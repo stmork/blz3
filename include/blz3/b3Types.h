@@ -108,9 +108,9 @@ typedef unsigned long       b3_ptr;        //!< A pointer for pointer arithmetic
  */
 typedef struct B3_ALIGN_16 b3_vector32_3D
 {
-	b3_f32 B3_ALIGN_16 x;
-	b3_f32             y;
-	b3_f32             z;
+	b3_f32 B3_ALIGN_16 x; //!< The 16 byte aligned x component.
+	b3_f32             y; //!< The y component.
+	b3_f32             z; //!< The z component.
 } b3_vector32, b3_vector;
 
 /**
@@ -119,9 +119,9 @@ typedef struct B3_ALIGN_16 b3_vector32_3D
  */
 typedef struct B3_ALIGN_32 b3_vector64_3D
 {
-	b3_f64 B3_ALIGN_16 x;
-	b3_f64             y;
-	b3_f64             z;
+	b3_f64 B3_ALIGN_16 x; //!< The 16 byte aligned x component.
+	b3_f64             y; //!< The y component.
+	b3_f64             z; //!< The z component.
 } b3_vector64;
 
 /**
@@ -130,10 +130,10 @@ typedef struct B3_ALIGN_32 b3_vector64_3D
  */
 typedef struct B3_ALIGN_16 b3_vector32_4D
 {
-	b3_f32    x;
-	b3_f32    y;
-	b3_f32    z;
-	b3_f32    w;
+	b3_f32    x; //!< The 16 byte aligned x component.
+	b3_f32    y; //!< The y component.
+	b3_f32    z; //!< The z component.
+	b3_f32    w; //!< The w component.
 } b3_vector4D;
 
 /**
@@ -142,10 +142,10 @@ typedef struct B3_ALIGN_16 b3_vector32_4D
  */
 typedef struct B3_ALIGN_32 b3_vector64_4D
 {
-	b3_f64    x;
-	b3_f64    y;
-	b3_f64    z;
-	b3_f64    w;
+	b3_f64    x; //!< The 16 byte aligned x component.
+	b3_f64    y; //!< The y component.
+	b3_f64    z; //!< The z component.
+	b3_f64    w; //!< The w component.
 } b3_vector4D_64;
 
 /**
@@ -179,7 +179,8 @@ typedef struct B3_ALIGN_64 b3_matrix64_4D
  */
 typedef struct B3_ALIGN_32 b3_line32_3D
 {
-	b3_vector pos,dir;
+	b3_vector pos; //!< The base position.
+	b3_vector dir; //!< The direction vector.
 } b3_line32, b3_line;
 
 /**
@@ -188,7 +189,8 @@ typedef struct B3_ALIGN_32 b3_line32_3D
  */
 typedef struct B3_ALIGN_64 b3_line64_3D
 {
-	b3_vector64 pos,dir;
+	b3_vector64 pos; //!< The base position.
+	b3_vector64 dir; //!< The direction vector.
 } b3_line64;
 
 /**
@@ -197,6 +199,9 @@ typedef struct B3_ALIGN_64 b3_line64_3D
  */
 struct B3_ALIGN_16 b3_pos
 {
+	/**
+	 * The x and y component of a window or screen position.
+	 */
 	b3_s32    x,y;
 };
 
@@ -206,6 +211,9 @@ struct B3_ALIGN_16 b3_pos
  */
 struct B3_ALIGN_16 b3_point
 {
+	/**
+	 * The floating point representation of a point.
+	 */
 	b3_f32    x,y;
 };
 
@@ -215,10 +223,10 @@ struct B3_ALIGN_16 b3_point
  */
 typedef struct B3_ALIGN_16 b3_color32
 {
-	b3_f32 a;
-	b3_f32 r;
-	b3_f32 g;
-	b3_f32 b;
+	b3_f32 a; //!< The alpha channel.
+	b3_f32 r; //!< The red channel.
+	b3_f32 g; //!< The green channel.
+	b3_f32 b; //!< The blue channel.
 } b3_color;
 
 // Some OpenGL data structures
@@ -227,8 +235,8 @@ typedef struct B3_ALIGN_16 b3_color32
  */
 struct b3_gl_texture
 {
-	b3_f32 s;
-	b3_f32 t;
+	b3_f32 s; //!< The textural x direction.
+	b3_f32 t; //!< The textural y direction.
 };
 
 /**
@@ -236,9 +244,9 @@ struct b3_gl_texture
  */
 struct b3_gl_vector
 {
-	b3_f32 x;
-	b3_f32 y;
-	b3_f32 z;
+	b3_f32 x; //!< The x component.
+	b3_f32 y; //!< The y component.
+	b3_f32 z; //!< The z component.
 };
 
 // Some definitions

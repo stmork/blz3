@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/08/10 15:09:04  smork
+**	- Documentation.
+**
 **	Revision 1.11  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
-**
+**	
 **	Revision 1.10  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -132,13 +135,7 @@ b3SearchPath::~b3SearchPath()
 
 void b3SearchPath::b3Empty()
 {
-	b3PathEntry *path_item;
-
-	while((path_item = m_SearchPath.First) != null)
-	{
-		m_SearchPath.b3Remove(path_item);
-		delete path_item;
-	}
+	m_SearchPath.b3Free();
 }
 
 b3_bool b3SearchPath::b3IsValid(const char *Name,char *FullName)

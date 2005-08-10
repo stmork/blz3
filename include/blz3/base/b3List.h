@@ -43,18 +43,18 @@
  * is zero the b3Link is meant as an anonymous list.
  *
  * We are using a doubly linked list in the following manner:
- *
- *                                                                    +------------+
- *   b3Base                 b3Link       b3Link       b3Link ...      |            |
- * +---------+                                                        v            |
- * |         |              +----+       +----+       +----+       +----+          |
- * |  First  |------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> null  |
- * |         |              |    |       |    |       |    |       |    |          |
- * |  Last   |--+   null <--|Prev|<------|Prev|<------|Prev|<------|Prev|          |
- * |         |  |           +----+       +----+       +----+       +----+          |
- * +---------+  |                                                                  |
- *              +------------------------------------------------------------------+
- *                                                                                  
+\verbatim
+                                                                    +------------+
+   b3Base                 b3Link       b3Link       b3Link ...      |            |
+ +---------+                                                        v            |
+ |         |              +----+       +----+       +----+       +----+          |
+ |  First  |------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> null  |
+ |         |              |    |       |    |       |    |       |    |          |
+ |  Last   |--+   null <--|Prev|<------|Prev|<------|Prev|<------|Prev|          |
+ |         |  |           +----+       +----+       +----+       +----+          |
+ +---------+  |                                                                  |
+              +------------------------------------------------------------------+
+\endverbatim
  *
  * @see b3Base
  */
@@ -137,6 +137,19 @@ public:
 /**
  * This class is the base container for a doubly linked list. All
  * elements in the list have got the same class specifier.
+ *
+\verbatim
+                                                                    +------------+
+   b3Base                 b3Link       b3Link       b3Link ...      |            |
+ +---------+                                                        v            |
+ |         |              +----+       +----+       +----+       +----+          |
+ |  First  |------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> null  |
+ |         |              |    |       |    |       |    |       |    |          |
+ |  Last   |--+   null <--|Prev|<------|Prev|<------|Prev|<------|Prev|          |
+ |         |  |           +----+       +----+       +----+       +----+          |
+ +---------+  |                                                                  |
+              +------------------------------------------------------------------+
+\endverbatim
  *
  * @see b3Link
  */

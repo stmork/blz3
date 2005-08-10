@@ -32,16 +32,16 @@ public:
 	b3_f32            m_yRot; //!< The trunk rotation around the y axis.
 	b3_f32            m_zRot; //!< The trunk rotation around the z axis.
 
-	b3_f32            m_RingSpacing; //!< Controls the ring spacing.
-	b3_f32            m_RingFrequency; //!< Controls the frequency of ring spacing.
-	b3_f32            m_RingNoise;     //!< Controls how noisy the rings are.
-	b3_f32            m_RingNoiseFrequency;
-	b3_f32            m_TrunkWobble;
-	b3_f32            m_TrunkWobbleFrequency;
-	b3_f32            m_AngularWobble;
-	b3_f32            m_AngularWobbleFrequency;
-	b3_f32            m_GrainFrequency; //!< The wood grain frequency.
-	b3_f32            m_Grainy;         //!< The strength of the grain.
+	b3_f32            m_RingSpacing;            //!< Controls the ring spacing.
+	b3_f32            m_RingFrequency;          //!< Controls the frequency of ring spacing.
+	b3_f32            m_RingNoise;              //!< Controls how noisy the rings are.
+	b3_f32            m_RingNoiseFrequency;     //!< The ring noise frequency.
+	b3_f32            m_TrunkWobble;            //!< A value how much the trunk wobbles.
+	b3_f32            m_TrunkWobbleFrequency;   //!< The trunk wobble frequency.
+	b3_f32            m_AngularWobble;          //!< The tree growth factor.
+	b3_f32            m_AngularWobbleFrequency; //!< The growth frequency.
+	b3_f32            m_GrainFrequency;         //!< The wood grain frequency.
+	b3_f32            m_Grainy;                 //!< The strength of the grain.
 	b3_f32            m_Ringy;
 
 public:

@@ -22,26 +22,85 @@
 #include "blz3/base/b3List.h"
 #include "blz3/system/b3Dir.h"
 
+/**
+ * This class implements a single search path.
+ *
+ * @see b3SearchPath
+ */
 class B3_PLUGIN b3PathEntry : public b3Link<b3PathEntry>, public b3Path
 {
 public:
+	/**
+	 * This copy constructor initializes this instance with a path.
+	 */
 	b3PathEntry(const b3PathEntry &src);
+
+	/**
+	 * This constructor initializes this instance with a path.
+	 */
 	b3PathEntry(const b3PathEntry *src);
+
+	/**
+	 * This constructor initializes this instance with a path.
+	 */
 	b3PathEntry(const char *path);
 };
 
+/**
+ * This class represents a list of search paths to find single file names.
+ *
+ * @warning
+ * The file name handling is not buffer overflow safe!
+ */
 class B3_PLUGIN b3SearchPath
 {
 public:
-	b3Base<b3PathEntry> m_SearchPath;
+	b3Base<b3PathEntry> m_SearchPath; //!< This is the list of search paths.
 
 public:
-	         b3SearchPath();
+	/**
+	 * This constructor initializes the path search list.
+	 */
+	b3SearchPath();
+
+	/**
+	 * This destructor deinitializes the instance using the b3Empty() method.
+	 */
 	virtual ~b3SearchPath();
+
+	/**
+	 * This method adds a search path to the list. The given path must be
+	 * a directory. Other file system items are simply ignored.
+	 *
+	 * @param path The new search path.
+	 */
 	void     b3AddPath(const char *path);
+
+	/**
+	 * This deletes all entries from the path search list.
+	 */
 	void     b3Empty();
-	b3_bool  b3IsValid(const char *short_name,char *result_as_full_name);
-	b3_bool  b3CutName(const char *file_name,char *result_as_short_name);
+
+	/**
+	 * This method checks wether the given file name is in the search path
+	 * as file. The fully qualified file name is returned.
+	 *
+	 * @param testname The name to test. This file may contain parent directory names.
+	 * @param fullname The resulting full qualified file name,
+	 * @return True if a full qualified file name was found.
+	 * @see b3Path::b3LinkFileName
+	 */
+	b3_bool  b3IsValid(const char *testname,char *fullname);
+
+	/**
+	 * This method cuts the search path from the full qualified name if any. If no
+	 * matching path was found the full name is returned.
+	 *
+	 * @param fullname The full qualified name to test.
+	 * @param shortname The cut name.
+	 * @return True if a mathing search path was found.
+	 */
+	b3_bool  b3CutName(const char *fullname,char *shortname);
 };
 
 #endif
