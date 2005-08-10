@@ -79,7 +79,7 @@ public:
 	 * @param x The input value.
 	 * @return The pseudo random value.
 	 */
-	static        b3_f64        b3NoiseScalar (b3_f64 x);
+	static        b3_f64        b3NoiseScalar (const b3_f64 x);
 
 	/**
 	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
@@ -88,7 +88,7 @@ public:
 	 * @param x The input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64  b3SignedNoiseScalar (b3_f64 x)
+	static inline b3_f64  b3SignedNoiseScalar (const b3_f64 x)
 	{
 		return b3NoiseScalar(x) * 2 - 1;
 	}
@@ -100,7 +100,7 @@ public:
 	 * @param x The input value.
 	 * @return The pseudo random value.
 	 */
-	static        b3_f64        b3FilteredNoiseScalar (b3_f64 x);
+	static        b3_f64        b3FilteredNoiseScalar (const b3_f64 x);
 
 	/**
 	 * This method returns an Hermite interpolated pseudo random float based on Perlin noise.
@@ -109,7 +109,7 @@ public:
 	 * @param x The input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64  b3SignedFilteredNoiseScalar (b3_f64 x)
+	static inline b3_f64  b3SignedFilteredNoiseScalar (const b3_f64 x)
 	{
 		return b3FilteredNoiseScalar(x) * 2 - 1;
 	}
@@ -123,7 +123,7 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static        b3_f64        b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+	static        b3_f64        b3NoiseVector (const b3_f64 x, const b3_f64 y, const b3_f64 z);
 
 	/**
 	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
@@ -134,7 +134,7 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64  b3SignedNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+	static inline b3_f64  b3SignedNoiseVector (const b3_f64 x, const b3_f64 y, const b3_f64 z)
 	{
 		return b3NoiseVector(x,y,z) * 2 - 1;
 	}
@@ -148,7 +148,7 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static        b3_f64        b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+	static        b3_f64        b3FilteredNoiseVector (const b3_f64 x,const b3_f64 y,const b3_f64 z);
 
 	/**
 	 * This method returns an Hermite interpolated pseudo random float based on Perlin noise.
@@ -159,13 +159,13 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64  b3SignedFilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+	static inline b3_f64  b3SignedFilteredNoiseVector (const b3_f64 x, const b3_f64 y, const b3_f64 z)
 	{
 		return b3FilteredNoiseVector(x,y,z) * 2 - 1;
 	}
 
 	/**
-	 * This method returns a psoeudo random float base on Perlin noise. The value
+	 * This method returns a psoeudo random float based on Perlin noise. The value
 	 * is in range [0..1]. The algorithm is somewhat optimized in comparison to the
 	 * classic version b3NoiseVector().
 	 *
@@ -175,13 +175,13 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64        b3ImprovedNoise    (b3_f64 x,b3_f64 y,b3_f64 z)
+	static inline b3_f64        b3ImprovedNoise    (const b3_f64 x, const b3_f64 y, const b3_f64 z)
 	{
 		return (b3SignedImprovedNoise(x,y,z) + 1) * 0.5;
 	}
 
 	/**
-	 * This method returns a psoeudo random float base on Perlin noise. The value
+	 * This method returns a psoeudo random float based on Perlin noise. The value
 	 * is in range [-1..1]. The algorithm is somewhat optimized in comparison to the
 	 * classic version b3NoiseVector().
 	 *
@@ -191,13 +191,51 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static        b3_f64  b3SignedImprovedNoise    (b3_f64 x,b3_f64 y,b3_f64 z);
+	static        b3_f64  b3SignedImprovedNoise    (const b3_f64 x, const b3_f64 y, const b3_f64 z);
 	
-	static        void          b3NoiseVector         (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
-	static        void          b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
+	/**
+	 * This method returns a vector with linear interpolated pseudo random floats based on Perlin noise.
+	 * The result is in range [0..1] and is computed from three scalar forming a vector.
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @param result The vector with random value.
+	 */
+	static        void          b3NoiseVector         (const b3_f64 x, const b3_f64 y, const b3_f64 z,b3_vector *result);
 	
-	static        void       b3NoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result);
-	static inline void b3SignedNoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result)
+	/**
+	 * This method returns a vector with linear interpolated pseudo random floats based on Perlin noise.
+	 * The result is in range [0..1] and is computed from three scalar forming a vector.
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @param result The vector with random value.
+	 */
+	static        void          b3FilteredNoiseVector (const b3_f64 x, const b3_f64 y, const b3_f64 z,b3_vector *result);
+
+	/**
+	 * This method returns the derivative vector of the given position based on Perlin noise. The
+	 * values are in range [0..1].
+	 *
+	 * @param dx The x derivative.	
+	 * @param dy The y derivative.	
+	 * @param dz The z derivative.	
+	 * @param result The resulting vector.
+	 */
+	static        void       b3NoiseDeriv (const b3_f64 dx, const b3_f64 dy, const b3_f64 dz,b3_vector *result);
+
+	/**
+	 * This method returns the derivative vector of the given position based on Perlin noise. The
+	 * values are in range [-1..1].
+	 *
+	 * @param dx The x derivative.	
+	 * @param dy The y derivative.	
+	 * @param dz The z derivative.	
+	 * @param result The resulting vector.
+	 */
+	static inline void b3SignedNoiseDeriv (const b3_f64 dx, const b3_f64 dy, const b3_f64 dz,b3_vector *result)
 	{
 		b3NoiseDeriv(dx,dy,dz,result);
 		
@@ -213,7 +251,7 @@ public:
 	 * @param octaves The number of recursions.
 	 * @return The resulting turbulence value.
 	 */
-	static inline b3_f64  b3Turbulence  (b3_vector *P,b3_count octaves = 10)
+	static inline b3_f64  b3Turbulence  (const b3_vector *P,const b3_count octaves = 10)
 	{
 		return b3FractionalBrownianMotion(P,octaves,2.0,0.5);
 	}
@@ -232,10 +270,10 @@ public:
 	 * @see b3FilteredNoiseVector()
 	 */
 	static inline b3_f64  b3FractionalBrownianMotion(
-		b3_vector *p,
-		b3_count   octaves,
-		b3_f32     amplification,
-		b3_f32     attenuation)
+		const b3_vector *p,
+		const b3_count   octaves,
+		const b3_f32     amplification,
+		const b3_f32     attenuation)
 	{
 		b3_f32 B3_ALIGN_16 v[4];
 		b3_f32 B3_ALIGN_16 factor[4];
@@ -328,7 +366,7 @@ public:
 	 * @param d The position.
 	 * @return The marble pattern.
 	 */
-	static b3_f64  b3Marble      (b3_vector *d);
+	static b3_f64  b3Marble      (const b3_vector *d);
 
 	/**
 	 * This method computes a wood pattern from a given position. The pattern
@@ -338,7 +376,7 @@ public:
 	 * @param d The position.
 	 * @return The wood pattern.
 	 */
-	static b3_f64  b3Wood        (b3_vector *d);
+	static b3_f64  b3Wood        (const b3_vector *d);
 
 	/**
 	 * This method computes a sky cloud pattern from a given position. The pattern
@@ -347,7 +385,7 @@ public:
 	 * @param P The position.
 	 * @param Color The resulting sky pattern.
 	 */
-	static void    b3Hell        (b3_vector *P,b3Color &Color);
+	static void    b3Hell        (const b3_vector *P,b3Color &Color);
 
 	/**
 	 * This method computes a wave pattern from a given position. The pattern
@@ -357,7 +395,7 @@ public:
 	 * @param point The position.
 	 * @return The wave pattern.
 	 */
-	static b3_f64  b3Wave        (b3_vector *point);
+	static b3_f64  b3Wave        (const b3_vector *point);
 
 	/**
 	 * This method computes a granite pattern from a given position. The pattern
@@ -368,16 +406,29 @@ public:
 	 * @param octaves The number of octaves to use.
 	 * @return The granite pattern.
 	 */
-	static b3_f64  b3Granite     (b3_vector *point,b3_count octaves);
-	static void    b3AnimThinFilm(b3_f64 t, b3_vector *result);
+	static b3_f64  b3Granite     (const b3_vector *point,const b3_count octaves);
+
+	/**
+	 * This method computes a thin oil film pattern from a given position.
+	 *
+	 * @param t The time point
+	 * @param result The oil film  pattern.
+	 */
+	static void    b3AnimThinFilm(const b3_f64 t, b3_vector *result);
 
 private:
-	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
-	static b3_f64       b3Interpolate(b3_index ix,b3_index iy,b3_index iz,b3_f32 fx,b3_f32 fy,b3_f32 fz,b3_index d=0);
-	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
+	static b3_noisetype b3GetDiff   (
+		const b3_index xs, const b3_index ys, const b3_index zs,
+		const b3_index k,  const b3_index i);
+	static b3_f64       b3Interpolate(
+		const b3_index ix, const b3_index iy, const b3_index iz,
+		const b3_f32   fx, const b3_f32   fy, const b3_f32 fz,
+		const b3_index d=0);
 
-	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
-	static void         b3MarbleCurve (b3Spline *Spline,b3_vector *result,b3_f64 x);
+	static b3_f64       b3GradNoise (const b3_f32 x, const b3_f32 y, const b3_f32 z, const b3_index i);
+
+	static void         b3OldMarble   (const b3_vector *P,b3Color &Color);
+	static void         b3MarbleCurve (b3Spline *Spline,b3_vector *result, const b3_f64 x);
 
 	static inline b3_f64 b3Grad(int hash, b3_f64 x, b3_f64 y, b3_f64 z)
 	{

@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
-**	Revision 1.53  2005/08/10 10:32:08  smork
+**	Revision 1.54  2005/08/10 12:49:42  smork
 **	- Documentation.
 **
+**	Revision 1.53  2005/08/10 10:32:08  smork
+**	- Documentation.
+**	
 **	Revision 1.52  2005/08/10 09:01:37  smork
 **	- Documentation
 **	- Noise improvements.
@@ -442,14 +445,17 @@ int b3Noise::m_Permutation[512] =
       222,114, 67, 29, 24, 72,243,141,128,195, 78, 66,215, 61,156,180
 };
 
-b3_f64 b3Noise::b3SignedImprovedNoise(b3_f64 x, b3_f64 y, b3_f64 z)
+b3_f64 b3Noise::b3SignedImprovedNoise(
+	const b3_f64 cx,
+	const b3_f64 cy,
+	const b3_f64 cz)
 {
-	int X     = (int)floor(x) & 255;       // FIND UNIT CUBE THAT
-	int Y     = (int)floor(y) & 255;       // CONTAINS POINT.
-	int Z     = (int)floor(z) & 255;
-	x        -= floor(x);                  // FIND RELATIVE X,Y,Z
-	y        -= floor(y);                  // OF POINT IN CUBE.
-	z        -= floor(z);
+	int X     = (int)floor(cx) & 255;      // FIND UNIT CUBE THAT
+	int Y     = (int)floor(cy) & 255;      // CONTAINS POINT.
+	int Z     = (int)floor(cz) & 255;
+	b3_f64 x  = cx - floor(cx);            // FIND RELATIVE X,Y,Z
+	b3_f64 y  = cy - floor(cy);            // OF POINT IN CUBE.
+	b3_f64 z  = cz - floor(cz);
 	b3_f64 u  = b3Math::b3Fade(x);         // COMPUTE FADE CURVES
 	b3_f64 v  = b3Math::b3Fade(y);         // FOR EACH OF X,Y,Z.
 	b3_f64 w  = b3Math::b3Fade(z);
@@ -551,7 +557,10 @@ b3_f64 b3Noise::b3FilteredNoiseScalar(b3_f64 x)
 **
 */
 
-b3_f64 b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+b3_f64 b3Noise::b3NoiseVector (
+	const b3_f64 x,
+	const b3_f64 y,
+	const b3_f64 z)
 {
 	b3_index ix,iy,iz;
 
@@ -565,7 +574,10 @@ b3_f64 b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 		(b3_f32)z - iz);
 }
 
-b3_f64 b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+b3_f64 b3Noise::b3FilteredNoiseVector (
+	const b3_f64 x,
+	const b3_f64 y,
+	const b3_f64 z)
 {
 	b3_index ix,iy,iz;
 
@@ -579,7 +591,11 @@ b3_f64 b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 		(b3_f32)(b3Math::b3Smoothstep(z - iz)));
 }
 
-void b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result)
+void b3Noise::b3NoiseVector (
+	const b3_f64     x,
+	const b3_f64     y,
+	const b3_f64     z,
+	      b3_vector *result)
 {
 	b3_index ix,iy,iz;
 
@@ -601,7 +617,11 @@ void b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result)
 		(b3_f32)z - iz,2);
 }
 
-void b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result)
+void b3Noise::b3FilteredNoiseVector (
+	const b3_f64     x,
+	const b3_f64     y,
+	const b3_f64     z,
+	      b3_vector *result)
 {
 	b3_index ix,iy,iz;
 
@@ -624,13 +644,13 @@ void b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *resul
 }
 
 inline b3_f64 b3Noise::b3Interpolate(
-	b3_index ix,
-	b3_index iy,
-	b3_index iz,
-	b3_f32   fx,
-	b3_f32   fy,
-	b3_f32   fz,
-	b3_index d)
+	const b3_index ix,
+	const b3_index iy,
+	const b3_index iz,
+	const b3_f32    fx,
+	const b3_f32   fy,
+	const b3_f32   fz,
+	const b3_index d)
 {
 	b3_noisetype *NoiseTable = &m_NoiseTable[d * NOISESIZE];
 	b3_f32        B3_ALIGN_16 a[4],b[4],c[4];
@@ -664,11 +684,11 @@ inline b3_f64 b3Noise::b3Interpolate(
 }
 
 inline b3_noisetype b3Noise::b3GetDiff(
-	b3_index xs,
-	b3_index ys,
-	b3_index zs,
-	b3_index k,
-	b3_index i)
+	const b3_index xs,
+	const b3_index ys,
+	const b3_index zs,
+	const b3_index k,
+	const b3_index i)
 {
 	return (b3_noisetype)(
 		m_NoiseTable[INDEX3D(xs + m_OM[k][i][0],
@@ -680,10 +700,10 @@ inline b3_noisetype b3Noise::b3GetDiff(
 }
 
 inline b3_f64 b3Noise::b3GradNoise (
-	b3_f64    x,
-	b3_f64    y,
-	b3_f64    z,
-	b3_index  i)
+	const b3_f32    x,
+	const b3_f32    y,
+	const b3_f32    z,
+	      b3_index  i)
 {
 	b3_f32  B3_ALIGN_16 a[4],b[4],c[4];
 	b3_index ix = (b3_index)floor(x);
@@ -722,14 +742,15 @@ inline b3_f64 b3Noise::b3GradNoise (
 }
 
 void b3Noise::b3NoiseDeriv (
-	b3_f64     dx,
-	b3_f64     dy,
-	b3_f64     dz,
-	b3_vector *RVec)
+	const b3_f64     cdx,
+	const b3_f64     cdy,
+	const b3_f64     cdz,
+	      b3_vector *RVec)
 {
-	dx = fabs(dx * NOISEMAX + 15000);
-	dy = fabs(dy * NOISEMAX + 15000);
-	dz = fabs(dz * NOISEMAX + 15000);
+	b3_f32 dx = fabs(cdx * NOISEMAX + 15000);
+	b3_f32 dy = fabs(cdy * NOISEMAX + 15000);
+	b3_f32 dz = fabs(cdz * NOISEMAX + 15000);
+
 	RVec->x = b3GradNoise (dx,dy,dz,0);
 	RVec->y = b3GradNoise (dx,dy,dz,1);
 	RVec->z = b3GradNoise (dx,dy,dz,2);
@@ -750,9 +771,9 @@ const b3Color b3Noise::m_MarbleColors[4] =
 };
 
 inline void b3Noise::b3MarbleCurve (
-	b3Spline  *Spline,
-	b3_vector *result,
-	b3_f64     x)
+	      b3Spline  *Spline,
+	      b3_vector *result,
+	const b3_f64     x)
 {
 	register b3_f32  *knots;
 	register b3_f64  q;
@@ -763,17 +784,19 @@ inline void b3Noise::b3MarbleCurve (
 	Spline->b3DeBoorOpened (result,0,q);
 }
 
-b3_f64 b3Noise::b3Marble(b3_vector *d)
+b3_f64 b3Noise::b3Marble(const b3_vector *d)
 {
 	b3_vector result;
 
-	b3MarbleCurve(&m_MarbleSpline,&result,
+	b3MarbleCurve(
+		&m_MarbleSpline,
+		&result,
 		mSin(d->x + 0.5 * d->y + 0.3 * d->z + b3Turbulence(d)));
 
 	return result.y;
 }
 
-void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
+void b3Noise::b3OldMarble (const b3_vector *P,b3Color &Color)
 {
 	b3_count  s,e;
 	b3_f64    t,frac;
@@ -798,7 +821,7 @@ void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3Noise::b3Wood(b3_vector *d)
+b3_f64 b3Noise::b3Wood(const b3_vector *d)
 {
 	b3_vector result;
 	b3_f64    s,r;
@@ -823,7 +846,7 @@ const b3Color b3Noise::m_HellColors[4] =
 	b3Color(0.7f, 0.2f, 0.0f)
 };
 
-void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
+void b3Noise::b3Hell (const b3_vector *P,b3Color &Color)
 {
 	b3_f64    t;
 	b3_vector Dir;
@@ -835,7 +858,7 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 	Color = m_HellColors[(int)(t * 4)];
 }
 
-b3_f64 b3Noise::b3Wave(b3_vector *point)
+b3_f64 b3Noise::b3Wave(const b3_vector *point)
 {
 	b3_f64 n,q;
 	b3_vector v;
@@ -847,7 +870,7 @@ b3_f64 b3Noise::b3Wave(b3_vector *point)
 	return mSin(point->y * 10 + v.z * 2);
 }
 
-void b3Noise::b3AnimThinFilm(b3_f64 t, b3_vector *result)
+void b3Noise::b3AnimThinFilm(const b3_f64 t, b3_vector *result)
 {
 	b3_f64   q,div;
 
@@ -856,7 +879,7 @@ void b3Noise::b3AnimThinFilm(b3_f64 t, b3_vector *result)
 	m_WaveSpline.b3DeBoorClosed (result,0,q);
 }
 
-b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)
+b3_f64 b3Noise::b3Granite(const b3_vector *point,const b3_count octaves)
 {
 	b3_loop   i;
 	b3_f64    sum = 0;
