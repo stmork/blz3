@@ -96,7 +96,7 @@ enum b3_world_error
 	B3_WORLD_MEMORY,       //!< Not enough memory for serialization.
 	B3_WORLD_PARSE,        //!< Parse error during load (wrong file format).
 	B3_WORLD_WRITE,        //!< Write error.
-	B3_WORLD_EMPTY1,       //!< Not used.
+	B3_WORLD_STORAGE_NOT_IMPLEMENTED,       //!< Not used.
 	B3_WORLD_OUT_OF_ORDER,       //!< Parse error because of wrong structure size.
 	B3_WORLD_CLASSTYPE_UNKNOWN,  //!< Cannot instanciate because of unknown class type.
 	B3_WORLD_IMPORT              //!< General import error during file conversion.
