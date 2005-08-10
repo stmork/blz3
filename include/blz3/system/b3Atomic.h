@@ -32,7 +32,7 @@ class b3AtomicCounter
 public:
 	/**
 	 * This constructor initializes the counter with the given value.
-	 * The initial counter value is of type <em>int</em>.
+	 * The initial counter value is of type <code>int</code>.
 	 *
 	 * @param init The initial counter value.
 	 */

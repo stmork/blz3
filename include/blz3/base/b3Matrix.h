@@ -464,7 +464,7 @@ public:
 	}
 
 	/**
-	 * This method adds a vector to a given one: <em>result += aVec</em>.
+	 * This method adds a vector to a given one: <code>result += aVec</code>.
 	 *
 	 * @param aVec The summand.
 	 * @param result The resulting vector.
@@ -491,7 +491,7 @@ public:
 	}
 
 	/**
-	 * This method adds a vector to a given one: <em>result += aVec</em>.
+	 * This method adds a vector to a given one: <code>result += aVec</code>.
 	 *
 	 * @param aVec The summand.
 	 * @param result The resulting vector.
@@ -518,7 +518,7 @@ public:
 	}
 
 	/**
-	 * This method adds a vector to a given one: <em>result += aVec</em>.
+	 * This method adds a vector to a given one: <code>result += aVec</code>.
 	 *
 	 * @param aVec The summand.
 	 * @param result The resulting vector.
@@ -545,7 +545,7 @@ public:
 	}
 
 	/**
-	 * This method adds two vectors to a resulting one: <em>result = aVec + bVec</em>
+	 * This method adds two vectors to a resulting one: <code>result = aVec + bVec</code>
 	 *
 	 * @param aVec The first summand.
 	 * @param bVec The second summand.
@@ -575,7 +575,7 @@ public:
 	}
 
 	/**
-	 * This method adds two vectors to a resulting one: <em>result = aVec + bVec</em>
+	 * This method adds two vectors to a resulting one: <code>result = aVec + bVec</code>
 	 *
 	 * @param aVec The first summand.
 	 * @param bVec The second summand.
@@ -605,7 +605,7 @@ public:
 	}
 
 	/**
-	 * This method adds two vectors to a resulting one: <em>result = aVec + bVec</em>
+	 * This method adds two vectors to a resulting one: <code>result = aVec + bVec</code>
 	 *
 	 * @param aVec The first summand.
 	 * @param bVec The second summand.
@@ -635,7 +635,7 @@ public:
 	}
 
 	/**
-	 * This method subtracts a vector from a given one: <em>result -= aVec</em>.
+	 * This method subtracts a vector from a given one: <code>result -= aVec</code>.
 	 *
 	 * @param aVec The minuend.
 	 * @param result The resulting vector.
@@ -662,7 +662,7 @@ public:
 	}
 
 	/**
-	 * This method subtracts a vector from a given one: <em>result -= aVec</em>.
+	 * This method subtracts a vector from a given one: <code>result -= aVec</code>.
 	 *
 	 * @param aVec The minuend.
 	 * @param result The resulting vector.
@@ -689,7 +689,7 @@ public:
 	}
 
 	/**
-	 * This method subtracts two vectors to a resulting one: <em>result = aVec - bVec</em>
+	 * This method subtracts two vectors to a resulting one: <code>result = aVec - bVec</code>
 	 *
 	 * @param aVec The subtrahend.
 	 * @param bVec The minuend.
@@ -719,7 +719,7 @@ public:
 	}
 
 	/**
-	 * This method subtracts two vectors to a resulting one: <em>result = aVec - bVec</em>
+	 * This method subtracts two vectors to a resulting one: <code>result = aVec - bVec</code>
 	 *
 	 * @param aVec The subtrahend.
 	 * @param bVec The minuend.
@@ -749,7 +749,7 @@ public:
 	}
 
 	/**
-	 * This method subtracts two vectors to a resulting one: <em>result = aVec - bVec</em>
+	 * This method subtracts two vectors to a resulting one: <code>result = aVec - bVec</code>
 	 *
 	 * @param aVec The subtrahend.
 	 * @param bVec The minuend.
@@ -779,7 +779,7 @@ public:
 	}
 
  	/**
-	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -821,7 +821,7 @@ public:
 	}
 
 	/**
-	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -863,7 +863,7 @@ public:
 	}
 
 	/**
-	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -896,7 +896,7 @@ public:
 	}
 
 	/**
-	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1365,7 +1365,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + factor * bVec</em>.
+	 * <code>result = aVec + factor * bVec</code>.
 	 *
 	 * @param aVec The first vector of order 0.
 	 * @param bVec The second vector of order 1.
@@ -1398,7 +1398,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + factor * bVec</em>.
+	 * <code>result = aVec + factor * bVec</code>.
 	 *
 	 * @param aVec The first vector of order 0.
 	 * @param bVec The second vector of order 1.
@@ -1431,7 +1431,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + factor * bVec</em>.
+	 * <code>result = aVec + factor * bVec</code>.
 	 *
 	 * @param aVec The first vector of order 0.
 	 * @param bVec The second vector of order 1.
@@ -1464,7 +1464,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = x * bVec + y * cVec</em>.
+	 * <code>result = x * bVec + y * cVec</code>.
 	 *
 	 * @param bVec The first vector.
 	 * @param cVec The second vector.
@@ -1499,7 +1499,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = x * bVec + y * cVec</em>.
+	 * <code>result = x * bVec + y * cVec</code>.
 	 *
 	 * @param bVec The first vector.
 	 * @param cVec The second vector.
@@ -1534,7 +1534,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = x * bVec + y * cVec</em>.
+	 * <code>result = x * bVec + y * cVec</code>.
 	 *
 	 * @param bVec The first vector.
 	 * @param cVec The second vector.
@@ -1569,7 +1569,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 * <code>result = aVec + x * bVec + y * cVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1607,7 +1607,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 * <code>result = aVec + x * bVec + y * cVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1645,7 +1645,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 * <code>result = aVec + x * bVec + y * cVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1683,7 +1683,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 * <code>result = aVec + x * bVec + y * cVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1706,7 +1706,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = x * aVec + y * bVec + z * cVec</em>.
+	 * <code>result = x * aVec + y * bVec + z * cVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1746,7 +1746,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = x * aVec + y * bVec + z * cVec</em>.
+	 * <code>result = x * aVec + y * bVec + z * cVec</code>.
 	 *
 	 * @param aVec The first vector.
 	 * @param bVec The second vector.
@@ -1786,7 +1786,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = line->pos + l * line->dir</em>.
+	 * <code>result = line->pos + l * line->dir</code>.
 	 *
 	 * @param line The ray containing the position and direction vector.
 	 * @param l The factor for the bVec parameter.
@@ -1817,7 +1817,7 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <em>result = line->pos + l * line->dir - base</em>.
+	 * <code>result = line->pos + l * line->dir - base</code>.
 	 *
 	 * @param line The ray containing the position and direction vector.
 	 * @param l The factor for the bVec parameter.

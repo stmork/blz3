@@ -25,7 +25,7 @@
 /**
  * This template class defines generic operations to do
  * complex math. It provides several operators for simple
- * use. It is recommended to use <em>b3_f64</em> as template
+ * use. It is recommended to use ::b3_f64 as template
  * class because it fits best into use of the SSE2 unit of
  * most processors.
  */
@@ -77,8 +77,8 @@ public:
 	}
 
 	/**
-	 * The += operator. The operation is <em>this += a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The += operator. The operation is <code>this += a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to add.
 	 * @return This as result.
@@ -94,8 +94,8 @@ public:
 	}
 
 	/**
-	 * The -= operator. The operation is <em>this -= a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The -= operator. The operation is <code>this -= a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to subtract.
 	 * @return This as result.
@@ -111,8 +111,8 @@ public:
 	}
 
 	/**
-	 * The *= operator. The operation is <em>this *= a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The *= operator. The operation is <code>this *= a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to multiply.
 	 * @return This as result.
@@ -133,8 +133,8 @@ public:
 	}
 
 	/**
-	 * The /= operator. The operation is <em>this /= a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The /= operator. The operation is <code>this /= a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to divide.
 	 * @return This as result.
@@ -165,7 +165,7 @@ public:
 	}
 
 	/**
-	 * The += operator. The operation adds the scalar <em>a</em>
+	 * The += operator. The operation adds the scalar <code>a</code>
 	 * to the real part of this complex number.
 	 *
 	 * @param a The scalar to add to the real part.
@@ -179,7 +179,7 @@ public:
 	}
 
 	/**
-	 * The -= operator. The operation subtracts the scalar <em>a</em>
+	 * The -= operator. The operation subtracts the scalar <code>a</code>
 	 * from the real part of this complex number.
 	 * 
 	 * @param a The scalar to subtract from the real part.
@@ -194,7 +194,7 @@ public:
 
 	/**
 	 * The *= operator. The operation scales this complex number
-	 * with the scalar <em>a</em>.
+	 * with the scalar <code>a</code>.
 	 * 
 	 * @param a The scalar to scale this complex number.
 	 * @return This as result.
@@ -211,7 +211,7 @@ public:
 
 	/**
 	 * The /= operator. The operation divides this complex number
-	 * by the scalar <em>a</em>.
+	 * by the scalar <code>a</code>.
 	 * 
 	 * @param a The scalar to divide this complex number.
 	 * @return This as result.
@@ -227,8 +227,8 @@ public:
 	}
 
 	/**
-	 * The + operator. The operation is <em>result = this + a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The + operator. The operation is <code>result = this + a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to add.
 	 * @return This as result.
@@ -245,8 +245,8 @@ public:
 	}
 
 	/**
-	 * The - operator. The operation is <em>result = this - a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The - operator. The operation is <code>result = this - a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to subtract.
 	 * @return This as result.
@@ -263,8 +263,8 @@ public:
 	}
 
 	/**
-	 * The * operator. The operation is <em>result = this * a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The * operator. The operation is <code>result = this * a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to multiply.
 	 * @return This as result.
@@ -277,8 +277,8 @@ public:
 	}
 
 	/**
-	 * The / operator. The operation is <em>result = this / a</em>.
-	 * Where <em>a</em> is a complex number.
+	 * The / operator. The operation is <code>result = this / a</code>.
+	 * Where <code>a</code> is a complex number.
 	 *
 	 * @param a The complex number to divide.
 	 * @return This as result.

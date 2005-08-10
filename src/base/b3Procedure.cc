@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2005/08/10 10:32:08  smork
+**	- Documentation.
+**
 **	Revision 1.52  2005/08/10 09:01:37  smork
 **	- Documentation
 **	- Noise improvements.
-**
+**	
 **	Revision 1.51  2005/07/31 19:34:33  sm
 **	- Documentation
 **	
@@ -795,7 +798,7 @@ void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
 **                                                                      **
 *************************************************************************/
 
-void b3Noise::b3Wood(b3_vector *d,b3Color &mask)
+b3_f64 b3Noise::b3Wood(b3_vector *d)
 {
 	b3_vector result;
 	b3_f64    s,r;
@@ -803,8 +806,7 @@ void b3Noise::b3Wood(b3_vector *d,b3Color &mask)
 	s   = 2 * sqrt(d->x * d->x + d->z * d->z) - 0.15 * d->y;
 	b3MarbleCurve(&m_WoodSpline,&result,mMod(s + b3Turbulence(d)));
 
-	r = 1.0 - result.y;
-	mask.b3Init(r,r,r);
+	return 1.0 - result.y;
 }
 
 /*************************************************************************
@@ -977,26 +979,4 @@ b3_f64 b3Clouds::b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
 		sight = 0;
 	}
 	return sight;
-}
-
-/*************************************************************************
-**                                                                      **
-**                        some experiments                              **
-**                                                                      **
-*************************************************************************/
-
-b3_f64 b3Noise::b3PGauss()
-{
-	b3_f64 u1,u2,v1,v2,s;
-
-	do
-	{
-		u1 = B3_FRAN(1.0);
-		u2 = B3_FRAN(1.0);
-		v1 = u1 + u1 - 1;
-		v2 = u2 + u2 - 1;
-		s  = v1 * v1 + v2 * v2;
-	}
-	while (s >= 1.0);
-	return v1 * sqrt((-2.0 * log(s)) / s);
 }

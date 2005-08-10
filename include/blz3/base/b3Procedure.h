@@ -68,11 +68,10 @@ class B3_PLUGIN b3Noise
 
 	static int                 m_Permutation[512];
 
-	               b3Noise();
+	 b3Noise();
+	~b3Noise();
 
 public:
-	              ~b3Noise();
-
 	/**
 	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
 	 * The result is in range [0..1] and is computed from one scalar.
@@ -115,22 +114,83 @@ public:
 		return b3FilteredNoiseScalar(x) * 2 - 1;
 	}
 	
+	/**
+	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [0..1] and is computed from three scalars forming a vector.
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @return The pseudo random value.
+	 */
 	static        b3_f64        b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+
+	/**
+	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [-1..1] and is computed from three scalars forming a vector.
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @return The pseudo random value.
+	 */
 	static inline b3_f64  b3SignedNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	{
 		return b3NoiseVector(x,y,z) * 2 - 1;
 	}
 	
+	/**
+	 * This method returns a Hermite interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [0..1] and is computed from three scalars forming a vector.
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @return The pseudo random value.
+	 */
 	static        b3_f64        b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+
+	/**
+	 * This method returns an Hermite interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [-1..1] and is computed from three scalars forming a vector.
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @return The pseudo random value.
+	 */
 	static inline b3_f64  b3SignedFilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	{
 		return b3FilteredNoiseVector(x,y,z) * 2 - 1;
 	}
 
+	/**
+	 * This method returns a psoeudo random float base on Perlin noise. The value
+	 * is in range [0..1]. The algorithm is somewhat optimized in comparison to the
+	 * classic version b3NoiseVector().
+	 *
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @return The pseudo random value.
+	 */
 	static inline b3_f64        b3ImprovedNoise    (b3_f64 x,b3_f64 y,b3_f64 z)
 	{
 		return (b3SignedImprovedNoise(x,y,z) + 1) * 0.5;
 	}
+
+	/**
+	 * This method returns a psoeudo random float base on Perlin noise. The value
+	 * is in range [-1..1]. The algorithm is somewhat optimized in comparison to the
+	 * classic version b3NoiseVector().
+	 *
+	 *
+	 * @param x The x input value.
+	 * @param y The y input value.
+	 * @param z The z input value.
+	 * @return The pseudo random value.
+	 */
 	static        b3_f64  b3SignedImprovedNoise    (b3_f64 x,b3_f64 y,b3_f64 z);
 	
 	static        void          b3NoiseVector         (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
@@ -146,32 +206,51 @@ public:
 		result->z = result->z * 2 - 1;
 	}
 
-
+	/**
+	 * This method provides a turbulence function based on Perlin noise.
+	 *
+	 * @param P The position
+	 * @param octaves The number of recursions.
+	 * @return The resulting turbulence value.
+	 */
 	static inline b3_f64  b3Turbulence  (b3_vector *P,b3_count octaves = 10)
 	{
 		return b3FractionalBrownianMotion(P,octaves,2.0,0.5);
 	}
 
+	/**
+	 * This method computes fractional brownian motion. The value is computed by adding
+	 * a Perlin noise value at each iteration. The used position is reamplified each
+	 * iteration. The resulting Perlin value is attenuated. This value is added to a
+	 * resulting sum.
+	 *
+	 * @param p The position.
+	 * @param octaves The number of iterations.
+	 * @param amplification The amplification of the position for each iteration (= octave).
+	 * @param attenuation The attenuation for each iteration (= octave) to the result.
+	 * @return The resulting fractional brownian motion.
+	 * @see b3FilteredNoiseVector()
+	 */
 	static inline b3_f64  b3FractionalBrownianMotion(
 		b3_vector *p,
 		b3_count   octaves,
-		b3_f32     lacunarity,
-		b3_f32     gain)
+		b3_f32     amplification,
+		b3_f32     attenuation)
 	{
 		b3_f32 B3_ALIGN_16 v[4];
 		b3_f32 B3_ALIGN_16 factor[4];
 		b3_f64             sum = 0,n;
 		b3_loop            i,k;
 
-		v[0] = 1;    // amplification
+		v[0] = 1;    // starting attenuation
 		v[1] = p->x;
 		v[2] = p->y;
 		v[3] = p->z;
 		
-		factor[0] = gain;
-		factor[1] = lacunarity;
-		factor[2] = lacunarity;
-		factor[3] = lacunarity;
+		factor[0] = attenuation;
+		factor[1] = amplification;
+		factor[2] = amplification;
+		factor[3] = amplification;
 
 		for (i = 0;i < octaves;i++)
 		{
@@ -185,11 +264,24 @@ public:
 		return sum;
 	}
 
+	/**
+	 * This method computes fractional brownian motion. The value is computed by adding
+	 * a Perlin noise derivative at each iteration. The used position is reamplified each
+	 * iteration. The resulting Perlin value is attenuated. These values is added to a
+	 * resulting sum.
+	 *
+	 * @param p The position.
+	 * @param octaves The number of iterations.
+	 * @param amplification The amplification of the position for each iteration (= octave).
+	 * @param attenuation The attenuation for each iteration (= octave) to the result.
+	 * @param result The resulting fractional brownian motion as vector.
+	 * @see b3NoiseDeriv()
+	 */
 	static inline void b3FractionalBrownianMotion(
 		b3_vector *p,
 		b3_count   octaves,
-		b3_f32     lacunarity,
-		b3_f32     gain,
+		b3_f32     amplification,
+		b3_f32     attenuation,
 		b3_vector *result)
 	{
 		b3_f32 B3_ALIGN_16 v[4];
@@ -203,10 +295,10 @@ public:
 		v[2] = p->y;
 		v[3] = p->z;
 		
-		factor[0] = gain;
-		factor[1] = lacunarity;
-		factor[2] = lacunarity;
-		factor[3] = lacunarity;
+		factor[0] = attenuation;
+		factor[1] = amplification;
+		factor[2] = amplification;
+		factor[3] = amplification;
 
 		for (k = 0;k < 4;k++)
 		{
@@ -228,13 +320,56 @@ public:
 		result->z = sum[2];
 	}
 
+	/**
+	 * This method computes a marble pattern from a given position. The pattern
+	 * is expressed as simple value between [0..1]. This value can be used for
+	 * mixing two or more colors.
+	 *
+	 * @param d The position.
+	 * @return The marble pattern.
+	 */
 	static b3_f64  b3Marble      (b3_vector *d);
-	static void    b3Wood        (b3_vector *d,b3Color &mask);
+
+	/**
+	 * This method computes a wood pattern from a given position. The pattern
+	 * is expressed as simple value between [0..1]. This value can be used for
+	 * mixing two or more colors.
+	 *
+	 * @param d The position.
+	 * @return The wood pattern.
+	 */
+	static b3_f64  b3Wood        (b3_vector *d);
+
+	/**
+	 * This method computes a sky cloud pattern from a given position. The pattern
+	 * is expressed as interpolated color.
+	 *
+	 * @param P The position.
+	 * @param Color The resulting sky pattern.
+	 */
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
+
+	/**
+	 * This method computes a wave pattern from a given position. The pattern
+	 * is expressed as simple value between [0..1]. This value can be used for
+	 * mixing two or more colors.
+	 *
+	 * @param point The position.
+	 * @return The wave pattern.
+	 */
 	static b3_f64  b3Wave        (b3_vector *point);
+
+	/**
+	 * This method computes a granite pattern from a given position. The pattern
+	 * is expressed as simple value between [0..1]. This value can be used for
+	 * mixing two or more colors.
+	 *
+	 * @param point The position.
+	 * @param octaves The number of octaves to use.
+	 * @return The granite pattern.
+	 */
 	static b3_f64  b3Granite     (b3_vector *point,b3_count octaves);
 	static void    b3AnimThinFilm(b3_f64 t, b3_vector *result);
-	static b3_f64  b3PGauss      ();
 
 private:
 	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
@@ -254,6 +389,9 @@ private:
 	}
 };
 
+/**
+ * This class computes water simulation.
+ */
 class b3Water
 {
 	b3_f64    m_Factor;
@@ -273,23 +411,43 @@ public:
 	b3_f64 b3ComputeWater(b3_vector *point, b3_f64 time);
 };
 
+/**
+ * This class computes cloud simulation.
+ */
 class b3Clouds
 {
 	b3_f64    m_EarthRadiusSqr;
 	b3_f64    m_CloudRadiusSqr;
 
 public:
-	b3_vector m_Anim;     // x/y are wind direction, z is time scaling
-	b3_vector m_PosScale;
-	b3_u32    m_Flags;
-	b3_f32    m_EarthRadius;
-	b3_f32    m_CloudHeight;
-	b3_f32    m_Scaling;
-	b3_f32    m_Sharpness;
+	b3_vector m_Anim;        //!< x/y are wind direction, z is time scaling.
+	b3_vector m_PosScale;    //!< Position scaling.
+	b3_u32    m_Flags;       //!< Some flags.
+	b3_f32    m_EarthRadius; //!< The plant radius to use.
+	b3_f32    m_CloudHeight; //!< The height of the clouds.
+	b3_f32    m_Scaling;     //!< Scaling.
+	b3_f32    m_Sharpness;   //!< The sharpness of the cloud border.
 
 public:
-	       b3Clouds();
+	/**
+	 * This constructor initializes this instance with default values.
+	 */
+	b3Clouds();
+
+	/**
+	 * This method precomputes some calculation invariant values.
+	 */
 	void   b3PrepareClouds();
+
+	/**
+	 * This method returns a cloud value in range [0..1]. The value 0 means
+	 * clear sky and 1 means full cloud.
+	 *
+	 * @param ray The ray containing the view direction.
+	 * @param r The distance to the cloud.
+	 * @param time The time point for animation.
+	 * @return The cloudiness.
+	 */
 	b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time);
 };
 

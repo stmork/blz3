@@ -141,7 +141,7 @@ public:
 	long       b3GetMode();
 
 	/**
-	 * This fills a <em>tm</em> struct with the values of this instance.
+	 * This fills a <code>tm</code> struct with the values of this instance.
 	 *
 	 * @param time_tm The tm structure to fill.
 	 * @return The given tm structure.
@@ -172,7 +172,7 @@ public:
 	void     operator=(const b3Date &date);
 
 	/**
-	 * This operator assigns a given date as <em>time_t</em> to this instance.
+	 * This operator assigns a given date as <code>time_t</code> to this instance.
 	 *
 	 * @param time_point The time value to assign.
 	 */
@@ -195,7 +195,7 @@ public:
 	b3Date   operator-(const b3Date &date);
 
 	/**
-	 * This operator returns the date of this instance as <em>time_t</em> value.
+	 * This operator returns the date of this instance as <code>time_t</code> value.
 	 *
 	 * @return The date as time_t.
 	 */

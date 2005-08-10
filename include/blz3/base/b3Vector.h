@@ -506,7 +506,7 @@ public:
 	}
 
  	/**
-	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
 	 *
 	 * @param a The first vector.
 	 * @param b The second vector.
@@ -523,7 +523,7 @@ public:
 	}
 
  	/**
-	 * This method computes the cross product from two vectors: <em>result = this x bVec</em>.
+	 * This method computes the cross product from two vectors: <code>result = this x bVec</code>.
 	 *
 	 * @param b The second vector the first vector is this instance.
 	 * @return The result as a new b3VectorTemplate instance.

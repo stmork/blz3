@@ -158,7 +158,7 @@ public:
 	}
 
 	/**
-	 * This method returns the fractional part of the division <em>a/b</em>.
+	 * This method returns the fractional part of the division <code>a/b</code>.
 	 *
 	 * \param a The dividend.
 	 * \param b The divisor.
