@@ -28,6 +28,8 @@
 #include "blz3/system/b3File.h"
 #include "blz3/system/b3Log.h"
 
+#include "b3TxTIFF.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -36,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/08/11 13:37:29  smork
+**	- Image cleanup (TIFF).
+**	- Documentation.
+**
 **	Revision 1.10  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.9  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -377,7 +383,7 @@ b3TIFF_Dir::b3TIFF_Dir(
 		}
 		if (tagTIFF == null)
 		{
-			throw b3Error();
+			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
 
 		tags.b3Append(tagTIFF);
@@ -616,7 +622,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 		}
 		else
 		{
-			throw b3Error();
+			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
 	}
 
@@ -880,7 +886,7 @@ b3TIFF::b3TIFF(struct HeaderTIFF *TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF),CLASS_TI
 		}
 		if (dirTIFF == null)
 		{
-			throw b3Error();
+			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
 		dirs.b3Append (dirTIFF);
 

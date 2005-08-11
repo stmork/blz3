@@ -28,6 +28,7 @@
 #include "blz3/base/b3Endian.h"
 
 #include "b3TxIFF.h"
+#include "b3TxTIFF.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,10 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2005/08/11 13:37:29  smork
+**	- Image cleanup (TIFF).
+**	- Documentation.
+**
 **	Revision 1.22  2005/08/11 13:16:11  smork
 **	- Documentation.
 **	- b3Tx cleanup.
-**
+**	
 **	Revision 1.21  2005/06/02 07:45:44  smork
 **	- Fixed RGB8 image saving in brt3.
 **	- Added PostScript image save.

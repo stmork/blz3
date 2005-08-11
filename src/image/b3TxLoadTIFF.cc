@@ -25,6 +25,8 @@
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3File.h"
 
+#include "b3TxTIFF.h"
+
 #include <math.h>
 
 /*************************************************************************
@@ -45,9 +47,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/08/11 13:37:29  smork
+**	- Image cleanup (TIFF).
+**	- Documentation.
+**
 **	Revision 1.16  2005/06/09 14:34:25  sm
 **	- Signature fix.
-**
+**	
 **	Revision 1.15  2005/06/09 12:10:27  smork
 **	- New TIFF lib 2.7.2
 **	

@@ -22,6 +22,9 @@
 #include <sys/resource.h>
 #include <sys/timeb.h>
 
+/**
+ * This class implements the system dependent version of b3TimeSpanAbstract.
+ */
 class b3TimeSpan : public b3TimeSpanAbstract
 {
 	struct rusage m_UsageTime;
@@ -32,15 +35,29 @@ public:
 	       void    b3Stop();
 };
 
+/**
+ * This class implements the system dependent version of b3TimeAbstract.
+ */
 class b3Time : public b3TimeAbstract
 {
 	struct timeval m_TimePoint;
 
 public:
-	        b3Time();
-			b3Time(b3Time &orig);
+	/**
+	 * This constructor initializes this instance with the actual time.
+	 */
+	b3Time();
+
+	/**
+	 * This copy constructor copies the time from another instance.
+	 */
+	b3Time(b3Time &orig);
 	void    b3Now();
 	b3_f64  b3GetTime();
+
+	/**
+	 * This assignment operator copies the time from another instance.
+	 */
 	b3Time &operator=(b3Time &orig);
 };
 
