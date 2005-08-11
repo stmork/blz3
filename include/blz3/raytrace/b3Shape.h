@@ -19,6 +19,7 @@
 #define B3_RAYTRACE_SHAPE_H
 
 #include "blz3/raytrace/b3Base.h"
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Condition.h"
 #include "blz3/raytrace/b3PickInfo.h"
 #include "blz3/raytrace/b3BaseTrans.h"

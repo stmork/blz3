@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
@@ -33,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2005/08/11 14:17:33  smork
+**      - Documentation.
+**      - Moved activation.
+**
 **      Revision 1.55  2005/07/13 19:26:12  sm
 **      - Convert error fixed.
 **

@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Condition.h"
 #include "blz3/raytrace/b3Scene.h"
 
@@ -32,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2005/08/11 14:17:33  smork
+**	- Documentation.
+**	- Moved activation.
+**
 **	Revision 1.26  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.25  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling

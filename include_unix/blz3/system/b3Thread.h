@@ -99,6 +99,9 @@ public:
 	b3_bool  b3Unlock();
 };
 
+/**
+ * This class implements a simple signalling event pipe..
+ */
 class b3Event : public b3EventAbstract
 {
 	         pthread_cond_t  event;

@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/raytrace/b3Scene.h"
 
@@ -32,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2005/08/11 14:17:33  smork
+**	- Documentation.
+**	- Moved activation.
+**
 **	Revision 1.44  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -41,7 +46,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.43  2004/10/17 09:08:41  sm
 **	- Moved camera setup into b3RenderContext.
 **	- Moved Antialiasing setup into b3RenderContext.

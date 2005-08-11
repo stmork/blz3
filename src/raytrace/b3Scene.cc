@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
 #include "b3ReadTGF.h"
@@ -33,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.75  2005/08/11 14:17:33  smork
+**	- Documentation.
+**	- Moved activation.
+**
 **	Revision 1.74  2005/01/14 08:51:05  smork
 **	- Corrected lens flares to be in front of any object.
 **	- Added start banner to divx tool.
-**
+**	
 **	Revision 1.73  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling

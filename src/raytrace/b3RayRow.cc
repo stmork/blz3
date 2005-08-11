@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Animation.h"
 #include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
@@ -36,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/08/11 14:17:33  smork
+**	- Documentation.
+**	- Moved activation.
+**
 **	Revision 1.16  2005/06/08 14:16:24  smork
 **	- Some more vectorization.
-**
+**	
 **	Revision 1.15  2005/01/14 13:10:44  smork
 **	- Optimized shading call inside b3RayRow handling.
 **	

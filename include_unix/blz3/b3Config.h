@@ -129,6 +129,10 @@ static inline int stricmp(const char *a,const char *b)
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
 #define B3_FILESTRINGLEN  (MAXNAMLEN)
 
+/**
+ * This class provides some runtime information. See the b3CPU class
+ * for some more information.
+ */
 class B3_PLUGIN b3Runtime : public b3CPU
 {
 	static b3Runtime   m_Runtime;
@@ -137,12 +141,60 @@ class B3_PLUGIN b3Runtime : public b3CPU
 	                   b3Runtime();
 
 public:
+	/**
+	 * This method swaps the 32 bits values the pointers specify.
+	 *
+	 * @param uPtr1 The first pointer.
+	 * @param uPtr2 The second pointer.
+	 */
 	static void        b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
+
+	/**
+	 * This method creates a beep.
+	 */
 	static void        b3Beep();
-	static b3_bool     b3Hostname(char *hostname,const b3_size buffer_size);
+
+	/**
+	 * This method returns the hostname.
+	 *
+	 * @param hostname The buffer which receives the hostname.
+	 * @param size     The buffer size.
+	 * @return True on success.
+	 */
+	static b3_bool     b3Hostname(char *hostname,const b3_size size);
+
+	/**
+	 * This method executes another program.
+	 *
+	 * @param command The command string to execute via shell.
+	 * @param async If the command should start asynchronously.
+	 * @return The execution result when executing synchronously.
+	 */
 	static b3_s32      b3Execute(const char *command, const b3_bool async);
+
+	/**
+	 * This method returns information about the used compiler.
+	 */
 	static char       *b3GetCompiler();
-	static void       *b3GetOpenGLExtension(const char *procedure_name);
+
+	/**
+	 * This method returns an OpenGL function pointer from the given procedure name.
+	 *
+	 * @param procedure The procedure name to solve.
+	 * @return The mapped procedure.
+	 */
+	static void       *b3GetOpenGLExtension(const char *procedure);
+
+	/**
+	 * This method parses the command line arguments.
+	 *
+	 * @param argc The number of arguments.
+	 * @param argv The arguments itself.
+	 * @param index The argument index to start parsing.
+	 * @param option The buffer which receives the option argument.
+	 * @param size The size of the option buffer.
+	 * @return The next index to process.
+	 */
 	static int         b3ParseOption(int argc, char *argv[], int index, char *option, size_t size);
 };
 
