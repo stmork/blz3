@@ -32,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/08/11 13:16:11  smork
+**	- Documentation.
+**	- b3Tx cleanup.
+**
 **	Revision 1.2  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -234,7 +238,7 @@ void b3Tx::b3GetColorMask(
 	b3_pkd_color  colorMask)
 {
 	b3_pkd_color *lPtr,bit;
-	b3_u08       *cPtr;
+	b3_u08       *bPtr;
 	b3_coord      x,y;
 	b3_index      xBytes,pos;
 	b3_u08        cache;
@@ -242,21 +246,21 @@ void b3Tx::b3GetColorMask(
 	switch (type)
 	{
 	case B3_TX_ILBM:
-		cPtr   = (b3_u08 *)data;
+		bPtr   = (b3_u08 *)data;
 		xBytes = TX_BWA(xSize);
 		for (y = 0;y < ySize;y++)
 		{
 			for (x = 0;x < xBytes;x++)
 			{
-				mask[x] = cPtr[x];
+				mask[x] = bPtr[x];
 			}
 			mask += BytesPerRow;
-			cPtr += xBytes;
+			bPtr += xBytes;
 		}
 		break;
 
 	case B3_TX_VGA:
-		cPtr = (b3_u08 *)data;
+		bPtr = (b3_u08 *)data;
 		for (y = 0;y < ySize;y++)
 		{
 			pos   =   0;
@@ -264,7 +268,7 @@ void b3Tx::b3GetColorMask(
 			cache =   0;
 			for (x = 0;x < xSize;x++)
 			{
-				if (palette[cPtr[x]] == colorMask)
+				if (palette[bPtr[x]] == colorMask)
 				{
 					cache |= bit;
 				}
@@ -278,7 +282,7 @@ void b3Tx::b3GetColorMask(
 			}
 			mask[pos]  = cache;
 			mask      += BytesPerRow;
-			cPtr      += xSize;
+			bPtr      += xSize;
 		}
 		break;
 

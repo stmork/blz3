@@ -39,13 +39,15 @@ struct b3_rect_info
 	b3_tx_type    dstType;
 	union
 	{
-		b3_u08       *cData;
+		b3_u08       *bData;
 		b3_pkd_color *lData;
+		b3_color     *cData;
 	}                  src;
 	union
 	{
-		b3_u08       *cData;
+		b3_u08       *bData;
 		b3_pkd_color *lData;
+		b3_color     *cData;
 	}                  dst;
 };
 
@@ -60,9 +62,13 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.24  2005/08/11 13:16:12  smork
+**	- Documentation.
+**	- b3Tx cleanup.
+**
 **	Revision 1.23  2005/08/10 18:45:10  sm
 **	- Documentation
-**
+**	
 **	Revision 1.22  2005/02/02 08:23:26  smork
 **	- Removed unnecessary malloc.h include.
 **	
@@ -573,7 +579,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
 	cIndex   =  RectInfo->cIndex;
-	src      =  RectInfo->src.cData;
+	src      =  RectInfo->src.bData;
 	yMin     =  RectInfo->yMin;
 	yMax     =  RectInfo->yMax;
 	xSrcSize =  RectInfo->xSizeSrc;
@@ -582,7 +588,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 	yDstSize =  RectInfo->ySizeDst;
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes =  RectInfo->xSizeDst;
-	cDst     = &RectInfo->dst.cData[yMin * dstBytes];
+	cDst     = &RectInfo->dst.bData[yMin * dstBytes];
 	lDst     = &RectInfo->dst.lData[yMin * dstBytes];
 	pal      =  RectInfo->new_palette;
 
@@ -735,8 +741,8 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
-	dst      = RectInfo->dst.cData;
-	src      = RectInfo->src.cData;
+	dst      = RectInfo->dst.bData;
+	src      = RectInfo->src.bData;
 	yMin     = RectInfo->yMin;
 	yMax     = RectInfo->yMax;
 	xSize    = RectInfo->xSizeDst;
@@ -802,7 +808,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 
 #endif
 
-void b3Tx::b3MonoScaleToGrey(
+void b3Tx::b3ScaleFilteredFromBW(
 	b3Tx     *Tx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -862,8 +868,8 @@ void b3Tx::b3MonoScaleToGrey(
 		RectInfo[i].dstType     = type;
 		RectInfo[i].rIndex      = rIndex;
 		RectInfo[i].cIndex      = cIndex;
-		RectInfo[i].src.cData   = Tx->data;
-		RectInfo[i].dst.cData   = data;
+		RectInfo[i].src.bData   = Tx->data;
+		RectInfo[i].dst.bData   = data;
 		RectInfo[i].xSizeSrc    = Tx->xSize;
 		RectInfo[i].xSizeDst    = xSize;
 		RectInfo[i].ySizeSrc    = Tx->ySize;
@@ -1170,7 +1176,7 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 	return 0;
 }
 
-void b3Tx::b3ColorScaleToGrey(
+void b3Tx::b3ScaleFilteredFromColor(
 	b3Tx     *srcTx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -1445,7 +1451,7 @@ void b3Tx::b3VGAScaleToRGB8(
 	}
 }
 
-void b3Tx::b3VGAScaleToGrey(
+void b3Tx::b3ScaleFilteredFromVGA(
 	b3Tx     *srcTx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -1502,15 +1508,15 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 	switch (srcTx->depth)
 	{
 	case 1 :
-		b3MonoScaleToGrey (srcTx,rIndex,cIndex);
+		b3ScaleFilteredFromBW (srcTx,rIndex,cIndex);
 		break;
 
 	case 24:
-		b3ColorScaleToGrey(srcTx,rIndex,cIndex);
+		b3ScaleFilteredFromColor(srcTx,rIndex,cIndex);
 		break;
 
 	default :
-		b3VGAScaleToGrey(srcTx,rIndex,cIndex);
+		b3ScaleFilteredFromVGA(srcTx,rIndex,cIndex);
 		break;
 	}
 	b3PrintT("ScaleToGrey: stop");
@@ -1542,8 +1548,8 @@ unsigned int b3Tx::b3ScaleBW2BW(void *ptr)
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
-	dst      = RectInfo->dst.cData;
-	src      = RectInfo->src.cData;
+	dst      = RectInfo->dst.bData;
+	src      = RectInfo->src.bData;
 	yMin     = RectInfo->yMin;
 	yMax     = RectInfo->yMax;
 	xSize    = RectInfo->xSizeDst;
@@ -1586,7 +1592,7 @@ unsigned int b3Tx::b3ScaleBW2BW(void *ptr)
 	return 0;
 }
 
-void b3Tx::b3MonoScale(
+void b3Tx::b3ScaleUnfilteredFromBW(
 	b3Tx     *Tx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -1596,7 +1602,7 @@ void b3Tx::b3MonoScale(
 	b3_index      value,index=0;
 	b3_pkd_color  pal[2];
 	b3_pkd_color *tx_pal,color;
-	b3_u08       *cData,bit;
+	b3_u08       *bData,bit;
 	b3_pkd_color *lData;
 	b3_f64        r,g,b;
 	b3_rect_info  RectInfo[CPU_MAX];
@@ -1613,7 +1619,7 @@ void b3Tx::b3MonoScale(
 	NumCPUs = 1;
 #endif
 
-	cData  = (b3_u08 *)Tx->b3GetData();
+	bData  = (b3_u08 *)Tx->b3GetData();
 	tx_pal = Tx->b3GetPalette();
 
 	color  = tx_pal[0];
@@ -1639,7 +1645,7 @@ void b3Tx::b3MonoScale(
 			{
 				rx    = rIndex[x];
 				bit   = m_Bits[rx & 7];
-				value = pal[cData[num + (rx >> 3)] & bit ? 1 : 0];
+				value = pal[bData[num + (rx >> 3)] & bit ? 1 : 0];
 
 				data[index++] = (b3_u08)value;
 			}
@@ -1657,7 +1663,7 @@ void b3Tx::b3MonoScale(
 				rx  = rIndex[x];
 				bit = m_Bits[rx & 7];
 
-				value = tx_pal[cData[num + (rx >> 3)] & bit ? 1 : 0];
+				value = tx_pal[bData[num + (rx >> 3)] & bit ? 1 : 0];
 
 				lData[index++] = value;
 			}
@@ -1679,8 +1685,8 @@ void b3Tx::b3MonoScale(
 		{
 			RectInfo[i].rIndex    = rIndex;
 			RectInfo[i].cIndex    = cIndex;
-			RectInfo[i].src.cData = Tx->data;
-			RectInfo[i].dst.cData = data;
+			RectInfo[i].src.bData = Tx->data;
+			RectInfo[i].dst.bData = data;
 			RectInfo[i].xSizeSrc  = Tx->xSize;
 			RectInfo[i].xSizeDst  = xSize;
 			RectInfo[i].ySizeSrc  = Tx->ySize;
@@ -1713,7 +1719,7 @@ void b3Tx::b3MonoScale(
 	}
 }
 
-void b3Tx::b3ColorScale(
+void b3Tx::b3ScaleUnfilteredFromColor(
 	b3Tx     *Tx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -1735,7 +1741,7 @@ void b3Tx::b3ColorScale(
 	}
 }
 
-void b3Tx::b3VGAScale(
+void b3Tx::b3ScaleUnfilteredFromVGA(
 	b3Tx     *Tx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -1818,7 +1824,7 @@ b3_index b3Tx::b3ILBMPlaneValue (
 	return PlaneValue;
 }
 
-void b3Tx::b3ILBMScale(
+void b3Tx::b3ScaleUnfilteredFromILBM(
 	b3Tx     *srcTx,
 	b3_count *rIndex,
 	b3_count *cIndex)
@@ -1892,21 +1898,21 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 	switch (srcTx->depth)
 	{
 	case 1:
-		b3MonoScale  (srcTx,rIndex,cIndex);
+		b3ScaleUnfilteredFromBW  (srcTx,rIndex,cIndex);
 		break;
 
 	case 24:
-		b3ColorScale (srcTx,rIndex,cIndex);
+		b3ScaleUnfilteredFromColor (srcTx,rIndex,cIndex);
 		break;
 
 	default:
 		if (srcTx->type == B3_TX_VGA) 
 		{
-			b3VGAScale(srcTx,rIndex,cIndex);
+			b3ScaleUnfilteredFromVGA(srcTx,rIndex,cIndex);
 		}
 		else
 		{
-			b3ILBMScale(srcTx,rIndex,cIndex);
+			b3ScaleUnfilteredFromILBM(srcTx,rIndex,cIndex);
 		}
 		break;
 	}

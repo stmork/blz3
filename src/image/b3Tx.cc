@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2005/08/11 13:16:11  smork
+**	- Documentation.
+**	- b3Tx cleanup.
+**
 **	Revision 1.32  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.31  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
 **	
@@ -324,7 +328,6 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 		TIFFSetWarningHandler (b3TIFFWarnHandler);
 		m_ErrorHandlerInstalled = true;
 	}
-	measure.b3Init(0,0,0);
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx instantiated (%p)\n",this);
 #endif
@@ -381,7 +384,7 @@ b3_bool b3Tx::b3AllocTx(
 		pSize = 1 << d;
 		type  = B3_TX_VGA;
 	}
-	if (d == 16)
+	if ((d == 12) || (d == 16))
 	{
 		dSize = (x * y) * sizeof(b3_u16);
 		type  = B3_TX_RGB4;
@@ -390,6 +393,11 @@ b3_bool b3Tx::b3AllocTx(
 	{
 		dSize = (x * y) * sizeof(b3_pkd_color);
 		type  = B3_TX_RGB8;
+	}
+	if ((d == 96) || (d == 128))
+	{
+		dSize = (x * y) * sizeof(b3_pkd_color);
+		type  = B3_TX_FLOAT;
 	}
 
 	if (type == B3_TX_UNDEFINED)
@@ -442,7 +450,6 @@ b3_bool b3Tx::b3AllocTx(
 		}
 	}
 	FileType  = FT_UNKNOWN;
-	measure.b3Init(xSize,ySize,depth);
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits)\n",
 		xSize,ySize,depth);
 	return true;
@@ -618,18 +625,18 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 		{
 			if (srcTx->type == B3_TX_ILBM)
 			{
-				b3_u08       *cPtr;
+				b3_u08       *bPtr;
 				b3_pkd_color *lPtr;
 				b3_coord      y;
 
 				switch (type)
 				{
 				case B3_TX_VGA:
-					cPtr = (b3_u08 *)data;
+					bPtr = (b3_u08 *)data;
 					for (y = 0;y < ySize;y++)
 					{
-						srcTx->b3CopyILBMtoVGA(cPtr,y);
-						cPtr += xSize;
+						srcTx->b3CopyILBMtoVGA(bPtr,y);
+						bPtr += xSize;
 					}
 					break;
 
@@ -677,7 +684,6 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 	yDPI        = srcTx->yDPI;
 	whiteRatio  = srcTx->whiteRatio;
 	ScanLines   = srcTx->ScanLines;
-	measure     = srcTx->measure;
 }
 
 void *b3Tx::b3GetData()
@@ -700,11 +706,6 @@ void b3Tx::b3Name(const char *ImageName)
 	strlcpy (image_name,ImageName != null ? ImageName : "",sizeof(image_name));
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Name(%s)\n",
 		(const char *)image_name);
-}
-
-b3Measure *b3Tx::b3GetMeasure()
-{
-	return &measure;
 }
 
 b3_pkd_color *b3Tx::b3GetPalette()
@@ -864,42 +865,54 @@ inline b3_pkd_color b3Tx::b3VGAValue (
 
 b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 {
-	b3_u08       *cPtr,bit;
+	b3_u08       *bPtr,bit;
 	b3_u16       *sPtr;
 	b3_pkd_color *lPtr,result;
+	b3_color     *cPtr;
 	b3_count      i,xBytes;
 
 	switch (type)
 	{
 		case B3_TX_ILBM :
 			xBytes = TX_BWA(xSize);
-			cPtr   = (b3_u08 *)data;
-			cPtr  += ((y + 1) * xBytes * depth + (x >> 3));
+			bPtr   = (b3_u08 *)data;
+			bPtr  += ((y + 1) * xBytes * depth + (x >> 3));
 			result = 0;
 			bit    = m_Bits[x & 7];
 			for (i = 0;i < depth;i++)
 			{
-				cPtr    -= xBytes;
+				bPtr    -= xBytes;
 				result <<= 1;
-				if (*cPtr & bit)
+				if (*bPtr & bit)
 				{
 					result |= 1;
 				}
 			}
 
-			return result != 0;
+			// Check for first index.
+			return result == 0;
 
 		case B3_TX_RGB8	:
 			lPtr = (b3_pkd_color *)data;
-			return (lPtr[x + y * xSize] & 0x00ffffff) != 0;
+
+			// Check for alpha channel not equal to 0.
+			return (lPtr[x + y * xSize] & 0xff000000) != 0;
 
 		case B3_TX_RGB4	:
 			sPtr = (b3_u16 *)data;
-			return (sPtr[x + y * xSize] & 0x0fff) != 0;
+
+			// Check for alpha channel not equal to 0.
+			return (sPtr[x + y * xSize] & 0xf000) != 0;
 
 		case B3_TX_VGA	:
-			cPtr = (b3_u08 *)data;
-			return cPtr[x + y * xSize] != 0;
+			bPtr = (b3_u08 *)data;
+			
+			// Check for first index.
+			return bPtr[x + y * xSize] == 0;
+
+		case B3_TX_FLOAT :
+			cPtr = (b3_color *)data;
+			return cPtr[x + y * xSize].a > 0;
 
 		default:
 			// No image -> no hit -> always transparent...

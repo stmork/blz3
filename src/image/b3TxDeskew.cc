@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/image/b3Tx.h"
+#include "blz3/image/b3TxMeasure.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/08/11 13:16:11  smork
+**	- Documentation.
+**	- b3Tx cleanup.
+**
 **	Revision 1.3  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.2  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
 **	
@@ -88,10 +93,11 @@ void b3Tx::b3Deskew()
 
 void b3Tx::b3DeskewILBM()
 {
-	b3_index  xBytes,i;
-	b3_coord  x,y;
-	b3_u08   *cPtr;
-	b3_bool   isBlack;
+	b3TxMeasure  measure;
+	b3_index     xBytes,i;
+	b3_coord     x,y;
+	b3_u08      *bPtr;
+	b3_bool      isBlack;
 
 	if (!b3IsBW())
 	{
@@ -106,11 +112,11 @@ void b3Tx::b3DeskewILBM()
 		// Search for first 0-Bit from left to right
 		isBlack = true;
 		index   = measure.left[i].y * xBytes;
-		cPtr    = &data[index];
+		bPtr    = &data[index];
 		isBlack = true;
 		for (x = measure.left[i].x;(x < xSize) && (isBlack);x += 8)
 		{
-			if (cPtr[x >> 3] == 255)
+			if (bPtr[x >> 3] == 255)
 			{
 				isBlack = true;
 			}
@@ -119,7 +125,7 @@ void b3Tx::b3DeskewILBM()
 				b3_u08 byte;
 				unsigned long bit = 128;
 
-				for (byte = cPtr[x >> 3];byte & bit;bit = bit >> 1)
+				for (byte = bPtr[x >> 3];byte & bit;bit = bit >> 1)
 				{
 					x++;
 				}
@@ -132,15 +138,15 @@ void b3Tx::b3DeskewILBM()
 		// Search for first 0-Bit from right to left
 		isBlack = true;
 		index   = measure.right[i].y * xBytes;
-		cPtr    = &data[index];
+		bPtr    = &data[index];
 		for (x = xSize;x & 7;x++)
 		{
-			cPtr[x >> 3] |= (128 >> (x & 7));
+			bPtr[x >> 3] |= (128 >> (x & 7));
 		}
 		while ((x >= 0) && (isBlack))
 		{
 			x -= 8;
-			if (cPtr[x >> 3] == 255)
+			if (bPtr[x >> 3] == 255)
 			{
 				isBlack = true;
 			}
@@ -149,7 +155,7 @@ void b3Tx::b3DeskewILBM()
 				unsigned long bit = 1,byte;
 
 				x += 7;
-				for (byte = cPtr[x >> 3];byte & bit;bit = bit << 1)
+				for (byte = bPtr[x >> 3];byte & bit;bit = bit << 1)
 				{
 					x--;
 				}
@@ -160,20 +166,20 @@ void b3Tx::b3DeskewILBM()
 
 		// Search for first 0-Bit from top to bottom
 		index = measure.top[i].y * xBytes + (measure.top[i].x >> 3);
-		cPtr  = &data[index];
-		for (y = measure.top[i].y;(cPtr[0] & 128) && (y < ySize);y++)
+		bPtr  = &data[index];
+		for (y = measure.top[i].y;(bPtr[0] & 128) && (y < ySize);y++)
 		{
 			y++;
-			cPtr += xBytes;
+			bPtr += xBytes;
 		}
 		measure.top[i].y = y;
 
 		// Search for first 0-Bit from bottom to top
 		index = measure.bottom[i].y * xBytes + (measure.bottom[i].x >> 3);
-		cPtr  = &data[index];
-		for (y = measure.bottom[i].y;(cPtr[0] & 128) && (y >= 0);y--)
+		bPtr  = &data[index];
+		for (y = measure.bottom[i].y;(bPtr[0] & 128) && (y >= 0);y--)
 		{
-			cPtr -= xBytes;
+			bPtr -= xBytes;
 		}
 		measure.bottom[i].y = y;
 	}

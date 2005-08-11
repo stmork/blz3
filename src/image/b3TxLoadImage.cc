@@ -37,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2005/08/11 13:16:11  smork
+**	- Documentation.
+**	- b3Tx cleanup.
+**
 **	Revision 1.21  2005/06/02 07:45:44  smork
 **	- Fixed RGB8 image saving in brt3.
 **	- Added PostScript image save.
-**
+**	
 **	Revision 1.20  2005/05/14 12:27:05  sm
 **	- Corrected scanf format.
 **	
@@ -490,29 +494,31 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 	b3Path         ext;
 	b3_tx_filetype filetype;
 
-	ext.b3ExtractExt(filename);
-	filetype = b3GetFileType(ext);
-
-	switch(filetype)
+	if (b3IsLoaded())
 	{
-	case FT_JPEG:
-		return b3SaveJPEG(filename);
-	case FT_TIFF:
-		return b3SaveTIFF(filename);
-	case FT_TGA:
-		return b3SaveTGA(filename);
-	case FT_RGB8:
-		return b3SaveRGB8(filename);
-	case FT_PS:
-		return b3SavePS(filename);
+		ext.b3ExtractExt(filename);
+		filetype = b3GetFileType(ext);
 
-	case FT_UNKNOWN:
-		B3_THROW(b3TxException, B3_TX_UNKNOWN_FILETYPE);
+		switch(filetype)
+		{
+		case FT_JPEG:
+			return b3SaveJPEG(filename);
+		case FT_TIFF:
+			return b3SaveTIFF(filename);
+		case FT_TGA:
+			return b3SaveTGA(filename);
+		case FT_RGB8:
+			return b3SaveRGB8(filename);
+		case FT_PS:
+			return b3SavePS(filename);
 
-	default:
-		return B3_ERROR;
+		case FT_UNKNOWN:
+			B3_THROW(b3TxException, B3_TX_UNKNOWN_FILETYPE);
+
+		default:
+			return B3_ERROR;
+		}
 	}
 	
-	// Never reached
 	return B3_ERROR;
 }

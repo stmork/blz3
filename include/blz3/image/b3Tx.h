@@ -68,8 +68,8 @@
  */
 enum b3_tiff_endian
 {
-	TIFF_INTEL    = 0x4949,
-	TIFF_MOTOROLA = 0x4d4d
+	TIFF_INTEL    = 0x4949, // Intel little endian.
+	TIFF_MOTOROLA = 0x4d4d  // Motorola big endian.
 };
 
 /**
@@ -130,12 +130,12 @@ struct HeaderSGI
  */
 enum b3_tx_type
 {
-	B3_TX_UNDEFINED = -1,
-	B3_TX_ILBM      =  0, //!< BW image.
-	B3_TX_VGA       =  1, //!< Palette image.
-	B3_TX_RGB4      =  2, //!< Color channels in true color ARGB nibbles.
-	B3_TX_RGB8      =  3, //!< Color channels in true color AARRGGBB nibbles.
-	B3_TX_FLOAT     =  4  //!< Color channels in floating point true color ARGB.
+	B3_TX_UNDEFINED = -1, //!< Undefined or empty image.
+	B3_TX_ILBM      =  0, //!< BW image with 16 bit alignment for each scan line (b3_u16).
+	B3_TX_VGA       =  1, //!< Palette image with unsigned byte indices (b3_u08) and b3_pkd_color palette.
+	B3_TX_RGB4      =  2, //!< Color channels in true color ARGB nibbles (b3_u16).
+	B3_TX_RGB8      =  3, //!< Color channels in true color AARRGGBB nibbles (b3_pkd_color).
+	B3_TX_FLOAT     =  4  //!< Color channels in floating point true color ARGB (b3_color).
 };
 
 /*************************************************************************
@@ -149,30 +149,30 @@ enum b3_tx_type
  */
 enum b3_tx_filetype
 {
-	FT_UNKNOWN		=   0,
-	FT_PCX4,
-	FT_PCX8,
-	FT_ILBM,
-	FT_ILBM_HAM,
-	FT_ILBM_HAM8,
-	FT_ILBM_EHB,
-	FT_ILBM_24,
-	FT_RGB8,
-	FT_RGB4,
-	FT_MTV,
-	FT_YUV,
-	FT_TIFF,
-	FT_TGA,
-	FT_GIF,
-	FT_PPM6,
-	FT_BMP,
-	FT_SGI_RLE,
-	FT_PPM,
-	FT_PGM,
-	FT_PBM,
-	FT_JPEG,
-	FT_BMF,
-	FT_PS
+	FT_UNKNOWN		=   0,  //!< unknown file format.
+	FT_PCX4,                //!< PCX 16 colors.
+	FT_PCX8,                //!< PCX 256 colors.
+	FT_ILBM,                //!< IFF ILBM
+	FT_ILBM_HAM,            //!< IFF ILBM hold&modify 6 bit.
+	FT_ILBM_HAM8,           //!< IFF ILBM hold&modify 8 bit.
+	FT_ILBM_EHB,            //!< IFF ILBM extra halfbrite.
+	FT_ILBM_24,             //!< IFF ILBM true color.
+	FT_RGB8,                //!< Impluse true color 24 bit,
+	FT_RGB4,                //!< Impluse true color 12 bit.
+	FT_MTV,                 //!< MTV.
+	FT_YUV,                 //!< IFF ILBM YUV format.
+	FT_TIFF,                //!< Tagged Image File Format.
+	FT_TGA,                 //!< Targa true color.
+	FT_GIF,                 //!< Graphics Interchange Format.
+	FT_PPM6,                //!< Pixmap.
+	FT_BMP,                 //!< Microsoft bitmap.
+	FT_SGI_RLE,             //!< SGI RLE.
+	FT_PPM,                 //!< Portable pixmap.
+	FT_PGM,                 //!< Portable grey map.
+	FT_PBM,                 //!< Portable bitmap.
+	FT_JPEG,                //!< Joint Pictures Expert Group.
+	FT_BMF,                 //!< BMF format.
+	FT_PS                   //!< PostScript.
 };
 
 /**
@@ -180,9 +180,9 @@ enum b3_tx_filetype
  */
 enum b3_tx_threshold
 {
-	B3_THRESHOLD_WHITE_RATIO = 0,
-	B3_THRESHOLD_USE         = 1,
-	B3_THRESHOLD_EQUALIZE    = 2
+	B3_THRESHOLD_WHITE_RATIO = 0,  //!< Use white page ratio as separation limit.
+	B3_THRESHOLD_USE         = 1,  //!< Use custom threshold for separation.
+	B3_THRESHOLD_EQUALIZE    = 2   //!< Use histogramme equalization.
 };
 
 /*************************************************************************
@@ -196,17 +196,17 @@ enum b3_tx_threshold
  */
 enum b3_tx_error
 {
-	B3_TX_ERROR = -1,
-	B3_TX_OK    =  0,
-	B3_TX_MEMORY,
-	B3_TX_NOT_FOUND,
-	B3_TX_NOT_SAVED,
-	B3_TX_UNSUPP,
-	B3_TX_ERR_PACKING,
-	B3_TX_UNCOMPL,
-	B3_TX_ERR_HEADER,
-	B3_TX_UNKNOWN_FILETYPE,
-	B3_TX_UNKNOWN_DATATYPE
+	B3_TX_ERROR = -1,         //!< General image processing error.
+	B3_TX_OK    =  0,         //!< Image OK.
+	B3_TX_MEMORY,             //!< Out of memory error.
+	B3_TX_NOT_FOUND,          //!< File not found.
+	B3_TX_NOT_SAVED,          //!< Disk full.
+	B3_TX_UNSUPP,             //!< Unsupported sub file format.
+	B3_TX_ERR_PACKING,        //!< Unknown packing algorithm.
+	B3_TX_UNCOMPL,            //!< Uncomplete image file.
+	B3_TX_ERR_HEADER,         //!< File header format error.
+	B3_TX_UNKNOWN_FILETYPE,   //!< Unknown file type.
+	B3_TX_UNKNOWN_DATATYPE    //!< Unknown image representation.
 };
 
 typedef b3Exception<b3_tx_error,'TX'> b3TxException;
@@ -254,43 +254,6 @@ public:
 	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
 };
 
-/**
- * This class handles one image reference point.
- */
-class B3_PLUGIN b3TxPoint
-{
-public:
-	b3_coord x,y;
-
-	b3TxPoint(b3_coord new_x = 0,b3_coord new_y = 0)
-	{
-		x = new_x;
-		y = new_y;
-	}
-};
-
-#define B3_MEASURE_EDGE 3
-
-/**
- * This class is for image measurement.
- */
-class B3_PLUGIN b3Measure
-{
-public:
-	b3_bool   valid;
-	b3TxPoint left[B3_MEASURE_EDGE];
-	b3TxPoint top[B3_MEASURE_EDGE];
-	b3TxPoint right[B3_MEASURE_EDGE];
-	b3TxPoint bottom[B3_MEASURE_EDGE];
-
-	b3TxPoint points[(B3_MEASURE_EDGE - 1) * 4];
-	b3_count  num;
-public:
-	     b3Measure();
-	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
-	void b3Print();
-};
-
 #define CLASS_TEXTURE       0x20000000
 #define TYPE_USUAL          0x00000001
 #define USUAL_TEXTURE       (CLASS_TEXTURE|TYPE_USUAL)
@@ -323,33 +286,155 @@ private:
 	b3_f64            whiteRatio;
 	b3Path            image_name;
 	b3ColorIndices   *grid;
-	b3Measure         measure;
 
 public:
-	b3_res         xSize;       //!< The image width;
-	b3_res         ySize;       //!< The image height;
-	b3_res         depth;       //!< The image depth in bit;
-	b3_count       ScanLines;
-	b3_res         xDPI;        //!< The pixel density in x direction.
-	b3_res         yDPI;        //!< The pixel density in y direction.
+	b3_res            xSize;       //!< The image width;
+	b3_res            ySize;       //!< The image height;
+	b3_res            depth;       //!< The image depth in bit;
+	b3_count          ScanLines;   //!< Number of row to process during scanning.
+	b3_res            xDPI;        //!< The pixel density in x direction.
+	b3_res            yDPI;        //!< The pixel density in y direction.
 
-	               b3Tx           ();
-	               b3Tx           (b3Tx *srcTx);
-	              ~b3Tx           ();
+	/**
+	 * This constructor initializes an empty image.
+	 */
+	b3Tx();
 
+	/**
+	 * This constructor copies the given image as initialization.
+	 *
+	 * @param srcTx The source image.
+	 * @see b3CopyTx()
+	 */
+	b3Tx(b3Tx *srcTx);
+
+	/**
+	 * This destructor deinitializes the image.
+	 */
+	~b3Tx           ();
+
+	/**
+	 * This method copies the data of the given source image.
+	 *
+	 * @param srcTx The source image to copy.
+	 */
 	void           b3Copy         (b3Tx *srcTx);
+
+	/**
+	 * This method allocates memory for bitmap data or palette data depending
+	 * on the given image format specifications. Depending on the bit depth
+	 * the format is chosen automatically:
+	 *
+	 * - Bit depth 0: The memory is freed with b3FreeTx().
+	 * - Bit depth 1: The image is of type B3_TX_ILBM.
+	 * - Bit depth 2-8: The image is palattized and of type B3_TX_VGA.
+	 * - Bit depth 12 or 16: The image is of type B3_TX_RGB4.
+	 * - Bit depth 24 or 32: The image is of type B3_TX_RGB8.
+	 * - Bit depth 96 or 128: The image is of type B3_TX_FLOAT.
+	 *
+	 * There is now image data allocated in all other cases.
+	 *
+	 * @param xSize The new image width.
+	 * @param ySize The new image height.
+	 * @param depth The new image bit depth.
+	 * @return True of success.
+	 * @see b3_tx_type
+	 */
 	b3_bool        b3AllocTx      (b3_res xSize,b3_res ySize,b3_res depth);
+
+	/**
+	 * This method frees all image data.
+	 */
 	void           b3FreeTx       ();
+
+	/**
+	 * This method returns the palette data if any.
+	 *
+	 * @return The palette data.
+	 */
 	b3_pkd_color  *b3GetPalette   ();
+
+	/**
+	 * This method sets the given color palette. The bit depth is adjusted according
+	 * to the palette entry count. If the new bit depth is 1 the type is B3_TX_ILBM otherwise
+	 * the type is B3_TX_VGA. The old palette is freed.
+	 *
+	 * @note The maximal supported palette size is 256 with bit depth 8. This is due to the
+	 *       fact that b3_u08 indices were used.
+	 *
+	 * @param entries The new palette.
+	 * @param numEntries The palette size.
+	 */
 	void           b3SetPalette   (b3_pkd_color *entries,b3_count numEntries);
+
+	/**
+	 * This method returns the image data.
+	 *
+	 * @return The image data.
+	 */
 	void          *b3GetData      ();
+
+	/**
+	 * This method sets the new image data in the given resolution. The old data is
+	 * deallocated.
+	 *
+	 * @param newData The new image data.
+	 * @param newXSize The new image width.
+	 * @param newYSize The new image height.
+	 */
 	void           b3SetData      (void *newData,b3_res newXSize,b3_res newYSize);
-	b3Measure     *b3GetMeasure   ();
+
+	/**
+	 * This method returns the file name from which the image was loaded. If the
+	 * image data was allocated via the b3AllocTx() method this file name is empty.
+	 *
+	 * @return The file name of the image.
+	 */
 	const char    *b3Name         ();
+
+	/**
+	 * This method sets a new file name.
+	 *
+	 * @param ImageName The new file name of the image.
+	 */
 	void           b3Name         (const char *ImageName);
+
+	/**
+	 * This method returns the pixel density.
+	 *
+	 * @param xDPI The resulting horizontal pixel density.
+	 * @param yDPI The resulting vertical pixel density.
+	 */
 	void           b3GetResolution(b3_res &xDPI,b3_res &yDPI);
+
+	/**
+	 * This method fills a given row buffer with the true color of the
+	 * given y coordinate. The row buffer must have enough entries for
+	 * retrieving a full scane line with the width of the image.
+	 *
+	 * @param row The row buffer.
+	 * @param y The y coordinate of the row.
+	 */
 	void           b3GetRow       (b3_pkd_color *row,b3_coord  y);
+
+	/** 
+	 * This method returns a color value at the given coordinates.
+	 *
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @return The resulting color as b3_pkd_color value.
+	 */
 	b3_pkd_color   b3GetValue     (b3_coord x,b3_coord  y);
+
+	/**
+	 * This method returns true if the given pixel is transparent.
+	 * In case B3_TX_ILBM and B3_TX_VGA the color index must be 0. In
+	 * all other cases there must be an alpha channel greater than 0.
+	 *
+	 * @param x The x coordinate to test.
+	 * @param y The y coordinate to test.
+	 * @return True if the pixel is transparent.
+	 */
 	b3_bool        b3IsBackground (b3_coord x,b3_coord  y);
 
 	/**
@@ -388,10 +473,32 @@ public:
 	b3_bool        b3IsGreyPalette();
 
 	// b3TxBlit.cc
+	/**
+	 * This method creates an image mask from a specified key color. If the image
+	 * type is B3_TX_ILBM the image data itself is used. In all other cases the 
+	 * color mask must be equal to the pixel value to set the mask bit to one.
+	 *
+	 * @param mask The resulting mask buffer.
+	 * @param BytesPerRow The number of bytes per row in the mask buffer.
+	 * @param colorMask The color key.
+	 */
 	void           b3GetColorMask(
 		b3_u08       *mask,
 		b3_count      BytesPerRow,
 		b3_pkd_color  colorMask);
+
+	/**
+	 * This method blits an image area from the source image into this image. The
+	 * destination type must be of type B3_TX_RGB8.
+	 *
+	 * @param srcTx   The source image.
+	 * @param xDstOff The x image offset in the destination image.
+	 * @param yDstOff The y image offset in the destination image.
+	 * @param xMax    The image width to blit.
+	 * @param yMax    The image height to blit.
+	 * @param xSrcOff The x image offset in the source image.
+	 * @param ySrcOff The y image offset in the source image.
+	 */
 	void           b3Blit       (
 		b3Tx     *srcTx,
 		b3_coord  xDstOff,  b3_coord yDstOff,
@@ -399,7 +506,22 @@ public:
 		b3_coord  xSrcOff=0,b3_coord ySrcOff=0);
 
 	// b3TxImage.cc
+	/**
+	 * This method reduces the black components of a B/W image. At the right black
+	 * to white border the last black pixel is converted into a white one until
+	 * there is only one pixel left.
+	 *
+	 * @note This method works only on B3_TX_ILBM images.
+	 *
+	 * @param shrink The iteration count.
+	 */
 	void           b3Shrink     (b3_count shrink=1);
+
+	/**
+	 * This method removes any black border on the left and right side of the image.
+	 *
+	 * @note This method works only on B3_TX_ILBM images.
+	 */
 	void           b3RemoveBlackBorder();
 
 	/**
@@ -421,52 +543,368 @@ public:
 	 * This method turns right the image by 90 degrees.
 	 */
 	void           b3TurnRight  ();
+
+	/**
+	 * This method computes devignette on an given image. If the source image
+	 * pointer is null this image instance is assumed. The 
+	 *
+	 * @param xPos The x center position to devignette.
+	 * @param yPos The y center position to devignette.
+	 * @param scale The scale factor for the radius.
+	 * @param sigma The sigma value of the Gauss bell.
+	 * @param niveau The general niveau to subtract.
+	 * @param slope The left to right slope to form.
+	 * @param srcTx The source image.
+	 * @return True on success.
+	 */
 	b3_bool        b3TxGauss    (
 		b3_coord xPos,b3_coord yPos,
 		b3_f64   scale,b3_f64 sigma,b3_f64 niveau,b3_f64 slope,
 		b3Tx        *srcTx = null);
+
+	/**
+	 * This method filters each color component seperately. If the source
+	 * image pointer is null this image is taken as source.
+	 *
+	 * @param redFilter The red filter value.
+	 * @param greenFilter The green filter value.
+	 * @param blueFilter The blue filter value.
+	 * @param srcTx The source image.
+	 * @return True on success.
+	 */
 	b3_bool        b3TxColorFilter(
-		b3_f64         red_filter,b3_f64 green_filter,b3_f64 blue_filter,
+		b3_f64       redFilter,
+		b3_f64       greenFilter,
+		b3_f64       blueFilter,
 		b3Tx        *srcTx = null);
+
+	/**
+	 * This method controls brightness, constrast and gamma of the given source
+	 * image. If the source image pointer is null this image instance is assumed.
+	 *
+	 * @param highlight The upper bound
+	 * @param shadow The lower bound
+	 * @param gamma the gamma curve between the bound values.
+	 * @param srcTx The source image.
+	 * @return True on success.
+	 */
 	b3_bool        b3TxContrast(
-		b3_f64         highlight,b3_f64 shadow,b3_f64 gamma,
+		b3_f64        highlight,
+		b3_f64        shadow,
+		b3_f64        gamma,
 		b3Tx        *srcTx = null);
+
+	/**
+	 * This method converts the three color channels seperately using the source
+	 * channel as index for lookup in the appropriate lookup table.
+	 * If the source image pointer is null this image instance is assumed.
+	 *
+	 * @param rTable Red lookup table.
+	 * @param gTable Green lookup table.
+	 * @param bTable Blue lookup table.
+	 * @param srcTx The source image.
+	 * @return True on success.
+	 * @bug This method is only implemented for B3_TX_RGB8 images as source and
+	 *      destination. No type checking is performed yet.
+	 */
 	b3_bool        b3TxTransformTable(
 		b3_pkd_color *rTable,
 		b3_pkd_color *gTable,
 		b3_pkd_color *bTable,
 		b3Tx         *srcTx = null);
+
+	/**
+	 * This method converts the source image into a palettized destination image.
+	 * The source image must be a true color image. Both images must have the same
+	 * resolution. The destination image must be a palettized image with an initialized
+	 * palette. All true color pixel values from the source image are converted into
+	 * the best fitting palette index entries in the destination image.
+	 *
+	 * @param src The source image.
+	 * @return True on successful reduce operation.
+	 */
 	b3_bool        b3TxReduce(b3Tx *src);
 
 	// b3TxHist.cc
+	/**
+	 * This method computes a complete histogramme of the image. This 
+	 * method works only on images of type B3_TX_ILBM, B3_TX_VGA and
+	 * B3_TX_RGB8.
+	 *
+	 * @throws b3TxException on out of memory.
+	 * @return True on success.
+	 */
 	b3_bool        b3Histogramme();
+
+	/**
+	 * This method initializes the histogramme. 
+	 *
+	 * @return True on success.
+	 */
 	b3_bool        b3StartHist  ();
+
+	/**
+	 * This method closes the histogramme counting.
+	 */
 	void           b3EndHist    ();
+
+	/**
+	 * This method computes the history for the given image area. This 
+	 * method works only on images of type B3_TX_ILBM, B3_TX_VGA and
+	 * B3_TX_RGB8.
+	 *
+	 * @param xStart The lower x coordinate.
+	 * @param yStart The lower y coordinete.
+	 * @param xStop The upper x coordinate.
+	 * @param yStop The upper y coordinate.
+	 * @return True on success.
+	 */
 	b3_bool        b3AddHist    (
 		b3_coord xStart,b3_coord yStart,
 		b3_coord xStop, b3_coord yStop);
+
+	/**
+	 * This method returns true if most of the image is white. The ratio is given
+	 * with the b3SetWhiteRatio() method.
+	 *
+	 * @return True if the image is mostly white.
+	 * @see b3SetWhiteRatio().
+	 */
 	b3_bool        b3IsWhite    ();
+	
+	/**
+	 * This method sets the white level for white iamge computation. This
+	 * level is compared against the quotient of the black parts of the
+	 * image and the whole pixel count.
+	 *
+	 * @param newRatio The new white level.
+	 * @see b3IsWhite().
+	 */
 	void           b3SetWhiteRatio(b3_f64 newRatio);
-	b3_bool        b3GetHistogramme  (b3_count *hist_buffer,b3_count &entries);
+
+	/**
+	 * This method returns the histogramme data. The data is computed via b3Histogramme() or
+	 * b3AddHistogramme() methods.
+	 *
+	 * @param buffer  The resulting histogramme buffer.
+	 * @param entries The resulting number of histogramme entries.
+	 * @return True on success.
+	 */
+	b3_bool        b3GetHistogramme  (b3_count *buffer, b3_count &entries);
+
+	/**
+	 * This method transforms the image to a B/W image. The given threshold
+	 * divides the index space into the black and white half.
+	 *
+	 * @param threshold The separation threshold.
+	 * @return True on success.
+	 */
 	b3_bool        b3TransToBW       (b3_index  threshold=128);
+
+	/**
+	 * This method transforms a given source image into a B/W image using a specified
+	 * transformation mode. If the mode is B3_THRESHOLD_WHITE_PAGE the white page
+	 * ratio set via the b3SetWhiteRatio() method is used to separate.  If
+	 * B3_THRESHOLD_USE is used as mode the given ratio is used as custom value.
+	 * IfB3_THRESHOLD_EQUALIZE is used the separation level is determined via the
+	 * internal histogramme where as much black pixel exist as white pixel.
+	 *
+	 * @param srcTx The source image.
+	 * @param ratio The relative separation level.
+	 * @param mode The separation mode.
+	 * @return True on success.
+	 * @see b3_tx_threshold.
+	 */
 	b3_bool        b3TransToBW       (b3Tx *srcTx,
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
+
+	/**
+	 * This method transforms a this image into a B/W image using a specified
+	 * transformation mode. If the mode is B3_THRESHOLD_WHITE_PAGE the white page
+	 * ratio set via the b3SetWhiteRatio() method is used to separate.  If
+	 * B3_THRESHOLD_USE is used as mode the given ratio is used as custom value.
+	 * IfB3_THRESHOLD_EQUALIZE is used the separation level is determined via the
+	 * internal histogramme where as much black pixel exist as white pixel.
+	 *
+	 * @param ratio The relative separation level.
+	 * @param mode The separation mode.
+	 * @return True on success.
+	 * @see b3_tx_threshold.
+	 */
 	b3_bool        b3TransToBW       (
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
+
+	/**
+	 * This method converts the required ratio and threshold mode into a direct
+	 * color index. Values below this threshold index are black the other are
+	 * white.
+	 *
+	 * @note The threshold ratio and the resulting color index are not the same!
+	 * @param ratio The relative separation level.
+	 * @param mode The separation mode.
+	 * @return The computed color index as threshold.
+	 */
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
+	/**
+	 * This method determines the file type depending on the given extension.
+	 *
+	 * @param extension The image file extension.
+	 * @return The resulting file type.
+	 * @see b3_tx_filetype
+	 */
 	static       b3_tx_filetype  b3GetFileType(const char *extension);
+
+	/**
+	 * This method returns the image file extension depending on the given file type.
+	 *
+	 * @param type The file type.
+	 * @return The resulting image file extension
+	 * @see b3_tx_filetype
+	 */
 	static const char           *b3GetExt(b3_tx_filetype type);
-	       const char           *b3GetExt();
-	       b3_result             b3LoadImage(const char *ImageName,b3_bool throw_exception = false);
-	       b3_result             b3LoadImage(b3_u08 *buffer,b3_size size);
-	       b3_result             b3SaveImage(const char *filename);
+
+	/**
+	 * This method returns the image file extension depending on the images file name.
+	 *
+	 * @return The resulting image file extension
+	 * @see b3_tx_filetype
+	 */
+	const char                  *b3GetExt();
+
+	/**
+	 * This method loads an image from the given image file. The file type is determined
+	 * automatically.
+	 *
+	 * @param ImageName The file name of the image.
+	 * @param throwException Flags if an exception should be thrown on error.
+	 * @return The result code if no exception is thrown anyway.
+	 * @see b3_result.
+	 */
+	b3_result                    b3LoadImage(const char *ImageName,b3_bool throwException = false);
+
+	/**
+	 * This method loads an image from the given buffer filled with image file data.
+	 *
+	 * @param buffer The buffer with the image file data.
+	 * @param size The size of the buffer.
+	 * @return The result code of image parsing.
+	 * @see b3_result.
+	 */
+	b3_result                    b3LoadImage(b3_u08 *buffer,b3_size size);
+
+	/**
+	 * This method saves the image to the given file name. The file type is determined from
+	 * the file name. The method returns an error if:
+	 *
+	 * - The image is empty.
+	 * - The extension shows an unsupported file type.
+	 * - A file IO error occured.
+	 *
+	 * @param filename The image file name.
+	 * @return The result code of image saving.
+	 * @see b3_result.
+	 */
+	b3_result                    b3SaveImage(const char *filename);
 
 	// b3TxScale.cc
-	void           b3TransToGrey();
-	void           b3ScaleToGrey(b3Tx *srcTx);
-	void           b3Scale      (b3Tx *srcTx);
+	/**
+	 * This method transforms the image to a grey image.
+	 */
+	void                         b3TransToGrey();
 
+	/**
+	 * This method scales the given source image to the dimension of this image.
+	 * The image is filtered if the destination size is smaller than the source size.
+	 * It is possible to enlarge in one direction and to make smaller in the other.
+	 * The destination size and format must be initialized in this instance.
+	 *
+	 * @param srcTx The source image.
+	 */
+	void                         b3ScaleToGrey(b3Tx *srcTx);
+
+	/**
+	 * This method samples the given source image to the dimension of this image.
+	 * It is possible to enlarge in one direction and to make smaller in the other.
+	 * The destination size and format must be initialized in this instance.
+	 *
+	 * @param srcTx The source image.
+	 */
+	void                         b3Scale      (b3Tx *srcTx);
+
+	// b3TxMirror.cc
+	/**
+	 * This method mirrors the image horizontally. The image is flipped
+	 * along the y axis in the middle of the image.
+	 */
+	void                         b3MirrorHorizontal();
+
+	/**
+	 * This method mirrors the image vertically. The image is flipped
+	 * along the x axis in the middle of the image.
+	 */
+	void                         b3MirrorVertical();
+
+	// b3TxDeskew.cc
+	/**
+	 * This method deskews the B/W image.
+	 *
+	 * @warning This method is not implemented yet.
+	 */
+	void                         b3Deskew     ();
+
+	// b3TxSaveTIFF.cc, b3TxLoadTIFF.cc
+
+	/**
+	 * This method saves the image as TIFF file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result      b3SaveTIFF (const char *ImageName);
+
+	// b3TxSaveXXX.cc
+
+	/**
+	 * This method saves the image as JPEG file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @param quality The JPEG quality level.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = B3_JPG_QUALITY);
+
+	/**
+	 * This method saves the image as PostScript file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result      b3SavePS   (const char *ImageName);
+
+	/**
+	 * This method saves the image as RGB8 file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result      b3SaveRGB8 (const char *ImageName);
+
+	/**
+	 * This method saves the image as TGA file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result      b3SaveTGA  (const char *ImageName);
+
+private:
+	// b3TxScale.cc
 	static unsigned int b3ScaleBW2BW(void *ptr);
 	static unsigned int b3ScaleBW2Grey(void *ptr);
 	static unsigned int b3RGB8ScaleToRGB8(void *ptr);
@@ -487,26 +925,6 @@ public:
 		b3_count *TxRowCells,
 		b3_count *rIndex, b3_u08       *src, b3_res xDstSize);
 
-	// b3TxMirror.cc
-	void           b3MirrorHorizontal();
-	void           b3MirrorVertical();
-
-	// b3TxDeskew.cc
-	void           b3Deskew     ();
-
-	// b3TxSaveTIFF.cc, b3TxLoadTIFF.cc
-	b3_result      b3SaveTIFF (const char *ImageName);
-	b3_result      b3LoadTIFF (const char *ImageName);
-	b3_result      b3LoadTIFF (const char *ImageName,
-		const b3_u08  *ImageBuffer,
-		const b3_size  BufferSize);
-
-	// b3TxSaveXXX.cc
-	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = B3_JPG_QUALITY);
-	b3_result      b3SavePS   (const char *ImageName);
-	b3_result      b3SaveRGB8 (const char *ImageName);
-	b3_result      b3SaveTGA  (const char *ImageName);
-
 private:
 	// b3TxTurn.cc
 	void           b3TurnLeftILBM();
@@ -521,16 +939,16 @@ private:
 	void           b3TurnRightRGB8();
 
 	// b3TxScale.cc
-	void           b3MonoScaleToGrey (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
-	void           b3VGAScaleToGrey  (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleFilteredFromBW (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleFilteredFromVGA  (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScaleToVGA   (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScaleToRGB8  (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
-	void           b3ColorScaleToGrey(b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleFilteredFromColor(b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 
-	void           b3MonoScale       (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
-	void           b3ILBMScale       (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
-	void           b3VGAScale        (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
-	void           b3ColorScale      (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleUnfilteredFromBW       (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleUnfilteredFromILBM     (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleUnfilteredFromVGA      (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleUnfilteredFromColor    (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	b3_index       b3ILBMPlaneValue  (b3_coord x,b3_coord y);
 
 	// b3Tx.cc
@@ -552,6 +970,10 @@ private:
 	static b3_f64  b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
 
 	// b3TxLoadTIFF.cc
+	b3_result      b3LoadTIFF (const char *ImageName);
+	b3_result      b3LoadTIFF (const char *ImageName,
+		const b3_u08  *ImageBuffer,
+		const b3_size  BufferSize);
 	long           b3TIFFPalette(TIFF *handle,short PaletteMode);
 	long           b3TIFFDecode (TIFF *handle,short PlanarConfig);
 	long           b3TIFFAlloc  ();

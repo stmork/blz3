@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "blz3/image/b3TxMeasure.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2005/08/11 13:16:11  smork
+**	- Documentation.
+**	- b3Tx cleanup.
+**
 **	Revision 1.1  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
@@ -47,12 +51,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3Measure::b3Measure()
+b3TxMeasure::b3TxMeasure()
 {
 	num = 0;
 }
 
-void b3Measure::b3Init(
+void b3TxMeasure::b3Init(
 	b3_res xSize,
 	b3_res ySize,
 	b3_res depth)
@@ -107,7 +111,7 @@ void b3Measure::b3Init(
 	valid = true;
 }
 
-void b3Measure::b3Print()
+void b3TxMeasure::b3Print()
 {
 	unsigned long i;
 
