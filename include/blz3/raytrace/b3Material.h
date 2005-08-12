@@ -224,13 +224,17 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class is the minimal material description possible in Blizzard III.
+ * It reflects simply the b3_material structure.
+ */
 class B3_PLUGIN b3MatNormal : public b3Material, public b3_material
 {
 public:
-	b3_u32            m_Flags;
+	b3_u32            m_Flags; //!< An unused set of flags.
 
 protected:
-	     b3MatNormal(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3MatNormal); //!< This is a base class deserialization constructor.
 
 public:
 	B3_ITEM_INIT(b3MatNormal); //!< This constructor handles default initialization.
@@ -249,18 +253,26 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class implements a chess board. Two materials are orientated like
+ * a chess board. The materials must not be black or white but they are
+ * named so for analogy.
+ */
 class B3_PLUGIN b3MatChess : public b3Material 
 {
 public:
-	b3_material m_Material[2];
-	b3_s32      m_Flags;
-	b3_s32      m_xTimes;
-	b3_s32      m_yTimes;
+	b3_material m_Material[2]; //!< The two used materials.
+	b3_s32      m_Flags;       //!< Unused.
+	b3_s32      m_xTimes;      //!< The horizontal repeatition count.
+	b3_s32      m_yTimes;      //!< The vertical repeatition count.
 
+	/**
+	 * This enumeration lists the material indices.
+	 */
 	enum b3_chess
 	{
-		BLACK = 0,
-		WHITE = 1
+		BLACK = 0, //!< Index for black material.
+		WHITE = 1  //!< Index for white material.
 	};
 
 public:
@@ -277,19 +289,24 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class implements simple texture mapping. The 2D polar surface coordinates
+ * are transformed into texture coordinate domain using start point (translation)
+ * and scaling. The texture can be tiled.
+ */
 class B3_PLUGIN b3MatTexture : public b3Material 
 {
 public:
-	b3_f32            m_Reflection;
-	b3_f32            m_Refraction;
-	b3_f32            m_Ior;
-	b3_f32            m_SpecularExp;
-	b3_f32            m_xStart,m_yStart;    // surface coordinate start
-	b3_f32            m_xScale,m_yScale;    // texture scale
-	b3_s32            m_xTimes,m_yTimes;    // repetition in x- y-direction
-	b3_s32            m_Flags;
-	b3Path            m_Name;
-	b3Tx             *m_Texture;
+	b3_f32            m_Reflection;         //!< The reflectance.
+	b3_f32            m_Refraction;         //!< The refractance.
+	b3_f32            m_Ior;                //!< The index of refraction.
+	b3_f32            m_SpecularExp;        //!< The specular exponent in range [1..100000].
+	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start.
+	b3_f32            m_xScale,m_yScale;    //!< Texture scale.
+	b3_s32            m_xTimes,m_yTimes;    //!< Repeatition in x- y-direction.
+	b3_s32            m_Flags;              //!< Unused.
+	b3Path            m_Name;               //!< The texture file name.
+	b3Tx             *m_Texture;            //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3MatTexture); //!< This constructor handles default initialization.
@@ -307,18 +324,22 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class implements a wripping texture. This fits into the specified 2D
+ * polar surface coordinates.
+ */
 class B3_PLUGIN b3MatWrapTexture : public b3Material 
 {
 public:
-	b3_f32            m_Reflection;
-	b3_f32            m_Refraction;
-	b3_f32            m_Ior;
-	b3_f32            m_SpecularExp;
-	b3_f32            m_xStart,m_yStart;  // surface coordinate start
-	b3_f32            m_xEnd,m_yEnd;      // surface coordinate end
-	b3_s32            m_Flags;
-	b3Path            m_Name;
-	b3Tx             *m_Texture;          // only one texture (compat. Dali)
+	b3_f32            m_Reflection;         //!< The reflectance.
+	b3_f32            m_Refraction;         //!< The refractance.
+	b3_f32            m_Ior;                //!< The index of refraction.
+	b3_f32            m_SpecularExp;        //!< The specular exponent in range [1..100000].
+	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start
+	b3_f32            m_xEnd,m_yEnd;        //!< Surface coordinate end
+	b3_s32            m_Flags;              //!< Unused.
+	b3Path            m_Name;               //!< The texture file name.
+	b3Tx             *m_Texture;            //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3MatWrapTexture); //!< This constructor handles default initialization.
@@ -336,12 +357,18 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class forms a material slide. The slide can be orientated in horizontal
+ * (XSLIDE) or vertical direction (YSLIDE). The slide can be clamped at the
+ * borders. This influences the further material computation during the b3GetSurfaceValues()
+ * method when this class occures inside a material list.
+ */
 class B3_PLUGIN b3MatSlide : public b3Material 
 {
 public:
-	b3_material       m_Material[2];
-	b3_f32            m_From,m_To;           // rel. polar values of start, end
-	b3_s32            m_ModeFlag;            // direction and cut flags, see below
+	b3_material       m_Material[2];         //!< The border materials
+	b3_f32            m_From,m_To;           //!< The relative polar values of start, end
+	b3_s32            m_ModeFlag;            //!< The direction and cut flags, see below
 
 public:
 	B3_ITEM_INIT(b3MatSlide); //!< This constructor handles default initialization.
@@ -373,12 +400,18 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class simulates marble material. The marble surface is computed
+ * using the b3Noise::b3Marble() method. The resulting scalar mixes
+ * the two user defined materials.
+ */
 class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling
 {
 	b3_s32            m_xTimes,m_yTimes;
+
 public:
-	b3_material       m_DarkMaterial;
-	b3_material       m_LightMaterial;
+	b3_material       m_DarkMaterial;  //!< The darkest material.
+	b3_material       m_LightMaterial; //!< The lightest material.
 
 public:
 	B3_ITEM_INIT(b3MatMarble); //!< This constructor handles default initialization.
