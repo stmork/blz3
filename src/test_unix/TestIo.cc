@@ -23,6 +23,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3World.h"
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/system/b3SelfTest.h"
 
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2005/08/12 11:35:49  sm
+**	- Readded vector multiplication for performance test issues.
+**
 **	Revision 1.21  2005/05/16 08:18:40  sm
 **	- Some bug fixes...
-**
+**	
 **	Revision 1.20  2005/05/16 07:59:23  sm
 **	- Moved some self testing methods into library to make them usable
 **	  from other applications.

@@ -164,6 +164,12 @@ public:
 		m_Increment = increment;
 	}
 
+	/**
+	 * This index operator provides access to a special indexed array element.
+	 *
+	 * @param index The array index.
+	 * @return The reference to the indexed array element.
+	 */
 	inline T & operator [](const b3_index index)
 	{
 #ifdef _DEBUG

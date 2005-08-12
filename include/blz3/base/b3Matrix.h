@@ -778,6 +778,177 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method multiplies a vector to a given one: <code>result *= aVec</code>.
+	 *
+	 * @param aVec The factors.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
+	static inline b3_vector *b3Mul(
+		const b3_vector *aVec,
+		      b3_vector *result)
+	{
+#ifdef B3_SSE1
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3;i++)
+		{
+			r[i] *= a[i];
+		}
+#else
+		result->x *= aVec->x;
+		result->y *= aVec->y;
+		result->z *= aVec->z;
+#endif
+		return result;
+	}
+
+	/**
+	 * This method multiplies a vector to a given one: <code>result += aVec</code>.
+	 *
+	 * @param aVec The multiplicand.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
+	static inline b3_vector64 *b3Mul(
+		const b3_vector64 *aVec,
+		      b3_vector64 *result)
+	{
+#ifdef B3_SSE2
+		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3;i++)
+		{
+			r[i] *= a[i];
+		}
+#else
+		result->x *= aVec->x;
+		result->y *= aVec->y;
+		result->z *= aVec->z;
+#endif
+		return result;
+	}
+
+	/**
+	 * This method multiplies a vector to a given one: <code>result += aVec</code>.
+	 *
+	 * @param aVec The multiplicand.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
+	static inline b3_gl_vector *b3Mul(
+		const b3_gl_vector *aVec,
+		      b3_gl_vector *result)
+	{
+#ifdef B3_SSE
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3;i++)
+		{
+			r[i] *= a[i];
+		}
+#else
+		result->x *= aVec->x;
+		result->y *= aVec->y;
+		result->z *= aVec->z;
+#endif
+		return result;
+	}
+
+	/**
+	 * This method multiplies two vectors to a resulting one: <code>result = aVec + bVec</code>
+	 *
+	 * @param aVec The first multiplicand.
+	 * @param bVec The second multiplicand.
+	 * @param result The sum of both vectors.
+	 * @return The result (= result input parameter)
+	 */
+	static inline b3_vector *b3Mul(
+		const b3_vector *aVec,
+		const b3_vector *bVec,
+		      b3_vector *result)
+	{
+#ifdef B3_SSE1
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = a[i] * b[i];
+		}
+#else
+		result->x = aVec->x * bVec->x;
+		result->y = aVec->y * bVec->y;
+		result->z = aVec->z * bVec->z;
+#endif
+		return result;
+	}
+
+	/**
+	 * This method multiplies two vectors to a resulting one: <code>result = aVec + bVec</code>
+	 *
+	 * @param aVec The first multiplicand.
+	 * @param bVec The second multiplicand.
+	 * @param result The sum of both vectors.
+	 * @return The result (= result input parameter)
+	 */
+	static inline b3_vector64 *b3Mul(
+		const b3_vector64 *aVec,
+		const b3_vector64 *bVec,
+		      b3_vector64 *result)
+	{
+#ifdef B3_SSE2
+		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = a[i] * b[i];
+		}
+#else
+		result->x = aVec->x * bVec->x;
+		result->y = aVec->y * bVec->y;
+		result->z = aVec->z * bVec->z;
+#endif
+		return result;
+	}
+
+	/**
+	 * This method multiplies two vectors to a resulting one: <code>result = aVec + bVec</code>
+	 *
+	 * @param aVec The first multiplicand.
+	 * @param bVec The second multiplicand.
+	 * @param result The sum of both vectors.
+	 * @return The result (= result input parameter)
+	 */
+	static inline b3_gl_vector *b3Mul(
+		const b3_gl_vector *aVec,
+		const b3_gl_vector *bVec,
+		      b3_gl_vector *result)
+	{
+#ifdef B3_SSE
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3; ;i++)
+		{
+			r[i] = a[i] * b[i];
+		}
+#else
+		result->x = aVec->x * bVec->x;
+		result->y = aVec->y * bVec->y;
+		result->z = aVec->z * bVec->z;
+#endif
+		return result;
+	}
+
  	/**
 	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
 	 *

@@ -379,6 +379,38 @@ public:
 	}
 
 	/**
+	 * This operator multipliess a specified vector to this instance.
+	 *
+	 * @param a The vector to multiply.
+	 * @return A reference to this instance.
+	 */
+	inline b3VectorTemplate<F,dim> &operator*=(const b3VectorTemplate<F,dim> &a)
+	{
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] *= a.v[i];
+		}
+		return *this;
+	}
+
+	/**
+	 * This operator multiplies a vector to this instance resulting in a new instance.
+	 *
+	 * @param a The vector to multiply.
+	 * @return A new b3VectorTemplate instance.
+	 */
+	inline b3VectorTemplate<F,dim> operator*(const b3VectorTemplate<F,dim> &a)
+	{
+		b3VectorTemplate<F,dim> result;
+
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result.v[i] = v[i] * (F)a.v[i];
+		}
+		return result;
+	}
+
+	/**
 	 * This operator multiplies this instance with a specified value.
 	 *
 	 * @param value The scaling factor.
