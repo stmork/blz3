@@ -58,29 +58,35 @@
 #define CAR_PAINT           (CLASS_MATERIAL|TYPE_MAT_CAR_PAINT)
 #define THIN_FILM           (CLASS_MATERIAL|TYPE_MAT_THIN_FILM)
 
+/**
+ * This structure provides basic material properties.
+ */
 struct b3_material
 {
-	b3Color     m_Diffuse;
-	b3Color     m_Ambient;
-	b3Color     m_Specular;
-	b3_f64      m_Reflection;
-	b3_f64      m_Refraction;
-	b3_f64      m_Ior;
-	b3_f64      m_SpecularExp;
+	b3Color     m_Diffuse;     //!< Diffuse surface color.
+	b3Color     m_Ambient;     //!< Ambient surface color.
+	b3Color     m_Specular;    //!< Specular surface color.
+	b3_f64      m_Reflection;  //!< The surface reflection.
+	b3_f64      m_Refraction;  //!< The surface refractance.
+	b3_f64      m_Ior;         //!< The index of refraction.
+	b3_f64      m_SpecularExp; //!< The specular exponent in range [1..100000]
 };
 
+/**
+ * This structure holds information about what's going on at an intersection point.
+ */
 struct b3_surface : public b3_material
 {
-	b3Color      m_AmbientSum;
-	b3Color      m_DiffuseSum;
-	b3Color      m_SpecularSum;
-	b3_ray      *m_Incoming;
-	b3_ray       m_ReflRay;
-	b3_ray       m_RefrRay;
-	b3_bool      m_Transparent;
-	b3_f64       m_Fresnel;
-	b3_f64       m_IorComputed;
-	b3_f64       m_CosAlpha;
+	b3Color      m_AmbientSum;       //!< The ambient sum integrated over all light sources.
+	b3Color      m_DiffuseSum;       //!< The diffuse sum integrated over all light sources.
+	b3Color      m_SpecularSum;      //!< The specular sum integrated over all light sources.
+	b3_ray      *m_Incoming;         //!< The incoming ray
+	b3_ray       m_ReflRay;          //!< The outgoing reflection ray.
+	b3_ray       m_RefrRay;          //!< The outgoing refraction ray.
+	b3_bool      m_Transparent;      //!< A flag indicating a transparent surface.
+	b3_f64       m_Fresnel;          //!< The Fresnel term depending on the angle of incidence and the index of refraction.
+	b3_f64       m_IorComputed;      //!< The real index of refraction depending if the incoming ray is inside or outside.
+	b3_f64       m_CosAlpha;         //!< The angle of incidence as cosine value.
 };
 
 /*************************************************************************
@@ -91,6 +97,9 @@ struct b3_surface : public b3_material
  
 struct b3_light_info;
 
+/**
+ * This class defines the surface properties at a given intersection point.
+ */
 class B3_PLUGIN b3Material : public b3Item
 {
 protected:
@@ -141,7 +150,14 @@ public:
 	}
 
 protected:
-	// Mix color components. If the configured shader should do this job return simply false.
+	/**
+	 * Mix color components. If the configured shader should do this job return simply false.
+	 *
+	 * @param surface The surface properties.
+	 * @param reflection The reflectance.
+	 * @param refraction The refractance.
+	 * @param True on component mixing, false on shader intelligence.
+	 */
 	virtual inline b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
 		return false;
@@ -149,26 +165,34 @@ protected:
 
 	/********************** Shading pipeline ********************************/
 
+	/**
+	 * This method mixes to material property collection by a defined mixer value.
+	 *
+	 * @param surface The surface which receives the result.
+	 * @param a The first material to mix.
+	 * @param b The second material to mix.
+	 * @param mix The mixing value.
+	 * @see b3Color::b3Mix()
+	 * @see b3Math::b3Mix()
+	 */
 	static inline void b3Mix(
 		      b3_surface  *surface,
 		const b3_material *a,
 		const b3_material *b,
 		const b3_f64       mix)
 	{
-		b3Color b_mixer;
-		b3Color a_mixer;
-		b3_f64  a_mix = 1.0 - mix;
+		b3Color mixer;
 
-		b_mixer.b3InitFactor(mix);
-		a_mixer.b3InitFactor(a_mix);
-		surface->m_Ambient     = a_mixer * a->m_Ambient  + b_mixer * b->m_Ambient;
-		surface->m_Diffuse     = a_mixer * a->m_Diffuse  + b_mixer * b->m_Diffuse;
-		surface->m_Specular    = a_mixer * a->m_Specular + b_mixer * b->m_Specular;
+		mixer.b3InitFactor(mix);
 
-		surface->m_Reflection  =  a->m_Reflection  * a_mix + b->m_Reflection  * mix;
-		surface->m_Refraction  =  a->m_Refraction  * a_mix + b->m_Refraction  * mix;
-		surface->m_Ior         =  a->m_Ior         * a_mix + b->m_Ior         * mix;
-		surface->m_SpecularExp =  a->m_SpecularExp * a_mix + b->m_SpecularExp * mix;
+		surface->m_Ambient     = b3Color::b3Mix(a->m_Ambient,  b->m_Ambient,  mixer);
+		surface->m_Diffuse     = b3Color::b3Mix(a->m_Diffuse,  b->m_Diffuse,  mixer);
+		surface->m_Specular    = b3Color::b3Mix(a->m_Specular, b->m_Specular, mixer);
+
+		surface->m_Reflection  = a->m_Reflection  + mix * (b->m_Reflection  - a->m_Reflection);
+		surface->m_Refraction  = a->m_Refraction  + mix * (b->m_Refraction  - a->m_Refraction);
+		surface->m_Ior         = a->m_Ior         + mix * (b->m_Ior         - a->m_Ior);
+		surface->m_SpecularExp = a->m_SpecularExp + mix * (b->m_SpecularExp - a->m_SpecularExp);;
 	}
 };
 

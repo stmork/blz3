@@ -30,6 +30,10 @@
 
 typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
 
+/**
+ * This class implements the b3PathAbstract class. It additionally provides some
+ * method for file name/file path handling.
+ */
 class b3Path : public b3PathAbstract
 {
 public:

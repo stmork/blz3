@@ -63,6 +63,9 @@ protected:
 	virtual b3PluginBase *b3CreatePlugin(b3Path &library) = 0;
 };
 
+/**
+ * This abstract class defines the behaviour of one plugin.
+ */
 class b3PluginBase : public b3Link<b3PluginBase>
 {
 protected:

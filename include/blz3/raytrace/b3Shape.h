@@ -103,20 +103,21 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 	             b3_count      m_Overhead,m_Heights,m_Widths;
 
 protected:
-	b3_count           xSize,ySize;
-	b3_stencil_limit   m_Limit;
+	b3_count           xSize;         //!< The horizontal count of vertex subdivision.
+	b3_count           ySize;         //!< The vertical count of vertex subdivision.
+	b3_stencil_limit   m_Limit;       //!< The 2D bounding box of this shape in surface coordinates.
 
-	b3_gl_line        *GridsCyl;
-	b3_gl_polygon     *PolysCyl;
-	b3_gl_line        *GridsCone;
-	b3_gl_polygon     *PolysCone;
+	b3_gl_line        *GridsCyl;      //!< The cylinder line indices.
+	b3_gl_polygon     *PolysCyl;      //!< The cylinder triangle indices.
+	b3_gl_line        *GridsCone;     //!< The cone line indices.
+	b3_gl_polygon     *PolysCone;     //!< The cone triangle indices.
 
 protected:
-	B3_ITEM_BASE(b3Shape);
+	B3_ITEM_BASE(b3Shape); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Shape);
-	B3_ITEM_LOAD(b3Shape);
+	B3_ITEM_INIT(b3Shape); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Shape); //!< This constructor handles deserialization.
 
 	static  void        b3Register();
 	        void        b3Write();
@@ -186,8 +187,20 @@ protected:
 
 	void            b3ComputeQuadricNormals(b3_bool normalize = true);
 
-	// Sphere
+	/**
+	 * This method computes vertices for a sphere.
+	 *
+	 * @param base The center of the sphere.
+	 * @param dir The radius vector of the sphere.
+	 */
 	void            b3ComputeSphereVertices(b3_vector &base,b3_vector &dir);
+
+	/**
+	 * This method computes normals.
+	 *
+	 * @param base The center point of the sphere.
+	 * @param normalize A flag to show if normalization is wanted.
+	 */
 	void            b3ComputeSphereNormals( b3_vector &base,b3_bool normalize);
 
 	// Cylinder
@@ -245,19 +258,47 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a simple shape. What we call simple can result
+ * in several intersection ponts and does not involve other shapes against
+ * to CSG shapes which may involve each intersection point from a whole
+ * list of CSG shapes.
+ *
+ * @see b3CSGShape.
+ */
 class B3_PLUGIN b3SimpleShape : public b3Shape
 {
 protected:
+	/**
+	 * This method checks the given polar coordinates for validity. The
+	 * stencil list is checked for that.
+	 *
+	 * @param polar The polar coordinates to check against the stencil list.
+	 * @return True if the polar coordinates are valid.
+	 */
 	b3_bool             b3CheckStencil(b3_polar *polar);
 
 protected:
-	B3_ITEM_BASE(b3SimpleShape);
+	B3_ITEM_BASE(b3SimpleShape); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3SimpleShape);
-	B3_ITEM_LOAD(b3SimpleShape);
+	B3_ITEM_INIT(b3SimpleShape); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SimpleShape); //!< This constructor handles deserialization.
 
 public:
+	/**
+	 * This method intesects the given ray with this shape. If the result
+	 * is positive there is a valid intersection point and marks the distance
+	 * between the base point of the ray and the intersection point. If the
+	 * result is negative it marks only that no intersection point was found.
+	 * The implementation of this method should check the validity of the
+	 * polar coordinates against the stencil list via the b3CheckStencil()
+	 * method call and have to reject this intersection point.
+	 *
+	 * @param ray The ray to intersect with this shape.
+	 * @param polar The polar coordinates of the resulting intersection point.
+	 * @return The distance from the rays base point to the intersection point.
+	 */
 	virtual inline b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar)
 	{
 		return -1;
@@ -279,8 +320,8 @@ public:
 	b3_vector       	 m_Dir;          // Radius
 
 public:
-	B3_ITEM_INIT(b3Sphere);
-	B3_ITEM_LOAD(b3Sphere);
+	B3_ITEM_INIT(b3Sphere); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Sphere); //!< This constructor handles deserialization.
 
 	void    b3StoreShape();
 	void    b3GetStencilBoundInfo(b3_stencil_bound *info);
@@ -316,11 +357,11 @@ public:
 	b3_vector           m_Dir1,m_Dir2;    // direction vectors
 
 protected:
-	B3_ITEM_BASE(b3Shape2);
+	B3_ITEM_BASE(b3Shape2); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Shape2);
-	B3_ITEM_LOAD(b3Shape2);
+	B3_ITEM_INIT(b3Shape2); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Shape2); //!< This constructor handles deserialization.
 
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
@@ -344,8 +385,8 @@ class B3_PLUGIN b3Area : public b3Shape2
 	static b3_f32        m_AreaTexcoord[8];
 
 public:
-	B3_ITEM_INIT(b3Area);
-	B3_ITEM_LOAD(b3Area);
+	B3_ITEM_INIT(b3Area); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Area); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
@@ -365,8 +406,8 @@ protected:
 class B3_PLUGIN b3Disk : public b3Shape2
 {
 public:
-	B3_ITEM_INIT(b3Disk);
-	B3_ITEM_LOAD(b3Disk);
+	B3_ITEM_INIT(b3Disk); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Disk); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
@@ -386,11 +427,11 @@ protected:
 class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTransformation
 {
 protected:
-	B3_ITEM_BASE(b3Shape3);
+	B3_ITEM_BASE(b3Shape3); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Shape3);
-	B3_ITEM_LOAD(b3Shape3);
+	B3_ITEM_INIT(b3Shape3); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Shape3); //!< This constructor handles deserialization.
 
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
@@ -411,8 +452,8 @@ protected:
 class B3_PLUGIN b3Cylinder : public b3Shape3
 {
 public:
-	B3_ITEM_INIT(b3Cylinder);
-	B3_ITEM_LOAD(b3Cylinder);
+	B3_ITEM_INIT(b3Cylinder); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Cylinder); //!< This constructor handles deserialization.
 
 	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Normal(b3_ray *ray);
@@ -434,8 +475,8 @@ protected:
 class B3_PLUGIN b3Cone : public b3Shape3
 {
 public:
-	B3_ITEM_INIT(b3Cone);
-	B3_ITEM_LOAD(b3Cone);
+	B3_ITEM_INIT(b3Cone); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Cone); //!< This constructor handles deserialization.
 
 	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Normal(b3_ray *ray);
@@ -456,8 +497,8 @@ protected:
 class B3_PLUGIN b3Ellipsoid : public b3Shape3
 {
 public:
-	B3_ITEM_INIT(b3Ellipsoid);
-	B3_ITEM_LOAD(b3Ellipsoid);
+	B3_ITEM_INIT(b3Ellipsoid); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Ellipsoid); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
@@ -480,8 +521,8 @@ class B3_PLUGIN b3Box : public b3Shape3
 	b3_gl_vertex   m_BoxVertex[6 * 4];
 
 public:
-	B3_ITEM_INIT(b3Box);
-	B3_ITEM_LOAD(b3Box);
+	B3_ITEM_INIT(b3Box); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Box); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
@@ -510,8 +551,8 @@ public:
 	b3_f64            m_aRad, m_bRad;     // radiuses of torus
 
 public:
-	B3_ITEM_INIT(b3Torus);
-	B3_ITEM_LOAD(b3Torus);
+	B3_ITEM_INIT(b3Torus); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Torus); //!< This constructor handles deserialization.
 
 	        void    b3StoreShape();
 
@@ -578,11 +619,11 @@ public:
 
 
 protected:
-	B3_ITEM_BASE(b3TriangleShape);
+	B3_ITEM_BASE(b3TriangleShape); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3TriangleShape);
-	B3_ITEM_LOAD(b3TriangleShape);
+	B3_ITEM_INIT(b3TriangleShape); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3TriangleShape); //!< This constructor handles deserialization.
 
 	               ~b3TriangleShape();
 	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count,b3_res xSize,b3_res ySize);
@@ -665,8 +706,8 @@ private:
 class B3_PLUGIN b3Triangles : public b3TriangleShape
 {
 public:
-	B3_ITEM_INIT(b3Triangles);
-	B3_ITEM_LOAD(b3Triangles);
+	B3_ITEM_INIT(b3Triangles); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Triangles); //!< This constructor handles deserialization.
 
 	void   b3StoreShape();
 	void   b3SetupPicking(b3PickInfo *pick_info);
@@ -697,8 +738,8 @@ public:
 	b3_vector       *m_Controls;
 
 public:
-	B3_ITEM_INIT(b3SplineRotShape);
-	B3_ITEM_LOAD(b3SplineRotShape);
+	B3_ITEM_INIT(b3SplineRotShape); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SplineRotShape); //!< This constructor handles deserialization.
 
 	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed,b3_count subdiv);
 	void    b3StoreShape();
@@ -733,11 +774,11 @@ public:
 	b3_vector       *m_Controls;
 
 protected:
-	B3_ITEM_BASE(b3SplineShape);
+	B3_ITEM_BASE(b3SplineShape); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3SplineShape);
-	B3_ITEM_LOAD(b3SplineShape);
+	B3_ITEM_INIT(b3SplineShape); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SplineShape); //!< This constructor handles deserialization.
 
 	void b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
@@ -769,8 +810,8 @@ private:
 class B3_PLUGIN b3SplineArea : public b3SplineShape
 {
 public:
-	B3_ITEM_INIT(b3SplineArea);
-	B3_ITEM_LOAD(b3SplineArea);
+	B3_ITEM_INIT(b3SplineArea); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SplineArea); //!< This constructor handles deserialization.
 };
 
 /*************************************************************************
@@ -782,8 +823,8 @@ public:
 class B3_PLUGIN b3SplineCylinder : public b3SplineShape 
 {
 public:
-	B3_ITEM_INIT(b3SplineCylinder);
-	B3_ITEM_LOAD(b3SplineCylinder);
+	B3_ITEM_INIT(b3SplineCylinder); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SplineCylinder); //!< This constructor handles deserialization.
 };
 
 /*************************************************************************
@@ -795,8 +836,8 @@ public:
 class B3_PLUGIN b3SplineRing : public b3SplineShape 
 {
 public:
-	B3_ITEM_INIT(b3SplineRing);
-	B3_ITEM_LOAD(b3SplineRing);
+	B3_ITEM_INIT(b3SplineRing); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SplineRing); //!< This constructor handles deserialization.
 };
 
 /*************************************************************************
@@ -870,11 +911,11 @@ public:
 	static b3_csg_operation m_CSGMode[];
 
 protected:
-	B3_ITEM_BASE(b3CSGShape);
+	B3_ITEM_BASE(b3CSGShape); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3CSGShape);
-	B3_ITEM_LOAD(b3CSGShape);
+	B3_ITEM_INIT(b3CSGShape); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGShape); //!< This constructor handles deserialization.
 
 public:
 	virtual b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
@@ -899,8 +940,8 @@ public:
 	b3_vector         m_Dir;              // direction
 
 public:
-	B3_ITEM_INIT(b3CSGSphere);
-	B3_ITEM_LOAD(b3CSGSphere);
+	B3_ITEM_INIT(b3CSGSphere); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGSphere); //!< This constructor handles deserialization.
 
 	void     b3StoreShape();
 	void     b3GetStencilBoundInfo(b3_stencil_bound *info);
@@ -928,11 +969,11 @@ protected:
 class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTransformation
 {
 protected:
-	B3_ITEM_BASE(b3CSGShape3);
+	B3_ITEM_BASE(b3CSGShape3); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3CSGShape3);
-	B3_ITEM_LOAD(b3CSGShape3);
+	B3_ITEM_INIT(b3CSGShape3); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGShape3); //!< This constructor handles deserialization.
 
 	        void     b3StoreShape();
 	        b3_bool  b3Prepare();
@@ -954,8 +995,8 @@ protected:
 class B3_PLUGIN b3CSGCylinder : public b3CSGShape3
 {
 public:
-	B3_ITEM_INIT(b3CSGCylinder);
-	B3_ITEM_LOAD(b3CSGCylinder);
+	B3_ITEM_INIT(b3CSGCylinder); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGCylinder); //!< This constructor handles deserialization.
 
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
@@ -977,8 +1018,8 @@ class B3_PLUGIN b3CSGCone : public b3CSGShape3
 {
 
 public:
-	B3_ITEM_INIT(b3CSGCone);
-	B3_ITEM_LOAD(b3CSGCone);
+	B3_ITEM_INIT(b3CSGCone); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGCone); //!< This constructor handles deserialization.
 
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
@@ -1000,8 +1041,8 @@ class B3_PLUGIN b3CSGEllipsoid : public b3CSGShape3
 {
 
 public:
-	B3_ITEM_INIT(b3CSGEllipsoid);
-	B3_ITEM_LOAD(b3CSGEllipsoid);
+	B3_ITEM_INIT(b3CSGEllipsoid); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGEllipsoid); //!< This constructor handles deserialization.
 
 	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
@@ -1025,8 +1066,8 @@ class B3_PLUGIN b3CSGBox : public b3CSGShape3
 	b3_gl_vertex    m_BoxVertex[6 * 4];
 
 public:
-	B3_ITEM_INIT(b3CSGBox);
-	B3_ITEM_LOAD(b3CSGBox);
+	B3_ITEM_INIT(b3CSGBox); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGBox); //!< This constructor handles deserialization.
 
 	        b3_bool b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void    b3InverseMap(b3_ray *ray,b3_csg_point *point);
@@ -1054,8 +1095,8 @@ public:
 	b3_f64             m_aRad, m_bRad;       // radiuses of torus
 
 public:
-	B3_ITEM_INIT(b3CSGTorus);
-	B3_ITEM_LOAD(b3CSGTorus);
+	B3_ITEM_INIT(b3CSGTorus); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CSGTorus); //!< This constructor handles deserialization.
 
 	        void     b3StoreShape();
 	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
