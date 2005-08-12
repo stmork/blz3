@@ -103,12 +103,15 @@ struct b3_light_info;
 class B3_PLUGIN b3Material : public b3Item
 {
 protected:
-	B3_ITEM_BASE(b3Material);
+	B3_ITEM_BASE(b3Material); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Material);
-	B3_ITEM_LOAD(b3Material);
+	B3_ITEM_INIT(b3Material); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Material); //!< This constructor handles deserialization.
 
+	/**
+	 * This method registers the default material implementations to the b3World item registry.
+	 */
 	static  void    b3Register();
 	
 	virtual inline b3_bool b3Prepare()
@@ -118,7 +121,13 @@ public:
 
 	/********************** Shading pipeline ********************************/
 
-	// Retrieve surface values and decide to terminate value retrieval.
+	/**
+	 * Retrieve surface values and decide to terminate value retrieval.
+	 * The default implementation returns a simple material.
+	 *
+	 * @param surface The surface structure to fill in the material properties.
+	 * @return True if the material traversal should terminate.
+	 */
 	virtual inline b3_bool b3GetSurfaceValues(b3_surface *surface)
 	{
 		surface->m_Diffuse     = B3_LIGHT_BLUE;
@@ -132,16 +141,29 @@ public:
 		return false;
 	}
 
-	// Make lighting: Compute ambient, diffuse and specular components from
-	// already retrieved surface values. If the configured shader should
-	// compute this return simply false.
-	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit)
+	/**
+	 * Make lighting: Compute ambient, diffuse and specular components from
+	 * already retrieved surface values. If the configured shader should
+	 * compute this return simply false.
+	 *
+	 * @param surface The surface values.
+	 * @param lit The lighting values.
+	 * @return True on material computation, false on shader computation.
+	 */
+	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit)
 	{
 		return false;
 	}
 
-	// Static entry point for component mixing (ambient, diffuse, specular terms plus refracted and
-	// refleted parts.
+	/**
+	 * This method is the static entry point for component mixing (ambient, diffuse, specular terms plus refracted and
+	 * reflected parts.
+	 *
+	 * @param surface 
+	 * @param reflection The reflectance.
+	 * @param refraction The refractance.
+	 * @return
+	 */ 
 	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
 		b3Material *material = surface->m_Incoming->material;
@@ -156,7 +178,7 @@ protected:
 	 * @param surface The surface properties.
 	 * @param reflection The reflectance.
 	 * @param refraction The refractance.
-	 * @param True on component mixing, false on shader intelligence.
+	 * @return True on component mixing, false on shader intelligence.
 	 */
 	virtual inline b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
@@ -192,7 +214,7 @@ protected:
 		surface->m_Reflection  = a->m_Reflection  + mix * (b->m_Reflection  - a->m_Reflection);
 		surface->m_Refraction  = a->m_Refraction  + mix * (b->m_Refraction  - a->m_Refraction);
 		surface->m_Ior         = a->m_Ior         + mix * (b->m_Ior         - a->m_Ior);
-		surface->m_SpecularExp = a->m_SpecularExp + mix * (b->m_SpecularExp - a->m_SpecularExp);;
+		surface->m_SpecularExp = a->m_SpecularExp + mix * (b->m_SpecularExp - a->m_SpecularExp);
 	}
 };
 
@@ -211,8 +233,8 @@ protected:
 	     b3MatNormal(b3_size class_size,b3_u32 class_type);
 
 public:
-	B3_ITEM_INIT(b3MatNormal);
-	B3_ITEM_LOAD(b3MatNormal);
+	B3_ITEM_INIT(b3MatNormal); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
 
 	        void    b3Write();
 	virtual b3_bool b3GetSurfaceValues(b3_surface *surface);
@@ -242,8 +264,8 @@ public:
 	};
 
 public:
-	B3_ITEM_INIT(b3MatChess);
-	B3_ITEM_LOAD(b3MatChess);
+	B3_ITEM_INIT(b3MatChess); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatChess); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
@@ -270,8 +292,8 @@ public:
 	b3Tx             *m_Texture;
 
 public:
-	B3_ITEM_INIT(b3MatTexture);
-	B3_ITEM_LOAD(b3MatTexture);
+	B3_ITEM_INIT(b3MatTexture); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -299,8 +321,8 @@ public:
 	b3Tx             *m_Texture;          // only one texture (compat. Dali)
 
 public:
-	B3_ITEM_INIT(b3MatWrapTexture);
-	B3_ITEM_LOAD(b3MatWrapTexture);
+	B3_ITEM_INIT(b3MatWrapTexture); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatWrapTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -322,8 +344,8 @@ public:
 	b3_s32            m_ModeFlag;            // direction and cut flags, see below
 
 public:
-	B3_ITEM_INIT(b3MatSlide);
-	B3_ITEM_LOAD(b3MatSlide);
+	B3_ITEM_INIT(b3MatSlide); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatSlide); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
@@ -359,8 +381,8 @@ public:
 	b3_material       m_LightMaterial;
 
 public:
-	B3_ITEM_INIT(b3MatMarble);
-	B3_ITEM_LOAD(b3MatMarble);
+	B3_ITEM_INIT(b3MatMarble); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatMarble); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -373,18 +395,24 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This base class handles all wooden material implementation. It inherits
+ * also the scale handling from the b3Scaling class.
+ *
+ * @see b3Scaling.
+ */
 class B3_PLUGIN b3MaterialWooden : public b3Material, public b3Scaling
 {
 public:
-	b3_material       m_DarkMaterial;
-	b3_material       m_LightMaterial;
+	b3_material       m_DarkMaterial;  //!< The dark colored wood material.
+	b3_material       m_LightMaterial; //!< The light colored wood material.
 
 protected:
-	B3_ITEM_BASE(b3MaterialWooden);
+	B3_ITEM_BASE(b3MaterialWooden); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3MaterialWooden);
-	B3_ITEM_LOAD(b3MaterialWooden);
+	B3_ITEM_INIT(b3MaterialWooden); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MaterialWooden); //!< This constructor handles deserialization.
 
 protected:
 	void     b3Init();
@@ -396,14 +424,19 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class simulates wood.
+ *
+ * @see b3MaterialWooden
+ * @see b3Wood
+ */
 class B3_PLUGIN b3MatWood : public b3MaterialWooden, public b3Wood
 {
-public:
 	b3_u32            m_xTimes,m_yTimes; // not used
 
 public:
-	B3_ITEM_INIT(b3MatWood);
-	B3_ITEM_LOAD(b3MatWood);
+	B3_ITEM_INIT(b3MatWood); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatWood); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -419,14 +452,21 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class implements wooden oak planks.
+ *
+ * @see b3MaterialWooden
+ * @see b3Wood
+ * @see b3OakPlank
+ */
 class B3_PLUGIN b3MatOakPlank : public b3MaterialWooden, public b3OakPlank
 {
 	b3_material     *m_LightMaterials;
 	b3_material     *m_DarkMaterials;
 
 public:
-	B3_ITEM_INIT(b3MatOakPlank);
-	B3_ITEM_LOAD(b3MatOakPlank);
+	B3_ITEM_INIT(b3MatOakPlank); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatOakPlank); //!< This constructor handles deserialization.
 
 	virtual ~b3MatOakPlank();
 
@@ -444,6 +484,9 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class implements the Cook & Torrance shading model.
+ */
 class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 {
 	b3Color     m_Ra;
@@ -451,19 +494,19 @@ class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 	b3Color     m_Mu;
 
 public:
-	b3_f32      m_ka;
-	b3_f32      m_ks;
-	b3_f32      m_kd;
-	b3_f32      m_m;
+	b3_f32      m_ka; //!< The ambient scaling factor.
+	b3_f32      m_ks; //!< The specular scaling factor.
+	b3_f32      m_kd; //!< The diffuse scaling factor.
+	b3_f32      m_m;  //!< Fresnel factor.
 
 public:
-	B3_ITEM_INIT(b3MatCookTorrance);
-	B3_ITEM_LOAD(b3MatCookTorrance);
+	B3_ITEM_INIT(b3MatCookTorrance); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatCookTorrance); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
+	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit);
 };
 
 /*************************************************************************
@@ -472,16 +515,21 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class simulates granite material. The granite surface is computed
+ * using the b3Noise::b3Granite() method. The resulting scalar mixes
+ * the two user defined materials.
+ */
 class B3_PLUGIN b3MatGranite : public b3Material, public b3Scaling
 {
 public:
-	b3_material       m_DarkMaterial;
-	b3_material       m_LightMaterial;
-	b3_count          m_Octaves;
+	b3_material       m_DarkMaterial;  //!< The lightest material.
+	b3_material       m_LightMaterial; //!< The darkest material.
+	b3_count          m_Octaves;       //!< The octave iterations used for turbulence.
 
 public:
-	B3_ITEM_INIT(b3MatGranite);
-	B3_ITEM_LOAD(b3MatGranite);
+	B3_ITEM_INIT(b3MatGranite); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatGranite); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -494,24 +542,27 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class simulates car surface colors.
+ */
 class B3_PLUGIN b3MatCarPaint : public b3Material
 {
 	b3_f64            m_MetallicScaleHalf;
 
 public:
-	b3_material       m_Parallel;
-	b3_material       m_Perpendicular;
-	b3_u32            m_Flags;
-	b3_f64            m_MetallicScale;
+	b3_material       m_Parallel;      //!< Parallel material.
+	b3_material       m_Perpendicular; //!< Perpendicular material.
+	b3_u32            m_Flags;         //!< Some flags
+	b3_f64            m_MetallicScale; //!< Scaling the metallic effect.
 
 public:
-	B3_ITEM_INIT(b3MatCarPaint);
-	B3_ITEM_LOAD(b3MatCarPaint);
+	B3_ITEM_INIT(b3MatCarPaint); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatCarPaint); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
+	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit);
 
 protected:
 	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
@@ -534,6 +585,9 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class simulates thin oil film surfaces.
+ */
 class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3Scaling
 {
 	static b3Color   m_WaveLength;
@@ -541,12 +595,12 @@ class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3
 
 public:
 	b3_s32           m_Flags;
-	b3_f32           m_Thickness; // in micro meter
-	b3Color          m_Intensity;
+	b3_f32           m_Thickness; //!< Thickness in micro meter.
+	b3Color          m_Intensity; //!< Color intensity filter.
 
 public:
-	B3_ITEM_INIT(b3MatThinFilm);
-	B3_ITEM_LOAD(b3MatThinFilm);
+	B3_ITEM_INIT(b3MatThinFilm); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3MatThinFilm); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
