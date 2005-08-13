@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3CameraProjection.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Render.h"

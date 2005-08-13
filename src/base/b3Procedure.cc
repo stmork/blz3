@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2005/08/13 13:29:02  sm
+**	- Refactoring
+**
 **	Revision 1.55  2005/08/10 13:20:44  smork
 **	- Documentation.
-**
+**	
 **	Revision 1.54  2005/08/10 12:49:42  smork
 **	- Documentation.
 **	
@@ -827,7 +830,7 @@ void b3Noise::b3OldMarble (const b3_vector *P,b3Color &Color)
 b3_f64 b3Noise::b3Wood(const b3_vector *d)
 {
 	b3_vector result;
-	b3_f64    s,r;
+	b3_f64    s;
 
 	s   = 2 * sqrt(d->x * d->x + d->z * d->z) - 0.15 * d->y;
 	b3MarbleCurve(&m_WoodSpline,&result,mMod(s + b3Turbulence(d)));

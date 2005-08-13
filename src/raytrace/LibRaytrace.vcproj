@@ -502,6 +502,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath="..\..\include\blz3\raytrace\b3Activation.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\raytrace\b3Animation.h">
 			</File>
 			<File
