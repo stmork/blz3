@@ -34,6 +34,12 @@
 #define CLASS_BBOX  0x60000000
 #define BBOX        CLASS_BBOX
 
+/**
+ * This class is a representation for a bounding box. This bounding box can
+ * be nested for hierarchical order. One bounding box can contain a list
+ * of shapes and a list of sub bounding boxes. The dimensions are computed
+ * via the b3ComputeBounds() method call.
+ */
 class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 {
 	static const b3_gl_line m_BBoxIndices[12 * 2];
@@ -47,31 +53,34 @@ class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 	}                m_Visibility;
 
 	// Inherited from Blizzard II
-	b3_u32           m_Type;               // texture type
+	b3_u32           m_Type;                      // texture type
 	b3_count         m_ShapeCount;
 	b3_count         m_CSGIntersectionCount;
 	b3_matrix        m_Inverse;
 
 public:
-	b3_vector        m_DimBase;
-	b3_vector        m_DimSize;
-	b3_matrix        m_Matrix;             // all composed transformations
-	char             m_BoxName[B3_BOXSTRINGLEN];   // object name
-	char             m_BoxURL[B3_BOXSTRINGLEN]; // HTML link
+	b3_vector        m_DimBase;                   //!< Lower base position of dimension size.
+	b3_vector        m_DimSize;                   //!< Dimension size.
+	b3_matrix        m_Matrix;                    //!< All composed transformations.
+	char             m_BoxName[B3_BOXSTRINGLEN];  //!< Oject name.
+	char             m_BoxURL[B3_BOXSTRINGLEN];   //!< HTML link (actually unused.)
 
-	b3_gl_vertex     m_BBoxVertex[8];
+	b3_gl_vertex     m_BBoxVertex[8];             //!< Bounding box vertex list (custom list in b3RenderObject).
 
-	static b3Color   m_GridColor;
-	static b3_bool   m_GridVisible;
+	static b3Color   m_GridColor;                 //!< Grid color of bounding boxes.
+	static b3_bool   m_GridVisible;               //!< Flag if bounding box grid should be shown.
 
-	static b3_count  m_Visible;
-	static b3_count  m_PartiallyVisible;
-	static b3_count  m_Invisible;
+	static b3_count  m_Visible;                   //!< Statistic cound of completely camera visible bounding boxes.
+	static b3_count  m_PartiallyVisible;          //!< Statistic cound of partially camera visible bounding boxes.
+	static b3_count  m_Invisible;                 //!< Statistic cound of completely camera invisible bounding boxes
 	
 public:
-	B3_ITEM_INIT(b3BBox);
-	B3_ITEM_LOAD(b3BBox);
+	B3_ITEM_INIT(b3BBox); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3BBox); //!< This constructor handles deserialization.
 
+	/**
+	 * Method for registering the shapes into the item registry.
+	 */
 	static void            b3Register();
 	       void            b3Write();
 	       void            b3Dump(b3_count level);
@@ -112,16 +121,31 @@ public:
 	static b3BBox         *b3ReadCOB(const char *filename);
 	static b3BBox         *b3ReadTGF(const char *filename);
 
+	/**
+	 * This method returns the list base of the bounding box shapes.
+	 *
+	 * @return List of bounding box shapes.
+	 */
 	inline b3Base<b3Item> *b3GetShapeHead()
 	{
 		return &m_Heads[0];
 	}
 
+	/**
+	 * This method returns the list base of the sub bounding boxes.
+	 *
+	 * @return List of sub bounding boxes.
+	 */
 	inline b3Base<b3Item> *b3GetBBoxHead()
 	{
 		return &m_Heads[1];
 	}
 
+	/**
+	 * This method computes the polar coordinates of the ray intersection point.
+	 *
+	 * @param ray The ray containing the intersection point.
+	 */
 	inline void            b3ComputeBoxPolar(b3_ray *ray)
 	{
 		b3_f64 x = ray->ipoint.x;

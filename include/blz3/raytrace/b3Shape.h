@@ -119,6 +119,9 @@ public:
 	B3_ITEM_INIT(b3Shape); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Shape); //!< This constructor handles deserialization.
 
+	/**
+	 * Method for registering the shapes into the item registry.
+	 */
 	static  void        b3Register();
 	        void        b3Write();
 	virtual void        b3StoreShape();
