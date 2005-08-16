@@ -162,7 +162,7 @@ public:
 	 * @param surface 
 	 * @param reflection The reflectance.
 	 * @param refraction The refractance.
-	 * @return
+	 * @return True if mixed via material properties. 
 	 */ 
 	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
