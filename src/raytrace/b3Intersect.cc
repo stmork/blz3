@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2005/08/19 14:34:56  sm
+**	- Documentation.
+**
 **	Revision 1.50  2005/06/17 10:29:05  smork
 **	- Made some inlining.
 **	- Removed some unnecessary tests.
 **	- Printing CPU message only once.
-**
+**	
 **	Revision 1.49  2005/06/10 14:22:12  smork
 **	- Some intersection vectorized.
 **	
@@ -1010,14 +1013,14 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 
 		denominator = -1.0 / b3Vector::b3SMul(&info->Normal, &ray->dir);
 		{
-			b3Vector::b3Sub(&pos, &info->O, &aux);
+			b3Vector::b3Sub(&pos, &info->base, &aux);
 			lValue = denominator * b3Vector::b3SMul(&info->Normal, &aux);
 			if ((lValue >= e) && (lValue < ray->Q))
 			{
 				b3Vector::b3CrossProduct(&aux, &dir, &product);
-				if ((aValue = b3Vector::b3SMul(&info->R2, &product) * denominator) >= 0)
+				if ((aValue = b3Vector::b3SMul(&info->dir2, &product) * denominator) >= 0)
 				{
-					bValue = -denominator * b3Vector::b3SMul(&info->R1, &product);
+					bValue = -denominator * b3Vector::b3SMul(&info->dir1, &product);
 					if ((bValue >= 0) && ((aValue + bValue) <= 1))
 					{
 						if (Index & 1)

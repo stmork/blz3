@@ -69,6 +69,13 @@
 class B3_PLUGIN b3ShapeBaseTransformation : public b3BaseTransformation
 {
 public:
+	/**
+	 * This method computes the derivates along the normal given by the 
+	 * ray structure.
+	 *
+	 * @param ray The ray which contains the normal.
+	 * @return True on success.
+	 */
 	b3_bool b3NormalDeriv(b3_ray *ray);
 };
 
@@ -124,17 +131,94 @@ public:
 	 */
 	static  void        b3Register();
 	        void        b3Write();
-	virtual void        b3StoreShape();
-	        void        b3InitActivation();
-	        b3Material *b3GetSurfaceValues(b3_surface *surface);
-	        void        b3BumpNormal(b3_ray *ray);
-	        void        b3ComputeBound(b3_stencil_limit *limit);
-	virtual b3_bool     b3CheckStencil(b3_polar *polar);
-	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	virtual b3_bool     b3Prepare();
+
+	/**
+	 * This method stores the basic shape values.
+	 *
+	 * @see b3Item::b3Write()
+	 */
+	virtual void        b3StoreShape();
+
+	/**
+	 * This method initializes animation activation.
+	 */
+	void        b3InitActivation();
+
+	/**
+	 * This method computes the material properties at the given surface point.
+	 *
+	 * @param surface The surface values which receives the material properties.
+	 * @return The hit material.
+	 * @see b3Material
+	 * @see b3_surface
+	 */
+	b3Material *b3GetSurfaceValues(b3_surface *surface);
+
+	/**
+	 * This method computes the normal at the computed intersection point.
+	 *
+	 * @param ray The ray which contains information about the intersection point.
+	 * @see b3Bump
+	 */
+	void        b3BumpNormal(b3_ray *ray);
+
+	/**
+	 * This method computes the stencil border in polar coordinates.
+	 *
+	 * @param limit The bounding box in polar coordinates.
+	 */
+	void        b3ComputeBound(b3_stencil_limit *limit);
+
+	/**
+	 * This method computes if the intersection point is valid. The intersection
+	 * point is represented in the shapes' polar coordinates. If the intersection
+	 * point due to stencelling is not valid False is returned and another
+	 * intersection point is to be tried.
+	 *
+	 * @param polar The intersection point as polar coordinates.
+	 * @return True if intersection point is valid.
+	 * @see b3Condition
+	 * @see b3Intersect()
+	 * @see b3_polar
+	 */
+	virtual b3_bool     b3CheckStencil(b3_polar *polar);
+
+	/**
+	 * This method transforms the shape with the given transformation matrix. The
+	 * affine flag signals if the normals must be recomputed. Otherwise the
+	 * normals can be simply transformed, too.
+	 * 
+	 * @param transformation The transformation matrix.
+	 * @param isAffine The flag if the transformation is affine.
+	 */
+	virtual void        b3Transform(b3_matrix *transformation,b3_bool isAffine);
+
+	/**
+	 * This method returns the possible value range of the polar coordinates.
+	 *
+	 * @param info The shape bound info structure to fill.
+	 * @see b3_stencil_bound
+	 */
 	virtual void        b3GetStencilBoundInfo(b3_stencil_bound *info);
-	virtual void        b3SetupPicking(b3PickInfo *pick_info);
-	virtual void        b3SetupGrid(b3PickInfo *pick_info);
+
+	/**
+	 * This method sets up picking information. This is for showing
+	 * end points of direction vectors or positions.
+	 *
+	 * @param info The pick info class.
+	 * @see b3PickInfo
+	 */
+	virtual void        b3SetupPicking(b3PickInfo *info);
+
+	/**
+	 * This method sets up grid information when picking. This is usable
+	 * for drawing direction vectors.
+	 *
+	 * @param info The pick info class.
+	 * @see b3PickInfo
+	 */
+	virtual void        b3SetupGrid(b3PickInfo *info);
 
 	/**
 	 * The implementation of this method computes the normal at the intersection point given in the
@@ -177,9 +261,23 @@ public:
 		return &m_Heads[2];
 	}
 
+	/**
+	 * This method computes the derivates along the normal given by the 
+	 * ray structure.
+	 *
+	 * @param ray The ray which contains the normal.
+	 * @return True on success.
+	 */
 	virtual b3_bool        b3NormalDeriv(b3_ray *ray);
 
 protected:
+	/**
+	 * This method computes the needed polygon faces in horizontal direction.
+	 *
+	 * @param xl The x coordinate of the lower bounding box corner in polar coordinates.
+	 * @param yl The y coordinate of the lower bounding box corner in polar coordinates.
+	 * @return The needed faces in horizontal direction.
+	 */
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
 	void            b3GetDiffuseColor(b3Color &diffuse);
 	b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
@@ -188,6 +286,11 @@ protected:
 	b3_bool         b3GetImage(b3Tx *image);
 	b3_render_mode  b3GetRenderMode();
 
+	/**
+	 * This method computes the quadratic normals of the shape.
+	 *
+	 * @param normalize This flag signals if the normal should be normalized.
+	 */
 	void            b3ComputeQuadricNormals(b3_bool normalize = true);
 
 	/**
@@ -206,41 +309,108 @@ protected:
 	 */
 	void            b3ComputeSphereNormals( b3_vector &base,b3_bool normalize);
 
-	// Cylinder
+	/**
+	 * This method computes the cylinder vertices.
+	 *
+	 * @param base The cylinder base point.
+	 * @param dir1 The first base plane direction vector.
+	 * @param dir2 The second base plane direction vector.
+	 * @param dir3 The axis direction vector.
+	 */
 	void            b3ComputeCylinderVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
-	void            b3ComputeCylinderIndices();
 
-	// Cone
+	/**
+	 * This method computes the cylinder indices for wire frame and polygons.
+	 */
+ 	void            b3ComputeCylinderIndices();
+
+	/**
+	 * This method computes the cone vertices.
+	 *
+	 * @param base The cone base point.
+	 * @param dir1 The first base plane direction vector.
+	 * @param dir2 The second base plane direction vector.
+	 * @param dir3 The axis direction vector.
+	 */
 	void            b3ComputeConeVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
+
+	/**
+	 * This method computes the cone indices for wire frame and polygons.
+	 */
 	void            b3ComputeConeIndices();
 
-	// Ellipsoid
+	/**
+	 * This method computes the ellipsoid wireframe and polygon count.
+	 *
+	 * @param gridCount The resulting wireframe line count.
+	 * @param polyCount The resulting polygon count
+	 */
 	void b3GetEllipsoidIndexCount(b3_count &gridCount,b3_count &polyCount);
+
+	/**
+	 * This method computes the ellipsoid vertices.
+	 *
+	 * @param base The cone base point.
+	 * @param dir1 The first base plane direction vector.
+	 * @param dir2 The second base plane direction vector.
+	 * @param dir3 The axis direction vector.
+	 */
 	void b3ComputeEllipsoidVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
+
+	/**
+	 * This method computes the ellipsoid indices for wire frame and polygons.
+	 */
 	void            b3ComputeEllipsoidIndices();
 
-	// Box
+	/**
+	 * This method computes the box vertices.
+	 *
+	 * @param base The cone base point.
+	 * @param dir1 The first base plane direction vector.
+	 * @param dir2 The second base plane direction vector.
+	 * @param dir3 The axis direction vector.
+	 */
 	void            b3ComputeBoxVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
+
+	/**
+	 * This method computes the box indices for wire frame and polygons.
+	 */
 	void            b3ComputeBoxIndices();
 
-	// Torus
+	/**
+	 * This method computes the torus wireframe and polygon count.
+	 *
+	 * @param gridCount The resulting wireframe line count.
+	 * @param polyCount The resulting polygon count
+	 */
 	void            b3GetTorusIndexCount(b3_count &gridCount,b3_count &polyCount);
+
+	/**
+	 * This method computes the box vertices.
+	 *
+	 * @param base The cone base point.
+	 * @param dir1 The first base plane direction vector.
+	 * @param dir2 The second base plane direction vector.
+	 * @param dir3 The axis direction vector.
+	 * @param aRad The tube radius.
+	 * @param bRad The ring radius.
+	 */
 	void            b3ComputeTorusVertices(
 		b3_vector &base,
 		b3_vector &dir1,
@@ -248,7 +418,15 @@ protected:
 		b3_vector &dir3,
 		b3_f64    aRad,
 		b3_f64    bRad);
+
+	/**
+	 * This method computes the torus' normals.
+	 */
 	void            b3ComputeTorusNormals();
+
+	/**
+	 * This method computes the torus indices for wire frame and polygons.
+	 */
 	void            b3ComputeTorusIndices();
 
 private:
@@ -314,6 +492,10 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a simple sphere. It can create up to two
+ * intersection points with a ray.
+ */
 class B3_PLUGIN b3Sphere : public b3SimpleShape    // Kugel
 {
 	b3_f64               m_QuadRadius;   // Quadrat vom Radius
@@ -327,14 +509,21 @@ public:
 	B3_ITEM_LOAD(b3Sphere); //!< This constructor handles deserialization.
 
 	void    b3StoreShape();
+	b3_bool b3Prepare();
 	void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	void    b3Normal(b3_ray *ray);
-	b3_bool b3NormalDeriv(b3_ray *ray);
-	void    b3SetupPicking(b3PickInfo *pick_info);
+	void    b3SetupPicking(b3PickInfo *info);
+	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
-	b3_bool b3Prepare();
-	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	/**
+	 * This method computes the derivates along the normal given by the 
+	 * ray structure.
+	 *
+	 * @param ray The ray which contains the normal.
+	 * @return True on success.
+	 */
+	b3_bool b3NormalDeriv(b3_ray *ray);
 
 protected:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -349,15 +538,19 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents 2d shapes with zero volume.
+ */
 class B3_PLUGIN b3Shape2 : public b3SimpleShape
 {
 protected:
-	b3_vector           m_Normal;
-	b3_f64              m_NormalLength;   // normal length
+	b3_vector           m_Normal;         //!< The precomputed normal.
+	b3_f64              m_NormalLength;   //!< The length of the normal.
 
 public:
-	b3_vector           m_Base;           // basis of area, disk
-	b3_vector           m_Dir1,m_Dir2;    // direction vectors
+	b3_vector           m_Base;           //!< Base point of 2d shapes.
+	b3_vector           m_Dir1;           //!< The first direction vector
+	b3_vector           m_Dir2;           //!< The second direction vector.
 
 protected:
 	B3_ITEM_BASE(b3Shape2); //!< This is a base class deserialization constructor.
@@ -368,10 +561,18 @@ public:
 
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
-	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	        void    b3Normal(b3_ray *ray);
-	        b3_bool b3NormalDeriv(b3_ray *ray);
-			void    b3SetupPicking(b3PickInfo *pick_info);
+			void    b3SetupPicking(b3PickInfo *info);
+
+	/**
+	 * This method computes the derivates along the normal given by the 
+	 * ray structure.
+	 *
+	 * @param ray The ray which contains the normal.
+	 * @return True on success.
+	 */
+	b3_bool b3NormalDeriv(b3_ray *ray);
 };
 
 /*************************************************************************
@@ -380,6 +581,9 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a parallelogramme.
+ */
 class B3_PLUGIN b3Area : public b3Shape2
 {
 	       b3_gl_vertex  m_AreaVertex[4];
@@ -406,6 +610,9 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a 2d disk.
+ */
 class B3_PLUGIN b3Disk : public b3Shape2
 {
 public:
@@ -427,6 +634,12 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This ckass provides support for 3d shapes. It can create up to two intersection points
+ * per ray. So this shape is also called a quadric.
+ *
+ * @see b3BaseTransformation
+ */
 class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTransformation
 {
 protected:
@@ -439,8 +652,8 @@ public:
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
-			void    b3SetupPicking(b3PickInfo *pick_info);
+	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
+			void    b3SetupPicking(b3PickInfo *info);
 
 protected:
 	virtual void    b3ComputeNormals(b3_bool normalize = true);
@@ -452,6 +665,11 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a cylinder.
+ *
+ * @see b3Shape3
+ */
 class B3_PLUGIN b3Cylinder : public b3Shape3
 {
 public:
@@ -475,6 +693,11 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a cone.
+ * 
+ * @see b3Shape3
+ */
 class B3_PLUGIN b3Cone : public b3Shape3
 {
 public:
@@ -497,6 +720,11 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents an ellipsoid,
+ * 
+ * @see b3Shape3
+ */
 class B3_PLUGIN b3Ellipsoid : public b3Shape3
 {
 public:
@@ -519,6 +747,11 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a box,
+ * 
+ * @see b3Shape3
+ */
 class B3_PLUGIN b3Box : public b3Shape3
 {
 	b3_gl_vertex   m_BoxVertex[6 * 4];
@@ -544,6 +777,10 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a 3d torus. It can create up to four intersection points
+ * per ray. So this shape is also called a quartic.
+ */
 class B3_PLUGIN b3Torus : public b3SimpleShape, public b3ShapeBaseTransformation
 {
 protected:
@@ -561,11 +798,11 @@ public:
 
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
-	        void    b3SetupPicking(b3PickInfo *pick_info);
+	        void    b3SetupPicking(b3PickInfo *info);
 
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 protected:
 	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -588,12 +825,22 @@ protected:
 // Voxel index inside grid
 #define GRID_INDEX(x,y,z,g) (((z) * (g) + (y)) * (g) + (x))
 
+/**
+ * This structure contains preparation information of one single triangle.
+ */
 struct b3_triainfo
 {
-	b3_vector32 O,R1,R2;
-	b3_vector32 Normal;
+	b3_vector32 base;     //!< The base point of the triangle.
+	b3_vector32 dir1;     //!< The precomputed direction vector to the second triangle corner.
+	b3_vector32 dir2;     //!< The precomputed direction vector to the third triangle corner.
+	b3_vector32 Normal;   //!< The precomputed triangle normal.
 };
 
+/**
+ * This class represents a triangle array which uses a vertex array. This class is
+ * also been used for the internal spline representation. All spline shapes are
+ * converted into triangles before rendering.
+ */
 class B3_PLUGIN b3TriangleShape : public b3SimpleShape
 {
 	b3Array<b3_index>     *m_GridList;       // list of grids
@@ -601,23 +848,28 @@ class B3_PLUGIN b3TriangleShape : public b3SimpleShape
 	b3_bool                m_GridComputed;
 
 protected:
-	b3_vector              m_Base,m_Size;    // size of bounding box of all triangles
-	b3_count               m_GridSize;       // num grid edges
-	b3_count               m_GridCount;      // array size of m_GridList;
+	b3_vector              m_Base;           //!< Base point of bounding box of all triangles.
+	b3_vector              m_Size;           //!< Dimension of bounding box of all triangles.
+	b3_count               m_GridSize;       //!< Number grid edges.
+	b3_count               m_GridCount;      //!< Array size of m_GridList.
 
 public:
-	b3_count               m_VertexCount;    // num of verteces and triangles
-	b3_count               m_TriaCount;
-	b3_vertex             *m_Vertices;
-	b3_triangle           *m_Triangles;
-	b3_u32                 m_Flags;          // interpolation flags
-	b3_res                 m_xSize,m_ySize;  // triangle order
+	b3_count               m_VertexCount;    //!< Number of vertices.
+	b3_count               m_TriaCount;      //!< Number of triangles.
+	b3_vertex             *m_Vertices;       //!< Pointer to vertices.
+	b3_triangle           *m_Triangles;      //!< Pointer to triangle index list.
+	b3_u32                 m_Flags;          //!< Interpolation flags.
+	b3_res                 m_xSize;          //!< Horizontal vertex distribution for texture mapping.
+	b3_res                 m_ySize;          //!< Vertical vertex distribution for texture mapping.
 
+	/**
+	 * This enumeration lists the bit position of the triangle interpolation flags.
+	 */
 	enum b3_triangle_flag
 	{
-		B3_PHONG_B               = 0,
-		B3_NORMAL_VERTEX_VALID_B = 1,
-		B3_NORMAL_FACE_VALID_B   = 2
+		B3_PHONG_B               = 0, //!< Use Phong interpolation.
+		B3_NORMAL_VERTEX_VALID_B = 1, //!< Use the predefined normal list for each vertex.
+		B3_NORMAL_FACE_VALID_B   = 2  //!< Use the predefined normal list for each triangle.
 	};
 
 
@@ -628,15 +880,33 @@ public:
 	B3_ITEM_INIT(b3TriangleShape); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3TriangleShape); //!< This constructor handles deserialization.
 
-	               ~b3TriangleShape();
-	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count,b3_res xSize,b3_res ySize);
+	/**
+	 * This destructor deinitializes the triangle shape.
+	 */
+	~b3TriangleShape();
+
+	/**
+	 * This method initializes a new triangle list. It initializes the
+	 * vertex count, the triangle count and the texture mapping order.
+	 *
+	 * @param vertCount The new vertex count.
+	 * @param triaCount The new triangle count.
+	 * @param xSize     The horizontal vertex distribution for texture mapping.
+	 * @param ySize     The vertical vertex distribution for texture mapping.
+	 * @return True on success.
+	 */
+	b3_bool b3Init(b3_count vertCount,b3_count triaCount,b3_res xSize,b3_res ySize);
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
 	virtual b3_bool b3Prepare();
-	virtual void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	virtual void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 protected:
-	        void    b3FreeTriaRefs();
+	/**
+	 * This method frees all prepared triangle references.
+	 */
+	void    b3FreeTriaRefs();
+
 private:
 	        b3_f64   b3IntersectTriangleList(
 				b3_ray    *ray,
@@ -713,7 +983,7 @@ public:
 	B3_ITEM_LOAD(b3Triangles); //!< This constructor handles deserialization.
 
 	void   b3StoreShape();
-	void   b3SetupPicking(b3PickInfo *pick_info);
+	void   b3SetupPicking(b3PickInfo *info);
 
 protected:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -746,10 +1016,10 @@ public:
 
 	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed,b3_count subdiv);
 	void    b3StoreShape();
-	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	b3_bool b3Prepare();
-	void    b3SetupPicking(b3PickInfo *pick_info);
-	void    b3SetupGrid(b3PickInfo *pick_info);
+	void    b3SetupPicking(b3PickInfo *info);
+	void    b3SetupGrid(b3PickInfo *info);
 
 protected:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -783,10 +1053,10 @@ public:
 	B3_ITEM_INIT(b3SplineShape); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3SplineShape); //!< This constructor handles deserialization.
 
-	void b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	void b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
-	void b3SetupPicking(b3PickInfo *pick_info);
-	void b3SetupGrid(b3PickInfo *pick_info);
+	void b3SetupPicking(b3PickInfo *info);
+	void b3SetupGrid(b3PickInfo *info);
 
 protected:
 	void b3StoreShape();
@@ -953,8 +1223,8 @@ public:
 	b3_count b3GetMaxIntersections();
 	void     b3Normal(b3_ray *ray);
 	b3_bool  b3Prepare();
-	void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
-	void     b3SetupPicking(b3PickInfo *pick_info);
+	void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	void     b3SetupPicking(b3PickInfo *info);
 
 protected:
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -981,8 +1251,8 @@ public:
 	        void     b3StoreShape();
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
-	        void     b3SetupPicking(b3PickInfo *pick_info);
+	        void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	        void     b3SetupPicking(b3PickInfo *info);
 	        b3_count b3GetMaxIntersections();
 
 protected:
@@ -1106,11 +1376,11 @@ public:
 	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	        b3_count b3GetMaxIntersections();
 	        void     b3Normal(b3_ray *ray);
-	        void     b3SetupPicking(b3PickInfo *pick_info);
+	        void     b3SetupPicking(b3PickInfo *info);
 
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	        void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 protected:
 	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);

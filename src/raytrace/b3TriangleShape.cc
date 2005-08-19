@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2005/08/19 14:34:56  sm
+**      - Documentation.
+**
 **      Revision 1.50  2005/06/10 12:40:03  smork
 **      - Some vectorization.
 **
@@ -481,11 +484,11 @@ b3_bool b3TriangleShape::b3Prepare()
 			P2 = m_Triangles[i].P2;		/* Dir1 */
 			P3 = m_Triangles[i].P3;		/* Dir2 */
 
-			info.O  = m_Vertices[P1].Point;
+			info.base  = m_Vertices[P1].Point;
 
-			b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point, &info.R1);
-			b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point, &info.R2);
-			b3Vector::b3CrossProduct(&info.R1, &info.R2, &info.Normal);
+			b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point, &info.dir1);
+			b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point, &info.dir2);
+			b3Vector::b3CrossProduct(&info.dir1, &info.dir2, &info.Normal);
 			
 			m_TriaInfos.b3Add(info);
 
