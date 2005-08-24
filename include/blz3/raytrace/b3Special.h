@@ -50,15 +50,23 @@
 #define CAUSTIC                 (CLASS_SPECIAL|TYPE_CAUSTIC)
 #define CLOUDS                  (CLASS_SPECIAL|TYPE_CLOUDS)
 
+/**
+ * This class represents a special effect which is scene global.
+ *
+ * @see b3Scene
+ */
 class B3_PLUGIN b3Special : public b3Item
 {
 protected:
-	B3_ITEM_BASE(b3Special);
+	B3_ITEM_BASE(b3Special); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Special);
-	B3_ITEM_LOAD(b3Special);
+	B3_ITEM_INIT(b3Special); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Special); //!< This constructor handles deserialization.
 
+	/**
+	 * Method for registering the shapes into the item registry.
+	 */
 	static void b3Register();
 };
 
@@ -71,8 +79,8 @@ public:
 	b3Color     m_Limit;
 
 public:
-	B3_ITEM_INIT(b3SuperSample);
-	B3_ITEM_LOAD(b3SuperSample);
+	B3_ITEM_INIT(b3SuperSample); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3SuperSample); //!< This constructor handles deserialization.
 
 	       void    b3Write();
 	       b3_bool b3IsActive();
@@ -91,8 +99,8 @@ public:
 	char             m_CameraName[B3_CAMERANAMELEN];
 
 public:
-	B3_ITEM_INIT(b3CameraPart);
-	B3_ITEM_LOAD(b3CameraPart);
+	B3_ITEM_INIT(b3CameraPart); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CameraPart); //!< This constructor handles deserialization.
 
 	void     b3Write();
 	void     b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
@@ -123,8 +131,8 @@ public:
 	b3_f32           m_NebularVal;
 
 public:
-	B3_ITEM_INIT(b3Nebular);
-	B3_ITEM_LOAD(b3Nebular);
+	B3_ITEM_INIT(b3Nebular); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Nebular); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -185,8 +193,8 @@ public:
 	b3_u32           m_CustomMeasure;
 
 public:
-	B3_ITEM_INIT(b3ModellerInfo);
-	B3_ITEM_LOAD(b3ModellerInfo);
+	B3_ITEM_INIT(b3ModellerInfo); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3ModellerInfo); //!< This constructor handles deserialization.
 
 	void        b3Write();
 	void        b3SnapToGrid(b3_vector *translation);
@@ -210,59 +218,133 @@ public:
 class b3AnimElement;
 class b3Scene;
 
-// ANIMATION
+/**
+ * This class provides a complete animation flow control.
+ */
 class B3_PLUGIN b3Animation : public b3Special
 {
 	// OK, the following values are only for "Lines"
-	b3_count        m_Frames;          // computed number of frames
-	b3_count        m_Tracks;          // number of visible tracks
-	b3_index        m_TrackIndex;      // start track in window 
-	b3_index        m_FrameIndex;      // start frame in window
-	b3_count        m_WTracks;         // actual number of tracks
-	b3_count        m_WFrames;         // whole of frames
-	b3AnimElement  *m_Element;         // actual animation element
-	b3_vector       m_AnimCenter;
+	b3_count        m_Frames;          //!< Computed number of frames.
+	b3_count        m_Tracks;          //!< Number of visible tracks.
+	b3_index        m_TrackIndex;      //!< Start track in window .
+	b3_index        m_FrameIndex;      //!< Start frame in window.
+	b3_count        m_WTracks;         //!< Actual number of tracks.
+	b3_count        m_WFrames;         //!< Whole of frames.
+	b3AnimElement  *m_Element;         //!< Actual animation element.
+	b3_vector       m_AnimCenter;      //!< Actual animation center.
 
 public:
-	b3_f64          m_Start;           // start time (one unit per frame)
-	b3_f64          m_End;             // end time (one unit per frame)
-	b3_f64          m_Time;            // time point
-	b3_f64          m_Neutral;         // neutral point
-	b3_count        m_FramesPerSecond;
-	b3_u32          m_Flags;
+	b3_f64          m_Start;           //!< Start time (one unit per frame)
+	b3_f64          m_End;             //!< End time (one unit per frame)
+	b3_f64          m_Time;            //!< Actual time point
+	b3_f64          m_Neutral;         //!< Neutral point for resetting animation
+	b3_count        m_FramesPerSecond; //!< Frames per second.
+	b3_u32          m_Flags;           //!< Some flags.
 
 public:
-	B3_ITEM_INIT(b3Animation);
-	B3_ITEM_LOAD(b3Animation);
+	B3_ITEM_INIT(b3Animation); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Animation); //!< This constructor handles deserialization.
 
+	/**
+	 * Method for registering the shapes into the item registry.
+	 */
 	static void            b3Register();
 	       void            b3Write();
 
 public:
-	       void            b3SetAnimElement (b3AnimElement *Element);
-	       b3_bool         b3IsActive();
-	       void            b3Activate(b3_bool activate = true);
+	/**
+	 * This method sets the given animation element for next computation.
+	 *
+	 * @param Element The animation element to compute.
+	 */
+	void            b3SetAnimElement (b3AnimElement *Element);
 
-	       void            b3SetAnimation (b3Scene *Global,b3_f64 t);
-	       void            b3ResetAnimation (b3Scene *Global);
-	       b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
-		   void            b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
-	       
-		   inline b3_f64   b3AnimTimeCode (b3_index index)
-		   {
-	           return m_Start + (b3_f64)index / m_FramesPerSecond;
-		   }
+	/**
+	 * This method returns the activation state of the animation.
+	 *
+	 * @return The activation state of the animation.
+	 */
+	b3_bool         b3IsActive();
 
-	       inline b3_index b3AnimFrameIndex (b3_f64 t)
-		   {
-			   return (b3_index)((t - m_Start) * m_FramesPerSecond);
-		   }
+	/**
+	 * This method activates the animation depending on the given flag.
+	 *
+	 * @param activate The activation flag.
+	 */
+	void            b3Activate(b3_bool activate = true);
 
-	       inline b3_f64   b3ClipTimePoint(b3_f64 val)
-		   {
-			   	return b3Math::b3Limit(val,m_Start,m_End);
-		   }
+	/**
+	 * This method computes all animation elements so that the animated objects
+	 * transforms for the given time point.
+	 *
+	 * @param Global The scene to animate.
+	 * @param t The time point to compute.
+	 */
+	void            b3SetAnimation (b3Scene *Global,b3_f64 t);
 
+	/**
+	 * This method resets the given scene to the given neutral time point.
+	 *
+	 * @param Global The scene to reset.
+	 */
+	void            b3ResetAnimation (b3Scene *Global);
+
+	/**
+	 * This method resets the animation and sets the activation state.
+	 *
+	 * @param scene The scene to reset.
+	 * @param activate The activation flag.
+	 * @return The old activation state.
+	 */
+	b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
+
+	/**
+	 * This method computes the animation center position for the given time point.
+	 *
+	 * @param Element The animation element.
+	 * @param center The center point.
+	 * @param t The time point to use.
+	 */
+	void            b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
+
+	/**
+	 * This method converts a frame index into a time point.
+	 *
+	 * @param index The frame index to convert.
+	 * @return The converted time point.
+	 */
+	inline b3_f64   b3AnimTimeCode (b3_index index)
+	{
+		return m_Start + (b3_f64)index / m_FramesPerSecond;
+	}
+
+	/**
+	 * This method converts a time point into a frame index.
+	 *
+	 * @param t The time point.
+	 * @return The converted frame index.
+	 */
+	inline b3_index b3AnimFrameIndex (b3_f64 t)
+	{
+		return (b3_index)((t - m_Start) * m_FramesPerSecond);
+	}
+
+	/**
+	 * This method clips a time point at the animation bounds.
+	 *
+	 * @param val The time point to clip.
+	 * @return The clipped time point.
+	 */
+	inline b3_f64   b3ClipTimePoint(b3_f64 val)
+	{
+		return b3Math::b3Limit(val,m_Start,m_End);
+	}
+
+	/**
+	 * This method returns the list base of the animation elements.
+	 *
+	 * @return The list base of animation elements.
+	 */
 	inline b3Base<b3Item> *b3GetAnimElementHead()
 	{
 		return &m_Heads[0];
@@ -307,8 +389,8 @@ public:
 	b3_count           m_SPP;
 
 public:
-	B3_ITEM_INIT(b3Distribute);
-	B3_ITEM_LOAD(b3Distribute);
+	B3_ITEM_INIT(b3Distribute); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Distribute); //!< This constructor handles deserialization.
 
 	virtual ~b3Distribute();
 	void     b3Write();
@@ -339,8 +421,8 @@ public:
 	b3_f32         m_Expon;
 
 public:
-	B3_ITEM_INIT(b3LensFlare);
-	B3_ITEM_LOAD(b3LensFlare);
+	B3_ITEM_INIT(b3LensFlare); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3LensFlare); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3IsActive();
@@ -358,8 +440,8 @@ public:
 	b3_count m_TraceDepth;
 
 public:
-	B3_ITEM_INIT(b3Caustic);
-	B3_ITEM_LOAD(b3Caustic);
+	B3_ITEM_INIT(b3Caustic); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Caustic); //!< This constructor handles deserialization.
 
 	void b3Write();
 };
@@ -371,8 +453,8 @@ public:
 class b3CloudBackground : public b3Special, public b3Clouds
 {
 public:
-	B3_ITEM_INIT(b3CloudBackground);
-	B3_ITEM_LOAD(b3CloudBackground);
+	B3_ITEM_INIT(b3CloudBackground); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CloudBackground); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();

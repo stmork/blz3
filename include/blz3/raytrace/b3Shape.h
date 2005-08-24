@@ -1225,6 +1225,12 @@ typedef b3_csg_intervals<B3_MAX_CSG_INTERSECTIONS_PER_BBOX> b3_bbox_intervals;
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents one CSG shape.
+ *
+ * @note Stencelling does not work on CSG shapes.
+ * @see b3SimpleShape
+ */
 class B3_PLUGIN b3CSGShape : public b3Shape
 {
 protected:
