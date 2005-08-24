@@ -325,7 +325,7 @@ public:
 *************************************************************************/
 
 /**
- * This class implements a wripping texture. This fits into the specified 2D
+ * This class implements a wrapping texture. This fits into the specified 2D
  * polar surface coordinates.
  */
 class B3_PLUGIN b3MatWrapTexture : public b3Material 

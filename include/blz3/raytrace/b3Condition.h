@@ -80,42 +80,62 @@
 #define COND_ATEXTUREWRAP       (CLASS_CONDITION|MODE_AND|TYPE_CTEXTUREWRAP)
 #define COND_AELLIPSE           (CLASS_CONDITION|MODE_AND|TYPE_ELLIPSE)
 
+/**
+ * This enumeration defines the purpose of a polar coordinate.
+ */
 enum b3_stencil_unit
 {
-	B3_STENCIL_UNIT,
-	B3_STENCIL_LENGTH,
-	B3_STENCIL_ANGLE
+	B3_STENCIL_UNIT,    //!< The value represents a simple unit.
+	B3_STENCIL_LENGTH,  //!< The value represents a length.
+	B3_STENCIL_ANGLE    //!< The value represents an angle.
 };
 
+/**
+ * This structure represents the bounding box of one shape formed by the
+ * conditional stencil classes.
+ */
 struct b3_stencil_limit
 {
 	b3_f64 x1,y1,x2,y2;
 };
 
+/**
+ * This structure contains information about maximal bounds in one direction.
+ */
 struct b3_stencil_bound_info
 {
-	b3_f64          min,max,factor;
+	b3_f64          min;    //!< The minimum lower bound.
+	b3_f64          max;    //!< The maximum upper bound.
+	b3_f64          factor; //!< The scaling factor for human readable values.
 	b3_stencil_unit unit;
 };
 
+/**
+ * This structure represents info about maximum surface bounds.
+ */
 struct b3_stencil_bound
 {
-	b3_stencil_bound_info xInfo;
-	b3_stencil_bound_info yInfo;
+	b3_stencil_bound_info xInfo; //!< The horizontal bound.
+	b3_stencil_bound_info yInfo; //!< The vertical bound.
 };
 
+/**
+ * This base class represents the behaviour for shape surface stencelling.
+ */
 class B3_PLUGIN b3Condition : public b3Item
 {
 	static const b3_u32 m_LogicOps[];
 
 protected:
-	B3_ITEM_BASE(b3Condition);
+	B3_ITEM_BASE(b3Condition); //!< This is a base class deserialization constructor.
 
 public:
+	B3_ITEM_INIT(b3Condition); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Condition); //!< This constructor handles deserialization.
 
-	B3_ITEM_INIT(b3Condition);
-	B3_ITEM_LOAD(b3Condition);
-
+	/**
+	 * Method for registering the shapes into the item registry.
+	 */
 	static  void    b3Register();
 	virtual b3_bool b3Prepare();
 	virtual void    b3ComputeBound(b3_stencil_limit *limit);
@@ -136,8 +156,8 @@ public:
 	b3_s32  m_Flags;
 
 public:
-	B3_ITEM_INIT(b3CondRectangle);
-	B3_ITEM_LOAD(b3CondRectangle);
+	B3_ITEM_INIT(b3CondRectangle); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondRectangle); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
@@ -157,11 +177,11 @@ public:
 	b3_f32  m_Denom;
 
 protected:
-	B3_ITEM_BASE(b3Cond2);
+	B3_ITEM_BASE(b3Cond2); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Cond2);
-	B3_ITEM_LOAD(b3Cond2);
+	B3_ITEM_INIT(b3Cond2); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Cond2); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -171,8 +191,8 @@ public:
 class B3_PLUGIN b3CondPara : public b3Cond2
 {
 public:
-	B3_ITEM_INIT(b3CondPara);
-	B3_ITEM_LOAD(b3CondPara);
+	B3_ITEM_INIT(b3CondPara); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondPara); //!< This constructor handles deserialization.
 
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -180,8 +200,8 @@ public:
 class B3_PLUGIN b3CondTria : public b3Cond2
 {
 public:
-	B3_ITEM_INIT(b3CondTria);
-	B3_ITEM_LOAD(b3CondTria);
+	B3_ITEM_INIT(b3CondTria); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondTria); //!< This constructor handles deserialization.
 
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -194,8 +214,8 @@ protected:
 	b3_f32  m_xCenter,m_yCenter,m_Radius;      // Mittelpunkt und Radius
 
 public:
-	B3_ITEM_INIT(b3CondCircle);
-	B3_ITEM_LOAD(b3CondCircle);
+	B3_ITEM_INIT(b3CondCircle); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondCircle); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
@@ -211,8 +231,8 @@ protected:
 	b3_f32  m_AngleStart,m_AngleEnd; // Segment
 
 public:
-	B3_ITEM_INIT(b3CondSegment);
-	B3_ITEM_LOAD(b3CondSegment);
+	B3_ITEM_INIT(b3CondSegment); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondSegment); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
@@ -229,28 +249,32 @@ protected:
 	b3_f32  m_AngleStart,m_AngleEnd; // Segment
 
 public:
-	B3_ITEM_INIT(b3CondEllipse);
-	B3_ITEM_LOAD(b3CondEllipse);
+	B3_ITEM_INIT(b3CondEllipse); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondEllipse); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
-// TYPE_TEXTURE
+/**
+ * This class implements simple stencil mapping. The 2D polar surface coordinates
+ * are transformed into texture coordinate domain using start point (translation)
+ * and scaling. The texture can be tiled.
+ */
 class B3_PLUGIN b3CondTexture : public b3Condition
 {
 protected:
-	b3Tx   *m_Texture;
-	b3_s32  m_Flags;               // unused yet
-	b3_f32  m_xStart,m_yStart;     // base of texture
-	b3_f32  m_xScale,m_yScale;     // scale of texture
-	b3_s32  m_xTimes,m_yTimes;     // repetion of texture in x- and y-direction
-	b3Path  m_Name;  // title
+	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start.
+	b3_f32            m_xScale,m_yScale;    //!< Texture scale.
+	b3_s32            m_xTimes,m_yTimes;    //!< Repeatition in x- y-direction.
+	b3_s32            m_Flags;              //!< Unused.
+	b3Path            m_Name;               //!< The texture file name.
+	b3Tx             *m_Texture;            //!< The selected texture.
 
 public:
-	B3_ITEM_INIT(b3CondTexture);
-	B3_ITEM_LOAD(b3CondTexture);
+	B3_ITEM_INIT(b3CondTexture); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();
@@ -258,19 +282,22 @@ public:
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
-// TYPE_WRAP_TEXTURE
+/**
+ * This class implements a wrapping stencil texture. This fits into the specified 2D
+ * polar surface coordinates.
+ */
 class B3_PLUGIN b3CondWrapTexture : public b3Condition
 {
 protected:
-	b3Tx   *m_Texture;
-	b3_s32  m_Flags;               // unused yet
-	b3_f32  m_xStart,m_yStart;     // borders in hor. direction
-	b3_f32  m_xEnd,m_yEnd;         // borders in vert. direction
-	b3Path  m_Name;                // title
+	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start
+	b3_f32            m_xEnd,m_yEnd;        //!< Surface coordinate end
+	b3_s32            m_Flags;              //!< Unused.
+	b3Path            m_Name;               //!< The texture file name.
+	b3Tx             *m_Texture;            //!< The selected texture.
 
 public:
-	B3_ITEM_INIT(b3CondWrapTexture);
-	B3_ITEM_LOAD(b3CondWrapTexture);
+	B3_ITEM_INIT(b3CondWrapTexture); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3CondWrapTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
 	b3_bool b3Prepare();

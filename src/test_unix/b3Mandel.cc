@@ -50,10 +50,13 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.15  2005/08/24 15:36:55  sm
+**	- Documentation.
+**
 **	Revision 1.14  2005/08/01 14:13:02  smork
 **	- Using b3AtomicCounter in Mandelbrot computation.
 **	- Documentation.
-**
+**	
 **	Revision 1.13  2005/07/31 10:10:05  sm
 **	- Bug fix.
 **	
@@ -349,6 +352,7 @@ void b3Mandel::b3Compute(
 	b3PrintF(B3LOG_NORMAL,"%3.3fM complex ops/s\n",count * 3 / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL,"%3.3fM mults/s\n",count * 5 / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL,"%3.3fM adds/s\n",count * 6 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL,"%3.3fMFlOp/s\n",count * 11 / tDiff / 1000000);
 
 	// Free what we have allocated.
 	delete [] threads;

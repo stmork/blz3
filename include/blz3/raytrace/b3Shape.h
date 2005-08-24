@@ -976,6 +976,9 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class epresents a shape built from a triangle mesh.
+ */
 class B3_PLUGIN b3Triangles : public b3TriangleShape
 {
 public:
@@ -998,23 +1001,35 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a rotation shape formed by a rotation axis and 
+ * a outline spline curve.
+ */
 class B3_PLUGIN b3SplineRotShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv;
 	b3_count         m_ySubDiv;
 
 public:
-	b3_line          m_Axis;                // for rotation shapes
-	b3_s32           m_rSubDiv;             // sub division for rotation
-	b3Spline         m_Spline;              // spline curve
-	b3_knot_vector   m_Knots; // one knot vector
-	b3_vector       *m_Controls;
+	b3_line          m_Axis;                //!< The rotation axis.
+	b3_s32           m_rSubDiv;             //!< The rotation sub division.
+	b3Spline         m_Spline;              //!< The outline spline curve rotated around the rotation axis.
+	b3_knot_vector   m_Knots;               //!< The knot vector vector of the outline spline curve.
+	b3_vector       *m_Controls;            //!< The control points of the outline spline curve.
 
 public:
 	B3_ITEM_INIT(b3SplineRotShape); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3SplineRotShape); //!< This constructor handles deserialization.
 
-	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed,b3_count subdiv);
+	/**
+	 * This method initializes the outline spline curve with default values.
+	 *
+	 * @param degree The outline spline degree.
+	 * @param controlNum The number of cotrol points.
+	 * @param closed True if the spline curve is closed.
+	 * @param subdiv The rotation sub division.
+	 */
+	void    b3Init(b3_count degree,b3_count controlNum,b3_bool closed,b3_count subdiv);
 	void    b3StoreShape();
 	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	b3_bool b3Prepare();
@@ -1033,18 +1048,21 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents the base class of a 2d spline shape.
+ */
 class B3_PLUGIN b3SplineShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv,m_ySubDiv;
 
 protected:
-	b3_count         m_GridVertexCount;
-	b3_count         m_SolidVertexCount;
+	b3_count         m_GridVertexCount;  //!< The computed vertex count for fireframe shading.
+	b3_count         m_SolidVertexCount; //!< The computed vertex count for solid shading.
 	
 public:
-	b3Spline         m_Spline[2];
-	b3_knot_vector   m_Knots[2];
-	b3_vector       *m_Controls;
+	b3Spline         m_Spline[2];  //!< The two spline representations.
+	b3_knot_vector   m_Knots[2];   //!< The two knot vectors.
+	b3_vector       *m_Controls;   //!< The control point grid.
 
 protected:
 	B3_ITEM_BASE(b3SplineShape); //!< This is a base class deserialization constructor.
@@ -1053,8 +1071,17 @@ public:
 	B3_ITEM_INIT(b3SplineShape); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3SplineShape); //!< This constructor handles deserialization.
 
-	void b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	/**
+	 * This method initializes a spline shape and computes the appropriate shape type
+	 * (area, cylinder or ring) depending on the control count and spline degrees.
+	 *
+	 * @param hDegree The horizontal spline degree.
+	 * @param vDegree The vertical spline degree.
+	 * @param hControlNum The horizontal control point dimension.
+	 * @param vControlNum The vertical control point dimension.
+	 */
 	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
+	void b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	void b3SetupPicking(b3PickInfo *info);
 	void b3SetupGrid(b3PickInfo *info);
 
@@ -1080,6 +1107,11 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents an piece of paper like shape formed by a 2d spline shape.
+ *
+ * @see b3SplineShape.
+ */
 class B3_PLUGIN b3SplineArea : public b3SplineShape
 {
 public:
@@ -1093,6 +1125,11 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a cylinder like shape formed by a 2d spline shape.
+ *
+ * @see b3SplineShape.
+ */
 class B3_PLUGIN b3SplineCylinder : public b3SplineShape 
 {
 public:
@@ -1106,6 +1143,11 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a torus like shape formed by a 2d spline shape.
+ *
+ * @see b3SplineShape.
+ */
 class B3_PLUGIN b3SplineRing : public b3SplineShape 
 {
 public:
@@ -1132,37 +1174,46 @@ class b3CSGShape;
 #define B3_MAX_CSG_SHAPES_PER_BBOX         80
 #define B3_MAX_CSG_INTERSECTIONS_PER_BBOX 240
 
+/**
+ * This enumeration lists all CSG operation modes.
+ */
 enum b3_csg_operation
 {
-	B3_CSG_UNION     = MODE_OR,
-	B3_CSG_INTERSECT = MODE_AND,
-	B3_CSG_SUB       = MODE_NOT
+	B3_CSG_UNION     = MODE_OR,  //!< CSG union.
+	B3_CSG_INTERSECT = MODE_AND, //!< CSG intersection.
+	B3_CSG_SUB       = MODE_NOT  //!< CSG subtraction.
 };
 
+/**
+ * This enumeration lists all possible intersection point types.
+ */
 enum b3_csg_index
 {
-	B3_CSG_SIDE = 0,   // CSG box only
-	B3_CSG_FRONT,      // CSG box only
-	B3_CSG_NORMAL,     // every CSG shape
-	B3_CSG_BOTTOM,     // CSG cylinder and cone
-	B3_CSG_TOP         // CSG cylinder only
+	B3_CSG_SIDE = 0,   //!< Side of a CSG box.
+	B3_CSG_FRONT,      //!< Front of a CSG box.
+	B3_CSG_NORMAL,     //!< Every CSG shape.
+	B3_CSG_BOTTOM,     //!< Bottom plate of cylinder or cone.
+	B3_CSG_TOP         //!< Top plate of a CSG cylinder.
 };
 
-// structures for CSG use
+/**
+ * This structure represents one intersection point a CSG shape can create.
+ */
 struct b3_csg_point
 {
-	b3_f64        m_Q;          // distance to intersection points
-	b3CSGShape   *m_Shape;      // shape which delivers the intersection points
-	b3_line64    *m_BTLine;
-	b3_csg_index  m_Index;      // surface index
+	b3_f64        m_Q;          //!< Distance to intersection points.
+	b3CSGShape   *m_Shape;      //!< Shape which delivers the intersection points.
+	b3_line64    *m_BTLine;     //!< The base transformed ray.
+	b3_csg_index  m_Index;      //!< The intersection point type.
 };
 
-
-// interval of intersection points
+/**
+ * This structure collects all CSG intersection points on a ray.
+ */
 template<int count> struct b3_csg_intervals
 {
-	b3_count      m_Count;
-	b3_csg_point  m_x[count];
+	b3_count      m_Count;    //!< Number of collected CSG intersection points.
+	b3_csg_point  m_x[count]; //!< All collected CSG intersection points of a bounding box.
 };
 
 typedef b3_csg_intervals<4>                                 b3_shape_intervals;
@@ -1177,11 +1228,11 @@ typedef b3_csg_intervals<B3_MAX_CSG_INTERSECTIONS_PER_BBOX> b3_bbox_intervals;
 class B3_PLUGIN b3CSGShape : public b3Shape
 {
 protected:
-	b3_s32           m_Index;
+	b3_s32           m_Index; //!< This is for GUI purposes in Lines III.
 
 public:
-	       b3_csg_operation m_Operation;
-	static b3_csg_operation m_CSGMode[];
+	       b3_csg_operation m_Operation;  //!< The CSG operation mode.
+	static b3_csg_operation m_CSGMode[];  //!< The list of possible operation modes.
 
 protected:
 	B3_ITEM_BASE(b3CSGShape); //!< This is a base class deserialization constructor.
@@ -1191,10 +1242,52 @@ public:
 	B3_ITEM_LOAD(b3CSGShape); //!< This constructor handles deserialization.
 
 public:
+	/**
+	 * This method computes all intersection points created by this shape and the given ray.
+	 *
+	 * @param ray The shooted ray.
+	 * @param interval The structure which collects the intersection points.
+	 * @param BTLine The base transformed ray.
+	 * @return True if any intersection point was found.
+	 */
 	virtual b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
-	        b3_size  b3GetOperationIndex(b3_csg_operation mode);
-	        void     b3Operate(b3_shape_intervals *local,b3_bbox_intervals *list,b3_bbox_intervals *result);
+
+	/**
+	 * This method gets the index of an operation mode table from the given operation mode.
+	 *
+	 * @param mode The operation mode.
+	 * @return The resulting index.
+	 */
+	b3_size  b3GetOperationIndex(b3_csg_operation mode);
+
+	/**
+	 * This method sorts the intersection points by usage of the shapes CSG operation mode.
+	 *
+	 * @todo Document this more precisely.
+	 * @param local The shape intersection points.
+	 * @param list  The existing intervals.
+	 * @param result The resulting intervals.
+	 */
+	void     b3Operate(b3_shape_intervals *local,b3_bbox_intervals *list,b3_bbox_intervals *result);
+
+	/**
+	 * This method computes the polar coordinates for the found intersection point and
+	 * puts the result into the given ray for further computation such as normal
+	 * computation or material shading.
+	 *
+	 * @param ray The ray getting the polar coordinates.
+	 * @param point The real computed intersection point.
+	 * @see b3_ray
+	 * @see b3_csg_point
+	 */
 	virtual void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+
+	/**
+	 * This method returns the maximal possible intersection count the shape can create.
+	 * The result must be divdable by two.
+	 *
+	 * @return The maximal possible amount of intersection the shape can create.
+	 */
 	virtual b3_count b3GetMaxIntersections();
 };
 
@@ -1204,13 +1297,16 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a CSG sphere.
+ */
 class B3_PLUGIN b3CSGSphere : public b3CSGShape
 {
-	b3_f64            m_QuadRadius;       // squared radius
+	b3_f64            m_QuadRadius;       //!< The squared radius
 
 public:
-	b3_vector         m_Base;             // mid of sphere
-	b3_vector         m_Dir;              // direction
+	b3_vector         m_Base;             //!< The center of the sphere
+	b3_vector         m_Dir;              //!< The radius direction
 
 public:
 	B3_ITEM_INIT(b3CSGSphere); //!< This constructor handles default initialization.
@@ -1239,6 +1335,9 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents CSG shapes which can produce two intersection points.
+ */
 class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTransformation
 {
 protected:
@@ -1265,6 +1364,11 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a CSG cylinder.
+ *
+ * @note The cylinder is closed at the bottom and the top by disk plates.
+ */
 class B3_PLUGIN b3CSGCylinder : public b3CSGShape3
 {
 public:
@@ -1287,6 +1391,11 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a CSG cone.
+ *
+ * @note The cone is closed at the bottom by a disk plate.
+ */
 class B3_PLUGIN b3CSGCone : public b3CSGShape3
 {
 
@@ -1310,6 +1419,9 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a CSG ellipsoid.
+ */
 class B3_PLUGIN b3CSGEllipsoid : public b3CSGShape3
 {
 
@@ -1334,6 +1446,9 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a CSG box.
+ */
 class B3_PLUGIN b3CSGBox : public b3CSGShape3
 {
 	b3_gl_vertex    m_BoxVertex[6 * 4];
@@ -1360,6 +1475,10 @@ protected:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class represents a CSG torus. This shape can create four
+ * intersection points.
+ */
 class B3_PLUGIN b3CSGTorus : public b3CSGShape, public b3ShapeBaseTransformation
 {
 	b3_f64             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad

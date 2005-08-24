@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2005/08/24 15:36:55  sm
+**      - Documentation.
+**
 **      Revision 1.56  2005/08/11 14:17:33  smork
 **      - Documentation.
 **      - Moved activation.
@@ -567,7 +570,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
 
-	Jit.pos         = surface->m_Incoming->ipoint;
+	Jit.pos           = surface->m_Incoming->ipoint;
 	Jit.m_LightView.x = m_Position.x - surface->m_Incoming->ipoint.x;
 	Jit.m_LightView.y = m_Position.y - surface->m_Incoming->ipoint.y;
 	Jit.m_LightView.z = m_Position.z - surface->m_Incoming->ipoint.z;
