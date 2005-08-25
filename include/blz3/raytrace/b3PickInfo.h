@@ -48,13 +48,36 @@ protected:
 
 public:
 	b3_pick_mode     m_AllowedMode;     //!< The move mode.
-	static b3Color   m_GridColor;
+	static b3Color   m_GridColor;       //!< The color of the pick points.
 
 public:
-	                 b3PickInfo();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3PickInfo();
+
+	/**
+	 * The destructor deinitializes this instance.
+	 */
 	virtual         ~b3PickInfo();
-	        b3_bool  b3SetShape(b3Shape *shape);
-	        void     b3Modified();
+
+	/**
+	 * This method sets a new shape into the pick info instance.
+	 *
+	 * @param shape The new shape.
+	 * @return True when the shape is not null.
+	 */
+	b3_bool  b3SetShape(b3Shape *shape);
+
+	/**
+	 * This method marks the pick info as modified. The vertex and index
+	 * list is cleared. The shapes' render object is invalidated using the
+	 * b3RenderObject::b3Recompute() method. The rendering object of this
+	 * instance is invalidated in the same way.
+	 *
+	 * @see b3RenderObject.
+	 */
+	void     b3Modified();
 
 	/**
 	 * This method adds a pick point to this instance with a given title.
@@ -72,8 +95,21 @@ public:
 	 * @param title The title to display.
 	 */
 	virtual void     b3AddPickDir(b3_vector *point,b3_vector *dir,const char *title = null) = 0;
-	        void     b3AddVertex(b3_vector *point);
-	        void     b3AddLine(b3_index a,b3_index b);
+
+	/**
+	 * This method adds a vertex for drawing a line between two pick points.
+	 *
+	 * @param point The point to add.
+	 */
+	void     b3AddVertex(b3_vector *point);
+
+	/**
+	 * This method adds a line which connects to vertices.
+	 *
+	 * @param a The first vertex index.
+	 * @param b The second vertex index.
+	 */
+	void     b3AddLine(b3_index a,b3_index b);
 
 protected:
 	        void     b3ComputeVertices();
