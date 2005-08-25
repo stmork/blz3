@@ -79,13 +79,30 @@ private:
 
 class b3Tx;
 
+/**
+ * This class resamples an image.
+ */
 class b3ImageSampler : public b3Sampler
 {
 public:
-	                      b3ImageSampler(b3Tx *tx);
+	/**
+	 * This constructor initializes image resampling.
+	 *
+	 * @param tx The image to resample.
+	 */
+	b3ImageSampler(b3Tx *tx);
+
 protected:
 	        b3SampleInfo *b3SampleInit(b3_count CPUs);
 	        void          b3SampleTask(b3SampleInfo *info);
+
+	/**
+	 * This method returns a pixel color at a given coordinate.
+	 *
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @return The resulting pixel color.
+	 */
 	virtual b3_pkd_color  b3SamplePixel(b3_coord x,b3_coord y) = 0;
 };
 

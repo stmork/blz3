@@ -23,17 +23,32 @@
 
 #define DEFAULT_BUMP_TILES 3
 
+/**
+ * This class visualizes bump structures.
+ */
 class b3BumpSampler : public b3Sampler
 {
 	static b3_vector m_Light;
 
 protected:
-	b3Tx     *m_Tx;
-	b3Bump   *m_Bump;
-	b3_count  m_Tiles;
+	b3Tx     *m_Tx;    //!< The image to sample in.
+	b3Bump   *m_Bump;  //!< The bump class instance to sample.
+	b3_count  m_Tiles; //!< The horizontal tiles.
 
 public:
-	              b3BumpSampler(b3Tx *tx,b3_count tiles = DEFAULT_BUMP_TILES);
+	/**
+	 * This constructor initializes this instance.
+	 *
+	 * @param tx The image to sample in.
+	 * @param tiles The number of tiles to use.
+	 */
+	b3BumpSampler(b3Tx *tx,b3_count tiles = DEFAULT_BUMP_TILES);
+
+	/**
+	 * This method sets the bump class instance.
+	 *
+	 * @param bump The bump class instance to sample.
+	 */
 	void          b3SetBump(b3Bump *bump);
 
 protected:

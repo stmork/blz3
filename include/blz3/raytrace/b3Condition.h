@@ -138,22 +138,65 @@ public:
 	 */
 	static  void    b3Register();
 	virtual b3_bool b3Prepare();
+
+	/**
+	 * This method compute the bounding box of this stencil condition
+	 * depending on the condition values.
+	 *
+	 * @param limit The info structure to fill.
+	 */
 	virtual void    b3ComputeBound(b3_stencil_limit *limit);
+
+	/**
+	 * This method checks wether the given polar coordinates matches into the
+	 * condition of this stencil.
+	 *
+	 * @param polar The polar coordinates to check.
+	 * @return True if the polar coordinates matches the stencil condition.
+	 */
 	virtual b3_bool b3CheckStencil(b3_polar *polar);
-	        b3_bool b3Conditionate(b3_bool input,b3_bool operation);
+
+	/**
+	 * This Method computes a Boolean expression depending of the
+	 * Boolean operand type specified with this stencil condition.
+	 *
+	 * @param input     All previous Boolean operations.
+	 * @param operation The actual result from this condition.
+	 * @return The result of the Boolean term specified with this condition.
+	 */
+	b3_bool b3Conditionate(b3_bool input,b3_bool operation);
 
 protected:
+	/**
+	 * This method checks a given limit against the object limit. The object
+	 * bound values are corrected so that the first values are smaller than
+	 * the second values.
+	 *
+	 * @param limit The bound to adjust.
+	 * @param object The object bound.
+	 */
 	static  void    b3CheckInnerBound(b3_stencil_limit *limit,b3_stencil_limit *object);
+
+	/**
+	 * This method checks a given limit against the object limit. The object
+	 * bound values are corrected so that the first values are smaller than
+	 * the second values.
+	 *
+	 * @param limit The bound to adjust.
+	 * @param object The object bound.
+	 */
 	static  void    b3CheckOuterBound(b3_stencil_limit *limit,b3_stencil_limit *object);
 };
 
-// TYPE_RECTANGLE
+/**
+ * This class represents a simple rectangular area for stencilling.
+ */
 class B3_PLUGIN b3CondRectangle : public b3Condition
 {
 public:
-	b3_f32  m_xStart,m_yStart;    // rel. start coordinates
-	b3_f32  m_xEnd,  m_yEnd;      // rel. end koordinates
-	b3_s32  m_Flags;
+	b3_f32  m_xStart,m_yStart;    //!< Polar start coordinates.
+	b3_f32  m_xEnd,  m_yEnd;      //!< Polar end coordinates.
+	b3_s32  m_Flags;              //!< Some flags.
 
 public:
 	B3_ITEM_INIT(b3CondRectangle); //!< This constructor handles default initialization.
@@ -167,14 +210,19 @@ public:
 #define RCB_ACTIVE  0
 #define RCF_ACTIVE (1 << RCB_ACTIVE)
 
-// TYPE_TRIANGLE, TYPE_PARALLELOGRAM
+/**
+ * This class represents 2d shapes for stencelling such as a triangle or
+ * a parallelogramme.
+ */
 class B3_PLUGIN b3Cond2 : public b3Condition
 {
+protected:
+	b3_f32  m_Denom;              //!< The determinand of the direction vectors.
+
 public:
-	b3_f32  m_xPos, m_yPos;       // base of triangle/ parallelogramme
-	b3_f32  m_xDir1,m_yDir1;      // direction 1
-	b3_f32  m_xDir2,m_yDir2;      // direction 2
-	b3_f32  m_Denom;
+	b3_f32  m_xPos, m_yPos;       //!< Base of triangle/ parallelogramme.
+	b3_f32  m_xDir1,m_yDir1;      //!< First direction vector.
+	b3_f32  m_xDir2,m_yDir2;      //!< Second direction vector.
 
 protected:
 	B3_ITEM_BASE(b3Cond2); //!< This is a base class deserialization constructor.
@@ -188,6 +236,9 @@ public:
 	void    b3ComputeBound(b3_stencil_limit *limit);
 };
 
+/**
+ * This class represents a parallelogramme stencil.
+ */
 class B3_PLUGIN b3CondPara : public b3Cond2
 {
 public:
@@ -197,6 +248,9 @@ public:
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
+/**
+ * This class represents a triangle stencil.
+ */
 class B3_PLUGIN b3CondTria : public b3Cond2
 {
 public:
@@ -206,12 +260,15 @@ public:
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
-
-// TYPE_CIRCLE
+/**
+ * This class represents a circle condition.
+ */
 class B3_PLUGIN b3CondCircle : public b3Condition
 {
 protected:
-	b3_f32  m_xCenter,m_yCenter,m_Radius;      // Mittelpunkt und Radius
+	b3_f32  m_xCenter;     //!< Polar x coordinate of center.
+	b3_f32  m_yCenter;     //!< Polar y coordinate of center.
+	b3_f32  m_Radius;      //!< Radius
 
 public:
 	B3_ITEM_INIT(b3CondCircle); //!< This constructor handles default initialization.
@@ -222,13 +279,15 @@ public:
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
-// TYPE_SEGMENT
+/**
+ * This class represents a circular segment bounded by radiuses and angles.
+ */
 class B3_PLUGIN b3CondSegment : public b3Condition
 {
 protected:
-	b3_f32  m_xCenter,   m_yCenter;  // Mittelpunkt
-	b3_f32  m_RadStart,  m_RadEnd;   // gültiger Bereich im Ring
-	b3_f32  m_AngleStart,m_AngleEnd; // Segment
+	b3_f32  m_xCenter,   m_yCenter;  //!< Center.
+	b3_f32  m_RadStart,  m_RadEnd;   //!< Radius bounds.
+	b3_f32  m_AngleStart,m_AngleEnd; //!< Angular bounds.
 
 public:
 	B3_ITEM_INIT(b3CondSegment); //!< This constructor handles default initialization.
@@ -239,14 +298,16 @@ public:
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
-// TYPE_ELLIPSE
+/**
+ * This method represents an ellipse segment bounded by radiuses and angles.
+ */
 class B3_PLUGIN b3CondEllipse : public b3Condition
 {
 protected:
-	b3_f32  m_xCenter,   m_yCenter;  // Mittelpunkt
-	b3_f32  m_xRadius,   m_yRadius;  // Radien
-	b3_f32  m_RadStart,  m_RadEnd;   // gültiger Bereich im Ring
-	b3_f32  m_AngleStart,m_AngleEnd; // Segment
+	b3_f32  m_xCenter,   m_yCenter;  //!< Center.
+	b3_f32  m_xRadius,   m_yRadius;  //!< The horizontal and vertical radius.
+	b3_f32  m_RadStart,  m_RadEnd;   //!< Radius bounds.
+	b3_f32  m_AngleStart,m_AngleEnd; //!< Anglular bounds.
 
 public:
 	B3_ITEM_INIT(b3CondEllipse); //!< This constructor handles default initialization.
@@ -304,6 +365,5 @@ public:
 	void    b3ComputeBound(b3_stencil_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
-
 
 #endif
