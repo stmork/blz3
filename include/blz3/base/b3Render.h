@@ -340,6 +340,11 @@ private:
 #endif
 };
 
+/**
+ * This class represents one render object.  A render object contains one
+ * array of vertices. One array of indices for wire frame drawing (grid
+ * drawing) and one array of indices for solid shading (triangle drawing).
+ */
 class B3_PLUGIN b3RenderObject
 {
 	static b3Tx        glTextureBuffer;

@@ -58,13 +58,15 @@
 
 #define TRACEPHOTO              TRACEPHOTO_MORK	// obsolete
 
-// m_BackgroundType
+/**
+ * This enumeration lists the possible background types.
+ */
 enum b3_bg_type
 {
-	TP_NOTHING    = 0,            // Lightning background
-	TP_TEXTURE    = 1,            // Background image
-	TP_SLIDE      = 2,            // Background slide
-	TP_SKY_N_HELL = 3             // Sky & hell
+	TP_NOTHING    = 0,            //!< Lightning background
+	TP_TEXTURE    = 1,            //!< Background image
+	TP_SLIDE      = 2,            //!< Background slide
+	TP_SKY_N_HELL = 3             //!< Sky clouds.
 };
 
 class b3Animation;
@@ -125,28 +127,31 @@ public:
 	// Background
 	b3Color          m_TopColor;
 	b3Color          m_BottomColor;
-	b3Tx            *m_BackTexture;         //
-	b3_bg_type       m_BackgroundType;      // Hintergrund: Farbe/Datei/...
+	b3Tx            *m_BackTexture;         //!< The background texture.
+	b3_bg_type       m_BackgroundType;      //!< The background type.
 
-	b3_count         m_TraceDepth;          // Rekursionstiefe
-	b3_u32           m_Flags;               // beschreibt, welche Werte gueltig sind
-	b3_f32           m_ShadowBrightness;
+	b3_count         m_TraceDepth;          //!< The ray trace depth.
+	b3_u32           m_Flags;               //!< 
+	b3_f32           m_ShadowBrightness;    //!< Ambient term of Mork shading.
 
 	// Some limits
 	b3_f32           m_BBoxOverSize;        // BBox-Ueberziehung
-	b3_f32           m_Epsilon;             // Schwellenwert
-	char             m_TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
+	b3_f32           m_Epsilon;             //!< Epsilon to use.
+	char             m_TextureName[B3_TEXSTRINGLEN]; //!< Name of background image.
 
-	static b3TxPool  m_TexturePool;
-	static b3_f64    epsilon;
-	static b3_s32    m_RenderPriority;
+	static b3TxPool  m_TexturePool;                  //!< The image pool.
+	static b3_f64    epsilon;                        //!< The near zero value.
+	static b3_s32    m_RenderPriority;               //!< The render thread priority to use for raytracing.
 
 public:
-	B3_ITEM_INIT(b3Scene);
-	B3_ITEM_LOAD(b3Scene);
+	B3_ITEM_INIT(b3Scene); //!< This constructor handles default initialization.
+	B3_ITEM_LOAD(b3Scene); //!< This constructor handles deserialization.
 
 	virtual ~b3Scene();
 
+	/**
+	 * Method for registering the shapes into the item registry.
+	 */
 	static  void             b3Register();
 	        void             b3Write();
 	        b3_bool          b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
@@ -279,40 +284,80 @@ private:
 	friend class b3MotionBlurRayRow;
 };
 
+/**
+ * This class represents one raytracing row to render.
+ *
+ * @see b3Row.
+ * @see b3Display
+ */
 class B3_PLUGIN b3RayRow : public b3Row
 {
 protected:
-	b3Display   *m_Display;
-	b3Scene     *m_Scene;
-	b3Shader    *m_Shader;
-	b3Color     *m_LastResult;
-	b3Color     *m_ThisResult;
+	b3Display   *m_Display;      //!< The used b3Display.
+	b3Scene     *m_Scene;        //!< The used b3Scene.
+	b3Shader    *m_Shader;       //!< The used b3Shader.
+	b3Color     *m_LastResult;   //!< The position of the previous color in row.
+	b3Color     *m_ThisResult;   //!< The position of the actual color.
 	b3_vector64  m_preDir;
-	b3_coord     m_y;
-	b3_res       m_xSize;
-	b3_res       m_ySize;
-	b3_f64       m_fxStep;
-	b3_f64       m_fy;
-	b3_f64       m_t;
+	b3_coord     m_y;            //!< The row's y coordinate
+	b3_res       m_xSize;        //!< The resulting image width.
+	b3_res       m_ySize;        //!< The resulting image height.
+	b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
+	b3_f64       m_fy;           //!< 
+	b3_f64       m_t;            //!< The actual time point.
 
 public:
-	                 b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	/**
+	 * This constructor initializes this row.
+	 *
+	 * @param scene The scene to raytrace.
+	 * @param display The display to render in.
+	 * @param y The y coordinate in image coordinates.
+	 * @param xSize The image width.
+	 * @param ySize The image height.
+	 */
+	b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+
+	/**
+	 * This destructor deinitializes this row instance.
+	 */
 	virtual         ~b3RayRow() {}
+
+	/**
+	 * This method simply raytraces this row.
+	 */
 	virtual void     b3Raytrace();
 
 protected:
-	        b3Color &b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy);
+	/**
+	 * This method shoots one ray which results in a color.
+	 *
+	 * @param ray The ray to shoot.
+	 * @param fx The projection plane x coordinate.
+	 * @param fy The projection plane y coordinate.
+	 * @return The raytraced color.
+	 */
+	b3Color &b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy);
 };
 
+/**
+ * This enumeration lists the row states for super sampling. This is
+ * necessary because of multi threading in SMP environments where it
+ * can happen, that the prevouis row is not earlier ready than the
+ * actual one.
+ */
 enum b3_row_state
 {
-	B3_STATE_NOT_STARTED,
-	B3_STATE_COMPUTING,
-	B3_STATE_CHECK,
-	B3_STATE_REFINING,
-	B3_STATE_READY
+	B3_STATE_NOT_STARTED, //!< Nothing raytraced, yet.
+	B3_STATE_COMPUTING,   //!< Actually raytracing.
+	B3_STATE_CHECK,       //!< Row needs check.
+	B3_STATE_REFINING,    //!< Actually refining.
+	B3_STATE_READY        //!< Raytracing complete.
 };
 
+/**
+ * This class handles super sampling depending on high contrast.
+ */
 class B3_PLUGIN b3SupersamplingRayRow : public b3RayRow
 {
 	b3SupersamplingRayRow *m_PrevRow;
@@ -322,8 +367,23 @@ class B3_PLUGIN b3SupersamplingRayRow : public b3RayRow
 	b3_bool                m_Debug;
 
 public:
-	              b3SupersamplingRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize,b3SupersamplingRayRow *previous);
+	/**
+	 * This constructor initializes this row instance.
+	 *
+	 * @param scene The scene to raytrace.
+	 * @param display The display to render in.
+	 * @param y The y coordinate in image coordinates.
+	 * @param xSize The image width.
+	 * @param ySize The image height.
+	 * @param previous The super sampling row directly above this one.
+	 */
+	b3SupersamplingRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize,b3SupersamplingRayRow *previous);
+
+	/**
+	 * This destructor deinitializes this row instance.
+	 */
 	virtual      ~b3SupersamplingRayRow();
+
 	virtual void  b3Raytrace();
 
 private:
@@ -332,22 +392,42 @@ private:
 	void    b3Convert();
 };
 
+/**
+ * This class provides the sampling for distributed raytracing.
+ */
 class B3_PLUGIN b3DistributedRayRow : public b3RayRow
 {
 protected:
-	b3Distribute *m_Distr;
-	b3_count      m_SPP;
-	b3_count      m_SPF;
-	b3_vector64  *m_xHalfDir;
-	b3_vector64  *m_yHalfDir;
-	b3_f32       *m_Samples;
+	b3Distribute *m_Distr;     //!< The class which describes distributed raytracing.
+	b3_count      m_SPP;       //!< Samples per pixel.
+	b3_count      m_SPF;       //!< Samples per frame.
+	b3_vector64  *m_xHalfDir;  //!< The half width of a pixel in world coordinates.
+	b3_vector64  *m_yHalfDir;  //!< The half height of a pixel in world coordinates.
+	b3_f32       *m_Samples;   //!< The sampling offsets provided by the b3Distribute::m_Samples member.
 
 public:
-	                b3DistributedRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	/**
+	 * This constructor initializes this row instance for distributed raytracing.
+	 *
+	 * @param scene The scene to raytrace.
+	 * @param display The display to render in.
+	 * @param y The y coordinate in image coordinates.
+	 * @param xSize The image width.
+	 * @param ySize The image height.
+	 */
+	b3DistributedRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+
+	/**
+	 * This destructor deinitializes this row instance.
+	 */
 	virtual        ~b3DistributedRayRow();
+
 	virtual void    b3Raytrace();
 };
 
+/**
+ * This class provides the sampling for motion blur.
+ */
 class B3_PLUGIN b3MotionBlurRayRow : public b3DistributedRayRow
 {
 	b3_index       *m_TimeIndex;
@@ -358,10 +438,31 @@ class B3_PLUGIN b3MotionBlurRayRow : public b3DistributedRayRow
 	b3_vector64     m_BackupDir;
 
 public:
-	                b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	/**
+	 * This constructor initializes this row instance for motion blur.
+	 *
+	 * @param scene The scene to raytrace.
+	 * @param display The display to render in.
+	 * @param y The y coordinate in image coordinates.
+	 * @param xSize The image width.
+	 * @param ySize The image height.
+	 */
+	b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+
+	/**
+	 * This destructor deinitializes this row instance.
+	 */
 	virtual        ~b3MotionBlurRayRow();
+
+	/**
+	 * This method sets the actual time point for the animation which is needed
+	 * for motion blur.
+	 *
+	 * @param t The actual time point.
+	 */
+	void    b3SetTimePoint(b3_f64 t);
+
 	virtual void    b3Raytrace();
-	        void    b3SetTimePoint(b3_f64 t);
 };
 
 // m_Flags
@@ -376,9 +477,18 @@ public:
 #define RAY_INSIDE       1
 #define RAY_OUTSIDE      0
 
+/**
+ * This class provides the entry point for registering all raytracing b3Itmes.
+ *
+ * @see b3Item
+ * @see b3World
+ */
 class b3RaytracingItems
 {
 public:
+	/**
+	 * This method registers all raytracing items for serialization.
+	 */
 	static void b3Register();
 };
 

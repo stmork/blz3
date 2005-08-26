@@ -21,9 +21,18 @@
 #include "blz3/raytrace/b3BaseTrans.h"
 #include "blz3/raytrace/b3Special.h"
 
+/**
+ * This class is a helper class to transform between world and
+ * camera coordinates.
+ */
 class B3_PLUGIN b3CameraProjection : public b3BaseTransformation
 {
 public:
+	/**
+	 * The constructor initializes the base transform.
+	 *
+	 * @param camera The camera to use.
+	 */
 	b3CameraProjection(b3CameraPart *camera);
 };
 

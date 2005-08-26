@@ -23,42 +23,72 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/raytrace/b3Special.h"
 
+/**
+ * This enumeration lists the possible view modes.
+ */
 enum b3_view_mode
 {
-	B3_VIEW_3D = 0,
-	B3_VIEW_TOP,
-	B3_VIEW_FRONT,
-	B3_VIEW_RIGHT,
-	B3_VIEW_LEFT,
-	B3_VIEW_BACK,
+	B3_VIEW_3D = 0,   //!< Perspective projection.
+	B3_VIEW_TOP,      //!< Parallel projection on top.
+	B3_VIEW_FRONT,    //!< Parallel projection front view.
+	B3_VIEW_RIGHT,    //!< Parallel projection right view.
+	B3_VIEW_LEFT,     //!< Parallel projection left view.
+	B3_VIEW_BACK,     //!< Parallel projection back view.
 
-	B3_VIEW_MAX            // Number of valid view modes
+	B3_VIEW_MAX       //!< Maximum number of valid view modes. 
 };
 
+/**
+ * This class represents one view. Several views can be stacked depending on
+ * the view mode.
+ */
 class b3RenderViewItem : public b3Link<b3RenderViewItem>
 {
 public:
-	b3_vector m_Size;
-	b3_vector m_Mid;
-	b3_f64    m_xRelation;
-	b3_f64    m_yRelation;
+	b3_vector m_Size;        //!< View dimension.
+	b3_vector m_Mid;         //!< View center.
+	b3_f64    m_xRelation;   //!< Scaling factor from horizontal camera width to real width.
+	b3_f64    m_yRelation;   //!< Scaling factor from vertical camera height to real height.
 
 public:
-	     b3RenderViewItem();
-	     b3RenderViewItem(b3_vector *lower,b3_vector *upper);
+	/**
+	 * This constructor initializes this view item.
+	 */
+	b3RenderViewItem();
+
+	/**
+	 * This constructor initializes this view item with the given view bounds.
+	 *
+	 * @param lower The lower corner.
+	 * @param upper The upper corner.
+	 */
+	b3RenderViewItem(b3_vector *lower,b3_vector *upper);
+
+	/**
+	 * This method sets a new boundary to this view item.
+	 *
+	 * @param lower The lower corner.
+	 * @param upper The upper corner.
+	 */
 	void b3Set(b3_vector *lower,b3_vector *upper);
 };
 
+/**
+ * This enumeration lists the action modes.
+ */
 enum b3_action_mode
 {
-	B3_ACTION_MOVE_RIGHT,
-	B3_ACTION_MOVE_LEFT,
-	B3_ACTION_MOVE_UP,
-	B3_ACTION_MOVE_DOWN,
-	B3_ACTION_ROT_LEFT,
-	B3_ACTION_ROT_RIGHT
+	B3_ACTION_MOVE_RIGHT, //!< Move right.
+	B3_ACTION_MOVE_LEFT,  //!< Move left.
+	B3_ACTION_MOVE_UP,    //!< Move up.
+	B3_ACTION_MOVE_DOWN,  //!< Move down.
+	B3_ACTION_ROT_LEFT,   //!< Rotate left.
+	B3_ACTION_ROT_RIGHT   //!< Rotate right.
 };
 
+/**
+ * This class handles view rendering.
+ */
 class b3RenderView
 {
 	// Camera description
@@ -80,18 +110,37 @@ class b3RenderView
 	b3RenderViewItem         *m_Actual;
 
 public:
-	b3_bool                   m_AntiAliased;
-	b3_bool                   m_AspectRatio;
+	b3_bool                   m_AntiAliased; //!< Use anti aliasing.
+	b3_bool                   m_AspectRatio; //!< Use correct aspect ratio.
 
 	// Viewport size
-	b3_res                    m_xRes;
-	b3_res                    m_yRes;
+	b3_res                    m_xRes;        //!< The view port width.
+	b3_res                    m_yRes;        //!< The view port height.
 
 public:
 	                  b3RenderView();
 	                 ~b3RenderView();
+
+	/**
+	 * This method sets the actual view mode. It switches the correct view stack.
+	 *
+	 * @param mode The new view mode to set.
+	 */
 	void              b3SetViewMode(b3_view_mode mode);
+
+	/**
+	 * This method checks wether the given view mode is actually used.
+	 *
+	 * @param mode The view mode to test.
+	 * @return True if the given view mode is used.
+	 */
 	b3_bool           b3IsViewMode(b3_view_mode mode);
+
+	/**
+	 * This method switches the perspective view to the given camera.
+	 *
+	 * @param camera The camera to set.
+	 */
 	void              b3SetCamera(b3CameraPart *camera);
 	void              b3SetCamera(b3Scene *scene);
 	b3_bool           b3SetBounds(b3Scene *scene);
@@ -139,6 +188,16 @@ public:
 			z,point);
 	}
 
+	/**
+	 * This method unprojects a point on the projection plane into world coordinates.
+	 * The xRelParam and yRelParam are relative coordinates in the range of [0..1[ where
+	 * the coordinate 0,0 is at the upper left corner of the view port screen.
+	 *
+	 * @param xRelParam The relative horizontal view port coordinate.
+	 * @param yRelParam The relative vertical view port coordinate.
+	 * @param zRelParam The view depth.
+	 * @param point The resulting point in world coordinates.
+	 */
 	inline void       b3Unproject(const b3_f64 xRelParam, const b3_f64 yRelParam, const b3_f64 zRelParam,b3_vector *point)
 	{
 		b3UnprojectInternal(
