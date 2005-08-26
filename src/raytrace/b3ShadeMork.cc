@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2005/08/26 16:22:43  sm
+**	- Documentation.
+**
 **	Revision 1.53  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
-**
+**	
 **	Revision 1.52  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
 **	
@@ -292,7 +295,7 @@ void b3ShaderMork::b3ShadeLight(
 	Jit->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
 
 	// No shadow => surface in light
-	if (Jit->shape == null)
+	if (Jit->shape == null) // This shape is the obscurer not the intersection point shape!!!
 	{
 		// specular high light
 		if ((ShapeAngle =

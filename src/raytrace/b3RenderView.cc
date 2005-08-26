@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2005/08/26 16:22:43  sm
+**	- Documentation.
+**
 **	Revision 1.45  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
-**
+**	
 **	Revision 1.44  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -407,7 +410,7 @@ b3_bool b3RenderView::b3GetDimension(b3_f64 &xSize,b3_f64 &ySize)
 		ySize = m_Upper.z - m_Lower.z;
 		break;
 
-		default:
+	default:
 		success = false;
 	}
 	return success;
@@ -455,11 +458,7 @@ void b3RenderView::b3Original()
 	if (m_ViewMode != B3_VIEW_3D)
 	{
 		// Empty stack
-		while((item = m_ViewStack[m_ViewMode].First) != null)
-		{
-			m_ViewStack[m_ViewMode].b3Remove(item);
-			m_Depot.b3Append(item);
-		}
+		m_Depot.b3Move(&m_ViewStack[m_ViewMode]);
 
 		// Allocate new top item
 		item = b3NewRenderViewItem();
@@ -470,7 +469,7 @@ void b3RenderView::b3Original()
 		}
 		else
 		{
-			b3PrintF(B3LOG_NORMAL,"Not enogh memory for allocating topmost view item.\n");
+			b3PrintF(B3LOG_NORMAL,"Not enough memory for allocating topmost view item.\n");
 		}
 	}
 }
