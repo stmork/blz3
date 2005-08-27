@@ -83,6 +83,9 @@ class b3RayRow;
 #define LENSFLARE_LOOP 6
 #define LENSFLARE_RING 2
 
+/**
+ * This class encapsulates a whole Blizzard III geometry.
+ */
 class B3_PLUGIN b3Scene : public b3Item
 {
 	static const b3_f64 m_Distances[LENSFLARE_LOOP];
