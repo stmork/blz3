@@ -117,16 +117,16 @@ class B3_PLUGIN b3Scene : public b3Item
 
 public:
 	// Camera
-	b3_vector        m_EyePoint;
-	b3_vector        m_ViewPoint;
-	b3_vector        m_Width;               // Bildschirmvektor X
-	b3_vector        m_Height;              // Bildschirmvektor Y
-	b3_res           m_xSize,m_ySize;       // Rechenaufloesung
-	b3_f32           m_xAngle,m_yAngle;     // Blickwinkel
+	b3_vector        m_EyePoint;            //!< Actual eye point.
+	b3_vector        m_ViewPoint;           //!< Actual view point.
+	b3_vector        m_Width;               //!< Horizontal projection plane vector.
+	b3_vector        m_Height;              //!< Vertical projection plane vector.
+	b3_res           m_xSize,m_ySize;       //!< Image resolution.
+	b3_f32           m_xAngle,m_yAngle;     //!< Horizontal and vertical view angle.
 
 	// Background
-	b3Color          m_TopColor;
-	b3Color          m_BottomColor;
+	b3Color          m_TopColor;            //!< Top background color.
+	b3Color          m_BottomColor;         //!< Bottom background color.
 	b3Tx            *m_BackTexture;         //!< The background texture.
 	b3_bg_type       m_BackgroundType;      //!< The background type.
 
@@ -135,7 +135,7 @@ public:
 	b3_f32           m_ShadowBrightness;    //!< Ambient term of Mork shading.
 
 	// Some limits
-	b3_f32           m_BBoxOverSize;        // BBox-Ueberziehung
+	b3_f32           m_BBoxOverSize;        //!< Bounding box dimension tolarence
 	b3_f32           m_Epsilon;             //!< Epsilon to use.
 	char             m_TextureName[B3_TEXSTRINGLEN]; //!< Name of background image.
 
@@ -147,6 +147,9 @@ public:
 	B3_ITEM_INIT(b3Scene); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Scene); //!< This constructor handles deserialization.
 
+	/**
+	 * This destructor deinitializes this scene instance.
+	 */
 	virtual ~b3Scene();
 
 	/**
@@ -154,115 +157,604 @@ public:
 	 */
 	static  void             b3Register();
 	        void             b3Write();
-	        b3_bool          b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 
-			// Drawing routines
-		    void             b3SetupVertexMemory(b3RenderContext *context);
-		    void             b3FreeVertices();
-	        void             b3Draw(b3RenderContext *context);
-			void             b3Update();
-			void             b3RecomputeMaterial();
-			void             b3UpdateMaterial();
+	/**
+	 * This method returns the selected render image resolution.
+	 *
+	 * @param xSize Image width.
+	 * @param ySize Image height.
+	 * @return True on success.
+	 */
+	b3_bool          b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 
-			// Filename handling
-	        char            *b3GetName();
-			char            *b3GetFilename();
-			void             b3SetFilename(const char *filename);
-			void             b3SetTexture(const char *name);
+	//////////////////////////
+	////////// Render handling
+	//////////////////////////
+	/** 
+	 * This method iterates through all objects and shapes to setup
+	 * vertex memory.
+	 *
+	 * @param context The render context to use.
+	 * @see b3RenderObject::b3SetupVertexMemory().
+	 */
+	void             b3SetupVertexMemory(b3RenderContext *context);
 
-			// Scene handling
-		    b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
-		    void             b3Raytrace(b3Display *display);
-		    void             b3AbortRaytrace();
-		    inline b3_bool   b3Intersect(b3_ray *ray,b3_bool check_visibility,b3_f64 max = DBL_MAX)
-			{
-				ray->Q     = max;
-				ray->shape = b3Intersect(b3GetFirstBBox(),ray,check_visibility);
+	/**
+	 * This method iterates through all objects and shapes to free
+	 * the allocated vertex and index memory.
+	 *
+	 * @see b3RenderObject::b3FreeVertices().
+	 */
+	void             b3FreeVertices();
 
-				return ray->shape != null;
-			}
-			b3_bool          b3IsObscured(b3_ray *ray,b3_f64 max = DBL_MAX)
-			{
-				ray->Q     = max;
-				ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
-				return ray->shape != null;
-			}
+	/** 
+	 * This method iterates through all objects and shapes to draw
+	 * all render objects in its configured state.
+	 *
+	 * @param context The render context to use.
+	 * @see b3RenderObject::b3Draw().
+	 */
+	void             b3Draw(b3RenderContext *context);
+
+	/**
+	 * This method iterates through all objects and shapes to update
+	 * the render object data in case the data is invalidated through
+	 * the b3RenderObject::b3Recompute() method.
+	 *
+	 * @see b3RenderObject::b3Update().
+	 */
+	void             b3Update();
+
+	/**
+	 * This method iterates through all objects and shapes and marks all
+	 * material data as invalid for recomputing through the b3UpdateMaterial()
+	 * method
+	 *
+	 * @see b3RenderObject::b3RecomputeMaterial().
+	 */
+	void             b3RecomputeMaterial();
+
+	/**
+	 * This method iterates through all objects and shapes to update
+	 * the render object material in case the material is invalidated through
+	 * the b3RenderObject::b3RecomputeMaterial() method.
+	 *
+	 * @see b3RenderObject::b3UpdateMaterial().
+	 */
+	void             b3UpdateMaterial();
+
+	////////////////////////////
+	////////// Filename handling
+	////////////////////////////
+	/**
+	 * This method returns the scene name. The scene name is computed from
+	 * the file name. The extension and the directory part is removed.
+	 *
+	 * @return The scene name.
+	 */
+	char            *b3GetName();
+
+	/**
+	 * This method returns the file name of this scene.
+	 *
+	 * @return The used file name of this scene.
+	 */
+	char            *b3GetFilename();
+
+	/**
+	 * This method sets a new file name of the scene.
+	 *
+	 * @param filename The new file name.
+	 */
+	void             b3SetFilename(const char *filename);
+
+	/**
+	 * This method sets a new background image file name.
+	 *
+	 * @param name The new file name of the background image.
+	 */
+	void             b3SetTexture(const char *name);
+
+	/////////////////////////
+	////////// Scene handling
+	/////////////////////////
+	/**
+	 * This method prepares the scene for raytracing into an image of the
+	 * given resolution,
+	 *
+	 * @param xSize The image width.
+	 * @param ySize The image height.
+	 * @return True on success.
+	 */
+	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
+
+	/**
+	 * This method simply raytraces the scene onto the given display.
+	 *
+	 * @param display The display to raytrace into.
+	 */
+	void             b3Raytrace(b3Display *display);
+
+	/**
+	 * This method aborts an active raytrace process.
+	 */
+	void             b3AbortRaytrace();
+
+	/**
+	 * This method computes the nearest intersection point to the rays base
+	 * position.
+	 *
+	 * @param ray The ray for intersection testing.
+	 * @param checkVisibility If true use camera visibility optimization.
+	 * @param max The maximum length of the ray to test.
+	 * @return True when any intersection point was found.
+	 */
+	inline b3_bool   b3Intersect(b3_ray *ray,b3_bool checkVisibility,b3_f64 max = DBL_MAX)
+	{
+		ray->Q     = max;
+		ray->shape = b3Intersect(b3GetFirstBBox(),ray,check_visibility);
+
+		return ray->shape != null;
+	}
+	/**
+	 * This method checks whether any intersection point is available on the
+	 * given ray. This is for shadow testing purposes which don't need any
+	 * surface values.
+	 *
+	 * @param ray The ray to test the occluding.
+	 * @param max The maximum length of the ray to test.
+	 * @return True when any intersection point was found.
+	 */
+	b3_bool          b3IsObscured(b3_ray *ray,b3_f64 max = DBL_MAX)
+	{
+		ray->Q     = max;
+		ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
+		return ray->shape != null;
+	}
 	
-			// shading
-			inline b3Shader *b3GetShader()
-			{
-				return m_Shader;
-			}
-			void             b3SetShading(b3_u32 class_type);
-		    void             b3GetBackgroundColor(b3_ray *ray,b3_f64 fx,b3_f64 fy);
-		    void             b3MixLensFlare(b3_ray *ray);
-		    void             b3GetInfiniteColor(b3_ray *ray);
+	//////////////////
+	////////// Shading
+	//////////////////
+	/**
+	 * This method returns the configured shader instance.
+	 *
+	 * @return The configured shader instance.
+	 */
+	inline b3Shader *b3GetShader()
+	{
+		return m_Shader;
+	}
 
-			// object methods
-			inline b3Base<b3Item> *b3GetBBoxHead()
-			{
-				return &m_Heads[0];
-			}
+	/**
+	 * This method setup new shading. The shader is instanciated depending on
+	 * the given class type.
+	 *
+	 * @param classType The class type which defines the shader.
+	 */
+	void             b3SetShading(b3_u32 classType);
 
-			inline b3BBox  *b3GetFirstBBox()
-			{
-				return (b3BBox *)b3GetBBoxHead()->First;
-			}
+	/**
+	 * This method copmutes the infinite background color depending on
+	 * the specified background type.
+	 *
+	 * @param ray The shooting ray which runs into infinity.
+	 * @param fx The relative x coordinate of the result image in the range [-1..1].
+	 * @param fy The relative y coordinate of the result image in the range [-1..1].
+	 */
+	void             b3GetBackgroundColor(b3_ray *ray,b3_f64 fx,b3_f64 fy);
 
-			void            b3Recount();
-	        void            b3Reorg();
-		    b3_count        b3GetBBoxCount();
-		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
-	        b3_bool         b3BacktraceRecompute(b3BBox *search);
-		    b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
-		    b3BBox         *b3FindParentBBox(b3Shape *shape);
-	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
-	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
-			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
-		    void            b3Activate(b3_bool activate=true);
-		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
-	        void            b3ComputeVisibility();
+	/**
+	 * This method mixes additional lens flares into the result color if
+	 * lens flares are configured.
+	 *
+	 * @param ray The shooting ray
+	 * @see b3_ray
+	 */
+	void             b3MixLensFlare(b3_ray *ray);
 
-			// camera methods
-		    b3CameraPart   *b3GetFirstCamera(b3_bool must_active = false);
-	        b3CameraPart   *b3GetActualCamera();
-			b3CameraPart   *b3GetCameraByName(const char *camera_name);
-		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
-		    b3CameraPart   *b3UpdateCamera();
-			b3_bool         b3GetTitle(char *title,size_t size);
-			void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
+	/**
+	 * This method computes the infinite color in case the ray depth is not
+	 * at top level. In such a case the image coordinates must be computed
+	 * otherwise. This method calls the b3GetBackgroundColor() method.
+	 *
+	 * @param ray The infinite ray.
+	 * @see b3GetBackgroundColor().
+	 */
+	void             b3GetInfiniteColor(b3_ray *ray);
+
+	/**
+	 * This method returns the list base of the top level objects.
+	 *
+	 * @return The list base of the top level objects.
+	 */
+	inline b3Base<b3Item> *b3GetBBoxHead()
+	{
+		return &m_Heads[0];
+	}
+
+	/**
+	 * This method returns the first object.
+	 *
+	 * @return The first object in the scene.
+	 */
+	inline b3BBox  *b3GetFirstBBox()
+	{
+		return (b3BBox *)b3GetBBoxHead()->First;
+	}
+
+	/**
+	 * This method recounts the object hierarchy depth of the scene
+	 * hierarchy. Every object gets the hierarchy depth in its type
+	 * part of the class type field.  This method call is necessary
+	 * before serializing the scene so that the hierarchy can be
+	 * reconstructed during deserialization.
+	 *
+	 * @see b3Reorg()
+	 * @see b3World::b3Write()
+	 */
+	void            b3Recount();
+
+	/**
+	 * This method reorganizes the object hierarchy after deserialization.
+	 *
+	 * @see b3Recount()
+	 * @see b3World::b3Read()
+	 */
+	void            b3Reorg();
+
+	/**
+	 * This method returns the object count.
+	 *
+	 * @return The object count in the scene.
+	 */
+	b3_count        b3GetBBoxCount();
+
+	/**
+	 * This method recursively recomputes the scenes bounding box.
+	 *
+	 * @param lower The resulting lower corner of the scene bounding box.
+	 * @param upper The resulting upper corner of the scene bounding box.
+	 * @return True on success.
+	 */
+	b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+
+	/**
+	 * This method invalidates all objects beginning at the given object
+	 * up in the hierarchy to the root object.
+	 *
+	 * @param search The leaf element to invalidate.
+	 * @return True on success.
+	 * @see b3RenderObject::b3Recompute()
+	 * @warning This method may be slow. It is ment for GUI purposes only.
+	 */
+	b3_bool         b3BacktraceRecompute(b3BBox *search);
+
+	/**
+	 * This method searches recursively in the object hierarchy the list base
+	 * of the given object.
+	 *
+	 * @param bbox The object to search for the object list base it belongs to.
+	 * @return The belonging object list base.
+	 * @warning This method may be slow. It is ment for GUI purposes only.
+	 */
+
+	b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
+	/**
+	 * this method searches in the object hierarchy the hosting object of the
+	 * given shape.
+	 *
+	 * @param shape The shape to search for the object it belongs to.
+	 * @return The belonging object.
+	 * @warning This method may be slow. It is ment for GUI purposes only.
+	 */
+	b3BBox         *b3FindParentBBox(b3Shape *shape);
+
+	/**
+	 * This method collects all objects which tangents the given ray.
+	 *
+	 * @param line The ray to shoot.
+	 * @param array The array which gets the object pointers.
+	 * @param max The maximum distance of the ray direction.
+	 */
+	void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
+
+	/**
+	 * This method collects all objects in the given bounding box.
+	 *
+	 * @param lower The lower corner of the bounding box.
+	 * @param upper The upper corner of the bounding box.
+	 * @param array  The array which gets the object pointers.
+	 */
+	void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
+
+	/**
+	 * This method collects all objects which are in the given activation state.
+	 *
+	 * @param array The array which gets the object pointers.
+	 * @param activation The activation state.
+	 */
+	void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
+
+	/**
+	 * This method sets the hole hierarchy into the given state.
+	 *
+	 * @param activate The activation state.
+	 */
+	void            b3Activate(b3_bool activate=true);
+
+	/**
+	 * This method transforms objects in the hierarchy depending on the given states.
+	 *
+	 * @param transformation The transformation matrix.
+	 * @param isAffine This flag signals if the transformation is affine. In this case the vertex
+	 * normals can be transformed, too. Otherwise the normals must be recomputed.
+	 * @param forceAction Force transformation and ignore activation state of object.
+	 */
+	void            b3Transform(b3_matrix *transformation,b3_bool isAffine = true,b3_bool forceAction = false);
+
+	/**
+	 * This method recomputes for all objects the visibility in conjunction with
+	 * the actual camera.
+	 */
+	void            b3ComputeVisibility();
+
+	/////////////////////////
+	////////// camera methods
+	/////////////////////////
+	/**
+	 * This method returns the first camera. If the given
+	 * must active flag is set the method returns the first
+	 * active camera if any.
+	 *
+	 * @param mustActive Force first camera to be active.
+	 * @return The first camera.
+	 */
+	b3CameraPart   *b3GetFirstCamera(b3_bool mustActive = false);
+
+	/**
+	 * This method returns the actually selected camera.
+	 *
+	 * @return The actually selected camera.
+	 * @see b3SetCamera().
+	 */
+	b3CameraPart   *b3GetActualCamera();
+
+	/**
+	 * This method returns the first camera which matches
+	 * the given camera name. The name comparison is case insensitive.
+	 *
+	 * @param cameraName The camera name to search for.
+	 * @return The found camera if any.
+	 */
+	b3CameraPart   *b3GetCameraByName(const char *cameraName);
+
+	/**
+	 * This method returns the next camera outgoing from the given camera.
+	 *
+	 * @param act The camera position to search from.
+	 * @return The next camera.
+	 */
+	b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
+
+	/**
+	 * This method copies the values from the actual set camera
+	 * into the scene copies.
+	 */
+	b3CameraPart   *b3UpdateCamera();
+
+	/**
+	 * This method returns the actual camera title. If the actual camera
+	 * is defined and its title has a length greater than zero this one
+	 * is used. If no actual camera is defined the scene file name is
+	 * returned.
+	 *
+	 * @param title The buffer which receives the camera name.
+	 * @param size The buffer size of the retrieving camera name.
+	 * @return True if the result name has a length greater than zero.
+	 */
+	b3_bool         b3GetTitle(char *title,size_t size);
+
+	/**
+	 * This method sets a new actual camera. An additional flag signals if
+	 * the camera should in front of the special list. This may accelerate
+	 * access via the b3GetCameraByName() method.
+	 *
+	 * @param camera The camera to set as actual camera.
+	 * @param reorder A flag which signals if the camera should be put in front
+	 * of all other cameras.
+	 */
+	void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
 	
-			// light methods
-			inline b3Base<b3Item> *b3GetLightHead()
-			{
-				return &m_Heads[1];
-			}
-			b3Light        *b3GetLight(b3_bool must_active = false);
-			b3Light        *b3GetLightByName(const char *light_name);
-			b3_count        b3GetLightCount();
+	////////////////////////
+	////////// Light methods
+	////////////////////////
+	/**
+	 * This method returns the list base of all light sources.
+	 *
+	 * @return The list base of the light sources.
+	 */
+	inline b3Base<b3Item> *b3GetLightHead()
+	{
+		return &m_Heads[1];
+	}
 
-			// Special access methods
-			inline b3Base<b3Item> *b3GetSpecialHead()
-			{
-				return &m_Heads[2];
-			}
-			b3Animation       *b3GetAnimation(b3_bool force = false);
-		    b3ModellerInfo    *b3GetModellerInfo();
-			b3Distribute      *b3GetDistributed(b3_bool force = true);
-		    b3Nebular         *b3GetNebular    (b3_bool force = true);
-		    b3SuperSample     *b3GetSuperSample(b3_bool force = true);
-		    b3LensFlare       *b3GetLensFlare  (b3_bool force = false);
-			b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
+	/**
+	 * This method returns the first light source. If the given
+	 * must active flag is set the method returns the first
+	 * active light source if any.
+	 *
+	 * @param mustActive Force first light source to be active.
+	 * @return The first light source.
+	 */
+	b3Light        *b3GetLight(b3_bool mustActive = false);
 
-			// Animation
-			void            b3SetAnimation (b3_f64 t);
-			b3_f64          b3GetTimePoint();
-	        void            b3ResetAnimation();
-			void            b3Animate(b3Activation::b3_anim_activation activation);
+	/**
+	 * This method returns the first light source which matches
+	 * the given light name. The name comparison is case insensitive.
+	 *
+	 * @param lightName The light name to search for.
+	 * @return The found light source if any.
+	 */
+	b3Light        *b3GetLightByName(const char *lightName);
 
+	/**
+	 * This method returns the light source count.
+	 *
+	 * @return The amount of light sources.
+	 */
+	b3_count        b3GetLightCount();
+
+	/////////////////////////////////
+	////////// Special access methods
+	/////////////////////////////////
+	/**
+	 * This method returns the list base of global special effects.
+	 *
+	 * @return The list base of special effects.
+	 */
+	inline b3Base<b3Item> *b3GetSpecialHead()
+	{
+		return &m_Heads[2];
+	}
+
+	/**
+	 * This method returns the animation definition.
+	 * If there is no animation definition found and the given force flag is set
+	 * a new one is returned. This animation class is the root for
+	 * all animation elements.
+	 *
+	 * @param force If a animation instance is forced.
+	 * @return The animation definition.
+	 * @see b3AnimElement.
+	 */
+	b3Animation       *b3GetAnimation(b3_bool force = false);
+
+	/**
+	 * This method returns a modeller helper class instance. If no instance
+	 * was found a new one is created.
+	 *
+	 * @return The modeller helper information instance.
+	 */
+	b3ModellerInfo    *b3GetModellerInfo();
+
+	/**
+	 * This method returns the distributed raytracing special effect definition.
+	 * If there is no distributed raytracing definition found and the given force flag is set
+	 * a new one is returned.
+	 *
+	 * @param force If a distributed raytracing instance is forced.
+	 * @return The distributed raytracing definition.
+	 */
+	b3Distribute      *b3GetDistributed(b3_bool force = true);
+
+	/**
+	 * This method returns the nebular special effect definition.
+	 * If there is no nebular definition found and the given force flag is set
+	 * a new one is returned.
+	 *
+	 * @param force If a nebular instance is forced.
+	 * @return The nebular definition.
+	 */
+	b3Nebular         *b3GetNebular    (b3_bool force = true);
+
+	/**
+	 * This method returns the super sampling definition.
+	 * If there is no super sampling definition found and the given force flag is set
+	 * a new one is returned.
+	 *
+	 * @param force If a super sampling instance is forced.
+	 * @return The super sampling definition.
+	 */
+	b3SuperSample     *b3GetSuperSample(b3_bool force = true);
+
+	/**
+	 * This method returns the lens flare special effect definition.
+	 * If there is no lens flare definition found and the given force flag is set
+	 * a new one is returned.
+	 *
+	 * @param force If a lens flare instance is forced.
+	 * @return The lens flare definition.
+	 */
+	b3LensFlare       *b3GetLensFlare  (b3_bool force = false);
+
+	/**
+	 * This method returns the cloud background special effect definition.
+	 * If there is no cloud definition found and the given force flag is set
+	 * a new one is returned.
+	 *
+	 * @param force If an cloud background instance is forced.
+	 * @return The cloud background definition.
+	 */
+	b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
+
+	////////////////////
+	////////// Animation
+	////////////////////
+	/**
+	 * This method sets the global animation time point.
+	 *
+	 * @param t The new animation time point to move to.
+	 */
+	void            b3SetAnimation (b3_f64 t);
+
+	/**
+	 * This method returns the actual animation time point.
+	 *
+	 * @return The actual animation time point.
+	 */
+	b3_f64          b3GetTimePoint();
+
+	/**
+	 * This method resets the animation to the neutral position time point.
+	 */
+	void            b3ResetAnimation();
+
+	/**
+	 * This method animates recursively the scene.
+	 *
+	 * @param activation The activation state.
+	 */
+	void            b3Animate(b3Activation::b3_anim_activation activation);
+
+	/**
+	 * This method reads a TGF scene and converts it into a Blizzard III scene.
+	 *
+	 * @param filename The file name of the TGF file.
+	 * @return The converted Blizzard III scene.
+	 */
 	static  b3Scene        *b3ReadTGF(const char *filename);
+
+	/**
+	 * This method checks the given image file name for existance in the
+	 * image pool and setups the given pointer reference. This is for
+	 * preparing surface properties for raytracing such as texture mapping
+	 * or bump mapping.
+	 *
+	 * @param tx The pointer to a pointer which receives the image reference.
+	 * @param name The image name to search for.
+	 * @return True on success.
+	 */
 	static  b3_bool         b3CheckTexture(b3Tx **tx,const char *name);
-	static  b3_bool         b3CutTextureName(const char *full_name,char *short_name);
+
+	/**
+	 * This method shortens the given full qualified file name to a short
+	 * name which satifies the search path of the scene image pool.
+	 *
+	 * @param fullname  The full qualified image file name.
+	 * @param shortname The shortened image file name.
+	 * @return True on success.
+	 * @see b3ImagePool::b3CutName().
+	 */
+	static  b3_bool         b3CutTextureName(const char *fullname,char *shortname);
+
+	/**
+	 * This is a multi threading call back function which simply prepares
+	 * the given object.
+	 *
+	 * @param bbox The object to prepare.
+	 * @param ptr An additional custom information pointer.
+	 * @return The result of the b3BBox::b3Prepare() method.
+	 */
 	static  b3_u32          b3PrepareBBoxThread(b3BBox *bbox,void *ptr);
 
 private:

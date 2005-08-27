@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2005/08/27 15:07:41  sm
+**      - Documentation.
+**
 **      Revision 1.15  2005/01/06 10:02:37  smork
 **      - Spline animation fix.
 **
@@ -448,7 +451,7 @@ void b3BBox::b3Animate(b3Activation::b3_anim_activation animate,b3_bool recurse)
 void b3Scene::b3Animate(b3Activation::b3_anim_activation animate)
 {
 	b3BBox *bbox;
-	b3Item  *item;
+	b3Item *item;
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
