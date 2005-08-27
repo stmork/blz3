@@ -292,7 +292,7 @@ public:
 	inline b3_bool   b3Intersect(b3_ray *ray,b3_bool checkVisibility,b3_f64 max = DBL_MAX)
 	{
 		ray->Q     = max;
-		ray->shape = b3Intersect(b3GetFirstBBox(),ray,check_visibility);
+		ray->shape = b3Intersect(b3GetFirstBBox(),ray,checkVisibility);
 
 		return ray->shape != null;
 	}
