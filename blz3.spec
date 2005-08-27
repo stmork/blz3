@@ -1,6 +1,6 @@
 %define name blz3
 %define ver 2.99.2
-%define rel 19
+%define rel 20
 
 Summary: A very fast raytracer named Blizzard III
 Name: %{name}
@@ -48,16 +48,19 @@ single images.
 
 %prep
 %setup -q -n %{name}
+umask 022
 ./configure BLZ3_DOC=$RPM_BUILD_ROOT%_docdir/blizzard\
 	--prefix=$RPM_BUILD_ROOT\
 	--exec-prefix=$RPM_BUILD_ROOT/usr\
 	--datadir=$RPM_BUILD_ROOT%_datadir/blizzard
 
 %build
+umask 022
 make depend
 make -j 3 RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
+umask 022
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT%_bindir
