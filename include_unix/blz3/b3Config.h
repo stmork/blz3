@@ -41,7 +41,7 @@
 #include "GL/glu.h"
 
 #undef __glext_h_
-#include "blz3/glext.h"
+#include "blz3_glext.h"
 
 #ifdef BLZ3_USE_GLUT
 #include <GL/glut.h>
