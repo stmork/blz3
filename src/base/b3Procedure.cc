@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Procedureal components
+**	Blizzard III - Procedural components
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2005/09/11 17:45:52  sm
+**	- Fixed wrong ordered b3MatGranite read.
+**
 **	Revision 1.56  2005/08/13 13:29:02  sm
 **	- Refactoring
-**
+**	
 **	Revision 1.55  2005/08/10 13:20:44  smork
 **	- Documentation.
 **	
@@ -473,21 +476,21 @@ b3_f64 b3Noise::b3SignedImprovedNoise(
 	int BB    = m_Permutation[B+1]+Z;      // THE 8 CUBE CORNERS,
 
 	return
-		b3Math::b3Mix(w,
-			b3Math::b3Mix(v,
-				b3Math::b3Mix(u,
-					b3Grad(m_Permutation[AA  ], x  , y  , z   ),   // AND ADD
-					b3Grad(m_Permutation[BA  ], x-1, y  , z   )),  // BLENDED
-				b3Math::b3Mix(u,
-					b3Grad(m_Permutation[AB  ], x  , y-1, z   ),   // RESULTS
-					b3Grad(m_Permutation[BB  ], x-1, y-1, z   ))), // FROM  8
-			b3Math::b3Mix(v,
-				b3Math::b3Mix(u,
-					b3Grad(m_Permutation[AA+1], x  , y  , z-1 ),   // CORNERS
-					b3Grad(m_Permutation[BA+1], x-1, y  , z-1 )),  // OF CUBE
-				b3Math::b3Mix(u,
+		b3Math::b3Mix(
+			b3Math::b3Mix(
+				b3Math::b3Mix(
+					b3Grad(m_Permutation[AA  ], x  , y  , z   ),       // AND ADD
+					b3Grad(m_Permutation[BA  ], x-1, y  , z   ),u),    // BLENDED
+				b3Math::b3Mix(
+					b3Grad(m_Permutation[AB  ], x  , y-1, z   ),       // RESULTS
+					b3Grad(m_Permutation[BB  ], x-1, y-1, z   ),u),v), // FROM  8
+			b3Math::b3Mix(
+				b3Math::b3Mix(
+					b3Grad(m_Permutation[AA+1], x  , y  , z-1 ),       // CORNERS
+					b3Grad(m_Permutation[BA+1], x-1, y  , z-1 ),u),    // OF CUBE
+				b3Math::b3Mix(
 					b3Grad(m_Permutation[AB+1], x  , y-1, z-1 ),
-					b3Grad(m_Permutation[BB+1], x-1, y-1, z-1 ))));
+					b3Grad(m_Permutation[BB+1], x-1, y-1, z-1 ),u),v),w);
 }
 
 /*************************************************************************

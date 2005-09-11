@@ -47,10 +47,13 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2005/09/11 17:45:51  sm
+**	- Fixed wrong ordered b3MatGranite read.
+**
 **	Revision 1.55  2005/06/12 11:38:51  sm
 **	- Fix ticket no.30. Surface property changes are reflected
 **	  to document modified changes.
-**
+**	
 **	Revision 1.54  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
 **	
@@ -409,6 +412,15 @@ BOOL CAppObjectDoc::OnNewDocument()
 
 void CAppObjectDoc::b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original)
 {
+	CString boxname = original->b3GetName();
+
+	// Set non empty object name.
+	if (boxname.IsEmpty())
+	{
+		boxname.LoadString(IDS_BBOX_UNNAMED);
+		original->b3SetName(boxname);
+	}
+
 	m_Original              = original;
 	m_LinesDoc              = LinesDoc;
 	m_Info->m_Unit          = LinesDoc->m_Info->m_Unit;

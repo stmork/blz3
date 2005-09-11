@@ -4342,6 +4342,7 @@ BEGIN
     IDS_OP_SHAPE_CONDITION_MAINTAIN "Stanzung verwalten"
     IDS_OP_SHAPE_CONDITION_EDIT "Stanzung ändern"
     IDS_OP_SHAPE_COPY_PROPERTY "Eigenschaften verteilen"
+    IDS_BBOX_UNNAMED        "Unbenannt"
 END
 
 #endif    // Deutsch (Deutschland) resources

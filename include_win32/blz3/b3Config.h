@@ -57,7 +57,7 @@
 #ifdef BLZ3_USE_OPENGL
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include "blz3/glext.h"
+#include "blz3_glext.h"
 #endif
 
 // Some defines for getting to know who we are
@@ -91,9 +91,12 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.35  2005/09/11 17:45:48  sm
+**	- Fixed wrong ordered b3MatGranite read.
+**
 **	Revision 1.34  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.33  2004/12/27 20:14:18  sm
 **	- Added Windows installation project
 **	

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.103  2005/09/11 17:45:52  sm
+**      - Fixed wrong ordered b3MatGranite read.
+**
 **      Revision 1.102  2004/12/30 16:27:39  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling
@@ -1649,7 +1652,7 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 	m_DarkMaterial.m_Specular     = B3_GREY;
 	m_LightMaterial.m_Specular    = B3_GREY;
 	m_DarkMaterial.m_Reflection   =
-	m_DarkMaterial.m_Reflection   =   0.0;
+	m_LightMaterial.m_Reflection  =   0.0;
 	m_DarkMaterial.m_Refraction   =
 	m_LightMaterial.m_Refraction  =   0.0;
 	m_DarkMaterial.m_Ior          =
@@ -1668,13 +1671,13 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 	b3InitColor(dummy);
 	b3InitColor(m_DarkMaterial.m_Ambient);
 	b3InitColor(m_DarkMaterial.m_Specular);
-	m_Scale.x   = b3InitFloat() * M_PI;
-	m_Scale.y   = b3InitFloat() * M_PI;
-	m_Scale.z   = b3InitFloat() * M_PI;
 	m_DarkMaterial.m_Reflection  = b3InitFloat();
 	m_DarkMaterial.m_Refraction  = b3InitFloat();
 	m_DarkMaterial.m_Ior         = b3InitFloat();
 	m_DarkMaterial.m_SpecularExp = b3InitFloat();
+	m_Scale.x       = b3InitFloat() * M_PI;
+	m_Scale.y       = b3InitFloat() * M_PI;
+	m_Scale.z       = b3InitFloat() * M_PI;
 	m_ScaleFlags    = (b3_scaling_mode)b3InitInt();
 	m_Octaves       = b3InitCount();
 
@@ -1695,7 +1698,7 @@ void b3MatGranite::b3Write()
 {
 	b3StoreColor(m_DarkMaterial.m_Diffuse);
 	b3StoreColor(m_LightMaterial.m_Diffuse);
-	b3StoreColor(m_DarkMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Diffuse); // dummy
 	b3StoreColor(m_DarkMaterial.m_Ambient);
 	b3StoreColor(m_DarkMaterial.m_Specular);
 	b3StoreFloat(m_DarkMaterial.m_Reflection);

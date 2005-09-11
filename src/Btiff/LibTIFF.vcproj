@@ -1526,10 +1526,10 @@
 				RelativePath="t4.h">
 			</File>
 			<File
-				RelativePath="tif_dir.h">
+				RelativePath="..\..\include\tif_dir.h">
 			</File>
 			<File
-				RelativePath="..\..\include\tif_dir.h">
+				RelativePath="tif_dir.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tif_fax3.h">

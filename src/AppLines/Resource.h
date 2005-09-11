@@ -946,6 +946,7 @@
 #define IDS_OP_SHAPE_MATERIAL_EDIT3     61458
 #define IDS_OP_SHAPE_CONDITION_EDIT     61458
 #define IDS_OP_SHAPE_COPY_PROPERTY      61459
+#define IDS_BBOX_UNNAMED                61460
 
 // Next default values for new objects
 // 
