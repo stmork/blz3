@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.84  2005/09/17 14:37:04  sm
+**      - Some missing initialization fixed.
+**
 **      Revision 1.83  2004/12/30 16:27:39  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling
@@ -722,7 +725,15 @@ b3_f64 b3Shape::b3GetColors(
 	b3_ray       ray;
 	b3_surface   surface;
 
+	b3Vector::b3Init(&ray.ipoint);
+	b3Vector::b3Init(&ray.polar.m_BBoxOriginal);
+	b3Vector::b3Init(&ray.polar.m_BoxPolar);
+	b3Vector::b3Init(&ray.polar.m_ObjectPolar);
+	b3Vector::b3Init(&ray.polar.m_Polar);
+	ray.polar.m_NormalIndex = 0;
+
 	surface.m_Incoming = &ray;
+	ray.Q = 1;
 	b3Vector::b3Init(&surface.m_Incoming->normal,0,0,1);
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
