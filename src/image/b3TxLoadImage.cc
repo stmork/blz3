@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2005/09/17 17:34:17  sm
+**	- Fixed loading of JPEG images with Exif tag.
+**
 **	Revision 1.23  2005/08/11 13:37:29  smork
 **	- Image cleanup (TIFF).
 **	- Documentation.
-**
+**	
 **	Revision 1.22  2005/08/11 13:16:11  smork
 **	- Documentation.
 **	- b3Tx cleanup.
@@ -185,9 +188,10 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
 			const char *jpg_start = (const char *)&buffer[i+6];
-			      char *result    = strstr(jpg_start,"JFIF");
+			      char *jfif      = strstr(jpg_start,"JFIF");
+			      char *exif      = strstr(jpg_start,"Exif");
 
-			if (result != null)
+			if ((jfif != null) || (exif != null))
 			{
 				return b3ParseJPEG(&buffer[i],buffer_size - i);
 			}
