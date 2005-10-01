@@ -99,6 +99,7 @@ struct b3_surface;
  * @see b3Item
  * @see b3RenderObject
  * @see b3Activation
+ * @dotfile shape.dot "Class hierarchy of all shapes."
  */
 class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {

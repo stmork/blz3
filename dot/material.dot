@@ -1,0 +1,65 @@
+digraph material
+{
+	rankdir=BT;
+	node [shape=box];
+
+	{
+		rank=same;
+		b3Item;
+	}
+	{
+		rank=same;
+		b3Material;
+	}
+	{
+		rank=same;
+		b3Scaling;
+	}
+	{
+		rank=same;
+		b3MaterialWooden;
+		b3Wood;
+		b3OakPlank;
+	}
+	{
+		rank=same;
+		b3MatNormal;
+		b3MatChess;
+		b3MatTexture;
+		b3MatWrapTexture;
+		b3MatSlide;
+		b3MatSlide;
+		b3MatMarble;
+		b3MatWood;
+		b3MatOakPlank;
+		b3MatGranite;
+		b3MatCarPaint;
+		b3MatThinFilm;
+	}
+	{
+		rank=same;
+		b3MatCookTorrance;
+	}
+
+	b3Material -> b3Item [ arrowhead="onormal"];
+
+	b3MatNormal -> b3Material [ arrowhead="onormal"];
+	b3MatChess -> b3Material [ arrowhead="onormal"];
+	b3MatTexture -> b3Material [ arrowhead="onormal"];
+	b3MatWrapTexture -> b3Material [ arrowhead="onormal"];
+	b3MatSlide -> b3Material  [ arrowhead="onormal"];
+	b3MatMarble -> b3Material [ arrowhead="onormal"];
+	b3MatMarble -> b3Scaling [ arrowhead="onormal"];
+	b3MaterialWooden -> b3Material [ arrowhead="onormal"];
+	b3MaterialWooden ->  b3Scaling [ arrowhead="onormal"];
+	b3MatWood -> b3MaterialWooden [ arrowhead="onormal"];
+	b3MatWood ->  b3Wood [ arrowhead="onormal"];
+	b3MatOakPlank -> b3MaterialWooden [ arrowhead="onormal"];
+	b3MatOakPlank ->  b3OakPlank [ arrowhead="onormal"];
+	b3MatCookTorrance -> b3MatNormal [ arrowhead="onormal"];
+	b3MatGranite -> b3Material [ arrowhead="onormal"];
+	b3MatGranite ->  b3Scaling [ arrowhead="onormal"];
+	b3MatCarPaint -> b3Material [ arrowhead="onormal"];
+	b3MatThinFilm -> b3Material [ arrowhead="onormal"];
+	b3MatThinFilm ->  b3Scaling [ arrowhead="onormal"];
+}

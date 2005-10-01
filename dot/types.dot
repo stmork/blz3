@@ -1,0 +1,11 @@
+digraph types
+{
+	b3Scene -> b3Special [ arrowtail="diamond" arrowhead="vee"];
+	b3Scene -> b3Light [ arrowtail="diamond" arrowhead="vee"];
+	b3Scene -> b3BBox [ arrowtail="diamond" arrowhead="vee"];
+	b3BBox -> b3BBox [ arrowtail="diamond" arrowhead="vee"];
+	b3BBox-> b3Shape [ arrowtail="diamond" arrowhead="vee"];
+	b3Shape -> b3Material [ arrowtail="diamond" arrowhead="vee"];
+	b3Shape -> b3Condition [ arrowtail="diamond" arrowhead="vee"];
+	b3Shape -> b3Bump [ arrowtail="diamond" arrowhead="vee"];
+}

@@ -1,0 +1,50 @@
+digraph bump
+{
+	node [shape=box];
+
+	{
+		rank=same;
+		b3Item;
+	}
+	{
+		rank=same;
+		b3Bump;
+	}
+	{
+		rank=same;
+		b3Scaling;
+	}
+	{
+		rank=same;
+		b3BumpNoise;
+		b3BumpMarble;
+		b3BumpTexture;
+		b3BumpWater;
+		b3BumpWave;
+		b3BumpGroove;
+		b3BumpGlossy;
+		b3BumpWood;
+		b3BumpOakPlank;
+	}
+	b3Bump -> b3Item [ arrowhead="onormal"];   
+
+	b3BumpNoise -> b3Bump [ arrowhead="onormal"];
+	b3BumpNoise -> b3Scaling [ arrowhead="onormal"];
+	b3BumpMarble -> b3Bump [ arrowhead="onormal"];
+	b3BumpMarble -> b3Scaling [ arrowhead="onormal"];
+	b3BumpTexture -> b3Bump [ arrowhead="onormal"];
+	b3BumpWater -> b3Bump [ arrowhead="onormal"];
+	b3BumpWater -> b3Water [ arrowhead="onormal"];
+	b3BumpWater -> b3Scaling [ arrowhead="onormal"];
+	b3BumpWave -> b3Bump [ arrowhead="onormal"];
+	b3BumpWave -> b3Scaling [ arrowhead="onormal"];
+	b3BumpGroove -> b3Bump [ arrowhead="onormal"];
+	b3BumpGroove -> b3Scaling [ arrowhead="onormal"];
+	b3BumpGlossy -> b3Bump [ arrowhead="onormal"];
+	b3BumpWooden -> b3Bump [ arrowhead="onormal"];
+	b3BumpWooden -> b3Scaling [ arrowhead="onormal"];
+	b3BumpWood -> b3BumpWooden [ arrowhead="onormal"];
+	b3BumpWood -> b3Wood [ arrowhead="onormal"];
+	b3BumpOakPlank -> b3BumpWooden [ arrowhead="onormal"];
+	b3BumpOakPlank -> b3OakPlank [ arrowhead="onormal"];
+}

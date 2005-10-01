@@ -1,0 +1,56 @@
+digraph shape
+{
+	rankdir=BT;
+	node [shape=box];
+
+	{
+		rank=same;
+		b3Item;
+		b3RenderObject;
+		b3Activation;
+	}
+	{
+		rank=same;
+		b3CSGShape; b3SimpleShape;
+	}
+	{
+		b3Shape2;
+		b3Shape3; b3CSGShape3;
+		b3TriangleShape;
+	}
+
+	b3Shape-> b3Item [ arrowhead="onormal"]; b3Shape -> b3RenderObject [ arrowhead="onormal"]; b3Shape -> b3Activation [ arrowhead="onormal"];
+	b3SimpleShape -> b3Shape [ arrowhead="onormal"];
+	b3Sphere -> b3SimpleShape [ arrowhead="onormal"];
+
+	b3Shape2 -> b3SimpleShape [ arrowhead="onormal"];
+	b3Area -> b3Shape2 [ arrowhead="onormal"];
+	b3Disk -> b3Shape2 [ arrowhead="onormal"];
+
+	b3Shape3 -> b3SimpleShape [ arrowhead="onormal"]; b3Shape3 -> b3ShapeBaseTransformation [ arrowhead="onormal"];
+	b3Cylinder -> b3Shape3 [ arrowhead="onormal"];
+	b3Cone -> b3Shape3 [ arrowhead="onormal"];
+	b3Ellipsoid -> b3Shape3 [ arrowhead="onormal"];
+	b3Box -> b3Shape3 [ arrowhead="onormal"];
+
+	b3Torus -> b3SimpleShape [ arrowhead="onormal"]; b3Torus -> b3ShapeBaseTransformation [ arrowhead="onormal"];
+
+	b3TriangleShape -> b3SimpleShape [ arrowhead="onormal"];
+	b3Triangles -> b3TriangleShape [ arrowhead="onormal"];
+	b3SplineRotShape -> b3TriangleShape [ arrowhead="onormal"];
+	b3SplineShape -> b3TriangleShape [ arrowhead="onormal"];
+	b3SplineArea -> b3SplineShape [ arrowhead="onormal"];
+	b3SplineCylinder -> b3SplineShape [ arrowhead="onormal"];
+	b3SplineRing -> b3SplineShape [ arrowhead="onormal"];
+
+	b3CSGShape -> b3Shape [ arrowhead="onormal"];
+	b3CSGSphere -> b3CSGShape [ arrowhead="onormal"];
+
+	b3CSGShape3 -> b3CSGShape [ arrowhead="onormal"]; b3CSGShape3 -> b3ShapeBaseTransformation [ arrowhead="onormal"];
+	b3CSGCylinder -> b3CSGShape3 [ arrowhead="onormal"];
+	b3CSGCone -> b3CSGShape3 [ arrowhead="onormal"];
+	b3CSGEllipsoid -> b3CSGShape3 [ arrowhead="onormal"];
+	b3CSGBox -> b3CSGShape3 [ arrowhead="onormal"];
+
+	b3CSGTorus -> b3CSGShape [ arrowhead="onormal"]; b3CSGTorus -> b3ShapeBaseTransformation [ arrowhead="onormal"];
+}

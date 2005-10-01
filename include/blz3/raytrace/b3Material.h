@@ -99,6 +99,8 @@ struct b3_light_info;
 
 /**
  * This class defines the surface properties at a given intersection point.
+ *
+ * \dotfile material.dot "class hierarchy of materials"
  */
 class B3_PLUGIN b3Material : public b3Item
 {

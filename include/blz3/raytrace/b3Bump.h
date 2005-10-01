@@ -59,6 +59,8 @@
 
 /**
  * This class provides an interface for bump mapping.
+ *
+ * @dotfile bump.dot "Class hierarchy of bump mapping classes."
  */
 class B3_PLUGIN b3Bump : public b3Item
 {

@@ -1,0 +1,38 @@
+digraph BNode
+{
+	rankdir=LR;
+/*
+	head [shape=record,label="<first> First|<last> Last"];
+	node1 [shape=record,label="<succ> Succ|<prev> Prev"];
+	node2 [shape=record,label="<succ> Succ|<prev> Prev"];
+	node3 [shape=record,label="<succ> Succ|<prev> Prev"];
+	firstnull [shape=plaintext,label="null"];
+	lastnull [shape=plaintext,label="null"];
+	
+*/
+
+	head:first -> node1:succ -> node2:succ -> node3:succ -> lastnull;
+	head:last  -> node3:succ;
+	node3:prev -> node2:prev -> node1:prev -> firstnull;
+
+	subgraph "b3Base"
+	{
+		node [shape=box];
+		label="b3Base<T>";
+		head [shape=record,label="<first> First|<last> Last"];
+	}
+	firstnull [shape=plaintext,label="null"];
+	subgraph "b3Link<T>"
+	{
+		node1 [shape=record,label="<succ> Succ|<prev> Prev"];
+	}
+	subgraph "b3Link<T>"
+	{
+		node2 [shape=record,label="<succ> Succ|<prev> Prev"];
+	}
+	subgraph "b3Link<T>"
+	{
+		node3 [shape=record,label="<succ> Succ|<prev> Prev"];
+	}
+	lastnull [shape=plaintext,label="null"];
+}
