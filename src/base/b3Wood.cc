@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/10/02 15:06:23  sm
+**	- Some b3Frac/b3FMod/fmod corrections
+**	- Documentation
+**
 **	Revision 1.10  2004/10/07 10:33:08  sm
 **	- Added some GIF tools and made them usable with Blizzard III.
-**
+**	
 **	Revision 1.9  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
@@ -141,7 +145,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 	// Ensure unequally spaced rings
 	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseScalar(r);
 
-	inring = b3Math::b3SmoothPulse(0.1,0.55,0.7,0.95,fmod(r,1.0));
+	inring = b3Math::b3SmoothPulse(0.1, 0.55, 0.7, 0.95, b3Math::b3FracOne(r));
 
 	Pgrain.x = d.x * m_GrainFrequency;
 	Pgrain.y = d.y * m_GrainFrequency;
@@ -261,14 +265,12 @@ b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar, b3_f64 distance, b3_index
 
 	fy = polar->y * m_ryScale;
 	fx = polar->x * m_rxScale + m_xOffset * floor(fy);
-	surface.x = fmod(fx,(b3_f64)m_xTimes);
-	surface.y = fmod(fy,(b3_f64)m_yTimes);
+	surface.x = b3Math::b3Frac(fx,(b3_f64)m_xTimes);
+	surface.y = b3Math::b3Frac(fy,(b3_f64)m_yTimes);
 	surface.z = 0;
 
-	fx *= m_rxTimes;
-	fy *= m_ryTimes;
-	ix  = (b3_index)((fx - floor(fx)) * m_xTimes);
-	iy  = (b3_index)((fy - floor(fy)) * m_yTimes);
-	index = ix * m_yTimes + iy;
+	ix  = (b3_index)surface.x;
+	iy  = (b3_index)surface.y;
+	index = (ix * m_yTimes + iy) % m_PlankCount;
 	return m_Planks[index].b3ComputeWood(&surface, distance);
 }

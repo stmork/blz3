@@ -21,6 +21,8 @@
 #define BLIZZARD3_REG_COMPANY  "MORKNet"
 #define BLIZZARD3_REG_PRODUCT  "Blizzard III"
 
+#pragma warning( disable : 4290 )
+
 #define main(argc,argv) _Blizzard3Main(argc,argv)
 
 // Include MFC stuff
@@ -91,9 +93,13 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.36  2005/10/02 15:06:23  sm
+**	- Some b3Frac/b3FMod/fmod corrections
+**	- Documentation
+**
 **	Revision 1.35  2005/09/11 17:45:48  sm
 **	- Fixed wrong ordered b3MatGranite read.
-**
+**	
 **	Revision 1.34  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
 **	

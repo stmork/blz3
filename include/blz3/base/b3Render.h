@@ -23,6 +23,7 @@
 #include "blz3/base/b3RenderTypes.h"
 #include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/base/b3VertexBuffer.h"
+#include "blz3/base/b3World.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/image/b3Tx.h"
 

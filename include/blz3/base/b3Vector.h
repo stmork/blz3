@@ -285,10 +285,9 @@ public:
 	 * the given index.
 	 *
 	 * @param index The component index.
-	 * @throws b3VectorException
 	 * @return The indexed compontent.
 	 */
-	inline F operator [](const b3_vector_index index) throw(b3VectorException)
+	inline F operator [](const b3_vector_index index)
 	{
 #ifdef _DEBUG
 		if ((index < 0) || (index >= dim))

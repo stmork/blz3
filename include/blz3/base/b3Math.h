@@ -159,6 +159,7 @@ public:
 
 	/**
 	 * This method returns the fractional part of the division <code>a/b</code>.
+	 * The result is always positive or zero even the dividend is negative.
 	 *
 	 * \param a The dividend.
 	 * \param b The divisor.
@@ -166,19 +167,36 @@ public:
 	 */
 	static inline b3_f64 b3Frac(b3_f64 a,b3_f64 b)
 	{
-		b3_s32 n;
+#if 0
+		b3_f64 n;
 
 		if (a < 0)
 		{
 			a = -a;
-			n = (b3_s32)(a / b);
+			n = floor(a / b);
 			return b - a + n * b;
 		}
 		else
 		{
-			n = (b3_s32)(a / b);
+			n = floor(a / b);
 			return a - n * b;
 		}
+#else
+		b3_f64 remainder = fmod(a,b);
+
+		return remainder < 0 ? remainder + b : remainder;
+#endif
+	}
+
+	/**
+	 * This returns the fractional part of a floating point number.
+	 *
+	 * \param a The complete floating point number.
+	 * \return The fractional part of a float.
+	 */
+	static inline b3_f64 b3FracOne(b3_f64 a)
+	{
+		return a - floor(a);
 	}
 
 	/**
@@ -234,6 +252,14 @@ public:
 		return P4 + s0 * R1 + s1 * R4;
 	}
 
+	/**
+	 * This method is a smooth hermite ramp inside the range [s..e]
+	 *
+	 * \param s The start value of the ramp.
+	 * \param e The end value of the ramp.
+	 * \param x The value to interpolate.
+	 * \return The hermite interpolation.
+	 */
 	static inline b3_f64 b3Smoothstep(b3_f64 s,b3_f64 e,b3_f64 x)
 	{
 		if (x < s)
@@ -251,6 +277,12 @@ public:
 	}
 
 
+	/**
+	 * This method is a smooth hermite ramp inside the range [0..1]
+	 *
+	 * \param t The input value.
+	 * \return The hermite interpolation.
+	 */
 	static inline b3_f64 b3Smoothstep(b3_f64 t)
 	{
 		if (t < 0)
@@ -283,9 +315,14 @@ public:
 		b3_f64 x,
 		b3_f64 period)
 	{
-		return b3SmoothPulse(e0,e1,e2,e3,fmod(x,period));
+		return b3SmoothPulse(e0,e1,e2,e3,b3Math::b3Frac(x,period));
 	}
 
+	/**
+	 *
+	 * \param t 
+	 * \return 
+	 */
 	static inline b3_f64 b3Fade(b3_f64 t)
 	{
 		return t * t * t * (t * (t * 6 - 15) + 10);

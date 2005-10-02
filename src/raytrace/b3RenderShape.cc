@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.86  2005/10/02 15:06:23  sm
+**      - Some b3Frac/b3FMod/fmod corrections
+**      - Documentation
+**
 **      Revision 1.85  2005/10/02 09:51:13  sm
 **      - Added OpenEXR configuration.
 **      - Added more excpetion handling.
@@ -871,11 +875,13 @@ private:
 		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / info->m_yMax;
 
 		surface.m_Incoming = &ray;
-		ray.bbox = &bbox;
+		surface.m_Incoming->Q = 1;
+		ray.bbox  = &bbox;
 		ray.shape = m_Shape;
 		bbox.b3Prepare();
 
 		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
+		ray.polar.m_NormalIndex = 0;
 		ray.polar.m_BoxPolar.z =
 		ray.polar.m_ObjectPolar.z =
 		ray.polar.m_Polar.z =
