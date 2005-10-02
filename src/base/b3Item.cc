@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2005/10/02 09:51:12  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.40  2005/01/02 19:15:25  sm
 **      - Fixed signed/unsigned warnings
 **
@@ -223,7 +227,7 @@ void b3Item::b3Register(
 	b3_item_init_func init_func,
 	b3_item_load_func load_func,
 	b3_u32            class_type,
-	b3_bool           is_class)
+	b3_bool           is_class) throw(b3WorldException)
 {
 	b3ItemRegisterEntry *entry;
 
@@ -630,7 +634,7 @@ void b3Item::b3InitNOP()
 **                                                                      **
 *************************************************************************/
 
-b3_u32 b3Item::b3Store()
+b3_u32 b3Item::b3Store() throw(b3WorldException)
 {
 	b3Item  *item;
 	b3_u32   size = 0;
@@ -744,7 +748,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
 	return error;
 }
 
-void b3Item::b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data)
+void b3Item::b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data) throw(b3WorldException)
 {
 	// Clearify some things...
 	if ((m_StoreOffset != 0) && (is_data))

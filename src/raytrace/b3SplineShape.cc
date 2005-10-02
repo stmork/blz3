@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2005/10/02 09:51:13  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.46  2004/11/21 14:56:58  sm
 **      - Merged VBO development into main trunk.
 **
@@ -719,7 +723,7 @@ void b3SplineShape::b3SetupGrid(b3PickInfo *info)
 	}
 }
 
-b3_bool b3SplineShape::b3Prepare()
+b3_bool b3SplineShape::b3Prepare() throw(b3WorldException)
 {
 	b3_vertex   *Vertex;
 	b3_triangle *Triangle;

@@ -166,8 +166,9 @@ public:
 	 *
 	 * @param key The object's key.
 	 * @param object The object itself.
+	 * @throws b3HashException
 	 */
-	inline void b3Add(const Key &key,const Object &object)
+	inline void b3Add(const Key &key,const Object &object) throw(b3HashException)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -365,7 +366,7 @@ public:
 	}
 
 private:
-	inline b3_hash b3Hash(const Key &key)
+	inline b3_hash b3Hash(const Key &key) throw(b3HashException)
 	{
 		b3_hash hash = m_HashFunc(key);
 

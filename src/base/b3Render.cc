@@ -46,6 +46,10 @@
 
 /*
 **      $Log$
+**      Revision 1.114  2005/10/02 09:51:12  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.113  2005/06/16 08:19:00  smork
 **      - Some logging added.
 **
@@ -1284,7 +1288,7 @@ void b3RenderObject::b3UpdateMaterial()
 void b3RenderObject::b3CreateTexture(
 	b3RenderContext *context,
 	b3_res           xSize,
-	b3_res           ySize)
+	b3_res           ySize) throw(b3TxException)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_res size;

@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.12  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
 **	- Fixed b3BumpWood and b3BumpOakPlank
 **	  bump computation
-**
+**	
 **	Revision 1.11  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -200,7 +204,7 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 	return 1;
 }
 
-b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr,b3_bool threaded)
+b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr,b3_bool threaded) throw(b3PrepareException)
 {
 	b3_bool  result = true;
 

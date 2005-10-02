@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.57  2005/09/11 17:45:52  sm
 **	- Fixed wrong ordered b3MatGranite read.
-**
+**	
 **	Revision 1.56  2005/08/13 13:29:02  sm
 **	- Refactoring
 **	
@@ -350,7 +354,7 @@ b3Noise       b3Noise::m_Noise;
 b3_noisetype *b3Noise::m_NoiseTable = null;
 b3_f64        b3Noise::epsilon      = FLT_EPSILON;
 
-b3Noise::b3Noise ()
+b3Noise::b3Noise () throw(b3NoiseException)
 {
 	if (m_NoiseTable == null)
 	{

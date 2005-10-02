@@ -1033,7 +1033,7 @@ public:
 	void    b3Init(b3_count degree,b3_count controlNum,b3_bool closed,b3_count subdiv);
 	void    b3StoreShape();
 	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
-	b3_bool b3Prepare();
+	b3_bool b3Prepare() throw(b3WorldException);
 	void    b3SetupPicking(b3PickInfo *info);
 	void    b3SetupGrid(b3PickInfo *info);
 
@@ -1099,7 +1099,7 @@ private:
 	void b3ComputeGridIndices();
 	void b3ComputeSolidIndices();
 
-	b3_bool b3Prepare();
+	b3_bool b3Prepare() throw(b3WorldException);
 };
 
 /*************************************************************************

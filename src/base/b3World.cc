@@ -39,6 +39,10 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2005/10/02 09:51:12  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.36  2005/08/08 14:46:31  smork
 **      - Documentation.
 **
@@ -454,7 +458,7 @@ b3_world_error b3World::b3Parse()
 	return result;
 }
 
-b3_bool b3World::b3Read(const char *name)
+b3_bool b3World::b3Read(const char *name) throw(b3WorldException)
 {
 	b3Path         world_name;
 	b3_world_error error;
@@ -552,7 +556,7 @@ b3_world_error b3World::b3Read(b3FileAbstract *file)
 	return error;
 }
 
-b3_bool b3World::b3ReadDump(const char *world_name)
+b3_bool b3World::b3ReadDump(const char *world_name) throw(b3WorldException)
 {
 	b3File         file;
 	b3_world_error error;
@@ -617,7 +621,7 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 
 void b3World::b3CloneBase(
 	b3Base<b3Item> *srcBase,
-	b3Base<b3Item> *dstBase)
+	b3Base<b3Item> *dstBase) throw(b3WorldException)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *srcItem;
@@ -646,7 +650,7 @@ void b3World::b3CloneBase(
 	}
 }
 
-b3Item *b3World::b3Clone(b3Item *original)
+b3Item *b3World::b3Clone(b3Item *original) throw(b3WorldException)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
@@ -672,7 +676,7 @@ b3Item *b3World::b3Clone(b3Item *original)
 	return item;
 }
 
-b3_bool b3World::b3Write(const char *filename)
+b3_bool b3World::b3Write(const char *filename) throw(b3WorldException)
 {
 	b3File          file;
 	b3_world_error  error;

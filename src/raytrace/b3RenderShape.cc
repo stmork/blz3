@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.85  2005/10/02 09:51:13  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.84  2005/09/17 14:37:04  sm
 **      - Some missing initialization fixed.
 **
@@ -558,7 +562,7 @@ b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
 	b3InitSubdiv(new_subdiv);
 }
 
-void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
+void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv) throw(b3WorldException)
 {
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;

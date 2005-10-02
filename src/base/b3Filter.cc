@@ -31,11 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.2  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
 **	  real time raytracing: 8 fps for Animationtest.
-**
+**	
 **	Revision 1.1  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
@@ -67,7 +71,7 @@ b3Filter *b3Filter::b3New(b3_filter filter)
 	return null;
 }
 
-b3_f64 b3Filter::b3InvIntegral(b3_f64 val,b3_bool throw_exception)
+b3_f64 b3Filter::b3InvIntegral(b3_f64 val,b3_bool throw_exception) throw(b3FilterException)
 {
 	b3_f64 y,xLower,xMid,xUpper,diff;
 

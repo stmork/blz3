@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.8  2005/01/04 15:13:59  smork
 **	- Changed some data types.
-**
+**	
 **	Revision 1.7  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -90,7 +94,7 @@ b3FileMem::b3FileMem()
 }
 
 // Instantiate as opened file
-b3FileMem::b3FileMem (const b3_access_mode access_mode)
+b3FileMem::b3FileMem (const b3_access_mode access_mode) throw(b3FileException)
 {
 	m_Buffer     = null;
 	m_BufferSize = 0;
@@ -104,7 +108,7 @@ b3FileMem::b3FileMem (const b3_access_mode access_mode)
 }
 
 // Instantiate as opened file
-b3FileMem::b3FileMem (const char *file_name,const b3_access_mode access_mode)
+b3FileMem::b3FileMem (const char *file_name,const b3_access_mode access_mode) throw(b3FileException)
 {
 	m_Buffer     = null;
 	m_BufferSize = 0;
@@ -122,7 +126,7 @@ b3FileMem::~b3FileMem()
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3FileMem::b3Open (const b3_access_mode access_mode)
+b3_bool b3FileMem::b3Open (const b3_access_mode access_mode) throw(b3FileException)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -152,7 +156,7 @@ b3_bool b3FileMem::b3Open (const b3_access_mode access_mode)
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3FileMem::b3Open (const char *file_name,const b3_access_mode access_mode)
+b3_bool b3FileMem::b3Open (const char *file_name,const b3_access_mode access_mode) throw(b3FileException)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -309,7 +313,7 @@ b3_bool b3FileMem::b3ReadBuffer(const char *filename)
 	return false;
 }
 
-b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
+b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size) throw(b3FileException)
 {
 	b3_u08 *new_buffer;
 

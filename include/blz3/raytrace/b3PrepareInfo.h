@@ -108,9 +108,10 @@ public:
 	 * @param prepareFunc   The preparation function.
 	 * @param ptr           A pointer for custom information.
 	 * @param threaded      A flag if the call should be multi threaded on multi CPU machines,
+	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3Prepare(b3PrepareProc prepareFunc,void *ptr = null,b3_bool threaded = true);
+	b3_bool          b3Prepare(b3PrepareProc prepareFunc,void *ptr = null,b3_bool threaded = true) throw(b3PrepareException);
 
 private:
 	b3BBoxReference *b3GetBBoxReference();

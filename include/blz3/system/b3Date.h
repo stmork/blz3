@@ -98,8 +98,9 @@ public:
 	 * @param day   The day to set.
 	 * @param month The month to set.
 	 * @param year  The year to set.
+	 * @throws b3DateException
 	 */
-	b3Date(unsigned short day,unsigned short month,unsigned long year);
+	b3Date(unsigned short day,unsigned short month,unsigned long year) throw(b3DateException);
 
 	/**
 	 * This method sets the date values to the actual time point.
@@ -161,8 +162,9 @@ public:
 	 * This operator adds the given date to this instance.
 	 *
 	 * @param date The date to add.
+	 * @throws b3DateException
 	 */
-	void     operator+=(const b3Date &date);
+	void     operator+=(const b3Date &date) throw(b3DateException);
 
 	/**
 	 * This operator assigns a given date to this instance.

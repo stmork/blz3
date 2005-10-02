@@ -181,16 +181,18 @@ public:
 	 *
 	 * @param worldname The file to deserialize.
 	 * @return True on success.
+	 * @throws b3WorldException
 	 */
-	b3_bool         b3Read (const char *worldname);
+	b3_bool         b3Read(const char *worldname) throw(b3WorldException);
 
 	/**
 	 * This method serialize the content of the named file.
 	 *
 	 * @param worldname The file to serialize.
 	 * @return True on success.
+	 * @throws b3WorldException
 	 */
-	b3_bool         b3Write(const char *worldname);
+	b3_bool         b3Write(const char *worldname) throw(b3WorldException);
 
 	/**
 	 * This method deserialize the content from the given file handle.
@@ -214,8 +216,9 @@ public:
 	 *
 	 * @param worldname The file to dump.
 	 * @return True if the content is correct.
+	 * @throws b3WorldException
 	 */
-	b3_bool         b3ReadDump(const char *worldname);
+	b3_bool         b3ReadDump(const char *worldname) throw(b3WorldException);
 
 	/**
 	 * This method dumps the b3Item hierarchy for debugging purposes.
@@ -265,8 +268,9 @@ public:
 	 *
 	 * @param original The b3Item to clone.
 	 * @return The cloned b3Item.
+	 * @throws b3WorldException
 	 */
-	static b3Item  *b3Clone(b3Item *original);
+	static b3Item  *b3Clone(b3Item *original) throw(b3WorldException);
 
 	/**
 	 * This method clones a complete b3Base list. The items must be stored
@@ -274,8 +278,9 @@ public:
 	 *
 	 * @param srcBase The source base to clone.
 	 * @param dstBase The destination base which gets the cloned b3Items.
+	 * @throws b3WorldException
 	 */
-	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase);
+	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase) throw(b3WorldException);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
@@ -358,12 +363,13 @@ public:
 	 * @param loadfunc The load method to fill the b3Item with serialized data.
 	 * @param classtype The class type as key.
 	 * @param isclass The flag wether a class initialization should be used.
+	 * @throws b3WorldException
 	 */
 	static  void            b3Register(
 		b3_item_init_func initfunc,
 		b3_item_load_func loadfunc,
 		b3_u32            classtype,
-		b3_bool           isclass = false);
+		b3_bool           isclass = false) throw(b3WorldException);
 
 	/**
 	 * This method serializes the content of this instance. The header is written
@@ -416,9 +422,10 @@ public:
 	 * the list heads and then calls b3Write(). After that the b3Items found in the list heads
 	 * are called for storing. The storing occurs into an internal memory buffer.
 	 *
+	 * @throws b3WorldException
 	 * @return The overall size in bytes written yet.
 	 */
-	b3_u32          b3Store();
+	b3_u32          b3Store() throw(b3WorldException);
 
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
@@ -742,7 +749,7 @@ protected:
 	static void            b3DumpSpace(b3_count level,b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	       void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true);
+	       void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true) throw(b3WorldException);
 	       b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
 
 	friend class b3World;

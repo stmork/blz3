@@ -37,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.17  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
-**
+**	
 **	Revision 1.16  2005/06/08 14:16:24  smork
 **	- Some more vectorization.
 **	
@@ -500,7 +504,7 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 	b3Display *display,
 	b3_coord   y,
 	b3_res     xSize,
-	b3_res     ySize) :
+	b3_res     ySize) throw(b3WorldException) :
 		b3DistributedRayRow(scene,display,y,xSize,ySize)
 {
 	b3_coord x;

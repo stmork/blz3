@@ -267,9 +267,10 @@ public:
 	 *
 	 * @param xSize The image width.
 	 * @param ySize The image height.
+	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
+	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareException);
 
 	/**
 	 * This method simply raytraces the scene onto the given display.
@@ -763,8 +764,8 @@ public:
 private:
 	        b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
 			void            b3ReallocateShader();
-	        void            b3DoRaytrace(b3Display *display,b3_count CPUs);
-	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
+	        void            b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareException);
+	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3PrepareException);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
 	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
@@ -941,8 +942,9 @@ public:
 	 * @param y The y coordinate in image coordinates.
 	 * @param xSize The image width.
 	 * @param ySize The image height.
+	 * @throws b3WorldException
 	 */
-	b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize) throw(b3WorldException);
 
 	/**
 	 * This destructor deinitializes this row instance.

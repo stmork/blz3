@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.74  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.73  2005/07/18 16:15:36  sm
 **	- Updating espilon
-**
+**	
 **	Revision 1.72  2005/05/13 15:33:54  sm
 **	- Tested surface property operations.
 **	
@@ -491,7 +495,7 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 	return 0;
 }
 
-void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
+void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareException)
 {
 	b3_rt_info *infos;
 	b3TimeSpan  span;
@@ -534,7 +538,7 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 	delete [] infos;
 }
 
-void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
+void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3PrepareException)
 {
 	b3_rt_info  *infos;
 	b3Animation *anim = b3GetAnimation();
@@ -639,7 +643,7 @@ b3_bool b3Scene::b3PrepareBBoxThread(b3BBox *bbox,void *ptr)
 	return bbox->b3PrepareBBox();
 }
 
-b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
+b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareException)
 {
 	b3Item            *item;
 	b3Nebular         *nebular;

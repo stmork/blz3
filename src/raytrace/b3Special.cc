@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.76  2005/10/02 09:51:13  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.75  2005/06/01 12:28:55  smork
 **      - Removed some floating point operations.
 **
@@ -1069,7 +1073,7 @@ b3_bool b3Distribute::b3IsMotionBlur()
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
 
-void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation)
+void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation) throw(b3WorldException)
 {
 	b3_f32       *samples;
 	b3_f64        start,step;

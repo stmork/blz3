@@ -625,8 +625,9 @@ public:
 	 *
 	 * @param xSize The image width to raytrace.
 	 * @param animation The animation for motion blur if any.
+	 * @throws b3WorldException
 	 */
-	void     b3PrepareAnimation(b3_res xSize,b3Animation *animation=null);
+	void     b3PrepareAnimation(b3_res xSize,b3Animation *animation=null) throw(b3WorldException);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0

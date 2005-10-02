@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/10/02 09:51:12  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.10  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.9  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
@@ -430,7 +434,7 @@ b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
 	return true;
 }
 
-b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
+b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename) throw(b3WorldException)
 {
 	b3BBox     *bbox  = new b3BBox(BBOX);
 	b3_count    cameras = 0;

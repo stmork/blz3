@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2005/10/02 09:51:13  sm
+**      - Added OpenEXR configuration.
+**      - Added more excpetion handling.
+**
 **      Revision 1.27  2004/11/21 14:56:58  sm
 **      - Merged VBO development into main trunk.
 **
@@ -250,7 +254,7 @@ void b3SplineRotShape::b3Init(
 	m_Spline.b3InitCurve(Degree,ControlNum,Closed);
 }
 
-b3_bool b3SplineRotShape::b3Prepare()
+b3_bool b3SplineRotShape::b3Prepare() throw(b3WorldException)
 {
 	b3Spline     MySpline;
 	b3_triangle *Triangle;

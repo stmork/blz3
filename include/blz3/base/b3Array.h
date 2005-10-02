@@ -52,8 +52,9 @@ public:
 	 * Constructor with default increment.
 	 *
 	 * @param increment The incremental reallocations of memory.
+	 * @throws b3ArrayException
 	 */
-	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
+	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT) throw(b3ArrayException)
 	{
 		if (increment <= 0)
 		{
@@ -80,8 +81,9 @@ public:
 	 * This method adds one element and increases the buffer if necessary.
 	 *
 	 * @param element The new element to add.
+	 * @throws b3ArrayException
 	 */
-	inline void b3Add(T element)
+	inline void b3Add(T element) throw(b3ArrayException)
 	{
 		T        *buffer;
 		b3_count  max = m_Max + m_Increment;
@@ -168,9 +170,10 @@ public:
 	 * This index operator provides access to a special indexed array element.
 	 *
 	 * @param index The array index.
+	 * @param b3ArrayException
 	 * @return The reference to the indexed array element.
 	 */
-	inline T & operator [](const b3_index index)
+	inline T & operator [](const b3_index index) throw(b3ArrayException)
 	{
 #ifdef _DEBUG
 		if ((index < 0) || (index >= m_Index))

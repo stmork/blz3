@@ -47,9 +47,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/10/02 09:51:13  sm
+**	- Added OpenEXR configuration.
+**	- Added more excpetion handling.
+**
 **	Revision 1.10  2005/05/07 14:48:06  sm
 **	- Searching for correct "latest possible" date on 64 bit machines.
-**
+**	
 **	Revision 1.9  2005/05/07 09:40:00  sm
 **	- Changing va-list init to each vxprintf function call.
 **	
@@ -104,7 +108,7 @@ b3Date::b3Date()
 b3Date::b3Date(
 	unsigned short newDay,
 	unsigned short newMonth,
-	unsigned long  newYear)
+	unsigned long  newYear) throw(b3DateException)
 {
 	if (!b3SetDate(newDay,newMonth,newYear))
 	{
@@ -454,7 +458,7 @@ void b3Date::operator-=(const b3Date &diff)
 	b3SetMode (B3_DT_DIFF);
 }
 
-void b3Date::operator+=(const b3Date &diff)
+void b3Date::operator+=(const b3Date &diff) throw(b3DateException)
 {
 	if ((diff.mode != B3_DT_DIFF) && (mode != B3_DT_DIFF))
 	{

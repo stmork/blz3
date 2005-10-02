@@ -49,8 +49,9 @@ public:
 	 *
 	 * @note All render objects should be recomputed after this call. 
 	 * @param subdiv The new sub division value.
+	 * @throws b3WorldException
 	 */
-	void             b3InitSubdiv(b3_count subdiv);
+	void             b3InitSubdiv(b3_count subdiv) throw(b3WorldException);
 
 	/**
 	 * This method returns precomputed line indices for cylinder shapes.

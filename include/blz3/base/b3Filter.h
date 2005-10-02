@@ -68,9 +68,10 @@ public:
 	 *
 	 * \param val The value position to integrate.
 	 * \param throw_exception A flag if throwing an exception on error.
+	 * \throws b3FilterException
 	 * \return The inverse integral.
 	 */
-	virtual b3_f64    b3InvIntegral(b3_f64 val,b3_bool throw_exception = false);
+	virtual b3_f64    b3InvIntegral(b3_f64 val,b3_bool throw_exception = false) throw(b3FilterException);
 
 	/**
 	 * A factory method for generating several filters.
@@ -99,7 +100,7 @@ public:
 		else return (x + 1) * 0.5;
 	}
 
-	inline b3_f64 b3InvIntegral(b3_f64 val,b3_bool throw_exception = false)
+	inline b3_f64 b3InvIntegral(b3_f64 val,b3_bool throw_exception = false) throw(b3FilterException)
 	{
 		if ((fabs(val) > 1) && throw_exception)
 		{

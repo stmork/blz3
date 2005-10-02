@@ -72,7 +72,7 @@ class b3TGFReader
 
 	             b3TGFReader();
 				~b3TGFReader();
-	b3BBox      *b3Parse(char *buffer,b3_size size,const char *filename);
+	b3BBox      *b3Parse(char *buffer,b3_size size,const char *filename) throw(b3WorldException);
 	b3_bool      b3ParseCamera(char *ptr);
 	b3_bool      b3ParseLight(char *ptr);
 	b3_bool      b3ParseMaterial(char *tr);
