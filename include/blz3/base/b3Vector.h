@@ -244,6 +244,7 @@ public:
 		result.x = (b3_f32)v[X];
 		result.y = (b3_f32)v[Y];
 		result.z = (b3_f32)v[Z];
+
 		return result;
 	}
 
@@ -275,7 +276,7 @@ public:
 		result.x = (b3_f64)v[X];
 		result.y = (b3_f64)v[Y];
 		result.z = (b3_f64)v[Z];
-		result.pad = 0;
+
 		return result;
 	}
 
