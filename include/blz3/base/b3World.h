@@ -559,20 +559,20 @@ protected:
 	/**
 	 * This method reads back a spline instance.
 	 *
-	 * @param spline The b3_spline structure pointer which defines the spline.
+	 * @param spline The b3Spline class pointer which defines the spline.
 	 * @param controls The pointer to the spline control pointer.
 	 * @param knots The knot vector of the spline.
 	 */
-	void     b3InitSpline  (b3_spline   *spline,b3_vector   *controls = null,b3_f32 *knots = null);
+	void     b3InitSpline  (b3Spline   *spline,b3_vector   *controls = null,b3_f32 *knots = null);
 
 	/**
 	 * This method reads back a NURBS instance.
 	 *
-	 * @param nurbs The b3_nurbs structure pointer which defines the NURBS.
+	 * @param nurbs The b3Nurbs class pointer which defines the NURBS.
 	 * @param controls The pointer to the NURBS control pointer.
 	 * @param knots The knot vector of the NURBS.
 	 */
-	void     b3InitNurbs   (b3_nurbs    *nurbs, b3_vector4D *controls = null,b3_f32 *knots = null);
+	void     b3InitNurbs   (b3Nurbs *nurbs, b3_vector4D *controls = null,b3_f32 *knots = null);
 
 	/**
 	 * This method reads back a string of the given size and corrects the read index.
@@ -580,7 +580,7 @@ protected:
 	 * @param name The text buffer.
 	 * @param len  The size of the text buffer.
 	 */
-	void     b3InitString  (char        *name,b3_size len);
+	void     b3InitString  (char *name,b3_size len);
 
 	/**
 	 * This method bumps the read index and returns a null pointer.
@@ -704,18 +704,18 @@ protected:
 	void     b3StoreColor   (      b3Color     &col);
 
 	/**
-	 * This method stores the contents of a b3_spline structure.
+	 * This method stores the contents of a b3Spline class.
 	 *
 	 * @param spline The spline structure.
 	 */
-	void     b3StoreSpline  (const b3_spline   *spline);
+	void     b3StoreSpline  (const b3Spline   *spline);
 
 	/**
-	 * This method stores the contents of a b3_nurbs structure.
+	 * This method stores the contents of a b3Nurbs class.
 	 *
 	 * @param nurbs The NURBS structure.
 	 */
-	void     b3StoreNurbs   (const b3_nurbs    *nurbs);
+	void     b3StoreNurbs   (const b3Nurbs *nurbs);
 
 	/**
 	 * This method stores a text string. The offset is adjusted automatically

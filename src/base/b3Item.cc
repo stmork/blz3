@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2005/10/07 14:59:59  sm
+**      - Fix due to GCC 3.4 and 4.0 compiler bug.
+**
 **      Revision 1.41  2005/10/02 09:51:12  sm
 **      - Added OpenEXR configuration.
 **      - Added more excpetion handling.
@@ -535,7 +538,7 @@ void b3Item::b3InitMatrix(b3_matrix *mat)
 }
 
 void b3Item::b3InitSpline(
-	b3_spline *spline,
+	b3Spline  *spline,
 	b3_vector *new_controls,
 	b3_f32    *new_knots)
 {
@@ -556,7 +559,7 @@ void b3Item::b3InitSpline(
 }
 
 void b3Item::b3InitNurbs(
-	b3_nurbs    *nurbs,
+	b3Nurbs     *nurbs,
 	b3_vector4D *new_controls,
 	b3_f32      *new_knots)
 {
@@ -941,7 +944,7 @@ void b3Item::b3StoreMatrix(const b3_matrix *mat)
 	m_StoreIndex += 16;
 }
 
-void b3Item::b3StoreSpline(const b3_spline *spline)
+void b3Item::b3StoreSpline(const b3Spline *spline)
 {
 	b3StoreInt((b3_u32)spline->control_num);
 	b3StoreInt((b3_u32)spline->knot_num);
@@ -955,7 +958,7 @@ void b3Item::b3StoreSpline(const b3_spline *spline)
 	b3StorePtr( spline->knots);
 }
 
-void b3Item::b3StoreNurbs(const b3_nurbs *nurbs)
+void b3Item::b3StoreNurbs(const b3Nurbs *nurbs)
 {
 	b3StoreInt((b3_u32)nurbs->control_num);
 	b3StoreInt((b3_u32)nurbs->knot_num);

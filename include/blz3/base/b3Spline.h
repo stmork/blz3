@@ -274,10 +274,13 @@ public:
 *************************************************************************/
 
 /**
- * This structure template defines the basic properties of a spline
+ * This template class defines the behaviour of splines.
  */
-template<class VECTOR> struct b3_spline_template
+template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 {
+public:
+	static b3_bspline_error bspline_errno;
+
 	b3_count        control_num,knot_num;
 	b3_count        degree,subdiv;         // values of B-Spline
 	b3_count        control_max,knot_max;  // max. values
@@ -285,18 +288,6 @@ template<class VECTOR> struct b3_spline_template
 	b3_bool         closed;                // open/close curve
 	VECTOR         *controls;              // control sequence
 	b3_knots        knots;                 // knot sequence
-};
-
-typedef b3_spline_template<b3_vector>   b3_spline;
-typedef b3_spline_template<b3_vector4D> b3_nurbs;
-
-/**
- * This template class defines the behaviour of splines.
- */
-template<class VECTOR> class B3_PLUGIN b3SplineTemplate : public b3_spline_template<VECTOR>
-{
-public:
-	static b3_bspline_error bspline_errno;
 
 public:
 	b3SplineTemplate<VECTOR>()
