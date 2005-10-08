@@ -36,7 +36,7 @@ enum b3_error_filter
 	B3_FILTER_OUT_OF_RANGE
 };
 
-typedef b3Exception<b3_error_filter,'FIL'> b3FilterException;
+typedef b3Exception<b3_error_filter,0x46494c> b3FilterException;
 
 class b3BoxFilter;
 class b3GaussFilter;

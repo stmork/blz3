@@ -28,7 +28,7 @@
 #include "blz3/system/b3Exception.h"
 #include "blz3/system/b3DirAbstract.h"
 
-typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
+typedef b3Exception<b3_dir_error,0x00444952> b3DirException;
 
 /**
  * This class implements the b3PathAbstract class. It additionally provides some

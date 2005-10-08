@@ -48,7 +48,7 @@ enum b3_display_error
 	B3_DISPLAY_OPEN          //!< Unable to open a window.
 };
 
-typedef b3Exception<b3_display_error,'DSP'> b3DisplayException;
+typedef b3Exception<b3_display_error,0x445350> b3DisplayException;
 
 class b3Row;
 

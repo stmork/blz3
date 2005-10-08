@@ -174,7 +174,7 @@ enum b3_tx_error
 	B3_TX_UNKNOWN_DATATYPE    //!< Unknown image representation.
 };
 
-typedef b3Exception<b3_tx_error,'TX'> b3TxException;
+typedef b3Exception<b3_tx_error,0x5458> b3TxException;
 
 /*************************************************************************
 **                                                                      **

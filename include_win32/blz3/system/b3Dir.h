@@ -24,7 +24,7 @@
 
 #define S_ISDIR(m)          ((m) & S_IFDIR)
 
-typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
+typedef b3Exception<b3_dir_error,0x444952> b3DirException;
 
 class b3Path : public b3PathAbstract
 {

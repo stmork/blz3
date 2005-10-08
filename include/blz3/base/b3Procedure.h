@@ -39,7 +39,7 @@ enum b3_noise_error
 	B3_NOISE_MEMORY      //!< Out of memory error.
 };
 
-typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
+typedef b3Exception<b3_noise_error,0x4e4f49> b3NoiseException;
 
 /**
  * This class provides some procedural texture methods based Perlin Noise.

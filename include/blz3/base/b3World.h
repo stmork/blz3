@@ -45,8 +45,8 @@
 
 #define no_DEBUG_VERBOSE
 
-#define B3_BLiZ 'BLiZ'
-#define B3_ZiLB 'ZiLB'
+#define B3_BLiZ 0x424c695a
+#define B3_ZiLB 0x5a694c42
 
 #define B3_CLASS_MAX 0x7fff0000
 
@@ -102,7 +102,7 @@ enum b3_world_error
 	B3_WORLD_IMPORT              //!< General import error during file conversion.
 };
 
-typedef b3Exception<b3_world_error,'BLZ'> b3WorldException; 
+typedef b3Exception<b3_world_error,0x424c5a> b3WorldException; 
 
 /*************************************************************************
 **                                                                      **

@@ -29,7 +29,7 @@ enum b3_print_error
 	B3_PRINT_NO_MEMORY
 };
 
-typedef b3Exception<b3_print_error,'PRT'> b3PrintException;
+typedef b3Exception<b3_print_error,505254> b3PrintException;
 
 class CB3Print
 {

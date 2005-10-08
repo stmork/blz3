@@ -37,7 +37,7 @@ enum b3_hash_error
 	B3_HASH_INVALID        //!< The computed hash is invalid.
 };
 
-typedef b3Exception<b3_hash_error,'HSH'> b3HashException;
+typedef b3Exception<b3_hash_error,0x485348> b3HashException;
 
 /*************************************************************************
 **                                                                      **

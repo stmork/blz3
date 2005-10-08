@@ -56,7 +56,7 @@ enum b3_error_prepare
 };
 
 typedef b3_bool (*b3PrepareProc)(b3BBox *bbox,void *ptr);
-typedef b3Exception<b3_error_prepare,'PRP'> b3PrepareException;
+typedef b3Exception<b3_error_prepare,0x505250> b3PrepareException;
 
 #define B3_MIN_BBOXES_FOR_THREADING 50
 

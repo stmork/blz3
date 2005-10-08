@@ -108,7 +108,7 @@ enum b3_file_error
 	B3_FILE_NOT_OPEN      //!< Could not open file.
 };
 
-typedef b3Exception<b3_file_error,'FIL'> b3FileException;
+typedef b3Exception<b3_file_error,0x46494c> b3FileException;
 
 /*************************************************************************
 **                                                                      **

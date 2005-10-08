@@ -33,7 +33,7 @@ enum b3_array_error
 	B3_ARRAY_INVALID_INCREMENT	//!< Invalid increment. Increments must be greater than zero.
 };
 
-typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
+typedef b3Exception<b3_array_error,0x415252> b3ArrayException;
 
 /**
  * This class implements a dynamic sized array of elements. It includes

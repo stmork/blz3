@@ -46,7 +46,7 @@ enum b3_vector_error
 	B3_VECTOR_OUT_OF_BOUNDS
 };
 
-typedef b3Exception<b3_vector_error,'VEC'> b3VectorException;
+typedef b3Exception<b3_vector_error,0x564543> b3VectorException;
 
 /**
  * This is a template class fur use in the b3Spline template class.

@@ -59,7 +59,7 @@ enum b3_date_error
 	B3_DATE_ILLEGAL_MODE  //!< Unknown time zone.
 };
 
-typedef b3Exception<b3_date_error,'DAT'> b3DateException;
+typedef b3Exception<b3_date_error,0x444154> b3DateException;
 
 /**
  * This class provides methods for dealing with dates and to

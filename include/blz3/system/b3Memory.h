@@ -40,7 +40,7 @@ enum b3_mem_error
 	B3_MEM_UNKNOWN_PTR //!< Memory pointer unknown in this chunk handler.
 };
 
-typedef b3Exception<b3_mem_error,'MEM'> b3MemException;
+typedef b3Exception<b3_mem_error,0x4d454d> b3MemException;
 
 /**
  * This structure holds information about one memory chunk.
