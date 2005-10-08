@@ -849,7 +849,7 @@ public:
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		if (closed) for (Count = 0;Count < Mult;Count++)
 		{
@@ -1154,7 +1154,7 @@ public:
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		if (append)
 		{
@@ -1240,8 +1240,8 @@ private:
 		j = i * offset + index;
 		for (l = 0;l <= degree;l++)
 		{
-			it[l] = Nurbs->controls[j];
-			j    -= Nurbs->offset;
+			it[l] = controls[j];
+			j    -= offset;
 		}
 
 		ins += i;		/* loop for control point insertion */
@@ -1272,7 +1272,6 @@ private:
 		b3_index  index,
 		b3_knot   qStart)
 	{
-		b3_nurbs *Nurbs = (b3_nurbs *)Spline;
 		b3_index  l,i,j,m;
 		b3_knot   r,q,diff;
 		b3_f64    Denom;
@@ -1289,7 +1288,7 @@ private:
 		j = i;
 		for (l = 0;l <= degree;l++)
 		{
-			it[l] = Nurbs->controls[j * Nurbs->offset + index];
+			it[l] = controls[j * offset + index];
 			if (--j < 0) j += m;
 		}
 
