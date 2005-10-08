@@ -175,7 +175,7 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64        b3ImprovedNoise    (const b3_f64 x, const b3_f64 y, const b3_f64 z)
+	static inline b3_f64        b3ImprovedNoise    (const b3_f32 x, const b3_f32 y, const b3_f32 z)
 	{
 		return (b3SignedImprovedNoise(x,y,z) + 1) * 0.5;
 	}
@@ -191,7 +191,7 @@ public:
 	 * @param z The z input value.
 	 * @return The pseudo random value.
 	 */
-	static        b3_f64  b3SignedImprovedNoise    (const b3_f64 x, const b3_f64 y, const b3_f64 z);
+	static        b3_f64  b3SignedImprovedNoise    (const b3_f32 x, const b3_f32 y, const b3_f32 z);
 	
 	/**
 	 * This method returns a vector with linear interpolated pseudo random floats based on Perlin noise.

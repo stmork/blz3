@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2005/10/08 16:35:44  sm
+**	- Fixed rounding problem
+**
 **	Revision 1.58  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.57  2005/09/11 17:45:52  sm
 **	- Fixed wrong ordered b3MatGranite read.
 **	
@@ -459,19 +462,19 @@ int b3Noise::m_Permutation[512] =
 };
 
 b3_f64 b3Noise::b3SignedImprovedNoise(
-	const b3_f64 cx,
-	const b3_f64 cy,
-	const b3_f64 cz)
+	const b3_f32 cx,
+	const b3_f32 cy,
+	const b3_f32 cz)
 {
 	int X     = (int)floor(cx) & 255;      // FIND UNIT CUBE THAT
 	int Y     = (int)floor(cy) & 255;      // CONTAINS POINT.
 	int Z     = (int)floor(cz) & 255;
-	b3_f64 x  = cx - floor(cx);            // FIND RELATIVE X,Y,Z
-	b3_f64 y  = cy - floor(cy);            // OF POINT IN CUBE.
-	b3_f64 z  = cz - floor(cz);
-	b3_f64 u  = b3Math::b3Fade(x);         // COMPUTE FADE CURVES
-	b3_f64 v  = b3Math::b3Fade(y);         // FOR EACH OF X,Y,Z.
-	b3_f64 w  = b3Math::b3Fade(z);
+	b3_f32 x  = cx - floor(cx);            // FIND RELATIVE X,Y,Z
+	b3_f32 y  = cy - floor(cy);            // OF POINT IN CUBE.
+	b3_f32 z  = cz - floor(cz);
+	b3_f32 u  = b3Math::b3Fade(x);         // COMPUTE FADE CURVES
+	b3_f32 v  = b3Math::b3Fade(y);         // FOR EACH OF X,Y,Z.
+	b3_f32 w  = b3Math::b3Fade(z);
 	int A     = m_Permutation[X  ]+Y;
 	int AA    = m_Permutation[A]+Z;
 	int AB    = m_Permutation[A+1]+Z;      // HASH COORDINATES OF
