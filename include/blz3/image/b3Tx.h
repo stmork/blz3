@@ -894,22 +894,46 @@ private:
 	static unsigned int b3ScaleBW2BW(void *ptr);
 	static unsigned int b3ScaleBW2Grey(void *ptr);
 	static unsigned int b3RGB8ScaleToRGB8(void *ptr);
+	static unsigned int b3FloatScaleToRGB8(void *ptr);
+
+	static void         b3FloatComputeLineSmaller(
+		b3_color *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex,
+		b3_color *src,
+		b3_res    xDstSize);
+	static void         b3FloatComputeLineBigger(
+		b3_color *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex,
+		b3_color *src,
+		b3_res    xDstSize);
+
 	static void         b3RGB8ComputeLineSmaller(
-		b3_count *TxRowCounter,
-		b3_count *TxRowCells,
-		b3_count *rIndex, b3_pkd_color *src, b3_res xDstSize);
+		b3_count     *TxRowCounter,
+		b3_count     *TxRowCells,
+		b3_count     *rIndex,
+		b3_pkd_color *src,
+		b3_res        xDstSize);
 	static void         b3RGB8ComputeLineBigger(
-		b3_count *TxRowCounter,
-		b3_count *TxRowCells,
-		b3_count *rIndex, b3_pkd_color *src, b3_res xDstSize);
+		b3_count     *TxRowCounter,
+		b3_count     *TxRowCells,
+		b3_count     *rIndex,
+		b3_pkd_color *src,
+		b3_res        xDstSize);
+
 	static void         b3ComputeLineSmaller(
 		b3_count *TxRowCounter,
 		b3_count *TxRowCells,
-		b3_count *rIndex, b3_u08       *src, b3_res xDstSize);
+		b3_count *rIndex,
+		b3_u08   *src,
+		b3_res    xDstSize);
 	static void         b3ComputeLineBigger(
 		b3_count *TxRowCounter,
 		b3_count *TxRowCells,
-		b3_count *rIndex, b3_u08       *src, b3_res xDstSize);
+		b3_count *rIndex,
+		b3_u08   *src,
+		b3_res    xDstSize);
 
 private:
 	// b3TxTurn.cc
@@ -917,12 +941,14 @@ private:
 	void           b3TurnLeftVGA();
 	void           b3TurnLeftRGB4();
 	void           b3TurnLeftRGB8();
+	void           b3TurnLeftFloat();
 
 	// b3TxTurn.cc
 	void           b3TurnRightILBM();
 	void           b3TurnRightVGA();
 	void           b3TurnRightRGB4();
 	void           b3TurnRightRGB8();
+	void           b3TurnRightFloat();
 
 	// b3TxScale.cc
 	void           b3ScaleFilteredFromBW (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
@@ -930,20 +956,27 @@ private:
 	void           b3VGAScaleToVGA   (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScaleToRGB8  (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ScaleFilteredFromColor(b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleFilteredFromFloat(b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 
 	void           b3ScaleUnfilteredFromBW       (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ScaleUnfilteredFromILBM     (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ScaleUnfilteredFromVGA      (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ScaleUnfilteredFromColor    (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ScaleUnfilteredFromFloat    (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	b3_index       b3ILBMPlaneValue  (b3_coord x,b3_coord y);
 
 	// b3Tx.cc
-	b3_pkd_color   b3ILBMValue(b3_coord x,b3_coord y);
-	b3_pkd_color   b3RGB4Value(b3_coord x,b3_coord y);
-	b3_pkd_color   b3RGB8Value(b3_coord x,b3_coord y);
-	b3_pkd_color   b3VGAValue (b3_coord x,b3_coord y);
-	void           b3CopyILBMtoVGA (b3_u08       *row,b3_coord y);
-	void           b3CopyILBMtoRGB8(b3_pkd_color *row,b3_coord y);
+	b3_pkd_color   b3ILBMValue (b3_coord x,b3_coord y);
+	b3_pkd_color   b3RGB4Value (b3_coord x,b3_coord y);
+	b3_pkd_color   b3RGB8Value (b3_coord x,b3_coord y);
+	b3_pkd_color   b3VGAValue  (b3_coord x,b3_coord y);
+	b3_pkd_color   b3FloatValue(b3_coord x,b3_coord y);
+
+	// b3Tx.cc
+	void           b3CopyILBMtoVGA  (b3_u08       *row, b3_coord y);
+	void           b3CopyILBMtoRGB8 (b3_pkd_color *row, b3_coord y);
+	void           b3CopyILBMtoFloat(b3_color     *row, b3_coord y);
+
 	// b3Tx.cc
 	void           b3GetILBM  (b3_pkd_color *row,b3_coord y);
 	void           b3GetRGB4  (b3_pkd_color *row,b3_coord y);

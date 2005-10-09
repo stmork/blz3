@@ -41,13 +41,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**
 **	Revision 1.6  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.5  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -96,7 +99,7 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 	b3SetRowRefreshCount();
 	m_xMax  = xSize;
 	m_yMax  = ySize;
-	m_depth = 24;
+	m_depth = 128;
 	m_RowCounter = 0;
 #ifdef _DEBUG
 	b3PrintF (B3LOG_NORMAL,"xSize: %4ld\n",m_xMax);
@@ -105,7 +108,7 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 #endif
 
 	m_Tx->b3AllocTx(m_xMax,m_yMax,m_depth);
-	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
+	m_Buffer = (b3_color *)m_Tx->b3GetData();
 }
 
 b3DisplayView::b3DisplayView(

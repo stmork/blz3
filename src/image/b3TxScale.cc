@@ -25,6 +25,7 @@
 
 #include "blz3/image/b3Tx.h"
 #include "blz3/system/b3Log.h"
+#include "blz3/base/b3Color.h"
 
 #include <math.h>
 
@@ -62,10 +63,13 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.25  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**
 **	Revision 1.24  2005/08/11 13:16:12  smork
 **	- Documentation.
 **	- b3Tx cleanup.
-**
+**	
 **	Revision 1.23  2005/08/10 18:45:10  sm
 **	- Documentation
 **	
@@ -963,7 +967,9 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 	b3_rect_info *RectInfo;
 	b3_tx_type    dstType;
 	b3_pkd_color *src;
-	b3_pkd_color *dst;
+	b3_u08       *bDst;
+	b3_pkd_color *lDst;
+	b3_color     *cDst;
 	b3_count     *rIndex;
 	b3_count     *cIndex;
 	b3_count     *TxRowCounter;
@@ -999,7 +1005,6 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 	yDstSize =  RectInfo->ySizeDst;
 	srcBytes =  RectInfo->xSizeSrc;
 	dstBytes =  RectInfo->xSizeDst;
-	dst      = &RectInfo->dst.lData[yMin * dstBytes];
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(%5ld - %5ld)\n",
 		yMin,yMax);
@@ -1050,26 +1055,29 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 			{
 			case B3_TX_VGA:
 				i = 0;
+				bDst = &RectInfo->dst.bData[yDst * dstBytes];
 				for (xDst = 0;xDst < xDstSize;xDst++)
 				{
-					if (TxRowCells[xDst] > 0)
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
 					{
 						color  =
-							B3_TX_DIV(TxRowCounter[i],TxRowCells[xDst]) << 16;
+							B3_TX_DIV(TxRowCounter[i],divisor) << 16;
 						i++;
 						color |=
-							B3_TX_DIV(TxRowCounter[i],TxRowCells[xDst]) <<  8;
+							B3_TX_DIV(TxRowCounter[i],divisor) <<  8;
 						i++;
 						color |=
-							B3_TX_DIV(TxRowCounter[i],TxRowCells[xDst]);
+							B3_TX_DIV(TxRowCounter[i],divisor);
 						i++;
 					}
-					dst++;
+					bDst++;
 				}
 				break;
 
 			case B3_TX_RGB8:
 				i = 0;
+				lDst = &RectInfo->dst.lData[yDst * dstBytes];
 				for (xDst = 0;xDst < xDstSize;xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1087,9 +1095,35 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
 							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
 						}
-						*dst = color;
+						*lDst = color;
 					}
-					dst++;
+					lDst++;
+				}
+				break;
+
+			case B3_TX_FLOAT:
+				i = 0;
+				cDst = &RectInfo->dst.cData[yDst * dstBytes];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
+					{
+						if (divisor < B3_TX_MAX_DIVISOR)
+						{
+							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16; i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8; i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor);       i++;
+						}
+						else
+						{
+							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16; i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
+						}
+						*cDst = b3Color(color);
+					}
+					cDst++;
 				}
 				break;
 
@@ -1121,26 +1155,29 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 			{
 			case B3_TX_VGA:
 				i = 0;
+				bDst = &RectInfo->dst.bData[yDst * dstBytes];
 				for (xDst = 0;xDst < xDstSize;xDst++)
 				{
-					if (TxRowCells[xDst] > 0)
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
 					{
 						color  =
-							(B3_TX_DIV(TxRowCounter[i],TxRowCells[xDst]) & 0xff) << 16;
+							(B3_TX_DIV(TxRowCounter[i],divisor) & 0xff) << 16;
 						i++;
 						color |=
-							(B3_TX_DIV(TxRowCounter[i],TxRowCells[xDst]) & 0xff) <<  8;
+							(B3_TX_DIV(TxRowCounter[i],divisor) & 0xff) <<  8;
 						i++;
 						color |=
-							(B3_TX_DIV(TxRowCounter[i],TxRowCells[xDst]) & 0xff);
+							(B3_TX_DIV(TxRowCounter[i],divisor) & 0xff);
 						i++;
 					}
-					dst++;
+					bDst++;
 				}
 				break;
 
 			case B3_TX_RGB8:
 				i = 0;
+				lDst = &RectInfo->dst.lData[yDst * dstBytes];
 				for (xDst = 0;xDst < xDstSize;xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1158,9 +1195,35 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
 							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
 						}
-						*dst = color;
+						*lDst = color;
 					}
-					dst++;
+					lDst++;
+				}
+				break;
+
+			case B3_TX_FLOAT:
+				i = 0;
+				cDst = &RectInfo->dst.cData[yDst * dstBytes];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
+					{
+						if (divisor < B3_TX_MAX_DIVISOR)
+						{
+							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16; i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8; i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor);       i++;
+						}
+						else
+						{
+							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16; i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
+						}
+						*cDst = b3Color(color);
+					}
+					cDst++;
 				}
 				break;
 
@@ -1211,7 +1274,9 @@ void b3Tx::b3ScaleFilteredFromColor(
 		RectInfo[i].rIndex      = rIndex;
 		RectInfo[i].cIndex      = cIndex;
 		RectInfo[i].src.lData   = (b3_pkd_color *)srcTx->data;
+		RectInfo[i].dst.bData   = (b3_u08 *)data;
 		RectInfo[i].dst.lData   = (b3_pkd_color *)data;
+		RectInfo[i].dst.cData   = (b3_color *)data;
 		RectInfo[i].xSizeSrc    = srcTx->xSize;
 		RectInfo[i].xSizeDst    = xSize;
 		RectInfo[i].ySizeSrc    = srcTx->ySize;
@@ -1242,6 +1307,363 @@ void b3Tx::b3ScaleFilteredFromColor(
 	{
 		// Simple call
 		b3RGB8ScaleToRGB8((void *)&RectInfo[0]);
+	}
+}
+
+// If a line is to be scaled up (means: destination is bigger)...
+void b3Tx::b3FloatComputeLineBigger(
+	b3_color     *TxRowCounter,
+	b3_count     *TxRowCells,
+	b3_count     *rIndex,
+	b3_color     *src,
+	b3_res        xDstSize)
+{
+	b3_coord     xDst;
+	b3_index     index;
+	b3_index     i = 0;
+
+	for (xDst = 0;xDst < xDstSize;xDst++)
+	{
+		index = rIndex[xDst];
+		TxRowCounter->r += src[index].r;
+		TxRowCounter->g += src[index].g;
+		TxRowCounter->b += src[index].b;
+		TxRowCounter->a += src[index].a;
+		TxRowCells[xDst]++;
+	}
+}
+
+
+// If a line is to be scaled down (means: destination is smaller)...
+void b3Tx::b3FloatComputeLineSmaller(
+	b3_color *TxRowCounter,
+	b3_count *TxRowCells,
+	b3_count *rIndex,
+	b3_color *src,
+	b3_res    xDstSize)
+{
+	b3_coord     xDst;
+	b3_res       xStart,xEnd;
+	b3_res       diff;
+	b3_coord     x;
+
+	xEnd = rIndex[0];
+	for (xDst = 0;xDst < xDstSize;xDst++)
+	{
+		xStart = xEnd;
+		xEnd   = rIndex[xDst + 1];
+		diff   = xEnd - xStart;
+		for (x = xStart;x < xEnd;x++)
+		{
+			TxRowCounter->r += src[x].r;
+			TxRowCounter->g += src[x].g;
+			TxRowCounter->b += src[x].b;
+			TxRowCounter->a += src[x].a;
+		}
+		TxRowCounter++;
+		TxRowCells[xDst] += diff;
+	}
+}
+
+unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
+{
+	b3_rect_info *RectInfo;
+	b3_tx_type    dstType;
+	b3_color     *src;
+	b3_count     *rIndex;
+	b3_count     *cIndex;
+	b3_color     *TxRowCounter;
+	b3_count     *TxRowCells;
+	b3_res        xSrcSize,ySrcSize;
+	b3_res        xDstSize,yDstSize;
+	b3_coord      ySrc;
+	b3_coord      xDst,yDst;
+	b3_count      srcBytes,dstBytes;
+	b3_index      i;
+	b3_color      color;
+	b3_count      divisor;
+	b3_res        yMin,yMax;
+	b3_u08       *bDst;
+	b3_pkd_color *lDst;
+	b3_color     *cDst;
+	void          (*ComputeLine)(
+		b3_color *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex,
+		b3_color *src,
+		b3_res    dstSize);
+
+	// ... and some values
+	RectInfo = (b3_rect_info *)ptr;
+
+	dstType  =  RectInfo->dstType;
+	rIndex   =  RectInfo->rIndex;
+	cIndex   =  RectInfo->cIndex;
+	src      =  RectInfo->src.cData;
+	yMin     =  RectInfo->yMin;
+	yMax     =  RectInfo->yMax;
+	xSrcSize =  RectInfo->xSizeSrc;
+	xDstSize =  RectInfo->xSizeDst;
+	ySrcSize =  RectInfo->ySizeSrc;
+	yDstSize =  RectInfo->ySizeDst;
+	srcBytes =  RectInfo->xSizeSrc;
+	dstBytes =  RectInfo->xSizeDst;
+
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(%5ld - %5ld)\n",
+		yMin,yMax);
+
+	// Alloc some memory
+	TxRowCounter = (b3_color *)malloc(xDstSize * sizeof(b3_color));
+	if (TxRowCounter == null)
+	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
+			"Not enough memory for row counter\n");
+		B3_THROW(b3TxException,B3_TX_MEMORY);
+	}
+	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
+	if (TxRowCells == null)
+	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
+			"Not enough memory for row cell sizes\n");
+		free(TxRowCounter);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
+	}
+
+	// Select right line computation
+	ComputeLine = (
+		xDstSize < xSrcSize ?
+		b3FloatComputeLineSmaller : b3FloatComputeLineBigger);
+
+	if (yDstSize < ySrcSize)
+	{
+		// Destination height is smaller (scale down)
+		for (yDst = yMin;yDst < yMax;yDst++)
+		{
+			// clean row counter
+			i = 0;
+			for (xDst = 0;xDst < xDstSize;xDst++)
+			{
+				TxRowCounter[i].r = 0;
+				TxRowCounter[i].g = 0;
+				TxRowCounter[i].b = 0;
+				TxRowCounter[i].a = 0;
+				i++;
+				TxRowCells[xDst]  = 0;
+			}
+
+			// scan interval
+			for (ySrc = cIndex[yDst];ySrc < cIndex[yDst + 1];ySrc++)
+			{
+				ComputeLine(TxRowCounter,TxRowCells,rIndex,&src[ySrc * srcBytes],xDstSize);
+			}
+
+			// compute grey indices
+			switch(dstType)
+			{
+			case B3_TX_VGA:
+				i = 0;
+				bDst = &RectInfo->dst.bData[yDst * xDstSize];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					if (TxRowCells[xDst] > 0)
+					{
+						b3Color value = b3Color(TxRowCounter[i++]) / divisor;
+						
+						value.b3Sat();
+						*bDst = (b3_u08)(
+							value[b3Color::R] *  89.25 +
+							value[b3Color::G] * 130.05 +
+							value[b3Color::B] *  35.7);
+					}
+					bDst++;
+				}
+				break;
+
+			case B3_TX_RGB8:
+				i = 0;
+				lDst = &RectInfo->dst.lData[yDst * xDstSize];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
+					{
+						color = TxRowCounter[i++];
+						*lDst = b3Color(color) / divisor;
+					}
+					lDst++;
+				}
+				break;
+
+			case B3_TX_FLOAT:
+				i = 0;
+				cDst = &RectInfo->dst.cData[yDst * xDstSize];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
+					{
+						color = TxRowCounter[i++];
+						*cDst = b3Color(color) / divisor;
+					}
+					cDst++;
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	else
+	{
+		// Destination height is bigger (scale up)
+		for (yDst = yMin;yDst < yMax;yDst++)
+		{
+			// Clean row counter
+			i = 0;
+			for (xDst = 0;xDst < xDstSize;xDst++)
+			{
+				TxRowCounter[i].r = 0;
+				TxRowCounter[i].g = 0;
+				TxRowCounter[i].b = 0;
+				TxRowCounter[i].a = 0;
+				i++;
+				TxRowCells[xDst]  = 0;
+			}
+
+			// Compute Line...
+			ComputeLine(
+				TxRowCounter,
+				TxRowCells,rIndex,&src[cIndex[yDst] * srcBytes],xDstSize);
+
+			// Compute grey indices
+			switch(dstType)
+			{
+			case B3_TX_VGA:
+				i = 0;
+				bDst = &RectInfo->dst.bData[yDst * xDstSize];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					if (TxRowCells[xDst] > 0)
+					{
+						b3Color value = b3Color(TxRowCounter[i++]) / divisor;
+						
+						value.b3Sat();
+						*bDst = (b3_u08)(
+							value[b3Color::R] *  89.25 +
+							value[b3Color::G] * 130.05 +
+							value[b3Color::B] *  35.7);
+					}
+					bDst++;
+				}
+				break;
+
+			case B3_TX_RGB8:
+				i = 0;
+				lDst = &RectInfo->dst.lData[yDst * xDstSize];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
+					{
+						*lDst = b3Color(TxRowCounter[i++]) / divisor;
+					}
+					lDst++;
+				}
+				break;
+
+			case B3_TX_FLOAT:
+				i = 0;
+				cDst = &RectInfo->dst.cData[yDst * xDstSize];
+				for (xDst = 0;xDst < xDstSize;xDst++)
+				{
+					divisor = TxRowCells[xDst];
+					if (divisor > 0)
+					{
+						color = TxRowCounter[i++];
+						*cDst = b3Color(color) / divisor;
+					}
+					cDst++;
+				}
+				break;
+			}
+		}
+	}
+
+	// Free willie
+	free (TxRowCounter);
+	free (TxRowCells);
+	return 0;
+}
+
+void b3Tx::b3ScaleFilteredFromFloat(
+	b3Tx     *srcTx,
+	b3_count *rIndex,
+	b3_count *cIndex)
+{
+	b3Thread     tx_thread[CPU_MAX];
+	b3_rect_info RectInfo[CPU_MAX];
+	b3_pkd_color new_palette[256];
+	b3_index     i;
+	b3_count     NumCPUs;
+
+#if 1
+	NumCPUs = b3Runtime::b3GetNumCPUs();
+	if (NumCPUs > CPU_MAX)
+	{
+		NumCPUs = CPU_MAX;
+	}
+#else
+	NumCPUs = 1;
+#endif
+
+	// It doesn't worth multi threading
+	// if the image is too small
+	if ((srcTx->xSize * srcTx->ySize) < 250000)
+	{
+		NumCPUs = 1;
+	}
+
+	// Init rect infos
+	for (i = 0;i < NumCPUs;i++)
+	{
+		RectInfo[i].dstType     = type;
+		RectInfo[i].rIndex      = rIndex;
+		RectInfo[i].cIndex      = cIndex;
+		RectInfo[i].src.cData   = (b3_color *)srcTx->data;
+		RectInfo[i].dst.bData   = (b3_u08 *)data;
+		RectInfo[i].dst.lData   = (b3_pkd_color *)data;
+		RectInfo[i].dst.cData   = (b3_color *)data;
+		RectInfo[i].xSizeSrc    = srcTx->xSize;
+		RectInfo[i].xSizeDst    = xSize;
+		RectInfo[i].ySizeSrc    = srcTx->ySize;
+		RectInfo[i].ySizeDst    = ySize;
+		RectInfo[i].yMin        = ySize *  i      / NumCPUs;
+		RectInfo[i].yMax        = ySize * (i + 1) / NumCPUs;
+		RectInfo[i].new_palette = new_palette;
+	}
+
+	if (NumCPUs > 1)
+	{
+		// start threads
+		for (i = 0;i < NumCPUs;i++)
+		{
+			tx_thread[i].b3Name("b3Tx - b3ColorScaleToGrey");
+			tx_thread[i].b3Start(
+				b3FloatScaleToRGB8,
+				(void *)&RectInfo[i],TX_PRIO);
+		}
+
+		// Wait for threads
+		for (i = 0;i < NumCPUs;i++)
+		{
+			tx_thread[i].b3Wait();
+		}
+	}
+	else
+	{
+		// Simple call
+		b3FloatScaleToRGB8((void *)&RectInfo[0]);
 	}
 }
 
@@ -1515,6 +1937,11 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 		b3ScaleFilteredFromColor(srcTx,rIndex,cIndex);
 		break;
 
+	case  96:
+	case 128:
+		b3ScaleFilteredFromFloat(srcTx,rIndex,cIndex);
+		break;
+
 	default :
 		b3ScaleFilteredFromVGA(srcTx,rIndex,cIndex);
 		break;
@@ -1741,6 +2168,29 @@ void b3Tx::b3ScaleUnfilteredFromColor(
 	}
 }
 
+void b3Tx::b3ScaleUnfilteredFromFloat(
+	b3Tx     *Tx,
+	b3_count *rIndex,
+	b3_count *cIndex)
+{
+	b3_coord       x,y;
+	b3_count      num;
+	b3_color     *cSrc;
+	b3_pkd_color *lDst;
+
+	cSrc = (b3_color *)Tx->b3GetData();
+	lDst = (b3_pkd_color *)data;
+
+	for (y = 0;y < ySize;y++)
+	{
+		num = cIndex[y] * Tx->xSize;
+		for (x = 0;x < xSize;x++)
+		{
+			*lDst++ = b3Color(cSrc[num + rIndex[x]]);
+		}
+	}
+}
+
 void b3Tx::b3ScaleUnfilteredFromVGA(
 	b3Tx     *Tx,
 	b3_count *rIndex,
@@ -1903,6 +2353,11 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 
 	case 24:
 		b3ScaleUnfilteredFromColor (srcTx,rIndex,cIndex);
+		break;
+
+	case  64:
+	case 128:
+		b3ScaleUnfilteredFromFloat (srcTx,rIndex,cIndex);
 		break;
 
 	default:

@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3Procedure.c $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2005 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Procedural components
+**	Blizzard III - Perlin noise
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002, 2003, 2004, 2005  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**
 **	Revision 1.59  2005/10/08 16:35:44  sm
 **	- Fixed rounding problem
-**
+**	
 **	Revision 1.58  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.

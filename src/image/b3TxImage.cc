@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**
 **	Revision 1.17  2005/01/31 21:36:50  sm
 **	- FLT_MAX is correct! And now: include <float.h> for that...
-**
+**	
 **	Revision 1.16  2005/01/31 21:20:19  sm
 **	- Changed FLT_MAX to MAX_FLOAT and removed values.h include.
 **	
@@ -617,23 +620,24 @@ void b3Tx::b3Shrink(b3_count shrink)
 // Negate image by turning all color bits to reverse.
 void b3Tx::b3Negate()
 {
+	b3_color     *cPtr;
 	b3_pkd_color *lPtr;
 	b3_u16       *sPtr;
-	b3_u08       *cPtr;
+	b3_u08       *bPtr;
 	b3_count      xBytes,max;
 	b3_index      i;
-	b3_u08        cVal;
+	b3_u08        bVal;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Negate()\n");
 	if (b3IsBW())
 	{
-		cPtr   = (b3_u08 *)data;
+		bPtr   = (b3_u08 *)data;
 		xBytes = TX_BWA(xSize);			 
 		max    = xBytes * ySize;
 		for (i = 0;i < max;i++)
 		{
-			cVal    = *cPtr;
-			*cPtr++ = (b3_u08)(cVal ^ 0xff);
+			bVal    = *bPtr;
+			*bPtr++ = (b3_u08)(bVal ^ 0xff);
 		}
 	}
 
@@ -666,6 +670,18 @@ void b3Tx::b3Negate()
 		{
 			*lPtr = *lPtr ^ 0xffffff;
 			lPtr++;
+		}
+		break;
+		
+	case B3_TX_FLOAT:
+		cPtr = (b3_color *)data;
+		max  = xSize * ySize;
+		for (i = 0;i < max;i++)
+		{
+			cPtr->r = 1.0 - cPtr->r;
+			cPtr->g = 1.0 - cPtr->g;
+			cPtr->b = 1.0 - cPtr->b;
+			cPtr++;
 		}
 		break;
 
@@ -972,6 +988,42 @@ void b3Tx::b3TurnRightRGB8()
 	b3Free(oldData);
 }
 
+void b3Tx::b3TurnRightFloat()
+{
+	b3_color *oldData;
+	b3_color *newData;
+	b3_res    xNewSize,yNewSize;
+	b3_coord  srcPos,srcStart,srcInit,x,y;
+
+	xNewSize  = ySize;
+	yNewSize  = xSize;
+	newData   = (b3_color *)b3Alloc(dSize);
+	if (newData == null)
+	{
+		B3_THROW(b3TxException,B3_TX_MEMORY);
+	}
+
+	// change data pointer
+	oldData   = (b3_color *)data;
+	data      = (b3_u08 *)newData;
+
+	srcPos    = 0;
+	srcInit   = xSize * (ySize - 1);
+	for (y = 0;y < yNewSize;y++)
+	{
+		srcStart = srcInit + srcPos;
+		for (x = 0;x < xNewSize;x++)
+		{
+			*newData++ = oldData[srcStart];
+			srcStart -= xSize;
+		}
+		srcPos++;
+	}
+	xSize = xNewSize;
+	ySize = yNewSize;
+	b3Free(oldData);
+}
+
 void b3Tx::b3TurnRight()
 {
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Right()\n");
@@ -988,6 +1040,9 @@ void b3Tx::b3TurnRight()
 		break;
 	case B3_TX_RGB8 :
 		b3TurnRightRGB8();
+		break;
+	case B3_TX_FLOAT :
+		b3TurnRightFloat();
 		break;
 	default:
 		break;
@@ -1211,6 +1266,41 @@ void b3Tx::b3TurnLeftRGB8()
 	b3Free(oldData);
 }
 
+void b3Tx::b3TurnLeftFloat()
+{
+	b3_color *oldData;
+	b3_color *newData;
+	b3_res    xNewSize,yNewSize;
+	b3_coord  srcPos,srcStart,x,y;
+
+	xNewSize  = ySize;
+	yNewSize  = xSize;
+	newData   = (b3_color *)b3Alloc(dSize);
+	if (newData == null)
+	{
+		B3_THROW(b3TxException,B3_TX_MEMORY);
+	}
+
+	// change data pointer
+	oldData   = (b3_color *)data;
+	data      = (b3_u08 *)newData;
+
+	srcPos    = xSize - 1;
+	for (y = 0;y < yNewSize;y++)
+	{
+		srcStart = srcPos;
+		for (x = 0;x < xNewSize;x++)
+		{
+			*newData++  = oldData[srcStart];
+			srcStart   += xSize;
+		}
+		srcPos--;
+	}
+	xSize = xNewSize;
+	ySize = yNewSize;
+	b3Free(oldData);
+}
+
 void b3Tx::b3TurnLeft()
 {
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Left()\n");
@@ -1227,6 +1317,9 @@ void b3Tx::b3TurnLeft()
 		break;
 	case B3_TX_RGB8 :
 		b3TurnLeftRGB8();
+		break;
+	case B3_TX_FLOAT :
+		b3TurnLeftFloat();
 		break;
 	default:
 		break;
@@ -1270,9 +1363,10 @@ b3_tx_turn b3_tx_turn::TxTurn;
 
 void b3Tx::b3Turn()
 {
-	b3_u08        cBack,*cfPtr,*cbPtr,*cPtr;
+	b3_u08        bBack,*bfPtr,*bbPtr,*bPtr;
 	b3_u16        sBack,*sfPtr,*sbPtr;
 	b3_pkd_color  lBack,*lfPtr,*lbPtr;
+	b3_color      cBack,*cfPtr,*cbPtr;
 	b3_coord      y;
 	b3_index      i,d;
 	b3_count      max,size;
@@ -1287,7 +1381,7 @@ void b3Tx::b3Turn()
 		xSize = (xSize + 15) & 0xfffffff0;
 		size = xSize >> 3;
 		max  = size  >> 1;
-		cPtr = data;
+		bPtr = data;
 		// First: Turn horizontal
 		for (y = 0;y < ySize;y++)
 		{
@@ -1302,56 +1396,57 @@ void b3Tx::b3Turn()
 				// We start from left and right simultanously.
 				// Exchanging the bytes and turning the bits
 				// inside these bytes using a lookup table.
-				cfPtr = (b3_u08 *)cPtr;
-				cbPtr = (b3_u08 *)(cfPtr + size);
+				bfPtr = (b3_u08 *)bPtr;
+				bbPtr = (b3_u08 *)(bfPtr + size);
 				for (x = 0;x < max;x++)
 				{
-					cbPtr--;
-					cBack  = b3_tx_turn::TxTurn.Turnbytes[*cbPtr];
-					*cbPtr = b3_tx_turn::TxTurn.Turnbytes[*cfPtr];
-					*cfPtr =  cBack;
-					cfPtr++;
+					bbPtr--;
+					bBack  = b3_tx_turn::TxTurn.Turnbytes[*bbPtr];
+					*bbPtr = b3_tx_turn::TxTurn.Turnbytes[*bfPtr];
+					*bfPtr =  bBack;
+					bfPtr++;
 				}
-				cPtr += size;
+				bPtr += size;
 			}
 		}
 
 		// Second: Turn vertical
 		max   = ySize >> 1;
-		cfPtr = (b3_u08 *)data;
-		cPtr  = (b3_u08 *)(data + size * ySize * depth);
+		bfPtr = (b3_u08 *)data;
+		bPtr  = (b3_u08 *)(data + size * ySize * depth);
 		for (y = 0;y < max;y++)
 		{
-			cPtr -= (depth * size);
+			bPtr -= (depth * size);
 			for (d = 0;d < depth;d++)
 			{
 				b3_coord x;
 
 				// Now exchange the two lines. Do it! Do it!
-				cbPtr = (b3_u08 *)cPtr;
+				bbPtr = (b3_u08 *)bPtr;
 				for (x = 0;x < size;x++)
 				{
-					cBack  = *cbPtr;
-					*cbPtr = *cfPtr;
-					*cfPtr =  cBack;
-					cfPtr++;
-					cbPtr++;
+					bBack  = *bbPtr;
+					*bbPtr = *bfPtr;
+					*bfPtr =  bBack;
+					bfPtr++;
+					bbPtr++;
 				}
-				cPtr += size;
+				bPtr += size;
 			}
-			cPtr -= (depth * size);
+			bPtr -= (depth * size);
 		}
 		break;
+
 	case B3_TX_VGA :
-		cfPtr = (b3_u08 *)data;
-		cbPtr = (b3_u08 *)(cfPtr + size);
+		bfPtr = (b3_u08 *)data;
+		bbPtr = (b3_u08 *)(bfPtr + size);
 		for (i = 0;i < max;i++)
 		{
-			cbPtr--;
-			cBack  = *cbPtr;
-			*cbPtr = *cfPtr;
-			*cfPtr =  cBack;
-			cfPtr++;
+			bbPtr--;
+			bBack  = *bbPtr;
+			*bbPtr = *bfPtr;
+			*bfPtr =  bBack;
+			bfPtr++;
 		}
 		break;
 
@@ -1378,6 +1473,19 @@ void b3Tx::b3Turn()
 			*lbPtr = *lfPtr;
 			*lfPtr =  lBack;
 			lfPtr++;
+		}
+		break;
+
+	case B3_TX_FLOAT :
+		cfPtr = (b3_color *)data;
+		cbPtr = (b3_color *)(cfPtr + size);
+		for (i = 0;i < max;i++)
+		{
+			cbPtr--;
+			cBack  = *cbPtr;
+			*cbPtr = *cfPtr;
+			*cfPtr =  cBack;
+			cfPtr++;
 		}
 		break;
 

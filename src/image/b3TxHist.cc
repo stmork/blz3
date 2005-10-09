@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**
 **	Revision 1.10  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.9  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
 **	
@@ -334,6 +337,37 @@ b3_bool b3Tx::b3AddHist(
 		}
 		return true;
 	}
+
+	if (type == B3_TX_FLOAT)
+	{
+		b3_coord      x,y;
+		b3_index      index;
+		b3_color     *cPtr;
+		b3_pkd_color  grey;
+		b3_f64        r,g,b;
+
+		cPtr  = (b3_color *)data;
+		index = yStart * xSize;
+		for (y = yStart;y < yStop;y++)
+		{
+			for (x = 0;x < xSize;x++)
+			{
+				r = cPtr[index].r *  89.25;
+				g = cPtr[index].g * 130.05;
+				b = cPtr[index].b *  35.7;
+				index++;
+
+				grey = (b3_pkd_color)(r + g + b);
+				if (grey >= B3_TX_MAX_HISTGRM)
+				{
+					grey = B3_TX_MAX_HISTGRM - 1;
+				}
+
+				histogramme[grey]++;
+			}
+		}
+		return true;
+	}
 	return false;
 }
 
@@ -502,9 +536,10 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 {
 	b3_u08        *dPtr,*ptr;
 	b3_pkd_color  *pPtr;
-	b3_u08        *cPtr;
+	b3_u08        *bPtr;
 	b3_u16        *sPtr;
 	b3_pkd_color  *lPtr;
+	b3_color      *cPtr;
 	b3_coord       x,y;
 	b3_count       xBytes,newSize;
 	b3_index       i,grey;
@@ -551,7 +586,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	switch (type)
 	{
 	case B3_TX_VGA:
-		cPtr = (b3_u08 *)data;
+		bPtr = (b3_u08 *)data;
 		ptr  = dPtr;
 		for (y = 0;y < ySize;y++)
 		{
@@ -562,11 +597,11 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			{
 				if (grey_palette)
 				{
-					grey = *cPtr++;
+					grey = *bPtr++;
 				}
 				else
 				{
-					color = palette[*cPtr++];
+					color = palette[*bPtr++];
 					r = ((color & 0xff0000) >> 16) * 0.35;
 					g = ((color & 0x00ff00) >>  8) * 0.51;
 					b = ((color & 0x0000ff))       * 0.14;
@@ -657,6 +692,47 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 				r = ((color & 0xff0000) >> 16) * 0.35;
 				g = ((color & 0x00ff00) >>  8) * 0.51;
 				b = ((color & 0x0000ff))       * 0.14;
+
+				// Set bit if over threshold
+				if ((r + g + b) < threshold)
+				{
+					byte |= bit;
+				}
+
+				// Shift bit
+				bit = bit >> 1;
+				if (bit == 0)
+				{
+					ptr[i] = byte;
+					bit    = 128;
+					byte   =   0;
+					i++;
+				}
+			}
+
+			// Put cached byte into memory
+			if (i < xBytes)
+			{
+				ptr[i] = byte;
+			}
+			ptr += xBytes;
+		}
+		result = true;
+		break;
+
+	case B3_TX_FLOAT:
+		cPtr = (b3_color *)data;
+		ptr  = dPtr;
+		for (y = 0;y < ySize;y++)
+		{
+			byte =   0;
+			bit  = 128;
+			i    =   0;
+			for (x = 0;x < xSize;x++)
+			{
+				r = cPtr[x].r *  89.25;
+				g = cPtr[x].g * 130.05;
+				b = cPtr[x].b *  35.7;
 
 				// Set bit if over threshold
 				if ((r + g + b) < threshold)

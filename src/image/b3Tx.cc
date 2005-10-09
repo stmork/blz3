@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**
 **	Revision 1.34  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
-**
+**	
 **	Revision 1.33  2005/08/11 13:16:11  smork
 **	- Documentation.
 **	- b3Tx cleanup.
@@ -612,6 +615,37 @@ inline void b3Tx::b3CopyILBMtoRGB8 (
 	}
 }
 
+inline void b3Tx::b3CopyILBMtoFloat (
+	b3_color *row,
+	b3_coord  y)
+{
+	b3_u08       *Data;
+	b3_coord      x,d,BytesPerLine;
+	b3_pkd_color  Color,Bit;
+
+	BytesPerLine = TX_BWA(xSize);
+	if (palette == null)
+	{
+		for (x = 0;x < xSize;x++)
+		{
+			Data   = data;
+			Data  += ((y+1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
+			Color  = 0;
+			Bit    = 128 >> (x & 7);
+			for (d = 0;d < depth;d++)
+			{
+				Color *= 2;
+				if (Data[0] & Bit) Color |= 1;
+				Data -= BytesPerLine;
+			}
+			row[x].r =  (Color & 0x0000ff)        / 255.0;
+			row[x].g = ((Color & 0x00ff00) >>  8) / 255.0;
+			row[x].b = ((Color & 0xff0000) >> 16) / 255.0;
+			row[x].a = 0;
+		}
+	}
+}
+
 void b3Tx::b3Copy(b3Tx *srcTx)
 {
 	type = B3_TX_UNDEFINED;
@@ -630,6 +664,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 			{
 				b3_u08       *bPtr;
 				b3_pkd_color *lPtr;
+				b3_color     *cPtr;
 				b3_coord      y;
 
 				switch (type)
@@ -649,6 +684,15 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 					{
 						srcTx->b3CopyILBMtoRGB8(lPtr,y);
 						lPtr += xSize;
+					}
+					break;
+
+				case B3_TX_FLOAT:
+					cPtr = (b3_color *)data;;
+					for (y = 0;y < ySize;y++)
+					{
+						srcTx->b3CopyILBMtoFloat(cPtr,y);
+						cPtr += xSize;
 					}
 					break;
 
@@ -755,7 +799,7 @@ b3_bool b3Tx::b3IsBW()
 
 b3_bool b3Tx::b3IsTrueColor()
 {
-	return (depth >= 24) && (type == B3_TX_RGB8);
+	return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
 }
 
 b3_bool b3Tx::b3IsPalette()
@@ -775,10 +819,11 @@ b3_pkd_color b3Tx::b3GetValue (
 {
 	switch (type)
 	{
-		case B3_TX_ILBM : return b3ILBMValue (x,y);
-		case B3_TX_RGB4 : return b3RGB4Value (x,y);
-		case B3_TX_RGB8 : return b3RGB8Value (x,y);
-		case B3_TX_VGA  : return b3VGAValue  (x,y);
+		case B3_TX_ILBM  : return b3ILBMValue (x,y);
+		case B3_TX_RGB4  : return b3RGB4Value (x,y);
+		case B3_TX_RGB8  : return b3RGB8Value (x,y);
+		case B3_TX_VGA   : return b3VGAValue  (x,y);
+		case B3_TX_FLOAT : return b3FloatValue(x,y);
 
 		case B3_TX_UNDEFINED :
 			return B3_BLACK;
@@ -851,6 +896,16 @@ inline b3_pkd_color b3Tx::b3RGB8Value (
 
 	Address  = (b3_pkd_color *)data;
 	return Address[y * xSize + x];
+}
+
+inline b3_pkd_color b3Tx::b3FloatValue(
+	b3_coord x,
+	b3_coord y)
+{
+	register b3_color *Address;
+
+	Address  = (b3_color *)data;
+	return b3Color(Address[y * xSize + x]);
 }
 
 inline b3_pkd_color b3Tx::b3VGAValue (
