@@ -42,13 +42,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/10/09 12:05:34  sm
+**	- Changed to HDR image computation.
+**
 **	Revision 1.9  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.8  2002/08/11 11:03:40  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -97,7 +100,7 @@ b3Display::b3Display(b3Tx *tx)
 	m_xMax   = tx->xSize;
 	m_yMax   = tx->ySize;
 	m_depth  = tx->depth;
-	m_Buffer = (b3_pkd_color *)tx->b3GetData();
+	m_Buffer = (b3_color *)tx->b3GetData();
 	m_Tx     = tx;
 	m_OwnTx  = false;
 }
@@ -145,10 +148,10 @@ void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
 	m_OwnTx = true;
 	m_xMax  = xSize;
 	m_yMax  = ySize;
-	m_depth = 24;
+	m_depth = 128;
 	m_Tx    = new b3Tx();
 	m_Tx->b3AllocTx(xSize,ySize,m_depth);
-	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
+	m_Buffer = (b3_color *)m_Tx->b3GetData();
 }
 
 b3Display::~b3Display()
@@ -163,15 +166,15 @@ b3Display::~b3Display()
 
 void b3Display::b3PutRow(b3Row *row)
 {
-	b3_coord      y = row->m_y;
-	b3_pkd_color *src,*dst;
+	b3_coord  y = row->m_y;
+	b3_color *src,*dst;
 
 	B3_ASSERT(m_Buffer != null);
 	src = row->m_buffer;
 	dst = &m_Buffer[y * m_xMax];
 	if (src != dst)
 	{
-		b3LongMemCopy(dst,src,m_xMax);
+		b3ColorMemCopy(dst,src,m_xMax);
 	}
 }
 

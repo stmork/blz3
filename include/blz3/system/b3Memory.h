@@ -190,6 +190,29 @@ public:
 			*data++ = value;
 		}
 	}
+
+	/**
+	 * This method copies a complete memory buffer of color quadrupel values to another.
+	 * The data pointer must be on a 32 bit boundary. The max value is meant as the number
+	 * of 32 bit float quadrupel color values not as bytes. The source and destination buffers must not
+	 * be overlapping!
+	 *
+	 * @param dst  The destination pointer to the color quadrupel buffer.
+	 * @param src  The source pointer to the color quadrupel buffer.
+	 * @param max  The number of color quadrupel values to copy.
+	 */
+	inline static void b3ColorMemCopy(
+		      b3_color *dst,
+		const b3_color *src,
+		const b3_count  max)
+	{
+		b3_index i;
+
+		for (i = 0;i < max;i++)
+		{
+			*dst++ = *src++;
+		}
+	}
 	
 	/**
 	 * This method copies a complete memory buffer of unsigned 32 bit integer values to another.

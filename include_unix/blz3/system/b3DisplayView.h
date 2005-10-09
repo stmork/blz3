@@ -62,7 +62,7 @@ public:
 	 * @param y The y coordinate.
 	 * @return The native color value.
 	 */
-	virtual b3_pkd_color b3ARGBtoPixel(b3_pkd_color ARGB,b3_coord x,b3_coord y) = 0;
+	virtual b3_pkd_color b3ARGBtoPixel(b3_color ARGB,b3_coord x,b3_coord y) = 0;
 };
 
 /**
@@ -109,7 +109,7 @@ public:
 	                     */
 	                   ~b3DisplayView();
 
-	void                b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
+	void                b3PutPixel(b3_coord x,b3_coord y,b3_color pixel);
 	void                b3PutRow(b3Row *row);
 	void                b3PutTx(b3Tx *tx);
 	b3_bool             b3IsCancelled(b3_coord x,b3_coord y);

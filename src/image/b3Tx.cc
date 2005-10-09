@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2005/10/09 12:05:34  sm
+**	- Changed to HDR image computation.
+**
 **	Revision 1.33  2005/08/11 13:16:11  smork
 **	- Documentation.
 **	- b3Tx cleanup.
-**
+**	
 **	Revision 1.32  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
 **	
@@ -396,7 +399,7 @@ b3_bool b3Tx::b3AllocTx(
 	}
 	if ((d == 96) || (d == 128))
 	{
-		dSize = (x * y) * sizeof(b3_pkd_color);
+		dSize = (x * y) * sizeof(b3_color);
 		type  = B3_TX_FLOAT;
 	}
 
@@ -1056,6 +1059,39 @@ inline void b3Tx::b3GetVGA (
 	}
 }
 
+inline void b3Tx::b3GetFloat(
+	b3_pkd_color *ColorLine,
+	b3_coord      y)
+{
+	b3_color *cPtr = (b3_color *)data;
+	b3_coord  x;
+
+	cPtr += (xSize * y);
+	for (x = 0; x < xSize;x++)
+	{
+		*ColorLine++ = b3Color(*cPtr++);
+	}
+}
+
+void b3Tx::b3GetRow (
+	b3_color *Line,
+	b3_coord  y)
+{
+	b3_color *cPtr = (b3_color *)data;
+	b3_coord  x;
+
+	if (type != B3_TX_FLOAT)
+	{
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+	}
+
+	cPtr += (xSize * y);
+	for (x = 0;x < xSize;x++)
+	{
+		*Line++ = *cPtr++;
+	}
+}
+
 void b3Tx::b3GetRow (
 	b3_pkd_color *Line,
 	b3_coord      y)
@@ -1073,6 +1109,9 @@ void b3Tx::b3GetRow (
 			break;
 		case B3_TX_VGA :
 			b3GetVGA  (Line,y);
+			break;
+		case B3_TX_FLOAT:
+			b3GetFloat(Line,y);
 			break;
 
 		default:

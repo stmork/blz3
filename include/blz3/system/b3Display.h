@@ -62,7 +62,7 @@ protected:
 	b3_res                m_xMax;        //!< The display width.
 	b3_res                m_yMax;        //!< The display height.
 	b3_res                m_depth;       //!< The real color depth.
-	b3_pkd_color         *m_Buffer;      //!< The color back buffer.
+	b3_color             *m_Buffer;      //!< The color back buffer.
 	b3Mutex               m_Mutex;       //!< A mutex for thread safe display.
 	b3Tx                 *m_Tx;          //!< An image for save control.
 
@@ -121,7 +121,7 @@ public:
 	 * \param y The y coordinate.
 	 * \param pixel The pixel color.
 	 */
-	virtual inline void b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel)
+	virtual inline void b3PutPixel(b3_coord x,b3_coord y,b3_color pixel)
 	{
 		B3_ASSERT(m_Buffer != null);
 		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
@@ -130,6 +130,7 @@ public:
 		}
 	}
 
+#if 0
 	/**
 	 * This method returns the pixel color at a given coordinate.
 	 *
@@ -137,7 +138,7 @@ public:
 	 * \param y The y coordinate.
 	 * \return  The color at the given coordinates.
 	 */
-	virtual inline b3_pkd_color b3GetPixel(b3_coord x,b3_coord y)
+	virtual inline b3_color b3GetPixel(b3_coord x,b3_coord y)
 	{
 		B3_ASSERT(m_Buffer != null);
 		return
@@ -145,6 +146,7 @@ public:
 				m_Buffer[y * m_xMax + x] :
 				0;
 	}
+#endif
 
 	/**
 	 * This method checks whether an cancel event occured. This could be pressing
@@ -198,30 +200,30 @@ private:
 class B3_PLUGIN b3Row : public b3Link<b3Row>, public b3Mem
 {
 protected:
-	b3_res        m_xSize;  //!< The width of the row.
+	b3_res     m_xSize;  //!< The width of the row.
 
 public:
-	b3_coord      m_y;      //!< The y positition of the row.
-	b3_pkd_color *m_buffer; //!< The color buffer of this row.
+	b3_coord   m_y;      //!< The y positition of the row.
+	b3_color  *m_buffer; //!< The color buffer of this row.
 
 public:
-	         /**
-	          * This constructor initializes the row for the given width and y position.
-			  *
-	          * \param y The vertical position.
-	          * \param xSize The row width.
-	          */
-	         b3Row(b3_coord y,b3_res xSize);
+	/**
+	 * This constructor initializes the row for the given width and y position.
+	 *
+	 * \param y The vertical position.
+	 * \param xSize The row width.
+	 */
+	b3Row(b3_coord y,b3_res xSize);
 
-			 /**
-	          * This constructor initializes the internal color puffer with the given
-			  * pixel.
-			  *
-	          * \param y The vertical position.
-	          * \param xSize The row width.
-	          * \param *buffer The initial color buffer.
-	          */
-	         b3Row(b3_coord y,b3_res xSize,b3_pkd_color *buffer);
+	/**
+	 * This constructor initializes the internal color puffer with the given
+	 * pixel.
+	 *
+	 * \param y The vertical position.
+	 * \param xSize The row width.
+	 * \param *buffer The initial color buffer.
+	 */
+	b3Row(b3_coord y,b3_res xSize,b3_color *buffer);
 
 	/**
 	 * This destrucotr does nothing.

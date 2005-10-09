@@ -339,6 +339,10 @@
 				FileType="0">
 			</File>
 			<File
+				RelativePath="b3TxSaveEXR.cc"
+				FileType="0">
+			</File>
+			<File
 				RelativePath="b3TxSaveInfo.cc"
 				FileType="0">
 			</File>

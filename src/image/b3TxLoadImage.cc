@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2005/10/09 12:05:34  sm
+**	- Changed to HDR image computation.
+**
 **	Revision 1.24  2005/09/17 17:34:17  sm
 **	- Fixed loading of JPEG images with Exif tag.
-**
+**	
 **	Revision 1.23  2005/08/11 13:37:29  smork
 **	- Image cleanup (TIFF).
 **	- Documentation.
@@ -425,6 +428,7 @@ b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
 	if (stricmp(ext,"img")  == 0) return FT_SGI_RLE;
 	if (stricmp(ext,"ps")   == 0) return FT_PS;
 	if (stricmp(ext,"bmp")  == 0) return FT_BMP;
+	if (stricmp(ext,"exr")  == 0) return FT_EXR;
 
 	return FT_UNKNOWN;
 }
@@ -492,6 +496,9 @@ const char *b3Tx::b3GetExt(b3_tx_filetype type)
 	case FT_PS:
 		return "ps";
 
+	case FT_EXR:
+		return "exr";
+
 	default:
 		return null;
 	}
@@ -520,6 +527,8 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 			return b3SaveRGB8(filename);
 		case FT_PS:
 			return b3SavePS(filename);
+		case FT_EXR:
+			return b3SaveEXR(filename);
 
 		case FT_UNKNOWN:
 			B3_THROW(b3TxException, B3_TX_UNKNOWN_FILETYPE);

@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2005/10/09 12:05:34  sm
+**	- Changed to HDR image computation.
+**
 **	Revision 1.18  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.17  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
@@ -320,7 +323,7 @@ inline void b3SupersamplingRayRow::b3Convert()
 	{
 		for (x = 0;x < m_xSize;x++)
 		{
-			m_buffer[x] = B3_BLUE;
+			m_buffer[x] = b3Color(B3_BLUE);
 		}
 	}
 
@@ -401,7 +404,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		fxRight   += m_fxStep;
 		fxLeft    += m_fxStep;
 
-		m_buffer[x] = m_Debug ? result : (b3_pkd_color)m_ThisResult[x];
+		m_buffer[x] = m_Debug ? b3Color(result) : m_ThisResult[x];
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();

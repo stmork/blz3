@@ -11,3 +11,6 @@ Version 2.99.2.18
 
 Version 2.99.2.19
 - Entwicklungsdokumentation
+
+Version 2.99.2.20
+- Einführung von HDR (high dynamic range) Bildern

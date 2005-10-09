@@ -137,7 +137,8 @@ enum b3_tx_filetype
 	FT_PBM,                 //!< Portable bitmap.
 	FT_JPEG,                //!< Joint Pictures Expert Group.
 	FT_BMF,                 //!< BMF format.
-	FT_PS                   //!< PostScript.
+	FT_PS,                  //!< PostScript.
+	FT_EXR                  //!< OpenEXR (high dynamice range).
 };
 
 /**
@@ -171,7 +172,8 @@ enum b3_tx_error
 	B3_TX_UNCOMPL,            //!< Uncomplete image file.
 	B3_TX_ERR_HEADER,         //!< File header format error.
 	B3_TX_UNKNOWN_FILETYPE,   //!< Unknown file type.
-	B3_TX_UNKNOWN_DATATYPE    //!< Unknown image representation.
+	B3_TX_UNKNOWN_DATATYPE,   //!< Unknown image representation.
+	B3_TX_ILLEGAL_DATATYPE    //!< Internal datatype use illegal.
 };
 
 typedef b3Exception<b3_tx_error,0x5458> b3TxException;
@@ -371,6 +373,16 @@ public:
 	 * @param yDPI The resulting vertical pixel density.
 	 */
 	void           b3GetResolution(b3_res &xDPI,b3_res &yDPI);
+
+	/**
+	 * This method fills a given row buffer with the hdr color of the
+	 * given y coordinate. The row buffer must have enough entries for
+	 * retrieving a full scane line with the width of the image.
+	 *
+	 * @param row The row buffer.
+	 * @param y The y coordinate of the row.
+	 */
+	void           b3GetRow       (b3_color *row,b3_coord  y);
 
 	/**
 	 * This method fills a given row buffer with the true color of the
@@ -851,6 +863,15 @@ public:
 	b3_result      b3SavePS   (const char *ImageName);
 
 	/**
+	 * This method saves the image as OpenEXR file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result      b3SaveEXR  (const char *ImageName);
+
+	/**
 	 * This method saves the image as RGB8 file.
 	 *
 	 * @param ImageName The file name to save into.
@@ -928,6 +949,7 @@ private:
 	void           b3GetRGB4  (b3_pkd_color *row,b3_coord y);
 	void           b3GetRGB8  (b3_pkd_color *row,b3_coord y);
 	void           b3GetVGA   (b3_pkd_color *row,b3_coord y);
+	void           b3GetFloat (b3_pkd_color *row,b3_coord y);
 
 	// b3TxImage.cc
 	b3_count       b3BuildRLE (b3_count *row,b3_u08 *rle);

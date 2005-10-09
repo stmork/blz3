@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/10/09 12:05:34  sm
+**	- Changed to HDR image computation.
+**
 **	Revision 1.12  2003/11/25 13:31:47  sm
 **	- Changed b3_loop to int (best performance)
-**
+**	
 **	Revision 1.11  2003/09/01 19:03:34  sm
 **	- Removed debug output
 **	
@@ -155,6 +158,11 @@ class b3DisplayPixelImpl : public b3DisplayPixel
 	static b3_pkd_color dithermask[8];
 
 protected:
+	inline static b3_pkd_color b3Convert(b3_f32 value)
+	{
+		return value > 1 ? 255 : value * 255;
+	}
+
 	inline static b3_bool b3Dither (
 		b3_pkd_color Byte,
 		b3_count     shift,
@@ -215,21 +223,21 @@ class b3DisplayPixel08 : public b3DisplayPixelImpl
 {
 public:
 	b3_pkd_color b3ARGBtoPixel (
-		b3_pkd_color ARGB,
+		b3_color     ARGB,
 		b3_coord     x,
 		b3_coord     y)
 	{
 		b3_pkd_color r,g,b;
 
-		r = ARGB & 0xe00000;
-		g = ARGB & 0x00e000;
-		b = ARGB & 0x0000c0;
+		r = b3Convert(ARGB.r);
+		g = b3Convert(ARGB.g);
+		b = b3Convert(ARGB.b);
 
-		if (b3Dither5(ARGB >> 16,x,y)) r += 0x200000;
-		if (b3Dither5(ARGB >>  8,x,y)) g += 0x002000;
-		if (b3Dither6(ARGB      ,x,y)) b += 0x000040;
+		if (b3Dither5(r, x, y)) r += 0x20;
+		if (b3Dither5(g, x, y)) g += 0x20;
+		if (b3Dither6(b, x, y)) b += 0x40;
 
-		return ((r >> 16) | (g >> 11) | (b >>  6));
+		return (r | (g >> 3) | (b >>  6));
 	}
 };
 
@@ -237,21 +245,21 @@ class b3DisplayPixel15 : public b3DisplayPixelImpl
 {
 public:
 	b3_pkd_color b3ARGBtoPixel (
-		b3_pkd_color ARGB,
-		b3_coord     x,
-		b3_coord     y)
+		b3_color ARGB,
+		b3_coord x,
+		b3_coord y)
 	{
 		b3_pkd_color r,g,b;
 
-		r = ARGB & 0xf80000;
-		g = ARGB & 0x00f800;
-		b = ARGB & 0x0000f8;
+		r = b3Convert(ARGB.r);
+		g = b3Convert(ARGB.g);
+		b = b3Convert(ARGB.b);
 
-		if (b3Dither3(ARGB >> 16,x,y)) r += 0x080000;
-		if (b3Dither3(ARGB >>  8,x,y)) g += 0x000800;
-		if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
+		if (b3Dither3(r, x, y)) r += 0x08;
+		if (b3Dither3(g, x, y)) g += 0x08;
+		if (b3Dither3(b, x, y)) b += 0x08;
 
-		return ((r >> 9) | (g >> 6) | (b >>  3));
+		return (r << 7) | (g << 2) | (b >>  3);
 	}
 };
 
@@ -259,21 +267,21 @@ class b3DisplayPixel16 : public b3DisplayPixelImpl
 {
 public:
 	b3_pkd_color b3ARGBtoPixel (
-		b3_pkd_color ARGB,
-		b3_coord     x,
-		b3_coord     y)
+		b3_color ARGB,
+		b3_coord x,
+		b3_coord y)
 	{
 		b3_pkd_color r,g,b;
 
-		r = ARGB & 0xf80000;
-		g = ARGB & 0x00fc00;
-		b = ARGB & 0x0000f8;
+		r = b3Convert(ARGB.r);
+		g = b3Convert(ARGB.g);
+		b = b3Convert(ARGB.b);
 
-		if (b3Dither3(ARGB >> 16,x,y)) r += 0x080000;
-		if (b3Dither2(ARGB >>  8,x,y)) g += 0x000400;
-		if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
+		if (b3Dither3(r, x, y)) r += 0x08;
+		if (b3Dither2(g, x, y)) g += 0x04;
+		if (b3Dither3(b, x, y)) b += 0x08;
 
-		return ((r >> 8) | (g >> 5) | (b >>  3));
+		return ((r << 8) | (g << 3) | (b >>  3));
 	}
 };
 
@@ -281,11 +289,17 @@ class b3DisplayPixel24 : public b3DisplayPixelImpl
 {
 public:
 	b3_pkd_color b3ARGBtoPixel(
-		b3_pkd_color ARGB,
-		b3_coord     x,
-		b3_coord     y)
+		b3_color ARGB,
+		b3_coord x,
+		b3_coord y)
 	{
-		return ARGB;
+		b3_pkd_color r,g,b;
+
+		r = b3Convert(ARGB.r);
+		g = b3Convert(ARGB.g);
+		b = b3Convert(ARGB.b);
+
+		return (r << 16) | (g << 8) | b;
 	}
 };
 
@@ -293,11 +307,17 @@ class b3DisplayPixel24Inv : public b3DisplayPixelImpl
 {
 public:
 	b3_pkd_color b3ARGBtoPixel(
-		b3_pkd_color ARGB,
-		b3_coord     x,
-		b3_coord     y)
+		b3_color ARGB,
+		b3_coord x,
+		b3_coord y)
 	{
-		return ((ARGB & 0xff0000) >> 16) | (ARGB & 0x00ff00) | ((ARGB & 0x0000ff) << 16);
+		b3_pkd_color r,g,b;
+
+		r = b3Convert(ARGB.r);
+		g = b3Convert(ARGB.g);
+		b = b3Convert(ARGB.b);
+
+		return r | (g << 8) | (b << 16);
 	}
 };
 
@@ -623,8 +643,8 @@ void b3DisplayView::b3PutTx(b3Tx *tx)
 
 inline void b3DisplayView::b3RefreshRow(b3_coord y)
 {
-	b3_pkd_color *ptr = &m_Buffer[y * m_xMax];
-	b3_coord      x;
+	b3_color *ptr = &m_Buffer[y * m_xMax];
+	b3_coord  x;
 	
 	for (x = 0;x < m_xs;x++)
 	{
@@ -633,7 +653,7 @@ inline void b3DisplayView::b3RefreshRow(b3_coord y)
 	}
 }
 
-void b3DisplayView::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
+void b3DisplayView::b3PutPixel(b3_coord x,b3_coord y,b3_color Color)
 {
 	b3Display::b3PutPixel(x,y,Color);
 
