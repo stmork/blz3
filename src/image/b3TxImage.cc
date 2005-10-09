@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
-**	Revision 1.18  2005/10/09 14:39:41  sm
+**	Revision 1.19  2005/10/09 15:06:47  sm
 **	- Added HDR image processing
 **
+**	Revision 1.18  2005/10/09 14:39:41  sm
+**	- Added HDR image processing
+**	
 **	Revision 1.17  2005/01/31 21:36:50  sm
 **	- FLT_MAX is correct! And now: include <float.h> for that...
 **	
@@ -1513,6 +1516,7 @@ b3_bool b3Tx::b3TxGauss(
 
 	if (!b3IsTrueColor())
 	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx # b3TxGauss(): source image is no true color image!\n");
 		return false;
 	}
 	if (src == null)

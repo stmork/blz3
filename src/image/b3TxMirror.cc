@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/10/09 15:06:47  sm
+**	- Added HDR image processing
+**
 **	Revision 1.2  2004/08/28 13:55:33  sm
 **	- Added some mirror methods.
 **	- Cleanup job.
-**
+**	
 **	Revision 1.1  2004/08/03 10:46:26  sm
 **	- Added simgle frame to DivX/AVI conversion tool
 **	- Added image mirror (not completely implemented yet)
@@ -51,13 +54,30 @@
 void b3Tx::b3MirrorHorizontal()
 {
 	b3_coord      x,y,xMax = xSize >> 1;
+	b3_color     *ctPtr,*cbPtr,cColor;
 	b3_pkd_color *ltPtr,*lbPtr,lColor;
 	b3_u16       *stPtr,*sbPtr,sColor;
-	b3_u08       *ctPtr,*cbPtr,cColor;
+	b3_u08       *btPtr,*bbPtr,bColor;
 
 	// Untested, yet.
 	switch(type)
 	{
+	case B3_TX_FLOAT:
+		cbPtr = (b3_color *)data;
+		ctPtr = &cbPtr[xSize];
+		for (y = 0;y < ySize;y++)
+		{
+			for (x = 0;x < xMax;x++)
+			{
+				ctPtr--;
+				 cColor   = *ctPtr;
+				*ctPtr    =  cbPtr[x];
+				 cbPtr[x] =  cColor;
+			}
+			cbPtr += xSize;
+		}
+		break;
+
 	case B3_TX_RGB8:
 		lbPtr = (b3_pkd_color *)data;
 		ltPtr = &lbPtr[xSize];
@@ -91,18 +111,18 @@ void b3Tx::b3MirrorHorizontal()
 		break;
 
 	case B3_TX_VGA:
-		cbPtr = (b3_u08 *)data;
-		ctPtr = &cbPtr[xSize];
+		bbPtr = (b3_u08 *)data;
+		btPtr = &bbPtr[xSize];
 		for (y = 0;y < ySize;y++)
 		{
 			for (x = 0;x < xMax;x++)
 			{
-				ctPtr--;
-				 cColor   = *ctPtr;
-				*ctPtr    =  cbPtr[x];
-				 cbPtr[x] =  cColor;
+				btPtr--;
+				 bColor   = *btPtr;
+				*btPtr    =  bbPtr[x];
+				 bbPtr[x] =  bColor;
 			}
-			cbPtr += xSize;
+			bbPtr += xSize;
 		}
 		break;
 
@@ -114,12 +134,29 @@ void b3Tx::b3MirrorHorizontal()
 void b3Tx::b3MirrorVertical()
 {
 	b3_coord      x,y,yMax = ySize >> 1;
+	b3_color     *ctPtr,*cbPtr,cColor;
 	b3_pkd_color *ltPtr,*lbPtr,lColor;
 	b3_u16       *stPtr,*sbPtr,sColor;
-	b3_u08       *ctPtr,*cbPtr,cColor;
+	b3_u08       *btPtr,*bbPtr,bColor;
 
 	switch(type)
 	{
+	case B3_TX_FLOAT:
+		ctPtr = (b3_color *)data;
+		cbPtr = &ctPtr[xSize * ySize];
+		for (y = 0;y < yMax;y++)
+		{
+			cbPtr -= xSize;
+			for (x = 0;x < xSize;x++)
+			{
+				cColor   = ctPtr[x];
+				ctPtr[x] = cbPtr[x];
+				cbPtr[x] = cColor;
+			}
+			ctPtr += xSize;
+		}
+		break;
+
 	case B3_TX_RGB8:
 		ltPtr = (b3_pkd_color *)data;
 		lbPtr = &ltPtr[xSize * ySize];
@@ -153,18 +190,18 @@ void b3Tx::b3MirrorVertical()
 		break;
 
 	case B3_TX_VGA:
-		ctPtr = (b3_u08 *)data;
-		cbPtr = &ctPtr[xSize * ySize];
+		btPtr = (b3_u08 *)data;
+		bbPtr = &btPtr[xSize * ySize];
 		for (y = 0;y < yMax;y++)
 		{
-			cbPtr -= xSize;
+			bbPtr -= xSize;
 			for (x = 0;x < xSize;x++)
 			{
-				cColor   = ctPtr[x];
-				ctPtr[x] = cbPtr[x];
-				cbPtr[x] = cColor;
+				bColor   = btPtr[x];
+				btPtr[x] = bbPtr[x];
+				bbPtr[x] = bColor;
 			}
-			ctPtr += xSize;
+			btPtr += xSize;
 		}
 		break;
 
