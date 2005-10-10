@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.68  2005/10/10 18:51:22  sm
+**	- Added OpenEXR image saving.
+**
 **	Revision 1.67  2005/06/22 11:02:34  smork
 **	- Added new brt3 option.
 **	- Changed example materials.
-**
+**	
 **	Revision 1.66  2005/06/17 10:29:05  smork
 **	- Made some inlining.
 **	- Removed some unnecessary tests.
@@ -453,7 +456,13 @@ static void b3Banner(const char *command)
 	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p] {Blizzard World Data files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p]%s {Blizzard World Data files}\n",
+#ifdef BLZ3_USE_OPENEXR
+			"[-x]",
+#else
+			"",
+#endif
+			command);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");
@@ -469,6 +478,9 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -j        JPEG image saving (default)\n");
 		b3PrintF(B3LOG_NORMAL,"  -r        RGB8 image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -p        PostScript image saving\n");
+#ifdef BLZ3_USE_OPENEXR
+		b3PrintF(B3LOG_NORMAL,"  -x        OpenEXR image saving\n");
+#endif
 		b3PrintF(B3LOG_NORMAL,"\n");
 	}
 	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
@@ -578,6 +590,11 @@ int main(int argc,char *argv[])
 				case 'p':
 					strlcpy(BLZ3_EXTENSION,".ps",sizeof(BLZ3_EXTENSION));
 					break;
+#ifdef BLZ3_USE_OPENEXR
+				case 'x':
+					strlcpy(BLZ3_EXTENSION,".exr",sizeof(BLZ3_EXTENSION));
+					break;
+#endif
 
 				case 'v' :
 					b3Banner(null);

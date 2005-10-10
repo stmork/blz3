@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2005/10/10 18:51:22  sm
+**	- Added OpenEXR image saving.
+**
 **	Revision 1.35  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
-**
+**	
 **	Revision 1.34  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
 **	
@@ -348,8 +351,8 @@ b3Tx::b3Tx(b3Tx *orig) : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 	palette     = null;
 	b3Copy(orig);
 #ifdef VERBOSE
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx instantiated (%ldx%ld, %ld bits) (%p)\n",
-		xSize,ySize,depth,this);
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx instantiated (%ldx%ld, %ld bits, type=%d) (%p)\n",
+		xSize, ySize, depth, type, this);
 #endif
 }
 
@@ -456,8 +459,8 @@ b3_bool b3Tx::b3AllocTx(
 		}
 	}
 	FileType  = FT_UNKNOWN;
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits)\n",
-		xSize,ySize,depth);
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits) this=%p type=%d, %ld bytes)\n",
+		xSize,ySize,depth,this,type,dSize);
 	return true;
 }
 
@@ -800,6 +803,11 @@ b3_bool b3Tx::b3IsBW()
 b3_bool b3Tx::b3IsTrueColor()
 {
 	return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
+}
+
+b3_bool b3Tx::b3IsHDR()
+{
+	return (depth >= 96) && (type == B3_TX_FLOAT);
 }
 
 b3_bool b3Tx::b3IsPalette()

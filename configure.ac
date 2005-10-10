@@ -80,7 +80,23 @@ AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG])])
 AC_CHECK_LIB([CgGL], [main])
 
 # Check for OpenEXR
-AC_CHECK_HEADER([ImfIO.h],[AC_DEFINE([BLZ3_USE_OPENEXR])])
+############## OpenEXR
+if test "x$OPENEXR" = "x"; then
+  if test "x$prefix" != xNONE; then
+    OPENEXR=$prefix/include/OpenEXR
+  else
+    OPENEXR=$ac_default_prefix/include/OpenEXR
+  fi
+fi
+AC_LANG_PUSH(C++)
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS -I$OPENEXR"
+AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
+AC_LANG_POP(C++)
+AC_SUBST(OPENEXR)
+# END OpenEXR
+
+#AC_CHECK_HEADER([ImfIO.h],[AC_DEFINE([BLZ3_USE_OPENEXR])])
 AC_CHECK_LIB([Half], [main])
 AC_CHECK_LIB([Iex], [main])
 AC_CHECK_LIB([Imath], [main])

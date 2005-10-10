@@ -436,6 +436,13 @@ public:
 	b3_bool        b3IsTrueColor  ();
 
 	/**
+	 * This method returns true if this image is a high dynamic range image.
+	 *
+	 * @return True if this image is a high dynamic range image.
+	 */
+	b3_bool        b3IsHDR  ();
+
+	/**
 	 * This method returns true if this image is palettized.
 	 *
 	 * @return True if this image is palettized.
