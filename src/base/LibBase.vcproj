@@ -343,10 +343,6 @@
 				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Spline.cc"
-				FileType="0">
-			</File>
-			<File
 				RelativePath="b3UndoOperation.cc"
 				FileType="0">
 			</File>
