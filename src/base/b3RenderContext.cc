@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2005/10/11 17:52:10  sm
+**	- OpenGL config update.
+**
 **	Revision 1.23  2005/06/16 08:19:00  smork
 **	- Some logging added.
-**
+**	
 **	Revision 1.22  2005/06/12 12:39:20  sm
 **	- What about GL_LOCAL_VIEWER?
 **	
@@ -321,31 +324,29 @@ void b3RenderContext::b3ViewSet(b3_render_view_info *info)
 **                                                                      **
 *************************************************************************/
 
+#ifdef BLZ3_USE_OPENGL
 void b3RenderContext::b3SetAmbient(b3_pkd_color ambient)
 {
+	GLfloat gl_ambient[4];
+
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3SetAmbient(%08lx)\n",
 		ambient);
 
-#ifdef BLZ3_USE_OPENGL
-	GLfloat gl_ambient[4];
-
 	b3PkdColorToGL(ambient,gl_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
-#endif
 }
 
 void b3RenderContext::b3SetAmbient(b3Color &ambient)
 {
+	GLfloat gl_ambient[4];
+
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3SetAmbient(%08lx)\n",
 		(b3_pkd_color)ambient);
 
-#ifdef BLZ3_USE_OPENGL
-	GLfloat gl_ambient[4];
-
 	b3ColorToGL(ambient,gl_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
-#endif
 }
+#endif
 
 void b3RenderContext::b3LightReset(b3_pkd_color ambient)
 {
