@@ -24,7 +24,6 @@ LIB_SOURCE =\
 	b3Render.cc\
 	b3RenderContext.cc\
 	b3SearchPath.cc\
-	b3Spline.cc\
 	b3UndoOperation.cc\
 	b3VectorBufferObjects.cc\
 	b3VertexBuffer.cc\
@@ -50,7 +49,6 @@ LIB_OBJ	=\
 	b3Render.o\
 	b3RenderContext.o\
 	b3SearchPath.o\
-	b3Spline.o\
 	b3UndoOperation.o\
 	b3VectorBufferObjects.o\
 	b3VertexBuffer.o\

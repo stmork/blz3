@@ -1342,4 +1342,6 @@ private:
 typedef b3SplineTemplate<b3_vector>   b3Spline;
 typedef b3SplineTemplate<b3_vector4D> b3Nurbs;
 
+template<class T> b3_bspline_error b3SplineTemplate<T>::bspline_errno = B3_BSPLINE_OK;      
+
 #endif
