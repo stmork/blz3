@@ -24,7 +24,9 @@
 
 #include "blz3/base/b3MultiSample.h"
 
+#ifdef BLZ3_USE_OPENGL
 #define HAS_MULTISAMPLE
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/10/11 16:59:18  sm
+**	- OpenGL compile fix.
+**
 **	Revision 1.5  2005/05/04 10:16:10  mork
 **	- Added some GLenum castings.
-**
+**	
 **	Revision 1.4  2004/12/06 15:14:56  smork
 **	- Minor changes
 **	
