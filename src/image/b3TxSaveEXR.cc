@@ -41,9 +41,12 @@ using namespace Imath;
 
 /*
 **	$Log$
+**	Revision 1.3  2005/10/15 16:43:03  sm
+**	- Added HDR texture access.
+**
 **	Revision 1.2  2005/10/10 18:51:22  sm
 **	- Added OpenEXR image saving.
-**
+**	
 **	Revision 1.1  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
 **	
@@ -98,6 +101,7 @@ public:
 			b3_color    *data = (b3_color *)m_Tx->b3GetData();
 			Header       header (m_Tx->xSize, m_Tx->ySize);
 
+			header.compression() = ZIP_COMPRESSION;
 			header.channels().insert("R", Channel(FLOAT));
 			header.channels().insert("G", Channel(FLOAT));
 			header.channels().insert("B", Channel(FLOAT));

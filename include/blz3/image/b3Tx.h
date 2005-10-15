@@ -22,6 +22,7 @@
 #include "blz3/system/b3FileAbstract.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Exception.h"
+#include "blz3/base/b3Color.h"
 #include "blz3/base/b3List.h"
 
 #include "tiff.h"
@@ -402,6 +403,16 @@ public:
 	 * @return The resulting color as b3_pkd_color value.
 	 */
 	b3_pkd_color   b3GetValue     (b3_coord x,b3_coord  y);
+
+	/** 
+	 * This method returns a color value at the given coordinates. The
+	 * color may be in HDR format.
+	 *
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param color The resulting color as HDR value.
+	 */
+	b3Color b3GetHdrValue     (b3_coord x,b3_coord  y);
 
 	/**
 	 * This method returns true if the given pixel is transparent.

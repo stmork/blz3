@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.104  2005/10/15 16:43:03  sm
+**      - Added HDR texture access.
+**
 **      Revision 1.103  2005/09/11 17:45:52  sm
 **      - Fixed wrong ordered b3MatGranite read.
 **
@@ -735,7 +738,7 @@ b3_bool b3MatTexture::b3GetSurfaceValues(b3_surface *surface)
 	x = (b3_coord)((fx - (b3_coord)fx) * m_Texture->xSize);
 	y = (b3_coord)((fy - (b3_coord)fy) * m_Texture->ySize);
 
-	surface->m_Diffuse = b3Color(m_Texture->b3GetValue(x,y));
+	surface->m_Diffuse = m_Texture->b3GetHdrValue(x, y);
 	surface->m_Ambient = surface->m_Diffuse * 0.3;
 	surface->m_Specular.b3Init(0.7f,0.7f,0.7f);
 
@@ -866,7 +869,7 @@ b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface *surface)
 		return false;
 	}
 
-	surface->m_Diffuse = b3Color(m_Texture->b3GetValue(x,y));
+	surface->m_Diffuse = m_Texture->b3GetHdrValue(x,y);
 	surface->m_Ambient = surface->m_Diffuse * 0.3;
 	surface->m_Specular.b3Init(0.7f,0.7f,0.7f);
 

@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/10/15 16:43:03  sm
+**	- Added HDR texture access.
+**
 **	Revision 1.5  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.4  2004/07/08 10:43:00  sm
 **	- Make some makefile cleanups.
 **	- Removed some compiler warnings.
@@ -95,7 +98,7 @@ public:
 		{
 			for (x = 0;x < source.xSize;x++)
 			{
-				avrg += b3Color(source.b3GetValue(x,y));
+				avrg += source.b3GetHdrValue(x,y);
 			}
 		}
 		avrg /= size;
@@ -107,7 +110,7 @@ public:
 			avrg.b3Init();
 			for (x = 0;x < source.xSize;x++)
 			{
-				avrg += b3Color(source.b3GetValue(x,y));
+				avrg += source.b3GetHdrValue(x,y);
 			}
 
 			avrg /= fxSize;
@@ -128,7 +131,7 @@ public:
 
 			for (x = 0;x < source.xSize;x++)
 			{
-				diff = b3Color(source.b3GetValue(x,y)) - avrg;
+				diff = source.b3GetHdrValue(x,y) - avrg;
 				dist = sqrt(
 					diff[b3Color::R] * diff[b3Color::R] +
 					diff[b3Color::B] * diff[b3Color::B] +

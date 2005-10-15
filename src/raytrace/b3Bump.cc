@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2005/10/15 16:43:03  sm
+**	- Added HDR texture access.
+**
 **	Revision 1.41  2005/01/03 10:34:29  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.40  2004/10/07 10:33:08  sm
 **	- Added some GIF tools and made them usable with Blizzard III.
 **	
@@ -432,8 +435,8 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	b3_f64     ly,
 	b3_vector *Deriv)
 {
-	b3_pkd_color p1,p2,p3;
-	b3_coord     x,y;
+	b3_f32    p1,p2,p3;
+	b3_coord  x,y;
 
 	if (!m_Texture->b3IsLoaded())
 	{
@@ -451,18 +454,13 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	x = (b3_coord)((lx - (b3_coord)lx) * m_Texture->xSize);
 	y = (b3_coord)((ly - (b3_coord)ly) * m_Texture->ySize);
 
-	p1 = m_Texture->b3GetValue(x,y);
-	p2 = m_Texture->b3GetValue((x+1) % m_Texture->xSize,y);
-	p3 = m_Texture->b3GetValue(x,(y+1) % m_Texture->ySize);
+	p1 = m_Texture->b3GetHdrValue( x,y)[b3Color::B];
+	p2 = m_Texture->b3GetHdrValue((x+1) % m_Texture->xSize,y)[b3Color::B];
+	p3 = m_Texture->b3GetHdrValue( x, (y+1) % m_Texture->ySize)[b3Color::B];
 
-	// extract blue values
-	p1 &= 0xff;	/* corner */
-	p2 &= 0xff;	/* right */
-	p3 &= 0xff;	/* down */
-
-	Deriv->x = ((b3_s32)p2 - (b3_s32)p1) * 0.0039215686;
-	Deriv->y = ((b3_s32)p3 - (b3_s32)p1) * 0.0039215686;
-	Deriv->z =  (b3_s32)p1               * 0.0039215686;
+	Deriv->x = p2 - p1;
+	Deriv->y = p3 - p1;
+	Deriv->z =      p1;
 
 	return true;
 }

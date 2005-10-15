@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/10/15 16:43:03  sm
+**	- Added HDR texture access.
+**
 **	Revision 1.17  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
-**
+**	
 **	Revision 1.16  2005/05/14 12:27:05  sm
 **	- Corrected scanf format.
 **	
@@ -314,7 +317,7 @@ void b3COBReader::b3COB_ComputeAvrgColor (
 	{
 		for (x = 0;x < xMax;x++)
 		{
-			color = b3Color(texture->b3GetValue(x,y));
+			color = texture->b3GetHdrValue(x,y);
 		}
 	}
 }

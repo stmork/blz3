@@ -138,7 +138,7 @@ public:
 	{
 		b3_pkd_color       color = input;
 		b3_s32 B3_ALIGN_16 c[4];
-		b3_loop                i;
+		b3_loop            i;
 
 		for (i = 0;i < 4;i++)
 		{

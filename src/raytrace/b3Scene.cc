@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.76  2005/10/15 16:43:03  sm
+**	- Added HDR texture access.
+**
 **	Revision 1.75  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
-**
+**	
 **	Revision 1.74  2005/01/14 08:51:05  smork
 **	- Corrected lens flares to be in front of any object.
 **	- Added start banner to divx tool.
@@ -1072,7 +1075,7 @@ void b3Scene::b3GetBackgroundColor(
 			if (y < 0)                     y = 0;
 			if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
 
-			ray->color = b3Color(m_BackTexture->b3GetValue(x,y));
+			ray->color = m_BackTexture->b3GetHdrValue(x,y);
 			break;
 
 		case TP_SKY_N_HELL :

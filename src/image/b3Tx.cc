@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2005/10/15 16:43:03  sm
+**	- Added HDR texture access.
+**
 **	Revision 1.36  2005/10/10 18:51:22  sm
 **	- Added OpenEXR image saving.
-**
+**	
 **	Revision 1.35  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
 **	
@@ -821,17 +824,58 @@ b3_bool b3Tx::b3IsPalette()
 **                                                                      **
 *************************************************************************/
 
+b3Color b3Tx::b3GetHdrValue(b3_coord x, b3_coord y)
+{
+	b3_pkd_color *lPtr;
+	b3_color     *cPtr;
+
+	switch (type)
+	{
+	case B3_TX_ILBM:
+	case B3_TX_RGB4:
+		return b3Color(b3GetValue(x, y));
+
+	case B3_TX_VGA:
+		return b3Color(palette == null ? B3_BLACK : palette[data[y * xSize + x]]);
+
+	case B3_TX_RGB8:
+		lPtr  = (b3_pkd_color *)data;
+		return b3Color(lPtr[y * xSize + x]);
+
+	case B3_TX_FLOAT:
+		cPtr  = (b3_color *)data;
+		return b3Color(cPtr[y * xSize + x]);
+
+	case B3_TX_UNDEFINED :
+		return b3Color(B3_BLACK);
+
+	default :
+		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
+	}
+}
+
 b3_pkd_color b3Tx::b3GetValue (
 	b3_coord x,
 	b3_coord y)
 {
+	b3_pkd_color *lPtr;
+	b3_color     *cPtr;
+
 	switch (type)
 	{
 		case B3_TX_ILBM  : return b3ILBMValue (x,y);
 		case B3_TX_RGB4  : return b3RGB4Value (x,y);
-		case B3_TX_RGB8  : return b3RGB8Value (x,y);
-		case B3_TX_VGA   : return b3VGAValue  (x,y);
-		case B3_TX_FLOAT : return b3FloatValue(x,y);
+
+		case B3_TX_RGB8:
+			lPtr  = (b3_pkd_color *)data;
+			return lPtr[y * xSize + x];
+
+		case B3_TX_VGA:
+			return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
+
+		case B3_TX_FLOAT:
+			cPtr  = (b3_color *)data;
+			return b3Color(cPtr[y * xSize + x]);
 
 		case B3_TX_UNDEFINED :
 			return B3_BLACK;
@@ -839,7 +883,6 @@ b3_pkd_color b3Tx::b3GetValue (
 		default :
 			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
-	return 0;
 }
 
 inline b3_pkd_color b3Tx::b3ILBMValue (
@@ -880,6 +923,13 @@ inline b3_pkd_color b3Tx::b3ILBMValue (
 	return PlaneValue;
 }
 
+inline b3_pkd_color b3Tx::b3VGAValue (
+	b3_coord x,
+	b3_coord y)
+{
+	return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
+}
+
 inline b3_pkd_color b3Tx::b3RGB4Value (
 	b3_coord x,
 	b3_coord y)
@@ -914,13 +964,6 @@ inline b3_pkd_color b3Tx::b3FloatValue(
 
 	Address  = (b3_color *)data;
 	return b3Color(Address[y * xSize + x]);
-}
-
-inline b3_pkd_color b3Tx::b3VGAValue (
-	b3_coord x,
-	b3_coord y)
-{
-	return palette == null ? 0 : palette[data[y * xSize + x]];
 }
 
 /*************************************************************************
