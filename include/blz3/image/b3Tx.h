@@ -410,9 +410,19 @@ public:
 	 *
 	 * @param x The x coordinate.
 	 * @param y The y coordinate.
-	 * @param color The resulting color as HDR value.
+	 * @result The resulting color as HDR value.
 	 */
 	b3Color b3GetHdrValue     (b3_coord x,b3_coord  y);
+
+	/** 
+	 * This method returns the blue color channel as floating point value.
+	 * color may be in HDR format.
+	 *
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @return The resulting blue channel as floting point value.
+	 */
+	b3_f32 b3GetBlue(b3_coord x,b3_coord  y);
 
 	/**
 	 * This method returns true if the given pixel is transparent.

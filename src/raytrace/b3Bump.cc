@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2005/10/15 20:55:19  sm
+**	- Some optimizations.
+**
 **	Revision 1.42  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
-**
+**	
 **	Revision 1.41  2005/01/03 10:34:29  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
@@ -454,9 +457,9 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	x = (b3_coord)((lx - (b3_coord)lx) * m_Texture->xSize);
 	y = (b3_coord)((ly - (b3_coord)ly) * m_Texture->ySize);
 
-	p1 = m_Texture->b3GetHdrValue( x,y)[b3Color::B];
-	p2 = m_Texture->b3GetHdrValue((x+1) % m_Texture->xSize,y)[b3Color::B];
-	p3 = m_Texture->b3GetHdrValue( x, (y+1) % m_Texture->ySize)[b3Color::B];
+	p1 = m_Texture->b3GetBlue( x,y);
+	p2 = m_Texture->b3GetBlue((x+1) % m_Texture->xSize,y);
+	p3 = m_Texture->b3GetBlue( x, (y+1) % m_Texture->ySize);
 
 	Deriv->x = p2 - p1;
 	Deriv->y = p3 - p1;

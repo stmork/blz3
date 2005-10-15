@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2005/10/15 20:55:19  sm
+**	- Some optimizations.
+**
 **	Revision 1.38  2005/10/15 16:47:33  sm
 **	- Stencil fix for ILBM images.
-**
+**	
 **	Revision 1.37  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
 **	
@@ -827,6 +830,36 @@ b3_bool b3Tx::b3IsPalette()
 **                                                                      **
 *************************************************************************/
 
+b3_f32 b3Tx::b3GetBlue(b3_coord x, b3_coord y)
+{
+	b3_pkd_color *lPtr;
+	b3_color     *cPtr;
+
+	switch (type)
+	{
+	case B3_TX_ILBM:
+	case B3_TX_RGB4:
+		return (b3GetValue(x, y) & 0xff) * 0.0039215686;
+
+	case B3_TX_VGA:
+		return palette == null ? 0 : (palette[data[y * xSize + x]] & 0xff) * 0.0039215686;
+
+	case B3_TX_RGB8:
+		lPtr  = (b3_pkd_color *)data;
+		return (lPtr[y * xSize + x] & 0xff) * 0.0039215686;
+
+	case B3_TX_FLOAT:
+		cPtr  = (b3_color *)data;
+		return cPtr[y * xSize + x].b;
+
+	case B3_TX_UNDEFINED :
+		return 0;
+
+	default :
+		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
+	}
+}
+
 b3Color b3Tx::b3GetHdrValue(b3_coord x, b3_coord y)
 {
 	b3_pkd_color *lPtr;
@@ -866,8 +899,11 @@ b3_pkd_color b3Tx::b3GetValue (
 
 	switch (type)
 	{
-		case B3_TX_ILBM  : return b3ILBMValue (x,y);
-		case B3_TX_RGB4  : return b3RGB4Value (x,y);
+		case B3_TX_ILBM:
+			return b3ILBMValue (x,y);
+
+		case B3_TX_RGB4:
+			return b3RGB4Value (x,y);
 
 		case B3_TX_RGB8:
 			lPtr  = (b3_pkd_color *)data;
@@ -904,8 +940,8 @@ inline b3_pkd_color b3Tx::b3ILBMValue (
 	Bit          = m_Bits[x & 7];
 	for (i = 0;i < depth;i++)
 	{
-		Address     -= BytesPerLine;
-		PlaneValue <<= 1;
+		Address    -= BytesPerLine;
+		PlaneValue += PlaneValue;
 		if (Address[0] & Bit)
 		{
 			PlaneValue |= 1;
@@ -937,15 +973,15 @@ inline b3_pkd_color b3Tx::b3RGB4Value (
 	b3_coord x,
 	b3_coord y)
 {
-	register b3_u16 *Address;
-	register b3_pkd_color   Colour,Result;
+	b3_u16       *Address;
+	b3_pkd_color  Color,Result;
 
 	Address  = (b3_u16 *)data;
 	Address += (y * xSize + x);
-	Colour = (b3_pkd_color)Address[0];
-	Result  = (Colour & 0x0f00) << 12;
-	Result |= (Colour & 0x00f0) <<  8;
-	Result |= (Colour & 0x000f) <<  4;
+	Color    = (b3_pkd_color)Address[0];
+	Result   = (Color & 0x0f00) << 12;
+	Result  |= (Color & 0x00f0) <<  8;
+	Result  |= (Color & 0x000f) <<  4;
 	return Result;
 }
 
@@ -953,7 +989,7 @@ inline b3_pkd_color b3Tx::b3RGB8Value (
 	b3_coord x,
 	b3_coord y)
 {
-	register b3_pkd_color *Address;
+	b3_pkd_color *Address;
 
 	Address  = (b3_pkd_color *)data;
 	return Address[y * xSize + x];
@@ -963,7 +999,7 @@ inline b3_pkd_color b3Tx::b3FloatValue(
 	b3_coord x,
 	b3_coord y)
 {
-	register b3_color *Address;
+	b3_color *Address;
 
 	Address  = (b3_color *)data;
 	return b3Color(Address[y * xSize + x]);
@@ -993,8 +1029,8 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 			bit    = m_Bits[x & 7];
 			for (i = 0;i < depth;i++)
 			{
-				bPtr    -= xBytes;
-				result <<= 1;
+				bPtr   -= xBytes;
+				result += result;
 				if (*bPtr & bit)
 				{
 					result |= 1;
@@ -1155,8 +1191,8 @@ inline void b3Tx::b3GetVGA (
 	b3_pkd_color *ColorLine,
 	b3_coord      y)
 {
-	register b3_u08   *Data;
-	register b3_coord  x;
+	b3_u08   *Data;
+	b3_coord  x;
 
 	Data    = (b3_u08 *)data;
 	Data   += (xSize * y);
@@ -1210,15 +1246,19 @@ void b3Tx::b3GetRow (
 		case B3_TX_ILBM :
 			b3GetILBM (Line,y);
 			break;
+
 		case B3_TX_RGB8 :
 			b3GetRGB8 (Line,y);
 			break;
+
 		case B3_TX_RGB4 :
 			b3GetRGB4 (Line,y);
 			break;
+
 		case B3_TX_VGA :
 			b3GetVGA  (Line,y);
 			break;
+
 		case B3_TX_FLOAT:
 			b3GetFloat(Line,y);
 			break;
