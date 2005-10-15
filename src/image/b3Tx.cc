@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2005/10/15 16:47:33  sm
+**	- Stencil fix for ILBM images.
+**
 **	Revision 1.37  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
-**
+**	
 **	Revision 1.36  2005/10/10 18:51:22  sm
 **	- Added OpenEXR image saving.
 **	
@@ -999,7 +1002,7 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 			}
 
 			// Check for first index.
-			return result == 0;
+			return result != 0;
 
 		case B3_TX_RGB8	:
 			lPtr = (b3_pkd_color *)data;
