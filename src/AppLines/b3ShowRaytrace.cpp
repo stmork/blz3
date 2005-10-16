@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/10/16 12:11:22  sm
+**	- Some HDR fixes.
+**
 **	Revision 1.3  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.2  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -86,7 +89,7 @@ void CB3ShowRaytrace::b3Update(b3Scene *scene)
 		m_yPos  = 0;
 		m_xSize = rect.Width();
 		m_ySize = rect.Height();
-		if (m_Tx.b3AllocTx(m_xSize,m_ySize,24))
+		if (m_Tx.b3AllocTx(m_xSize, m_ySize, 128))
 		{
 			m_Display = new b3Display(&m_Tx);
 		}

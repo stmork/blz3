@@ -41,9 +41,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/10/16 12:11:22  sm
+**	- Some HDR fixes.
+**
 **	Revision 1.7  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
-**
+**	
 **	Revision 1.6  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -109,6 +112,10 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 
 	m_Tx->b3AllocTx(m_xMax,m_yMax,m_depth);
 	m_Buffer = (b3_color *)m_Tx->b3GetData();
+	if (!m_Tx->b3IsHDR())
+	{
+		B3_THROW(b3DisplayException,B3_DISPLAY_ERROR);
+	}
 }
 
 b3DisplayView::b3DisplayView(
