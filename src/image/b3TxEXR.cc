@@ -22,9 +22,9 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef BLZ3_USE_OPENEXR
 #include "blz3/image/b3Tx.h"
 
-#ifdef BLZ3_USE_OPENEXR
 #include <ImfIO.h>
 #include <ImfInputFile.h>
 #include <ImfHeader.h>
@@ -42,9 +42,12 @@ using namespace Iex;
 
 /*
 **	$Log$
+**	Revision 1.2  2005/10/16 09:43:41  sm
+**	- Minor changes.
+**
 **	Revision 1.1  2005/10/16 09:35:45  sm
 **	- Added OpenEXR parsing file.
-**
+**	
 **
 */
 
@@ -83,12 +86,12 @@ public:
 		return m_Index < m_Size;
 	}
 
-	virtual Int64	tellg ()
+	virtual Int64 tellg ()
 	{
 		return m_Index;
 	}
 
-	virtual void	seekg (Int64 pos)
+	virtual void seekg (Int64 pos)
 	{
 		if (pos >= m_Size)
 		{
@@ -105,7 +108,7 @@ public:
 
 b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 {
-	b3_result result;
+	b3_result result = B3_ERROR;
 
 	b3PrintF(B3LOG_FULL,"IMG EXR  # b3ParseOpenEXR(%s)\n",
 		(const char *)image_name);
@@ -134,7 +137,10 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 	}
 	catch(std::exception &exc)
 	{
-		result = B3_ERROR;
+		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG EXR  # Error reading file:\n");
+		b3PrintF(B3LOG_NORMAL,"           Cause:\n%s", exc.what());
+		B3_THROW(b3TxException,B3_TX_ERR_HEADER);
 	}
 	return result;
 }
