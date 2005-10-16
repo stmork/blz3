@@ -12,6 +12,7 @@ LIB_SOURCE		=\
 	b3TxBlit.cc\
 	b3TxDeskew.cc\
 	b3TxEasy.cc\
+	v3TxEXR.cc\
 	b3TxGIF.cc\
 	b3TxHist.cc\
 	b3TxIFF.cc\
@@ -41,6 +42,7 @@ LIB_OBJ			=\
 	b3TxBlit.o\
 	b3TxDeskew.o\
 	b3TxEasy.o\
+	b3TxEXR.o\
 	b3TxGIF.o\
 	b3TxHist.o\
 	b3TxIFF.o\

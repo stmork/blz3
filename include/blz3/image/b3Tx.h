@@ -1072,6 +1072,11 @@ private:
 	// b3TxGIF.cc
 	b3_result      b3ParseGIF  (b3_u08 *buffer);
 
+#ifdef BLZ3_USE_OPENEXR
+	// b3TxEXR.cc
+	b3_result      b3ParseOpenEXR  (b3_u08 *buffer, b3_size size);
+#endif
+
 	// b3TxPCX.cc
 	b3_result      b3ParsePCX4 (b3_u08 *buffer);
 	b3_result      b3ParsePCX8 (b3_u08 *buffer);

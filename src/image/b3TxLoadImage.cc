@@ -30,6 +30,10 @@
 #include "b3TxIFF.h"
 #include "b3TxTIFF.h"
 
+#ifdef BLZ3_USE_OPENEXR
+#include <ImfVersion.h>
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -38,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2005/10/16 09:20:09  sm
+**	- Added OpenEXR reading.
+**
 **	Revision 1.25  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
-**
+**	
 **	Revision 1.24  2005/09/17 17:34:17  sm
 **	- Fixed loading of JPEG images with Exif tag.
 **	
@@ -275,6 +282,13 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 		}
 	}
 
+#ifdef BLZ3_USE_OPENEXR
+	// OpenEXR
+	if (Imf::isImfMagic((const char *)buffer))
+	{
+		return b3ParseOpenEXR(buffer, buffer_size);
+	}
+#endif
 
 	// BMP
 	if ((buffer[0] == 'B') &&
