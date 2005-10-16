@@ -31,10 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/10/16 08:37:23  sm
+**	- Fixed OpenEXR configure.
+**	- Fixed bimg3 for HDR image output.
+**	- Optimized IFF-ILBM image access.
+**
 **	Revision 1.5  2005/08/02 15:02:50  smork
 **	- Optimized b3Mix methods.
 **	- Documentation.
-**
+**	
 **	Revision 1.4  2004/06/05 08:07:05  sm
 **	- Corrected b3Color for multiplying colors as filter.
 **	
@@ -77,6 +82,14 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_m255[4] =
 	255.0f,
 	255.0f,
 	255.0f
+};
+
+b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
+{
+	0.0666666666f,
+	0.0666666666f,
+	0.0666666666f,
+	0.0666666666f
 };
 
 b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =

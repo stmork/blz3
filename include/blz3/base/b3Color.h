@@ -55,6 +55,7 @@ class B3_PLUGIN b3Color
 	static b3_f32 B3_ALIGN_16 m_Limit_m000[4]; //!< These color values represent black (for clamping).
 	static b3_f32 B3_ALIGN_16 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
 	static b3_f32 B3_ALIGN_16 m_Limit_m255[4]; //!< These values are used for conversion into integer.
+	static b3_f32 B3_ALIGN_16 m_Limit_d015[4]; //!< These values are used for conversion from integer.
 	static b3_f32 B3_ALIGN_16 m_Limit_d255[4]; //!< These values are used for conversion from integer.
 
 public:
@@ -127,6 +128,34 @@ public:
 	inline b3Color(const b3_color *color)
 	{
 		b3Init(color->r,color->g,color->b,color->a);
+	}
+
+	/**
+	 * This constructor initializes this instance from a ::b3_pkd_color structure.
+	 *
+	 * @param input The other ::b3_pkd_color instance to copy.
+	 */
+	inline b3Color(const b3_u16 input)
+	{
+		b3_u16             color = input;
+		b3_s32 B3_ALIGN_16 c[4];
+		b3_loop            i;
+
+		for (i = 0;i < 4;i++)
+		{
+			c[3-i] = color & 0xf;
+			color  = color >> 4;
+		}
+
+		for (i = 0;i < 4;i++)
+		{
+			v[i] = (b3_f32)c[i];
+		}
+
+		for (i = 0;i < 4;i++)
+		{
+			v[i] *= m_Limit_d015[i];
+		}
 	}
 
 	/**

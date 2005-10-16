@@ -30,6 +30,8 @@ AC_SUBST(BLZ3_DOC, "$BLZ3_DOC", [The Blizzard III documentation directory])
 AC_SUBST(GLUTLIBS)
 AC_SUBST(DIVXLIBS)
 
+AC_LANG_PUSH(C++)
+
 AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
@@ -80,23 +82,16 @@ AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG])])
 AC_CHECK_LIB([CgGL], [main])
 
 # Check for OpenEXR
-############## OpenEXR
+AC_ARG_WITH(openexr, [AC_HELP_STRING([--with-openexr],[OpenEXR include path])], OPENEXR=$withval)
 if test "x$OPENEXR" = "x"; then
-  if test "x$prefix" != xNONE; then
-    OPENEXR=$prefix/include/OpenEXR
-  else
-    OPENEXR=$ac_default_prefix/include/OpenEXR
-  fi
+  OPENEXR=/usr/include/OpenEXR
 fi
-AC_LANG_PUSH(C++)
+
 save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -I$OPENEXR"
 AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
-AC_LANG_POP(C++)
-AC_SUBST(OPENEXR)
 # END OpenEXR
 
-#AC_CHECK_HEADER([ImfIO.h],[AC_DEFINE([BLZ3_USE_OPENEXR])])
 AC_CHECK_LIB([Half], [main])
 AC_CHECK_LIB([Iex], [main])
 AC_CHECK_LIB([Imath], [main])
@@ -104,6 +99,8 @@ AC_CHECK_LIB([IlmImf], [main])
 
 # Check for DivX
 AC_CHECK_LIB([divxencore], [encore], [AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])])
+
+AC_LANG_POP(C++)
 
 CPPFLAGS="$CPPFLAGS -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
 LDFLAGS="$LDFLAGS -L$BLZ3_LIB $X_LIBS"

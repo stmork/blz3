@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2005/10/16 08:37:23  sm
+**	- Fixed OpenEXR configure.
+**	- Fixed bimg3 for HDR image output.
+**	- Optimized IFF-ILBM image access.
+**
 **	Revision 1.39  2005/10/15 20:55:19  sm
 **	- Some optimizations.
-**
+**	
 **	Revision 1.38  2005/10/15 16:47:33  sm
 **	- Stencil fix for ILBM images.
 **	
@@ -929,23 +934,25 @@ inline b3_pkd_color b3Tx::b3ILBMValue (
 	b3_coord y)
 {
 	b3_u08       *Address;
-	b3_pkd_color  Bit,PlaneValue;
+	b3_pkd_color  Bit;
+	b3_u32        PlaneValue = 0,pattern = 1;
 	b3_index      BytesPerLine;
 	b3_res        i;
 
 	BytesPerLine = TX_BWA(xSize);
 	PlaneValue   = 0;
 	Address      = (b3_u08 *)data;
-	Address     += ((y + 1) * BytesPerLine * depth + (x >> 3));
-	Bit          = m_Bits[x & 7];
+	Address     += (y * BytesPerLine * depth + (x >> 3));
+//	Bit          = m_Bits[x & 7];
+	Bit          = 128 >> (x & 7);
 	for (i = 0;i < depth;i++)
 	{
-		Address    -= BytesPerLine;
-		PlaneValue += PlaneValue;
 		if (Address[0] & Bit)
 		{
-			PlaneValue |= 1;
+			PlaneValue |= pattern;
 		}
+		Address += BytesPerLine;
+		pattern += pattern;
 	}
 	if (palette != null)
 	{
@@ -1222,18 +1229,60 @@ void b3Tx::b3GetRow (
 	b3_color *Line,
 	b3_coord  y)
 {
-	b3_color *cPtr = (b3_color *)data;
-	b3_coord  x;
+	b3_u08       *bPtr;
+	b3_u16       *sPtr;
+	b3_pkd_color *lPtr;
+	b3_color     *cPtr;
+	b3_coord      x;
 
-	if (type != B3_TX_FLOAT)
+	switch(type)
 	{
+	case B3_TX_ILBM:
+		for (x = 0;x < xSize;x++)
+		{
+			*Line++ = b3Color(b3ILBMValue(x,y));
+		}
+		break;
+
+	case B3_TX_VGA:
+		bPtr = data;
+		bPtr += (xSize * y);
+		for (x = 0;x < xSize;x++)
+		{
+			*Line++ = b3Color(palette != null ? palette[*bPtr] : B3_BLACK);
+			bPtr++;
+		}
+		break;
+
+	case B3_TX_RGB4:
+		sPtr = (b3_u16 *)data;
+		sPtr += (xSize * y);
+		for (x = 0;x < xSize;x++)
+		{
+			*Line++ = b3Color(*sPtr++);
+		}
+		break;
+
+	case B3_TX_RGB8:
+		lPtr = (b3_pkd_color *)data;
+		lPtr += (xSize * y);
+		for (x = 0;x < xSize;x++)
+		{
+			*Line++ = b3Color(*lPtr++);
+		}
+		break;
+
+	case B3_TX_FLOAT:
+		cPtr = (b3_color *)data;
+		cPtr += (xSize * y);
+		for (x = 0;x < xSize;x++)
+		{
+			*Line++ = *cPtr++;
+		}
+		break;
+
+	default:
 		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
-	}
-
-	cPtr += (xSize * y);
-	for (x = 0;x < xSize;x++)
-	{
-		*Line++ = *cPtr++;
 	}
 }
 
