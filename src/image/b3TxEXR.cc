@@ -22,6 +22,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/b3Config.h"
+
 #ifdef BLZ3_USE_OPENEXR
 #include "blz3/image/b3Tx.h"
 
@@ -42,9 +44,12 @@ using namespace Iex;
 
 /*
 **	$Log$
+**	Revision 1.3  2005/10/17 18:51:33  sm
+**	- Compile fix.
+**
 **	Revision 1.2  2005/10/16 09:43:41  sm
 **	- Minor changes.
-**
+**	
 **	Revision 1.1  2005/10/16 09:35:45  sm
 **	- Added OpenEXR parsing file.
 **	
