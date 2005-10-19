@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/10/19 15:14:10  sm
+**	- Added some debug messages.
+**
 **	Revision 1.4  2005/05/09 17:38:09  sm
 **	- Fixed threading problem on Multi CPU machines for
 **	  material initialization.
-**
+**	
 **	Revision 1.3  2005/05/05 07:58:03  sm
 **	- BBox visibility computed only for raytracing.
 **	
@@ -232,6 +235,9 @@ void b3Scene::b3Update()
 
 b3_bool b3Scene::b3UpdateThread(b3BBox *bbox,void *ptr)
 {
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"      Updating object <%s>\n",bbox->b3GetName());
+#endif
 	bbox->b3UpdateBBox();
 	return true;
 }
@@ -241,12 +247,21 @@ void b3BBox::b3UpdateBBox()
 	b3Item  *item;
 	b3Shape *shape;
 
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"      Updating object <%s>",b3GetName());
+#endif
 	b3RenderObject::b3Update();
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,".");
+#endif
 		shape->b3Update();
 	}
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"\n");
+#endif
 }
 
 /*************************************************************************
