@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2005/10/20 19:55:17  sm
+**	- Introduced SSE intrinsics.
+**
 **	Revision 1.51  2005/08/19 14:34:56  sm
 **	- Documentation.
-**
+**	
 **	Revision 1.50  2005/06/17 10:29:05  smork
 **	- Made some inlining.
 **	- Removed some unnecessary tests.
@@ -440,7 +443,7 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 		b3Vector::b3LinearCombine(ray, l1, &m_Base, &n);
 
 		p = acos(-b3Vector::b3AngleOfVectors(&n,&pole));
-		polar->m_Polar.x = acos(b3Vector::b3AngleOfVectors (&m_Dir,&n) /
+		polar->m_Polar.x = b3Math::b3Acos(b3Vector::b3AngleOfVectors (&m_Dir,&n) /
 			sin(p)) * 0.5 / M_PI;
 		polar->m_Polar.y = p * 2.0 / M_PI - 1.0;
 		polar->m_Polar.z = 0;

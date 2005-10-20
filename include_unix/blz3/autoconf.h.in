@@ -28,6 +28,11 @@
 #undef BLZ3_USE_DIVX4LINUX
 #undef BLZ3_IS_LINUX
 
+#undef HAVE_SSE
+#undef HAVE_SSE2
+#undef HAVE_SSE3
+#undef HAVE_ALTIVEC
+
 #undef HAVE_STRICMP
 #undef HAVE_STRCASECMP
 #undef HAVE_STRLCPY

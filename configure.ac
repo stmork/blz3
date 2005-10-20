@@ -61,6 +61,21 @@ AC_TRY_LINK([#include <string.h>],[
 char msg[1024];strerror_r(0,msg,sizeof(msg)));
 ],[AC_DEFINE([HAVE_STRERROR]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
+AC_MSG_CHECKING([for SSE])
+AC_TRY_LINK([#include <xmmintrin.h>],[
+__m128 a,b,r;r = _mm_add_ps(a,b);
+],[AC_DEFINE([HAVE_SSE]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING([for SSE2])
+AC_TRY_LINK([#include <emmintrin.h>],[
+__m128d a,b,r;r = _mm_add_pd(a,b);
+],[AC_DEFINE([HAVE_SSE2]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING([for SSE3])
+AC_TRY_LINK([#include <pmmintrin.h>],[
+__m128d a,b,r;r = _mm_hadd_pd(a,b);
+],[AC_DEFINE([HAVE_SSE3]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
 AC_PATH_XTRA
 
 # Checks for header files.

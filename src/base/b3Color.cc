@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/10/20 19:55:17  sm
+**	- Introduced SSE intrinsics.
+**
 **	Revision 1.6  2005/10/16 08:37:23  sm
 **	- Fixed OpenEXR configure.
 **	- Fixed bimg3 for HDR image output.
 **	- Optimized IFF-ILBM image access.
-**
+**	
 **	Revision 1.5  2005/08/02 15:02:50  smork
 **	- Optimized b3Mix methods.
 **	- Documentation.
@@ -60,6 +63,7 @@
 **                                                                      **
 *************************************************************************/
 
+#ifndef HAVE_SSE
 b3_f32 B3_ALIGN_16 b3Color::m_Limit_m000[4] =
 {
 	0.0f,
@@ -99,3 +103,4 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =
 	0.0039215686f,
 	0.0039215686f
 };
+#endif
