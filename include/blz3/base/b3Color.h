@@ -61,6 +61,29 @@ public:
 		G,     //!< The green channel.
 		B      //!< The blue channel.
 	};
+
+	/**
+	 * This method initializes a ::b3_color structure instance.
+	 *
+	 * @param color The other ::b3_color instance to copy.
+	 * @param r The new red channel.
+	 * @param g The new green channel.
+	 * @param b The new blue channel.
+	 * @param a The new alpha channel.
+	 * @return The ::b3_color instance pointer.
+	 */
+	inline static b3_color *b3Init(b3_color *color,
+		b3_f32 r = 0,
+		b3_f32 g = 0,
+		b3_f32 b = 0,
+		b3_f32 a = 0)
+	{
+		color->r = r;
+		color->g = g;
+		color->b = b;
+		color->a = a;
+		return color;
+	}
 };
 
 #ifdef BLZ3_USE_SSE

@@ -226,29 +226,6 @@ public:
 		v = _mm_set_ps(b, g, r, a);
 	}
 
-	/**
-	 * This method initializes a ::b3_color structure instance.
-	 *
-	 * @param color The other ::b3_color instance to copy.
-	 * @param r The new red channel.
-	 * @param g The new green channel.
-	 * @param b The new blue channel.
-	 * @param a The new alpha channel.
-	 * @return The ::b3_color instance pointer.
-	 */
-	inline static b3_color *b3Init(b3_color *color,
-		b3_f32 r = 0,
-		b3_f32 g = 0,
-		b3_f32 b = 0,
-		b3_f32 a = 0)
-	{
-		color->r = r;
-		color->g = g;
-		color->b = b;
-		color->a = a;
-		return color;
-	}
-
 	//////////////////////////////////////--------- methods and operators
 	/**
 	 * This method sets the alpha channel.
@@ -700,10 +677,11 @@ public:
 	 */
 	inline COLORREF b3GetColorref()
 	{
+		b3_f32 *ptr = (b3_f32 *)&v;
 		return RGB(
-			(b3_pkd_color)(v[R] * 255),
-			(b3_pkd_color)(v[G] * 255),
-			(b3_pkd_color)(v[B] * 255));
+			(b3_pkd_color)(ptr[R] * 255),
+			(b3_pkd_color)(ptr[G] * 255),
+			(b3_pkd_color)(ptr[B] * 255));
 	}
 
 	/**

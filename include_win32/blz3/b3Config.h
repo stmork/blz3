@@ -49,17 +49,36 @@
 #include "blz3/system/b3Thread.h"
 
 #ifdef _DEBUG
-#include <assert.h>
-#define B3_ASSERT(cond) ASSERT(cond)
+#	include <assert.h>
+#	define B3_ASSERT(cond) ASSERT(cond)
 #else
-#define B3_ASSERT(cond)
+#	define B3_ASSERT(cond)
+#endif
+
+// Use some SSE intrinsics
+#if 0
+#	if _M_IX86_FP >= 1
+#		define HAVE_SSE
+#		define BLZ3_USE_SSE
+#		include <xmmintrin.h>
+#		if _M_IX86_FP >= 2
+#			define HAVE_SSE2
+#			define BLZ3_USE_SSE2
+#			include <emmintrin.h>
+#			if _M_IX86_FP >= 3
+#				define HAVE_SSE3
+#				define BLZ3_USE_SSE3
+#				include <pmmintrin.h>
+#			endif
+#		endif
+#	endif
 #endif
 
 // OpenGL is nice...
 #ifdef BLZ3_USE_OPENGL
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include "blz3_glext.h"
+#	include <GL/gl.h>
+#	include <GL/glu.h>
+#	include "blz3_glext.h"
 #endif
 
 // Some defines for getting to know who we are
@@ -93,10 +112,16 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.37  2005/10/22 15:14:45  sm
+**	- Added SSE intrinsic support which doesn't
+**	  function due to an alignment buf in the VC
+**	  new operator which returns only 8 byte
+**	  boundary addresses.
+**
 **	Revision 1.36  2005/10/02 15:06:23  sm
 **	- Some b3Frac/b3FMod/fmod corrections
 **	- Documentation
-**
+**	
 **	Revision 1.35  2005/09/11 17:45:48  sm
 **	- Fixed wrong ordered b3MatGranite read.
 **	

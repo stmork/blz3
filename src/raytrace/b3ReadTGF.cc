@@ -27,6 +27,7 @@
 
 #include "b3ReadTGF.h"
 #include "blz3/system/b3File.h"
+#include "blz3/base/b3Color.h"
 #include "blz3/base/b3Endian.h"
 #include "blz3/base/b3Matrix.h"
 
@@ -38,10 +39,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/10/22 15:14:45  sm
+**	- Added SSE intrinsic support which doesn't
+**	  function due to an alignment buf in the VC
+**	  new operator which returns only 8 byte
+**	  boundary addresses.
+**
 **	Revision 1.11  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.10  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -425,7 +432,7 @@ b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
 	ptr += strlen(ptr) + 1;
 
 	mat.m_Index = b3Endian::b3GetIntel32(ptr);
-	mat.m_Color.b3Init(
+	b3ColorBase::b3Init(&mat.m_Color,
 		b3Endian::b3GetIntelFloat(&ptr[ 4]),
 		b3Endian::b3GetIntelFloat(&ptr[ 8]),
 		b3Endian::b3GetIntelFloat(&ptr[12]));
