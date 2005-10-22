@@ -20,14 +20,6 @@
 #ifndef B3_CONF_H
 #define B3_CONF_H
 
-#undef BLZ3_USE_OPENGL
-#undef BLZ3_USE_GLUT
-#undef BLZ3_USE_CG
-#undef BLZ3_USE_OPENEXR
-#undef BLZ3_USE_AVILIB
-#undef BLZ3_USE_DIVX4LINUX
-#undef BLZ3_IS_LINUX
-
 #undef HAVE_SSE
 #undef HAVE_SSE2
 #undef HAVE_SSE3
@@ -38,5 +30,20 @@
 #undef HAVE_STRLCPY
 #undef HAVE_STRERROR
 #undef HAVE_VALUES_H
+
+#ifndef __ICC
+#undef BLZ3_USE_SSE
+#undef BLZ3_USE_SSE2
+#undef BLZ3_USE_SSE3
+#endif
+
+#undef BLZ3_USE_ALTIVEC
+#undef BLZ3_USE_OPENGL
+#undef BLZ3_USE_GLUT
+#undef BLZ3_USE_CG
+#undef BLZ3_USE_OPENEXR
+#undef BLZ3_USE_AVILIB
+#undef BLZ3_USE_DIVX4LINUX
+#undef BLZ3_IS_LINUX
 
 #endif

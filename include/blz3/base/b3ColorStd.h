@@ -1,15 +1,15 @@
 /*
 **
 **      $Filename:      b3Color.h $
-**      $Release:       Dortmund 2003 $
+**      $Release:       Dortmund 2005 $
 **      $Revision$
 **      $Date$
 **      $Author$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Color handling
+**      Blizzard III - Color handling with standard methods.
 **
-**      (C) Copyright  Steffen A. Mork
+**      (C) Copyright 2005  Steffen A. Mork
 **          All Rights Reserved
 **
 **

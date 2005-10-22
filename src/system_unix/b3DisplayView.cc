@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/10/22 10:51:41  sm
+**	- Some SSE optimizations.
+**
 **	Revision 1.13  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
-**
+**	
 **	Revision 1.12  2003/11/25 13:31:47  sm
 **	- Changed b3_loop to int (best performance)
 **	
@@ -160,7 +163,7 @@ class b3DisplayPixelImpl : public b3DisplayPixel
 protected:
 	inline static b3_pkd_color b3Convert(b3_f32 value)
 	{
-		return value > 1 ? 255 : value * 255;
+		return value > 1 ? 255 : b3_pkd_color(value * 255);
 	}
 
 	inline static b3_bool b3Dither (

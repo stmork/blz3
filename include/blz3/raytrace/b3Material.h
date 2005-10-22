@@ -80,13 +80,13 @@ struct b3_surface : public b3_material
 	b3Color      m_AmbientSum;       //!< The ambient sum integrated over all light sources.
 	b3Color      m_DiffuseSum;       //!< The diffuse sum integrated over all light sources.
 	b3Color      m_SpecularSum;      //!< The specular sum integrated over all light sources.
-	b3_ray      *m_Incoming;         //!< The incoming ray
 	b3_ray       m_ReflRay;          //!< The outgoing reflection ray.
 	b3_ray       m_RefrRay;          //!< The outgoing refraction ray.
 	b3_bool      m_Transparent;      //!< A flag indicating a transparent surface.
 	b3_f64       m_Fresnel;          //!< The Fresnel term depending on the angle of incidence and the index of refraction.
 	b3_f64       m_IorComputed;      //!< The real index of refraction depending if the incoming ray is inside or outside.
 	b3_f64       m_CosAlpha;         //!< The angle of incidence as cosine value.
+	b3_ray      *m_Incoming;         //!< The incoming ray
 };
 
 /*************************************************************************

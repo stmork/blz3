@@ -1,15 +1,15 @@
 /*
 **
-**      $Filename:      b3Color.h $
-**      $Release:       Dortmund 2003 $
+**      $Filename:      b3ColorSSE.h $
+**      $Release:       Dortmund 2005 $
 **      $Revision$
 **      $Date$
 **      $Author$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Color handling
+**      Blizzard III - Color handling with SSE
 **
-**      (C) Copyright  Steffen A. Mork
+**      (C) Copyright 2005  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -22,8 +22,6 @@
 
 #include "blz3/b3Config.h"
 
-#include <xmmintrin.h>
-
 /**
  * This class provides color handling. It uses modern command sets
  * like SSE if the compiler can generate this and the underlying cpu
@@ -31,7 +29,8 @@
  */
 class B3_PLUGIN b3Color : public b3ColorBase
 {
-	__m128 v;                   //!< These are the color channels of a b3Color instance.
+	       __m128 v;                   //!< These are the color channels of a b3Color instance.
+	static b3_u32 B3_ALIGN_16 m_AbsMask[4];
 
 public:
 	/////////////////////////////////////////////////--------  constructors
@@ -40,6 +39,16 @@ public:
 	 */
 	inline b3Color()
 	{
+	}
+
+	/**
+	 * This constructor initializes this instance with an SSE vector.
+	 *
+	 * @param color The color vector in SSE representation.
+	 */
+	inline b3Color(__m128 color)
+	{
+		v = color;
 	}
 
 	/**
@@ -97,7 +106,6 @@ public:
 	 */
 	inline b3Color(const b3_u16 input)
 	{
-	printf("u1u1u1u1u1u\n");
 #if 0
 // FIXME
 		b3_u16             color = input;
@@ -130,16 +138,32 @@ public:
 	inline b3Color(const b3_pkd_color input)
 	{
 		b3_pkd_color       color = input;
-		b3_f32 B3_ALIGN_16 c[4];
 		b3_loop            i;
+
+#ifdef BLZ3_USE_SSE2
+		b3_s32 B3_ALIGN_16 c[4];
+
+		for (i = 3;i >= 0;i--)
+		{
+			c[i]  = color & 0xff;
+			color = color >> 8;
+		}
+
+		v = _mm_mul_ps(
+			_mm_cvtepi32_ps(_mm_load_si128((__m128i *)c)),
+			_mm_rcp_ps(_mm_set_ps1(255)));
+#else
+		b3_f32 B3_ALIGN_16 c[4];
 
 		for (i = 0;i < 4;i++)
 		{
 			c[i] = float(color & 0xff);
 			color  = color >> 8;
 		}
-
-		v = _mm_div_ps(_mm_loadr_ps(c),_mm_set_ps1(255));
+		v = _mm_mul_ps(
+			_mm_loadr_ps(c),
+			_mm_rcp_ps(_mm_set_ps1(255)));
+#endif
 	}
 
 	//////////////////////////////////////////--------- initializers
@@ -562,12 +586,10 @@ public:
 	 */
 	inline b3_bool b3IsGreater(b3Color &limit)
 	{
-#if 0
-	// FIXME
-		return (fabs(v[R]) >= limit[R]) || (fabs(v[G]) >= limit[G]) || (fabs(v[B]) >= limit[B]);
-#else
-	return false;
-#endif
+		b3_f32 *a = (b3_f32 *)&v;
+		b3_f32 *b = (b3_f32 *)&limit.v;
+
+		return (fabs(a[R]) >= b[R]) || (fabs(a[G]) >= b[G]) || (fabs(a[B]) >= b[B]);
 	}
 
 	/**
@@ -575,9 +597,7 @@ public:
 	 */
 	inline void b3Abs()
 	{
-		// FIXME
-		__m128 mask = _mm_load_ps1(0);
-		v = _mm_and_ps(v, mask);
+		v = _mm_and_ps(v, _mm_load_ps((const float *)m_AbsMask));
 	}
 
 	/**
@@ -657,9 +677,7 @@ public:
 	 */
 	inline void b3Min()
 	{
-		__m128 zero = _mm_setzero_ps();
-
-		v = _mm_max_ps(v,zero);
+		v = _mm_max_ps(v, _mm_setzero_ps());
 	}
 
 	/**

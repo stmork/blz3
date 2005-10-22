@@ -47,12 +47,12 @@
  */
 struct b3_light_info : public b3_ray
 {
-	b3_vector m_LightView;      //!< The normalized direction from the intersection point to the light source.
-	b3_vector m_xDir;           //!< The horizontal spanning vector for soft lights.
-	b3_vector m_yDir;           //!< The vertical spanning vector for soft shadows.
 	b3Color   m_AmbientSum;     //!< The collected ambient term over all shader feeler.
 	b3Color   m_DiffuseSum;     //!< The collected diffuse term over all shadow feeler.
 	b3Color   m_SpecularSum;    //!< The collected specular term over all shadow feeler. 
+	b3_vector m_LightView;      //!< The normalized direction from the intersection point to the light source.
+	b3_vector m_xDir;           //!< The horizontal spanning vector for soft lights.
+	b3_vector m_yDir;           //!< The vertical spanning vector for soft shadows.
 	b3_f64    m_Size;           //!< Spanning area for soft light sources copied from the b3Light class.
 	b3_f64    m_LightFrac;      //!< The reciproce distance between the intersection point and the light source.
 	b3_f64    m_LightDist;      //!< The real distance between the intersection point and the light source.

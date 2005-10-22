@@ -55,6 +55,16 @@
 #endif
 #endif
 
+#ifdef HAVE_SSE
+#	include <xmmintrin.h>
+#	ifdef HAVE_SSE2
+#		include <emmintrin.h>
+#		ifdef HAVE_SSE3
+#			include <pmmintrin.h>
+#		endif
+#	endif
+#endif
+
 #define USE_JPEGLIB_LOAD
 #define USE_JPEGLIB_SAVE
  

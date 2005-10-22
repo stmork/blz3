@@ -9,7 +9,7 @@
 **
 **      Blizzard III - Color handling
 **
-**      (C) Copyright  Steffen A. Mork
+**      (C) Copyright 2005  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -63,7 +63,7 @@ public:
 	};
 };
 
-#ifdef HAVE_SSE
+#ifdef BLZ3_USE_SSE
 #include "blz3/base/b3ColorSSE.h"
 #else
 #include "blz3/base/b3ColorStd.h"

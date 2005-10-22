@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/10/22 10:51:41  sm
+**	- Some SSE optimizations.
+**
 **	Revision 1.7  2005/10/20 19:55:17  sm
 **	- Introduced SSE intrinsics.
-**
+**	
 **	Revision 1.6  2005/10/16 08:37:23  sm
 **	- Fixed OpenEXR configure.
 **	- Fixed bimg3 for HDR image output.
@@ -63,7 +66,12 @@
 **                                                                      **
 *************************************************************************/
 
-#ifndef HAVE_SSE
+#ifdef BLZ3_USE_SSE
+
+b3_u32 B3_ALIGN_16 b3Color::m_AbsMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
+
+#else
+
 b3_f32 B3_ALIGN_16 b3Color::m_Limit_m000[4] =
 {
 	0.0f,

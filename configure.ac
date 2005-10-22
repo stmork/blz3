@@ -61,20 +61,31 @@ AC_TRY_LINK([#include <string.h>],[
 char msg[1024];strerror_r(0,msg,sizeof(msg)));
 ],[AC_DEFINE([HAVE_STRERROR]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
+AC_CHECK_HEADER([xmmintrin.h],[AC_DEFINE([HAVE_SSE])])
 AC_MSG_CHECKING([for SSE])
-AC_TRY_LINK([#include <xmmintrin.h>],[
-__m128 a,b,r;r = _mm_add_ps(a,b);
-],[AC_DEFINE([HAVE_SSE]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <xmmintrin.h>],[
+char result[[128]];__m128 a = _mm_set_ps1(1),b = _mm_set_ps1(1),r = _mm_add_ps(a,b);
+sprintf(result,"%f\n",*((float *)&r));
+])],[AC_DEFINE([BLZ3_USE_SSE]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
+AC_CHECK_HEADER([emmintrin.h],[AC_DEFINE([HAVE_SSE2])])
 AC_MSG_CHECKING([for SSE2])
-AC_TRY_LINK([#include <emmintrin.h>],[
-__m128d a,b,r;r = _mm_add_pd(a,b);
-],[AC_DEFINE([HAVE_SSE2]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <emmintrin.h>],[
+char result[[128]];__m128d a = _mm_set1_pd(1),b = _mm_set1_pd(1),r = _mm_add_pd(a,b);
+sprintf(result,"%lf\n",*((double *)&r));
+])],[AC_DEFINE([BLZ3_USE_SSE2]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
+AC_CHECK_HEADER([pmmintrin.h],[AC_DEFINE([HAVE_SSE3])])
 AC_MSG_CHECKING([for SSE3])
-AC_TRY_LINK([#include <pmmintrin.h>],[
-__m128d a,b,r;r = _mm_hadd_pd(a,b);
-],[AC_DEFINE([HAVE_SSE3]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <emmintrin.h>
+#include <pmmintrin.h>],[
+char result[[128]];
+__m128d a = _mm_set1_pd(1),b = _mm_set1_pd(1),r = _mm_hadd_pd(a,b);
+sprintf(result,"%lf\n",*((double *)&r));
+])],[AC_DEFINE([BLZ3_USE_SSE3]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_PATH_XTRA
 

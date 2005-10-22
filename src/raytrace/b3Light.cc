@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2005/10/22 10:51:41  sm
+**      - Some SSE optimizations.
+**
 **      Revision 1.57  2005/08/24 15:36:55  sm
 **      - Documentation.
 **
@@ -507,12 +510,12 @@ inline b3_bool b3Light::b3PointIllumination(
 
 	Jit.m_Distr = 1;
 	Jit.m_Size  = 0;
-	Jit.pos.x = surface->m_Incoming->ipoint.x;
-	Jit.pos.y = surface->m_Incoming->ipoint.y;
-	Jit.pos.z = surface->m_Incoming->ipoint.z;
-	Jit.dir.x = m_Position.x - surface->m_Incoming->ipoint.x;
-	Jit.dir.y = m_Position.y - surface->m_Incoming->ipoint.y;
-	Jit.dir.z = m_Position.z - surface->m_Incoming->ipoint.z;
+	Jit.pos.x   = surface->m_Incoming->ipoint.x;
+	Jit.pos.y   = surface->m_Incoming->ipoint.y;
+	Jit.pos.z   = surface->m_Incoming->ipoint.z;
+	Jit.dir.x   = m_Position.x - surface->m_Incoming->ipoint.x;
+	Jit.dir.y   = m_Position.y - surface->m_Incoming->ipoint.y;
+	Jit.dir.z   = m_Position.z - surface->m_Incoming->ipoint.z;
 
 	LightDist    = b3Vector::b3QuadLength(&Jit.dir);
 	RecLightDist = 1.0 / (LightDist = sqrt(LightDist));
@@ -559,8 +562,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3Shader   *shader,
 	b3_surface *surface)
 {
-	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_light_info  Jit;
+	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_vector      point;
 	b3_f64         Factor,denomLightDist,q;
 	b3_coord       x,y,xs;

@@ -34,8 +34,6 @@
 #endif
 
 #if defined(__ICC)
-#	include <xmmintrin.h>
-
 #	define B3_ALIGN_16  __declspec(align(16))
 #	define B3_ALIGN_32  __declspec(align(32))
 #	define B3_ALIGN_64  __declspec(align(64))
