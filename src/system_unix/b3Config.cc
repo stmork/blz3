@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/10/23 12:30:30  sm
+**	- Added some informations about vector units.
+**
 **	Revision 1.17  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
-**
+**	
 **	Revision 1.16  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
 **	
@@ -108,7 +111,8 @@ char      b3Runtime::m_Compiler[256];
 
 b3Runtime::b3Runtime()
 {
-	b3_count bits = b3GetCPUBits();
+	char     *vu;
+	b3_count  bits = b3GetCPUBits();
 #if defined(B3_SSE2)
 	char *math = "SSE2";
 #elif defined(B3_SSE)
@@ -117,16 +121,31 @@ b3Runtime::b3Runtime()
 	char *math = "FPU";
 #endif
 
+	switch (b3GetVectorUnit())
+	{
+	case B3_VU_FPU:     vu = "FPU"; break;
+	case B3_VU_MMX:     vu = "MMX"; break;
+	case B3_VU_SSE:     vu = "SSE"; break;
+	case B3_VU_SSE2:    vu = "SSE2"; break;
+	case B3_VU_SSE3:    vu = "SSE3"; break;
+	case B3_VU_3DNOW:   vu = "3DNow!"; break;
+	case B3_VU_ALTIVEC: vu = "AltiVec"; break;
+	}
+
 #ifdef __ICC
-	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit) %s",__ICC / 100,(__ICC / 10) % 10,bits,math);
+	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit) vector unit: %s math mode: %s",
+		__ICC / 100,(__ICC / 10) % 10,bits,vu,math);
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit) %s",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,math);
+	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit) vector unit: %s math mode: %s",
+		__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,vu,math);
 #	else
-	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit) %s",__GNUC__,__GNUC_MINOR__,bits,math);
+	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",
+		__GNUC__,__GNUC_MINOR__,bits,vu,math);
 #	endif
 #else
-	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler");
+	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler vector unit: %s math mode: %s",
+		vu, math);
 #endif
 }
 
