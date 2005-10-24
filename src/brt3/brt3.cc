@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2005/10/24 15:18:58  sm
+**	- Added some logging.
+**
 **	Revision 1.68  2005/10/10 18:51:22  sm
 **	- Added OpenEXR image saving.
-**
+**	
 **	Revision 1.67  2005/06/22 11:02:34  smork
 **	- Added new brt3 option.
 **	- Changed example materials.
@@ -545,6 +548,16 @@ int main(int argc,char *argv[])
 		b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
 			CPUs,
 			CPUs > 1 ? "'s" : "");
+
+		b3PrintF(B3LOG_DEBUG,"Used environment:\n");
+		b3PrintF(B3LOG_DEBUG,"HOME=%s\n",             HOME);
+		b3PrintF(B3LOG_DEBUG,"BLZ3_DATA=%s\n",        BLZ3_DATA);
+		b3PrintF(B3LOG_DEBUG,"BLZ3_TEXTURES=%s\n",    BLZ3_TEXTURES);
+		b3PrintF(B3LOG_DEBUG,"BLZ3_PICTURES=%s\n",    BLZ3_PICTURES);
+		b3PrintF(B3LOG_DEBUG,"BLZ3_PLUGINS=%s\n",     BLZ3_PLUGINS);
+		b3PrintF(B3LOG_DEBUG,"BLZ3_BIN=%s\n",         BLZ3_BIN);
+		b3PrintF(B3LOG_DEBUG,"BLZ3_RENDER_PRIO=%s\n", BLZ3_RENDER_PRIO);
+
 		for (i = 1;i < argc;i++)
 		{
 			char    number[1024];
