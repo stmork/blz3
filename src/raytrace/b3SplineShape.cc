@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2005/11/27 11:48:11  sm
+**      - Added some additional logging.
+**
 **      Revision 1.48  2005/11/27 11:36:04  sm
 **      - Some more debugging output added.
 **
@@ -428,10 +431,15 @@ void b3SplineShape::b3ComputeGridVertices()
 	MySpline.controls = ControlArray;
 
 	// ... then create real horizontal spline curve.
+#ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"SplineShape: horizontal\n");
 	m_Spline[0].b3Dump();
+#endif
 	for (y = 0;y < CurveNum;y++)
 	{
+#ifdef _DEBUG
+		b3PrintF(B3LOG_FULL,"     y: %d\n", y);
+#endif
 		Points = MySpline.b3DeBoor (SplVector,y);
 		for (t = 0;t < Points;t++)
 		{
@@ -441,7 +449,9 @@ void b3SplineShape::b3ComputeGridVertices()
 			Vector++;
 		}
 	}
+#ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"SplineShape: horizontal done\n");
+#endif
 
 	// building vertical splines
 	// first create controls for segments of horizontal spline...
@@ -451,10 +461,15 @@ void b3SplineShape::b3ComputeGridVertices()
 	MySpline.controls = ControlArray;
 
 	// ... then create real vertical spline curve.
+#ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"SplineShape: vertical\n");
 	m_Spline[1].b3Dump();
+#endif
 	for (x = 0;x < CurveNum;x++)
 	{
+#ifdef _DEBUG
+		b3PrintF(B3LOG_FULL,"     x: %d\n",x);
+#endif
 		Points = MySpline.b3DeBoor (SplVector,x);
 		for (t = 0;t < Points;t++)
 		{
@@ -464,7 +479,9 @@ void b3SplineShape::b3ComputeGridVertices()
 			Vector++;
 		}
 	}
+#ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"SplineShape: vertical done\n");
+#endif
 }
 
 void b3SplineShape::b3ComputeSolidVertices()

@@ -304,6 +304,24 @@ public:
 		closed      = false;
 	}
 
+	b3SplineTemplate<VECTOR>(const b3SplineTemplate<VECTOR> &src)
+	{
+		B3_ASSERT(src.control_num <= B3_MAX_CONTROLS);
+		B3_ASSERT(src.knot_num <= B3_MAX_KNOTS);
+		B3_ASSERT(src.subdiv <= B3_MAX_SUBDIV);
+
+		control_max = B3_MAX_CONTROLS;
+		knot_max    = B3_MAX_KNOTS;
+		degree      = src.degree;
+		control_num = src.control_num;
+		knot_num    = src.knot_num;
+		offset      = src.offset;
+		controls    = src.controls;
+		knots       = src.knots;
+		subdiv      = src.subdiv;
+		closed      = src.closed;
+	}
+
 	inline b3_count b3GetSegmentCount()
 	{
 		return closed ? control_num : control_num - degree;
