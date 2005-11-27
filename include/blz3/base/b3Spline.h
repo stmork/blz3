@@ -716,8 +716,8 @@ public:
 	{
 		b3_index  l,i,j;
 		b3_knot   r;
-		b3_f64    denom;
-		b3_f64    it[B3_MAX_DEGREE + 1];
+		b3_knot    denom;
+		b3_knot    it[B3_MAX_DEGREE + 1];
 
 		i = iFind (q);
 
@@ -749,8 +749,8 @@ public:
 	{
 		b3_index   l,i,j,k;
 		b3_knot    r,diff,q;
-		b3_f64     denom;
-		b3_f64     it[B3_MAX_DEGREE + 1];
+		b3_knot     denom;
+		b3_knot     it[B3_MAX_DEGREE + 1];
 
 		diff    = knots[control_num] - knots[0];
 		if  ((i = iFind (qStart)) >= control_num)
@@ -1216,6 +1216,20 @@ public:
 		control_num += Mult;
 		return true;
 	}
+
+	inline void b3Dump()
+	{
+		b3PrintF(B3LOG_FULL,"Spline at %p\n", this);
+		b3PrintF(B3LOG_FULL,"  Degree: %d\n", degree);
+		b3PrintF(B3LOG_FULL,"  Knot count: %d max: %d\n",knot_num, knot_max);
+		b3PrintF(B3LOG_FULL,"  Control count: %d max: %d\n",control_num, control_max);
+		b3PrintF(B3LOG_FULL,"  Offset: %d\n", offset);
+		b3PrintF(B3LOG_FULL,"  Subdivision: %d max: %d\n", subdiv, B3_MAX_SUBDIV);
+		b3PrintF(B3LOG_FULL,"  Spline type: %s\n", closed ? "closed" : "open");
+		b3PrintF(B3LOG_FULL,"  Controls: %p\n", controls);
+		b3PrintF(B3LOG_FULL,"  Knots: %p\n", knots);
+	}
+
 private:
 	/**
 	 * This routine computes the first level of the de Boor algorithm. The

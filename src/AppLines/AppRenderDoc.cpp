@@ -27,6 +27,8 @@
 #include "DlgUndoRedo.h"
 #include "MainFrm.h"
 
+#include "blz3/raytrace/b3Scene.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2005/11/27 11:36:04  sm
+**	- Some more debugging output added.
+**
 **	Revision 1.26  2005/05/11 14:19:28  sm
 **	- Added first Undo operation for object editor.
-**
+**	
 **	Revision 1.25  2004/11/21 16:44:46  sm
 **	- Corrected fulcrum drawing problem: The fulcrum was
 **	  updated before first initialization. And even the initialization

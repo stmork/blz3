@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2005/11/27 11:36:04  sm
+**      - Some more debugging output added.
+**
 **      Revision 1.47  2005/10/02 09:51:13  sm
 **      - Added OpenEXR configuration.
 **      - Added more excpetion handling.
@@ -407,7 +410,7 @@ void b3SplineShape::b3ComputeGridVertices()
 {
 	b3_gl_vertex *Vector = *glVertexElements;
 	b3_vector     SplVector[B3_MAX_SUBDIV + 1];
-	b3_vector     Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
+	b3_vector     ControlArray[B3_MAX_CONTROLS * B3_MAX_CONTROLS];
 	b3_count      CurveNum,Points = 0;
 	b3_index      x,y,t;
 	b3Spline      MySpline;
@@ -419,12 +422,14 @@ void b3SplineShape::b3ComputeGridVertices()
 
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
-	b3Spline::b3DeBoorSurfaceControl (&m_Spline[0],&m_Spline[1],Between);
+	b3Spline::b3DeBoorSurfaceControl (&m_Spline[0],&m_Spline[1],ControlArray);
 	MySpline          = m_Spline[0];
 	MySpline.offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]);
-	MySpline.controls = Between;
+	MySpline.controls = ControlArray;
 
 	// ... then create real horizontal spline curve.
+	b3PrintF(B3LOG_FULL,"SplineShape: horizontal\n");
+	m_Spline[0].b3Dump();
 	for (y = 0;y < CurveNum;y++)
 	{
 		Points = MySpline.b3DeBoor (SplVector,y);
@@ -436,15 +441,18 @@ void b3SplineShape::b3ComputeGridVertices()
 			Vector++;
 		}
 	}
+	b3PrintF(B3LOG_FULL,"SplineShape: horizontal done\n");
 
 	// building vertical splines
 	// first create controls for segments of horizontal spline...
-	b3Spline::b3DeBoorSurfaceControl (&m_Spline[1],&m_Spline[0],Between);
+	b3Spline::b3DeBoorSurfaceControl (&m_Spline[1],&m_Spline[0],ControlArray);
 	MySpline          = m_Spline[1];
 	MySpline.offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[0]);
-	MySpline.controls = Between;
+	MySpline.controls = ControlArray;
 
 	// ... then create real vertical spline curve.
+	b3PrintF(B3LOG_FULL,"SplineShape: vertical\n");
+	m_Spline[1].b3Dump();
 	for (x = 0;x < CurveNum;x++)
 	{
 		Points = MySpline.b3DeBoor (SplVector,x);
@@ -456,6 +464,7 @@ void b3SplineShape::b3ComputeGridVertices()
 			Vector++;
 		}
 	}
+	b3PrintF(B3LOG_FULL,"SplineShape: vertical done\n");
 }
 
 void b3SplineShape::b3ComputeSolidVertices()
@@ -518,12 +527,11 @@ void b3SplineShape::b3ComputeVertices()
 
 void b3SplineShape::b3ComputeGridIndices()
 {
-	b3_gl_line *gPtr;
+	b3_gl_line *gPtr = *glGridElements;
 	b3_index    x,y,i=0;
 	b3_count    max;
 
 	// horizontal splines
-	gPtr = *glGridElements;
 	max = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]);
 	for (y = 0;y < max;y++)
 	{
@@ -549,7 +557,6 @@ void b3SplineShape::b3ComputeGridIndices()
 		B3_GL_LINIT(gPtr,i+y-1,m_Spline[1].closed ? i : i + y);
 
 		i += (m_Spline[1].subdiv + 1);
-		
 	}
 }
 
