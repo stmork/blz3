@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 #include "blz3/system/b3File.h"
 
 #define DEFAULT_CACHESIZE 64000
@@ -37,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/11/29 22:23:44  sm
+**	- Added special error logging for b3Open.
+**
 **	Revision 1.9  2004/05/13 08:13:21  sm
 **	- Removed some variable hidings.
-**
+**	
 **	Revision 1.8  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -124,6 +128,8 @@ b3_bool b3File::b3Open (
 	const char           *Name,
 	const b3_access_mode  AccessMode)
 {
+	char error_msg[1024];
+
 	switch (AccessMode)
 	{
 		case B_READ :
@@ -136,6 +142,12 @@ b3_bool b3File::b3Open (
 				files_opened_mutex.b3Unlock();
 
 				return true;
+			}
+			else
+			{
+				strerror_r(errno, error_msg, sizeof(error_msg));
+				b3PrintF(B3LOG_NORMAL,"File read error\n  filename: %s\n  error msg: %s\n",
+					Name,error_msg);
 			}
 			break;
 
@@ -151,6 +163,12 @@ b3_bool b3File::b3Open (
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
+			else
+			{
+				strerror_r(errno, error_msg, sizeof(error_msg));
+				b3PrintF(B3LOG_NORMAL,"File write error\n  filename: %s\n  error msg: %s\n",
+					Name,error_msg);
+			}
 			break;
 
 		case B_APPEND :
@@ -163,6 +181,12 @@ b3_bool b3File::b3Open (
 				files_opened_mutex.b3Unlock();
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
+			}
+			else
+			{
+				strerror_r(errno, error_msg, sizeof(error_msg));
+				b3PrintF(B3LOG_NORMAL,"File append error\n  filename: %s\n  error msg: %s\n",
+					Name,error_msg);
 			}
 			break;
 
