@@ -55,10 +55,10 @@ public:
 	 * @param a The new alpha channel.
 	 */
 	inline b3Color(
-		b3_f32 r,
-		b3_f32 g,
-		b3_f32 b,
-		b3_f32 a = 0)
+		const b3_f32 r,
+		const b3_f32 g,
+		const b3_f32 b,
+		const b3_f32 a = 0)
 	{
 		b3Init(r,g,b,a);
 	}
@@ -172,7 +172,7 @@ public:
 	 *
 	 * @param value The filter value as single precision floating point number.
 	 */
-	inline void b3InitFactor(b3_f32 value)
+	inline void b3InitFactor(const b3_f32 value)
 	{
 		for (b3_loop i = 0;i < 4;i++)
 		{
@@ -186,7 +186,7 @@ public:
 	 *
 	 * @param dvalue The filter value as double precision floating point number.
 	 */
-	inline void b3InitFactor(b3_f64 dvalue)
+	inline void b3InitFactor(const b3_f64 dvalue)
 	{
 		b3_f32 value = (b3_f32)dvalue;
 
@@ -202,7 +202,7 @@ public:
 	 * @param rgb The new grey level.
 	 * @param a   The new alpha channel.
 	 */
-	inline void b3Init(b3_f32 rgb, b3_f32 a = 0)
+	inline void b3Init(const b3_f32 rgb, const b3_f32 a = 0)
 	{
 		v[R] =
 		v[G] =
@@ -270,7 +270,10 @@ public:
 	 * @param mix The mixer component as single precision floating point number.
 	 * @return The resulting mixed color.
 	 */
-	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f32 mix)
+	inline static b3Color b3Mix(
+		const b3Color &low,
+		const b3Color &high,
+		const b3_f32   mix)
 	{
 		b3Color result;
 		b3Color mixer;
@@ -292,7 +295,10 @@ public:
 	 * @param mix The mixer component as double precision floating point number.
 	 * @return The resulting mixed color.
 	 */
-	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f64 mix)
+	inline static b3Color b3Mix(
+		const b3Color &low,
+		const b3Color &high,
+		const b3_f64   mix)
 	{
 		b3Color result;
 		b3Color mixer;
@@ -314,7 +320,10 @@ public:
 	 * @param mixer The mixer component as a color component. Each channel is mixed seperatly.
 	 * @return The resulting mixed color.
 	 */
-	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3Color &mixer)
+	inline static b3Color b3Mix(
+		const b3Color &low,
+		const b3Color &high,
+		const b3Color &mixer)
 	{
 		b3Color result;
 
@@ -614,7 +623,7 @@ public:
 	 * @param exp The exponent.
 	 * @return The resulting color.
 	 */
-	inline b3Color b3Pow(b3_f32 exp)
+	inline b3Color b3Pow(const b3_f32 exp)
 	{
 		b3Color result,exponent;
 		
@@ -633,9 +642,12 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(b3Color &limit)
+	inline b3_bool b3IsGreater(const b3Color &limit)
 	{
-		return (fabs(v[R]) >= limit[R]) || (fabs(v[G]) >= limit[G]) || (fabs(v[B]) >= limit[B]);
+		return
+			(fabs(v[R]) >= limit.v[R]) ||
+			(fabs(v[G]) >= limit.v[G]) ||
+			(fabs(v[B]) >= limit.v[B]);
 	}
 
 	/**
@@ -722,7 +734,7 @@ public:
 	 *
 	 * @param sat The saturation value.
 	 */
-	inline void b3Sat(b3_f32 sat)
+	inline void b3Sat(const b3_f32 sat)
 	{
 		for (b3_loop i = 0;i < 4;i++)
 		{
@@ -752,7 +764,7 @@ public:
 	 *
 	 * @param min The minimum value for each color channel.
 	 */
-	inline void b3Min(b3_f32 min)
+	inline void b3Min(const b3_f32 min)
 	{
 		for (b3_loop i = 0;i < 4;i++)
 		{

@@ -46,7 +46,7 @@ public:
 	 *
 	 * @param color The color vector in SSE representation.
 	 */
-	inline b3Color(__m128 color)
+	inline b3Color(const __m128 color)
 	{
 		v = color;
 	}
@@ -60,10 +60,10 @@ public:
 	 * @param a The new alpha channel.
 	 */
 	inline b3Color(
-		b3_f32 r,
-		b3_f32 g,
-		b3_f32 b,
-		b3_f32 a = 0)
+		const b3_f32 r,
+		const b3_f32 g,
+		const b3_f32 b,
+		const b3_f32 a = 0)
 	{
 		b3Init(r,g,b,a);
 	}
@@ -182,7 +182,7 @@ public:
 	 *
 	 * @param value The filter value as single precision floating point number.
 	 */
-	inline void b3InitFactor(b3_f32 value)
+	inline void b3InitFactor(const b3_f32 value)
 	{
 		v = _mm_set_ps1(value);
 	}
@@ -193,7 +193,7 @@ public:
 	 *
 	 * @param dvalue The filter value as double precision floating point number.
 	 */
-	inline void b3InitFactor(b3_f64 dvalue)
+	inline void b3InitFactor(const b3_f64 dvalue)
 	{
 		v = _mm_set_ps1(float(dvalue));
 	}
@@ -204,7 +204,7 @@ public:
 	 * @param rgb The new grey level.
 	 * @param a   The new alpha channel.
 	 */
-	inline void b3Init(b3_f32 rgb, b3_f32 a = 0)
+	inline void b3Init(const b3_f32 rgb, const b3_f32 a = 0)
 	{
 		v = _mm_set_ps(rgb, rgb, rgb, a);
 	}
@@ -218,10 +218,10 @@ public:
 	 * @param a The new alpha channel.
 	 */
 	inline void b3Init(
-		b3_f32 r,
-		b3_f32 g,
-		b3_f32 b,
-		b3_f32 a = 0)
+		const b3_f32 r,
+		const b3_f32 g,
+		const b3_f32 b,
+		const b3_f32 a = 0)
 	{
 		v = _mm_set_ps(b, g, r, a);
 	}
@@ -271,7 +271,10 @@ public:
 	 * @param mix The mixer component as single precision floating point number.
 	 * @return The resulting mixed color.
 	 */
-	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f32 mix)
+	inline static b3Color b3Mix(
+		const b3Color &low,
+		const b3Color &high,
+		const b3_f32   mix)
 	{
 		__m128  mixer = _mm_set_ps1(mix);
 		b3Color result;
@@ -290,7 +293,10 @@ public:
 	 * @param mix The mixer component as double precision floating point number.
 	 * @return The resulting mixed color.
 	 */
-	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f64 mix)
+	inline static b3Color b3Mix(
+		const b3Color &low,
+		const b3Color &high,
+		const b3_f64   mix)
 	{
 		__m128  mixer = _mm_set_ps1(float(mix));
 		b3Color result;
@@ -309,7 +315,10 @@ public:
 	 * @param mixer The mixer component as a color component. Each channel is mixed seperatly.
 	 * @return The resulting mixed color.
 	 */
-	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3Color &mixer)
+	inline static b3Color b3Mix(
+		const b3Color &low,
+		const b3Color &high,
+		const b3Color &mixer)
 	{
 		b3Color result;
 
@@ -540,7 +549,7 @@ public:
 	 * @param exp The exponent.
 	 * @return The resulting color.
 	 */
-	inline b3Color b3Pow(b3_f32 exp)
+	inline b3Color b3Pow(const b3_f32 exp)
 	{
 		b3_f32 B3_ALIGN_16 b[4];
 		b3Color            result;
@@ -561,10 +570,10 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(b3Color &limit)
+	inline b3_bool b3IsGreater(const b3Color &limit)
 	{
-		b3_f32 *a = (b3_f32 *)&v;
-		b3_f32 *b = (b3_f32 *)&limit.v;
+		const b3_f32 *a = (const b3_f32 *)&v;
+		const b3_f32 *b = (const b3_f32 *)&limit.v;
 
 		return (fabs(a[R]) >= b[R]) || (fabs(a[G]) >= b[G]) || (fabs(a[B]) >= b[B]);
 	}
@@ -642,7 +651,7 @@ public:
 	 *
 	 * @param sat The saturation value.
 	 */
-	inline void b3Sat(b3_f32 sat)
+	inline void b3Sat(const b3_f32 sat)
 	{
 		__m128 s = _mm_set_ps1(sat);
 
@@ -662,7 +671,7 @@ public:
 	 *
 	 * @param min The minimum value for each color channel.
 	 */
-	inline void b3Min(b3_f32 min)
+	inline void b3Min(const b3_f32 min)
 	{
 		__m128 m = _mm_set_ps1(min);
 
