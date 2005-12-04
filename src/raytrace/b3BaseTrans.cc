@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/12/04 16:48:40  sm
+**	- Converted some defines into inlined methods.
+**
 **	Revision 1.7  2005/06/09 19:07:24  sm
 **	- Corrected TIFF files
 **	- Enabled SSE optimization
-**
+**	
 **	Revision 1.6  2005/06/08 11:18:44  smork
 **	- Some more optimization.
 **	
@@ -116,8 +119,8 @@ b3_bool b3BaseTransformation::b3Prepare()
 }
 
 void b3BaseTransformation::b3BaseTransform(
-	b3_line64 *in,
-	b3_line64 *out)
+	const b3_line64 *in,
+	      b3_line64 *out)
 {
 #ifdef B3_SSE2
 	b3_vector64         pos;
@@ -174,8 +177,8 @@ void b3BaseTransformation::b3BaseTransform(
 
 
 void b3BaseTransformation::b3BaseTransform(
-	b3_vector *in,
-	b3_vector *out)
+	const b3_vector *in,
+	      b3_vector *out)
 {
 #ifdef B3_SSE2
 	b3_vector64            pos;
@@ -213,8 +216,8 @@ void b3BaseTransformation::b3BaseTransform(
 
 
 void b3BaseTransformation::b3Project(
-	b3_vector *in,
-	b3_vector *out)
+	const b3_vector *in,
+	      b3_vector *out)
 {
 	b3_f64 xPos,yPos,zPos;
 

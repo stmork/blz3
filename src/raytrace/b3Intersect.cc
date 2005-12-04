@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2005/12/04 16:48:40  sm
+**	- Converted some defines into inlined methods.
+**
 **	Revision 1.52  2005/10/20 19:55:17  sm
 **	- Introduced SSE intrinsics.
-**
+**	
 **	Revision 1.51  2005/08/19 14:34:56  sm
 **	- Documentation.
 **	
@@ -374,7 +377,7 @@ b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 
 	// compute surface coordinates
-	polar->m_Polar.x	= b3RelAngleOfScalars(aValue,bValue);
+	polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(aValue,bValue);
 	polar->m_Polar.y	= sqrt (Denom);
 	polar->m_Polar.z	= 0;
 	polar->m_ObjectPolar.x = aValue;
@@ -553,7 +556,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 		b3Vector::b3LinearCombine(&BTLine, l1, &polar->m_ObjectPolar);
 
-		polar->m_Polar.x = b3RelAngleOfScalars(
+		polar->m_Polar.x = b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
 		polar->m_Polar.y = polar->m_ObjectPolar.z;
@@ -572,7 +575,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 		b3Vector::b3LinearCombine(&BTLine, l2, &polar->m_ObjectPolar);
 
-		polar->m_Polar.x	= b3RelAngleOfScalars(
+		polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
 		polar->m_Polar.y	= polar->m_ObjectPolar.z;
@@ -649,7 +652,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 		b3Vector::b3LinearCombine(&BTLine, l1, &polar->m_ObjectPolar);
 
-		polar->m_Polar.x	= b3RelAngleOfScalars(
+		polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
 		polar->m_Polar.y	= polar->m_ObjectPolar.z;
@@ -668,7 +671,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 
 		b3Vector::b3LinearCombine(&BTLine, l2, &polar->m_ObjectPolar);
-		polar->m_Polar.x	= b3RelAngleOfScalars(
+		polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
 		polar->m_Polar.y	= polar->m_ObjectPolar.z;
@@ -713,7 +716,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 		b3Vector::b3LinearCombine(&BTLine, l1, &polar->m_ObjectPolar);
 
-		polar->m_Polar.x	= b3RelAngleOfScalars(
+		polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
 		polar->m_Polar.y	= asin(polar->m_ObjectPolar.z) * 2.0 / M_PI;
@@ -732,7 +735,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 		b3Vector::b3LinearCombine(&BTLine, l2, &polar->m_ObjectPolar);
 
-		polar->m_Polar.x	= b3RelAngleOfScalars(
+		polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
 		polar->m_Polar.y	= asin(polar->m_ObjectPolar.z) * 2.0 / M_PI;
@@ -954,10 +957,10 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 		yp = polar->m_ObjectPolar.y;
 
 		Val2 = m_aRad - m_aQuad / sqrt(xp * xp + yp * yp);
-		polar->m_Polar.x = b3RelAngleOfScalars(
+		polar->m_Polar.x = b3Math::b3RelAngleOfScalars(
 			polar->m_ObjectPolar.x,
 			polar->m_ObjectPolar.y);
-		polar->m_Polar.y = b3RelAngleOfScalars(
+		polar->m_Polar.y = b3Math::b3RelAngleOfScalars(
 			Val2,
 			polar->m_ObjectPolar.z);
 		polar->m_Polar.z = 0;

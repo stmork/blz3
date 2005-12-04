@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2005/12/04 16:48:40  sm
+**      - Converted some defines into inlined methods.
+**
 **      Revision 1.24  2004/12/09 08:38:29  smork
 **      - Corrected Grid for CSG cylinder/CSG cone.
 **
@@ -247,7 +250,7 @@ void b3CSGCylinder::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
 	polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
 	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
-	polar->m_Polar.x	= b3RelAngleOfScalars(
+	polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
 		polar->m_ObjectPolar.x,
 		polar->m_ObjectPolar.y);
 	polar->m_Polar.y	= polar->m_ObjectPolar.z;

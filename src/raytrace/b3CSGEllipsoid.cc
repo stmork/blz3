@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2005/12/04 16:48:40  sm
+**      - Converted some defines into inlined methods.
+**
 **      Revision 1.20  2004/12/03 12:34:10  smork
 **      - Grid and polygon count computation added for torus and ellipsoid.
 **
@@ -182,7 +185,7 @@ void b3CSGEllipsoid::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
 	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
 
-	polar->m_Polar.x = b3RelAngleOfScalars(
+	polar->m_Polar.x = b3Math::b3RelAngleOfScalars(
 		polar->m_ObjectPolar.x,
 		polar->m_ObjectPolar.y);
 	polar->m_Polar.y = asin(polar->m_ObjectPolar.z) * 2.0 / M_PI;

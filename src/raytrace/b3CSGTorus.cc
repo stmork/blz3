@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2005/12/04 16:48:40  sm
+**      - Converted some defines into inlined methods.
+**
 **      Revision 1.33  2005/06/08 11:09:05  smork
 **      - Base transformation optimized.
 **
@@ -367,8 +370,8 @@ void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 
 	val = m_aRad - m_aQuad / sqrt(aQuad * aQuad + bQuad * bQuad);
 
-	polar->m_Polar.x = b3RelAngleOfScalars(aQuad,bQuad);
-	polar->m_Polar.y = b3RelAngleOfScalars (val,polar->m_ObjectPolar.z);
+	polar->m_Polar.x = b3Math::b3RelAngleOfScalars(aQuad,bQuad);
+	polar->m_Polar.y = b3Math::b3RelAngleOfScalars (val,polar->m_ObjectPolar.z);
 	polar->m_Polar.z = 0;
 }
 
