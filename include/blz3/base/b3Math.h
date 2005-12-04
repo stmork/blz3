@@ -35,7 +35,7 @@ public:
 	 * \param value The value to square.
 	 * \return The squared value.
 	 */
-	static inline b3_f64 b3Sqr(b3_f64 value)
+	static inline b3_f64 b3Sqr(const b3_f64 value)
 	{
 		return value * value;
 	}
@@ -46,7 +46,7 @@ public:
 	 * \param F0 
 	 * \return The computed Fresnel term.
 	 */
-	static inline b3_f64 b3GetMu(b3_f64 F0)
+	static inline b3_f64 b3GetMu(const b3_f64 F0)
 	{
 		b3_f64 sF0 = sqrt(F0);
 
@@ -61,7 +61,7 @@ public:
 	 * \param mu 
 	 * \return The fresnel computed value.
 	 */
-	static inline b3_f64 b3GetFresnel(b3_f64 phi,b3_f64 mu)
+	static inline b3_f64 b3GetFresnel(b3_f64 phi,const b3_f64 mu)
 	{
 		b3_f64 theta,a,b,c,d;
 	
@@ -107,15 +107,18 @@ public:
 	 * \param max The upper limit.
 	 * \return The bound value.
 	 */
-	static inline b3_f64 b3Limit(b3_f64 value,const b3_f64 min,const b3_f64 max)
+	static inline b3_f64 b3Limit(
+		const b3_f64 value,
+		const b3_f64 min,
+		const b3_f64 max)
 	{
 		if (value < min)
 		{
-			value = min;
+			return min;
 		}
 		else if (value > max)
 		{
-			value = max;
+			return max;
 		}
 		return value;
 	}
@@ -129,15 +132,18 @@ public:
 	 * \param max The upper limit.
 	 * \return The bound value.
 	 */
-	static inline b3_s32 b3Limit(b3_s32 value,const b3_s32 min,const b3_s32 max)
+	static inline b3_s32 b3Limit(
+		const b3_s32 value,
+		const b3_s32 min,
+		const b3_s32 max)
 	{
 		if (value < min)
 		{
-			value = min;
+			return min;
 		}
 		else if (value > max)
 		{
-			value = max;
+			return max;
 		}
 		return value;
 	}
@@ -149,7 +155,7 @@ public:
 	 * \param rnd The precision.
 	 * \return The rounded value.
 	 */
-	static inline b3_f64 b3Round(b3_f64 x,b3_f64 rnd)
+	static inline b3_f64 b3Round(const b3_f64 x,const b3_f64 rnd)
 	{
 		b3_f64 mul    = floor(0.5 / rnd + 0.5);
 		b3_f64 result = floor(x * mul + 0.5) / mul;
@@ -194,7 +200,7 @@ public:
 	 * \param a The complete floating point number.
 	 * \return The fractional part of a float.
 	 */
-	static inline b3_f64 b3FracOne(b3_f64 a)
+	static inline b3_f64 b3FracOne(const b3_f64 a)
 	{
 		return a - floor(a);
 	}
@@ -209,7 +215,7 @@ public:
 	 * \param x The mixer in range [0..1].
 	 * \return The mixed value.
 	 */
-	static inline b3_f64 b3Mix(b3_f64 a,b3_f64 b,b3_f64 x)
+	static inline b3_f64 b3Mix(const b3_f64 a,const b3_f64 b,const b3_f64 x)
 	{
 		B3_ASSERT(x >= 0);
 		B3_ASSERT(x <= 1);
@@ -223,7 +229,7 @@ public:
 	 * \param b Another value.
 	 * \return The lower value of both given values.
 	 */
-	static inline b3_f64 b3Min(b3_f64 a,b3_f64 b)
+	static inline b3_f64 b3Min(const b3_f64 a,const b3_f64 b)
 	{
 		return a < b ? a : b;
 	}
@@ -235,12 +241,15 @@ public:
 	 * \param b Another value.
 	 * \return The greater value of both given values.
 	 */
-	static inline b3_f64 b3Max(b3_f64 a,b3_f64 b)
+	static inline b3_f64 b3Max(const b3_f64 a,const b3_f64 b)
 	{
 		return a > b ? a : b;
 	}
 
-	static inline b3_f64 b3Hermite(b3_f64 t1,b3_f64 s0,b3_f64 s1)
+	static inline b3_f64 b3Hermite(
+		const b3_f64 t1,
+		const b3_f64 s0,
+		const b3_f64 s1)
 	{
 		b3_f64 t2 = t1 * t1;
 		b3_f64 t3 = t2 * t1;
@@ -260,7 +269,10 @@ public:
 	 * \param x The value to interpolate.
 	 * \return The hermite interpolation.
 	 */
-	static inline b3_f64 b3Smoothstep(b3_f64 s,b3_f64 e,b3_f64 x)
+	static inline b3_f64 b3Smoothstep(
+		const b3_f64 s,
+		const b3_f64 e,
+		const b3_f64 x)
 	{
 		if (x < s)
 		{
@@ -283,7 +295,7 @@ public:
 	 * \param t The input value.
 	 * \return The hermite interpolation.
 	 */
-	static inline b3_f64 b3Smoothstep(b3_f64 t)
+	static inline b3_f64 b3Smoothstep(const b3_f64 t)
 	{
 		if (t < 0)
 		{
@@ -298,22 +310,22 @@ public:
 	}
 
 	static inline b3_f64 b3SmoothPulse(
-		b3_f64 e0,
-		b3_f64 e1,
-		b3_f64 e2,
-		b3_f64 e3,
-		b3_f64 x)
+		const b3_f64 e0,
+		const b3_f64 e1,
+		const b3_f64 e2,
+		const b3_f64 e3,
+		const b3_f64 x)
 	{
 		return b3Smoothstep(e0,e1,x) - b3Smoothstep(e2,e3,x);
 	}
 
 	static inline b3_f64 b3SmoothPulseTrain(
-		b3_f64 e0,
-		b3_f64 e1,
-		b3_f64 e2,
-		b3_f64 e3,
-		b3_f64 x,
-		b3_f64 period)
+		const b3_f64 e0,
+		const b3_f64 e1,
+		const b3_f64 e2,
+		const b3_f64 e3,
+		const b3_f64 x,
+		const b3_f64 period)
 	{
 		return b3SmoothPulse(e0,e1,e2,e3,b3Math::b3Frac(x,period));
 	}
@@ -323,7 +335,7 @@ public:
 	 * \param t 
 	 * \return 
 	 */
-	static inline b3_f64 b3Fade(b3_f64 t)
+	static inline b3_f64 b3Fade(const b3_f64 t)
 	{
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
@@ -335,7 +347,7 @@ public:
 	 * \param exponent The exponent.
 	 * \return The power of x with integer exponent exponent.
 	 */
-	static inline b3_f64 b3FastPow(b3_f64 x,b3_u32 exponent)
+	static inline b3_f64 b3FastPow(const b3_f64 x,b3_u32 exponent)
 	{
 		b3_f64 result = 1;
 		b3_f64 factor = x;
@@ -358,7 +370,7 @@ public:
 	 * \param x The sine value.
 	 * \return The arc sine value.
 	 */
-	static inline b3_f64 b3Asin(b3_f64 x)
+	static inline b3_f64 b3Asin(const b3_f64 x)
 	{
 		if (x <= -1)
 		{
@@ -377,7 +389,7 @@ public:
 	 * \param x The cosine value.
 	 * \return The arc cosine value.
 	 */
-	static inline b3_f64 b3Acos(b3_f64 x)
+	static inline b3_f64 b3Acos(const b3_f64 x)
 	{
 		if (x <= -1)
 		{
@@ -398,7 +410,7 @@ public:
 	 * \return The cubic root.
 	 */
 #ifdef  CBRT_SLOW
-	static inline b3_f64 b3Cbrt(b3_f64 x)
+	static inline b3_f64 b3Cbrt(const b3_f64 x)
 	{
 		if (x > 0) return ( exp(log( x) / 3));
 		if (x < 0) return (-exp(log(-x) / 3));

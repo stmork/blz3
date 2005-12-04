@@ -21,9 +21,6 @@
 #include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Compare.h"
 
-#define B3_ARRAY_INITIAL            10
-#define B3_ARRAY_DEFAULT_INCREMENT 128
-
 enum b3_array_error
 {
 	B3_ARRAY_ERROR = -1,		//!< General error.
@@ -41,11 +38,15 @@ typedef b3Exception<b3_array_error,0x415252> b3ArrayException;
  */
 template <class T> class B3_PLUGIN b3Array
 {
+	static const b3_count B3_ARRAY_DEFAULT_INCREMENT = 128;
+	static const b3_count B3_ARRAY_INITIAL           =  10;
+
 	b3_count  m_Increment;
 	b3_index  m_Index;
 	b3_count  m_Max;
 	T        *m_Buffer;
 	T         m_Start[B3_ARRAY_INITIAL];
+
 
 public:
 	/**
@@ -123,7 +124,7 @@ public:
 	 *
 	 * @param really_free A flag which indicates if the memory should also be freed.
 	 */
-	inline void b3Clear(b3_bool really_free = false)
+	inline void b3Clear(const b3_bool really_free = false)
 	{
 		m_Index = 0;
 		if (really_free)

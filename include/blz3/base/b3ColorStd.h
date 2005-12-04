@@ -29,13 +29,13 @@
  */
 class B3_PLUGIN b3Color : public b3ColorBase
 {
-	b3_f32 B3_ALIGN_16 v[4];                   //!< These are the color channels of a b3Color instance.
+	             b3_f32 B3_ALIGN_16 v[4];            //!< These are the color channels of a b3Color instance.
 
-	static b3_f32 B3_ALIGN_16 m_Limit_m000[4]; //!< These color values represent black (for clamping).
-	static b3_f32 B3_ALIGN_16 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
-	static b3_f32 B3_ALIGN_16 m_Limit_m255[4]; //!< These values are used for conversion into integer.
-	static b3_f32 B3_ALIGN_16 m_Limit_d015[4]; //!< These values are used for conversion from integer.
-	static b3_f32 B3_ALIGN_16 m_Limit_d255[4]; //!< These values are used for conversion from integer.
+	static const b3_f32 B3_ALIGN_16 m_Limit_m000[4]; //!< These color values represent black (for clamping).
+	static const b3_f32 B3_ALIGN_16 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
+	static const b3_f32 B3_ALIGN_16 m_Limit_m255[4]; //!< These values are used for conversion into integer.
+	static const b3_f32 B3_ALIGN_16 m_Limit_d015[4]; //!< These values are used for conversion from integer.
+	static const b3_f32 B3_ALIGN_16 m_Limit_d255[4]; //!< These values are used for conversion from integer.
 
 public:
 	/////////////////////////////////////////////////--------  constructors

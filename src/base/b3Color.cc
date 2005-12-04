@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/12/04 15:35:58  sm
+**	- Added some const signatures.
+**
 **	Revision 1.8  2005/10/22 10:51:41  sm
 **	- Some SSE optimizations.
-**
+**	
 **	Revision 1.7  2005/10/20 19:55:17  sm
 **	- Introduced SSE intrinsics.
 **	
@@ -68,11 +71,11 @@
 
 #ifdef BLZ3_USE_SSE
 
-b3_u32 B3_ALIGN_16 b3Color::m_AbsMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
+const b3_u32 B3_ALIGN_16 b3Color::m_AbsMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
 
 #else
 
-b3_f32 B3_ALIGN_16 b3Color::m_Limit_m000[4] =
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_m000[4] =
 {
 	0.0f,
 	0.0f,
@@ -80,7 +83,7 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_m000[4] =
 	0.0f
 };
 
-b3_f32 B3_ALIGN_16 b3Color::m_Limit_m001[4] =
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_m001[4] =
 {
 	1.0f,
 	1.0f,
@@ -88,7 +91,7 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_m001[4] =
 	1.0f
 };
 
-b3_f32 B3_ALIGN_16 b3Color::m_Limit_m255[4] =
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_m255[4] =
 {
 	255.0f,
 	255.0f,
@@ -96,7 +99,7 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_m255[4] =
 	255.0f
 };
 
-b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
 {
 	0.0666666666f,
 	0.0666666666f,
@@ -104,7 +107,7 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
 	0.0666666666f
 };
 
-b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =
 {
 	0.0039215686f,
 	0.0039215686f,

@@ -29,8 +29,8 @@
  */
 class B3_PLUGIN b3Color : public b3ColorBase
 {
-	       __m128 v;                   //!< These are the color channels of a b3Color instance.
-	static b3_u32 B3_ALIGN_16 m_AbsMask[4];
+	             __m128 v;                   //!< These are the color channels of a b3Color instance.
+	static const b3_u32 B3_ALIGN_16 m_AbsMask[4];
 
 public:
 	/////////////////////////////////////////////////--------  constructors

@@ -76,7 +76,7 @@ public:
 	 * @param new_size The class instance size.
 	 * @param new_class The class type for this list item.
 	 */
-	b3Link(b3_size new_size,b3_u32 new_class = 0)
+	b3Link(const b3_size new_size,const b3_u32 new_class = 0)
 	{
 		Succ      = null;
 		Prev      = null;
@@ -166,7 +166,7 @@ public:
 	/**
 	 * This constructor initializes the list with the specified class.
 	 */
-	b3Base(b3_u32 new_class = 0)
+	b3Base(const b3_u32 new_class = 0)
 	{
 		b3InitBase(new_class);
 	}
@@ -180,7 +180,7 @@ public:
 	 * Note that a previously non empty list will loose all its
 	 * elements!
 	 */
-	inline void b3InitBase(b3_u32 new_class = 0)
+	inline void b3InitBase(const b3_u32 new_class = 0)
 	{
 		First = null;
 		Last  = null;
@@ -505,7 +505,7 @@ public:
 	 * \param *ptr The element
 	 * \return The state of the element.
 	 */
-	inline long b3State(T *ptr)
+	inline long b3State(const T *ptr)
 	{
 		b3_u32  flags;
 
