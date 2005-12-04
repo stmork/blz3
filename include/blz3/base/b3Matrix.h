@@ -20,10 +20,6 @@
 #include "blz3/b3Config.h"
 #include <float.h>
 
-#define b3ArcAngleOfScalars(u,v) (atan2((double)v,(double)u)                + ((v) < 0 ? (M_PI * 2.0) : 0))
-#define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) *   0.5 / M_PI + ((v) < 0 ?   1.0 : 0))
-#define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * 180.0 / M_PI + ((v) < 0 ? 360.0 : 0))
-
 /**
  * This class gives some static convenience methods for vector handing.
  *
@@ -2631,10 +2627,10 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector *b3VMul  (
-		b3_matrix *A,
-		b3_vector *Src,
-		b3_vector *Dst,
-		b3_bool    Use4D)
+		      b3_matrix *A,
+		const b3_vector *Src,
+		      b3_vector *Dst,
+		const b3_bool    Use4D)
 	{
 #ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 *m = &A->m11;

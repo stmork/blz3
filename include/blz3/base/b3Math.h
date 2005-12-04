@@ -402,6 +402,22 @@ public:
 		return acos(x);
 	}
 
+	static inline b3_f64 b3ArcAngleOfScalars(const b3_f64 u, const b3_f64 v)
+	{
+		return atan2(v,u) + (v < 0 ? (M_PI * 2.0) : 0);
+	}
+
+	static inline b3_f64 b3RelAngleOfScalars(const b3_f64 u, const b3_f64 v)
+	{
+		return atan2(v,u) * 0.5 / M_PI + (v < 0 ?   1.0 : 0);
+	}
+
+	static inline b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
+	{
+		return atan2(v, u) * 180.0 / M_PI + (v < 0 ? 360.0 : 0);
+	}
+
+
 #ifndef CBRT_SYS
 	/**
 	 * This method computes the cubic root from a value.

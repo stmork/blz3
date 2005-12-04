@@ -57,7 +57,7 @@ public:
 	 * @param in The input ray.
 	 * @param out The transformed ray.
 	 */
-	void    b3BaseTransform(b3_line64 *in,b3_line64 *out);
+	void    b3BaseTransform(const b3_line64 *in,b3_line64 *out);
 
 	/**
 	 * This method performs a base transformation on a direction vector.
@@ -65,7 +65,7 @@ public:
 	 * @param in The input ray.
 	 * @param out The transformed ray.
 	 */
-	void    b3BaseTransform(b3_vector *in,b3_vector *out);
+	void    b3BaseTransform(const b3_vector *in,b3_vector *out);
 
 	/**
 	 * This method projects a vector. This is a base transformation
@@ -74,7 +74,7 @@ public:
 	 * @param in The input ray.
 	 * @param out The transformed ray.
 	 */
-	void    b3Project(b3_vector *in,b3_vector *out);
+	void    b3Project(const b3_vector *in,b3_vector *out);
 };
 
 #endif
