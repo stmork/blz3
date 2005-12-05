@@ -96,7 +96,10 @@ public:
 	                       * \param ySize The new y resolution.
 	                       * \param *title The new window title.
 	                       */
-	                      b3Display(b3_res xSize,b3_res ySize,const char *title = null);
+	                      b3Display(
+	                      	const b3_res  xSize,
+	                      	const b3_res  ySize,
+	                      	const char   *title = null);
 	/**
 	 * This destructor deinitializes the display.
 	 */
@@ -121,7 +124,7 @@ public:
 	 * \param y The y coordinate.
 	 * \param pixel The pixel color.
 	 */
-	virtual inline void b3PutPixel(b3_coord x,b3_coord y,b3_color pixel)
+	virtual inline void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color pixel)
 	{
 		B3_ASSERT(m_Buffer != null);
 		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
@@ -138,7 +141,7 @@ public:
 	 * \param y The y coordinate.
 	 * \return  The color at the given coordinates.
 	 */
-	virtual inline b3_color b3GetPixel(b3_coord x,b3_coord y)
+	virtual inline b3_color b3GetPixel(const b3_coord x, const b3_coord y)
 	{
 		B3_ASSERT(m_Buffer != null);
 		return
@@ -156,7 +159,7 @@ public:
 	 * \param y The y coordinate to print.
 	 * \return True if an cancel event occured.
 	 */
-	virtual inline b3_bool b3IsCancelled(b3_coord x,b3_coord y)
+	virtual inline b3_bool b3IsCancelled(const b3_coord x, const b3_coord y)
 	{
 		return false;
 	}
@@ -173,7 +176,7 @@ public:
 	 *
 	 * \param *row The row to put on the display.
 	 */
-	virtual void          b3PutRow(b3Row *row);
+	virtual void          b3PutRow(const b3Row *row);
 	
 	/**
 	 * This method puts an entire image on the display.
@@ -191,7 +194,7 @@ public:
 	virtual b3_bool       b3SaveImage(const char *filename);
 
 private:
-	        void          b3Init(b3_res xSize,b3_res ySize,const char *title);
+	        void          b3Init(const b3_res xSize, const b3_res ySize,const char *title);
 };
 
 /**
@@ -200,11 +203,11 @@ private:
 class B3_PLUGIN b3Row : public b3Link<b3Row>, public b3Mem
 {
 protected:
-	b3_res     m_xSize;  //!< The width of the row.
+	const b3_res     m_xSize;  //!< The width of the row.
 
 public:
-	b3_coord   m_y;      //!< The y positition of the row.
-	b3_color  *m_buffer; //!< The color buffer of this row.
+	const b3_coord   m_y;      //!< The y positition of the row.
+	      b3_color  *m_buffer; //!< The color buffer of this row.
 
 public:
 	/**
@@ -213,7 +216,7 @@ public:
 	 * \param y The vertical position.
 	 * \param xSize The row width.
 	 */
-	b3Row(b3_coord y,b3_res xSize);
+	b3Row(const b3_coord y, const b3_res xSize);
 
 	/**
 	 * This constructor initializes the internal color puffer with the given
@@ -223,7 +226,7 @@ public:
 	 * \param xSize The row width.
 	 * \param *buffer The initial color buffer.
 	 */
-	b3Row(b3_coord y,b3_res xSize,b3_color *buffer);
+	b3Row(const b3_coord y, const b3_res xSize,b3_color *buffer);
 
 	/**
 	 * This destrucotr does nothing.

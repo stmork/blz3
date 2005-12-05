@@ -35,9 +35,6 @@ enum b3_log_level
 	B3LOG_FULL   = 30  //!< Full logging for software debugging purposes.
 };
 
-#define B3_MAX_LOGSIZE     20480
-#define B3_MAX_LOGFILENAME   128
-
 class b3Mutex;
 
 /**
@@ -45,6 +42,9 @@ class b3Mutex;
  */
 class B3_PLUGIN b3LogBase
 {
+	static const b3_count B3_MAX_LOGSIZE     = 20480;
+	static const b3_count B3_MAX_LOGFILENAME =   128;
+
 protected:
 	static b3LogBase    *m_Logger;     //!< The logging instance.
 	static FILE         *m_Out;        //!< The log file where to log into.

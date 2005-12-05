@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2005/12/05 22:12:24  sm
+**	- More const declarations.
+**
 **	Revision 1.22  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
-**
+**	
 **	Revision 1.21  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
 **	
@@ -126,13 +129,12 @@ static b3TxPool texture_pool;
 class b3ImageRow : public b3Row
 {
 public:
-	b3ImageRow(b3_res xSize) : b3Row(0,xSize)
+	b3ImageRow(const b3_res xSize) : b3Row(0,xSize)
 	{
 	}
 
-	void b3SetRow(b3Tx *tx,b3_coord y)
+	void b3SetRow(b3Tx *tx, const b3_coord y)
 	{
-		m_y = y;
 		tx->b3GetRow(m_buffer,y);
 	}
 };

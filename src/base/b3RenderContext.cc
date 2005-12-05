@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2005/12/05 22:12:24  sm
+**	- More const declarations.
+**
 **	Revision 1.24  2005/10/11 17:52:10  sm
 **	- OpenGL config update.
-**
+**	
 **	Revision 1.23  2005/06/16 08:19:00  smork
 **	- Some logging added.
 **	
@@ -286,7 +289,7 @@ void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
 **                                                                      **
 *************************************************************************/
 
-void b3RenderContext::b3ViewSet(b3_render_view_info *info)
+void b3RenderContext::b3ViewSet(const b3_render_view_info *info)
 {
 #ifdef BLZ3_USE_OPENGL
 	glMatrixMode(GL_PROJECTION);
@@ -325,7 +328,7 @@ void b3RenderContext::b3ViewSet(b3_render_view_info *info)
 *************************************************************************/
 
 #ifdef BLZ3_USE_OPENGL
-void b3RenderContext::b3SetAmbient(b3_pkd_color ambient)
+void b3RenderContext::b3SetAmbient(const b3_pkd_color ambient)
 {
 	GLfloat gl_ambient[4];
 
@@ -412,7 +415,7 @@ void b3RenderContext::b3LightNum(b3_index num)
 #endif
 }
 
-b3_bool b3RenderContext::b3LightAdd(b3_render_light_info *info)
+b3_bool b3RenderContext::b3LightAdd(const b3_render_light_info *info)
 {
 	b3_bool result = false;
 
@@ -428,8 +431,8 @@ b3_bool b3RenderContext::b3LightAdd(b3_render_light_info *info)
 }
 
 void b3RenderContext::b3LightSet(
-	b3_index              num,
-	b3_render_light_info *info)
+	const b3_index              num,
+	const b3_render_light_info *info)
 {
 #ifdef BLZ3_USE_OPENGL
 	GLenum light = glLightNum[num];
@@ -530,8 +533,8 @@ b3_bool b3RenderContext::b3GetMatrix(
 }
 
 b3_bool b3RenderContext::b3PutMatrix(
-	b3_matrix_mode  mode,
-	b3_matrix      *matrix)
+	const b3_matrix_mode  mode,
+	const b3_matrix      *matrix)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_bool result = false;

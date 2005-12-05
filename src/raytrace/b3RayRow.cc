@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2005/12/05 22:12:24  sm
+**	- More const declarations.
+**
 **	Revision 1.19  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
-**
+**	
 **	Revision 1.18  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
@@ -124,18 +127,16 @@
 *************************************************************************/
 
 b3RayRow::b3RayRow(
-	b3Scene   *scene,
-	b3Display *display,
-	b3_coord   y,
-	b3_res     xSize,
-	b3_res     ySize) : b3Row(y,xSize)
+	      b3Scene   *scene,
+	      b3Display *display,
+	const b3_coord   y,
+	const b3_res     xSize,
+	const b3_res     ySize) :
+		b3Row(y,xSize), m_ySize(ySize)
 {
+	m_Display = display;
 	m_Scene   = scene;
 	m_Shader  = scene->b3GetShader();
-	m_Display = display;
-	m_y       = y;
-	m_xSize   = xSize;
-	m_ySize   = ySize;
 	m_t       = scene->b3GetTimePoint();
 
 	// Init direction
@@ -146,7 +147,7 @@ b3RayRow::b3RayRow(
 	m_preDir.z  = (m_Scene->m_ViewPoint.z - m_Scene->m_EyePoint.z) - m_Scene->m_Width.z + m_fy * m_Scene->m_Height.z;
 }
 
-inline b3Color &b3RayRow::b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy)
+inline b3Color &b3RayRow::b3Shade(b3_ray *ray, const b3_f64 fx, const b3_f64 fy)
 {
 	if (!m_Shader->b3Shade(ray))
 	{
@@ -201,12 +202,12 @@ void b3RayRow::b3Raytrace()
 *************************************************************************/
 
 b3SupersamplingRayRow::b3SupersamplingRayRow(
-	b3Scene               *scene,
-	b3Display             *display,
-	b3_coord               y,
-	b3_res                 xSize,
-	b3_res                 ySize,
-	b3SupersamplingRayRow *last) :
+	      b3Scene               *scene,
+	      b3Display             *display,
+	const b3_coord               y,
+	const b3_res                 xSize,
+	const b3_res                 ySize,
+	      b3SupersamplingRayRow *last) :
 		b3RayRow(scene,display,y,xSize,ySize)
 {
 	m_Limit      = m_Scene->m_SuperSample->m_Limit;
@@ -301,7 +302,7 @@ void b3SupersamplingRayRow::b3Raytrace()
 	}
 }
 
-inline b3_bool b3SupersamplingRayRow::b3Test(b3_res x)
+inline b3_bool b3SupersamplingRayRow::b3Test(const b3_res x)
 {
 	b3Color diff = m_LastResult[x] - m_ThisResult[x];
 
@@ -334,7 +335,7 @@ inline void b3SupersamplingRayRow::b3Convert()
 	}
 }
 
-inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
+inline void b3SupersamplingRayRow::b3Refine(const b3_bool this_row)
 {
 	b3_ray        ray;
 	b3_res        x;
@@ -436,11 +437,11 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 *************************************************************************/
 
 b3DistributedRayRow::b3DistributedRayRow(
-	b3Scene   *scene,
-	b3Display *display,
-	b3_coord   y,
-	b3_res     xSize,
-	b3_res     ySize) :
+	      b3Scene   *scene,
+	      b3Display *display,
+	const b3_coord   y,
+	const b3_res     xSize,
+	const b3_res     ySize) :
 		b3RayRow(scene,display,y,xSize,ySize)
 {
 	m_Distr    = scene->m_Distributed;
@@ -503,11 +504,11 @@ void b3DistributedRayRow::b3Raytrace()
 *************************************************************************/
 
 b3MotionBlurRayRow::b3MotionBlurRayRow(
-	b3Scene   *scene,
-	b3Display *display,
-	b3_coord   y,
-	b3_res     xSize,
-	b3_res     ySize) throw(b3WorldException) :
+	      b3Scene   *scene,
+	      b3Display *display,
+	const b3_coord   y,
+	const b3_res     xSize,
+	const b3_res     ySize) throw(b3WorldException) :
 		b3DistributedRayRow(scene,display,y,xSize,ySize)
 {
 	b3_coord x;

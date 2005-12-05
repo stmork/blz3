@@ -191,7 +191,7 @@ public:
 	 *
 	 * @param value The components value.
 	 */
-	inline void b3Value(b3_f32 value = 0)
+	inline void b3Value(const b3_f32 value = 0)
 	{
 		for (b3_loop i = 0;i < dim;i++)
 		{
@@ -204,7 +204,7 @@ public:
 	 *
 	 * @param value The components value.
 	 */
-	inline void b3Value(b3_f64 value = 0)
+	inline void b3Value(const b3_f64 value = 0)
 	{
 		for (b3_loop i = 0;i < dim;i++)
 		{
@@ -221,10 +221,10 @@ public:
 	 * @param w The new w value.
 	 */
 	inline void b3Init(
-		b3_f64 x = 0,
-		b3_f64 y = 0,
-		b3_f64 z = 0,
-		b3_f64 w = 0)
+		const b3_f64 x = 0,
+		const b3_f64 y = 0,
+		const b3_f64 z = 0,
+		const b3_f64 w = 0)
 	{
 		v[X] = (F)x;
 		v[Y] = (F)y;
@@ -594,8 +594,8 @@ public:
 	 * @return The resulting distance.
 	 */
 	inline static F b3Distance(
-		b3VectorTemplate<F,dim> &a,
-		b3VectorTemplate<F,dim> &b)
+		const b3VectorTemplate<F,dim> &a,
+		const b3VectorTemplate<F,dim> &b)
 	{
 		b3VectorTemplate<F,dim> diff = a - b;
 
@@ -627,8 +627,8 @@ public:
 	 * @param upper The upper bound of the bounding box.
 	 */
 	static inline void b3InitBound(
-		b3VectorTemplate<F,dim> &lower,
-		b3VectorTemplate<F,dim> &upper)
+		const b3VectorTemplate<F,dim> &lower,
+		const b3VectorTemplate<F,dim> &upper)
 	{
 		lower.b3Value( FLT_MAX);
 		upper.b3Value(-FLT_MAX);
@@ -639,7 +639,7 @@ public:
 	 *
 	 * @param min The lower level to clamp.
 	 */
-	inline void b3SetMinimum(F min)
+	inline void b3SetMinimum(const F min)
 	{
 		for (b3_loop i = 0;i < dim;i++)
 		{
@@ -666,7 +666,7 @@ public:
 	 *
 	 * @param max The upper level to saturate.
 	 */
-	inline void b3SetMaximum(F max)
+	inline void b3SetMaximum(const F max)
 	{
 		for (b3_loop i = 0;i < dim;i++)
 		{
@@ -696,8 +696,8 @@ public:
 	 * @return The resulting angle.
 	 */
 	static inline F b3AngleOfVectors(
-		b3VectorTemplate<F,dim> &Vector1,
-		b3VectorTemplate<F,dim> &Vector2)
+		const b3VectorTemplate<F,dim> &Vector1,
+		const b3VectorTemplate<F,dim> &Vector2)
 	{
 		F Denom;
 
@@ -717,8 +717,8 @@ public:
 	 * @param upper The upper corner of the bounding box to adjust.
 	 */
 	inline void b3AdjustBound(
-		b3VectorTemplate<F,dim> &lower,
-		b3VectorTemplate<F,dim> &upper)
+		const b3VectorTemplate<F,dim> &lower,
+		const b3VectorTemplate<F,dim> &upper)
 	{
 		lower.b3CheckLowerBound(*this);
 		upper.b3CheckUpperBound(*this);

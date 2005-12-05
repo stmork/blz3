@@ -102,23 +102,23 @@ public:
 	                     * @param ySize The window height.
 	                     * @param title The window title.
 	                     */
-	                    b3DisplayView(b3_res xSize,b3_res ySize,const char *title = null);
+	                    b3DisplayView(const b3_res xSize, const b3_res ySize, const char *title = null);
 
 	                    /**
 	                     * This destructor closes the window.
 	                     */
 	                   ~b3DisplayView();
 
-	void                b3PutPixel(b3_coord x,b3_coord y,b3_color pixel);
-	void                b3PutRow(b3Row *row);
+	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color pixel);
+	void                b3PutRow(const b3Row *row);
 	void                b3PutTx(b3Tx *tx);
-	b3_bool             b3IsCancelled(b3_coord x,b3_coord y);
+	b3_bool             b3IsCancelled(const b3_coord x, const b3_coord y);
 	void                b3Wait();
 
 private:
-	       void         b3RefreshRow(b3_coord y);
+	       void         b3RefreshRow(const b3_coord y);
 
-	       void         b3Open(b3_res xSize,b3_res ySize);
+	       void         b3Open(const b3_res xSize, const b3_res ySize);
 	       b3_bool      b3CreateColormap();
 	       void         b3FreeColormap();
 	static Bool         b3SetPredicate(Display *display,XEvent *event,char *buffer);

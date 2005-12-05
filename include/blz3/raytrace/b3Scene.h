@@ -789,18 +789,17 @@ private:
 class B3_PLUGIN b3RayRow : public b3Row
 {
 protected:
-	b3Display   *m_Display;      //!< The used b3Display.
-	b3Scene     *m_Scene;        //!< The used b3Scene.
-	b3Shader    *m_Shader;       //!< The used b3Shader.
-	b3Color     *m_LastResult;   //!< The position of the previous color in row.
-	b3Color     *m_ThisResult;   //!< The position of the actual color.
-	b3_vector64  m_preDir;
-	b3_coord     m_y;            //!< The row's y coordinate
-	b3_res       m_xSize;        //!< The resulting image width.
-	b3_res       m_ySize;        //!< The resulting image height.
-	b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
-	b3_f64       m_fy;           //!< 
-	b3_f64       m_t;            //!< The actual time point.
+	const b3_res       m_ySize;        //!< The resulting image height.
+
+	      b3Display   *m_Display;      //!< The used b3Display.
+	      b3Scene     *m_Scene;        //!< The used b3Scene.
+	      b3Shader    *m_Shader;       //!< The used b3Shader.
+	      b3Color     *m_LastResult;   //!< The position of the previous color in row.
+	      b3Color     *m_ThisResult;   //!< The position of the actual color.
+	      b3_vector64  m_preDir;
+	      b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
+	      b3_f64       m_fy;           //!< 
+	      b3_f64       m_t;            //!< The actual time point.
 
 public:
 	/**
@@ -812,7 +811,12 @@ public:
 	 * @param xSize The image width.
 	 * @param ySize The image height.
 	 */
-	b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	b3RayRow(
+		      b3Scene   *scene,
+		      b3Display *display,
+		const b3_coord   y,
+		const b3_res     xSize,
+		const b3_res     ySize);
 
 	/**
 	 * This destructor deinitializes this row instance.
@@ -833,7 +837,7 @@ protected:
 	 * @param fy The projection plane y coordinate.
 	 * @return The raytraced color.
 	 */
-	b3Color &b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy);
+	b3Color &b3Shade(b3_ray *ray, const b3_f64 fx, const b3_f64 fy);
 };
 
 /**
@@ -873,7 +877,13 @@ public:
 	 * @param ySize The image height.
 	 * @param previous The super sampling row directly above this one.
 	 */
-	b3SupersamplingRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize,b3SupersamplingRayRow *previous);
+	b3SupersamplingRayRow(
+		      b3Scene               *scene,
+		      b3Display             *display,
+		const b3_coord               y,
+		const b3_res                 xSize,
+		const b3_res                 ySize,
+		      b3SupersamplingRayRow *previous);
 
 	/**
 	 * This destructor deinitializes this row instance.
@@ -883,8 +893,8 @@ public:
 	virtual void  b3Raytrace();
 
 private:
-	b3_bool b3Test(b3_res x);
-	void    b3Refine(b3_bool this_row);
+	b3_bool b3Test(const b3_res x);
+	void    b3Refine(const b3_bool this_row);
 	void    b3Convert();
 };
 
@@ -911,7 +921,12 @@ public:
 	 * @param xSize The image width.
 	 * @param ySize The image height.
 	 */
-	b3DistributedRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	b3DistributedRayRow(
+		      b3Scene   *scene,
+		      b3Display *display,
+		const b3_coord   y,
+		const b3_res     xSize,
+		const b3_res     ySize);
 
 	/**
 	 * This destructor deinitializes this row instance.
@@ -944,7 +959,12 @@ public:
 	 * @param ySize The image height.
 	 * @throws b3WorldException
 	 */
-	b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize) throw(b3WorldException);
+	b3MotionBlurRayRow(
+		      b3Scene   *scene,
+		      b3Display *display,
+		const b3_coord   y,
+		const b3_res     xSize,
+		const b3_res     ySize) throw(b3WorldException);
 
 	/**
 	 * This destructor deinitializes this row instance.

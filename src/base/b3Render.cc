@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.115  2005/12/05 22:12:24  sm
+**      - More const declarations.
+**
 **      Revision 1.114  2005/10/02 09:51:12  sm
 **      - Added OpenEXR configuration.
 **      - Added more excpetion handling.
@@ -1575,8 +1578,8 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 #endif
 
 void b3RenderObject::b3CheckGeometry(
-	b3RenderContext *context,
-	b3_render_mode   render_mode)
+	const b3RenderContext *context,
+	const b3_render_mode   render_mode)
 {
 	B3_ASSERT(glVertexElements->b3IsComputed());
 	B3_ASSERT(glGridElements->b3IsComputed());
@@ -1673,8 +1676,8 @@ void b3RenderObject::b3CheckGeometry(
 }
 
 void b3RenderObject::b3DrawGeometry(
-	b3RenderContext *context,
-	b3_render_mode   render_mode)
+	      b3RenderContext *context,
+	const b3_render_mode   render_mode)
 {    
 	switch (render_mode)
 	{
@@ -1703,7 +1706,7 @@ void b3RenderObject::b3DrawGeometry(
 void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Color        diffuse;
+	b3Color         diffuse;
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
@@ -1720,7 +1723,7 @@ void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext *context)
 #endif
 }
 
-void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
+void b3RenderObject::b3SelectMaterialForFilledDrawing(const b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 	glEnable(GL_LIGHTING);
@@ -1760,13 +1763,13 @@ void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
 
 #ifndef _DEBUG
 
-void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
+void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext *context)
 {
 	glVertexElements->b3Draw();
 	glGridElements->b3Draw();
 }
  
-void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
+void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext *context)
 {
 	glVertexElements->b3Draw(); 
 	glPolygonElements->b3Draw();
@@ -1774,7 +1777,7 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 
 #else
 
-void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
+void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifdef VERBOSE

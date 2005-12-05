@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/12/05 22:12:24  sm
+**	- More const declarations.
+**
 **	Revision 1.10  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
-**
+**	
 **	Revision 1.9  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
@@ -135,12 +138,12 @@ b3Display::b3Display(const char *title)
 	b3Init(xSize,ySize,title);
 }
 
-b3Display::b3Display(b3_res xSize,b3_res ySize,const char *title)
+b3Display::b3Display(const b3_res xSize, const b3_res ySize, const char *title)
 {
 	b3Init(xSize,ySize,title);
 }
 
-void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
+void b3Display::b3Init(const b3_res xSize, const b3_res ySize,const char *title)
 {
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
 		title,
@@ -164,7 +167,7 @@ b3Display::~b3Display()
 }
 
 
-void b3Display::b3PutRow(b3Row *row)
+void b3Display::b3PutRow(const b3Row *row)
 {
 	b3_coord  y = row->m_y;
 	b3_color *src,*dst;

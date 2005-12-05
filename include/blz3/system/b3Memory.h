@@ -26,9 +26,6 @@
 #define LOOP_INSIDE (b3_ptr(1 << LOOP_B))
 #define LOOP_MASK   (LOOP_INSIDE - 1)
 
-#define B3_MEM_INITIAL_SLOTS       5
-#define B3_MEM_ADDITIONAL_SLOTS  256
-
 /**
  * This enumeration lists all possible memory management errors.
  */
@@ -59,6 +56,9 @@ struct b3_mem_info
  */
 class B3_PLUGIN b3Mem : protected b3Mutex
 {
+	static const b3_count B3_MEM_INITIAL_SLOTS    =   5;
+	static const b3_count B3_MEM_ADDITIONAL_SLOTS = 256;
+
 	b3_mem_info    *m_SlotPtr; //!< A pointer to the chunk pointer array. This array is initially inside this chunk handler.
 	b3_index        m_SlotMax; //!< The size of the chunk pointer array.
 	b3_index        m_SlotCount; //!< The used number of chunk pointer. This value is less or equal to the slot max value.

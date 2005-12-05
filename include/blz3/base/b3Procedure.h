@@ -430,7 +430,7 @@ private:
 	static void         b3OldMarble   (const b3_vector *P,b3Color &Color);
 	static void         b3MarbleCurve (b3Spline *Spline,b3_vector *result, const b3_f64 x);
 
-	static inline b3_f64 b3Grad(int hash, b3_f64 x, b3_f64 y, b3_f64 z)
+	static inline b3_f64 b3Grad(const int hash, const b3_f64 x, const b3_f64 y, const b3_f64 z)
 	{
 		int    h = hash & 15;                   // CONVERT LO 4 BITS OF HASH CODE
 		b3_f64 u = h<8 ? x : y;                 // INTO 12 GRADIENT DIRECTIONS.

@@ -308,7 +308,7 @@ public:
 	 * @return True of success.
 	 * @see b3_tx_type
 	 */
-	b3_bool        b3AllocTx      (b3_res xSize,b3_res ySize,b3_res depth);
+	b3_bool        b3AllocTx      (const b3_res xSize, const b3_res ySize, const b3_res depth);
 
 	/**
 	 * This method frees all image data.
@@ -333,7 +333,7 @@ public:
 	 * @param entries The new palette.
 	 * @param numEntries The palette size.
 	 */
-	void           b3SetPalette   (b3_pkd_color *entries,b3_count numEntries);
+	void           b3SetPalette   (const b3_pkd_color *entries, b3_count numEntries);
 
 	/**
 	 * This method returns the image data.
@@ -350,7 +350,7 @@ public:
 	 * @param newXSize The new image width.
 	 * @param newYSize The new image height.
 	 */
-	void           b3SetData      (void *newData,b3_res newXSize,b3_res newYSize);
+	void           b3SetData      (const void *newData, const b3_res newXSize, const b3_res newYSize);
 
 	/**
 	 * This method returns the file name from which the image was loaded. If the
@@ -383,7 +383,7 @@ public:
 	 * @param row The row buffer.
 	 * @param y The y coordinate of the row.
 	 */
-	void           b3GetRow       (b3_color *row,b3_coord  y);
+	void           b3GetRow       (b3_color *row, const b3_coord  y);
 
 	/**
 	 * This method fills a given row buffer with the true color of the
@@ -393,7 +393,7 @@ public:
 	 * @param row The row buffer.
 	 * @param y The y coordinate of the row.
 	 */
-	void           b3GetRow       (b3_pkd_color *row,b3_coord  y);
+	void           b3GetRow       (b3_pkd_color *row, const b3_coord  y);
 
 	/** 
 	 * This method returns a color value at the given coordinates.
@@ -402,7 +402,7 @@ public:
 	 * @param y The y coordinate.
 	 * @return The resulting color as b3_pkd_color value.
 	 */
-	b3_pkd_color   b3GetValue     (b3_coord x,b3_coord  y);
+	b3_pkd_color   b3GetValue     (const b3_coord x, const b3_coord  y);
 
 	/** 
 	 * This method returns a color value at the given coordinates. The
@@ -412,7 +412,7 @@ public:
 	 * @param y The y coordinate.
 	 * @result The resulting color as HDR value.
 	 */
-	b3Color b3GetHdrValue     (b3_coord x,b3_coord  y);
+	b3Color b3GetHdrValue     (const b3_coord x, const b3_coord  y);
 
 	/** 
 	 * This method returns the blue color channel as floating point value.
@@ -433,7 +433,7 @@ public:
 	 * @param y The y coordinate to test.
 	 * @return True if the pixel is transparent.
 	 */
-	b3_bool        b3IsBackground (b3_coord x,b3_coord  y);
+	b3_bool        b3IsBackground (const b3_coord x, const b3_coord  y);
 
 	/**
 	 * This method returns true if this instance holds an image.

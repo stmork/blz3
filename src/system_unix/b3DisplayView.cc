@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/12/05 22:12:24  sm
+**	- More const declarations.
+**
 **	Revision 1.14  2005/10/22 10:51:41  sm
 **	- Some SSE optimizations.
-**
+**	
 **	Revision 1.13  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
 **	
@@ -345,9 +348,9 @@ b3DisplayView::b3DisplayView(const char *title) : b3Display(title)
 }
 
 b3DisplayView::b3DisplayView(
-	b3_res      xSize,
-	b3_res      ySize,
-	const char *title) : b3Display(xSize,ySize,title)
+	const b3_res      xSize,
+	const b3_res      ySize,
+	const char       *title) : b3Display(xSize,ySize,title)
 {
 	m_Title = (char *)title;
 	b3Open(xSize,ySize);
@@ -370,8 +373,8 @@ b3DisplayView::~b3DisplayView()
 }
 
 void b3DisplayView::b3Open(
-	b3_res xSize,
-	b3_res ySize)
+	const b3_res xSize,
+	const b3_res ySize)
 {
 	XGCValues      Values;
 	XEvent         report;
@@ -616,7 +619,7 @@ inline void b3DisplayView::b3RefreshAll ()
 	}
 }
 
-void b3DisplayView::b3PutRow(b3Row *row)
+void b3DisplayView::b3PutRow(const b3Row *row)
 {
 	b3_coord y = row->m_y;
 
@@ -644,7 +647,7 @@ void b3DisplayView::b3PutTx(b3Tx *tx)
 	m_Mutex.b3Unlock();
 }
 
-inline void b3DisplayView::b3RefreshRow(b3_coord y)
+inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 {
 	b3_color *ptr = &m_Buffer[y * m_xMax];
 	b3_coord  x;
@@ -656,7 +659,7 @@ inline void b3DisplayView::b3RefreshRow(b3_coord y)
 	}
 }
 
-void b3DisplayView::b3PutPixel(b3_coord x,b3_coord y,b3_color Color)
+void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color Color)
 {
 	b3Display::b3PutPixel(x,y,Color);
 
@@ -670,12 +673,12 @@ void b3DisplayView::b3PutPixel(b3_coord x,b3_coord y,b3_color Color)
 	}
 }
 
-Bool b3DisplayView::b3SetPredicate (Display *display,XEvent *event,char *buffer)
+Bool b3DisplayView::b3SetPredicate (Display *display,XEvent *event, char *buffer)
 {
 	return True;
 }
 
-b3_bool b3DisplayView::b3IsCancelled(b3_coord x,b3_coord y)
+b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 {
 	b3_bool	 loop = true,result=false,really_ask;
 	XEvent	 report;
