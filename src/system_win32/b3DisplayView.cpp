@@ -41,9 +41,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/12/06 15:10:08  smork
+**	- Windows const update.
+**
 **	Revision 1.8  2005/10/16 12:11:22  sm
 **	- Some HDR fixes.
-**
+**	
 **	Revision 1.7  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
 **	
@@ -83,7 +86,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
+void b3DisplayView::b3Open(CB3ScrollView *view,const b3_res xSize, const b3_res ySize)
 {
 	// We should make sure, that we've collected some data
 	// about us.
@@ -141,8 +144,8 @@ b3DisplayView::b3DisplayView(
 
 b3DisplayView::b3DisplayView(
 	CB3ScrollView *view,
-	b3_res         xSize,
-	b3_res         ySize,
+	const b3_res   xSize,
+	const b3_res   ySize,
 	const char    *title) : b3Display(view->b3GetDocument()->m_Tx)
 {
 	m_Title = (char *)title;
@@ -162,7 +165,7 @@ void b3DisplayView::b3SetRowRefreshCount(b3_count refresh_count)
 	m_RowRefreshCount = refresh_count;
 }
 
-void b3DisplayView::b3PutRow(b3Row *row)
+void b3DisplayView::b3PutRow(const b3Row *row)
 {
 	b3Display::b3PutRow(row);
 	if ((m_RowCounter++ % m_RowRefreshCount) == 0)

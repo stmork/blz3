@@ -48,15 +48,15 @@ class b3DisplayView : public b3Display
 
 public:
 	                    b3DisplayView(CB3ScrollView *view,const char *title = null);
-	                    b3DisplayView(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title = null);
+	                    b3DisplayView(CB3ScrollView *view,const b3_res xSize, const b3_res ySize,const char *title = null);
 	                   ~b3DisplayView();
-	void                b3PutRow(b3Row *row);
+	void                b3PutRow(const b3Row *row);
 	void                b3PutTx(b3Tx *tx);
 	void                b3Wait();
 	void                b3SetRowRefreshCount(b3_count refresh_count = B3_DISPLAY_ROWREFRESHCOUNT);
 
 private:
-	       void         b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize);
+	       void         b3Open(CB3ScrollView *view, const b3_res xSize, const b3_res ySize);
 };
 
 #endif
