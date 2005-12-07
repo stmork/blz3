@@ -21,19 +21,19 @@
 #include "blz3/image/b3Sampler.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
-#define DEFAULT_BUMP_TILES 3
-
 /**
  * This class visualizes bump structures.
  */
 class b3BumpSampler : public b3Sampler
 {
+	static const b3_count DEFAULT_BUMP_TILES = 3;
+
 	static b3_vector m_Light;
 
 protected:
-	b3Tx     *m_Tx;    //!< The image to sample in.
-	b3Bump   *m_Bump;  //!< The bump class instance to sample.
-	b3_count  m_Tiles; //!< The horizontal tiles.
+	      b3Tx     *m_Tx;    //!< The image to sample in.
+	      b3Bump   *m_Bump;  //!< The bump class instance to sample.
+	const b3_count  m_Tiles; //!< The horizontal tiles.
 
 public:
 	/**
@@ -42,7 +42,7 @@ public:
 	 * @param tx The image to sample in.
 	 * @param tiles The number of tiles to use.
 	 */
-	b3BumpSampler(b3Tx *tx,b3_count tiles = DEFAULT_BUMP_TILES);
+	b3BumpSampler(b3Tx *tx,const b3_count tiles = DEFAULT_BUMP_TILES);
 
 	/**
 	 * This method sets the bump class instance.
@@ -52,8 +52,8 @@ public:
 	void          b3SetBump(b3Bump *bump);
 
 protected:
-	b3SampleInfo *b3SampleInit(b3_count CPUs);
-	void          b3SampleTask(b3SampleInfo *info);
+	b3SampleInfo *b3SampleInit(const b3_count CPUs);
+	void          b3SampleTask(const b3SampleInfo *info);
 };
 
 #endif

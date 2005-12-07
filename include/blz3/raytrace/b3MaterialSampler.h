@@ -21,17 +21,17 @@
 #include "blz3/image/b3Sampler.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
-#define DEFAULT_MATERIAL_TILES 3
-
 /**
  * This class implements the sampling of a material into a texture.
  */
 class b3MaterialSampler : public b3Sampler
 {
+	static const b3_count DEFAULT_MATERIAL_TILES = 3;
+
 protected:
-	b3Tx       *m_Tx;       //!< The image to sample in.
-	b3Material *m_Material; //!< The material to sample.
-	b3_count    m_Tiles;    //!< How many sample plains to use.
+	      b3Tx       *m_Tx;       //!< The image to sample in.
+	      b3Material *m_Material; //!< The material to sample.
+	const b3_count    m_Tiles;    //!< How many sample plains to use.
 
 public:
 	/**
@@ -40,7 +40,7 @@ public:
 	 * @param tx The image to sample into.
 	 * @param tiles The number of intersection plains to sample.
 	 */
-	b3MaterialSampler(b3Tx *tx,b3_count tiles = DEFAULT_MATERIAL_TILES);
+	b3MaterialSampler(b3Tx *tx,const b3_count tiles = DEFAULT_MATERIAL_TILES);
 
 	/** 
 	 * This method sets a material to sample.
@@ -50,8 +50,8 @@ public:
 	void          b3SetMaterial(b3Material *material);
 
 protected:
-	b3SampleInfo *b3SampleInit(b3_count CPUs);
-	void          b3SampleTask(b3SampleInfo *info);
+	b3SampleInfo *b3SampleInit(const b3_count CPUs);
+	void          b3SampleTask(const b3SampleInfo *info);
 };
 
 #endif

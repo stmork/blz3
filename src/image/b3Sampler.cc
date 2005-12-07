@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.8  2005/12/07 10:48:54  smork
+**  - Some more const
+**
 **  Revision 1.7  2004/05/16 18:50:59  sm
 **  - Added new simple image sampler.
 **  - We need better water!
@@ -67,7 +70,7 @@
 
 void b3Sampler::b3Sample()
 {
-	b3_count          CPUs = b3Runtime::b3GetNumCPUs();
+	const b3_count    CPUs = b3Runtime::b3GetNumCPUs();
 	b3_loop           i;
 	b3SampleInfo     *info;
 
@@ -118,7 +121,7 @@ b3ImageSampler::b3ImageSampler(b3Tx *tx)
 	m_Data  = (b3_pkd_color *)tx->b3GetData();
 }
 
-b3SampleInfo *b3ImageSampler::b3SampleInit(b3_count CPUs)
+b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
 {
 	b3SampleInfo *info = new b3SampleInfo[CPUs];
 	b3_loop       i;
@@ -140,7 +143,7 @@ b3SampleInfo *b3ImageSampler::b3SampleInit(b3_count CPUs)
 	return info;
 }
 
-void b3ImageSampler::b3SampleTask(b3SampleInfo *info)
+void b3ImageSampler::b3SampleTask(const b3SampleInfo *info)
 {
 	b3_coord      x,y;
 	b3_pkd_color *data = info->m_Data;

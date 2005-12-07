@@ -31,13 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/12/07 10:48:54  smork
+**	- Some more const
+**
 **	Revision 1.6  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.5  2004/04/24 20:15:52  sm
 **	- Further slide material dialog development
 **	
@@ -71,7 +74,7 @@ b3_vector b3BumpSampler::m_Light =
 	-1,1,1
 };
 
-b3BumpSampler::b3BumpSampler(b3Tx *tx,b3_count tiles)
+b3BumpSampler::b3BumpSampler(b3Tx *tx,const b3_count tiles) : m_Tiles(tiles)
 {
 	// Init texture
 	m_Bump  = null;
@@ -79,7 +82,6 @@ b3BumpSampler::b3BumpSampler(b3Tx *tx,b3_count tiles)
 	m_xMax  = m_Tx->xSize;
 	m_yMax  = m_Tx->ySize;
 	m_Data  = (b3_pkd_color *)m_Tx->b3GetData();
-	m_Tiles = tiles;
 }
 	
 void b3BumpSampler::b3SetBump(b3Bump *bump)
@@ -87,7 +89,7 @@ void b3BumpSampler::b3SetBump(b3Bump *bump)
 	m_Bump = bump;
 }
 
-b3SampleInfo *b3BumpSampler::b3SampleInit(b3_count CPUs)
+b3SampleInfo *b3BumpSampler::b3SampleInit(const b3_count CPUs)
 {
 	b3SampleInfo *info = new b3SampleInfo[CPUs];
 	b3_loop       i;
@@ -111,7 +113,7 @@ b3SampleInfo *b3BumpSampler::b3SampleInit(b3_count CPUs)
 	return info;
 }
 
-void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
+void b3BumpSampler::b3SampleTask(const b3SampleInfo *info)
 {
 	b3Bump       *bump = (b3Bump *)info->m_Ptr;
 	b3BBox        bbox = BBOX;

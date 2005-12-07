@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/12/07 10:48:54  smork
+**	- Some more const
+**
 **	Revision 1.8  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
-**
+**	
 **	Revision 1.7  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -81,7 +84,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3MaterialSampler::b3MaterialSampler(b3Tx *tx,b3_count tiles)
+b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_count tiles) : m_Tiles(tiles)
 {
 	// Init texture
 	m_Material = null;
@@ -89,7 +92,6 @@ b3MaterialSampler::b3MaterialSampler(b3Tx *tx,b3_count tiles)
 	m_xMax     = m_Tx->xSize;
 	m_yMax     = m_Tx->ySize;
 	m_Data     = (b3_pkd_color *)m_Tx->b3GetData();
-	m_Tiles    = tiles;
 }
 	
 void b3MaterialSampler::b3SetMaterial(b3Material *material)
@@ -97,7 +99,7 @@ void b3MaterialSampler::b3SetMaterial(b3Material *material)
 	m_Material = material;
 }
 
-b3SampleInfo *b3MaterialSampler::b3SampleInit(b3_count CPUs)
+b3SampleInfo *b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 {
 	b3SampleInfo *info = new b3SampleInfo[CPUs];
 	b3_loop       i;
@@ -121,7 +123,7 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(b3_count CPUs)
 	return info;
 }
 
-void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
+void b3MaterialSampler::b3SampleTask(const b3SampleInfo *info)
 {
 	b3Material   *material = (b3Material *)info->m_Ptr;
 	b3BBox        bbox = BBOX;

@@ -64,14 +64,14 @@ protected:
 	 * @return The initialized sample information structures.
 	 * @see b3SampleInfo
 	 */
-	virtual b3SampleInfo * b3SampleInit(b3_count CPUs) = 0;
+	virtual b3SampleInfo * b3SampleInit(const b3_count CPUs) = 0;
 
 	/**
 	 * This method is a call back for the sampling task called from each sampling thread.
 	 *
 	 * @param info The threads sample information structure.
 	 */
-	virtual void           b3SampleTask(b3SampleInfo *info) = 0;
+	virtual void           b3SampleTask(const b3SampleInfo *info) = 0;
 
 private:
 	static b3_u32 b3SampleThread(void *ptr);
@@ -93,8 +93,8 @@ public:
 	b3ImageSampler(b3Tx *tx);
 
 protected:
-	        b3SampleInfo *b3SampleInit(b3_count CPUs);
-	        void          b3SampleTask(b3SampleInfo *info);
+	        b3SampleInfo *b3SampleInit(const b3_count CPUs);
+	        void          b3SampleTask(const b3SampleInfo *info);
 
 	/**
 	 * This method returns a pixel color at a given coordinate.
@@ -103,7 +103,7 @@ protected:
 	 * @param y The y coordinate.
 	 * @return The resulting pixel color.
 	 */
-	virtual b3_pkd_color  b3SamplePixel(b3_coord x,b3_coord y) = 0;
+	virtual b3_pkd_color  b3SamplePixel(const b3_coord x, const b3_coord y) = 0;
 };
 
 #endif

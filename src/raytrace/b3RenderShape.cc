@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.87  2005/12/07 10:48:54  smork
+**      - Some more const
+**
 **      Revision 1.86  2005/10/02 15:06:23  sm
 **      - Some b3Frac/b3FMod/fmod corrections
 **      - Documentation
@@ -834,7 +837,7 @@ public:
 	}
 
 private:
-	b3SampleInfo *b3SampleInit(b3_count CPUs)
+	b3SampleInfo *b3SampleInit(const b3_count CPUs)
 	{
 		b3SampleInfo *info = new b3SampleInfo[CPUs];
 		b3_loop       i;
@@ -856,7 +859,7 @@ private:
 		return info;
 	}
 
-	void b3SampleTask(b3SampleInfo *info)
+	void b3SampleTask(const b3SampleInfo *info)
 	{
 		b3Material       *material;
 		b3_ray            ray;
