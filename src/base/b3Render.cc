@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.116  2005/12/07 07:16:10  sm
+**      - Done compile fixes.
+**
 **      Revision 1.115  2005/12/05 22:12:24  sm
 **      - More const declarations.
 **
@@ -1797,7 +1800,7 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext *context)
 #endif
 }
 
-void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
+void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifdef VERBOSE
