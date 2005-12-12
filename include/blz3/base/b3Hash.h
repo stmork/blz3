@@ -66,17 +66,20 @@ template <class Key,class Object> class b3HashPair :
 {
 	friend class b3HashMap<Key,Object>;
 
+	using b3HashContainer<Key,Object>::m_Key;
+	using b3HashContainer<Key,Object>::m_Object;
+
 	/**
 	 * This constructor constructs one key object pair from the given value.
 	 *
 	 * @param key The object's key.
 	 * @param key The object itself.
 	 */
-	b3HashPair(Key &key,Object &object) :
+	b3HashPair(const Key &key,const Object &object) :
 		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
 	{
-		b3HashContainer<Key,Object>::m_Key    = key;
-		b3HashContainer<Key,Object>::m_Object = object;
+		m_Key    = key;
+		m_Object = object;
 	}
 
 	/**
@@ -88,8 +91,8 @@ template <class Key,class Object> class b3HashPair :
 	b3HashPair(const b3HashContainer<Key,Object> &container) :
 		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
 	{
-		b3HashContainer<Key,Object>::m_Key    = container.key;
-		b3HashContainer<Key,Object>::m_Object = container.object;
+		m_Key    = container.m_Key;
+		m_Object = container.m_Object;
 	}
 
 	/**
@@ -97,9 +100,9 @@ template <class Key,class Object> class b3HashPair :
 	 *
 	 * @param object The new object reference.
 	 */
-	inline void b3SetObject(Object &object)
+	inline void b3SetObject(const Object &object)
 	{
-		b3HashContainer<Key,Object>::m_Object = object;
+		m_Object = object;
 	}
 };
 
@@ -168,7 +171,7 @@ public:
 	 * @param object The object itself.
 	 * @throws b3HashException
 	 */
-	inline void b3Add(Key &key, Object &object) throw(b3HashException)
+	inline void b3Add(const Key &key,const Object &object) throw(b3HashException)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -191,7 +194,7 @@ public:
 	 * @param object The object to replace.
 	 * @return True if an key object pair already existed.
 	 */
-	inline b3_bool b3Replace(Key &key, Object &object)
+	inline b3_bool b3Replace(const Key &key,const Object &object)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
