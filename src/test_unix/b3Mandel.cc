@@ -50,9 +50,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.16  2005/12/12 11:54:11  smork
+**	- Some corrections with const anf GCC 4
+**
 **	Revision 1.15  2005/08/24 15:36:55  sm
 **	- Documentation.
-**
+**	
 **	Revision 1.14  2005/08/01 14:13:02  smork
 **	- Using b3AtomicCounter in Mandelbrot computation.
 **	- Documentation.
@@ -178,7 +181,7 @@ public:
 			// Snap! --!>
 
 			// Fill in color
-			m_buffer[x] = count >= iter ? B3_BLACK : iter_color[count & 0x3f];
+			m_buffer[x] = b3Color(count >= iter ? B3_BLACK : iter_color[count & 0x3f]);
 			f += xStep;
 			cnt += count;
 		}

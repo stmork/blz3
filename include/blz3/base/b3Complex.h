@@ -154,7 +154,7 @@ public:
 		}
 		val[Im] = v[Im] * a.v[Re] - v[Re] * a.v[Im];
 		denom   = den[Re] + den[Im];
-		val[Re] = nom[re] + nom[Im];
+		val[Re] = nom[Re] + nom[Im];
 
 		for(b3_loop i = 0;i < 2;i++)
 		{
@@ -298,7 +298,7 @@ public:
 		}
 		val[Im] = v[Im] * a.v[Re] - v[Re] * a.v[Im];
 		denom   = den[Re] + den[Im];
-		val[Re] = nom[re] + nom[Im];
+		val[Re] = nom[Re] + nom[Im];
 
 		return b3Complex<T>(val[Re] / denom,val[Im] / denom);
 	}
