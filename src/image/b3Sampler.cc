@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.9  2005/12/12 16:01:32  smork
+**  - Some more const correction in samplers.
+**
 **  Revision 1.8  2005/12/07 10:48:54  smork
 **  - Some more const
 **
@@ -118,7 +121,11 @@ b3ImageSampler::b3ImageSampler(b3Tx *tx)
 	// Init texture
 	m_xMax  = tx->xSize;
 	m_yMax  = tx->ySize;
-	m_Data  = (b3_pkd_color *)tx->b3GetData();
+	m_Data  = (b3_color *)tx->b3GetData();
+	if (!tx->b3IsHDR())
+	{
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+	}
 }
 
 b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
@@ -145,8 +152,8 @@ b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
 
 void b3ImageSampler::b3SampleTask(const b3SampleInfo *info)
 {
-	b3_coord      x,y;
-	b3_pkd_color *data = info->m_Data;
+	b3_coord  x,y;
+	b3_color *data = info->m_Data;
 
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{

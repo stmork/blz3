@@ -36,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.18  2005/12/12 16:01:32  smork
+**  - Some more const correction in samplers.
+**
 **  Revision 1.17  2004/11/29 09:58:01  smork
 **  - Changed exit states to correct defines.
 **  - Added switch for disabling VBO in OpenGL renderer.
@@ -131,10 +134,10 @@ public:
 	}
 
 protected:
-	inline b3_pkd_color b3SamplePixel(b3_coord x,b3_coord y)
+	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y)
 	{
-		b3_vector    sample;
-		b3_pkd_color result;
+		b3_vector sample;
+		b3Color   result;
 
 		sample.y = x - m_Translate;
 		sample.x = m_Translate - y;
@@ -142,7 +145,9 @@ protected:
 		
 		b3_f64 mix = b3ComputeWood(&sample, 1.0);
 		result = b3Color::b3Mix(m_Dark,m_Light,mix);
-//		b3PrintF(B3LOG_FULL,"%3d %3d: %06lx - %1.4f %2.3f %2.3f %2.3f\n",x,y,result,mix,sample.x,sample.y,sample.z);
+		b3PrintF(B3LOG_FULL,
+			"%3d %3d: %06lx - %1.4f %2.3f %2.3f %2.3f\n",
+			x,y,b3_pkd_color(result),mix,sample.x,sample.y,sample.z);
 		return result;
 	}
 };
@@ -179,11 +184,11 @@ public:
 	}
 
 protected:
-	inline b3_pkd_color b3SamplePixel(b3_coord x,b3_coord y)
+	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y)
 	{
-		b3_vector    sample;
-		b3_pkd_color result;
-		b3_index     index;
+		b3_vector sample;
+		b3Color   result;
+		b3_index  index;
 
 		sample.x = x * m_Scale;
 		sample.y = y * m_Scale;
@@ -191,7 +196,9 @@ protected:
 		
 		b3_f64 mix = b3ComputeOakPlank(&sample, 1.0, index);
 		result = b3Color::b3Mix(m_Dark,m_Light,mix);
-//		b3PrintF(B3LOG_NORMAL,"%3d %3d: %06lx - %1.4f / %2d - %2.3f %2.3f %2.3f\n",x,y,result,mix,index,sample.x,sample.y,sample.z);
+		b3PrintF(B3LOG_NORMAL,
+			"%3d %3d: %06lx - %1.4f / %2d - %2.3f %2.3f %2.3f\n",
+			x,y,b3_pkd_color(result),mix,index,sample.x,sample.y,sample.z);
 		return result;
 	}
 };
@@ -210,7 +217,7 @@ int main(int argc,char *argv[])
 		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
 		display->b3GetRes(xMax,yMax);
 		
-		tx.b3AllocTx(xMax,yMax,24);
+		tx.b3AllocTx(xMax, yMax, 128);
 
 #if 1
 		b3WoodSampler  sampler(&tx);

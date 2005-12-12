@@ -625,7 +625,7 @@ public:
 	 */
 	inline operator b3_color()
 	{
-		b3_f32 B3_ALIGN_32  a[4];
+		b3_f32 B3_ALIGN_16  a[4];
 		b3_color            result;
 
 		_mm_store_ps(a, v);
@@ -676,6 +676,15 @@ public:
 		__m128 m = _mm_set_ps1(min);
 
 		v = _mm_max_ps(v,m);
+	}
+
+	inline void b3Dump()
+	{
+		b3_f32 B3_ALIGN_16  a[4];
+
+		_mm_store_ps(a, v);
+		b3PrintF(B3LOG_NORMAL,"r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",
+			a[R], a[R], a[B], a[A]);
 	}
 
 #ifdef WIN32

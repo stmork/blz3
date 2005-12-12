@@ -34,6 +34,9 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2005/12/12 16:01:32  smork
+**  - Some more const correction in samplers.
+**
 **  Revision 1.4  2004/11/29 09:58:01  smork
 **  - Changed exit states to correct defines.
 **  - Added switch for disabling VBO in OpenGL renderer.
@@ -66,7 +69,7 @@ class b3WaterSampler : public b3ImageSampler, public b3Water
 	b3_f64  m_Factor;
 	b3_f64  m_Time;
 
-	b3_pkd_color b3SamplePixel(b3_coord x,b3_coord y)
+	inline b3_color b3SamplePixel(const b3_coord x,const b3_coord y)
 	{
 		b3_vector pos;
 		b3_f64    water;
@@ -76,12 +79,12 @@ class b3WaterSampler : public b3ImageSampler, public b3Water
 		pos.z = 0;
 		
 		water = b3ComputeWater(&pos,m_Time) * 0.5;
-		
+	
 		return b3Color(water,water,water);
 	}
 
 public:
-	b3WaterSampler(b3Tx *tx) : b3ImageSampler(tx)
+	inline b3WaterSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
 		m_Factor = 1.0;
 		m_Time   = 0.0;
@@ -98,7 +101,7 @@ public:
 			m_WindFreq,m_MinWind,m_WindAmp);
 	}
 	
-	void b3SampleTime(b3_f64 time)
+	inline void b3SampleTime(b3_f64 time)
 	{
 		m_Time = time;
 		b3Sample();
@@ -118,7 +121,7 @@ int main(int argc,char *argv[])
 		display = new b3DisplayView(WATER_RES,WATER_RES,"Water");
 		display->b3GetRes(xMax,yMax);
 		
-		tx.b3AllocTx(xMax,yMax,24);
+		tx.b3AllocTx(xMax, yMax, 128);
 		
 		b3WaterSampler sampler(&tx);
 
@@ -135,11 +138,11 @@ int main(int argc,char *argv[])
 			{
 				b3Tx small,big;
 
-				small.b3AllocTx(32,32,24);
+				small.b3AllocTx(32, 32, 24);
 				small.b3ScaleToGrey(&tx);
 				small.b3SaveTGA(argv[2]);
 
-				big.b3AllocTx(48,48,24);
+				big.b3AllocTx(48, 48, 24);
 				big.b3ScaleToGrey(&tx);
 				big.b3SaveTGA(argv[3]);
 			}

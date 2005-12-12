@@ -33,6 +33,9 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2005/12/12 16:01:32  smork
+**  - Some more const correction in samplers.
+**
 **  Revision 1.2  2004/11/29 09:58:01  smork
 **  - Changed exit states to correct defines.
 **  - Added switch for disabling VBO in OpenGL renderer.
@@ -199,7 +202,7 @@ int main(int argc,char *argv[])
 		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
 		display->b3GetRes(xMax,yMax);
 		
-		tx.b3AllocTx(xMax,yMax,24);
+		tx.b3AllocTx(xMax, yMax, 128);
 		
 		b3MatWoodSampler      sampler(&tx);
 //		b3MatOakPlankSampler  sampler(&tx);

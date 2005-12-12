@@ -715,6 +715,14 @@ public:
 		return result;
 	}
 
+	inline void operator=(const b3Color &src)
+	{
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			v[i] = src.v[i];
+		}
+	}
+
 	/**
 	 * This method saturates all color channels to 1.
 	 */

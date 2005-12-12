@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.88  2005/12/12 16:01:32  smork
+**      - Some more const correction in samplers.
+**
 **      Revision 1.87  2005/12/07 10:48:54  smork
 **      - Some more const
 **
@@ -833,7 +836,7 @@ public:
 		m_Tx    = tx;
 		m_xMax  = tx->xSize;
 		m_yMax  = tx->ySize;
-		m_Data  = (b3_pkd_color *)tx->b3GetData();
+		m_Data  = (b3_color *)tx->b3GetData();
 	}
 
 private:
@@ -866,8 +869,8 @@ private:
 		b3BBox            bbox = BBOX;
 		b3_surface        surface;
 		b3_stencil_limit  limit;
-		b3_pkd_color     *data = info->m_Data;
-		b3_pkd_color      color;
+		b3_color         *data = info->m_Data;
+		b3_color          color;
 		b3_coord          x,y;
 		b3_f64            fx,fxStep;
 		b3_f64            fy,fyStep;
@@ -907,7 +910,7 @@ private:
 				ray.polar.m_BBoxOriginal.x =
 				ray.ipoint.x = fx;
 
-				color = B3_BLACK;
+				color = b3Color(B3_BLACK);
 				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First,loop = true;
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)

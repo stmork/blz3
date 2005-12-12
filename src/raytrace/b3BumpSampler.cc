@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/12/12 16:01:32  smork
+**	- Some more const correction in samplers.
+**
 **	Revision 1.7  2005/12/07 10:48:54  smork
 **	- Some more const
-**
+**	
 **	Revision 1.6  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -81,7 +84,7 @@ b3BumpSampler::b3BumpSampler(b3Tx *tx,const b3_count tiles) : m_Tiles(tiles)
 	m_Tx    = tx;
 	m_xMax  = m_Tx->xSize;
 	m_yMax  = m_Tx->ySize;
-	m_Data  = (b3_pkd_color *)m_Tx->b3GetData();
+	m_Data  = (b3_color *)m_Tx->b3GetData();
 }
 	
 void b3BumpSampler::b3SetBump(b3Bump *bump)
@@ -115,13 +118,13 @@ b3SampleInfo *b3BumpSampler::b3SampleInit(const b3_count CPUs)
 
 void b3BumpSampler::b3SampleTask(const b3SampleInfo *info)
 {
-	b3Bump       *bump = (b3Bump *)info->m_Ptr;
-	b3BBox        bbox = BBOX;
-	b3_coord      x,y;
-	b3_ray        ray;
-	b3_f64        fy,angle;
-	b3_vector     normal;
-	b3_pkd_color *data = info->m_Data;
+	b3Bump    *bump = (b3Bump *)info->m_Ptr;
+	b3BBox     bbox = BBOX;
+	b3_coord   x,y;
+	b3_ray     ray;
+	b3_f64     fy,angle;
+	b3_vector  normal;
+	b3_color  *data = info->m_Data;
 
 	ray.bbox = &bbox;
 	bbox.b3Prepare();

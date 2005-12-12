@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/12/12 16:01:32  smork
+**	- Some more const correction in samplers.
+**
 **	Revision 1.9  2005/12/07 10:48:54  smork
 **	- Some more const
-**
+**	
 **	Revision 1.8  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
 **	
@@ -91,7 +94,7 @@ b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_count tiles) : m_Tiles(t
 	m_Tx       = tx;
 	m_xMax     = m_Tx->xSize;
 	m_yMax     = m_Tx->ySize;
-	m_Data     = (b3_pkd_color *)m_Tx->b3GetData();
+	m_Data     = (b3_color *)m_Tx->b3GetData();
 }
 	
 void b3MaterialSampler::b3SetMaterial(b3Material *material)
@@ -125,13 +128,13 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 
 void b3MaterialSampler::b3SampleTask(const b3SampleInfo *info)
 {
-	b3Material   *material = (b3Material *)info->m_Ptr;
-	b3BBox        bbox = BBOX;
-	b3_coord      x,y;
-	b3_ray        ray;
-	b3_surface    surface;
-	b3_f64        fy;
-	b3_pkd_color *data = info->m_Data;
+	b3Material *material = (b3Material *)info->m_Ptr;
+	b3BBox      bbox = BBOX;
+	b3_coord    x,y;
+	b3_ray      ray;
+	b3_surface  surface;
+	b3_f64      fy;
+	b3_color   *data = info->m_Data;
 
 	ray.bbox           = &bbox;
 	surface.m_Incoming = &ray;
