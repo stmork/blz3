@@ -60,8 +60,21 @@ public:
 	/**
 	 * This constructor does simply nothing.
 	 */
-	inline b3VectorTemplate()
+	inline b3VectorTemplate<F, dim>()
 	{
+	}
+
+	/**
+	 * This copy constructor copies one vector template instance.
+	 *
+	 * @oaram src The source vector template.
+	 */
+	inline b3VectorTemplate<F, dim>(const b3VectorTemplate<F, dim> &src)
+	{
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] = src.v[i];
+		}
 	}
 
 	/**
@@ -69,7 +82,7 @@ public:
 	 *
 	 * @param value The value to initialize.
 	 */ 
-	inline b3VectorTemplate(F value)
+	inline b3VectorTemplate<F, dim>(F value)
 	{
 		b3Value(value);
 	}
@@ -82,7 +95,7 @@ public:
 	 * @param z The new z value.
 	 * @param w The new w value.
 	 */
-	inline b3VectorTemplate(
+	inline b3VectorTemplate<F, dim>(
 		b3_f32 x,
 		b3_f32 y,
 		b3_f32 z,
@@ -99,33 +112,13 @@ public:
 	 * @param z The new z value.
 	 * @param w The new w value.
 	 */
-	inline b3VectorTemplate(
+	inline b3VectorTemplate<F, dim>(
 		b3_f64 x,
 		b3_f64 y,
 		b3_f64 z,
 		b3_f64 w)
 	{
 		b3Init(x,y,z,w);
-	}
-
-	/**
-	 * This copy constructor copies a b3Vector into this instance.
-	 *
-	 * @param src The source vector.
-	 */
-	inline b3VectorTemplate(const b3VectorTemplate<b3_f32,B3_MAX_DIM> &src)
-	{
-		for (b3_loop i = 0;i < dim;i++) v[i] = src.v[i];
-	}
-
-	/**
-	 * This copy constructor copies a b3Vector into this instance.
-	 *
-	 * @param src The source vector.
-	 */
-	inline b3VectorTemplate(const b3VectorTemplate<b3_f64,B3_MAX_DIM> &src)
-	{
-		for (b3_loop i = 0;i < dim;i++) v[i] = src.v[i];
 	}
 
 	/**
@@ -597,7 +590,7 @@ public:
 		const b3VectorTemplate<F,dim> &a,
 		const b3VectorTemplate<F,dim> &b)
 	{
-		b3VectorTemplate<F,dim> diff = a - b;
+		b3VectorTemplate<F,dim> diff = b3VectorTemplate<F,dim>(a) - b3VectorTemplate<F,dim>(b);
 
 		return diff.b3Length();
 	}
@@ -627,8 +620,8 @@ public:
 	 * @param upper The upper bound of the bounding box.
 	 */
 	static inline void b3InitBound(
-		const b3VectorTemplate<F,dim> &lower,
-		const b3VectorTemplate<F,dim> &upper)
+		b3VectorTemplate<F,dim> &lower,
+		b3VectorTemplate<F,dim> &upper)
 	{
 		lower.b3Value( FLT_MAX);
 		upper.b3Value(-FLT_MAX);
@@ -717,8 +710,8 @@ public:
 	 * @param upper The upper corner of the bounding box to adjust.
 	 */
 	inline void b3AdjustBound(
-		const b3VectorTemplate<F,dim> &lower,
-		const b3VectorTemplate<F,dim> &upper)
+		b3VectorTemplate<F,dim> &lower,
+		b3VectorTemplate<F,dim> &upper)
 	{
 		lower.b3CheckLowerBound(*this);
 		upper.b3CheckUpperBound(*this);
