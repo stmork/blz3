@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h"
 #include <unistd.h>
 #include <dlfcn.h>
+#include <locale.h>
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2005/12/19 10:45:18  sm
+**	- Some locale specified.
+**
 **	Revision 1.18  2005/10/23 12:30:30  sm
 **	- Added some informations about vector units.
-**
+**	
 **	Revision 1.17  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
 **	
@@ -120,6 +124,11 @@ b3Runtime::b3Runtime()
 #else
 	char *math = "FPU";
 #endif
+
+	if (!setlocale(LC_CTYPE, ""))
+	{
+		fprintf(stderr, "Cannot set locale. Assuming w're right ;-)\n");
+	}
 
 	switch (b3GetVectorUnit())
 	{

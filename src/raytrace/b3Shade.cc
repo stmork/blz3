@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2005/12/19 10:45:18  sm
+**	- Some locale specified.
+**
 **	Revision 1.58  2005/06/08 14:16:24  smork
 **	- Some more vectorization.
-**
+**	
 **	Revision 1.57  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -309,9 +312,8 @@
 **                                                                      **
 *************************************************************************/
 
-b3Shader::b3Shader(b3Scene *scene)
+b3Shader::b3Shader(b3Scene *scene) : m_Scene(scene)
 {
-	m_Scene = scene;
 	b3Prepare();
 }
 
