@@ -1,7 +1,7 @@
 /*
 **
 **      $Filename:      b3Types.h $
-**      $Release:       Dortmund 2001 $
+**      $Release:       Dortmund 2005 $
 **      $Revision$
 **      $Date$
 **      $Author$
@@ -33,7 +33,9 @@
 #	define B3_SSE2
 #endif
 
-#if defined(__ICC) || defined(_MSC_VER)
+#if defined(__ICC)
+#	include <xmmintrin.h>
+
 #	define B3_ALIGN_16  __declspec(align(16))
 #	define B3_ALIGN_32  __declspec(align(32))
 #	define B3_ALIGN_64  __declspec(align(64))
@@ -104,9 +106,9 @@ typedef unsigned long       b3_ptr;        //!< A pointer for pointer arithmetic
  * This structure represents a three component vector with single floating point numbers.
  * The first element is aligned on a 16 byte boundary.
  */
-typedef struct b3_vector32_3D
+typedef struct B3_ALIGN_16 b3_vector32_3D
 {
-	b3_f32             x; //!< The 16 byte aligned x component.
+	b3_f32 B3_ALIGN_16 x; //!< The 16 byte aligned x component.
 	b3_f32             y; //!< The y component.
 	b3_f32             z; //!< The z component.
 } b3_vector32, b3_vector;
@@ -115,9 +117,9 @@ typedef struct b3_vector32_3D
  * This structure represents a three component vector with double floating point numbers.
  * The first element is aligned on a 32 byte boundary.
  */
-typedef struct b3_vector64_3D
+typedef struct B3_ALIGN_16 b3_vector64_3D
 {
-	b3_f64             x; //!< The 16 byte aligned x component.
+	b3_f64 B3_ALIGN_16 x; //!< The 16 byte aligned x component.
 	b3_f64             y; //!< The y component.
 	b3_f64             z; //!< The z component.
 } b3_vector64;
@@ -126,7 +128,7 @@ typedef struct b3_vector64_3D
  * This structure represents a four component vector with single floating point numbers.
  * The first element is aligned on a 16 byte boundary.
  */
-typedef struct b3_vector32_4D
+typedef struct B3_ALIGN_16 b3_vector32_4D
 {
 	b3_f32    x; //!< The 16 byte aligned x component.
 	b3_f32    y; //!< The y component.
@@ -138,7 +140,7 @@ typedef struct b3_vector32_4D
  * This structure represents a four component vector with double floating point numbers.
  * The first element is aligned on a 32 byte boundary.
  */
-typedef struct b3_vector64_4D
+typedef struct B3_ALIGN_16 b3_vector64_4D
 {
 	b3_f64    x; //!< The 16 byte aligned x component.
 	b3_f64    y; //!< The y component.
@@ -150,7 +152,7 @@ typedef struct b3_vector64_4D
  * This structure represents a 4x4 matrix with single precision floating point numbers. The
  * first element is aligned on a 16 byte boundary.
  */
-typedef struct b3_matrix32_4D
+typedef struct B3_ALIGN_16 b3_matrix32_4D
 {
 	b3_f32 B3_ALIGN_16 m11;
 	b3_f32                 m12,m13,m14;
@@ -163,9 +165,9 @@ typedef struct b3_matrix32_4D
  * This structure represents a 4x4 matrix with double precision floating point numbers. The
  * first element is aligned on a 16 byte boundary.
  */
-typedef struct b3_matrix64_4D
+typedef struct B3_ALIGN_16 b3_matrix64_4D
 {
-	b3_f64 B3_ALIGN_16   m11,m12,m13,m14;
+	b3_f64    m11,m12,m13,m14;
 	b3_f64    m21,m22,m23,m24;
     b3_f64    m31,m32,m33,m34;
     b3_f64    m41,m42,m43,m44;
@@ -175,7 +177,7 @@ typedef struct b3_matrix64_4D
  * This structure represents a ray with single precision floating point numbers. The
  * first element is aligned on a 32 byte boundary.
  */
-typedef struct b3_line32_3D
+typedef struct B3_ALIGN_16 b3_line32_3D
 {
 	b3_vector pos; //!< The base position.
 	b3_vector dir; //!< The direction vector.
@@ -185,7 +187,7 @@ typedef struct b3_line32_3D
  * This structure represents a ray with double precision floating point numbers. The
  * first element is aligned on a 64 byte boundary.
  */
-typedef struct b3_line64_3D
+typedef struct B3_ALIGN_16 b3_line64_3D
 {
 	b3_vector64 pos; //!< The base position.
 	b3_vector64 dir; //!< The direction vector.
@@ -195,31 +197,31 @@ typedef struct b3_line64_3D
  * This structure represents a display point as signed integer. The first element is
  * aligned on a 16 byte boundary.
  */
-struct b3_pos
+struct B3_ALIGN_16 b3_pos
 {
 	/**
 	 * The x and y component of a window or screen position.
 	 */
-	b3_s32 B3_ALIGN_16    x,y;
+	b3_s32    x,y;
 };
 
 /**
  * This structure represents a 2D point as floats. The first element is aligned on a
  * 16 byte boundary.
  */
-struct b3_point
+struct B3_ALIGN_16 b3_point
 {
 	/**
 	 * The floating point representation of a point.
 	 */
-	b3_f32 x,y;
+	b3_f32    x,y;
 };
 
 /**
  * This structure contains three RGB color values and an alpha value as floats. The
  * first element is aligned on a 16 byte boundary.
  */
-typedef struct b3_color32
+typedef struct B3_ALIGN_16 b3_color32
 {
 	b3_f32 a; //!< The alpha channel.
 	b3_f32 r; //!< The red channel.
