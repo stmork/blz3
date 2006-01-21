@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2006/01/21 10:34:33  smork
+**	- Adjusted autoconf for OpenEXR without zlib support.
+**	- Corrected typos.
+**
 **	Revision 1.69  2005/10/24 15:18:58  sm
 **	- Added some logging.
-**
+**	
 **	Revision 1.68  2005/10/10 18:51:22  sm
 **	- Added OpenEXR image saving.
 **	
@@ -460,12 +464,13 @@ static void b3Banner(const char *command)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p]%s {Blizzard World Data files}\n",
+			command,
 #ifdef BLZ3_USE_OPENEXR
-			"[-x]",
+			"[-x]"
 #else
-			"",
+			""
 #endif
-			command);
+			);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");

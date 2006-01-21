@@ -17,8 +17,8 @@
 **
 */
 
-#ifndef B3_CONF_H
-#define B3_CONF_H
+#ifndef B3_AUTOCONF_H
+#define B3_AUTOCONF_H
 
 #undef HAVE_SSE
 #undef HAVE_SSE2
@@ -31,6 +31,15 @@
 #undef HAVE_STRERROR
 #undef HAVE_VALUES_H
 
+#undef HAVE_LIBDL
+#undef HAVE_LIBHALF
+#undef HAVE_LIBIEX
+#undef HAVE_LIBILMIMF
+#undef HAVE_LIBIMATH
+#undef HAVE_LIBPTHREAD
+#undef HAVE_LIBX11
+#undef HAVE_LIBZ
+
 #ifndef __ICC
 #undef BLZ3_USE_SSE
 #undef BLZ3_USE_SSE2
@@ -41,7 +50,9 @@
 #undef BLZ3_USE_OPENGL
 #undef BLZ3_USE_GLUT
 #undef BLZ3_USE_CG
+#if defined(HAVE_LIBIMATH) && defined(HAVE_LIBHALF) && defined(HAVE_LIBIEX) && defined(HAVE_LIBILMIMF)
 #undef BLZ3_USE_OPENEXR
+#endif
 #undef BLZ3_USE_AVILIB
 #undef BLZ3_USE_DIVX4LINUX
 #undef BLZ3_IS_LINUX
