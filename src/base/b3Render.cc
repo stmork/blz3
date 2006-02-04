@@ -46,6 +46,13 @@
 
 /*
 **      $Log$
+**      Revision 1.117  2006/02/04 19:19:30  sm
+**      - Corrected image sampler. Check the used data
+**        type in constructor by using tx->b3IsHDR or some
+**        sort!
+**      - The RenderShapeSampler needs integer frame
+**        buffer for OpenGL use. All other use HDR images.
+**
 **      Revision 1.116  2005/12/07 07:16:10  sm
 **      - Done compile fixes.
 **
@@ -1245,7 +1252,7 @@ void b3RenderObject::b3UpdateMaterial()
 				{
 					b3_res max  = B3_MAX_TX_SIZE;
 
-					glTextureBuffer.b3AllocTx(max,max,24);
+					glTextureBuffer.b3AllocTx(max, max, 24);
 				}
 				glTextureMutex.b3Unlock();
 

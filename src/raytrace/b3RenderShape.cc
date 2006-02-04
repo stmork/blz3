@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.89  2006/02/04 19:19:30  sm
+**      - Corrected image sampler. Check the used data
+**        type in constructor by using tx->b3IsHDR or some
+**        sort!
+**      - The RenderShapeSampler needs integer frame
+**        buffer for OpenGL use. All other use HDR images.
+**
 **      Revision 1.88  2005/12/12 16:01:32  smork
 **      - Some more const correction in samplers.
 **
@@ -832,11 +839,13 @@ class b3RenderImageSampler : public b3Sampler
 public:
 	b3RenderImageSampler(b3Shape *shape,b3Tx *tx)
 	{
+		B3_ASSERT(tx->b3IsTrueColor());
+
 		m_Shape = shape;
 		m_Tx    = tx;
 		m_xMax  = tx->xSize;
 		m_yMax  = tx->ySize;
-		m_Data  = (b3_color *)tx->b3GetData();
+		m_Data  = tx->b3GetData();
 	}
 
 private:
@@ -845,6 +854,7 @@ private:
 		b3SampleInfo *info = new b3SampleInfo[CPUs];
 		b3_loop       i;
 		b3_res        yStart,yEnd;
+		b3_pkd_color *data = (b3_pkd_color *)m_Data;
 
 		yStart = 0;
 		for (i = 0;i < CPUs;i++)
@@ -856,7 +866,7 @@ private:
 			info[i].m_yMax    = m_yMax;
 			info[i].m_yStart  = yStart;
 			info[i].m_yEnd    = yEnd;
-			info[i].m_Data    = &m_Data[yStart * m_xMax];
+			info[i].m_Data    = &data[yStart * m_xMax];
 			yStart = yEnd;
 		}
 		return info;
@@ -869,13 +879,13 @@ private:
 		b3BBox            bbox = BBOX;
 		b3_surface        surface;
 		b3_stencil_limit  limit;
-		b3_color         *data = info->m_Data;
-		b3_color          color;
+		b3_pkd_color     *data = (b3_pkd_color *)info->m_Data;
+		b3_pkd_color      color;
 		b3_coord          x,y;
 		b3_f64            fx,fxStep;
 		b3_f64            fy,fyStep;
 		b3_bool           loop;
-				
+
 		m_Shape->b3ComputeBound(&limit);
 		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / info->m_xMax;
 		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / info->m_yMax;
@@ -910,8 +920,9 @@ private:
 				ray.polar.m_BBoxOriginal.x =
 				ray.ipoint.x = fx;
 
-				color = b3Color(B3_BLACK);
-				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First,loop = true;
+				color = B3_BLACK;
+				loop  = true;
+				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)
 				{
@@ -947,7 +958,7 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 	if (result)
 	{
 		b3PrintT(">b3GetImage()");
-		b3RenderImageSampler sampler(this,image);
+		b3RenderImageSampler sampler(this, image);
 
 		sampler.b3Sample();
 		b3PrintT("<b3GetImage()");

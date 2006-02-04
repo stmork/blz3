@@ -32,6 +32,13 @@
 
 /*
 **  $Log$
+**  Revision 1.10  2006/02/04 19:19:30  sm
+**  - Corrected image sampler. Check the used data
+**    type in constructor by using tx->b3IsHDR or some
+**    sort!
+**  - The RenderShapeSampler needs integer frame
+**    buffer for OpenGL use. All other use HDR images.
+**
 **  Revision 1.9  2005/12/12 16:01:32  smork
 **  - Some more const correction in samplers.
 **
@@ -119,9 +126,11 @@ b3_u32 b3Sampler::b3SampleThread(void *ptr)
 b3ImageSampler::b3ImageSampler(b3Tx *tx)
 {
 	// Init texture
+	B3_ASSERT(tx->b3IsHDR());
+
 	m_xMax  = tx->xSize;
 	m_yMax  = tx->ySize;
-	m_Data  = (b3_color *)tx->b3GetData();
+	m_Data  = tx->b3GetData();
 	if (!tx->b3IsHDR())
 	{
 		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
@@ -133,6 +142,7 @@ b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
 	b3SampleInfo *info = new b3SampleInfo[CPUs];
 	b3_loop       i;
 	b3_res        yStart,yEnd;
+	b3_color     *data = (b3_color *)m_Data;
 
 	yStart = 0;
 	for (i = 0;i < CPUs;i++)
@@ -144,7 +154,7 @@ b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
 		info[i].m_yMax    = m_yMax;
 		info[i].m_yStart  = yStart;
 		info[i].m_yEnd    = yEnd;
-		info[i].m_Data    = &m_Data[yStart * m_xMax];
+		info[i].m_Data    = &data[yStart * m_xMax];
 		yStart = yEnd;
 	}
 	return info;
@@ -153,7 +163,7 @@ b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
 void b3ImageSampler::b3SampleTask(const b3SampleInfo *info)
 {
 	b3_coord  x,y;
-	b3_color *data = info->m_Data;
+	b3_color *data = (b3_color *)info->m_Data;
 
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{

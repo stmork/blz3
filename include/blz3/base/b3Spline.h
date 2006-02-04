@@ -306,9 +306,9 @@ public:
 
 	b3SplineTemplate<VECTOR>(const b3SplineTemplate<VECTOR> &src)
 	{
-		B3_ASSERT(src.control_num <= B3_MAX_CONTROLS);
-		B3_ASSERT(src.knot_num <= B3_MAX_KNOTS);
-		B3_ASSERT(src.subdiv <= B3_MAX_SUBDIV);
+		B3_ASSERT(src.control_num < B3_MAX_CONTROLS);
+		B3_ASSERT(src.knot_num < B3_MAX_KNOTS);
+		B3_ASSERT(src.subdiv < B3_MAX_SUBDIV);
 
 		control_max = B3_MAX_CONTROLS;
 		knot_max    = B3_MAX_KNOTS;

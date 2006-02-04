@@ -34,7 +34,7 @@ struct b3SampleInfo
 	b3_res        m_yEnd;          //!< The vertical strip end coordinate.
 	b3_res        m_xMax;          //!< The strip width.
 	b3_res        m_yMax;          //!< The overall sampling height.
-	b3_color     *m_Data;          //!< The resulting strip data.
+	void         *m_Data;          //!< The resulting strip data.
 	void         *m_Ptr;           //!< A pointer to custom information.
 };
 
@@ -46,7 +46,7 @@ class b3Sampler
 protected:
 	b3_res        m_xMax;  //!< The sample width.
 	b3_res        m_yMax;  //!< The sample height.
-	b3_color     *m_Data;  //!< The resulting sampling data.
+	void         *m_Data;  //!< The resulting sampling data.
 
 public:
 	/**

@@ -94,10 +94,9 @@
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
 				RuntimeLibrary="3"
-				StructMemberAlignment="5"
 				BufferSecurityCheck="TRUE"
 				EnableFunctionLevelLinking="TRUE"
-				EnableEnhancedInstructionSet="1"
+				EnableEnhancedInstructionSet="2"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="blz3/b3Config.h"
@@ -159,7 +158,6 @@
 				StringPooling="TRUE"
 				MinimalRebuild="TRUE"
 				RuntimeLibrary="2"
-				StructMemberAlignment="5"
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="2"
@@ -223,7 +221,6 @@
 				StringPooling="TRUE"
 				MinimalRebuild="TRUE"
 				RuntimeLibrary="2"
-				StructMemberAlignment="5"
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
@@ -1529,10 +1526,10 @@
 				RelativePath="t4.h">
 			</File>
 			<File
-				RelativePath="tif_dir.h">
+				RelativePath="..\..\include\tif_dir.h">
 			</File>
 			<File
-				RelativePath="..\..\include\tif_dir.h">
+				RelativePath="tif_dir.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tif_fax3.h">

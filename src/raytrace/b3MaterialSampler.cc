@@ -31,9 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/02/04 19:19:30  sm
+**	- Corrected image sampler. Check the used data
+**	  type in constructor by using tx->b3IsHDR or some
+**	  sort!
+**	- The RenderShapeSampler needs integer frame
+**	  buffer for OpenGL use. All other use HDR images.
+**
 **	Revision 1.10  2005/12/12 16:01:32  smork
 **	- Some more const correction in samplers.
-**
+**	
 **	Revision 1.9  2005/12/07 10:48:54  smork
 **	- Some more const
 **	
@@ -90,11 +97,13 @@
 b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_count tiles) : m_Tiles(tiles)
 {
 	// Init texture
+	B3_ASSERT(tx->b3IsHDR());
+
 	m_Material = null;
 	m_Tx       = tx;
 	m_xMax     = m_Tx->xSize;
 	m_yMax     = m_Tx->ySize;
-	m_Data     = (b3_color *)m_Tx->b3GetData();
+	m_Data     = m_Tx->b3GetData();
 }
 	
 void b3MaterialSampler::b3SetMaterial(b3Material *material)
@@ -107,6 +116,7 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 	b3SampleInfo *info = new b3SampleInfo[CPUs];
 	b3_loop       i;
 	b3_res        yStart,yEnd;
+	b3_color     *data = (b3_color *)m_Data;
 
 	B3_ASSERT(m_Material != null);
 	m_Material->b3Prepare();
@@ -120,7 +130,7 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 		info[i].m_yMax    = m_yMax;
 		info[i].m_yStart  = yStart;
 		info[i].m_yEnd    = yEnd;
-		info[i].m_Data    = &m_Data[yStart * m_xMax];
+		info[i].m_Data    = &data[yStart * m_xMax];
 		yStart = yEnd;
 	}
 	return info;
@@ -134,7 +144,7 @@ void b3MaterialSampler::b3SampleTask(const b3SampleInfo *info)
 	b3_ray      ray;
 	b3_surface  surface;
 	b3_f64      fy;
-	b3_color   *data = info->m_Data;
+	b3_color   *data = (b3_color *)info->m_Data;
 
 	ray.bbox           = &bbox;
 	surface.m_Incoming = &ray;

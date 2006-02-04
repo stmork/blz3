@@ -56,8 +56,8 @@ struct b3_mem_info
  */
 class B3_PLUGIN b3Mem : protected b3Mutex
 {
-	static const b3_count B3_MEM_INITIAL_SLOTS    =   5;
-	static const b3_count B3_MEM_ADDITIONAL_SLOTS = 256;
+	static const b3_count B3_MEM_INITIAL_SLOTS    =  5;
+	static const b3_count B3_MEM_ADDITIONAL_SLOTS = 64;
 
 	b3_mem_info    *m_SlotPtr; //!< A pointer to the chunk pointer array. This array is initially inside this chunk handler.
 	b3_index        m_SlotMax; //!< The size of the chunk pointer array.
