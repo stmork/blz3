@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/02/05 18:57:14  sm
+**	- Added locale support.
+**
 **	Revision 1.7  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.6  2003/05/24 13:46:49  sm
 **	- Added plugin support
 **	- Fixed b3FileList on non existing directory.
@@ -77,7 +80,7 @@ b3FileEntry::b3FileEntry (const char *new_name) :
 
 int b3FileEntry::b3Cmp(b3FileEntry *compare)
 {
-	return strcmp(b3Name(),compare->b3Name());
+	return strcoll(b3Name(),compare->b3Name());
 }
 
 const char *b3FileEntry::b3Name()

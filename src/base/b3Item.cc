@@ -24,6 +24,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Locale.h"
 #include "blz3/base/b3World.h"
 #include "b3ItemRegister.h"
 
@@ -35,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2006/02/05 18:57:14  sm
+**      - Added locale support.
+**
 **      Revision 1.42  2005/10/07 14:59:59  sm
 **      - Fix due to GCC 3.4 and 4.0 compiler bug.
 **
@@ -608,7 +612,7 @@ void b3Item::b3InitString(char *name,b3_size len)
 	B3_ASSERT_INDEX;
 
 	new_size = pos + len > m_ItemSize ? m_ItemSize - pos : len;
-	memcpy(name,&m_Buffer[m_ParseIndex],new_size);
+	b3Locale::b3IsoToLocale((const char *)&m_Buffer[m_ParseIndex], name, new_size);
 	if (new_size < len)
 	{
 		name[new_size] = 0;
@@ -1000,7 +1004,7 @@ void b3Item::b3StoreString(const char *name,const b3_size len)
 	{
 		m_StoreOffset = m_StoreIndex;
 	}
-	memcpy(&m_StoreBuffer[m_StoreIndex],name,len);
+	b3Locale::b3LocaleToIso(name, (char *)&m_StoreBuffer[m_StoreIndex], len);
 	m_StoreIndex += ((b3_u32)len >> 2);
 }
 

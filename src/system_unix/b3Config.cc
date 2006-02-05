@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/02/05 18:57:14  sm
+**	- Added locale support.
+**
 **	Revision 1.19  2005/12/19 10:45:18  sm
 **	- Some locale specified.
-**
+**	
 **	Revision 1.18  2005/10/23 12:30:30  sm
 **	- Added some informations about vector units.
 **	
@@ -112,7 +115,6 @@
 
 b3Runtime b3Runtime::m_Runtime;
 char      b3Runtime::m_Compiler[256];
-
 b3Runtime::b3Runtime()
 {
 	char     *vu;
@@ -124,10 +126,18 @@ b3Runtime::b3Runtime()
 #else
 	char *math = "FPU";
 #endif
+	char *locale;
 
-	if (!setlocale(LC_CTYPE, ""))
+	locale = setlocale(LC_ALL, "");
+	if (locale == null)
 	{
 		fprintf(stderr, "Cannot set locale. Assuming w're right ;-)\n");
+	}
+	else
+	{
+#ifdef _DEBUG
+		fprintf(stderr, "Default locale: %s\n", locale);
+#endif
 	}
 
 	switch (b3GetVectorUnit())
