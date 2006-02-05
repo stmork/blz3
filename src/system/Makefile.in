@@ -10,6 +10,7 @@ LIB_SOURCE =\
 	b3Date.cc\
 	b3Display.cc\
 	b3Exception.cc\
+	b3Locale.cc\
 	b3LogBase.cc\
 	b3Memory.cc\
 	b3PluginBase.cc\
@@ -22,6 +23,7 @@ LIB_OBJ	=\
 	b3Date.o\
 	b3Display.o\
 	b3Exception.o\
+	b3Locale.o\
 	b3LogBase.o\
 	b3Memory.o\
 	b3PluginBase.o\
