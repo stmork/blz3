@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/02/05 19:07:24  sm
+**	- Added locale support for Windows.
+**
 **	Revision 1.6  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.5  2004/09/23 21:27:39  sm
 **	- VBOs still don't work.
 **	
@@ -82,6 +85,23 @@ b3Runtime b3Runtime::m_Runtime;
 
 b3Runtime::b3Runtime()
 {
+	char *locale;
+
+	locale = setlocale(LC_ALL, "");
+
+	if (locale != null)
+	{
+#ifdef _DEBUG
+		char message[1024];
+
+		snprintf(message, sizeof(message), "Default locale: %s\n", locale);
+		OutputDebugString(message);
+#endif
+	}
+	else
+	{
+		OutputDebugString("Cannot set locale. Assuming we're right ;-) \n");
+	}
 }
 
 void b3Runtime::b3PSwap(

@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.11  2006/02/05 19:07:24  sm
+**  - Added locale support for Windows.
+**
 **  Revision 1.10  2006/02/04 19:19:30  sm
 **  - Corrected image sampler. Check the used data
 **    type in constructor by using tx->b3IsHDR or some
@@ -131,10 +134,6 @@ b3ImageSampler::b3ImageSampler(b3Tx *tx)
 	m_xMax  = tx->xSize;
 	m_yMax  = tx->ySize;
 	m_Data  = tx->b3GetData();
-	if (!tx->b3IsHDR())
-	{
-		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
-	}
 }
 
 b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)

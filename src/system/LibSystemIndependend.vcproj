@@ -287,6 +287,10 @@
 				FileType="0">
 			</File>
 			<File
+				RelativePath=".\b3Locale.cc"
+				FileType="0">
+			</File>
+			<File
 				RelativePath="b3LogBase.cc"
 				FileType="0">
 			</File>
@@ -303,7 +307,8 @@
 				FileType="0">
 			</File>
 			<File
-				RelativePath=".\b3SelfTest.cc">
+				RelativePath=".\b3SelfTest.cc"
+				FileType="0">
 			</File>
 			<File
 				RelativePath="b3TimeAbstract.cc"
@@ -336,6 +341,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\system\b3FileAbstract.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\system\b3Locale.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\system\b3LogBase.h">
