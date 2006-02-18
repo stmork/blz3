@@ -26,7 +26,7 @@
 #include "afxmt.h"
 
 // To protect critical sections between processes
-class b3IPCMutex : public CMutex, public b3MutexAbstract
+class B3_PLUGIN b3IPCMutex : public CMutex, public b3MutexAbstract
 {
 public:
 	b3_bool b3Lock();
@@ -34,7 +34,7 @@ public:
 };
 
 // To protect critical sections inside threads
-class b3Mutex : public b3MutexAbstract
+class B3_PLUGIN b3Mutex : public b3MutexAbstract
 {
 	CRITICAL_SECTION cs;
 public:
@@ -45,7 +45,7 @@ public:
 };
 
 // To send other threads a signal
-class b3Event : public CEvent
+class B3_PLUGIN b3Event : public CEvent
 {
 public:
 	void    b3Pulse();
@@ -53,7 +53,7 @@ public:
 };
 
 // Thread handling
-class b3Thread : public b3ThreadAbstract
+class B3_PLUGIN b3Thread : public b3ThreadAbstract
 {
 	static b3_count    m_ThreadCount;
 	static b3IPCMutex  m_ThreadMutex;
@@ -86,7 +86,7 @@ private:
 	friend class b3CPU;
 };
 
-class b3CPU : public b3CPUBase
+class B3_PLUGIN b3CPU : public b3CPUBase
 {
 public:
 	                b3CPU();

@@ -24,7 +24,7 @@
  * This abstract class defines an interface for critical sections where
  * only one thread or process can use a resource.
  */
-class B3_PLUGIN b3MutexAbstract
+class b3MutexAbstract
 {
 public:
 	/**
@@ -43,7 +43,7 @@ public:
  * thread waits for a signal from another thread to proceed with
  * something.
  */
-class B3_PLUGIN b3EventAbstract
+class b3EventAbstract
 {
 public:
 	/**
