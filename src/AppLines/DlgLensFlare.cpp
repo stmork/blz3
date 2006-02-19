@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/02/19 18:58:47  sm
+**	- Some dialog inheritance corrections.
+**
 **	Revision 1.7  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.6  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -96,7 +99,7 @@ CDlgLensFlare::CDlgLensFlare(b3_u32 class_type,CWnd* pParent /*=NULL*/)
 
 void CDlgLensFlare::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgLensFlare)
 	DDX_Control(pDX, IDC_LF_PREVIEW, m_LensFlarePreviewCtrl);
 	DDX_Control(pDX, IDC_LF_COLOR, m_LensFlareColorCtrl);
@@ -106,7 +109,7 @@ void CDlgLensFlare::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgLensFlare, CDialog)
+BEGIN_MESSAGE_MAP(CDlgLensFlare, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgLensFlare)
 	ON_BN_CLICKED(IDC_LF_CHANGE, OnLensFlareColorChange)
 	ON_BN_CLICKED(IDC_ACT_LENS_FLARE, OnActLensFlare)
@@ -137,7 +140,7 @@ BOOL CDlgLensFlare::OnInitDialog()
 
 	m_ActLensFlare = m_EditLensFlare->b3IsActive();
 
-	CDialog::OnInitDialog();
+	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	m_LensFlareExponCtrl.b3SetMin(b3Scene::epsilon);
@@ -153,7 +156,7 @@ BOOL CDlgLensFlare::OnInitDialog()
 
 void CDlgLensFlare::OnDestroy() 
 {
-	CDialog::OnDestroy();
+	CPropertyPage::OnDestroy();
 	
 	// TODO: Add your message handler code here
 	delete m_LensFlareScene;

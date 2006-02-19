@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/02/19 18:58:47  sm
+**	- Some dialog inheritance corrections.
+**
 **	Revision 1.6  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -39,7 +42,7 @@
 **	- Fixed animation problem when using rotating elements on
 **	  time bounds because of rounding problems. Now using
 **	  b3_f32 for time points.
-**
+**	
 **	Revision 1.5  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -86,7 +89,7 @@ CDlgSuperSampling::CDlgSuperSampling(CWnd* pParent /*=NULL*/)
 
 void CDlgSuperSampling::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgSuperSampling)
 	DDX_Control(pDX, IDC_SS4_RED, m_RedCtrl);
 	DDX_Control(pDX, IDC_SS4_GREEN, m_GreenCtrl);
@@ -99,7 +102,7 @@ void CDlgSuperSampling::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgSuperSampling, CDialog)
+BEGIN_MESSAGE_MAP(CDlgSuperSampling, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgSuperSampling)
 	ON_BN_CLICKED(IDC_SS4_ACTIVE, OnActivation)
 	//}}AFX_MSG_MAP
@@ -119,7 +122,7 @@ BOOL CDlgSuperSampling::OnInitDialog()
 	m_GreenLegend.Format(IDS_SS4_GREEN_LEGEND,m_LastGreen);
 	m_BlueLegend.Format(IDS_SS4_BLUE_LEGEND,m_LastBlue);
 
-	CDialog::OnInitDialog();
+	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	m_RedCtrl.SetRangeMin   (   0);

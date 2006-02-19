@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/02/19 18:58:47  sm
+**	- Some dialog inheritance corrections.
+**
 **	Revision 1.5  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.4  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
@@ -81,7 +84,7 @@ CDlgDistributed::CDlgDistributed(CWnd* pParent /*=NULL*/)
 
 void CDlgDistributed::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgDistributed)
 	DDX_Control(pDX, IDC_SPP_SPIN, m_CtrlSPP);
 	DDX_Control(pDX, IDC_SPF_SPIN, m_CtrlSPF);
@@ -94,7 +97,7 @@ void CDlgDistributed::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgDistributed, CDialog)
+BEGIN_MESSAGE_MAP(CDlgDistributed, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgDistributed)
 	ON_BN_CLICKED(IDC_ACT_DISTRIBUTED, OnActivation)
 	ON_BN_CLICKED(IDC_ACT_MOTION_BLUR, OnActivation)
@@ -107,7 +110,7 @@ END_MESSAGE_MAP()
 BOOL CDlgDistributed::OnInitDialog() 
 {
 	b3_s32 flags = SAMPLE_GET_FLAGS(m_Distributed);
-	CDialog::OnInitDialog();
+	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	m_ActDistributed = m_Distributed->b3IsActive();
@@ -128,9 +131,7 @@ BOOL CDlgDistributed::OnInitDialog()
 
 BOOL CDlgDistributed::PreTranslateMessage(MSG* pMsg) 
 {
-	// TODO: Add your specialized code here and/or call the base class
-	
-	return CDialog::PreTranslateMessage(pMsg);
+	return CPropertyPage::PreTranslateMessage(pMsg);
 }
 
 void CDlgDistributed::b3UpdateUI()

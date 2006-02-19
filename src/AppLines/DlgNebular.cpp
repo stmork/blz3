@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/02/19 18:58:47  sm
+**	- Some dialog inheritance corrections.
+**
 **	Revision 1.7  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.6  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -96,7 +99,7 @@ CDlgNebular::CDlgNebular(b3_u32 class_type,CWnd* pParent /*=NULL*/)
 
 void CDlgNebular::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgNebular)
 	DDX_Control(pDX, IDC_NEB_PREVIEW, m_NebularPreviewCtrl);
 	DDX_Control(pDX, IDC_NEB_DISTANCE, m_NebularDistanceCtrl);
@@ -106,7 +109,7 @@ void CDlgNebular::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgNebular, CDialog)
+BEGIN_MESSAGE_MAP(CDlgNebular, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgNebular)
 	ON_BN_CLICKED(ID_NEB_CHANGE, OnNebularColorChange)
 	ON_BN_CLICKED(IDC_ACT_NEBULAR, OnActNebular)
@@ -128,7 +131,7 @@ BOOL CDlgNebular::OnInitDialog()
 
 	m_ActNebular = m_EditNebular->b3IsActive();
 
-	CDialog::OnInitDialog();
+	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	m_NebularDistanceCtrl.b3SetMin(b3Scene::epsilon);
@@ -144,7 +147,7 @@ BOOL CDlgNebular::OnInitDialog()
 
 void CDlgNebular::OnDestroy() 
 {
-	CDialog::OnDestroy();
+	CPropertyPage::OnDestroy();
 	
 	// TODO: Add your message handler code here
 	delete m_NebularScene;
