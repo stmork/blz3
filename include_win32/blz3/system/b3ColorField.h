@@ -19,6 +19,7 @@
 #define B3_SYSTEM_COLORFIELD_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Color.h"
 
 #define UL_2_COLORREF(c) (RGB(((c) & 0xff0000) >> 16,((c) & 0x00ff00) >> 8,(c) & 0x0000ff))
 #define COLORREF_2_UL(r) ((b3_pkd_color)(\

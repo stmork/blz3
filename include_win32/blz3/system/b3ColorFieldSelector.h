@@ -21,7 +21,7 @@
 #include "blz3/system/b3ColorField.h"
 #include "blz3/base/b3Color.h"
 
-class CB3ColorFieldSelector : public CB3ColorField
+class B3_PLUGIN CB3ColorFieldSelector : public CB3ColorField
 {
 	b3Color  *m_Color;
 	CWnd     *m_Parent;

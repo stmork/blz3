@@ -35,7 +35,7 @@
 #define B3_FSBC_DEFAULT_ACCEL     5.0
 #define B3_FSBC_DEFAULT_DIGITS    2
 
-class CB3FloatSpinButtonCtrl : public CSpinButtonCtrl, public b3ControlUnits
+class B3_PLUGIN CB3FloatSpinButtonCtrl : public CSpinButtonCtrl, public b3ControlUnits
 {
 
 	b3_f64        m_Increment;

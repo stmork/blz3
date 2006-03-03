@@ -26,8 +26,8 @@
 
 #include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/system/b3ColorFieldSelector.h"
 #include "blz3/raytrace/b3Material.h"
-#include "b3SelectColor.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageMaterial dialog

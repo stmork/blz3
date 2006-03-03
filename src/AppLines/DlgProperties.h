@@ -25,7 +25,7 @@
 //
 
 #include "blz3/system/b3IntSpinButtonCtrl.h"
-#include "b3SelectColor.h"
+#include "blz3/system/b3ColorFieldSelector.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProperties dialog

@@ -21,6 +21,10 @@
 #define BLIZZARD3_REG_COMPANY  "MORKNet"
 #define BLIZZARD3_REG_PRODUCT  "Blizzard III"
 
+#ifndef WINVER
+#define WINVER 0x501
+#endif
+
 #pragma warning( disable : 4290 )
 
 #define main(argc,argv) _Blizzard3Main(argc,argv)
@@ -112,12 +116,15 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.38  2006/03/03 21:54:05  sm
+**	- Moved color field selector into system.
+**
 **	Revision 1.37  2005/10/22 15:14:45  sm
 **	- Added SSE intrinsic support which doesn't
 **	  function due to an alignment buf in the VC
 **	  new operator which returns only 8 byte
 **	  boundary addresses.
-**
+**	
 **	Revision 1.36  2005/10/02 15:06:23  sm
 **	- Some b3Frac/b3FMod/fmod corrections
 **	- Documentation

@@ -394,6 +394,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3ColorFieldSelector.cpp">
+			</File>
+			<File
 				RelativePath="b3ComboBox.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -1758,6 +1761,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3ColorField.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3ColorFieldSelector.h">
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3ComboBox.h">

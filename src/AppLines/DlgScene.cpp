@@ -24,7 +24,7 @@
 #include "AppLines.h"
 #include "DlgScene.h"
 #include "b3ExampleScene.h"
-#include "b3SelectColor.h"
+#include "blz3/system/b3ColorFieldSelector.h"
 #include "b3SelectTexture.h"
 
 /*************************************************************************
@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2006/03/03 21:54:06  sm
+**	- Moved color field selector into system.
+**
 **	Revision 1.24  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.23  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	

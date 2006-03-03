@@ -27,7 +27,7 @@
 #include "blz3/raytrace/b3Material.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3ShowImage.h"
-#include "b3SelectColor.h"
+#include "blz3/system/b3ColorFieldSelector.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////

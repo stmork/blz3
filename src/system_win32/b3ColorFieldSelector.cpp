@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3SelectColor.h"
+#include "blz3/system/b3ColorFieldSelector.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2006/03/03 21:54:06  sm
+**	- Moved color field selector into system.
+**
 **	Revision 1.4  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.3  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
