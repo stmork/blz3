@@ -22,8 +22,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Shape.h"
+#include "AppLinesInclude.h"
+
 #include "b3ImageList.h"
 #include "DlgShape1.h"
 #include "DlgShape2.h"
@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2004/05/06 08:38:33  sm
 **	- Demerged raytracing includes of Lines
-**
+**	
 **	Revision 1.6  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.

@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgSelectProfile.h"
 #include "DlgCreateTriangles.h"
 #include "DlgCreateRotShape.h"
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.9  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	

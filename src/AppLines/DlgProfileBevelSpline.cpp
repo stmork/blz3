@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgProfileBevelSpline.h"
 #include "b3Profile.h"
 
@@ -33,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
-**
+**	
 **	Revision 1.4  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods

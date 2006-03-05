@@ -21,9 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgAnimation.h"
-#include "blz3/raytrace/b3Special.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2004/05/06 08:38:32  sm
 **	- Demerged raytracing includes of Lines
-**
+**	
 **	Revision 1.2  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	

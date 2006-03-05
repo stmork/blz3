@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3SplinePreview.h"
-#include "blz3/base/b3Matrix.h"
 
 #ifndef B3_PICK_SIZE
 #define B3_PICK_SIZE 2
@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.1  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.

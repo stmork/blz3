@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "b3StaticPluginInfoInit.h"
 
 #include "DlgBumpGlossy.h"
@@ -55,9 +56,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2004/09/27 11:08:54  sm
 **	- Added rudimental car paint material dialog.
-**
+**	
 **	Revision 1.9  2004/07/27 16:33:50  sm
 **	- Added thin film material rendering
 **	

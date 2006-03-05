@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
+#include "AppLinesInclude.h"
 
-#include "AppObjectDoc.h"
 #include "DlgNewObject.h"
 
 #include "b3UndoShape.h"
@@ -36,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2005/06/12 11:38:51  sm
 **	- Fix ticket no.30. Surface property changes are reflected
 **	  to document modified changes.
-**
+**	
 **	Revision 1.5  2005/05/13 15:33:54  sm
 **	- Tested surface property operations.
 **	

@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgDistributed.h"
 
 /*************************************************************************
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2006/02/19 18:58:47  sm
 **	- Some dialog inheritance corrections.
-**
+**	
 **	Revision 1.5  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	

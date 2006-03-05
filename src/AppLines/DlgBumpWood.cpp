@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgBumpWood.h"
 #include "blz3/system/b3Plugin.h"
 
@@ -33,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.12  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.11  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	

@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgSpinTest.h"
 
 /*************************************************************************
@@ -32,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -43,7 +47,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **
 */
 

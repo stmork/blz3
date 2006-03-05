@@ -21,12 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppLinesDoc.h"
-#include "AppLinesView.h"
-#include "AppRaytraceDoc.h"
-#include "AppRaytraceView.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
 
 #include "DlgAnimation.h"
 #include "DlgHierarchy.h"
@@ -47,12 +42,8 @@
 #include "b3ExampleScene.h"
 #include "b3Action.h"
 
-#include "blz3/base/b3Array.h"
-#include "blz3/base/b3Matrix.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -62,9 +53,12 @@
 
 /*
 **	$Log$
+**	Revision 1.112  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.111  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.110  2005/05/12 20:16:12  sm
 **	- Some more undo/redo surface operations.
 **	

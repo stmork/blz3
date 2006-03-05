@@ -21,10 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
+
 #include "b3UndoCamera.h"
 #include "DlgCreateItem.h"
-#include "AppRenderView.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.5  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3

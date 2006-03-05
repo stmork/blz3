@@ -21,10 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppObjectDoc.h"
-#include "AppObjectView.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
 
 #include "b3UndoShape.h"
 #include "b3UndoShapeSurface.h"
@@ -32,12 +29,6 @@
 #include "DlgItemMaintain.h"
 #include "DlgKnotControl.h"
 #include "DlgNewObject.h"
-
-#include "blz3/base/b3Matrix.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Bump.h"
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -47,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.56  2005/09/11 17:45:51  sm
 **	- Fixed wrong ordered b3MatGranite read.
-**
+**	
 **	Revision 1.55  2005/06/12 11:38:51  sm
 **	- Fix ticket no.30. Surface property changes are reflected
 **	  to document modified changes.

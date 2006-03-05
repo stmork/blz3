@@ -21,10 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
 #include "b3SelectTexture.h"
 #include "b3ImagePreviewFileDlg.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.9  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.

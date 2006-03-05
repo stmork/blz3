@@ -21,11 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "b3ProfileBevelStumpSpline.h"
 #include "DlgProfileBevelStumpSpline.h"
-
-#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.2  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow

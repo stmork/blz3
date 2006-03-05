@@ -21,13 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppRenderDoc.h"
-#include "AppRenderView.h"
+#include "AppLinesInclude.h"
 #include "DlgUndoRedo.h"
-#include "MainFrm.h"
-
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.27  2005/11/27 11:36:04  sm
 **	- Some more debugging output added.
-**
+**	
 **	Revision 1.26  2005/05/11 14:19:28  sm
 **	- Added first Undo operation for object editor.
 **	

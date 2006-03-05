@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "b3ExampleScene.h"
 #include "DlgLight.h"
 #include "DlgCreateItem.h"
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.17  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.16  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	

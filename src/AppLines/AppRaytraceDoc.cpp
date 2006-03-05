@@ -21,13 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "stdafx.h"
-#include "AppLines.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
 #include "b3SelectTexture.h"
-
-#include "AppRaytraceDoc.h"
-#include "AppRaytraceView.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.17  2004/12/22 21:36:36  sm
 **	- Changed development environment to Visual C++ .net 2003
-**
+**	
 **	Revision 1.16  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	

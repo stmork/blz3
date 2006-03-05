@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgScene.h"
 #include "b3ExampleScene.h"
 #include "blz3/system/b3ColorFieldSelector.h"
@@ -35,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.25  2006/03/03 21:54:06  sm
 **	- Moved color field selector into system.
-**
+**	
 **	Revision 1.24  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	

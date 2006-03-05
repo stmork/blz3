@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "PageBump.h"
 
 /*************************************************************************
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
-**
+**	
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	

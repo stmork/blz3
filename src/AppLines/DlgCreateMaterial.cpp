@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgCreateMaterial.h"
 #include "b3ExampleScene.h"
 #include "b3SelectTexture.h"
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.19  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.18  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.

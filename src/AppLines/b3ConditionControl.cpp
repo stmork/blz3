@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
 #include "b3ConditionControl.h"
 
 /*************************************************************************
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
-**
+**	
 **	Revision 1.3  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.

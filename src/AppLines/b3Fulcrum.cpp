@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3Fulcrum.h"
 
 /*************************************************************************
@@ -31,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2006/03/05 22:12:32  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.15  2004/11/21 16:44:46  sm
 **      - Corrected fulcrum drawing problem: The fulcrum was
 **        updated before first initialization. And even the initialization

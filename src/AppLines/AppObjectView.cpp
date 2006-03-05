@@ -21,13 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppObjectView.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
 #include "DlgObjectPreview.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
-#include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.27  2005/05/15 18:52:48  sm
 **	- Corrected pick drawing in object editor.
-**
+**	
 **	Revision 1.26  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
 **	

@@ -21,12 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "stdafx.h"
-#include "AppLines.h"
-#include "MainFrm.h"
-
-#include "AppRaytraceDoc.h"
-#include "AppRaytraceView.h"
+#include "AppLinesInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.9  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	

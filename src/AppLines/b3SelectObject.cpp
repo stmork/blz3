@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "b3SelectObject.h"
 #include "b3ImagePreviewFileDlg.h"
 
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.6  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	

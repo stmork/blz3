@@ -21,15 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppLinesDoc.h"
-#include "AppLinesView.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
-
-#include "blz3/raytrace/b3Light.h"
-#include "blz3/raytrace/b3Scene.h"
 
 #include "DlgCamera.h"
 
@@ -45,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.74  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.73  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.72  2005/01/23 19:54:05  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.

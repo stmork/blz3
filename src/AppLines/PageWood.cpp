@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "PageWood.h"
 
 /*************************************************************************
@@ -32,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2004/05/09 16:37:59  sm
 **	- Added scaling property page to oak plank material
 **	- Corrected so,e input parameters.
-**
+**	
 **	Revision 1.5  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	

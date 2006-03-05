@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgSuperSampling.h"
 
 /*************************************************************************
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2006/02/19 18:58:47  sm
 **	- Some dialog inheritance corrections.
-**
+**	
 **	Revision 1.6  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.

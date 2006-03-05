@@ -21,11 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
+
 #include "b3UndoLight.h"
 #include "DlgCreateItem.h"
-#include "MainFrm.h"
-#include "AppLinesDoc.h"
-#include "AppLinesView.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.1  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo

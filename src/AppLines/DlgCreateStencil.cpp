@@ -21,10 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "DlgCreateStencil.h"
+#include "AppLinesInclude.h"
 
-#include "blz3/raytrace/b3Shape.h"
+#include "DlgCreateStencil.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.7  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.

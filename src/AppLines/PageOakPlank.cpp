@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "PageOakPlank.h"
 
 /*************************************************************************
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.3  2004/04/24 20:15:51  sm
 **	- Further slide material dialog development
 **	

@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3ControlKnot.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2004/07/27 19:05:59  sm
 **	- Some typo cleanups.
-**
+**	
 **	
 */
 

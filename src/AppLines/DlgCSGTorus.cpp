@@ -21,9 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
+
 #include "DlgCSGTorus.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.5  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	

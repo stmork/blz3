@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3ControlLDC.h"
 
 #define SEGMENTS 6
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.9  2003/02/23 21:15:41  sm
 **	- First shape picking
 **	

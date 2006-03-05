@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
+
 #include "blz3/system/b3File.h"
 #include "DlgHierarchy.h"
 #include "DlgCreateItem.h"
@@ -29,7 +30,6 @@
 #include "DlgObjectTransformMode.h"
 #include "b3UndoObject.h"
 #include "b3SelectObject.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -39,11 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.13  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.12  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	

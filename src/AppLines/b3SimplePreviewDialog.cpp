@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3SimplePreviewDialog.h"
-#include "AppLines.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
-**
+**	
 **	Revision 1.4  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.

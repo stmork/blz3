@@ -21,10 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3Action.h"
-#include "AppLines.h"
-#include "MainFrm.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.12  2005/06/11 17:47:12  sm
 **	- Moving int o view direction on camera turn (right mouse button)
-**
+**	
 **	Revision 1.11  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.

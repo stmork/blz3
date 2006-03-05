@@ -21,15 +21,12 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppLinesView.h"
+#include "AppLinesInclude.h"
+
 #include "DlgProperties.h"
 #include "b3CameraVolume.h"
 #include "b3Fulcrum.h"
 #include "b3PickVector.h"
-#include "blz3/base/b3VectorBufferObjects.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3PickInfo.h"
 
 /*************************************************************************
 **                                                                      **
@@ -39,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.12  2004/12/11 18:39:44  sm
 **	- Fixed modified object problem in Lines when returning
 **	  to scene editor.
-**
+**	
 **	Revision 1.11  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
 **	

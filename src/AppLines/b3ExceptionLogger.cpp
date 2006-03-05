@@ -21,14 +21,13 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3ExceptionLogger.h"
-#include "Resource.h"
 
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/system/b3Print.h"
 #include "blz3/system/b3Date.h"
-#include "blz3/image/b3Tx.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Procedure.h"
 
@@ -40,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.10  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
 **	

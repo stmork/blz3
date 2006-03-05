@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgObjectPreview.h"
 #include "b3ExampleScene.h"
 
@@ -33,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -40,7 +44,7 @@
 **	- Fixed animation problem when using rotating elements on
 **	  time bounds because of rounding problems. Now using
 **	  b3_f32 for time points.
-**
+**	
 **	Revision 1.1  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
 **	

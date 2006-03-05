@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3SpanningShapeDialog.h"
 
 /*************************************************************************
@@ -31,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2002/03/10 20:34:18  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.2  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.

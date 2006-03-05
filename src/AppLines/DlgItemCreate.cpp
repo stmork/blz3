@@ -21,12 +21,11 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppRenderDoc.h"
+#include "AppLinesInclude.h"
+
 #include "DlgItemCreate.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3FileReg.h"
-#include "blz3/base/b3World.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.6  2004/12/27 21:21:45  sm
 **	- Adjusted type size (LPARAM vs. long)
 **	

@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppObjectDoc.h"
+#include "AppLinesInclude.h"
+
 #include "blz3/system/b3Plugin.h"
 #include "DlgMatCarPaint.h"
 #include "b3ExampleScene.h"
@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.4  2004/09/30 11:52:44  sm
 **	- Adjusted edit field accuracy.
 **	- Done some minor car paint tests.

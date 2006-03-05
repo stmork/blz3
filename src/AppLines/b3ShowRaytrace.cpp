@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3ShowRaytrace.h"
 
 /*************************************************************************
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2005/10/16 12:11:22  sm
 **	- Some HDR fixes.
-**
+**	
 **	Revision 1.3  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	

@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
 #include "b3ExampleScene.h"
 
 /*************************************************************************
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.25  2005/01/08 15:11:40  sm
 **	- Moved b3ExampleScene into b3Factory
-**
+**	
 **	Revision 1.24  2005/01/07 12:38:51  smork
 **	- Bump release.
 **	- Added tool to create object/bbox thumb nails.

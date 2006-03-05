@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-#include "AppLines.h"
-#include "AppLinesView.h"
+#include "AppLinesInclude.h"
+
 #include "DlgFulcrum.h"
 
 /*************************************************************************
@@ -34,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -45,7 +47,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.3  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
 **	

@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgMatOakPlank.h"
 #include "blz3/system/b3Plugin.h"
 
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.14  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
 **	

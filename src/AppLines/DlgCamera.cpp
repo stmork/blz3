@@ -21,11 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgCamera.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/raytrace/b3Special.h"
-#include "blz3/raytrace/b3Scene.h"
 #include "DlgCreateItem.h"
 
 /*************************************************************************
@@ -36,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.12  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.11  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.

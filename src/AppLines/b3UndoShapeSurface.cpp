@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
+#include "AppLinesInclude.h"
 
-#include "AppObjectDoc.h"
 #include "DlgItemMaintain.h"
 #include "DlgCopyProperties.h"
 
@@ -37,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2005/06/12 11:38:51  sm
 **	- Fix ticket no.30. Surface property changes are reflected
 **	  to document modified changes.
-**
+**	
 **	Revision 1.3  2005/05/15 06:53:23  sm
 **	- Tested shape surface property copy operation.
 **	

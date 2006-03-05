@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppRenderView.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
 #include "blz3/system/b3Error.h"
@@ -38,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.50  2005/05/15 18:52:48  sm
 **	- Corrected pick drawing in object editor.
-**
+**	
 **	Revision 1.49  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.

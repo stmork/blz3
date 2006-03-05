@@ -21,12 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "MainFrm.h"
+#include "AppLinesInclude.h"
+
 #include "b3Splash.h"
-#include "blz3/raytrace/b3Light.h"
-#include "blz3/raytrace/b3Special.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.43  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -45,7 +45,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.42  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	

@@ -21,9 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
+
 #include "b3Undo.h"
-#include "blz3/b3Config.h"
-#include "AppRenderDoc.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2005/05/12 12:16:25  sm
 **	- Added surface property editing for undo/redo editing.
-**
+**	
 **	Revision 1.7  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
 **	

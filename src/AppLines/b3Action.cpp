@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3Action.h"
-#include "AppLines.h"
-#include "MainFrm.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.25  2003/03/26 14:50:55  sm
 **	- Ticket no. 5 fixed.
-**
+**	
 **	Revision 1.24  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.

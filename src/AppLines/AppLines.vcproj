@@ -435,6 +435,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -445,7 +447,16 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release SSE2|Win32">
@@ -454,6 +465,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -463,6 +476,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -552,6 +567,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -562,6 +579,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -571,6 +590,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -580,6 +601,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -589,7 +612,47 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\AppLinesInclude.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
 				</FileConfiguration>
 			</File>
 			<File
@@ -602,6 +665,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -612,6 +677,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -621,6 +688,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -630,6 +699,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -639,6 +710,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -695,6 +768,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -705,6 +780,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -714,6 +791,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -723,6 +802,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -732,6 +813,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -745,6 +828,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -755,6 +840,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -764,6 +851,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -773,6 +862,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -782,6 +873,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -795,6 +888,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -805,6 +900,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -814,6 +911,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -823,6 +922,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -832,6 +933,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -845,6 +948,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -855,6 +960,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -864,6 +971,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -873,6 +982,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -882,6 +993,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -895,6 +1008,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -905,6 +1020,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -914,6 +1031,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -923,6 +1042,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -932,6 +1053,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -945,6 +1068,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -955,6 +1080,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -964,6 +1091,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -973,6 +1102,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -982,6 +1113,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -995,6 +1128,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1005,6 +1140,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1014,6 +1151,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1023,6 +1162,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1032,6 +1173,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1045,6 +1188,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1055,6 +1200,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1064,6 +1211,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1073,6 +1222,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1082,6 +1233,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1095,6 +1248,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1105,6 +1260,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1114,6 +1271,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1123,6 +1282,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1132,6 +1293,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1145,6 +1308,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1155,6 +1320,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1164,6 +1331,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1173,6 +1342,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1182,6 +1353,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1195,6 +1368,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1205,6 +1380,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1214,6 +1391,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1223,6 +1402,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1232,6 +1413,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1245,6 +1428,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1255,6 +1440,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1264,6 +1451,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1273,6 +1462,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1282,6 +1473,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1295,6 +1488,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1305,6 +1500,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1314,6 +1511,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1323,6 +1522,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1332,11 +1533,48 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3CopyProperty.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ExampleScene.cpp">
@@ -1348,6 +1586,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1358,6 +1598,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1367,6 +1609,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1376,6 +1620,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1385,6 +1631,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1398,6 +1646,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1408,6 +1658,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1417,6 +1669,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1426,6 +1680,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1435,6 +1691,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1448,6 +1706,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1458,6 +1718,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1467,6 +1729,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1476,6 +1740,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1485,6 +1751,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1498,6 +1766,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1508,6 +1778,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1517,6 +1789,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1526,6 +1800,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1535,6 +1811,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1548,6 +1826,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1558,6 +1838,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1567,6 +1849,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1576,6 +1860,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1585,6 +1871,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1598,6 +1886,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1608,6 +1898,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1617,6 +1909,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1626,6 +1920,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1635,6 +1931,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1648,6 +1946,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1658,6 +1958,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1667,6 +1969,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1676,6 +1980,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1685,6 +1991,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1698,6 +2006,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1708,6 +2018,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1717,6 +2029,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1726,6 +2040,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1735,6 +2051,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1748,6 +2066,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1758,6 +2078,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1767,6 +2089,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1776,6 +2100,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1785,6 +2111,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1798,6 +2126,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1808,6 +2138,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1817,6 +2149,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1826,6 +2160,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1835,6 +2171,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1848,6 +2186,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1858,6 +2198,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1867,6 +2209,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1876,6 +2220,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1885,6 +2231,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1898,6 +2246,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1908,6 +2258,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1917,6 +2269,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1926,6 +2280,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1935,6 +2291,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1948,6 +2306,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -1958,6 +2318,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1967,6 +2329,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1976,6 +2340,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1985,6 +2351,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -1998,6 +2366,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2008,6 +2378,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2017,6 +2389,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2026,6 +2400,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2035,6 +2411,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2048,6 +2426,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2058,6 +2438,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2067,6 +2449,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2076,6 +2460,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2085,6 +2471,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2098,6 +2486,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2108,6 +2498,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2117,6 +2509,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2126,6 +2520,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2135,6 +2531,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2148,6 +2546,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2158,6 +2558,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2167,6 +2569,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2176,6 +2580,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2185,6 +2591,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2198,6 +2606,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2208,6 +2618,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2217,6 +2629,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2226,6 +2640,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2235,6 +2651,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2248,6 +2666,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2258,6 +2678,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2267,6 +2689,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2276,6 +2700,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2285,6 +2711,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2298,6 +2726,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2308,6 +2738,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2317,6 +2749,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2326,6 +2760,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2335,6 +2771,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2348,6 +2786,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2358,6 +2798,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2367,6 +2809,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2376,6 +2820,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2385,6 +2831,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2398,6 +2846,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2408,6 +2858,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2417,6 +2869,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2426,6 +2880,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2435,6 +2891,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2448,6 +2906,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2458,6 +2918,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2467,6 +2929,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2476,6 +2940,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2485,6 +2951,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2498,6 +2966,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2508,6 +2978,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2517,6 +2989,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2526,6 +3000,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2535,6 +3011,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2548,6 +3026,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2558,6 +3038,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2567,6 +3049,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2576,6 +3060,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2585,6 +3071,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2598,6 +3086,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2608,6 +3098,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2617,6 +3109,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2626,6 +3120,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2635,6 +3131,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2648,6 +3146,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2658,6 +3158,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2667,6 +3169,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2676,6 +3180,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2685,6 +3191,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2698,6 +3206,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2708,6 +3218,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2717,6 +3229,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2726,6 +3240,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2735,6 +3251,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2748,6 +3266,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2758,6 +3278,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2767,6 +3289,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2776,6 +3300,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2785,6 +3311,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2798,6 +3326,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2808,6 +3338,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2817,6 +3349,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2826,6 +3360,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2835,6 +3371,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2848,6 +3386,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2858,6 +3398,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2867,6 +3409,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2876,6 +3420,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2885,14 +3431,86 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3UndoShape.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3UndoShapeSurface.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="ChildFrm.cpp">
@@ -2904,6 +3522,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2914,6 +3534,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2923,6 +3545,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2932,6 +3556,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2941,6 +3567,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -2954,6 +3582,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -2964,6 +3594,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2973,6 +3605,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2982,6 +3616,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2991,6 +3627,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3004,6 +3642,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3014,6 +3654,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3023,6 +3665,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3032,6 +3676,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3041,6 +3687,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3054,6 +3702,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3064,6 +3714,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3073,6 +3725,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3082,6 +3736,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3091,6 +3747,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3104,6 +3762,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3114,6 +3774,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3123,6 +3785,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3132,6 +3796,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3141,6 +3807,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3154,6 +3822,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3164,6 +3834,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3173,6 +3845,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3182,6 +3856,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3191,6 +3867,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3204,6 +3882,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3214,6 +3894,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3223,6 +3905,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3232,6 +3916,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3241,6 +3927,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3254,6 +3942,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3264,6 +3954,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3273,6 +3965,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3282,6 +3976,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3291,6 +3987,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3304,6 +4002,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3314,6 +4014,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3323,6 +4025,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3332,6 +4036,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3341,6 +4047,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3354,6 +4062,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3364,6 +4074,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3373,6 +4085,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3382,6 +4096,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3391,6 +4107,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3404,6 +4122,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3414,6 +4134,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3423,6 +4145,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3432,6 +4156,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3441,6 +4167,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3454,6 +4182,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3464,6 +4194,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3473,6 +4205,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3482,6 +4216,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3491,6 +4227,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3504,6 +4242,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3514,6 +4254,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3523,6 +4265,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3532,6 +4276,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3541,6 +4287,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3554,6 +4302,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3564,6 +4314,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3573,6 +4325,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3582,6 +4336,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3591,6 +4347,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3604,6 +4362,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3614,6 +4374,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3623,6 +4385,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3632,6 +4396,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3641,6 +4407,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3654,6 +4422,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3664,6 +4434,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3673,6 +4445,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3682,6 +4456,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3691,6 +4467,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3704,6 +4482,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3714,6 +4494,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3723,6 +4505,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3732,6 +4516,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3741,6 +4527,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3754,6 +4542,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3764,6 +4554,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3773,6 +4565,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3782,6 +4576,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3791,6 +4587,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3804,6 +4602,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3814,6 +4614,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3823,6 +4625,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3832,6 +4636,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3841,6 +4647,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3854,6 +4662,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3864,6 +4674,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3873,6 +4685,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3882,6 +4696,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3891,6 +4707,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3904,6 +4722,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3914,6 +4734,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3923,6 +4745,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3932,6 +4756,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3941,6 +4767,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -3954,6 +4782,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -3964,6 +4794,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3973,6 +4805,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3982,6 +4816,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -3991,6 +4827,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4004,6 +4842,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4014,6 +4854,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4023,6 +4865,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4032,6 +4876,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4041,6 +4887,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4054,6 +4902,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4064,6 +4914,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4073,6 +4925,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4082,6 +4936,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4091,6 +4947,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4104,6 +4962,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4114,6 +4974,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4123,6 +4985,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4132,6 +4996,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4141,6 +5007,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4154,6 +5022,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4164,6 +5034,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4173,6 +5045,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4182,6 +5056,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4191,6 +5067,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4204,6 +5082,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4214,6 +5094,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4223,6 +5105,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4232,6 +5116,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4241,6 +5127,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4254,6 +5142,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4264,6 +5154,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4273,6 +5165,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4282,6 +5176,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4291,6 +5187,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4304,6 +5202,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4314,6 +5214,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4323,6 +5225,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4332,6 +5236,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4341,6 +5247,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4354,6 +5262,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4364,6 +5274,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4373,6 +5285,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4382,6 +5296,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4391,6 +5307,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4404,6 +5322,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4414,6 +5334,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4423,6 +5345,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4432,6 +5356,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4441,6 +5367,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4454,6 +5382,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4464,6 +5394,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4473,6 +5405,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4482,6 +5416,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4491,6 +5427,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4504,6 +5442,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4514,6 +5454,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4523,6 +5465,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4532,6 +5476,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4541,6 +5487,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4554,6 +5502,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4564,6 +5514,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4573,6 +5525,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4582,6 +5536,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4591,6 +5547,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4604,6 +5562,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4614,6 +5574,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4623,6 +5585,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4632,6 +5596,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4641,6 +5607,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4654,6 +5622,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4664,6 +5634,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4673,6 +5645,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4682,6 +5656,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4691,6 +5667,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4704,6 +5682,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4714,6 +5694,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4723,6 +5705,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4732,6 +5716,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4741,6 +5727,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4754,6 +5742,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4764,6 +5754,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4773,6 +5765,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4782,6 +5776,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4791,6 +5787,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4804,6 +5802,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4814,6 +5814,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4823,6 +5825,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4832,6 +5836,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4841,6 +5847,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4854,6 +5862,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4864,6 +5874,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4873,6 +5885,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4882,6 +5896,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4891,6 +5907,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4904,6 +5922,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4914,6 +5934,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4923,6 +5945,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4932,6 +5956,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4941,6 +5967,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -4954,6 +5982,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -4964,6 +5994,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4973,6 +6005,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4982,6 +6016,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4991,6 +6027,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5004,6 +6042,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5014,6 +6054,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5023,6 +6065,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5032,6 +6076,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5041,6 +6087,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5054,6 +6102,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5064,6 +6114,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5073,6 +6125,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5082,6 +6136,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5091,6 +6147,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5104,6 +6162,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5114,6 +6174,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5123,6 +6185,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5132,6 +6196,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5141,6 +6207,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5154,6 +6222,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5164,6 +6234,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5173,6 +6245,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5182,6 +6256,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5191,6 +6267,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5204,6 +6282,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5214,6 +6294,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5223,6 +6305,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5232,6 +6316,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5241,6 +6327,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5254,6 +6342,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5264,6 +6354,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5273,6 +6365,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5282,6 +6376,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5291,6 +6387,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5304,6 +6402,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5314,6 +6414,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5323,6 +6425,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5332,6 +6436,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5341,6 +6447,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5354,6 +6462,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5364,6 +6474,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5373,6 +6485,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5382,6 +6496,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5391,6 +6507,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5404,6 +6522,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5414,6 +6534,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5423,6 +6545,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5432,6 +6556,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5441,6 +6567,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5454,6 +6582,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5464,6 +6594,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5473,6 +6605,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5482,6 +6616,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5491,6 +6627,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5504,6 +6642,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5514,6 +6654,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5523,6 +6665,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5532,6 +6676,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5541,6 +6687,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5554,6 +6702,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5564,6 +6714,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5573,6 +6725,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5582,6 +6736,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5591,6 +6747,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5604,6 +6762,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5614,6 +6774,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5623,6 +6785,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5632,6 +6796,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5641,6 +6807,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5654,6 +6822,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5664,6 +6834,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5673,6 +6845,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5682,6 +6856,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5691,6 +6867,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5704,6 +6882,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5714,6 +6894,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5723,6 +6905,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5732,6 +6916,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5741,6 +6927,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5754,6 +6942,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5764,6 +6954,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5773,6 +6965,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5782,6 +6976,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5791,6 +6987,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5804,6 +7002,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5814,6 +7014,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5823,6 +7025,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5832,6 +7036,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5841,6 +7047,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5854,6 +7062,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5864,6 +7074,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5873,6 +7085,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5882,6 +7096,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5891,6 +7107,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5904,6 +7122,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5914,6 +7134,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5923,6 +7145,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5932,6 +7156,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5941,6 +7167,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -5954,6 +7182,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -5964,6 +7194,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5973,6 +7205,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5982,6 +7216,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -5991,6 +7227,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6004,6 +7242,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6014,6 +7254,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6023,6 +7265,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6032,6 +7276,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6041,6 +7287,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6054,6 +7302,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6064,6 +7314,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6073,6 +7325,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6082,6 +7336,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6091,6 +7347,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6104,6 +7362,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6114,6 +7374,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6123,6 +7385,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6132,6 +7396,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6141,6 +7407,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6154,6 +7422,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6164,6 +7434,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6173,6 +7445,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6182,6 +7456,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6191,6 +7467,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6204,6 +7482,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6214,6 +7494,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6223,6 +7505,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6232,6 +7516,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6241,6 +7527,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6254,6 +7542,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6264,6 +7554,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6273,6 +7565,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6282,6 +7576,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6291,6 +7587,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6304,6 +7602,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6314,6 +7614,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6323,6 +7625,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6332,6 +7636,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6341,6 +7647,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6354,6 +7662,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6364,6 +7674,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6373,6 +7685,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6382,6 +7696,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6391,6 +7707,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6404,6 +7722,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6414,6 +7734,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6423,6 +7745,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6432,6 +7756,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6441,6 +7767,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6454,6 +7782,8 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						BrowseInformation="1"
 						CompileAs="2"/>
 				</FileConfiguration>
@@ -6464,6 +7794,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6473,6 +7805,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6482,6 +7816,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6491,6 +7827,8 @@
 						Optimization="2"
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="AppLinesInclude.h"
 						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
@@ -6503,6 +7841,9 @@
 			</File>
 			<File
 				RelativePath="AppLinesDoc.h">
+			</File>
+			<File
+				RelativePath=".\AppLinesInclude.h">
 			</File>
 			<File
 				RelativePath="AppLinesView.h">

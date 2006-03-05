@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "AppObjectDoc.h"
+#include "AppLinesInclude.h"
+
 #include "b3ExampleScene.h"
 #include "DlgMatChess.h"
 #include "blz3/system/b3Plugin.h"
@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.9  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	

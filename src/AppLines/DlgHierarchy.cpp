@@ -21,11 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-#include "AppLines.h"
-#include "AppLinesView.h"
+#include "AppLinesInclude.h"
+
 #include "DlgHierarchy.h"
-#include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.26  2004/12/27 21:21:45  sm
 **	- Adjusted type size (LPARAM vs. long)
-**
+**	
 **	Revision 1.25  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.

@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgUndoRedo.h"
 
 /*************************************************************************
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
-**
+**	
 **	Revision 1.3  2003/01/31 16:49:39  sm
 **	- Further dialog programming.
 **	

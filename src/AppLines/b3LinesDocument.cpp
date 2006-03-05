@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3LinesDocument.h"
-#include "AppLines.h"
+#include "AppLinesInclude.h"
 
 #define NO_STATE
 
@@ -34,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 */
 
 /*************************************************************************

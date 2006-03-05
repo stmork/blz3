@@ -22,24 +22,14 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "MainFrm.h"
-#include "ChildFrm.h"
-#include "AppLinesDoc.h"
-#include "AppLinesView.h"
-#include "AppObjectDoc.h"
-#include "AppObjectView.h"
-#include "AppRaytraceDoc.h"
-#include "AppRaytraceView.h"
+#include "AppLinesInclude.h"
 
-#include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3File.h"
 #include "blz3/system/b3FileDialog.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3SelfTest.h"
 #include "blz3/system/b3Version.h"
 #include "blz3/base/b3FileMem.h"
-#include "blz3/raytrace/b3BBox.h"
 
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
@@ -60,9 +50,12 @@
 
 /*
 **	$Log$
+**	Revision 1.88  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.87  2005/05/16 08:24:30  sm
 **	- Including self test into Lines.
-**
+**	
 **	Revision 1.86  2005/01/23 20:57:21  sm
 **	- Moved some global static variables into class static ones.
 **	

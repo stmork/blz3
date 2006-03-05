@@ -21,11 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3CopyProperty.h"
+#include "AppLinesInclude.h"
 
-#include "blz3/raytrace/b3Condition.h"
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Shape.h"
+#include "b3CopyProperty.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2005/05/15 06:53:23  sm
 **	- Tested shape surface property copy operation.
-**
+**	
 **
 */
 

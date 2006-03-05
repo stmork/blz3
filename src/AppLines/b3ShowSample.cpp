@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
 #include "b3ShowSample.h"
 
 /*************************************************************************
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 22:12:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2004/04/09 12:08:05  sm
 **	- New CStatic control introduced for material sampling.
-**
+**	
 **	
 */
 

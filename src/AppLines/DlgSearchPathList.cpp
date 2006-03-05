@@ -23,6 +23,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
+
 #include "DlgSearchPathList.h"
 #include "blz3/system/b3Dir.h"
 
@@ -34,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.6  2004/12/23 22:22:42  sm
 **	- Adjusted further Visual C++ options
 **	

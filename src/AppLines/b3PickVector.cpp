@@ -21,8 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
+#include "AppLinesInclude.h"
+
 #include "b3PickVector.h"
-#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.7  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and

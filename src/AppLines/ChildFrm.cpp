@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "ChildFrm.h"
+#include "AppLinesInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.2  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view

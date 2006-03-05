@@ -21,12 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "DlgCopyProperties.h"
 #include "b3CopyProperty.h"
-
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 22:12:31  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2005/05/15 06:53:23  sm
 **	- Tested shape surface property copy operation.
-**
+**	
 **	Revision 1.4  2005/05/14 19:01:24  sm
 **	- Added shape property copy to undo/redo operations
 **	

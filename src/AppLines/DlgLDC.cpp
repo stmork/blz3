@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "b3ExampleScene.h"
 #include "DlgLDC.h"
 
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2004/09/27 13:20:49  sm
 **	- Fixed uninitialized class type for preview in LDC dialog.
-**
+**	
 **	Revision 1.4  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	

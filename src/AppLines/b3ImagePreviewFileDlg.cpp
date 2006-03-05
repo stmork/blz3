@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
+#include "AppLinesInclude.h"
+
 #include "b3ImagePreviewFileDlg.h"
 
 #include <dlgs.h>
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 22:12:32  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2005/01/16 17:30:23  sm
 **	- Minor changes
-**
+**	
 **	Revision 1.7  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
