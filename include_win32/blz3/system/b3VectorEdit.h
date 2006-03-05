@@ -15,15 +15,15 @@
 **
 */
 
-#ifndef B3_VECTOR_EDIT_H
-#define B3_VECTOR_EDIT_H
+#ifndef B3_SYSTEM_VECTOREDIT_H
+#define B3_SYSTEM_VECTOREDIT_H
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3App.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/base/b3Matrix.h"
 
-class CB3PosGroup
+class B3_PLUGIN CB3PosGroup
 {
 protected:
 	CB3FloatEdit *m_xCtrl;
@@ -40,7 +40,7 @@ public:
 	void b3Write(const char *title);
 };
 
-class CB3DirGroup : public CB3PosGroup
+class B3_PLUGIN CB3DirGroup : public CB3PosGroup
 {
 protected:
 	CB3FloatEdit *m_lenCtrl;
