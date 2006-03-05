@@ -27,8 +27,8 @@
 #include "b3ProfileShapeDialog.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/system/b3VectorEdit.h"
 #include "b3SplinePreview.h"
-#include "b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProfileBevelSpline dialog

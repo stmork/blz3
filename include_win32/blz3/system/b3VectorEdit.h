@@ -19,7 +19,6 @@
 #define B3_SYSTEM_VECTOREDIT_H
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3App.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/base/b3Matrix.h"
 

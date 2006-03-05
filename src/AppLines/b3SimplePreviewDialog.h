@@ -30,7 +30,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CB3SimplePreviewDialog dialog
 
-class CB3SimplePreviewDialog : public CDialog
+class B3_PLUGIN CB3SimplePreviewDialog : public CDialog
 {
 	b3Item *m_Item;
 	b3_u32  m_Checksum;

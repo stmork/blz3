@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3VectorEdit.h"
+#include "blz3/system/b3VectorEdit.h"
+#include "blz3/system/b3App.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 15:00:35  sm
+**	- Added some more B3_PLUGIN modifier.
+**
 **	Revision 1.4  2002/03/10 20:34:18  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.

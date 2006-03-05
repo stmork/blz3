@@ -1630,6 +1630,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3VectorEdit.cpp">
+			</File>
+			<File
 				RelativePath="b3Version.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -1860,6 +1863,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3TreeCtrl.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3VectorEdit.h">
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3Version.h">

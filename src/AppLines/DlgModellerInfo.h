@@ -26,7 +26,7 @@
 
 #include "blz3/raytrace/b3Special.h"
 #include "blz3/system/b3FloatEdit.h"
-#include "b3VectorEdit.h"
+#include "blz3/system/b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgModellerInfo dialog

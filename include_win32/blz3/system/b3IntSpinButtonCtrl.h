@@ -22,7 +22,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-// b3FloatSpinButtonCtrl.h : header file
+// b3IntSpinButtonCtrl.h : header file
 //
 
 #include "blz3/b3Config.h"
@@ -33,7 +33,7 @@
 #define B3_ISBC_DEFAULT_INCREMENT 1
 #define B3_ISBC_DEFAULT_ACCEL     5
 
-class CB3IntSpinButtonCtrl : public CSpinButtonCtrl
+class B3_PLUGIN CB3IntSpinButtonCtrl : public CSpinButtonCtrl
 {
 	b3_s32 m_Increment;
 	b3_s32 m_Min;

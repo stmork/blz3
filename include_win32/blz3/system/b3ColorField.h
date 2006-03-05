@@ -27,7 +27,7 @@
 	 ((r) & 0x00ff00) |\
 	(((r) & 0x0000ff) << 16)))
 
-class CB3ColorField : public CStatic
+class B3_PLUGIN CB3ColorField : public CStatic
 {
 	b3_pkd_color m_Color;
 public:
@@ -41,7 +41,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-class CB3LineWidth : public CStatic
+class B3_PLUGIN CB3LineWidth : public CStatic
 {
 	b3_pkd_color m_Color;
 	b3_res       m_Width;
@@ -56,7 +56,7 @@ protected:
  	DECLARE_MESSAGE_MAP()
 };
 
-class CB3FontField : public CStatic
+class B3_PLUGIN CB3FontField : public CStatic
 {
 	b3_pkd_color  m_fgColor;
 	b3_pkd_color  m_bgColor;
@@ -82,7 +82,7 @@ enum b3_hsv_mode
 
 extern b3_bool b3HSVtoRGB(b3_f64 h,b3_f64 s,b3_f64 v,b3_f64 &r,b3_f64 &g,b3_f64 &b);
 
-class CB3HSVField : public CStatic
+class B3_PLUGIN CB3HSVField : public CStatic
 {
 	b3_hsv_mode m_Mode;
 	b3_f64      m_H,m_S,m_V;

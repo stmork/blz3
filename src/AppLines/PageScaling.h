@@ -25,8 +25,8 @@
 //
 
 #include "blz3/system/b3PropertyPage.h"
+#include "blz3/system/b3VectorEdit.h"
 #include "blz3/raytrace/b3Scaling.h"
-#include "b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageScaling dialog

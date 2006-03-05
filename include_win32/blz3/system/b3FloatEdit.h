@@ -29,7 +29,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CB3FloatEdit window
 
-class CB3FloatEdit : public CEdit
+class B3_PLUGIN CB3FloatEdit : public CEdit
 {
 	DECLARE_DYNAMIC(CB3FloatEdit)
 

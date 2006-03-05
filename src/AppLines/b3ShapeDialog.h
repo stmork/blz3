@@ -26,7 +26,7 @@
 //
 
 #include "AppLines.h"
-#include "b3VectorEdit.h"
+#include "blz3/system/b3VectorEdit.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3World.h"
