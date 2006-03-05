@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/base/b3Color.h"
 
@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.41  2005/12/05 22:12:24  sm
 **	- More const declarations.
-**
+**	
 **	Revision 1.40  2005/10/16 08:37:23  sm
 **	- Fixed OpenEXR configure.
 **	- Fixed bimg3 for HDR image output.

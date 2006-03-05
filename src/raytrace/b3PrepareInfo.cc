@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/raytrace/b3Base.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.13  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.12  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog

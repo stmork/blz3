@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.24  2005/12/04 16:48:40  sm
 **      - Converted some defines into inlined methods.
 **

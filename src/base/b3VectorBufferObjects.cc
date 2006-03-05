@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3VectorBufferObjects.h"
 
 #define USE_VBOS
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2004/12/06 15:14:56  smork
 **	- Minor changes
-**
+**	
 **	Revision 1.10  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
 **	

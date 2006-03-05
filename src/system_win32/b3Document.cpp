@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Document.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2001/07/08 12:56:43  sm
 **	- Now displaying Mandelbrot set. It's like switching all light on together.
-**
+**	
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.

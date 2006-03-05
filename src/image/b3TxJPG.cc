@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2005/01/25 14:34:33  smork
 **	- Done some formatting.
-**
+**	
 **	Revision 1.14  2005/01/25 08:46:10  smork
 **	- Removed global static variables/functions from JPEG load code.
 **	

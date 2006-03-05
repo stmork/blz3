@@ -20,7 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxSaveInfo.h"
+#include "b3TxInclude.h"
 
 #ifdef BLZ3_USE_OPENEXR
 #include <ImfOutputFile.h>
@@ -41,9 +41,12 @@ using namespace Imath;
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
-**
+**	
 **	Revision 1.2  2005/10/10 18:51:22  sm
 **	- Added OpenEXR image saving.
 **	

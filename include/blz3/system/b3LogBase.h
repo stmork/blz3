@@ -35,7 +35,7 @@ enum b3_log_level
 	B3LOG_FULL   = 30  //!< Full logging for software debugging purposes.
 };
 
-class b3Mutex;
+class B3_PLUGIN b3Mutex;
 
 /**
  * This class provides several logging methods.

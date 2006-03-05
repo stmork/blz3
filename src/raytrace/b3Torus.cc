@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.39  2005/06/08 11:09:05  smork
 **	- Base transformation optimized.
-**
+**	
 **	Revision 1.38  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and

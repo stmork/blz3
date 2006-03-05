@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 #include "blz3/base/b3Endian.h"
 
 /*************************************************************************
@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.7  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc

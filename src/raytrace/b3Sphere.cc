@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.35  2004/12/07 13:20:59  smork
 **	- Computing spheres correctly
-**
+**	
 **	Revision 1.34  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow

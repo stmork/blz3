@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Reg.h"
 
 /*************************************************************************
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2005/01/09 19:58:30  sm
 **	- Added more convenient plugin path maintainance
-**
+**	
 **	Revision 1.3  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	

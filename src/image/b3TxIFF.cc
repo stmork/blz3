@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 #include "blz3/base/b3Endian.h"
 
 #include "b3TxIFF.h"
@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.14  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.13  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
 **	

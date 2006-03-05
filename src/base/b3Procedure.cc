@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Procedure.h"
@@ -37,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.60  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
-**
+**	
 **	Revision 1.59  2005/10/08 16:35:44  sm
 **	- Fixed rounding problem
 **	

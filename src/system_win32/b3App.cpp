@@ -21,11 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemInclude.h"
 #include "blz3/system/b3App.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3Aux.h"
-#include <math.h>
 
 #ifndef _DEBUG
 #define dont_USE_COOL_CONTROLS
@@ -43,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.13  2005/01/13 20:05:16  sm
 **	- Some Lines bugfixes
-**
+**	
 **	Revision 1.12  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	

@@ -276,226 +276,1826 @@
 			<File
 				RelativePath="b3Animation.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3AnimElement.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Area.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3BaseTrans.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3BBox.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Box.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Bump.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3BumpSampler.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3CameraProjection.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Condition.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Cone.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGBox.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGCone.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGCylinder.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGEllipsoid.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGShape.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGSphere.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3CSGTorus.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Cylinder.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Disk.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Ellipsoid.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3Factory.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Init.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Intersect.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Light.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Material.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3MaterialSampler.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Normal.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3NormalDeriv.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3PickInfo.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3PrepareInfo.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3RayRow.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Raytrace.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\b3RaytraceInclude.cc"
+				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ReadCOB.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ReadTGF.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3RenderLight.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3RenderShape.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3RenderView.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Scaling.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Scene.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SceneBBoxTraversal.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Shade.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ShadeMork.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ShadeMork2.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ShadePhong.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Shape.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Special.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Sphere.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SplineArea.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SplineCylinder.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SplineRing.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SplineRot.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SplineShape.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Torus.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Triangles.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3TriangleShape.cc"
 				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3RaytraceInclude.h"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -548,6 +2148,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\raytrace\b3Raytrace.h">
+			</File>
+			<File
+				RelativePath=".\b3RaytraceInclude.h">
 			</File>
 			<File
 				RelativePath="b3ReadCOB.h">

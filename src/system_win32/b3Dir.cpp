@@ -21,14 +21,12 @@
 **                                                                      **
 *************************************************************************/
 
-#include "stdafx.h"
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3Log.h"
 #include <sys/types.h>
 #include <sys/stat.h>	
 #include <io.h>
 #include <direct.h>
-#include <stdlib.h>
 
 /*************************************************************************
 **                                                                      **
@@ -38,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.14  2005/01/02 21:18:34  sm
 **	- Changed version output
 **	

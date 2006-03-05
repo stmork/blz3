@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include <math.h>
-
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Print.h"
 
 #define no_USE_PRINT
@@ -36,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.2  2002/08/09 14:05:51  sm
 **	- Minor bug fixes.
 **	

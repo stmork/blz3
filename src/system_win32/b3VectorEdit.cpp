@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3VectorEdit.h"
 #include "blz3/system/b3App.h"
 
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2006/03/05 15:00:35  sm
 **	- Added some more B3_PLUGIN modifier.
-**
+**	
 **	Revision 1.4  2002/03/10 20:34:18  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods

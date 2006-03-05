@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3PluginBase.h"
 #include "blz3/base/b3FileList.h"
 
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2004/01/18 13:51:58  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.1  2003/05/24 14:00:36  sm
 **	- Added plugin base classes for system independend support
 **	#

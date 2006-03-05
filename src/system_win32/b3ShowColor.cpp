@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3ShowColor.h"
 #include "blz3/image/b3Tx.h"
 
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
-**
+**	
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title

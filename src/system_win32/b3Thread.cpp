@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "stdafx.h"
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Thread.h"
-#include "blz3/system/b3Log.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.19  2005/08/05 18:52:56  sm
 **	- Done some integration work.
-**
+**	
 **	Revision 1.18  2005/06/03 09:00:34  smork
 **	- Moved b3CPU into own file.
 **	

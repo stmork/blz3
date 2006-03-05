@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
-#include "blz3/system/b3Log.h"
+#include "b3TxInclude.h"
 #include "blz3/base/b3Color.h"
 #include <float.h>
 
@@ -36,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.19  2005/10/09 15:06:47  sm
 **	- Added HDR image processing
-**
+**	
 **	Revision 1.18  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
 **	

@@ -20,7 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3Locale.h"
 #include <wchar.h>
 #include <locale.h>
@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2006/02/05 18:57:14  sm
 **	- Added locale support.
-**
+**	
 **
 */
 

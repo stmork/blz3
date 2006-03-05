@@ -25,6 +25,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3RaytraceInclude.h"
 #include "b3ReadTGF.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Color.h"
@@ -39,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.14  2005/12/28 15:03:19  sm
 **	- Typo fix
-**
+**	
 **	Revision 1.13  2005/12/28 14:46:21  sm
 **	- Typo fix.
 **	

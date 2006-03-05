@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Version.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Date.h"
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2005/01/02 21:18:34  sm
 **	- Changed version output
-**
+**	
 **	Revision 1.3  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format

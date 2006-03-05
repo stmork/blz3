@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Endian.h"
@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.26  2005/10/16 09:20:09  sm
 **	- Added OpenEXR reading.
-**
+**	
 **	Revision 1.25  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
 **	

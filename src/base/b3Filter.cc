@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Filter.h"
 
 /*************************************************************************
@@ -31,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.2  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to

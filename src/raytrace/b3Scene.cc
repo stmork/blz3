@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Activation.h"
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/raytrace/b3Shade.h"
+#include "b3RaytraceInclude.h"
 #include "b3ReadTGF.h"
 
 /*************************************************************************
@@ -34,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.77  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.76  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
-**
+**	
 **	Revision 1.75  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.

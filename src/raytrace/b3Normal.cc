@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Bump.h"
-#include "blz3/raytrace/b3Shape.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2005/06/17 10:29:06  smork
 **	- Made some inlining.
 **	- Removed some unnecessary tests.
 **	- Printing CPU message only once.
-**
+**	
 **	Revision 1.14  2005/06/07 14:16:09  smork
 **	- Compiler fixes.
 **	

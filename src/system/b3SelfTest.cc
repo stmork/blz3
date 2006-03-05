@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3Date.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"

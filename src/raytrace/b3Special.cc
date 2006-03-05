@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Animation.h"
-#include "blz3/raytrace/b3Special.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.77  2006/03/05 21:22:36  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.76  2005/10/02 09:51:13  sm
 **      - Added OpenEXR configuration.
 **      - Added more excpetion handling.

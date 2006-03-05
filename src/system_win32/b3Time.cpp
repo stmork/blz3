@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Time.h"
 
 /*************************************************************************
@@ -34,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.13  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -42,7 +45,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.12  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.

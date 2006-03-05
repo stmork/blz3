@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Activation.h"
+#include "b3RaytraceInclude.h"
 #include "blz3/raytrace/b3RenderView.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.46  2005/08/26 16:22:43  sm
 **	- Documentation.
-**
+**	
 **	Revision 1.45  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.

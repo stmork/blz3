@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 #include "blz3/base/b3Endian.h"
 
 /*************************************************************************
@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.9  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.

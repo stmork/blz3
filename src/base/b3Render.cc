@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3VertexBuffer.h"
 #include "blz3/base/b3Matrix.h"
@@ -46,6 +47,9 @@
 
 /*
 **      $Log$
+**      Revision 1.118  2006/03/05 21:22:34  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.117  2006/02/04 19:19:30  sm
 **      - Corrected image sampler. Check the used data
 **        type in constructor by using tx->b3IsHDR or some

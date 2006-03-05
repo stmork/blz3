@@ -21,10 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3ShapeRenderContext.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "b3RaytraceInclude.h"
 #include "blz3/image/b3Sampler.h"
 
 /*************************************************************************
@@ -35,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.90  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.89  2006/02/04 19:19:30  sm
 **      - Corrected image sampler. Check the used data
 **        type in constructor by using tx->b3IsHDR or some

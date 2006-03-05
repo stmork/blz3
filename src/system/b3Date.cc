@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3Date.h"
 #include "blz3/system/b3Log.h"
 
@@ -47,10 +48,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2005/10/02 09:51:13  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.10  2005/05/07 14:48:06  sm
 **	- Searching for correct "latest possible" date on 64 bit machines.
 **	

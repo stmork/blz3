@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
-#include "blz3/system/b3Log.h"
+#include "b3TxInclude.h"
 #include "blz3/system/b3File.h"
 
 #include "b3TxTIFF.h"
@@ -47,10 +46,13 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.17  2005/08/11 13:37:29  smork
 **	- Image cleanup (TIFF).
 **	- Documentation.
-**
+**	
 **	Revision 1.16  2005/06/09 14:34:25  sm
 **	- Signature fix.
 **	

@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3TimeAbstract.h"
 
 /*************************************************************************
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.2  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing

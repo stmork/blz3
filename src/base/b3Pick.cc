@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Pick.h"
 
 #define SEGMENTS 6
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.9  2005/05/15 10:19:27  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.8  2003/02/23 21:15:41  sm
 **	- First shape picking
 **	

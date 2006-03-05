@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3ComboBox.h"
 
 /*************************************************************************
@@ -33,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2004/05/16 09:21:11  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
-**
+**	
 **	Revision 1.3  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3

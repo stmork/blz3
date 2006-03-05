@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.5  2004/07/03 13:49:30  sm
 **	- Added spline knot control dialog which is not completed yet.
 **	

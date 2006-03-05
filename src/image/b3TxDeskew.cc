@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
-#include "blz3/image/b3TxMeasure.h"
+#include "b3TxInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2005/08/11 13:16:11  smork
 **	- Documentation.
 **	- b3Tx cleanup.
-**
+**	
 **	Revision 1.3  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.

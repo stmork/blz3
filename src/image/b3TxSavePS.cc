@@ -20,7 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxSaveInfo.h"
+#include "b3TxInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -30,9 +30,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2005/06/16 10:15:39  smork
 **	- Corrected PostScript handling.
-**
+**	
 **	Revision 1.4  2005/06/02 07:45:44  smork
 **	- Fixed RGB8 image saving in brt3.
 **	- Added PostScript image save.

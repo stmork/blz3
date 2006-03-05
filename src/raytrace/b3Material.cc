@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/base/b3Math.h"
+#include "b3RaytraceInclude.h"
 #include "blz3/base/b3Procedure.h"
 
 #define no_DEBUG_MATERIAL
@@ -36,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.105  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.104  2005/10/15 16:43:03  sm
 **      - Added HDR texture access.
 **

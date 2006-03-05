@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-#include "blz3/image/b3Tx.h"
-#include "blz3/system/b3Log.h"
+#include "b3TxInclude.h"
 
 #include <math.h>
 
@@ -35,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.9  2005/06/02 07:45:44  smork
 **	- Fixed RGB8 image saving in brt3.
 **	- Added PostScript image save.
-**
+**	
 **	Revision 1.8  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	

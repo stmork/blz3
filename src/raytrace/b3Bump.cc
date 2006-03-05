@@ -21,10 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Bump.h"
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/base/b3Math.h"
+#include "b3RaytraceInclude.h"
 #include "blz3/base/b3Procedure.h"
 
 /*************************************************************************
@@ -35,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.43  2005/10/15 20:55:19  sm
 **	- Some optimizations.
-**
+**	
 **	Revision 1.42  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
 **	

@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3UndoOperation.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.1  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 */
 
 /*************************************************************************

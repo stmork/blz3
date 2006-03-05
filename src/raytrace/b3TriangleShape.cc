@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/base/b3Math.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2006/03/05 21:22:36  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.51  2005/08/19 14:34:56  sm
 **      - Documentation.
 **

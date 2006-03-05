@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2006/03/05 21:22:36  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.5  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.

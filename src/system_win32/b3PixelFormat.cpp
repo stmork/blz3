@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3PixelFormat.h"
 #include "blz3/system/b3App.h"
 #include "blz3/base/b3Render.h"
@@ -33,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.9  2005/01/23 19:54:07  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.8  2005/01/21 20:42:03  sm
 **	- Added error handling to Lines.
 **	- Try to use ChoosePixelFormat for OpenGL context selection.

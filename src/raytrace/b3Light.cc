@@ -21,10 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Activation.h"
-#include "blz3/raytrace/b3Light.h"
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/raytrace/b3Shade.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.58  2005/10/22 10:51:41  sm
 **      - Some SSE optimizations.
 **

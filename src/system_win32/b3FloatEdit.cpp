@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3FloatEdit.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2003/08/31 08:56:23  sm
 **	- Windows support for the snprintf functions
-**
+**	
 **	Revision 1.10  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format

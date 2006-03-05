@@ -28,5 +28,7 @@
 #include "blz3/raytrace/b3Animation.h"
 #include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
+#include "blz3/raytrace/b3RenderLight.h"
 
 #endif

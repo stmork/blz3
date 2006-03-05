@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3SearchPath.h"
 
 /*************************************************************************
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.12  2005/08/10 15:09:04  smork
 **	- Documentation.
-**
+**	
 **	Revision 1.11  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
 **	

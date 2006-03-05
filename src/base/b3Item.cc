@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3BaseInclude.h"
 #include "blz3/system/b3Locale.h"
 #include "blz3/base/b3World.h"
 #include "b3ItemRegister.h"
@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2006/03/05 21:22:33  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.43  2006/02/05 18:57:14  sm
 **      - Added locale support.
 **

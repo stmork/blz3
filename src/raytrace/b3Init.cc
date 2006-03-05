@@ -21,15 +21,7 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/raytrace/b3Condition.h"
-#include "blz3/raytrace/b3Bump.h"
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Shape.h"   
-#include "blz3/raytrace/b3BBox.h"    
-#include "blz3/raytrace/b3Light.h"   
-#include "blz3/raytrace/b3Animation.h"
-#include "blz3/raytrace/b3Special.h"  
-#include "blz3/raytrace/b3Scene.h"    
+#include "b3RaytraceInclude.h"
    
 /*************************************************************************
 **                                                                      **
@@ -39,6 +31,9 @@
     
 /*
 **      $Log$
+**      Revision 1.13  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.12  2005/01/02 19:15:25  sm
 **      - Fixed signed/unsigned warnings
 **

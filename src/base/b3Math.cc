@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Math.h"
 #include <float.h>
 
@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2005/02/02 09:08:25  smork
 **	- Fine tuning of epsilon.
-**
+**	
 **	Revision 1.1  2004/03/21 16:08:35  sm
 **	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
 **	

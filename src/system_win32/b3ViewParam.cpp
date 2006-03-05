@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3ViewParam.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.

@@ -23,8 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
-#include "blz3/system/b3Log.h"
+#include "b3TxInclude.h"
 #include "blz3/base/b3Color.h"
 
 #include <math.h>
@@ -63,9 +62,12 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.26  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.25  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
-**
+**	
 **	Revision 1.24  2005/08/11 13:16:12  smork
 **	- Documentation.
 **	- b3Tx cleanup.

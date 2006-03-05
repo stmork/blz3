@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.29  2004/12/07 13:20:58  smork
 **      - Computing spheres correctly
 **

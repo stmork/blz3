@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Aux.h"
 
@@ -42,9 +43,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2005/12/05 22:12:24  sm
 **	- More const declarations.
-**
+**	
 **	Revision 1.10  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
 **	

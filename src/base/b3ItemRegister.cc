@@ -25,7 +25,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3BaseInclude.h"
 #include "blz3/base/b3World.h"
 #include "blz3/system/b3File.h"
 #include "b3ItemRegister.h"
@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2006/03/05 21:22:33  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.11  2004/11/26 16:28:17  smork
 **      - Equalizing VERBOSE print outs.
 **      - pthread error messages only in _DEBUG version.

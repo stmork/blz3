@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3Exception.h"
 #include <ctype.h>
 
@@ -34,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2006/03/05 21:22:36  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.7  2004/12/30 16:27:39  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling

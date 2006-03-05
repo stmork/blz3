@@ -21,11 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "b3RaytraceInclude.h"
 #include "blz3/base/b3Cubic.h"
-#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.53  2005/12/04 16:48:40  sm
 **	- Converted some defines into inlined methods.
-**
+**	
 **	Revision 1.52  2005/10/20 19:55:17  sm
 **	- Introduced SSE intrinsics.
 **	

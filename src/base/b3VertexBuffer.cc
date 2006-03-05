@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3VertexBuffer.h"
 #include "blz3/system/b3Mem.h"
 
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.10  2005/05/04 10:16:10  mork
 **	- Added some GLenum castings.
-**
+**	
 **	Revision 1.9  2004/12/11 18:39:44  sm
 **	- Fixed modified object problem in Lines when returning
 **	  to scene editor.

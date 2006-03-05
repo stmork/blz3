@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3PropertyPage.h"
 
 /*************************************************************************
@@ -31,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2004/05/12 14:13:28  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -45,7 +49,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.6  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.

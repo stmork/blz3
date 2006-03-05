@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Color.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.9  2005/12/04 15:35:58  sm
 **	- Added some const signatures.
-**
+**	
 **	Revision 1.8  2005/10/22 10:51:41  sm
 **	- Some SSE optimizations.
 **	

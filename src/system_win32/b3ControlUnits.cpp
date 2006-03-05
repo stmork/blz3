@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3ControlUnits.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
-**
+**	
 **	Revision 1.3  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.

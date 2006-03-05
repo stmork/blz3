@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Activation.h"
-#include "blz3/raytrace/b3Condition.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.27  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
-**
+**	
 **	Revision 1.26  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero

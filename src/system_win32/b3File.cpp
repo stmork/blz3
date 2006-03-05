@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "stdafx.h"
 #include "blz3/system/b3File.h"
 #include "io.h"
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.7  2004/05/13 08:14:29  sm
 **	- Fixed some uninitialized variables.
 **	

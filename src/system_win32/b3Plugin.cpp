@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/base/b3FileList.h"
 
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.14  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.

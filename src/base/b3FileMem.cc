@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3FileMem.h"
 #include "blz3/system/b3File.h"
 
@@ -33,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.9  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.8  2005/01/04 15:13:59  smork
 **	- Changed some data types.
 **	

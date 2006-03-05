@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Aux.h"
 
 /*************************************************************************
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2003/03/08 16:08:14  sm
 **	- Optimized b3_pkd_color <-> b3Color conversion.
-**
+**	
 **	Revision 1.6  2002/08/10 14:36:31  sm
 **	- Some shapes had cleared the vertex array whenever the
 **	  b3AllocVertices() method were called. Without calling

@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3BaseInclude.h"
 #include "blz3/base/b3World.h"
 #include "b3ItemRegister.h"
 
@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2006/03/05 21:22:33  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.5  2004/09/23 09:31:33  sm
 **      - Changed b3Runtime into a real singleton.
 **      - Added functions for OpenGL extension.

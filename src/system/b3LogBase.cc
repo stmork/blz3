@@ -15,7 +15,7 @@
 **
 */
 
-#include "blz3/b3Config.h"
+#include "b3SystemIndInclude.h"
 #include <errno.h>
 
 /*************************************************************************
@@ -26,9 +26,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2005/06/18 07:31:41  sm
 **	- Windows doesn't have truncate()
-**
+**	
 **	Revision 1.10  2005/06/14 13:24:08  smork
 **	- Changed remove to truncate.
 **	

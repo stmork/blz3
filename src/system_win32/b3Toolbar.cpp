@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemInclude.h"
 #include "blz3/system/b3App.h"
 #include "blz3/system/b3Toolbar.h"
 							  
@@ -40,6 +40,9 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -48,7 +51,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.14  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	

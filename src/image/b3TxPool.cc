@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3TxPool.h"
+#include "b3TxInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.27  2005/07/02 14:59:08  sm
 **	- Some better image pooling.
-**
+**	
 **	Revision 1.26  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	

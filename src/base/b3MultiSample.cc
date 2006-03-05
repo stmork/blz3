@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3MultiSample.h"
 
 #ifdef BLZ3_USE_OPENGL
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.6  2005/10/11 16:59:18  sm
 **	- OpenGL compile fix.
-**
+**	
 **	Revision 1.5  2005/05/04 10:16:10  mork
 **	- Added some GLenum castings.
 **	

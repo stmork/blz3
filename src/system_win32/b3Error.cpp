@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3Error.h"
 
 /*************************************************************************
@@ -31,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2005/01/21 20:42:03  sm
 **	- Added error handling to Lines.
 **	- Try to use ChoosePixelFormat for OpenGL context selection.
-**
+**	
 **	Revision 1.1  2005/01/21 15:41:06  smork
 **	- Added error code/text preparation.
 **	

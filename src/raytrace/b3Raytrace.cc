@@ -21,13 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Animation.h"
-#include "blz3/raytrace/b3Special.h"  
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/raytrace/b3Shade.h"
-#include "blz3/raytrace/b3CameraProjection.h"
-#include "blz3/base/b3Math.h"
+#include "b3RaytraceInclude.h"
 
 #define no_DEBUG_SS4
 
@@ -39,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.75  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.74  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
-**
+**	
 **	Revision 1.73  2005/07/18 16:15:36  sm
 **	- Updating espilon
 **	

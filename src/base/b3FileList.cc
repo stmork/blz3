@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3FileList.h"
 
 /*************************************************************************
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2006/02/05 18:57:14  sm
 **	- Added locale support.
-**
+**	
 **	Revision 1.7  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	

@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3SystemInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.7  2006/02/05 19:07:24  sm
 **	- Added locale support for Windows.
-**
+**	
 **	Revision 1.6  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	

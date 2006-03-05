@@ -30,7 +30,7 @@
 #include <sys/timeb.h>
 #include <time.h>
 
-#include "blz3/b3Config.h"
+#include "b3SystemInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.15  2005/06/13 10:43:41  smork
 **	- Log file moved into home directory.
-**
+**	
 **	Revision 1.14  2005/05/07 14:06:06  sm
 **	- Corrected va-list handling in Windows version.
 **	- Using correct lib directory on 64 bit architectures.

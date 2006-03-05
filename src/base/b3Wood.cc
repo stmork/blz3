@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Wood.h"
@@ -34,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2005/10/02 15:06:23  sm
 **	- Some b3Frac/b3FMod/fmod corrections
 **	- Documentation
-**
+**	
 **	Revision 1.10  2004/10/07 10:33:08  sm
 **	- Added some GIF tools and made them usable with Blizzard III.
 **	

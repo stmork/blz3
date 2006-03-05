@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.5  2005/10/19 15:14:10  sm
 **	- Added some debug messages.
-**
+**	
 **	Revision 1.4  2005/05/09 17:38:09  sm
 **	- Fixed threading problem on Multi CPU machines for
 **	  material initialization.

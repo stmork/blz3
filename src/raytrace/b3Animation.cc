@@ -21,10 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Animation.h"
-#include "blz3/raytrace/b3Special.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2006/03/05 21:22:35  sm
+**      - Added precompiled support for faster comiling :-)
+**
 **      Revision 1.23  2004/08/20 08:09:27  sm
 **      - Optimized animation a little bit.
 **

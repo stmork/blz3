@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3TreeCtrl.h"
 
 /*************************************************************************
@@ -33,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in
 **	  hierarchy dialog.
 **	- Some print cleanups done.
 **	- Fixed activation of b3SuperSample.
-**
+**	
 **	Revision 1.1  2002/01/24 15:55:58  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.

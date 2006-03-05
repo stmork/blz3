@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Cubic.h"
 #include "blz3/base/b3Math.h"
 
@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2004/03/21 16:08:35  sm
 **	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
-**
+**	
 **	Revision 1.2  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
 **	

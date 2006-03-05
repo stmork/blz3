@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include <math.h>
+#include "b3SystemInclude.h"
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Tracker.h"
 
@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.11  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.10  2002/08/14 16:48:49  sm
 **	- The last view mode/filter mode for image views are stored in
 **	  registry

@@ -21,11 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Activation.h"
-#include "blz3/raytrace/b3Animation.h"
-#include "blz3/raytrace/b3Special.h"  
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/raytrace/b3Shade.h"
+#include "b3RaytraceInclude.h"
 
 #define DEBUG_SS4
 
@@ -37,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.20  2005/12/05 22:12:24  sm
 **	- More const declarations.
-**
+**	
 **	Revision 1.19  2005/10/09 12:05:34  sm
 **	- Changed to HDR image computation.
 **	

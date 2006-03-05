@@ -25,10 +25,10 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3RaytraceInclude.h"
 #include "b3ReadCOB.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Aux.h"
-#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.18  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
-**
+**	
 **	Revision 1.17  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
 **	

@@ -21,11 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3Special.h"
-#include "blz3/raytrace/b3Scene.h"
-#include "blz3/raytrace/b3Shade.h"
+#include "b3RaytraceInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.59  2005/12/19 10:45:18  sm
 **	- Some locale specified.
-**
+**	
 **	Revision 1.58  2005/06/08 14:16:24  smork
 **	- Some more vectorization.
 **	

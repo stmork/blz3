@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxInclude.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2005/10/09 15:06:47  sm
 **	- Added HDR image processing
-**
+**	
 **	Revision 1.2  2004/08/28 13:55:33  sm
 **	- Added some mirror methods.
 **	- Cleanup job.

@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemInclude.h"
 #include "blz3/system/b3ShowImage.h"
 
 /*************************************************************************
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/03/05 21:22:37  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.8  2002/08/25 13:01:11  sm
 **	- b3ShowImage updated to handle empty images.
-**
+**	
 **	Revision 1.7  2002/08/09 14:05:51  sm
 **	- Minor bug fixes.
 **	

@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3RaytraceInclude.h"
 #include "blz3/raytrace/b3BumpSampler.h"
 
 /*************************************************************************
@@ -31,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.9  2006/02/04 19:19:30  sm
 **	- Corrected image sampler. Check the used data
 **	  type in constructor by using tx->b3IsHDR or some
 **	  sort!
 **	- The RenderShapeSampler needs integer frame
 **	  buffer for OpenGL use. All other use HDR images.
-**
+**	
 **	Revision 1.8  2005/12/12 16:01:32  smork
 **	- Some more const correction in samplers.
 **	

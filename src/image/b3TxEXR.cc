@@ -22,11 +22,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3TxInclude.h"
 
 #ifdef BLZ3_USE_OPENEXR
-#include "blz3/image/b3Tx.h"
-
 #include <ImfIO.h>
 #include <ImfInputFile.h>
 #include <ImfHeader.h>
@@ -44,9 +42,12 @@ using namespace Iex;
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/05 21:22:34  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.3  2005/10/17 18:51:33  sm
 **	- Compile fix.
-**
+**	
 **	Revision 1.2  2005/10/16 09:43:41  sm
 **	- Minor changes.
 **	

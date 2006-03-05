@@ -21,11 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3RaytraceInclude.h"
 #include "blz3/raytrace/b3Factory.h"
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3ShapeRenderContext.h"
-#include "blz3/raytrace/b3Special.h"
-#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.24  2005/01/07 12:38:51  smork
 **	- Bump release.
 **	- Added tool to create object/bbox thumb nails.
 **	- Moved scene factory from Lines to raytrace lib.
-**
+**	
 **	Revision 1.23  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling

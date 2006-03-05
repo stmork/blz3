@@ -20,6 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3CPUBase.h"
 
 /*************************************************************************
@@ -30,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
-**
+**	
 **	Revision 1.1  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)

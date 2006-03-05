@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3SystemIndInclude.h"
 #include "blz3/system/b3Mem.h"
 
 /*************************************************************************
@@ -31,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/05 21:22:36  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.4  2005/05/18 09:16:55  smork
 **	- More selftest stability.
 **	- Using mutex as base class in b3Mem.
-**
+**	
 **	Revision 1.3  2005/05/17 17:49:05  sm
 **	- Using non static mutex for memory management.
 **	

@@ -21,16 +21,12 @@
 #define BLIZZARD3_REG_COMPANY  "MORKNet"
 #define BLIZZARD3_REG_PRODUCT  "Blizzard III"
 
-#ifndef WINVER
-#define WINVER 0x501
-#endif
-
 #pragma warning( disable : 4290 )
 
 #define main(argc,argv) _Blizzard3Main(argc,argv)
 
 // Include MFC stuff
-#include "stdafx.h"
+#include "StdAfx.h"
 
 // Make memory leaks debuggable
 #ifdef _DEBUG
@@ -116,9 +112,12 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.39  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.38  2006/03/03 21:54:05  sm
 **	- Moved color field selector into system.
-**
+**	
 **	Revision 1.37  2005/10/22 15:14:45  sm
 **	- Added SSE intrinsic support which doesn't
 **	  function due to an alignment buf in the VC

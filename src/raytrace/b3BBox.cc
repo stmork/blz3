@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3BBox.h"
+#include "b3RaytraceInclude.h"
 #include "b3ReadCOB.h"
 #include "b3ReadTGF.h"
 
@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.114  2006/03/05 21:22:35  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.113  2005/05/05 07:58:03  sm
 **	- BBox visibility computed only for raytracing.
-**
+**	
 **	Revision 1.112  2005/05/01 12:58:22  sm
 **	- Optimized object visibility.
 **	

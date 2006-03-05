@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Endian.h"
 
 union b3_change_buffer
@@ -106,9 +107,12 @@ public:
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.2  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
-**
+**	
 **	Revision 1.1  2001/10/12 18:43:21  sm
 **	- Endian conversion added
 **	

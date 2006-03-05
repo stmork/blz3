@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3TxInclude.h"
 #include "blz3/image/b3Sampler.h"
-#include "blz3/image/b3Tx.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.12  2006/03/05 21:22:34  sm
+**  - Added precompiled support for faster comiling :-)
+**
 **  Revision 1.11  2006/02/05 19:07:24  sm
 **  - Added locale support for Windows.
 **

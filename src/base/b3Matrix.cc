@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "b3BaseInclude.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Aux.h"
 
@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2006/03/05 21:22:33  sm
+**	- Added precompiled support for faster comiling :-)
+**
 **	Revision 1.32  2005/08/05 12:56:59  smork
 **	- Documentation.
-**
+**	
 **	Revision 1.31  2005/06/06 12:26:30  smork
 **	- Further optimizations.
 **	
@@ -377,7 +380,7 @@ b3_matrix * b3Matrix::b3Inverse (
 		Row3.y  = From->m23;
 		Row3.z  = From->m33;
 
-		Denom = Det3 (&Row1,&Row2,&Row3);
+		Denom = b3Det3 (&Row1,&Row2,&Row3);
 		if (Denom == 0)
 		{
 			return null;
