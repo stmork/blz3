@@ -23,7 +23,6 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
-#include "blz3/base/b3Endian.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/06 09:24:55  smork
+**	- Small optimizations for precompiling.
+**
 **	Revision 1.11  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.10  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
 **	

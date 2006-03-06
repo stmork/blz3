@@ -24,7 +24,6 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
-#include "blz3/base/b3Endian.h"
 #include "blz3/system/b3File.h"
 
 #include "b3TxTIFF.h"
@@ -37,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/06 09:24:55  smork
+**	- Small optimizations for precompiling.
+**
 **	Revision 1.12  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.11  2005/08/11 13:37:29  smork
 **	- Image cleanup (TIFF).
 **	- Documentation.
