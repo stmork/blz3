@@ -15,8 +15,6 @@
 **
 */
 
-#define MATRIX_INV_4D
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -25,7 +23,6 @@
 
 #include "b3BaseInclude.h"
 #include "blz3/base/b3Matrix.h"
-#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2006/03/08 22:08:47  sm
+**	- Compile fix for vector alignment matrix.
+**
 **	Revision 1.33  2006/03/05 21:22:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.32  2005/08/05 12:56:59  smork
 **	- Documentation.
 **	
@@ -182,9 +182,6 @@ b3_vector b3Matrix::m_EmptyVector =
 {
 	0,0,0
 };
-
-typedef b3_f32 b3_matrix_array[4][4];
-
 b3_bool b3Matrix::b3NormalizeCol (
 	b3_matrix *Matrix,
 	b3_count   col)
@@ -263,7 +260,7 @@ b3_bool b3Matrix::b3NormalizeRow (
 
 b3_f64 b3Matrix::b3Det4(b3_matrix *Matrix)
 {
-	b3_vector Row1,Row2,Row3,Row4;
+	b3_vector64 Row1,Row2,Row3,Row4;
 	b3_f64    Result;
 
 	Row1.x  = Matrix->m21;
@@ -310,105 +307,61 @@ b3_matrix * b3Matrix::b3Inverse (
 	b3_matrix *From,
 	b3_matrix *To)
 {
-#	ifdef MATRIX_INV_4D
-		b3_f64    Denom;
-		b3_vector Row1,Row2,Row3,Row4;
+	b3_f64      Denom;
+	b3_vector64 Row1,Row2,Row3,Row4;
 
-		Denom = b3Det4 (From);
-		if (Denom == 0)
-		{
-			return (null);
-		}
-		Denom = 1 /Denom;
+	Denom = b3Det4 (From);
+	if (Denom == 0)
+	{
+		return (null);
+	}
+	Denom = 1 /Denom;
 
-		Row1.x  = From->m12;	Row2.x  = From->m22;
-		Row1.y  = From->m13;	Row2.y  = From->m23;
-		Row1.z  = From->m14;	Row2.z  = From->m24;
-  
-		Row3.x  = From->m32;	Row4.x  = From->m42;
-		Row3.y  = From->m33;	Row4.y  = From->m43;
-		Row3.z  = From->m34;	Row4.z  = From->m44;
-  
-		/* inverting first line */
-		To->m11 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
-		To->m12 = - (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
-		To->m13 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
-		To->m14 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
+	Row1.x  = From->m12;	Row2.x  = From->m22;
+	Row1.y  = From->m13;	Row2.y  = From->m23;
+	Row1.z  = From->m14;	Row2.z  = From->m24;
 
-		/* inverting second line */
-		Row1.x  =   From->m11;
-		Row2.x  =   From->m21;
-		Row3.x  =   From->m31;
-		Row4.x  =   From->m41;
-		To->m21 = - (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
-		To->m22 =   (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
-		To->m23 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
-		To->m24 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
+	Row3.x  = From->m32;	Row4.x  = From->m42;
+	Row3.y  = From->m33;	Row4.y  = From->m43;
+	Row3.z  = From->m34;	Row4.z  = From->m44;
 
-		/* inverting third line */
-		Row1.y  =   From->m12;
-		Row2.y  =   From->m22;
-		Row3.y  =   From->m32;
-		Row4.y  =   From->m42;
-		To->m31 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
-		To->m32 = - (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
-		To->m33 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
-		To->m34 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
+	/* inverting first line */
+	To->m11 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+	To->m12 = - (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+	To->m13 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+	To->m14 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
-		/* inverting third fourth */
-		Row1.z  =   From->m13;
-		Row2.z  =   From->m23;
-		Row3.z  =   From->m33;
-		Row4.z  =   From->m43;
-		To->m41 = - (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
-		To->m42 =   (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
-		To->m43 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
-		To->m44 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
-#	else
-		b3_f64    Denom;
-		b3_vector Row1,Row2,Row3;
+	/* inverting second line */
+	Row1.x  =   From->m11;
+	Row2.x  =   From->m21;
+	Row3.x  =   From->m31;
+	Row4.x  =   From->m41;
+	To->m21 = - (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+	To->m22 =   (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+	To->m23 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+	To->m24 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
-		Row1.x  = From->m11;
-		Row1.y  = From->m21;
-		Row1.z  = From->m31;
+	/* inverting third line */
+	Row1.y  =   From->m12;
+	Row2.y  =   From->m22;
+	Row3.y  =   From->m32;
+	Row4.y  =   From->m42;
+	To->m31 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+	To->m32 = - (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+	To->m33 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+	To->m34 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
-		Row2.x  = From->m12;
-		Row2.y  = From->m22;
-		Row2.z  = From->m32;
-  
-		Row3.x  = From->m13;
-		Row3.y  = From->m23;
-		Row3.z  = From->m33;
+	/* inverting third fourth */
+	Row1.z  =   From->m13;
+	Row2.z  =   From->m23;
+	Row3.z  =   From->m33;
+	Row4.z  =   From->m43;
+	To->m41 = - (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+	To->m42 =   (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+	To->m43 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+	To->m44 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
-		Denom = b3Det3 (&Row1,&Row2,&Row3);
-		if (Denom == 0)
-		{
-			return null;
-		}
-		Denom = 1 / Denom;
-
-		To->m11 =  (b3_f32)(b3Det2 (From->m22,From->m23,From->m32,From->m33) * Denom);
-		To->m12 = -(b3_f32)(b3Det2 (From->m12,From->m13,From->m32,From->m33) * Denom);
-		To->m13 =  (b3_f32)(b3Det2 (From->m12,From->m13,From->m22,From->m23) * Denom);
-		To->m14 = -From->m14;
-
-		To->m21 = -(b3_f32)(b3Det2 (From->m21,From->m23,From->m31,From->m33) * Denom);
-		To->m22 =  (b3_f32)(b3Det2 (From->m11,From->m13,From->m31,From->m33) * Denom);
-		To->m23 = -(b3_f32)(b3Det2 (From->m11,From->m13,From->m21,From->m23) * Denom);
-		To->m24 = -From->m24;
-
-		To->m31 =  (b3_f32)(b3Det2 (From->m21,From->m22,From->m31,From->m32) * Denom);
-		To->m32 = -(b3_f32)(b3Det2 (From->m11,From->m12,From->m31,From->m32) * Denom);
-		To->m33 =  (b3_f32)(b3Det2 (From->m11,From->m12,From->m21,From->m22) * Denom);
-		To->m34 = -From->m34;
-
-		To->m41 =
-		To->m42 =
-		To->m43 =  0;
-		To->m44 =  1;
-#	endif
-
-	return (To);
+	return To;
 }
 
 b3_matrix * b3Matrix::b3MMul (

@@ -23,7 +23,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				OptimizeForProcessor="2"
+				OptimizeForProcessor="0"
+				OptimizeForWindowsApplication="FALSE"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;BLZ3_USE_OPENGL;WIN32;_B3_EXPORT"
 				StringPooling="FALSE"
@@ -100,7 +101,7 @@
 				AdditionalOptions="/O2"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				OptimizeForProcessor="0"
+				OptimizeForProcessor="1"
 				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_CONSOLE;BLZ3_USE_OPENGL;WIN32;_B3_EXPORT"
