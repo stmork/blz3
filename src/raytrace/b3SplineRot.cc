@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2006/03/08 20:48:59  sm
+**      - Formatting.
+**
 **      Revision 1.29  2006/03/05 21:22:36  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -460,7 +463,7 @@ void b3SplineRotShape::b3ComputeVertices()
 		// Rotate control points
 		for (i = 0;i < AuxSpline.control_num;i++)
 		{
-			b3Matrix::b3VMul (&Matrix,&AuxControls[i],&AuxControls[i],true);
+			b3Matrix::b3VMul (&Matrix, &AuxControls[i], &AuxControls[i], true);
 		}
 	}
 
