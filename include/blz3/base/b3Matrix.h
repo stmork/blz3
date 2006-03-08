@@ -2617,6 +2617,26 @@ public:
 	}
 
 	/**
+	 * This method computes the 3d determinand from three input vectors. The
+	 * vectors are of double precision type.
+	 *
+	 * @param a The first column.
+	 * @param b The second column.
+	 * @param c The third column.
+	 * @return The resulting determinand.
+	 */
+	static inline b3_f64     b3Det3  (b3_vector64 *a,b3_vector64 *b,b3_vector64 *c)
+	{
+		return
+			a->x * b->y * c->z -
+			c->x * b->y * a->z +
+			b->x * c->y * a->z -
+			b->x * a->y * c->z +
+			c->x * a->y * b->z -
+			a->x * c->y * b->z;
+	}
+
+	/**
 	 * This method computes a transformation on an input vector and stores the result into
 	 * a given result buffer.
 	 *
