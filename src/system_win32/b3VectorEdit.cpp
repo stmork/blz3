@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/12 23:20:38  sm
+**	- Refined item loading.
+**	- Adjusted dialog item handling of vector elements.
+**
 **	Revision 1.6  2006/03/05 21:22:37  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2006/03/05 15:00:35  sm
 **	- Added some more B3_PLUGIN modifier.
 **	
@@ -76,16 +80,50 @@
 
 /*************************************************************************
 **                                                                      **
-**                        CB3PosGroup implementation                    **
+**                        CB3VectorGroup implementation                 **
 **                                                                      **
 *************************************************************************/
 
-CB3PosGroup::CB3PosGroup()
+CB3VectorGroup::CB3VectorGroup()
 {
 	m_Vector = null;
 	m_xCtrl  = null;
 	m_yCtrl  = null;
 	m_zCtrl  = null;
+}
+
+void CB3VectorGroup::b3Read(const char *title)
+{
+	CB3GetApp()->b3ReadProfileVector(title,m_Vector);
+};
+
+void CB3VectorGroup::b3Write(const char *title)
+{
+	CB3GetApp()->b3WriteProfileVector(title,m_Vector);
+};
+
+/*************************************************************************
+**                                                                      **
+**                        CB3PosGroup implementation                    **
+**                                                                      **
+*************************************************************************/
+
+void CB3VectorGroup::b3Init(
+	b3_vector    *vector,
+	CB3FloatEdit *xCtrl,
+	CB3FloatEdit *yCtrl,
+	CB3FloatEdit *zCtrl)
+{
+	if (m_Vector == null)
+	{
+		m_Vector = vector;
+		m_xCtrl  = xCtrl;
+		m_yCtrl  = yCtrl;
+		m_zCtrl  = zCtrl;
+		m_xCtrl->b3SetDigits(5,3);
+		m_yCtrl->b3SetDigits(5,3);
+		m_zCtrl->b3SetDigits(5,3);
+	}
 }
 
 void CB3PosGroup::b3DDX(CDataExchange *pDX)
@@ -106,34 +144,6 @@ void CB3PosGroup::b3Update()
 	m_Vector->z = m_zCtrl->b3GetPos();
 }
 
-void CB3PosGroup::b3Init(
-	b3_vector    *vector,
-	CB3FloatEdit *xCtrl,
-	CB3FloatEdit *yCtrl,
-	CB3FloatEdit *zCtrl)
-{
-	if (m_Vector == null)
-	{
-		m_Vector = vector;
-		m_xCtrl  = xCtrl;
-		m_yCtrl  = yCtrl;
-		m_zCtrl  = zCtrl;
-		m_xCtrl->b3SetDigits(5,3);
-		m_yCtrl->b3SetDigits(5,3);
-		m_zCtrl->b3SetDigits(5,3);
-	}
-}
-
-void CB3PosGroup::b3Read(const char *title)
-{
-	CB3GetApp()->b3ReadProfileVector(title,m_Vector);
-};
-
-void CB3PosGroup::b3Write(const char *title)
-{
-	CB3GetApp()->b3WriteProfileVector(title,m_Vector);
-};
-
 /*************************************************************************
 **                                                                      **
 **                        CB3DirGroup implementation                    **
@@ -146,15 +156,33 @@ CB3DirGroup::CB3DirGroup()
 	m_lenCtrl = null;
 }
 
-void CB3DirGroup::b3Init(b3_vector *base,b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl,CB3FloatEdit *lenCtrl)
+void CB3DirGroup::b3Init(
+	b3_vector    *base,
+	b3_vector    *vector,
+	CB3FloatEdit *xCtrl,
+	CB3FloatEdit *yCtrl,
+	CB3FloatEdit *zCtrl,
+	CB3FloatEdit *lenCtrl)
 {
-	CB3PosGroup::b3Init(vector,xCtrl,yCtrl,zCtrl);
+	CB3VectorGroup::b3Init(vector,xCtrl,yCtrl,zCtrl);
 	if (m_Base == null)
 	{
 		m_Base    = base;
 		m_lenCtrl = lenCtrl;
 		m_lenCtrl->b3SetMin(0.0001);
 		m_lenCtrl->b3SetDigits(5,3);
+	}
+}
+
+void CB3DirGroup::b3DDX(CDataExchange *pDX, int mode)
+{
+	if (pDX->m_bSaveAndValidate)
+	{
+		b3Update(mode);
+	}
+	else
+	{
+		b3Set(mode);
 	}
 }
 

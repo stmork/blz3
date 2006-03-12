@@ -96,7 +96,7 @@ enum b3_world_error
 	B3_WORLD_MEMORY,       //!< Not enough memory for serialization.
 	B3_WORLD_PARSE,        //!< Parse error during load (wrong file format).
 	B3_WORLD_WRITE,        //!< Write error.
-	B3_WORLD_STORAGE_NOT_IMPLEMENTED,       //!< Not used.
+	B3_WORLD_NOT_REGISTERED,     //!< The items classtype is not registered an no implementation is found.
 	B3_WORLD_OUT_OF_ORDER,       //!< Parse error because of wrong structure size.
 	B3_WORLD_CLASSTYPE_UNKNOWN,  //!< Cannot instanciate because of unknown class type.
 	B3_WORLD_IMPORT              //!< General import error during file conversion.
@@ -125,6 +125,7 @@ class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 	b3_u32          m_BufferSize;
 	b3_bool         m_NeedEndianChange;
 	b3FirstItem    *m_Start;
+	b3_count        m_Missed;
 
 public:
 	/**
@@ -154,15 +155,22 @@ public:
 	virtual        ~b3World(); 
 
 	/**
+	 * This method frees all memory inside this world instance.
+	 */
+	void b3Free();
+
+	/**
 	 * This method allocates a b3Item instance from the item registry. If the
 	 * needed class type is not found a null pointer is returned. The new
 	 * instance get the default values via the initfunc call registerd in the
 	 * registry.
 	 *
 	 * @param classtype The needed class type.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item  *b3AllocNode(b3_u32  classtype);
+	static b3Item  *b3AllocNode(b3_u32  classtype, b3_bool throw_exception = false);
 
 	/**
 	 * This method allocates a b3Item instance from the item registry. If the
@@ -172,9 +180,11 @@ public:
 	 * via the loadfunc call registerd in the registry.
 	 *
 	 * @param buffer The serialization buffer.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item  *b3AllocNode(b3_u32 *buffer);
+	static b3Item  *b3AllocNode(b3_u32 *buffer, b3_bool throw_exception = false);
 
 	/**
 	 * This method deserialize the content of the named file.

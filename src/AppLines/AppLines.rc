@@ -3844,7 +3844,7 @@ BEGIN
     IDS_ERR_PACKING         "Das Bild enth‰lt gepackte Daten im unbekanntem Format!"
     IDS_ERR_PARSE           "Die Blizzard-Datei ist nicht im richtigen Format!"
     IDS_ERR_READ            "Die Blizzard Datei lieﬂ sich nicht lesen!"
-    IDS_ERR_STORAGE         "Es wurde ein Blizzard-Element gefunden, das sich nicht speichern l‰ﬂt."
+    IDS_ERR_STORAGE         "Es wurde ein Blizzard-Element gefunden, das sich nicht benutzen l‰ﬂt."
     IDS_ERR_UNCOMPL         "Die Bilddaten sind nicht komplett!"
 END
 

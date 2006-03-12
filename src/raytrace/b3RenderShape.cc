@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.91  2006/03/12 23:20:38  sm
+**      - Refined item loading.
+**      - Adjusted dialog item handling of vector elements.
+**
 **      Revision 1.90  2006/03/05 21:22:35  sm
 **      - Added precompiled support for faster comiling :-)
 **

@@ -53,9 +53,13 @@
 
 /*
 **	$Log$
+**	Revision 1.113  2006/03/12 23:20:38  sm
+**	- Refined item loading.
+**	- Adjusted dialog item handling of vector elements.
+**
 **	Revision 1.112  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.111  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
 **	
@@ -821,6 +825,14 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 #ifdef _DEBUG
 		m_Scene->b3Dump(1);
 #endif
+	}
+	catch(b3WorldException &w)
+	{
+		m_World.b3Free();
+
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
+		b3PrintF(B3LOG_NORMAL,"                       %s\n",w.b3GetErrorMsg());
+		B3_MSG_ERROR(w);
 	}
 	catch(b3ExceptionBase &e)
 	{

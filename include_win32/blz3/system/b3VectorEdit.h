@@ -22,7 +22,7 @@
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/base/b3Matrix.h"
 
-class B3_PLUGIN CB3PosGroup
+class B3_PLUGIN CB3VectorGroup
 {
 protected:
 	CB3FloatEdit *m_xCtrl;
@@ -30,16 +30,23 @@ protected:
 	CB3FloatEdit *m_zCtrl;
 	b3_vector    *m_Vector;
 
+protected:
+	     CB3VectorGroup();
+
 public:
-	     CB3PosGroup();
-	void b3DDX(CDataExchange *pDX);
 	void b3Init(b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl);
-	void b3Update();
 	void b3Read(const char *title);
 	void b3Write(const char *title);
 };
 
-class B3_PLUGIN CB3DirGroup : public CB3PosGroup
+class B3_PLUGIN CB3PosGroup : public CB3VectorGroup
+{
+public:
+	void b3DDX(CDataExchange *pDX);
+	void b3Update();
+};
+
+class B3_PLUGIN CB3DirGroup : public CB3VectorGroup
 {
 protected:
 	CB3FloatEdit *m_lenCtrl;
@@ -55,6 +62,7 @@ public:
 public:
 	     CB3DirGroup();
 	void b3Init(b3_vector *base,b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl,CB3FloatEdit *lenCtrl);
+	void b3DDX(CDataExchange *pDX, int mode);
 	void b3Set(int mode);
 	void b3Update(int mode);
 	void b3UpdateLen(int mode);

@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/12 23:20:38  sm
+**	- Refined item loading.
+**	- Adjusted dialog item handling of vector elements.
+**
 **	Revision 1.12  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.11  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -108,7 +112,7 @@ b3HashContainer<b3_errno,UINT> CB3ExceptionLogger::m_LocalMessages[] =
 	{ B3_MK_ERRNO(B3_WORLD_MEMORY,                  'BLZ'), IDS_ERR_MEMORY },
 	{ B3_MK_ERRNO(B3_WORLD_PARSE,                   'BLZ'), IDS_ERR_PARSE },
 	{ B3_MK_ERRNO(B3_WORLD_WRITE,                   'BLZ'), IDS_ERR_WRITE },
-	{ B3_MK_ERRNO(B3_WORLD_STORAGE_NOT_IMPLEMENTED, 'BLZ'), IDS_ERR_STORAGE },
+	{ B3_MK_ERRNO(B3_WORLD_NOT_REGISTERED,          'BLZ'), IDS_ERR_STORAGE },
 	{ B3_MK_ERRNO(B3_WORLD_OUT_OF_ORDER,            'BLZ'), IDS_ERR_ORDER },
 	{ B3_MK_ERRNO(B3_WORLD_CLASSTYPE_UNKNOWN,       'BLZ'), IDS_ERR_CLASSTYPE_UNKNOWN },
 	{ B3_MK_ERRNO(B3_WORLD_IMPORT,                  'BLZ'), IDS_ERR_IMPORT },
