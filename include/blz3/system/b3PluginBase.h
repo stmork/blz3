@@ -40,6 +40,7 @@ public:
 	 * This method loads all available plugins.
 	 */
 	void     b3Load();
+
 	/**
 	 * This method unloads all plugins.
 	 */
@@ -47,6 +48,7 @@ public:
 
 protected:
 	virtual              ~b3LoaderBase();
+
 	/**
 	 * This method checks wether the given library is a correct Blizzard III plugin.
 	 *
@@ -54,6 +56,7 @@ protected:
 	 * \return If the plugin is a correct Blizzard III plugin.
 	 */
 	virtual b3_bool       b3IsPlugin(b3Path &library) = 0;
+
 	/**
 	 * This method loads the specified library and adds the plugin to the internal list.
 	 *

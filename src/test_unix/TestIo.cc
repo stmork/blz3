@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2006/03/15 13:32:30  smork
+**	- Syntax corrections.
+**
 **	Revision 1.22  2005/08/12 11:35:49  sm
 **	- Readded vector multiplication for performance test issues.
-**
+**	
 **	Revision 1.21  2005/05/16 08:18:40  sm
 **	- Some bug fixes...
 **	
@@ -185,8 +188,8 @@ int main(int argc,char *argv[])
 			case B3_WORLD_MEMORY:
 				b3PrintF(B3LOG_NORMAL,"  Cannot allocate memory.\n");
 				break;
-			case B3_WORLD_STORAGE_NOT_IMPLEMENTED:
-				b3PrintF(B3LOG_NORMAL,"  Cannot call unimplemented b3Item::b3Write().\n");
+			case B3_WORLD_NOT_REGISTERED:
+				b3PrintF(B3LOG_NORMAL,"  Cannot instanciate unregistered class type.\n");
 				break;
 			case B3_WORLD_OUT_OF_ORDER:
 				b3PrintF(B3LOG_NORMAL,"  Data and string written out of order.\n");

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/15 13:32:30  smork
+**	- Syntax corrections.
+**
 **	Revision 1.6  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.5  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -114,8 +117,8 @@ static void b3TestFile(const char *filename)
 		case B3_WORLD_MEMORY:
 			b3PrintF(B3LOG_NORMAL,"  Cannot allocate memory.\n");
 			break;
-		case B3_WORLD_STORAGE_NOT_IMPLEMENTED:
-			b3PrintF(B3LOG_NORMAL,"  Cannot call unimplemented b3Item::b3Write().\n");
+		case B3_WORLD_NOT_REGISTERED:
+			b3PrintF(B3LOG_NORMAL,"  Cannot instanciate unregistered class type.\n");
 			break;
 		case B3_WORLD_OUT_OF_ORDER:
 			b3PrintF(B3LOG_NORMAL,"  Data and string written out of order.\n");
