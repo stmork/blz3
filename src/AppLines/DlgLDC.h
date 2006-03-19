@@ -27,8 +27,8 @@
 #include "blz3/raytrace/b3Light.h"
 #include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
+#include "blz3/system/b3ShowRaytrace.h"
 #include "b3ControlLDC.h"
-#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLDC dialog

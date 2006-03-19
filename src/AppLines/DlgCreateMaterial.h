@@ -28,7 +28,7 @@
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3ShowImage.h"
 #include "blz3/system/b3ColorFieldSelector.h"
-#include "b3ShowRaytrace.h"
+#include "blz3/system/b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateMaterial dialog

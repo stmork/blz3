@@ -15,8 +15,8 @@
 **
 */
 
-#if !defined(AFX_B3SIMPLEPREVIEWDIALOG_H__1B0A466C_A989_4E39_9535_DB586E0A90A1__INCLUDED_)
-#define AFX_B3SIMPLEPREVIEWDIALOG_H__1B0A466C_A989_4E39_9535_DB586E0A90A1__INCLUDED_
+#ifndef B3_SYSTEM_SIMPLEPREVIEWDIALOG_H
+#define B3_SYSTEM_SIMPLEPREVIEWDIALOG_H
 
 #if _MSC_VER > 1000
 #pragma once
@@ -24,7 +24,6 @@
 // b3SimplePropertyPreviewDialog.h : header file
 //
 
-#include "blz3/b3Config.h"
 #include "blz3/base/b3World.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -32,11 +31,16 @@
 
 class B3_PLUGIN CB3SimplePreviewDialog : public CDialog
 {
-	b3Item *m_Item;
-	b3_u32  m_Checksum;
-	CString m_RegKeyAutoRefresh;
+	b3Item           *m_Item;
+	b3_u32            m_Checksum;
+	CString           m_RegKeyAutoRefresh;
+
 protected:
-// Construction
+	const static int  m_RefreshId;
+	const static int  m_AutoRefreshId;
+	const static int  m_PropertySheetId;
+
+	// Construction
 public:
 	CB3SimplePreviewDialog(b3Item *item,int dlgId,CWnd* pParent = NULL);   // standard constructor
 	~CB3SimplePreviewDialog();
@@ -77,4 +81,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_B3SIMPLEPREVIEWDIALOG_H__1B0A466C_A989_4E39_9535_DB586E0A90A1__INCLUDED_)
+#endif // !defined(B3_SYSTEM_SIMPLEPREVIEWDIALOG_H)

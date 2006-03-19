@@ -22,7 +22,6 @@
 *************************************************************************/
 
 #include "b3SystemInclude.h"
-#include "blz3/system/b3App.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3Aux.h"
 
@@ -42,9 +41,13 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.14  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.13  2005/01/13 20:05:16  sm
 **	- Some Lines bugfixes
 **	

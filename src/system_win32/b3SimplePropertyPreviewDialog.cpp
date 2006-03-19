@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLinesInclude.h"
-#include "b3SimplePropertyPreviewDialog.h"
+#include "b3SystemInclude.h"
+#include "blz3/system/b3SimplePropertyPreviewDialog.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.6  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -96,7 +100,7 @@ BOOL CB3SimplePropertyPreviewDialog::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	b3InitDialog();
-	CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,IDC_PROPERTY);
+	CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,m_PropertySheetId);
 
 	b3UpdateUI();
 	OnAutoRefresh();

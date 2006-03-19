@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.12  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.11  2006/02/04 19:19:30  sm
 **	- Corrected image sampler. Check the used data
 **	  type in constructor by using tx->b3IsHDR or some
@@ -151,15 +155,21 @@ void b3MaterialSampler::b3SampleTask(const b3SampleInfo *info)
 	b3_color   *data = (b3_color *)info->m_Data;
 
 	ray.bbox           = &bbox;
+	ray.Q              = 1;
 	surface.m_Incoming = &ray;
 	bbox.b3Prepare();
+
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{
 		fy = (b3_f64)y / info->m_yMax;
 		for (x = 0;x < info->m_xMax;x++)
 		{
 			int ix = (m_Tiles * x) / info->m_xMax;
-			
+
+			ray.normal.x = 0;
+			ray.normal.y = -0.15 *ix;
+			ray.normal.z = 1;
+			b3Vector::b3Normalize(&ray.normal);
 			ray.polar.m_BoxPolar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
 			ray.polar.m_BoxPolar.y = 1.0 - fy;
 			ray.polar.m_BoxPolar.z = 1.0 - fy * 0.15 * ix;

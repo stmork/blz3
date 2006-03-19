@@ -23,8 +23,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLinesInclude.h"
-#include "b3ShowRaytrace.h"
+#include "b3SystemInclude.h"
+#include "blz3/system/b3ShowRaytrace.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.5  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.4  2005/10/16 12:11:22  sm
 **	- Some HDR fixes.
 **	

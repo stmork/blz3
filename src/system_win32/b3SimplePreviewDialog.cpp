@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLinesInclude.h"
-#include "b3SimplePreviewDialog.h"
+#include "b3SystemInclude.h"
+#include "blz3/system/b3SimplePreviewDialog.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.6  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
 **	
@@ -90,7 +94,7 @@ void CB3SimplePreviewDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CB3SimplePreviewDialog)
-	DDX_Check(pDX, IDC_AUTO_REFRESH, m_AutoRefresh);
+	DDX_Check(pDX, m_AutoRefreshId, m_AutoRefresh);
 	//}}AFX_DATA_MAP
 }
 
@@ -98,8 +102,8 @@ void CB3SimplePreviewDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CB3SimplePreviewDialog, CDialog)
 	//{{AFX_MSG_MAP(CB3SimplePreviewDialog)
 	ON_MESSAGE(WM_USER,OnPreview)
-	ON_BN_CLICKED(IDC_AUTO_REFRESH, OnAutoRefresh)
-	ON_BN_CLICKED(IDC_REFRESH, OnRefresh)
+	ON_BN_CLICKED(m_AutoRefreshId, OnAutoRefresh)
+	ON_BN_CLICKED(m_RefreshId, OnRefresh)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -162,7 +166,7 @@ void CB3SimplePreviewDialog::b3Preview()
 void CB3SimplePreviewDialog::OnAutoRefresh() 
 {
 	// TODO: Add your control notification handler code here
-	CWnd *refresh = GetDlgItem(IDC_REFRESH);
+	CWnd *refresh = GetDlgItem(m_RefreshId);
 
 	if (refresh != null)
 	{

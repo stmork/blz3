@@ -17,14 +17,14 @@
 **
 */
 
-#ifndef B3_SHOWRAYTRACE_H
-#define B3_SHOWRAYTRACE_H
+#ifndef B3_SYSTEM_SHOWRAYTRACE_H
+#define B3_SYSTEM_SHOWRAYTRACE_H
 
 #include "blz3/system/b3ShowImage.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/raytrace/b3Scene.h"
 
-class CB3ShowRaytrace : public CB3ShowImage
+class B3_PLUGIN CB3ShowRaytrace : public CB3ShowImage
 {
 	DECLARE_DYNAMIC(CB3ShowRaytrace)
 

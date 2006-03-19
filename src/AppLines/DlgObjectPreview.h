@@ -24,7 +24,7 @@
 // DlgObjectPreview.h : header file
 //
 
-#include "b3ShowRaytrace.h"
+#include "blz3/system/b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgObjectPreview dialog

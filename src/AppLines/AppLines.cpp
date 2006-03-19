@@ -28,6 +28,7 @@
 #include "blz3/system/b3FileDialog.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3SelfTest.h"
+#include "blz3/system/b3SimplePreviewDialog.h"
 #include "blz3/system/b3Version.h"
 #include "blz3/base/b3FileMem.h"
 
@@ -50,9 +51,13 @@
 
 /*
 **	$Log$
+**	Revision 1.89  2006/03/19 14:47:17  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.88  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.87  2005/05/16 08:24:30  sm
 **	- Including self test into Lines.
 **	
@@ -488,6 +493,16 @@ const CLSID CAppLinesApp::m_SceneClsID =
 // {F346F6D2-0E7B-4b15-B887-D7A9B215EB62}
 const CLSID CAppLinesApp::m_ObjectClsID =
 { 0xf346f6d2, 0xe7b, 0x4b15, { 0xb8, 0x87, 0xd7, 0xa9, 0xb2, 0x15, 0xeb, 0x62 } };
+
+/*************************************************************************
+**                                                                      **
+**                        CAppLinesApp initialization                   **
+**                                                                      **
+*************************************************************************/
+
+const int CB3SimplePreviewDialog::m_AutoRefreshId   = IDC_AUTO_REFRESH;
+const int CB3SimplePreviewDialog::m_RefreshId       = IDC_REFRESH;
+const int CB3SimplePreviewDialog::m_PropertySheetId = IDC_PROPERTY;
 
 /*************************************************************************
 **                                                                      **
@@ -1094,10 +1109,17 @@ void CAppLinesApp::OnAppAbout()
 
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);
-	CDlgItemMaintain dlg(null,&head);
+	if (item->b3Prepare())
+	{
+		CDlgItemMaintain dlg(null,&head);
 
-	dlg.DoModal();
+		dlg.DoModal();
 
+	}
+	else
+	{
+		b3Runtime::b3MessageBox("Preparation failed!",B3_MSGBOX_ERROR);
+	}
 	head.b3Free();
 #else
 	CAboutDlg aboutDlg;

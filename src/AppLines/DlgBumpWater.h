@@ -24,9 +24,9 @@
 // DlgBumpWater.h : header file
 //
 
-#include "b3SimplePropertyPreviewDialog.h"
+#include "blz3/system/b3SimplePropertyPreviewDialog.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
-#include "b3ShowRaytrace.h"
+#include "blz3/system/b3ShowRaytrace.h"
 #include "PageBump.h"
 #include "PageScaling.h"
 

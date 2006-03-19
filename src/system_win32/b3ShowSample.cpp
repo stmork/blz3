@@ -23,8 +23,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLinesInclude.h"
-#include "b3ShowSample.h"
+#include "b3SystemInclude.h"
+#include "blz3/system/b3ShowSample.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.2  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.1  2004/04/09 12:08:05  sm
 **	- New CStatic control introduced for material sampling.
 **	
@@ -81,5 +85,5 @@ void CB3ShowSample::b3Init()
 	m_yPos  = 0;
 	m_xSize = rect.Width();
 	m_ySize = rect.Height();
-	m_Tx.b3AllocTx(m_xSize,m_ySize,24);
+	m_Tx.b3AllocTx(m_xSize, m_ySize, 128);
 }

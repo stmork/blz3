@@ -27,7 +27,7 @@
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/system/b3ShowImage.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
-#include "b3ShowRaytrace.h"
+#include "blz3/system/b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgScene dialog

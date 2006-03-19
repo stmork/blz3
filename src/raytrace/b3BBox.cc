@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.115  2006/03/19 14:47:18  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.114  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.113  2005/05/05 07:58:03  sm
 **	- BBox visibility computed only for raytracing.
 **	
@@ -614,6 +618,7 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 	m_Heads[1].b3InitBase(CLASS_BBOX);
 
 	b3Matrix::b3Unit(&m_Matrix);
+	b3Matrix::b3Unit(&m_Inverse);
 	m_Type       = 0;
 	b3Vector::b3Init(&m_DimBase,-1.0,-1.0,-1.0);
 	b3Vector::b3Init(&m_DimSize, 2.0, 2.0, 2.0);

@@ -25,8 +25,8 @@
 //
 
 #include "blz3/raytrace/b3BumpSampler.h"
-#include "b3SimplePropertyPreviewDialog.h"
-#include "b3ShowSample.h"
+#include "blz3/system/b3SimplePropertyPreviewDialog.h"
+#include "blz3/system/b3ShowSample.h"
 #include "PageBump.h"
 #include "PageWood.h"
 #include "PageOakPlank.h"

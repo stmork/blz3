@@ -26,9 +26,9 @@
 
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/raytrace/b3Material.h"
+#include "blz3/system/b3ShowRaytrace.h"
+#include "blz3/system/b3SimplePreviewDialog.h"
 #include "b3ConditionControl.h"
-#include "b3ShowRaytrace.h"
-#include "b3SimplePreviewDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatWrapTexture dialog

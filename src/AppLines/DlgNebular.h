@@ -28,7 +28,7 @@
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/system/b3ColorFieldSelector.h"
-#include "b3ShowRaytrace.h"
+#include "blz3/system/b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgNebular dialog

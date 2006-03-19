@@ -19,5 +19,6 @@
 #define B3_SYSTEM_SYSTEMINCLUDE_H
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3App.h"
 
 #endif

@@ -17,14 +17,14 @@
 **
 */
 
-#ifndef B3_SHOWSAMPLE_H
-#define B3_SHOWSAMPLE_H
+#ifndef B3_SYSTEM_SHOWSAMPLE_H
+#define B3_SYSTEM_SHOWSAMPLE_H
 
 #include "blz3/system/b3ShowImage.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/image/b3Sampler.h"
 
-class CB3ShowSample : public CB3ShowImage
+class B3_PLUGIN CB3ShowSample : public CB3ShowImage
 {
 	DECLARE_DYNAMIC(CB3ShowSample)
 

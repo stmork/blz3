@@ -37,7 +37,7 @@
 				EnableEnhancedInstructionSet="0"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="blz3/b3Config.h"
+				PrecompiledHeaderThrough="b3SystemInclude.h"
 				PrecompiledHeaderFile=".\..\..\Release/LibSystem.pch"
 				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release/"
@@ -100,7 +100,7 @@
 				EnableEnhancedInstructionSet="2"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="blz3/b3Config.h"
+				PrecompiledHeaderThrough="b3SystemInclude.h"
 				PrecompiledHeaderFile=".\..\..\Debug/LibSystem.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
 				ObjectFile=".\..\..\Debug/"
@@ -164,7 +164,7 @@
 				EnableEnhancedInstructionSet="2"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="blz3/b3Config.h"
+				PrecompiledHeaderThrough="b3SystemInclude.h"
 				PrecompiledHeaderFile=".\..\..\Release-SSE2/LibSystem.pch"
 				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release-SSE2/"
@@ -227,7 +227,7 @@
 				EnableEnhancedInstructionSet="1"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="blz3/b3Config.h"
+				PrecompiledHeaderThrough="b3SystemInclude.h"
 				PrecompiledHeaderFile=".\..\..\Release-SSE/LibSystem.pch"
 				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release-SSE/"
@@ -1706,6 +1706,130 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3ShowRaytrace.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\b3ShowSample.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\b3SimplePreviewDialog.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\b3SimplePropertyPreviewDialog.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"
+						PrecompiledHeaderThrough="b3SystemInclude.h"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\b3SystemInclude.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -2252,6 +2376,18 @@
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3ShowImage.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3ShowRaytrace.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3ShowSample.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3SimplePreviewDialog.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3SimplePropertyPreviewDialog.h">
 			</File>
 			<File
 				RelativePath=".\b3SystemInclude.h">

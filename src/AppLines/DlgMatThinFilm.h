@@ -26,8 +26,8 @@
 
 #include "blz3/raytrace/b3Material.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
-#include "b3SimplePropertyPreviewDialog.h"
-#include "b3ShowRaytrace.h"
+#include "blz3/system/b3SimplePropertyPreviewDialog.h"
+#include "blz3/system/b3ShowRaytrace.h"
 #include "PageMaterial.h"
 #include "PageScaling.h"
 

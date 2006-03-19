@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.106  2006/03/19 14:47:18  sm
+**      - Fixed missing initiailization problems in b3BBox.
+**      - Moved some dialog elements into system library.
+**
 **      Revision 1.105  2006/03/05 21:22:35  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -1134,12 +1138,12 @@ b3MaterialWooden::b3MaterialWooden(b3_u32 *src) : b3Material(src)
 void b3MaterialWooden::b3Init()
 {
 	m_LightMaterial.m_Diffuse.b3Init(0.5f,0.2f,0.067f);
-	m_LightMaterial.m_Ambient = m_LightMaterial.m_Diffuse * 0.2;
-	m_LightMaterial.m_Specular.b3Init(0.8f,0.8f,0.8f);
+	m_LightMaterial.m_Ambient  = m_LightMaterial.m_Diffuse * 0.2;
+	m_LightMaterial.m_Specular = B3_LIGHT_GREY;
 
-	m_DarkMaterial.m_Diffuse = m_LightMaterial.m_Diffuse * 0.7;
-	m_DarkMaterial.m_Ambient = m_DarkMaterial.m_Diffuse * 0.2;
-	m_DarkMaterial.m_Specular.b3Init(0.8f,0.8f,0.8f);
+	m_DarkMaterial.m_Diffuse   = m_LightMaterial.m_Diffuse * 0.7;
+	m_DarkMaterial.m_Ambient   = m_DarkMaterial.m_Diffuse * 0.2;
+	m_DarkMaterial.m_Specular  = B3_LIGHT_GREY;
 
 	m_DarkMaterial.m_Reflection  =   0;
 	m_DarkMaterial.m_Refraction  =   0;

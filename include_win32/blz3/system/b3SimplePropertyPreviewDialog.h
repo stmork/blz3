@@ -15,8 +15,8 @@
 **
 */
 
-#if !defined(AFX_B3SIMPLEPROPERTYPREVIEWDIALOG_H__1B0A466C_A989_4E39_9535_DB586E0A90A1__INCLUDED_)
-#define AFX_B3SIMPLEPROPERTYPREVIEWDIALOG_H__1B0A466C_A989_4E39_9535_DB586E0A90A1__INCLUDED_
+#ifndef B3_SYSTEM_SIMPLEPROPERTYPREVIEWDIALOG_H
+#define B3_SYSTEM_SIMPLEPROPERTYPREVIEWDIALOG_H
 
 #if _MSC_VER > 1000
 #pragma once
@@ -31,7 +31,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CB3SimplePropertyPreviewDialog dialog
 
-class CB3SimplePropertyPreviewDialog : public CB3SimplePreviewDialog
+class B3_PLUGIN CB3SimplePropertyPreviewDialog : public CB3SimplePreviewDialog
 {
 protected:
 	CPropertySheet     m_PropertySheet;
@@ -65,4 +65,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_B3SIMPLEPROPERTYPREVIEWDIALOG_H__1B0A466C_A989_4E39_9535_DB586E0A90A1__INCLUDED_)
+#endif // !defined(B3_SYSTEM_SIMPLEPROPERTYPREVIEWDIALOG_H)

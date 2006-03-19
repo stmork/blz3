@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2006/03/19 14:47:17  sm
+**	- Fixed missing initiailization problems in b3BBox.
+**	- Moved some dialog elements into system library.
+**
 **	Revision 1.57  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.56  2005/09/11 17:45:51  sm
 **	- Fixed wrong ordered b3MatGranite read.
 **	
@@ -1140,7 +1144,7 @@ void CAppObjectDoc::OnEditBumpDirect()
 	
 	if (shape != null)
 	{
-		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
+		if (shape->b3GetBumpHead()->b3GetCount() == 1)
 		{
 			b3AddOp(new b3OpShapeBumpEdit(m_BBox, shape, this, m_DlgHierarchy));
 		}
