@@ -24,6 +24,7 @@
 #include "AppLinesInclude.h"
 
 #include "DlgHierarchy.h"
+#include ".\dlghierarchy.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2006/03/25 22:11:20  sm
+**	- Fix shape/object creation problem in object editor.
+**	- Added double click option in hierarchy tree.
+**
 **	Revision 1.27  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.26  2004/12/27 21:21:45  sm
 **	- Adjusted type size (LPARAM vs. long)
 **	
@@ -205,6 +210,7 @@ BEGIN_MESSAGE_MAP(CDlgHierarchy, CB3Dialogbar)
 	ON_NOTIFY(NM_RCLICK, IDC_HIERARCHY, OnContextMenu)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_HIERARCHY, OnHierarchySelectionChanged)
 	//}}AFX_MSG_MAP
+	ON_NOTIFY(NM_DBLCLK, IDC_HIERARCHY, OnNMDblclkHierarchy)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -574,7 +580,6 @@ void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point)
 
 void CDlgHierarchy::OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	// TODO: Add your control notification handler code here
 	CPoint point;
 
 	if ((m_pDoc != null) && GetCursorPos(&point))
@@ -588,10 +593,19 @@ void CDlgHierarchy::OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult)
 void CDlgHierarchy::OnHierarchySelectionChanged(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
-	// TODO: Add your control notification handler code here
+
 	if (m_pDoc != null)
 	{
 		m_pDoc->b3HierarchySelectionChanged();
+	}
+	*pResult = 0;
+}
+
+void CDlgHierarchy::OnNMDblclkHierarchy(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	if (m_pDoc != null)
+	{
+		m_pDoc->b3Edit();
 	}
 	*pResult = 0;
 }

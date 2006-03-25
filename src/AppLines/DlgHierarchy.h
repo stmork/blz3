@@ -90,6 +90,8 @@ private:
 	b3_count              b3GetExpansion (HTREEITEM parent);
 	HTREEITEM             b3FindItem (HTREEITEM parent,b3Item *item);
 	void                  b3UpdateIcons(HTREEITEM parent);
+public:
+	afx_msg void OnNMDblclkHierarchy(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
 //{{AFX_INSERT_LOCATION}}

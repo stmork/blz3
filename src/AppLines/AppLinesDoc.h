@@ -77,6 +77,7 @@ public:
 	void        b3ComputeBounds();
 	void        b3StartRaytrace();
 	void        b3StopRaytrace();
+	b3_bool     b3Edit();
 	BOOL        OnImportArcon(LPCTSTR lpszPathName) ;
 
 	virtual   ~CAppLinesDoc();

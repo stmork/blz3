@@ -53,10 +53,14 @@
 
 /*
 **	$Log$
+**	Revision 1.114  2006/03/25 22:11:20  sm
+**	- Fix shape/object creation problem in object editor.
+**	- Added double click option in hierarchy tree.
+**
 **	Revision 1.113  2006/03/12 23:20:38  sm
 **	- Refined item loading.
 **	- Adjusted dialog item handling of vector elements.
-**
+**	
 **	Revision 1.112  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -1810,11 +1814,10 @@ void CAppLinesDoc::OnObjectCopy()
 	b3AddOp(new b3OpObjectCopy(m_Scene,m_DlgHierarchy,b3GetFulcrum()));
 }
 
-void CAppLinesDoc::OnObjectEdit() 
+b3_bool CAppLinesDoc::b3Edit()
 {
-	// TODO: Add your command handler code here
 	CAppLinesApp  *app  = (CAppLinesApp *)AfxGetApp();
-	CAppObjectDoc *pDoc;
+	CAppObjectDoc *pDoc = null;
 	b3BBox        *selected;
 
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
@@ -1827,6 +1830,12 @@ void CAppLinesDoc::OnObjectEdit()
 			b3ClearOp();
 		}
 	}
+	return pDoc != null;
+}
+
+void CAppLinesDoc::OnObjectEdit() 
+{
+	b3Edit();
 }
 
 void CAppLinesDoc::b3FinishEdit(

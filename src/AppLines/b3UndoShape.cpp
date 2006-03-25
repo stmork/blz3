@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/25 22:11:20  sm
+**	- Fix shape/object creation problem in object editor.
+**	- Added double click option in hierarchy tree.
+**
 **	Revision 1.7  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.6  2005/06/12 11:38:51  sm
 **	- Fix ticket no.30. Surface property changes are reflected
 **	  to document modified changes.
@@ -79,8 +83,8 @@ b3OpShapeCreate::b3OpShapeCreate(
 	int             result;
 
 	m_InsertAfter = m_DlgHierarchy->b3GetSelectedShape();
-	m_Selected    = (m_InsertAfter != null ?
-		m_BBox->b3FindParentBBox(m_InsertAfter) :
+	m_Selected    = ((m_InsertAfter != null) && (m_InsertAfter->b3GetClass() != CLASS_BBOX) ?
+		m_BBox->b3FindParentBBox((b3Shape *)m_InsertAfter) :
 		m_DlgHierarchy->b3GetSelectedBBox());
 	if (m_Selected != null)
 	{
@@ -96,8 +100,15 @@ b3OpShapeCreate::b3OpShapeCreate(
 			{
 				// Manually insert to prevent uninitialized redraw
 				// of new item.
-				m_Shape = (b3Shape *)dlg.m_NewItem;
-				m_Base  = m_Selected->b3GetShapeHead();
+				m_NewItem = dlg.m_NewItem;
+				if (m_NewItem->b3GetClass() == CLASS_BBOX)
+				{
+					m_Base  = m_Selected->b3GetBBoxHead();
+				}
+				else
+				{
+					m_Base  = m_Selected->b3GetShapeHead();
+				}
 
 				b3Initialize();
 				m_PrepareGeometry         = true;
@@ -115,21 +126,21 @@ b3OpShapeCreate::b3OpShapeCreate(
 
 void b3OpShapeCreate::b3Undo()
 {
-	m_Base->b3Remove(m_Shape);
+	m_Base->b3Remove(m_NewItem);
 	m_DlgHierarchy->b3SelectItem(m_InsertAfter);
 }
 
 void b3OpShapeCreate::b3Redo()
 {
-	m_Base->b3Insert(m_InsertAfter, m_Shape);
-	m_DlgHierarchy->b3SelectItem(m_Shape);
+	m_Base->b3Insert(m_InsertAfter, m_NewItem);
+	m_DlgHierarchy->b3SelectItem(m_NewItem);
 }
 
 void b3OpShapeCreate::b3Delete()
 {
-	if (!b3IsDone() && (m_Shape != null))
+	if (!b3IsDone() && (m_NewItem != null))
 	{
-		delete m_Shape;
+		delete m_NewItem;
 	}
 }
 

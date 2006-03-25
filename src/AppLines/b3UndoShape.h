@@ -45,8 +45,8 @@ protected:
 class b3OpShapeCreate : public b3OpShape
 {
 	b3BBox         *m_Selected;
-	b3Shape        *m_Shape;
-	b3Shape        *m_InsertAfter;
+	b3Item         *m_NewItem;
+	b3Item         *m_InsertAfter;
 	b3Base<b3Item> *m_Base;
 
 public:

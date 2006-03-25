@@ -95,6 +95,7 @@ public:
 	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 	virtual void       b3ContextMenu(HTREEITEM item);
 	virtual void       b3HierarchySelectionChanged();
+	virtual b3_bool    b3Edit() = 0;
 
 	virtual void       b3AddUndoAction(CB3Action *action);
 	        void       b3AddOp(b3UndoOperation *op);

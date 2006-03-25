@@ -38,10 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2006/03/25 22:11:20  sm
+**	- Fix shape/object creation problem in object editor.
+**	- Added double click option in hierarchy tree.
+**
 **	Revision 1.58  2006/03/19 14:47:17  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
-**
+**	
 **	Revision 1.57  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -780,10 +784,18 @@ void CAppObjectDoc::OnObjectNew()
 	b3AddOp(new b3OpShapeCreate(m_BBox, this, m_DlgHierarchy));
 }
 
+b3_bool CAppObjectDoc::b3Edit()
+{
+	b3Operation *op = new b3OpShapeEdit(m_BBox, this, m_DlgHierarchy);
+	b3AddOp(op);
+
+	return op != null;
+}
+
 void CAppObjectDoc::OnObjectEdit() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeEdit(m_BBox, this, m_DlgHierarchy));
+	b3Edit();
 }
 
 void CAppObjectDoc::OnObjectDelete() 
