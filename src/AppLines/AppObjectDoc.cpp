@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2006/03/26 17:58:23  sm
+**	- Edit object from hierarchy tree caused a race. Fixed now.
+**
 **	Revision 1.59  2006/03/25 22:11:20  sm
 **	- Fix shape/object creation problem in object editor.
 **	- Added double click option in hierarchy tree.
-**
+**	
 **	Revision 1.58  2006/03/19 14:47:17  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
@@ -412,7 +415,7 @@ BOOL CAppObjectDoc::OnNewDocument()
 	return TRUE;
 }
 
-void CAppObjectDoc::b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original)
+void CAppObjectDoc::b3EditBBox(CAppLinesDoc *LinesDoc, b3BBox *original)
 {
 	CString boxname = original->b3GetName();
 

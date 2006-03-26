@@ -53,10 +53,13 @@
 
 /*
 **	$Log$
+**	Revision 1.115  2006/03/26 17:58:22  sm
+**	- Edit object from hierarchy tree caused a race. Fixed now.
+**
 **	Revision 1.114  2006/03/25 22:11:20  sm
 **	- Fix shape/object creation problem in object editor.
 **	- Added double click option in hierarchy tree.
-**
+**	
 **	Revision 1.113  2006/03/12 23:20:38  sm
 **	- Refined item loading.
 **	- Adjusted dialog item handling of vector elements.
@@ -1816,6 +1819,18 @@ void CAppLinesDoc::OnObjectCopy()
 
 b3_bool CAppLinesDoc::b3Edit()
 {
+	CWnd *pWnd = CB3GetMainFrame()->GetActiveFrame();
+	b3_bool result = false;
+
+	if (pWnd != null)
+	{
+		result = pWnd->PostMessage(WM_COMMAND, ID_OBJECT_EDIT, 0);
+	}
+	return result;
+}
+
+void CAppLinesDoc::OnObjectEdit() 
+{
 	CAppLinesApp  *app  = (CAppLinesApp *)AfxGetApp();
 	CAppObjectDoc *pDoc = null;
 	b3BBox        *selected;
@@ -1824,18 +1839,12 @@ b3_bool CAppLinesDoc::b3Edit()
 	if (selected != null)
 	{
 		B3_ASSERT(b3BBox::b3FindBBox(m_Scene->b3GetBBoxHead(),selected));
-		pDoc = app->b3CreateObjectDoc(this,selected);
+		pDoc = app->b3CreateObjectDoc(this, selected);
 		if (pDoc != null)
 		{
 			b3ClearOp();
 		}
 	}
-	return pDoc != null;
-}
-
-void CAppLinesDoc::OnObjectEdit() 
-{
-	b3Edit();
 }
 
 void CAppLinesDoc::b3FinishEdit(

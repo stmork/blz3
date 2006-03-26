@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2006/03/26 17:58:23  sm
+**	- Edit object from hierarchy tree caused a race. Fixed now.
+**
 **	Revision 1.28  2006/03/25 22:11:20  sm
 **	- Fix shape/object creation problem in object editor.
 **	- Added double click option in hierarchy tree.
-**
+**	
 **	Revision 1.27  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -209,8 +212,8 @@ BEGIN_MESSAGE_MAP(CDlgHierarchy, CB3Dialogbar)
 	ON_WM_LBUTTONUP()
 	ON_NOTIFY(NM_RCLICK, IDC_HIERARCHY, OnContextMenu)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_HIERARCHY, OnHierarchySelectionChanged)
-	//}}AFX_MSG_MAP
 	ON_NOTIFY(NM_DBLCLK, IDC_HIERARCHY, OnNMDblclkHierarchy)
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
