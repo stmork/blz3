@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.6  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -104,7 +107,7 @@ b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
 	b3_f64     xEdge;
 	b3_f64     yEdge;
 	b3_f64     oblique;
-	b3_vector *c = spline->controls;
+	b3_vector *c = spline->m_Controls;
 	int        i;
 
 	B3_ASSERT(c != null);
@@ -150,7 +153,7 @@ b3_bool b3ProfileBevelSpline::b3ComputeShape(b3Spline *spline,b3Shape *base_shap
 	b3_f64         height;
 	b3_count       yDegree;
 	b3_count       yControls;
-	b3_vector     *c = spline->controls;
+	b3_vector     *c = spline->m_Controls;
 
 	B3_ASSERT(c != null);
 
@@ -160,14 +163,14 @@ b3_bool b3ProfileBevelSpline::b3ComputeShape(b3Spline *spline,b3Shape *base_shap
 	yControls = va_arg(args,b3_count);
 	va_end(args);
 
-	shape->b3Init(spline->degree,yDegree,spline->control_num,yControls);
+	shape->b3Init(spline->m_Degree, yDegree, spline->m_ControlNum, yControls);
 
 	// Init control points
-	for (y = 0;y < shape->m_Spline[1].control_num;y++)
+	for (y = 0;y < shape->m_Spline[1].m_ControlNum;y++)
 	{
-		index = y * shape->m_Spline[1].offset;
-		z     = b3Spline::b3ArcLengthParameter(y,yDegree,yControls,height);
-		for (x = 0;x < shape->m_Spline[0].control_num;x++)
+		index = y * shape->m_Spline[1].m_Offset;
+		z     = b3Spline::b3ArcLengthParameter(y, yDegree, yControls, height);
+		for (x = 0;x < shape->m_Spline[0].m_ControlNum;x++)
 		{
 			shape->m_Controls[index + x]   = c[x];
 			shape->m_Controls[index + x].z = z;

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.11  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.10  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
 **	
@@ -179,10 +182,10 @@ void CB3ControlLDC::b3Init(b3Light *light)
 	CDC       *dc;
 
 	m_LDC = &light->m_Spline;
-	m_LDC->subdiv = SEGMENTS * LINES_PER_SEGMENT;
+	m_LDC->m_SubDiv = SEGMENTS * LINES_PER_SEGMENT;
 	if (m_Curve == null)
 	{
-		m_Curve = (b3_vector *)b3Alloc(sizeof(b3_vector) * (m_LDC->subdiv + 1));
+		m_Curve = (b3_vector *)b3Alloc(sizeof(b3_vector) * (m_LDC->m_SubDiv + 1));
 	}
 
 	if ((!m_Init) && ::IsWindow(m_hWnd))
@@ -202,9 +205,9 @@ void CB3ControlLDC::b3Init(b3Light *light)
 	if (m_Mode == LDC_EDIT)
 	{
 		m_PickBase.b3Free();
-		for (i = 0;i < m_LDC->control_num;i++)
+		for (i = 0;i < m_LDC->m_ControlNum;i++)
 		{
-			pick = new b3PickLDC(&m_LDC->controls[i],m_xMax,m_yMax);
+			pick = new b3PickLDC(&m_LDC->m_Controls[i], m_xMax, m_yMax);
 			m_PickBase.b3Append(pick);
 		}
 	}
@@ -249,24 +252,24 @@ void CB3ControlLDC::OnPaint()
 		m_DC.SelectObject(oldPen);
 
 		// Init curve
-		x = m_xMax * (0.5 - m_Curve[m_LDC->subdiv].x * 0.5);
-		y = m_yMax * (1.0 - m_Curve[m_LDC->subdiv].y);
+		x = m_xMax * (0.5 - m_Curve[m_LDC->m_SubDiv].x * 0.5);
+		y = m_yMax * (1.0 - m_Curve[m_LDC->m_SubDiv].y);
 		oldPen = m_DC.SelectObject(&pen);
 		m_DC.MoveTo(x,y);
 
 		// Draw left side
-		for (i = 0;i < m_LDC->subdiv;i++)
+		for (i = 0;i < m_LDC->m_SubDiv;i++)
 		{
-			x = m_xMax * (0.5 - m_Curve[m_LDC->subdiv - i].x * 0.5);
-			y = m_yMax * (1.0 - m_Curve[m_LDC->subdiv - i].y);
+			x = m_xMax * (0.5 - m_Curve[m_LDC->m_SubDiv - i].x * 0.5);
+			y = m_yMax * (1.0 - m_Curve[m_LDC->m_SubDiv - i].y);
 			m_DC.LineTo(x,y);
 		}
 
 		// Draw right side
 		while(i >= 0)
 		{
-			x = m_xMax * (0.5 + m_Curve[m_LDC->subdiv - i].x * 0.5);
-			y = m_yMax * (1.0 - m_Curve[m_LDC->subdiv - i].y);
+			x = m_xMax * (0.5 + m_Curve[m_LDC->m_SubDiv - i].x * 0.5);
+			y = m_yMax * (1.0 - m_Curve[m_LDC->m_SubDiv - i].y);
 			m_DC.LineTo(x,y);
 			i--;
 		}
@@ -299,24 +302,24 @@ void CB3ControlLDC::OnPaint()
 		m_DC.SelectObject(oldPen);
 
 		// Init curve
-		x = m_xMax * (0.5 - sin(m_Curve[m_LDC->subdiv].x * M_PI * 0.5) * m_Curve[m_LDC->subdiv].y * 0.5);
-		y = m_yMax *       (cos(m_Curve[m_LDC->subdiv].x * M_PI * 0.5) * m_Curve[m_LDC->subdiv].y);
+		x = m_xMax * (0.5 - sin(m_Curve[m_LDC->m_SubDiv].x * M_PI * 0.5) * m_Curve[m_LDC->m_SubDiv].y * 0.5);
+		y = m_yMax *       (cos(m_Curve[m_LDC->m_SubDiv].x * M_PI * 0.5) * m_Curve[m_LDC->m_SubDiv].y);
 		oldPen = m_DC.SelectObject(&pen);
 		m_DC.MoveTo(x,y);
 
 		// Draw left side
-		for (i = 0;i < m_LDC->subdiv;i++)
+		for (i = 0;i < m_LDC->m_SubDiv;i++)
 		{
-			x = m_xMax * (0.5 - sin(m_Curve[m_LDC->subdiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->subdiv - i].y * 0.5);
-			y = m_yMax *       (cos(m_Curve[m_LDC->subdiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->subdiv - i].y);
+			x = m_xMax * (0.5 - sin(m_Curve[m_LDC->m_SubDiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->m_SubDiv - i].y * 0.5);
+			y = m_yMax *       (cos(m_Curve[m_LDC->m_SubDiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->m_SubDiv - i].y);
 			m_DC.LineTo(x,y);
 		}
 
 		// Draw right side
 		while(i >= 0)
 		{
-			x = m_xMax * (0.5 + sin(m_Curve[m_LDC->subdiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->subdiv - i].y * 0.5);
-			y = m_yMax *       (cos(m_Curve[m_LDC->subdiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->subdiv - i].y);
+			x = m_xMax * (0.5 + sin(m_Curve[m_LDC->m_SubDiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->m_SubDiv - i].y * 0.5);
+			y = m_yMax *       (cos(m_Curve[m_LDC->m_SubDiv - i].x * M_PI * 0.5) * m_Curve[m_LDC->m_SubDiv - i].y);
 			m_DC.LineTo(x,y);
 			i--;
 		}

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.3  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.2  2004/07/27 19:05:59  sm
 **	- Some typo cleanups.
 **	
@@ -61,7 +64,7 @@ CDlgKnotControl::CDlgKnotControl(b3Spline *spline,CWnd* pParent /*=NULL*/)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_KnotDisplay.b3Init(m_Spline);
-	m_KnotNumCtrl.b3SetRange(1,spline->knot_num);
+	m_KnotNumCtrl.b3SetRange(1,spline->m_KnotNum);
 	m_KnotNum = 1;
 }
 
@@ -104,14 +107,14 @@ void CDlgKnotControl::b3SetKnotCtrl()
 {
 	b3_index  num = m_KnotNum - 1;
 	b3_index  min,max;
-	b3_knots  knots = m_Spline->knots;
+	b3_knots  knots = m_Spline->m_Knots;
 
 	min = (num > 0 ? knots[num - 1] : 0);
-	max = (num < (m_Spline->knot_num - 1) ? knots[num + 1] : knots[m_Spline->knot_num - 1]);
+	max = (num < (m_Spline->m_KnotNum - 1) ? knots[num + 1] : knots[m_Spline->m_KnotNum - 1]);
 
 	m_KnotCtrl.SetSelection(min * KNOT_SCALING,max * KNOT_SCALING);
 	m_KnotCtrl.SetPos(knots[num] * KNOT_SCALING);
-	m_KnotCtrl.SetRange(0,knots[m_Spline->knot_num - 1] * KNOT_SCALING,TRUE);
+	m_KnotCtrl.SetRange(0,knots[m_Spline->m_KnotNum - 1] * KNOT_SCALING,TRUE);
 	m_KnotDisplay.b3Update();
 }
 

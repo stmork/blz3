@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.18  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.17  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -234,9 +237,9 @@ void CDlgLight::b3UpdatePreview()
 	light->m_SoftShadow   = m_Light->m_SoftShadow;
 	light->m_SpotActive   = m_Light->m_SpotActive;
 	light->m_JitterEdge   = m_Light->m_JitterEdge;
-	for (i = 0;i < m_Light->m_Spline.control_num;i++)
+	for (i = 0;i < m_Light->m_Spline.m_ControlNum;i++)
 	{
-		light->m_Spline.controls[i] = m_Light->m_Spline.controls[i];
+		light->m_Spline.m_Controls[i] = m_Light->m_Spline.m_Controls[i];
 	}
 	m_CtrlPreview.b3Update(m_LightScene);
 }

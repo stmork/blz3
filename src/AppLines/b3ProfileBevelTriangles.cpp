@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.4  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -90,7 +93,7 @@ b3_bool b3ProfileBevelTriangles::b3ComputeProfile(b3Spline *spline,...)
 	b3_f64     xEdge;
 	b3_f64     yEdge;
 	b3_f64     oblique;
-	b3_vector *c = spline->controls;
+	b3_vector *c = spline->m_Controls;
 	b3_f64     factor = 1 - sqrt(0.5);
 	int        i;
 
@@ -104,7 +107,7 @@ b3_bool b3ProfileBevelTriangles::b3ComputeProfile(b3Spline *spline,...)
 
 	spline->b3InitCurve(1,12,true);
 	spline->b3ClearControls();
-	spline->subdiv = 12;
+	spline->m_SubDiv = 12;
 
 	c[0].x = xEdge;
 	c[0].y = yEdge - oblique;
@@ -137,7 +140,7 @@ b3_bool b3ProfileBevelTriangles::b3ComputeShape(b3Spline *spline,b3Shape *base_s
 	b3_f64       height;
 	b3_count     xCount,yCount;
 	b3_count     VertexCount,TriaCount;
-	b3_vector   *c = spline->controls;
+	b3_vector   *c = spline->m_Controls;
 	b3_vertex   *vertex;
 	b3_triangle *tria;
 				
@@ -148,7 +151,7 @@ b3_bool b3ProfileBevelTriangles::b3ComputeShape(b3Spline *spline,b3Shape *base_s
 	va_end(args);
 
 	// Init/allocate triangle shape
-	xCount      = spline->control_num;
+	xCount      = spline->m_ControlNum;
 	VertexCount = xCount * yCount + xCount;
 	TriaCount   = xCount * yCount * 2;
 	shape->b3Init(VertexCount,TriaCount,xCount,yCount);

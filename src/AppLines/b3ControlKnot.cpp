@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.2  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.1  2004/07/27 19:05:59  sm
 **	- Some typo cleanups.
 **	
@@ -86,7 +89,7 @@ void CB3ControlKnot::OnPaint()
 {
 	b3_index   i;
 	b3_f64     iMin,iMax;
-	b3_knots   knots = m_Spline->knots;
+	b3_knots   knots = m_Spline->m_Knots;
 	CRect      rect;
 	CPaintDC   dc(this); // device context for painting
 	b3_count   repeat;
@@ -99,7 +102,7 @@ void CB3ControlKnot::OnPaint()
 	// TODO: Add your message handler code here
 	CStatic::OnPaint();
 	iMin = knots[0];
-	iMax = knots[m_Spline->knot_num - 1];
+	iMax = knots[m_Spline->m_KnotNum - 1];
 	last = iMin - 1; // force different knot
 
 	GetClientRect(&rect);
@@ -108,7 +111,7 @@ void CB3ControlKnot::OnPaint()
 	quotient = (xMax - m_LeftOffset - m_RightOffset) / iMax;
 	dc.FillSolidRect(0,0,xMax,yMax,RGB(255,255,255));
 	
-	for (i = 0;i < m_Spline->knot_num;i++)
+	for (i = 0;i < m_Spline->m_KnotNum;i++)
 	{
 		if (last != knots[i])
 		{

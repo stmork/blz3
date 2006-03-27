@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.3  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.2  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -94,16 +97,16 @@ void CB3SplinePreview::OnPaint()
 
 	// Draw control polygon
 	oldPen = dc.SelectObject(&gray);
-	b3ComputePoint(&m_Spline->controls[0],x,y);
+	b3ComputePoint(&m_Spline->m_Controls[0],x,y);
 	dc.MoveTo(x,y);
-	for (i = 1;i < m_Spline->control_num;i++)
+	for (i = 1;i < m_Spline->m_ControlNum;i++)
 	{
-		b3ComputePoint(&m_Spline->controls[i],x,y);
+		b3ComputePoint(&m_Spline->m_Controls[i],x,y);
 		dc.LineTo(x,y);
 	}
-	if (m_Spline->closed)
+	if (m_Spline->m_Closed)
 	{
-		b3ComputePoint(&m_Spline->controls[0],x,y);
+		b3ComputePoint(&m_Spline->m_Controls[0],x,y);
 		dc.LineTo(x,y);
 	}
 	dc.SelectObject(oldPen);
@@ -121,9 +124,9 @@ void CB3SplinePreview::OnPaint()
 	dc.SelectObject(oldPen);
 
 	// Draw control points;
-	for (i = 0;i < m_Spline->control_num;i++)
+	for (i = 0;i < m_Spline->m_ControlNum;i++)
 	{
-		b3ComputePoint(&m_Spline->controls[i],x,y);
+		b3ComputePoint(&m_Spline->m_Controls[i],x,y);
 		dc.FillSolidRect(
 			x - B3_PICK_SIZE,y - B3_PICK_SIZE,
 			B3_PICK_SIZE * 2 + 1,B3_PICK_SIZE * 2 + 1,
@@ -140,9 +143,9 @@ void CB3SplinePreview::b3Update(b3Spline *spline)
 
 	m_Spline = spline;
 	b3Vector::b3InitBound(&m_Lower,&m_Upper);
-	for (i = 0;i < m_Spline->control_num;i++)
+	for (i = 0;i < m_Spline->m_ControlNum;i++)
 	{
-		b3Vector::b3AdjustBound(&m_Spline->controls[i],&m_Lower,&m_Upper);
+		b3Vector::b3AdjustBound(&m_Spline->m_Controls[i],&m_Lower,&m_Upper);
 	}
 
 	// Compute dimensions

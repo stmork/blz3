@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.6  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2004/09/27 13:20:49  sm
 **	- Fixed uninitialized class type for preview in LDC dialog.
 **	
@@ -133,9 +136,9 @@ void CDlgLDC::b3UpdatePreview()
 	b3_index  i;
 
 	B3_ASSERT(light != null);
-	for (i = 0;i < m_Light->m_Spline.control_num;i++)
+	for (i = 0;i < m_Light->m_Spline.m_ControlNum;i++)
 	{
-		light->m_Spline.controls[i] = m_Light->m_Spline.controls[i];
+		light->m_Spline.m_Controls[i] = m_Light->m_Spline.m_Controls[i];
 	}
 	m_CtrlPreview.b3Update(m_LightScene);
 }

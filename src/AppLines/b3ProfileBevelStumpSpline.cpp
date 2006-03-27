@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.4  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -93,7 +96,7 @@ b3_bool b3ProfileBevelStumpSpline::b3ComputeProfile(b3Spline *spline,...)
 	b3_f64     xEdge;
 	b3_f64     yEdge;
 	b3_f64     oblique;
-	b3_vector *c = spline->controls;
+	b3_vector *c = spline->m_Controls;
 	int        i;
 
 	B3_ASSERT(c != null);
@@ -140,7 +143,7 @@ b3_bool b3ProfileBevelStumpSpline::b3ComputeShape(b3Spline *spline,b3Shape *base
 	b3_f64         yEdge;
 	b3_f64         height;
 	b3_f64         oblique;
-	b3_vector     *c = spline->controls;
+	b3_vector     *c = spline->m_Controls;
 
 	B3_ASSERT(c != null);
 
@@ -151,14 +154,14 @@ b3_bool b3ProfileBevelStumpSpline::b3ComputeShape(b3Spline *spline,b3Shape *base
 	oblique = va_arg(args,b3_f64);
 	va_end(args);
 
-	shape->b3Init(spline->degree,2,spline->control_num,6);
+	shape->b3Init(spline->m_Degree, 2, spline->m_ControlNum,6);
 
 	// Init bottom half of control points
 	for (y = 0;y < 3;y++)
 	{
-		bIndex = y * shape->m_Spline[1].offset;
+		bIndex = y * shape->m_Spline[1].m_Offset;
 		z     = (y < 2 ? 0 : oblique * 2);
-		for (x = 0;x < shape->m_Spline[0].control_num;x++)
+		for (x = 0;x < shape->m_Spline[0].m_ControlNum;x++)
 		{
 			if (y == 0)
 			{
@@ -176,10 +179,10 @@ b3_bool b3ProfileBevelStumpSpline::b3ComputeShape(b3Spline *spline,b3Shape *base
 	// Mirror bottom to top
 	for (y = 0;y < 3;y++)
 	{
-		bIndex =      y  * shape->m_Spline[1].offset;
-		tIndex = (5 - y) * shape->m_Spline[1].offset;
+		bIndex =      y  * shape->m_Spline[1].m_Offset;
+		tIndex = (5 - y) * shape->m_Spline[1].m_Offset;
 		z      = shape->m_Controls[bIndex].z;
-		for (x = 0;x < shape->m_Spline[0].control_num;x++)
+		for (x = 0;x < shape->m_Spline[0].m_ControlNum;x++)
 		{
 			shape->m_Controls[tIndex + x] =   shape->m_Controls[bIndex + x];
 			shape->m_Controls[tIndex + x].z = height - z;

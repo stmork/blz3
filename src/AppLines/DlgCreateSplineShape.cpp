@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/03/27 11:22:35  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.7  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.6  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -225,7 +228,7 @@ void CDlgCreateSplineShape::b3PostProcess()
 				c[x].y = (shape->m_Spline[1].b3ArcLengthParameter(y) - 0.5) * m_ySize;
 				c[x].z = 0;
 			}
-			c += shape->m_Spline[1].offset;
+			c += shape->m_Spline[1].m_Offset;
 		}
 		break;
 
@@ -238,7 +241,7 @@ void CDlgCreateSplineShape::b3PostProcess()
 				c[x].y = sin(M_PI * 2 * x / m_xControls) * m_xSize;
 				c[x].z = shape->m_Spline[1].b3ArcLengthParameter(y,m_ySize);
 			}
-			c += shape->m_Spline[1].offset;
+			c += shape->m_Spline[1].m_Offset;
 		}
 		break;
 
@@ -252,7 +255,7 @@ void CDlgCreateSplineShape::b3PostProcess()
 				c[x].y = sin(M_PI * 2 * x / m_xControls) * rad;
 				c[x].z = sin(M_PI * 2 * y / m_yControls) * m_ySize;
 			}
-			c += shape->m_Spline[1].offset;
+			c += shape->m_Spline[1].m_Offset;
 		}
 		break;
 
