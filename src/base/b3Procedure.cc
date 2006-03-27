@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2006/03/27 10:32:06  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.61  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.60  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
 **	
@@ -382,34 +385,34 @@ b3Noise::b3Noise () throw(b3NoiseException)
 		}
 
 		// init marble spline
-		m_MarbleSpline.knot_max    = sizeof(m_MarbleKnots)    / sizeof(b3_f32);
-		m_MarbleSpline.control_max = sizeof(m_MarbleControls) / sizeof(b3_vector);
-		m_MarbleSpline.offset      = 1;
-		m_MarbleSpline.knots       = m_MarbleKnots;
-		m_MarbleSpline.controls    = m_MarbleControls;
-		m_MarbleSpline.b3InitCurve         (3,m_MarbleSpline.control_max,false);
+		m_MarbleSpline.m_KnotMax    = sizeof(m_MarbleKnots)    / sizeof(b3_f32);
+		m_MarbleSpline.m_ControlMax = sizeof(m_MarbleControls) / sizeof(b3_vector);
+		m_MarbleSpline.m_Offset     = 1;
+		m_MarbleSpline.m_Knots      = m_MarbleKnots;
+		m_MarbleSpline.m_Controls   = m_MarbleControls;
+		m_MarbleSpline.b3InitCurve         (3,m_MarbleSpline.m_ControlMax,false);
 		m_MarbleSpline.b3ThroughEndControl ();
 
 		// init wood spline
-		m_WoodSpline.knot_max     = sizeof(m_WoodKnots)    / sizeof(b3_f32);
-		m_WoodSpline.control_max  = sizeof(m_WoodControls) / sizeof(b3_vector);
-		m_WoodSpline.offset       = 1;
-		m_WoodSpline.knots        = m_WoodKnots;
-		m_WoodSpline.controls     = m_WoodControls;
-		m_WoodSpline.b3InitCurve         (3,m_WoodSpline.control_max,false);
+		m_WoodSpline.m_KnotMax     = sizeof(m_WoodKnots)    / sizeof(b3_f32);
+		m_WoodSpline.m_ControlMax  = sizeof(m_WoodControls) / sizeof(b3_vector);
+		m_WoodSpline.m_Offset      = 1;
+		m_WoodSpline.m_Knots       = m_WoodKnots;
+		m_WoodSpline.m_Controls    = m_WoodControls;
+		m_WoodSpline.b3InitCurve         (3,m_WoodSpline.m_ControlMax,false);
 		m_WoodSpline.b3ThroughEndControl ();
 
 		// init wave spline
-		m_WaveSpline.knot_max     = sizeof(m_WaveKnots)    / sizeof(b3_f32);
-		m_WaveSpline.control_max  = sizeof(m_WaveControls) / sizeof(b3_vector);
-		m_WaveSpline.offset       = 1;
-		m_WaveSpline.knots        = m_WaveKnots;
-		m_WaveSpline.controls     = m_WaveControls;
-		m_WaveSpline.b3InitCurve(3,m_WaveSpline.control_max,true);
-		for (i = 0;i < m_WaveSpline.control_max;i++)
+		m_WaveSpline.m_KnotMax     = sizeof(m_WaveKnots)    / sizeof(b3_f32);
+		m_WaveSpline.m_ControlMax  = sizeof(m_WaveControls) / sizeof(b3_vector);
+		m_WaveSpline.m_Offset      = 1;
+		m_WaveSpline.m_Knots       = m_WaveKnots;
+		m_WaveSpline.m_Controls    = m_WaveControls;
+		m_WaveSpline.b3InitCurve(3,m_WaveSpline.m_ControlMax,true);
+		for (i = 0;i < m_WaveSpline.m_ControlMax;i++)
 		{
-			m_WaveControls[i].x = cos(M_PI * 2.0 * i / m_WaveSpline.control_max);
-			m_WaveControls[i].y = sin(M_PI * 2.0 * i / m_WaveSpline.control_max);
+			m_WaveControls[i].x = cos(M_PI * 2.0 * i / m_WaveSpline.m_ControlMax);
+			m_WaveControls[i].y = sin(M_PI * 2.0 * i / m_WaveSpline.m_ControlMax);
 			m_WaveControls[i].z = B3_FRAN(M_PI * 2.0) - M_PI;
 		}
 	}
@@ -801,9 +804,9 @@ inline void b3Noise::b3MarbleCurve (
 	register b3_f32  *knots;
 	register b3_f64  q;
 
-	knots = Spline->knots;
-	q =         x  * knots[Spline->degree] +
-	     (1.0 - x) * knots[Spline->control_num];
+	knots = Spline->m_Knots;
+	q =         x  * knots[Spline->m_Degree] +
+	     (1.0 - x) * knots[Spline->m_ControlNum];
 	Spline->b3DeBoorOpened (result,0,q);
 }
 
@@ -887,7 +890,7 @@ b3_f64 b3Noise::b3Wave(const b3_vector *point)
 	b3_vector v;
 
 	n = b3ImprovedNoise(point->x * 0.5,point->y,point->z);
-	q = b3Math::b3Frac(point->x * 0.5 + n,(b3_f64)m_WaveSpline.control_max);
+	q = b3Math::b3Frac(point->x * 0.5 + n,(b3_f64)m_WaveSpline.m_ControlMax);
 	m_WaveSpline.b3DeBoorClosed (&v,0,q);
 
 	return mSin(point->y * 10 + v.z * 2);
@@ -897,7 +900,7 @@ void b3Noise::b3AnimThinFilm(const b3_f64 t, b3_vector *result)
 {
 	b3_f64   q,div;
 
-	div = (b3_f64)m_WaveSpline.control_num;
+	div = (b3_f64)m_WaveSpline.m_ControlNum;
 	q   = b3Math::b3Frac(t * 0.05f,div);
 	m_WaveSpline.b3DeBoorClosed (result,0,q);
 }

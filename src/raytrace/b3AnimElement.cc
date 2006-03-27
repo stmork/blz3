@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2006/03/27 10:32:06  smork
+**      - Renamed member variables of spline template class.
+**
 **      Revision 1.17  2006/03/05 21:22:34  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -174,13 +177,13 @@ void b3AnimControl::b3Write()
 
 void b3AnimControl::b3InitNurbs(b3Nurbs &nurbs)
 {
-	if (nurbs.controls == null)
+	if (nurbs.m_Controls == null)
 	{
-		nurbs.control_max = m_Max;
-		nurbs.controls    = m_Controls;
+		nurbs.m_ControlMax = m_Max;
+		nurbs.m_Controls   = m_Controls;
 	}
 
-	m_Used = nurbs.control_num;
+	m_Used = nurbs.m_ControlNum;
 }
 
 /*************************************************************************
@@ -223,7 +226,7 @@ b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 
 	// Init nurbs
 	b3InitNurbs(&m_Param,null,m_Knots);
-	for (b3_index i = 0;i < m_Param.knot_max;i++)
+	for (b3_index i = 0;i < m_Param.m_KnotMax;i++)
 	{
 		m_Knots[i] = b3InitFloat();
 	}
@@ -248,7 +251,7 @@ void b3AnimElement::b3Write()
 
 	// Init nurbs
 	b3StoreNurbs(&m_Param);
-	for (b3_index i = 0;i < m_Param.knot_max;i++)
+	for (b3_index i = 0;i < m_Param.m_KnotMax;i++)
 	{
 		b3StoreFloat(m_Knots[i]);
 	}
@@ -283,8 +286,8 @@ void b3AnimElement::b3GetPosition(b3_vector32_4D *position,b3_f64 t)
 		ctrl->b3InitNurbs(m_Param);
 
 		// compute predefined values
-		qStart = m_Knots[m_Param.closed ? 0 : m_Param.degree];
-		q      = m_Knots[m_Param.control_num] - qStart;
+		qStart = m_Knots[m_Param.m_Closed ? 0 : m_Param.m_Degree];
+		q      = m_Knots[m_Param.m_ControlNum] - qStart;
 
 		// compute position at time t
 		ratio = (t - m_Start) / (m_End - m_Start);

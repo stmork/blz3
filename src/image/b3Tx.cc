@@ -24,10 +24,7 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
-#include "blz3/system/b3Log.h"
 #include "blz3/base/b3Color.h"
-
-#include <math.h>
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2006/03/27 10:32:06  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.42  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.41  2005/12/05 22:12:24  sm
 **	- More const declarations.
 **	

@@ -11,6 +11,9 @@ source:
 count:
 	test -f src/Makefile && make -C src $@
 
+count_all:
+	test -f src/Makefile && make -C src $@
+
 uncr:
 	test -f src/Makefile && make -C src $@
 

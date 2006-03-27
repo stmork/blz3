@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.60  2006/03/27 10:32:06  smork
+**      - Renamed member variables of spline template class.
+**
 **      Revision 1.59  2006/03/05 21:22:35  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -421,11 +424,11 @@ void b3Light::b3InitValues()
 	m_Direction.y =    100.0;
 	m_Direction.z =   -100.0;
 
-	m_Spline.offset      = 1;
-	m_Spline.knots       = m_Knots;
-	m_Spline.controls    = m_Controls;
-	m_Spline.control_max = sizeof(m_Controls) / sizeof(m_Controls[0]);
-	m_Spline.knot_max    = sizeof(m_Knots)    / sizeof(m_Knots[0]);
+	m_Spline.m_Offset     = 1;
+	m_Spline.m_Knots      = m_Knots;
+	m_Spline.m_Controls   = m_Controls;
+	m_Spline.m_ControlMax = sizeof(m_Controls) / sizeof(m_Controls[0]);
+	m_Spline.m_KnotMax    = sizeof(m_Knots)    / sizeof(m_Knots[0]);
 	m_Spline.b3InitCurve (INIT_DEGREE,INIT_CONTROL_MAX,false);
 	for (i = 0;i < INIT_CONTROL_MAX;i++)
 	{

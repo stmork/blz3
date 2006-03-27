@@ -23,8 +23,6 @@
 
 #include "b3TxInclude.h"
 
-#include <math.h>
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/03/27 10:32:06  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.12  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.11  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
 **	

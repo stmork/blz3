@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2006/03/27 10:32:06  smork
+**      - Renamed member variables of spline template class.
+**
 **      Revision 1.30  2006/03/08 20:48:59  sm
 **      - Formatting.
 **
@@ -214,9 +217,9 @@ b3SplineRotShape::b3SplineRotShape(b3_u32 *src) :
 	b3InitVector(&m_Axis.pos);
 	b3InitVector(&m_Axis.dir);
 
-	m_Controls = (b3_vector *)b3Item::b3Alloc(m_Spline.control_max * sizeof(b3_vector));
-	m_Spline.controls = m_Controls;
-	for (i = 0;i < m_Spline.control_max;i++)
+	m_Controls = (b3_vector *)b3Item::b3Alloc(m_Spline.m_ControlMax * sizeof(b3_vector));
+	m_Spline.m_Controls = m_Controls;
+	for (i = 0;i < m_Spline.m_ControlMax;i++)
 	{
 		b3InitVector(&m_Controls[i]);
 	}
@@ -235,7 +238,7 @@ void b3SplineRotShape::b3StoreShape()
 	b3StoreSpline(&m_Spline);
 	b3StoreVector(&m_Axis.pos);
 	b3StoreVector(&m_Axis.dir);
-	for (i = 0;i < m_Spline.control_max;i++)
+	for (i = 0;i < m_Spline.m_ControlMax;i++)
 	{
 		b3StoreVector(&m_Controls[i]);
 	}
@@ -251,12 +254,12 @@ void b3SplineRotShape::b3Init(
 	m_rSubDiv = SubDiv;
 
 	// Allocate controls
-	m_Controls      = (b3_vector *)b3Item::b3Alloc(m_Spline.control_max * sizeof(b3_vector));
+	m_Controls      = (b3_vector *)b3Item::b3Alloc(m_Spline.m_ControlMax * sizeof(b3_vector));
 
 	// Init horizontal spline
-	m_Spline.knots    = m_Knots;
-	m_Spline.controls = m_Controls;
-	m_Spline.offset   = 1;
+	m_Spline.m_Knots    = m_Knots;
+	m_Spline.m_Controls = m_Controls;
+	m_Spline.m_Offset   = 1;
 	m_Spline.b3InitCurve(Degree,ControlNum,Closed);
 }
 
@@ -271,29 +274,29 @@ b3_bool b3SplineRotShape::b3Prepare() throw(b3WorldException)
 	b3_vector    VertexField[B3_MAX_SUBDIV+1];
 
 	// Create aux BSpline
-	MySpline          = m_Spline;
-	MySpline.controls = Between;
+	MySpline            = m_Spline;
+	MySpline.m_Controls = Between;
 
 	xSize       = m_rSubDiv;
-	ySize       = MySpline.subdiv;
+	ySize       = MySpline.m_SubDiv;
 	TriaCount = xSize * ySize * 2;
 
-	if (!MySpline.closed) ySize++;
+	if (!MySpline.m_Closed) ySize++;
 	VertexCount = xSize * ySize;
 
 	// Reallocating new tria shape
-	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_rSubDiv,MySpline.subdiv))
+	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_rSubDiv,MySpline.m_SubDiv))
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
 
 	// computing vertices
-	MySpline.offset = 1;
+	MySpline.m_Offset = 1;
 	for (x = 0;x < xSize;x++)
 	{
 		b3Matrix::b3RotateVector (null,&Matrix,&m_Axis,M_PI * 2.0 * x / xSize);
-		for (y = 0;y < MySpline.control_num;y++)
+		for (y = 0;y < MySpline.m_ControlNum;y++)
 		{
 			b3Matrix::b3VMul (&Matrix,&m_Controls[y],&Between[y],true);
 		}
@@ -310,7 +313,7 @@ b3_bool b3SplineRotShape::b3Prepare() throw(b3WorldException)
 
 	// computing triangles
 	Triangle = m_Triangles;
-	for (y = 0;y < MySpline.subdiv;y++)
+	for (y = 0;y < MySpline.m_SubDiv;y++)
 	{
 		for (x = 0;x < xSize;x++)
 		{
@@ -329,7 +332,7 @@ b3_bool b3SplineRotShape::b3Prepare() throw(b3WorldException)
 
 	/* initializing values */
 	m_xSize = xSize;
-	m_ySize = MySpline.subdiv;
+	m_ySize = MySpline.m_SubDiv;
 	m_Flags = PHONG;
 
 	return b3TriangleShape::b3Prepare();
@@ -341,15 +344,15 @@ void b3SplineRotShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	b3_index   offset;
 	b3_index   x;
 
-	control = m_Spline.controls;
-	offset  = m_Spline.offset;
+	control = m_Spline.m_Controls;
+	offset  = m_Spline.m_Offset;
 
 	// Transform rotation axis
 	b3Matrix::b3VMul (transformation,&m_Axis.pos,&m_Axis.pos,true);
 	b3Matrix::b3VMul (transformation,&m_Axis.dir,&m_Axis.dir,false);
 
 	// Transform control points
-	for (x = 0;x < m_Spline.control_num;x++)
+	for (x = 0;x < m_Spline.m_ControlNum;x++)
 	{
 		b3Vector::b3MatrixMul4D(transformation,control);
 		control += offset;
@@ -366,9 +369,9 @@ void b3SplineRotShape::b3SetupPicking(b3PickInfo *info)
 	info->b3AddPickPoint(&m_Axis.pos,"b");
 	info->b3AddPickDir(&m_Axis.pos,&m_Axis.dir,"d");
 
-	control = m_Spline.controls;
-	offset  = m_Spline.offset;
-	for (x = 0;x < m_Spline.control_num;x++)
+	control = m_Spline.m_Controls;
+	offset  = m_Spline.m_Offset;
+	for (x = 0;x < m_Spline.m_ControlNum;x++)
 	{
 		info->b3AddPickPoint(control);
 		info->b3AddVertex(control);
@@ -382,18 +385,18 @@ void b3SplineRotShape::b3SetupGrid(b3PickInfo *info)
 	b3_index   offset;
 	b3_index   x;
 
-	control = m_Spline.controls;
-	offset  = m_Spline.offset;
-	for (x = 0;x < m_Spline.control_num;x++)
+	control = m_Spline.m_Controls;
+	offset  = m_Spline.m_Offset;
+	for (x = 0;x < m_Spline.m_ControlNum;x++)
 	{
 		info->b3AddPickPoint(control);
 		info->b3AddVertex(control);
 		control += offset;
 	}
 
-	for (x = (m_Spline.closed ? 0 : 1);x < m_Spline.control_num;x++)
+	for (x = (m_Spline.m_Closed ? 0 : 1);x < m_Spline.m_ControlNum;x++)
 	{
-		info->b3AddLine(x,(x + m_Spline.control_num - 1) % m_Spline.control_num);
+		info->b3AddLine(x,(x + m_Spline.m_ControlNum - 1) % m_Spline.m_ControlNum);
 	}
 }
 
@@ -403,16 +406,16 @@ void b3SplineRotShape::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	m_ySubDiv   = m_Spline.subdiv;
+	m_ySubDiv   = m_Spline.m_SubDiv;
 	m_xSubDiv   = m_rSubDiv;
-	if (!m_Spline.closed)
+	if (!m_Spline.m_Closed)
 	{
 		m_ySubDiv++;
 	}
 
-	vertCount = (m_Spline.subdiv + 1) * m_rSubDiv;
-	gridCount = m_rSubDiv * (m_Spline.subdiv + m_ySubDiv);
-	polyCount = m_rSubDiv *  m_Spline.subdiv * 2;
+	vertCount = (m_Spline.m_SubDiv + 1) * m_rSubDiv;
+	gridCount = m_rSubDiv * (m_Spline.m_SubDiv + m_ySubDiv);
+	polyCount = m_rSubDiv *  m_Spline.m_SubDiv * 2;
 }
 
 void b3SplineRotShape::b3ComputeVertices()
@@ -431,9 +434,9 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3Matrix::b3RotateVector (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
 
 	// Copy BSpline
-	AuxSpline          = m_Spline;
-	AuxSpline.controls = AuxControls;
-	for (i = 0;i < AuxSpline.control_num;i++)
+	AuxSpline            = m_Spline;
+	AuxSpline.m_Controls = AuxControls;
+	for (i = 0;i < AuxSpline.m_ControlNum;i++)
 	{
 		AuxControls[i] = m_Controls[i];
 	}
@@ -461,14 +464,14 @@ void b3SplineRotShape::b3ComputeVertices()
 		fy += fyStep;
 
 		// Rotate control points
-		for (i = 0;i < AuxSpline.control_num;i++)
+		for (i = 0;i < AuxSpline.m_ControlNum;i++)
 		{
 			b3Matrix::b3VMul (&Matrix, &AuxControls[i], &AuxControls[i], true);
 		}
 	}
 
 	xSize  = m_rSubDiv;
-	ySize  = AuxSpline.subdiv;
+	ySize  = AuxSpline.m_SubDiv;
 }
 
 void b3SplineRotShape::b3ComputeIndices()
@@ -479,8 +482,8 @@ void b3SplineRotShape::b3ComputeIndices()
 	b3_count       yStep;
 	b3_f64         sStep;
 
-	yStep = m_Spline.subdiv + 1;
-	sStep = (b3_f64)m_Spline.subdiv / m_rSubDiv;
+	yStep = m_Spline.m_SubDiv + 1;
+	sStep = (b3_f64)m_Spline.m_SubDiv / m_rSubDiv;
 
 	gPtr  = *glGridElements;
 	pPtr  = *glPolygonElements;
@@ -492,7 +495,7 @@ void b3SplineRotShape::b3ComputeIndices()
 		x2 = (a + 1) % m_rSubDiv * yStep;
 
 		// curve itself
-		for (y1 = 0;y1 < m_Spline.subdiv;y1++)
+		for (y1 = 0;y1 < m_Spline.m_SubDiv;y1++)
 		{
 			y2 = (y1 + 1) % m_ySubDiv;
 

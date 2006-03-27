@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2006/03/27 10:32:06  smork
+**      - Renamed member variables of spline template class.
+**
 **      Revision 1.44  2006/03/05 21:22:33  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -551,16 +554,16 @@ void b3Item::b3InitSpline(
 {
 	B3_ASSERT_INDEX;
 
-	spline->control_num = b3InitInt();
-	spline->knot_num    = b3InitInt();
-	spline->degree      = b3InitInt();
-	spline->subdiv      = b3InitInt();
-	spline->control_max = b3InitInt();
-	spline->knot_max    = b3InitInt();
-	spline->offset      = b3InitInt();
-	spline->closed      = b3InitBool();
-	spline->controls    = new_controls;
-	spline->knots       = new_knots;
+	spline->m_ControlNum = b3InitInt();
+	spline->m_KnotNum    = b3InitInt();
+	spline->m_Degree     = b3InitInt();
+	spline->m_SubDiv     = b3InitInt();
+	spline->m_ControlMax = b3InitInt();
+	spline->m_KnotMax    = b3InitInt();
+	spline->m_Offset     = b3InitInt();
+	spline->m_Closed     = b3InitBool();
+	spline->m_Controls   = new_controls;
+	spline->m_Knots      = new_knots;
 
 	m_ParseIndex += 2;
 }
@@ -572,16 +575,16 @@ void b3Item::b3InitNurbs(
 {
 	B3_ASSERT_INDEX;
 
-	nurbs->control_num = b3InitInt();
-	nurbs->knot_num    = b3InitInt();
-	nurbs->degree      = b3InitInt();
-	nurbs->subdiv      = b3InitInt();
-	nurbs->control_max = b3InitInt();
-	nurbs->knot_max    = b3InitInt();
-	nurbs->offset      = b3InitInt();
-	nurbs->closed      = b3InitBool();
-	nurbs->controls    = new_controls;
-	nurbs->knots       = new_knots;
+	nurbs->m_ControlNum = b3InitInt();
+	nurbs->m_KnotNum    = b3InitInt();
+	nurbs->m_Degree     = b3InitInt();
+	nurbs->m_SubDiv     = b3InitInt();
+	nurbs->m_ControlMax = b3InitInt();
+	nurbs->m_KnotMax    = b3InitInt();
+	nurbs->m_Offset     = b3InitInt();
+	nurbs->m_Closed     = b3InitBool();
+	nurbs->m_Controls   = new_controls;
+	nurbs->m_Knots      = new_knots;
 
 	m_ParseIndex += 2;
 }
@@ -953,30 +956,30 @@ void b3Item::b3StoreMatrix(const b3_matrix *mat)
 
 void b3Item::b3StoreSpline(const b3Spline *spline)
 {
-	b3StoreInt((b3_u32)spline->control_num);
-	b3StoreInt((b3_u32)spline->knot_num);
-	b3StoreInt((b3_u32)spline->degree);
-	b3StoreInt((b3_u32)spline->subdiv);
-	b3StoreInt((b3_u32)spline->control_max);
-	b3StoreInt((b3_u32)spline->knot_max);
-	b3StoreInt((b3_u32)spline->offset);
-	b3StoreBool(spline->closed);
-	b3StorePtr( spline->controls);
-	b3StorePtr( spline->knots);
+	b3StoreInt((b3_u32)spline->m_ControlNum);
+	b3StoreInt((b3_u32)spline->m_KnotNum);
+	b3StoreInt((b3_u32)spline->m_Degree);
+	b3StoreInt((b3_u32)spline->m_SubDiv);
+	b3StoreInt((b3_u32)spline->m_ControlMax);
+	b3StoreInt((b3_u32)spline->m_KnotMax);
+	b3StoreInt((b3_u32)spline->m_Offset);
+	b3StoreBool(spline->m_Closed);
+	b3StorePtr( spline->m_Controls);
+	b3StorePtr( spline->m_Knots);
 }
 
 void b3Item::b3StoreNurbs(const b3Nurbs *nurbs)
 {
-	b3StoreInt((b3_u32)nurbs->control_num);
-	b3StoreInt((b3_u32)nurbs->knot_num);
-	b3StoreInt((b3_u32)nurbs->degree);
-	b3StoreInt((b3_u32)nurbs->subdiv);
-	b3StoreInt((b3_u32)nurbs->control_max);
-	b3StoreInt((b3_u32)nurbs->knot_max);
-	b3StoreInt((b3_u32)nurbs->offset);
-	b3StoreBool(nurbs->closed);
-	b3StorePtr( nurbs->controls);
-	b3StorePtr( nurbs->knots);
+	b3StoreInt((b3_u32)nurbs->m_ControlNum);
+	b3StoreInt((b3_u32)nurbs->m_KnotNum);
+	b3StoreInt((b3_u32)nurbs->m_Degree);
+	b3StoreInt((b3_u32)nurbs->m_SubDiv);
+	b3StoreInt((b3_u32)nurbs->m_ControlMax);
+	b3StoreInt((b3_u32)nurbs->m_KnotMax);
+	b3StoreInt((b3_u32)nurbs->m_Offset);
+	b3StoreBool(nurbs->m_Closed);
+	b3StorePtr( nurbs->m_Controls);
+	b3StorePtr( nurbs->m_Knots);
 }
 
 void b3Item::b3StoreColor(const b3_color *col)

@@ -22,7 +22,6 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
-#include "blz3/system/b3Log.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/03/27 10:32:06  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.4  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2005/08/11 13:16:11  smork
 **	- Documentation.
 **	- b3Tx cleanup.

@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/03/27 10:32:06  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.6  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.5  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
@@ -259,18 +262,18 @@ private:
 		b3_count xp,xo,xi,x,i;
 		b3_index pos;
 
-		for (i = 0;i < shape->m_Spline[0].knot_num;i++)
+		for (i = 0;i < shape->m_Spline[0].m_KnotNum;i++)
 		{
-			shape->m_Spline[0].knots[i] = i / shape->m_Spline[0].degree;
+			shape->m_Spline[0].m_Knots[i] = i / shape->m_Spline[0].m_Degree;
 		}
 
-		for (i = 0;i < shape->m_Spline[1].knot_num;i++)
+		for (i = 0;i < shape->m_Spline[1].m_KnotNum;i++)
 		{
-			shape->m_Spline[1].knots[i] = (i - 1) / shape->m_Spline[1].degree;
+			shape->m_Spline[1].m_Knots[i] = (i - 1) / shape->m_Spline[1].m_Degree;
 		}
-		shape->m_Spline[1].knots[i-1] = shape->m_Spline[1].knots[i-2];
+		shape->m_Spline[1].m_Knots[i-1] = shape->m_Spline[1].m_Knots[i-2];
 
-		index *= shape->m_Spline[1].offset;
+		index *= shape->m_Spline[1].m_Offset;
 		for (i = start;i < end;i += step)
 		{
 			for (xp = 0;xp < 4;xp++)
@@ -292,9 +295,9 @@ private:
 						x++;
 					}
 				}
-				index += shape->m_Spline[1].offset;
+				index += shape->m_Spline[1].m_Offset;
 			}
-			index -= shape->m_Spline[1].offset;
+			index -= shape->m_Spline[1].m_Offset;
 		}
 	}
 
@@ -317,13 +320,13 @@ private:
 
 			index = 0;
 			pos   = 0;
-			for (y = 0;y < shape->m_Spline[1].control_num;y++)
+			for (y = 0;y < shape->m_Spline[1].m_ControlNum;y++)
 			{
-				for (x = 0;x < shape->m_Spline[0].control_num;x += shape->m_Spline[0].offset)
+				for (x = 0;x < shape->m_Spline[0].m_ControlNum;x += shape->m_Spline[0].m_Offset)
 				{
 					shape->m_Controls[x + index] = m_Vertices[m_Patches[i].m_Indices[pos++] - 1];
 				}
-				index += shape->m_Spline[1].offset;
+				index += shape->m_Spline[1].m_Offset;
 			}
 		}
 	}

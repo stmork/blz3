@@ -1,3 +1,4 @@
+
 /*
 **
 **	$Filename:	b3TxLoadTIFF.cc $
@@ -26,8 +27,6 @@
 
 #include "b3TxTIFF.h"
 
-#include <math.h>
-
 /*************************************************************************
 **                                                                      **
 **                        memory routines for TIFF-library              **
@@ -46,9 +45,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2006/03/27 10:32:06  smork
+**	- Renamed member variables of spline template class.
+**
 **	Revision 1.18  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.17  2005/08/11 13:37:29  smork
 **	- Image cleanup (TIFF).
 **	- Documentation.
