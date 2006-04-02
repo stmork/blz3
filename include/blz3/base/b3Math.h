@@ -23,7 +23,7 @@
 /**
  * This class provides useful math helper methods.
  */
-class b3Math
+class B3_PLUGIN b3Math
 {
 	static b3_f64 epsilon;
 	static b3_f64 m_CbrtCoeffs[15];

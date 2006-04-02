@@ -26,7 +26,7 @@
  * @see b3_vector
  * @see b3_vector64
  */
-class b3Vector
+class B3_PLUGIN b3Vector
 {
 	/**
 	 * This enumeration lists the first four indices into the vector components.
@@ -2275,7 +2275,7 @@ public:
 /**
  * This class provides methods for generating different transformations.
  */
-class b3Matrix
+class B3_PLUGIN b3Matrix
 {
 	static b3_matrix m_UnitMatrix;
 	static b3_vector m_EmptyVector;
