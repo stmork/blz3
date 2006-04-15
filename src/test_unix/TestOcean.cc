@@ -1,15 +1,15 @@
 /*
 **
-**	$Filename:	TestWood.cc $
-**	$Release:	Dortmund 2004 $
+**	$Filename:	TestOcean.cc $
+**	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Displaying Wood
+**	Blizzard III - Animating ocean water
 **
-**	(C) Copyright 2004  Steffen A. Mork
+**	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -34,39 +34,21 @@
 
 /*
 **  $Log$
-**  Revision 1.6  2006/04/15 20:34:55  sm
+**  Revision 1.1  2006/04/15 20:34:55  sm
 **  - Added support for ocean surface bump mapping.
-**
-**  Revision 1.5  2005/12/12 16:01:32  smork
-**  - Some more const correction in samplers.
-**
-**  Revision 1.4  2004/11/29 09:58:01  smork
-**  - Changed exit states to correct defines.
-**  - Added switch for disabling VBO in OpenGL renderer.
-**  - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**  Revision 1.3  2004/05/18 13:34:50  sm
-**  - Cleaned up water animation
-**
-**  Revision 1.2  2004/05/18 10:44:52  sm
-**  - Fine tuning animated water.
-**
-**  Revision 1.1  2004/05/16 18:50:59  sm
-**  - Added new simple image sampler.
-**  - We need better water!
 **
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        b3TestWater implementation                    **
+**                        b3TestOceanWave implementation                **
 **                                                                      **
 *************************************************************************/
 
 #define WATER_RES   200
 
-class b3WaterSampler : public b3ImageSampler, public b3Water
+class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 {
 	b3Tx   *m_Tx;
 	b3_f64  m_Factor;
@@ -76,32 +58,20 @@ class b3WaterSampler : public b3ImageSampler, public b3Water
 	{
 		b3_vector pos;
 		b3_f64    water;
-		
+
 		pos.x = m_Factor * x / m_xMax;
 		pos.y = m_Factor * y / m_yMax;
 		pos.z = 0;
 		
-		water = b3ComputeWater(&pos,m_Time) * 0.5;
+		water = b3ComputeOceanWave(&pos,m_Time);
 	
 		return b3Color(water,water,water);
 	}
 
 public:
-	inline b3WaterSampler(b3Tx *tx) : b3ImageSampler(tx)
+	inline b3OceanWaveSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
-		m_Factor = 1.0;
-		m_Time   = 0.0;
-
-		m_WindFreq  = 0.5;
-		m_WindAmp   = 0.2f;
-		m_MinWind   = 1.0f;
-		m_Km        = 1.0f;
-		m_Octaves   = 2;  
-
-		b3PrintF(B3LOG_NORMAL, "octaves=%ld\n",m_Octaves);
-		b3PrintF(B3LOG_NORMAL, "Km=%3.3f\n",m_Km);
-		b3PrintF(B3LOG_NORMAL, "wind: frequency=%3.3f min=%3.3f amp=%3.3f\n",
-			m_WindFreq,m_MinWind,m_WindAmp);
+		m_Factor = 100;
 	}
 	
 	inline void b3SampleTime(b3_f64 time)
@@ -121,13 +91,14 @@ int main(int argc,char *argv[])
 		b3_res xMax,yMax;
 		
 		// Create display
-		display = new b3DisplayView(WATER_RES,WATER_RES,"Water");
+		display = new b3DisplayView(WATER_RES,WATER_RES,"OceanWave");
 		display->b3GetRes(xMax,yMax);
 		
 		tx.b3AllocTx(xMax, yMax, 128);
 		
-		b3WaterSampler sampler(&tx);
+		b3OceanWaveSampler sampler(&tx);
 
+		sampler.b3PrepareOceanWave();
 		if (argc > 1)
 		{
 			sampler.b3Sample();

@@ -314,6 +314,29 @@ public:
 	}
 
 	/**
+	 * This method normalizes this complex number.
+	 */
+	inline b3_bool b3Normalize(const T len = 1)
+	{
+		T old_len = b3Length();
+
+		if (old_len != 0)
+		{
+			T new_len = len / old_len;
+
+			for(b3_loop i = 0;i < 2;i++)
+			{
+				v[i] *= new_len;
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
 	 * This method computes the length as square of this complex number.
 	 *
 	 * @return Squared length of this complex number.
@@ -355,6 +378,57 @@ public:
 		v[Im]  = v[Re] * v[Im];
 		v[Im] += v[Im];
 		v[Re]  = re[0] - re[1];
+	}
+
+	/**
+	 * The method returns the real part of this complex number.
+	 *
+	 * @return The real part.
+	 */
+	inline T b3GetRe() const
+	{
+		return v[Re];
+	}
+
+	/**
+	 * This method sets the real part of the complex number.
+	 *
+	 * @param re The new real part.
+	 */
+	inline void b3SetRe(const T re)
+	{
+		v[Re] = re;
+	}
+
+	/**
+	 * The method returns the imaginary part of this complex number.
+	 *
+	 * @return The imaginary part.
+	 */
+	inline T b3GetIm() const
+	{
+		return v[Im];
+	}
+
+	/**
+	 * This method sets the imaginary part of the complex number.
+	 *
+	 * @param im The new imaginary part.
+	 */
+	inline void b3SetIm(const T im)
+	{
+		v[Im] = im;
+	}
+
+	/**
+	 * This method dumps the contents.
+	 *
+	 */
+	inline void b3Dump(const char *variable, const b3_log_level level = B3LOG_NORMAL)
+	{
+		b3PrintF(level,"%s.re=%2.5f %s.im=%2.5f\n",
+			variable,v[Re],
+			variable,v[Im]);
 	}
 }; 
 

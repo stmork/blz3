@@ -11,7 +11,7 @@ LIBS			= @LIBS@
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= TestIo TestThread Mandel TestData TestUtil TestFilter TestVector TestMaterial TestSampler TestWood TestWater
+PRGS			= TestIo TestThread Mandel TestOcean TestData TestUtil TestFilter TestVector TestMaterial TestSampler TestWood TestWater
 
 PRG_SOURCE	=\
 	TestIo.cc\
@@ -22,6 +22,7 @@ PRG_SOURCE	=\
 	TestUtil.cc\
 	TestVector.cc\
 	TestMaterial.cc\
+	TestOcean.cc\
 	TestSampler.cc\
 	TestThread.cc\
 	TestWater.cc\
@@ -29,6 +30,7 @@ PRG_SOURCE	=\
 
 TESTDATA_OBJS		= TestData.o
 TESTMATERIAL_OBJS	= TestMaterial.o
+TESTOCEAN_OBJS		= TestOcean.o
 TESTSAMPLER_OBJS	= TestSampler.o
 TESTWATER_OBJS		= TestWater.o
 TESTWOOD_OBJS		= TestWood.o
@@ -69,6 +71,9 @@ TestSampler:	$(TESTSAMPLER_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestWater:	$(TESTWATER_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestOcean:	$(TESTOCEAN_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestMaterial:	$(TESTMATERIAL_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)

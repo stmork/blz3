@@ -24,6 +24,7 @@
 #include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3Complex.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
 
@@ -443,7 +444,7 @@ private:
 /**
  * This class computes water simulation.
  */
-class b3Water
+class B3_PLUGIN b3Water
 {
 	b3_f64    m_Factor;
 
@@ -481,7 +482,7 @@ public:
 /**
  * This class computes cloud simulation.
  */
-class b3Clouds
+class B3_PLUGIN b3Clouds
 {
 	b3_f64    m_EarthRadiusSqr;
 	b3_f64    m_CloudRadiusSqr;
@@ -516,6 +517,53 @@ public:
 	 * @return The cloudiness.
 	 */
 	b3_f64 b3ComputeClouds(const b3_line64 *ray,b3_f64 &r, const b3_f64 time);
+};
+
+typedef b3_f64 b3_kf[2];
+typedef b3_s32 b3_ki[2];
+
+class B3_PLUGIN b3OceanWave
+{
+	const static b3_f64 g;
+
+	b3_f64  m_f;        // frequency
+	b3_f64  m_fDenom;   // reciprocal frequency
+	b3_f64  m_k;        //
+	b3_f64  m_kSquare;
+	b3_f64  m_kQuad;
+	b3_f64  m_l;
+	b3_f64  m_lSquare;
+	b3_f64  m_Quotient;
+	b3_loop m_fftMin;
+	b3_loop m_fftMax;
+	b3_f64  m_fftDiff;  // 
+	b3Complex<b3_f64> m_W;
+
+public:
+	// time animation values
+	b3_f64   m_T;      //!< Time period.
+	b3_kf    m_L;      //!< wave length in unit length.
+	b3_count m_Dim;    //!< FFT dimension as poer of two.
+
+	b3_f32   m_Wx;     //!< Direction of the wind (x component).
+	b3_f32   m_Wy;     //!< Direction of the wind (y component).
+	b3_f64   m_A;      //!< Global factor.
+	b3_f64   m_v;      //!< Wind speed.
+
+public:
+	       b3OceanWave();
+
+	/**
+	 * This method precomputes some calculation invariant values.
+	 */
+	void   b3PrepareOceanWave();
+
+	b3_f64 b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t);
+
+private:
+	b3Complex<b3_f64> b3Height(const b3Complex<b3_f64> &k, const b3_f64 t);
+	b3Complex<b3_f64> b3HeightBase(const b3Complex<b3_f64> &k);
+	b3Complex<b3_f64> b3Exp(const b3Complex<b3_f64> &k, const b3Complex<b3_f64> &x);
 };
 
 #endif

@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/04/15 20:34:55  sm
+**	- Added support for ocean surface bump mapping.
+**
 **	Revision 1.3  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.2  2003/10/12 08:30:35  sm
 **	- Added rotating of image before scaling and saving.
 **	
@@ -99,7 +102,7 @@ int main (int argc,char *argv[])
 
 					xSize = (image.xSize >> 1);
 					ySize = (image.ySize >> 1);
-					if (half.b3AllocTx(xSize,ySize,24))
+					if (half.b3AllocTx(xSize, ySize, 24))
 					{
 						half.b3ScaleToGrey(&image);
 						half.b3SaveJPEG(argv[i]);

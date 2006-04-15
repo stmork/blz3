@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2006/04/15 20:34:55  sm
+**	- Added support for ocean surface bump mapping.
+**
 **	Revision 1.62  2006/03/27 10:32:06  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.61  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -1033,4 +1036,115 @@ b3_f64 b3Clouds::b3ComputeClouds(
 		sight = 0;
 	}
 	return sight;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Cloud default values                          **
+**                                                                      **
+*************************************************************************/
+
+const b3_f64 b3OceanWave::g = 9.81;
+
+b3OceanWave::b3OceanWave()
+{
+	m_T    = 10;
+	m_L[0] =  2;
+	m_L[1] =  0.1;
+	m_Dim  =  4;
+	m_Wx   =  2;
+	m_Wy   =  1;
+	m_v    =  5;
+	m_A    =  0.000000001;
+}
+
+void b3OceanWave::b3PrepareOceanWave()
+{
+	m_fDenom   = m_T * 0.5 / M_PI;
+	m_f        = M_PI * 2.0 / m_T;
+	m_k        = M_PI * 2 / sqrt(m_Wx * m_Wx + m_Wy * m_Wy);
+	m_kSquare  = m_k * m_k;
+	m_kQuad    = m_kSquare * m_kSquare;
+	m_l        = m_v * m_v / g;
+	m_lSquare  = m_l * m_l;
+	m_Quotient = m_A * exp(-1 / (m_lSquare * m_kSquare)) / m_kQuad;
+	m_fftMax   = 1 << (m_Dim - 1);
+	m_fftMin   = -m_fftMax;
+	m_fftDiff  = M_PI * 2.0 / (m_fftMax - m_fftMin);
+	m_W = b3Complex<b3_f64>(m_Wx, m_Wy);
+	m_W.b3Normalize();
+}
+
+b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
+{
+	b3_loop n,m;
+	b3Complex<b3_f64>  h;
+	b3Complex<b3_f64>  K;
+	b3Complex<b3_f64>  x(pos->x, pos->y);
+	
+	for (n = m_fftMin; n < m_fftMax; n++)
+	{
+		K.b3SetIm(m_fftDiff * n);
+		for(m = m_fftMin; m < m_fftMax; m++)
+		{
+			K.b3SetRe(m_fftDiff * m);
+			h += (b3Height(K, t) * b3Exp(K, x));
+		}
+	}
+//	h.b3Dump("h");
+	return h.b3GetIm();
+}
+
+b3Complex<b3_f64> b3OceanWave::b3Height(const b3Complex<b3_f64> &K, const b3_f64 t)
+{
+	b3_loop           i;
+	b3Complex<b3_f64> O1,O2;
+	b3Complex<b3_f64> Kn = b3Complex<b3_f64>(-K.b3GetRe(), K.b3GetIm());
+	b3_f64            o1,o2;
+
+	o1 = sqrt(g * m_k) * t;
+	o2 = -o1;
+
+	O1 = b3Complex<b3_f64>(cos(o1),sin(o1));
+	O2 = b3Complex<b3_f64>(cos(o2),sin(o2));
+
+	return
+		b3HeightBase(K)  * O1 +
+		b3HeightBase(Kn) * O2;
+}
+
+b3Complex<b3_f64> b3OceanWave::b3HeightBase(const b3Complex<b3_f64> &k)
+{
+	b3Complex<b3_f64> M,Result,K = k;
+	b3_f64            P,re,im;
+	b3_vector         perlin;
+
+	if (K.b3Normalize())
+	{
+		M = K * m_W;
+	}
+	else
+	{
+		M = m_W;
+	}
+	P = m_Quotient * M.b3SquareLength();
+
+	b3Noise::b3NoiseVector(k.b3GetRe(), k.b3GetIm(), 0.0, &perlin);
+	re = B3_FRAN(1);
+	im = B3_FRAN(1);
+	re = perlin.x;
+	im = perlin.y;
+	Result = b3Complex<b3_f64>(re, im) * sqrt(0.5 * P);
+
+	return Result;
+}
+
+b3Complex<b3_f64> b3OceanWave::b3Exp(const b3Complex<b3_f64> &k, const b3Complex<b3_f64> &x)
+{
+	b3_f64 re = k.b3GetRe() * x.b3GetRe();
+	b3_f64 im = k.b3GetIm() * x.b3GetIm();
+
+	b3Complex<b3_f64> result = b3Complex<b3_f64>(cos(re),sin(im));
+
+	return result;
 }

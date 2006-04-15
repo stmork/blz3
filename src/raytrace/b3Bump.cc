@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2006/04/15 20:34:55  sm
+**	- Added support for ocean surface bump mapping.
+**
 **	Revision 1.44  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.43  2005/10/15 20:55:19  sm
 **	- Some optimizations.
 **	
@@ -237,15 +240,16 @@
 void b3Bump::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering bump mapping...\n");
-	b3Item::b3Register(&b3BumpNoise::b3StaticInit,    &b3BumpNoise::b3StaticInit,    BUMP_NOISE);
-	b3Item::b3Register(&b3BumpMarble::b3StaticInit,   &b3BumpMarble::b3StaticInit,   BUMP_MARBLE);
-	b3Item::b3Register(&b3BumpTexture::b3StaticInit,  &b3BumpTexture::b3StaticInit,  BUMP_TEXTURE);
-	b3Item::b3Register(&b3BumpWater::b3StaticInit,    &b3BumpWater::b3StaticInit,    BUMP_WATER);
-	b3Item::b3Register(&b3BumpWave::b3StaticInit,     &b3BumpWave::b3StaticInit,     BUMP_WAVE);
-	b3Item::b3Register(&b3BumpGroove::b3StaticInit,   &b3BumpGroove::b3StaticInit,   BUMP_GROOVE);
-	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,   &b3BumpGlossy::b3StaticInit,   BUMP_GLOSSY);
-	b3Item::b3Register(&b3BumpWood::b3StaticInit,     &b3BumpWood::b3StaticInit,     BUMP_WOOD);
-	b3Item::b3Register(&b3BumpOakPlank::b3StaticInit, &b3BumpOakPlank::b3StaticInit, BUMP_OAKPLANK);
+	b3Item::b3Register(&b3BumpNoise::b3StaticInit,     &b3BumpNoise::b3StaticInit,     BUMP_NOISE);
+	b3Item::b3Register(&b3BumpMarble::b3StaticInit,    &b3BumpMarble::b3StaticInit,    BUMP_MARBLE);
+	b3Item::b3Register(&b3BumpTexture::b3StaticInit,   &b3BumpTexture::b3StaticInit,   BUMP_TEXTURE);
+	b3Item::b3Register(&b3BumpWater::b3StaticInit,     &b3BumpWater::b3StaticInit,     BUMP_WATER);
+	b3Item::b3Register(&b3BumpWave::b3StaticInit,      &b3BumpWave::b3StaticInit,      BUMP_WAVE);
+	b3Item::b3Register(&b3BumpGroove::b3StaticInit,    &b3BumpGroove::b3StaticInit,    BUMP_GROOVE);
+	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,    &b3BumpGlossy::b3StaticInit,    BUMP_GLOSSY);
+	b3Item::b3Register(&b3BumpWood::b3StaticInit,      &b3BumpWood::b3StaticInit,      BUMP_WOOD);
+	b3Item::b3Register(&b3BumpOakPlank::b3StaticInit,  &b3BumpOakPlank::b3StaticInit,  BUMP_OAKPLANK);
+	b3Item::b3Register(&b3BumpOceanWave::b3StaticInit, &b3BumpOceanWave::b3StaticInit, BUMP_OCEAN_WAVE);
 }
 
 /*************************************************************************
@@ -1040,4 +1044,32 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitudes[index];
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitudes[index];
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitudes[index];
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Ocean wave bump                               **
+**                                                                      **
+*************************************************************************/
+
+b3BumpOceanWave::b3BumpOceanWave(b3_u32 class_type) : b3Bump(sizeof(b3BumpOceanWave),class_type)
+{
+}
+
+b3BumpOceanWave::b3BumpOceanWave(b3_u32 *src) : b3Bump(src)
+{
+}
+
+void b3BumpOceanWave::b3Write()
+{
+}
+
+b3_bool b3BumpOceanWave::b3Prepare()
+{
+	b3PrepareOceanWave();
+	return true;
+}
+
+void b3BumpOceanWave::b3BumpNormal(b3_ray *ray)
+{
 }
