@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2006/04/16 21:05:03  sm
+**	- Added FFT module.
+**	- Changed ocean waves to FFT creation. Not working yet!
+**
 **	Revision 1.45  2006/04/15 20:34:55  sm
 **	- Added support for ocean surface bump mapping.
-**
+**	
 **	Revision 1.44  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -564,7 +568,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	time = (m_ScaleTime < 0.0001 ? 0 : ray->t / m_ScaleTime);
 	b3Scale(ray,&m_Scale,&point);
 
-	water = b3ComputeWater(&point,ray->t);
+	water = b3ComputeWater(&point, time);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = water;
@@ -573,11 +577,11 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	oy.z     = water;
 
 	point.x += ox.x;
-	ox.z    -= b3ComputeWater (&point,time);
+	ox.z    -= b3ComputeWater (&point, time);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= b3ComputeWater (&point,time);
+	oy.z    -= b3ComputeWater (&point, time);
 
 	r   = m_Amplitude;
 	n.x = ox.y * oy.z - ox.z - oy.y;

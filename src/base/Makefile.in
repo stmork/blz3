@@ -10,6 +10,7 @@ LIB_SOURCE =\
 	b3Color.cc\
 	b3Cubic.cc\
 	b3Endian.cc\
+	b3FFT.cc\
 	b3FileList.cc\
 	b3FileMem.cc\
 	b3Filter.cc\
@@ -35,6 +36,7 @@ LIB_OBJ	=\
 	b3Color.o\
 	b3Cubic.o\
 	b3Endian.o\
+	b3FFT.o\
 	b3FileList.o\
 	b3FileMem.o\
 	b3Filter.o\

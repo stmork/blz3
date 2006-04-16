@@ -269,7 +269,7 @@ public:
 	 * @param a The complex number to multiply.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator*(const b3Complex<T> &a)
+	inline b3Complex<T> operator*(const b3Complex<T> &a) const
 	{
 		return b3Complex<T>(
 			v[Re] * a.v[Re] - v[Im] * a.v[Im],
@@ -308,7 +308,7 @@ public:
 	 *
 	 * @return Length of this complex number.
 	 */
-	inline T b3Length()
+	inline T b3Length() const
 	{
 		return sqrt(b3SquareLength());
 	}
@@ -341,7 +341,7 @@ public:
 	 *
 	 * @return Squared length of this complex number.
 	 */
-	inline T b3SquareLength()
+	inline T b3SquareLength() const
 	{
 		T B3_ALIGN_16 val[2];
 
@@ -358,7 +358,7 @@ public:
 	 *
 	 * @return Phase of this complex number.
 	 */
-	inline T b3Phase()
+	inline T b3Phase() const
 	{
 		return atan2 (v[Im], v[Re]);
 	}

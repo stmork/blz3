@@ -25,6 +25,7 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Complex.h"
+#include "blz3/base/b3FFT.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
 
@@ -526,6 +527,7 @@ class B3_PLUGIN b3OceanWave
 {
 	const static b3_f64 g;
 
+	b3_f64  m_t;        // actual time point
 	b3_f64  m_f;        // frequency
 	b3_f64  m_fDenom;   // reciprocal frequency
 	b3_f64  m_k;        //
@@ -538,6 +540,9 @@ class B3_PLUGIN b3OceanWave
 	b3_loop m_fftMax;
 	b3_f64  m_fftDiff;  // 
 	b3Complex<b3_f64> m_W;
+
+	b3Fourier         m_FFT;
+	b3Mutex           m_Mutex;
 
 public:
 	// time animation values
@@ -561,9 +566,18 @@ public:
 	b3_f64 b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t);
 
 private:
+	void              b3TestSpectrum1();
+	void              b3TestSpectrum2();
+	void              b3ComputePhillipsSpectrum();
 	b3Complex<b3_f64> b3Height(const b3Complex<b3_f64> &k, const b3_f64 t);
 	b3Complex<b3_f64> b3HeightBase(const b3Complex<b3_f64> &k);
 	b3Complex<b3_f64> b3Exp(const b3Complex<b3_f64> &k, const b3Complex<b3_f64> &x);
+
+	static void       b3FilterPhillipsSpectrum(
+		b3_f64        fx,b3_f64        fy,
+		b3_index      re,b3_index      im,
+		b3Fourier    *fourier, 
+		b3FilterInfo *filter_info);
 };
 
 #endif
