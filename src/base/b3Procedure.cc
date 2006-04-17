@@ -16,8 +16,6 @@
 **
 */
 
-#define not_VERBOSE
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -31,6 +29,7 @@
 #include "blz3/base/b3Spline.h"
 
 #define USE_MORK_NOISE
+#define not_VERBOSE
 
 /*************************************************************************
 **                                                                      **
@@ -40,10 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.66  2006/04/17 16:36:34  sm
+**	- Importing FFT and ocean waves into Windows project.
+**
 **	Revision 1.65  2006/04/17 14:42:46  sm
 **	- Completed ocean waves. I see ocean waves. They are not nice but
 **	  I can see them!
-**
+**	
 **	Revision 1.64  2006/04/16 21:05:03  sm
 **	- Added FFT module.
 **	- Changed ocean waves to FFT creation. Not working yet!
@@ -1062,7 +1064,7 @@ b3OceanWave::b3OceanWave()
 	m_T     =    10;
 	m_Dim   =    10;
 	m_Wx    =     1;
-	m_Wy    =     0.7;
+	m_Wy    =     0.7f;
 	m_A     =  1000;
 	m_Size  =     8;
 }
@@ -1154,7 +1156,7 @@ void b3OceanWave::b3FilterPhillipsSpectrum(
 
 b3Complex<b3_f64> b3OceanWave::b3Height(const b3Complex<b3_f64> &K, const b3_f64 t)
 {
-	b3_f64            x1, x2, w;
+	b3_f64            w;
 	b3_f64            phillips;
 	b3Complex<b3_f64> gauss;
 	b3_f64            k2    = K.b3SquareLength();
@@ -1203,7 +1205,6 @@ void b3OceanWave::b3TestSpectrum1()
 
 	buffer[m_fftDiff * m_fftDiff - 5 - m_fftDiff] = 0.5;
 	buffer[m_fftDiff * m_fftDiff - 0 - m_fftDiff] = 1;
-	sleep(1);
 }
 
 void b3OceanWave::b3TestSpectrum2()

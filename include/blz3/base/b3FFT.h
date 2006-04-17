@@ -63,7 +63,7 @@ typedef void (*b3FilterFunc)(b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fouri
  * This class provides several spectral conversion methods.
  * The most common methods are the FFT/iFFT methods.
  */
-class b3Fourier : public b3Mem
+class B3_PLUGIN b3Fourier : public b3Mem
 {
 	b3_f64            *m_rBuffer;
 	b3_f64            *m_gBuffer;

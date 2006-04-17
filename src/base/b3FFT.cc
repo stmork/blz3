@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3BaseInclude.h"
 #include "blz3/base/b3FFT.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Math.h"
@@ -33,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/04/17 16:36:34  sm
+**	- Importing FFT and ocean waves into Windows project.
+**
 **	Revision 1.2  2006/04/17 14:42:46  sm
 **	- Completed ocean waves. I see ocean waves. They are not nice but
 **	  I can see them!
-**
+**	
 **	Revision 1.1  2006/04/16 21:05:03  sm
 **	- Added FFT module.
 **	- Changed ocean waves to FFT creation. Not working yet!
@@ -277,8 +281,6 @@ void b3Fourier::b3AllocBuffer(b3Tx *tx)
 
 b3_bool b3Fourier::b3AllocBuffer(b3_res size, b3_fourier_type new_type)
 {
-	b3_res max;
-
 	b3PrintF(B3LOG_FULL, "b3Fourier::b3AllocBuffer(%d, ...)\n", size);
 	b3Free();
 	m_xOrig  =
@@ -364,9 +366,8 @@ void b3Fourier::b3SelfTest()
 
 void b3Fourier::b3GetBuffer(b3Tx *tx)
 {
-	b3_pkd_color *lPtr,color;
+	b3_pkd_color *lPtr;
 	b3_u08       *cPtr;
-	b3_f64        r;
 	b3_loop       x,y,index = 0;
 
 	b3PrintF(B3LOG_FULL, "b3Fourier::b3GetBuffer(...)\n");
@@ -407,7 +408,7 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 
 void b3Fourier::b3GetSpectrum(b3Tx *tx)
 {
-	b3_pkd_color  *lPtr,color;
+	b3_pkd_color  *lPtr;
 	b3_u08        *cPtr;
 	b3_f64         r,i = 0,R,G,B;
 	b3_f64         result;
@@ -2876,4 +2877,3 @@ void b3Fourier::b3DST2d(
 		}
 	}
 }
-
