@@ -102,6 +102,8 @@ public:
 	        b3Fourier      (b3Fourier &src);
 	void    b3GetBuffer    (b3Tx *tx);
 	void    b3GetSpectrum  (b3Tx *tx);
+
+	void    b3AllocBuffer  (b3Tx *tx);
 	
 	/**
 	 * This method allocates a new buffer with the specified size.
@@ -127,6 +129,8 @@ public:
 		return m_bBuffer;
 	}
 
+	void    b3DumpBuffer  (b3_log_level level = B3LOG_NORMAL);
+	void    b3DumpSpectrum(b3_log_level level = B3LOG_NORMAL);
 
 	void    b3Filter       (b3FilterInfo *info, b3FilterFunc func);
 	void    b3SetBandpass  (b3_f64 frequency,b3_f64 bandwidth);
@@ -162,14 +166,21 @@ protected:
 	 * @param fourier The calling Fourier class instance.
 	 * @param info    The information of the bandpass filter.
 	 */
-	static void b3FilterBandpass  (b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
-	static void b3FilterHighpass  (b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
-	static void b3FilterLowpass   (b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
-	static void b3FilterAntiRaster(b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
-	static void b3FilterSinc2     (b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
-	static void b3FilterSinc2AR   (b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
+	static void b3FilterBandpass  (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
+	static void b3FilterHighpass  (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
+	static void b3FilterLowpass   (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
+	static void b3FilterAntiRaster(b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
+	static void b3FilterSinc2     (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
+	static void b3FilterSinc2AR   (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
 
 private:
+	static inline b3_f64 b3Rnd(b3_s32 &seed)
+	{
+		seed = (seed * 7141 + 54773)  % 259200;
+		
+		return (b3_f64)seed / 259200.0;
+	}
+
 	static b3_loop      b3PowOf2(b3_loop value);
 	       void     b3Init();
 	       b3_f64 **b3Alloc2D();

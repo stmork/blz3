@@ -527,19 +527,17 @@ class B3_PLUGIN b3OceanWave
 {
 	const static b3_f64 g;
 
-	b3_f64  m_t;        // actual time point
-	b3_f64  m_f;        // frequency
-	b3_f64  m_fDenom;   // reciprocal frequency
-	b3_f64  m_k;        //
-	b3_f64  m_kSquare;
-	b3_f64  m_kQuad;
-	b3_f64  m_l;
-	b3_f64  m_lSquare;
-	b3_f64  m_Quotient;
-	b3_loop m_fftMin;
-	b3_loop m_fftMax;
-	b3_f64  m_fftDiff;  // 
-	b3Complex<b3_f64> m_W;
+	b3_f64            m_t;           // actual time point
+	b3_loop           m_fftMin;      // FFT loop start
+	b3_loop           m_fftMax;      // FFT loop end
+	b3_size           m_fftDiff;     // FFT loop size
+	b3Complex<b3_f64> m_W;           // Normalized wind direction
+	b3_f64            m_v;           // Wind speed
+	b3_f64            m_xWind2;      // squared x component of wind direction
+	b3_f64            m_yWind2;      // squared y component of wind direction
+	b3_f64            m_Windspeed4;  // Quad wind speed
+	b3_f64            m_g2;          // Squared gravity constant
+	b3_f64            m_Scale;       // FFT grid scaling
 
 	b3Fourier         m_FFT;
 	b3Mutex           m_Mutex;
@@ -547,13 +545,12 @@ class B3_PLUGIN b3OceanWave
 public:
 	// time animation values
 	b3_f64   m_T;      //!< Time period.
-	b3_kf    m_L;      //!< wave length in unit length.
 	b3_count m_Dim;    //!< FFT dimension as poer of two.
 
 	b3_f32   m_Wx;     //!< Direction of the wind (x component).
 	b3_f32   m_Wy;     //!< Direction of the wind (y component).
-	b3_f64   m_A;      //!< Global factor.
-	b3_f64   m_v;      //!< Wind speed.
+	b3_f32   m_A;      //!< Global factor.
+	b3_f32   m_Size;   //!< Geometric field size
 
 public:
 	       b3OceanWave();
@@ -568,10 +565,10 @@ public:
 private:
 	void              b3TestSpectrum1();
 	void              b3TestSpectrum2();
+	void              b3TestSpectrum3();
+	void              b3TestSpectrum4();
 	void              b3ComputePhillipsSpectrum();
 	b3Complex<b3_f64> b3Height(const b3Complex<b3_f64> &k, const b3_f64 t);
-	b3Complex<b3_f64> b3HeightBase(const b3Complex<b3_f64> &k);
-	b3Complex<b3_f64> b3Exp(const b3Complex<b3_f64> &k, const b3Complex<b3_f64> &x);
 
 	static void       b3FilterPhillipsSpectrum(
 		b3_f64        fx,b3_f64        fy,

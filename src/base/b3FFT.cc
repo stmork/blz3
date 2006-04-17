@@ -22,8 +22,8 @@
 *************************************************************************/
 
 #include "blz3/base/b3FFT.h"
-
-#define RND(p) ((*(p) = (*(p) * 7141 + 54773) % 259200) * (1.0 / 259200))
+#include "blz3/base/b3Color.h"
+#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/04/17 14:42:46  sm
+**	- Completed ocean waves. I see ocean waves. They are not nice but
+**	  I can see them!
+**
 **	Revision 1.1  2006/04/16 21:05:03  sm
 **	- Added FFT module.
 **	- Changed ocean waves to FFT creation. Not working yet!
-**
+**	
 **	
 */
 
@@ -73,120 +77,7 @@ b3Fourier::b3Fourier()
 
 b3Fourier::b3Fourier(b3Tx *tx)
 {
-	b3_loop       x,y,index,max;
-	b3_pkd_color *palette,color;
-	b3_u08       *cPtr;
-	b3_u32       *lPtr;
-
-	m_xOrig  = tx->xSize;
-	m_yOrig  = tx->ySize;
-	m_xSize  = b3PowOf2(m_xOrig);
-	m_ySize  = b3PowOf2(m_yOrig);
-	max      = B3_MAX(m_xSize, m_ySize);
-	m_xSize  = max;
-	m_ySize  = max;
-	m_xStart = (m_xSize - m_xOrig) >> 1;
-	m_yStart = (m_ySize - m_yOrig) >> 1;
-	index    = m_yStart * m_xSize + m_xStart;
-
-	// Aux buffers
-	m_TempBuffer = null;
-	m_PermBuffer = null;
-	m_Values     = null;
-
-	m_Type = B3_FOURIER_UNDEFINED;
-	if (tx->b3IsGreyPalette())
-	{
-		m_rLine   = null;
-		m_gLine   = b3Alloc2D();
-		m_bLine   = null;
-		m_rBuffer = null;
-		m_gBuffer = m_gLine[0];
-		m_bBuffer = null;
-		cPtr    = (b3_u08 *)tx->b3GetData();
-		for (y = 0;y < m_yOrig;y++)
-		{
-			for (x = 0;x < m_xOrig;x++)
-			{
-				m_gBuffer[index + x] = (b3_f64)*cPtr++ / 255.0;
-			}
-			index += m_xSize;
-		}
-
-#if 0
-		index = 0;
-		long xHalf = m_xSize >> 1,yHalf = m_ySize >> 1;
-		for (y = 0;y < m_ySize;y++)
-		{
-			for (x = 0;x < m_xSize;x++)
-			{
-				b3_f64 rx = x - xHalf,ry = (y - yHalf) * 1;
-
-//				m_gBuffer[index + x] = cos((rx + ry) / (b3_f64)xSize * 3.141592654 * 2.0 *  4.0) * 0.5 + 0.5;
-//				m_gBuffer[index + x] = cos(rx / (b3_f64)m_xSize * 3.141592654 * 2.0 * 32.0) > -0.2 ? 1.0 : 0.0;
-//				m_gBuffer[index + x] = cos(sqrt(rx * rx + ry * ry) / (b3_f64)m_xSize * 3.141592654 * 2.0 * 32.0) > -0.2 ? 1.0 : 0.0;
-//				m_gBuffer[index + x] = cos(sqrt(rx * rx + ry * ry) / (b3_f64)m_xSize * 3.141592654 * 2.0 *  4.0) * 0.5 + 0.5;
-//				m_gBuffer[index + x] = cos((rx + ry) / (b3_f64)m_xSize * 3.141592654 * 2.0 * 32.0) * 0.5 + 0.5;
-			}
-			index += m_xSize;
-		}
-#endif
-		m_Type = B3_FOURIER_GREY;
-	}
-	else
-	{
-		if(tx->b3IsPalette())
-		{
-			m_rLine   = b3Alloc2D();
-			m_gLine   = b3Alloc2D();
-			m_bLine   = b3Alloc2D();
-			m_rBuffer = m_rLine[0];
-			m_gBuffer = m_gLine[0];
-			m_bBuffer = m_bLine[0];
-			palette = tx->b3GetPalette();
-			cPtr    = (b3_u08 *)tx->b3GetData();
-			for (y = 0;y < m_yOrig;y++)
-			{
-				for (x = 0;x < m_xOrig;x++)
-				{
-					color = palette[*cPtr++];
-					m_rBuffer[index + x] = (b3_f64)((color & 0xff0000) >> 16) / 255.0;
-					m_gBuffer[index + x] = (b3_f64)((color & 0x00ff00) >>  8) / 255.0;
-					m_bBuffer[index + x] = (b3_f64)((color & 0x0000ff))       / 255.0;
-				}
-				index += m_xSize;
-			}
-			m_Type = B3_FOURIER_PALETTE;
-		}
-
-		if (tx->b3IsTrueColor())
-		{
-			m_rLine   = b3Alloc2D();
-			m_gLine   = b3Alloc2D();
-			m_bLine   = b3Alloc2D();
-			m_rBuffer = m_rLine[0];
-			m_gBuffer = m_gLine[0];
-			m_bBuffer = m_bLine[0];
-			lPtr    = (b3_pkd_color *)tx->b3GetData();
-			for (y = 0;y < m_yOrig;y++)
-			{
-				for (x = 0;x < m_xOrig;x++)
-				{
-					color = *lPtr++;
-					m_rBuffer[index + x] = (b3_f64)((color & 0xff0000) >> 16) / 255.0;
-					m_gBuffer[index + x] = (b3_f64)((color & 0x00ff00) >>  8) / 255.0;
-					m_bBuffer[index + x] = (b3_f64)((color & 0x0000ff))       / 255.0;
-				}
-				index += m_xSize;
-			}
-			m_Type = B3_FOURIER_TRUECOLOR;
-		}
-	}
-
-	if (m_Type == B3_FOURIER_UNDEFINED)
-	{
-		throw;
-	}
+	b3AllocBuffer(tx);
 }
 
 b3Fourier::b3Fourier(b3Fourier &src)
@@ -260,10 +151,135 @@ b3Fourier::b3Fourier(b3Fourier &src)
 	m_Type   = src.m_Type;
 }
 
+void b3Fourier::b3AllocBuffer(b3Tx *tx)
+{
+	b3_loop       x,y,index,max;
+	b3_pkd_color *palette,color;
+	b3_u08       *cPtr;
+	b3_u32       *lPtr;
+
+	b3PrintF(B3LOG_FULL, "b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
+	b3Free();
+
+	m_xOrig  = tx->xSize;
+	m_yOrig  = tx->ySize;
+	m_xSize  = b3PowOf2(m_xOrig);
+	m_ySize  = b3PowOf2(m_yOrig);
+	max      = B3_MAX(m_xSize, m_ySize);
+	m_xSize  = max;
+	m_ySize  = max;
+	m_xStart = (m_xSize - m_xOrig) >> 1;
+	m_yStart = (m_ySize - m_yOrig) >> 1;
+	index    = m_yStart * m_xSize + m_xStart;
+
+	// Aux buffers
+	m_TempBuffer = null;
+	m_PermBuffer = null;
+	m_Values     = null;
+
+	m_Type = B3_FOURIER_UNDEFINED;
+	if (tx->b3IsGreyPalette())
+	{
+		b3PrintF(B3LOG_FULL, "  Grey (%dx%d)\n", m_xSize, m_ySize);
+		m_rLine   = null;
+		m_gLine   = b3Alloc2D();
+		m_bLine   = null;
+		m_rBuffer = null;
+		m_gBuffer = m_gLine[0];
+		m_bBuffer = null;
+		cPtr    = (b3_u08 *)tx->b3GetData();
+		for (y = 0;y < m_yOrig;y++)
+		{
+			for (x = 0;x < m_xOrig;x++)
+			{
+				m_gBuffer[index + x] = (b3_f64)*cPtr++ / 255.0;
+			}
+			index += m_xSize;
+		}
+
+#if 0
+		index = 0;
+		long xHalf = m_xSize >> 1,yHalf = m_ySize >> 1;
+		for (y = 0;y < m_ySize;y++)
+		{
+			for (x = 0;x < m_xSize;x++)
+			{
+				b3_f64 rx = x - xHalf,ry = (y - yHalf) * 1;
+
+//				m_gBuffer[index + x] = cos((rx + ry) / (b3_f64)xSize * M_PI * 2.0 *  4.0) * 0.5 + 0.5;
+//				m_gBuffer[index + x] = cos(rx / (b3_f64)m_xSize * M_PI * 2.0 * 32.0) > -0.2 ? 1.0 : 0.0;
+//				m_gBuffer[index + x] = cos(sqrt(rx * rx + ry * ry) / (b3_f64)m_xSize * M_PI * 2.0 * 32.0) > -0.2 ? 1.0 : 0.0;
+//				m_gBuffer[index + x] = cos(sqrt(rx * rx + ry * ry) / (b3_f64)m_xSize * M_PI * 2.0 *  4.0) * 0.5 + 0.5;
+//				m_gBuffer[index + x] = cos((rx + ry) / (b3_f64)m_xSize * M_PI * 2.0 * 32.0) * 0.5 + 0.5;
+			}
+			index += m_xSize;
+		}
+#endif
+		m_Type = B3_FOURIER_GREY;
+	}
+	else
+	{
+		if(tx->b3IsPalette())
+		{
+			b3PrintF(B3LOG_FULL, "  Palette (%dx%d)\n", m_xSize, m_ySize);
+			m_rLine   = b3Alloc2D();
+			m_gLine   = b3Alloc2D();
+			m_bLine   = b3Alloc2D();
+			m_rBuffer = m_rLine[0];
+			m_gBuffer = m_gLine[0];
+			m_bBuffer = m_bLine[0];
+			palette = tx->b3GetPalette();
+			cPtr    = (b3_u08 *)tx->b3GetData();
+			for (y = 0;y < m_yOrig;y++)
+			{
+				for (x = 0;x < m_xOrig;x++)
+				{
+					color = palette[*cPtr++];
+					m_rBuffer[index + x] = (b3_f64)((color & 0xff0000) >> 16) / 255.0;
+					m_gBuffer[index + x] = (b3_f64)((color & 0x00ff00) >>  8) / 255.0;
+					m_bBuffer[index + x] = (b3_f64)((color & 0x0000ff))       / 255.0;
+				}
+				index += m_xSize;
+			}
+			m_Type = B3_FOURIER_PALETTE;
+		}
+
+		if (tx->b3IsTrueColor())
+		{
+			b3PrintF(B3LOG_FULL, "  True color (%dx%d)\n", m_xSize, m_ySize);
+			m_rLine   = b3Alloc2D();
+			m_gLine   = b3Alloc2D();
+			m_bLine   = b3Alloc2D();
+			m_rBuffer = m_rLine[0];
+			m_gBuffer = m_gLine[0];
+			m_bBuffer = m_bLine[0];
+			lPtr    = (b3_pkd_color *)tx->b3GetData();
+			for (y = 0;y < m_yOrig;y++)
+			{
+				for (x = 0;x < m_xOrig;x++)
+				{
+					color = *lPtr++;
+					m_rBuffer[index + x] = (b3_f64)((color & 0xff0000) >> 16) / 255.0;
+					m_gBuffer[index + x] = (b3_f64)((color & 0x00ff00) >>  8) / 255.0;
+					m_bBuffer[index + x] = (b3_f64)((color & 0x0000ff))       / 255.0;
+				}
+				index += m_xSize;
+			}
+			m_Type = B3_FOURIER_TRUECOLOR;
+		}
+	}
+
+	if (m_Type == B3_FOURIER_UNDEFINED)
+	{
+		throw;
+	}
+}
+
 b3_bool b3Fourier::b3AllocBuffer(b3_res size, b3_fourier_type new_type)
 {
 	b3_res max;
 
+	b3PrintF(B3LOG_FULL, "b3Fourier::b3AllocBuffer(%d, ...)\n", size);
 	b3Free();
 	m_xOrig  =
 	m_yOrig  = size;
@@ -315,32 +331,35 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res size, b3_fourier_type new_type)
 
 void b3Fourier::b3SelfTest()
 {
-    b3_loop  j1, j2, seed;
+    b3_loop  x, y;
+    b3_s32   seed;
     b3_f64   err = 0, e, divisor;
 
 	seed = 0;
-    for (j1 = 0; j1 < m_xSize; j1++)
+    for (y = 0; y < m_ySize; y++)
 	{
-        for (j2 = 0; j2 < m_ySize; j2++)
+        for (x = 0; x < m_xSize; x++)
 		{
-            m_gLine[j1][j2] = RND(&seed);
+            m_gLine[y][x] = b3Rnd(seed);
         }
     }
+
+	b3DumpBuffer(B3LOG_FULL);
 
 	b3FFT2D();
 	b3IFFT2D();
 
 	seed = 0;
 	divisor = m_xSize * m_ySize * 0.5;
-    for (j1 = 0; j1 < m_xSize; j1++)
+    for (y = 0; y < m_ySize; y++)
 	{
-        for (j2 = 0; j2 < m_ySize; j2++)
+        for (x = 0; x < m_xSize; x++)
 		{
-            e   = RND(&seed) - m_gLine[j1][j2] / divisor;
+            e   = b3Rnd(seed) - m_gLine[y][x];
             err = B3_MAX(err, fabs(e));
         }
     }
-	b3PrintF(B3LOG_DEBUG,"### CLASS: b3Four # error %g\n",err);
+	b3PrintF(B3LOG_NORMAL,"### CLASS: b3Four # error %g\n",err);
 }
 
 void b3Fourier::b3GetBuffer(b3Tx *tx)
@@ -350,6 +369,7 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 	b3_f64        r;
 	b3_loop       x,y,index = 0;
 
+	b3PrintF(B3LOG_FULL, "b3Fourier::b3GetBuffer(...)\n");
 	index  = m_yStart * m_xSize + m_xStart;
 	switch(m_Type)
 	{
@@ -360,19 +380,7 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 		{
 			for (x = 0;x < m_xOrig;x++)
 			{
-				r = m_gBuffer[index + x] * 255;
-				if (r >= 255.0)
-				{
-					*cPtr = 255;
-				}
-				else
-				{
-					if (r > 0.0)
-					{
-						*cPtr = (b3_u08)r;
-					}
-				}
-				cPtr++;
+				*cPtr++ = (b3_u08)floor(b3Math::b3Limit(m_gBuffer[index + x]) * 255);
 			}
 			index += m_xSize;
 		}
@@ -386,52 +394,7 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 		{
 			for (x = 0;x < m_xOrig;x++)
 			{
-				r = m_rBuffer[index + x] * 255;
-				if (r > 255.0)
-				{
-					color = 255;
-				}
-				else
-				{
-					if (r > 0.0)
-					{
-						color  = (b3_u08)r;
-					}
-					else
-					{
-						color  = 0;
-					}
-				}
-
-				color  = color << 8;
-				r = m_gBuffer[index + x] * 255;
-				if (r > 255.0)
-				{
-					color |= 255;
-				}
-				else
-				{
-					if (r > 0.0)
-					{
-						color |= (b3_u08)r;
-					}
-				}
-
-				color  = color << 8;
-				r = m_bBuffer[index + x] * 255;
-				if (r > 255.0)
-				{
-					color |= 255;
-				}
-				else
-				{
-					if (r > 0.0)
-					{
-						color |= (b3_u08)r;
-					}
-				}
-
-				*lPtr++ = color;
+				*lPtr++ = b3Color(m_rBuffer[index + x],m_gBuffer[index + x],m_bBuffer[index + x]);
 			}
 			index += m_xSize;
 		}
@@ -446,8 +409,9 @@ void b3Fourier::b3GetSpectrum(b3Tx *tx)
 {
 	b3_pkd_color  *lPtr,color;
 	b3_u08        *cPtr;
-	b3_f64         r,i = 0;
+	b3_f64         r,i = 0,R,G,B;
 	b3_f64         result;
+	b3_f64         denom = 4.0 / (m_xSize + m_ySize);
 	b3_loop        x,y,index = 0,xHalf = m_xSize >> 1,yHalf = m_ySize >> 1;
 	b3_loop        xMask = m_xSize - 1,yMask = m_ySize - 1;
 	b3_index       dst,off;
@@ -487,20 +451,21 @@ void b3Fourier::b3GetSpectrum(b3Tx *tx)
 			{
 				r = m_rBuffer[index + x];
 				i = m_rBuffer[index + x + xHalf];
-				color  = (b3_u08)floor(sqrt(r * r + i * i) * 0.5);
+				R = sqrt(r * r + i * i);
 
-				color  = color << 8;
 				r = m_gBuffer[index + x];
 				i = m_gBuffer[index + x + xHalf];
-				color |= (b3_u08)floor(sqrt(r * r + i * i) * 0.5);
+				G = sqrt(r * r + i * i);
 
-				color  = color << 8;
 				r = m_bBuffer[index + x];
 				i = m_bBuffer[index + x + xHalf];
-				color |= (b3_u08)floor(sqrt(r * r + i * i) * 0.5);
+				B = sqrt(r * r + i * i);
 
-				lPtr[dst + off]     = color;
-				lPtr[dst + off + 1] = color;
+				lPtr[dst + off]     =
+				lPtr[dst + off + 1] = b3Color(
+					R * denom,
+					G * denom,
+					B * denom);
 
 				off = (off + 2) & xMask;
 			}
@@ -510,6 +475,39 @@ void b3Fourier::b3GetSpectrum(b3Tx *tx)
 
 	default:
 		break;
+	}
+}
+
+void b3Fourier::b3DumpBuffer(b3_log_level level)
+{
+	b3_loop  x,y;
+	b3_index index = 0;
+
+	b3PrintF(level,"### Fourier buffer dump # %dx%d\n", m_xSize, m_ySize);
+	for (y = 0;y < m_ySize;y++)
+	{
+		for (x = 0;x < m_xSize;x++)
+		{
+			b3PrintF(level, "%1.3f ", m_gBuffer[index++]);
+		}
+		b3PrintF(level,"\n");
+	}
+}
+
+void b3Fourier::b3DumpSpectrum(b3_log_level level)
+{
+	b3_loop  x,y,xHalf = m_xSize >> 1;
+	b3_index index = 0;
+
+	b3PrintF(level,"### Fourier spectrum dump # %dx%d\n", m_xSize, m_ySize);
+	for (y = 0;y < m_ySize;y++)
+	{
+		for (x = 0;x < xHalf;x++)
+		{
+			b3PrintF(level, "%1.3f/%1.3f ", m_gBuffer[index], m_gBuffer[index + xHalf]);
+			index++;
+		}
+		b3PrintF(level,"\n");
 	}
 }
 
@@ -800,7 +798,7 @@ void b3Fourier::b3SetSinc2(b3_f64 frequency)
 {
 	b3FilterInfo info;
 
-	info.si2.factor = 3.141592654 / frequency;
+	info.si2.factor = M_PI / frequency;
 	b3Filter(&info,b3FilterSinc2);
 }
 
@@ -808,7 +806,7 @@ void b3Fourier::b3SetSinc2AR(b3_f64 frequency)
 {
 	b3FilterInfo info;
 
-	info.si2.factor = 3.141592654 / frequency;
+	info.si2.factor = M_PI / frequency;
 	b3Filter(&info,b3FilterSinc2AR);
 }
 
@@ -880,6 +878,8 @@ b3_f64 ** b3Fourier::b3Alloc2D()
 
 void b3Fourier::b3FFT2D()
 {
+	b3PrintF(B3LOG_FULL, "b3Fourier::b3FFT2D()\n");
+
 	b3Init();
 	if (m_rLine != null)
 	{
@@ -900,6 +900,7 @@ void b3Fourier::b3IFFT2D()
 	b3_loop i,max = m_xSize * m_ySize;
 	b3_f64 divisor = 2.0 / (b3_f64)(m_xSize * m_ySize);
 
+	b3PrintF(B3LOG_FULL, "b3Fourier::b3IFFT2D()\n");
 	b3Init();
 	if (m_rLine != null)
 	{

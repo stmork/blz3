@@ -34,6 +34,10 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2006/04/17 14:42:46  sm
+**  - Completed ocean waves. I see ocean waves. They are not nice but
+**    I can see them!
+**
 **  Revision 1.1  2006/04/15 20:34:55  sm
 **  - Added support for ocean surface bump mapping.
 **
@@ -46,7 +50,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WATER_RES   200
+#define WATER_RES   800
 
 class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 {
@@ -84,6 +88,8 @@ public:
 int main(int argc,char *argv[])
 {
 	b3Display   *display;
+
+//	b3Log::b3SetLevel(B3LOG_FULL);
 
 	try
 	{
