@@ -29,7 +29,6 @@
 #include "blz3/base/b3Spline.h"
 
 #define USE_MORK_NOISE
-#define not_VERBOSE
 
 /*************************************************************************
 **                                                                      **
@@ -39,12 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.68  2006/04/18 20:38:25  sm
+**	- Optimized compilation
+**
 **	Revision 1.67  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
 **	  o ocean waves
 **	  o water
-**
+**	
 **	Revision 1.66  2006/04/17 16:36:34  sm
 **	- Importing FFT and ocean waves into Windows project.
 **	

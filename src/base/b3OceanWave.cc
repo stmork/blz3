@@ -25,6 +25,8 @@
 #include "b3BaseInclude.h"
 #include "blz3/base/b3OceanWave.h"
 
+#define not_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/04/18 20:38:25  sm
+**	- Optimized compilation
+**
 **	Revision 1.1  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
 **	  o ocean waves
 **	  o water
-**
+**	
 **
 */
 
