@@ -1,16 +1,16 @@
 /*
 **
-**	$Filename:	b3Procedure.h $
-**	$Release:	Dortmund 2002 $
+**	$Filename:	b3OceanWave.h $
+**	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - some procedure proto types for pseudo random noise
+**	Blizzard III - Ocean wave bump map
 **	               functions.
 **
-**	(C) Copyright 2002  Steffen A. Mork
+**	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
