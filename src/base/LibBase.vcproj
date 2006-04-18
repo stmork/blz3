@@ -336,6 +336,34 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3Clouds.cc"
+				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="b3Color.cc"
 				FileType="0">
 				<FileConfiguration
@@ -748,6 +776,34 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3OceanWave.cc"
+				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="b3Pick.cc"
 				FileType="0">
 				<FileConfiguration
@@ -1004,6 +1060,34 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3Water.cc"
+				FileType="0">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE2|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release SSE|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="b3Wood.cc"
 				FileType="0">
 				<FileConfiguration
@@ -1081,6 +1165,9 @@
 				RelativePath=".\b3BaseInclude.h">
 			</File>
 			<File
+				RelativePath="..\..\include\blz3\base\b3Clouds.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\base\b3Color.h">
 			</File>
 			<File
@@ -1132,6 +1219,9 @@
 				RelativePath="..\..\include\blz3\base\b3MultiSample.h">
 			</File>
 			<File
+				RelativePath="..\..\include\blz3\base\b3OceanWave.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\base\b3Pick.h">
 			</File>
 			<File
@@ -1160,6 +1250,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\base\b3VertexBuffer.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\base\b3Water.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\base\b3Wood.h">
