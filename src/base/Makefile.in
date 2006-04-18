@@ -7,6 +7,7 @@ LDLIBS			= @LIBS@
 LIBS			= libB3Base.o
 LIB_SOURCE =\
 	b3Aux.cc\
+	b3Clouds.cc\
 	b3Color.cc\
 	b3Cubic.cc\
 	b3Endian.cc\
@@ -20,6 +21,7 @@ LIB_SOURCE =\
 	b3Math.cc\
 	b3Matrix.cc\
 	b3MultiSample.cc\
+	b3OceanWave.cc\
 	b3Pick.cc\
 	b3Procedure.cc\
 	b3Render.cc\
@@ -28,11 +30,13 @@ LIB_SOURCE =\
 	b3UndoOperation.cc\
 	b3VectorBufferObjects.cc\
 	b3VertexBuffer.cc\
+	b3Water.cc\
 	b3Wood.cc\
 	b3World.cc
 
 LIB_OBJ	=\
 	b3Aux.o\
+	b3Clouds.o\
 	b3Color.o\
 	b3Cubic.o\
 	b3Endian.o\
@@ -46,6 +50,7 @@ LIB_OBJ	=\
 	b3Math.o\
 	b3Matrix.o\
 	b3MultiSample.o\
+	b3OceanWave.o\
 	b3Pick.o\
 	b3Procedure.o\
 	b3Render.o\
@@ -54,6 +59,7 @@ LIB_OBJ	=\
 	b3UndoOperation.o\
 	b3VectorBufferObjects.o\
 	b3VertexBuffer.o\
+	b3Water.o\
 	b3Wood.o\
 	b3World.o
 

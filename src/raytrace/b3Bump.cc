@@ -32,10 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2006/04/18 15:48:59  sm
+**	- Extracted from procedure module:
+**	  o clouds
+**	  o ocean waves
+**	  o water
+**
 **	Revision 1.46  2006/04/16 21:05:03  sm
 **	- Added FFT module.
 **	- Changed ocean waves to FFT creation. Not working yet!
-**
+**	
 **	Revision 1.45  2006/04/15 20:34:55  sm
 **	- Added support for ocean surface bump mapping.
 **	
@@ -253,7 +259,6 @@ void b3Bump::b3Register()
 	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,    &b3BumpGlossy::b3StaticInit,    BUMP_GLOSSY);
 	b3Item::b3Register(&b3BumpWood::b3StaticInit,      &b3BumpWood::b3StaticInit,      BUMP_WOOD);
 	b3Item::b3Register(&b3BumpOakPlank::b3StaticInit,  &b3BumpOakPlank::b3StaticInit,  BUMP_OAKPLANK);
-	b3Item::b3Register(&b3BumpOceanWave::b3StaticInit, &b3BumpOceanWave::b3StaticInit, BUMP_OCEAN_WAVE);
 }
 
 /*************************************************************************
@@ -1048,32 +1053,4 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitudes[index];
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitudes[index];
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitudes[index];
-}
-
-/*************************************************************************
-**                                                                      **
-**                        Ocean wave bump                               **
-**                                                                      **
-*************************************************************************/
-
-b3BumpOceanWave::b3BumpOceanWave(b3_u32 class_type) : b3Bump(sizeof(b3BumpOceanWave),class_type)
-{
-}
-
-b3BumpOceanWave::b3BumpOceanWave(b3_u32 *src) : b3Bump(src)
-{
-}
-
-void b3BumpOceanWave::b3Write()
-{
-}
-
-b3_bool b3BumpOceanWave::b3Prepare()
-{
-	b3PrepareOceanWave();
-	return true;
-}
-
-void b3BumpOceanWave::b3BumpNormal(b3_ray *ray)
-{
 }

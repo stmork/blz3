@@ -20,6 +20,7 @@
 
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/base/b3Array.h"
+#include "blz3/base/b3Clouds.h"
 #include "blz3/base/b3Filter.h"
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Procedure.h"

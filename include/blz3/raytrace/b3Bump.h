@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Scaling.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3Water.h"
 #include "blz3/base/b3Wood.h"
 #include "blz3/image/b3Tx.h"
 
