@@ -36,7 +36,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="2"
 				TreatWChar_tAsBuiltInType="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="b3BaseInclude.h"
 				PrecompiledHeaderFile=".\..\..\Debug/LibBase.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -100,7 +100,7 @@
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="0"
 				TreatWChar_tAsBuiltInType="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="b3BaseInclude.h"
 				PrecompiledHeaderFile=".\..\..\Release/LibBase.pch"
 				AssemblerOutput="0"
@@ -163,7 +163,7 @@
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="2"
 				TreatWChar_tAsBuiltInType="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="b3BaseInclude.h"
 				PrecompiledHeaderFile=".\..\..\Release-SSE2/LibBase.pch"
 				AssemblerOutput="0"
@@ -226,7 +226,7 @@
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
 				TreatWChar_tAsBuiltInType="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="b3BaseInclude.h"
 				PrecompiledHeaderFile=".\..\..\Release-SSE/LibBase.pch"
 				AssemblerOutput="0"
@@ -274,34 +274,6 @@
 			<File
 				RelativePath="b3Aux.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3BaseInclude.cc"
@@ -310,846 +282,130 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
+						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
+						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release SSE2|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
+						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release SSE|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
+						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3Clouds.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Color.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Cubic.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Endian.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3FFT.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3FileList.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3FileMem.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Filter.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Item.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ItemRegister.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3ItemRegisterEntry.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Math.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Matrix.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3MultiSample.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3OceanWave.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Pick.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Procedure.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Render.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3RenderContext.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3SearchPath.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3UndoOperation.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3VectorBufferObjects.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3VertexBuffer.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\b3Water.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3Wood.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3World.cc"
 				FileType="0">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE2|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release SSE|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="3"
-						PrecompiledHeaderThrough="b3BaseInclude.h"/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
