@@ -35,6 +35,7 @@
 
 #include "Resource.h"       // main symbols
 #include "blz3/system/b3DisplayView.h"
+#include "blz3/base/b3OceanWave.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:
@@ -51,6 +52,8 @@ class b3SearchPath;
 
 class CAppLinesApp : public CB3App
 {
+	b3OceanWave m_OW;
+
 	// Last view parameter
 	b3_bool            m_Filtered;
 	b3_display_mode    m_Mode;

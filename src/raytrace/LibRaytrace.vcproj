@@ -86,7 +86,7 @@
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/O2"
+				AdditionalOptions="/Ox"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="1"
@@ -150,7 +150,7 @@
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/O2"
+				AdditionalOptions="/Ox"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="3"
@@ -214,7 +214,7 @@
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/O2"
+				AdditionalOptions="/Ox"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"

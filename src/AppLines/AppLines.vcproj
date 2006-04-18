@@ -68,7 +68,7 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\Debug/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="1"
+				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				TargetMachine="1"/>
 			<Tool
@@ -111,7 +111,7 @@
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/O2"
+				AdditionalOptions="/Ox"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="1"
@@ -152,7 +152,7 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i386/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="1"
+				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				TargetMachine="0"/>
 			<Tool
@@ -236,7 +236,7 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i386/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="1"
+				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				TargetMachine="0"/>
 			<Tool
@@ -279,7 +279,7 @@
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/O2"
+				AdditionalOptions="/Ox"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="3"
@@ -320,7 +320,7 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i686\SSE2/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="1"
+				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				TargetMachine="0"/>
 			<Tool
@@ -363,7 +363,7 @@
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/O2"
+				AdditionalOptions="/Ox"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
@@ -404,7 +404,7 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i686\SSE/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="1"
+				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				OptimizeForWindows98="0"
 				TargetMachine="0"/>
