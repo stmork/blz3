@@ -38,7 +38,7 @@ typedef b3_vector64 * (*b3_scale_method)(b3_ray *ray);
  * This class provides scaling of any form of the intersection point to a point
  * used for different procedural mappings such as materials or bump mapping.
  */
-class b3Scaling
+class B3_PLUGIN b3Scaling
 {
 	b3_scale_method  m_ScaleMethod;
 

@@ -51,7 +51,6 @@
 #define BUMP_GROOVE         (CLASS_BUMP|TYPE_GROOVE)
 #define BUMP_WOOD           (CLASS_BUMP|TYPE_BUMP_WOOD)
 #define BUMP_OAKPLANK       (CLASS_BUMP|TYPE_BUMP_OAKPLANK)
-#define BUMP_OCEAN_WAVE     (CLASS_BUMP|TYPE_OCEAN_WAVE)
 
 /*************************************************************************
 **                                                                      **
@@ -370,27 +369,5 @@ public:
 #define BUMP_IPOINT          1
 #define BUMP_U_SUPPRESS_WAVE 2
 #define BUMP_V_SUPPRESS_WAVE 4
-
-/*************************************************************************
-**                                                                      **
-**                        Ocean wave bump                               **
-**                                                                      **
-*************************************************************************/
-
-/**
- * This class provides procedural ocean wave bump mapping.
- *
- * @see b3OceanWave
- */
-class B3_PLUGIN b3BumpOceanWave : public b3Bump, public b3OceanWave
-{
-public:
-	B3_ITEM_INIT(b3BumpOceanWave); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3BumpOceanWave); //!< This constructor handles deserialization.
-
-	b3_bool b3Prepare();
-	void    b3Write();
-	void    b3BumpNormal(b3_ray *ray);
-};
 
 #endif
