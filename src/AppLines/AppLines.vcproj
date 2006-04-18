@@ -58,6 +58,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalDependencies="LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib version.lib"
+				ShowProgress="0"
 				OutputFile=".\..\..\Debug/AppLines.exe"
 				Version="3.0"
 				LinkIncremental="0"
@@ -68,8 +69,9 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\Debug/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="0"
+				OptimizeReferences="1"
+				EnableCOMDATFolding="1"
+				OptimizeForWindows98="1"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -144,6 +146,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalDependencies="LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib"
+				ShowProgress="0"
 				OutputFile="..\..\bin\win32_i386\AppLines.exe"
 				Version="3.0"
 				LinkIncremental="0"
@@ -152,8 +155,9 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i386/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="0"
+				OptimizeReferences="1"
+				EnableCOMDATFolding="1"
+				OptimizeForWindows98="1"
 				TargetMachine="0"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -228,6 +232,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalDependencies="LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib"
+				ShowProgress="0"
 				OutputFile="..\..\bin\win32_i386\AppLines.exe"
 				Version="3.0"
 				LinkIncremental="0"
@@ -236,8 +241,9 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i386/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="0"
+				OptimizeReferences="1"
+				EnableCOMDATFolding="1"
+				OptimizeForWindows98="1"
 				TargetMachine="0"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -312,6 +318,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalDependencies="LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib"
+				ShowProgress="0"
 				OutputFile="..\..\bin\win32_i686\SSE2\AppLines.exe"
 				Version="3.0"
 				LinkIncremental="0"
@@ -320,8 +327,9 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i686\SSE2/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="0"
+				OptimizeReferences="1"
+				EnableCOMDATFolding="1"
+				OptimizeForWindows98="1"
 				TargetMachine="0"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -396,6 +404,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalDependencies="LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib"
+				ShowProgress="0"
 				OutputFile="..\..\bin\win32_i686\SSE\AppLines.exe"
 				Version="3.0"
 				LinkIncremental="0"
@@ -404,9 +413,9 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i686\SSE/AppLines.map"
 				SubSystem="2"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="0"
-				OptimizeForWindows98="0"
+				OptimizeReferences="1"
+				EnableCOMDATFolding="1"
+				OptimizeForWindows98="1"
 				TargetMachine="0"/>
 			<Tool
 				Name="VCMIDLTool"
