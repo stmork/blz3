@@ -32,12 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2006/04/19 11:01:53  sm
+**	- Corrected cross product of several bump maps.
+**
 **	Revision 1.47  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
 **	  o ocean waves
 **	  o water
-**
+**	
 **	Revision 1.46  2006/04/16 21:05:03  sm
 **	- Added FFT module.
 **	- Changed ocean waves to FFT creation. Not working yet!
@@ -589,9 +592,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	oy.z    -= b3ComputeWater (&point, time);
 
 	r   = m_Amplitude;
-	n.x = ox.y * oy.z - ox.z - oy.y;
-	n.y = ox.z * oy.x - ox.x - oy.z;
-	n.z = ox.x * oy.y - ox.y - oy.x;
+	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
@@ -657,9 +658,7 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 	oy.z    -= b3Noise::b3Wave (&point);
 
 	r   = m_Amplitude;
-	n.x = ox.y * oy.z - ox.z - oy.y;
-	n.y = ox.z * oy.x - ox.x - oy.z;
-	n.z = ox.x * oy.y - ox.y - oy.x;
+	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
@@ -729,9 +728,7 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	oy.z    -= b3Noise::b3Wave (&point);
 
 	r   = m_Amplitude;
-	n.x = ox.y * oy.z - ox.z - oy.y;
-	n.y = ox.z * oy.x - ox.x - oy.z;
-	n.z = ox.x * oy.y - ox.y - oy.x;
+	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
