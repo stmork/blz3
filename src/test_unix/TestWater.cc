@@ -24,7 +24,7 @@
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Time.h"
 #include "blz3/image/b3Sampler.h"
-#include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3Water.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,6 +34,10 @@
 
 /*
 **  $Log$
+**  Revision 1.7  2006/04/19 10:20:30  sm
+**  - Adjusted splitted includes.
+**  - Adjusted ocean waves values.
+**
 **  Revision 1.6  2006/04/15 20:34:55  sm
 **  - Added support for ocean surface bump mapping.
 **

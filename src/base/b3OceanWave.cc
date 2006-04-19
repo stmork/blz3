@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/04/19 10:20:30  sm
+**	- Adjusted splitted includes.
+**	- Adjusted ocean waves values.
+**
 **	Revision 1.3  2006/04/19 08:48:19  sm
 **	- Fine tuning on ocean waves
-**
+**	
 **	Revision 1.2  2006/04/18 20:38:25  sm
 **	- Optimized compilation
 **	
@@ -62,11 +66,11 @@ b3OceanWave::b3OceanWave()
 {
 	m_t     = -FLT_MAX;
 	m_T     =    10;
-	m_Dim   =     8;
+	m_Dim   =    10;
 	m_Wx    =     1;
 	m_Wy    =     0.7f;
 	m_A     =  1000;
-	m_Size  =    64;
+	m_Size  =   100;
 }
 
 void b3OceanWave::b3PrepareOceanWave()
@@ -128,7 +132,8 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 	buffer = m_FFT.b3GetGBuffer();
 	x = (b3_index)(b3Math::b3FracOne(fx) * m_fftDiff);
 	y = (b3_index)(b3Math::b3FracOne(fy) * m_fftDiff);
-	result = buffer[y * m_fftDiff + x] * 0.5 + 0.5;
+
+	result = buffer[y * m_fftDiff + x];
 
 	return result;
 }
@@ -166,7 +171,7 @@ b3Complex<b3_f64> b3OceanWave::b3Height(const b3Complex<b3_f64> &K, const b3_f64
 
 	if(denom == 0)
 	{
-		phillips = 0;
+		phillips = m_A;
 	}
 	else
 	{

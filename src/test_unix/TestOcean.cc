@@ -24,7 +24,7 @@
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Time.h"
 #include "blz3/image/b3Sampler.h"
-#include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3OceanWave.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,6 +34,10 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2006/04/19 10:20:30  sm
+**  - Adjusted splitted includes.
+**  - Adjusted ocean waves values.
+**
 **  Revision 1.2  2006/04/17 14:42:46  sm
 **  - Completed ocean waves. I see ocean waves. They are not nice but
 **    I can see them!
@@ -50,12 +54,13 @@
 **                                                                      **
 *************************************************************************/
 
-#define WATER_RES   800
+#define WATER_RES   400
 
 class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 {
 	b3Tx   *m_Tx;
 	b3_f64  m_Factor;
+	b3_f64  m_Amplitude;
 	b3_f64  m_Time;
 
 	inline b3_color b3SamplePixel(const b3_coord x,const b3_coord y)
@@ -66,8 +71,8 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		pos.x = m_Factor * x / m_xMax;
 		pos.y = m_Factor * y / m_yMax;
 		pos.z = 0;
-		
-		water = b3ComputeOceanWave(&pos,m_Time);
+
+		water = b3ComputeOceanWave(&pos,m_Time) * m_Amplitude + 0.5;
 	
 		return b3Color(water,water,water);
 	}
@@ -75,7 +80,8 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 public:
 	inline b3OceanWaveSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
-		m_Factor = 100;
+		m_Factor    = 100;
+		m_Amplitude =  20;
 	}
 	
 	inline void b3SampleTime(b3_f64 time)
