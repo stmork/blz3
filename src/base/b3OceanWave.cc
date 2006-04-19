@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/04/19 10:55:51  sm
+**	- Fine tuning on ocean waves
+**
 **	Revision 1.4  2006/04/19 10:20:30  sm
 **	- Adjusted splitted includes.
 **	- Adjusted ocean waves values.
-**
+**	
 **	Revision 1.3  2006/04/19 08:48:19  sm
 **	- Fine tuning on ocean waves
 **	
@@ -133,7 +136,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 	x = (b3_index)(b3Math::b3FracOne(fx) * m_fftDiff);
 	y = (b3_index)(b3Math::b3FracOne(fy) * m_fftDiff);
 
-	result = buffer[y * m_fftDiff + x];
+	result = buffer[y * m_fftDiff + x] * 20 + 0.5;
 
 	return result;
 }
