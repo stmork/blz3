@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/04/19 18:15:09  sm
+**	- Fine tuning ocean waves.
+**
 **	Revision 1.6  2006/04/19 15:19:58  sm
 **	- The break through! Ocean waves...
-**
+**	
 **	Revision 1.5  2006/04/19 10:55:51  sm
 **	- Fine tuning on ocean waves
 **	
@@ -144,7 +147,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 	x = (b3_index)(b3Math::b3FracOne(fx) * m_fftDiff);
 	y = (b3_index)(b3Math::b3FracOne(fy) * m_fftDiff);
 
-	result = buffer[y * m_fftDiff + x] * 25000 + 0.5;
+	result = buffer[y * m_fftDiff + x] * 20000 + 0.5;
 #ifdef VERBOSE
 //	printf("<<< %d %d # %f\n", x, y, result);
 #endif
