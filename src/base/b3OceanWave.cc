@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/04/19 15:19:58  sm
+**	- The break through! Ocean waves...
+**
 **	Revision 1.5  2006/04/19 10:55:51  sm
 **	- Fine tuning on ocean waves
-**
+**	
 **	Revision 1.4  2006/04/19 10:20:30  sm
 **	- Adjusted splitted includes.
 **	- Adjusted ocean waves values.
@@ -72,16 +75,20 @@ b3OceanWave::b3OceanWave()
 	m_Dim   =    10;
 	m_Wx    =     1;
 	m_Wy    =     0.7f;
-	m_A     =  1000;
-	m_Size  =   100;
+	m_A     =     1;
+	m_Size  =    30;
 }
 
 void b3OceanWave::b3PrepareOceanWave()
 {
+	b3_f64 ws2;
+
 	b3PrintF(B3LOG_FULL, "  preparing ocean waves...\n");
 	m_W          = b3Complex<b3_f64>(m_Wx, m_Wy);
 	m_v          = m_W.b3Length();
 	m_W.b3Normalize();
+	
+	m_f          =  M_PI * 2.0 / m_T;
 
 	m_fftMax     =  1 << (m_Dim - 1);
 	m_fftMin     = -m_fftMax;
@@ -90,7 +97,8 @@ void b3OceanWave::b3PrepareOceanWave()
 
 	m_xWind2     =  m_Wx * m_Wx;
 	m_yWind2     =  m_Wy * m_Wy;
-	m_Windspeed4 =  m_xWind2 * m_xWind2 + m_yWind2 * m_yWind2;
+	ws2          =  m_xWind2 + m_yWind2;
+	m_Windspeed4 =  ws2 * ws2;
 	m_g2         = -g*g;
 
 	m_FFT.b3AllocBuffer(1 << m_Dim, B3_FOURIER_GREY);
@@ -136,8 +144,10 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 	x = (b3_index)(b3Math::b3FracOne(fx) * m_fftDiff);
 	y = (b3_index)(b3Math::b3FracOne(fy) * m_fftDiff);
 
-	result = buffer[y * m_fftDiff + x] * 20 + 0.5;
-
+	result = buffer[y * m_fftDiff + x] * 25000 + 0.5;
+#ifdef VERBOSE
+//	printf("<<< %d %d # %f\n", x, y, result);
+#endif
 	return result;
 }
 
@@ -155,9 +165,14 @@ void b3OceanWave::b3FilterPhillipsSpectrum(
 	b3FilterInfo *filter_info)
 {
 	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
-	b3Complex<b3_f64>  K(fx * ocean->m_Size, fy * ocean->m_Size);
+	b3_f64             factor = M_PI * 2 * ocean->m_fftMax / ocean->m_Size;
+	b3Complex<b3_f64>  K(fx * factor, fy * factor);
 	b3Complex<b3_f64>  result = ocean->b3Height(K, ocean->m_t);
 	b3_f64            *buffer = fourier->b3GetGBuffer();
+
+#ifdef VERBOSE
+//	printf(">>> %f %f # %f %f # %f %f\n",fx,fy,K.b3GetRe(),K.b3GetIm(),result.b3GetRe(), result.b3GetIm());
+#endif
 
 	buffer[re] = result.b3GetRe();
 	buffer[im] = result.b3GetIm();
@@ -167,24 +182,26 @@ b3Complex<b3_f64> b3OceanWave::b3Height(const b3Complex<b3_f64> &K, const b3_f64
 {
 	b3_f64            w;
 	b3_f64            phillips;
+	b3_f64            f = t * m_f;
 	b3Complex<b3_f64> gauss;
+	b3Complex<b3_f64> time(cos(f), sin(f));
 	b3_f64            k2    = K.b3SquareLength();
 	b3_f64            k4    = k2 * k2;
-	b3_f64            denom = k4 * fabs(K.b3GetRe() * m_Wx + K.b3GetIm() * m_Wy);
+	b3_f64            quotient = fabs(K.b3GetRe() * m_Wx + K.b3GetIm() * m_Wy) / k4;
 
-	if(denom == 0)
+	if(k4 == 0)
 	{
-		phillips = m_A;
+		phillips = 0;
 	}
 	else
 	{
-		phillips = m_A * exp( m_g2 / (k2 * k2 * m_Windspeed4) ) / denom;
+		phillips = m_A * exp( m_g2 / (k2 * m_Windspeed4) ) * quotient;
 	}
 
 #ifdef VERBOSE
-	b3PrintF(B3LOG_NORMAL,"%f %f # %f %f %f %f %f %f %f",
+	b3PrintF(B3LOG_NORMAL,"%f %f # %f %f %f %f %f %f %f %f",
 		K.b3GetRe(), K.b3GetIm(),
-		k2,k4,m_xWind2,m_yWind2,m_Windspeed4,m_g2, phillips);
+		k2,k4,m_xWind2,m_yWind2,m_Windspeed4,m_g2, quotient, phillips);
 #endif
 
 	do
@@ -197,10 +214,12 @@ b3Complex<b3_f64> b3OceanWave::b3Height(const b3Complex<b3_f64> &K, const b3_f64
 
 	w = sqrt( (-2.0 * log( w ) ) / w );
 
-    b3Complex<b3_f64> result = gauss * w * sqrt(phillips * 0.5);
+    b3Complex<b3_f64> result = gauss * w * sqrt(phillips * 0.5) * time;
 
 #ifdef VERBOSE
-	b3PrintF(B3LOG_NORMAL, " # %f %f %f # %f %f\n", x1, x2, w, result.b3GetRe(), result.b3GetIm());
+	b3PrintF(B3LOG_NORMAL, " # %f %f %f # %f %f\n",
+		gauss.b3GetRe(),  gauss.b3GetIm(), w,
+		result.b3GetRe(), result.b3GetIm());
 #endif
 	return result;
 }

@@ -28,6 +28,7 @@ class B3_PLUGIN b3OceanWave
 	const static b3_f64 g;
 
 	b3_f64            m_t;           // actual time point
+	b3_f64            m_f;           // frequency
 	b3_loop           m_fftMin;      // FFT loop start
 	b3_loop           m_fftMax;      // FFT loop end
 	b3_size           m_fftDiff;     // FFT loop size

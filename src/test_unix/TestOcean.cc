@@ -34,6 +34,9 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2006/04/19 15:19:58  sm
+**  - The break through! Ocean waves...
+**
 **  Revision 1.3  2006/04/19 10:20:30  sm
 **  - Adjusted splitted includes.
 **  - Adjusted ocean waves values.
@@ -72,7 +75,7 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		pos.y = m_Factor * y / m_yMax;
 		pos.z = 0;
 
-		water = b3ComputeOceanWave(&pos,m_Time) * m_Amplitude + 0.5;
+		water = b3ComputeOceanWave(&pos,m_Time);
 	
 		return b3Color(water,water,water);
 	}
@@ -80,8 +83,8 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 public:
 	inline b3OceanWaveSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
-		m_Factor    = 100;
-		m_Amplitude =  20;
+		m_Factor    = m_Size;
+		m_Amplitude =   1;
 	}
 	
 	inline void b3SampleTime(b3_f64 time)
