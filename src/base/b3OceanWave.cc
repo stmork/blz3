@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/04/19 08:48:19  sm
+**	- Fine tuning on ocean waves
+**
 **	Revision 1.2  2006/04/18 20:38:25  sm
 **	- Optimized compilation
-**
+**	
 **	Revision 1.1  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
@@ -59,16 +62,16 @@ b3OceanWave::b3OceanWave()
 {
 	m_t     = -FLT_MAX;
 	m_T     =    10;
-	m_Dim   =    10;
+	m_Dim   =     8;
 	m_Wx    =     1;
 	m_Wy    =     0.7f;
 	m_A     =  1000;
-	m_Size  =     8;
+	m_Size  =    64;
 }
 
 void b3OceanWave::b3PrepareOceanWave()
 {
-	b3PrintF(B3LOG_FULL, "Preparing ocean waves...\n");
+	b3PrintF(B3LOG_FULL, "  preparing ocean waves...\n");
 	m_W          = b3Complex<b3_f64>(m_Wx, m_Wy);
 	m_v          = m_W.b3Length();
 	m_W.b3Normalize();
@@ -76,7 +79,7 @@ void b3OceanWave::b3PrepareOceanWave()
 	m_fftMax     =  1 << (m_Dim - 1);
 	m_fftMin     = -m_fftMax;
 	m_fftDiff    =  m_fftMax - m_fftMin;
-	m_Scale      =  m_fftDiff / m_Size;
+	m_Scale      =  1.0 / m_Size;
 
 	m_xWind2     =  m_Wx * m_Wx;
 	m_yWind2     =  m_Wy * m_Wy;
@@ -90,8 +93,8 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 {
 	b3_f64   *buffer;
 	b3_f64    result;
-	b3_f64    fx = pos->x * 0.01;
-	b3_f64    fy = pos->y * 0.01;
+	b3_f64    fx = pos->x * m_Scale;
+	b3_f64    fy = pos->y * m_Scale;
 	b3_index  x,y;
 
 	// FIXME: SLOW!!!
@@ -104,6 +107,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 #else
 		b3ComputePhillipsSpectrum();
 #endif
+
 #ifdef VERBOSE
 		b3Tx tx;
 
@@ -122,8 +126,8 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos, const b3_f64 t)
 	m_Mutex.b3Unlock();
 
 	buffer = m_FFT.b3GetGBuffer();
-	x = (b3_index)b3Math::b3Frac(fx * m_fftDiff, (b3_f64)m_fftDiff);
-	y = (b3_index)b3Math::b3Frac(fy * m_fftDiff, (b3_f64)m_fftDiff);
+	x = (b3_index)(b3Math::b3FracOne(fx) * m_fftDiff);
+	y = (b3_index)(b3Math::b3FracOne(fy) * m_fftDiff);
 	result = buffer[y * m_fftDiff + x] * 0.5 + 0.5;
 
 	return result;
@@ -142,8 +146,8 @@ void b3OceanWave::b3FilterPhillipsSpectrum(
 	b3Fourier    *fourier, 
 	b3FilterInfo *filter_info)
 {
-	b3OceanWave       *ocean = (b3OceanWave *)filter_info;
-	b3Complex<b3_f64>  K(fx * ocean->m_Scale, fy * ocean->m_Scale);
+	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
+	b3Complex<b3_f64>  K(fx * ocean->m_Size, fy * ocean->m_Size);
 	b3Complex<b3_f64>  result = ocean->b3Height(K, ocean->m_t);
 	b3_f64            *buffer = fourier->b3GetGBuffer();
 
