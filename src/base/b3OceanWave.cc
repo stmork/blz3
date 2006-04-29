@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/04/29 20:45:57  sm
+**	- New scaling.
+**
 **	Revision 1.10  2006/04/29 20:29:54  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
-**
+**	
 **	Revision 1.9  2006/04/29 17:58:27  sm
 **	- Minor value changes.
 **	
@@ -360,7 +363,6 @@ void b3OceanWave::b3SampleHeight(
 	      b3FilterInfo *filter_info)
 {
 	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
-	b3_f64            *buffer = ocean->b3GetBuffer();
 	b3Complex<b3_f64>  result = ocean->m_Phillips[index] * ocean->m_Cycle;
 	
 	re = result.b3GetRe();

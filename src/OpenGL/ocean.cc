@@ -26,9 +26,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/04/29 20:45:57  sm
+**	- New scaling.
+**
 **	Revision 1.2  2006/04/29 17:58:27  sm
 **	- Minor value changes.
-**
+**	
 **	Revision 1.1  2006/04/29 11:39:04  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -254,7 +257,7 @@ void RenderScene()
 	{
 		for (i = 0; i < size; i+=OW_SKIP)
 		{
-			*dst = *src * 100;
+			*dst = *src * 0.0001;
 			src += OW_SKIP;
 			dst += 3;
 		}
