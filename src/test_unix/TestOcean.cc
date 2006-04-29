@@ -35,6 +35,9 @@
 
 /*
 **  $Log$
+**  Revision 1.6  2006/04/29 20:51:10  sm
+**  - New scaling.
+**
 **  Revision 1.5  2006/04/29 11:25:50  sm
 **  - Added ocean bump to main packet.
 **  - b3Prepare signature: Added further initialization information
@@ -94,7 +97,7 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 #endif
 		pos.z = 0;
 
-		water = b3Math::b3Limit(b3ComputeOceanWave(&pos));
+		water = b3Math::b3Limit(b3ComputeOceanWave(&pos) * 0.0002 + 0.5);
 
 		return b3Color(water,water,water);
 	}
