@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2006/04/29 20:50:39  sm
+**	- Switched to other FFT 2D algorithm which works correctly.
+**
 **	Revision 1.49  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -44,7 +47,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.48  2006/04/19 11:01:53  sm
 **	- Corrected cross product of several bump maps.
 **	
