@@ -32,9 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.48  2006/04/19 11:01:53  sm
 **	- Corrected cross product of several bump maps.
-**
+**	
 **	Revision 1.47  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
@@ -262,6 +275,7 @@ void b3Bump::b3Register()
 	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,    &b3BumpGlossy::b3StaticInit,    BUMP_GLOSSY);
 	b3Item::b3Register(&b3BumpWood::b3StaticInit,      &b3BumpWood::b3StaticInit,      BUMP_WOOD);
 	b3Item::b3Register(&b3BumpOakPlank::b3StaticInit,  &b3BumpOakPlank::b3StaticInit,  BUMP_OAKPLANK);
+	b3Item::b3Register(&b3BumpOcean::b3StaticInit,     &b3BumpOcean::b3StaticInit,     BUMP_OCEAN);
 }
 
 /*************************************************************************
@@ -373,7 +387,7 @@ void b3BumpMarble::b3Write()
 	b3StoreInt(m_ScaleFlags);
 }
 
-b3_bool b3BumpMarble::b3Prepare()
+b3_bool b3BumpMarble::b3Prepare(b3_preparation_info *info)
 {
 	b3PrepareScaling();
 	return true;
@@ -444,7 +458,7 @@ void b3BumpTexture::b3Write()
 	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
-b3_bool b3BumpTexture::b3Prepare()
+b3_bool b3BumpTexture::b3Prepare(b3_preparation_info *info)
 {
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
@@ -561,22 +575,24 @@ void b3BumpWater::b3Write()
 	b3StoreVector(&m_Anim);
 }
 
-b3_bool b3BumpWater::b3Prepare()
+b3_bool b3BumpWater::b3Prepare(b3_preparation_info *prep_info)
 {
+	b3_scene_preparation *info = (b3_scene_preparation *)prep_info;
+	b3_f64                t = (m_ScaleTime < 0.0001 ? 0 : info->m_t / m_ScaleTime);
+
 	b3PrepareScaling();
-	b3PrepareWater();
+	b3PrepareWater(t);
 	return true;
 }
 
 void b3BumpWater::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector point,ox,oy,n;
-	b3_f64    Denom,r,time,water;
+	b3_f64    Denom,r,water;
 
-	time = (m_ScaleTime < 0.0001 ? 0 : ray->t / m_ScaleTime);
 	b3Scale(ray,&m_Scale,&point);
 
-	water = b3ComputeWater(&point, time);
+	water = b3ComputeWater(&point);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = water;
@@ -585,11 +601,11 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	oy.z     = water;
 
 	point.x += ox.x;
-	ox.z    -= b3ComputeWater (&point, time);
+	ox.z    -= b3ComputeWater (&point);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= b3ComputeWater (&point, time);
+	oy.z    -= b3ComputeWater (&point);
 
 	r   = m_Amplitude;
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
@@ -629,7 +645,7 @@ void b3BumpWave::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-b3_bool b3BumpWave::b3Prepare()
+b3_bool b3BumpWave::b3Prepare(b3_preparation_info *info)
 {
 	b3PrepareScaling();
 	return true;
@@ -695,7 +711,7 @@ void b3BumpGroove::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-b3_bool b3BumpGroove::b3Prepare()
+b3_bool b3BumpGroove::b3Prepare(b3_preparation_info *info)
 {
 	b3PrepareScaling();
 	return true;
@@ -861,7 +877,7 @@ void b3BumpWood::b3Write()
 	b3StoreFloat(m_Ringy);
 }
 
-b3_bool b3BumpWood::b3Prepare()
+b3_bool b3BumpWood::b3Prepare(b3_preparation_info *info)
 {
 	b3PrepareWood(&m_Scale);
 	b3PrepareScaling();
@@ -985,7 +1001,7 @@ void b3BumpOakPlank::b3Write()
 	b3StoreFloat(m_Wobble);
 }
 
-b3_bool b3BumpOakPlank::b3Prepare()
+b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info *info)
 {
 	b3_index x,y;
 	b3_f64   fx,fy,wobble;
@@ -1050,4 +1066,109 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitudes[index];
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitudes[index];
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitudes[index];
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Ocean bump                                    **
+**                                                                      **
+*************************************************************************/
+
+b3BumpOcean::b3BumpOcean(b3_u32 class_type) :
+	b3Bump(sizeof(b3BumpOcean), class_type)
+{
+	b3Vector::b3Init(&m_Scale, 0.01, 0.01, 0.01);
+	m_ScaleFlags = B3_SCALE_IPOINT;
+	m_Amplitude = 20;
+}
+
+b3BumpOcean::b3BumpOcean(b3_u32 *src) :
+	b3Bump(src)
+{
+	b3InitVector(&m_Scale);
+	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
+	m_Amplitude  = b3InitFloat();
+
+	m_A = b3InitFloat();
+	m_T = b3InitFloat();
+	m_GridSize = b3InitFloat();
+	m_Dim = b3InitCount();
+	m_Wx = b3InitFloat();
+	m_Wy = b3InitFloat();
+}
+
+void b3BumpOcean::b3Write()
+{
+	b3StoreVector(&m_Scale);
+	b3StoreInt(m_ScaleFlags);
+	b3StoreFloat(m_Amplitude);
+
+	b3StoreFloat(m_A);
+	b3StoreFloat(m_T);
+	b3StoreFloat(m_GridSize);
+	b3StoreCount(m_Dim);
+	b3StoreFloat(m_Wx);
+	b3StoreFloat(m_Wy);
+}
+
+b3_bool b3BumpOcean::b3Prepare(b3_preparation_info *prep_info)
+{
+	b3_scene_preparation *scene_info = (b3_scene_preparation *)prep_info;
+
+	b3PrepareOceanWave(scene_info->m_t);
+	b3PrepareScaling();
+
+	return true;
+}
+
+char *b3BumpOcean::b3GetName()
+{
+	return null;
+}
+
+void b3BumpOcean::b3BumpNormal(b3_ray *ray)
+{
+	b3_vector point, n;
+	b3_f64    Denom;
+
+	b3_f64    r   = m_Amplitude;
+	b3Scale(ray, &m_Scale, &point);
+
+#if 0
+	b3_vector ox, oy;
+	b3_f64    water = b3ComputeOceanWave(&point);
+
+	ox.x     = 0.1f;
+	ox.y     = 0;
+	ox.z     = water;
+	oy.x     = 0;
+	oy.y     = 0.1f;
+	oy.z     = water;
+
+	point.x += ox.x;
+	ox.z    -= b3ComputeOceanWave (&point);
+	point.x -= ox.x;
+
+	point.y += oy.y;
+	oy.z    -= b3ComputeOceanWave (&point);
+
+	b3Vector::b3CrossProduct(&ox, &oy, &n);
+	b3Vector::b3Scale(&n, r);
+#else
+	b3ComputeOceanWaveDeriv(&point, &n);
+	b3Vector::b3Normalize(&n, r);
+#endif
+	Denom = 1.0 / sqrt(
+		ray->normal.x * ray->normal.x +
+		ray->normal.y * ray->normal.y +
+		ray->normal.z * ray->normal.z);
+
+	ray->normal.x = ray->normal.x * Denom + n.x;
+	ray->normal.y = ray->normal.y * Denom + n.y;
+	ray->normal.z = ray->normal.z * Denom + n.z;
+}
+
+b3_bool b3BumpOcean::b3NeedDeriv()
+{
+	return false;
 }

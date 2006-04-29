@@ -68,7 +68,6 @@ struct B3_PLUGIN b3_ray : public b3_line64
 	b3BBox     *bbox;                  //!< Bounding box which contains intersected shape.
 	b3Material *material;              //!< Hit material of intersected shape.
 	b3_bool     inside;                //!< Inside or outside flag.
-	b3_f64      t;                     //!< Animation time point.
 	b3Color     color;                 //!< Result color.
 	b3_index    TriaIndex;             //!< Triangle index at intersection point.
 	b3_f64      aTriaValue,bTriaValue; //!< Polar coordinates of that triangle.

@@ -20,6 +20,7 @@
 
 #include "blz3/raytrace/b3Scaling.h"
 #include "blz3/base/b3Array.h"
+#include "blz3/base/b3OceanWave.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Water.h"
 #include "blz3/base/b3Wood.h"
@@ -32,26 +33,27 @@
 *************************************************************************/
 
 #define CLASS_BUMP          0x28000000
-#define TYPE_NOISE          0x00000001
-#define TYPE_MARBLE         0x00000002
-#define TYPE_TEXTURE        0x00000003
-#define TYPE_WATER          0x00000004
-#define TYPE_WAVE           0x00000005
-#define TYPE_GLOSSY         0x00000006
-#define TYPE_GROOVE         0x00000007
+#define TYPE_BUMP_NOISE     0x00000001
+#define TYPE_BUMP_MARBLE    0x00000002
+#define TYPE_BUMP_TEXTURE   0x00000003
+#define TYPE_BUMP_WATER     0x00000004
+#define TYPE_BUMP_WAVE      0x00000005
+#define TYPE_BUMP_GLOSSY    0x00000006
+#define TYPE_BUMP_GROOVE    0x00000007
 #define TYPE_BUMP_WOOD      0x00000008
 #define TYPE_BUMP_OAKPLANK  0x00000009
-#define TYPE_OCEAN_WAVE     0x0000000a
+#define TYPE_BUMP_OCEAN     0x0000000a
 
-#define BUMP_NOISE          (CLASS_BUMP|TYPE_NOISE)
-#define BUMP_MARBLE         (CLASS_BUMP|TYPE_MARBLE)
-#define BUMP_TEXTURE        (CLASS_BUMP|TYPE_TEXTURE)
-#define BUMP_WATER          (CLASS_BUMP|TYPE_WATER)
-#define BUMP_WAVE           (CLASS_BUMP|TYPE_WAVE)
-#define BUMP_GLOSSY         (CLASS_BUMP|TYPE_GLOSSY)
-#define BUMP_GROOVE         (CLASS_BUMP|TYPE_GROOVE)
+#define BUMP_NOISE          (CLASS_BUMP|TYPE_BUMP_NOISE)
+#define BUMP_MARBLE         (CLASS_BUMP|TYPE_BUMP_MARBLE)
+#define BUMP_TEXTURE        (CLASS_BUMP|TYPE_BUMP_TEXTURE)
+#define BUMP_WATER          (CLASS_BUMP|TYPE_BUMP_WATER)
+#define BUMP_WAVE           (CLASS_BUMP|TYPE_BUMP_WAVE)
+#define BUMP_GLOSSY         (CLASS_BUMP|TYPE_BUMP_GLOSSY)
+#define BUMP_GROOVE         (CLASS_BUMP|TYPE_BUMP_GROOVE)
 #define BUMP_WOOD           (CLASS_BUMP|TYPE_BUMP_WOOD)
 #define BUMP_OAKPLANK       (CLASS_BUMP|TYPE_BUMP_OAKPLANK)
+#define BUMP_OCEAN          (CLASS_BUMP|TYPE_BUMP_OCEAN)
 
 /*************************************************************************
 **                                                                      **
@@ -81,7 +83,7 @@ public:
 	 */
 	static         void    b3Register();
 
-	virtual        b3_bool b3Prepare()
+	virtual        b3_bool b3Prepare(b3_preparation_info *info)
 	{
 		return true;
 	}
@@ -146,7 +148,7 @@ public:
 	B3_ITEM_LOAD(b3BumpMarble); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *info);
 	void    b3BumpNormal(b3_ray *ray);
 };
 
@@ -175,7 +177,7 @@ public:
 	B3_ITEM_LOAD(b3BumpTexture); //!< This constructor handles deserialization.
 
 	       void    b3Write();
-	       b3_bool b3Prepare();
+	       b3_bool b3Prepare(b3_preparation_info *info);
 	       void    b3BumpNormal(b3_ray *ray);
 	inline b3_bool b3NeedDeriv()
 	{
@@ -212,7 +214,7 @@ public:
 	B3_ITEM_LOAD(b3BumpWater); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *info);
 	void    b3BumpNormal(b3_ray *ray);
 };
 
@@ -232,7 +234,7 @@ public:
 	B3_ITEM_LOAD(b3BumpWave); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *info);
 	void    b3BumpNormal(b3_ray *ray);
 };
 
@@ -252,7 +254,7 @@ public:
 	B3_ITEM_LOAD(b3BumpGroove); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *info);
 	void    b3BumpNormal(b3_ray *ray);
 };
 
@@ -330,7 +332,7 @@ public:
 		return true;
 	}
 
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *info);
 	void    b3Write();
 	void    b3BumpNormal(b3_ray *ray);
 };
@@ -361,7 +363,7 @@ public:
 		return true;
 	}
 
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *info);
 	void    b3Write();
 	void    b3BumpNormal(b3_ray *ray);
 };
@@ -370,5 +372,26 @@ public:
 #define BUMP_IPOINT          1
 #define BUMP_U_SUPPRESS_WAVE 2
 #define BUMP_V_SUPPRESS_WAVE 4
+
+/*************************************************************************
+**                                                                      **
+**                        Ocean wave bump                               **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3BumpOcean : public b3Bump, public b3OceanWave, public b3Scaling
+{
+public:
+	B3_ITEM_INIT(b3BumpOcean);
+	B3_ITEM_LOAD(b3BumpOcean);
+	void     b3Write();
+	b3_bool  b3Prepare(b3_preparation_info *info);
+	char    *b3GetName();
+
+public:
+	virtual inline void    b3BumpNormal(b3_ray *ray);
+	virtual inline b3_bool b3NeedDeriv();
+};
+
 
 #endif

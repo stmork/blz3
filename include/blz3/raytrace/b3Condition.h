@@ -137,7 +137,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void    b3Register();
-	virtual b3_bool b3Prepare();
+	virtual b3_bool b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method compute the bounding box of this stencil condition
@@ -232,7 +232,7 @@ public:
 	B3_ITEM_LOAD(b3Cond2); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	void    b3ComputeBound(b3_stencil_limit *limit);
 };
 
@@ -338,7 +338,7 @@ public:
 	B3_ITEM_LOAD(b3CondTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	void    b3ComputeBound(b3_stencil_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -361,7 +361,7 @@ public:
 	B3_ITEM_LOAD(b3CondWrapTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	void    b3ComputeBound(b3_stencil_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };

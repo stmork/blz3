@@ -24,6 +24,7 @@
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Time.h"
 #include "blz3/image/b3Sampler.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3OceanWave.h"
 
 /*************************************************************************
@@ -34,6 +35,19 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2006/04/29 11:25:50  sm
+**  - Added ocean bump to main packet.
+**  - b3Prepare signature: Added further initialization information
+**    for animation preparation
+**  - Added test module for ocean waves.
+**  - Added module for random number generation.
+**  - Adjusted material and bump sampler to reflect preparation
+**    signature change.
+**  - Added OpenGL test program for ocean waves.
+**  - Changed Phillips spectrum computation to be independent
+**    from time.
+**  - Interpolated height field for ocean waves.
+**
 **  Revision 1.4  2006/04/19 15:19:58  sm
 **  - The break through! Ocean waves...
 **
@@ -71,25 +85,32 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		b3_vector pos;
 		b3_f64    water;
 
+#if 0
 		pos.x = m_Factor * x / m_xMax;
 		pos.y = m_Factor * y / m_yMax;
+#else
+		pos.x = x;
+		pos.y = y;
+#endif
 		pos.z = 0;
 
-		water = b3ComputeOceanWave(&pos,m_Time);
-	
+		water = b3Math::b3Limit(b3ComputeOceanWave(&pos));
+
 		return b3Color(water,water,water);
 	}
 
 public:
 	inline b3OceanWaveSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
-		m_Factor    = m_Size;
-		m_Amplitude =   1;
+		m_Factor    = m_GridSize;
+		m_Amplitude = 1;
+		m_Dim       = 8;
 	}
 	
 	inline void b3SampleTime(b3_f64 time)
 	{
 		m_Time = time;
+		b3PrepareOceanWave(m_Time);
 		b3Sample();
 	}
 };
@@ -113,7 +134,6 @@ int main(int argc,char *argv[])
 		
 		b3OceanWaveSampler sampler(&tx);
 
-		sampler.b3PrepareOceanWave();
 		if (argc > 1)
 		{
 			sampler.b3Sample();
@@ -147,14 +167,13 @@ int main(int argc,char *argv[])
 
 			do
 			{
-				now.b3Now();
-				time_diff = now.b3GetTime() - time_start;
+				time_diff = now.b3Now() - time_start;
 				b3PrintF(B3LOG_NORMAL, "t=%3.3f\n",time_diff);
 				sampler.b3SampleTime(time_diff);
 				display->b3PutTx(&tx);
 			}
 //			while(true);
-			while(!display->b3IsCancelled(xMax,yMax));
+			while(!display->b3IsCancelled(xMax, yMax));
 		}
 
 		// Delete Display

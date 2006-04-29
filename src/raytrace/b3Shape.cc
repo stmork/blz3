@@ -31,6 +31,19 @@
 
 /*
 **      $Log$
+**      Revision 1.67  2006/04/29 11:25:49  sm
+**      - Added ocean bump to main packet.
+**      - b3Prepare signature: Added further initialization information
+**        for animation preparation
+**      - Added test module for ocean waves.
+**      - Added module for random number generation.
+**      - Adjusted material and bump sampler to reflect preparation
+**        signature change.
+**      - Added OpenGL test program for ocean waves.
+**      - Changed Phillips spectrum computation to be independent
+**        from time.
+**      - Interpolated height field for ocean waves.
+**
 **      Revision 1.66  2006/03/05 21:22:36  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -490,7 +503,7 @@ void b3Shape::b3StoreShape()
 {
 }
 
-b3_bool b3Shape::b3Prepare()
+b3_bool b3Shape::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3Item      *item;
 	b3Condition *cond;
@@ -500,7 +513,7 @@ b3_bool b3Shape::b3Prepare()
 	B3_FOR_BASE(b3GetConditionHead(),item)
 	{
 		cond = (b3Condition *)item;
-		if (!cond->b3Prepare())
+		if (!cond->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -509,7 +522,7 @@ b3_bool b3Shape::b3Prepare()
 	B3_FOR_BASE(b3GetBumpHead(),item)
 	{
 		bump = (b3Bump *)item;
-		if (!bump->b3Prepare())
+		if (!bump->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -518,7 +531,7 @@ b3_bool b3Shape::b3Prepare()
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (!material->b3Prepare())
+		if (!material->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -693,11 +706,11 @@ void b3Shape2::b3StoreShape()
 	b3StoreFloat(m_NormalLength);
 }
 
-b3_bool b3Shape2::b3Prepare()
+b3_bool b3Shape2::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&m_Normal);
 	m_NormalLength = b3Vector::b3Length(&m_Normal);
-	return b3Shape::b3Prepare();
+	return b3Shape::b3Prepare(prep_info);
 }
 
 void b3Shape2::b3Transform(b3_matrix *transformation,b3_bool is_affine)
@@ -774,13 +787,13 @@ void b3Shape3::b3StoreShape()
 	b3StoreFloat(m_DirLen[2]);
 }
 
-b3_bool b3Shape3::b3Prepare()
+b3_bool b3Shape3::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3_bool result = false;
 
 	if (b3BaseTransformation::b3Prepare())
 	{
-		result = b3Shape::b3Prepare();
+		result = b3Shape::b3Prepare(prep_info);
 	}
 	return result;
 }

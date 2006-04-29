@@ -32,9 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.10  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.9  2006/02/04 19:19:30  sm
 **	- Corrected image sampler. Check the used data
 **	  type in constructor by using tx->b3IsHDR or some
@@ -93,6 +106,8 @@ b3BumpSampler::b3BumpSampler(b3Tx *tx,const b3_count tiles) : m_Tiles(tiles)
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
 
+	m_t     = 0;
+	m_Scene = null;
 	m_Bump  = null;
 	m_Tx    = tx;
 	m_xMax  = m_Tx->xSize;
@@ -107,13 +122,13 @@ void b3BumpSampler::b3SetBump(b3Bump *bump)
 
 b3SampleInfo *b3BumpSampler::b3SampleInit(const b3_count CPUs)
 {
-	b3SampleInfo *info = new b3SampleInfo[CPUs];
-	b3_loop       i;
-	b3_res        yStart,yEnd;
-	b3_color     *data = (b3_color *)m_Data;
+	b3SampleInfo         *info = new b3SampleInfo[CPUs];
+	b3_loop               i;
+	b3_res                yStart,yEnd;
+	b3_color             *data = (b3_color *)m_Data;
 
 	B3_ASSERT(m_Bump != null);
-	m_Bump->b3Prepare();
+	m_Bump->b3Prepare(this);
 	yStart = 0;
 	for (i = 0;i < CPUs;i++)
 	{
@@ -141,7 +156,6 @@ void b3BumpSampler::b3SampleTask(const b3SampleInfo *info)
 	b3_color  *data = (b3_color *)info->m_Data;
 
 	ray.bbox = &bbox;
-	bbox.b3Prepare();
 	b3Vector::b3Init(&ray.xDeriv,1.0,0.0,0.0);
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{

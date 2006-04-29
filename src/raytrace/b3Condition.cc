@@ -31,9 +31,22 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.28  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.27  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
@@ -215,7 +228,7 @@ b3Condition::b3Condition(b3_u32 *src) : b3Item(src)
 {
 }
 
-b3_bool b3Condition::b3Prepare()
+b3_bool b3Condition::b3Prepare(b3_preparation_info *prep_info)
 {
 	return true;
 }
@@ -572,7 +585,7 @@ void b3Cond2::b3Write()
 	b3StoreFloat(m_Denom);
 }
 
-b3_bool b3Cond2::b3Prepare()
+b3_bool b3Cond2::b3Prepare(b3_preparation_info *prep_info)
 {
 	m_Denom = m_xDir1 * m_yDir2 - m_yDir1 * m_xDir2;
 	return true;
@@ -714,7 +727,7 @@ void b3CondTexture::b3Write()
 	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
-b3_bool b3CondTexture::b3Prepare()
+b3_bool b3CondTexture::b3Prepare(b3_preparation_info *prep_info)
 {
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
@@ -800,7 +813,7 @@ void b3CondWrapTexture::b3Write()
 	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
-b3_bool b3CondWrapTexture::b3Prepare()
+b3_bool b3CondWrapTexture::b3Prepare(b3_preparation_info *prep_info)
 {
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }

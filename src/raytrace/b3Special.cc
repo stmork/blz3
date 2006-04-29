@@ -31,6 +31,19 @@
 
 /*
 **      $Log$
+**      Revision 1.78  2006/04/29 11:25:49  sm
+**      - Added ocean bump to main packet.
+**      - b3Prepare signature: Added further initialization information
+**        for animation preparation
+**      - Added test module for ocean waves.
+**      - Added module for random number generation.
+**      - Adjusted material and bump sampler to reflect preparation
+**        signature change.
+**      - Added OpenGL test program for ocean waves.
+**      - Changed Phillips spectrum computation to be independent
+**        from time.
+**      - Interpolated height field for ocean waves.
+**
 **      Revision 1.77  2006/03/05 21:22:36  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -641,7 +654,7 @@ void b3CameraPart::b3SetName(const char *name)
 	b3Mem::b3SetString(m_CameraName,sizeof(m_CameraName),name);
 }
 
-b3_bool b3CameraPart::b3Prepare()
+b3_bool b3CameraPart::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3PrintF(B3LOG_DEBUG,"Camera %s, %sactive\n",b3GetName(),b3IsActive() ? "" : "not ");
 	b3PrintF(B3LOG_DEBUG," W: %3.5f\n",b3Vector::b3Length(&m_Width));
@@ -920,7 +933,7 @@ void b3Nebular::b3Write()
 	b3StoreFloat(m_NebularVal);
 }
 
-b3_bool b3Nebular::b3Prepare()
+b3_bool b3Nebular::b3Prepare(b3_preparation_info *prep_info)
 {
 	if (m_NebularVal > 0)
 	{
@@ -1333,7 +1346,7 @@ void b3CloudBackground::b3Write()
 	b3StoreFloat(m_Sharpness);
 }
 
-b3_bool b3CloudBackground::b3Prepare()
+b3_bool b3CloudBackground::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3PrepareClouds();
 	return true;

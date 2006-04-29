@@ -19,6 +19,7 @@ test -f src/icc.make   && rm  -f src/icc.make
 echo "Removing temp files..."
 find $BLZ3_HOME -name "*.log" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.ncb" -exec rm -f {} \;
+find $BLZ3_HOME -name "*.suo" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.plg" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.mak" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.bak" -exec rm -f {} \;

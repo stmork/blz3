@@ -317,6 +317,10 @@ typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3StaticInit(b3_u32  class_type) { return new item_class(class_type); }
 #define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3StaticInit(b3_u32 *src)        { return new item_class(src); }
 
+struct b3_preparation_info
+{
+};
+
 /**
  * This class provides serialization methods for one data item.
  */
@@ -399,9 +403,11 @@ public:
 	/**
 	 * This virtual function initializes this class in an implementation specific manner.
 	 *
+	 * @param info Information for preparation job.
+	 *
 	 * @return True on success.
 	 */
-	virtual b3_bool         b3Prepare();
+	virtual b3_bool         b3Prepare(b3_preparation_info *info);
 
 	/**
 	 * This method dumps the content of this instance. This method can be overloaded to

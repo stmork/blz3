@@ -31,9 +31,22 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.14  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.13  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
@@ -205,7 +218,10 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 	return 1;
 }
 
-b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr,b3_bool threaded) throw(b3PrepareException)
+b3_bool b3PrepareInfo::b3Prepare(
+	b3PrepareProc  prepare_proc,
+	void          *ptr,
+	b3_bool        threaded) throw(b3PrepareException)
 {
 	b3_bool  result = true;
 
@@ -241,7 +257,7 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr,b3_bool th
 		b3PrintF(B3LOG_FULL,"    Doing preparation...\n");
 		for (int i = 0;(i < m_BBoxRefArray.b3GetCount()) && result;i++)
 		{
-			result = m_PrepareProc(m_BBoxRefArray[i].m_BBox,m_Ptr);
+			result = m_PrepareProc(m_BBoxRefArray[i].m_BBox, m_Ptr);
 		}
 	}
 	b3PrintF(B3LOG_FULL,"    Preparing finished %s.\n",

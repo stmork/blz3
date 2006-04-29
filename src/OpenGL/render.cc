@@ -37,6 +37,19 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2006/04/29 11:25:48  sm
+**      - Added ocean bump to main packet.
+**      - b3Prepare signature: Added further initialization information
+**        for animation preparation
+**      - Added test module for ocean waves.
+**      - Added module for random number generation.
+**      - Adjusted material and bump sampler to reflect preparation
+**        signature change.
+**      - Added OpenGL test program for ocean waves.
+**      - Changed Phillips spectrum computation to be independent
+**        from time.
+**      - Interpolated height field for ocean waves.
+**
 **      Revision 1.58  2005/06/09 11:00:57  smork
 **      - Call option cleanup.
 **
@@ -480,7 +493,6 @@ static void b3Update(b3Scene *scene)
 	scene->b3SetupVertexMemory(&context);
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower,&upper);
-	scene->b3Prepare();
 			
 	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
@@ -505,7 +517,6 @@ static void b3Prepare(b3Scene *scene)
 	scene->b3Reorg();
 	scene->b3GetDisplaySize(xSize,ySize);
 	scene->b3SetCamera(scene->b3GetFirstCamera(false));
-	scene->b3PrepareScene(xSize,ySize);
 
 	info = scene->b3GetModellerInfo();
 	if (info != null)

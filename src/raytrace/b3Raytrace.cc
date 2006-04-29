@@ -33,9 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.76  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.75  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.74  2005/10/02 09:51:12  sm
 **	- Added OpenEXR configuration.
 **	- Added more excpetion handling.
@@ -637,20 +650,21 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3P
 
 b3_bool b3Scene::b3PrepareBBoxThread(b3BBox *bbox,void *ptr)
 {
-	return bbox->b3PrepareBBox();
+	return bbox->b3PrepareBBox((b3_scene_preparation *)ptr);
 }
 
 b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareException)
 {
-	b3Item            *item;
-	b3Nebular         *nebular;
-	b3Distribute      *distributed;
-	b3SuperSample     *supersample;
-	b3Time             timepoint;
-	b3Light           *light;
-	b3_f64             xDenom,yDenom,tStart,tEnd;
+	b3Item                *item;
+	b3Nebular             *nebular;
+	b3Distribute          *distributed;
+	b3SuperSample         *supersample;
+	b3Time                 timepoint;
+	b3Light               *light;
+	b3_f64                 xDenom,yDenom,tStart,tEnd;
+	b3_scene_preparation  *info = b3GetPrepareInfo();
 
-	tStart = timepoint;
+	tStart       = timepoint;
 	b3PrintF(B3LOG_FULL,"b3Scene::b3PrepareScene(%d,%d)\n",xSize,ySize);
 	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
 	m_AvrgColor = (m_BottomColor + m_TopColor) * 0.5;
@@ -659,7 +673,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	b3PrintF(B3LOG_FULL,"  preparing special items...\n");
 	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
-		if(!item->b3Prepare())
+		if(!item->b3Prepare(info))
 		{
 			B3_THROW(b3PrepareException,B3_PREPARE_ERROR);
 		}
@@ -770,7 +784,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	m_LightCount = 0;
 	for (light = b3GetLight();light != null;light = (b3Light *)light->Succ)
 	{
-		if (!light->b3Prepare())
+		if (!light->b3Prepare(info))
 		{
 			b3PrintF(B3LOG_NORMAL,"Lights doesn't initialize itself...\n");
 			return false;
@@ -784,7 +798,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	// Init geometry
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if(!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread))
+	if(!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info))
 	{
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
@@ -792,7 +806,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 
 	b3PrintF(B3LOG_FULL,"  preparing global shader...\n");
 	B3_ASSERT(m_Shader != null);
-	m_Shader->b3Prepare();
+	m_Shader->b3Prepare(info);
 
 	timepoint.b3Now();
 	tEnd = timepoint;

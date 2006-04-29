@@ -33,6 +33,19 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2006/04/29 11:25:50  sm
+**  - Added ocean bump to main packet.
+**  - b3Prepare signature: Added further initialization information
+**    for animation preparation
+**  - Added test module for ocean waves.
+**  - Added module for random number generation.
+**  - Adjusted material and bump sampler to reflect preparation
+**    signature change.
+**  - Added OpenGL test program for ocean waves.
+**  - Changed Phillips spectrum computation to be independent
+**    from time.
+**  - Interpolated height field for ocean waves.
+**
 **  Revision 1.3  2005/12/12 16:01:32  smork
 **  - Some more const correction in samplers.
 **
@@ -113,7 +126,7 @@ public:
 	{
 		// Init material
 		m_Material = new b3MatWood(WOOD);
-		m_Material->b3Prepare();
+		m_Material->b3Prepare(null);
 	}
 	
 	virtual ~b3MatWoodSampler()
@@ -142,7 +155,7 @@ public:
 
 		// Init material
 		m_Material = material;
-		m_Material->b3Prepare();
+		m_Material->b3Prepare(null);
 	}
 	
 	virtual ~b3MatOakPlankSampler()
@@ -158,7 +171,7 @@ public:
 	{
 		// Init material
 		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
-		m_Bump->b3Prepare();
+		m_Bump->b3Prepare(null);
 	}
 	
 	virtual ~b3BumpWoodSampler()
@@ -179,7 +192,7 @@ public:
 
 		// Init material
 		m_Bump = bump;
-		m_Bump->b3Prepare();
+		m_Bump->b3Prepare(null);
 	}
 	
 	virtual ~b3BumpOakPlankSampler()

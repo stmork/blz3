@@ -51,10 +51,23 @@
 
 /*
 **	$Log$
+**	Revision 1.90  2006/04/29 11:25:48  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.89  2006/03/19 14:47:17  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
-**
+**	
 **	Revision 1.88  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -1104,17 +1117,19 @@ BOOL CAboutDlg::OnInitDialog()
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3Base<b3Item> head;
-	b3Item        *item = b3World::b3AllocNode(WOOD);
+	b3Base<b3Item>        head;
+	b3Item               *item = b3World::b3AllocNode(WOOD);
+	b3_scene_preparation  prep_info;
 
+	prep_info.m_Scene = null;
+	prep_info.m_t     = 0;
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);
-	if (item->b3Prepare())
+	if (item->b3Prepare(&prep_info))
 	{
 		CDlgItemMaintain dlg(null,&head);
 
 		dlg.DoModal();
-
 	}
 	else
 	{

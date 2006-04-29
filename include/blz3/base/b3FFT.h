@@ -20,6 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Random.h"
 
 enum b3_fourier_type
 {
@@ -81,6 +82,8 @@ class B3_PLUGIN b3Fourier : public b3Mem
 	b3_res             m_ySize, m_yOrig, m_yStart;
 	b3_fourier_type    m_Type;
 
+	b3PseudoRandom<b3_f64> m_Random;
+
 public:
 	        /**
 	         * This constructor setup an empty Fourier buffer.
@@ -100,8 +103,8 @@ public:
 	         * @param src The source instance.
 	         */
 	        b3Fourier      (b3Fourier &src);
-	void    b3GetBuffer    (b3Tx *tx);
-	void    b3GetSpectrum  (b3Tx *tx);
+	void    b3GetBuffer    (b3Tx *tx, b3_f64 amp);
+	void    b3GetSpectrum  (b3Tx *tx, b3_f64 amp =   10.0);
 
 	void    b3AllocBuffer  (b3Tx *tx);
 	
@@ -174,13 +177,6 @@ protected:
 	static void b3FilterSinc2AR   (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
 
 private:
-	static inline b3_f64 b3Rnd(b3_s32 &seed)
-	{
-		seed = (seed * 7141 + 54773)  % 259200;
-		
-		return (b3_f64)seed / 259200.0;
-	}
-
 	static b3_loop      b3PowOf2(b3_loop value);
 	       void     b3Init();
 	       b3_f64 **b3Alloc2D();

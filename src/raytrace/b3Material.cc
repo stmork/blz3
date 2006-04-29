@@ -34,6 +34,19 @@
 
 /*
 **      $Log$
+**      Revision 1.107  2006/04/29 11:25:49  sm
+**      - Added ocean bump to main packet.
+**      - b3Prepare signature: Added further initialization information
+**        for animation preparation
+**      - Added test module for ocean waves.
+**      - Added module for random number generation.
+**      - Adjusted material and bump sampler to reflect preparation
+**        signature change.
+**      - Added OpenGL test program for ocean waves.
+**      - Changed Phillips spectrum computation to be independent
+**        from time.
+**      - Interpolated height field for ocean waves.
+**
 **      Revision 1.106  2006/03/19 14:47:18  sm
 **      - Fixed missing initiailization problems in b3BBox.
 **      - Moved some dialog elements into system library.
@@ -712,7 +725,7 @@ void b3MatTexture::b3Write()
 	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
-b3_bool b3MatTexture::b3Prepare()
+b3_bool b3MatTexture::b3Prepare(b3_preparation_info *prep_info)
 {
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
@@ -812,7 +825,7 @@ void b3MatWrapTexture::b3Write()
 	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
-b3_bool b3MatWrapTexture::b3Prepare()
+b3_bool b3MatWrapTexture::b3Prepare(b3_preparation_info *prep_info)
 {
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
@@ -1096,7 +1109,7 @@ void b3MatMarble::b3Write()
 	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatMarble::b3Prepare()
+b3_bool b3MatMarble::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3PrepareScaling();
 	return true;
@@ -1274,7 +1287,7 @@ void b3MatWood::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatWood::b3Prepare()
+b3_bool b3MatWood::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3PrepareWood(&m_Scale);
 	b3PrepareScaling();
@@ -1438,7 +1451,7 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatOakPlank::b3Prepare()
+b3_bool b3MatOakPlank::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3_index x,y,index = 0;
 	b3_f64   fx,fy;
@@ -1552,7 +1565,7 @@ void b3MatCookTorrance::b3Write()
 	b3StoreFloat(m_m);
 }
 
-b3_bool b3MatCookTorrance::b3Prepare()
+b3_bool b3MatCookTorrance::b3Prepare(b3_preparation_info *prep_info)
 {
 	m_Ra   = m_Ambient * m_ka;
 	m_Rd   = m_Diffuse * m_kd;
@@ -1729,7 +1742,7 @@ void b3MatGranite::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatGranite::b3Prepare()
+b3_bool b3MatGranite::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3PrepareScaling();
 	return true;
@@ -1824,7 +1837,7 @@ void b3MatCarPaint::b3Write()
 	b3StoreFloat(m_MetallicScale);
 }
 
-b3_bool b3MatCarPaint::b3Prepare()
+b3_bool b3MatCarPaint::b3Prepare(b3_preparation_info *prep_info)
 {
 	m_MetallicScaleHalf = m_MetallicScale * 0.5;
 	return true;
@@ -1958,8 +1971,11 @@ void b3MatThinFilm::b3Write()
 	b3StoreInt   (m_ScaleFlags);
 }
 
-b3_bool b3MatThinFilm::b3Prepare()
+b3_bool b3MatThinFilm::b3Prepare(b3_preparation_info *prep_info)
 {
+	b3_scene_preparation *info = (b3_scene_preparation *)prep_info;
+
+	m_t = info->m_t;
 	b3PrepareScaling();
 	return true;
 }
@@ -1979,7 +1995,7 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 	b3Scale(surface->m_Incoming,&m_Scale,&point);
 
 	// Compute animation
-	b3Noise::b3AnimThinFilm(surface->m_Incoming->t,&shift);
+	b3Noise::b3AnimThinFilm(m_t,&shift);
 	point.x += m_ScaleTime.x * shift.x;
 	point.y += m_ScaleTime.y * shift.y;
 	point.z += m_ScaleTime.z * shift.z;

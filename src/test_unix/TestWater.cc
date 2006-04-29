@@ -34,6 +34,19 @@
 
 /*
 **  $Log$
+**  Revision 1.8  2006/04/29 11:25:50  sm
+**  - Added ocean bump to main packet.
+**  - b3Prepare signature: Added further initialization information
+**    for animation preparation
+**  - Added test module for ocean waves.
+**  - Added module for random number generation.
+**  - Adjusted material and bump sampler to reflect preparation
+**    signature change.
+**  - Added OpenGL test program for ocean waves.
+**  - Changed Phillips spectrum computation to be independent
+**    from time.
+**  - Interpolated height field for ocean waves.
+**
 **  Revision 1.7  2006/04/19 10:20:30  sm
 **  - Adjusted splitted includes.
 **  - Adjusted ocean waves values.
@@ -76,31 +89,11 @@ class b3WaterSampler : public b3ImageSampler, public b3Water
 	b3_f64  m_Factor;
 	b3_f64  m_Time;
 
-	inline b3_color b3SamplePixel(const b3_coord x,const b3_coord y)
-	{
-		b3_vector pos;
-		b3_f64    water;
-		
-		pos.x = m_Factor * x / m_xMax;
-		pos.y = m_Factor * y / m_yMax;
-		pos.z = 0;
-		
-		water = b3ComputeWater(&pos,m_Time) * 0.5;
-	
-		return b3Color(water,water,water);
-	}
-
 public:
 	inline b3WaterSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
 		m_Factor = 1.0;
 		m_Time   = 0.0;
-
-		m_WindFreq  = 0.5;
-		m_WindAmp   = 0.2f;
-		m_MinWind   = 1.0f;
-		m_Km        = 1.0f;
-		m_Octaves   = 2;  
 
 		b3PrintF(B3LOG_NORMAL, "octaves=%ld\n",m_Octaves);
 		b3PrintF(B3LOG_NORMAL, "Km=%3.3f\n",m_Km);
@@ -111,7 +104,23 @@ public:
 	inline void b3SampleTime(b3_f64 time)
 	{
 		m_Time = time;
+		b3PrepareWater(m_Time);
 		b3Sample();
+	}
+
+private:
+	inline b3_color b3SamplePixel(const b3_coord x,const b3_coord y)
+	{
+		b3_vector pos;
+		b3_f64    water;
+		
+		pos.x = m_Factor * x / m_xMax;
+		pos.y = m_Factor * y / m_yMax;
+		pos.z = 0;
+		
+		water = b3ComputeWater(&pos) * 0.5;
+	
+		return b3Color(water,water,water);
 	}
 };
 

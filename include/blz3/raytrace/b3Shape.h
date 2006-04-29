@@ -132,7 +132,7 @@ public:
 	 */
 	static  void        b3Register();
 	        void        b3Write();
-	virtual b3_bool     b3Prepare();
+	virtual b3_bool     b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method stores the basic shape values.
@@ -510,7 +510,7 @@ public:
 	B3_ITEM_LOAD(b3Sphere); //!< This constructor handles deserialization.
 
 	void    b3StoreShape();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	void    b3Normal(b3_ray *ray);
@@ -561,7 +561,7 @@ public:
 	B3_ITEM_LOAD(b3Shape2); //!< This constructor handles deserialization.
 
 	        void    b3StoreShape();
-	        b3_bool b3Prepare();
+	        b3_bool b3Prepare(b3_preparation_info *prep_info);
 	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	        void    b3Normal(b3_ray *ray);
 			void    b3SetupPicking(b3PickInfo *info);
@@ -651,7 +651,7 @@ public:
 	B3_ITEM_LOAD(b3Shape3); //!< This constructor handles deserialization.
 
 	        void    b3StoreShape();
-	        b3_bool b3Prepare();
+	        b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 			void    b3SetupPicking(b3PickInfo *info);
@@ -801,7 +801,7 @@ public:
 	        void    b3Normal(b3_ray *ray);
 	        void    b3SetupPicking(b3PickInfo *info);
 
-	        b3_bool b3Prepare();
+	        b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
@@ -899,7 +899,7 @@ public:
 	b3_bool b3Init(b3_count vertCount,b3_count triaCount,b3_res xSize,b3_res ySize);
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
-	virtual b3_bool b3Prepare();
+	virtual b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 protected:
@@ -1033,7 +1033,7 @@ public:
 	void    b3Init(b3_count degree,b3_count controlNum,b3_bool closed,b3_count subdiv);
 	void    b3StoreShape();
 	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
-	b3_bool b3Prepare() throw(b3WorldException);
+	b3_bool b3Prepare(b3_preparation_info *prep_info) throw(b3WorldException);
 	void    b3SetupPicking(b3PickInfo *info);
 	void    b3SetupGrid(b3PickInfo *info);
 
@@ -1099,7 +1099,7 @@ private:
 	void b3ComputeGridIndices();
 	void b3ComputeSolidIndices();
 
-	b3_bool b3Prepare() throw(b3WorldException);
+	b3_bool b3Prepare(b3_preparation_info *prep_info) throw(b3WorldException);
 };
 
 /*************************************************************************
@@ -1325,7 +1325,7 @@ public:
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	b3_count b3GetMaxIntersections();
 	void     b3Normal(b3_ray *ray);
-	b3_bool  b3Prepare();
+	b3_bool  b3Prepare(b3_preparation_info *prep_info);
 	void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	void     b3SetupPicking(b3PickInfo *info);
 
@@ -1355,7 +1355,7 @@ public:
 	B3_ITEM_LOAD(b3CSGShape3); //!< This constructor handles deserialization.
 
 	        void     b3StoreShape();
-	        b3_bool  b3Prepare();
+	        b3_bool  b3Prepare(b3_preparation_info *prep_info);
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
 	        void     b3SetupPicking(b3PickInfo *info);
@@ -1504,7 +1504,7 @@ public:
 	        void     b3Normal(b3_ray *ray);
 	        void     b3SetupPicking(b3PickInfo *info);
 
-	        b3_bool  b3Prepare();
+	        b3_bool  b3Prepare(b3_preparation_info *prep_info);
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
 

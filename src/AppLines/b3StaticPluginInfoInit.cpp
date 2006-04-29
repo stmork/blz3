@@ -34,6 +34,7 @@
 #include "DlgBumpWater.h"
 #include "DlgBumpWave.h"
 #include "DlgBumpWood.h"
+#include "DlgBumpOcean.h"
 
 #include "DlgMatNormal.h"
 #include "DlgMatChess.h"
@@ -56,9 +57,22 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/04/29 11:25:48  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.11  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.10  2004/09/27 11:08:54  sm
 **	- Added rudimental car paint material dialog.
 **	
@@ -150,6 +164,7 @@ void b3StaticPluginInfoInit::b3Init()
 	CDlgBumpWater::b3Register ();
 	CDlgBumpWave::b3Register();
 	CDlgBumpWood::b3Register();
+	CDlgBumpOcean::b3Register();
 
 	CDlgMatNormal::b3Register();
 	CDlgMatChess::b3Register();

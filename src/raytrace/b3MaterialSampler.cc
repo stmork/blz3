@@ -32,10 +32,23 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.13  2006/03/19 14:47:18  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
-**
+**	
 **	Revision 1.12  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -107,6 +120,8 @@ b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_count tiles) : m_Tiles(t
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
 
+	m_t        = 0;
+	m_Scene    = null;
 	m_Material = null;
 	m_Tx       = tx;
 	m_xMax     = m_Tx->xSize;
@@ -127,7 +142,7 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 	b3_color     *data = (b3_color *)m_Data;
 
 	B3_ASSERT(m_Material != null);
-	m_Material->b3Prepare();
+	m_Material->b3Prepare(this);
 	yStart = 0;
 	for (i = 0;i < CPUs;i++)
 	{
@@ -157,7 +172,6 @@ void b3MaterialSampler::b3SampleTask(const b3SampleInfo *info)
 	ray.bbox           = &bbox;
 	ray.Q              = 1;
 	surface.m_Incoming = &ray;
-	bbox.b3Prepare();
 
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{

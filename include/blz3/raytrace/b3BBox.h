@@ -23,6 +23,7 @@
 #include "blz3/raytrace/b3PickInfo.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
 #include "blz3/raytrace/b3CameraProjection.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Render.h"
 
 /*************************************************************************
@@ -102,7 +103,7 @@ public:
 		   void            b3UpdateBBox();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
-		   b3_bool         b3PrepareBBox(b3_bool recursive = false);
+		   b3_bool         b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
 		   char           *b3GetName();
 		   b3_bool         b3BacktraceRecompute(b3BBox *search);
 		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);

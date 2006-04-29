@@ -34,9 +34,22 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.15  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.14  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
 **	
@@ -262,7 +275,7 @@ void CB3FloatSpinButtonCtrl::b3SetUnit(b3_unit unit)
 		break;
 
 	case B3_UNIT_BUMP:
-		b3SetRange(0.0,5.0);
+		b3SetRange(0.0,10000.0);
 		b3SetIncrement(0.001);
 		b3SetDigits(4,1);
 		break;

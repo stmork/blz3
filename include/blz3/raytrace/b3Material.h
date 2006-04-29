@@ -116,7 +116,7 @@ public:
 	 */
 	static  void    b3Register();
 	
-	virtual inline b3_bool b3Prepare()
+	virtual inline b3_bool b3Prepare(b3_preparation_info *prep_info)
 	{
 		return true;
 	}
@@ -315,7 +315,7 @@ public:
 	B3_ITEM_LOAD(b3MatTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	void    b3SetTexture(const char *name);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
@@ -348,7 +348,7 @@ public:
 	B3_ITEM_LOAD(b3MatWrapTexture); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	void    b3SetTexture(const char *name);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
@@ -420,7 +420,7 @@ public:
 	B3_ITEM_LOAD(b3MatMarble); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
@@ -474,7 +474,7 @@ public:
 	B3_ITEM_LOAD(b3MatWood); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 
 private:
@@ -506,7 +506,7 @@ public:
 	virtual ~b3MatOakPlank();
 
 	void     b3Write();
-	b3_bool  b3Prepare();
+	b3_bool  b3Prepare(b3_preparation_info *prep_info);
 	b3_bool  b3GetSurfaceValues(b3_surface *surface);
 
 private:
@@ -539,7 +539,7 @@ public:
 	B3_ITEM_LOAD(b3MatCookTorrance); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit);
 };
@@ -567,7 +567,7 @@ public:
 	B3_ITEM_LOAD(b3MatGranite); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
@@ -595,7 +595,7 @@ public:
 	B3_ITEM_LOAD(b3MatCarPaint); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit);
 
@@ -628,6 +628,8 @@ class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3
 	static b3Color   m_WaveLength;
 	static b3_vector m_ScaleTime;
 
+	b3_f64           m_t;
+
 public:
 	b3_s32           m_Flags;
 	b3_f32           m_Thickness; //!< Thickness in micro meter.
@@ -638,7 +640,7 @@ public:
 	B3_ITEM_LOAD(b3MatThinFilm); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 

@@ -103,7 +103,7 @@ public:
 	/**
 	 * This method initializes this instance to the actual time point.
 	 */
-	virtual void    b3Now() = 0;
+	virtual b3_f64  b3Now() = 0;
 
 	/**
 	 * This cast operator returns a time point in seconds since 1. January 1970 in seconds. The

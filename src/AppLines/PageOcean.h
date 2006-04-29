@@ -1,0 +1,78 @@
+/*
+**
+**	$Filename:	BumpOceanWave $
+**	$Release:	Dortmund 2006 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Ozeanwellen
+**
+**	(C) Copyright 2006  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
+#ifndef B3_PAGE_OCEANWAVE_H
+#define B3_PAGE_OCEANWAVE_H
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+// DlgBumpOceanWave.h : header file
+//
+
+#include "blz3/system/b3PropertyPage.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/system/b3FloatEdit.h"
+
+#include "blz3/system/b3IntSpinButtonCtrl.h"
+
+#include "blz3/system/b3FloatEdit.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// CDlgAuthor dialog
+
+class CPageOcean : public CB3PropertyPage
+{
+// Construction
+public:
+	b3BumpOcean  *m_Ocean;
+	CPageOcean();   // standard constructor
+// Dialog Data
+	//{{AFX_DATA(CPageOcean)
+	enum { IDD = IDD_PAGE_OCEAN };
+	CB3FloatEdit           m_A;
+	CB3FloatSpinButtonCtrl m_T;
+	CB3FloatEdit           m_Size;
+	CB3IntSpinButtonCtrl   m_Dim;
+	CB3FloatEdit           m_Wx;
+	CB3FloatEdit           m_Wy;
+	//}}AFX_DATA
+
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CPageOcean)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	//}}AFX_VIRTUAL
+
+// Implementation
+protected:
+	// Generated message map functions
+	//{{AFX_MSG(CPageOcean)
+	virtual BOOL  OnInitDialog();
+	virtual void  OnOK();
+	afx_msg void  OnDestroy();
+	afx_msg void  OnEdit();
+	afx_msg void  OnSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3UpdateUI();
+};
+
+#endif

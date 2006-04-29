@@ -35,10 +35,23 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.7  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
-**
+**	
 **	Revision 1.6  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
@@ -132,9 +145,10 @@ b3Time::b3Time(b3Time &orig)
 	m_TimePoint = orig.m_TimePoint;
 }
 
-void b3Time::b3Now()
+b3_f64 b3Time::b3Now()
 {
 	gettimeofday(&m_TimePoint,0);
+	return b3GetTime();
 }
 
 b3_f64 b3Time::b3GetTime()

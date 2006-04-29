@@ -3106,6 +3106,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DlgBumpOcean.cpp">
+			</File>
+			<File
 				RelativePath="DlgBumpTexture.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -6256,6 +6259,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\PageOcean.cpp">
+			</File>
+			<File
 				RelativePath="PageScaling.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -6522,6 +6528,9 @@
 				RelativePath="DlgBumpOakPlank.h">
 			</File>
 			<File
+				RelativePath=".\DlgBumpOcean.h">
+			</File>
+			<File
 				RelativePath="DlgBumpTexture.h">
 			</File>
 			<File
@@ -6711,6 +6720,9 @@
 				RelativePath="PageOakPlank.h">
 			</File>
 			<File
+				RelativePath=".\PageOcean.h">
+			</File>
+			<File
 				RelativePath="PageScaling.h">
 			</File>
 			<File
@@ -6764,6 +6776,9 @@
 			</File>
 			<File
 				RelativePath="res\bump_noise.ico">
+			</File>
+			<File
+				RelativePath=".\res\bump_ocean.ico">
 			</File>
 			<File
 				RelativePath="res\bump_texture.ico">

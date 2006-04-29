@@ -83,6 +83,12 @@ class b3RayRow;
 #define LENSFLARE_LOOP 6
 #define LENSFLARE_RING 2
 
+struct b3_scene_preparation : public b3_preparation_info
+{
+	b3_f64    m_t;
+	b3Scene * m_Scene;
+};
+
 /**
  * This class encapsulates a whole Blizzard III geometry.
  */
@@ -92,31 +98,32 @@ class B3_PLUGIN b3Scene : public b3Item
 	static const b3_f64 m_ResultWeights[LENSFLARE_LOOP];
 	static const b3_f64 m_Exponents[LENSFLARE_LOOP];
 
-	b3Base<b3Row>    m_RowPool;
-	b3Base<b3Row>    m_TrashPool;
-	b3PrepareInfo    m_PrepareInfo;
-	b3_vector        m_NormWidth;
-	b3_vector        m_NormHeight;
-	b3_vector        m_ViewAxis;
-	b3_f64           m_ViewAxisLen;
-	b3Path           m_SceneName;
-	b3Shader        *m_Shader;
-	b3Path           m_Filename;
-	b3Mutex          m_PoolMutex;
-	b3Mutex          m_TrashMutex;
-	b3Mutex          m_SamplingMutex;
-	b3Distribute    *m_Distributed;
-	b3Nebular       *m_Nebular;
-	b3SuperSample   *m_SuperSample;
-	b3LensFlare     *m_LensFlare;
-	b3CameraPart    *m_ActualCamera;
-	b3Clouds        *m_Clouds;
-	b3Color          m_AvrgColor;
-	b3Color          m_DiffColor;
-	b3_vector64      m_xHalfDir;
-	b3_vector64      m_yHalfDir;
-	b3_vector64      m_xStepDir;
-	b3_count         m_LightCount;
+	b3Base<b3Row>         m_RowPool;
+	b3Base<b3Row>         m_TrashPool;
+	b3PrepareInfo         m_PrepareInfo;
+	b3_scene_preparation  m_ScenePrepInfo;
+	b3_vector             m_NormWidth;
+	b3_vector             m_NormHeight;
+	b3_vector             m_ViewAxis;
+	b3_f64                m_ViewAxisLen;
+	b3Path                m_SceneName;
+	b3Shader             *m_Shader;
+	b3Path                m_Filename;
+	b3Mutex               m_PoolMutex;
+	b3Mutex               m_TrashMutex;
+	b3Mutex               m_SamplingMutex;
+	b3Distribute         *m_Distributed;
+	b3Nebular            *m_Nebular;
+	b3SuperSample        *m_SuperSample;
+	b3LensFlare          *m_LensFlare;
+	b3CameraPart         *m_ActualCamera;
+	b3Clouds             *m_Clouds;
+	b3Color               m_AvrgColor;
+	b3Color               m_DiffColor;
+	b3_vector64           m_xHalfDir;
+	b3_vector64           m_yHalfDir;
+	b3_vector64           m_xStepDir;
+	b3_count              m_LightCount;
 
 public:
 	// Camera
@@ -271,6 +278,19 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareException);
+
+	/**
+	 * This method returns info for using with all sub b3Items for initialisation
+	 * via the b3Prepare() method call.
+	 * 
+	 * \return The scene's preparation info.
+	 */
+	inline b3_scene_preparation *b3GetPrepareInfo()
+	{
+		m_ScenePrepInfo.m_Scene = this;
+		m_ScenePrepInfo.m_t     = b3GetTimePoint();
+		return &m_ScenePrepInfo;
+	}
 
 	/**
 	 * This method simply raytraces the scene onto the given display.

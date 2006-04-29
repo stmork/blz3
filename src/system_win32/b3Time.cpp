@@ -34,9 +34,22 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.14  2006/03/05 21:22:37  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.13  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -294,9 +307,10 @@ b3Time::b3Time(b3Time &orig)
 	m_TimePoint = orig.m_TimePoint;
 }
 
-void b3Time::b3Now()
+b3_f64 b3Time::b3Now()
 {
 	ftime(&m_TimePoint);
+	return b3GetTime();
 }
 
 b3_f64 b3Time::b3GetTime()

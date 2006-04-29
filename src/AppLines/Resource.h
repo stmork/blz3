@@ -103,17 +103,23 @@
 #define IDD_TORUS                       673
 #define IDD_UNDO_REDO                   674
 #define IDD_MAT_CAR_PAINT               675
+#define IDD_BUMP_OCEANWAVE              676
+#define IDD_BUMP_OCEAN                  676
+#define IDD_PAGE_OCEANWAVE              677
+#define IDD_PAGE_OCEAN                  677
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
 #define IDI_BBOX_SUB                    1004
 #define IDI_BBOX_S_SHAPES               1005
+#define IDC_B3OCEANWAVE_A               1005
 #define IDI_BBOX_S_SHAPES_SUB           1006
 #define IDI_BBOX_WORLD                  1007
 #define IDI_BUMP_GLOSSY                 1008
 #define IDI_BUMP_GROOVE                 1009
 #define IDI_BUMP_MARBLE                 1010
 #define IDI_BUMP_NOISE                  1011
+#define IDC_B3OCEANWAVE_DIM             1011
 #define IDI_BUMP_TEXTURE                1012
 #define IDI_BUMP_WATER                  1013
 #define IDI_BUMP_WAVE                   1014
@@ -161,6 +167,8 @@
 #define IDI_SHAPE_TRIANGLES             1056
 #define IDI_UP                          1057
 #define IDI_MAT_CAR_PAINT               1058
+#define IDI_BUMP_WATER1                 1059
+#define IDI_BUMP_OCEAN                  1059
 #define ID_ACTIVATE                     10000
 #define ID_ACTIVATE_ALL                 10001
 #define ID_ACT_SELECT                   10002
@@ -722,6 +730,12 @@
 #define IDC_SPIN_METALLIC               32430
 #define IDC_METALLIC                    32431
 #define IDC_ALLOW_VBO                   32432
+#define IDC_B3OCEANWAVE_T               32433
+#define IDC_B3OCEANWAVE_T_SPIN          32434
+#define IDC_B3OCEANWAVE_SIZE            32435
+#define IDC_B3OCEANWAVE_DIM_SPIN        32436
+#define IDC_B3OCEANWAVE_WX              32437
+#define IDC_B3OCEANWAVE_WY              32438
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -947,13 +961,15 @@
 #define IDS_OP_SHAPE_CONDITION_EDIT     61458
 #define IDS_OP_SHAPE_COPY_PROPERTY      61459
 #define IDS_BBOX_UNNAMED                61460
+#define IDS_BUMP_OCEANWAVE              61461
+#define IDS_BUMP_OCEAN                  61461
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        123
+#define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10128
 #define _APS_NEXT_CONTROL_VALUE         32433
 #define _APS_NEXT_SYMED_VALUE           60209

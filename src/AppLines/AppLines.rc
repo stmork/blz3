@@ -131,6 +131,7 @@ IDI_BUMP_WAVE           ICON                    "res\\bump_wave.ico"
 IDI_BUMP_NOISE          ICON                    "res\\bump_noise.ico"
 IDI_MAT_THIN_FILM       ICON                    "res\\mat_thin_film.ico"
 IDI_MAT_CAR_PAINT       ICON                    "res\\mat_car_paint.ico"
+IDI_BUMP_OCEAN          ICON                    "res\\bump_ocean.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2379,10 +2380,10 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
 END
 
-IDD_PAGE_OAKPLANK DIALOG  0, 0, 177, 126
+IDD_PAGE_OAKPLANK DIALOGEX 0, 0, 177, 126
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Parkettierung"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     GROUPBOX        "Parkettierung in %:",IDC_STATIC,10,10,75,105
     LTEXT           "Breite",IDC_STATIC,25,20,19,8
@@ -3025,6 +3026,46 @@ BEGIN
     LTEXT           "Stärke",IDC_STATIC,325,220,22,8
 END
 
+IDD_BUMP_OCEAN DIALOGEX 0, 0, 567, 271
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ozeanwellen"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    320,10,235,200
+    LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
+END
+
+IDD_PAGE_OCEAN DIALOGEX 0, 0, 167, 101
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ozeanwellen"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "spez. Wellenfaktor:",IDC_STATIC,12,6,66,8
+    EDITTEXT        IDC_B3OCEANWAVE_A,12,18,45,12,ES_AUTOHSCROLL
+    LTEXT           "Periodendauer (in Sek.):",IDC_STATIC,12,36,78,8
+    EDITTEXT        IDC_B3OCEANWAVE_T,12,48,45,12,ES_AUTOHSCROLL
+    CONTROL         "",IDC_B3OCEANWAVE_T_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,59,47,11,14
+    LTEXT           "geom. Feldgröße:",IDC_STATIC,12,66,66,8
+    EDITTEXT        IDC_B3OCEANWAVE_SIZE,12,78,45,12,ES_AUTOHSCROLL
+    LTEXT           "Felddimension:",IDC_STATIC,96,6,65,8
+    EDITTEXT        IDC_B3OCEANWAVE_DIM,96,18,45,12,ES_AUTOHSCROLL
+    CONTROL         "",IDC_B3OCEANWAVE_DIM_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,144,18,11,14
+    LTEXT           "Querwindrichtung:",IDC_STATIC,96,36,65,8
+    EDITTEXT        IDC_B3OCEANWAVE_WX,96,48,45,12,ES_AUTOHSCROLL
+    LTEXT           "Längswindrichtung:",IDC_STATIC,96,66,71,8
+    EDITTEXT        IDC_B3OCEANWAVE_WY,96,78,45,12,ES_AUTOHSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3647,6 +3688,22 @@ BEGIN
         RIGHTMARGIN, 485
         TOPMARGIN, 7
         BOTTOMMARGIN, 264
+    END
+
+    IDD_BUMP_OCEAN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 560
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 264
+    END
+
+    IDD_PAGE_OCEAN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 160
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -4343,6 +4400,7 @@ BEGIN
     IDS_OP_SHAPE_CONDITION_EDIT "Stanzung ändern"
     IDS_OP_SHAPE_COPY_PROPERTY "Eigenschaften verteilen"
     IDS_BBOX_UNNAMED        "Unbenannt"
+    IDS_BUMP_OCEAN          "Ozeanwellen"
 END
 
 #endif    // Deutsch (Deutschland) resources

@@ -59,7 +59,7 @@ class b3Time : public b3TimeAbstract
 public:
 	        b3Time();
 			b3Time(b3Time &orig);
-	void    b3Now();
+	b3_f64  b3Now();
 	b3_f64  b3GetTime();
 	b3Time &operator=(b3Time &orig);
 };

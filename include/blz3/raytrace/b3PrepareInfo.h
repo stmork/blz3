@@ -21,6 +21,7 @@
 #include "blz3/system/b3Thread.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3List.h"
+#include "blz3/base/b3World.h"
 
 class b3Scene;
 class b3BBox;
@@ -63,7 +64,7 @@ typedef b3Exception<b3_error_prepare,0x505250> b3PrepareException;
 /**
  * This class handles multi threaded preparation of bounding boxes.
  */
-class B3_PLUGIN b3PrepareInfo
+class B3_PLUGIN b3PrepareInfo : b3_preparation_info
 {
 	b3Thread                *m_Threads;
 	b3PrepareProc            m_PrepareProc;

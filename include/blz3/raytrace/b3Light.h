@@ -100,7 +100,7 @@ public:
 	static void     b3Register();
 	       void     b3Write();
 		   void     b3Dump(b3_count level);
-	       b3_bool  b3Prepare();
+	       b3_bool  b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method returns the lights name.

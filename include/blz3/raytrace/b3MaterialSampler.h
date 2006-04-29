@@ -19,14 +19,14 @@
 #define B3_RAYTRACE_MATERIALSAMPLER_H
 
 #include "blz3/image/b3Sampler.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Material.h"
 
 /**
  * This class implements the sampling of a material into a texture.
  */
-class b3MaterialSampler : public b3Sampler
+class b3MaterialSampler : public b3Sampler, protected b3_scene_preparation
 {
-	static const b3_count DEFAULT_MATERIAL_TILES = 3;
+	static const b3_count        DEFAULT_MATERIAL_TILES = 3;
 
 protected:
 	      b3Tx       *m_Tx;       //!< The image to sample in.
@@ -48,6 +48,16 @@ public:
 	 * @param material The material to sample.
 	 */
 	void          b3SetMaterial(b3Material *material);
+
+	/**
+	 * This method sets the actual time point.
+	 *
+	 * @param t The new time point
+	 */
+	inline void   b3SetTime(const b3_f64 t)
+	{
+		m_t = t;
+	}
 
 protected:
 	b3SampleInfo *b3SampleInit(const b3_count CPUs);

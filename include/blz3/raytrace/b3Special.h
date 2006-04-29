@@ -121,7 +121,7 @@ public:
 	B3_ITEM_LOAD(b3CameraPart); //!< This constructor handles deserialization.
 
 	void     b3Write();
-	b3_bool  b3Prepare();
+	b3_bool  b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method orientates the camera to the given values. The internal vectors
@@ -249,7 +249,7 @@ public:
 	B3_ITEM_LOAD(b3Nebular); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method returns the activation state.
@@ -712,7 +712,7 @@ public:
 	B3_ITEM_LOAD(b3CloudBackground); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	b3_bool b3Prepare();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 };
 
 #endif

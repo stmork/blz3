@@ -31,9 +31,22 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.60  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.59  2005/12/19 10:45:18  sm
 **	- Some locale specified.
 **	
@@ -313,10 +326,14 @@
 
 b3Shader::b3Shader(b3Scene *scene) : m_Scene(scene)
 {
-	b3Prepare();
+	b3_scene_preparation info;
+
+	info.m_Scene = scene;
+	info.m_t     = scene->b3GetTimePoint();
+	b3Prepare(&info);
 }
 
-void b3Shader::b3Prepare()
+void b3Shader::b3Prepare(b3_preparation_info *prep_info)
 {
 	m_Nebular    = m_Scene->m_Nebular;
 	m_TraceDepth = m_Scene->m_TraceDepth;
@@ -339,7 +356,6 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 
 	surface->m_ReflRay.pos    = surface->m_Incoming->ipoint;
 	surface->m_ReflRay.inside = surface->m_Incoming->inside;
-	surface->m_ReflRay.t      = surface->m_Incoming->t;
 	surface->m_Transparent    = false;
 
 	// Use only sharp angles
@@ -369,7 +385,6 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 
 				surface->m_RefrRay.pos    =  surface->m_Incoming->ipoint;
 				surface->m_RefrRay.inside = !surface->m_Incoming->inside;
-				surface->m_RefrRay.t      =  surface->m_Incoming->t;
 				surface->m_Transparent    = true;
 			}
 		}
@@ -380,7 +395,6 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 			surface->m_RefrRay.pos    =  surface->m_Incoming->ipoint;
 			surface->m_RefrRay.dir    =  surface->m_Incoming->dir;
 			surface->m_RefrRay.inside = !surface->m_Incoming->inside;
-			surface->m_RefrRay.t      =  surface->m_Incoming->t;
 			surface->m_Transparent    = true;
 		}
 	}

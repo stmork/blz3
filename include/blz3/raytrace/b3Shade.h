@@ -51,7 +51,7 @@ public:
 	/**
 	 * This method prepares the shader for use.
 	 */
-	virtual void            b3Prepare();
+	virtual void            b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method collects all necessary values for shading. These components are:
@@ -207,7 +207,7 @@ public:
 	 */
 	b3ShaderMork(b3Scene *scene);
 
-	void     b3Prepare();
+	void     b3Prepare(b3_preparation_info *prep_info);
 
 protected:
 	void     b3ShadeSurface(b3_surface *surface,b3_count depth);
@@ -235,7 +235,7 @@ public:
 	 */
 	b3ShaderMork2(b3Scene *scene);
 
-	void     b3Prepare();
+	void     b3Prepare(b3_preparation_info *prep_info);
 
 protected:
 	void     b3ShadeSurface(b3_surface *surface,b3_count depth);

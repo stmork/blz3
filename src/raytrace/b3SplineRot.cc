@@ -31,6 +31,19 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2006/04/29 11:25:49  sm
+**      - Added ocean bump to main packet.
+**      - b3Prepare signature: Added further initialization information
+**        for animation preparation
+**      - Added test module for ocean waves.
+**      - Added module for random number generation.
+**      - Adjusted material and bump sampler to reflect preparation
+**        signature change.
+**      - Added OpenGL test program for ocean waves.
+**      - Changed Phillips spectrum computation to be independent
+**        from time.
+**      - Interpolated height field for ocean waves.
+**
 **      Revision 1.31  2006/03/27 10:32:06  smork
 **      - Renamed member variables of spline template class.
 **
@@ -263,7 +276,7 @@ void b3SplineRotShape::b3Init(
 	m_Spline.b3InitCurve(Degree,ControlNum,Closed);
 }
 
-b3_bool b3SplineRotShape::b3Prepare() throw(b3WorldException)
+b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info *prep_info) throw(b3WorldException)
 {
 	b3Spline     MySpline;
 	b3_triangle *Triangle;
@@ -335,7 +348,7 @@ b3_bool b3SplineRotShape::b3Prepare() throw(b3WorldException)
 	m_ySize = MySpline.m_SubDiv;
 	m_Flags = PHONG;
 
-	return b3TriangleShape::b3Prepare();
+	return b3TriangleShape::b3Prepare(prep_info);
 }
 
 void b3SplineRotShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)

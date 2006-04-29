@@ -1,30 +1,31 @@
 /*
 **
-**	$Filename:	b3Water.cc $
+**	$Filename:	TestOcean.cc $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Simple water bump map
+**	Blizzard III - Animating ocean water
 **
 **	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved
-**
-**
 **
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III includes                         **
+**                        Lines III includes                            **
 **                                                                      **
 *************************************************************************/
 
-#include "b3BaseInclude.h"
-#include "blz3/base/b3Water.h"
-#include "blz3/base/b3Procedure.h"
+#include "blz3/system/b3DisplayView.h"
+#include "blz3/system/b3Time.h"
+#include "blz3/image/b3Sampler.h"
+#include "blz3/base/b3Math.h"
+#include "blz3/base/b3OceanWave.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,7 +35,7 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2006/04/29 11:25:49  sm
+**	Revision 1.1  2006/04/29 11:25:50  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
 **	  for animation preparation
@@ -47,54 +48,57 @@
 **	  from time.
 **	- Interpolated height field for ocean waves.
 **
-**	Revision 1.1  2006/04/18 15:48:59  sm
-**	- Extracted from procedure module:
-**	  o clouds
-**	  o ocean waves
-**	  o water
-**	
 **
 */
 
-
 /*************************************************************************
 **                                                                      **
-**                        Water default values                          **
+**                        b3TestOceanWave implementation                **
 **                                                                      **
 *************************************************************************/
 
-b3Water::b3Water()
+int main(int argc, char *argv[])
 {
-	m_Km        = 1.0f;
-	m_Octaves   = 2;
-	m_ScaleTime = 1;
-	m_WindFreq  = 0.5;
-	m_WindAmp   = 0.2f;
-	m_MinWind   = 1.0f;
-	b3Vector::b3Init(&m_Anim,1.5f,1.5f,4.0f);
-	b3PrepareWater(0.0);
-}
+	b3Display   *display;
+	b3OceanWave  wave;
 
-void b3Water::b3PrepareWater(const b3_f64 t)
-{
-	m_Factor = 10 * m_WindFreq;
-	m_t      = t;
-}
+	wave.m_Dim = 8;
+//	b3Log::b3SetLevel(B3LOG_FULL);
 
-b3_f64 b3Water::b3ComputeWater(const b3_vector *point)
-{
-	b3_vector P;
-	b3_f64    offset,turbulence;
+	try
+	{
+		b3Tx   tx;
+		b3_res xMax, yMax;
+		
+		xMax = yMax = 1 << wave.m_Dim;
+		
+		// Create display
+		display = new b3DisplayView(xMax, yMax, "OceanWave");
+		
+		tx.b3AllocTx(xMax, yMax, 128);
+		
+		b3Time now;
+		b3_f64 time_start = now.b3GetTime(),time_diff;
 
-	P.x = point->x * m_Factor + m_t * m_Anim.x;
-	P.y = point->y * m_Factor + m_t * m_Anim.y;
-	P.z = point->z * m_Factor + m_t * m_Anim.z * m_ScaleTime;
-	offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P,m_Octaves,2.0,1.0);
+		do
+		{
+			now.b3Now();
+			time_diff = now.b3GetTime() - time_start;
+			b3PrintF(B3LOG_NORMAL, "t=%3.3f\n",time_diff);
 
-	P.x *= 8;
-	P.y *= 8;
-	P.z *= 8;
-	turbulence = b3Noise::b3Turbulence(&P, 3);
+			wave.b3PrepareOceanWave(time_diff);
+			wave.b3GetBuffer(&tx, 1.0);
+			display->b3PutTx(&tx);
+		}
+		while(!display->b3IsCancelled(xMax,yMax));
 
-	return (m_MinWind + m_WindAmp * turbulence) * offset;
+		// Delete Display
+		delete display;
+	}
+	catch(b3DisplayException &e)
+	{
+		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
+	}
+
+	return EXIT_SUCCESS;
 }

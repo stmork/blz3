@@ -11,7 +11,9 @@ LIBS			= @LIBS@
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= TestIo TestThread Mandel TestOcean TestData TestUtil TestFilter TestVector TestMaterial TestSampler TestWood TestWater
+PRGS			=\
+	TestIo TestThread Mandel TestOcean TestData TestUtil\
+	TestFilter TestVector TestMaterial TestSampler TestWood TestWater TestWave
 
 PRG_SOURCE	=\
 	TestIo.cc\
@@ -26,19 +28,21 @@ PRG_SOURCE	=\
 	TestSampler.cc\
 	TestThread.cc\
 	TestWater.cc\
+	TestWave.cc\
 	TestWood.cc
 
 TESTDATA_OBJS		= TestData.o
+TESTFILTER_OBJS		= TestFilter.o
+TESTIO_OBJS		= TestIo.o
 TESTMATERIAL_OBJS	= TestMaterial.o
 TESTOCEAN_OBJS		= TestOcean.o
 TESTSAMPLER_OBJS	= TestSampler.o
-TESTWATER_OBJS		= TestWater.o
-TESTWOOD_OBJS		= TestWood.o
-TESTFILTER_OBJS		= TestFilter.o
-TESTIO_OBJS		= TestIo.o
 TESTTHREAD_OBJS		= TestThread.o
 TESTUTIL_OBJS		= TestUtil.o
 TESTVECTOR_OBJS		= TestVector.o
+TESTWATER_OBJS		= TestWater.o
+TESTWAVE_OBJS		= TestWave.o
+TESTWOOD_OBJS		= TestWood.o
 MANDEL_OBJS		= Mandel.o b3Mandel.o
 
 all:	$(PRGS)
@@ -49,13 +53,25 @@ depend:
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
-TestIo:	$(TESTIO_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
 TestData:	$(TESTDATA_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestFilter:	$(TESTFILTER_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestIo:	$(TESTIO_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestMaterial:	$(TESTMATERIAL_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestOcean:	$(TESTOCEAN_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestSampler:	$(TESTSAMPLER_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestThread:	$(TESTTHREAD_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestUtil:	$(TESTUTIL_OBJS) $(B3_LIB_BASE)
@@ -64,19 +80,10 @@ TestUtil:	$(TESTUTIL_OBJS) $(B3_LIB_BASE)
 TestVector:	$(TESTVECTOR_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
-TestThread:	$(TESTTHREAD_OBJS) $(B3_LIB_BASE)
+TestWater:	$(TESTWATER_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
-TestSampler:	$(TESTSAMPLER_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
-TestWater:	$(TESTWATER_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
-TestOcean:	$(TESTOCEAN_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
-TestMaterial:	$(TESTMATERIAL_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
+TestWave:	$(TESTWAVE_OBJS)  $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestWood:	$(TESTWOOD_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)

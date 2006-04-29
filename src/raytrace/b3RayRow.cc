@@ -33,9 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.21  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.20  2005/12/05 22:12:24  sm
 **	- More const declarations.
 **	
@@ -178,7 +191,6 @@ void b3RayRow::b3Raytrace()
 	{
 		ray.dir    = m_preDir;
 		ray.inside = false;
-		ray.t      = m_t;
 
 		m_buffer[x] = b3Shade(&ray, fx, m_fy);
 
@@ -258,7 +270,6 @@ void b3SupersamplingRayRow::b3Raytrace()
 	{
 		ray.dir    = dir;
 		ray.inside = false;
-		ray.t      = m_t;
 
 		m_ThisResult[x] = b3Shade(&ray,fxRight,m_fy);
 
@@ -382,19 +393,16 @@ inline void b3SupersamplingRayRow::b3Refine(const b3_bool this_row)
 		{
 			ray.dir    = *b3Vector::b3Add(&m_Scene->m_yHalfDir, &dir);
 			ray.inside = false;
-			ray.t      =  m_t;
 
 			m_ThisResult[x] += b3Shade(&ray,fxRight,fyUp);
 
 			ray.dir    = *b3Vector::b3Sub(&m_Scene->m_xHalfDir, &dir);
 			ray.inside = false;
-			ray.t      =  m_t;
 
 			m_ThisResult[x] += b3Shade(&ray,fxLeft,fyUp);
 
 			ray.dir    = *b3Vector::b3Sub(&m_Scene->m_yHalfDir, &dir);
 			ray.inside = false;
-			ray.t      =  m_t;
 
 			m_ThisResult[x]  = (m_ThisResult[x] + b3Shade(&ray,fxLeft,fyDown)) * 0.25f;
 
@@ -479,7 +487,6 @@ void b3DistributedRayRow::b3Raytrace()
 
 			b3Vector::b3LinearCombine(&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir, sx, sy, &ray.dir);
 			ray.inside = false;
-			ray.t      = m_t;
 
 			result += b3Shade (&ray,fx + sx,m_fy + sy);
 		}
@@ -565,7 +572,6 @@ void b3MotionBlurRayRow::b3Raytrace()
 
 				b3Vector::b3LinearCombine(&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir, sx, sy, &ray.dir);
 				ray.inside = false;
-				ray.t      = m_t;
 
 				m_Color[x]  += b3Shade(&ray,fx + sx,m_fy + sy);
 				m_buffer[x]  = m_Color[x] / m_SPP;

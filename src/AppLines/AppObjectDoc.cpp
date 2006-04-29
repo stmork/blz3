@@ -38,9 +38,22 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2006/04/29 11:25:48  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.60  2006/03/26 17:58:23  sm
 **	- Edit object from hierarchy tree caused a race. Fixed now.
-**
+**	
 **	Revision 1.59  2006/03/25 22:11:20  sm
 **	- Fix shape/object creation problem in object editor.
 **	- Added double click option in hierarchy tree.
@@ -401,6 +414,19 @@ b3_u32 CAppObjectDoc::b3GetParentShading()
 	return (m_LinesDoc != null) && (m_LinesDoc->m_Scene != null) ? m_LinesDoc->m_Scene->b3GetClassType() : TRACEPHOTO_MORK;
 }
 
+b3_scene_preparation *CAppObjectDoc::b3GetScenePrepInfo()
+{
+	b3Scene *scene = b3GetParentScene();
+
+	if (scene != null)
+	{
+		return scene->b3GetPrepareInfo();
+	}
+	m_ScenePrepInfo.m_Scene = null;
+	m_ScenePrepInfo.m_t     = 0;
+	return &m_ScenePrepInfo;
+}
+
 BOOL CAppObjectDoc::OnNewDocument()
 {
 	if (!CAppRenderDoc::OnNewDocument())
@@ -449,7 +475,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 	bbox->b3SetupVertexMemory(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
 
 	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	bbox->b3PrepareBBox(true);
+	bbox->b3PrepareBBox(b3GetScenePrepInfo(), true);
 	bbox->b3Update();
 	bbox->b3Inverse(&m_OriginalPosition);
 
@@ -656,7 +682,7 @@ void CAppObjectDoc::b3Prepare(
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
 
 		prep.b3CollectBBoxes(m_BBox);
-		prep.b3Prepare(b3Scene::b3PrepareBBoxThread);
+		prep.b3Prepare(b3Scene::b3PrepareBBoxThread, b3GetScenePrepInfo());
 	}
 
 	if (geometry_changed || structure_changed)
@@ -956,8 +982,10 @@ void CAppObjectDoc::b3UpdateSurface(b3Shape *shape)
 {
 	if (shape != null)
 	{
+		b3GetParentScene();
+
 		SetModifiedFlag();
-		shape->b3Prepare();
+		shape->b3Prepare(b3GetScenePrepInfo());
 		shape->b3RecomputeMaterial();
 		shape->b3UpdateMaterial();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);

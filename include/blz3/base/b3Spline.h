@@ -81,6 +81,14 @@ class B3_PLUGIN b3SplineVector
 {
 public:
 	/**
+	 * This method initializes the given scalar to 0.
+	 */
+	static inline void b3Clear(b3_f64 *scalar)
+	{
+		*scalar = 0;
+	}
+
+	/**
 	 * This method initializes the given vector to 0.
 	 */
 	static inline void b3Clear(b3_vector *vector)
@@ -101,10 +109,25 @@ public:
 		vector->w = 0;
 	}
 
+	/**
+	 * This method does nothing.
+	 */
+	static inline void b3Homogenize(b3_f64 *vector)
+	{
+	}
+
+	/**
+	 * This method does nothing.
+	 */
 	static inline void b3Homogenize(b3_vector *vector)
 	{
 	}
 
+	/**
+	 * This method homogenizes the given vector.
+	 *
+	 * @param vector The vector to homogenize.
+	 */
 	static inline void b3Homogenize(b3_vector4D *vector)
 	{
 		register b3_f32 w;
@@ -114,6 +137,14 @@ public:
 		vector->x = (b3_f32)(vector->x * w);
 		vector->y = (b3_f32)(vector->y * w);
 		vector->z = (b3_f32)(vector->z * w);
+	}
+
+	static inline void b3Sub(
+		const b3_f64 *aVec,
+		const b3_f64 *bVec,
+		      b3_f64 *result)
+	{
+		*result = *aVec - *bVec;
 	}
 
 	static inline void b3Sub(
@@ -160,6 +191,14 @@ public:
 	}
 
 	static inline void b3AddScaled(
+		const b3_f32  factor,
+		const b3_f64 *offset,
+		      b3_f64 *vector)
+	{
+		*vector = *vector + factor * *offset;
+	}
+
+	static inline void b3AddScaled(
 		const b3_f32     factor,
 		const b3_vector *offset,
 		      b3_vector *vector)
@@ -201,6 +240,15 @@ public:
 	}
 
 	static inline void b3LinearCombine(
+		const b3_f64 *a,
+		const b3_f64 *b,
+		const b3_f64  factor,
+		      b3_f64 *result)
+	{
+		*result = *a + factor * *b;
+	}
+
+	static inline void b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f32     b,
@@ -234,7 +282,17 @@ public:
 #endif
 	}
 
-	static inline void b3Mix(b3_vector *result,
+	static inline void b3Mix(
+		      b3_f64 *result,
+		const b3_f64 *a,
+		const b3_f64 *b,
+		const b3_f64  f)
+	{
+		*result = *a + f * (*b - *a);
+	}
+
+	static inline void b3Mix(
+		      b3_vector *result,
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f32     f)
@@ -244,7 +302,8 @@ public:
 		result->z = aVec->z + f * (bVec->z - aVec->z);
 	}
 
-	static inline void b3Mix(b3_vector4D *result,
+	static inline void b3Mix(
+		      b3_vector4D *result,
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
 		const b3_f32       f)
@@ -376,7 +435,7 @@ public:
 		return result * scale;
 	}
 
-	b3_bool b3InitCurve(const b3_count Degree,const b3_count ControlNum,const b3_bool Closed)
+	b3_bool b3InitCurve(const b3_count Degree,const b3_count ControlNum,const b3_bool Closed, const b3_count Offset = 1)
 	{
 		b3_index  i;
 
@@ -399,10 +458,11 @@ public:
 		bspline_errno = B3_BSPLINE_OK;
 
 		// Copy values
-		m_Degree      = Degree;
+		m_Degree     = Degree;
 		m_ControlNum = ControlNum;
 		m_KnotNum    = ControlNum + Degree + 1;
-		m_Closed      = Closed;
+		m_Closed     = Closed;
+		m_Offset     = Offset;
 
 		// Create knot vector
 		for (i=0;i < m_KnotMax;i++)
@@ -637,7 +697,7 @@ public:
 	 * @param it     Array where to store the basis function coefficents
 	 * @param qStart Parameter value inside the curve
 	 */
-	b3_index  b3Mansfield(b3_f64 *it,b3_f64 qStart)
+	b3_index  b3Mansfield(b3_f64 *it, b3_f64 qStart)
 	{
 		b3_index  l,i,j,k;
 		b3_knot	  r,denom,q,diff;
@@ -700,7 +760,11 @@ public:
 	 * @param i      Knot index returned by b3Mansfield()
 	 * @param index  Start index of control points
 	 */
-	void b3MansfieldVector(VECTOR *point,b3_f64 *it,b3_index i,b3_index index)
+	void b3MansfieldVector(
+		VECTOR   *point,
+		b3_f64   *it,
+		b3_index  i,
+		b3_index  index)
 	{
 		b3_index  l,j;
 		VECTOR   *ctrls;
@@ -1371,6 +1435,7 @@ private:
 	}
 };
 
+typedef b3SplineTemplate<b3_f64>      b3Curve;
 typedef b3SplineTemplate<b3_vector>   b3Spline;
 typedef b3SplineTemplate<b3_vector4D> b3Nurbs;
 

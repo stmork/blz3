@@ -33,9 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/04/29 11:25:50  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.8  2005/01/04 15:13:59  smork
 **	- Changed some data types.
-**
+**	
 **	Revision 1.7  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -115,7 +128,7 @@ public:
 	{
 		b3Scene          *scene = new b3Scene(TRACEPHOTO_MORK);
 		b3BBox           *bbox  = new b3BBox(BBOX);
-		b3SplineRotShape *big = new b3SplineRotShape(SPLINE_ROT);
+		b3SplineRotShape *big   = new b3SplineRotShape(SPLINE_ROT);
 		b3Area           *area  = new b3Area(AREA);
 		b3MatChess       *chess = new b3MatChess(CHESS);
 		b3Light          *light = new b3Light(SPOT_LIGHT);

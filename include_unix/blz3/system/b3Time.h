@@ -52,7 +52,7 @@ public:
 	 * This copy constructor copies the time from another instance.
 	 */
 	b3Time(b3Time &orig);
-	void    b3Now();
+	b3_f64  b3Now();
 	b3_f64  b3GetTime();
 
 	/**

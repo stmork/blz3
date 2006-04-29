@@ -31,6 +31,19 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2006/04/29 11:25:49  sm
+**      - Added ocean bump to main packet.
+**      - b3Prepare signature: Added further initialization information
+**        for animation preparation
+**      - Added test module for ocean waves.
+**      - Added module for random number generation.
+**      - Adjusted material and bump sampler to reflect preparation
+**        signature change.
+**      - Added OpenGL test program for ocean waves.
+**      - Changed Phillips spectrum computation to be independent
+**        from time.
+**      - Interpolated height field for ocean waves.
+**
 **      Revision 1.51  2006/03/27 10:32:06  smork
 **      - Renamed member variables of spline template class.
 **
@@ -432,7 +445,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
 	b3Spline::b3DeBoorSurfaceControl (&m_Spline[0],&m_Spline[1],ControlArray);
-	MySpline          = m_Spline[0];
+	MySpline            = m_Spline[0];
 	MySpline.m_Offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]);
 	MySpline.m_Controls = ControlArray;
 
@@ -753,7 +766,7 @@ void b3SplineShape::b3SetupGrid(b3PickInfo *info)
 	}
 }
 
-b3_bool b3SplineShape::b3Prepare() throw(b3WorldException)
+b3_bool b3SplineShape::b3Prepare(b3_preparation_info *prep_info) throw(b3WorldException)
 {
 	b3_vertex   *Vertex;
 	b3_triangle *Triangle;
@@ -833,5 +846,5 @@ b3_bool b3SplineShape::b3Prepare() throw(b3WorldException)
 
 	b3Item::b3Free(Between);
 
-	return b3TriangleShape::b3Prepare();
+	return b3TriangleShape::b3Prepare(prep_info);
 }

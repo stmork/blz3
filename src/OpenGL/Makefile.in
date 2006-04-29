@@ -1,27 +1,29 @@
 # Beispiel Makefile
 
-BLZ3_LIB		= @BLZ3_LIB@
-BLZ3_BIN		= @BLZ3_BIN@
-CC				= @CC@
-CXX				= @CXX@
-CPPFLAGS		= @CPPFLAGS@
-LDFLAGS			= @LDFLAGS@
-LIBS			= @LIBS@ @GLUTLIBS@
-prefix			= @prefix@
-exec_prefix		= @exec_prefix@
+BLZ3_LIB	= @BLZ3_LIB@
+BLZ3_BIN	= @BLZ3_BIN@
+CC		= @CC@
+CXX		= @CXX@
+CPPFLAGS	= @CPPFLAGS@
+LDFLAGS		= @LDFLAGS@
+LIBS		= @LIBS@ @GLUTLIBS@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
 
-SIMPLE_OBJ		= simple.o
-SIMPLE_SRC		= simple.cc
-RENDER_OBJ		= render.o
-RENDER_SRC		= render.cc
+SIMPLE_OBJ	= simple.o
+SIMPLE_SRC	= simple.cc
+RENDER_OBJ	= render.o
+RENDER_SRC	= render.cc
 MATRIX_TEST_SRC	= matrix_test.cc
 MATRIX_TEST_OBJ	= matrix_test.o
-PRG_SOURCE		= $(SIMPLE_SRC) $(RENDER_SRC) $(MATRIX_TEST_SRC)
+OCEAN_OBJ	= ocean.o
+OCEAN_SRC	= ocean.cc
+PRG_SOURCE	= $(SIMPLE_SRC) $(RENDER_SRC) $(MATRIX_TEST_SRC) $(OCEAN_SRC)
 
-B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
+B3_LIB_BASE	= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= simple render matrix_test
+PRGS		= simple render matrix_test ocean
 INSTALL_PRGS	= render
 
 all:	$(PRGS)
@@ -44,6 +46,9 @@ simple:	$(SIMPLE_OBJ) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 matrix_test:	$(MATRIX_TEST_OBJ) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+ocean:	$(OCEAN_OBJ) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep

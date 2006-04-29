@@ -27,6 +27,7 @@
 class B3_PLUGIN b3Water
 {
 	b3_f64    m_Factor;
+	b3_f64    m_t;
 
 public:
 	b3_count  m_Octaves;    //!< The number of octaves to use for b3Turbulence().
@@ -45,18 +46,19 @@ public:
 
 	/**
 	 * This method precomputes some calculation invariant values.
+	 *
+	 * @param time The time point for animation.
 	 */
-	void   b3PrepareWater();
+	void   b3PrepareWater(const b3_f64 time);
 
 	/**
 	 * This method returns a water value in range [0..1]. This value
 	 * is a relative height value.
 	 *
 	 * @param point The position in space.
-	 * @param time The time point for animation.
 	 * @return The water height.
 	 */
-	b3_f64 b3ComputeWater(const b3_vector *point, const b3_f64 time);
+	b3_f64 b3ComputeWater(const b3_vector *point);
 };
 
 #endif

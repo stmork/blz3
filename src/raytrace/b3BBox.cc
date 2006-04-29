@@ -33,10 +33,23 @@
 
 /*
 **	$Log$
+**	Revision 1.116  2006/04/29 11:25:49  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.115  2006/03/19 14:47:18  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
-**
+**	
 **	Revision 1.114  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -669,7 +682,7 @@ void b3BBox::b3Write()
 	b3StoreString(m_BoxURL, B3_BOXSTRINGLEN);
 }
 
-b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
+b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation *scene_prep, b3_bool recursive)
 {
 	b3Item     *item;
 	b3Shape    *shape;
@@ -681,7 +694,7 @@ b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
-		if (!shape->b3Prepare())
+		if (!shape->b3Prepare(scene_prep))
 		{
 			b3PrintF(B3LOG_NORMAL,
 				"Shape not initialized [%s].\n",
@@ -718,7 +731,7 @@ b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
 		B3_FOR_BASE(b3GetBBoxHead(),item)
 		{
 			bbox = (b3BBox *)item;
-			if (!bbox->b3PrepareBBox(recursive))
+			if (!bbox->b3PrepareBBox(scene_prep, recursive))
 			{
 				return false;
 			}

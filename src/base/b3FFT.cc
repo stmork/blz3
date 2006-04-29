@@ -34,9 +34,22 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/04/29 11:25:48  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.3  2006/04/17 16:36:34  sm
 **	- Importing FFT and ocean waves into Windows project.
-**
+**	
 **	Revision 1.2  2006/04/17 14:42:46  sm
 **	- Completed ocean waves. I see ocean waves. They are not nice but
 **	  I can see them!
@@ -279,16 +292,24 @@ void b3Fourier::b3AllocBuffer(b3Tx *tx)
 	}
 }
 
-b3_bool b3Fourier::b3AllocBuffer(b3_res size, b3_fourier_type new_type)
+b3_bool b3Fourier::b3AllocBuffer(b3_res new_size, b3_fourier_type new_type)
 {
+	b3_res size = b3PowOf2(new_size);
+	
 	b3PrintF(B3LOG_FULL, "b3Fourier::b3AllocBuffer(%d, ...)\n", size);
-	b3Free();
 	m_xOrig  =
-	m_yOrig  = size;
+	m_yOrig  = new_size;
+	m_xStart = (size - m_xOrig) >> 1;
+	m_yStart = (size - m_yOrig) >> 1;
+
+	if ((m_xSize == size) && (m_ySize == size) && (m_Type == new_type))
+	{
+		// New buffer has same size.
+		return true;
+	}
+	b3Free();
 	m_xSize  =
-	m_ySize  = b3PowOf2(size);
-	m_xStart = (m_xSize - m_xOrig) >> 1;
-	m_yStart = (m_ySize - m_yOrig) >> 1;
+	m_ySize  = size;
 
 	// Aux buffers
 	m_TempBuffer = null;
@@ -334,15 +355,14 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res size, b3_fourier_type new_type)
 void b3Fourier::b3SelfTest()
 {
     b3_loop  x, y;
-    b3_s32   seed;
     b3_f64   err = 0, e, divisor;
 
-	seed = 0;
-    for (y = 0; y < m_ySize; y++)
+	m_Random.b3SetSeed(0);
+	for (y = 0; y < m_ySize; y++)
 	{
         for (x = 0; x < m_xSize; x++)
 		{
-            m_gLine[y][x] = b3Rnd(seed);
+            m_gLine[y][x] = m_Random.b3Rand();
         }
     }
 
@@ -351,24 +371,25 @@ void b3Fourier::b3SelfTest()
 	b3FFT2D();
 	b3IFFT2D();
 
-	seed = 0;
+	m_Random.b3SetSeed(0);
 	divisor = m_xSize * m_ySize * 0.5;
     for (y = 0; y < m_ySize; y++)
 	{
         for (x = 0; x < m_xSize; x++)
 		{
-            e   = b3Rnd(seed) - m_gLine[y][x];
+            e   = m_Random.b3Rand() - m_gLine[y][x];
             err = B3_MAX(err, fabs(e));
         }
     }
 	b3PrintF(B3LOG_NORMAL,"### CLASS: b3Four # error %g\n",err);
 }
 
-void b3Fourier::b3GetBuffer(b3Tx *tx)
+void b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 {
 	b3_pkd_color *lPtr;
 	b3_u08       *cPtr;
 	b3_loop       x,y,index = 0;
+	b3_f64        cMin = 0, c, cMax = 0;
 
 	b3PrintF(B3LOG_FULL, "b3Fourier::b3GetBuffer(...)\n");
 	index  = m_yStart * m_xSize + m_xStart;
@@ -381,7 +402,10 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 		{
 			for (x = 0;x < m_xOrig;x++)
 			{
-				*cPtr++ = (b3_u08)floor(b3Math::b3Limit(m_gBuffer[index + x]) * 255);
+				c = m_gBuffer[index + x] * amp;
+				if (c < cMin) cMin = c;
+				if (c > cMax) cMax = c;
+				*cPtr++ = (b3_u08)floor(b3Math::b3Limit(c * 0.5 + 0.5) * 255);
 			}
 			index += m_xSize;
 		}
@@ -395,7 +419,10 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 		{
 			for (x = 0;x < m_xOrig;x++)
 			{
-				*lPtr++ = b3Color(m_rBuffer[index + x],m_gBuffer[index + x],m_bBuffer[index + x]);
+				*lPtr++ = b3Color(
+					m_rBuffer[index + x],
+					m_gBuffer[index + x],
+					m_bBuffer[index + x]);
 			}
 			index += m_xSize;
 		}
@@ -406,13 +433,14 @@ void b3Fourier::b3GetBuffer(b3Tx *tx)
 	}
 }
 
-void b3Fourier::b3GetSpectrum(b3Tx *tx)
+void b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 {
 	b3_pkd_color  *lPtr;
 	b3_u08        *cPtr;
 	b3_f64         r,i = 0,R,G,B;
 	b3_f64         result;
 	b3_f64         denom = 4.0 / (m_xSize + m_ySize);
+	b3_f64         cMax = 0;
 	b3_loop        x,y,index = 0,xHalf = m_xSize >> 1,yHalf = m_ySize >> 1;
 	b3_loop        xMask = m_xSize - 1,yMask = m_ySize - 1;
 	b3_index       dst,off;
@@ -430,8 +458,11 @@ void b3Fourier::b3GetSpectrum(b3Tx *tx)
 			{
 				r = m_gBuffer[index + x];
 				i = m_gBuffer[index + x + xHalf];
-				result  = floor(sqrt(r * r + i * i) * 0.5);
-				cPtr[dst + off]     = (b3_u08)result;
+				result  = sqrt(r * r + i * i) * amp * 127;
+				if (result > cMax) cMax = result;
+
+				if (result > 255) result = 255;
+				cPtr[dst + off]     =
 				cPtr[dst + off + 1] = (b3_u08)result;
 
 				off = (off + 2) & xMask;
@@ -899,7 +930,7 @@ void b3Fourier::b3FFT2D()
 void b3Fourier::b3IFFT2D()
 {
 	b3_loop i,max = m_xSize * m_ySize;
-	b3_f64 divisor = 2.0 / (b3_f64)(m_xSize * m_ySize);
+	b3_f64  divisor = 2.0 / (b3_f64)max;
 
 	b3PrintF(B3LOG_FULL, "b3Fourier::b3IFFT2D()\n");
 	b3Init();
@@ -2646,8 +2677,8 @@ necessary package
 */
 
 void b3Fourier::b3ComplexDFT2d(
-	b3_loop    n1,
-	b3_loop    n2,
+	b3_loop    xSize,
+	b3_loop    ySize,
 	b3_loop    isgn,
 	b3_f64   **a,
 	b3_f64    *t, 
@@ -2656,29 +2687,29 @@ void b3Fourier::b3ComplexDFT2d(
 {
 	b3_loop n, i, j, i2;
 
-	n = n1 << 1;
-	if (n < n2)
+	n = xSize << 1;
+	if (n < ySize)
 	{
-		n = n2;
+		n = ySize;
 	}
 	if (n > (ip[0] << 2))
 	{
 		b3MakeWT(n >> 2, ip, w);
 	}
-	for (i = 0; i < n1; i++)
+	for (i = 0; i < xSize; i++)
 	{
-		b3ComplexDFT(n2, isgn, a[i], ip, w);
+		b3ComplexDFT(ySize, isgn, a[i], ip, w);
 	}
-	for (j = 0; j <= n2 - 2; j += 2)
+	for (j = 0; j < ySize; j += 2)
 	{
-		for (i = 0; i < n1; i++)
+		for (i = 0; i < xSize; i++)
 		{
 			i2        = i << 1;
 			t[i2]     = a[i][j];
 			t[i2 + 1] = a[i][j + 1];
 		}
-		b3ComplexDFT(n1 << 1, isgn, t, ip, w);
-		for (i = 0; i < n1; i++)
+		b3ComplexDFT(xSize << 1, isgn, t, ip, w);
+		for (i = 0; i < xSize; i++)
 		{
 			i2          = i << 1;
 			a[i][j]     = t[i2];

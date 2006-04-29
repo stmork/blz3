@@ -39,9 +39,22 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/04/29 11:25:48  sm
+**	- Added ocean bump to main packet.
+**	- b3Prepare signature: Added further initialization information
+**	  for animation preparation
+**	- Added test module for ocean waves.
+**	- Added module for random number generation.
+**	- Adjusted material and bump sampler to reflect preparation
+**	  signature change.
+**	- Added OpenGL test program for ocean waves.
+**	- Changed Phillips spectrum computation to be independent
+**	  from time.
+**	- Interpolated height field for ocean waves.
+**
 **	Revision 1.14  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.13  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -586,7 +599,7 @@ b3OpObjectCopy::b3OpObjectCopy(
 		{
 			cloned = (b3BBox *)b3World::b3Clone(bbox);
 			cloned->b3Transform(&dlg.m_Transformation,true,true);
-			cloned->b3PrepareBBox(true);
+			cloned->b3PrepareBBox(scene->b3GetPrepareInfo(), true);
 			m_ClonedBBoxes.b3Add(cloned);
 
 			bbox = cloned;
