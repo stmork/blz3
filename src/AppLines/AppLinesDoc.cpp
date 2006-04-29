@@ -53,9 +53,12 @@
 
 /*
 **	$Log$
+**	Revision 1.116  2006/04/29 20:29:53  sm
+**	- Switched to other FFT 2D algorithm which works correctly.
+**
 **	Revision 1.115  2006/03/26 17:58:22  sm
 **	- Edit object from hierarchy tree caused a race. Fixed now.
-**
+**	
 **	Revision 1.114  2006/03/25 22:11:20  sm
 **	- Fix shape/object creation problem in object editor.
 **	- Added double click option in hierarchy tree.
@@ -847,10 +850,12 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		b3PrintF(B3LOG_NORMAL,"                       %s\n",e.b3GetErrorMsg());
 		B3_MSG_ERROR(e);
 	}
+#ifndef _DEBUG
 	catch(...)
 	{
 		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
 	}
+#endif
 
 	main->b3SetStatusMessage(AFX_IDS_IDLEMESSAGE);
 	return result;

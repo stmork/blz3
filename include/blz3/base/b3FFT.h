@@ -58,7 +58,8 @@ union b3FilterInfo
 
 class b3Fourier;
 
-typedef void (*b3FilterFunc)(b3_f64 fx,b3_f64 fy,b3_index re,b3_index im,b3Fourier *fourier,b3FilterInfo *info);
+typedef void (*b3FilterFunc)(b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier,b3FilterInfo *info);
+typedef void (*b3SampleFunc)(const b3_f64 fx,const b3_f64 fy, b3_f64 &re, b3_f64 &im, const b3_index index, b3FilterInfo *info);
 
 /**
  * This class provides several spectral conversion methods.
@@ -136,6 +137,7 @@ public:
 	void    b3DumpSpectrum(b3_log_level level = B3LOG_NORMAL);
 
 	void    b3Filter       (b3FilterInfo *info, b3FilterFunc func);
+	void    b3Sample       (b3FilterInfo *info, b3SampleFunc func);
 	void    b3SetBandpass  (b3_f64 frequency,b3_f64 bandwidth);
 	void    b3SetLowpass   (b3_f64 frequency);
 	void    b3SetHighpass  (b3_f64 frequency);
@@ -158,6 +160,9 @@ public:
 	 */
 	void    b3SelfTest();
 
+	static b3_loop      b3PowOf2(b3_loop value);
+	static b3_count     b3Log2(b3_u32 value);
+
 protected:
 	/**
 	 * This method provides a bandpass filer callback method
@@ -177,9 +182,8 @@ protected:
 	static void b3FilterSinc2AR   (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
 
 private:
-	static b3_loop      b3PowOf2(b3_loop value);
-	       void     b3Init();
-	       b3_f64 **b3Alloc2D();
+	       void         b3Init();
+	       b3_f64     **b3Alloc2D();
 
 	// Onedimensional
 	static void b3ComplexDFT(b3_loop n, b3_loop isgn, b3_f64 *a, b3_index *ip, b3_f64 *w);
@@ -208,6 +212,69 @@ private:
 	static void b3ComplexFTbsub(b3_loop n, b3_f64 *a, b3_f64 *w);
 	static void b3DCTsub(b3_loop n, b3_f64 *a, b3_loop nc, b3_f64 *c);
 	static void b3DSTsub(b3_loop n, b3_f64 *a, b3_loop nc, b3_f64 *c);
+};
+
+
+#include "blz3/base/b3Complex.h"
+
+class B3_PLUGIN b3SimpleFourier : protected b3Mem
+{
+	b3_res              m_xSize, m_xOrig, m_xStart, m_xDim;
+	b3_res              m_ySize, m_yOrig, m_yStart, m_yDim;
+	b3_fourier_type     m_Type;
+
+	b3Complex<b3_f64>  *m_Buffer;
+	b3Complex<b3_f64> **m_Lines;
+
+	b3_f64             *m_xReal, *m_xImag;
+	b3_f64             *m_yReal, *m_yImag;
+	b3_f64             *m_RealBuffer;
+
+	b3PseudoRandom<b3_f64> m_Random;
+
+public:
+	b3SimpleFourier();
+	virtual ~b3SimpleFourier();
+	
+	b3_bool b3AllocBuffer(b3_res new_size, b3_fourier_type type = B3_FOURIER_GREY);
+	void    b3AllocBuffer  (b3Tx *tx);
+	void    b3FreeBuffer();
+	void    b3Sample       (b3FilterInfo *info, b3SampleFunc func);
+
+	inline void    b3FFT2D()
+	{
+		b3FFT2D(1);
+	}
+
+	inline void    b3IFFT2D()
+	{
+		b3_loop  x,y;
+		b3_index index = 0;
+
+		b3FFT2D(-1);
+		for (y = 0;y < m_yOrig;y++)
+		{
+			for (x = 0;x < m_xOrig;x++)
+			{
+				m_RealBuffer[index++] = m_Lines[y][x].b3GetRe();
+			}
+		}
+	}
+
+	void    b3GetBuffer    (b3Tx *tx, b3_f64 amp);
+	void    b3GetSpectrum  (b3Tx *tx, b3_f64 amp =   10.0);
+
+	b3_f64 *b3GetGBuffer();
+	
+	/**
+	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
+	 */
+	void    b3SelfTest();
+
+private:
+	static b3_bool b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y);
+	       b3_bool b3FFT2D(int dir);
+		   void    b3ReallocBuffer();
 };
 
 #endif

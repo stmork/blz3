@@ -2,8 +2,8 @@
 
 BLZ3_LIB		= @BLZ3_LIB@
 BLZ3_BIN		= @BLZ3_BIN@
-CC				= @CC@
-CXX				= @CXX@
+CC			= @CC@
+CXX			= @CXX@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
@@ -12,11 +12,12 @@ B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
 PRGS			=\
-	TestIo TestThread Mandel TestOcean TestData TestUtil\
-	TestFilter TestVector TestMaterial TestSampler TestWood TestWater TestWave
+	TestIo TestFFT TestFilter TestThread Mandel TestOcean TestData TestUtil\
+	TestVector TestMaterial TestSampler TestWood TestWater TestWave
 
 PRG_SOURCE	=\
 	TestIo.cc\
+	TestFFT.cc\
 	TestFilter.cc\
 	Mandel.cc\
 	b3Mandel.cc\
@@ -32,6 +33,7 @@ PRG_SOURCE	=\
 	TestWood.cc
 
 TESTDATA_OBJS		= TestData.o
+TESTFFT_OBJS		= TestFFT.o
 TESTFILTER_OBJS		= TestFilter.o
 TESTIO_OBJS		= TestIo.o
 TESTMATERIAL_OBJS	= TestMaterial.o
@@ -54,6 +56,9 @@ clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
 TestData:	$(TESTDATA_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+TestFFT:	$(TESTFFT_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestFilter:	$(TESTFILTER_OBJS) $(B3_LIB_BASE)

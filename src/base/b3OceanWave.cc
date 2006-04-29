@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/04/29 20:29:54  sm
+**	- Switched to other FFT 2D algorithm which works correctly.
+**
 **	Revision 1.9  2006/04/29 17:58:27  sm
 **	- Minor value changes.
-**
+**	
 **	Revision 1.8  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -104,6 +107,14 @@ b3OceanWave::b3OceanWave()
 	m_Modified = true;
 }
 
+b3OceanWave::~b3OceanWave()
+{
+	if (m_Phillips != null)
+	{
+		delete [] m_Phillips;
+	}
+}
+
 void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 {
 	b3PrintF(B3LOG_FULL, "  preparing ocean waves...\n");
@@ -149,7 +160,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 
 b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 {
-	b3_f64   *buffer = m_FFT.b3GetGBuffer();
+	b3_f64   *buffer = b3GetBuffer();
 	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
 	b3_index  x,y;
@@ -196,7 +207,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 {
-	b3_f64   *buffer = m_FFT.b3GetGBuffer();
+	b3_f64   *buffer = b3GetBuffer();
 	b3_f64    fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64    fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
 	b3_index  x,y;
@@ -258,7 +269,7 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 {
 	if (m_Phillips == null)
 	{
-		m_Phillips = (b3_f64 *)b3Alloc(m_fftDiff * m_fftDiff * sizeof(b3_f64));
+		m_Phillips = new b3Complex<b3_f64>[m_fftDiff * m_fftDiff];
 		if (m_Phillips == null)
 		{
 			throw;
@@ -268,27 +279,27 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 
 	if (m_Modified)
 	{
-		m_FFT.b3Filter((b3FilterInfo *)this, b3FilterPhillipsSpectrum);
+		m_FFT.b3Sample((b3FilterInfo *)this, b3FilterPhillipsSpectrum);
 		m_Modified = false;
 	}
 
-	m_FFT.b3Filter((b3FilterInfo *)this, b3SampleHeight);
+	m_FFT.b3Sample((b3FilterInfo *)this, b3SampleHeight);
 }
 
 void b3OceanWave::b3FilterPhillipsSpectrum(
-	b3_f64        fx,
-	b3_f64        fy,
-	b3_index      re,
-	b3_index      im,
-	b3Fourier    *fourier, 
-	b3FilterInfo *filter_info)
+	const b3_f64        fx,
+	const b3_f64        fy,
+	      b3_f64       &re,
+	      b3_f64       &im,
+	const b3_index      index,
+	      b3FilterInfo *filter_info)
 {
 	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
 
-	ocean->b3SamplePhillipsSpectrum(fx, fy, re, im);
+	ocean->b3SamplePhillipsSpectrum(fx, fy, index);
 }
 
-void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index re, b3_index im)
+void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 {
 	b3_f64             factor = M_PI * 2 * m_fftMax / m_GridSize;
 	b3_f64             w;
@@ -337,30 +348,28 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index re, b3
 		gauss.b3GetRe(),  gauss.b3GetIm(), w);
 #endif
 
-	m_Phillips[re] = gauss.b3GetRe();
-	m_Phillips[im] = gauss.b3GetIm();
+	m_Phillips[index] = gauss;
 }
 
 void b3OceanWave::b3SampleHeight(
-	b3_f64        fx,
-	b3_f64        fy,
-	b3_index      re,
-	b3_index      im,
-	b3Fourier    *fourier, 
-	b3FilterInfo *filter_info)
+	const b3_f64        fx,
+	const b3_f64        fy,
+	      b3_f64       &re,
+	      b3_f64       &im,
+	const b3_index      index,
+	      b3FilterInfo *filter_info)
 {
 	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
-	b3_f64            *buffer = fourier->b3GetGBuffer();
-	b3Complex<b3_f64>  P(ocean->m_Phillips[re], ocean->m_Phillips[im]);
-	b3Complex<b3_f64>  result = P * ocean->m_Cycle;
+	b3_f64            *buffer = ocean->b3GetBuffer();
+	b3Complex<b3_f64>  result = ocean->m_Phillips[index] * ocean->m_Cycle;
 	
-	buffer[re] = result.b3GetRe();
-	buffer[im] = result.b3GetIm();
+	re = result.b3GetRe();
+	im = result.b3GetIm();
 }
 
 void b3OceanWave::b3TestSpectrum1()
 {
-	b3_f64 *buffer = m_FFT.b3GetGBuffer();
+	b3_f64 *buffer = b3GetBuffer();
 
 	buffer[5] = 0.5;
 	buffer[0] = 1;
@@ -371,10 +380,9 @@ void b3OceanWave::b3TestSpectrum1()
 
 void b3OceanWave::b3TestSpectrum2()
 {
-	b3_f64            *buffer;
+	b3_f64            *buffer = b3GetBuffer();
 	b3_loop            n,m;
 
-	buffer = m_FFT.b3GetGBuffer();
 	for (n = m_fftMin; n < m_fftMax; n++)
 	{
 		for(m = m_fftMin; m < m_fftMax; m++)
@@ -413,7 +421,7 @@ void b3OceanWave::b3DumpImages()
 	m_FFT.b3DumpSpectrum(B3LOG_FULL);
 #endif
 //	m_FFT.b3SetAntiRaster(0.5, 0.25);
-	m_FFT.b3GetSpectrum(&tx);
+	m_FFT.b3GetSpectrum(&tx, 0.2);
 #ifdef WIN32
 	tx.b3SaveJPEG("c:/temp/spectrum.jpg");
 #else
@@ -434,4 +442,3 @@ void b3OceanWave::b3DumpImages()
 #endif
 #endif
 }
-

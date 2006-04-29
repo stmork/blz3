@@ -28,7 +28,7 @@
 #define B3_OCEAN_MAX_DIM      12
 #define B3_OCEAN_MAX          (1 << B3_OCEAN_MAX_DIM)
 #define B3_OCEAN_CURVE_DEGREE  2
-#define B3_OCEAN_XSKIP         4
+#define B3_OCEAN_XSKIP         1
 #define B3_OCEAN_MAX_MASK     (B3_OCEAN_MAX - B3_OCEAN_XSKIP)
 
 class B3_PLUGIN b3OceanWave : protected b3Mem
@@ -46,9 +46,9 @@ class B3_PLUGIN b3OceanWave : protected b3Mem
 	b3_f64                  m_L2;          // squard factor
 	b3_f64                  m_l2;          // wave length lower limit (squared)
 	b3Complex<b3_f64>       m_Cycle;       // e^j*omega*t
-	b3Fourier               m_FFT;
+	b3SimpleFourier         m_FFT;
 	b3PseudoRandom<b3_f64>  m_Random;
-	b3_f64                 *m_Phillips;
+	b3Complex<b3_f64>      *m_Phillips;
 	b3_bool                 m_Modified;
 
 public:
@@ -63,6 +63,7 @@ public:
 
 public:
 	       b3OceanWave();
+		   virtual ~b3OceanWave();
 
 	/**
 	 * This method precomputes some calculation invariant values.
@@ -112,22 +113,22 @@ private:
 	void              b3ComputePhillipsSpectrum();
 
 	static void       b3FilterPhillipsSpectrum(
-		b3_f64        fx,
-		b3_f64        fy,
-		b3_index      re,
-		b3_index      im,
-		b3Fourier    *fourier, 
-		b3FilterInfo *filter_info);
+		const b3_f64        fx,
+		const b3_f64        fy,
+		      b3_f64       &re,
+		      b3_f64       &im,
+		const b3_index      index,
+		      b3FilterInfo *filter_info);
 
 	static void       b3SampleHeight(
-		b3_f64        fx,
-		b3_f64        fy,
-		b3_index      re,
-		b3_index      im,
-		b3Fourier    *fourier, 
-		b3FilterInfo *filter_info);
+		const b3_f64        fx,
+		const b3_f64        fy,
+		      b3_f64       &re,
+		      b3_f64       &im,
+		const b3_index      index,
+		      b3FilterInfo *filter_info);
 
-	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index re, b3_index im);
+	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index);
 	void              b3TestSpectrum1();
 	void              b3TestSpectrum2();
 	void              b3TestSpectrum3();
