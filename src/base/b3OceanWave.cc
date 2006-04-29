@@ -37,6 +37,9 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/04/29 17:58:27  sm
+**	- Minor value changes.
+**
 **	Revision 1.8  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -49,7 +52,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.7  2006/04/19 18:15:09  sm
 **	- Fine tuning ocean waves.
 **	
@@ -93,7 +96,7 @@ b3OceanWave::b3OceanWave()
 	m_Dim      =    10;
 	m_Wx       =     1;
 	m_Wy       =     0.7f;
-	m_A        =     1000;
+	m_A        =    50;
 	m_GridSize =   400;
 	m_l        =     0.1f;
 	

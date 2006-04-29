@@ -26,6 +26,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/04/29 17:58:27  sm
+**	- Minor value changes.
+**
 **	Revision 1.1  2006/04/29 11:39:04  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -38,7 +41,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **              
 */
 
@@ -50,7 +53,7 @@
 
 #if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
-#define OW_SKIP 4
+#define OW_SKIP B3_OCEAN_XSKIP
 
 GLfloat ambient[] =
 {
@@ -208,7 +211,8 @@ void init_vbo()
 		glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
 		glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
-		has_vbo = false&&
+		has_vbo =
+			false&&
 			(glGenBuffersARB != null) &&
 			(glBindBufferARB != null) &&
 			(glBufferDataARB != null) &&

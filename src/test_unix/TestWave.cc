@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/04/29 17:58:27  sm
+**	- Minor value changes.
+**
 **	Revision 1.1  2006/04/29 11:25:50  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -47,7 +50,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **
 */
 
@@ -62,7 +65,7 @@ int main(int argc, char *argv[])
 	b3Display   *display;
 	b3OceanWave  wave;
 
-	wave.m_Dim = 8;
+	wave.m_Dim = 10;
 //	b3Log::b3SetLevel(B3LOG_FULL);
 
 	try
@@ -87,7 +90,7 @@ int main(int argc, char *argv[])
 			b3PrintF(B3LOG_NORMAL, "t=%3.3f\n",time_diff);
 
 			wave.b3PrepareOceanWave(time_diff);
-			wave.b3GetBuffer(&tx, 1.0);
+			wave.b3GetBuffer(&tx, 100.0);
 			display->b3PutTx(&tx);
 		}
 		while(!display->b3IsCancelled(xMax,yMax));
