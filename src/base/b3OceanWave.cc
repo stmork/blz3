@@ -26,8 +26,8 @@
 #include "blz3/base/b3OceanWave.h"
 #include "blz3/base/b3Procedure.h"
 
-#define VERBOSE
-#define VERBOSE_DUMP
+#define not_VERBOSE
+#define not_VERBOSE_DUMP
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/04/30 09:05:25  sm
+**	- No verbose!
+**
 **	Revision 1.14  2006/04/30 08:55:52  sm
 **	- Further signed/unsigned issues.
-**
+**	
 **	Revision 1.13  2006/04/30 08:53:24  sm
 **	- Removed some signed/unsigned issues.
 **	- Reflect new FFT algorithm.
