@@ -46,7 +46,7 @@ class B3_PLUGIN b3OceanWave : protected b3Mem
 	b3_f64                  m_L2;          // squard factor
 	b3_f64                  m_l2;          // wave length lower limit (squared)
 	b3Complex<b3_f64>       m_Cycle;       // e^j*omega*t
-	b3SimpleFourier         m_FFT;
+	b3Fourier               m_FFT;
 	b3PseudoRandom<b3_f64>  m_Random;
 	b3Complex<b3_f64>      *m_Phillips;
 	b3_bool                 m_Modified;
@@ -62,7 +62,7 @@ public:
 	b3_f32   m_l;          //!< Lower limit of wave length.
 
 public:
-	       b3OceanWave();
+	                b3OceanWave();
 		   virtual ~b3OceanWave();
 
 	/**
@@ -79,7 +79,7 @@ public:
 	 * @param tx The image to put the buffer in.
 	 * @param scale Scales all values by this factor.
 	 */
-	inline void b3GetBuffer    (b3Tx *tx, b3_f64 scale = 1000.0)
+	inline void b3GetBuffer    (b3Tx *tx, b3_f64 scale)
 	{
 		m_FFT.b3GetBuffer(tx, scale);
 	}
@@ -90,9 +90,9 @@ public:
 	 *
 	 * @param tx The image to put the spectrum in.
 	 */
-	inline void b3GetSpectrum(b3Tx *tx)
+	inline void b3GetSpectrum(b3Tx *tx, b3_f64 scale)
 	{
-		m_FFT.b3GetSpectrum(tx);
+		m_FFT.b3GetSpectrum(tx, scale);
 	}
 
 	/**
@@ -100,9 +100,9 @@ public:
 	 *
 	 * @return The height field.
 	 */
-	inline b3_f64 *b3GetBuffer()
+	inline b3Complex<b3_f64> *b3GetBuffer()
 	{
-		return m_FFT.b3GetGBuffer();
+		return m_FFT.b3GetBuffer();
 	}
 
 	inline void b3Modified(b3_bool modified=true)
@@ -115,16 +115,12 @@ private:
 	static void       b3FilterPhillipsSpectrum(
 		const b3_f64        fx,
 		const b3_f64        fy,
-		      b3_f64       &re,
-		      b3_f64       &im,
 		const b3_index      index,
 		      b3FilterInfo *filter_info);
 
 	static void       b3SampleHeight(
 		const b3_f64        fx,
 		const b3_f64        fy,
-		      b3_f64       &re,
-		      b3_f64       &im,
 		const b3_index      index,
 		      b3FilterInfo *filter_info);
 

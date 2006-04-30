@@ -367,7 +367,7 @@ public:
 	 * This method multiplies this complex number with
 	 * themself.
 	 */
-	inline void b3Square()
+	inline void b3Square() const
 	{
 		T B3_ALIGN_16 re[2];
 
@@ -378,46 +378,6 @@ public:
 		v[Im]  = v[Re] * v[Im];
 		v[Im] += v[Im];
 		v[Re]  = re[0] - re[1];
-	}
-
-	/**
-	 * The method returns the real part of this complex number.
-	 *
-	 * @return The real part.
-	 */
-	inline T b3GetRe() const
-	{
-		return v[Re];
-	}
-
-	/**
-	 * This method sets the real part of the complex number.
-	 *
-	 * @param re The new real part.
-	 */
-	inline void b3SetRe(const T re)
-	{
-		v[Re] = re;
-	}
-
-	/**
-	 * The method returns the imaginary part of this complex number.
-	 *
-	 * @return The imaginary part.
-	 */
-	inline T b3GetIm() const
-	{
-		return v[Im];
-	}
-
-	/**
-	 * This method sets the imaginary part of the complex number.
-	 *
-	 * @param im The new imaginary part.
-	 */
-	inline void b3SetIm(const T im)
-	{
-		v[Im] = im;
 	}
 
 	inline T & b3Real()

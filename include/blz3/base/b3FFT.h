@@ -20,223 +20,33 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Complex.h"
 #include "blz3/base/b3Random.h"
 
-enum b3_fourier_type
+struct b3FilterInfo
 {
-	B3_FOURIER_UNDEFINED  = -1,
-	B3_FOURIER_GREY       =  0,
-	B3_FOURIER_PALETTE,
-	B3_FOURIER_TRUECOLOR
 };
 
-union b3FilterInfo
-{
-	struct b3FilterInfoBandpass
-	{
-		b3_f64 start,end;
-	} bp;
-	struct b3FilterInfoLowpass
-	{
-		b3_f64 limit;
-	} lp;
-	struct b3FilterInfoHighpass
-	{
-		b3_f64 limit;
-	} hp;
-	struct b3FilterInfoAntiRaster
-	{
-		b3_f64 limit;
-		b3_f64 corr;
-	} ar;
-	struct b3FilterInfoSinc2
-	{
-		b3_f64 factor;
-	} si2;
-	void *ptr;
-};
+typedef void (*b3SampleFunc)(const b3_f64 fx,const b3_f64 fy, const b3_index index, b3FilterInfo *info);
 
-class b3Fourier;
-
-typedef void (*b3FilterFunc)(b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier,b3FilterInfo *info);
-typedef void (*b3SampleFunc)(const b3_f64 fx,const b3_f64 fy, b3_f64 &re, b3_f64 &im, const b3_index index, b3FilterInfo *info);
-
-/**
- * This class provides several spectral conversion methods.
- * The most common methods are the FFT/iFFT methods.
- */
-class B3_PLUGIN b3Fourier : public b3Mem
-{
-	b3_f64            *m_rBuffer;
-	b3_f64            *m_gBuffer;
-	b3_f64            *m_bBuffer;
-
-	b3_f64           **m_rLine;
-	b3_f64           **m_gLine;
-	b3_f64           **m_bLine;
-
-	b3_f64            *m_TempBuffer;
-	b3_index          *m_PermBuffer;
-	b3_f64            *m_Values;
-
-	b3_res             m_xSize, m_xOrig, m_xStart;
-	b3_res             m_ySize, m_yOrig, m_yStart;
-	b3_fourier_type    m_Type;
-
-	b3PseudoRandom<b3_f64> m_Random;
-
-public:
-	        /**
-	         * This constructor setup an empty Fourier buffer.
-	         */
-	        b3Fourier      ();
-
-	        /**
-	         * This constructor creates a Fourier buffer from a b3Tx instance.
-	         *
-	         * @param tx The texture with the values to initialize with.
-	         */
-	        b3Fourier      (b3Tx *image);
-
-	        /**
-	         * This copy constructor copies the values from another Fourier instance.
-	         *
-	         * @param src The source instance.
-	         */
-	        b3Fourier      (b3Fourier &src);
-	void    b3GetBuffer    (b3Tx *tx, b3_f64 amp);
-	void    b3GetSpectrum  (b3Tx *tx, b3_f64 amp =   10.0);
-
-	void    b3AllocBuffer  (b3Tx *tx);
-	
-	/**
-	 * This method allocates a new buffer with the specified size.
-	 *
-	 * @param size The new dimension which is adjusted to the next power of 2 value.
-	 * @param new_type The buffer type (true color or grey value)
-	 * @return True on success.
-	 */
-	b3_bool b3AllocBuffer  (b3_res size, b3_fourier_type new_type = B3_FOURIER_GREY);
-
-	inline b3_f64 * b3GetRBuffer()
-	{
-		return m_rBuffer;
-	}
-
-	inline b3_f64 * b3GetGBuffer()
-	{
-		return m_gBuffer;
-	}
-
-	inline b3_f64 * b3GetBBuffer()
-	{
-		return m_bBuffer;
-	}
-
-	void    b3DumpBuffer  (b3_log_level level = B3LOG_NORMAL);
-	void    b3DumpSpectrum(b3_log_level level = B3LOG_NORMAL);
-
-	void    b3Filter       (b3FilterInfo *info, b3FilterFunc func);
-	void    b3Sample       (b3FilterInfo *info, b3SampleFunc func);
-	void    b3SetBandpass  (b3_f64 frequency,b3_f64 bandwidth);
-	void    b3SetLowpass   (b3_f64 frequency);
-	void    b3SetHighpass  (b3_f64 frequency);
-	void    b3SetAntiRaster(b3_f64 frequency,b3_f64 corridor);
-	void    b3SetSinc2     (b3_f64 frequency);
-	void    b3SetSinc2AR   (b3_f64 frequency);
-	
-	/**
-	 * This method executes a forward FFT on the allocated buffers.
-	 */
-	void    b3FFT2D();
-
-	/**
-	 * This method exectues an inverse FFT on the allocated buffers.
-	 */
-	void    b3IFFT2D();
-	
-	/**
-	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
-	 */
-	void    b3SelfTest();
-
-	static b3_loop      b3PowOf2(b3_loop value);
-	static b3_count     b3Log2(b3_u32 value);
-
-protected:
-	/**
-	 * This method provides a bandpass filer callback method
-	 *
-	 * @param fx      The x coordinate.
-	 * @param fy      The y coordinate.
-	 * @param re      The index to the real component of the spectrum.
-	 * @param im      The index to the imaginary component of the spectrum.
-	 * @param fourier The calling Fourier class instance.
-	 * @param info    The information of the bandpass filter.
-	 */
-	static void b3FilterBandpass  (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
-	static void b3FilterHighpass  (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
-	static void b3FilterLowpass   (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
-	static void b3FilterAntiRaster(b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
-	static void b3FilterSinc2     (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
-	static void b3FilterSinc2AR   (b3_f64 fx, b3_f64 fy, b3_index re, b3_index im, b3Fourier *fourier, b3FilterInfo *info);
-
-private:
-	       void         b3Init();
-	       b3_f64     **b3Alloc2D();
-
-	// Onedimensional
-	static void b3ComplexDFT(b3_loop n, b3_loop isgn, b3_f64 *a, b3_index *ip, b3_f64 *w);
-	static void b3RealDFT   (b3_loop n, b3_loop isgn, b3_f64 *a, b3_index *ip, b3_f64 *w);
-    static void b3DCT       (b3_loop n, b3_loop isgn, b3_f64 *a, b3_index *ip, b3_f64 *w);
-	static void b3DST       (b3_loop n, b3_loop isgn, b3_f64 *a, b3_index *ip, b3_f64 *w);
-	static void b3FourierDCT(b3_loop n, b3_f64 *a, b3_f64 *t, b3_index *ip, b3_f64 *w);
-	static void b3FourierDST(b3_loop n, b3_f64 *a, b3_f64 *t, b3_index *ip, b3_f64 *w);
-
-	// Twodimensional
-	static void b3ComplexDFT2d(b3_loop n1, b3_loop n2, b3_loop isgn, b3_f64 **a, b3_f64 *t,b3_index *ip, b3_f64 *w);
-	static void b3RealDFT2d(b3_loop n1, b3_loop n2, b3_loop isgn, b3_f64 **a, b3_f64 *t,b3_index *ip, b3_f64 *w);
-	static void b3DCT2d(b3_loop n1, b3_loop n2, b3_loop isgn, b3_f64 **a, b3_f64 *t, b3_index *ip, b3_f64 *w);
-	static void b3DST2d(b3_loop n1, b3_loop n2, b3_loop isgn, b3_f64 **a, b3_f64 *t, b3_index *ip, b3_f64 *w);
-
-	static void b3MakeWT(b3_loop nw, b3_index *ip, b3_f64 *w);
-	static void b3MakeCT(b3_loop nc, b3_index *ip, b3_f64 *c);
-	static void b3BitRV2(b3_loop n, b3_index *ip, b3_f64 *a);
-	static void b3BitRV2Conj(b3_loop n, b3_index *ip, b3_f64 *a);
-
-	static void b3ComplexFT1st(b3_loop n, b3_f64 *a, b3_f64 *w);
-	static void b3ComplexFTmdl(b3_loop n, b3_loop l, b3_f64 *a, b3_f64 *w);
-	static void b3RealFTfsub(b3_loop n, b3_f64 *a, b3_loop nc, b3_f64 *c);
-	static void b3RealFTbsub(b3_loop n, b3_f64 *a, b3_loop nc, b3_f64 *c);
-	static void b3ComplexFTfsub(b3_loop n, b3_f64 *a, b3_f64 *w);
-	static void b3ComplexFTbsub(b3_loop n, b3_f64 *a, b3_f64 *w);
-	static void b3DCTsub(b3_loop n, b3_f64 *a, b3_loop nc, b3_f64 *c);
-	static void b3DSTsub(b3_loop n, b3_f64 *a, b3_loop nc, b3_f64 *c);
-};
-
-
-#include "blz3/base/b3Complex.h"
-
-class B3_PLUGIN b3SimpleFourier : protected b3Mem
+class B3_PLUGIN b3Fourier : protected b3Mem
 {
 	b3_res              m_xSize, m_xOrig, m_xStart, m_xDim;
 	b3_res              m_ySize, m_yOrig, m_yStart, m_yDim;
-	b3_fourier_type     m_Type;
 
 	b3Complex<b3_f64>  *m_Buffer;
 	b3Complex<b3_f64> **m_Lines;
 
 	b3_f64             *m_xReal, *m_xImag;
 	b3_f64             *m_yReal, *m_yImag;
-	b3_f64             *m_RealBuffer;
 
 	b3PseudoRandom<b3_f64> m_Random;
 
 public:
-	b3SimpleFourier();
-	virtual ~b3SimpleFourier();
+	         b3Fourier();
+	virtual ~b3Fourier();
 	
-	b3_bool b3AllocBuffer(b3_res new_size, b3_fourier_type type = B3_FOURIER_GREY);
+	b3_bool b3AllocBuffer(b3_res new_size);
 	void    b3AllocBuffer  (b3Tx *tx);
 	void    b3FreeBuffer();
 	void    b3Sample       (b3FilterInfo *info, b3SampleFunc func);
@@ -248,28 +58,24 @@ public:
 
 	inline void    b3IFFT2D()
 	{
-		b3_loop  x,y;
-		b3_index index = 0;
-
 		b3FFT2D(-1);
-		for (y = 0;y < m_yOrig;y++)
-		{
-			for (x = 0;x < m_xOrig;x++)
-			{
-				m_RealBuffer[index++] = m_Lines[y][x].b3GetRe();
-			}
-		}
 	}
 
 	void    b3GetBuffer    (b3Tx *tx, b3_f64 amp);
-	void    b3GetSpectrum  (b3Tx *tx, b3_f64 amp =   10.0);
+	void    b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
 
-	b3_f64 *b3GetGBuffer();
+	inline b3Complex<b3_f64> *b3GetBuffer()
+	{
+		return m_Buffer;
+	}
 	
 	/**
 	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
 	 */
 	void    b3SelfTest();
+
+	static b3_loop  b3PowOf2(b3_loop value);
+	static b3_count b3Log2(b3_u32 value);
 
 private:
 	static b3_bool b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y);
