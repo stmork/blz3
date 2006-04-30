@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/04/30 08:55:52  sm
+**	- Further signed/unsigned issues.
+**
 **	Revision 1.13  2006/04/30 08:53:24  sm
 **	- Removed some signed/unsigned issues.
 **	- Reflect new FFT algorithm.
-**
+**	
 **	Revision 1.12  2006/04/30 08:30:56  sm
 **	- Exchanged FFT algorithm.
 **	
@@ -174,7 +177,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
 	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_size            max    = m_fftDiff * m_fftDiff;
+	b3_index           max    = m_fftDiff * m_fftDiff;
 	b3_index           index, x, y;
 	b3_f64             a[2], b[2], c[2];
 
@@ -221,7 +224,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
 	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_size            max    = m_fftDiff * m_fftDiff;
+	b3_index           max    = m_fftDiff * m_fftDiff;
 	b3_index           index, x, y;
 	b3_f64             h, hx, hy;
 
