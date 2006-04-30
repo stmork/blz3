@@ -40,6 +40,7 @@ class B3_PLUGIN b3OceanWave : protected b3Mem
 	b3_loop                 m_fftMin;      // FFT loop start
 	b3_loop                 m_fftMax;      // FFT loop end
 	b3_index                m_fftDiff;     // FFT loop size
+	b3_index                m_fftMask;
 	b3_f64                  m_W2;          // Quad wind speed
 	b3_f64                  m_GridScale;   // FFT grid scaling
 	b3_f64                  m_L;           // windspeed and gravity constant
@@ -124,6 +125,7 @@ private:
 		const b3_index      index,
 		      b3FilterInfo *filter_info);
 
+	b3_f64            b3Height(b3Complex<b3_f64> *buffer, const b3_f64 fx, const b3_f64 fy);
 	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index);
 	void              b3TestSpectrum1();
 	void              b3TestSpectrum2();

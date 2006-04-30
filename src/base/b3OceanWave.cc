@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2006/04/30 14:26:07  sm
+**	- That's it!
+**
 **	Revision 1.18  2006/04/30 13:15:10  sm
 **	- More deriv development.
-**
+**	
 **	Revision 1.17  2006/04/30 11:48:12  sm
 **	- New ocean wave deriv try.
 **	
@@ -148,6 +151,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	m_fftMax         =  1 << (m_Dim - 1);
 	m_fftMin         = -m_fftMax;
 	m_fftDiff        =  m_fftMax - m_fftMin;
+	m_fftMask        =  m_fftDiff - 1;
 	m_GridScale      =  1.0 / m_GridSize;
 	
 	// Time values
@@ -187,168 +191,60 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 {
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx[2];
-	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_index           max    = m_fftDiff * m_fftDiff;
-	b3_index           index, x, y;
-	b3_f64             a[2], b[2], c[2];
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
 
-	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
-	y = (b3_index)fy;
+	return b3Height(buffer, fx, fy);
+}
 
-	dx[0] = dx[1] = (fx - x) / B3_OCEAN_XSKIP;
-	dy =  fy - y;
+b3_f64 b3OceanWave::b3Height(b3Complex<b3_f64> *buffer, const b3_f64 fx, const b3_f64 fy)
+{
+	b3_f64                 dy;
+	b3_index               max    = m_fftDiff * m_fftDiff;
+	b3_index               index, xs, xe, y;
+	b3_f64    B3_ALIGN_16  a[2], b[2], c[2], dx[2];
 
-	index = y * m_fftDiff + x;
-	a[0] = buffer[index].b3Real();
+	xs = (b3_index)fx;
+	xe = (xs + 1) & m_fftMask;
+	y  = (b3_index)fy;
 
-	index += B3_OCEAN_XSKIP;
-	if (index >= max)
-	{
-		index -= m_fftDiff;
-	}
-	b[0] = buffer[index].b3Real();
+	dx[0] = dx[1] = fx - xs;
+	dy    =         fy - y;
+
+	index = y << m_Dim;
+	a[0] = buffer[index + xs].b3Real();
+	b[0] = buffer[index + xe].b3Real();
 
 	index += m_fftDiff;
 	if (index >= max)
 	{
 		index -= max;
 	}
-	b[1] = buffer[index].b3Real();
-
-	index -= B3_OCEAN_XSKIP;
-	if (index < 0)
-	{
-		index += m_fftDiff;
-	}
-	a[1] = buffer[index].b3Real();
+	a[1] = buffer[index + xs].b3Real();
+	b[1] = buffer[index + xe].b3Real();
 
 	for (b3_loop i = 0;i < 2;i++)
 	{
 		c[i] = a[i] + dx[i] * (b[i] - a[i]);
 	}
 
-#ifdef VERBOSE_DUMP
-	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f  %f %f # %f %f # %f %f\n",x, y, pos->x, pos->y, a[0], b[0], a[1], b[1], c[0], c[1], dx,dy);
-#endif
-
 	return b3Math::b3Mix(c[0], c[1], dy);
 }
 
-/**
- *              hyl
- *               *
- *               |
- *               |
- *     hxl *-----*-----* hxh
- *               |h
- *               |
- *               *
- *              hyl
- */
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 {
-#if 1
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
-	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_index           max    = m_fftDiff * m_fftDiff;
-	b3_index           xs, x, xMask = (m_fftDiff - 1) & B3_OCEAN_MAX_MASK;
-	b3_index           ys, y, yMask =  m_fftDiff - 1;
-	b3_f64             h, hxl, hxh, hyl, hyh;
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
+	b3_f64             h, dx, dy;
 
-	xs = (b3_index)fx & B3_OCEAN_MAX_MASK;
-	ys = (b3_index)fy;
+	h  = b3Height(buffer, fx,     fy);
+	dx = b3Height(buffer, fx + 1, fy) - h;
+	dy = b3Height(buffer, fx,     fy + 1) - h;
 
-	h = buffer[(ys << m_Dim) + xs].b3Real();
-
-	x = (xs + B3_OCEAN_XSKIP) & xMask;
-	hxh = buffer[(ys << m_Dim) + x].b3Real();
-
-	x = (xs - B3_OCEAN_XSKIP) & xMask;
-	hxl = buffer[(ys << m_Dim) + x].b3Real();
-
-	y = (ys + 1) & yMask;
-	hyh = buffer[(y << m_Dim) + xs].b3Real();
-
-	y = (ys - 1) & yMask;
-	hyl = buffer[(y << m_Dim) + xs].b3Real();
-
-	dx = (fx - x) / B3_OCEAN_XSKIP;
-	dy =  fy - y;
-
-	n->x = b3Math::b3Mix(h - hxl, hxh - h, dx);
-	n->y = b3Math::b3Mix(h - hyl, hyh - h, dy);
+	n->x = -dx;
+	n->y = -dy;
 	n->z = 1;
-
-#if 0
-	b3PrintF(B3LOG_NORMAL, "%4d %4d %f %f # %f %f %f - %f - %f %f %f # %f %f\n",
-		x, y, pos->x, pos->y,
-		hxl, dx, hxh, h,
-		hyl, dy, hyh, n->x, n->y);
-#endif
-#else
-	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
-	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_index           max    = m_fftDiff * m_fftDiff;
-	b3_index           index, x, y;
-	b3_f64             h, hx, hy;
-
-	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
-	y = (b3_index)fy;
-
-	index = y * m_fftDiff + x;
-	h = buffer[index].b3Real();
-
-	index += B3_OCEAN_XSKIP;
-	if (index >= max)
-	{
-		index -= m_fftDiff;
-	}
-
-	dx = (fx - x) / B3_OCEAN_XSKIP;
-	if (dx == 0)
-	{
-		dx = 1;
-		hx = buffer[index].b3Real() - h;
-	}
-	else
-	{
-		hx = b3Math::b3Mix(h, buffer[index].b3Real(), dx) - h;
-	}
-
-	index += m_fftDiff;
-	if (index >= max)
-	{
-		index -= max;
-	}
-
-	index -= B3_OCEAN_XSKIP;
-	if (index < 0)
-	{
-		index += m_fftDiff;
-	}
-
-	dy =  fy - y;
-	if (dy == 0)
-	{
-		dy = 1;
-		hy = buffer[index].b3Real() - h;
-	}
-	else
-	{
-		hy = b3Math::b3Mix(h, buffer[index].b3Real(), dy) - h;
-	}
-
-	n->x = -hx / dx;
-	n->y = -hy / dy;
-	n->z = 1.0f;
-
-#ifdef VERBOSE_DUMP
-	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f  %f %f # %f %f\n",x, y, pos->x, pos->y, hx, dx, hy, dy, n->x, n->y);
-#endif
-#endif
 }
 
 void b3OceanWave::b3ComputePhillipsSpectrum()

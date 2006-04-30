@@ -36,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.10  2006/04/30 14:26:07  sm
+**  - That's it!
+**
 **  Revision 1.9  2006/04/30 13:15:10  sm
 **  - More deriv development.
 **
@@ -119,9 +122,10 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 //		b3Vector::b3Normalize(&n);
 #endif
 
-//		return b3Color(water, n.x * factor + 0.5, n.y * factor + 0.5);
+//		return b3Color(water, water, water);
+		return b3Color(water, n.x * factor + 0.5, n.y * factor + 0.5);
 //	printf("%d %d %f\n",x, y, n.x * factor + 0.5);
-		return b3Color(n.x * factor + 0.5, n.x * factor + 0.5, n.x * factor + 0.5);
+//		return b3Color(n.x * factor + 0.5, n.x * factor + 0.5, n.x * factor + 0.5);
 //		return b3Color(n.y * factor + 0.5, n.y * factor + 0.5, n.y * factor + 0.5);
 	}
 
