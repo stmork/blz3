@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/04/30 15:13:33  sm
+**	- Fixed overflow error.
+**
 **	Revision 1.19  2006/04/30 14:26:07  sm
 **	- That's it!
-**
+**	
 **	Revision 1.18  2006/04/30 13:15:10  sm
 **	- More deriv development.
 **	
@@ -205,8 +208,8 @@ b3_f64 b3OceanWave::b3Height(b3Complex<b3_f64> *buffer, const b3_f64 fx, const b
 	b3_f64    B3_ALIGN_16  a[2], b[2], c[2], dx[2];
 
 	xs = (b3_index)fx;
-	xe = (xs + 1) & m_fftMask;
 	y  = (b3_index)fy;
+	xe = (xs + 1) & m_fftMask;
 
 	dx[0] = dx[1] = fx - xs;
 	dy    =         fy - y;
@@ -234,13 +237,15 @@ b3_f64 b3OceanWave::b3Height(b3Complex<b3_f64> *buffer, const b3_f64 fx, const b
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 {
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
-	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
-	b3_f64             h, dx, dy;
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, ax = fx + 1;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, ay = fy + 1;
+	b3_f64             h, dx, dy, limit = m_fftDiff;
 
-	h  = b3Height(buffer, fx,     fy);
-	dx = b3Height(buffer, fx + 1, fy) - h;
-	dy = b3Height(buffer, fx,     fy + 1) - h;
+	if (ax >= limit) ax -= limit;
+	if (ay >= limit) ay -= limit;
+	h  = b3Height(buffer, fx, fy);
+	dx = b3Height(buffer, ax, fy) - h;
+	dy = b3Height(buffer, fx, ay) - h;
 
 	n->x = -dx;
 	n->y = -dy;
