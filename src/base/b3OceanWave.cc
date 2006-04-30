@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/04/30 13:15:10  sm
+**	- More deriv development.
+**
 **	Revision 1.17  2006/04/30 11:48:12  sm
 **	- New ocean wave deriv try.
-**
+**	
 **	Revision 1.16  2006/04/30 10:52:54  sm
 **	- Done some height field corrections.
 **	
@@ -250,59 +253,40 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
 	b3_index           max    = m_fftDiff * m_fftDiff;
-	b3_index           index, x, y;
+	b3_index           xs, x, xMask = (m_fftDiff - 1) & B3_OCEAN_MAX_MASK;
+	b3_index           ys, y, yMask =  m_fftDiff - 1;
 	b3_f64             h, hxl, hxh, hyl, hyh;
 
-	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
-	y = (b3_index)fy;
+	xs = (b3_index)fx & B3_OCEAN_MAX_MASK;
+	ys = (b3_index)fy;
 
-	index = y * m_fftDiff + x;
-	h = buffer[index].b3Real();
+	h = buffer[(ys << m_Dim) + xs].b3Real();
 
-	index += B3_OCEAN_XSKIP;
-	if (index >= max)
-	{
-		index -= m_fftDiff;
-	}
-	hxh = buffer[index].b3Real() - h;
+	x = (xs + B3_OCEAN_XSKIP) & xMask;
+	hxh = buffer[(ys << m_Dim) + x].b3Real();
 
-	index -= B3_OCEAN_XSKIP;
-	index -= B3_OCEAN_XSKIP;
-	if (index < 0)
-	{
-		index += m_fftDiff;
-	}
-	hxl = buffer[index].b3Real() - h;
+	x = (xs - B3_OCEAN_XSKIP) & xMask;
+	hxl = buffer[(ys << m_Dim) + x].b3Real();
 
-	index += B3_OCEAN_XSKIP;
-	if (index >= max)
-	{
-		index -= m_fftDiff;
-	}
-	index += m_fftDiff;
-	if (index >= max)
-	{
-		index -= max;
-	}
-	hyh = buffer[index].b3Real() - h;
+	y = (ys + 1) & yMask;
+	hyh = buffer[(y << m_Dim) + xs].b3Real();
 
-	index -= m_fftDiff;
-	index -= m_fftDiff;
-	if (index < 0)
-	{
-		index += max;
-	}
-	hyl = buffer[index].b3Real() - h;
+	y = (ys - 1) & yMask;
+	hyl = buffer[(y << m_Dim) + xs].b3Real();
 
 	dx = (fx - x) / B3_OCEAN_XSKIP;
 	dy =  fy - y;
 
-	n->x = b3Math::b3Mix(hxl, hxh, dx) * 0.01;
-	n->y = b3Math::b3Mix(hyl, hyh, dy) * 0.01;
+	n->x = b3Math::b3Mix(h - hxl, hxh - h, dx);
+	n->y = b3Math::b3Mix(h - hyl, hyh - h, dy);
 	n->z = 1;
 
-	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f %f - %f %f %f # %f %f\n",
-		x, y, pos->x, pos->y, hxl, dx, hxh, hyl, dy, hyh, n->x, n->y);
+#if 0
+	b3PrintF(B3LOG_NORMAL, "%4d %4d %f %f # %f %f %f - %f - %f %f %f # %f %f\n",
+		x, y, pos->x, pos->y,
+		hxl, dx, hxh, h,
+		hyl, dy, hyh, n->x, n->y);
+#endif
 #else
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
 	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;

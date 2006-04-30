@@ -36,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.9  2006/04/30 13:15:10  sm
+**  - More deriv development.
+**
 **  Revision 1.8  2006/04/30 10:52:54  sm
 **  - Done some height field corrections.
 **
@@ -97,6 +100,7 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		b3_vector n;
 		b3_f64    height;
 		b3_f64    water;
+		b3_f64    factor = 0.00005;
 
 #if 0
 		pos.x = m_Factor * x / m_xMax;
@@ -108,12 +112,17 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		pos.z = 0;
 
 		height = b3ComputeOceanWave(&pos);
-		water = b3Math::b3Limit(height * 0.0002 + 0.5);
-		n.x = n.y = water = 0.5;
+		water = b3Math::b3Limit(height * factor + 0.5);
+		n.x = n.y = height;
+#if 1
 		b3ComputeOceanWaveDeriv(&pos, &n);
-		b3Vector::b3Normalize(&n);
+//		b3Vector::b3Normalize(&n);
+#endif
 
-		return b3Color(water, n.x * 0.5 + 0.5, n.y * 0.5 + 0.5);
+//		return b3Color(water, n.x * factor + 0.5, n.y * factor + 0.5);
+//	printf("%d %d %f\n",x, y, n.x * factor + 0.5);
+		return b3Color(n.x * factor + 0.5, n.x * factor + 0.5, n.x * factor + 0.5);
+//		return b3Color(n.y * factor + 0.5, n.y * factor + 0.5, n.y * factor + 0.5);
 	}
 
 public:
