@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/04/30 10:52:54  sm
+**	- Done some height field corrections.
+**
 **	Revision 1.15  2006/04/30 09:05:25  sm
 **	- No verbose!
-**
+**	
 **	Revision 1.14  2006/04/30 08:55:52  sm
 **	- Further signed/unsigned issues.
 **	
@@ -112,11 +115,11 @@ b3OceanWave::b3OceanWave()
 {
 	m_t        = -FLT_MAX;
 	m_T        =     3;
-	m_Dim      =    10;
+	m_Dim      =     9;
 	m_Wx       =     1;
 	m_Wy       =     0.7f;
-	m_A        =    50;
-	m_GridSize =   400;
+	m_A        =     10;
+	m_GridSize =   800;
 	m_l        =     0.1f;
 	
 	m_Phillips = null;
@@ -178,7 +181,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 {
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx[2];
 	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
 	b3_index           max    = m_fftDiff * m_fftDiff;
 	b3_index           index, x, y;
@@ -187,7 +190,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
 	y = (b3_index)fy;
 
-	dx = (fx - x) / B3_OCEAN_XSKIP;
+	dx[0] = dx[1] = (fx - x) / B3_OCEAN_XSKIP;
 	dy =  fy - y;
 
 	index = y * m_fftDiff + x;
@@ -216,10 +219,14 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 
 	for (b3_loop i = 0;i < 2;i++)
 	{
-		c[i] = a[i] + dx * (b[i] - a[i]);
+		c[i] = a[i] + dx[i] * (b[i] - a[i]);
 	}
 
-	return b3Math::b3Mix(c[0], c[1], 0) * 0.5 + 0.5;
+#ifdef VERBOSE_DUMP
+	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f  %f %f # %f %f # %f %f\n",x, y, pos->x, pos->y, a[0], b[0], a[1], b[1], c[0], c[1], dx,dy);
+#endif
+
+	return b3Math::b3Mix(c[0], c[1], dy);
 }
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
@@ -260,7 +267,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 		index -= max;
 	}
 
-	index-=4;
+	index -= B3_OCEAN_XSKIP;
 	if (index < 0)
 	{
 		index += m_fftDiff;
@@ -280,6 +287,10 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	n->x = -hx / dx;
 	n->y = -hy / dy;
 	n->z = 1.0f;
+
+#ifdef VERBOSE_DUMP
+	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f  %f %f # %f %f\n",x, y, pos->x, pos->y, hx, dx, hy, dy, n->x, n->y);
+#endif
 }
 
 void b3OceanWave::b3ComputePhillipsSpectrum()

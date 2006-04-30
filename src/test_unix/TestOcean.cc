@@ -25,6 +25,7 @@
 #include "blz3/system/b3Time.h"
 #include "blz3/image/b3Sampler.h"
 #include "blz3/base/b3Math.h"
+#include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3OceanWave.h"
 
 /*************************************************************************
@@ -35,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.8  2006/04/30 10:52:54  sm
+**  - Done some height field corrections.
+**
 **  Revision 1.7  2006/04/30 08:53:24  sm
 **  - Removed some signed/unsigned issues.
 **  - Reflect new FFT algorithm.
@@ -90,6 +94,8 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 	inline b3_color b3SamplePixel(const b3_coord x,const b3_coord y)
 	{
 		b3_vector pos;
+		b3_vector n;
+		b3_f64    height;
 		b3_f64    water;
 
 #if 0
@@ -101,9 +107,13 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 #endif
 		pos.z = 0;
 
-		water = b3Math::b3Limit(b3ComputeOceanWave(&pos) * 0.0002 + 0.5);
+		height = b3ComputeOceanWave(&pos);
+		water = b3Math::b3Limit(height * 0.0002 + 0.5);
+		n.x = n.y = water = 0.5;
+		b3ComputeOceanWaveDeriv(&pos, &n);
+		b3Vector::b3Normalize(&n);
 
-		return b3Color(water,water,water);
+		return b3Color(water, n.x * 0.5 + 0.5, n.y * 0.5 + 0.5);
 	}
 
 public:
