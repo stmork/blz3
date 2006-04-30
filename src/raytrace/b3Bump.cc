@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2006/04/30 11:48:12  sm
+**	- New ocean wave deriv try.
+**
 **	Revision 1.50  2006/04/29 20:50:39  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
-**
+**	
 **	Revision 1.49  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -1141,11 +1144,11 @@ void b3BumpOcean::b3BumpNormal(b3_ray *ray)
 	b3_vector ox, oy;
 	b3_f64    water = b3ComputeOceanWave(&point);
 
-	ox.x     = 0.1f;
+	ox.x     = 0.5f;
 	ox.y     = 0;
 	ox.z     = water;
 	oy.x     = 0;
-	oy.y     = 0.1f;
+	oy.y     = 0.5f;
 	oy.z     = water;
 
 	point.x += ox.x;

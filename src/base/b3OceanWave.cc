@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/04/30 11:48:12  sm
+**	- New ocean wave deriv try.
+**
 **	Revision 1.16  2006/04/30 10:52:54  sm
 **	- Done some height field corrections.
-**
+**	
 **	Revision 1.15  2006/04/30 09:05:25  sm
 **	- No verbose!
 **	
@@ -229,8 +232,78 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 	return b3Math::b3Mix(c[0], c[1], dy);
 }
 
+/**
+ *              hyl
+ *               *
+ *               |
+ *               |
+ *     hxl *-----*-----* hxh
+ *               |h
+ *               |
+ *               *
+ *              hyl
+ */
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 {
+#if 1
+	b3Complex<b3_f64> *buffer = b3GetBuffer();
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
+	b3_index           max    = m_fftDiff * m_fftDiff;
+	b3_index           index, x, y;
+	b3_f64             h, hxl, hxh, hyl, hyh;
+
+	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
+	y = (b3_index)fy;
+
+	index = y * m_fftDiff + x;
+	h = buffer[index].b3Real();
+
+	index += B3_OCEAN_XSKIP;
+	if (index >= max)
+	{
+		index -= m_fftDiff;
+	}
+	hxh = buffer[index].b3Real() - h;
+
+	index -= B3_OCEAN_XSKIP;
+	index -= B3_OCEAN_XSKIP;
+	if (index < 0)
+	{
+		index += m_fftDiff;
+	}
+	hxl = buffer[index].b3Real() - h;
+
+	index += B3_OCEAN_XSKIP;
+	if (index >= max)
+	{
+		index -= m_fftDiff;
+	}
+	index += m_fftDiff;
+	if (index >= max)
+	{
+		index -= max;
+	}
+	hyh = buffer[index].b3Real() - h;
+
+	index -= m_fftDiff;
+	index -= m_fftDiff;
+	if (index < 0)
+	{
+		index += max;
+	}
+	hyl = buffer[index].b3Real() - h;
+
+	dx = (fx - x) / B3_OCEAN_XSKIP;
+	dy =  fy - y;
+
+	n->x = b3Math::b3Mix(hxl, hxh, dx) * 0.01;
+	n->y = b3Math::b3Mix(hyl, hyh, dy) * 0.01;
+	n->z = 1;
+
+	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f %f - %f %f %f # %f %f\n",
+		x, y, pos->x, pos->y, hxl, dx, hxh, hyl, dy, hyh, n->x, n->y);
+#else
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
 	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
@@ -290,6 +363,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_FULL, "%4d %4d %f %f # %f %f  %f %f # %f %f\n",x, y, pos->x, pos->y, hx, dx, hy, dy, n->x, n->y);
+#endif
 #endif
 }
 
