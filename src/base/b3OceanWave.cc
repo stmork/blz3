@@ -26,8 +26,8 @@
 #include "blz3/base/b3OceanWave.h"
 #include "blz3/base/b3Procedure.h"
 
-#define not_VERBOSE
-#define not_VERBOSE_DUMP
+#define VERBOSE
+#define VERBOSE_DUMP
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/04/30 08:53:24  sm
+**	- Removed some signed/unsigned issues.
+**	- Reflect new FFT algorithm.
+**
 **	Revision 1.12  2006/04/30 08:30:56  sm
 **	- Exchanged FFT algorithm.
-**
+**	
 **	Revision 1.11  2006/04/29 20:45:57  sm
 **	- New scaling.
 **	
@@ -151,6 +155,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	b3PrintF(B3LOG_DEBUG, "    L    = %1.3f\n", m_L);
 	b3PrintF(B3LOG_DEBUG, "    L²   = %1.3f\n", m_L2);
 	b3PrintF(B3LOG_DEBUG, "    |w|² = %1.3f\n", m_W2);
+
 #if 0
 	b3TestSpectrum3();
 #else
@@ -166,12 +171,12 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 
 b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 {
-	b3Complex<b3_f64>   *buffer = b3GetBuffer();
-	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
-	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_index  x,y;
-	b3_size   index, max = m_fftDiff * m_fftDiff;
-	b3_f64    a[2], b[2], c[2];
+	b3Complex<b3_f64> *buffer = b3GetBuffer();
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
+	b3_size            max    = m_fftDiff * m_fftDiff;
+	b3_index           index, x, y;
+	b3_f64             a[2], b[2], c[2];
 
 	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
 	y = (b3_index)fy;
@@ -213,12 +218,12 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 {
-	b3Complex<b3_f64>   *buffer = b3GetBuffer();
-	b3_f64    fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
-	b3_f64    fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
-	b3_index  x,y;
-	b3_size   index, max = m_fftDiff * m_fftDiff;
-	b3_f64    h, hx, hy;
+	b3Complex<b3_f64> *buffer = b3GetBuffer();
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
+	b3_size            max    = m_fftDiff * m_fftDiff;
+	b3_index           index, x, y;
+	b3_f64             h, hx, hy;
 
 	x = (b3_index)fx & B3_OCEAN_MAX_MASK;
 	y = (b3_index)fy;
@@ -394,9 +399,6 @@ void b3OceanWave::b3TestSpectrum3()
 //	tx.b3LoadImage("/home/sm/Kram/Bilder/openBC4.jpg");
 	tx.b3LoadImage("s:/blz3/WWW/lines/normal/window_raytrace.jpg");
 	m_FFT.b3AllocBuffer(&tx);
-#ifdef VERBOSE_DUMP
-	m_FFT.b3DumpBuffer(B3LOG_FULL);
-#endif
 	m_FFT.b3FFT2D();
 }
 
@@ -411,9 +413,6 @@ void b3OceanWave::b3DumpImages()
 #ifdef VERBOSE
 	b3Tx tx;
 
-#ifdef VERBOSE_DUMP
-	m_FFT.b3DumpSpectrum(B3LOG_FULL);
-#endif
 //	m_FFT.b3SetAntiRaster(0.5, 0.25);
 	m_FFT.b3GetSpectrum(&tx, 0.2);
 #ifdef WIN32
@@ -425,9 +424,6 @@ void b3OceanWave::b3DumpImages()
  	m_FFT.b3IFFT2D();
 
 #ifdef VERBOSE
-#ifdef VERBOSE_DUMP
-	m_FFT.b3DumpBuffer(B3LOG_FULL);
-#endif
 	m_FFT.b3GetBuffer(&tx, 2000);
 #ifdef WIN32
 	tx.b3SaveJPEG("c:/temp/buffer.jpg");

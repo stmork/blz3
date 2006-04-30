@@ -26,9 +26,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/04/30 08:53:24  sm
+**	- Removed some signed/unsigned issues.
+**	- Reflect new FFT algorithm.
+**
 **	Revision 1.3  2006/04/29 20:45:57  sm
 **	- New scaling.
-**
+**	
 **	Revision 1.2  2006/04/29 17:58:27  sm
 **	- Minor value changes.
 **	
@@ -239,7 +243,7 @@ void init_vbo()
 
 void RenderScene()
 {
-	b3_f64  *src;
+	b3Complex<b3_f64>  *src;
 	b3_f64   t, now = timepoint.b3Now();
 	GLint    max = size * size,i,k;
 	GLfloat *dst;
@@ -257,7 +261,7 @@ void RenderScene()
 	{
 		for (i = 0; i < size; i+=OW_SKIP)
 		{
-			*dst = *src * 0.0001;
+			*dst = src->b3Real() * 0.0001;
 			src += OW_SKIP;
 			dst += 3;
 		}

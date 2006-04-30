@@ -35,6 +35,10 @@
 
 /*
 **  $Log$
+**  Revision 1.7  2006/04/30 08:53:24  sm
+**  - Removed some signed/unsigned issues.
+**  - Reflect new FFT algorithm.
+**
 **  Revision 1.6  2006/04/29 20:51:10  sm
 **  - New scaling.
 **
@@ -74,7 +78,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WATER_RES   400
+#define WATER_RES 400
 
 class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 {

@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/04/30 08:53:24  sm
+**	- Removed some signed/unsigned issues.
+**	- Reflect new FFT algorithm.
+**
 **	Revision 1.1  2006/04/29 20:29:54  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
-**
+**	
 **
 */
 
@@ -47,18 +51,16 @@ static void save(b3Tx *tx, const char *name, int num)
 {
 	char filename[B3_FILESTRINGLEN];
 
-	snprintf(filename, sizeof(filename), "/tmp/%s_%03d.jpg");
+	snprintf(filename, sizeof(filename), "/tmp/%s_%03d.jpg", name, num);
 	tx->b3SaveJPEG(name);
 }
 
 int main(int argc, char *argv[])
 {
-	b3Fourier       fft1;
-	b3SimpleFourier fft2;
+	b3Fourier       fft2;
 	b3Tx            tx;
 
 	b3Log::b3SetLevel(B3LOG_FULL);
-	fft1.b3SelfTest();
 	fft2.b3SelfTest();
 
 	tx.b3LoadImage("/home/sm/Blizzard/Textures/StanOlli.gif");

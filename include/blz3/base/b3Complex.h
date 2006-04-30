@@ -367,7 +367,7 @@ public:
 	 * This method multiplies this complex number with
 	 * themself.
 	 */
-	inline void b3Square() const
+	inline void b3Square()
 	{
 		T B3_ALIGN_16 re[2];
 
