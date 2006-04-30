@@ -19,9 +19,14 @@
 #define B3_BASE_BASEINCLUDE_H
 
 #include "blz3/b3Config.h"
-#include "blz3/base/b3Math.h"
+#include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
-#include "blz3/base/b3Vector.h"
+#include "blz3/base/b3Complex.h"
+#include "blz3/base/b3List.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Spline.h"
+#include "blz3/base/b3Vector.h"
+#include "blz3/base/b3World.h"
 
 #endif

@@ -39,7 +39,7 @@ class B3_PLUGIN b3OceanWave : protected b3Mem
 	b3_f64                  m_omega_t;     // omega t
 	b3_loop                 m_fftMin;      // FFT loop start
 	b3_loop                 m_fftMax;      // FFT loop end
-	b3_size                 m_fftDiff;     // FFT loop size
+	b3_index                m_fftDiff;     // FFT loop size
 	b3_f64                  m_W2;          // Quad wind speed
 	b3_f64                  m_GridScale;   // FFT grid scaling
 	b3_f64                  m_L;           // windspeed and gravity constant
