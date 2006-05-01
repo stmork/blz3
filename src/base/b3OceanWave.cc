@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2006/05/01 10:03:02  sm
+**	- Better Exception handling.
+**	- Documentation.
+**
 **	Revision 1.20  2006/04/30 15:13:33  sm
 **	- Fixed overflow error.
-**
+**	
 **	Revision 1.19  2006/04/30 14:26:07  sm
 **	- That's it!
 **	
@@ -128,7 +132,7 @@ b3OceanWave::b3OceanWave()
 	m_t        = -FLT_MAX;
 	m_T        =     3;
 	m_Dim      =     9;
-	m_Wx       =     1;
+	m_Wx       =     2;
 	m_Wy       =     0.7f;
 	m_A        =     10;
 	m_GridSize =   800;
@@ -143,6 +147,16 @@ b3OceanWave::~b3OceanWave()
 	if (m_Phillips != null)
 	{
 		delete [] m_Phillips;
+	}
+}
+
+void b3OceanWave::b3Modified(b3_bool modified)
+{
+	m_Modified = modified;
+	if (m_Phillips == null)
+	{
+		delete [] m_Phillips;
+		m_Phillips = null;
 	}
 }
 
@@ -172,11 +186,12 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	m_FFT.b3AllocBuffer(1 << m_Dim);
 	m_Random.b3SetSeed(0);
 
-	b3PrintF(B3LOG_DEBUG, "    T    = %1.3f\n", m_T);
-	b3PrintF(B3LOG_DEBUG, "    t    = %1.3f\n", m_t);
-	b3PrintF(B3LOG_DEBUG, "    L    = %1.3f\n", m_L);
-	b3PrintF(B3LOG_DEBUG, "    L²   = %1.3f\n", m_L2);
+	b3PrintF(B3LOG_DEBUG, "     T   = %1.3f\n", m_T);
+	b3PrintF(B3LOG_DEBUG, "     t   = %1.3f\n", m_t);
+	b3PrintF(B3LOG_DEBUG, "     L   = %1.3f\n", m_L);
+	b3PrintF(B3LOG_DEBUG, "     L²  = %1.3f\n", m_L2);
 	b3PrintF(B3LOG_DEBUG, "    |w|² = %1.3f\n", m_W2);
+	b3PrintF(B3LOG_DEBUG, "     l²  = %1.3f\n", m_l2);
 
 #if 0
 	b3TestSpectrum3();
@@ -237,8 +252,49 @@ b3_f64 b3OceanWave::b3Height(b3Complex<b3_f64> *buffer, const b3_f64 fx, const b
 void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 {
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, ax = fx + 1;
-	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, ay = fy + 1;
+	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
+	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
+#if 1
+	b3_f64                 dy;
+	b3_index               max    = m_fftDiff * m_fftDiff;
+	b3_index               index, xs, xe, y;
+	b3_f64    B3_ALIGN_16  a[2], b[2], c[2], dx[2];
+
+	xs = (b3_index)fx;
+	y  = (b3_index)fy;
+	xe = (xs + 1) & m_fftMask;
+
+	dx[0] = dx[1] = fx - xs;
+	dy    =         fy - y;
+
+	index = y << m_Dim;
+	a[0] = buffer[index + xs].b3Real();
+	b[0] = buffer[index + xe].b3Real();
+
+	index += m_fftDiff;
+	if (index >= max)
+	{
+		index -= max;
+	}
+	a[1] = buffer[index + xs].b3Real();
+	b[1] = buffer[index + xe].b3Real();
+
+	for (b3_loop i = 0;i < 2;i++)
+	{
+		c[i] = a[i] + dx[i] * (b[i] - a[i]);
+	}
+	n->y = c[1] - c[0];
+
+	b3_f64 aux = b[0]; b[0] = a[1]; a[1] = aux;
+	for (b3_loop i = 0;i < 2;i++)
+	{
+		c[i] = a[i] + dx[i] * (b[i] - a[i]);
+	}
+	n->x = c[1] - c[0];
+	n->z = m_GridSize / m_fftDiff;
+#else
+	b3_f64  ax = fx + 1;
+	b3_f64  ay = fy + 1;
 	b3_f64             h, dx, dy, limit = m_fftDiff;
 
 	if (ax >= limit) ax -= limit;
@@ -250,6 +306,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	n->x = -dx;
 	n->y = -dy;
 	n->z = 1;
+#endif
 }
 
 void b3OceanWave::b3ComputePhillipsSpectrum()
@@ -259,18 +316,13 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 		m_Phillips = new b3Complex<b3_f64>[m_fftDiff * m_fftDiff];
 		if (m_Phillips == null)
 		{
-			throw;
+			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
-
-	}
-
-	if (m_Modified)
-	{
-		m_FFT.b3Sample((b3FilterInfo *)this, b3FilterPhillipsSpectrum);
+		m_FFT.b3Sample(this, b3FilterPhillipsSpectrum);
 		m_Modified = false;
 	}
 
-	m_FFT.b3Sample((b3FilterInfo *)this, b3SampleHeight);
+	m_FFT.b3Sample(this, b3SampleHeight);
 }
 
 void b3OceanWave::b3FilterPhillipsSpectrum(

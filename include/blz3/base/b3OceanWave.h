@@ -31,7 +31,7 @@
 #define B3_OCEAN_XSKIP         1
 #define B3_OCEAN_MAX_MASK     (B3_OCEAN_MAX - B3_OCEAN_XSKIP)
 
-class B3_PLUGIN b3OceanWave : protected b3Mem
+class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 {
 	const static b3_f64 g;
 
@@ -106,10 +106,13 @@ public:
 		return m_FFT.b3GetBuffer();
 	}
 
-	inline void b3Modified(b3_bool modified=true)
-	{
-		m_Modified = modified;
-	}
+	/**
+	 * This method flags the ocean wave instance whether a Phillips
+	 * Spectrum recomputation should be performed.
+	 *
+	 * @param modified A flag which indicates a modifiaction of computation values.
+	 */
+	void b3Modified(b3_bool modified=true);
 private:
 	void              b3ComputePhillipsSpectrum();
 

@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/05/01 10:03:02  sm
+**	- Better Exception handling.
+**	- Documentation.
+**
 **	Revision 1.6  2006/04/30 08:30:56  sm
 **	- Exchanged FFT algorithm.
-**
+**	
 **	Revision 1.5  2006/04/29 20:29:53  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
 **	
@@ -158,25 +162,29 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 		// New buffer has same size.
 		return true;
 	}
-	b3Free();
-	if (m_Buffer != null)
-	{
-		delete [] m_Buffer;
-		delete [] m_Lines;
-	}
+	b3FreeBuffer();
+
 	m_xSize  =
 	m_ySize  = size;
-	b3ReallocBuffer();
+	if (!b3ReallocBuffer())
+	{
+		b3FreeBuffer();
+		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
+	}
 	return true;
 }
 
-void b3Fourier::b3ReallocBuffer()
+b3_bool b3Fourier::b3ReallocBuffer()
 {
 	m_xDim   = b3Log2(m_xSize);
 	m_yDim   = b3Log2(m_ySize);
 
 	m_Buffer = new b3Complex<b3_f64>[m_xSize * m_ySize];
 	m_Lines  = new b3Complex<b3_f64> *[m_ySize];
+	if ((m_Buffer == null) || (m_Lines == null))
+	{
+		return false;
+	}
 
 	for (b3_loop y = 0;y < m_ySize;y++)
 	{
@@ -188,6 +196,8 @@ void b3Fourier::b3ReallocBuffer()
 
 	m_yReal = (b3_f64 *)b3Alloc(m_ySize * sizeof(b3_f64));
 	m_yImag = (b3_f64 *)b3Alloc(m_ySize * sizeof(b3_f64));
+
+	return (m_xReal != null) && (m_xImag != null) && (m_yReal != null) && (m_yImag != null);
 }
 
 void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
@@ -199,6 +209,7 @@ void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
 	b3_index index   = 0, pos;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3Sample(...)\n");
+	info->m_Fourier = this;
 	index = 0;
 	for (y = -yHalf;y < yHalf;y++)
 	{
@@ -233,13 +244,16 @@ void b3Fourier::b3AllocBuffer  (b3Tx *tx)
 	m_yStart = (m_ySize - m_yOrig) >> 1;
 	index    = m_yStart * m_xSize + m_xStart;
 
-	if (!tx->b3IsGreyPalette())
+	if (!tx->b3IsPalette())
 	{
-//		throw;
+		B3_THROW(b3FFTException, B3_FFT_NO_PALETTE);
 	}
 
 	b3PrintF(B3LOG_FULL, "  Grey (%dx%d)\n", m_xSize, m_ySize);
-	b3ReallocBuffer();
+	if (!b3ReallocBuffer())
+	{
+		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
+	}
 	cPtr    = (b3_u08 *)tx->b3GetData();
 	for (y = 0;y < m_yOrig;y++)
 	{

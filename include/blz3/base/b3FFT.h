@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Fourier transform (1d/2d)
+**	Blizzard III - 2D Fast Fourier transform
 **
 **	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved
@@ -23,8 +23,21 @@
 #include "blz3/base/b3Complex.h"
 #include "blz3/base/b3Random.h"
 
+enum b3_fft_error
+{
+	B3_FFT_ERROR     = -1,
+	B3_FFT_OK        =  0,
+	B3_FFT_NO_MEMORY,
+	B3_FFT_NO_PALETTE
+};
+
+typedef b3Exception<b3_fft_error,0x4f4f54> b3FFTException;
+
+class b3Fourier;
+
 struct b3FilterInfo
 {
+	b3Fourier *m_Fourier;
 };
 
 typedef void (*b3SampleFunc)(const b3_f64 fx,const b3_f64 fy, const b3_index index, b3FilterInfo *info);
@@ -45,17 +58,48 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 public:
 	         b3Fourier();
 	virtual ~b3Fourier();
-	
+
+	/**
+	 * This method allocates memory of the needed size for the FFT computation.
+	 *
+	 * @param new_size The needed new size
+	 * @return True on success
+	 */
 	b3_bool b3AllocBuffer(b3_res new_size);
+
+	/**
+	 * This method copies the values from a given image into the internal FFT
+	 * buffer. It allocates the needed memory.
+	 *
+	 * @param tx The image with the values to initialize.
+	 */
 	void    b3AllocBuffer  (b3Tx *tx);
+
+	/**
+	 * This method frees all used memory.
+	 */
 	void    b3FreeBuffer();
+
+	/**
+	 * This method samples all values of the internal buffer. The internal buffer
+	 * has to be in spatial domain.
+	 *
+	 * @param info The info structure to pass to the sample method.
+	 * @param func The sample callback method which is called for every buffer sample.
+	 */
 	void    b3Sample       (b3FilterInfo *info, b3SampleFunc func);
 
+	/**
+	 * This method computes the forward FFT of the internal buffer.
+	 */
 	inline void    b3FFT2D()
 	{
 		b3FFT2D(1);
 	}
 
+	/**
+	 * This method computes the inverse FFT of the internal buffer.
+	 */
 	inline void    b3IFFT2D()
 	{
 		b3FFT2D(-1);
@@ -74,13 +118,27 @@ public:
 	 */
 	void    b3SelfTest();
 
+	/**
+	 * This method returns the number which is a power of 2 number
+	 * and greater or equal to the given number.
+	 *
+	 * @param value The value to compute the power of 2 number from.
+	 * @return The value which is a power of two number and greater or equal to the given number.
+	 */
 	static b3_loop  b3PowOf2(b3_loop value);
+
+	/**
+	 * This method returns the log of the given value.
+	 *
+	 * @param value The value to compute the log2 from.
+	 * @return The resulting log2 value.
+	 */
 	static b3_count b3Log2(b3_u32 value);
 
 private:
 	static b3_bool b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y);
 	       b3_bool b3FFT2D(int dir);
-		   void    b3ReallocBuffer();
+		   b3_bool b3ReallocBuffer();
 };
 
 #endif
