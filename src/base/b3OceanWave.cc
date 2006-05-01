@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2006/05/01 12:32:42  sm
+**	- Some value tests.
+**
 **	Revision 1.22  2006/05/01 10:44:46  sm
 **	- Unifying ocean wave values.
-**
+**	
 **	Revision 1.21  2006/05/01 10:03:02  sm
 **	- Better Exception handling.
 **	- Documentation.
@@ -293,7 +296,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	{
 		c[i] = a[i] + dx[i] * (b[i] - a[i]);
 	}
-	n->y = c[1] - c[0];
+	n->y = c[0] - c[1];
 
 	//
 	//   b0 #          # b1
@@ -308,7 +311,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	{
 		c[i] = a[i] + dx[i] * (b[i] - a[i]);
 	}
-	n->x = c[1] - c[0];
+	n->x = c[0] - c[1];
 	n->z = m_GridSize / m_fftDiff;
 #else
 	b3_f64  ax = fx + 1;

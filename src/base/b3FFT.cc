@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/01 12:32:42  sm
+**	- Some value tests.
+**
 **	Revision 1.7  2006/05/01 10:03:02  sm
 **	- Better Exception handling.
 **	- Documentation.
-**
+**	
 **	Revision 1.6  2006/04/30 08:30:56  sm
 **	- Exchanged FFT algorithm.
 **	
@@ -391,14 +394,14 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 	{
 		for (i = 0; i < m_xSize; i++)
 		{
-			m_xReal[i] = m_Lines[i][j].b3Real();
-			m_xImag[i] = m_Lines[i][j].b3Imag();
+			m_xReal[i] = m_Lines[j][i].b3Real();
+			m_xImag[i] = m_Lines[j][i].b3Imag();
 		}
 		b3FFT(dir,m_xDim,m_xReal,m_xImag);
 		for (i = 0; i < m_xSize; i++)
 		{
-			m_Lines[i][j].b3Real() = m_xReal[i];
-			m_Lines[i][j].b3Imag() = m_xImag[i];
+			m_Lines[j][i].b3Real() = m_xReal[i];
+			m_Lines[j][i].b3Imag() = m_xImag[i];
 		}
 	}
 
@@ -407,14 +410,14 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 	{
 		for (j = 0; j < m_ySize; j++)
 		{
-			m_yReal[j] = m_Lines[i][j].b3Real();
-			m_yImag[j] = m_Lines[i][j].b3Imag();
+			m_yReal[j] = m_Lines[j][i].b3Real();
+			m_yImag[j] = m_Lines[j][i].b3Imag();
 		}
 		b3FFT(dir, m_yDim, m_yReal, m_yImag);
 		for (j = 0; j < m_ySize; j++)
 		{
-			m_Lines[i][j].b3Real() = m_yReal[j];
-			m_Lines[i][j].b3Imag() = m_yImag[j];
+			m_Lines[j][i].b3Real() = m_yReal[j];
+			m_Lines[j][i].b3Imag() = m_yImag[j];
 		}
 	}
 
