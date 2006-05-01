@@ -36,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.11  2006/05/01 10:44:46  sm
+**  - Unifying ocean wave values.
+**
 **  Revision 1.10  2006/04/30 14:26:07  sm
 **  - That's it!
 **
@@ -103,7 +106,7 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		b3_vector n;
 		b3_f64    height;
 		b3_f64    water;
-		b3_f64    factor = 0.00005;
+		b3_f64    factor = 0.001;
 
 #if 0
 		pos.x = m_Factor * x / m_xMax;

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/01 10:44:46  sm
+**	- Unifying ocean wave values.
+**
 **	Revision 1.3  2006/04/29 20:29:54  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
-**
+**	
 **	Revision 1.2  2006/04/29 17:58:27  sm
 **	- Minor value changes.
 **	
@@ -93,7 +96,7 @@ int main(int argc, char *argv[])
 			b3PrintF(B3LOG_NORMAL, "t=%3.3f\n",time_diff);
 
 			wave.b3PrepareOceanWave(time_diff);
-			wave.b3GetBuffer(&tx, 0.0001);
+			wave.b3GetBuffer(&tx, 0.001);
 			display->b3PutTx(&tx);
 		}
 		while(!display->b3IsCancelled(xMax,yMax));

@@ -71,7 +71,20 @@ public:
 	 */
 	void   b3PrepareOceanWave(const b3_f64 t);
 
+	/**
+	 * This method computes a height value for the given position.
+	 *
+	 * @param pos The position of the height value to be computed.
+	 * @return The computed height value.
+	 */
 	b3_f64 b3ComputeOceanWave(const b3_vector *pos);
+
+	/**
+	 * This method computes the slope values for the given position.
+	 *
+	 * @param pos The position of the slope values to be computed.
+	 * @param n The computed slope values.
+	 */
 	void   b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n);
 
 	/**
@@ -84,7 +97,6 @@ public:
 	{
 		m_FFT.b3GetBuffer(tx, scale);
 	}
-
 
 	/**
 	 * This returns the FFT spectral buffer as texture.
@@ -113,6 +125,13 @@ public:
 	 * @param modified A flag which indicates a modifiaction of computation values.
 	 */
 	void b3Modified(b3_bool modified=true);
+
+	/**
+	 * This method dumps the actual computed Phillips spectrum as height field and
+	 * spectrum into the temp directory.
+	 */
+	void              b3DumpImages();
+
 private:
 	void              b3ComputePhillipsSpectrum();
 
@@ -134,7 +153,6 @@ private:
 	void              b3TestSpectrum2();
 	void              b3TestSpectrum3();
 	void              b3TestSpectrum4();
-	void              b3DumpImages();
 };
 
 #endif

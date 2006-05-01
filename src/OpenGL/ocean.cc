@@ -26,10 +26,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/01 10:44:46  sm
+**	- Unifying ocean wave values.
+**
 **	Revision 1.4  2006/04/30 08:53:24  sm
 **	- Removed some signed/unsigned issues.
 **	- Reflect new FFT algorithm.
-**
+**	
 **	Revision 1.3  2006/04/29 20:45:57  sm
 **	- New scaling.
 **	
@@ -98,16 +101,14 @@ PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
 GLuint  vbo[2];
 b3_bool has_vbo;
 
-void init_vertices(int dim, b3_f64 gridsize)
+void init_vertices()
 {
 	b3_f64 factor;
 	int i,k;
 
-	size = 1 << dim;
-	halfgrid = gridsize * 0.5;
-	ocean.m_Dim      = dim;
-	ocean.m_GridSize = gridsize;
-	factor = gridsize / size;
+	size = 1 << ocean.m_Dim;
+	halfgrid = ocean.m_GridSize * 0.5;
+	factor   = ocean.m_GridSize / size;
 	vSize = size * size * sizeof(GLfloat) * 3;
 	iSize = 2 * size * (size - 1) * sizeof(GLint) * 2;
 
@@ -261,7 +262,7 @@ void RenderScene()
 	{
 		for (i = 0; i < size; i+=OW_SKIP)
 		{
-			*dst = src->b3Real() * 0.0001;
+			*dst = src->b3Real() * 0.001;
 			src += OW_SKIP;
 			dst += 3;
 		}
@@ -343,7 +344,7 @@ void SetupRC()
 	glLightfv(GL_LIGHT0,GL_POSITION,light0);
 
 	init_vbo();
-	init_vertices(9, 400);
+	init_vertices();
 }
 
 int main(int argc,char *argv[])

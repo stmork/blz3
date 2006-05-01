@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2006/05/01 10:44:46  sm
+**	- Unifying ocean wave values.
+**
 **	Revision 1.21  2006/05/01 10:03:02  sm
 **	- Better Exception handling.
 **	- Documentation.
-**
+**	
 **	Revision 1.20  2006/04/30 15:13:33  sm
 **	- Fixed overflow error.
 **	
@@ -132,11 +135,11 @@ b3OceanWave::b3OceanWave()
 	m_t        = -FLT_MAX;
 	m_T        =     3;
 	m_Dim      =     9;
-	m_Wx       =     2;
+	m_Wx       =     1;
 	m_Wy       =     0.7f;
-	m_A        =     10;
-	m_GridSize =   800;
-	m_l        =     0.1f;
+	m_A        =     1;
+	m_GridSize =   400;
+	m_l        =     0.0f;
 	
 	m_Phillips = null;
 	m_Modified = true;
@@ -198,11 +201,10 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 #else
 	b3ComputePhillipsSpectrum();
 #endif
+	m_FFT.b3IFFT2D();
 
 #ifdef VERBOSE
 	b3DumpImages();
-#else
-	m_FFT.b3IFFT2D();
 #endif
 }
 
@@ -254,7 +256,7 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	b3Complex<b3_f64> *buffer = b3GetBuffer();
 	b3_f64             fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
 	b3_f64             fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
-#if 1
+#if 0
 	b3_f64                 dy;
 	b3_index               max    = m_fftDiff * m_fftDiff;
 	b3_index               index, xs, xe, y;
@@ -279,12 +281,28 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 	a[1] = buffer[index + xs].b3Real();
 	b[1] = buffer[index + xe].b3Real();
 
+	//          c1
+	//   a1 #---+-------# b1
+	//          |
+	//          |
+	//          |
+	//          |
+	//   a0 #---+-------# b0
+	//          c0
 	for (b3_loop i = 0;i < 2;i++)
 	{
 		c[i] = a[i] + dx[i] * (b[i] - a[i]);
 	}
 	n->y = c[1] - c[0];
 
+	//
+	//   b0 #          # b1
+	//      |          |
+	//   c0 +----------+ c1
+	//      |          |
+	//      |          |
+	//   a0 #          # a1
+	//
 	b3_f64 aux = b[0]; b[0] = a[1]; a[1] = aux;
 	for (b3_loop i = 0;i < 2;i++)
 	{
@@ -341,13 +359,13 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 	b3_f64             factor = M_PI * 2 * m_fftMax / m_GridSize;
 	b3_f64             w;
 	b3_f64             phillips;
-	b3Complex<b3_f64>  gauss;
-	b3Complex<b3_f64>  result;
-	b3Complex<b3_f64>  K(fx * factor, fy * factor);
-	b3_f64             k2       = K.b3SquareLength();
+	b3_f64             Kr       = fx * factor;
+	b3_f64             Ki       = fy * factor;
+	b3_f64             k2       = Kr * Kr + Ki * Ki;
 	b3_f64             k4       = k2 * k2;
-	b3_f64             quotient = fabs(K.b3Real() * m_Wx + K.b3Imag() * m_Wy);
+	b3_f64             quotient = fabs(Kr * m_Wx + Ki * m_Wy);
 	b3_f64             hf_scale = exp(-m_l2 * k2);
+	b3_f64             gr, gi;
 
 	if(k4 == 0)
 	{
@@ -355,26 +373,27 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 	}
 	else
 	{
-		phillips = m_A * exp( m_L2 / k2 ) * quotient * quotient * quotient / k4;
+		phillips = m_A * exp( m_L2 / k2 ) * quotient * quotient * quotient * hf_scale / k4;
 	}
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_NORMAL,"f: %f %f - K: %f %f # k²=%f k^4=%f L²=%f q=%f P=%f",
 		fx, fy,
-		K.b3Real(), K.b3Imag(),
+		Kr, Ki,
 		k2, k4, m_L2, quotient, phillips);
 #endif
 
 
 	do
 	{
-		gauss.b3Real() = m_Random.b3Rand(2.0) - 1.0;
-		gauss.b3Imag() = m_Random.b3Rand(2.0) - 1.0;
-		w  = gauss.b3SquareLength();
+		gr = m_Random.b3Rand(2.0) - 1.0;
+		gi = m_Random.b3Rand(2.0) - 1.0;
+
+		w  = gr * gr + gi * gi;
 	}
 	while (w >= 1.0);
 
-	m_Phillips[index] = gauss * sqrt( -phillips * log(w) / w);
+	m_Phillips[index] = b3Complex<b3_f64>(gr, gi) * sqrt( -phillips * log(w) / w);
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_NORMAL, " # %f %f %f\n",
@@ -438,25 +457,21 @@ void b3OceanWave::b3TestSpectrum4()
 
 void b3OceanWave::b3DumpImages()
 {
-#ifdef VERBOSE
 	b3Tx tx;
 
-//	m_FFT.b3SetAntiRaster(0.5, 0.25);
-	m_FFT.b3GetSpectrum(&tx, 0.2);
+	m_FFT.b3FFT2D();
+	m_FFT.b3GetSpectrum(&tx, 1);
 #ifdef WIN32
 	tx.b3SaveJPEG("c:/temp/spectrum.jpg");
 #else
 	tx.b3SaveJPEG("/tmp/spectrum.jpg");
 #endif
-#endif 		
  	m_FFT.b3IFFT2D();
 
-#ifdef VERBOSE
-	m_FFT.b3GetBuffer(&tx, 2000);
+	m_FFT.b3GetBuffer(&tx, 0.001);
 #ifdef WIN32
 	tx.b3SaveJPEG("c:/temp/buffer.jpg");
 #else
 	tx.b3SaveJPEG("/tmp/buffer.jpg");
-#endif
 #endif
 }
