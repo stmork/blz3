@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2006/05/01 12:59:07  sm
+**	- Minor changes.
+**
 **	Revision 1.51  2006/04/30 11:48:12  sm
 **	- New ocean wave deriv try.
-**
+**	
 **	Revision 1.50  2006/04/29 20:50:39  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
 **	
@@ -1083,9 +1086,9 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 b3BumpOcean::b3BumpOcean(b3_u32 class_type) :
 	b3Bump(sizeof(b3BumpOcean), class_type)
 {
-	b3Vector::b3Init(&m_Scale, 0.01, 0.01, 0.01);
+	b3Vector::b3Init(&m_Scale, 0.1, 0.1, 0.1);
 	m_ScaleFlags = B3_SCALE_IPOINT;
-	m_Amplitude = 20;
+	m_Amplitude  = 0,1;
 }
 
 b3BumpOcean::b3BumpOcean(b3_u32 *src) :
@@ -1140,30 +1143,9 @@ void b3BumpOcean::b3BumpNormal(b3_ray *ray)
 	b3_f64    r   = m_Amplitude;
 	b3Scale(ray, &m_Scale, &point);
 
-#if 0
-	b3_vector ox, oy;
-	b3_f64    water = b3ComputeOceanWave(&point);
-
-	ox.x     = 0.5f;
-	ox.y     = 0;
-	ox.z     = water;
-	oy.x     = 0;
-	oy.y     = 0.5f;
-	oy.z     = water;
-
-	point.x += ox.x;
-	ox.z    -= b3ComputeOceanWave (&point);
-	point.x -= ox.x;
-
-	point.y += oy.y;
-	oy.z    -= b3ComputeOceanWave (&point);
-
-	b3Vector::b3CrossProduct(&ox, &oy, &n);
-	b3Vector::b3Scale(&n, r);
-#else
 	b3ComputeOceanWaveDeriv(&point, &n);
 	b3Vector::b3Normalize(&n, r);
-#endif
+
 	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
