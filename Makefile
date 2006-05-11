@@ -18,7 +18,7 @@ uncr:
 	test -f src/Makefile && make -C src $@
 
 test:
-	test -f src/Makefile && make -C src $@
+	+test -f src/Makefile && make -C src $@
 
 install:
 	+make -C src $@

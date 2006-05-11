@@ -302,29 +302,30 @@ public:
 	 */
 	static inline b3_f32 b3Normalize(
 		      b3_vector *vector,
-		const b3_f32     length = 1.0)
+		const b3_f64     length = 1.0)
 	{
 #ifdef B3_SSE
 		b3_f32 B3_ALIGN_16 *v      = &vector->x;
-		b3_f32              denom  = 0;
-		b3_f32              result = 0;
+		b3_f64              denom  = 0;
+		b3_f64              result;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
 			denom += v[i] * v[i];
 		}
 
-		denom = length / (result = sqrt(denom));
+		result = sqrt(denom);
+		denom  = length / result;
 		for (b3_loop i = 0;i < 3;i++)
 		{
 			v[i] *= denom;
 		}
 #else
-		b3_f32 x      = vector->x;
-		b3_f32 y      = vector->y;
-		b3_f32 z      = vector->z;
-		b3_f32 result = 0;
-		b3_f32 denom  = length / (result = sqrt(x*x + y*y + z*z));
+		b3_f64 x      = vector->x;
+		b3_f64 y      = vector->y;
+		b3_f64 z      = vector->z;
+		b3_f64 result;
+		b3_f64 denom  = length / (result = sqrt(x*x + y*y + z*z));
 
 		vector->x *= denom;
 		vector->y *= denom;
@@ -347,14 +348,15 @@ public:
 #ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *v      = &vector->x;
 		b3_f64              denom  = 0;
-		b3_f64              result = 0;
+		b3_f64              result;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
 			denom += v[i] * v[i];
 		}
 
-		denom = length / (result = sqrt(denom));
+		result = sqrt(denom);
+		denom  = length / result;
 		for (b3_loop i = 0;i < 3;i++)
 		{
 			v[i] *= denom;
@@ -363,8 +365,8 @@ public:
 		b3_f64 x      = vector->x;
 		b3_f64 y      = vector->y;
 		b3_f64 z      = vector->z;
-		b3_f64 result = 0;
-		b3_f64 denom  = length / (result = sqrt(x*x + y*y + z*z));
+		b3_f64 result = sqrt(x*x + y*y + z*z);
+		b3_f64 denom  = length / result;
 
 		vector->x *= denom;
 		vector->y *= denom;

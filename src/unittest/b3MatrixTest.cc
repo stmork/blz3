@@ -31,13 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/11 18:48:24  sm
+**	- Small makefile fixes.
+**	- Corrected accuracy in unit tests.
+**
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **
 */
 
@@ -124,8 +128,8 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL( 9.0f,   b3Vector::b3QuadLength(&bs));
 	CPPUNIT_ASSERT_EQUAL( 3.0f,   b3Vector::b3Normalize(&bs));
 	CPPUNIT_ASSERT_EQUAL( 1.0f,   b3Vector::b3Length(&bs));
-	CPPUNIT_ASSERT_EQUAL( 1.0f,   b3Vector::b3Normalize(&bs, 2.5));
-	CPPUNIT_ASSERT_EQUAL( 2.5f,   b3Vector::b3Length(&bs));
+	CPPUNIT_ASSERT_EQUAL( 1.0f,   b3Vector::b3Normalize(&bs, 6.0));
+	CPPUNIT_ASSERT_EQUAL( 6.0f,   b3Vector::b3Length(&bs));
 
 	CPPUNIT_ASSERT_EQUAL(&bd,   b3Vector::b3Init(&bd, 2.0, -1.0, -2.0));
 	CPPUNIT_ASSERT_EQUAL(-6.0,  b3Vector::b3SMul(&ad, &bd));
@@ -134,8 +138,8 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL( 9.0,  b3Vector::b3QuadLength(&bd));
 	CPPUNIT_ASSERT_EQUAL( 3.0,  b3Vector::b3Normalize(&bd));
 	CPPUNIT_ASSERT_EQUAL( 1.0,  b3Vector::b3Length(&bd));
-	CPPUNIT_ASSERT_EQUAL( 1.0,  b3Vector::b3Normalize(&bd, 2.5));
-	CPPUNIT_ASSERT_EQUAL( 2.5,  b3Vector::b3Length(&bd));
+	CPPUNIT_ASSERT_EQUAL( 1.0,  b3Vector::b3Normalize(&bd, 6.0));
+	CPPUNIT_ASSERT_EQUAL( 6.0,  b3Vector::b3Length(&bd));
 
 	CPPUNIT_ASSERT_EQUAL(&as,  b3Vector::b3Init(&as, 1.0, -3.0, -4.0));
 	CPPUNIT_ASSERT_EQUAL(&bs,  b3Vector::b3Init(&bs, 2.0, -1.0, -2.0));

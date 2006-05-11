@@ -26,7 +26,6 @@
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
-#include "blz3/base/b3Vector.h"
 #include "blz3/base/b3World.h"
 
 #endif

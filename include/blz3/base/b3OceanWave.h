@@ -114,6 +114,16 @@ public:
 	}
 
 	/**
+	 * Returns the value field of the height field.
+	 *
+	 * @return The height field.
+	 */
+	inline b3Complex<b3_f64> *b3GetBuffer()
+	{
+		return m_FFT.b3GetBuffer();
+	}
+
+	/**
 	 * This method flags the ocean wave instance whether a Phillips
 	 * Spectrum recomputation should be performed.
 	 *
@@ -148,16 +158,6 @@ private:
 	void              b3TestSpectrum2();
 	void              b3TestSpectrum3();
 	void              b3TestSpectrum4();
-
-	/**
-	 * Returns the value field of the height field.
-	 *
-	 * @return The height field.
-	 */
-	inline b3Complex<b3_f64> *b3GetBuffer()
-	{
-		return m_FFT.b3GetBuffer();
-	}
 
 	inline b3_index  b3GetIndex(const b3_index x, const b3_index y)
 	{

@@ -81,8 +81,8 @@ public:
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 9.0),   bs.b3QuadLength());
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 3.0),   bs.b3Normalize());
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 1.0),   bs.b3Length());
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 1.0),   bs.b3Normalize( 2.5));
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 2.5),   bs.b3Length());
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 1.0),   bs.b3Normalize( 6.0));
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 6.0),   bs.b3Length());
 
 		as.b3Init( 1.0, -3.0, -4.0);
 		bs.b3Init( 2.0, -1.0, -2.0);

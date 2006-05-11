@@ -80,7 +80,7 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 install:	all install-bin
 
 test:
-	make -C unittest $@
+	+make -C unittest $@
 
 install-bin:
 	+@for i in $(PRGS); do \

@@ -31,13 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/11 18:48:24  sm
+**	- Small makefile fixes.
+**	- Corrected accuracy in unit tests.
+**
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **
 */
 
@@ -76,9 +80,9 @@ void b3ColorTest::test()
 //	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
 #ifdef BLZ3_USE_SSE
 	b3_f32 *fPtr = &color[b3Color::A];
-	int     offset = reinterpret_cast<int>(fPtr) & 0xf;
+	b3_ptr  offset = reinterpret_cast<b3_ptr>(fPtr) & 0xf;
 
-	CPPUNIT_ASSERT_EQUAL(0, offset);
+	CPPUNIT_ASSERT_EQUAL(static_cast<b3_ptr>(0), offset);
 #endif
 
 	color = B3_WHITE;
