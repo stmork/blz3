@@ -17,6 +17,9 @@ count_all:
 uncr:
 	test -f src/Makefile && make -C src $@
 
+test:
+	test -f src/Makefile && make -C src $@
+
 install:
 	+make -C src $@
 
@@ -31,7 +34,7 @@ configure:	configure.ac
 config:	configure
 	./configure BLZ3_DOC=$(PWD)/doc --prefix=$(PWD)
 
-distclean:
+distclean:	clean
 	bin/clobber.sh $(PWD)
 
 dist:	distclean configure

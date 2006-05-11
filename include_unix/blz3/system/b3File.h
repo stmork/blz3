@@ -34,6 +34,7 @@
 class b3File : public b3FileAbstract, public b3Mem
 {
 	static b3_count  m_OpenFiles;
+	static b3Mutex   m_FilesOpenedMutex;
 
 	b3_u08     *m_Cache;      //!< Cache buffer.
 	b3_offset   m_Index;      //!< Index in cache.

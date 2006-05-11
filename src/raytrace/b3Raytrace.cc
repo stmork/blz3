@@ -33,6 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.77  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.76  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -45,7 +52,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.75  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -442,9 +449,11 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	do
 	{
 		// Enter critical section
-		scene->m_PoolMutex.b3Lock();
-		row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
-		scene->m_PoolMutex.b3Unlock();
+		{
+			b3CriticalSection lock(scene->m_PoolMutex);
+
+			row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
+		}
 		// Leave critical section
 
 		if (row != null)
@@ -452,9 +461,8 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 			// We can handle the row for its own!
 			row->b3Raytrace();
 
-			scene->m_TrashMutex.b3Lock();
+			b3CriticalSection lock(scene->m_TrashMutex);
 			scene->m_TrashPool.b3Append(row);
-			scene->m_TrashMutex.b3Unlock();
 		}
 	}
 	while(row != null);
@@ -479,9 +487,11 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 		do
 		{
 			// Enter critical section
-			scene->m_PoolMutex.b3Lock();
-			row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
-			scene->m_PoolMutex.b3Unlock();
+			{
+				b3CriticalSection lock(scene->m_PoolMutex);
+
+				row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
+			}
 			// Leave critical section
 
 			if (row != null)
@@ -489,9 +499,9 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 				// We can handle the row for its own!
 				row->b3Raytrace();
 
-				scene->m_TrashMutex.b3Lock();
+				b3CriticalSection lock(scene->m_TrashMutex);
+
 				scene->m_TrashPool.b3Append(row);
-				scene->m_TrashMutex.b3Unlock();
 			}
 		}
 		while(row != null);
@@ -889,13 +899,18 @@ void b3Scene::b3Raytrace(b3Display *display)
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}
 
-	m_PoolMutex.b3Lock();
-	B3_DELETE_BASE(&m_RowPool,row);
-	m_PoolMutex.b3Unlock();
+	// CRITICAL SECTION
+	{
+		b3CriticalSection lock(m_PoolMutex);
 
-	m_TrashMutex.b3Lock();
-	B3_DELETE_BASE(&m_TrashPool,row);
-	m_TrashMutex.b3Unlock();
+		B3_DELETE_BASE(&m_RowPool,row);
+	}
+	// CRITICAL SECTION
+	{
+		b3CriticalSection lock(m_TrashMutex);
+
+		B3_DELETE_BASE(&m_TrashPool,row);
+	}
 
 	b3PrintF (B3LOG_NORMAL,"Done.\n\n");
 }
@@ -907,17 +922,19 @@ void b3Scene::b3AbortRaytrace()
 	do
 	{
 		// Enter critical section
-		m_PoolMutex.b3Lock();
-		row = m_RowPool.b3RemoveFirst();
-		m_PoolMutex.b3Unlock();
+		{
+			b3CriticalSection lock(m_PoolMutex);
+
+			row = m_RowPool.b3RemoveFirst();
+		}
 		// Leave critical section
 
 		if (row != null)
 		{
 			// We can handle the row for its own!
-			m_TrashMutex.b3Lock();
+			b3CriticalSection lock(m_TrashMutex);
+
 			m_TrashPool.b3Append(row);
-			m_TrashMutex.b3Unlock();
 		}
 	}
 	while(row != null);

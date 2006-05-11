@@ -23,19 +23,22 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Compare.h"
 
-#define B3_NODE_FIRST        1
-#define B3_NODE_PREV         2
-#define B3_NODE_NULL         4
-#define B3_NODE_SUCC         8
-#define B3_NODE_LAST        16
-#define B3_NODE_NOT_FIRST   32
-#define B3_NODE_NOT_PREV    64
-#define B3_NODE_NOT_NULL   128
-#define B3_NODE_NOT_SUCC   256
-#define B3_NODE_NOT_LAST   512
+enum b3_link_state
+{
+	B3_NODE_FIRST     =   1,
+	B3_NODE_PREV      =   2,
+	B3_NODE_NULL      =   4,
+	B3_NODE_SUCC      =   8,
+	B3_NODE_LAST      =  16,
+	B3_NODE_NOT_FIRST =  32,
+	B3_NODE_NOT_PREV  =  64,
+	B3_NODE_NOT_NULL  = 128,
+	B3_NODE_NOT_SUCC  = 256,
+	B3_NODE_NOT_LAST  = 512
+};
 
-#define B3_CLASS_MASK 0xffff0000
-#define B3_TYPE_MASK  0x0000ffff
+#define B3_CLASS_MASK (static_cast<b3_u32>(0xffff0000))
+#define B3_TYPE_MASK  (static_cast<b3_u32>(0x0000ffff))
 
 /**
  * This class is one list element. All elements are identified by
@@ -67,7 +70,7 @@ public:
 protected:
 	b3_u32     ClassType; //!< The class and type of thie element instance.
 	b3_size    Size;      //!< The size in bytes of this instance.
-	b3_offset  Offset;    //!< The offset to the instance text for serailizing.
+	b3_offset  Offset;    //!< The offset to the instance text for serializing.
 
 public:
 	/**
@@ -302,7 +305,10 @@ public:
 	 */
 	inline void b3Append(T *ptr)
 	{
-		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
+		B3_ASSERT(ptr->Succ == null);
+		B3_ASSERT(ptr->Prev == null);
+		B3_ASSERT(ptr != First);
+		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
 		{
@@ -330,7 +336,10 @@ public:
 	 */
 	inline void b3First(T *ptr)
 	{
-		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
+		B3_ASSERT(ptr->Succ == null);
+		B3_ASSERT(ptr->Prev == null);
+		B3_ASSERT(ptr != First);
+		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
 		{
@@ -505,9 +514,9 @@ public:
 	 * \param *ptr The element
 	 * \return The state of the element.
 	 */
-	inline long b3State(const T *ptr)
+	inline b3_link_state b3State(const T *ptr)
 	{
-		b3_u32  flags;
+		int flags;
 
 		if (ptr == null)
 		{
@@ -526,7 +535,7 @@ public:
 			else              flags |= B3_NODE_NOT_SUCC;
 		}
 
-		return flags;
+		return static_cast<b3_link_state>(flags);
 	}
 
 	/**

@@ -62,9 +62,16 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.27  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.26  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.25  2005/10/09 14:39:41  sm
 **	- Added HDR image processing
 **	
@@ -1322,7 +1329,6 @@ void b3Tx::b3FloatComputeLineBigger(
 {
 	b3_coord     xDst;
 	b3_index     index;
-	b3_index     i = 0;
 
 	for (xDst = 0;xDst < xDstSize;xDst++)
 	{
@@ -1383,7 +1389,7 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 	b3_count      srcBytes,dstBytes;
 	b3_index      i;
 	b3_color      color;
-	b3_count      divisor;
+	b3_count      divisor = 1;
 	b3_res        yMin,yMax;
 	b3_u08       *bDst;
 	b3_pkd_color *lDst;
@@ -1587,6 +1593,9 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 					}
 					cDst++;
 				}
+				break;
+
+			default:
 				break;
 			}
 		}

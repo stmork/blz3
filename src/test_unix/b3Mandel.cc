@@ -50,9 +50,16 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.17  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.16  2005/12/12 11:54:11  smork
 **	- Some corrections with const anf GCC 4
-**
+**	
 **	Revision 1.15  2005/08/24 15:36:55  sm
 **	- Documentation.
 **	
@@ -234,12 +241,14 @@ public:
 		do
 		{
 			// Enter critical section
-			row_mutex.b3Lock();
-			if ((row = (b3MandelRow *)rows.First) != null)
 			{
-				rows.b3Remove(row);
+				b3CriticalSection lock(row_mutex);
+
+				if ((row = (b3MandelRow *)rows.First) != null)
+				{
+					rows.b3Remove(row);
+				}
 			}
-			row_mutex.b3Unlock();
 			// Leave critical section
 
 			if (row != null)

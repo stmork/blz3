@@ -435,7 +435,11 @@ public:
 		return result * scale;
 	}
 
-	b3_bool b3InitCurve(const b3_count Degree,const b3_count ControlNum,const b3_bool Closed, const b3_count Offset = 1)
+	b3_bool b3InitCurve(
+		const b3_count Degree,
+		const b3_count ControlNum,
+		const b3_bool  Closed,
+		const b3_count Offset = 1)
 	{
 		b3_index  i;
 
@@ -470,7 +474,7 @@ public:
 			m_Knots[i] = (b3_f32)i;
 		}
 
-		// Addjust knot vector
+		// Adjust knot vector
 		if (!m_Closed)
 		{
 			b3ThroughEndControl();
@@ -1299,17 +1303,17 @@ public:
 		return true;
 	}
 
-	inline void b3Dump()
+	inline void b3Dump(b3_log_level level = B3LOG_FULL)
 	{
-		b3PrintF(B3LOG_FULL,"Spline at %p\n", this);
-		b3PrintF(B3LOG_FULL,"  Degree: %d\n", m_Degree);
-		b3PrintF(B3LOG_FULL,"  Knot count: %d max: %d\n",m_KnotNum, m_KnotMax);
-		b3PrintF(B3LOG_FULL,"  Control count: %d max: %d\n",m_ControlNum, m_ControlMax);
-		b3PrintF(B3LOG_FULL,"  Offset: %d\n", m_Offset);
-		b3PrintF(B3LOG_FULL,"  Subdivision: %d max: %d\n", m_SubDiv, B3_MAX_SUBDIV);
-		b3PrintF(B3LOG_FULL,"  Spline type: %s\n", m_Closed ? "closed" : "open");
-		b3PrintF(B3LOG_FULL,"  Controls: %p\n", m_Controls);
-		b3PrintF(B3LOG_FULL,"  Knots: %p\n", m_Knots);
+		b3PrintF(level, "Spline at %p\n", this);
+		b3PrintF(level, "  Degree: %d\n", m_Degree);
+		b3PrintF(level, "  Knot count: %d max: %d\n",m_KnotNum, m_KnotMax);
+		b3PrintF(level, "  Control count: %d max: %d\n",m_ControlNum, m_ControlMax);
+		b3PrintF(level, "  Offset: %d\n", m_Offset);
+		b3PrintF(level, "  Subdivision: %d max: %d\n", m_SubDiv, B3_MAX_SUBDIV);
+		b3PrintF(level, "  Spline type: %s\n", m_Closed ? "closed" : "open");
+		b3PrintF(level, "  Controls: %p\n", m_Controls);
+		b3PrintF(level, "  Knots: %p\n", m_Knots);
 	}
 
 private:

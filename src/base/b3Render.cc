@@ -47,6 +47,13 @@
 
 /*
 **      $Log$
+**      Revision 1.119  2006/05/11 15:34:22  sm
+**      - Added unit tests
+**      - Corrected normal computation for ocean waves
+**      - Optimized b3Complex
+**      - Added new FFT
+**      - Added own assertion include
+**
 **      Revision 1.118  2006/03/05 21:22:34  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -1251,26 +1258,33 @@ void b3RenderObject::b3UpdateMaterial()
 			{
 				glTextureScaleX = 1;
 				glTextureScaleY = 1;
-				glTextureMutex.b3Lock();
-				if (!glTextureBuffer.b3IsLoaded())
+				
+				// CRITICAL SECTION
 				{
-					b3_res max  = B3_MAX_TX_SIZE;
+					b3CriticalSection lock(glTextureMutex);
 
-					glTextureBuffer.b3AllocTx(max, max, 24);
-				}
-				glTextureMutex.b3Unlock();
+					if (!glTextureBuffer.b3IsLoaded())
+					{
+						b3_res max  = B3_MAX_TX_SIZE;
 
-				glTextureMutex.b3Lock();
-				if (b3GetImage(&glTextureBuffer))
-				{
-					b3CreateImage(null,&glTextureBuffer);
+						glTextureBuffer.b3AllocTx(max, max, 24);
+					}
 				}
-				else
+
+				// CRITICAL SECTION
 				{
-					// Free memory
-					b3CreateTexture(null,0);
+					b3CriticalSection lock(glTextureMutex);
+
+					if (b3GetImage(&glTextureBuffer))
+					{
+						b3CreateImage(null,&glTextureBuffer);
+					}
+					else
+					{
+						// Free memory
+						b3CreateTexture(null,0);
+					}
 				}
-				glTextureMutex.b3Unlock();
 			}
 		}
 

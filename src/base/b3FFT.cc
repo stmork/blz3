@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.8  2006/05/01 12:32:42  sm
 **	- Some value tests.
-**
+**	
 **	Revision 1.7  2006/05/01 10:03:02  sm
 **	- Better Exception handling.
 **	- Documentation.
@@ -106,7 +113,7 @@ b3_loop b3Fourier::b3PowOf2(b3_loop value)
 	b3_loop result = 1;
 
 	// Prevent busy loop
-	if (value >= 0x80000000)
+	if ((value & 0x80000000) != 0)
 	{
 		return 0x80000000;
 	}
@@ -133,10 +140,8 @@ b3_count b3Fourier::b3Log2(b3_u32 value)
 void b3Fourier::b3FreeBuffer()
 {
 	b3Free();
-	m_xReal = null;
-	m_xImag = null;
-	m_yReal = null;
-	m_yImag = null;
+	m_Real = null;
+	m_Imag = null;
 
 	if (m_Buffer != null)
 	{
@@ -177,58 +182,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 	return true;
 }
 
-b3_bool b3Fourier::b3ReallocBuffer()
-{
-	m_xDim   = b3Log2(m_xSize);
-	m_yDim   = b3Log2(m_ySize);
-
-	m_Buffer = new b3Complex<b3_f64>[m_xSize * m_ySize];
-	m_Lines  = new b3Complex<b3_f64> *[m_ySize];
-	if ((m_Buffer == null) || (m_Lines == null))
-	{
-		return false;
-	}
-
-	for (b3_loop y = 0;y < m_ySize;y++)
-	{
-		m_Lines[y] = &m_Buffer[y * m_xSize];
-	}
-
-	m_xReal = (b3_f64 *)b3Alloc(m_xSize * sizeof(b3_f64));
-	m_xImag = (b3_f64 *)b3Alloc(m_xSize * sizeof(b3_f64));
-
-	m_yReal = (b3_f64 *)b3Alloc(m_ySize * sizeof(b3_f64));
-	m_yImag = (b3_f64 *)b3Alloc(m_ySize * sizeof(b3_f64));
-
-	return (m_xReal != null) && (m_xImag != null) && (m_yReal != null) && (m_yImag != null);
-}
-
-void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
-{
-	b3_loop  x,xHalf = m_xSize >> 1, xMask = m_xSize - 1;
-	b3_loop  y,yHalf = m_ySize >> 1, yMask = m_ySize - 1;
-	b3_f64   fx, fxHalf = 1.0 / xHalf;
-	b3_f64   fy, fyHalf = 1.0 / yHalf;
-	b3_index index   = 0, pos;
-
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3Sample(...)\n");
-	info->m_Fourier = this;
-	index = 0;
-	for (y = -yHalf;y < yHalf;y++)
-	{
-		fy = fyHalf * y;
-		index = (y & yMask) << m_xDim;
-		for (x = -xHalf;x < xHalf;x++)
-		{
-			fx = fxHalf * x;
-			pos = index + (x & xMask);
-			sample_func(fx, fy, pos, info);
-		}
-	}
-	b3PrintF(B3LOG_FULL, "<b3Fourier::b3Sample(...)\n");
-}
-
-void b3Fourier::b3AllocBuffer  (b3Tx *tx)
+b3_bool b3Fourier::b3AllocBuffer  (b3Tx *tx)
 {
 	b3_loop       x,y,index,max;
 	b3_u08       *cPtr;
@@ -267,6 +221,58 @@ void b3Fourier::b3AllocBuffer  (b3Tx *tx)
 		index += m_xSize;
 	}
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
+
+	return true;
+}
+
+b3_bool b3Fourier::b3ReallocBuffer()
+{
+	b3_size size = B3_MAX(m_xSize, m_ySize);
+
+	m_xDim   = b3Log2(m_xSize);
+	m_yDim   = b3Log2(m_ySize);
+
+	m_Buffer = new b3Complex<b3_f64>[m_xSize * m_ySize];
+	m_Lines  = new b3Complex<b3_f64> *[m_ySize];
+	if ((m_Buffer == null) || (m_Lines == null))
+	{
+		return false;
+	}
+
+	for (b3_loop y = 0;y < m_ySize;y++)
+	{
+		m_Lines[y] = &m_Buffer[y * m_xSize];
+	}
+
+	m_Real = (b3_f64 *)b3Alloc(size * sizeof(b3_f64));
+	m_Imag = (b3_f64 *)b3Alloc(size * sizeof(b3_f64));
+
+	return (m_Real != null) && (m_Imag != null);
+}
+
+void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
+{
+	b3_loop  x,xHalf = m_xSize >> 1, xMask = m_xSize - 1;
+	b3_loop  y,yHalf = m_ySize >> 1, yMask = m_ySize - 1;
+	b3_f64   fx, fxHalf = 1.0 / xHalf;
+	b3_f64   fy, fyHalf = 1.0 / yHalf;
+	b3_index index   = 0, pos;
+
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3Sample(...)\n");
+	info->m_Fourier = this;
+	index = 0;
+	for (y = -yHalf;y < yHalf;y++)
+	{
+		fy = fyHalf * y;
+		index = (y & yMask) << m_xDim;
+		for (x = -xHalf;x < xHalf;x++)
+		{
+			fx = fxHalf * x;
+			pos = index + (x & xMask);
+			sample_func(fx, fy, pos, info);
+		}
+	}
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3Sample(...)\n");
 }
 
 /*-------------------------------------------------------------------------
@@ -389,19 +395,21 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 {
 	b3_loop   i,j;
 
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3FFT2D(<%s>);\n", dir == 1 ? "forward" : "inverse");
+
 	/* Transform the rows */
 	for (j = 0; j < m_ySize; j++)
 	{
 		for (i = 0; i < m_xSize; i++)
 		{
-			m_xReal[i] = m_Lines[j][i].b3Real();
-			m_xImag[i] = m_Lines[j][i].b3Imag();
+			m_Real[i] = m_Lines[j][i].b3Real();
+			m_Imag[i] = m_Lines[j][i].b3Imag();
 		}
-		b3FFT(dir,m_xDim,m_xReal,m_xImag);
+		b3FFT(dir,m_xDim,m_Real,m_Imag);
 		for (i = 0; i < m_xSize; i++)
 		{
-			m_Lines[j][i].b3Real() = m_xReal[i];
-			m_Lines[j][i].b3Imag() = m_xImag[i];
+			m_Lines[j][i].b3Real() = m_Real[i];
+			m_Lines[j][i].b3Imag() = m_Imag[i];
 		}
 	}
 
@@ -410,28 +418,31 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 	{
 		for (j = 0; j < m_ySize; j++)
 		{
-			m_yReal[j] = m_Lines[j][i].b3Real();
-			m_yImag[j] = m_Lines[j][i].b3Imag();
+			m_Real[j] = m_Lines[j][i].b3Real();
+			m_Imag[j] = m_Lines[j][i].b3Imag();
 		}
-		b3FFT(dir, m_yDim, m_yReal, m_yImag);
+		b3FFT(dir, m_yDim, m_Real, m_Imag);
 		for (j = 0; j < m_ySize; j++)
 		{
-			m_Lines[j][i].b3Real() = m_yReal[j];
-			m_Lines[j][i].b3Imag() = m_yImag[j];
+			m_Lines[j][i].b3Real() = m_Real[j];
+			m_Lines[j][i].b3Imag() = m_Imag[j];
 		}
 	}
 
 	return true;
 }
 
-void b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
+b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 {
 	b3_u08       *cPtr;
 	b3_loop       x,y;
 	b3_f64        cMin = 0, c, cMax = 0;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3GetBuffer(..., %1.3f)\n", amp);
-	tx->b3AllocTx(m_xOrig, m_yOrig, 8);
+	if (!tx->b3AllocTx(m_xOrig, m_yOrig, 8))
+	{
+		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
+	}
 	cPtr = (b3_u08 *)tx->b3GetData();
 	for (y = 0;y < m_yOrig;y++)
 	{
@@ -444,9 +455,10 @@ void b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 		}
 	}
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3GetBuffer(...)\n");
+	return true;
 }
 
-void b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
+b3_bool b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 {
 	b3_u08        *cPtr;
 	b3_f64         result;
@@ -456,7 +468,10 @@ void b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 	b3_index       index;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3GetSpectrum(..., %1.3f)\n", amp);
-	tx->b3AllocTx(m_xSize, m_ySize, 8);
+	if (!tx->b3AllocTx(m_xSize, m_ySize, 8))
+	{
+		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
+	}
 	cPtr = (b3_u08 *)tx->b3GetData();
 	for (y = -yHalf;y < yHalf;y++)
 	{
@@ -471,9 +486,10 @@ void b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 		}
 	}
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3GetSpectrum(...)\n");
+	return true;
 }
 
-void b3Fourier::b3SelfTest()
+b3_bool b3Fourier::b3SelfTest()
 {
     b3_loop  x, y;
     b3_f64   err = 0, e, divisor;
@@ -488,8 +504,14 @@ void b3Fourier::b3SelfTest()
         }
     }
 
-	b3FFT2D();
-	b3IFFT2D();
+	if (!b3FFT2D())
+	{
+		return false;
+	}
+	if (!b3IFFT2D())
+	{
+		return false;
+	}
 
 	m_Random.b3SetSeed(0);
 	divisor = m_xSize * m_ySize * 0.5;
@@ -503,4 +525,5 @@ void b3Fourier::b3SelfTest()
     }
 	b3PrintF(B3LOG_NORMAL,"### CLASS: b3Four # error %g\n",err);
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3SelfTest()\n");
+	return err < 0.001;
 }

@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Config.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001-2006 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III base defines
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001-2006  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -47,13 +47,8 @@
 #include <limits.h>
 #include "blz3/b3PluginDef.h"
 #include "blz3/system/b3Thread.h"
+#include "blz3/system/b3Assert.h"
 
-#ifdef _DEBUG
-#	include <assert.h>
-#	define B3_ASSERT(cond) ASSERT(cond)
-#else
-#	define B3_ASSERT(cond)
-#endif
 
 // Use some SSE intrinsics
 #if 0
@@ -112,9 +107,16 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.40  2006/05/11 15:34:17  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.39  2006/03/05 21:22:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.38  2006/03/03 21:54:05  sm
 **	- Moved color field selector into system.
 **	

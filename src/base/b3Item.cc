@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2006/05/11 15:34:22  sm
+**      - Added unit tests
+**      - Corrected normal computation for ocean waves
+**      - Optimized b3Complex
+**      - Added new FFT
+**      - Added own assertion include
+**
 **      Revision 1.46  2006/04/29 11:25:48  sm
 **      - Added ocean bump to main packet.
 **      - b3Prepare signature: Added further initialization information
@@ -726,7 +733,7 @@ void b3Item::b3Write()
 	b3EnsureStoreBuffer(( m_ItemOffset >> 2) - m_StoreIndex);
 	b3EnsureStoreBuffer(((m_ItemSize - m_ItemOffset) >> 2) - m_StoreIndex,false);
 
-	memcpy(&m_StoreBuffer[m_StoreIndex],&m_Buffer[m_StoreIndex],m_ItemSize - m_StoreIndex);
+	memcpy(&m_StoreBuffer[m_StoreIndex],&m_Buffer[m_StoreIndex],m_ItemSize - (m_StoreIndex << 2));
 	m_StoreIndex  = m_ItemSize >> 2;
 	m_StoreOffset = m_ItemOffset >> 2;
 

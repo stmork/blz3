@@ -33,6 +33,16 @@ test -d $BLZ3_HOME/Release      && rm -rf $BLZ3_HOME/Release
 test -d $BLZ3_HOME/Release-SSE  && rm -rf $BLZ3_HOME/Release-SSE
 test -d $BLZ3_HOME/Release-SSE2 && rm -rf $BLZ3_HOME/Release-SSE2
 
+echo "Removing install files..."
+if ( -d "Installer/Lines III" ) then
+  cd "Installer/Lines III"
+  test -d Debug         && rm -rf Debug
+  test -d Release       && rm -rf Release
+  test -d Release\ SSE  && rm -rf Release\ SSE
+  test -d Release\ SSE2 && rm -rf Release\ SSE2
+  cd ../..
+endif
+
 find bin -name "AppLines*" -exec rm -f {} \;
 
 exit 0

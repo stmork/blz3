@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.10  2006/03/05 21:22:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.9  2005/12/04 15:35:58  sm
 **	- Added some const signatures.
 **	
@@ -73,6 +80,14 @@
 **                                                                      **
 *************************************************************************/
 
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
+{
+	0.06666666666666666f,
+	0.06666666666666666f,
+	0.06666666666666666f,
+	0.06666666666666666f
+};
+
 #ifdef BLZ3_USE_SSE
 
 const b3_u32 B3_ALIGN_16 b3Color::m_AbsMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
@@ -103,12 +118,12 @@ const b3_f32 B3_ALIGN_16 b3Color::m_Limit_m255[4] =
 	255.0f
 };
 
-const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_m015[4] =
 {
-	0.0666666666f,
-	0.0666666666f,
-	0.0666666666f,
-	0.0666666666f
+	15.0f,
+	15.0f,
+	15.0f,
+	15.0f
 };
 
 const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =

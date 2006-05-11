@@ -41,9 +41,16 @@ using namespace Imath;
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.4  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
 **	
@@ -80,7 +87,7 @@ public:
 	{
 		clearerr (m_FileHandle);
 
-		if (fwrite (c, 1, n, m_FileHandle) != n)
+		if (fwrite (c, 1, n, m_FileHandle) != static_cast<size_t>(n))
 		{
 			B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 		}

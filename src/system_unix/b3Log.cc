@@ -29,6 +29,7 @@
 #include <unistd.h>
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3MutexAbstract.h"
 
 /*************************************************************************
 **                                                                      **
@@ -38,9 +39,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.17  2005/06/13 10:43:41  smork
 **	- Log file moved into home directory.
-**
+**	
 **	Revision 1.16  2005/06/02 13:20:01  smork
 **	- Write log file error reason on stderr.
 **	
@@ -152,11 +160,11 @@ void b3Log::b3LogFunction (
 
 	if (b3CheckLevel(level))
 	{
+		b3CriticalSection lock(m_LogMutex);
+
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this
 		// piece of code.
-		m_LogMutex.b3Lock();
-
 		if (b3OpenLogFile())
 		{
 			va_start (argptr,format);
@@ -176,8 +184,6 @@ void b3Log::b3LogFunction (
 			fflush   (stderr);
 			va_end   (argptr);
 		}
-
 		// That's it! Let's doing other to make the same...
-		m_LogMutex.b3Unlock();
 	}
 }

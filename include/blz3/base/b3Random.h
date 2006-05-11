@@ -46,7 +46,7 @@ public:
 
 template<class T>class B3_PLUGIN b3PseudoRandom : public b3Random<T>
 {
-	int m_Seed;
+	long int m_Seed;
 
 public:
 	inline b3PseudoRandom<T>(const int seed = B3_RANDOM_DEFAULT_SEED) : b3Random<T>()
@@ -63,14 +63,42 @@ public:
 	{
 		m_Seed = (m_Seed * 7141 + 54773)  % 259200;
 		
-		return (T)m_Seed / 259200.0;
+		return static_cast<T>(m_Seed) / 259200;
 	}
 
 	inline virtual T b3Rand(const T mult)
 	{
 		m_Seed = (m_Seed * 7141 + 54773)  % 259200;
 		
-		return (T)m_Seed * mult / 259200.0;
+		return static_cast<T>(m_Seed) * mult / 259200;
+	}
+};
+
+template<class T> class B3_PLUGIN b3Rand48 : public b3Random<T>
+{
+public:
+	inline b3Rand48<T>(const int seed = B3_RANDOM_DEFAULT_SEED) : b3Random<T>()
+	{
+		unsigned short conv = seed & 0xffff;
+
+		seed48(&conv);
+	}
+
+	inline void b3SetSeed(const int seed = B3_RANDOM_DEFAULT_SEED)
+	{
+		unsigned short conv = seed & 0xffff;
+
+		seed48(&conv);
+	}
+
+	inline virtual T b3Rand()
+	{
+		return static_cast<T>(drand48());
+	}
+
+	inline virtual T b3Rand(const T mult)
+	{
+		return static_cast<T>(drand48() * mult);
 	}
 };
 

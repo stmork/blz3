@@ -26,9 +26,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.5  2006/05/01 10:44:46  sm
 **	- Unifying ocean wave values.
-**
+**	
 **	Revision 1.4  2006/04/30 08:53:24  sm
 **	- Removed some signed/unsigned issues.
 **	- Reflect new FFT algorithm.
@@ -104,7 +111,7 @@ b3_bool has_vbo;
 void init_vertices()
 {
 	b3_f64 factor;
-	int i,k;
+	GLuint i,k;
 
 	size = 1 << ocean.m_Dim;
 	halfgrid = ocean.m_GridSize * 0.5;
@@ -245,9 +252,9 @@ void init_vbo()
 void RenderScene()
 {
 	b3Complex<b3_f64>  *src;
-	b3_f64   t, now = timepoint.b3Now();
-	GLint    max = size * size,i,k;
-	GLfloat *dst;
+	GLfloat            *dst;
+	GLuint              i,k;
+	b3_f64              t, now = timepoint.b3Now();
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 

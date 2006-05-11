@@ -216,7 +216,7 @@ public:
 	 *            procedure.
 	 * @see b3Comparator
 	 */
-	inline void b3Sort(b3Comparator<T> comparator,const void *ptr = null)
+	inline void b3Sort(b3Comparator<T> &comparator,const void *ptr = null)
 	{
 		qsort(m_Buffer,b3GetCount(),sizeof(T),comparator.b3Sort,ptr);
 	}

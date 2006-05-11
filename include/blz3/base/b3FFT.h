@@ -50,8 +50,8 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 	b3Complex<b3_f64>  *m_Buffer;
 	b3Complex<b3_f64> **m_Lines;
 
-	b3_f64             *m_xReal, *m_xImag;
-	b3_f64             *m_yReal, *m_yImag;
+	b3_f64             *m_Real;
+	b3_f64             *m_Imag;
 
 	b3PseudoRandom<b3_f64> m_Random;
 
@@ -73,7 +73,7 @@ public:
 	 *
 	 * @param tx The image with the values to initialize.
 	 */
-	void    b3AllocBuffer  (b3Tx *tx);
+	b3_bool b3AllocBuffer  (b3Tx *tx);
 
 	/**
 	 * This method frees all used memory.
@@ -92,21 +92,21 @@ public:
 	/**
 	 * This method computes the forward FFT of the internal buffer.
 	 */
-	inline void    b3FFT2D()
+	inline b3_bool b3FFT2D()
 	{
-		b3FFT2D(1);
+		return b3FFT2D(1);
 	}
 
 	/**
 	 * This method computes the inverse FFT of the internal buffer.
 	 */
-	inline void    b3IFFT2D()
+	inline b3_bool  b3IFFT2D()
 	{
-		b3FFT2D(-1);
+		return b3FFT2D(-1);
 	}
 
-	void    b3GetBuffer    (b3Tx *tx, b3_f64 amp);
-	void    b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
+	b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp);
+	b3_bool   b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
 
 	inline b3Complex<b3_f64> *b3GetBuffer()
 	{
@@ -116,7 +116,7 @@ public:
 	/**
 	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
 	 */
-	void    b3SelfTest();
+	b3_bool    b3SelfTest();
 
 	/**
 	 * This method returns the number which is a power of 2 number

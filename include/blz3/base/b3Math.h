@@ -155,6 +155,21 @@ public:
 	 * \param rnd The precision.
 	 * \return The rounded value.
 	 */
+	static inline b3_f32 b3Round(const b3_f32 x,const b3_f32 rnd)
+	{
+		b3_f32 mul    = floorf(0.5 / rnd + 0.5);
+		b3_f32 result = floorf(x * mul + 0.5) / mul;
+
+		return result;
+	}
+
+	/**
+	 * This method rounds a number by the given precision.
+	 *
+	 * \param x The value to round.
+	 * \param rnd The precision.
+	 * \return The rounded value.
+	 */
 	static inline b3_f64 b3Round(const b3_f64 x,const b3_f64 rnd)
 	{
 		b3_f64 mul    = floor(0.5 / rnd + 0.5);

@@ -19,6 +19,7 @@
 #define B3_SYSTEM_MUTEXABSTRACT_H
 
 #include "blz3/b3Types.h"
+#include "blz3/system/b3Assert.h"
 
 /**
  * This abstract class defines an interface for critical sections where
@@ -36,6 +37,47 @@ public:
 	 * This method unlocks a critical section.
 	 */
 	virtual b3_bool  b3Unlock() = 0;
+};
+
+/**
+ * This class represents a critical section. The critical section persists
+ * during the life cycle of this class instance. It automatically locks
+ * a mutex on creation and unlocks this mutex on deletion.
+ */
+class B3_PLUGIN b3CriticalSection
+{
+	b3MutexAbstract &m_Mutex;
+
+public:
+	/**
+	 * This constructor locks the specified mutex.
+	 *
+	 * @param mutex The mutex to use for automatical locking/unlocking.
+	 */
+	inline b3CriticalSection(b3MutexAbstract &mutex) : m_Mutex(mutex)
+	{
+#ifdef _DEBUG
+		b3_bool locked = m_Mutex.b3Lock();
+		
+		B3_ASSERT(locked);
+#else
+		m_Mutex.b3Lock();
+#endif
+	}
+
+	/**
+	 * This destructor unlocks the mutex given by the constructor mutex.
+	 */
+	inline ~b3CriticalSection()
+	{
+#ifdef _DEBUG
+		b3_bool unlocked = m_Mutex.b3Unlock();
+		
+		B3_ASSERT(unlocked);
+#else
+		m_Mutex.b3Unlock();
+#endif
+	}
 };
 
 /**

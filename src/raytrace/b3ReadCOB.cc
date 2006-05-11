@@ -38,9 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.19  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.18  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
 **	
@@ -400,9 +407,10 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	b3BBox    *BBox;
 	char       line[MAX_LINE];
 	char       boxName[B3_BOXSTRINGLEN];
-	b3_size    len,size;
+	b3_size    len;
 	b3_cob_id  id,parent;
 	b3_count   ver,rev;
+	long int   size;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"Grou V%ld.%ld Id %d Parent %d Size %08ld",
@@ -451,13 +459,14 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	b3_vector        pos;
 	b3_matrix        transform;
 	char             line[MAX_LINE];
-	b3_size          len,size,i,index,vPos = 0,fPos = 0;
+	b3_size          vPos = 0,fPos = 0;
 	b3_count         ver,rev;
 	b3_cob_id        id,parent;
 	b3_count         count,vertices=0,faces=0,polygons=0,k;
 #ifdef _DEBUG
 	b3_count         dbgCount = 0;
 #endif
+	long int         size, i, len, index;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"PolH V%ld.%ld Id %d Parent %d Size %08ld",
@@ -588,7 +597,8 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				i += (len+1);
 #ifndef SINGLE_CYCLE
 				b3Array<b3_index> IDs;
-				b3_index          read,u,l;
+				b3_index          u,l;
+				long int          read;
 
 				/* first, scan indices */
 				rev += 2;
@@ -678,10 +688,10 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 	b3MatNormal *Mat;
 	char         line[MAX_LINE];
 	char         name[B3_FILESTRINGLEN];
-	b3_size      len,size,i;
 	b3_count     ver,rev;
 	b3_cob_id    id,parent;
 	b3_f32       ambient = 0,specular = 0,alpha,r,g,b;
+	long int     size, i, len;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08ld",
@@ -756,7 +766,7 @@ b3_size b3COBReader::b3COB_ParseDummy(const char *buffer)
 {
 	char       line[MAX_LINE];
 	char       command[8];
-	b3_size    len,size;
+	long int   len,size;
 	b3_count   ver,rev;
 	b3_cob_id  id,parent;
 

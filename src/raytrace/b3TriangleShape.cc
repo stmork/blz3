@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2006/05/11 15:34:22  sm
+**      - Added unit tests
+**      - Corrected normal computation for ocean waves
+**      - Optimized b3Complex
+**      - Added new FFT
+**      - Added own assertion include
+**
 **      Revision 1.53  2006/04/29 11:25:49  sm
 **      - Added ocean bump to main packet.
 **      - b3Prepare signature: Added further initialization information
@@ -559,7 +566,7 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info *prep_info)
 
 		Denom    = 1.0 / m_GridSize;
 		m_Base   = Start;
-		b3Vector::b3Scale(&m_Size, &diff, Denom);
+		b3Vector::b3Scale(&diff, &m_Size, Denom);
 		b3Vector::b3SetMinimum(&m_Size,b3Scene::epsilon);
 
 		max = m_GridSize * m_GridSize * m_GridSize;

@@ -38,9 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.68  2006/04/18 20:38:25  sm
 **	- Optimized compilation
-**
+**	
 **	Revision 1.67  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
@@ -900,7 +907,7 @@ void b3Noise::b3Hell (const b3_vector *P,b3Color &Color)
 	b3_f64    t;
 	b3_vector Dir;
 
-	b3Vector::b3Scale(&Dir,P,0.08f);
+	b3Vector::b3Scale(P, &Dir, 0.08f);
 
 	t = b3Turbulence (&Dir);	
 	if (t >= 1) t = 0.99;

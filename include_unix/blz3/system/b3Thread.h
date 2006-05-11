@@ -57,6 +57,22 @@ public:
 	}
 };
 
+class b3PThread
+{
+public:
+	inline static b3_bool b3CheckResult(int error_code)
+	{
+#ifdef _DEBUG
+		if(error_code != 0)
+		{
+			b3PrintF(B3LOG_NORMAL,"### CLASS: b3PLog # errno: %d (%s)!\n",
+				error_code,strerror(error_code));
+		}
+#endif
+		return error_code == 0;
+	}
+};
+
 /**
  * This class defines a critical sections where
  * only one thread can use a resource. This class uses
@@ -72,14 +88,28 @@ public:
 	/**
 	 * This constructor initializes the mutex.
 	 */
-	         b3Mutex();
+	b3Mutex()
+	{
+		b3PThread::b3CheckResult(pthread_mutex_init(&mutex,NULL));
+	}
 
 	/**
 	 * Ths destructor deinitializes the mutex.
 	 */
-	        ~b3Mutex();
-	b3_bool  b3Lock();
-	b3_bool  b3Unlock();
+	virtual ~b3Mutex()
+	{
+		b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
+	}
+
+	inline b3_bool  b3Lock()
+	{
+		return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
+	}
+
+	inline b3_bool  b3Unlock()
+	{
+		return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
+	}
 };
 
 /**
@@ -94,7 +124,7 @@ class b3IPCMutex : public b3MutexAbstract
 	pthread_mutex_t mutex;
 public:
 	         b3IPCMutex();
-	        ~b3IPCMutex();
+	virtual ~b3IPCMutex();
 	b3_bool  b3Lock();
 	b3_bool  b3Unlock();
 };
@@ -117,7 +147,7 @@ public:
 	/**
 	 * This destructor deinitializes this event handler.
 	 */
-	        ~b3Event();
+	virtual ~b3Event();
 
 	void     b3Pulse();
 	b3_bool  b3Wait();
@@ -152,7 +182,7 @@ public:
 	/**
 	 * This destructor terminates a running thread and deinitializes this instance.
 	 */
-	        ~b3Thread();
+	virtual ~b3Thread();
 
 	void     b3Name(const char *taskname = null);
 	b3_bool  b3Start(b3ThreadProc thread, void *ptr, b3_s32 priority=0);

@@ -31,6 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.15  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -43,7 +50,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.14  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -180,23 +187,20 @@ void b3PrepareInfo::b3CollectBBoxes(b3BBox *bbox)
 
 b3BBoxReference *b3PrepareInfo::b3GetBBoxReference()
 {
-	b3BBoxReference *removed;
+	b3CriticalSection lock(m_Mutex);
 
-	m_Mutex.b3Lock();
-	removed = m_BBoxRefList.b3RemoveFirst();
-	m_Mutex.b3Unlock();
-	return removed;
+	return m_BBoxRefList.b3RemoveFirst();
 }
 
 void b3PrepareInfo::b3RebuildListFromArray()
 {
-	m_Mutex.b3Lock();
+	b3CriticalSection lock(m_Mutex);
+	
 	m_BBoxRefList.b3RemoveAll();
 	for (int i = 0;i < m_BBoxRefArray.b3GetCount();i++)
 	{
 		m_BBoxRefList.b3Append(&m_BBoxRefArray[i]);
 	}
-	m_Mutex.b3Unlock();
 }
 
 b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)

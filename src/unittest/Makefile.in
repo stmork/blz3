@@ -1,0 +1,66 @@
+# Beispiel Makefile
+
+BLZ3_LIB		= @BLZ3_LIB@
+BLZ3_BIN		= @BLZ3_BIN@
+CC			= @CC@
+CXX			= @CXX@
+CFLAGS			= @CFLAGS@
+CXXFLAGS		= @CXXFLAGS@
+CPPFLAGS		= @CPPFLAGS@
+LDFLAGS			= @LDFLAGS@
+LIBS			= @LIBS@
+
+B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
+B3_LIB_RAYTRACE		= $(BLZ3_LIB)/libB3Raytrace.a
+
+PRGS			= basetest
+
+BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
+	b3ArrayTest.cc\
+	b3ColorTest.cc\
+	b3ComplexTest.cc\
+	b3DataSizeTest.cc\
+	b3FFTTest.cc\
+	b3FileTest.cc\
+	b3HashTest.cc\
+	b3ListTest.cc\
+	b3MathTest.cc\
+	b3MatrixTest.cc\
+	b3RandomTest.cc\
+	b3SplineTest.cc\
+	b3VectorTest.cc\
+	b3WorldTest.cc
+
+BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
+	b3ArrayTest.o\
+	b3ColorTest.o\
+	b3ComplexTest.o\
+	b3DataSizeTest.o\
+	b3FFTTest.o\
+	b3FileTest.o\
+	b3HashTest.o\
+	b3ListTest.o\
+	b3MathTest.o\
+	b3MatrixTest.o\
+	b3RandomTest.o\
+	b3SplineTest.o\
+	b3VectorTest.o\
+	b3WorldTest.o
+
+TEST_FILES = Config.tst *.jpg test1.bwd test2.bwd
+
+all:	$(PRGS)
+
+depend:
+	@CPP@ -M  $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
+
+clean:
+	rm -f *.o *.bak *~ core $(PRGS) $(TEST_FILES) ALL QUIET
+
+basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+test:	basetest
+	./basetest
+
+-include .dep

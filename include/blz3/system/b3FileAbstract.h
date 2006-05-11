@@ -183,7 +183,7 @@ public:
 	 * content.
 	 *
 	 * @param new_cache_size The new cache size.
-	 * @return Succes if the cache was resized.
+	 * @return Success if the cache was resized.
 	 */
 	virtual b3_bool  b3Buffer    (const b3_size new_cache_size) = 0;
 

@@ -33,6 +33,7 @@ class B3_PLUGIN b3Color : public b3ColorBase
 
 	static const b3_f32 B3_ALIGN_16 m_Limit_m000[4]; //!< These color values represent black (for clamping).
 	static const b3_f32 B3_ALIGN_16 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
+	static const b3_f32 B3_ALIGN_16 m_Limit_m015[4]; //!< These values are used for conversion from integer.
 	static const b3_f32 B3_ALIGN_16 m_Limit_m255[4]; //!< These values are used for conversion into integer.
 	static const b3_f32 B3_ALIGN_16 m_Limit_d015[4]; //!< These values are used for conversion from integer.
 	static const b3_f32 B3_ALIGN_16 m_Limit_d255[4]; //!< These values are used for conversion from integer.

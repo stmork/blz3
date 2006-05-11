@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:      b3Config.h $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3Config.h $
+**	$Release:	Dortmund 2006 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - basic configuration
+**	Blizzard III - System configuration
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2006  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -35,6 +35,7 @@
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Thread.h"
+#include "blz3/system/b3Assert.h"
 
 #ifdef BLZ3_USE_OPENGL
 #define __glext_h_
@@ -71,13 +72,6 @@
 #define USE_TIFFLIB_LOAD
 #define USE_TIFFLIB_SAVE
   
-#ifdef _DEBUG
-#include <assert.h>
-
-#define B3_ASSERT(a) assert(a)
-#else
-#define B3_ASSERT(a)
-#endif
 
 #define B3_PLUGIN
 

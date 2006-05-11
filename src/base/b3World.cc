@@ -40,6 +40,13 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2006/05/11 15:34:22  sm
+**      - Added unit tests
+**      - Corrected normal computation for ocean waves
+**      - Optimized b3Complex
+**      - Added new FFT
+**      - Added own assertion include
+**
 **      Revision 1.39  2006/03/12 23:20:38  sm
 **      - Refined item loading.
 **      - Adjusted dialog item handling of vector elements.
@@ -299,7 +306,7 @@ b3_world_error b3World::b3EndianSwapWorld()
 	return i == max_file ? B3_WORLD_OK : B3_WORLD_PARSE;
 }
 
-b3Item *b3World::b3AllocNode(b3_u32 class_value, b3_bool throw_exception)
+b3Item *b3World::b3AllocNode(b3_u32 class_value, const b3_bool throw_exception)
 {
 	b3ItemRegisterEntry *entry;
 
@@ -318,7 +325,7 @@ b3Item *b3World::b3AllocNode(b3_u32 class_value, b3_bool throw_exception)
 	return 0;
 }
 
-b3Item *b3World::b3AllocNode(b3_u32 *buffer, b3_bool throw_exception)
+b3Item *b3World::b3AllocNode(b3_u32 *buffer, const b3_bool throw_exception)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
@@ -402,7 +409,7 @@ b3_world_error b3Item::b3ParseLinkuage(
 	return B3_WORLD_OK;
 }
 
-b3_world_error b3World::b3Parse()
+b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 {
 	b3_world_error     result;
 	b3_index           k;
@@ -451,7 +458,7 @@ b3_world_error b3World::b3Parse()
 		// Create node
 		try
 		{
-			node = b3AllocNode(&m_Buffer[i], true);
+			node = b3AllocNode(&m_Buffer[i], throw_exception);
 			if (node == null)
 			{
 				// On error - no chance to proceed
@@ -500,7 +507,7 @@ b3_world_error b3World::b3Parse()
 	return result;
 }
 
-b3_bool b3World::b3Read(const char *name) throw(b3WorldException)
+b3_bool b3World::b3Read(const char *name, const b3_bool throw_exception) throw(b3WorldException)
 {
 	b3Path         world_name;
 	b3_world_error error;
@@ -515,7 +522,7 @@ b3_bool b3World::b3Read(const char *name) throw(b3WorldException)
 
 		if (file.b3Open(world_name,B_READ))
 		{
-			error = b3Read(&file);
+			error = b3Read(&file, throw_exception);
 			file.b3Close();
 		}
 		else
@@ -537,7 +544,7 @@ b3_bool b3World::b3Read(const char *name) throw(b3WorldException)
 	return true;
 }
 
-b3_world_error b3World::b3Read(b3FileAbstract *file)
+b3_world_error b3World::b3Read(b3FileAbstract *file, const b3_bool throw_exception)
 {
 	b3_u32         header[2];
 	b3_world_error error = B3_WORLD_ERROR;
@@ -572,7 +579,7 @@ b3_world_error b3World::b3Read(b3FileAbstract *file)
 			{
 				if (file->b3Read(m_Buffer,m_BufferSize) == m_BufferSize)
 				{
-					error = b3Parse();
+					error = b3Parse(throw_exception);
 				}
 				else
 				{
@@ -660,7 +667,7 @@ b3_bool b3World::b3ReadDump(const char *world_name) throw(b3WorldException)
 
 void b3World::b3CloneBase(
 	b3Base<b3Item> *srcBase,
-	b3Base<b3Item> *dstBase) throw(b3WorldException)
+	b3Base<b3Item> *dstBase, const b3_bool throw_exception) throw(b3WorldException)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *srcItem;
@@ -673,23 +680,31 @@ void b3World::b3CloneBase(
 		if (entry != null)
 		{
 			dstItem = entry->b3Load(srcItem->m_StoreBuffer);
-			dstBase->b3Append(dstItem);
-			for(i = 0;i < srcItem->m_HeadCount;i++)
-			{
-				b3CloneBase(&srcItem->m_Heads[i],&dstItem->m_Heads[i]);
-			}
-			srcItem->b3Free(srcItem->m_StoreBuffer);
-			srcItem->m_StoreBuffer = null;
-			srcItem->m_StoreSize   = 0;
 		}
 		else
 		{
-			B3_THROW(b3WorldException,B3_WORLD_CLASSTYPE_UNKNOWN);
+			if (throw_exception)
+			{
+				B3_THROW(b3WorldException,B3_WORLD_CLASSTYPE_UNKNOWN);
+			}
+			else
+			{
+				dstItem = new b3Item(srcItem->m_StoreBuffer);
+			}
 		}
+
+		dstBase->b3Append(dstItem);
+		for(i = 0;i < srcItem->m_HeadCount;i++)
+		{
+			b3CloneBase(&srcItem->m_Heads[i],&dstItem->m_Heads[i], throw_exception);
+		}
+		srcItem->b3Free(srcItem->m_StoreBuffer);
+		srcItem->m_StoreBuffer = null;
+		srcItem->m_StoreSize   = 0;
 	}
 }
 
-b3Item *b3World::b3Clone(b3Item *original) throw(b3WorldException)
+b3Item *b3World::b3Clone(b3Item *original, const b3_bool throw_exception) throw(b3WorldException)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
@@ -700,29 +715,40 @@ b3Item *b3World::b3Clone(b3Item *original) throw(b3WorldException)
 	if (entry != null)
 	{
 		item = entry->b3Load(original->m_StoreBuffer);
-		for(i = 0;i < original->m_HeadCount;i++)
-		{
-			b3CloneBase(&original->m_Heads[i],&item->m_Heads[i]);
-		}
-		original->b3Free(original->m_StoreBuffer);
-		original->m_StoreBuffer = null;
-		original->m_StoreSize   = 0;
 	}
 	else
 	{
-		B3_THROW(b3WorldException,B3_WORLD_CLASSTYPE_UNKNOWN);
+		if (throw_exception)
+		{
+			B3_THROW(b3WorldException,B3_WORLD_CLASSTYPE_UNKNOWN);
+		}
+		else
+		{
+			item = new b3Item(original->m_StoreBuffer);
+		}
 	}
+
+	for(i = 0;i < original->m_HeadCount;i++)
+	{
+		b3CloneBase(&original->m_Heads[i],&item->m_Heads[i], throw_exception);
+	}
+	original->b3Free(original->m_StoreBuffer);
+	original->m_StoreBuffer = null;
+	original->m_StoreSize   = 0;
+
 	return item;
 }
 
-b3_bool b3World::b3Write(const char *filename) throw(b3WorldException)
+b3_bool b3World::b3Write(
+	const char    *filename,
+	const b3_bool  throw_exception) throw(b3WorldException)
 {
 	b3File          file;
 	b3_world_error  error;
 
 	if(file.b3Open(filename,B_WRITE))
 	{
-		error = b3Write(&file);
+		error = b3Write(&file, throw_exception);
 		file.b3Close();
 	}
 	else
@@ -737,7 +763,7 @@ b3_bool b3World::b3Write(const char *filename) throw(b3WorldException)
 	return true;
 }
 
-b3_world_error b3World::b3Write(b3FileAbstract *file)
+b3_world_error b3World::b3Write(b3FileAbstract *file, const b3_bool throw_exception)
 {
 	b3Item         *item;
 	b3_u32          size;

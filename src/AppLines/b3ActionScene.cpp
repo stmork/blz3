@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.13  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.12  2005/06/11 17:47:12  sm
 **	- Moving int o view direction on camera turn (right mouse button)
 **	
@@ -590,7 +597,7 @@ void CB3ActionCameraTurn::b3RMove(b3_coord x,b3_coord y)
 		b3_f64 yFactor = m_yRelStart - yRel;
 
 		// Compute moving vector;
-		b3Vector::b3Scale(&diff, &m_ViewDir, yFactor);
+		b3Vector::b3Scale(&m_ViewDir, &diff, yFactor);
 
 		if (!b3Vector::b3IsEqual(&diff,&m_LastDiff))
 		{

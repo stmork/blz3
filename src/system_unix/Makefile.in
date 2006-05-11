@@ -1,13 +1,15 @@
 # Beispiel Makefile
 
-CC				= @CC@
-CXX				= @CXX@
-CPPFLAGS		= @CPPFLAGS@
+CC		= @CC@
+CXX		= @CXX@
+CFLAGS		= @CFLAGS@
+CXXFLAGS	= @CXXFLAGS@
+CPPFLAGS	= @CPPFLAGS@
 
 # Optionen
 
-LIBS			= libB3System.o
-LIB_SOURCE		=\
+LIBS		= libB3System.o
+LIB_SOURCE	=\
 	b3Config.cc\
 	b3CPU.cc\
 	b3Dir.cc\
@@ -19,7 +21,7 @@ LIB_SOURCE		=\
 	b3Thread.cc\
 	b3Time.cc
 
-LIB_OBJ			=\
+LIB_OBJ		=\
 	b3Config.o\
 	b3CPU.o\
 	b3Dir.o\

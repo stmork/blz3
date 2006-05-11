@@ -38,9 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.10  2005/11/29 22:23:44  sm
 **	- Added special error logging for b3Open.
-**
+**	
 **	Revision 1.9  2004/05/13 08:13:21  sm
 **	- Removed some variable hidings.
 **	
@@ -87,8 +94,7 @@
 *************************************************************************/
 
 b3_count b3File::m_OpenFiles = 0;
-
-static b3Mutex        files_opened_mutex;
+b3Mutex  b3File::m_FilesOpenedMutex;
 
 // Initialize an instance only
 b3File::b3File()
@@ -137,10 +143,9 @@ b3_bool b3File::b3Open (
 			m_File = open(Name,O_RDONLY);
 			if (m_File != -1)
 			{
-				files_opened_mutex.b3Lock();
-				m_OpenFiles++;
-				files_opened_mutex.b3Unlock();
+				b3CriticalSection lock(m_FilesOpenedMutex);
 
+				m_OpenFiles++;
 				return true;
 			}
 			else
@@ -157,9 +162,9 @@ b3_bool b3File::b3Open (
 			m_File = open(Name,O_WRONLY|O_CREAT,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
 			if (m_File != -1)
 			{
-				files_opened_mutex.b3Lock();
+				b3CriticalSection lock(m_FilesOpenedMutex);
+
 				m_OpenFiles++;
-				files_opened_mutex.b3Unlock();
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
@@ -176,9 +181,9 @@ b3_bool b3File::b3Open (
 			m_File = open(Name,O_WRONLY|O_APPEND,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
 			if (m_File != -1)
 			{
-				files_opened_mutex.b3Lock();
+				b3CriticalSection lock(m_FilesOpenedMutex);
+
 				m_OpenFiles++;
-				files_opened_mutex.b3Unlock();
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
@@ -396,10 +401,10 @@ void b3File::b3Close ()
 	b3Buffer(0);
 	if (m_File != -1)
 	{
+		b3CriticalSection lock(m_FilesOpenedMutex);
+
 		close  (m_File);
-		files_opened_mutex.b3Lock();
 		m_OpenFiles--;
-		files_opened_mutex.b3Unlock();
 		m_File  = -1;
 	}
 

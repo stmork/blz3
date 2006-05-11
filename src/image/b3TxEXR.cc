@@ -42,9 +42,16 @@ using namespace Iex;
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.4  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2005/10/17 18:51:33  sm
 **	- Compile fix.
 **	
@@ -89,7 +96,7 @@ public:
 		m_Index += n;
 
 		// Return EOF.
-		return m_Index < m_Size;
+		return m_Index < static_cast<b3_index>(m_Size);
 	}
 
 	virtual Int64 tellg ()

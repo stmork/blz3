@@ -39,6 +39,13 @@ static char THIS_FILE[] = __FILE__;
 /*
 ** PROTECTED REGION ID(CDlgBumpOceanWave_log) ENABLED START
 **	$Log$
+**	Revision 1.2  2006/05/11 15:34:21  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.1  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -51,7 +58,7 @@ static char THIS_FILE[] = __FILE__;
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.6  2006/04/19 18:20:26  sm
 **	- Regeneration
 **	
@@ -95,6 +102,7 @@ void CPageOcean::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_B3OCEANWAVE_A, m_A);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_T_SPIN, m_T);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_SIZE, m_Size);
+	DDX_Control(pDX, IDC_B3OCEANWAVE_L, m_L);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_DIM_SPIN, m_Dim);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_WX, m_Wx);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_WY, m_Wy);
@@ -103,6 +111,7 @@ void CPageOcean::DoDataExchange(CDataExchange* pDX)
 	m_A.b3DDX(pDX, m_Ocean->m_A);
 	m_T.b3DDX(pDX, m_Ocean->m_T);
 	m_Size.b3DDX(pDX, m_Ocean->m_GridSize);
+	m_L.b3DDX(pDX, m_Ocean->m_l);
 	m_Dim.b3DDX(pDX, m_Ocean->m_Dim);
 	m_Wx.b3DDX(pDX, m_Ocean->m_Wx);
 	m_Wy.b3DDX(pDX, m_Ocean->m_Wy);
@@ -114,6 +123,7 @@ BEGIN_MESSAGE_MAP(CPageOcean, CB3PropertyPage)
 	ON_EN_KILLFOCUS(IDC_B3OCEANWAVE_T, OnEdit)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_B3OCEANWAVE_T_SPIN, OnSpin)
 	ON_EN_KILLFOCUS(IDC_B3OCEANWAVE_SIZE, OnEdit)
+	ON_EN_KILLFOCUS(IDC_B3OCEANWAVE_L, OnEdit)
 	ON_EN_KILLFOCUS(IDC_B3OCEANWAVE_WX, OnEdit)
 	ON_EN_KILLFOCUS(IDC_B3OCEANWAVE_WY, OnEdit)
 	ON_WM_DESTROY()
@@ -134,6 +144,7 @@ BOOL CPageOcean::OnInitDialog()
 	m_A.b3SetPos(m_Ocean->m_A);
 	m_T.b3SetPos(m_Ocean->m_T);
 	m_Size.b3SetPos(m_Ocean->m_GridSize);
+	m_L.b3SetPos(m_Ocean->m_l);
 	m_Dim.b3SetPos(m_Ocean->m_Dim);
 	m_Wx.b3SetPos(m_Ocean->m_Wx);
 	m_Wy.b3SetPos(m_Ocean->m_Wy);

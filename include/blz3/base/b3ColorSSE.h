@@ -31,6 +31,7 @@ class B3_PLUGIN b3Color : public b3ColorBase
 {
 	             __m128 v;                   //!< These are the color channels of a b3Color instance.
 	static const b3_u32 B3_ALIGN_16 m_AbsMask[4];
+	static const b3_f32 B3_ALIGN_16 m_Limit_d015[4];
 
 public:
 	/////////////////////////////////////////////////--------  constructors
@@ -106,10 +107,9 @@ public:
 	 */
 	inline b3Color(const b3_u16 input)
 	{
-#if 0
-// FIXME
 		b3_u16             color = input;
 		b3_s32 B3_ALIGN_16 c[4];
+		b3_f32 B3_ALIGN_16 d[4];
 		b3_loop            i;
 
 		for (i = 0;i < 4;i++)
@@ -120,14 +120,12 @@ public:
 
 		for (i = 0;i < 4;i++)
 		{
-			v[i] = (b3_f32)c[i];
+			d[i] = (b3_f32)c[i];
 		}
 
-		for (i = 0;i < 4;i++)
-		{
-			v[i] *= m_Limit_d015[i];
-		}
-#endif
+		v = _mm_mul_ps(
+			_mm_loadu_ps(d),
+			_mm_loadu_ps(m_Limit_d015));
 	}
 
 	/**
@@ -583,7 +581,7 @@ public:
 	 */
 	inline void b3Abs()
 	{
-		v = _mm_and_ps(v, _mm_load_ps((const float *)m_AbsMask));
+		v = _mm_and_ps(v, _mm_loadu_ps((const float *)m_AbsMask));
 	}
 
 	/**

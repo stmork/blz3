@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2006/05/11 15:34:22  sm
+**      - Added unit tests
+**      - Corrected normal computation for ocean waves
+**      - Optimized b3Complex
+**      - Added new FFT
+**      - Added own assertion include
+**
 **      Revision 1.6  2006/03/05 21:22:33  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -117,12 +124,22 @@ b3_bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check)
 
 b3Item *b3ItemRegisterEntry::b3Init()
 {
-	return init_func(class_type);
+	b3Item *item = init_func(class_type);
+	
+	item->Succ = null;
+	item->Prev = null;
+
+	return item;
 }
 
 b3Item *b3ItemRegisterEntry::b3Load(b3_u32 *buffer)
 {
-	return load_func(buffer);
+	b3Item *item = load_func(buffer);
+	
+	item->Succ = null;
+	item->Prev = null;
+
+	return item;
 }
 
 void b3ItemRegisterEntry::b3Dump()

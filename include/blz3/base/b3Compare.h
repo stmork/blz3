@@ -61,12 +61,7 @@ public:
 	 * @param compare The external instance to compare to.
 	 * @return The comparison value as documented above.
 	 */
-	virtual int b3Cmp(T *compare)
-	{
-		// This is left side
-		// b is right side.
-		return 0;
-	}
+	virtual int b3Cmp(T *compare) = 0;
 };
 
 /**

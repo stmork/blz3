@@ -33,9 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.7  2004/12/23 22:22:42  sm
 **	- Adjusted further Visual C++ options
-**
+**	
 **	Revision 1.6  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -60,7 +67,7 @@
 *************************************************************************/
 
 #define TEST_NUM_THREADS 5
-#define TEST_LOOP        500000
+#define TEST_LOOP        5000000
 
 class TestUnit;
 
@@ -152,10 +159,10 @@ public:
 		b3PrintF (B3LOG_NORMAL,"Thread %d started.\n",num + 1);
 		for (i = 0;i < TEST_LOOP;i++)
 		{
-			thisClass->tMutex.b3Lock();
+			b3CriticalSection lock(thisClass->tMutex);
+
 			info->counter[num]++;
 			thisClass->counter++;
-			thisClass->tMutex.b3Unlock();
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
 		return 0;
@@ -171,10 +178,10 @@ public:
 		b3PrintF (B3LOG_NORMAL,"Thread %d started.\n",num + 1);
 		for (i = 0;i < TEST_LOOP;i++)
 		{
-			thisClass->iMutex.b3Lock();
+			b3CriticalSection lock(thisClass->iMutex);
+
 			info->counter[num]++;
 			thisClass->counter++;
-			thisClass->iMutex.b3Unlock();
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
 		return 0;
@@ -315,6 +322,8 @@ int main(int argc,char *argv[])
 	ptr = new TestUnit();
 	ptr->test3();
 	delete ptr;
+
+//	b3LockerTest test;
 
 	return EXIT_SUCCESS;
 }

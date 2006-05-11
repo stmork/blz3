@@ -1,7 +1,9 @@
 # Beispiel Makefile
 
-CC				= @CC@
-CXX				= @CXX@
+CC			= @CC@
+CXX			= @CXX@
+CFLAGS			= @CFLAGS@
+CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDLIBS			= @LIBS@
 LIBS			= libB3Image.o

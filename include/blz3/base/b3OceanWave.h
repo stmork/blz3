@@ -48,14 +48,19 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3_f64                  m_l2;          // wave length lower limit (squared)
 	b3Complex<b3_f64>       m_Cycle;       // e^j*omega*t
 	b3Fourier               m_FFT;
+#if 1
 	b3PseudoRandom<b3_f64>  m_Random;
+#else
+	b3Rand48<b3_f64>        m_Random;
+#endif
 	b3Complex<b3_f64>      *m_Phillips;
+	b3_vector              *m_Normals;
 	b3_bool                 m_Modified;
 
 public:
 	// time animation values
 	b3_f64   m_T;          //!< Time period.
-	b3_count m_Dim;        //!< FFT dimension as poer of two.
+	b3_count m_Dim;        //!< FFT dimension as power of two.
 	b3_f32   m_Wx;         //!< Direction of the wind (x component).
 	b3_f32   m_Wy;         //!< Direction of the wind (y component).
 	b3_f32   m_A;          //!< Global factor.
@@ -109,16 +114,6 @@ public:
 	}
 
 	/**
-	 * Returns the value field of the height field.
-	 *
-	 * @return The height field.
-	 */
-	inline b3Complex<b3_f64> *b3GetBuffer()
-	{
-		return m_FFT.b3GetBuffer();
-	}
-
-	/**
 	 * This method flags the ocean wave instance whether a Phillips
 	 * Spectrum recomputation should be performed.
 	 *
@@ -147,12 +142,34 @@ private:
 		const b3_index      index,
 		      b3FilterInfo *filter_info);
 
-	b3_f64            b3Height(b3Complex<b3_f64> *buffer, const b3_f64 fx, const b3_f64 fy);
 	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index);
+	void              b3PrepareNormals();
 	void              b3TestSpectrum1();
 	void              b3TestSpectrum2();
 	void              b3TestSpectrum3();
 	void              b3TestSpectrum4();
+
+	/**
+	 * Returns the value field of the height field.
+	 *
+	 * @return The height field.
+	 */
+	inline b3Complex<b3_f64> *b3GetBuffer()
+	{
+		return m_FFT.b3GetBuffer();
+	}
+
+	inline b3_index  b3GetIndex(const b3_index x, const b3_index y)
+	{
+		return ((y & m_fftMask) << m_Dim) | (x & m_fftMask);
+	}
+	
+	inline b3_f64     b3GetHeight(const b3_index x, const b3_index y)
+	{
+		b3Complex<b3_f64> *buffer = b3GetBuffer();
+
+		return buffer[b3GetIndex(x, y)].b3Real();
+	}
 };
 
 #endif

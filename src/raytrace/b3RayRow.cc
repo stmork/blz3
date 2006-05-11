@@ -33,6 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.22  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -45,7 +52,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.21  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -277,30 +284,32 @@ void b3SupersamplingRayRow::b3Raytrace()
 		b3Vector::b3Add(&m_Scene->m_xStepDir, &dir);
 	}
 
-	m_Scene->m_SamplingMutex.b3Lock();
-	m_RowState = B3_STATE_CHECK;
+	// CRITICAL SECTION
+	{
+		b3CriticalSection lock(m_Scene->m_SamplingMutex);
+		m_RowState = B3_STATE_CHECK;
 
-	if (m_PrevRow == null)
-	{
-		// This is the first row...
-		do_convert = true;
-		m_RowState = B3_STATE_READY;
-		if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+		if (m_PrevRow == null)
 		{
-			do_refine_succ = true;
-			m_SuccRow->m_RowState = B3_STATE_REFINING;
+			// This is the first row...
+			do_convert = true;
+			m_RowState = B3_STATE_READY;
+			if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+			{
+				do_refine_succ = true;
+				m_SuccRow->m_RowState = B3_STATE_REFINING;
+			}
+		}
+		else
+		{
+			// The previous one is already OK -> Refine this.
+			if (m_PrevRow->m_RowState == B3_STATE_READY)
+			{
+				do_refine = true;
+				m_RowState = B3_STATE_REFINING;
+			}
 		}
 	}
-	else
-	{
-		// The previous one is already OK -> Refine this.
-		if (m_PrevRow->m_RowState == B3_STATE_READY)
-		{
-			do_refine = true;
-			m_RowState = B3_STATE_REFINING;
-		}
-	}
-	m_Scene->m_SamplingMutex.b3Unlock();
 
 	if (do_convert)	b3Convert();
 	if (do_refine) b3Refine(true);
@@ -415,14 +424,17 @@ inline void b3SupersamplingRayRow::b3Refine(const b3_bool this_row)
 		m_buffer[x] = m_Debug ? b3Color(result) : m_ThisResult[x];
 	}
 
-	m_Scene->m_SamplingMutex.b3Lock();
-	m_RowState = B3_STATE_READY;
-	if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+	// CRITICAL SECTION
 	{
-		do_refine_succ = true;
-		m_SuccRow->m_RowState = B3_STATE_REFINING;
+		b3CriticalSection lock(m_Scene->m_SamplingMutex);
+
+		m_RowState = B3_STATE_READY;
+		if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+		{
+			do_refine_succ = true;
+			m_SuccRow->m_RowState = B3_STATE_REFINING;
+		}
 	}
-	m_Scene->m_SamplingMutex.b3Unlock();
 
 	if (do_refine_succ)
 	{

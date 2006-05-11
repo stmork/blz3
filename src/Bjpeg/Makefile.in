@@ -2,8 +2,10 @@
 
 # Optionen
 
-BLZ3_LIB    = @BLZ3_LIB@
-CC			= @CC@
+BLZ3_LIB	= @BLZ3_LIB@
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+CXXFLAGS	= @CXXFLAGS@
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3jpeg.o
 

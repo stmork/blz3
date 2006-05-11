@@ -61,31 +61,63 @@ AC_TRY_LINK([#include <string.h>],[
 char msg[1024];strerror_r(0,msg,sizeof(msg)));
 ],[AC_DEFINE([HAVE_STRERROR]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
-AC_CHECK_HEADER([xmmintrin.h],[AC_DEFINE([HAVE_SSE])])
-AC_MSG_CHECKING([for SSE])
-AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
-#include <xmmintrin.h>],[
-char result[[128]];__m128 a = _mm_set_ps1(1),b = _mm_set_ps1(1),r = _mm_add_ps(a,b);
-sprintf(result,"%f\n",*((float *)&r));
-])],[AC_DEFINE([BLZ3_USE_SSE]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_CHECK_HEADER([emmintrin.h],[AC_DEFINE([HAVE_SSE2])])
-AC_MSG_CHECKING([for SSE2])
-AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
-#include <emmintrin.h>],[
-char result[[128]];__m128d a = _mm_set1_pd(1),b = _mm_set1_pd(1),r = _mm_add_pd(a,b);
-sprintf(result,"%lf\n",*((double *)&r));
-])],[AC_DEFINE([BLZ3_USE_SSE2]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_CHECK_HEADER([pmmintrin.h],[AC_DEFINE([HAVE_SSE3])])
-AC_MSG_CHECKING([for SSE3])
-AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
-#include <emmintrin.h>
-#include <pmmintrin.h>],[
+AC_CHECK_HEADER([xmmintrin.h],[
+	AC_DEFINE([HAVE_SSE])
+	AC_MSG_CHECKING([for SSE])
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <xmmintrin.h>
+__m128 a;
+unsigned short q;
+__m128 b,r;],[
 char result[[128]];
-__m128d a = _mm_set1_pd(1),b = _mm_set1_pd(1),r = _mm_hadd_pd(a,b);
+a = _mm_set_ps1(1);
+b = _mm_set_ps1(1);
+r = _mm_add_ps(a,b);
+// printf ("SSE1 %p %p\n", &a, &b);
+sprintf(result,"%f\n",*((float *)&r));
+	])],
+	[AC_DEFINE([BLZ3_USE_SSE]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+])
+
+AC_CHECK_HEADER([emmintrin.h],[
+	AC_DEFINE([HAVE_SSE2])
+	AC_MSG_CHECKING([for SSE2])
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <emmintrin.h>
+__m128d a;
+unsigned short q;
+__m128d b,r;],[
+char result[[128]];
+a = _mm_set1_pd(1);
+b = _mm_set1_pd(1);
+r = _mm_add_pd(a,b);
+// printf ("SSE2 %p %p\n", &a, &b);
 sprintf(result,"%lf\n",*((double *)&r));
-])],[AC_DEFINE([BLZ3_USE_SSE3]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+	])],
+	[AC_DEFINE([BLZ3_USE_SSE2]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+])
+
+AC_CHECK_HEADER([pmmintrin.h],[
+	AC_DEFINE([HAVE_SSE3])
+	AC_MSG_CHECKING([for SSE3])
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <emmintrin.h>
+#include <pmmintrin.h>
+__m128d a;
+unsigned short q;
+__m128d b,r;],[
+char result[[128]];
+a = _mm_set1_pd(1);
+b = _mm_set1_pd(1);
+r = _mm_hadd_pd(a,b);
+// printf ("SSE3 %p %p\n", &a, &b);
+sprintf(result,"%lf\n",*((double *)&r));
+	])],
+	[AC_DEFINE([BLZ3_USE_SSE3]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+])
 
 AC_PATH_XTRA
 
@@ -98,6 +130,7 @@ AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h s
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 AC_CHECK_LIB([z], [main])
+AC_CHECK_LIB([cppunit], [main])
 
 # Check for OpenGL
 AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
@@ -169,5 +202,6 @@ AC_CONFIG_FILES([
 	src/brt3/Makefile
 	src/divx/Makefile
 	src/tools/Makefile
-	src/cpuperf/Makefile])
+	src/cpuperf/Makefile
+	src/unittest/Makefile])
 AC_OUTPUT

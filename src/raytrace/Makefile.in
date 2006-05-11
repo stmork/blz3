@@ -1,11 +1,13 @@
 # Beispiel Makefile
 
-CC				= @CC@
-CXX				= @CXX@
-CPPFLAGS		= @CPPFLAGS@
+CC		= @CC@
+CXX		= @CXX@
+CFLAGS		= @CFLAGS@
+CXXFLAGS	= @CXXFLAGS@
+CPPFLAGS	= @CPPFLAGS@
 
-LIBS			= libB3Raytrace.o
-PRG_SOURCE		=\
+LIBS		= libB3Raytrace.o
+PRG_SOURCE	=\
 	b3Animation.cc\
 	b3AnimElement.cc\
 	b3Area.cc\

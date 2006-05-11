@@ -76,6 +76,11 @@ public:
 		v[Im] = im;
 	}
 
+	inline bool operator==(const b3Complex<T> &a) const
+	{
+		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
+	}
+
 	/**
 	 * The += operator. The operation is <code>this += a</code>.
 	 * Where <code>a</code> is a complex number.

@@ -40,9 +40,16 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.15  2005/12/05 22:12:24  sm
 **	- More const declarations.
-**
+**	
 **	Revision 1.14  2005/10/22 10:51:41  sm
 **	- Some SSE optimizations.
 **	
@@ -543,7 +550,8 @@ b3_bool b3DisplayView::b3CreateColormap ()
 		return false;
 	}
 
-	display_mutex.b3Lock();
+	b3CriticalSection lock(display_mutex);
+
 	if (cmap != null)
 	{
 		cmap_count++;
@@ -582,14 +590,13 @@ b3_bool b3DisplayView::b3CreateColormap ()
 			result     = true;
 		}
 	}
-	display_mutex.b3Unlock();
-
 	return result;
 }
 
 void b3DisplayView::b3FreeColormap()
 {
-	display_mutex.b3Lock();
+	b3CriticalSection lock(display_mutex);
+
 	if (--cmap_count <= 0)
 	{
 		if (m_depth == 8)
@@ -598,7 +605,6 @@ void b3DisplayView::b3FreeColormap()
 			cmap = null;
 		}
 	}
-	display_mutex.b3Unlock();
 }
 
 inline void b3DisplayView::b3FirstDrawing ()
@@ -610,12 +616,12 @@ inline void b3DisplayView::b3RefreshAll ()
 {
 	if (m_Opened)
 	{
-		m_Mutex.b3Lock();
+		b3CriticalSection lock(m_Mutex);
+
 		XCopyArea (m_Display,
 			m_Image,m_Window,
 			m_GC,0,0,
 			m_xs,m_ys,0,0);
-		m_Mutex.b3Unlock();
 	}
 }
 
@@ -626,10 +632,10 @@ void b3DisplayView::b3PutRow(const b3Row *row)
 	b3Display::b3PutRow(row);
 	if (m_Opened && (y < m_ys))
 	{
-		m_Mutex.b3Lock();
+		b3CriticalSection lock(m_Mutex);
+
 		b3RefreshRow(y);
 		XCopyArea (m_Display,m_Image,m_Window,m_GC,0,y,m_xs,1,0,y);
-		m_Mutex.b3Unlock();
 	}
 }
 
@@ -638,13 +644,13 @@ void b3DisplayView::b3PutTx(b3Tx *tx)
 	b3_coord y;
 
 	b3Display::b3PutTx(tx);
-	m_Mutex.b3Lock();
+	b3CriticalSection lock(m_Mutex);
+
 	for (y = 0;y < m_ys;y++)
 	{
 		b3RefreshRow(y);
 	}
 	XCopyArea (m_Display,m_Image,m_Window,m_GC,0,0,m_xs,m_ys,0,0);
-	m_Mutex.b3Unlock();
 }
 
 inline void b3DisplayView::b3RefreshRow(const b3_coord y)
@@ -665,11 +671,11 @@ void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_colo
 
 	if (m_Opened)
 	{
-		m_Mutex.b3Lock();
+		b3CriticalSection lock(m_Mutex);
+
 		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel (Color,x,y));
 		XDrawPoint     (m_Display,m_Window,m_GC,x,y);
 		XDrawPoint     (m_Display,m_Image, m_GC,x,y);
-		m_Mutex.b3Unlock();
 	}
 }
 
@@ -683,17 +689,20 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 	b3_bool	 loop = true,result=false,really_ask;
 	XEvent	 report;
 
-	display_mutex.b3Lock();
-	if (--count > 0)
+	// CRITICAL SECTION
 	{
-		really_ask = false;
+		b3CriticalSection lock(display_mutex);
+
+		if (--count > 0)
+		{
+			really_ask = false;
+		}
+		else
+		{
+			count      = READY;
+			really_ask = true;
+		}
 	}
-	else
-	{
-		count      = READY;
-		really_ask = true;
-	}
-	display_mutex.b3Unlock();
 
 	if (!really_ask)
 	{
@@ -702,14 +711,17 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 
 	do	/* check pending events */
 	{
-		m_Mutex.b3Lock();
-		if (XPending  (m_Display) <= 0)
+		// CRITICAL SECTION
 		{
-			m_Mutex.b3Unlock();
-			return result;
+			b3CriticalSection lock(m_Mutex);
+
+			if (XPending  (m_Display) <= 0)
+			{
+				return result;
+			}
+			XCheckIfEvent (m_Display,&report,&b3SetPredicate,0);
 		}
-		XCheckIfEvent (m_Display,&report,&b3SetPredicate,0);
-		m_Mutex.b3Unlock();
+
 		switch (report.type)
 		{
 			case Expose :

@@ -736,6 +736,7 @@
 #define IDC_B3OCEANWAVE_DIM_SPIN        32436
 #define IDC_B3OCEANWAVE_WX              32437
 #define IDC_B3OCEANWAVE_WY              32438
+#define IDC_B3OCEANWAVE_L               32439
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002

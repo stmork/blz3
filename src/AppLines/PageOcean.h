@@ -47,6 +47,7 @@ public:
 	CB3FloatEdit           m_A;
 	CB3FloatSpinButtonCtrl m_T;
 	CB3FloatEdit           m_Size;
+	CB3FloatEdit           m_L;
 	CB3IntSpinButtonCtrl   m_Dim;
 	CB3FloatEdit           m_Wx;
 	CB3FloatEdit           m_Wy;

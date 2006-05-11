@@ -36,9 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.1  2005/06/03 09:00:34  smork
 **	- Moved b3CPU into own file.
-**
+**	
 **	
 */
 
@@ -102,9 +109,9 @@ b3CPU::b3CPU()
 
 b3_count b3CPU::b3GetNumThreads()
 {
-	b3_count resuming;
+	b3_count          resuming;
+	b3CriticalSection lock(b3Thread::m_ThreadMutex);
 
-	b3Thread::m_ThreadMutex.b3Lock();
 	if (cpu_count > b3Thread::m_ThreadCount)
 	{
 		resuming = cpu_count - b3Thread::m_ThreadCount;
@@ -113,6 +120,5 @@ b3_count b3CPU::b3GetNumThreads()
 	{
 		resuming = 1;
 	}
-	b3Thread::m_ThreadMutex.b3Unlock();
 	return resuming;
 }

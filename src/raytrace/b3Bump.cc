@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.52  2006/05/01 12:59:07  sm
 **	- Minor changes.
-**
+**	
 **	Revision 1.51  2006/04/30 11:48:12  sm
 **	- New ocean wave deriv try.
 **	
@@ -1086,9 +1093,9 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 b3BumpOcean::b3BumpOcean(b3_u32 class_type) :
 	b3Bump(sizeof(b3BumpOcean), class_type)
 {
-	b3Vector::b3Init(&m_Scale, 0.1, 0.1, 0.1);
+	b3Vector::b3Init(&m_Scale, 0.1f, 0.1f, 0.1f);
 	m_ScaleFlags = B3_SCALE_IPOINT;
-	m_Amplitude  = 0,1;
+	m_Amplitude  = 1;
 }
 
 b3BumpOcean::b3BumpOcean(b3_u32 *src) :

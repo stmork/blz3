@@ -159,6 +159,42 @@ public:
 	}
 
 	/**
+	 * This method initializes a b3_line64 structure.
+	 *
+	 * @param line The b3_line64 structure to initialize.
+	 * @param base The base position.
+	 * @param dir  The direction vector.
+	 * @return The result (= line input).
+	 */
+	static inline b3_line64 *b3Init(
+		      b3_line64   *line,
+		const b3_vector64 *base,
+		const b3_vector64 *dir)
+	{
+		line->pos = *base;
+		line->dir = *dir;
+		return line;
+	}
+
+	/**
+	 * This method initializes a b3_line structure.
+	 *
+	 * @param line The b3_line structure to initialize.
+	 * @param base The base position.
+	 * @param dir  The direction vector.
+	 * @return The result (= line input).
+	 */
+	static inline b3_line *b3Init(
+		      b3_line   *line,
+		const b3_vector *base,
+		const b3_vector *dir)
+	{
+		line->pos = *base;
+		line->dir = *dir;
+		return line;
+	}
+
+	/**
 	 * This method compares two vectors.
 	 *
 	 * @param vec1 The first vector.
@@ -191,6 +227,24 @@ public:
 
 		return (x*x + y*y + z*z) < 0.0001;
 #endif
+	}
+
+	/**
+	 * This method compares two vectors.
+	 *
+	 * @param vec1 The first vector.
+	 * @param vec2 The second vector.
+	 * @return True if both vectors are equal.
+	 */
+	static inline b3_bool b3IsEqual(
+		const b3_vector64 *vec1,
+		const b3_vector64 *vec2)
+	{
+		b3_f64 x = vec2->x - vec1->x;
+		b3_f64 y = vec2->y - vec1->y;
+		b3_f64 z = vec2->z - vec1->z;
+
+		return (x*x + y*y + z*z) < 0.0001;
 	}
 
 	/**
@@ -1228,14 +1282,34 @@ public:
 	}
 
 	/**
+	 * This method computes the distance between the two given
+	 * vectors interpreted as points.
+	 *
+	 * @param from The first point.
+	 * @param to   The second point.
+	 * @return The resulting distance.
+	 */
+	static inline b3_f64 b3Distance(
+		const b3_vector64 *from,
+		const b3_vector64 *to)
+	{
+		register b3_f64 x,y,z;
+
+		x = to->x - from->x;
+		y = to->y - from->y;
+		z = to->z - from->z;
+		return sqrt(x * x + y * y + z * z);
+	}
+
+	/**
 	 * This method scales a vector by the given factor.
 	 *
 	 * @param vector The vector to scale.
 	 * @param factor The scale factor.
 	 */
-	static inline void b3Scale(
+	static inline b3_vector * b3Scale(
 		      b3_vector *vector,
-		const b3_f32 factor)
+		const b3_f32     factor)
 	{
 #ifdef B3_SSE1
 		b3_f32 B3_ALIGN_16 *v = &vector->x;
@@ -1249,6 +1323,7 @@ public:
 		vector->y *= factor;
 		vector->z *= factor;
 #endif
+		return vector;
 	}
 
 	/**
@@ -1261,8 +1336,8 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector *b3Scale(
-		      b3_vector *result,
 		const b3_vector *vector,
+		      b3_vector *result,
 		const b3_f32     factor)
 	{
 #ifdef B3_SSE1
@@ -1287,7 +1362,7 @@ public:
 	 * @param vector The vector to scale.
 	 * @param factor The scale factor.
 	 */
-	static inline void b3Scale(
+	static inline b3_vector64 * b3Scale(
 		      b3_vector64 *vector,
 		const b3_f64       factor)
 	{
@@ -1303,6 +1378,7 @@ public:
 		vector->y *= factor;
 		vector->z *= factor;
 #endif
+		return vector;
 	}
 
 	/**
@@ -1315,8 +1391,8 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector64 *b3Scale(
-		      b3_vector64 *result,
 		const b3_vector64 *vector,
+		      b3_vector64 *result,
 		const b3_f64       factor)
 	{
 #ifdef B3_SSE2
@@ -1528,6 +1604,52 @@ public:
 
 		return b3AngleOfVectors(&a,&b);
 #endif
+	}
+
+	/**
+	 * This method mixes two vectors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mix The mixer component as single precision floating point number.
+	 * @param result The mixer result.
+	 * @return The resulting mixed vector.
+	 */
+	inline static b3_vector * b3Mix(
+		const b3_vector *low,
+		const b3_vector *high,
+		const b3_f32     mix,
+		      b3_vector *result)
+	{
+		result->x = low->x + mix * (high->x - low->x);
+		result->y = low->y + mix * (high->y - low->y);
+		result->z = low->z + mix * (high->z - low->z);
+
+		return result;
+	}
+
+	/**
+	 * This method mixes two vectors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mix The mixer component as single precision floating point number.
+	 * @param result The mixer result.
+	 * @return The resulting mixed vector.
+	 */
+	inline static b3_vector64 * b3Mix(
+		const b3_vector64 *low,
+		const b3_vector64 *high,
+		const b3_f64       mix,
+		      b3_vector64 *result)
+	{
+		result->x = low->x + mix * (high->x - low->x);
+		result->y = low->y + mix * (high->y - low->y);
+		result->z = low->z + mix * (high->z - low->z);
+
+		return result;
 	}
 
 	/**
@@ -2136,7 +2258,7 @@ public:
 	 * @param vector The vector to clamp.
 	 * @param min The lower level to clamp.
 	 */
-	static inline void b3SetMinimum(
+	static inline b3_vector * b3SetMinimum(
 		b3_vector *vector,
 		b3_f32     min)
 	{
@@ -2154,6 +2276,7 @@ public:
 		if (vector->y < m) vector->y = m;
 		if (vector->z < m) vector->z = m;
 #endif
+		return vector;
 	}
 
 	/**
@@ -2163,7 +2286,7 @@ public:
 	 * @param lower The lower corner to adjust.
 	 * @param point The point to compare to.
 	 */
-	static inline void b3CheckLowerBound(
+	static inline b3_vector * b3CheckLowerBound(
 		      b3_vector *lower,
 		const b3_vector *point)
 	{
@@ -2180,6 +2303,7 @@ public:
 		if (point->y < lower->y) lower->y = point->y;
 		if (point->z < lower->z) lower->z = point->z;
 #endif
+		return lower;
 	}
 
 	/**
@@ -2188,7 +2312,7 @@ public:
 	 * @param vector The vector to saturate.
 	 * @param max The upper level to saturate.
 	 */
-	static inline void b3SetMaximum(
+	static inline b3_vector * b3SetMaximum(
 		b3_vector *vector,
 		b3_f32     max)
 	{
@@ -2206,6 +2330,7 @@ public:
 		if (vector->y > m) vector->y = m;
 		if (vector->z > m) vector->z = m;
 #endif
+		return vector;
 	}
 
 	/**
@@ -2215,7 +2340,7 @@ public:
 	 * @param upper The lower corner to adjust.
 	 * @param point The point to compare to.
 	 */
-	static inline void b3CheckUpperBound(
+	static inline b3_vector * b3CheckUpperBound(
 		      b3_vector *upper,
 		const b3_vector *point)
 	{
@@ -2232,6 +2357,7 @@ public:
 		if (point->y > upper->y) upper->y = point->y;
 		if (point->z > upper->z) upper->z = point->z;
 #endif
+		return upper;
 	}
 
 	/**

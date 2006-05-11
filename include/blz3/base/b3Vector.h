@@ -219,10 +219,18 @@ public:
 		const b3_f64 z = 0,
 		const b3_f64 w = 0)
 	{
-		v[X] = (F)x;
-		v[Y] = (F)y;
-		v[Z] = (F)z;
-		v[W] = (F)w;
+		b3_f64  param[4];
+		b3_loop max = B3_MIN(4, dim);
+
+		param[0] = x;
+		param[1] = y;
+		param[2] = z;
+		param[3] = w;
+
+		for(b3_loop i = 0; i < max; i++)
+		{
+			v[i] = static_cast<F>(param[i]);
+		}
 	}
 
 	/**
@@ -280,7 +288,7 @@ public:
 	 * @param index The component index.
 	 * @return The indexed compontent.
 	 */
-	inline F operator [](const b3_vector_index index)
+	inline F & operator [](const b3_vector_index index)
 	{
 #ifdef _DEBUG
 		if ((index < 0) || (index >= dim))
@@ -289,6 +297,28 @@ public:
 		}
 #endif
 		return v[index];
+	}
+
+	inline bool operator==(const b3VectorTemplate<F,dim> &a)
+	{
+		bool result = true;
+
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result &= (v[i] == a.v[i]);
+		}
+		return result;
+	}
+
+	inline bool operator!=(const b3VectorTemplate<F,dim> &a)
+	{
+		bool result = false;
+
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result |= (v[i] != a.v[i]);
+		}
+		return result;
 	}
 
 	/**
@@ -504,12 +534,19 @@ public:
 		const b3VectorTemplate<F,dim> &b)
 	{
 		F B3_ALIGN_16 r[dim];
+		F             result = 0;
+		b3_loop       i;
 
-		for (b3_loop i = 0;i < dim;i++)
+		for (i = 0;i < dim;i++)
 		{
 			r[i] = a.v[i] * b.v[i];
 		}
-		return r[0] + r[1] + r[2] + r[3];
+
+		for (i = 0;i < dim;i++)
+		{
+			result += r[i];
+		}
+		return result;
 	}
 
 	/**
@@ -678,6 +715,28 @@ public:
 		for (b3_loop i = 0;i < dim;i++)
 		{
 			if (v[i] < upper.v[i]) v[i] = upper.v[i];
+		}
+	}
+
+	/**
+	 * This method takes two vectors and sorts each component into
+	 * their lower and upper value.
+	 *
+	 * @param lower The sorted lower vector.
+	 * @param upper The sorted upper vector.
+	 */
+	static inline void b3Sort(
+		b3VectorTemplate<F,dim> &lower,
+		b3VectorTemplate<F,dim> &upper)
+	{
+		F aux;
+
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			if (lower.v[i] > upper.v[i])
+			{
+				aux = lower.v[i]; lower.v[i] = upper.v[i]; upper.v[i] = aux;
+			}
 		}
 	}
 

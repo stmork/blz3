@@ -170,7 +170,7 @@ public:
 	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item  *b3AllocNode(b3_u32  classtype, b3_bool throw_exception = false);
+	static b3Item  *b3AllocNode(b3_u32  classtype, const b3_bool throw_exception = false);
 
 	/**
 	 * This method allocates a b3Item instance from the item registry. If the
@@ -184,41 +184,49 @@ public:
 	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item  *b3AllocNode(b3_u32 *buffer, b3_bool throw_exception = false);
+	static b3Item  *b3AllocNode(b3_u32 *buffer, const b3_bool throw_exception = false);
 
 	/**
 	 * This method deserialize the content of the named file.
 	 *
 	 * @param worldname The file to deserialize.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Read(const char *worldname) throw(b3WorldException);
+	b3_bool         b3Read(const char *worldname, const b3_bool throw_exception = true) throw(b3WorldException);
 
 	/**
 	 * This method serialize the content of the named file.
 	 *
 	 * @param worldname The file to serialize.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Write(const char *worldname) throw(b3WorldException);
+	b3_bool         b3Write(const char *worldname, const b3_bool throw_exception = true) throw(b3WorldException);
 
 	/**
 	 * This method deserialize the content from the given file handle.
 	 *
 	 * @param filehandle The file to deserialize.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return True on success.
 	 */
-	b3_world_error  b3Read (b3FileAbstract *filehandle);
+	b3_world_error  b3Read (b3FileAbstract *filehandle, const b3_bool throw_exception = true);
 
 	/**
 	 * This method serialize the content into the given file handle.
 	 *
 	 * @param filehandle The file for the serialized data.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return The error code.
 	 */
-	b3_world_error  b3Write(b3FileAbstract *filehandle);
+	b3_world_error  b3Write(b3FileAbstract *filehandle, const b3_bool throw_exception = true);
 
 	/**
 	 * this method dumps the content of the given file name to show the b3Item
@@ -277,10 +285,13 @@ public:
 	 * using the b3CloneBase() method.
 	 *
 	 * @param original The b3Item to clone.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @return The cloned b3Item.
 	 * @throws b3WorldException
 	 */
-	static b3Item  *b3Clone(b3Item *original) throw(b3WorldException);
+	static b3Item  *b3Clone(
+		b3Item *original, const b3_bool throw_exception = true) throw(b3WorldException);
 
 	/**
 	 * This method clones a complete b3Base list. The items must be stored
@@ -288,13 +299,17 @@ public:
 	 *
 	 * @param srcBase The source base to clone.
 	 * @param dstBase The destination base which gets the cloned b3Items.
+	 * @param throw_exception If true throw exception if the needed class type is
+	 *                        not registered.
 	 * @throws b3WorldException
 	 */
-	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase) throw(b3WorldException);
+	static void     b3CloneBase(
+		b3Base<b3Item> *srcBase,
+		b3Base<b3Item> *dstBase, const b3_bool throw_exception = true) throw(b3WorldException);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
-	b3_world_error  b3Parse();
+	b3_world_error  b3Parse(const b3_bool throw_exception);
 };
 
 /*************************************************************************

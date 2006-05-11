@@ -36,9 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2006/05/11 15:34:23  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.23  2005/06/03 09:00:34  smork
 **	- Moved b3CPU into own file.
-**
+**	
 **	Revision 1.22  2005/05/10 15:30:57  sm
 **	- getrusage time correction message added.
 **	
@@ -140,54 +147,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        pthread logging                               **
-**                                                                      **
-*************************************************************************/
-
-#ifdef _DEBUG
-static b3_bool b3LogPThread(int error_code)
-{
-	if(error_code != 0)
-	{
-		b3PrintF(B3LOG_NORMAL,"### CLASS: b3PLog # errno: %d (%s)!\n",
-			error_code,strerror(error_code));
-	}
-	return error_code == 0;
-}
-#else
-#define b3LogPThread(error_code) (b3_bool)((error_code) == 0)
-#endif
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III mutex                            **
-**                                                                      **
-*************************************************************************/
-
-b3Mutex::b3Mutex()
-{
-	b3LogPThread(pthread_mutex_init(&mutex,NULL));
-}
-
-b3Mutex::~b3Mutex()
-{
-	b3LogPThread(pthread_mutex_destroy(&mutex));
-}
-
-// Method for entering a critical code section
-b3_bool b3Mutex::b3Lock()
-{
-	return b3LogPThread(pthread_mutex_lock(&mutex));
-}
-
-// Method for leaving a critical code section
-b3_bool b3Mutex::b3Unlock()
-{
-	return b3LogPThread(pthread_mutex_unlock(&mutex));
-}
-
-/*************************************************************************
-**                                                                      **
 **                        Blizzard III IPC mutex                        **
 **                                                                      **
 *************************************************************************/
@@ -195,24 +154,24 @@ b3_bool b3Mutex::b3Unlock()
 
 b3IPCMutex::b3IPCMutex()
 {
-	b3LogPThread(pthread_mutex_init(&mutex,NULL));
+	b3PThread::b3CheckResult(pthread_mutex_init(&mutex,NULL));
 }
 
 b3IPCMutex::~b3IPCMutex()
 {
-	b3LogPThread(pthread_mutex_destroy(&mutex));
+	b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
 }
 
 // Method for entering a critical code section
 b3_bool b3IPCMutex::b3Lock()
 {
-	return b3LogPThread(pthread_mutex_lock(&mutex));
+	return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 }
 
 // Method for leaving a critical code section
 b3_bool b3IPCMutex::b3Unlock()
 {
-	return b3LogPThread(pthread_mutex_unlock(&mutex));
+	return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
 }
 
 /*************************************************************************
@@ -223,24 +182,24 @@ b3_bool b3IPCMutex::b3Unlock()
 
 b3Event::b3Event()
 {
-	b3LogPThread(pthread_cond_init(&event,NULL));
-	b3LogPThread(pthread_mutex_init(&mutex,NULL));
+	b3PThread::b3CheckResult(pthread_cond_init(&event,NULL));
+	b3PThread::b3CheckResult(pthread_mutex_init(&mutex,NULL));
 	pulse = false;
 }
 
 b3Event::~b3Event()
 {
-	b3LogPThread(pthread_mutex_destroy(&mutex));
-	b3LogPThread(pthread_cond_destroy(&event));
+	b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
+	b3PThread::b3CheckResult(pthread_cond_destroy(&event));
 }
 
 // Signal another thread that there has happend something.
 void b3Event::b3Pulse()
 {
-	b3LogPThread(pthread_mutex_lock(&mutex));
+	b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 	pulse = true;
-	b3LogPThread(pthread_cond_broadcast(&event));
-	b3LogPThread(pthread_mutex_unlock(&mutex));
+	b3PThread::b3CheckResult(pthread_cond_broadcast(&event));
+	b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
 }
 
 // Wait for a signal from another thread.
@@ -248,13 +207,13 @@ b3_bool b3Event::b3Wait()
 {
 	b3_bool success = true;
 
-	success &= b3LogPThread(pthread_mutex_lock(&mutex));
+	success &= b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 	if (!pulse)
 	{
-		success &= b3LogPThread(pthread_cond_wait(&event,&mutex));
+		success &= b3PThread::b3CheckResult(pthread_cond_wait(&event,&mutex));
 	}
 	pulse = false;
-	success &= b3LogPThread(pthread_mutex_unlock(&mutex));
+	success &= b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
 
 	return success;
 }
@@ -286,27 +245,26 @@ b3Thread::~b3Thread()
 
 void b3Thread::b3Inc()
 {
-	m_ThreadMutex.b3Lock();
+	b3CriticalSection lock(m_ThreadMutex);
+
 	if (!m_IsRunning)
 	{
 		m_Span.b3Start();
 		m_IsRunning = true;
 		m_ThreadCount++;
 	}
-	m_ThreadMutex.b3Unlock();
 }
 
 void b3Thread::b3Dec()
 {
-	m_ThreadMutex.b3Lock();
+	b3CriticalSection lock(m_ThreadMutex);
+
 	if (m_IsRunning)
 	{
 		m_ThreadCount--;
 		m_IsRunning = false;
 		m_Span.b3Stop();
 	}
-	m_ThreadMutex.b3Unlock();
-
 }
 
 void b3Thread::b3Name(const char *task_name)
@@ -331,7 +289,7 @@ b3_bool b3Thread::b3Start(
 	m_Thread   = 0;
 	m_Prio     = -priority * 5;
 
-	success = b3LogPThread(error_code = pthread_create(&m_Thread,NULL,&b3Trampoline,this));
+	success = b3PThread::b3CheckResult(error_code = pthread_create(&m_Thread,NULL,&b3Trampoline,this));
 	if (success)
 	{
 		threadSuccess++;
@@ -341,7 +299,8 @@ b3_bool b3Thread::b3Start(
 	}
 	else
 	{
-		m_ThreadMutex.b3Lock();
+		b3CriticalSection lock(m_ThreadMutex);
+
 		threadError++;
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Thrd # Thread (%x) not started!\n",
 			m_Thread);
@@ -349,7 +308,6 @@ b3_bool b3Thread::b3Start(
 			threadSuccess,threadError);
 		b3PrintF(B3LOG_NORMAL,"    thread count:   %d\n",
 			m_ThreadCount);
-		m_ThreadMutex.b3Unlock();
 	}
 	return success;
 }
@@ -400,7 +358,7 @@ b3_u32 b3Thread::b3Wait()
 	int   result;
 	void *ptr = &result;
 
-	b3LogPThread(pthread_join(m_Thread,&ptr));
+	b3PThread::b3CheckResult(pthread_join(m_Thread,&ptr));
 	return m_Result;
 }
 

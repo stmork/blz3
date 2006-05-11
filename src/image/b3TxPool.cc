@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2006/05/11 15:34:22  sm
+**	- Added unit tests
+**	- Corrected normal computation for ocean waves
+**	- Optimized b3Complex
+**	- Added new FFT
+**	- Added own assertion include
+**
 **	Revision 1.28  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.27  2005/07/02 14:59:08  sm
 **	- Some better image pooling.
 **	
@@ -180,9 +187,9 @@ b3TxPool::b3TxPool()
 
 b3TxPool::~b3TxPool()
 {
-	m_Mutex.b3Lock();
+	b3CriticalSection lock(m_Mutex);
+
 	B3_DELETE_BASE(&m_Pool,tx);
-	m_Mutex.b3Unlock();
 }
 
 b3Base<b3Tx> *b3TxPool::b3GetTxHead()
@@ -215,11 +222,11 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name)
 
 b3Tx *b3TxPool::b3FindTexture(const char *ParamName)
 {
-	b3Tx *tx;
+	b3Tx  *tx;
+	b3CriticalSection lock(m_Mutex);
 
-	m_Mutex.b3Lock();
 	tx = b3FindTextureUnsafe(ParamName);
-	m_Mutex.b3Unlock();
+
 	return tx;
 }
 
@@ -253,7 +260,8 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name)
 	// find existing texture
 	b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" to load.\n",Name);
 
-	m_Mutex.b3Lock();
+	b3CriticalSection lock(m_Mutex);
+
 	tx = b3FindTextureUnsafe(Name);
 	if (tx == null)
 	{
@@ -269,7 +277,6 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name)
 		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" found.\n",
 			tx->b3Name());
 	}
-	m_Mutex.b3Unlock();
 
 	return tx;
 }
