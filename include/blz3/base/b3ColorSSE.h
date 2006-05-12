@@ -29,7 +29,7 @@
  */
 class B3_PLUGIN b3Color : public b3ColorBase
 {
-#ifdef NATIVE_SSE
+#ifdef SSE_ALIGNED
 	             __m128 v;                   //!< These are the color channels of a b3Color instance.
 #else
 	b3_f32 B3_ALIGN_16  v[4];

@@ -66,9 +66,9 @@
 #	endif
 #	ifdef SSE_ALIGNED
 #		define SSE_PS_LOAD(p)      (p)
-#		define SSE_PS_STORE(p, a)  ((p) = (a))
+#		define SSE_PS_STORE(p, a)  p = (a)
 #		define SSE_PD_LOAD(p)      (p)
-#		define SSE_PD_STORE(p, a)  ((p) = (a))
+#		define SSE_PD_STORE(p, a)  p = (a)
 #	else
 #		define SSE_PS_LOAD(p)      _mm_loadu_ps(p)
 #		define SSE_PS_STORE(p, a)  _mm_storeu_ps(p, a)
