@@ -67,6 +67,17 @@
 #			endif
 #		endif
 #	endif
+#	ifdef NATIVE_SSE
+#		define SSE_PS_LOAD(p)      (p)
+#		define SSE_PS_STORE(p, a)  ((p) = (a))
+#		define SSE_PD_LOAD(p)      (p)
+#		define SSE_PD_STORE(p, a)  ((p) = (a))
+#	else
+#		define SSE_PS_LOAD(p)      _mm_loadu_ps(p)
+#		define SSE_PS_STORE(p, a)  _mm_storeu_ps(p, a)
+#		define SSE_PD_LOAD(p)      _mm_loadu_pd(p)
+#		define SSE_PD_STORE(p, a)  _mm_storeu_pd(p, a)
+#	endif
 #endif
 
 // OpenGL is nice...
@@ -107,13 +118,16 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.41  2006/05/12 13:30:33  sm
+**	- Added unaligned SSE commands
+**
 **	Revision 1.40  2006/05/11 15:34:17  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.39  2006/03/05 21:22:33  sm
 **	- Added precompiled support for faster comiling :-)
 **	
