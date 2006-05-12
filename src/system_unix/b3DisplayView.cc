@@ -40,13 +40,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/05/12 16:29:32  sm
+**	- Added aligned support for Windows.
+**
 **	Revision 1.16  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.15  2005/12/05 22:12:24  sm
 **	- More const declarations.
 **	
@@ -665,7 +668,7 @@ inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 	}
 }
 
-void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color Color)
+void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &Color)
 {
 	b3Display::b3PutPixel(x,y,Color);
 
