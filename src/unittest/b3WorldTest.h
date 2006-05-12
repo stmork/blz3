@@ -18,11 +18,13 @@
 #ifndef B3_WORLD_TEST_H
 #define B3_WORLD_TEST_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
 #include "blz3/base/b3World.h"
 #include "blz3/system/b3File.h"
+
+#ifdef HAVE_LIBCPPUNIT
+
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 using namespace std;
 
@@ -90,4 +92,5 @@ public:
 	}
 };
 
+#endif
 #endif

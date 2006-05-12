@@ -31,13 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **
 */
 
@@ -46,6 +49,8 @@
 **                        Unit test for random number generation        **
 **                                                                      **
 *************************************************************************/
+
+#ifdef HAVE_LIBCPPUNIT
 
 typedef b3RandomTest<b3PseudoRandom<int>,    int>    random_test_1;
 typedef b3RandomTest<b3PseudoRandom<float>,  float>  random_test_2;
@@ -61,3 +66,5 @@ CPPUNIT_TEST_SUITE_REGISTRATION(random_test_3);
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_4);
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_5);       
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_6);
+
+#endif

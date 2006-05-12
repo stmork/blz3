@@ -18,11 +18,12 @@
 #ifndef B3_COLOR_TEST_H
 #define B3_COLOR_TEST_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Math.h"
+
+#ifdef HAVE_LIBCPPUNIT
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 using namespace std;
 
@@ -49,4 +50,5 @@ public:
 	}
 };
 
+#endif
 #endif

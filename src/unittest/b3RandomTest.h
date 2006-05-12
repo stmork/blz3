@@ -18,10 +18,12 @@
 #ifndef B3_RANDOM_TEST_H
 #define B3_RANDOM_TEST_H
 
+#include "blz3/base/b3Random.h"
+
+#ifdef HAVE_LIBCPPUNIT
+
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#include "blz3/base/b3Random.h"
 
 using namespace std;
 
@@ -65,4 +67,5 @@ public:
 	}
 };
 
+#endif
 #endif

@@ -18,11 +18,12 @@
 #ifndef B3_HASH_TEST_H
 #define B3_HASH_TEST_H
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Hash.h"
+
+#ifdef HAVE_LIBCPPUNIT
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 using namespace std;
 
@@ -93,4 +94,5 @@ public:
 	}
 };
 
+#endif
 #endif

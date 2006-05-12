@@ -18,10 +18,12 @@
 #ifndef B3_LIST_TEST_H
 #define B3_LIST_TEST_H
 
+#include "blz3/base/b3List.h"
+
+#ifdef HAVE_LIBCPPUNIT
+
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#include "blz3/base/b3List.h"
 
 using namespace std;
 
@@ -201,4 +203,5 @@ private:
 	}
 };
 
+#endif
 #endif

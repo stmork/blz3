@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.2  2006/05/11 18:48:24  sm
 **	- Small makefile fixes.
 **	- Corrected accuracy in unit tests.
-**
+**	
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -50,6 +53,8 @@
 **                        Unit tests for matrix and vector ops          **
 **                                                                      **
 *************************************************************************/
+
+#ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3MatrixTest);
 
@@ -406,3 +411,5 @@ void b3MatrixTest::testMatrix()
 	CPPUNIT_ASSERT_EQUAL(  0.0, bd.y);
 	CPPUNIT_ASSERT_EQUAL(  4.0, bd.z);
 }
+
+#endif

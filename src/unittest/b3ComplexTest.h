@@ -18,10 +18,11 @@
 #ifndef B3_COMPLEX_TEST_H
 #define B3_COMPLEX_TEST_H
 
+#include "blz3/base/b3Complex.h"
+
+#ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#include "blz3/base/b3Complex.h"
 
 using namespace std;
 
@@ -43,4 +44,5 @@ private:
 	b3Complex<b3_f64> *c , *d;
 };
 
+#endif
 #endif

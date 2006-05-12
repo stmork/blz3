@@ -31,13 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **
 */
 
@@ -46,6 +49,8 @@
 **                        Unit tests for splines                        **
 **                                                                      **
 *************************************************************************/
+
+#ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineTest<b3Curve>);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineTest<b3Spline>);
@@ -74,3 +79,5 @@ void b3SplineTest<b3Nurbs>::setUp()
 	a.m_Knots    = knots;
 	a.m_Controls = nurbs_controls;
 }
+
+#endif

@@ -20,11 +20,13 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
+#include "blz3/b3Config.h"
+
+#ifdef HAVE_LIBCPPUNIT
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
-
-#include "blz3/system/b3Log.h"
+#endif
 
 using namespace std;
 
@@ -36,13 +38,16 @@ using namespace std;
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **
 */
 
@@ -54,6 +59,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+#ifdef HAVE_LIBCPPUNIT
 	CppUnit::TextUi::TestRunner runner;
 	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
 
@@ -61,4 +67,8 @@ int main(int argc, char *argv[])
 	runner.addTest( registry.makeTest());
 	
 	return runner.run ("", false) ? EXIT_SUCCESS : EXIT_FAILURE;
+#else
+	b3PrintF(B3LOG_NORMAL, "No cppunit package available.\n");
+	return EXIT_SUCCESS;
+#endif
 }

@@ -18,10 +18,12 @@
 #ifndef B3_FILE_TEST_H
 #define B3_FILE_TEST_H
 
+#include "blz3/system/b3File.h"
+
+#ifdef HAVE_LIBCPPUNIT
+
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#include "blz3/system/b3File.h"
 
 using namespace std;
 
@@ -66,4 +68,5 @@ public:
 	}
 };
 
+#endif
 #endif

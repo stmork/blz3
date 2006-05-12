@@ -18,6 +18,9 @@
 #ifndef B3_SKELETON_TEST_H
 #define B3_SKELETON_TEST_H
 
+#include "blz3/b3Config.h"
+
+#ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -35,4 +38,5 @@ public:
 	void test();
 };
 
+#endif
 #endif

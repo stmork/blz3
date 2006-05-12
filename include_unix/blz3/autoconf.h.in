@@ -39,6 +39,7 @@
 #undef HAVE_LIBPTHREAD
 #undef HAVE_LIBX11
 #undef HAVE_LIBZ
+#undef HAVE_LIBCPPUNIT
 
 #ifndef __ICC
 #define SSE_ALIGNED

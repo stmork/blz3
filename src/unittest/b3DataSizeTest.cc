@@ -22,7 +22,6 @@
 *************************************************************************/
   
 #include "b3DataSizeTest.h"
-#include "blz3/b3Config.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,13 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **
 */
 
@@ -47,6 +49,8 @@
 **                        Unit test for basic data types                **
 **                                                                      **
 *************************************************************************/
+
+#ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3DataSizeTest);
 
@@ -161,3 +165,5 @@ void b3DataSizeTest::testSwap()
 	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
 	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));
 }
+
+#endif

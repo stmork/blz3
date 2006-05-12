@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.16  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.15  2005/01/25 14:34:33  smork
 **	- Done some formatting.
 **	
@@ -326,7 +329,7 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3FreeTx();
 	b3PrintF(B3LOG_NORMAL,"IMG JPEG # Missing JPEG support:\n");
-	throw b3TxException(B3_TX_UNSUPP);
+	B3_THROW(b3TxException, B3_TX_UNSUPP);
 }
 
 #endif

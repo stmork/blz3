@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/05/12 14:06:28  smork
+**	- Added configurable CPPUNIT tests.
+**
 **	Revision 1.2  2006/05/11 18:48:24  sm
 **	- Small makefile fixes.
 **	- Corrected accuracy in unit tests.
-**
+**	
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -50,6 +53,8 @@
 **                        Color unit test                               **
 **                                                                      **
 *************************************************************************/
+
+#ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3ColorTest);
 
@@ -174,3 +179,5 @@ void b3ColorTest::test()
 	CPPUNIT_ASSERT_EQUAL(static_cast<b3_pkd_color>(0x3f3f3f7f), static_cast<b3_pkd_color>(bc));
 	CPPUNIT_ASSERT_EQUAL(static_cast<b3_pkd_color>(0x2f0f1f3f), static_cast<b3_pkd_color>(color));
 }
+
+#endif
