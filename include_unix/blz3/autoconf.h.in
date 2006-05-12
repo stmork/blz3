@@ -41,6 +41,7 @@
 #undef HAVE_LIBZ
 
 #ifndef __ICC
+#define SSE_ALIGNED
 #undef BLZ3_USE_SSE
 #undef BLZ3_USE_SSE2
 #undef BLZ3_USE_SSE3
