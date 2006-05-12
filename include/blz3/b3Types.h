@@ -28,12 +28,12 @@
 #if defined(__ICC)
 #	define B3_SSE1
 #	define B3_SSE2
-#elif defined(WIN32)
+#elif defined(_WIN32)
 #	define B3_SSE1
 #	define B3_SSE2
 #endif
 
-#if defined(__ICC)
+#if defined(__ICC) || defined(_WIN32)
 #	include <xmmintrin.h>
 
 #	define B3_ALIGN_16  __declspec(align(16))
@@ -60,7 +60,7 @@ typedef unsigned char       b3_u08;  //!< Granted unsigned integer with 8 bits.
 typedef unsigned short      b3_u16;  //!< Granted unsigned integer with 16 bits.
 typedef unsigned int        b3_u32;  //!< Granted unsigned integer with 32 bits.
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef unsigned __int64    b3_u64;  //!< Granted unsigned integer with 64 bits.
 #else
 typedef unsigned long long  b3_u64;  //!< Granted unsigned integer with 64 bits.
@@ -71,7 +71,7 @@ typedef   signed char       b3_s08;  //!< Granted signed integer with 8 bits.
 typedef   signed short      b3_s16;  //!< Granted signed integer with 16 bits.
 typedef   signed int        b3_s32;  //!< Granted signed integer with 32 bits.
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef   signed __int64    b3_s64;  //!< Granted signed integer with 64 bits.
 #else
 typedef   signed long long  b3_s64;  //!< Granted signed integer with 64 bits.
@@ -95,7 +95,7 @@ typedef b3_u32              b3_pkd_color;  //!< An unsigned color specifier usin
 typedef long                b3_coord;      //!< A signed coordinate specifier.
 typedef int                 b3_loop;       //!< A signed integer for small loops (max. 32 bits, but can be more).
 
-#ifdef WIN32
+#ifdef _WIN32
 typedef __w64               b3_ptr;        //!< A pointer for pointer arithmetics.
 #else
 typedef unsigned long       b3_ptr;        //!< A pointer for pointer arithmetics.

@@ -124,7 +124,7 @@ public:
 	 * \param y The y coordinate.
 	 * \param pixel The pixel color.
 	 */
-	virtual inline void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color pixel)
+	virtual inline void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &pixel)
 	{
 		B3_ASSERT(m_Buffer != null);
 		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))

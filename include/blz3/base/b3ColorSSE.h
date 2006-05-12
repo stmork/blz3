@@ -145,6 +145,7 @@ public:
 
 #ifdef BLZ3_USE_SSE2
 		b3_s32 B3_ALIGN_16 c[4];
+		__m128i            ci;
 
 		for (i = 3;i >= 0;i--)
 		{
@@ -152,8 +153,9 @@ public:
 			color = color >> 8;
 		}
 
+		ci = _mm_load_si128((__m128i *)c);
 		SSE_PS_STORE(v,_mm_mul_ps(
-			_mm_cvtepi32_ps(_mm_load_si128((__m128i *)c)),
+			_mm_cvtepi32_ps(ci),
 			_mm_rcp_ps(_mm_set_ps1(255))));
 #else
 		b3_f32 B3_ALIGN_16 c[4];

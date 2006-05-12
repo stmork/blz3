@@ -51,32 +51,25 @@
 
 
 // Use some SSE intrinsics
-#if 0
+#if 1
 #	if _M_IX86_FP >= 1
 #		define HAVE_SSE
 #		define BLZ3_USE_SSE
 #		include <xmmintrin.h>
+#		define SSE_PS_LOAD(p)      _mm_loadu_ps(p)
+#		define SSE_PS_STORE(p, a)  _mm_storeu_ps(p, a)
 #		if _M_IX86_FP >= 2
 #			define HAVE_SSE2
 #			define BLZ3_USE_SSE2
 #			include <emmintrin.h>
+#			define SSE_PD_LOAD(p)      _mm_loadu_pd(p)
+#			define SSE_PD_STORE(p, a)  _mm_storeu_pd(p, a)
 #			if _M_IX86_FP >= 3
 #				define HAVE_SSE3
 #				define BLZ3_USE_SSE3
 #				include <pmmintrin.h>
 #			endif
 #		endif
-#	endif
-#	ifdef NATIVE_SSE
-#		define SSE_PS_LOAD(p)      (p)
-#		define SSE_PS_STORE(p, a)  ((p) = (a))
-#		define SSE_PD_LOAD(p)      (p)
-#		define SSE_PD_STORE(p, a)  ((p) = (a))
-#	else
-#		define SSE_PS_LOAD(p)      _mm_loadu_ps(p)
-#		define SSE_PS_STORE(p, a)  _mm_storeu_ps(p, a)
-#		define SSE_PD_LOAD(p)      _mm_loadu_pd(p)
-#		define SSE_PD_STORE(p, a)  _mm_storeu_pd(p, a)
 #	endif
 #endif
 
@@ -118,9 +111,12 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
-**	Revision 1.41  2006/05/12 13:30:33  sm
+**	Revision 1.42  2006/05/12 16:24:25  sm
 **	- Added unaligned SSE commands
 **
+**	Revision 1.41  2006/05/12 13:30:33  sm
+**	- Added unaligned SSE commands
+**	
 **	Revision 1.40  2006/05/11 15:34:17  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves

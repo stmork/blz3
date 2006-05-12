@@ -84,7 +84,7 @@ public:
 	 * @param element The new element to add.
 	 * @throws b3ArrayException
 	 */
-	inline void b3Add(T element) throw(b3ArrayException)
+	inline void b3Add(const T &element) throw(b3ArrayException)
 	{
 		T        *buffer;
 		b3_count  max = m_Max + m_Increment;
