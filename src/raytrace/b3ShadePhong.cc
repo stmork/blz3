@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2006/05/12 20:49:56  sm
+**	- b3Color default initialization in DEBUG case.
+**	- Corrected b3Color usage without initialization in Phong shader.
+**
 **	Revision 1.42  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.41  2005/08/11 14:17:33  smork
 **	- Documentation.
 **	- Moved activation.
@@ -290,12 +294,17 @@ void b3ShaderPhong::b3ShadeSurface(
 	else
 	{
 		refr = 0;
+		surface->m_RefrRay.color.b3Init();
 	}
 
 	refl = surface->m_Reflection;
 	if (refl > 0)
 	{
 		b3Shade(&surface->m_ReflRay,depth_count);
+	}
+	else
+	{
+		surface->m_ReflRay.color.b3Init();
 	}
 
 	surface->m_DiffuseSum.b3Init();

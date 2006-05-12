@@ -81,7 +81,7 @@
 #endif
 
 // Some defines for getting to know who we are
-#if defined (WIN32)
+#if defined (_WIN32)
 #	define IS_WIN32      TRUE
 #	define THISPROCESSOR INTEL
 #	ifndef _WINDOWS
@@ -111,9 +111,13 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.43  2006/05/12 20:49:56  sm
+**	- b3Color default initialization in DEBUG case.
+**	- Corrected b3Color usage without initialization in Phong shader.
+**
 **	Revision 1.42  2006/05/12 16:24:25  sm
 **	- Added unaligned SSE commands
-**
+**	
 **	Revision 1.41  2006/05/12 13:30:33  sm
 **	- Added unaligned SSE commands
 **	

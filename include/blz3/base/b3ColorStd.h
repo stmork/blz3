@@ -45,6 +45,9 @@ public:
 	 */
 	inline b3Color()
 	{
+#ifdef _DEBUG
+		b3Init(1.0f, 0.125f, 0.25f);
+#endif
 	}
 
 	/**
