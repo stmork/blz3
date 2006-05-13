@@ -73,6 +73,13 @@ public:
 		return result;
 	}
 
+	inline void operator+=(const b3Complex64 &sum)
+	{
+		SSE_PD_STORE(v, _mm_add_pd(
+			SSE_PD_LOAD(v),
+			SSE_PD_LOAD(sum.v)));
+	}
+
 	inline b3Complex64 operator-(const b3Complex64 &sum)
 	{
 		b3Complex64 result;
@@ -81,6 +88,13 @@ public:
 			SSE_PD_LOAD(v),
 			SSE_PD_LOAD(sum.v)));
 		return result;
+	}
+
+	inline void operator-=(const b3Complex64 &sum)
+	{
+		SSE_PD_STORE(v, _mm_sub_pd(
+			SSE_PD_LOAD(v),
+			SSE_PD_LOAD(sum.v)));
 	}
 
 	inline b3Complex64 operator*(const b3Complex64 &sum)
@@ -106,6 +120,28 @@ public:
 		return result;
 	}
 
+	inline void operator*=(const b3Complex64 &sum)
+	{
+		__m128d b = SSE_PD_LOAD(sum.v);
+		__m128d a = SSE_PD_LOAD(v);
+
+		__m128d p1 = _mm_mul_pd(
+			a,
+			_mm_unpacklo_pd(b,b));
+
+		__m128d p2 = _mm_mul_pd(
+			_mm_shuffle_pd(a, a, _MM_SHUFFLE2(0,1)),
+			_mm_unpackhi_pd(b,b));
+
+#ifdef BLZ3_USE_SSE3
+		SSE_PD_STORE(v, _mm_addsub_pd(p1, p2));
+#else
+		SSE_PD_STORE(v, _mm_add_pd(
+			p1,
+			_mm_mul_pd(p2, _mm_setr_pd(-1,1))));
+#endif
+	}
+
 	inline b3Complex64 operator*(const b3_f64 value)
 	{
 		b3Complex64 result;
@@ -115,6 +151,35 @@ public:
 			SSE_PD_LOAD(v),
 			mul));
 		return result;
+	}
+
+	inline void operator*=(const b3_f64 value)
+	{
+		__m128d     mul = _mm_set1_pd(value);
+
+		SSE_PD_STORE(v, _mm_mul_pd(
+			SSE_PD_LOAD(v),
+			mul));
+	}
+
+	inline b3Complex64 operator/(const b3_f64 value)
+	{
+		b3Complex64 result;
+		__m128d     mul = _mm_set1_pd(value);
+
+		SSE_PD_STORE(result.v, _mm_div_pd(
+			SSE_PD_LOAD(v),
+			mul));
+		return result;
+	}
+
+	inline void operator/=(const b3_f64 value)
+	{
+		__m128d     mul = _mm_set1_pd(value);
+
+		SSE_PD_STORE(v, _mm_div_pd(
+			SSE_PD_LOAD(v),
+			mul));
 	}
 
 	inline b3_f64 b3SquareLength()
@@ -206,6 +271,14 @@ public:
 		return result;
 	}
 
+	inline void operator+=(const b3Complex64 &sum)
+	{
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			v[i] += sum.v[i];
+		}
+	}
+
 	inline b3Complex64 operator-(const b3Complex64 &sum)
 	{
 		b3Complex64 result;
@@ -217,11 +290,28 @@ public:
 		return result;
 	}
 
+	inline void operator-=(const b3Complex64 &sum)
+	{
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			v[i] -= sum.v[i];
+		}
+	}
+
 	inline b3Complex64 operator*(const b3Complex64 &a)
 	{
 		return b3Complex64(
 			v[b3Complex<b3_f64>::Re] * a.v[b3Complex<b3_f64>::Re] - v[b3Complex<b3_f64>::Im] * a.v[b3Complex<b3_f64>::Im],
 			v[b3Complex<b3_f64>::Im] * a.v[b3Complex<b3_f64>::Re] + v[b3Complex<b3_f64>::Re] * a.v[b3Complex<b3_f64>::Im]);
+	}
+
+	inline void operator*=(const b3Complex64 &a)
+	{
+		b3Complex64 result = b3Complex64(
+			v[b3Complex<b3_f64>::Re] * a.v[b3Complex<b3_f64>::Re] - v[b3Complex<b3_f64>::Im] * a.v[b3Complex<b3_f64>::Im],
+			v[b3Complex<b3_f64>::Im] * a.v[b3Complex<b3_f64>::Re] + v[b3Complex<b3_f64>::Re] * a.v[b3Complex<b3_f64>::Im]);
+
+		*this = result;
 	}
 
 	inline b3Complex64 operator*(const b3_f64 value)
@@ -233,6 +323,33 @@ public:
 			result.v[i] = v[i] * value;
 		}
 		return result;
+	}
+
+	inline void operator*=(const b3_f64 value)
+	{
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			v[i] *= value;
+		}
+	}
+
+	inline b3Complex64 operator/(const b3_f64 value)
+	{
+		b3Complex64 result;
+
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			result.v[i] = v[i] / value;
+		}
+		return result;
+	}
+
+	inline void operator/=(const b3_f64 value)
+	{
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			v[i] /= value;
+		}
 	}
 
 	inline b3_f64 b3SquareLength()
