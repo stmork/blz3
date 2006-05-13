@@ -46,14 +46,14 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3_f64                  m_L;           // windspeed and gravity constant
 	b3_f64                  m_L2;          // squard factor
 	b3_f64                  m_l2;          // wave length lower limit (squared)
-	b3Complex<b3_f64>       m_Cycle;       // e^j*omega*t
+	b3Complex64             m_Cycle;       // e^j*omega*t
 	b3Fourier               m_FFT;
 #if 1
 	b3PseudoRandom<b3_f64>  m_Random;
 #else
 	b3Rand48<b3_f64>        m_Random;
 #endif
-	b3Complex<b3_f64>      *m_Phillips;
+	b3Complex64            *m_Phillips;
 	b3_vector              *m_Normals;
 	b3_bool                 m_Modified;
 
@@ -118,7 +118,7 @@ public:
 	 *
 	 * @return The height field.
 	 */
-	inline b3Complex<b3_f64> *b3GetBuffer()
+	inline b3Complex64 *b3GetBuffer()
 	{
 		return m_FFT.b3GetBuffer();
 	}
@@ -166,7 +166,7 @@ private:
 	
 	inline b3_f64     b3GetHeight(const b3_index x, const b3_index y)
 	{
-		b3Complex<b3_f64> *buffer = b3GetBuffer();
+		b3Complex64 *buffer = b3GetBuffer();
 
 		return buffer[b3GetIndex(x, y)].b3Real();
 	}

@@ -252,7 +252,7 @@ public:
 	 * @param key The search key.
 	 * @return The resulting object.
 	 */
-	inline Object *b3Find(Key key)
+	inline Object *b3Find(const Key &key)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -273,7 +273,7 @@ public:
 	 * @param key The key to check.
 	 * @return A flag if the given key is inside the hash map.
 	 */
-	inline b3_bool b3HasKey(Key key)
+	inline b3_bool b3HasKey(const Key &key)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);

@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/05/13 10:01:01  sm
+**	- Introduced special complex number computation for FFT handling.
+**
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
-**
+**	
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -117,9 +120,9 @@ void b3FFTTest::testSample()
 
 b3_f64 b3FFTTest::b3Count()
 {
-	b3_f64             count = 0;
-	b3_loop            i, max = dim * dim;
-	b3Complex<b3_f64> *buffer = fft.b3GetBuffer();
+	b3_f64       count = 0;
+	b3_loop      i, max = dim * dim;
+	b3Complex64 *buffer = fft.b3GetBuffer();
 
 	CPPUNIT_ASSERT(buffer != null);
 	for (i = 0; i < max; i++)
@@ -136,7 +139,7 @@ void b3FFTTest::clear(
 	const b3_index      index,
 	      b3FilterInfo *filter_info)
 {
-	 b3Complex<b3_f64> *buffer = filter_info->m_Fourier->b3GetBuffer();
+	 b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
 	 
 	 buffer[index] = 0;
 }
@@ -147,9 +150,9 @@ void b3FFTTest::setbuffer(
 	const b3_index      index,
 	      b3FilterInfo *filter_info)
 {
-	 b3Complex<b3_f64> *buffer = filter_info->m_Fourier->b3GetBuffer();
+	 b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
 	 
-	 buffer[index] = b3Complex<b3_f64>(TEST_RE, TEST_IM);
+	 buffer[index] = b3Complex64(TEST_RE, TEST_IM);
 }
 
 void b3FFTTest::testOceanWave()

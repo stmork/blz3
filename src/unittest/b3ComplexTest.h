@@ -19,6 +19,7 @@
 #define B3_COMPLEX_TEST_H
 
 #include "blz3/base/b3Complex.h"
+#include "blz3/base/b3Complex64.h"
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
@@ -28,9 +29,14 @@ using namespace std;
 
 class b3ComplexTest : public CppUnit::TestFixture
 {
+	b3Complex<b3_f64> a, b, e;
+	b3Complex<b3_f64> *c , *d;
+	b3Complex64       ca, cb, cc, cd, ce;
+
 	CPPUNIT_TEST_SUITE(b3ComplexTest);
 	CPPUNIT_TEST(testOps);
 	CPPUNIT_TEST(testEqual);
+	CPPUNIT_TEST(testComplex64);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -38,10 +44,7 @@ public:
 	void tearDown();
 	void testOps();
 	void testEqual();
-
-private:
-	b3Complex<b3_f64> a, b, e;
-	b3Complex<b3_f64> *c , *d;
+	void testComplex64();
 };
 
 #endif

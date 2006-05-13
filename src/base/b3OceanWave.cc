@@ -37,13 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2006/05/13 10:01:01  sm
+**	- Introduced special complex number computation for FFT handling.
+**
 **	Revision 1.24  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.23  2006/05/01 12:32:42  sm
 **	- Some value tests.
 **	
@@ -230,7 +233,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 
 b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 {
-	b3Complex<b3_f64>     *buffer = b3GetBuffer();
+	b3Complex64           *buffer = b3GetBuffer();
 	b3_f64                 fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
 	b3_f64                 fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
 	b3_f64                 dy;
@@ -294,7 +297,7 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 	{
 		b3_size size = m_fftDiff * m_fftDiff;
 
-		m_Phillips = new b3Complex<b3_f64>[size];
+		m_Phillips = new b3Complex64[size];
 		if (m_Phillips == null)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
@@ -379,7 +382,7 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 	}
 	while (w >= 1.0);
 
-	m_Phillips[index] = b3Complex<b3_f64>(gr, gi) * sqrt( -phillips * log(w) / w);
+	m_Phillips[index] = b3Complex64(gr, gi) * sqrt( -phillips * log(w) / w);
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_NORMAL, " # %f %f %f\n",
@@ -393,15 +396,15 @@ void b3OceanWave::b3SampleHeight(
 	const b3_index      index,
 	      b3FilterInfo *filter_info)
 {
-	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
-	b3Complex<b3_f64> *buffer = ocean->b3GetBuffer();
+	b3OceanWave *ocean  = (b3OceanWave *)filter_info;
+	b3Complex64 *buffer = ocean->b3GetBuffer();
 	
 	buffer[index] = ocean->m_Phillips[index] * ocean->m_Cycle;
 }
 
 void b3OceanWave::b3TestSpectrum1()
 {
-	b3Complex<b3_f64> *buffer = b3GetBuffer();
+	b3Complex64 *buffer = b3GetBuffer();
 
 	buffer[5] = 0.5;
 	buffer[0] = 1;
@@ -412,8 +415,8 @@ void b3OceanWave::b3TestSpectrum1()
 
 void b3OceanWave::b3TestSpectrum2()
 {
-	b3Complex<b3_f64> *buffer = b3GetBuffer();
-	b3_loop            n,m;
+	b3Complex64 *buffer = b3GetBuffer();
+	b3_loop      n,m;
 
 	for (n = m_fftMin; n < m_fftMax; n++)
 	{

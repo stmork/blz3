@@ -26,13 +26,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/05/13 10:01:01  sm
+**	- Introduced special complex number computation for FFT handling.
+**
 **	Revision 1.6  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.5  2006/05/01 10:44:46  sm
 **	- Unifying ocean wave values.
 **	
@@ -251,10 +254,10 @@ void init_vbo()
 
 void RenderScene()
 {
-	b3Complex<b3_f64>  *src;
-	GLfloat            *dst;
-	GLuint              i,k;
-	b3_f64              t, now = timepoint.b3Now();
+	b3Complex64  *src;
+	GLfloat      *dst;
+	GLuint        i,k;
+	b3_f64        t, now = timepoint.b3Now();
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 

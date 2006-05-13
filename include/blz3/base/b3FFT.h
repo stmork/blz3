@@ -21,6 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/base/b3Complex.h"
+#include "blz3/base/b3Complex64.h"
 #include "blz3/base/b3Random.h"
 
 enum b3_fft_error
@@ -47,8 +48,8 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 	b3_res              m_xSize, m_xOrig, m_xStart, m_xDim;
 	b3_res              m_ySize, m_yOrig, m_yStart, m_yDim;
 
-	b3Complex<b3_f64>  *m_Buffer;
-	b3Complex<b3_f64> **m_Lines;
+	b3Complex64        *m_Buffer;
+	b3Complex64       **m_Lines;
 
 	b3_f64             *m_Real;
 	b3_f64             *m_Imag;
@@ -108,7 +109,7 @@ public:
 	b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp);
 	b3_bool   b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
 
-	inline b3Complex<b3_f64> *b3GetBuffer()
+	inline b3Complex64 *b3GetBuffer()
 	{
 		return m_Buffer;
 	}

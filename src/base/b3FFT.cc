@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/05/13 10:01:01  sm
+**	- Introduced special complex number computation for FFT handling.
+**
 **	Revision 1.9  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.8  2006/05/01 12:32:42  sm
 **	- Some value tests.
 **	
@@ -232,8 +235,8 @@ b3_bool b3Fourier::b3ReallocBuffer()
 	m_xDim   = b3Log2(m_xSize);
 	m_yDim   = b3Log2(m_ySize);
 
-	m_Buffer = new b3Complex<b3_f64>[m_xSize * m_ySize];
-	m_Lines  = new b3Complex<b3_f64> *[m_ySize];
+	m_Buffer = new b3Complex64[m_xSize * m_ySize];
+	m_Lines  = new b3Complex64 *[m_ySize];
 	if ((m_Buffer == null) || (m_Lines == null))
 	{
 		return false;
