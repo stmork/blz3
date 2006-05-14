@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/05/14 18:05:09  sm
+**	- Added return value
+**
 **	Revision 1.12  2006/05/14 11:30:39  sm
 **	- Added complex number classes to FFT class.
-**
+**	
 **	Revision 1.11  2006/05/14 08:54:58  sm
 **	- Multithreaded 2D FFT.
 **	
@@ -490,6 +493,7 @@ b3_u32 b3Fourier::b3RowFFT(void *ptr)
 			lines[j][i] = aux[i];
 		}
 	}
+	return 0;
 }
 
 b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
@@ -514,6 +518,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 			lines[j][i] = aux[j];
 		}
 	}
+	return 0;
 }
 
 b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
