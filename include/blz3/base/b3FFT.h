@@ -30,7 +30,7 @@ enum b3_fft_error
 	B3_FFT_NO_PALETTE
 };
 
-typedef b3Exception<b3_fft_error,0x4f4f54> b3FFTException;
+typedef b3Exception<b3_fft_error,0x464654> b3FFTException;
 
 class b3Fourier;
 
@@ -48,8 +48,7 @@ struct b3_fft_info
 	b3_loop       m_xMin, m_xMax;
 	b3_loop       m_yMin, m_yMax;
 	b3Complex64 **m_Lines;
-	b3_f64       *m_Real;
-	b3_f64       *m_Imag;
+	b3Complex64  *m_Aux;
 	b3_res        m_xDim;
 	b3_res        m_yDim;
 	int           m_Dir;
@@ -63,9 +62,7 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 
 	b3Complex64           *m_Buffer;
 	b3Complex64          **m_Lines;
-
-	b3_f64                *m_Real;
-	b3_f64                *m_Imag;
+	b3Complex64           *m_Aux;
 
 	b3_count               m_CPUs;
 
@@ -152,7 +149,7 @@ public:
 private:
 	static b3_u32  b3RowFFT(void *ptr);
 	static b3_u32  b3ColumnFFT(void *ptr);
-	static b3_bool b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y);
+	static b3_bool b3FFT(int dir,b3_res m,b3Complex64 *line);
 	       b3_bool b3FFT2D(int dir);
 		   b3_bool b3ReallocBuffer();
 };

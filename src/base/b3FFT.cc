@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/05/14 11:30:39  sm
+**	- Added complex number classes to FFT class.
+**
 **	Revision 1.11  2006/05/14 08:54:58  sm
 **	- Multithreaded 2D FFT.
-**
+**	
 **	Revision 1.10  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
 **	
@@ -109,6 +112,7 @@ b3Fourier::b3Fourier()
 
 	m_Buffer = null;
 	m_Lines  = null;
+	m_Aux    = null;
 	m_CPUs   = B3_MIN(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs());
 }
 
@@ -148,10 +152,9 @@ b3_count b3Fourier::b3Log2(b3_u32 value)
 
 void b3Fourier::b3FreeBuffer()
 {
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3FreeBuffer()\n");
+	
 	b3Free();
-	m_Real = null;
-	m_Imag = null;
-
 	if (m_Buffer != null)
 	{
 		delete [] m_Buffer;
@@ -162,14 +165,21 @@ void b3Fourier::b3FreeBuffer()
 		delete [] m_Lines;
 		m_Lines = null;
 	}
+	if (m_Aux != null)
+	{
+		delete [] m_Aux;
+		m_Aux = null;
+	}
 	m_Size = 0;
+
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3FreeBuffer()\n");
 }
 
 b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 {
 	b3_res size = b3PowOf2(new_size);
 	
-	b3PrintF(B3LOG_FULL, "b3Fourier::b3AllocBuffer(%d)\n", size);
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%d)\n", size);
 	m_xOrig  =
 	m_yOrig  = new_size;
 	m_xStart = (size - m_xOrig) >> 1;
@@ -178,6 +188,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 	if ((m_xSize == size) && (m_ySize == size))
 	{
 		// New buffer has same size.
+		b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%d) [unchanged]\n", size);
 		return true;
 	}
 	b3FreeBuffer();
@@ -189,6 +200,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 		b3FreeBuffer();
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%d)\n", size);
 	return true;
 }
 
@@ -230,21 +242,24 @@ b3_bool b3Fourier::b3AllocBuffer  (b3Tx *tx)
 		}
 		index += m_xSize;
 	}
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
 
 	return true;
 }
 
 b3_bool b3Fourier::b3ReallocBuffer()
 {
-	m_Size   = B3_MAX(m_xSize, m_ySize);
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3ReallocBuffer()\n");
 
+	m_Size   = B3_MAX(m_xSize, m_ySize);
 	m_xDim   = b3Log2(m_xSize);
 	m_yDim   = b3Log2(m_ySize);
 
 	m_Buffer = new b3Complex64[m_xSize * m_ySize];
 	m_Lines  = new b3Complex64 *[m_ySize];
-	if ((m_Buffer == null) || (m_Lines == null))
+	m_Aux    = new b3Complex64[m_Size * m_CPUs];
+
+	if ((m_Buffer == null) || (m_Lines == null) || (m_Aux == null))
 	{
 		return false;
 	}
@@ -254,10 +269,8 @@ b3_bool b3Fourier::b3ReallocBuffer()
 		m_Lines[y] = &m_Buffer[y * m_xSize];
 	}
 
-	m_Real = (b3_f64 *)b3Alloc(m_Size * m_CPUs * sizeof(b3_f64));
-	m_Imag = (b3_f64 *)b3Alloc(m_Size * m_CPUs * sizeof(b3_f64));
-
-	return (m_Real != null) && (m_Imag != null);
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3ReallocBuffer()\n");
+	return true;
 }
 
 void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
@@ -309,10 +322,13 @@ void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
                   ---
                   k=0
 */
-b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y)
+b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3Complex64 *line)
 {
-	b3_loop nn,i,i1,j,k,i2,l,l1,l2;
-	b3_f64  c1,c2,tx,ty,t1,t2,u1,u2,z;
+	b3Complex64 one   = b3Complex64(1.0, 1.0);
+	b3Complex64 half  = b3Complex64(0.5, 0.5);
+	b3Complex64 dMult = b3Complex64(1.0, dir == 1 ? -1.0 : 1.0);
+	b3Complex64 c,u;
+	b3_loop     nn,i,i1,j,k,i2,l,l1,l2;
 
 	/* Calculate the number of points */
 	nn = 1;
@@ -328,12 +344,7 @@ b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y)
 	{
 		if (i < j)
 		{
-			tx = x[i];
-			ty = y[i];
-			x[i] = x[j];
-			y[i] = y[j];
-			x[j] = tx;
-			y[j] = ty;
+			b3Complex64::b3Swap(line[i], line[j]);
 		}
 		k = i2;
 		while (k <= j)
@@ -345,46 +356,41 @@ b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y)
 	}
 
 	/* Compute the FFT */
-	c1 = -1.0;
-	c2 = 0.0;
+	c  = -1.0;
 	l2 = 1;
 	for (l=0;l<m;l++)
 	{
-		l1 = l2;
+		u    = 1;
+		l1   = l2;
 		l2 <<= 1;
-		u1 = 1.0;
-		u2 = 0.0;
 		for (j=0;j<l1;j++)
 		{
 			for (i=j;i<nn;i+=l2)
 			{
 				i1 = i + l1;
-				t1 = u1 * x[i1] - u2 * y[i1];
-				t2 = u1 * y[i1] + u2 * x[i1];
-				x[i1] = x[i] - t1;
-				y[i1] = y[i] - t2;
-				x[i] += t1;
-				y[i] += t2;
+
+				b3Complex64 t = u * line[i1];
+
+				line[i1]  = line[i] - t;
+				line[i]  += t;
 			}
-			z =  u1 * c1 - u2 * c2;
-			u2 = u1 * c2 + u2 * c1;
-			u1 = z;
+			u *= c;
 		}
-		c2 = sqrt((1.0 - c1) / 2.0);
-		if (dir == 1)
-		{
-			c2 = -c2;
-		}
-		c1 = sqrt((1.0 + c1) / 2.0);
+
+		b3_f64 cr = c.b3Real();
+		b3Complex64 q = one + b3Complex64(cr, -cr);
+
+		c = b3Complex64::b3Sqrt(q * 0.5);
+		c.b3Scale(dMult);
 	}
 
 	/* Scaling for forward transform */
 	if (dir == 1)
 	{
+		b3Complex64 denom(1.0 / nn, 1.0 / nn);
 		for (i=0;i<nn;i++)
 		{
-			x[i] /= (b3_f64)nn;
-			y[i] /= (b3_f64)nn;
+			line[i].b3Scale(denom);
 		}
 	}
 
@@ -412,8 +418,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 	for(i = 0;i < m_CPUs;i++)
 	{
 		info[i].m_Lines = m_Lines;
-		info[i].m_Real  = &m_Real[m_Size * i];
-		info[i].m_Imag  = &m_Imag[m_Size * i];
+		info[i].m_Aux   = &m_Aux[m_Size * i];
 		info[i].m_xDim  = m_xDim;
 		info[i].m_yDim  = m_yDim;
 		info[i].m_Dir   = dir;
@@ -465,10 +470,9 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 
 b3_u32 b3Fourier::b3RowFFT(void *ptr)
 {
-	b3_fft_info  *info = static_cast<b3_fft_info *>(ptr);
+	b3_fft_info  *info  = static_cast<b3_fft_info *>(ptr);
 	b3Complex64 **lines = info->m_Lines;
-	b3_f64       *real = info->m_Real;
-	b3_f64       *imag = info->m_Imag;
+	b3Complex64  *aux   = info->m_Aux;
 	b3_loop       i,j;
 
 	/* Transform the rows */
@@ -476,16 +480,14 @@ b3_u32 b3Fourier::b3RowFFT(void *ptr)
 	{
 		for (i = info->m_xMin; i < info->m_xMax; i++)
 		{
-			real[i] = lines[j][i].b3Real();
-			imag[i] = lines[j][i].b3Imag();
+			aux[i] = lines[j][i];
 		}
 
-		b3FFT(info->m_Dir, info->m_xDim, real, imag);
+		b3FFT(info->m_Dir, info->m_xDim, aux);
 
 		for (i = info->m_xMin; i < info->m_xMax; i++)
 		{
-			lines[j][i].b3Real() = real[i];
-			lines[j][i].b3Imag() = imag[i];
+			lines[j][i] = aux[i];
 		}
 	}
 }
@@ -494,8 +496,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 {
 	b3_fft_info  *info  = static_cast<b3_fft_info *>(ptr);
 	b3Complex64 **lines = info->m_Lines;
-	b3_f64       *real  = info->m_Real;
-	b3_f64       *imag  = info->m_Imag;
+	b3Complex64  *aux   = info->m_Aux;
 	b3_loop       i,j;
 
 	/* Transform the columns */
@@ -503,16 +504,14 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 	{
 		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
-			real[j] = lines[j][i].b3Real();
-			imag[j] = lines[j][i].b3Imag();
+			aux[j] = lines[j][i];
 		}
 
-		b3FFT(info->m_Dir, info->m_yDim, real, imag);
+		b3FFT(info->m_Dir, info->m_yDim, aux);
 
 		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
-			lines[j][i].b3Real() = real[j];
-			lines[j][i].b3Imag() = imag[j];
+			lines[j][i] = aux[j];
 		}
 	}
 }
@@ -528,6 +527,7 @@ b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
+
 	cPtr = (b3_u08 *)tx->b3GetData();
 	for (y = 0;y < m_yOrig;y++)
 	{

@@ -36,22 +36,36 @@ public:
 	{
 	}
 
-	inline b3Complex64(const b3_f64 re, const b3_f64 im = 0)
+	inline b3Complex64(const b3_f64 re)
 	{
-		SSE_PD_STORE(v, _mm_setr_pd(re, im));
+		SSE_PD_STORE(v, _mm_set_sd(re));
 	}
 
-	inline void operator=(b3Complex<b3_f64> &orig)
+	inline void operator=(const b3_f64 a)
 	{
-		b3_f64 re = orig.b3Real();
-		b3_f64 im = orig.b3Imag();
+		SSE_PD_STORE(v, _mm_set_sd(a));
+	}
 
+	inline b3Complex64(const b3_f64 re, const b3_f64 im)
+	{
 		SSE_PD_STORE(v, _mm_setr_pd(re, im));
 	}
 
 	inline b3Complex64(const b3Complex64 &orig)
 	{
 		SSE_PD_STORE(v, SSE_PD_LOAD(orig.v));
+	}
+
+	inline void operator=(const b3Complex64 &a)
+	{
+		SSE_PD_STORE(v, SSE_PD_LOAD(a.v));
+	}
+
+	inline void operator=(b3Complex<b3_f64> &a)
+	{
+		SSE_PD_STORE(v, _mm_setr_pd(
+			a.b3Real(),
+			a.b3Imag()));
 	}
 
 	inline bool operator==(const b3Complex64 &a)
@@ -216,6 +230,28 @@ public:
 #else
 		return v[1];
 #endif
+	}
+
+	inline static b3Complex64 b3Sqrt(const b3Complex64 &a)
+	{
+		b3Complex64 result;
+
+		SSE_PD_STORE(result.v, _mm_sqrt_pd(SSE_PD_LOAD(a.v)));
+		return result;
+	}
+
+	inline void b3Scale(const b3Complex64 &a)
+	{
+		SSE_PD_STORE(v, _mm_mul_pd(
+			SSE_PD_LOAD(v),
+			SSE_PD_LOAD(a.v)));
+	}
+
+	inline static void b3Swap(b3Complex64 &a, b3Complex64 &b)
+	{
+		__m128d ma = SSE_PD_LOAD(a.v);
+		SSE_PD_STORE(a.v, SSE_PD_LOAD(b.v));
+		SSE_PD_STORE(b.v, ma);
 	}
 };
 

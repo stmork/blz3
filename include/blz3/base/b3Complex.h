@@ -395,6 +395,32 @@ public:
 		return v[Im];
 	}
 
+	inline static b3Complex<T> b3Sqrt(const b3Complex<T> &a)
+	{
+		b3Complex<T> result;
+
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			result.v[i] = sqrt(a.v[i]);
+		}
+		return result;
+	}
+
+	inline void b3Scale(const b3Complex<T> &a)
+	{
+		for (b3_loop i = 0;i < 2;i++)
+		{
+			v[i] *= a.v[i];
+		}
+	}
+
+	inline static void b3Swap(b3Complex<T> &a, b3Complex &b)
+	{
+		b3Complex<T> aux;
+
+		aux = a; a = b; b = aux;
+	}
+
 	/**
 	 * This method dumps the contents.
 	 *

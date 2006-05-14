@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/14 11:30:39  sm
+**	- Added complex number classes to FFT class.
+**
 **	Revision 1.3  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
-**
+**	
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
 **	
@@ -99,10 +102,26 @@ void b3ComplexTest::testComplex64()
 	CPPUNIT_ASSERT_EQUAL(  3.0, cb.b3Imag());
 	CPPUNIT_ASSERT(ca == cb);
 
-	cc = *c;
+	cc = b3Complex64(4.0, 9.0);
+	CPPUNIT_ASSERT_EQUAL(  4.0, cc.b3Real());
+	CPPUNIT_ASSERT_EQUAL(  9.0, cc.b3Imag());
+	cd = b3Complex64::b3Sqrt(cc);
+	CPPUNIT_ASSERT_EQUAL(  2.0, cd.b3Real());
+	CPPUNIT_ASSERT_EQUAL(  3.0, cd.b3Imag());
+
+	cc = 9.0;
+	CPPUNIT_ASSERT_EQUAL(  9.0, cc.b3Real());
+	CPPUNIT_ASSERT_EQUAL(  0.0, cc.b3Imag());
+	cc = *d;
+	CPPUNIT_ASSERT_EQUAL(  6.0, cc.b3Real());
+	CPPUNIT_ASSERT_EQUAL(  7.0, cc.b3Imag());
+	cd = *c;
+	CPPUNIT_ASSERT_EQUAL(  4.0, cd.b3Real());
+	CPPUNIT_ASSERT_EQUAL(  5.0, cd.b3Imag());
+
+	b3Complex64::b3Swap(cc, cd);
 	CPPUNIT_ASSERT_EQUAL(  4.0, cc.b3Real());
 	CPPUNIT_ASSERT_EQUAL(  5.0, cc.b3Imag());
-	cd = *d;
 	CPPUNIT_ASSERT_EQUAL(  6.0, cd.b3Real());
 	CPPUNIT_ASSERT_EQUAL(  7.0, cd.b3Imag());
 
