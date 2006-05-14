@@ -20,9 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/image/b3Tx.h"
-#include "blz3/base/b3Complex.h"
 #include "blz3/base/b3Complex64.h"
-#include "blz3/base/b3Random.h"
 
 enum b3_fft_error
 {
@@ -43,18 +41,33 @@ struct b3FilterInfo
 
 typedef void (*b3SampleFunc)(const b3_f64 fx,const b3_f64 fy, const b3_index index, b3FilterInfo *info);
 
+#define B3_FFT_MAX_THREADS 4
+
+struct b3_fft_info
+{
+	b3_loop       m_xMin, m_xMax;
+	b3_loop       m_yMin, m_yMax;
+	b3Complex64 **m_Lines;
+	b3_f64       *m_Real;
+	b3_f64       *m_Imag;
+	b3_res        m_xDim;
+	b3_res        m_yDim;
+	int           m_Dir;
+};
+
 class B3_PLUGIN b3Fourier : protected b3Mem
 {
-	b3_res              m_xSize, m_xOrig, m_xStart, m_xDim;
-	b3_res              m_ySize, m_yOrig, m_yStart, m_yDim;
+	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
+	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
+	b3_count               m_Size;
 
-	b3Complex64        *m_Buffer;
-	b3Complex64       **m_Lines;
+	b3Complex64           *m_Buffer;
+	b3Complex64          **m_Lines;
 
-	b3_f64             *m_Real;
-	b3_f64             *m_Imag;
+	b3_f64                *m_Real;
+	b3_f64                *m_Imag;
 
-	b3PseudoRandom<b3_f64> m_Random;
+	b3_count               m_CPUs;
 
 public:
 	         b3Fourier();
@@ -137,6 +150,8 @@ public:
 	static b3_count b3Log2(b3_u32 value);
 
 private:
+	static b3_u32  b3RowFFT(void *ptr);
+	static b3_u32  b3ColumnFFT(void *ptr);
 	static b3_bool b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y);
 	       b3_bool b3FFT2D(int dir);
 		   b3_bool b3ReallocBuffer();

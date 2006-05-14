@@ -25,6 +25,7 @@
 #include "blz3/base/b3FFT.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Math.h"
+#include "blz3/base/b3Random.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/05/14 08:54:58  sm
+**	- Multithreaded 2D FFT.
+**
 **	Revision 1.10  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
-**
+**	
 **	Revision 1.9  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -101,9 +105,11 @@ b3Fourier::b3Fourier()
 	m_yStart = 0;
 	m_xDim   =
 	m_yDim   = 0;
+	m_Size   = 0;
 
-	m_Buffer     = null;
-	m_Lines      = null;
+	m_Buffer = null;
+	m_Lines  = null;
+	m_CPUs   = B3_MIN(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs());
 }
 
 b3Fourier::~b3Fourier()
@@ -156,6 +162,7 @@ void b3Fourier::b3FreeBuffer()
 		delete [] m_Lines;
 		m_Lines = null;
 	}
+	m_Size = 0;
 }
 
 b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
@@ -230,7 +237,7 @@ b3_bool b3Fourier::b3AllocBuffer  (b3Tx *tx)
 
 b3_bool b3Fourier::b3ReallocBuffer()
 {
-	b3_size size = B3_MAX(m_xSize, m_ySize);
+	m_Size   = B3_MAX(m_xSize, m_ySize);
 
 	m_xDim   = b3Log2(m_xSize);
 	m_yDim   = b3Log2(m_ySize);
@@ -247,8 +254,8 @@ b3_bool b3Fourier::b3ReallocBuffer()
 		m_Lines[y] = &m_Buffer[y * m_xSize];
 	}
 
-	m_Real = (b3_f64 *)b3Alloc(size * sizeof(b3_f64));
-	m_Imag = (b3_f64 *)b3Alloc(size * sizeof(b3_f64));
+	m_Real = (b3_f64 *)b3Alloc(m_Size * m_CPUs * sizeof(b3_f64));
+	m_Imag = (b3_f64 *)b3Alloc(m_Size * m_CPUs * sizeof(b3_f64));
 
 	return (m_Real != null) && (m_Imag != null);
 }
@@ -396,43 +403,118 @@ b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3_f64 *x,b3_f64 *y)
  */
 b3_bool b3Fourier::b3FFT2D(int dir)
 {
-	b3_loop   i,j;
-
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3FFT2D(<%s>);\n", dir == 1 ? "forward" : "inverse");
 
-	/* Transform the rows */
-	for (j = 0; j < m_ySize; j++)
+	b3Thread    threads[B3_FFT_MAX_THREADS];
+	b3_fft_info info[B3_FFT_MAX_THREADS];
+	b3_loop     i;
+
+	for(i = 0;i < m_CPUs;i++)
 	{
-		for (i = 0; i < m_xSize; i++)
+		info[i].m_Lines = m_Lines;
+		info[i].m_Real  = &m_Real[m_Size * i];
+		info[i].m_Imag  = &m_Imag[m_Size * i];
+		info[i].m_xDim  = m_xDim;
+		info[i].m_yDim  = m_yDim;
+		info[i].m_Dir   = dir;
+		threads[i].b3Name("b3FFT - FFT computation");
+	}	
+
+	if (m_CPUs > 1)
+	{
+		for(i = 0;i < m_CPUs;i++)
 		{
-			m_Real[i] = m_Lines[j][i].b3Real();
-			m_Imag[i] = m_Lines[j][i].b3Imag();
+			info[i].m_xMin = 0;
+			info[i].m_xMax = m_xSize;
+			info[i].m_yMin = m_ySize *  i      / m_CPUs;
+			info[i].m_yMax = m_ySize * (i + 1) / m_CPUs;
+			threads[i].b3Start(b3RowFFT, &info[i]);
 		}
-		b3FFT(dir,m_xDim,m_Real,m_Imag);
-		for (i = 0; i < m_xSize; i++)
+
+		for(i = 0;i < m_CPUs;i++)
 		{
-			m_Lines[j][i].b3Real() = m_Real[i];
-			m_Lines[j][i].b3Imag() = m_Imag[i];
+			threads[i].b3Wait();
+		}
+
+		for(i = 0;i < m_CPUs;i++)
+		{
+			info[i].m_xMin = m_xSize *   i      / m_CPUs;
+			info[i].m_xMax = m_xSize * ( i + 1) / m_CPUs;
+			info[i].m_yMin = 0;
+			info[i].m_yMax = m_ySize;
+			threads[i].b3Start(b3ColumnFFT, &info[i]);
+		}
+
+		for(i = 0;i < m_CPUs;i++)
+		{
+			threads[i].b3Wait();
 		}
 	}
-
-	/* Transform the columns */
-	for (i = 0; i < m_xSize; i++)
+	else
 	{
-		for (j = 0; j < m_ySize; j++)
-		{
-			m_Real[j] = m_Lines[j][i].b3Real();
-			m_Imag[j] = m_Lines[j][i].b3Imag();
-		}
-		b3FFT(dir, m_yDim, m_Real, m_Imag);
-		for (j = 0; j < m_ySize; j++)
-		{
-			m_Lines[j][i].b3Real() = m_Real[j];
-			m_Lines[j][i].b3Imag() = m_Imag[j];
-		}
+		info[0].m_xMin = 0;
+		info[0].m_xMax = m_xSize;
+		info[0].m_yMin = 0;
+		info[0].m_yMax = m_ySize;
+		b3RowFFT(&info);
+		b3ColumnFFT(&info);
 	}
 
 	return true;
+}
+
+b3_u32 b3Fourier::b3RowFFT(void *ptr)
+{
+	b3_fft_info  *info = static_cast<b3_fft_info *>(ptr);
+	b3Complex64 **lines = info->m_Lines;
+	b3_f64       *real = info->m_Real;
+	b3_f64       *imag = info->m_Imag;
+	b3_loop       i,j;
+
+	/* Transform the rows */
+	for (j = info->m_yMin; j < info->m_yMax; j++)
+	{
+		for (i = info->m_xMin; i < info->m_xMax; i++)
+		{
+			real[i] = lines[j][i].b3Real();
+			imag[i] = lines[j][i].b3Imag();
+		}
+
+		b3FFT(info->m_Dir, info->m_xDim, real, imag);
+
+		for (i = info->m_xMin; i < info->m_xMax; i++)
+		{
+			lines[j][i].b3Real() = real[i];
+			lines[j][i].b3Imag() = imag[i];
+		}
+	}
+}
+
+b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
+{
+	b3_fft_info  *info  = static_cast<b3_fft_info *>(ptr);
+	b3Complex64 **lines = info->m_Lines;
+	b3_f64       *real  = info->m_Real;
+	b3_f64       *imag  = info->m_Imag;
+	b3_loop       i,j;
+
+	/* Transform the columns */
+	for (i = info->m_xMin; i < info->m_xMax; i++)
+	{
+		for (j = info->m_yMin; j < info->m_yMax; j++)
+		{
+			real[j] = lines[j][i].b3Real();
+			imag[j] = lines[j][i].b3Imag();
+		}
+
+		b3FFT(info->m_Dir, info->m_yDim, real, imag);
+
+		for (j = info->m_yMin; j < info->m_yMax; j++)
+		{
+			lines[j][i].b3Real() = real[j];
+			lines[j][i].b3Imag() = imag[j];
+		}
+	}
 }
 
 b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
@@ -494,16 +576,17 @@ b3_bool b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 
 b3_bool b3Fourier::b3SelfTest()
 {
+	b3PseudoRandom<b3_f64> random;
     b3_loop  x, y;
     b3_f64   err = 0, e, divisor;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest()\n");
-	m_Random.b3SetSeed(0);
+	random.b3SetSeed(0);
 	for (y = 0; y < m_ySize; y++)
 	{
         for (x = 0; x < m_xSize; x++)
 		{
-            m_Lines[y][x].b3Real() = m_Random.b3Rand();
+            m_Lines[y][x].b3Real() = random.b3Rand();
         }
     }
 
@@ -516,13 +599,13 @@ b3_bool b3Fourier::b3SelfTest()
 		return false;
 	}
 
-	m_Random.b3SetSeed(0);
+	random.b3SetSeed(0);
 	divisor = m_xSize * m_ySize * 0.5;
     for (y = 0; y < m_ySize; y++)
 	{
         for (x = 0; x < m_xSize; x++)
 		{
-            e   = m_Random.b3Rand() - m_Lines[y][x].b3Real();
+            e   = random.b3Rand() - m_Lines[y][x].b3Real();
             err = B3_MAX(err, fabs(e));
         }
     }
