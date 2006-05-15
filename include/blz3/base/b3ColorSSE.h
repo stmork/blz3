@@ -37,6 +37,7 @@ class B3_PLUGIN b3Color : public b3ColorBase
 
 	static const b3_u32 B3_ALIGN_16 m_AbsMask[4];
 	static const b3_f32 B3_ALIGN_16 m_Limit_d015[4];
+	static const b3_f32 B3_ALIGN_16 m_Limit_d255[4];
 
 public:
 	/////////////////////////////////////////////////--------  constructors
@@ -156,10 +157,10 @@ public:
 			color = color >> 8;
 		}
 
-		ci = _mm_load_si128((__m128i *)c);
+		ci = _mm_loadu_si128((__m128i *)c);
 		SSE_PS_STORE(v,_mm_mul_ps(
 			_mm_cvtepi32_ps(ci),
-			_mm_rcp_ps(_mm_set_ps1(255))));
+			_mm_load_ps(m_Limit_d255)));
 #else
 		b3_f32 B3_ALIGN_16 c[4];
 
@@ -170,7 +171,7 @@ public:
 		}
 		SSE_PS_STORE(v, _mm_mul_ps(
 			_mm_loadr_ps(c),
-			_mm_rcp_ps(_mm_set_ps1(255))));
+			_mm_load_ps(m_Limit_d255)));
 #endif
 	}
 
@@ -311,9 +312,10 @@ public:
 	inline static b3Color b3Mix(
 		const b3Color &low,
 		const b3Color &high,
-		const b3_f64   mix)
+		const b3_f64   dMix)
 	{
-		__m128  mixer = _mm_set_ps1(float(mix));
+		float mix = dMix;
+		__m128  mixer = _mm_set_ps1(mix);
 		__m128  l     = SSE_PS_LOAD(low.v);
 		b3Color result;
 

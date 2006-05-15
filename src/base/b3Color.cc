@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/05/15 13:28:08  smork
+**	- Correct b3_pkd_color initialization.
+**
 **	Revision 1.11  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.10  2006/03/05 21:22:33  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -88,6 +91,14 @@ const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d015[4] =
 	0.06666666666666666f
 };
 
+const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =
+{
+	0.0039215686f,
+	0.0039215686f,
+	0.0039215686f,
+	0.0039215686f
+};
+
 #ifdef BLZ3_USE_SSE
 
 const b3_u32 B3_ALIGN_16 b3Color::m_AbsMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
@@ -126,11 +137,4 @@ const b3_f32 B3_ALIGN_16 b3Color::m_Limit_m015[4] =
 	15.0f
 };
 
-const b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =
-{
-	0.0039215686f,
-	0.0039215686f,
-	0.0039215686f,
-	0.0039215686f
-};
 #endif
