@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/15 12:31:26  sm
+**	- Typo fix
+**
 **	Revision 1.3  2006/05/15 12:30:36  smork
 **	- Templating syntax error fixed.
 **	- Searching for some test case problems.
-**
+**	
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
 **	
@@ -60,12 +63,12 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(b3FileTest<b3File>);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3FileTest<b3FileMem>);
 
-template<> void b3FileTest<b3File>::setUp()
+template <> void b3FileTest<b3File>::setUp()
 {
 	file.b3Open("Config.tst",B_WRITE);
 }
 
-template<> void b3FileTest<b3FileMem>::setUp()
+template <> void b3FileTest<b3FileMem>::setUp()
 {
 	file.b3Open(B_WRITE);
 }
