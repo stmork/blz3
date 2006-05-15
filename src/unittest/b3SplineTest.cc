@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/05/15 12:30:36  smork
+**	- Templating syntax error fixed.
+**	- Searching for some test case problems.
+**
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
-**
+**	
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -58,7 +62,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineTest<b3Nurbs>);
 
 static b3_f64 curve_controls[B3_MAX_CONTROLS];
 
-void b3SplineTest<b3Curve>::setUp()
+template <> void b3SplineTest<b3Curve>::setUp()
 {
 	a.m_Knots    = knots;
 	a.m_Controls = curve_controls;
@@ -66,7 +70,7 @@ void b3SplineTest<b3Curve>::setUp()
 
 static b3_vector spline_controls[B3_MAX_CONTROLS];
 
-void b3SplineTest<b3Spline>::setUp()
+template <> void b3SplineTest<b3Spline>::setUp()
 {
 	a.m_Knots    = knots;
 	a.m_Controls = spline_controls;
@@ -74,7 +78,7 @@ void b3SplineTest<b3Spline>::setUp()
 
 static b3_vector4D nurbs_controls[B3_MAX_CONTROLS];
 
-void b3SplineTest<b3Nurbs>::setUp()
+template <> void b3SplineTest<b3Nurbs>::setUp()
 {
 	a.m_Knots    = knots;
 	a.m_Controls = nurbs_controls;

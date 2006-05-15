@@ -287,14 +287,14 @@ public:
 		const b3_f32   mix)
 	{
 		__m128  mixer = _mm_set_ps1(mix);
+		__m128  l     = SSE_PS_LOAD(low.v);
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			SSE_PS_LOAD(low.v),
-			_mm_mul_ps(mixer,
-			_mm_sub_ps(
-				SSE_PS_LOAD(high.v),
-				SSE_PS_LOAD(low.v)))));
+			l,
+			_mm_mul_ps(
+				mixer,
+				_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -314,15 +314,14 @@ public:
 		const b3_f64   mix)
 	{
 		__m128  mixer = _mm_set_ps1(float(mix));
+		__m128  l     = SSE_PS_LOAD(low.v);
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			SSE_PS_LOAD(low.v),
+			l,
 			_mm_mul_ps(
 				mixer,
-				_mm_sub_ps(
-					SSE_PS_LOAD(high.v),
-					SSE_PS_LOAD(low.v)))));
+				_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -342,14 +341,13 @@ public:
 		const b3Color &mixer)
 	{
 		b3Color result;
+		__m128 l = SSE_PS_LOAD(low.v);
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			SSE_PS_LOAD(low.v),
+			l,
 			_mm_mul_ps(
 				SSE_PS_LOAD(mixer.v),
-				_mm_sub_ps(
-					SSE_PS_LOAD(high.v),
-					SSE_PS_LOAD(low.v)))));
+				_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}

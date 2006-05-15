@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/15 12:30:36  smork
+**	- Templating syntax error fixed.
+**	- Searching for some test case problems.
+**
 **	Revision 1.3  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
-**
+**	
 **	Revision 1.2  2006/05/11 18:48:24  sm
 **	- Small makefile fixes.
 **	- Corrected accuracy in unit tests.
@@ -60,15 +64,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3ColorTest);
 
 #define testColor(r,g,b,a)\
 {\
-		b3_f32 tr = round_color(color[b3Color::R]);\
-		b3_f32 tg = round_color(color[b3Color::G]);\
-		b3_f32 tb = round_color(color[b3Color::B]);\
-		b3_f32 ta = round_color(color[b3Color::A]);\
+	b3_f32 tr = round_color(color[b3Color::R]);\
+	b3_f32 tg = round_color(color[b3Color::G]);\
+	b3_f32 tb = round_color(color[b3Color::B]);\
+	b3_f32 ta = round_color(color[b3Color::A]);\
 \
-		CPPUNIT_ASSERT_EQUAL(r, tr);\
-		CPPUNIT_ASSERT_EQUAL(g, tg);\
-		CPPUNIT_ASSERT_EQUAL(b, tb);\
-		CPPUNIT_ASSERT_EQUAL(a, ta);\
+	CPPUNIT_ASSERT_EQUAL(r, tr);\
+	CPPUNIT_ASSERT_EQUAL(g, tg);\
+	CPPUNIT_ASSERT_EQUAL(b, tb);\
+	CPPUNIT_ASSERT_EQUAL(a, ta);\
 }\
 
 
@@ -93,6 +97,15 @@ void b3ColorTest::test()
 	color = B3_WHITE;
 	testColor(1.0f, 1.0f, 1.0f, 0.0f);
 
+	color = B3_RED;
+	testColor(1.0f, 0.0f, 0.0f, 0.0f);
+
+	color = B3_GREEN;
+	testColor(0.0f, 1.0f, 0.0f, 0.0f);
+
+	color = B3_BLUE;
+	testColor(0.0f, 0.0f, 1.0f, 0.0f);
+
 	color = static_cast<b3_u16>(0x0f0f);
 	testColor(1.0f, 0.0f, 1.0f, 0.0f);
 
@@ -112,7 +125,11 @@ void b3ColorTest::test()
 	testColor(0.25f, 0.5f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-		b3Color(B3_WHITE), b3Color(B3_RED), 0.25);
+		b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f64>(0.25));
+	testColor(1.0f, 0.75f, 0.75f, 0.0f);
+
+	color = b3Color::b3Mix(
+		b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f32>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
