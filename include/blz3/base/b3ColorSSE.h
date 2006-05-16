@@ -514,9 +514,9 @@ public:
 	inline b3Color &operator/=(const b3_f32 value)
 	{
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(v, _mm_div_ps(
+		SSE_PS_STORE(v, _mm_mul_ps(
 			SSE_PS_LOAD(v),
-			_mm_set_ps1(value)));
+			_mm_set_ps1(1.0 / value)));
 		return *this;
 	}
 
@@ -529,9 +529,9 @@ public:
 	inline b3Color &operator/=(const b3_f64 value)
 	{
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(v, _mm_div_ps(
+		SSE_PS_STORE(v, _mm_mul_ps(
 			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(value))));
+			_mm_set_ps1(float(1.0 / value))));
 		return *this;
 	}
 
@@ -544,9 +544,9 @@ public:
 	inline b3Color &operator/=(const b3_count value)
 	{
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(v, _mm_div_ps(
+		SSE_PS_STORE(v, _mm_mul_ps(
 			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(value))));
+			_mm_set_ps1(1.0 / float(value))));
 		return *this;
 	}
 
@@ -561,9 +561,9 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_div_ps(
+		SSE_PS_STORE(result.v, _mm_mul_ps(
 			SSE_PS_LOAD(v),
-			_mm_set_ps1(value)));
+			_mm_set_ps1(1.0 / value)));
 		return result;
 	}
 
@@ -578,9 +578,9 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_div_ps(
+		SSE_PS_STORE(result.v, _mm_mul_ps(
 			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(value))));
+			_mm_set_ps1(1.0 / float(value))));
 		return result;
 	}
 
@@ -595,9 +595,9 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_div_ps(
+		SSE_PS_STORE(result.v, _mm_mul_ps(
 			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(value))));
+			_mm_set_ps1(1.0 / float(value))));
 		return result;
 	}
 

@@ -211,7 +211,7 @@ public:
 		      b3_f32 B3_ALIGN_16  d[4];
 		      b3_f32              result = 0;
 
-		for (b3_loop i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			d[i]    = v2[i] - v1[i];
 		}
