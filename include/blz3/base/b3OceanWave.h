@@ -20,7 +20,6 @@
 #define B3_BASE_OCEANWAVE_H
 
 #include "blz3/b3Config.h"
-#include "blz3/base/b3Complex.h"
 #include "blz3/base/b3FFT.h"
 #include "blz3/base/b3Random.h"
 #include "blz3/base/b3Spline.h"

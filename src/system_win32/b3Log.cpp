@@ -21,16 +21,16 @@
 **                                                                      **
 *************************************************************************/
 
-#include <stdio.h>
+#include "b3SystemInclude.h"
 
-#include "stdafx.h"
-#include "afxmt.h"
+#include <stdio.h>
 
 #include <stdio.h>
 #include <sys/timeb.h>
 #include <time.h>
 
-#include "b3SystemInclude.h"
+#include "stdafx.h"
+#include "afxmt.h"
 
 /*************************************************************************
 **                                                                      **
@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/05/17 21:35:37  sm
+**	- Minor optimizations.
+**
 **	Revision 1.16  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.15  2005/06/13 10:43:41  smork
 **	- Log file moved into home directory.
 **	
@@ -159,7 +162,7 @@ void b3Log::b3LogFunction (
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this
 		// piece of code.
-		m_LogMutex.b3Lock();
+		b3CriticalSection lock(m_LogMutex);
 
 		va_start (argptr,format);
 #ifdef _DEBUG
@@ -187,8 +190,5 @@ void b3Log::b3LogFunction (
 			fflush   (stderr);
 			va_end   (argptr);
 		}
-
-		// That's it! Let's doing other to make the same...
-		m_LogMutex.b3Unlock();
 	}
 }

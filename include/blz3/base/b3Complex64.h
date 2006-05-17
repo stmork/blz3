@@ -111,11 +111,11 @@ public:
 			SSE_PD_LOAD(sum.v)));
 	}
 
-	inline b3Complex64 operator*(const b3Complex64 &sum)
+	inline b3Complex64 operator*(const b3Complex64 &mul)
 	{
 		b3Complex64 result;
 
-		__m128d b = SSE_PD_LOAD(sum.v);
+		__m128d b = SSE_PD_LOAD(mul.v);
 		__m128d a = SSE_PD_LOAD(v);
 
 		__m128d p1 = _mm_mul_pd(
@@ -134,9 +134,9 @@ public:
 		return result;
 	}
 
-	inline void operator*=(const b3Complex64 &sum)
+	inline void operator*=(const b3Complex64 &mul)
 	{
-		__m128d b = SSE_PD_LOAD(sum.v);
+		__m128d b = SSE_PD_LOAD(mul.v);
 		__m128d a = SSE_PD_LOAD(v);
 
 		__m128d p1 = _mm_mul_pd(
@@ -179,9 +179,9 @@ public:
 	inline b3Complex64 operator/(const b3_f64 value)
 	{
 		b3Complex64 result;
-		__m128d     mul = _mm_set1_pd(value);
+		__m128d     mul = _mm_set1_pd(1.0 / value);
 
-		SSE_PD_STORE(result.v, _mm_div_pd(
+		SSE_PD_STORE(result.v, _mm_mul_pd(
 			SSE_PD_LOAD(v),
 			mul));
 		return result;
@@ -189,9 +189,9 @@ public:
 
 	inline void operator/=(const b3_f64 value)
 	{
-		__m128d     mul = _mm_set1_pd(value);
+		__m128d     mul = _mm_set1_pd(1.0 / value);
 
-		SSE_PD_STORE(v, _mm_div_pd(
+		SSE_PD_STORE(v, _mm_mul_pd(
 			SSE_PD_LOAD(v),
 			mul));
 	}

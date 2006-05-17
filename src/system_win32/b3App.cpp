@@ -41,10 +41,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/05/17 21:35:37  sm
+**	- Minor optimizations.
+**
 **	Revision 1.15  2006/03/19 14:47:18  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
-**
+**	
 **	Revision 1.14  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -132,8 +135,8 @@ CB3App::CB3App(const char *appName) :
 	m_RunAutomated       = false;
 	m_AutoSave           = true;
 	m_ClientName         = appName;
-	m_lastGC             = HGLRC(0xdeadbeef);
-	m_lastDC             = HDC(0xbadc0ded);
+	m_lastGC             = reinterpret_cast<HGLRC>(0xdeadbeef0fbadcaf);
+	m_lastDC             = reinterpret_cast<HDC>(0xbadcaffebadc0ded);
 	b3Log::b3GetLogFile(DebugFile);
 	b3ReadString("Settings","DebugFile",DebugFile);
 	b3Log::b3SetLogFile(DebugFile);

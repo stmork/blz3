@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/17 21:35:37  sm
+**	- Minor optimizations.
+**
 **	Revision 1.13  2006/05/14 18:05:09  sm
 **	- Added return value
-**
+**	
 **	Revision 1.12  2006/05/14 11:30:39  sm
 **	- Added complex number classes to FFT class.
 **	
@@ -155,8 +158,6 @@ b3_count b3Fourier::b3Log2(b3_u32 value)
 
 void b3Fourier::b3FreeBuffer()
 {
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3FreeBuffer()\n");
-	
 	b3Free();
 	if (m_Buffer != null)
 	{
@@ -174,8 +175,6 @@ void b3Fourier::b3FreeBuffer()
 		m_Aux = null;
 	}
 	m_Size = 0;
-
-	b3PrintF(B3LOG_FULL, "<b3Fourier::b3FreeBuffer()\n");
 }
 
 b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
