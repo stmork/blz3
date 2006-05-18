@@ -24,6 +24,7 @@
 #include "AppLinesInclude.h"
 
 #include "DlgAnimation.h"
+#include "blz3/system/b3Plugin.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/18 14:13:44  sm
+**	- Some animation addons.
+**
 **	Revision 1.4  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2004/05/06 08:38:32  sm
 **	- Demerged raytracing includes of Lines
 **	
@@ -56,9 +60,11 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgAnimation::CDlgAnimation(CWnd* pParent /*=NULL*/)
+CDlgAnimation::CDlgAnimation(b3Item *item, CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgAnimation::IDD, pParent)
 {
+	m_Animation = static_cast<b3Animation *>(item);
+
 	//{{AFX_DATA_INIT(CDlgAnimation)
 	m_Enable = FALSE;
 	//}}AFX_DATA_INIT
@@ -117,4 +123,16 @@ void CDlgAnimation::OnOK()
 	CDialog::OnOK();
 	m_Animation->b3Activate(m_Enable);
 	m_Animation->m_FramesPerSecond = m_CtrlFPS.b3GetPos();
+}
+
+b3_bool CDlgAnimation::b3Edit(b3Item *item,void *ptr)
+{
+	CDlgAnimation dlg(item);
+
+	return dlg.DoModal() == IDOK;
+}
+
+void CDlgAnimation::b3Register()
+{
+	b3Loader::b3AddClassType(ANIMATION,IDS_ITEMDESC_ANIMATION,IDI_BUMP_GLOSSY,b3Edit,b3Edit);
 }

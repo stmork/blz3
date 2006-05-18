@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Complex.h"
 
-#ifdef BLZ3_USE_SSE2
+#if defined(BLZ3_USE_SSE2) && !defined(WIN32)
 
 class B3_PLUGIN b3Complex64
 {
@@ -200,9 +200,9 @@ public:
 	{
 		b3_f64  B3_ALIGN_16 comp[2];
 
-		__m128d mul =
-			_mm_mul_pd(SSE_PD_LOAD(v), SSE_PD_LOAD(v));
-		_mm_store_pd(comp, mul);
+		__m128d mul = SSE_PD_LOAD(v);
+
+		_mm_store_pd(comp, _mm_mul_pd(mul, mul));
 
 		return comp[0] + comp[1];
 	}

@@ -32,10 +32,13 @@
 
 class CDlgAnimation : public CDialog
 {
+	b3Animation *m_Animation;
+
 // Construction
 public:
-	b3Animation *m_Animation;
-	CDlgAnimation(CWnd* pParent = NULL);   // standard constructor
+	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static void    b3Register();
+	CDlgAnimation(b3Item *item, CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgAnimation)

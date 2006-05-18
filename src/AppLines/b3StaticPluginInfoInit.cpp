@@ -25,6 +25,8 @@
 
 #include "b3StaticPluginInfoInit.h"
 
+#include "DlgAnimation.h"
+
 #include "DlgBumpGlossy.h"
 #include "DlgBumpGroove.h"
 #include "DlgBumpMarble.h"
@@ -57,6 +59,9 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/05/18 14:13:44  sm
+**	- Some animation addons.
+**
 **	Revision 1.12  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -69,7 +74,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.11  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -150,10 +155,12 @@ void b3StaticPluginInfoInit::b3Init()
 	b3Loader::b3AddClassType(SUPERSAMPLE4, IDS_ITEMDESC_SUPERSAMPLE4);
 	b3Loader::b3AddClassType(NEBULAR,      IDS_ITEMDESC_NEBULAR);
 	b3Loader::b3AddClassType(LINES_INFO,   IDS_ITEMDESC_LINES_INFO);
-	b3Loader::b3AddClassType(ANIMATION,    IDS_ITEMDESC_ANIMATION);
+//	b3Loader::b3AddClassType(ANIMATION,    IDS_ITEMDESC_ANIMATION);
 	b3Loader::b3AddClassType(DISTRIBUTE,   IDS_ITEMDESC_DISTRIBUTE);
 	b3Loader::b3AddClassType(LENSFLARE,    IDS_ITEMDESC_LENSFLARE);
 	b3Loader::b3AddClassType(CAUSTIC,      IDS_ITEMDESC_CAUSTIC);
+
+	CDlgAnimation::b3Register();
 
 	CDlgBumpGlossy::b3Register();
 	CDlgBumpGroove::b3Register();

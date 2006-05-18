@@ -53,9 +53,12 @@
 
 /*
 **	$Log$
+**	Revision 1.117  2006/05/18 14:13:44  sm
+**	- Some animation addons.
+**
 **	Revision 1.116  2006/04/29 20:29:53  sm
 **	- Switched to other FFT 2D algorithm which works correctly.
-**
+**	
 **	Revision 1.115  2006/03/26 17:58:22  sm
 **	- Edit object from hierarchy tree caused a race. Fixed now.
 **	
@@ -2046,9 +2049,9 @@ void CAppLinesDoc::OnUpdateAnimEnd(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnAnimProperties() 
 {
 	// TODO: Add your command handler code here
-	CDlgAnimation dlg;
+	CDlgAnimation dlg(m_Scene->b3GetAnimation(true));
 
-	dlg.m_Animation = m_Anim = m_Scene->b3GetAnimation(true);
+	m_Anim = m_Scene->b3GetAnimation(true);
 	if (dlg.DoModal())
 	{
 		SetModifiedFlag();
