@@ -38,9 +38,12 @@ using namespace std;
 
 /*
 **	$Log$
+**	Revision 1.3  2006/05/18 10:06:42  sm
+**	- Some SSE tests.
+**
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
-**
+**	
 **	Revision 1.1  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -59,6 +62,32 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_NORMAL, "%s\n",b3Runtime::b3GetCompiler());
+
+#ifdef BLZ3_USE_SSE
+	b3PrintF(B3LOG_NORMAL, "Using SSE intrinsics.\n");
+#endif
+
+#ifdef BLZ3_USE_SSE2
+	b3PrintF(B3LOG_NORMAL, "Using SSE2 intrinsics.\n");
+#endif
+
+#ifdef BLZ3_USE_SSE3
+	b3PrintF(B3LOG_NORMAL, "Using SSE3 intrinsics.\n");
+#endif
+
+#ifdef B3_SSE
+	b3PrintF(B3LOG_NORMAL, "Using SSE algorithms.\n");
+#endif
+
+#ifdef B3_SSE1
+	b3PrintF(B3LOG_NORMAL, "Using SSE (1) algorithms.\n");
+#endif
+
+#ifdef B3_SSE2
+	b3PrintF(B3LOG_NORMAL, "Using SSE2 algorithms.\n");
+#endif
 #ifdef HAVE_LIBCPPUNIT
 	CppUnit::TextUi::TestRunner runner;
 	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();

@@ -205,28 +205,11 @@ public:
 		const b3_vector *vec1,
 		const b3_vector *vec2)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *v1 = &vec1->x;
-		const b3_f32 B3_ALIGN_16 *v2 = &vec2->x;
-		      b3_f32 B3_ALIGN_16  d[4];
-		      b3_f32              result = 0;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			d[i]    = v2[i] - v1[i];
-		}
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			result += d[i]  * d[i];
-		}
-		return result < 0.0001;
-#else
 		b3_f32 x = vec2->x - vec1->x;
 		b3_f32 y = vec2->y - vec1->y;
 		b3_f32 z = vec2->z - vec1->z;
 
 		return (x*x + y*y + z*z) < 0.0001;
-#endif
 	}
 
 	/**
@@ -304,23 +287,6 @@ public:
 		      b3_vector *vector,
 		const b3_f64     length = 1.0)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *v      = &vector->x;
-		b3_f64              denom  = 0;
-		b3_f64              result;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			denom += v[i] * v[i];
-		}
-
-		result = sqrt(denom);
-		denom  = length / result;
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			v[i] *= denom;
-		}
-#else
 		b3_f64 x      = vector->x;
 		b3_f64 y      = vector->y;
 		b3_f64 z      = vector->z;
@@ -330,7 +296,7 @@ public:
 		vector->x *= denom;
 		vector->y *= denom;
 		vector->z *= denom;
-#endif
+
 		return result;
 	}
 
@@ -386,22 +352,6 @@ public:
 		      b3_gl_vector *vector,
 		const b3_f32        length = 1.0)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *v      = &vector->x;
-		b3_f32              denom  = 0;
-		b3_f32              result = 0;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			denom += v[i] * v[i];
-		}
-
-		denom = length / (result = sqrt(denom));
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			v[i] *= denom;
-		}
-#else
 		b3_f32 x      = vector->x;
 		b3_f32 y      = vector->y;
 		b3_f32 z      = vector->z;
@@ -411,7 +361,7 @@ public:
 		vector->x *= denom;
 		vector->y *= denom;
 		vector->z *= denom;
-#endif
+
 		return result;
 	}
 
@@ -426,28 +376,10 @@ public:
 		const b3_vector *aVec,
 		const b3_vector *bVec)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16  p[4];
-		      b3_f32              result = 0;
-
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			p[i] = a[i] * b[i];
-		}
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			result += p[i];
-		}
-		return result;
-#else
 		return
 			aVec->x * bVec->x +
 			aVec->y * bVec->y +
 			aVec->z * bVec->z;
-#endif
 	}
 
 	/**
@@ -461,22 +393,10 @@ public:
 		const b3_vector   *aVec,
 		const b3_vector64 *bVec)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f64              result = 0;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			result += a[i] * b[i];
-		}
-		return result;
-#else
 		return
 			aVec->x * bVec->x +
 			aVec->y * bVec->y +
 			aVec->z * bVec->z;
-#endif
 	}
 
 	static inline b3_f64 b3SMul(
@@ -526,19 +446,10 @@ public:
 		const b3_vector *aVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] += a[i];
-		}
-#else
 		result->x += aVec->x;
 		result->y += aVec->y;
 		result->z += aVec->z;
-#endif
+
 		return result;
 	}
 
@@ -580,19 +491,10 @@ public:
 		const b3_gl_vector *aVec,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] += a[i];
-		}
-#else
 		result->x += aVec->x;
 		result->y += aVec->y;
 		result->z += aVec->z;
-#endif
+
 		return result;
 	}
 
@@ -609,20 +511,10 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] + b[i];
-		}
-#else
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
 		result->z = aVec->z + bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -669,20 +561,10 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3; ;i++)
-		{
-			r[i] = a[i] + b[i];
-		}
-#else
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
 		result->z = aVec->z + bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -697,19 +579,10 @@ public:
 		const b3_vector *aVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] -= a[i];
-		}
-#else
 		result->x -= aVec->x;
 		result->y -= aVec->y;
 		result->z -= aVec->z;
-#endif
+
 		return result;
 	}
 
@@ -753,20 +626,10 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] - b[i];
-		}
-#else
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -813,20 +676,10 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] - b[i];
-		}
-#else
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -841,19 +694,10 @@ public:
 		const b3_vector *aVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] *= a[i];
-		}
-#else
 		result->x *= aVec->x;
 		result->y *= aVec->y;
 		result->z *= aVec->z;
-#endif
+
 		return result;
 	}
 
@@ -895,19 +739,10 @@ public:
 		const b3_gl_vector *aVec,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] *= a[i];
-		}
-#else
 		result->x *= aVec->x;
 		result->y *= aVec->y;
 		result->z *= aVec->z;
-#endif
+
 		return result;
 	}
 
@@ -924,20 +759,10 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] * b[i];
-		}
-#else
 		result->x = aVec->x * bVec->x;
 		result->y = aVec->y * bVec->y;
 		result->z = aVec->z * bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -984,20 +809,10 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3; ;i++)
-		{
-			r[i] = a[i] * b[i];
-		}
-#else
 		result->x = aVec->x * bVec->x;
 		result->y = aVec->y * bVec->y;
 		result->z = aVec->z * bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -1014,32 +829,10 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *r = &result->x;
-		b3_f32 B3_ALIGN_16  a[4],b[4],c[4],d[4];
-
-		a[Z] = c[Y] = aVec->x; b[Y] = d[Z] = bVec->x;
-		a[X] = c[Z] = aVec->y; b[Z] = d[X] = bVec->y;
-		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
-		a[W] = c[W] =          b[W] = d[W] = 0;
-
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			a[i] *= b[i];
-		}
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			c[i] *= d[i];
-		}
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			r[i]  = a[i] + c[i];
-		}
-#else
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
 		result->z = aVec->x * bVec->y - aVec->y * bVec->x;
-#endif
+
 		return result;
 	}
 
@@ -1056,32 +849,10 @@ public:
 		const b3_vector   *bVec,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
-		b3_f64 B3_ALIGN_16 *r = &result->x;
-		b3_f32 B3_ALIGN_16  a[4],b[4],c[4],d[4];
-
-		a[Z] = c[Y] = aVec->x; b[Y] = d[Z] = bVec->x;
-		a[X] = c[Z] = aVec->y; b[Z] = d[X] = bVec->y;
-		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
-		a[W] = c[W] =          b[W] = d[W] = 0;
-
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			a[i] *= b[i];
-		}
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			c[i] *= d[i];
-		}
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			r[i]  = a[i] + c[i];
-		}
-#else
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
 		result->z = aVec->x * bVec->y - aVec->y * bVec->x;
-#endif
+
 		return result;
 	}
 
@@ -1131,23 +902,10 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *r = &result->x;
-		b3_f32 B3_ALIGN_16  a[4],b[4],c[4],d[4];
-
-		a[Z] = c[Y] = aVec->x; b[Y] = d[Z] = bVec->x;
-		a[X] = c[Z] = aVec->y; b[Z] = d[X] = bVec->y;
-		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] * b[i] - c[i] * d[i];
-		}
-#else
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
 		result->z = aVec->x * bVec->y - aVec->y * bVec->x;
-#endif
+
 		return result;
 	}
 
@@ -1159,14 +917,10 @@ public:
 	 */
 	static inline b3_f32 b3Length(const b3_vector *vector)
 	{
-#ifdef B3_SSE
-		return sqrt(b3QuadLength(vector));
-#else
 		return sqrt(
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z);
-#endif
 	}
 
 	/**
@@ -1177,14 +931,10 @@ public:
 	 */
 	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
-#ifdef B3_SSE
-		return sqrt(b3QuadLength(vector));
-#else
 		return sqrt(
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z);
-#endif
 	}
 
 	/**
@@ -1195,27 +945,10 @@ public:
 	 */
 	static inline b3_f32 b3QuadLength(const b3_vector *vector)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *v = &vector->x;
-		      b3_f32 B3_ALIGN_16  prod[4];
-		      b3_f32              result = 0;
-
-		for(b3_loop i = 0;i < 4;i++)
-		{
-			prod[i] = v[i] * v[i];
-		}
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			result += prod[i];
-		}
-		return result;
-#else
 		return
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z;
-#endif
 	}
 
 	/**
@@ -1226,7 +959,7 @@ public:
 	 */
 	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *v = &vector->x;
 		      b3_f64              result = 0;
 
@@ -1255,32 +988,13 @@ public:
 		const b3_vector *from,
 		const b3_vector *to)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &from->x;
-		const b3_f32 B3_ALIGN_16 *b = &to->x;
-		      b3_f32 B3_ALIGN_16  d[4];
-		      b3_f32 B3_ALIGN_16  p[4];
-		      b3_f32              result = 0;
-
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			d[i] = b[i] - a[i];
-			p[i] = d[i] * d[i];
-		}
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			result += p[i];
-		}
-		return sqrt(result);
-#else
 		register b3_f64 x,y,z;
 
 		x = to->x - from->x;
 		y = to->y - from->y;
 		z = to->z - from->z;
+
 		return sqrt(x * x + y * y + z * z);
-#endif
 	}
 
 	/**
@@ -1313,18 +1027,10 @@ public:
 		      b3_vector *vector,
 		const b3_f32     factor)
 	{
-#ifdef B3_SSE1
-		b3_f32 B3_ALIGN_16 *v = &vector->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			v[i] *= factor;
-		}
-#else
 		vector->x *= factor;
 		vector->y *= factor;
 		vector->z *= factor;
-#endif
+
 		return vector;
 	}
 
@@ -1342,19 +1048,10 @@ public:
 		      b3_vector *result,
 		const b3_f32     factor)
 	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *v = &vector->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = v[i] * factor;
-		}
-#else
 		result->x = vector->x * factor;
 		result->y = vector->y * factor;
 		result->z = vector->z * factor;
-#endif
+
 		return result;
 	}
 
@@ -1516,25 +1213,12 @@ public:
 		const b3_vector *Vector1,
 		const b3_vector *Vector2)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *v1 = &Vector1->x;
-		const b3_f32 B3_ALIGN_16 *v2 = &Vector2->x;
-		      b3_f64              Denom = b3Length(Vector1) * b3Length(Vector2);
-		      b3_f32              result = 0;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			result += v1[i] * v2[i];
-		}
-		return result / Denom;
-#else
 		b3_f64 Denom = b3Length(Vector1) * b3Length(Vector2);
 
 		return (
 			Vector1->x * Vector2->x  +
 			Vector1->y * Vector2->y  +
 			Vector1->z * Vector2->z) / Denom;
-#endif
 	}
 
 	/**
@@ -1551,49 +1235,6 @@ public:
 		const b3_vector *point1,
 		const b3_vector *point2)
 	{
-#ifdef B3_SSE
-#if 0
-		const b3_f32 B3_ALIGN_16 *b  = &base->x;
-		const b3_f32 B3_ALIGN_16 *p1 = &point1->x;
-		const b3_f32 B3_ALIGN_16 *p2 = &point2->x;
-		      b3_f32 B3_ALIGN_16 aDir[4];
-		      b3_f32 B3_ALIGN_16 bDir[4];
-		      b3_f32             len1 = 0;
-		      b3_f32             len2 = 0;
-		      b3_f64             denom;
-		      b3_f32             result;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			aDir[i] = p1[i] - b[i];
-			bDir[i] = p2[i] - b[i];
-
-			len1   += aDir[i] * aDir[i];
-			len2   += bDir[i] * bDir[i];
-		}
-
-		denom = len1 * len2;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			result += aDir[i] * bDir[i];
-		}
-		return result / denom;
-#else
-		const b3_f32 B3_ALIGN_16 *b  = &base->x;
-		const b3_f32 B3_ALIGN_16 *p1 = &point1->x;
-		const b3_f32 B3_ALIGN_16 *p2 = &point2->x;
-		      b3_f32 B3_ALIGN_16  aDir[4];
-		      b3_f32 B3_ALIGN_16  bDir[4];
-		
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			aDir[i] = p1[i] - b[i];
-			bDir[i] = p2[i] - b[i];
-		}
-		return b3AngleOfVectors((const b3_vector *)aDir, (const b3_vector *)bDir);
-#endif
-#else
 		b3_vector a,b;
 
 		a.x = point1->x - base->x;
@@ -1605,7 +1246,6 @@ public:
 		b.z = point2->z - base->z;
 
 		return b3AngleOfVectors(&a,&b);
-#endif
 	}
 
 	/**
@@ -1670,20 +1310,10 @@ public:
 		const b3_f32     factor,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] + factor * b[i];
-		}
-#else
 		result->x = aVec->x + factor * bVec->x;
 		result->y = aVec->y + factor * bVec->y;
 		result->z = aVec->z + factor * bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -1736,20 +1366,10 @@ public:
 		const b3_f32        factor,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] + factor * b[i];
-		}
-#else
 		result->x = aVec->x + factor * bVec->x;
 		result->y = aVec->y + factor * bVec->y;
 		result->z = aVec->z + factor * bVec->z;
-#endif
+
 		return result;
 	}
 
@@ -1771,20 +1391,10 @@ public:
 		const b3_f32     y,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = x * b[i] + y * c[i];
-		}
-#else
 		result->x = x * bVec->x + y * cVec->x;
 		result->y = x * bVec->y + y * cVec->y;
 		result->z = x * bVec->z + y * cVec->z;
-#endif
+
 		return result;
 	}
 
@@ -1806,20 +1416,10 @@ public:
 		const b3_f32       y,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
-		      b3_f64 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = x * b[i] + y * c[i];
-		}
-#else
 		result->x = x * bVec->x + y * cVec->x;
 		result->y = x * bVec->y + y * cVec->y;
 		result->z = x * bVec->z + y * cVec->z;
-#endif
+
 		return result;
 	}
 
@@ -1878,21 +1478,10 @@ public:
 		const b3_f32     y,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] + x * b[i] + y * c[i];
-		}
-#else
 		result->x = aVec->x + x * bVec->x + y * cVec->x;
 		result->y = aVec->y + x * bVec->y + y * cVec->y;
 		result->z = aVec->z + x * bVec->z + y * cVec->z;
-#endif
+
 		return result;
 	}
 
@@ -1954,21 +1543,10 @@ public:
 		const b3_f32       y,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
-		      b3_f64 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] + x * b[i] + y * c[i];
-		}
-#else
 		result->x = aVec->x + x * bVec->x + y * cVec->x;
 		result->y = aVec->y + x * bVec->y + y * cVec->y;
 		result->z = aVec->z + x * bVec->z + y * cVec->z;
-#endif
+
 		return result;
 	}
 
@@ -2017,21 +1595,10 @@ public:
 		const b3_f32       z,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
-		      b3_f64 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = x * a[i] + y * b[i] + z * c[i];
-		}
-#else
 		result->x = x * aVec->x + y * bVec->x + z * cVec->x;
 		result->y = x * aVec->y + y * bVec->y + z * cVec->y;
 		result->z = x * aVec->z + y * bVec->z + z * cVec->z;
-#endif
+
 		return result;
 	}
 
@@ -2057,21 +1624,10 @@ public:
 		const b3_f32       z,
 		      b3_vector   *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = x * a[i] + y * b[i] + z * c[i];
-		}
-#else
 		result->x = x * aVec->x + y * bVec->x + z * cVec->x;
 		result->y = x * aVec->y + y * bVec->y + z * cVec->y;
 		result->z = x * aVec->z + y * bVec->z + z * cVec->z;
-#endif
+
 		return result;
 	}
 
@@ -2122,21 +1678,10 @@ public:
 		const b3_vector   *base,
 		      b3_vector   *result)
 	{
-#ifdef B3_SSE
-		const b3_f64 B3_ALIGN_16 *p = &line->pos.x;
-		const b3_f64 B3_ALIGN_16 *d = &line->dir.x;
-		const b3_f32 B3_ALIGN_16 *b = &base->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = p[i] + l * d[i] - b[i];
-		}
-#else
 		result->x = line->pos.x + l * line->dir.x - base->x;
 		result->y = line->pos.y + l * line->dir.y - base->y;
 		result->z = line->pos.z + l * line->dir.z - base->z;
-#endif
+
 		return result;
 	}
 
@@ -2151,19 +1696,6 @@ public:
 		b3_vector *lower,
 		b3_vector *upper)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *l = &lower->x;
-		b3_f32 B3_ALIGN_16 *u = &upper->x;
-		b3_f32              aux;
-
-		for (b3_loop i = 0;i < 3; i++)
-		{
-			if (l[i] > u[i])
-			{
-				aux = l[i]; l[i] = u[i]; u[i] = aux;
-			}
-		}
-#else
 		b3_f32 aux;
 
 		if (lower->x > upper->x)
@@ -2180,7 +1712,6 @@ public:
 		{
 			aux = lower->z; lower->z = upper->z; upper->z = aux;
 		}
-#endif
 	}
 
 	/**
@@ -2235,23 +1766,12 @@ public:
 		b3_vector *lower,
 		b3_vector *upper)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *l = &lower->x;
-		b3_f32 B3_ALIGN_16 *u = &upper->x;
-
-		for (b3_loop i = 0;i < 3; i++)
-		{
-			l[i] =  FLT_MAX;
-			u[i] = -FLT_MAX;
-		}
-#else
 		lower->x =
 		lower->y =
 		lower->z =  FLT_MAX;
 		upper->x =
 		upper->y =
 		upper->z = -FLT_MAX;
-#endif
 	}
 
 	/**
@@ -2264,20 +1784,12 @@ public:
 		b3_vector *vector,
 		b3_f32     min)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *v = &vector->x;
-
-		for (b3_loop i = 0;i < 3; i++)
-		{
-			if (v[i] < min) v[i] = min;
-		}
-#else
 		b3_f32 m = (b3_f32)min;
 
 		if (vector->x < m) vector->x = m;
 		if (vector->y < m) vector->y = m;
 		if (vector->z < m) vector->z = m;
-#endif
+
 		return vector;
 	}
 
@@ -2292,19 +1804,10 @@ public:
 		      b3_vector *lower,
 		const b3_vector *point)
 	{
-#ifdef B3_SSE
-		      b3_f32 B3_ALIGN_16 *l = &lower->x;
-		const b3_f32 B3_ALIGN_16 *p = &point->x;
-
-		for (b3_loop i = 0;i < 3; i++)
-		{
-			if (p[i] < l[i]) l[i] = p[i];
-		}
-#else
 		if (point->x < lower->x) lower->x = point->x;
 		if (point->y < lower->y) lower->y = point->y;
 		if (point->z < lower->z) lower->z = point->z;
-#endif
+
 		return lower;
 	}
 
@@ -2318,20 +1821,12 @@ public:
 		b3_vector *vector,
 		b3_f32     max)
 	{
-#ifdef B3_SSE
-		b3_f32 B3_ALIGN_16 *v = &vector->x;
-
-		for (b3_loop i = 0;i < 3; i++)
-		{
-			if (v[i] > max) v[i] = max;
-		}
-#else
 		b3_f32 m = (b3_f32)max;
 
 		if (vector->x > m) vector->x = m;
 		if (vector->y > m) vector->y = m;
 		if (vector->z > m) vector->z = m;
-#endif
+
 		return vector;
 	}
 
@@ -2346,19 +1841,10 @@ public:
 		      b3_vector *upper,
 		const b3_vector *point)
 	{
-#ifdef B3_SSE
-		      b3_f32 B3_ALIGN_16 *u = &upper->x;
-		const b3_f32 B3_ALIGN_16 *p = &point->x;
-
-		for (b3_loop i = 0;i < 3; i++)
-		{
-			if (p[i] > u[i]) u[i] = p[i];
-		}
-#else
 		if (point->x > upper->x) upper->x = point->x;
 		if (point->y > upper->y) upper->y = point->y;
 		if (point->z > upper->z) upper->z = point->z;
-#endif
+
 		return upper;
 	}
 

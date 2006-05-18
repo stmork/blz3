@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2006/05/18 10:06:42  sm
+**	- Some SSE tests.
+**
 **	Revision 1.23  2006/03/15 13:32:30  smork
 **	- Syntax corrections.
-**
+**	
 **	Revision 1.22  2005/08/12 11:35:49  sm
 **	- Readded vector multiplication for performance test issues.
 **	
@@ -201,6 +204,33 @@ int main(int argc,char *argv[])
 			}
 		}
 	}
+
+	b3PrintF(B3LOG_FULL, "Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_FULL, "%s\n",b3Runtime::b3GetCompiler());
+
+#ifdef BLZ3_USE_SSE
+	b3PrintF(B3LOG_FULL, "Using SSE intrinsics.\n");
+#endif
+
+#ifdef BLZ3_USE_SSE2
+	b3PrintF(B3LOG_FULL, "Using SSE2 intrinsics.\n");
+#endif
+
+#ifdef BLZ3_USE_SSE3
+	b3PrintF(B3LOG_FULL, "Using SSE3 intrinsics.\n");
+#endif
+
+#ifdef B3_SSE
+	b3PrintF(B3LOG_FULL, "Using SSE algorithms.\n");
+#endif
+
+#ifdef B3_SSE1
+	b3PrintF(B3LOG_FULL, "Using SSE (1) algorithms.\n");
+#endif
+
+#ifdef B3_SSE2
+	b3PrintF(B3LOG_FULL, "Using SSE2 algorithms.\n");
+#endif
 
 	B3_BEEP;
 	return EXIT_SUCCESS;
