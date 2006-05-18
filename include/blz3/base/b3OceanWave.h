@@ -47,11 +47,7 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3_f64                  m_l2;          // wave length lower limit (squared)
 	b3Complex64             m_Cycle;       // e^j*omega*t
 	b3Fourier               m_FFT;
-#if 1
-	b3PseudoRandom<b3_f64>  m_Random;
-#else
 	b3Rand48<b3_f64>        m_Random;
-#endif
 	b3Complex64            *m_Phillips;
 	b3_vector              *m_Normals;
 	b3_bool                 m_Modified;

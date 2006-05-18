@@ -74,31 +74,51 @@ public:
 	}
 };
 
+#define __rand_C 16807
+#define __rand_A 2147483647.0
+
 template<class T> class B3_PLUGIN b3Rand48 : public b3Random<T>
 {
+	b3_f64 m_Seed;
+
 public:
 	inline b3Rand48<T>(const int seed = B3_RANDOM_DEFAULT_SEED) : b3Random<T>()
 	{
 		unsigned short conv = seed & 0xffff;
 
-		seed48(&conv);
+		b3Seed48(&conv);
 	}
 
 	inline void b3SetSeed(const int seed = B3_RANDOM_DEFAULT_SEED)
 	{
 		unsigned short conv = seed & 0xffff;
 
-		seed48(&conv);
+		b3Seed48(&conv);
 	}
 
 	inline virtual T b3Rand()
 	{
-		return static_cast<T>(drand48());
+		return static_cast<T>(b3DRand48());
 	}
 
 	inline virtual T b3Rand(const T mult)
 	{
-		return static_cast<T>(drand48() * mult);
+		return static_cast<T>(b3DRand48() * mult);
+	}
+
+private:
+	inline b3_f64 b3DRand48()
+	{
+        b3_u32 ki;
+
+		ki     = static_cast<b3_u32>((__rand_C * m_Seed) / __rand_A);
+		m_Seed = __rand_C * m_Seed - ki * __rand_A;
+		return m_Seed/(__rand_A-1);
+	}
+
+	inline void b3Seed48(unsigned short *seed)
+	{
+		m_Seed = *seed;
 	}
 };
 

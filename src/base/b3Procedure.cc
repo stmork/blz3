@@ -26,6 +26,7 @@
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3Random.h"
 #include "blz3/base/b3Spline.h"
 
 #define USE_MORK_NOISE
@@ -38,13 +39,16 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2006/05/18 18:08:45  sm
+**	- DRand48 implementation for all platforms.
+**
 **	Revision 1.69  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.68  2006/04/18 20:38:25  sm
 **	- Optimized compilation
 **	
@@ -399,6 +403,9 @@ b3_f64        b3Noise::epsilon      = FLT_EPSILON;
 
 b3Noise::b3Noise () throw(b3NoiseException)
 {
+	b3Rand48<b3_noisetype> random_noise;
+	b3Rand48<b3_f64>       random_wave;
+
 	if (m_NoiseTable == null)
 	{
 		b3_count i,max = NOISEDIM * NOISESIZE;
@@ -411,7 +418,7 @@ b3Noise::b3Noise () throw(b3NoiseException)
 
 		for (i = 0;i < max;i++)
 		{
-			m_NoiseTable[i] = (b3_noisetype)B3_IRAN(MAXVAL) / MAXVAL;
+			m_NoiseTable[i] = random_noise.b3Rand();
 		}
 
 		// init marble spline
@@ -443,7 +450,7 @@ b3Noise::b3Noise () throw(b3NoiseException)
 		{
 			m_WaveControls[i].x = cos(M_PI * 2.0 * i / m_WaveSpline.m_ControlMax);
 			m_WaveControls[i].y = sin(M_PI * 2.0 * i / m_WaveSpline.m_ControlMax);
-			m_WaveControls[i].z = B3_FRAN(M_PI * 2.0) - M_PI;
+			m_WaveControls[i].z = random_wave.b3Rand(M_PI * 2.0) - M_PI;
 		}
 	}
 }
