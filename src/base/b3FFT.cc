@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/05/18 19:07:40  sm
+**	- DRand48 implementation for all platforms.
+**
 **	Revision 1.14  2006/05/17 21:35:37  sm
 **	- Minor optimizations.
-**
+**	
 **	Revision 1.13  2006/05/14 18:05:09  sm
 **	- Added return value
 **	
@@ -585,7 +588,7 @@ b3_bool b3Fourier::b3SelfTest()
     b3_f64   err = 0, e, divisor;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest()\n");
-	random.b3SetSeed(0);
+	random.b3SetSeed();
 	for (y = 0; y < m_ySize; y++)
 	{
         for (x = 0; x < m_xSize; x++)
@@ -603,7 +606,7 @@ b3_bool b3Fourier::b3SelfTest()
 		return false;
 	}
 
-	random.b3SetSeed(0);
+	random.b3SetSeed();
 	divisor = m_xSize * m_ySize * 0.5;
     for (y = 0; y < m_ySize; y++)
 	{

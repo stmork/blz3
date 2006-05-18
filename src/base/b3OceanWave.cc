@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2006/05/18 19:07:40  sm
+**	- DRand48 implementation for all platforms.
+**
 **	Revision 1.25  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
-**
+**	
 **	Revision 1.24  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -209,7 +212,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
-	m_Random.b3SetSeed(0);
+	m_Random.b3SetSeed(0xcafe);
 
 	b3PrintF(B3LOG_DEBUG, "     T   = %1.3f\n", m_T);
 	b3PrintF(B3LOG_DEBUG, "     t   = %1.3f\n", m_t);

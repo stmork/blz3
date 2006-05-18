@@ -113,11 +113,12 @@ private:
 
 		ki     = static_cast<b3_u32>((__rand_C * m_Seed) / __rand_A);
 		m_Seed = __rand_C * m_Seed - ki * __rand_A;
-		return m_Seed/(__rand_A-1);
+		return m_Seed / (__rand_A - 1);
 	}
 
 	inline void b3Seed48(unsigned short *seed)
 	{
+		B3_ASSERT(*seed != 0);
 		m_Seed = *seed;
 	}
 };
