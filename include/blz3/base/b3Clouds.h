@@ -35,6 +35,7 @@ public:
 	b3_u32    m_Flags;       //!< Some flags.
 	b3_f32    m_EarthRadius; //!< The plant radius to use.
 	b3_f32    m_CloudHeight; //!< The height of the clouds.
+	b3_f32    m_Seeing;      //!< Fog
 	b3_f32    m_Scaling;     //!< Scaling.
 	b3_f32    m_Sharpness;   //!< The sharpness of the cloud border.
 

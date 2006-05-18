@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/18 10:53:15  sm
+**	- Some cloud experiments.
+**
 **	Revision 1.1  2006/04/18 15:48:59  sm
 **	- Extracted from procedure module:
 **	  o clouds
 **	  o ocean waves
 **	  o water
-**
+**	
 **
 */
 
@@ -57,6 +60,7 @@ b3Clouds::b3Clouds()
 	b3Vector::b3Init(&m_PosScale,0.01f, 0.01f, 0.01f);
 	m_EarthRadius = EARTH_RADIUS_KM;
 	m_CloudHeight =   1.0f;
+	m_Seeing      =   7.5;
 	m_Scaling     =   5.0f;
 	m_Sharpness   =  10.2f;
 	m_Flags       =   0;
@@ -83,6 +87,7 @@ b3_f64 b3Clouds::b3ComputeClouds(
 	{
 		b3_vector Dir;
 		b3_f64    p,D,len;
+		b3_f64    fog;
 		b3_f32    t;
 
 		p     = ray->dir.z * -m_EarthRadius;
@@ -99,6 +104,7 @@ b3_f64 b3Clouds::b3ComputeClouds(
 		{
 			r = 0;
 		}
+		fog   = exp(-len * log(2.0) / m_Seeing);
 		sight = ray->dir.z;
 	}
 	else
