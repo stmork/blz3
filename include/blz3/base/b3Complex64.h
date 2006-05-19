@@ -21,7 +21,9 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Complex.h"
 
-#if defined(BLZ3_USE_SSE2) && !defined(WIN32)
+#if defined(BLZ3_USE_SSE2) && !defined(WIN32) && (__GNUC__ < 4)
+
+#include <stdexcept>
 
 class B3_PLUGIN b3Complex64
 {
@@ -30,6 +32,11 @@ class B3_PLUGIN b3Complex64
 #else
 	b3_f64 B3_ALIGN_16 v[2];
 #endif
+
+	inline b3Complex64(const __m128d in)
+	{
+		SSE_PD_STORE(v, in);
+	}
 
 public:
 	inline b3Complex64()
@@ -41,9 +48,9 @@ public:
 		SSE_PD_STORE(v, _mm_set_sd(re));
 	}
 
-	inline void operator=(const b3_f64 a)
+	inline void operator=(const b3_f64 re)
 	{
-		SSE_PD_STORE(v, _mm_set_sd(a));
+		SSE_PD_STORE(v, _mm_set_sd(re));
 	}
 
 	inline b3Complex64(const b3_f64 re, const b3_f64 im)
@@ -111,10 +118,18 @@ public:
 			SSE_PD_LOAD(sum.v)));
 	}
 
-	inline b3Complex64 operator*(const b3Complex64 &mul)
+	inline __m128d product(const b3Complex64 &mul)
 	{
-		b3Complex64 result;
+#if 1
+		b3_f64 B3_ALIGN_16 a[2];
+		b3_f64 B3_ALIGN_16 b[2];
 
+		_mm_store_pd(a, SSE_PD_LOAD(v));
+		_mm_store_pd(b, SSE_PD_LOAD(mul.v));
+		return _mm_setr_pd(
+			a[0] * b[0] - a[1] * b[1],
+			a[0] * b[1] + a[1] * b[0]);
+#else
 		__m128d b = SSE_PD_LOAD(mul.v);
 		__m128d a = SSE_PD_LOAD(v);
 
@@ -127,33 +142,25 @@ public:
 			_mm_unpackhi_pd(b,b));
 
 #ifdef BLZ3_USE_SSE3
-		SSE_PD_STORE(result.v, _mm_addsub_pd(p1, p2));
+		return _mm_addsub_pd(p1, p2);
 #else
-		SSE_PD_STORE(result.v, _mm_add_pd(p1, _mm_mul_pd(p2, _mm_setr_pd(-1,1))));
+		return _mm_add_pd(p1, _mm_mul_pd(p2, _mm_setr_pd(-1,1)));
 #endif
+#endif
+	}
+
+	inline b3Complex64 operator*(const b3Complex64 &mul)
+	{
+		b3Complex64 result;
+
+		SSE_PD_STORE(result.v, product(mul));
+
 		return result;
 	}
 
 	inline void operator*=(const b3Complex64 &mul)
 	{
-		__m128d b = SSE_PD_LOAD(mul.v);
-		__m128d a = SSE_PD_LOAD(v);
-
-		__m128d p1 = _mm_mul_pd(
-			a,
-			_mm_unpacklo_pd(b,b));
-
-		__m128d p2 = _mm_mul_pd(
-			_mm_shuffle_pd(a, a, _MM_SHUFFLE2(0,1)),
-			_mm_unpackhi_pd(b,b));
-
-#ifdef BLZ3_USE_SSE3
-		SSE_PD_STORE(v, _mm_addsub_pd(p1, p2));
-#else
-		SSE_PD_STORE(v, _mm_add_pd(
-			p1,
-			_mm_mul_pd(p2, _mm_setr_pd(-1,1))));
-#endif
+		SSE_PD_STORE(v, product(mul));
 	}
 
 	inline b3Complex64 operator*(const b3_f64 value)
@@ -189,7 +196,7 @@ public:
 
 	inline void operator/=(const b3_f64 value)
 	{
-		__m128d     mul = _mm_set1_pd(1.0 / value);
+		__m128d mul = _mm_set1_pd(1.0 / value);
 
 		SSE_PD_STORE(v, _mm_mul_pd(
 			SSE_PD_LOAD(v),
@@ -198,7 +205,7 @@ public:
 
 	inline b3_f64 b3SquareLength()
 	{
-		b3_f64  B3_ALIGN_16 comp[2];
+		b3_f64 B3_ALIGN_16 comp[2];
 
 		__m128d mul = SSE_PD_LOAD(v);
 
@@ -233,11 +240,16 @@ public:
 	}
 
 	inline static b3Complex64 b3Sqrt(const b3Complex64 &a)
+		throw(std::domain_error)
 	{
-		b3Complex64 result;
-
-		SSE_PD_STORE(result.v, _mm_sqrt_pd(SSE_PD_LOAD(a.v)));
-		return result;
+		_MM_SET_EXCEPTION_STATE(0);
+		__m128d s = _mm_sqrt_pd(SSE_PD_LOAD(a.v));
+		if (_mm_getcsr() & _MM_EXCEPT_INVALID)
+		{
+			throw std::domain_error("negative component for sqrt()");
+		}
+		
+		return b3Complex64(s);
 	}
 
 	inline void b3Scale(const b3Complex64 &a)

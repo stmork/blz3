@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/19 15:58:47  smork
+**	- Correct exception handling in complex number computation.
+**
 **	Revision 1.4  2006/05/19 07:02:58  sm
 **	- Corrected FFT unit test.
-**
+**	
 **	Revision 1.3  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
 **	
@@ -76,11 +79,11 @@ void b3FFTTest::testFFT()
 {
 	b3Tx tx;
 
-	CPPUNIT_ASSERT(fft.b3AllocBuffer(200));
-	CPPUNIT_ASSERT(fft.b3SelfTest());
+	CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(200));
+	CPPUNIT_ASSERT_NO_THROW(fft.b3SelfTest());
 
 	tx.b3LoadImage("fft_test.gif");
-	CPPUNIT_ASSERT(fft.b3AllocBuffer(&tx));
+	CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(&tx));
 	CPPUNIT_ASSERT(fft.b3GetBuffer(&tx, 1.0));
 	tx.b3SaveJPEG("fft_orig.jpg");
 
@@ -113,12 +116,12 @@ void b3FFTTest::testFFT()
 
 void b3FFTTest::testSample()
 {
-	CPPUNIT_ASSERT(fft.b3AllocBuffer(dim));
+	CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(dim));
 
-	fft.b3Sample(this, setbuffer);
+	CPPUNIT_ASSERT_NO_THROW(fft.b3Sample(this, setbuffer));
 	CPPUNIT_ASSERT_EQUAL((TEST_RE + TEST_IM) * dim * dim, b3Count());
 	
-	fft.b3Sample(this, clear);
+	CPPUNIT_ASSERT_NO_THROW(fft.b3Sample(this, clear));
 	CPPUNIT_ASSERT_EQUAL(0.0, b3Count());
 }
 
@@ -161,8 +164,8 @@ void b3FFTTest::setbuffer(
 
 void b3FFTTest::testOceanWave()
 {
-	ocean.b3PrepareOceanWave(0);
-	ocean.b3DumpImages();
+	CPPUNIT_ASSERT_NO_THROW(ocean.b3PrepareOceanWave(0));
+	CPPUNIT_ASSERT_NO_THROW(ocean.b3DumpImages());
 }
 
 #endif

@@ -22,6 +22,8 @@
 
 #include "blz3/b3Config.h"
 
+#include <stdexcept>
+
 /**
  * This template class defines generic operations to do
  * complex math. It provides several operators for simple
@@ -396,9 +398,14 @@ public:
 	}
 
 	inline static b3Complex<T> b3Sqrt(const b3Complex<T> &a)
+		throw(std::domain_error)
 	{
 		b3Complex<T> result;
 
+		if ((a.v[0] < 0) || (a.v[1] < 0))
+		{
+			throw std::domain_error("negative component for sqrt()");
+		}
 		for (b3_loop i = 0;i < 2;i++)
 		{
 			result.v[i] = sqrt(a.v[i]);

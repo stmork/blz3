@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/19 15:58:47  smork
+**	- Correct exception handling in complex number computation.
+**
 **	Revision 1.4  2006/05/15 12:30:36  smork
 **	- Templating syntax error fixed.
 **	- Searching for some test case problems.
-**
+**	
 **	Revision 1.3  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
 **	
@@ -87,7 +90,7 @@ void b3ColorTest::tearDown()
 void b3ColorTest::test()
 {
 //	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
-#ifdef BLZ3_USE_SSE
+#if defined(BLZ3_USE_SSE) && defined(SSE_ALIGNED)
 	b3_f32 *fPtr = &color[b3Color::A];
 	b3_ptr  offset = reinterpret_cast<b3_ptr>(fPtr) & 0xf;
 

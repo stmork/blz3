@@ -62,6 +62,7 @@ public:
 
 		err = RANDOM_MAX * RANDOM_SPACE * 0.5 / count;
 
+		b3PrintF(B3LOG_FULL, "### CLASS: b3Rand # Error: %f  count: %d\n", err, count);
 		CPPUNIT_ASSERT(err < RANDOM_ERROR);
 		CPPUNIT_ASSERT(err > (1.0 / RANDOM_ERROR));
 	}

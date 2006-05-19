@@ -38,9 +38,12 @@ using namespace std;
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/19 15:58:47  smork
+**	- Correct exception handling in complex number computation.
+**
 **	Revision 1.4  2006/05/19 07:02:58  sm
 **	- Corrected FFT unit test.
-**
+**	
 **	Revision 1.3  2006/05/18 10:06:42  sm
 **	- Some SSE tests.
 **	
@@ -78,6 +81,10 @@ int main(int argc, char *argv[])
 
 #ifdef BLZ3_USE_SSE3
 	b3PrintF(B3LOG_NORMAL, "Using SSE3 intrinsics.\n");
+#endif
+
+#ifdef SSE_ALIGNED
+	b3PrintF(B3LOG_NORMAL,"Memory alignment SSE compatible.\n");
 #endif
 
 #ifdef B3_SSE
