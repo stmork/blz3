@@ -38,9 +38,12 @@ using namespace std;
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/19 07:02:58  sm
+**	- Corrected FFT unit test.
+**
 **	Revision 1.3  2006/05/18 10:06:42  sm
 **	- Some SSE tests.
-**
+**	
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
 **	
@@ -93,6 +96,24 @@ int main(int argc, char *argv[])
 	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
 
 	b3Log::b3SetLevel(B3LOG_NONE);
+	if ((argc >= 2) && (argv[1][0] == '-'))
+	{
+		switch(argv[1][1])
+		{
+		case 'f':
+			b3Log::b3SetLevel(B3LOG_FULL);
+			break;
+		case 'd':
+			b3Log::b3SetLevel(B3LOG_DEBUG);
+			break;
+		case 'n':
+			b3Log::b3SetLevel(B3LOG_NONE);
+			break;
+		default:
+			b3Log::b3SetLevel(B3LOG_NONE);
+			break;
+		}
+	}
 	runner.addTest( registry.makeTest());
 	
 	return runner.run ("", false) ? EXIT_SUCCESS : EXIT_FAILURE;

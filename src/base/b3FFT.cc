@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/05/19 07:02:58  sm
+**	- Corrected FFT unit test.
+**
 **	Revision 1.15  2006/05/18 19:07:40  sm
 **	- DRand48 implementation for all platforms.
-**
+**	
 **	Revision 1.14  2006/05/17 21:35:37  sm
 **	- Minor optimizations.
 **	
@@ -427,7 +430,6 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 		info[i].m_xDim  = m_xDim;
 		info[i].m_yDim  = m_yDim;
 		info[i].m_Dir   = dir;
-		threads[i].b3Name("b3FFT - FFT computation");
 	}	
 
 	if (m_CPUs > 1)
@@ -438,6 +440,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 			info[i].m_xMax = m_xSize;
 			info[i].m_yMin = m_ySize *  i      / m_CPUs;
 			info[i].m_yMax = m_ySize * (i + 1) / m_CPUs;
+			threads[i].b3Name("b3FFT - row computation");
 			threads[i].b3Start(b3RowFFT, &info[i]);
 		}
 
@@ -452,6 +455,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 			info[i].m_xMax = m_xSize * ( i + 1) / m_CPUs;
 			info[i].m_yMin = 0;
 			info[i].m_yMax = m_ySize;
+			threads[i].b3Name("b3FFT - column computation");
 			threads[i].b3Start(b3ColumnFFT, &info[i]);
 		}
 
@@ -583,11 +587,12 @@ b3_bool b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 
 b3_bool b3Fourier::b3SelfTest()
 {
-	b3PseudoRandom<b3_f64> random;
-    b3_loop  x, y;
-    b3_f64   err = 0, e, divisor;
+	b3Rand48<b3_f64> random;
+    b3_loop          x, y;
+    b3_f64           err = 0, e, divisor;
 
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest()\n");
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest() %dx%d\n", m_xSize, m_ySize);
+
 	random.b3SetSeed();
 	for (y = 0; y < m_ySize; y++)
 	{
@@ -612,11 +617,11 @@ b3_bool b3Fourier::b3SelfTest()
 	{
         for (x = 0; x < m_xSize; x++)
 		{
-            e   = random.b3Rand() - m_Lines[y][x].b3Real();
+            e   = fabs(random.b3Rand() - m_Lines[y][x].b3Real());
             err = B3_MAX(err, fabs(e));
         }
     }
-	b3PrintF(B3LOG_NORMAL,"### CLASS: b3Four # error %g\n",err);
+	b3PrintF(B3LOG_NORMAL,"### CLASS: b3Four # error diff %g\n",err);
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3SelfTest()\n");
 	return err < 0.001;
 }

@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2006/05/19 07:02:58  sm
+**	- Corrected FFT unit test.
+**
 **	Revision 1.26  2006/05/18 19:07:40  sm
 **	- DRand48 implementation for all platforms.
-**
+**	
 **	Revision 1.25  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
 **	
@@ -453,17 +456,9 @@ void b3OceanWave::b3DumpImages()
 
 	m_FFT.b3FFT2D();
 	m_FFT.b3GetSpectrum(&tx, 1);
-#ifdef WIN32
-	tx.b3SaveJPEG("c:/temp/spectrum.jpg");
-#else
-	tx.b3SaveJPEG("/tmp/spectrum.jpg");
-#endif
+	tx.b3SaveJPEG("ow_spectrum.jpg");
  	m_FFT.b3IFFT2D();
 
 	m_FFT.b3GetBuffer(&tx, 0.001);
-#ifdef WIN32
-	tx.b3SaveJPEG("c:/temp/buffer.jpg");
-#else
-	tx.b3SaveJPEG("/tmp/buffer.jpg");
-#endif
+	tx.b3SaveJPEG("ow_buffer.jpg");
 }

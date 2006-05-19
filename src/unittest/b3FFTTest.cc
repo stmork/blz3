@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/19 07:02:58  sm
+**	- Corrected FFT unit test.
+**
 **	Revision 1.3  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
-**
+**	
 **	Revision 1.2  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
 **	
@@ -73,6 +76,7 @@ void b3FFTTest::testFFT()
 {
 	b3Tx tx;
 
+	CPPUNIT_ASSERT(fft.b3AllocBuffer(200));
 	CPPUNIT_ASSERT(fft.b3SelfTest());
 
 	tx.b3LoadImage("fft_test.gif");
