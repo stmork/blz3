@@ -22,7 +22,6 @@
 #include "blz3/base/b3Complex.h"
 
 #if defined(BLZ3_USE_SSE2) && !defined(WIN32)
-// && (__GNUC__ < 4)
 
 #include <stdexcept>
 
@@ -46,17 +45,28 @@ public:
 
 	inline b3Complex64(const b3_f64 re)
 	{
-		SSE_PD_STORE(v, _mm_set_sd(re));
+#ifdef SSE_ALIGNED
+		v = _mm_set_sd(re);
+#else
+		v[0] = re;
+		v[1] = 0;
+#endif
 	}
 
 	inline void operator=(const b3_f64 re)
 	{
-		SSE_PD_STORE(v, _mm_set_sd(re));
+#ifdef SSE_ALIGNED
+		v = _mm_set_sd(re);
+#else
+		v[0] = re;
+		v[1] = 0;
+#endif
 	}
 
 	inline b3Complex64(const b3_f64 re, const b3_f64 im)
 	{
-		SSE_PD_STORE(v, _mm_setr_pd(re, im));
+		b3Real() = re;
+		b3Imag() = im;
 	}
 
 	inline b3Complex64(const b3Complex64 &orig)
@@ -85,9 +95,8 @@ public:
 
 	inline void operator=(b3Complex<b3_f64> &a)
 	{
-		SSE_PD_STORE(v, _mm_setr_pd(
-			a.b3Real(),
-			a.b3Imag()));
+		b3Real() = a.b3Real();
+		b3Imag() = a.b3Imag();
 	}
 
 	inline bool operator==(const b3Complex64 &a)
