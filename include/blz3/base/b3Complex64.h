@@ -21,7 +21,8 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Complex.h"
 
-#if defined(BLZ3_USE_SSE2) && !defined(WIN32) && (__GNUC__ < 4)
+#if defined(BLZ3_USE_SSE2) && !defined(WIN32)
+// && (__GNUC__ < 4)
 
 #include <stdexcept>
 
@@ -60,12 +61,12 @@ public:
 
 	inline b3Complex64(const b3Complex64 &orig)
 	{
-		SSE_PD_STORE(v, SSE_PD_LOAD(orig.v));
+		v = orig.v;
 	}
 
 	inline void operator=(const b3Complex64 &a)
 	{
-		SSE_PD_STORE(v, SSE_PD_LOAD(a.v));
+		v = a.v;
 	}
 
 	inline void operator=(b3Complex<b3_f64> &a)
@@ -261,9 +262,10 @@ public:
 
 	inline static void b3Swap(b3Complex64 &a, b3Complex64 &b)
 	{
-		__m128d ma = SSE_PD_LOAD(a.v);
-		SSE_PD_STORE(a.v, SSE_PD_LOAD(b.v));
-		SSE_PD_STORE(b.v, ma);
+		b3Complex64 aux = a;
+		
+		a = b;
+		b = aux;
 	}
 };
 
