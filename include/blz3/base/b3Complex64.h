@@ -61,12 +61,26 @@ public:
 
 	inline b3Complex64(const b3Complex64 &orig)
 	{
+#ifdef SSE_ALIGNED
 		v = orig.v;
+#else
+		for (int i = 0;i < 2;i++)
+		{
+			v[i] = orig.v[i];
+		}
+#endif
 	}
 
-	inline void operator=(const b3Complex64 &a)
+	inline void operator=(const b3Complex64 &orig)
 	{
-		v = a.v;
+#ifdef SSE_ALIGNED
+		v = orig.v;
+#else
+		for (int i = 0;i < 2;i++)
+		{
+			v[i] = orig.v[i];
+		}
+#endif
 	}
 
 	inline void operator=(b3Complex<b3_f64> &a)
