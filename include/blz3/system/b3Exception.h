@@ -32,7 +32,7 @@ typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 /**
  * This exception class is a base class for al Blizzard III exceptions.
  */
-class B3_PLUGIN b3ExceptionBase : public exception
+class B3_PLUGIN b3ExceptionBase : public std::exception
 {
 	static char                m_LocalMessageBuffer[512];
 	static b3ExceptionLogger   m_Logger;
