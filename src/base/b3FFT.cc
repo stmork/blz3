@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/05/20 16:32:42  sm
+**	- Some complex number optimizations.
+**
 **	Revision 1.16  2006/05/19 07:02:58  sm
 **	- Corrected FFT unit test.
-**
+**	
 **	Revision 1.15  2006/05/18 19:07:40  sm
 **	- DRand48 implementation for all platforms.
 **	
@@ -388,7 +391,8 @@ b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3Complex64 *line)
 		b3_f64 cr = c.b3Real();
 		b3Complex64 q = one + b3Complex64(cr, -cr);
 
-		c = b3Complex64::b3Sqrt(q * 0.5);
+		q.b3Scale(half);
+		c = b3Complex64::b3Sqrt(q);
 		c.b3Scale(dMult);
 	}
 
@@ -396,7 +400,8 @@ b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3Complex64 *line)
 	if (dir == 1)
 	{
 		b3Complex64 denom(1.0 / nn, 1.0 / nn);
-		for (i=0;i<nn;i++)
+
+		for (i = 0; i < nn; i++)
 		{
 			line[i].b3Scale(denom);
 		}
