@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Complex.h"
 
-#if defined(BLZ3_USE_SSE2) && !defined(WIN32)
+#ifdef BLZ3_USE_SSE2
 
 #include <stdexcept>
 
@@ -144,16 +144,6 @@ public:
 
 	inline __m128d product(const b3Complex64 &mul)
 	{
-#if 1
-		b3_f64 B3_ALIGN_16 a[2];
-		b3_f64 B3_ALIGN_16 b[2];
-
-		_mm_store_pd(a, SSE_PD_LOAD(v));
-		_mm_store_pd(b, SSE_PD_LOAD(mul.v));
-		return _mm_setr_pd(
-			a[0] * b[0] - a[1] * b[1],
-			a[0] * b[1] + a[1] * b[0]);
-#else
 		__m128d b = SSE_PD_LOAD(mul.v);
 		__m128d a = SSE_PD_LOAD(v);
 
@@ -169,7 +159,6 @@ public:
 		return _mm_addsub_pd(p1, p2);
 #else
 		return _mm_add_pd(p1, _mm_mul_pd(p2, _mm_setr_pd(-1,1)));
-#endif
 #endif
 	}
 

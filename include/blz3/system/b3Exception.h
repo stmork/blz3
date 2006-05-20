@@ -19,11 +19,10 @@
 #define B3_SYSTEM_EXCEPTION_H
 
 #include "blz3/b3Config.h"
+#include <stdexcept>
 
 typedef unsigned int b3_errno;
 typedef unsigned int b3_excno;
-
-#define B3_MK_ERRNO(e,t) (((b3_errno)(e) & 0xff) | ((b3_errno)(t) << 8))
 
 class b3ExceptionBase;
 
@@ -33,7 +32,7 @@ typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 /**
  * This exception class is a base class for al Blizzard III exceptions.
  */
-class B3_PLUGIN b3ExceptionBase
+class B3_PLUGIN b3ExceptionBase : public exception
 {
 	static char                m_LocalMessageBuffer[512];
 	static b3ExceptionLogger   m_Logger;
@@ -44,16 +43,20 @@ class B3_PLUGIN b3ExceptionBase
 		   const char         *m_FileName;
 
 protected:
-	                   /**
-	                    * This constructor creates an exception instance.
-	                    *
-	                    * @param ErrNo The error code.
-	                    * @param ExcNo A special unique exception code. This can be used for mapping
-	                    *              into a clear text message.
-	                    * @param lineno The line number in the source code where the exception is thrown.
-	                    * @param filename The filename of the source code where the exception is thrown.
-	                    */
-	                   b3ExceptionBase(const b3_errno ErrNo,const b3_excno ExcNo,const b3_count lineno,const char *filename);
+	/**
+	* This constructor creates an exception instance.
+	*
+	* @param ErrNo The error code.
+	* @param ExcNo A special unique exception code. This can be used for mapping
+	*              into a clear text message.
+	* @param lineno The line number in the source code where the exception is thrown.
+	* @param filename The filename of the source code where the exception is thrown.
+	*/
+	explicit b3ExceptionBase(
+		const b3_errno  ErrNo,
+		const b3_excno  ExcNo,
+		const b3_count  lineno,
+		const char     *filename);
 
 	/**
 	 * This method logs an exception.
@@ -86,7 +89,7 @@ public:
 	 *
 	 * \return The exceptions error message.
 	 */
-	inline const char *b3GetErrorMsg()
+	inline const char *b3GetErrorMsg() const
 	{
 		return m_GetMessage(m_ErrorCode);
 	}
@@ -104,7 +107,14 @@ public:
 	 * \param converter The Message converter.
 	 */
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
+
+	const char *what() const throw()
+	{
+		return b3GetErrorMsg();
+	}
 };
+
+#define B3_MK_ERRNO(e,t) (((e) & 0xff) | ((t) << 8))
 
 /**
  * This template class is the main exception class.
@@ -119,14 +129,18 @@ public:
 	 * \param *FileName The modules' file name.
 	 * \param LineNo The line number in the module.
 	 */
-	b3Exception(
+	explicit b3Exception(
 		const T     error,
 		const char *FileName,
-		const int   LineNo) : b3ExceptionBase(B3_MK_ERRNO(error,C),C,LineNo,FileName)
+		const int   LineNo) : b3ExceptionBase(
+			B3_MK_ERRNO(error,C),
+			C,
+			LineNo,
+			FileName)
 	{
 	}
 };
 
-#define B3_THROW(e,no) throw e(no,__FILE__,__LINE__);
+#define B3_THROW(e,no) throw e(no,__FILE__,__LINE__)
 
 #endif
