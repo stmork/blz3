@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/05/21 12:31:03  sm
+**	- Optimized cache access for FFT.
+**
 **	Revision 1.5  2006/05/19 15:58:47  smork
 **	- Correct exception handling in complex number computation.
-**
+**	
 **	Revision 1.4  2006/05/19 07:02:58  sm
 **	- Corrected FFT unit test.
 **	
@@ -79,8 +82,11 @@ void b3FFTTest::testFFT()
 {
 	b3Tx tx;
 
-	CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(200));
-	CPPUNIT_ASSERT_NO_THROW(fft.b3SelfTest());
+	for (b3_loop size = 1; size <= 2048; size += size)
+	{
+		CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(size));
+		CPPUNIT_ASSERT_NO_THROW(fft.b3SelfTest());
+	}
 
 	tx.b3LoadImage("fft_test.gif");
 	CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(&tx));

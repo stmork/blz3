@@ -58,7 +58,7 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 {
 	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
 	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
-	b3_count               m_Size;
+//	b3_count               m_Size;
 
 	b3Complex64           *m_Buffer;
 	b3Complex64          **m_Lines;

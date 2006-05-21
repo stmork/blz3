@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3BaseInclude.h"
+#include "blz3/system/b3TimeStop.h"
 #include "blz3/base/b3FFT.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Math.h"
@@ -35,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/05/21 12:31:03  sm
+**	- Optimized cache access for FFT.
+**
 **	Revision 1.17  2006/05/20 16:32:42  sm
 **	- Some complex number optimizations.
-**
+**	
 **	Revision 1.16  2006/05/19 07:02:58  sm
 **	- Corrected FFT unit test.
 **	
@@ -123,7 +127,6 @@ b3Fourier::b3Fourier()
 	m_yStart = 0;
 	m_xDim   =
 	m_yDim   = 0;
-	m_Size   = 0;
 
 	m_Buffer = null;
 	m_Lines  = null;
@@ -183,7 +186,6 @@ void b3Fourier::b3FreeBuffer()
 		delete [] m_Aux;
 		m_Aux = null;
 	}
-	m_Size = 0;
 }
 
 b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
@@ -262,13 +264,12 @@ b3_bool b3Fourier::b3ReallocBuffer()
 {
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3ReallocBuffer()\n");
 
-	m_Size   = B3_MAX(m_xSize, m_ySize);
 	m_xDim   = b3Log2(m_xSize);
 	m_yDim   = b3Log2(m_ySize);
 
 	m_Buffer = new b3Complex64[m_xSize * m_ySize];
 	m_Lines  = new b3Complex64 *[m_ySize];
-	m_Aux    = new b3Complex64[m_Size * m_CPUs];
+	m_Aux    = new b3Complex64[m_ySize * m_CPUs];
 
 	if ((m_Buffer == null) || (m_Lines == null) || (m_Aux == null))
 	{
@@ -422,6 +423,8 @@ b3_bool b3Fourier::b3FFT(int dir,b3_res m,b3Complex64 *line)
  */
 b3_bool b3Fourier::b3FFT2D(int dir)
 {
+	b3TimeStop stop("2D FFT");
+
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3FFT2D(<%s>);\n", dir == 1 ? "forward" : "inverse");
 
 	b3Thread    threads[B3_FFT_MAX_THREADS];
@@ -431,7 +434,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 	for(i = 0;i < m_CPUs;i++)
 	{
 		info[i].m_Lines = m_Lines;
-		info[i].m_Aux   = &m_Aux[m_Size * i];
+		info[i].m_Aux   = &m_Aux[m_ySize * i];
 		info[i].m_xDim  = m_xDim;
 		info[i].m_yDim  = m_yDim;
 		info[i].m_Dir   = dir;
@@ -453,6 +456,8 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 		{
 			threads[i].b3Wait();
 		}
+
+		stop.b3TimePos();
 
 		for(i = 0;i < m_CPUs;i++)
 		{
@@ -492,17 +497,7 @@ b3_u32 b3Fourier::b3RowFFT(void *ptr)
 	/* Transform the rows */
 	for (j = info->m_yMin; j < info->m_yMax; j++)
 	{
-		for (i = info->m_xMin; i < info->m_xMax; i++)
-		{
-			aux[i] = lines[j][i];
-		}
-
-		b3FFT(info->m_Dir, info->m_xDim, aux);
-
-		for (i = info->m_xMin; i < info->m_xMax; i++)
-		{
-			lines[j][i] = aux[i];
-		}
+		b3FFT(info->m_Dir, info->m_xDim, lines[j]);
 	}
 	return 0;
 }
@@ -519,6 +514,9 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 	{
 		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
+#ifdef BLZ3_USE_SSE2
+			_mm_prefetch(&lines[j+2][i], _MM_HINT_NTA);
+#endif
 			aux[j] = lines[j][i];
 		}
 
@@ -526,7 +524,11 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 
 		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
+#ifdef BLZ3_USE_SSE2
+			b3Complex64::b3CopyUncached(lines[j][i], aux[j]);
+#else
 			lines[j][i] = aux[j];
+#endif
 		}
 	}
 	return 0;

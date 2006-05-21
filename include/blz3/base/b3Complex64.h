@@ -93,6 +93,18 @@ public:
 #endif
 	}
 
+	inline static void b3CopyUncached(b3Complex64 &dst, const b3Complex64 &src)
+	{
+#ifdef SSE_ALIGNED
+		_mm_stream_pd(&dst.b3Real(), src.v);
+#else
+		for (int i = 0;i < 2;i++)
+		{
+			dst.v[i] = src.v[i];
+		}
+#endif
+	}
+
 	inline void operator=(b3Complex<b3_f64> &a)
 	{
 		b3Real() = a.b3Real();
