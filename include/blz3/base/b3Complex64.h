@@ -98,10 +98,13 @@ public:
 #ifdef SSE_ALIGNED
 		_mm_stream_pd(&dst.b3Real(), src.v);
 #else
-		for (int i = 0;i < 2;i++)
-		{
-			dst.v[i] = src.v[i];
-		}
+		const int *srcPtr = reinterpret_cast<const int *>(&src.v);
+		      int *dstPtr = reinterpret_cast<int *>(&dst.v);
+
+		_mm_stream_si32(dstPtr++, *srcPtr++);
+		_mm_stream_si32(dstPtr++, *srcPtr++);
+		_mm_stream_si32(dstPtr++, *srcPtr++);
+		_mm_stream_si32(dstPtr++, *srcPtr++);
 #endif
 	}
 

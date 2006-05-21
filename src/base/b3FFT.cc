@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2006/05/21 20:32:15  sm
+**	- Some prefetching issues.
+**
 **	Revision 1.18  2006/05/21 12:31:03  sm
 **	- Optimized cache access for FFT.
-**
+**	
 **	Revision 1.17  2006/05/20 16:32:42  sm
 **	- Some complex number optimizations.
 **	
@@ -492,7 +495,7 @@ b3_u32 b3Fourier::b3RowFFT(void *ptr)
 	b3_fft_info  *info  = static_cast<b3_fft_info *>(ptr);
 	b3Complex64 **lines = info->m_Lines;
 	b3Complex64  *aux   = info->m_Aux;
-	b3_loop       i,j;
+	b3_loop       j;
 
 	/* Transform the rows */
 	for (j = info->m_yMin; j < info->m_yMax; j++)
@@ -514,8 +517,8 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 	{
 		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
-#ifdef BLZ3_USE_SSE2
-			_mm_prefetch(&lines[j+2][i], _MM_HINT_NTA);
+#ifdef BLZ3_USE_SSE
+			_mm_prefetch(reinterpret_cast<const char *>(&lines[j+2][i]), _MM_HINT_NTA);
 #endif
 			aux[j] = lines[j][i];
 		}
@@ -531,6 +534,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 #endif
 		}
 	}
+
 	return 0;
 }
 
