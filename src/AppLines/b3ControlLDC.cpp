@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/05/22 20:42:37  sm
+**	- Added ocean wave control.
+**
 **	Revision 1.12  2006/03/27 11:22:35  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.11  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -365,12 +368,12 @@ void CB3ControlLDC::OnMouseMove(UINT nFlags, CPoint point)
 		b3Update();
 		if (parent != null)
 		{
-		NMHDR nmhdr;
+			NMHDR nmhdr;
 
-		nmhdr.hwndFrom = m_hWnd;
-		nmhdr.idFrom   = GetDlgCtrlID();
-		nmhdr.code     = WM_MOUSEMOVE;
-		parent->SendMessage(WM_NOTIFY,nmhdr.idFrom,(LPARAM)&nmhdr);
+			nmhdr.hwndFrom = m_hWnd;
+			nmhdr.idFrom   = GetDlgCtrlID();
+			nmhdr.code     = WM_MOUSEMOVE;
+			parent->SendMessage(WM_NOTIFY,nmhdr.idFrom,(LPARAM)&nmhdr);
 
 //			parent->PostMessage(WM_B3_LDC_MOVED);
 		}
@@ -388,12 +391,12 @@ void CB3ControlLDC::OnLButtonUp(UINT nFlags, CPoint point)
 		::ReleaseCapture();
 		if (parent != null)
 		{
-		NMHDR nmhdr;
+			NMHDR nmhdr;
 
-		nmhdr.hwndFrom = m_hWnd;
-		nmhdr.idFrom   = GetDlgCtrlID();
-		nmhdr.code     = WM_LBUTTONUP;
-		parent->SendMessage(WM_NOTIFY,nmhdr.idFrom,(LPARAM)&nmhdr);
+			nmhdr.hwndFrom = m_hWnd;
+			nmhdr.idFrom   = GetDlgCtrlID();
+			nmhdr.code     = WM_LBUTTONUP;
+			parent->SendMessage(WM_NOTIFY,nmhdr.idFrom,(LPARAM)&nmhdr);
 
 //			parent->PostMessage(WM_B3_LDC_CHANGED);
 		}

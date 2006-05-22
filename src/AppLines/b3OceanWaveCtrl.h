@@ -29,7 +29,6 @@ class CB3OceanWaveCtrl :
 	b3_bool      m_MouseCapture;
 	CRect        m_Rect;
 	CPoint       m_MidPoint;
-	CPoint       m_EndPoint;
 	CPoint       m_LastPoint;
 
 public:

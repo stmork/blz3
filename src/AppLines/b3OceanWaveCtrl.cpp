@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/22 20:42:37  sm
+**	- Added ocean wave control.
+**
 **	Revision 1.1  2006/05/22 20:15:24  sm
 **	- Added ocean wave control.
-**	
+**		
 **
 */
 
@@ -55,40 +58,35 @@ END_MESSAGE_MAP()
 void CB3OceanWaveCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
-
-	CStatic::OnLButtonDown(nFlags, point);
 	m_MouseCapture = true;
-	m_LastPoint = point;
-	GetCapture();
+	SetCapture();
+	b3UpdateUI(&point);
+	CStatic::OnLButtonDown(nFlags, point);
 }
 
 void CB3OceanWaveCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
-
-	CStatic::OnMouseMove(nFlags, point);
 	if ((m_MouseCapture) && (m_LastPoint != point))
 	{
-		GetParent()->UpdateData(FALSE);
 		b3UpdateUI(&point);
 	}
+	CStatic::OnMouseMove(nFlags, point);
 }
 
 void CB3OceanWaveCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
-
-	CStatic::OnLButtonUp(nFlags, point);
 	if (m_MouseCapture)
 	{
 		if (m_LastPoint != point)
 		{
-			GetParent()->UpdateData(FALSE);
 			b3UpdateUI(&point);
 		}
 		::ReleaseCapture();
 		m_MouseCapture = false;
 	}
+	CStatic::OnLButtonUp(nFlags, point);
 }
 
 
@@ -121,7 +119,7 @@ void CB3OceanWaveCtrl::OnPaint()
 
 		oldPen = dc.SelectObject(&pen);
 		dc.MoveTo(m_MidPoint);
-		dc.LineTo(m_EndPoint);
+		dc.LineTo(m_LastPoint);
 		dc.SelectObject(oldPen);
 	}
 	else
@@ -136,15 +134,13 @@ void CB3OceanWaveCtrl::b3UpdateUI(CPoint *point)
 	{
 		CPoint diff;
 
-		m_LastPoint = *point;
 		diff        = *point - m_MidPoint;
 		m_Ocean->m_Wx =  b3_f64(diff.x) / m_Factor;
 		m_Ocean->m_Wy = -b3_f64(diff.y) / m_Factor;
+//		m_Ocean->b3PrepareOceanWave(0.0); // Animate later
+		m_LastPoint = *point;
+		GetParent()->UpdateData(FALSE);
 	}
-	m_EndPoint = m_MidPoint + CPoint(
-		 m_Ocean->m_Wx * m_Factor,
-		-m_Ocean->m_Wy * m_Factor);
-//	m_Ocean->b3PrepareOceanWave(0.0); // Animate later
 	InvalidateRect(NULL);
 }
 
@@ -153,7 +149,10 @@ void CB3OceanWaveCtrl::b3SetOcean(b3OceanWave *ocean)
 	CRect rect;
 
 	GetClientRect(&m_Rect);
-	m_MidPoint = CPoint(m_Rect.Width() >> 1, m_Rect.Height() >> 1);
-	m_Ocean    = ocean;
+	m_MidPoint  = CPoint(m_Rect.Width() >> 1, m_Rect.Height() >> 1);
+	m_Ocean     = ocean;
+	m_LastPoint = m_MidPoint + CPoint(
+		 m_Ocean->m_Wx * m_Factor,
+		-m_Ocean->m_Wy * m_Factor);
 	b3UpdateUI();
 }
