@@ -737,6 +737,7 @@
 #define IDC_B3OCEANWAVE_WX              32437
 #define IDC_B3OCEANWAVE_WY              32438
 #define IDC_B3OCEANWAVE_L               32439
+#define IDC_OCEANWAVE                   32440
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -972,7 +973,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10128
-#define _APS_NEXT_CONTROL_VALUE         32433
+#define _APS_NEXT_CONTROL_VALUE         32441
 #define _APS_NEXT_SYMED_VALUE           60209
 #endif
 #endif

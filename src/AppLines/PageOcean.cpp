@@ -39,13 +39,16 @@ static char THIS_FILE[] = __FILE__;
 /*
 ** PROTECTED REGION ID(CDlgBumpOceanWave_log) ENABLED START
 **	$Log$
+**	Revision 1.3  2006/05/22 20:15:24  sm
+**	- Added ocean wave control.
+**
 **	Revision 1.2  2006/05/11 15:34:21  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.1  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -115,6 +118,7 @@ void CPageOcean::DoDataExchange(CDataExchange* pDX)
 	m_Dim.b3DDX(pDX, m_Ocean->m_Dim);
 	m_Wx.b3DDX(pDX, m_Ocean->m_Wx);
 	m_Wy.b3DDX(pDX, m_Ocean->m_Wy);
+	DDX_Control(pDX, IDC_OCEANWAVE, m_OceanWaveCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CPageOcean, CB3PropertyPage)
@@ -149,6 +153,7 @@ BOOL CPageOcean::OnInitDialog()
 	m_Wx.b3SetPos(m_Ocean->m_Wx);
 	m_Wy.b3SetPos(m_Ocean->m_Wy);
 	b3UpdateUI();
+	m_OceanWaveCtrl.b3SetOcean(m_Ocean);
 	return TRUE;
 }
 

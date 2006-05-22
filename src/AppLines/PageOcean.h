@@ -27,10 +27,8 @@
 #include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3FloatEdit.h"
-
 #include "blz3/system/b3IntSpinButtonCtrl.h"
-
-#include "blz3/system/b3FloatEdit.h"
+#include "b3OceanWaveCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgAuthor dialog
@@ -51,6 +49,7 @@ public:
 	CB3IntSpinButtonCtrl   m_Dim;
 	CB3FloatEdit           m_Wx;
 	CB3FloatEdit           m_Wy;
+	CB3OceanWaveCtrl       m_OceanWaveCtrl;
 	//}}AFX_DATA
 
 // Overrides

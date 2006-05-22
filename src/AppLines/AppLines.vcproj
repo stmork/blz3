@@ -31,7 +31,7 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
 				StringPooling="FALSE"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
 				RuntimeLibrary="3"
@@ -121,7 +121,7 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
 				StringPooling="TRUE"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -293,7 +293,7 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
 				StringPooling="TRUE"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -379,7 +379,7 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
 				StringPooling="TRUE"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -1698,6 +1698,9 @@
 						PreprocessorDefinitions=""
 						CompileAs="2"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\b3OceanWaveCtrl.cpp">
 			</File>
 			<File
 				RelativePath="b3PickInfoObject.cpp">
@@ -6436,6 +6439,9 @@
 			</File>
 			<File
 				RelativePath="b3LinesDocument.h">
+			</File>
+			<File
+				RelativePath=".\b3OceanWaveCtrl.h">
 			</File>
 			<File
 				RelativePath="b3PickInfoObject.h">
