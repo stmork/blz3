@@ -108,10 +108,7 @@ public:
 	 */
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 
-	const char *what() const throw()
-	{
-		return b3GetErrorMsg();
-	}
+	const char *what() const throw();
 };
 
 #define B3_MK_ERRNO(e,t) (((e) & 0xff) | ((t) << 8))

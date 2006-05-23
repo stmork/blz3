@@ -36,6 +36,10 @@
 
 /*
 **  $Log$
+**  Revision 1.12  2006/05/23 20:25:12  sm
+**  - Some test updates.
+**  - Changed exception handling a little bit.
+**
 **  Revision 1.11  2006/05/01 10:44:46  sm
 **  - Unifying ocean wave values.
 **
@@ -118,15 +122,18 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		pos.z = 0;
 
 		height = b3ComputeOceanWave(&pos);
-		water = b3Math::b3Limit(height * factor + 0.5);
+		water = b3Math::b3Limit(height * factor * 3 + 0.5);
 		n.x = n.y = height;
 #if 1
 		b3ComputeOceanWaveDeriv(&pos, &n);
-//		b3Vector::b3Normalize(&n);
+		b3Vector::b3Normalize(&n);
 #endif
 
 //		return b3Color(water, water, water);
-		return b3Color(water, n.x * factor + 0.5, n.y * factor + 0.5);
+		return b3Color(
+			water,
+			b3Math::b3Limit(water + n.x * m_Amplitude),
+			b3Math::b3Limit(water + n.y * m_Amplitude));
 //	printf("%d %d %f\n",x, y, n.x * factor + 0.5);
 //		return b3Color(n.x * factor + 0.5, n.x * factor + 0.5, n.x * factor + 0.5);
 //		return b3Color(n.y * factor + 0.5, n.y * factor + 0.5, n.y * factor + 0.5);
@@ -136,7 +143,7 @@ public:
 	inline b3OceanWaveSampler(b3Tx *tx) : b3ImageSampler(tx)
 	{
 		m_Factor    = m_GridSize;
-		m_Amplitude = 1;
+		m_Amplitude = 0.2f;
 		m_Dim       = 8;
 	}
 	

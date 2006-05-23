@@ -36,12 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2006/05/23 20:25:12  sm
+**	- Some test updates.
+**	- Changed exception handling a little bit.
+**
 **	Revision 1.20  2006/05/23 20:23:41  sm
 **	- Some view/bitmap cleanups.
 **	- Some more ocean wave ctrl development.
 **	- Some preview property page cleanups.
 **	- Changed data access methods of b3Tx.
-**
+**	
 **	Revision 1.19  2006/05/21 20:32:15  sm
 **	- Some prefetching issues.
 **	
@@ -232,6 +236,10 @@ b3_bool b3Fourier::b3AllocBuffer  (b3Tx *tx)
 	b3_u08       *cPtr;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
+	if (!tx->b3IsLoaded())
+	{
+		B3_THROW(b3FFTException, B3_FFT_SRC_TX_EMPTY);
+	}
 	b3FreeBuffer();
 
 	m_xOrig  = tx->xSize;

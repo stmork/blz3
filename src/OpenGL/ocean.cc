@@ -26,9 +26,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/23 20:25:12  sm
+**	- Some test updates.
+**	- Changed exception handling a little bit.
+**
 **	Revision 1.7  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
-**
+**	
 **	Revision 1.6  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -292,7 +296,6 @@ void RenderScene()
 	}
 	else
 	{
-		printf("Drawing vertex array...\n");
 		glVertexPointer(3, GL_FLOAT, 0, vPtr);
 		glDrawElements(GL_LINES,4 * size * (size - 1) / OW_SKIP,GL_UNSIGNED_INT, iPtr);
 	}

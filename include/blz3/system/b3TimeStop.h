@@ -35,18 +35,18 @@ public:
 		m_Title = title;
 		m_Start = b3Now();
 
-		b3PrintF(m_Level, "TIME START <%s>\n", m_Title);
+		b3PrintF(m_Level, "TIME START <%s>-----\n", m_Title);
 	}
 
 	inline void b3TimePos(const char *text = null)
 	{
-		b3PrintF(m_Level, "TIME CONT <%s> duration %2.3f\n",
+		b3PrintF(m_Level, "TIME CONT  <%s>      duration %2.6f\n",
 			m_Title, b3Now() - m_Start);
 	}
 
 	inline virtual ~b3TimeStop()
 	{
-		b3PrintF(m_Level, "TIME STOP <%s> duration %2.3f\n",
+		b3PrintF(m_Level, "TIME STOP  <%s>----- duration %2.6f\n",
 			m_Title, b3Now() - m_Start);
 	}
 };

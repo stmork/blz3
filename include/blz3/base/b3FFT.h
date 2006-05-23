@@ -27,7 +27,8 @@ enum b3_fft_error
 	B3_FFT_ERROR     = -1,
 	B3_FFT_OK        =  0,
 	B3_FFT_NO_MEMORY,
-	B3_FFT_NO_PALETTE
+	B3_FFT_NO_PALETTE,
+	B3_FFT_SRC_TX_EMPTY
 };
 
 typedef b3Exception<b3_fft_error,0x464654> b3FFTException;

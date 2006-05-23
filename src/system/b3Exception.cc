@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2006/05/23 20:25:12  sm
+**      - Some test updates.
+**      - Changed exception handling a little bit.
+**
 **      Revision 1.8  2006/03/05 21:22:36  sm
 **      - Added precompiled support for faster comiling :-)
 **
@@ -140,11 +144,23 @@ const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 	b = (ErrNo >> 16) & 0xff;
 	c = (ErrNo >>  8) & 0xff;
 
-	snprintf(m_LocalMessageBuffer,sizeof(m_LocalMessageBuffer),"errno: %c%c%c:%02x",
+	snprintf(m_LocalMessageBuffer,sizeof(m_LocalMessageBuffer),
+		"errno: %c%c%c:%02x",
 		isprint(a) ? a : '_',
 		isprint(b) ? b : '_',
 		isprint(c) ? c : '_',
 		ErrNo        & 0xff);
+	return m_LocalMessageBuffer;
+}
+
+const char *b3ExceptionBase::what() const throw()
+{
+	char buffer[128];
+
+	b3GetErrorMsg();
+	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d",m_FileName, m_LineNo);
+	strncat(m_LocalMessageBuffer, buffer, sizeof(m_LocalMessageBuffer));
+
 	return m_LocalMessageBuffer;
 }
 
