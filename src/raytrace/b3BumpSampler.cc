@@ -32,6 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.11  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -44,7 +50,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.10  2006/03/05 21:22:35  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -112,7 +118,7 @@ b3BumpSampler::b3BumpSampler(b3Tx *tx,const b3_count tiles) : m_Tiles(tiles)
 	m_Tx    = tx;
 	m_xMax  = m_Tx->xSize;
 	m_yMax  = m_Tx->ySize;
-	m_Data  = m_Tx->b3GetData();
+	m_Data  = m_Tx->b3GetHdrData();
 }
 	
 void b3BumpSampler::b3SetBump(b3Bump *bump)

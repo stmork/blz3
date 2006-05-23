@@ -21,7 +21,7 @@
 #define B3_SYSTEM_SHOWIMAGE_H
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3View.h"
+#include "blz3/system/b3Bitmap.h"
 #include "blz3/image/b3Tx.h"
 
 class CB3ShowImage : public CStatic

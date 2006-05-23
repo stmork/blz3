@@ -47,6 +47,12 @@
 
 /*
 **      $Log$
+**      Revision 1.120  2006/05/23 20:23:41  sm
+**      - Some view/bitmap cleanups.
+**      - Some more ocean wave ctrl development.
+**      - Some preview property page cleanups.
+**      - Changed data access methods of b3Tx.
+**
 **      Revision 1.119  2006/05/11 15:34:22  sm
 **      - Added unit tests
 **      - Corrected normal computation for ocean waves
@@ -1473,7 +1479,7 @@ void b3RenderObject::b3CopyTexture(
 	scale.b3Scale(input);
 	b3CreateTexture(context,xMax,yMax);
 
-	lPtr = (b3_pkd_color *)scale.b3GetData();
+	lPtr = scale.b3GetTrueColorData();
 	size = xMax * yMax;
 	for (i = 0;i < size;i++)
 	{
@@ -1487,7 +1493,7 @@ void b3RenderObject::b3CreateImage(
 	b3Tx            *input)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_pkd_color *lPtr = (b3_pkd_color *)input->b3GetData();
+	b3_pkd_color *lPtr = input->b3GetTrueColorData();
 	b3_coord      size,i = 0;
 
 	B3_ASSERT(lPtr != null);

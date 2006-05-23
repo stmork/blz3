@@ -39,9 +39,15 @@ static char THIS_FILE[] = __FILE__;
 /*
 ** PROTECTED REGION ID(CDlgBumpOceanWave_log) ENABLED START
 **	$Log$
+**	Revision 1.4  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.3  2006/05/22 20:15:24  sm
 **	- Added ocean wave control.
-**
+**	
 **	Revision 1.2  2006/05/11 15:34:21  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
@@ -109,6 +115,7 @@ void CPageOcean::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_B3OCEANWAVE_DIM_SPIN, m_Dim);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_WX, m_Wx);
 	DDX_Control(pDX, IDC_B3OCEANWAVE_WY, m_Wy);
+	DDX_Control(pDX, IDC_OCEANWAVE, m_OceanWaveCtrl);
 	//}}AFX_DATA_MAP
 
 	m_A.b3DDX(pDX, m_Ocean->m_A);
@@ -118,7 +125,6 @@ void CPageOcean::DoDataExchange(CDataExchange* pDX)
 	m_Dim.b3DDX(pDX, m_Ocean->m_Dim);
 	m_Wx.b3DDX(pDX, m_Ocean->m_Wx);
 	m_Wy.b3DDX(pDX, m_Ocean->m_Wy);
-	DDX_Control(pDX, IDC_OCEANWAVE, m_OceanWaveCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CPageOcean, CB3PropertyPage)
@@ -166,23 +172,3 @@ void CPageOcean::OnDestroy()
 {
 	CB3PropertyPage::OnDestroy();
 }
-
-void CPageOcean::b3UpdateUI()
-{
-// PROTECTED REGION ID(_10_5_1_15500e1_1145358477964_574357_129_updateui) ENABLED START
-// PROTECTED REGION END
-
-}
-
-void CPageOcean::OnEdit()
-{
-	UpdateData();
-}
-
-void CPageOcean::OnSpin(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	OnEdit();
-	*pResult = 0;
-}
-

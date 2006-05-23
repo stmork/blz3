@@ -336,11 +336,76 @@ public:
 	void           b3SetPalette   (const b3_pkd_color *entries, b3_count numEntries);
 
 	/**
-	 * This method returns the image data.
+	 * This method returns the image as palette index data pointer.
 	 *
-	 * @return The image data.
+	 * @return The image palette index data.
 	 */
-	void          *b3GetData      ();
+	inline b3_u08 *b3GetIndexData()
+	{
+		if (data == null)
+		{
+			return null;
+		}
+		if ((!b3IsPalette()) || (depth > 8))
+		{
+			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+		}
+		return reinterpret_cast<b3_u08 *>(data);
+	}
+
+	/**
+	 * This method returns the image as palette index data pointer.
+	 *
+	 * @return The image palette index data.
+	 */
+	inline b3_u16 *b3GetHighColorData()
+	{
+		if (data == null)
+		{
+			return null;
+		}
+		if (!b3IsHighColor())
+		{
+			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+		}
+		return reinterpret_cast<b3_u16 *>(data);
+	}
+
+	/**
+	 * This method returns the image as true color data pointer.
+	 *
+	 * @return The image true color data.
+	 */
+	inline b3_pkd_color *b3GetTrueColorData()
+	{
+		if (data == null)
+		{
+			return null;
+		}
+		if (!b3IsTrueColor())
+		{
+			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+		}
+		return reinterpret_cast<b3_pkd_color *>(data);
+	}
+
+	/**
+	 * This method returns the image as HDR data pointer.
+	 *
+	 * @return The image HDR data pointer.
+	 */
+	inline b3_color *b3GetHdrData()
+	{
+		if (data == null)
+		{
+			return null;
+		}
+		if (!b3IsHDR())
+		{
+			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+		}
+		return reinterpret_cast<b3_color *>(data);
+	}
 
 	/**
 	 * This method sets the new image data in the given resolution. The old data is
@@ -447,28 +512,50 @@ public:
 	 *
 	 * @return True if this image is b/w.
 	 */
-	b3_bool        b3IsBW         ();
+	inline b3_bool b3IsBW()
+	{
+		return (depth == 1) && (type == B3_TX_ILBM);
+	}
+
+	/**
+	 * This method returns true if this image is high color.
+	 *
+	 * @return True if this image is high color.
+	 */
+	inline b3_bool b3IsHighColor()
+	{
+		return ((depth == 12) || (depth == 16)) && (type == B3_TX_RGB4);
+	}
 
 	/**
 	 * This method returns true if this image is true color.
 	 *
 	 * @return True if this image is true color.
 	 */
-	b3_bool        b3IsTrueColor  ();
+	inline b3_bool b3IsTrueColor()
+	{
+		return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
+	}
 
 	/**
 	 * This method returns true if this image is a high dynamic range image.
 	 *
 	 * @return True if this image is a high dynamic range image.
 	 */
-	b3_bool        b3IsHDR  ();
+	inline b3_bool b3IsHDR()
+	{
+		return (depth >= 96) && (type == B3_TX_FLOAT);
+	}
 
 	/**
 	 * This method returns true if this image is palettized.
 	 *
 	 * @return True if this image is palettized.
 	 */
-	b3_bool        b3IsPalette    ();
+	inline b3_bool b3IsPalette()
+	{
+		return palette != null;
+	}
 
 	/**
 	 * This method returns true if this image is a palettized grey image.
@@ -964,6 +1051,16 @@ private:
 		b3_res    xDstSize);
 
 private:
+	/**
+	 * This method returns the image data.
+	 *
+	 * @return The image data.
+	 */
+	inline void *b3GetVoidData()
+	{
+		return data;
+	}
+
 	// b3TxTurn.cc
 	void           b3TurnLeftILBM();
 	void           b3TurnLeftVGA();

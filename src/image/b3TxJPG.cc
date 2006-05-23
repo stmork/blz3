@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.17  2006/05/12 14:06:28  smork
 **	- Added configurable CPPUNIT tests.
-**
+**	
 **	Revision 1.16  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -216,7 +222,7 @@ b3_bool b3JPEG::b3Decompress(b3Tx *tx)
 		{
 			return false;
 		}
-		out = (b3_pkd_color *)tx->b3GetData();
+		out = tx->b3GetTrueColorData();
 
 		while (m_Decompress.output_scanline < m_Decompress.output_height)
 		{
@@ -241,7 +247,7 @@ b3_bool b3JPEG::b3Decompress(b3Tx *tx)
 			return false;
 		}
 
-		line = (b3_u08 *)tx->b3GetData();
+		line = tx->b3GetIndexData();
 		while (m_Decompress.output_scanline < m_Decompress.output_height)
 		{
 			jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);

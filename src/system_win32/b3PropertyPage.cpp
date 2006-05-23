@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/05/23 20:23:42  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.8  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.7  2004/05/12 14:13:28  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -171,18 +177,4 @@ void CB3PropertyPage::b3SetCaption(int id)
 	m_Caption.LoadString(id);
 	m_psp.pszTitle  = m_Caption; 
 	m_psp.dwFlags  |= PSP_USETITLE; 
-}
-
-BOOL CB3PropertyPage::OnKillActive() 
-{
-	// TODO: Add your specialized code here and/or call the base class
-	
-	return CPropertyPage::OnKillActive();
-}
-
-void CB3PropertyPage::OnOK() 
-{
-	// TODO: Add your specialized code here and/or call the base class
-	
-	CPropertyPage::OnOK();
 }

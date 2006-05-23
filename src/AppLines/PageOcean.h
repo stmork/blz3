@@ -66,13 +66,8 @@ protected:
 	virtual BOOL  OnInitDialog();
 	virtual void  OnOK();
 	afx_msg void  OnDestroy();
-	afx_msg void  OnEdit();
-	afx_msg void  OnSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-private:
-	void b3UpdateUI();
 };
 
 #endif

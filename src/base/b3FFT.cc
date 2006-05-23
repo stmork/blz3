@@ -36,9 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.19  2006/05/21 20:32:15  sm
 **	- Some prefetching issues.
-**
+**	
 **	Revision 1.18  2006/05/21 12:31:03  sm
 **	- Optimized cache access for FFT.
 **	
@@ -249,7 +255,8 @@ b3_bool b3Fourier::b3AllocBuffer  (b3Tx *tx)
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
-	cPtr    = (b3_u08 *)tx->b3GetData();
+
+	cPtr = tx->b3GetIndexData();
 	for (y = 0;y < m_yOrig;y++)
 	{
 		for (x = 0;x < m_xOrig;x++)
@@ -539,6 +546,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 }
 
 b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
+	throw(b3FFTException)
 {
 	b3_u08       *cPtr;
 	b3_loop       x,y;
@@ -550,7 +558,7 @@ b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
 
-	cPtr = (b3_u08 *)tx->b3GetData();
+	cPtr = tx->b3GetIndexData();
 	for (y = 0;y < m_yOrig;y++)
 	{
 		for (x = 0;x < m_xOrig;x++)
@@ -561,7 +569,8 @@ b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 			*cPtr++ = (b3_u08)floor(b3Math::b3Limit(c * 0.5 + 0.5) * 255);
 		}
 	}
-	b3PrintF(B3LOG_FULL, "<b3Fourier::b3GetBuffer(...)\n");
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3GetBuffer(...) [%1.4f - %1.4f]\n",
+		cMin, cMax);
 	return true;
 }
 
@@ -579,7 +588,7 @@ b3_bool b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
-	cPtr = (b3_u08 *)tx->b3GetData();
+	cPtr = tx->b3GetIndexData();
 	for (y = -yHalf;y < yHalf;y++)
 	{
 		index = (y & yMask) << m_xDim;

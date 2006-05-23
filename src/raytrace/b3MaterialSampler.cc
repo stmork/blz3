@@ -32,6 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.14  2006/04/29 11:25:49  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -44,7 +50,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.13  2006/03/19 14:47:18  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
@@ -126,7 +132,7 @@ b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_count tiles) : m_Tiles(t
 	m_Tx       = tx;
 	m_xMax     = m_Tx->xSize;
 	m_yMax     = m_Tx->ySize;
-	m_Data     = m_Tx->b3GetData();
+	m_Data     = m_Tx->b3GetHdrData();
 }
 	
 void b3MaterialSampler::b3SetMaterial(b3Material *material)

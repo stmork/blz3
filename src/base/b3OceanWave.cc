@@ -23,6 +23,7 @@
 *************************************************************************/
 
 #include "b3BaseInclude.h"
+#include "blz3/system/b3TimeStop.h"
 #include "blz3/base/b3OceanWave.h"
 #include "blz3/base/b3Procedure.h"
 
@@ -37,9 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.27  2006/05/19 07:02:58  sm
 **	- Corrected FFT unit test.
-**
+**	
 **	Revision 1.26  2006/05/18 19:07:40  sm
 **	- DRand48 implementation for all platforms.
 **	
@@ -239,6 +246,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 
 b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 {
+	b3TimeStop             stop("Prepare ocean wave");
 	b3Complex64           *buffer = b3GetBuffer();
 	b3_f64                 fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
 	b3_f64                 fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
@@ -299,6 +307,8 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
 
 void b3OceanWave::b3ComputePhillipsSpectrum()
 {
+	b3TimeStop stop("Compute Phillips spectrum");
+
 	if (m_Phillips == null)
 	{
 		b3_size size = m_fftDiff * m_fftDiff;

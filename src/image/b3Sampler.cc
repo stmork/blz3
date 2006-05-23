@@ -32,6 +32,12 @@
 
 /*
 **  $Log$
+**  Revision 1.13  2006/05/23 20:23:41  sm
+**  - Some view/bitmap cleanups.
+**  - Some more ocean wave ctrl development.
+**  - Some preview property page cleanups.
+**  - Changed data access methods of b3Tx.
+**
 **  Revision 1.12  2006/03/05 21:22:34  sm
 **  - Added precompiled support for faster comiling :-)
 **
@@ -136,7 +142,7 @@ b3ImageSampler::b3ImageSampler(b3Tx *tx)
 
 	m_xMax  = tx->xSize;
 	m_yMax  = tx->ySize;
-	m_Data  = tx->b3GetData();
+	m_Data  = tx->b3GetHdrData();
 }
 
 b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)

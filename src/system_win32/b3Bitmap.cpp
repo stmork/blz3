@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "b3SystemInclude.h"
-#include "blz3/system/b3View.h"
+#include "blz3/system/b3Bitmap.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.6  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -119,10 +125,10 @@ CB3DIB::operator BITMAPINFO *()
 CB3BitmapDIB::CB3BitmapDIB()
 {
 	// Init zero
-	row   = null;
+	m_Row = null;
 	dSize = 0;
 	b3SetSize (0,0,0);
-	memset(&DIB,0,sizeof(DIB));
+	memset(&m_DIB,0,sizeof(m_DIB));
 }
 
 CB3BitmapDIB::CB3BitmapDIB(
@@ -130,7 +136,7 @@ CB3BitmapDIB::CB3BitmapDIB(
 	void       *new_row)
 {
 	// Init zero
-	row   = null;
+	m_Row = null;
 	dSize = 0;
 	b3SetSize (0,0,0);
 
@@ -142,7 +148,7 @@ CB3BitmapDIB::CB3BitmapDIB(
 
 CB3BitmapDIB::operator BITMAPINFO *()
 {
-	return (BITMAPINFO *)&DIB.bmiHeader;
+	return (BITMAPINFO *)&m_DIB.bmiHeader;
 }
 
 void CB3BitmapDIB::b3InitDIB()
@@ -169,17 +175,17 @@ void CB3BitmapDIB::b3InitDIB()
 	// This is the need for a 24-Bit-DIB. See VC++
 	// documentation for what's going up here. This
 	// needs a lot of memory but it's faaaast later.
-	DIB.bmiHeader.biSize          = sizeof(DIB.bmiHeader);
-	DIB.bmiHeader.biWidth         =  xSize;
-	DIB.bmiHeader.biHeight        = (signed)ySize;
-	DIB.bmiHeader.biPlanes        =  1;
-	DIB.bmiHeader.biBitCount      = num;
-	DIB.bmiHeader.biCompression   = (depth <= 8 ? BI_RGB : BI_BITFIELDS);
-	DIB.bmiHeader.biSizeImage     = (DWORD)B3_MIN(dSize,0x7ffffff0);
-	DIB.bmiHeader.biXPelsPerMeter = 1;
-	DIB.bmiHeader.biYPelsPerMeter = 1;
-	DIB.bmiHeader.biClrUsed       = 0;
-	DIB.bmiHeader.biClrImportant  = 0;
+	m_DIB.bmiHeader.biSize          = sizeof(m_DIB.bmiHeader);
+	m_DIB.bmiHeader.biWidth         =  xSize;
+	m_DIB.bmiHeader.biHeight        = (signed)ySize;
+	m_DIB.bmiHeader.biPlanes        =  1;
+	m_DIB.bmiHeader.biBitCount      = num;
+	m_DIB.bmiHeader.biCompression   = (depth <= 8 ? BI_RGB : BI_BITFIELDS);
+	m_DIB.bmiHeader.biSizeImage     = (DWORD)B3_MIN(dSize,0x7ffffff0);
+	m_DIB.bmiHeader.biXPelsPerMeter = 1;
+	m_DIB.bmiHeader.biYPelsPerMeter = 1;
+	m_DIB.bmiHeader.biClrUsed       = 0;
+	m_DIB.bmiHeader.biClrImportant  = 0;
 
 	// Now we are ready to draw onto the screen (TippEx on the CRT)
 	b3PrintF (B3LOG_FULL,
@@ -244,10 +250,10 @@ b3_bool CB3BitmapDIB::b3SetSize(
 	if (newField != dSize)
 	{
 		// Free old bitmap
-		b3Free ((void *)row);
+		b3Free (m_Row);
 
 		// Signal reallocation
-		row  = null;
+		m_Row = null;
 	}
 
 	// If resolution has changed we need a new Windows bitmap
@@ -265,9 +271,9 @@ b3_bool CB3BitmapDIB::b3SetSize(
 	b3InitDIB();
 
 	// Allocate new image buffer
-	if (row == null)
+	if (m_Row == null)
 	{
-		row  = (b3_pkd_color *)b3Alloc(dSize);
+		m_Row   = (b3_pkd_color *)b3Alloc(dSize);
 		changed = true;
 	}
 
@@ -296,8 +302,8 @@ void CB3BitmapDIB::b3SetData(b3Tx *texture,b3_res yStart,b3_res yEnd)
 		b3PrintF (B3LOG_FULL,
 			"### CLASS: b3BDIB # b3SetData(): monochrome mode\n");
 
-		src   = (b3_u08 *)texture->b3GetData();
-		dst   = (b3_u08 *)row;
+		src   = texture->b3GetIndexData();
+		dst   = reinterpret_cast<b3_u08 *>(m_Row);
 		index = yDiff * dstBytes;
 		for (y = yStart;y < yEnd;y++)
 		{
@@ -317,13 +323,13 @@ void CB3BitmapDIB::b3SetData(b3Tx *texture,b3_res yStart,b3_res yEnd)
 		b3PrintF (B3LOG_FULL,
 			"### CLASS: b3BDIB # b3SetData(): palette mode\n");
 
-		src   = (b3_u08 *)texture->b3GetData();
-		dst   = (b3_u08 *)row;
+		src   = texture->b3GetIndexData();
+		dst   = reinterpret_cast<b3_u08 *>(m_Row);
 		index = yDiff * dstBytes;
 		for (y = yStart;y < yEnd;y++)
 		{
 			index -= dstBytes;
-			memcpy (&dst[index],src,srcBytes);
+			memcpy (&dst[index], src, srcBytes);
 			src   += srcBytes;
 		}
 	}
@@ -334,15 +340,15 @@ void CB3BitmapDIB::b3SetData(b3Tx *texture,b3_res yStart,b3_res yEnd)
 		b3PrintF (B3LOG_FULL,
 			"### CLASS: b3BDIB # b3SetData(): true color mode\n");
 
-		DIB.color.rgb[0] = 0x00ff0000;
-		DIB.color.rgb[1] = 0x0000ff00;
-		DIB.color.rgb[2] = 0x000000ff;
+		m_DIB.color.rgb[0] = 0x00ff0000;
+		m_DIB.color.rgb[1] = 0x0000ff00;
+		m_DIB.color.rgb[2] = 0x000000ff;
 
 		index  = yDiff * xSize;
 		for (y = yStart;y < yEnd;y++)
 		{
 			index -= xSize;
-			texture->b3GetRow(&row[index],y);
+			texture->b3GetRow(&m_Row[index],y);
 		}
 	}
 }
@@ -389,28 +395,28 @@ b3_bool CB3BitmapDIB::b3SetDIB(
 	{
 		return false;
 	}
-	b3Free(row);
-	row = buffer;
+	b3Free(m_Row);
+	m_Row = buffer;
 
 	// Copy some values
-	DIB.bmiHeader = new_dib->bmiHeader;
-	xSize = DIB.bmiHeader.biWidth;
-	ySize = abs(DIB.bmiHeader.biHeight);
-	dSize = DIB.bmiHeader.biSizeImage;
-	depth = DIB.bmiHeader.biBitCount;
+	m_DIB.bmiHeader = new_dib->bmiHeader;
+	xSize = m_DIB.bmiHeader.biWidth;
+	ySize = abs(m_DIB.bmiHeader.biHeight);
+	dSize = m_DIB.bmiHeader.biSizeImage;
+	depth = m_DIB.bmiHeader.biBitCount;
 
 	num_colors = 1 << depth;
 	if (depth <= 8)
 	{
 		for (i = 0;i < num_colors;i++)
 		{
-			DIB.color.quad[i] = new_dib->bmiColors[i];
+			m_DIB.color.quad[i] = new_dib->bmiColors[i];
 			b3PrintF (B3LOG_FULL,
 				"### CLASS: b3BDIB # %3lu: %02x%02x%02x\n",i,
 				new_dib->bmiColors[i].rgbRed,
 				new_dib->bmiColors[i].rgbGreen,
 				new_dib->bmiColors[i].rgbBlue);
-			DIB.bmiHeader.biClrUsed = i;
+			m_DIB.bmiHeader.biClrUsed = i;
 			m_Mode = DIB_RGB_COLORS;
 		}
 	}
@@ -418,9 +424,9 @@ b3_bool CB3BitmapDIB::b3SetDIB(
 	// Check if image data is appended to header
 	if (new_row == null)
 	{
-		new_row = (void *)&new_dib->bmiColors[depth > 8 ? DIB.bmiHeader.biClrUsed : num_colors];
+		new_row = (void *)&new_dib->bmiColors[depth > 8 ? m_DIB.bmiHeader.biClrUsed : num_colors];
 	}
-	memcpy(row,new_row,dSize);
+	memcpy(m_Row, new_row, dSize);
 
 	return true;
 }
@@ -430,7 +436,6 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 	b3_pkd_color  *palette;
 	b3_pkd_color  *lData;
 	b3_u08        *cData,*cRow;
-	void          *data;
 	b3RGB          color;
 	b3_index	   i,index;
 	b3_count       xMax,xBytes;
@@ -442,21 +447,20 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 		return false;
 	}
 	texture->b3AllocTx(xSize,ySize,depth);
-	data    = texture->b3GetData();
 	palette = texture->b3GetPalette();
 
 	if (palette != null)
 	{
-		for (i = 0;i < (b3_count)DIB.bmiHeader.biClrUsed;i++)
+		for (i = 0;i < (b3_count)m_DIB.bmiHeader.biClrUsed;i++)
 		{
-			color.r    = DIB.color.quad[i].rgbRed;
-			color.g    = DIB.color.quad[i].rgbGreen;
-			color.b    = DIB.color.quad[i].rgbBlue;
+			color.r    = m_DIB.color.quad[i].rgbRed;
+			color.g    = m_DIB.color.quad[i].rgbGreen;
+			color.b    = m_DIB.color.quad[i].rgbBlue;
 			palette[i] = color;
 		}
 	}
 
-	if (data == null)
+	if (!texture->b3IsLoaded())
 	{
 		return false;
 	}
@@ -467,12 +471,12 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 	{
 	case  1:
 		xBytes     = TX_BWA(xSize);
-		cRow       = (b3_u08 *)row;
-		cData      = (b3_u08 *)data;
+		cRow       = reinterpret_cast<b3_u08 *>(m_Row);
+		cData      = texture->b3GetIndexData();
 		rowOffset  = TX_BLA(xSize);
 		palette[0] = 0xffffff;
 		palette[1] = 0x000000;
-		if (DIB.bmiHeader.biHeight > 0)
+		if (m_DIB.bmiHeader.biHeight > 0)
 		{
 			subOffset = xBytes;
 			addOffset = 0;
@@ -500,9 +504,9 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 	case  4:
 		xMax  = xSize & 0xfffffffe;
 		index = 0;
-		cRow  = (b3_u08 *)row;
-		cData = (b3_u08 *)data;
-		if (DIB.bmiHeader.biHeight > 0)
+		cRow  = reinterpret_cast<b3_u08 *>(m_Row);
+		cData = texture->b3GetIndexData();
+		if (m_DIB.bmiHeader.biHeight > 0)
 		{
 			subOffset = xSize;
 			addOffset = 0;
@@ -533,9 +537,9 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 		break;
 
 	case  8:
-		cData = (b3_u08 *)data;
-		cRow  = (b3_u08 *)row;
-		if (DIB.bmiHeader.biHeight > 0)
+		cData = texture->b3GetIndexData();
+		cRow  = reinterpret_cast<b3_u08 *>(m_Row);
+		if (m_DIB.bmiHeader.biHeight > 0)
 		{
 			subOffset = xSize;
 			addOffset = 0;
@@ -567,9 +571,9 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 
 	case 24:
 		index = 0;
-		lData = (b3_pkd_color *)data;
-		cRow  = (b3_u08 *)row;
-		if (DIB.bmiHeader.biHeight > 0)
+		lData = texture->b3GetTrueColorData();
+		cRow  = reinterpret_cast<b3_u08 *>(m_Row);
+		if (m_DIB.bmiHeader.biHeight > 0)
 		{
 			subOffset = xSize;
 			addOffset = 0;
@@ -598,9 +602,9 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 
 	case 32:
 		index = 0;
-		lData = (b3_pkd_color *)data;
-		cRow  = (b3_u08 *)row;
-		if (DIB.bmiHeader.biHeight > 0)
+		lData = texture->b3GetTrueColorData();
+		cRow  = reinterpret_cast<b3_u08 *>(m_Row);
+		if (m_DIB.bmiHeader.biHeight > 0)
 		{
 			subOffset = xSize;
 			addOffset = 0;
@@ -637,7 +641,7 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 HBITMAP CB3BitmapDIB::b3CreateBitmap(CDC *dc)
 {
 	return ::CreateDIBitmap(dc->GetSafeHdc(),
-		&DIB.bmiHeader,CBM_INIT,row,(BITMAPINFO *)&DIB.bmiHeader,m_Mode);
+		&m_DIB.bmiHeader,CBM_INIT,m_Row,(BITMAPINFO *)&m_DIB.bmiHeader,m_Mode);
 }
 
 /*************************************************************************
@@ -801,21 +805,21 @@ void CB3BitmapDDB::b3SetPalette(b3Tx *texture)
 			switch (m_Mode)
 			{
 			case DIB_PAL_COLORS:
-				DIB.color.bw[i] = (b3_u16)i;
+				m_DIB.color.bw[i] = (b3_u16)i;
 				break;
 
 			case DIB_RGB_COLORS:
-				DIB.color.quad[i].rgbRed      = r;
-				DIB.color.quad[i].rgbGreen    = g;
-				DIB.color.quad[i].rgbBlue     = b;
-				DIB.color.quad[i].rgbReserved = 0;
+				m_DIB.color.quad[i].rgbRed      = r;
+				m_DIB.color.quad[i].rgbGreen    = g;
+				m_DIB.color.quad[i].rgbBlue     = b;
+				m_DIB.color.quad[i].rgbReserved = 0;
 				break;
 			}
 		}
 
 		// Set right values into DIB (palette)
-		DIB.bmiHeader.biClrUsed       = num;
-		DIB.bmiHeader.biClrImportant  = num;
+		m_DIB.bmiHeader.biClrUsed       = num;
+		m_DIB.bmiHeader.biClrImportant  = num;
 
 		// Signal new palette
 		useNewPalette = true;
@@ -838,12 +842,12 @@ void CB3BitmapDDB::b3SetPalette(b3Tx *texture)
 		}
 
 		// Set right values into DIB (RGB)
-		DIB.bmiHeader.biClrUsed       = 0;
-		DIB.bmiHeader.biClrImportant  = 0;
+		m_DIB.bmiHeader.biClrUsed       = 0;
+		m_DIB.bmiHeader.biClrImportant  = 0;
 
-		DIB.color.rgb[0] = 0x00ff0000;
-		DIB.color.rgb[1] = 0x0000ff00;
-		DIB.color.rgb[2] = 0x000000ff;
+		m_DIB.color.rgb[0] = 0x00ff0000;
+		m_DIB.color.rgb[1] = 0x0000ff00;
+		m_DIB.color.rgb[2] = 0x000000ff;
 
 		// Check if we must seup a custom color palette
 		// for true color images on palette screen
@@ -962,16 +966,21 @@ void CB3BitmapDDB::b3InitImage(
 			xSize,ySize,yStart,yEnd);
 
 		// Copy image data
-		b3SetData(texture,yStart,yEnd);
-
-		if (m_AutoMemDC)
-		{
-			b3DIBtoDDB(&memDC);
-		}
+		b3SetImage(texture, yStart, yEnd);
 	}
 
 	b3PrintF (B3LOG_FULL,"### CLASS: b3BDDB # b3InitImage() - stop\n");
 	origDC = null;
+}
+
+void CB3BitmapDDB::b3SetImage(b3Tx *tx, b3_res yStart, b3_res yEnd)
+{
+	b3SetData(tx, yStart, yEnd);
+
+	if (m_AutoMemDC)
+	{
+		b3DIBtoDDB(&memDC);
+	}
 }
 
 b3_bool CB3BitmapDDB::b3InitBitmap(
@@ -1013,8 +1022,8 @@ b3_bool CB3BitmapDDB::b3DIBtoDDB(CDC *pDC)
 		xSize,ySize,	// dst size
 		0,0,			// src position
 		xSize,ySize,	// src size
-		row,			// where is the bitmap data
-		DIB,			// bitmap info
+		m_Row,			// where is the bitmap data
+		m_DIB,			// bitmap info
 		m_Mode,
 		SRCCOPY);
 	b3PrintF (B3LOG_FULL,"### CLASS: b3BDDB # b3DIBtoDDB();\n");
@@ -1058,8 +1067,8 @@ b3_bool CB3BitmapDDB::b3Transparent(
 				origDC->m_hDC,		// From where to get data
 				HBITMAP(memBitmap),	// The bitmap
 				0, ySize,			// Starting scan line, number of scan lines
-				row,				// Where to put the data
-				DIB,				// DIB info
+				m_Row,				// Where to put the data
+				m_DIB,				// DIB info
 				DIB_RGB_COLORS );	// Always RGB
 
 			// Init multiplication table
@@ -1074,13 +1083,13 @@ b3_bool CB3BitmapDDB::b3Transparent(
 			max = xSize * ySize;
 			for (i = 0;i < max;i++)
 			{
-				src     = row[i];
-				dst     = bMulTable[src & 0xff];
-				src     = src >> 8;
-				dst    |= gMulTable[src & 0xff];
-				src     = src >> 8;
-				dst    |= rMulTable[src & 0xff];
-				row[i]  = dst;
+				src       = m_Row[i];
+				dst       = bMulTable[src & 0xff];
+				src       = src >> 8;
+				dst      |= gMulTable[src & 0xff];
+				src       = src >> 8;
+				dst      |= rMulTable[src & 0xff];
+				m_Row[i]  = dst;
 			}
 		}
 	}
@@ -1090,8 +1099,8 @@ b3_bool CB3BitmapDDB::b3Transparent(
 		origDC->m_hDC,		// Where to put data
 		HBITMAP(memBitmap),	// The bitmap
 		0, ySize,			// Starting scan line, number of scan lines
-		row,				// The data to put itself
-		DIB,				// DIB info
+		m_Row,				// The data to put itself
+		m_DIB,				// DIB info
 		DIB_RGB_COLORS );	// Always RGB
 	origDC->BitBlt(
 		xPos,yPos,			// Dest position

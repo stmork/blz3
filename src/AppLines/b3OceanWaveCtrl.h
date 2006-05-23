@@ -20,6 +20,8 @@
 
 #pragma once
 #include "blz3/b3Config.h"
+#include "blz3/base/b3OceanWave.h"
+#include "blz3/system/b3View.h"
 
 class CB3OceanWaveCtrl :
 	public CStatic
@@ -27,9 +29,13 @@ class CB3OceanWaveCtrl :
 	b3OceanWave *m_Ocean;
 	b3_f64       m_Factor;
 	b3_bool      m_MouseCapture;
+	b3Tx         m_Tx;
+	b3_res       m_xSize;
+	b3_res       m_ySize;
 	CRect        m_Rect;
 	CPoint       m_MidPoint;
 	CPoint       m_LastPoint;
+	CB3BitmapDDB m_DDB;
 
 public:
 

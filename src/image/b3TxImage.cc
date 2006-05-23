@@ -35,9 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.20  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.19  2005/10/09 15:06:47  sm
 **	- Added HDR image processing
 **	
@@ -1530,8 +1536,8 @@ b3_bool b3Tx::b3TxGauss(
 
 	xHalf = xSize >> 1;
 	yHalf = ySize >> 1;
-	srcPtr = (b3_pkd_color *)src->b3GetData();
-	dstPtr = (b3_pkd_color *)data;
+	srcPtr = src->b3GetTrueColorData();
+	dstPtr = b3GetTrueColorData();
 	for (y = 0;y < (long)ySize;y++)
 	{
 		for (x = 0;x < (long)xSize;x++)
@@ -1602,15 +1608,15 @@ b3_bool b3Tx::b3TxTransformTable(
 		{
 			// We have to copy the data, too.
 			// But only if srcTx and dstTx are different.
-			memcpy(data,srcTx->b3GetData(),dSize);
+			memcpy(data,srcTx->b3GetVoidData(),dSize);
 		}
 	}
 
 	if (b3IsTrueColor())
 	{
 
-		srcPtr = (b3_pkd_color *)srcTx->b3GetData();
-		dstPtr = (b3_pkd_color *)data;
+		srcPtr = srcTx->b3GetTrueColorData();
+		dstPtr = b3GetTrueColorData();
 		num    = xSize * ySize;
 	}
 
@@ -1706,8 +1712,8 @@ b3_bool b3Tx::b3TxContrast(
 b3_bool b3Tx::b3TxReduce(b3Tx *src)
 {
 	b3_index      i,p,count,index;
-	b3_pkd_color *srcPtr = (b3_pkd_color *)src->b3GetData(),color;
-	b3_u08       *dstPtr = (b3_u08 *)b3GetData();
+	b3_pkd_color *srcPtr = src->b3GetTrueColorData(), color;
+	b3_u08       *dstPtr = b3GetIndexData();
 
 	if (!src->b3IsTrueColor())
 	{

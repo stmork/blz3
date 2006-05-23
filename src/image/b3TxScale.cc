@@ -62,13 +62,19 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.28  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.27  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.26  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -1825,8 +1831,8 @@ void b3Tx::b3VGAScaleToRGB8(
 	b3_count      count=0;
 	b3_pkd_color  rVal,gVal,bVal,color;
 
-	lDst    = (b3_pkd_color *)data;
-	cSrc    = (b3_u08 *)srcTx->b3GetData();
+	lDst    = b3GetTrueColorData();
+	cSrc    = srcTx->b3GetIndexData();
 	palette = srcTx->b3GetPalette();
 	for (y = 0;y < ySize;y++)
 	{
@@ -2057,7 +2063,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	NumCPUs = 1;
 #endif
 
-	bData  = (b3_u08 *)Tx->b3GetData();
+	bData  = Tx->b3GetIndexData();
 	tx_pal = Tx->b3GetPalette();
 
 	color  = tx_pal[0];
@@ -2166,8 +2172,8 @@ void b3Tx::b3ScaleUnfilteredFromColor(
 	b3_count      num;
 	b3_pkd_color *lSrc,*lDst;
 
-	lSrc = (b3_pkd_color *)Tx->b3GetData();
-	lDst = (b3_pkd_color *)data;
+	lSrc = Tx->b3GetTrueColorData();
+	lDst = b3GetTrueColorData();
 
 	for (y = 0;y < ySize;y++)
 	{
@@ -2189,8 +2195,8 @@ void b3Tx::b3ScaleUnfilteredFromFloat(
 	b3_color     *cSrc;
 	b3_pkd_color *lDst;
 
-	cSrc = (b3_color *)Tx->b3GetData();
-	lDst = (b3_pkd_color *)data;
+	cSrc = Tx->b3GetHdrData();
+	lDst = b3GetTrueColorData();
 
 	for (y = 0;y < ySize;y++)
 	{
@@ -2227,8 +2233,8 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 	// scaling textures
 	if (type == B3_TX_VGA)
 	{
-		cSrc = (b3_u08 *)Tx->b3GetData();
-		cDst = (b3_u08 *)data;
+		cSrc = Tx->b3GetIndexData();
+		cDst = b3GetIndexData();
 		for (y = 0;y < ySize;y++)
 		{
 			num = cIndex[y] * Tx->xSize;
@@ -2242,9 +2248,9 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 	// scaling textures
 	if (type == B3_TX_RGB8)
 	{
-		pSrc = (b3_pkd_color *)Tx->b3GetPalette();
-		cSrc = (b3_u08 *)Tx->b3GetData();
-		lDst = (b3_pkd_color *)data;
+		pSrc = Tx->b3GetPalette();
+		cSrc = Tx->b3GetIndexData();
+		lDst = b3GetTrueColorData();
 		for (y = 0;y < ySize;y++)
 		{
 			num = cIndex[y] * Tx->xSize;

@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.43  2006/03/27 10:32:06  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.42  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -443,7 +449,7 @@ b3_bool b3Tx::b3AllocTx(
 		b3FreeTx();
 		return false;
 	}
-	data = (unsigned char *)new_ptr;
+	data = reinterpret_cast<unsigned char *>(new_ptr);
 
 	if (pSize > 0)
 	{
@@ -721,7 +727,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 
 				case B3_TX_ILBM:
 					// Never created
-					memcpy (data,   srcTx->b3GetData(),   dSize);
+					memcpy (data,   srcTx->b3GetVoidData(),   dSize);
 					break;
 
 				default:
@@ -731,7 +737,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 			}
 			else
 			{
-				memcpy (data,   srcTx->b3GetData(),   dSize);
+				memcpy (data,   srcTx->b3GetVoidData(),   dSize);
 			}
 			b3PrintF(B3LOG_FULL," [data - %ld]",dSize);
 		}
@@ -754,11 +760,6 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 	yDPI        = srcTx->yDPI;
 	whiteRatio  = srcTx->whiteRatio;
 	ScanLines   = srcTx->ScanLines;
-}
-
-void *b3Tx::b3GetData()
-{
-	return data;
 }
 
 b3_bool b3Tx::b3IsLoaded()
@@ -813,26 +814,6 @@ void b3Tx::b3GetResolution(b3_res &xd,b3_res &yd)
 {
 	xd = xDPI;
 	yd = yDPI;
-}
-
-b3_bool b3Tx::b3IsBW()
-{
-	return (depth == 1) && (type == B3_TX_ILBM);
-}
-
-b3_bool b3Tx::b3IsTrueColor()
-{
-	return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
-}
-
-b3_bool b3Tx::b3IsHDR()
-{
-	return (depth >= 96) && (type == B3_TX_FLOAT);
-}
-
-b3_bool b3Tx::b3IsPalette()
-{
-	return palette != null;
 }
 
 /*************************************************************************
@@ -1148,7 +1129,7 @@ inline void b3Tx::b3GetRGB8 (
 {
 	b3_pkd_color *src;
 
-	src = (b3_pkd_color *)data;
+	src = b3GetTrueColorData();
 #if 0
 	memcpy (dst,&src[y * xSize],xSize * sizeof(b3_pkd_color));
 #else

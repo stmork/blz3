@@ -43,9 +43,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.12  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.11  2005/12/05 22:12:24  sm
 **	- More const declarations.
 **	
@@ -107,7 +113,7 @@ b3Display::b3Display(b3Tx *tx)
 	m_xMax   = tx->xSize;
 	m_yMax   = tx->ySize;
 	m_depth  = tx->depth;
-	m_Buffer = (b3_color *)tx->b3GetData();
+	m_Buffer = tx->b3GetHdrData();
 	m_Tx     = tx;
 	m_OwnTx  = false;
 }
@@ -158,7 +164,7 @@ void b3Display::b3Init(const b3_res xSize, const b3_res ySize,const char *title)
 	m_depth = 128;
 	m_Tx    = new b3Tx();
 	m_Tx->b3AllocTx(xSize,ySize,m_depth);
-	m_Buffer = (b3_color *)m_Tx->b3GetData();
+	m_Buffer = m_Tx->b3GetHdrData();
 }
 
 b3Display::~b3Display()

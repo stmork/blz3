@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.93  2006/05/23 20:23:41  sm
+**      - Some view/bitmap cleanups.
+**      - Some more ocean wave ctrl development.
+**      - Some preview property page cleanups.
+**      - Changed data access methods of b3Tx.
+**
 **      Revision 1.92  2006/04/29 11:25:49  sm
 **      - Added ocean bump to main packet.
 **      - b3Prepare signature: Added further initialization information
@@ -862,7 +868,7 @@ public:
 		m_Tx    = tx;
 		m_xMax  = tx->xSize;
 		m_yMax  = tx->ySize;
-		m_Data  = tx->b3GetData();
+		m_Data  = tx->b3GetTrueColorData();
 	}
 
 private:

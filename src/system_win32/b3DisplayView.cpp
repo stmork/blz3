@@ -42,9 +42,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/05/23 20:23:41  sm
+**	- Some view/bitmap cleanups.
+**	- Some more ocean wave ctrl development.
+**	- Some preview property page cleanups.
+**	- Changed data access methods of b3Tx.
+**
 **	Revision 1.10  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.9  2005/12/06 15:10:08  smork
 **	- Windows const update.
 **	
@@ -118,7 +124,7 @@ void b3DisplayView::b3Open(CB3ScrollView *view,const b3_res xSize, const b3_res 
 #endif
 
 	m_Tx->b3AllocTx(m_xMax,m_yMax,m_depth);
-	m_Buffer = (b3_color *)m_Tx->b3GetData();
+	m_Buffer = m_Tx->b3GetHdrData();
 	if (!m_Tx->b3IsHDR())
 	{
 		B3_THROW(b3DisplayException,B3_DISPLAY_ERROR);

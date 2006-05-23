@@ -21,7 +21,7 @@
 #define B3_SYSTEM_SHOWCOLOR_H
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3View.h"
+#include "blz3/system/b3Bitmap.h"
 
 class CB3ShowColor : public CStatic
 {
