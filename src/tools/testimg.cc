@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/24 16:07:55  sm
+**	- Done some Un*x b3GetData() corrections.
+**
 **	Revision 1.4  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.3  2004/07/08 10:43:00  sm
 **	- Make some makefile cleanups.
 **	- Removed some compiler warnings.
@@ -79,7 +82,7 @@ static void create(b3Tx &img)
 	b3_coord              y,yQuart = img.ySize >> 2,c,max;
 	b3Array<b3_pkd_color> bars,sinus;
 
-	b3_pkd_color *lPtr = (b3_pkd_color *)img.b3GetData();
+	b3_pkd_color *lPtr = img.b3GetTrueColorData();
 	b3_pkd_color *data = lPtr;
 	b3_pkd_color value,color;
 

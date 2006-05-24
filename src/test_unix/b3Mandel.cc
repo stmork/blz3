@@ -27,7 +27,7 @@
 #include "blz3/system/b3Atomic.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Color.h"
-#include "blz3/base/b3Complex.h"
+#include "blz3/base/b3Complex64.h"
 
 #include "b3Mandel.h"
 
@@ -42,6 +42,12 @@ struct mandel_info
 	b3_res     xSize;
 };
 
+#if 0
+typedef b3Complex64 b3Cmplx;
+#else
+typedef b3Complex<b3_f64> b3Cmplx;
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -50,13 +56,16 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.18  2006/05/24 16:07:55  sm
+**	- Done some Un*x b3GetData() corrections.
+**
 **	Revision 1.17  2006/05/11 15:34:23  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.16  2005/12/12 11:54:11  smork
 **	- Some corrections with const anf GCC 4
 **	
@@ -166,8 +175,8 @@ public:
 		b3_count           count;
 		b3_pkd_color       color;
 
-		b3Complex<b3_f64>  a = 0;
-		b3Complex<b3_f64>  f = b3Complex<b3_f64>(fx,fy);
+		b3Cmplx  a = 0;
+		b3Cmplx  f = b3Cmplx(fx,fy);
 
 		for (x = 0;x < m_xSize;x++)
 		{
@@ -179,9 +188,8 @@ public:
 			count = 0;
 			do
 			{
-				a.b3Square();
+				a *= a;
 				a -= f;
-
 				count++;
 			}
 			while((count <= iter) && (a.b3SquareLength() < 4));

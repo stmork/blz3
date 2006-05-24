@@ -177,6 +177,11 @@ public:
 #endif
 	}
 
+	inline void b3Square()
+	{
+		SSE_PD_STORE(v, product(*this));
+	}
+
 	inline b3Complex64 operator*(const b3Complex64 &mul)
 	{
 		b3Complex64 result;

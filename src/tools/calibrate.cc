@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/05/24 16:07:55  sm
+**	- Done some Un*x b3GetData() corrections.
+**
 **	Revision 1.6  2005/10/15 16:43:03  sm
 **	- Added HDR texture access.
-**
+**	
 **	Revision 1.5  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -167,9 +170,10 @@ public:
 	void b3Adjust(b3Tx &image)
 	{
 		b3PrintF(B3LOG_NORMAL,"%s\n",image.b3Name());
-		b3_coord x,y;
-		b3_pkd_color *ptr = (b3_pkd_color *)image.b3GetData();
-		b3Color  result,scale(B3_WHITE),offset(B3_BLACK);
+
+		b3_pkd_color *ptr = image.b3GetTrueColorData();
+		b3_coord      x,y;
+		b3Color       result,scale(B3_WHITE),offset(B3_BLACK);
 
 		for (y = 0;y < image.ySize;y++)
 		{

@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/05/24 16:07:55  sm
+**	- Done some Un*x b3GetData() corrections.
+**
 **	Revision 1.5  2006/05/19 15:58:47  smork
 **	- Correct exception handling in complex number computation.
-**
+**	
 **	Revision 1.4  2006/05/14 11:30:39  sm
 **	- Added complex number classes to FFT class.
 **	
@@ -97,6 +100,11 @@ void b3ComplexTest::testEqual()
 
 void b3ComplexTest::testComplex64()
 {
+	ca = b3Complex64( 6.0, -7.0);
+	CPPUNIT_ASSERT_NO_THROW(ca.b3Square())
+	CPPUNIT_ASSERT_EQUAL( -13.0, ca.b3Real());
+	CPPUNIT_ASSERT_EQUAL( -84.0, ca.b3Imag());	
+
 	ca = 0.0;
 	cb = 0.0;
 	ca = a;

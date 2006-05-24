@@ -47,9 +47,12 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.9  2006/05/24 16:07:55  sm
+**	- Done some Un*x b3GetData() corrections.
+**
 **	Revision 1.8  2005/05/31 11:15:12  smork
 **	- Extraced avilib into own directory.
-**
+**	
 **	Revision 1.7  2005/01/14 08:51:05  smork
 **	- Corrected lens flares to be in front of any object.
 **	- Added start banner to divx tool.
@@ -171,7 +174,7 @@ int main(int argc,char *argv[])
 
 		// Recode image
 		ptr  = buffer;
-		data = (b3_pkd_color *)img.b3GetData();
+		data = img.b3GetTrueColorData();
 		for (b3_size k = 0;k < size;k++)
 		{
 			color  = *data++;

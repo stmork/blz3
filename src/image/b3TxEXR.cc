@@ -42,13 +42,16 @@ using namespace Iex;
 
 /*
 **	$Log$
+**	Revision 1.6  2006/05/24 16:07:55  sm
+**	- Done some Un*x b3GetData() corrections.
+**
 **	Revision 1.5  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**
+**	
 **	Revision 1.4  2006/03/05 21:22:34  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -136,7 +139,7 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 
 		if (b3AllocTx(width, height, 128))
 		{
-			b3_color    *ptr = (b3_color *)b3GetData();
+			b3_color    *ptr = b3GetHdrData();
 			FrameBuffer  fb;
 
 			fb.insert("R", Slice(FLOAT, (char *)&ptr->r, sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
