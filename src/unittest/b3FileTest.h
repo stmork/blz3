@@ -53,7 +53,7 @@ public:
 	{
 		char   array[1024];
 
-		CPPUNIT_ASSERT_NO_THROW(openWrite("Config.tst"));
+		CPPUNIT_ASSERT(openWrite("Config.tst"));
 		CPPUNIT_ASSERT(file.b3Buffer (2048));
 		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write  (array,1024));
 		CPPUNIT_ASSERT(file.b3Flush  ());
