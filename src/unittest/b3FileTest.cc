@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/26 09:09:29  sm
+**	- Fixed first run test error.
+**
 **	Revision 1.4  2006/05/15 12:31:26  sm
 **	- Typo fix
-**
+**	
 **	Revision 1.3  2006/05/15 12:30:36  smork
 **	- Templating syntax error fixed.
 **	- Searching for some test case problems.
@@ -63,14 +66,33 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(b3FileTest<b3File>);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3FileTest<b3FileMem>);
 
-template <> void b3FileTest<b3File>::setUp()
+template <> b3_bool b3FileTest<b3File>::openRead(const char *filename)
 {
-	file.b3Open("Config.tst",B_WRITE);
+	return file.b3Open(filename, B_READ);
 }
 
-template <> void b3FileTest<b3FileMem>::setUp()
+template <> b3_bool b3FileTest<b3File>::openWrite(const char *filename)
 {
-	file.b3Open(B_WRITE);
+	return file.b3Open(filename, B_WRITE);
+}
+
+template <> void b3FileTest<b3File>::removeFile(const char *filename)
+{
+	::remove(filename);
+}
+
+template <> b3_bool b3FileTest<b3FileMem>::openRead(const char *filename)
+{
+	return file.b3Open(filename,B_READ);
+}
+
+template <> b3_bool b3FileTest<b3FileMem>::openWrite(const char *filename)
+{
+	return file.b3Open(B_WRITE);
+}
+
+template <> void b3FileTest<b3FileMem>::removeFile(const char *filename)
+{
 }
 
 #endif

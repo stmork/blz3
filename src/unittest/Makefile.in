@@ -54,8 +54,11 @@ all:	$(PRGS)
 depend:
 	@CPP@ -M  $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
 
-clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(TEST_FILES) ALL QUIET
+clean:	cleantest
+	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
+
+cleantest:
+	rm -f $(TEST_FILES)
 
 basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
