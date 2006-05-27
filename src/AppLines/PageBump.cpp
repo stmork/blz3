@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.8  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.7  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
 **	
@@ -101,3 +105,11 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageBump message handlers
+
+void CPageBump::b3PreInitDialog()
+{
+}
+
+void CPageBump::b3PostInitDialog()
+{
+}

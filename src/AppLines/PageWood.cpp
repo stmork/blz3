@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.7  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.6  2004/05/09 16:37:59  sm
 **	- Added scaling property page to oak plank material
 **	- Corrected so,e input parameters.
@@ -176,24 +180,18 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPageWood message handlers
 
-BOOL CPageWood::OnInitDialog() 
-{
-	CB3PropertyPage::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	b3PrintLegend();
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
-}
-
 BOOL CPageWood::PreTranslateMessage(MSG* pMsg) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	b3PrintLegend();
+	b3PostInitDialog();
 	return CB3PropertyPage::PreTranslateMessage(pMsg);
 }
 
-void CPageWood::b3PrintLegend()
+void CPageWood::b3PreInitDialog()
+{
+}
+
+void CPageWood::b3PostInitDialog()
 {
 	CString  title;
 

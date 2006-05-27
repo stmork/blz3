@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.6  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -159,23 +163,15 @@ b3_bool CDlgBumpTexture::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-BOOL CDlgBumpTexture::OnInitDialog() 
+void CDlgBumpTexture::b3PreInitDialog() 
 {
-	// Init legends
 	m_xStart.b3Init(&m_xStartCtrl, &m_xStartLegend, &m_Bound.xInfo,B3_COND_CTRL_START);
 	m_xScale.b3Init(&m_xScaleCtrl, &m_xScaleLegend, &m_Bound.xInfo,B3_COND_CTRL_DIR);
 	m_yStart.b3Init(&m_yStartCtrl, &m_yStartLegend, &m_Bound.yInfo,B3_COND_CTRL_START);
 	m_yScale.b3Init(&m_yScaleCtrl, &m_yScaleLegend, &m_Bound.yInfo,B3_COND_CTRL_DIR);
-
-	CB3SimplePreviewDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgBumpTexture::b3InitDialog() 
+void CDlgBumpTexture::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);

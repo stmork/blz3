@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.1  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -46,7 +50,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	
 */
 
@@ -102,7 +106,11 @@ b3_bool CDlgBumpOcean::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-void CDlgBumpOcean::b3InitDialog() 
+void CDlgBumpOcean::b3PreInitDialog()
+{
+}
+
+void CDlgBumpOcean::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);

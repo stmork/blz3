@@ -39,12 +39,16 @@ static char THIS_FILE[] = __FILE__;
 /*
 ** PROTECTED REGION ID(CDlgBumpOceanWave_log) ENABLED START
 **	$Log$
+**	Revision 1.5  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.4  2006/05/23 20:23:41  sm
 **	- Some view/bitmap cleanups.
 **	- Some more ocean wave ctrl development.
 **	- Some preview property page cleanups.
 **	- Changed data access methods of b3Tx.
-**
+**	
 **	Revision 1.3  2006/05/22 20:15:24  sm
 **	- Added ocean wave control.
 **	
@@ -146,11 +150,14 @@ END_MESSAGE_MAP()
 **                                                                      **
 *************************************************************************/
 
-BOOL CPageOcean::OnInitDialog()
+void CPageOcean::b3PreInitDialog()
 {
 	m_T.b3SetRange(1.0, 100.0);
 	m_Dim.b3SetRange(4, 12);
-	CB3PropertyPage::OnInitDialog();
+}
+
+void CPageOcean::b3PostInitDialog()
+{
 	m_A.b3SetPos(m_Ocean->m_A);
 	m_T.b3SetPos(m_Ocean->m_T);
 	m_Size.b3SetPos(m_Ocean->m_GridSize);
@@ -158,9 +165,7 @@ BOOL CPageOcean::OnInitDialog()
 	m_Dim.b3SetPos(m_Ocean->m_Dim);
 	m_Wx.b3SetPos(m_Ocean->m_Wx);
 	m_Wy.b3SetPos(m_Ocean->m_Wy);
-	b3UpdateUI();
 	m_OceanWaveCtrl.b3SetOcean(m_Ocean);
-	return TRUE;
 }
 
 void CPageOcean::OnOK()

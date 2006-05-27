@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.13  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.12  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -144,7 +148,11 @@ b3_bool CDlgBumpWood::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-void CDlgBumpWood::b3InitDialog() 
+void CDlgBumpWood::b3PreInitDialog()
+{
+}
+
+void CDlgBumpWood::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);

@@ -24,13 +24,14 @@
 // DlgProperties.h : header file
 //
 
+#include "blz3/system/b3Dialog.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "blz3/system/b3ColorFieldSelector.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProperties dialog
 
-class CDlgProperties : public CDialog
+class CDlgProperties : public CB3Dialog
 {
 	CAppLinesApp *m_App;
 	b3Color       m_ColorBg;
@@ -80,7 +81,6 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgProperties)
 	virtual void OnOK();
-	virtual BOOL OnInitDialog();
 	afx_msg void OnChangeBg();
 	afx_msg void OnChangeCamera();
 	afx_msg void OnChangeFulcrum();
@@ -96,6 +96,11 @@ protected:
 
 public:
 	static void b3ReadConfig();
+
+private:
+	void b3PreInitDialog();
+	void b3PostInitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

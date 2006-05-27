@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.6  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.5  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -125,7 +129,11 @@ b3_bool CDlgMatCarPaint::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-void CDlgMatCarPaint::b3InitDialog()
+void CDlgMatCarPaint::b3PreInitDialog()
+{
+}
+
+void CDlgMatCarPaint::b3PostInitDialog()
 {
 	m_PagePerpendicular.b3SetCaption(IDS_TITLE_PERPENDICULAR);
 	m_PageParallel.b3SetCaption(IDS_TITLE_PARALLEL);

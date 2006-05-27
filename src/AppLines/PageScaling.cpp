@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.5  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.4  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -129,17 +133,14 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPageScaling message handlers
 
-BOOL CPageScaling::OnInitDialog() 
+void CPageScaling::b3PreInitDialog()
 {
 	m_ScaleCtrl.b3Init(&m_Scaling->m_Scale,&m_xScaleCtrl,&m_yScaleCtrl,&m_zScaleCtrl);
+}
 
-	CB3PropertyPage::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+void CPageScaling::b3PostInitDialog()
+{
 	m_xScaleCtrl.b3SetRange(0.0001,10000);
 	m_yScaleCtrl.b3SetRange(0.0001,10000);
 	m_zScaleCtrl.b3SetRange(0.0001,10000);
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }

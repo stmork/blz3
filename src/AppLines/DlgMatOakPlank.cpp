@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.16  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.15  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -160,7 +164,11 @@ b3_bool CDlgMatOakPlank::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-void CDlgMatOakPlank::b3InitDialog() 
+void CDlgMatOakPlank::b3PreInitDialog()
+{
+}
+
+void CDlgMatOakPlank::b3PostInitDialog() 
 {
 	m_PreviewMaterialCtrl.b3Init();
 	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl,1);

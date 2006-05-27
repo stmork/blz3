@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Light.h"
+#include "blz3/system/b3Dialog.h"
 #include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/system/b3ShowRaytrace.h"
@@ -33,11 +34,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLDC dialog
 
-class CDlgLDC : public CDialog
+class CDlgLDC : public CB3Dialog
 {
 // Construction
 	b3_u32     m_ShadingClassType;
 	b3Scene   *m_LightScene;
+
 public:
 	b3Light   *m_Light;
 	CDlgLDC(b3_u32 class_type,CWnd* pParent = NULL);   // standard constructor
@@ -64,13 +66,14 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgLDC)
-	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 private:
-	void b3UpdatePreview();
+	void b3PreInitDialog();
+	void b3PostInitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -64,6 +64,10 @@ protected:
 	//{{AFX_MSG(CPageOakPlank)
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3PreInitDialog();
+	void b3PostInitDialog();
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.13  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.12  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
 **	
@@ -145,7 +149,11 @@ b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-void CDlgBumpOakPlank::b3InitDialog() 
+void CDlgBumpOakPlank::b3PreInitDialog()
+{
+}
+
+void CDlgBumpOakPlank::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);

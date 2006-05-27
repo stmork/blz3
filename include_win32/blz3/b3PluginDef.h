@@ -9,7 +9,7 @@
 **
 **	Blizzard III - class import/export to plugins
 **
-**	(C) Copyright  Steffen A. Mork
+**	(C) Copyright 2003  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

@@ -86,7 +86,6 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgBumpTexture)
-	virtual BOOL OnInitDialog();
 	afx_msg void OnUnitChanged();
 	afx_msg void OnLimitChanged();
 	afx_msg void OnChangeTexturePath();
@@ -94,7 +93,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	void b3InitDialog();
+	void b3PreInitDialog();
+	void b3PostInitDialog();
 	void b3UpdateUI();
 };
 

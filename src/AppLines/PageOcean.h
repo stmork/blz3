@@ -63,11 +63,14 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageOcean)
-	virtual BOOL  OnInitDialog();
 	virtual void  OnOK();
 	afx_msg void  OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3PreInitDialog();
+	void b3PostInitDialog();
 };
 
 #endif

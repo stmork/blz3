@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.9  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.8  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -128,17 +132,15 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPageMaterial message handlers
 
-BOOL CPageMaterial::OnInitDialog() 
+void CPageMaterial::b3PreInitDialog() 
 {
-	CB3PropertyPage::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+}
+
+void CPageMaterial::b3PostInitDialog() 
+{
 	m_AmbientCtrl.b3Init(&m_Material->m_Ambient,this);
 	m_DiffuseCtrl.b3Init(&m_Material->m_Diffuse,this);
 	m_SpecularCtrl.b3Init(&m_Material->m_Specular,this);
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CPageMaterial::OnColorAmbient() 

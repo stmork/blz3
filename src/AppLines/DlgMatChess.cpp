@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.11  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.10  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -161,7 +165,11 @@ b3_bool CDlgMatChess::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-void CDlgMatChess::b3InitDialog()
+void CDlgMatChess::b3PreInitDialog()
+{
+}
+
+void CDlgMatChess::b3PostInitDialog()
 {
 	m_PageBlack.b3AddToSheet(&m_PropertySheet);
 	m_PageWhite.b3AddToSheet(&m_PropertySheet);

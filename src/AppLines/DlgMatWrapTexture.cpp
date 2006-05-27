@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.10  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.9  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -180,23 +184,15 @@ b3_bool CDlgMatWrapTexture::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-BOOL CDlgMatWrapTexture::OnInitDialog() 
+void CDlgMatWrapTexture::b3PreInitDialog() 
 {
-	// Init legends
 	m_xStart.b3Init(&m_xStartCtrl,&m_xStartLegend,&m_Bound.xInfo,B3_COND_CTRL_START);
 	m_xEnd.b3Init(  &m_xEndCtrl,  &m_xEndLegend,  &m_Bound.xInfo,B3_COND_CTRL_END);
 	m_yStart.b3Init(&m_yStartCtrl,&m_yStartLegend,&m_Bound.yInfo,B3_COND_CTRL_START);
 	m_yEnd.b3Init(  &m_yEndCtrl,  &m_yEndLegend,  &m_Bound.yInfo,B3_COND_CTRL_END);
-
-	CB3SimplePreviewDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgMatWrapTexture::b3InitDialog()
+void CDlgMatWrapTexture::b3PostInitDialog()
 {
 }
 

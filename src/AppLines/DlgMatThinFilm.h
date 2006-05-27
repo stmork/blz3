@@ -75,7 +75,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	void b3InitDialog();
+	void b3PreInitDialog();
+	void b3PostInitDialog();
 	void b3UpdateUI();
 };
 

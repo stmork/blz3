@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.13  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.12  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -168,21 +172,15 @@ b3_bool CDlgMatNormal::b3Edit(b3Item *item,void *ptr)
 	return dlg.DoModal() == IDOK;
 }
 
-BOOL CDlgMatNormal::OnInitDialog() 
+void CDlgMatNormal::b3PreInitDialog()
 {
-	CB3SimplePreviewDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+}
+
+void CDlgMatNormal::b3PostInitDialog()
+{
 	m_AmbientCtrl.b3Init(&m_Material->m_Ambient,this);
 	m_DiffuseCtrl.b3Init(&m_Material->m_Diffuse,this);
 	m_SpecularCtrl.b3Init(&m_Material->m_Specular,this);
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
-}
-
-void CDlgMatNormal::b3InitDialog()
-{
 }
 
 void CDlgMatNormal::b3UpdateUI()

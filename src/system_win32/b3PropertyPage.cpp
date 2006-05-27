@@ -32,12 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.9  2006/05/23 20:23:42  sm
 **	- Some view/bitmap cleanups.
 **	- Some more ocean wave ctrl development.
 **	- Some preview property page cleanups.
 **	- Changed data access methods of b3Tx.
-**
+**	
 **	Revision 1.8  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -121,9 +125,22 @@ END_MESSAGE_MAP()
 
 BOOL CB3PropertyPage::OnInitDialog() 
 {
-	CPropertyPage::OnInitDialog();
+	BOOL result = FALSE;
 
-	return TRUE;  // return TRUE unless you set the focus to a control
+	try
+	{
+		b3PreInitDialog();
+		CPropertyPage::OnInitDialog();
+		b3PostInitDialog();
+	}
+	catch(exception &exc)
+	{
+		b3PrintF(B3LOG_NORMAL, 
+			"ERROR in CB3Dialog::OnInitDialog()!\n",
+			"      %s\n", exc.what());
+		result = FALSE;
+	}
+	return result;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 

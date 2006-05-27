@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.7  2006/03/27 11:22:35  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.6  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -67,7 +71,7 @@
 *************************************************************************/
 
 CDlgLDC::CDlgLDC(b3_u32 class_type,CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgLDC::IDD, pParent)
+	: CB3Dialog(CDlgLDC::IDD, pParent)
 {
 	m_ShadingClassType = class_type;
 	//{{AFX_DATA_INIT(CDlgLDC)
@@ -80,7 +84,7 @@ CDlgLDC::CDlgLDC(b3_u32 class_type,CWnd* pParent /*=NULL*/)
 
 void CDlgLDC::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3Dialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgLDC)
 	DDX_Control(pDX, IDC_LIGHT_LDC_DIAGRAM, m_CtrlDiagram);
 	DDX_Control(pDX, IDC_LIGHT_PREVIEW, m_CtrlPreview);
@@ -89,7 +93,7 @@ void CDlgLDC::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgLDC, CDialog)
+BEGIN_MESSAGE_MAP(CDlgLDC, CB3Dialog)
 	//{{AFX_MSG_MAP(CDlgLDC)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
@@ -98,7 +102,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLDC message handlers
 
-BOOL CDlgLDC::OnInitDialog() 
+void CDlgLDC::b3PreInitDialog() 
 {
 	b3Light *light;
 
@@ -117,20 +121,17 @@ BOOL CDlgLDC::OnInitDialog()
 	light->m_LightActive = m_Light->m_LightActive;
 	light->m_SoftShadow  = m_Light->m_SoftShadow;
 	light->m_SpotActive  = m_Light->m_SpotActive;
+}
 
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+void CDlgLDC::b3PostInitDialog() 
+{
 	m_CtrlLDC.b3Init(m_Light);
 	m_CtrlLDC.b3Update();
 	m_CtrlDiagram.b3Init(m_Light);
 	m_CtrlDiagram.b3Update();
-	b3UpdatePreview();	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgLDC::b3UpdatePreview()
+void CDlgLDC::b3UpdateUI()
 {
 	b3Light  *light = m_LightScene->b3GetLight();
 	b3_index  i;
@@ -145,7 +146,7 @@ void CDlgLDC::b3UpdatePreview()
 
 void CDlgLDC::OnDestroy() 
 {
-	CDialog::OnDestroy();
+	CB3Dialog::OnDestroy();
 	
 	// TODO: Add your message handler code here
 	delete m_LightScene;
@@ -166,11 +167,11 @@ BOOL CDlgLDC::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 			return TRUE;
 
 		case WM_LBUTTONUP:
-			b3UpdatePreview();
+			b3UpdateUI();
 			*pResult = 0;
 			return TRUE;
 		}
 		break;
 	}
-	return CDialog::OnNotify(wParam, lParam, pResult);
+	return CB3Dialog::OnNotify(wParam, lParam, pResult);
 }

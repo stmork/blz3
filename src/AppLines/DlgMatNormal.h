@@ -72,7 +72,6 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatNormal)
-	virtual BOOL OnInitDialog();
 	afx_msg void OnColorAmbient();
 	afx_msg void OnColorDiffuse();
 	afx_msg void OnColorSpecular();
@@ -80,7 +79,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	void b3InitDialog();
+	void b3PreInitDialog();
+	void b3PostInitDialog();
 	void b3UpdateUI();
 };
 

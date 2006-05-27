@@ -63,10 +63,12 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageScaling)
-	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
+private:
+	void b3PreInitDialog();
+	void b3PostInitDialog();
 };
 
 //{{AFX_INSERT_LOCATION}}

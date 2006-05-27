@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.13  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.12  2004/12/11 18:39:44  sm
 **	- Fixed modified object problem in Lines when returning
 **	  to scene editor.
@@ -100,7 +104,7 @@
 *************************************************************************/
 
 CDlgProperties::CDlgProperties(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgProperties::IDD, pParent)
+	: CB3Dialog(CDlgProperties::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgProperties)
 	m_BBoxVisible = FALSE;
@@ -111,7 +115,7 @@ CDlgProperties::CDlgProperties(CWnd* pParent /*=NULL*/)
 
 void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3Dialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgProperties)
 	DDX_Control(pDX, IDC_PICK_SIZE, m_PickSizeCtrl);
 	DDX_Control(pDX, IDC_COLOR_SHAPE, m_CtrlColorShape);
@@ -131,7 +135,7 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgProperties, CDialog)
+BEGIN_MESSAGE_MAP(CDlgProperties, CB3Dialog)
 	//{{AFX_MSG_MAP(CDlgProperties)
 	ON_BN_CLICKED(IDC_CHANGE_BG, OnChangeBg)
 	ON_BN_CLICKED(IDC_CHANGE_CAMERA, OnChangeCamera)
@@ -149,13 +153,13 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProperties message handlers
 
-BOOL CDlgProperties::OnInitDialog() 
+void CDlgProperties::b3PreInitDialog() 
 {
 	m_BBoxVisible = b3BBox::m_GridVisible;
-
-	CDialog::OnInitDialog();
+}
 	
-	// TODO: Add extra initialization here
+void CDlgProperties::b3PostInitDialog() 
+{
 	m_ColorBg       = CAppRenderDoc::m_BgColor;
 	m_ColorUnit     = CAppLinesView::m_GridColorUnit;
 	m_ColorMove     = CAppLinesView::m_GridColorMove;
@@ -186,10 +190,10 @@ BOOL CDlgProperties::OnInitDialog()
 	
 	m_PickSizeCtrl.SetRange(1,4);
 	m_PickSizeCtrl.SetPos(b3PickInfo::m_PickSize);
+}
 
-//	GetDlgItem(IDC_ALLOW_VBO)->EnableWindow(b3VectorBufferObjects::b3HasVBO());
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+void CDlgProperties::b3UpdateUI()
+{
 }
 
 void CDlgProperties::OnChangeBg() 
@@ -255,7 +259,7 @@ void CDlgProperties::OnChangeUnit()
 void CDlgProperties::OnOK() 
 {
 	// TODO: Add extra validation here
-	CDialog::OnOK();
+	CB3Dialog::OnOK();
 	
 	CAppRenderDoc::m_BgColor          = m_ColorBg;
 	CAppLinesView::m_GridColorUnit    = m_ColorUnit;

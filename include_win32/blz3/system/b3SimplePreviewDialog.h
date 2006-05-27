@@ -73,7 +73,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	virtual void b3InitDialog() = 0;
+	virtual void b3PreInitDialog() = 0;
+	virtual void b3PostInitDialog() = 0;
 	virtual void b3UpdateUI() = 0;
 	        void b3Preview();
 };

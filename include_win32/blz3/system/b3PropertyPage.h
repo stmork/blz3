@@ -63,13 +63,15 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-protected:
-	        void   b3UpdateUI();
-
 public:
 	static  void   b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet, int id);
 	        void   b3AddToSheet(CPropertySheet *sheet);
 	        void   b3SetCaption(int id);
+
+protected:
+	virtual void   b3PreInitDialog() = 0;
+	virtual void   b3PostInitDialog() = 0;
+	        void   b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

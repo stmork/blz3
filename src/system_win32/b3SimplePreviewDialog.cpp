@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/27 13:32:22  sm
+**	- Added CB3Dialog base class for simple dialogs.
+**	- Adjusted all tool dialog base classes for better oAW MDA generation
+**
 **	Revision 1.1  2006/03/19 14:47:18  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
-**
+**	
 **	Revision 1.6  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -112,16 +116,26 @@ END_MESSAGE_MAP()
 
 BOOL CB3SimplePreviewDialog::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	b3InitDialog();
+	BOOL result = FALSE;
 
-	b3UpdateUI();
-	m_Checksum = m_Item->b3Checksum();
-	OnAutoRefresh();
+	try
+	{
+		b3PreInitDialog();
+		result = CDialog::OnInitDialog();
+		b3PostInitDialog();
 
-	return TRUE;  // return TRUE unless you set the focus to a control
+		b3UpdateUI();
+		m_Checksum = m_Item->b3Checksum();
+		OnAutoRefresh();
+	}
+	catch(exception &exc)
+	{
+		b3PrintF(B3LOG_NORMAL, 
+			"ERROR in CB3Dialog::OnInitDialog()!\n",
+			"      %s\n", exc.what());
+		result = FALSE;
+	}
+	return result;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
