@@ -25,6 +25,7 @@
 
 #include "b3SystemInclude.h"
 #include "blz3/system/b3ShowColor.h"
+#include "blz3/system/b3PaintDC.h"
 #include "blz3/image/b3Tx.h"
 
 /*************************************************************************
@@ -35,12 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.4  2006/05/23 20:23:42  sm
 **	- Some view/bitmap cleanups.
 **	- Some more ocean wave ctrl development.
 **	- Some preview property page cleanups.
 **	- Changed data access methods of b3Tx.
-**
+**	
 **	Revision 1.3  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -158,7 +162,7 @@ b3_bool CB3ShowColor::b3Update()
 
 void CB3ShowColor::OnPaint()
 {
-	CPaintDC       dc(this);
+	CB3PaintDC     dc(this);
 	CBrush         mark(RGB(255,255,255));
 	CBrush        *oldBrush;
 	CPen           pen(PS_SOLID,1,RGB(0,0,0));
@@ -179,7 +183,6 @@ void CB3ShowColor::OnPaint()
 		center.x - radius,center.y - radius,
 		center.x + radius,center.y + radius);
 
-	CStatic::OnPaint();
 	oldBrush = dc.SelectObject(&mark);
 	oldPen   = dc.SelectObject(&pen);
 	dc.BitBlt(0,0,m_xSize,m_ySize,m_DDB.b3GetDC(),0,0,SRCCOPY);

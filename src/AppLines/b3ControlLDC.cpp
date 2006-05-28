@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.13  2006/05/22 20:42:37  sm
 **	- Added ocean wave control.
-**
+**	
 **	Revision 1.12  2006/03/27 11:22:35  smork
 **	- Renamed member variables of spline template class.
 **	
@@ -227,7 +230,6 @@ void CB3ControlLDC::OnPaint()
 	b3_res    xHalf;
 	
 	// TODO: Add your message handler code here
-	CStatic::OnPaint();
 	B3_ASSERT((m_xMax > 0) && (m_yMax > 0) && (m_LDC != null));
 	m_DC.FillSolidRect(0,0,m_xMax,m_yMax,RGB(255,255,255));
 

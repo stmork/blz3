@@ -23,6 +23,7 @@
 
 #include "AppLinesInclude.h"
 #include "b3ControlKnot.h"
+#include "blz3/system/b3PaintDC.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.3  2006/03/27 11:22:35  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.2  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -87,20 +91,19 @@ void CB3ControlKnot::b3Update(b3_bool refresh)
 
 void CB3ControlKnot::OnPaint() 
 {
-	b3_index   i;
-	b3_f64     iMin,iMax;
-	b3_knots   knots = m_Spline->m_Knots;
-	CRect      rect;
-	CPaintDC   dc(this); // device context for painting
-	b3_count   repeat;
-	CPen       pen(PS_SOLID,1,RGB(0,0,0));
-	b3_knot    last;
-	b3_res     xMax,yMax;
-	b3_coord   x;
-	b3_f64     quotient;
+	CB3PaintDC   dc(this); // device context for painting
+	b3_index     i;
+	b3_f64       iMin,iMax;
+	b3_knots     knots = m_Spline->m_Knots;
+	CRect        rect;
+	b3_count     repeat;
+	CPen         pen(PS_SOLID,1,RGB(0,0,0));
+	b3_knot      last;
+	b3_res       xMax,yMax;
+	b3_coord     x;
+	b3_f64       quotient;
 
 	// TODO: Add your message handler code here
-	CStatic::OnPaint();
 	iMin = knots[0];
 	iMax = knots[m_Spline->m_KnotNum - 1];
 	last = iMin - 1; // force different knot
@@ -137,6 +140,4 @@ void CB3ControlKnot::OnPaint()
 		dc.LineTo(x,    yMax - 10 - repeat * 10);
 		last = knots[i];
 	}
-	
-	// Do not call CStatic::OnPaint() for painting messages
 }

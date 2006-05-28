@@ -1805,6 +1805,9 @@
 				RelativePath="..\..\include_win32\blz3\system\b3Mem.h">
 			</File>
 			<File
+				RelativePath="..\..\include_win32\blz3\system\b3PaintDC.h">
+			</File>
+			<File
 				RelativePath="..\..\include_win32\blz3\system\b3PixelFormat.h">
 			</File>
 			<File

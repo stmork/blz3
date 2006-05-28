@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/05/28 09:46:13  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.19  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.18  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -382,7 +385,7 @@ void CDlgItemMaintain::OnItemEdit()
 	if (item != null)
 	{
 		edit = b3World::b3Clone(item);
-		if (b3Loader::b3GetLoader().b3Edit(edit,m_pDoc))
+		if (b3Loader::b3GetLoader().b3Edit(edit, m_pDoc))
 		{
 			b3Store(edit);
 			m_Head->b3Insert(item,edit);

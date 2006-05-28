@@ -25,6 +25,7 @@
 
 #include "b3SystemInclude.h"
 #include "blz3/system/b3ShowImage.h"
+#include "blz3/system/b3PaintDC.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.9  2006/03/05 21:22:37  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.8  2002/08/25 13:01:11  sm
 **	- b3ShowImage updated to handle empty images.
 **	
@@ -194,9 +198,7 @@ b3_bool CB3ShowImage::b3Update(
 
 void CB3ShowImage::OnPaint()
 {
-	CPaintDC      dc(this);
-
-	CStatic::OnPaint();
+	CB3PaintDC    dc(this);
 
 	GetClientRect(&m_Rect);
 	dc.FillSolidRect(&m_Rect,GetSysColor(COLOR_BTNFACE));

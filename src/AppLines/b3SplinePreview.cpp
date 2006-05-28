@@ -23,6 +23,7 @@
 
 #include "AppLinesInclude.h"
 #include "b3SplinePreview.h"
+#include "blz3/system/b3PaintDC.h"
 
 #ifndef B3_PICK_SIZE
 #define B3_PICK_SIZE 2
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.4  2006/03/27 11:22:35  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.3  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -81,13 +85,13 @@ END_MESSAGE_MAP()
 
 void CB3SplinePreview::OnPaint() 
 {
-	CPaintDC  dc(this); // device context for painting
-	CPen      black(PS_SOLID,1,RGB(0,0,0));
-	CPen      gray(PS_SOLID,1,RGB(140,140,140));
-	CPen     *oldPen;
-	b3_vector curve[B3_MAX_SUBDIV + 1];
-	b3_count  i,max;
-	b3_coord  x,y;
+	CB3PaintDC  dc(this); // device context for painting
+	CPen        black(PS_SOLID,1,RGB(0,0,0));
+	CPen        gray(PS_SOLID,1,RGB(140,140,140));
+	CPen       *oldPen;
+	b3_vector   curve[B3_MAX_SUBDIV + 1];
+	b3_count    i,max;
+	b3_coord    x,y;
 	
 	// TODO: Add your message handler code here
 	B3_ASSERT(m_Spline != null);
@@ -132,8 +136,6 @@ void CB3SplinePreview::OnPaint()
 			B3_PICK_SIZE * 2 + 1,B3_PICK_SIZE * 2 + 1,
 			RGB(255,16,64));
 	}
-
-	// Do not call CStatic::OnPaint() for painting messages
 }
 
 void CB3SplinePreview::b3Update(b3Spline *spline)

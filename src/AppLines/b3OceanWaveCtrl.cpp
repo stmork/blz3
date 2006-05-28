@@ -23,6 +23,7 @@
 
 #include "AppLinesInclude.h"
 #include "b3OceanWaveCtrl.h"
+#include "blz3/system/b3PaintDC.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.3  2006/05/23 20:23:41  sm
 **	- Some view/bitmap cleanups.
 **	- Some more ocean wave ctrl development.
 **	- Some preview property page cleanups.
 **	- Changed data access methods of b3Tx.
-**
+**	
 **	Revision 1.2  2006/05/22 20:42:37  sm
 **	- Added ocean wave control.
 **	
@@ -97,10 +101,8 @@ void CB3OceanWaveCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 
 void CB3OceanWaveCtrl::OnPaint()
 {
-	CPaintDC dc(this); // device context for painting
+	CB3PaintDC dc(this); // device context for painting
 
-	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein.
-	// CStatic::OnPaint() soll zum Zeichnen von Meldungen nicht aufgerufen werden.
 	if (m_Ocean != null)
 	{
 		CPen pen(PS_SOLID, 2, RGB(0xff, 0x11, 0x44)), *oldPen;

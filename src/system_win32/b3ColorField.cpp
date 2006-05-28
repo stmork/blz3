@@ -23,6 +23,7 @@
 
 #include "b3SystemInclude.h"
 #include "blz3/system/b3ColorField.h"
+#include "blz3/system/b3PaintDC.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2006/05/28 09:46:14  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.4  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.3  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -80,8 +84,8 @@ void CB3ColorField::b3SetColor(b3_pkd_color color)
 
 void CB3ColorField::OnPaint()
 {
-	CPaintDC dc(this);
-	CRect    rect;
+	CB3PaintDC dc(this);
+	CRect      rect;
 
 	GetClientRect(&rect);
 	dc.FillSolidRect(&rect,UL_2_COLORREF(m_Color));
@@ -135,7 +139,7 @@ b3_res CB3LineWidth::b3SetColor(
 
 void CB3LineWidth::OnPaint()
 {
-	CPaintDC   dc(this);
+	CB3PaintDC dc(this);
 	CRect      rect;
 	CPen       pen(PS_SOLID,m_Width,UL_2_COLORREF(m_Color));
 	b3_coord   x1,x2,y,diff;
@@ -204,7 +208,7 @@ b3_bool CB3FontField::b3IsEmpty()
 
 void CB3FontField::OnPaint()
 {
-	CPaintDC      dc(this);
+	CB3PaintDC    dc(this);
 	CFont         font;
 	CFont        *old;
 	CRect         rect;
@@ -291,11 +295,11 @@ inline COLORREF CB3HSVField::b3ComputeColorHSV(b3_f64 angle,b3_f64 distance,b3_f
 
 void CB3HSVField::OnPaint()
 {
-	CPaintDC  dc(this);
-	CRect     rect;
-	CPen     *oldPen,color;
-	b3_res    x,xSize,ySize;
-	b3_f64    angle,distance;
+	CB3PaintDC  dc(this);
+	CRect       rect;
+	CPen       *oldPen,color;
+	b3_res      x,xSize,ySize;
+	b3_f64      angle,distance;
 
 	GetClientRect(&rect);
 	xSize = rect.Width();

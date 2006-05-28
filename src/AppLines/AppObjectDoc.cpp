@@ -38,6 +38,9 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2006/05/28 09:46:13  sm
+**	- Fixed CB3ColorField problem
+**
 **	Revision 1.61  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -50,7 +53,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.60  2006/03/26 17:58:23  sm
 **	- Edit object from hierarchy tree caused a race. Fixed now.
 **	
@@ -411,6 +414,12 @@ b3Scene *CAppObjectDoc::b3GetParentScene()
 
 b3_u32 CAppObjectDoc::b3GetParentShading()
 {
+#ifdef _DEBUG
+	if (this == null)
+	{
+		return TRACEPHOTO_MORK2;
+	}
+#endif
 	return (m_LinesDoc != null) && (m_LinesDoc->m_Scene != null) ? m_LinesDoc->m_Scene->b3GetClassType() : TRACEPHOTO_MORK;
 }
 
