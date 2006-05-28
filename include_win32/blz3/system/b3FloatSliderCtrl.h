@@ -31,9 +31,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // CB3FloatSliderCtrl 
 
-#define B3_FSBC_DEFAULT_INCREMENT 1.0
-#define B3_FSBC_DEFAULT_ACCEL     5.0
-#define B3_FSBC_DEFAULT_DIGITS    2
+#define B3_FSC_DEFAULT_INCREMENT 1.0
+#define B3_FSC_DEFAULT_ACCEL     5.0
+#define B3_FSC_DEFAULT_DIGITS    2
+
+#define B3_FSC_MIN DBL_MIN
+#define B3_FSC_MAX DBL_MAX
 
 class CB3FloatSliderCtrl : public CSliderCtrl, public b3ControlUnits
 {

@@ -26,6 +26,9 @@
 
 #include "blz3/b3Config.h"
 
+#define B3_FE_MIN DBL_MIN
+#define B3_FE_MAX DBL_MAX
+
 /////////////////////////////////////////////////////////////////////////////
 // CB3FloatEdit window
 

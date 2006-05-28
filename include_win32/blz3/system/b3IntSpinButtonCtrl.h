@@ -33,6 +33,9 @@
 #define B3_ISBC_DEFAULT_INCREMENT 1
 #define B3_ISBC_DEFAULT_ACCEL     5
 
+#define B3_ISBC_MIN  INT_MIN
+#define B3_ISBC_MAX  INT_MAX
+
 class B3_PLUGIN CB3IntSpinButtonCtrl : public CSpinButtonCtrl
 {
 	b3_s32 m_Increment;
@@ -46,7 +49,7 @@ public:
 	virtual ~CB3IntSpinButtonCtrl();
 	
 	b3_s32   b3SetPos(b3_s32 pos);
-	b3_s32   b3SetRange(b3_s32 min,b3_s32 max);
+	b3_s32   b3SetRange(b3_s32 min, b3_s32 max);
 	void     b3SetIncrement(b3_s32 increment = B3_ISBC_DEFAULT_INCREMENT);
 	void     b3SetAccel(b3_s32 increment = B3_ISBC_DEFAULT_ACCEL,int secs = 2);
 	void     b3DDX(CDataExchange *pDX,b3_s32 &pos);

@@ -35,6 +35,9 @@
 #define B3_FSBC_DEFAULT_ACCEL     5.0
 #define B3_FSBC_DEFAULT_DIGITS    2
 
+#define B3_FSBC_MIN DBL_MIN
+#define B3_FSBC_MAX DBL_MAX
+
 class B3_PLUGIN CB3FloatSpinButtonCtrl : public CSpinButtonCtrl, public b3ControlUnits
 {
 

@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/28 16:29:09  sm
+**	- Added some constants.
+**	- Added some secure locks.
+**
 **	Revision 1.7  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.6  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -143,7 +147,6 @@ void CB3IntSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CB3IntSpinButtonCtrl::OnLButtonUp(UINT nFlags, CPoint point) 
 {
-	// TODO: Add your message handler code here and/or call default
 	CWnd *parent = GetParent();
 
 	CSpinButtonCtrl::OnLButtonUp(nFlags, point);

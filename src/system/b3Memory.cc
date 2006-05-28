@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/05/28 16:29:09  sm
+**	- Added some constants.
+**	- Added some secure locks.
+**
 **	Revision 1.5  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.4  2005/05/18 09:16:55  smork
 **	- More selftest stability.
 **	- Using mutex as base class in b3Mem.
@@ -72,10 +76,10 @@ b3Mem::~b3Mem()
 
 void *b3Mem::b3Alloc(const b3_size size)
 {
-	void     *ptr = b3MemAccess::b3Alloc(size);
-	b3_index  i;
+	void              *ptr = b3MemAccess::b3Alloc(size);
+	b3_index           i;
+	b3CriticalSection  lock(*this);
 
-	b3Lock();
 	i = b3FindIndex(null);
 	if (i >= 0)
 	{
@@ -126,7 +130,6 @@ void *b3Mem::b3Alloc(const b3_size size)
 			}
 		}
 	}
-	b3Unlock();
 		
 	return ptr;
 }
@@ -144,9 +147,9 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 		{
 			if (new_size > 0)
 			{
+				b3CriticalSection lock(*this);
 				b3_index i;
 
-				b3Lock();
 				i = b3FindIndex(old_ptr);
 				if (i >= 0)
 				{
@@ -174,7 +177,6 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 				{
 					// Error!
 				}
-				b3Unlock();
 			}
 			else
 			{
@@ -191,15 +193,18 @@ b3_bool b3Mem::b3Free(const void *ptr)
 
 	if (ptr != null)
 	{
-		b3Lock();
-		i = b3FindIndex(ptr);
-		if (i >= 0)
+		// Critical Section
 		{
-			m_SlotPtr[i].m_Ptr  = null;
-			m_SlotPtr[i].m_Size = 0;
-			found = true;
+			b3CriticalSection lock(*this);
+
+			i = b3FindIndex(ptr);
+			if (i >= 0)
+			{
+				m_SlotPtr[i].m_Ptr  = null;
+				m_SlotPtr[i].m_Size = 0;
+				found = true;
+			}
 		}
-		b3Unlock();
 
 		if (found)
 		{
@@ -212,9 +217,9 @@ b3_bool b3Mem::b3Free(const void *ptr)
 
 b3_bool b3Mem::b3Free()
 {
-	b3_index i;
+	b3CriticalSection lock(*this);
+	b3_index          i;
 
-	b3Lock();
 	for (i = 0;i < m_SlotMax;i++)
 	{
 		if (m_SlotPtr[i].m_Ptr != null)
@@ -225,21 +230,19 @@ b3_bool b3Mem::b3Free()
 		}
 	}
 	m_SlotMax = 0;
-	b3Unlock();
 
 	return true;
 }
 
 void b3Mem::b3Dump()
 {
-	b3_index i;
+	b3CriticalSection lock(*this);
+	b3_index          i;
 
-	b3Lock();
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # slot max: %d  slot count: %d\n",m_SlotMax,m_SlotCount);
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # slots: %p   initial slots: %p\n",m_SlotPtr, m_Slots);
 	for (i = 0;i < m_SlotMax;i++)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # %3d: %p\n",i,m_SlotPtr[i]);
 	}
-	b3Unlock();
 }
