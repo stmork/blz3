@@ -42,6 +42,7 @@ protected:
 
 	// Construction
 public:
+	DECLARE_DYNAMIC(CB3SimplePreviewDialog)
 	CB3SimplePreviewDialog(b3Item *item,int dlgId,CWnd* pParent = NULL);   // standard constructor
 	~CB3SimplePreviewDialog();
 

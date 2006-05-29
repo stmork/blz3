@@ -947,24 +947,24 @@
 #define IDS_TOOLBAR_OBJECT              60206
 #define IDS_TOOLBAR_VIEW                60207
 #define IDS_UNKNOWN                     60208
-#define IDS_MAT_CAR_PAINT               61446
-#define IDS_TITLE_PARALLEL              61447
-#define IDS_TITLE_PERPENDICULAR         61448
-#define IDS_DOC_UPDATE_MATERIAL         61449
-#define IDS_OP_SHAPE_CREATE             61450
-#define IDS_OP_SHAPE_EDIT               61451
-#define IDS_OP_SHAPE_DELETE             61452
-#define IDS_OP_SHAPE_MATERIAL_MAINTAIN  61453
-#define IDS_OP_SHAPE_MATERIAL_EDIT      61454
-#define IDS_OP_SHAPE_BUMP_MAINTAIN      61455
-#define IDS_OP_SHAPE_BUMP_EDIT          61456
-#define IDS_OP_SHAPE_CONDITION_MAINTAIN 61457
-#define IDS_OP_SHAPE_MATERIAL_EDIT3     61458
-#define IDS_OP_SHAPE_CONDITION_EDIT     61458
-#define IDS_OP_SHAPE_COPY_PROPERTY      61459
-#define IDS_BBOX_UNNAMED                61460
-#define IDS_BUMP_OCEANWAVE              61461
-#define IDS_BUMP_OCEAN                  61461
+#define IDS_MAT_CAR_PAINT               60209
+#define IDS_TITLE_PARALLEL              60210
+#define IDS_TITLE_PERPENDICULAR         60211
+#define IDS_DOC_UPDATE_MATERIAL         60212
+#define IDS_OP_SHAPE_CREATE             60213
+#define IDS_OP_SHAPE_EDIT               60214
+#define IDS_OP_SHAPE_DELETE             60215
+#define IDS_OP_SHAPE_MATERIAL_MAINTAIN  60216
+#define IDS_OP_SHAPE_MATERIAL_EDIT      60217
+#define IDS_OP_SHAPE_BUMP_MAINTAIN      60218
+#define IDS_OP_SHAPE_BUMP_EDIT          60219
+#define IDS_OP_SHAPE_CONDITION_MAINTAIN 60220
+#define IDS_OP_SHAPE_MATERIAL_EDIT3     60221
+#define IDS_OP_SHAPE_CONDITION_EDIT     60222
+#define IDS_OP_SHAPE_COPY_PROPERTY      60223
+#define IDS_BBOX_UNNAMED                60224
+#define IDS_BUMP_OCEANWAVE              60225
+#define IDS_BUMP_OCEAN                  60226
 
 // Next default values for new objects
 // 
@@ -974,6 +974,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10128
 #define _APS_NEXT_CONTROL_VALUE         32441
-#define _APS_NEXT_SYMED_VALUE           60209
+#define _APS_NEXT_SYMED_VALUE           60227
 #endif
 #endif

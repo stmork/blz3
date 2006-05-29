@@ -24,6 +24,7 @@
 class B3_PLUGIN CB3Dialog : public CDialog
 {
 public:
+	DECLARE_DYNAMIC(CB3Dialog)
 	CB3Dialog(int dlgId,CWnd* pParent = NULL);   // standard constructor
 	virtual ~CB3Dialog(void);
 

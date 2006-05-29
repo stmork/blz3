@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2006/05/29 15:13:45  smork
+**	- Resource IDs corrected.
+**
 **	Revision 1.2  2006/05/27 13:32:22  sm
 **	- Added CB3Dialog base class for simple dialogs.
 **	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
+**	
 **	Revision 1.1  2006/03/19 14:47:18  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
@@ -75,6 +78,8 @@
 **                        CB3SimplePreviewDialog implementation         **
 **                                                                      **
 *************************************************************************/
+
+IMPLEMENT_DYNAMIC(CB3SimplePreviewDialog, CDialog)
 
 CB3SimplePreviewDialog::CB3SimplePreviewDialog(b3Item *item,int dlgId,CWnd* pParent /*=NULL*/)
 	: CDialog(dlgId, pParent)

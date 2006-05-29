@@ -37,6 +37,7 @@ protected:
 	CPropertySheet     m_PropertySheet;
 // Construction
 public:
+	DECLARE_DYNAMIC(CB3SimplePropertyPreviewDialog)
 	CB3SimplePropertyPreviewDialog(b3Item *item,int dlgId,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data

@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2006/05/29 15:13:45  smork
+**	- Resource IDs corrected.
+**
 **	Revision 1.1  2006/05/27 13:32:22  sm
 **	- Added CB3Dialog base class for simple dialogs.
 **	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
+**	
 **
 */
 
@@ -44,6 +47,8 @@
 **                        CB3Dialog implementation                      **
 **                                                                      **
 *************************************************************************/
+
+IMPLEMENT_DYNAMIC(CB3Dialog, CDialog)
 
 CB3Dialog::CB3Dialog(int dlgId,CWnd* pParent /*=NULL*/)
 	: CDialog(dlgId, pParent)

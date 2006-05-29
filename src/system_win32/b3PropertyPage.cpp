@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2006/05/29 15:13:45  smork
+**	- Resource IDs corrected.
+**
 **	Revision 1.10  2006/05/27 13:32:22  sm
 **	- Added CB3Dialog base class for simple dialogs.
 **	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
+**	
 **	Revision 1.9  2006/05/23 20:23:42  sm
 **	- Some view/bitmap cleanups.
 **	- Some more ocean wave ctrl development.
@@ -93,6 +96,8 @@
 **                        CB3PropertyPage implementation                **
 **                                                                      **
 *************************************************************************/
+
+IMPLEMENT_DYNAMIC(CB3PropertyPage, CPropertyPage)
 
 CB3PropertyPage::CB3PropertyPage(UINT nIDTemplate) : CPropertyPage(nIDTemplate)
 {

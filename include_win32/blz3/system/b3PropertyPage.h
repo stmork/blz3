@@ -36,6 +36,7 @@ class CB3PropertyPage : public CPropertyPage
 
 // Construction
 public:
+	DECLARE_DYNAMIC(CB3PropertyPage)
 	CB3PropertyPage(UINT nIDTemplate);
 	~CB3PropertyPage();
 
