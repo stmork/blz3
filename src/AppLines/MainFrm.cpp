@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2006/05/31 14:17:20  smork
+**	- Disabling menu bar because it disturbs plugin dlls.
+**
 **	Revision 1.44  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.43  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -362,7 +365,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3GfxType(this);
 	app->b3MoveWindow(this);
 
-	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
+//	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
 	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,         IDS_TOOLBAR_MAINFRAME);
 	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT,    IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,      IDS_TOOLBAR_VIEW);

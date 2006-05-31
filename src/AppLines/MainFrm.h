@@ -66,7 +66,7 @@ public:
 protected:  // control bar embedded members
 	CStatusBar         m_wndStatusBar;
 	CCoolMenuManager   m_menuManager;		// cool (bitmap button) menus
-	CB3Menubar         m_wndMenuBar;
+//	CB3Menubar         m_wndMenuBar;
 	CB3Toolbar         m_wndToolBar;
 	CB3Toolbar         m_wndViewBar;
 	CB3Toolbar         m_wndActnBar;
