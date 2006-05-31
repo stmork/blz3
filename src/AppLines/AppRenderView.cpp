@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLinesInclude.h"
+
 #include "b3Action.h"
 #include <sys/timeb.h>
 #include "blz3/system/b3Error.h"
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2006/05/31 17:29:09  sm
+**	- CMenuBar braced by #ifdef's
+**
 **	Revision 1.51  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.50  2005/05/15 18:52:48  sm
 **	- Corrected pick drawing in object editor.
 **	

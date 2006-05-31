@@ -21,9 +21,10 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/image/b3Tx.h"
 
-#include "AppLines.h"
 #include "MainFrm.h"
 #include "ChildFrm.h"
+
+#include "AppLines.h"
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
 #include "AppObjectDoc.h"

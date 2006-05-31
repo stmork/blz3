@@ -24,6 +24,8 @@
 #include "AppLinesInclude.h"
 
 #include "b3Splash.h"
+#include "MainFrm.h"
+#include ".\mainfrm.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2006/05/31 17:29:09  sm
+**	- CMenuBar braced by #ifdef's
+**
 **	Revision 1.45  2006/05/31 14:17:20  smork
 **	- Disabling menu bar because it disturbs plugin dlls.
-**
+**	
 **	Revision 1.44  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -365,7 +370,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3GfxType(this);
 	app->b3MoveWindow(this);
 
-//	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
+#ifdef USE_MENUBAR
+	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
+#endif
 	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,         IDS_TOOLBAR_MAINFRAME);
 	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT,    IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,      IDS_TOOLBAR_VIEW);
@@ -836,4 +843,15 @@ void CMainFrame::OnUpdateLightSelect(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(false);
+}
+
+BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
+{
+#ifdef USE_MENUBAR
+	if (m_wndMenuBar.TranslateFrameMessage(pMsg))
+	{
+		return TRUE;
+	}
+#endif
+	return CMDIFrameWnd::PreTranslateMessage(pMsg);
 }

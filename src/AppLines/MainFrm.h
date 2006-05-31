@@ -66,7 +66,9 @@ public:
 protected:  // control bar embedded members
 	CStatusBar         m_wndStatusBar;
 	CCoolMenuManager   m_menuManager;		// cool (bitmap button) menus
-//	CB3Menubar         m_wndMenuBar;
+#ifdef USE_MENUBAR
+	CB3Menubar         m_wndMenuBar;
+#endif
 	CB3Toolbar         m_wndToolBar;
 	CB3Toolbar         m_wndViewBar;
 	CB3Toolbar         m_wndActnBar;
@@ -143,6 +145,7 @@ public:
 	void          b3SetStatusMessage(const int message_id);
 	void          b3SetPosition(b3_vector *position);
 	void          b3SetPerformance(CView *drawing_window,b3_f64 time_diff,b3_count poly_count);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 /////////////////////////////////////////////////////////////////////////////

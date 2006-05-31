@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLinesInclude.h"
+#include "DlgHierarchy.h"
 
 #include "b3UndoCutPaste.h"
 
@@ -35,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/05/31 17:29:09  sm
+**	- CMenuBar braced by #ifdef's
+**
 **	Revision 1.7  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.6  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
