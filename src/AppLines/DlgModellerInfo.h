@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Special.h"
+#include "blz3/system/b3Checkbox.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/system/b3VectorEdit.h"
 
@@ -47,8 +48,8 @@ public:
 	CB3FloatEdit	m_zFulcrumCtrl;
 	CB3FloatEdit	m_yFulcrumCtrl;
 	CB3FloatEdit	m_xFulcrumCtrl;
-	BOOL			m_SnapToAngle;
-	BOOL			m_SnapToGrid;
+	CB3Checkbox		m_SnapToAngle;
+	CB3Checkbox		m_SnapToGrid;
 	int				m_Unit;
 	int				m_Measure;
 	b3_u32			m_CustomMeasure;

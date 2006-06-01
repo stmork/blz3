@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.3  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.2  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -67,7 +72,7 @@ b3OpLightCreate::b3OpLightCreate(
 		m_Light = new b3Light(AREA_LIGHT);
 		m_Prev  = light;
 		m_Base  = m_Scene->b3GetLightHead();
-		m_Light->b3SetName(dlg.m_NewName);
+		m_Light->b3SetName(dlg.b3GetText());
 		b3Initialize();
 	}
 }

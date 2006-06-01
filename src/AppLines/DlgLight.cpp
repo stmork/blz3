@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.19  2006/03/27 11:22:35  smork
 **	- Renamed member variables of spline template class.
-**
+**	
 **	Revision 1.18  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -301,7 +306,7 @@ void CDlgLight::OnLightNew()
 		b3SetLight();
 
 		m_Light = new b3Light(AREA_LIGHT);
-		m_Light->b3SetName(dlg.m_NewName);
+		m_Light->b3SetName(dlg.b3GetText());
 		m_LightBase->b3Append(m_Light);
 		
 		b3RefreshList();

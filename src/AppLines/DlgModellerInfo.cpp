@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.14  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.13  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -112,8 +117,6 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgModellerInfo::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgModellerInfo)
-	m_SnapToAngle = FALSE;
-	m_SnapToGrid = FALSE;
 	m_Unit = B3_UNIT_CM;
 	m_Measure = B3_MEASURE_20;
 	m_CustomMeasure = 1;
@@ -134,8 +137,8 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FULCRUM_Z, m_zFulcrumCtrl);
 	DDX_Control(pDX, IDC_FULCRUM_Y, m_yFulcrumCtrl);
 	DDX_Control(pDX, IDC_FULCRUM_X, m_xFulcrumCtrl);
-	DDX_Check(pDX, IDC_SNAP_TO_ANGLE, m_SnapToAngle);
-	DDX_Check(pDX, IDC_SNAP_TO_GRID, m_SnapToGrid);
+	DDX_Control(pDX, IDC_SNAP_TO_ANGLE, m_SnapToAngle);
+	DDX_Control(pDX, IDC_SNAP_TO_GRID, m_SnapToGrid);
 	DDX_CBIndex(pDX, IDC_UNIT, m_Unit);
 	DDX_CBIndex(pDX, IDC_MEASURE, m_Measure);
 	DDX_Text(pDX, IDC_CUSTOM_MEASURE, m_CustomMeasure);
@@ -145,6 +148,8 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	m_CenterCtrl.b3DDX(pDX);
 	m_SnapToGridCtrl.b3DDX (pDX,m_ModellerInfo->m_GridMove);
 	m_SnapToAngleCtrl.b3DDX(pDX,m_ModellerInfo->m_GridRot);
+	m_SnapToGrid.b3DDX(pDX, m_ModellerInfo->m_GridActive);
+	m_SnapToAngle.b3DDX(pDX, m_ModellerInfo->m_AngleActive);
 }
 
 
@@ -163,8 +168,6 @@ END_MESSAGE_MAP()
 BOOL CDlgModellerInfo::OnInitDialog() 
 {
 	m_CenterCtrl.b3Init(&m_ModellerInfo->m_Center,&m_xFulcrumCtrl,&m_yFulcrumCtrl,&m_zFulcrumCtrl);
-	m_SnapToGrid    = m_ModellerInfo->m_GridActive;
-	m_SnapToAngle   = m_ModellerInfo->m_AngleActive;
 	m_Unit          = m_ModellerInfo->m_Unit;
 	m_Measure       = m_ModellerInfo->m_Measure;
 	m_CustomMeasure = m_ModellerInfo->m_CustomMeasure;
@@ -202,8 +205,8 @@ void CDlgModellerInfo::OnFulcrumClear()
 
 void CDlgModellerInfo::b3UpdateUI()
 {
-	GetDlgItem(IDC_STEP_GRID)->EnableWindow(m_SnapToGrid);
-	GetDlgItem(IDC_STEP_ANGLE)->EnableWindow(m_SnapToAngle);
+	GetDlgItem(IDC_STEP_GRID)->EnableWindow(m_ModellerInfo->m_GridActive);
+	GetDlgItem(IDC_STEP_ANGLE)->EnableWindow(m_ModellerInfo->m_AngleActive);
 	GetDlgItem(IDC_CUSTOM_MEASURE)->EnableWindow(m_Measure == B3_MEASURE_CUSTOM);
 }
 
@@ -212,8 +215,6 @@ void CDlgModellerInfo::OnOK()
 	// TODO: Add extra validation here
 	CDialog::OnOK();
 
-	m_ModellerInfo->m_GridActive  = m_SnapToGrid;
-	m_ModellerInfo->m_AngleActive = m_SnapToAngle;
 	m_ModellerInfo->m_Unit        = (b3_unit)m_Unit;
 	m_ModellerInfo->m_UseSceneLights = m_LightMode == 1;
 	if (m_Measure != B3_MEASURE_CUSTOM)

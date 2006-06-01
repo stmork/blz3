@@ -352,6 +352,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3Checkbox.cpp">
+			</File>
+			<File
 				RelativePath="b3ColorField.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -1414,6 +1417,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3TextEdit.cpp">
+			</File>
+			<File
 				RelativePath="b3Thread.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -1742,6 +1748,9 @@
 				RelativePath="..\..\include_win32\blz3\system\b3Bitmap.h">
 			</File>
 			<File
+				RelativePath="..\..\include_win32\blz3\system\b3Checkbox.h">
+			</File>
+			<File
 				RelativePath="..\..\include_win32\blz3\system\b3ColorField.h">
 			</File>
 			<File
@@ -1848,6 +1857,9 @@
 			</File>
 			<File
 				RelativePath=".\b3SystemInclude.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3TextEdit.h">
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3Thread.h">

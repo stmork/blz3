@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.5  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.4  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -69,32 +74,33 @@
 *************************************************************************/
 
 CDlgCreateItem::CDlgCreateItem(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgCreateItem::IDD, pParent)
+	: CB3Dialog(CDlgCreateItem::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgCreateItem)
-	m_Label = _T("");
-	m_NewName = _T("");
+	m_Label       = _T("");
 	//}}AFX_DATA_INIT
 
 	m_ClassType   = 0;
 	m_ItemBase    = null;
+	m_Suggest     = _T("");
+	m_NewName     = _T("");
 	m_MaxNameLen  = 0;
-	m_Suggest     = "";
 	m_NoNameCheck = false;
 }
 
 
 void CDlgCreateItem::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3Dialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgCreateItem)
 	DDX_Text(pDX, IDC_ITEM_CREATE_LABEL, m_Label);
-	DDX_Text(pDX, IDC_NEW_ITEM_NAME, m_NewName);
+	DDX_Control(pDX, IDC_NEW_ITEM_NAME, m_NewNameCtrl);
 	//}}AFX_DATA_MAP
+	m_NewNameCtrl.b3DDX(pDX, m_NewName, m_MaxNameLen);
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgCreateItem, CDialog)
+BEGIN_MESSAGE_MAP(CDlgCreateItem, CB3Dialog)
 	//{{AFX_MSG_MAP(CDlgCreateItem)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -102,12 +108,13 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateItem message handlers
 
-BOOL CDlgCreateItem::OnInitDialog() 
+void CDlgCreateItem::b3PreInitDialog() 
 {
 	b3Suggest();
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+}
+
+void CDlgCreateItem::b3PostInitDialog()
+{
 	CEdit *edit;
 
 	B3_ASSERT(m_ItemBase != null);
@@ -116,8 +123,6 @@ BOOL CDlgCreateItem::OnInitDialog()
 		edit = (CEdit *)GetDlgItem(IDC_NEW_ITEM_NAME);
 		edit->LimitText(m_MaxNameLen);
 	}
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 b3_bool CDlgCreateItem::b3IsNameOK(const char *suggest)
@@ -171,6 +176,10 @@ void CDlgCreateItem::b3Suggest()
 	}
 }
 
+void CDlgCreateItem::b3UpdateUI()
+{
+}
+
 void CDlgCreateItem::OnOK() 
 {
 	// TODO: Add extra validation here
@@ -187,5 +196,15 @@ void CDlgCreateItem::OnOK()
 		GetDlgItem(IDC_NEW_ITEM_NAME)->SetFocus();
 		return;
 	}
-	CDialog::OnOK();
+	CB3Dialog::OnOK();
+}
+
+void CDlgCreateItem::b3GetText(char *buffer)
+{
+	strncpy(buffer, m_NewName, m_MaxNameLen);
+}
+
+const char *CDlgCreateItem::b3GetText()
+{
+	return m_NewName.Left(m_MaxNameLen - 1);
 }

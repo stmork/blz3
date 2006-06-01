@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.8  2006/03/05 22:12:32  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.7  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -243,7 +248,7 @@ void CDlgNewObject::OnOK()
 		{
 			m_NewItem = b3World::b3AllocNode(BBOX | (m_BBox->b3GetType() + 1));
 			bbox = (b3BBox *)m_NewItem;
-			bbox->b3SetName(dlg.m_NewName);
+			bbox->b3SetName(dlg.b3GetText());
 			m_Base = bboxes;
 			m_InsertAfter = bboxes->Last;
 		}

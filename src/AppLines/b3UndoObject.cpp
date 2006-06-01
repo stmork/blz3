@@ -39,6 +39,11 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.15  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -51,7 +56,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.14  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -140,7 +145,7 @@ b3OpObjectCreate::b3OpObjectCreate(
 	if (dlg.DoModal() == IDOK)
 	{
 		m_BBox = new b3BBox(BBOX);
-		m_BBox->b3SetName(dlg.m_NewName);
+		m_BBox->b3SetName(dlg.b3GetText());
 		b3Initialize();
 		m_PrepareGeometry         = true;
 		m_PrepareChangedStructure = true;

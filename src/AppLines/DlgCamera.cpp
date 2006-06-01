@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.13  2006/03/05 22:12:31  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.12  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -231,7 +236,7 @@ void CDlgCamera::OnCameraNew()
 		camera->m_Width     = m_Camera->m_Width;
 		camera->m_Height    = m_Camera->m_Height;
 		camera->m_Flags     = CAMERA_ACTIVE;
-		camera->b3SetName(dlg.m_NewName);
+		camera->b3SetName(dlg.b3GetText());
 		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
 		
 		b3RefreshList();

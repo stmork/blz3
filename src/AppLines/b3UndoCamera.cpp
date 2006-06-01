@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2006/06/01 14:17:24  smork
+**	- Added frame work controls for simpler plugin generation:
+**	  o CB3Checkbox
+**	  o CB3TextEdit
+**
 **	Revision 1.7  2006/03/05 22:12:33  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.6  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -87,7 +92,7 @@ b3OpCameraCreate::b3OpCameraCreate(
 		m_Camera->m_Width     = selected->m_Width;
 		m_Camera->m_Height    = selected->m_Height;
 		m_Camera->m_Flags     = CAMERA_ACTIVE;
-		m_Camera->b3SetName(dlg.m_NewName);
+		m_Camera->b3SetName(dlg.b3GetText());
 		b3Initialize();
 	}
 }

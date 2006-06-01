@@ -24,29 +24,34 @@
 // DlgCreateItem.h : header file
 //
 
+#include "blz3/system/b3Dialog.h"
+#include "blz3/system/b3TextEdit.h"
 #include "blz3/base/b3World.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateItem dialog
 
-class CDlgCreateItem : public CDialog
+class CDlgCreateItem : public CB3Dialog
 {
+	CString         m_NewName;
 // Construction
 public:
 	b3Base<b3Item> *m_ItemBase;
 	b3_u32          m_ClassType;
+	CString         m_Suggest;
 	b3_count        m_MaxNameLen;
 	b3_bool         m_NoNameCheck;
-	CString         m_Suggest;
 	CDlgCreateItem(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCreateItem)
 	enum { IDD = IDD_NEW_ITEM };
 	CString	m_Label;
-	CString	m_NewName;
+	CB3TextEdit	m_NewNameCtrl;
 	//}}AFX_DATA
 
+	void b3GetText(char *buffer);
+	const char *b3GetText();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -60,11 +65,13 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateItem)
-	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
+	void    b3PreInitDialog();
+	void    b3PostInitDialog();
+	void    b3UpdateUI();
 	b3_bool b3IsNameOK(const char *suggest);
 	void    b3Suggest();
 };
