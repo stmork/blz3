@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/06/05 08:56:37  sm
+**	- Exception changes to std::exception.
+**
 **	Revision 1.17  2004/11/29 09:58:00  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.16  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -230,7 +233,7 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 
 	if (sscanf(&m_Line[m_Pos],"%*s %s %lf %lf %lf\n",level->m_BoxName,&base,&height,&scale) < 3)
 	{
-		throw b3ParseException("Invalid number of arguments",m_LineNo);
+		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
 	b3PrintF(B3LOG_DEBUG,"  creating area %s scaling by %3.2f...\n",level->m_BoxName,scale);
 

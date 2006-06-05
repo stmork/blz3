@@ -21,6 +21,8 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Aux.h"
 
+#include <stdexcept>
+
 struct b3_door
 {
 	b3_index a,b;
@@ -76,20 +78,25 @@ public:
 	static b3Scene *b3Parse(const char *filename);
 };
 
-class b3ParseException
+class b3ParseException : public std::exception
 {
 public:
 	char m_Message[1024];
 
 public:
-	b3ParseException(char *text)
+	explicit b3ParseException(char *text)
 	{
 		strcpy(m_Message,text);
 	}
 
-	b3ParseException(char *text,b3_count line)
+	explicit b3ParseException(char *text,b3_count line)
 	{
 		sprintf(m_Message,"%s (line: %ld)",text,line);
+	}
+
+	const char *what() const throw()
+	{
+		return m_Message;
 	}
 };
 
