@@ -17,9 +17,10 @@ test -d autom4te.cache && rm -rf autom4te.cache
 test -f src/icc.make   && rm  -f src/icc.make
 
 echo "Removing temp files..."
+find $BLZ3_HOME -name "*.a"   -exec rm -f {} \;
+find $BLZ3_HOME -name "*.lib" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.log" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.ncb" -exec rm -f {} \;
-find $BLZ3_HOME -name "*.suo" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.plg" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.mak" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.bak" -exec rm -f {} \;
@@ -27,7 +28,6 @@ find $BLZ3_HOME -name "*~"    -exec rm -f {} \;
 find $BLZ3_HOME -name ".#*"   -exec rm -f {} \;
 find $BLZ3_HOME -name DEADJOE -exec rm -f {} \;
 
-test -d $BLZ3_HOME/lib          && rm -rf $BLZ3_HOME/lib
 test -d $BLZ3_HOME/Debug        && rm -rf $BLZ3_HOME/Debug
 test -d $BLZ3_HOME/Release      && rm -rf $BLZ3_HOME/Release
 test -d $BLZ3_HOME/Release-SSE  && rm -rf $BLZ3_HOME/Release-SSE
