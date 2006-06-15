@@ -1,15 +1,33 @@
+/*
+**
+**	$Filename:	CB3ImageMultiDocTemplate.h $
+**	$Release:	Dortmund 2001, 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Id$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Lines application
+**
+**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
 #ifndef B3_IMAGEMULTIDOCTEMPLATE_H
 #define B3_IMAGEMULTIDOCTEMPLATE_H
 
 #include "blz3/image/b3Tx.h"
 
-class CImageMultiDocTemplate : public CMultiDocTemplate
+class CB3ImageMultiDocTemplate : public CMultiDocTemplate
 {
-	DECLARE_DYNAMIC(CImageMultiDocTemplate)
+	DECLARE_DYNAMIC(CB3ImageMultiDocTemplate)
 
 // Constructors
 public:
-	CImageMultiDocTemplate(
+	CB3ImageMultiDocTemplate(
 		UINT           nIDResource,
 		CRuntimeClass *pDocClass,
 		CRuntimeClass *pFrameClass,

@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/06/15 18:36:49  sm
+**	- Fixed recursive file list creation.
+**
 **	Revision 1.17  2006/05/17 21:35:37  sm
 **	- Minor optimizations.
-**
+**	
 **	Revision 1.16  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -169,7 +172,7 @@ void b3Log::b3LogFunction (
 		vsnprintf(m_Message,sizeof(m_Message),format,argptr);
 		OutputDebugString(m_Message);
 #endif
-		va_end   (argptr);
+		va_end(argptr);
 
 		if (b3OpenLogFile())
 		{

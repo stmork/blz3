@@ -51,6 +51,9 @@
 
 /*
 **	$Log$
+**	Revision 1.91  2006/06/15 18:36:48  sm
+**	- Fixed recursive file list creation.
+**
 **	Revision 1.90  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -63,7 +66,7 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**
+**	
 **	Revision 1.89  2006/03/19 14:47:17  sm
 **	- Fixed missing initiailization problems in b3BBox.
 **	- Moved some dialog elements into system library.
@@ -494,7 +497,7 @@ CAppLinesApp theApp;
 
 IMPLEMENT_DYNAMIC(CB3DocManager,CDocManager)
 
-IMPLEMENT_DYNAMIC(CImageMultiDocTemplate,CMultiDocTemplate)
+IMPLEMENT_DYNAMIC(CB3ImageMultiDocTemplate,CMultiDocTemplate)
 
 // This identifier was generated to be statistically unique for your app.
 // You may change it if you prefer to choose a specific identifier.
@@ -644,7 +647,7 @@ BOOL CAppLinesApp::InitInstance()
 		RUNTIME_CLASS(CAppLinesView));
 	AddDocTemplate(m_pSceneTemplate);
 
-	m_pImageTemplate = new CImageMultiDocTemplate(
+	m_pImageTemplate = new CB3ImageMultiDocTemplate(
 		IDR_DISPLAYTYPE,
 		RUNTIME_CLASS(CAppRaytraceDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame

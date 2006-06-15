@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2006/06/15 18:36:49  sm
+**	- Fixed recursive file list creation.
+**
 **	Revision 1.16  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
-**
+**	
 **	Revision 1.15  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
 **	
@@ -305,7 +308,10 @@ b3_bool b3Dir::b3OpenDir (const char *path)
 			type = B3_TYPE_FILE;
 		}
 	}
-	else type = B3_NOT_EXISTANT;
+	else
+	{
+		type = B3_NOT_EXISTANT;
+	}
 	return (handle != INVALID_HANDLE_VALUE);
 }
 
@@ -317,7 +323,6 @@ b3_path_type b3Dir::b3DirNext (char *name)
 	do
 	{
 		loop = false;
-		local_type = B3_NOT_EXISTANT;
 		local_type = type;
 		if (local_type != B3_NOT_EXISTANT)
 		{
@@ -329,15 +334,15 @@ b3_path_type b3Dir::b3DirNext (char *name)
 				if (strcmp(entry.cFileName,".")  == 0) loop = true;
 			}
 			strcpy (name,entry.cFileName);
-			if (!FindNextFile (handle,&entry)) type = B3_NOT_EXISTANT;
+			if (FindNextFile (handle,&entry) == 0)
+			{
+				type = B3_NOT_EXISTANT;
+			}
 			else
 			{
 				// Set flag for file/directory entry
-				if (entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-				{
-					type = B3_TYPE_DIR;
-				}
-				else type = B3_TYPE_FILE;
+				type = entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+					B3_TYPE_DIR : B3_TYPE_FILE;
 			}
 		}
 	}
@@ -415,10 +420,11 @@ void b3Path::b3LinkFileName(
 {
 	char    nDrive[_MAX_DRIVE];
 	char    nPathOfPath[_MAX_DIR];
-	char    nNameOfPath[_MAX_FNAME];
-	char    nExt[_MAX_EXT];
+	char    nNameOfPath[_MAX_FNAME + _MAX_EXT];
+	char    nExtOfPath[_MAX_EXT];
 	char    nPathOfName[_MAX_DIR];
-	char    nNameOfName[_MAX_FNAME];
+	char    nNameOfName[_MAX_FNAME + _MAX_EXT];
+	char    nExtOfName[_MAX_EXT];
 	char    nFullPath[_MAX_DIR];
 	b3_size i,len;
 
@@ -427,7 +433,8 @@ void b3Path::b3LinkFileName(
 	nFullPath[0] = 0;
 	if (path != null)
 	{
-		_splitpath (path,nDrive,nPathOfPath,nNameOfPath,nExt);
+		_splitpath (path,nDrive,nPathOfPath,nNameOfPath,nExtOfPath);
+		strncat(nNameOfPath,nExtOfPath, sizeof(nNameOfPath));
 	}
 	else
 	{
@@ -436,19 +443,20 @@ void b3Path::b3LinkFileName(
 
 	if (name != null)
 	{
-		_splitpath (name,null,nPathOfName,nNameOfName,nExt);
+		_splitpath (name,null,nPathOfName,nNameOfName,nExtOfName);
+		strncat(nNameOfName,nExtOfName, sizeof(nNameOfName));
 	}
 
 	if (strlen(nPathOfName) > 0)
 	{
-		snprintf(nFullPath,sizeof(nFullPath),"%s%s\\%s",nPathOfPath,nNameOfPath,nPathOfName);
+		snprintf(nFullPath,sizeof(nFullPath),"%s%s\\%s%s",nPathOfPath,nNameOfPath,nPathOfName);
 	}
 	else
 	{
 		snprintf(nFullPath,sizeof(nFullPath),"%s%s",nPathOfPath,nNameOfPath);
 	}
 
-	_makepath (full,nDrive,nFullPath,nNameOfName,nExt);
+	_makepath (full,nDrive,nFullPath,nNameOfName,"");
 	b3RemoveDelimiter(full);
 
 	// convert '/' to '\'
