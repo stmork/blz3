@@ -51,9 +51,12 @@
 
 /*
 **	$Log$
+**	Revision 1.92  2006/06/15 21:12:04  sm
+**	- Fixed b3LinkFileName
+**
 **	Revision 1.91  2006/06/15 18:36:48  sm
 **	- Fixed recursive file list creation.
-**
+**	
 **	Revision 1.90  2006/04/29 11:25:48  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -602,9 +605,14 @@ BOOL CAppLinesApp::InitInstance()
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views.
-#ifdef _DEBUG
-	b3Log::b3SetLevel(B3LOG_FULL);
+	b3_log_level  level;
+#ifndef _DEBUG
+	level = (b3_log_level)b3ReadInt("Settings", "DebugLevel", B3LOG_NORMAL);
+#else
+	level = B3LOG_FULL;
 #endif
+	b3Log::b3SetLevel(level);
+
 	b3PrintF(B3LOG_NORMAL,"%s %s\n%s\n\n",
 		b3ClientName(),
 		version.b3GetVersionString(),

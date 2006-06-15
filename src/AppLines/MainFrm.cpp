@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2006/06/15 21:12:04  sm
+**	- Fixed b3LinkFileName
+**
 **	Revision 1.46  2006/05/31 17:29:09  sm
 **	- CMenuBar braced by #ifdef's
-**
+**	
 **	Revision 1.45  2006/05/31 14:17:20  smork
 **	- Disabling menu bar because it disturbs plugin dlls.
 **	
@@ -320,10 +323,6 @@ CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
 	CB3App       *app   = CB3GetApp();
-#ifndef _DEBUG
-	b3_log_level  level = (b3_log_level)app->b3ReadInt("Settings","DebugLevel",B3LOG_NORMAL);
-	b3Log::b3SetLevel(level);
-#endif
 
 	// Get window sizes...
 	app->b3GetWindowMode();

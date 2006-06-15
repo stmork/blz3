@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2006/06/15 21:12:04  sm
+**	- Fixed b3LinkFileName
+**
 **	Revision 1.17  2006/06/15 18:36:49  sm
 **	- Fixed recursive file list creation.
-**
+**	
 **	Revision 1.16  2006/03/05 21:22:36  sm
 **	- Added precompiled support for faster comiling :-)
 **	
@@ -418,6 +421,12 @@ void b3Path::b3LinkFileName(
 	const char *path,
 	const char *name)
 {
+	char    nFullPath[_MAX_DIR];
+	b3_size i,len;
+
+	B3_ASSERT(full != null);
+
+#if 0
 	char    nDrive[_MAX_DRIVE];
 	char    nPathOfPath[_MAX_DIR];
 	char    nNameOfPath[_MAX_FNAME + _MAX_EXT];
@@ -425,10 +434,6 @@ void b3Path::b3LinkFileName(
 	char    nPathOfName[_MAX_DIR];
 	char    nNameOfName[_MAX_FNAME + _MAX_EXT];
 	char    nExtOfName[_MAX_EXT];
-	char    nFullPath[_MAX_DIR];
-	b3_size i,len;
-
-	B3_ASSERT(full != null);
 
 	nFullPath[0] = 0;
 	if (path != null)
@@ -457,6 +462,24 @@ void b3Path::b3LinkFileName(
 	}
 
 	_makepath (full,nDrive,nFullPath,nNameOfName,"");
+#else
+	if (path != null)
+	{
+		if (name != null)
+		{
+			snprintf(nFullPath, sizeof(nFullPath), "%s\\%s", path, name);
+		}
+		else
+		{
+			strncpy(nFullPath, path, sizeof(nFullPath));
+		}
+	}
+	else
+	{
+		nFullPath[0] = 0;
+	}
+	strcpy (full, nFullPath);
+#endif
 	b3RemoveDelimiter(full);
 
 	// convert '/' to '\'
