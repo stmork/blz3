@@ -75,8 +75,6 @@ cp -a lib/lib*.a        $RPM_BUILD_ROOT%_libdir
 
 %files -f /tmp/blz3-file-list
 %defattr(-,root,root)
-%config /etc/profile.d/blz3.csh
-%config /etc/profile.d/blz3.sh
 
 %files devel -f /tmp/blz3-devel-file-list
 %defattr(-,root,root)

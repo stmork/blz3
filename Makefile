@@ -37,7 +37,7 @@ config:	configure
 distclean:	clean
 	bin/clobber.sh $(PWD)
 
-dist:	distclean configure
+dist:	configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 	cp blz3.spec /tmp/
 
