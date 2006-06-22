@@ -62,8 +62,6 @@ mkdir -p $RPM_BUILD_ROOT%_libdir
 mkdir -p $RPM_BUILD_ROOT%_docdir/blizzard/
 
 make install documentation
-install -m 755 bin/blz3.csh $RPM_BUILD_ROOT/etc/profile.d/blz3.csh
-install -m 755 bin/blz3.sh  $RPM_BUILD_ROOT/etc/profile.d/blz3.sh
 
 cp -a include/blz3      $RPM_BUILD_ROOT%_includedir
 cp -a include_unix/blz3 $RPM_BUILD_ROOT%_includedir
