@@ -20,9 +20,18 @@
 #ifndef B3_AUTOCONF_H
 #define B3_AUTOCONF_H
 
+#ifdef __SSE__
 #undef HAVE_SSE
+#endif
+
+#ifdef __SSE2__
 #undef HAVE_SSE2
+#endif
+
+#ifdef __SSE3__
 #undef HAVE_SSE3
+#endif
+
 #undef HAVE_ALTIVEC
 
 #undef HAVE_STRICMP
