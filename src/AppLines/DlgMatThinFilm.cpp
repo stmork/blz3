@@ -29,35 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
-**	Revision 1.4  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.3  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.2  2004/07/27 19:05:59  sm
-**	- Some typo cleanups.
-**	
-**	Revision 1.1  2004/07/27 16:33:49  sm
-**	- Added thin film material rendering
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgMatThinFilm implementation                **
 **                                                                      **
 *************************************************************************/

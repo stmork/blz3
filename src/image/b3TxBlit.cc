@@ -25,46 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/27 10:32:06  smork
-**	- Renamed member variables of spline template class.
-**
-**	Revision 1.4  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.3  2005/08/11 13:16:11  smork
-**	- Documentation.
-**	- b3Tx cleanup.
-**	
-**	Revision 1.2  2001/10/19 14:46:57  sm
-**	- Rotation spline shape bug found.
-**	- Major optimizations done.
-**	- Cleanups
-**	
-**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**	Blizzard III is born
-**	
-**	Revision 1.3  2000/09/21 10:22:27  smork
-**	- Setting Blizzard III projects to warning level 3: Found
-**	  some uninitialized variables.
-**	- changed b3Mutex from CMutex to CRITICAL_SECTION (thread
-**	  synchronization only)
-**	- introduced b3IPCMutex for process synchronization
-**	
-**	Revision 1.2  2000/08/14 11:11:23  smork
-**	- Inserted change log
-**	- Inserted author tag
-**	- Cleaned up file header
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Tx blitting                                 **
 **                                                                      **
 *************************************************************************/

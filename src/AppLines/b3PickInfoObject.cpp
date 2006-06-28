@@ -28,29 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2003/02/25 19:26:07  sm
-**	- Fixed missing grid update on pick move
-**	
-**	Revision 1.2  2003/02/24 17:32:38  sm
-**	- Added further picking support.
-**	- Fixed geometry update delay.
-**	
-**	Revision 1.1  2003/02/23 21:15:41  sm
-**	- First shape picking
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3PickInfo implementation                     **
 **                                                                      **
 *************************************************************************/

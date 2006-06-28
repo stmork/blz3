@@ -28,55 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.7  2004/11/30 18:51:39  sm
-**	- Corrected affine transformations and scaling which is
-**	  not affine.
-**	
-**	Revision 1.6  2004/10/16 17:00:52  sm
-**	- Moved lighting into own class to ensure light setup
-**	  after view setup.
-**	- Fixed lighting for scene and simple overview
-**	- Fixed Light cutoff exponent deadloop.
-**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**	
-**	Revision 1.5  2003/02/18 16:52:57  sm
-**	- Fixed no name error on new scenes (ticket no. 4).
-**	- Introduced new b3Matrix class and renamed methods.
-**	
-**	Revision 1.4  2003/01/18 14:13:49  sm
-**	- Added move/rotate stepper operations
-**	- Cleaned up resource IDs
-**	
-**	Revision 1.3  2003/01/11 17:16:15  sm
-**	- Object handling with undo/redo
-**	- Light handling with undo/redo
-**	
-**	Revision 1.2  2003/01/07 16:14:38  sm
-**	- Lines III: object editing didn't prepared any more. Fixed.
-**	- Some prepare optimizations.
-**	
-**	Revision 1.1  2003/01/05 16:13:24  sm
-**	- First undo/redo implementations
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Undo/Redo stepper action                      **
 **                                                                      **
 *************************************************************************/

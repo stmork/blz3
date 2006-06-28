@@ -25,31 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2005/10/09 15:06:47  sm
-**	- Added HDR image processing
-**	
-**	Revision 1.2  2004/08/28 13:55:33  sm
-**	- Added some mirror methods.
-**	- Cleanup job.
-**	
-**	Revision 1.1  2004/08/03 10:46:26  sm
-**	- Added simgle frame to DivX/AVI conversion tool
-**	- Added image mirror (not completely implemented yet)
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        implementation                                **
 **                                                                      **
 *************************************************************************/

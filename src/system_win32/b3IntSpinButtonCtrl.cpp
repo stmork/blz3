@@ -26,59 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/05/28 16:29:09  sm
-**	- Added some constants.
-**	- Added some secure locks.
-**
-**	Revision 1.7  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.6  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.5  2004/07/03 13:49:30  sm
-**	- Added spline knot control dialog which is not completed yet.
-**	
-**	Revision 1.4  2004/05/06 18:13:52  sm
-**	- Added support for changed only b3Items for a
-**	  better preview performance.
-**	
-**	Revision 1.3  2002/03/10 13:55:15  sm
-**	- Added creation dialog for rotation shapes.
-**	- Cleaned up derivation of b3SplineRotShape.
-**	- Added support for foreign BLZ3_HOME directories.
-**	
-**	Revision 1.2  2002/03/09 19:48:14  sm
-**	- Added a second profile for spline cylinders.
-**	- BSpline shape creation dialog added.
-**	- Added some features to b3SplineTemplate class:
-**	  o call b3ThroughEndControl() for open splines
-**	  o optimize subdivision on b3InitCurve()
-**	- Fine tuing and fixed much minor bugs.
-**	
-**	Revision 1.1  2002/03/08 16:46:15  sm
-**	- Added new CB3IntSpinButtonCtrl. This is much
-**	  better than standard integer CSpinButtonCtrl.
-**	- Added a test control to test spin button controls
-**	  and float control.
-**	- Made spin button controls and float edit control
-**	  DDXable. The spin button controls need only
-**	  a simple edit field without any DDX CEdit reference
-**	  or value reference inside a dialog.
-**	- Changed dialogs to reflect new controls. This was a
-**	  major cleanup which shortens the code in an elegant way.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3FloatSpinButtonCtrl implementation         **
 **                                                                      **
 *************************************************************************/

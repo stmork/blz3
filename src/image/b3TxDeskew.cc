@@ -25,48 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2005/08/11 13:16:11  smork
-**	- Documentation.
-**	- b3Tx cleanup.
-**	
-**	Revision 1.3  2002/08/15 13:56:43  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.2  2002/03/13 19:01:58  sm
-**	- Fixed some GCC warnings.
-**	
-**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**	Blizzard III is born
-**	
-**	Revision 1.3  2000/09/21 10:22:27  smork
-**	- Setting Blizzard III projects to warning: Found
-**	  some uninitialized variables.
-**	- changed b3Mutex from CMutex to CRITICAL_SECTION (thread
-**	  synchronization only)
-**	- introduced b3IPCMutex for process synchronization
-**	
-**	Revision 1.2  2000/08/14 11:11:23  smork
-**	- Inserted change log
-**	- Inserted author tag
-**	- Cleaned up file header
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Tx deskew                                   **
 **                                                                      **
 *************************************************************************/

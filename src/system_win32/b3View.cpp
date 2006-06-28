@@ -28,30 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/05/23 20:23:42  sm
-**	- Some view/bitmap cleanups.
-**	- Some more ocean wave ctrl development.
-**	- Some preview property page cleanups.
-**	- Changed data access methods of b3Tx.
-**
-**	Revision 1.2  2006/03/05 21:22:37  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.1  2001/07/07 21:21:15  sm
-**	- OK! Imported some display stuff using the CScrollView. After getting linked today
-**	  it should possible to display real things tomorrow.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3View: preparing an image for                **
 **                                drawing into CScrollView              **
 **                                                                      **

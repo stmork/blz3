@@ -30,47 +30,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzatd III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.7  2005/01/23 20:57:22  sm
-**	- Moved some global static variables into class static ones.
-**	
-**	Revision 1.6  2004/12/23 22:22:42  sm
-**	- Adjusted further Visual C++ options
-**	
-**	Revision 1.5  2004/12/22 21:36:37  sm
-**	- Changed development environment to Visual C++ .net 2003
-**	
-**	Revision 1.4  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.3  2002/11/01 12:49:07  sm
-**	- Some b3SearchPath constructor refinements.
-**	- Fixed texture path configuration.
-**	
-**	Revision 1.2  2001/12/02 15:43:49  sm
-**	- Creation/Deletion/Editing of lights
-**	- Creation/Deletion of cameras
-**	- New toolbars introduced.
-**	
-**	Revision 1.1  2001/12/01 17:48:42  sm
-**	- Added raytraced image saving
-**	- Added texture search path configuration
-**	- Always drawing fulcrum and view volume. The
-**	  depth buffer problem persists
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgSearchPathList dialog                     **
 **                                                                      **
 *************************************************************************/

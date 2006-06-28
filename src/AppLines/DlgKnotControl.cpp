@@ -29,29 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/27 11:22:35  smork
-**	- Renamed member variables of spline template class.
-**
-**	Revision 1.3  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.2  2004/07/27 19:05:59  sm
-**	- Some typo cleanups.
-**	
-**	Revision 1.1  2004/07/03 13:49:30  sm
-**	- Added spline knot control dialog which is not completed yet.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgKnotControl implementation                **
 **                                                                      **
 *************************************************************************/

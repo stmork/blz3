@@ -25,37 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 21:22:35  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2005/08/11 14:17:33  smork
-**	- Documentation.
-**	- Moved activation.
-**	
-**	Revision 1.3  2005/06/16 08:19:00  smork
-**	- Some logging added.
-**	
-**	Revision 1.2  2005/05/20 11:09:20  smork
-**	- Corrected specular color handling in OpenGL.
-**	
-**	Revision 1.1  2004/10/16 17:00:52  sm
-**	- Moved lighting into own class to ensure light setup
-**	  after view setup.
-**	- Fixed lighting for scene and simple overview
-**	- Fixed Light cutoff exponent deadloop.
-**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3RenderLight Implementation                  **
 **                                                                      **
 *************************************************************************/

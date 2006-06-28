@@ -28,34 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/18 14:13:44  sm
-**	- Some animation addons.
-**
-**	Revision 1.4  2006/03/05 22:12:31  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.3  2004/05/06 08:38:32  sm
-**	- Demerged raytracing includes of Lines
-**	
-**	Revision 1.2  2003/01/11 12:30:29  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.1  2002/08/23 11:35:23  sm
-**	- Added motion blur raytracing. The image creation looks very
-**	  nice! The algorithm is not as efficient as it could be.
-**	
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgAnimation implementation                  **
 **                                                                      **
 *************************************************************************/

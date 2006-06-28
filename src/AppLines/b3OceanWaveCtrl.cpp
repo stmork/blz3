@@ -27,32 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/05/28 09:46:14  sm
-**	- Fixed CB3ColorField problem
-**
-**	Revision 1.3  2006/05/23 20:23:41  sm
-**	- Some view/bitmap cleanups.
-**	- Some more ocean wave ctrl development.
-**	- Some preview property page cleanups.
-**	- Changed data access methods of b3Tx.
-**	
-**	Revision 1.2  2006/05/22 20:42:37  sm
-**	- Added ocean wave control.
-**	
-**	Revision 1.1  2006/05/22 20:15:24  sm
-**	- Added ocean wave control.
-**		
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3OceanWaveCtrl implementation               **
 **                                                                      **
 *************************************************************************/

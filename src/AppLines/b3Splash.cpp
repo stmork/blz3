@@ -28,27 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.2  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.1  2002/01/20 12:48:51  sm
-**	- Added splash screen
-**	- Corrected repeat buttons (capture change)
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CAppLinesApp implementation                   **
 **                                                                      **
 *************************************************************************/

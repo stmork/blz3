@@ -27,34 +27,13 @@
 #include "blz3/base/b3Cubic.h"
 #include "blz3/base/b3Math.h"
 
+#define b3IsZero(x) (fabs(x) < 4.656613e-10)
+
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
+**                        b3Cubic implementation                        **
 **                                                                      **
 *************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 21:22:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2004/03/21 16:08:35  sm
-**	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
-**	
-**	Revision 1.2  2002/12/20 15:32:55  sm
-**	- Made some ICC optimazations :-)
-**	
-**	Revision 1.1  2001/10/06 19:24:17  sm
-**	- New torus intersection routines and support routines
-**	- Added further shading support from materials
-**	- Added stencil checking
-**	- Changed support for basis transformation for shapes with
-**	  at least three direction vectors.
-**	
-**
-*/
-
-#define b3IsZero(x) (fabs(x) < 4.656613e-10)
 
 b3_count b3Cubic::b3SolveOrd2 (b3_f64 *Coeffs,b3_f64 *x)
 {

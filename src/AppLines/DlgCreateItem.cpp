@@ -27,48 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/06/01 14:17:24  smork
-**	- Added frame work controls for simpler plugin generation:
-**	  o CB3Checkbox
-**	  o CB3TextEdit
-**
-**	Revision 1.5  2006/03/05 22:12:31  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.4  2003/01/11 12:30:29  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.3  2002/01/04 17:53:53  sm
-**	- Added new/delete object.
-**	- Added deactive rest of all scene objects.
-**	- Changed icons to reflect object activation.
-**	- Sub object insertion added.
-**	- Fixed update routines to reflect correct state in hierarchy.
-**	- Better hierarchy update coded.
-**	
-**	Revision 1.2  2001/12/22 21:08:35  sm
-**	- Tidied up some dialogs
-**	- Designed new icons for document templates
-**	- Toolbars got adjusted and beautified
-**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
-**	- Found and fixed some minor bugs
-**	
-**	Revision 1.1  2001/12/02 15:43:49  sm
-**	- Creation/Deletion/Editing of lights
-**	- Creation/Deletion of cameras
-**	- New toolbars introduced.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgCreateItem implementation                 **
 **                                                                      **
 *************************************************************************/

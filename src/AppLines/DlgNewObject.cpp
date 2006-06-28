@@ -28,63 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/06/01 14:17:24  smork
-**	- Added frame work controls for simpler plugin generation:
-**	  o CB3Checkbox
-**	  o CB3TextEdit
-**
-**	Revision 1.8  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.7  2004/07/02 19:28:03  sm
-**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
-**	- Recoupled b3Scene include from CApp*Doc header files to allow
-**	  faster compilation.
-**	- Removed intersection counter completely because of a mysterious
-**	  destruction problem of b3Mutex.
-**	
-**	Revision 1.6  2003/08/31 10:44:07  sm
-**	- Further buffer overflow avoidments.
-**	
-**	Revision 1.5  2003/01/11 12:30:29  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.4  2002/05/10 15:24:23  sm
-**	- Corrected some exceptions in b3Tx
-**	- Added double click support in list controls when creating
-**	  a new shape.
-**	- Some minor fixes done.
-**	
-**	Revision 1.3  2002/02/24 17:45:31  sm
-**	- Added CSG edit dialogs
-**	- Corrected shape edit inheritance.
-**	
-**	Revision 1.2  2002/02/23 22:02:49  sm
-**	- Added shape/object edit.
-**	- Added shape/object deletion.
-**	- Added (de-)activation even for shapes.
-**	- Added create/change dialogs for following shapes:
-**	  o sphere
-**	  o area, disk
-**	  o cylinder, cone, ellipsoid, box
-**	- Changed hierarchy to reflect these changes.
-**	
-**	Revision 1.1  2002/02/22 20:18:09  sm
-**	- Added shape/bbox creation in object editor. So bigger
-**	  icons (64x64) for shape selection are created.
-**	- Created new class for image list maintainance.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgNewObject implementation                  **
 **                                                                      **
 *************************************************************************/

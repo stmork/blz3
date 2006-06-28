@@ -27,40 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/28 09:46:14  sm
-**	- Fixed CB3ColorField problem
-**
-**	Revision 1.4  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.3  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.2  2004/12/30 16:27:39  sm
-**	- Removed assertion problem when starting Lines III: The
-**	  image list were initialized twice due to double calling
-**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
-**	  calls OnInitDialog() automatically sinde MFC 7
-**	- Removed many global references from raytrace and base lib
-**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
-**	  method checks the vertex maintainer against a null pointer.
-**	
-**	Revision 1.1  2001/11/03 16:24:16  sm
-**	- Added scene property dialog
-**	- Added raytrace view title
-**	- Added raytrace abort on button press
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Draw a color field                            **
 **                                                                      **
 *************************************************************************/

@@ -26,37 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2005/01/09 19:58:30  sm
-**	- Added more convenient plugin path maintainance
-**	
-**	Revision 1.3  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.2  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	Revision 1.1  2001/08/11 15:59:59  sm
-**	- Rendering cleaned up
-**	- CWinApp/CMainFrm derived from Blizzard III classes
-**	  supporting more effective GUI.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        con/destructor                                **
 **                                                                      **
 *************************************************************************/

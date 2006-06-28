@@ -30,37 +30,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/28 09:46:14  sm
-**	- Fixed CB3ColorField problem
-**
-**	Revision 1.4  2006/05/23 20:23:42  sm
-**	- Some view/bitmap cleanups.
-**	- Some more ocean wave ctrl development.
-**	- Some preview property page cleanups.
-**	- Changed data access methods of b3Tx.
-**	
-**	Revision 1.3  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.2  2001/12/03 18:37:51  sm
-**	- Added light distribution curve control.
-**	
-**	Revision 1.1  2001/11/03 16:24:16  sm
-**	- Added scene property dialog
-**	- Added raytrace view title
-**	- Added raytrace abort on button press
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3ShowColor: Display a color cycle which     **
 **                                      displays a selected color.      **
 **                                                                      **

@@ -28,27 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.1  2006/03/19 14:47:18  sm
-**	- Fixed missing initiailization problems in b3BBox.
-**	- Moved some dialog elements into system library.
-**
-**	Revision 1.2  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.1  2004/04/09 12:08:05  sm
-**	- New CStatic control introduced for material sampling.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3ShowRaytrace implementation                **
 **                                                                      **
 *************************************************************************/

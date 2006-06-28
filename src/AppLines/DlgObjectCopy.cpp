@@ -27,60 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.7  2003/08/27 14:54:23  sm
-**	- sprintf changed into snprintf to avoid buffer overflows.
-**	
-**	Revision 1.6  2003/02/22 17:21:32  sm
-**	- Changed some global variables into static class members:
-**	  o b3Scene::epsilon
-**	  o b3Scene::m_TexturePool et. al.
-**	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**	
-**	Revision 1.5  2003/02/18 16:52:57  sm
-**	- Fixed no name error on new scenes (ticket no. 4).
-**	- Introduced new b3Matrix class and renamed methods.
-**	
-**	Revision 1.4  2002/03/08 16:46:14  sm
-**	- Added new CB3IntSpinButtonCtrl. This is much
-**	  better than standard integer CSpinButtonCtrl.
-**	- Added a test control to test spin button controls
-**	  and float control.
-**	- Made spin button controls and float edit control
-**	  DDXable. The spin button controls need only
-**	  a simple edit field without any DDX CEdit reference
-**	  or value reference inside a dialog.
-**	- Changed dialogs to reflect new controls. This was a
-**	  major cleanup which shortens the code in an elegant way.
-**	
-**	Revision 1.3  2002/01/09 17:47:54  sm
-**	- Finished CB3ImageButton implementation.
-**	- Finished CDlgObjectCopy
-**	
-**	Revision 1.2  2002/01/08 16:21:58  sm
-**	- Added center to copy dialog
-**	
-**	Revision 1.1  2002/01/07 21:19:30  sm
-**	- Adding object copy dialog
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgObjectCopy implementation                 **
 **                                                                      **
 *************************************************************************/

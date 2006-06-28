@@ -28,44 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
-**	Revision 1.7  2006/03/27 11:22:35  smork
-**	- Renamed member variables of spline template class.
-**	
-**	Revision 1.6  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.5  2004/09/27 13:20:49  sm
-**	- Fixed uninitialized class type for preview in LDC dialog.
-**	
-**	Revision 1.4  2004/05/29 13:38:11  sm
-**	- Made shading model visible to material an bump dialogs.
-**	
-**	Revision 1.3  2003/01/11 12:30:29  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.2  2002/03/02 15:24:35  sm
-**	- Templetized splines (uhff).
-**	- Prepared spline shapes for their creation.
-**	  *** And now: Testing! Testing! Testing! ***
-**	
-**	Revision 1.1  2001/12/07 16:36:12  sm
-**	- Added simple LDC editing dialog.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgLDC implementation                        **
 **                                                                      **
 *************************************************************************/

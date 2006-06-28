@@ -27,29 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.2  2002/04/09 07:24:19  sm
-**	- Some bugs fixed concerning Windows NT and CB3FileDialog
-**	
-**	Revision 1.1  2002/04/07 12:59:38  sm
-**	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
-**	- CB3FileDialog used for CWinApp::OnFileOpen()
-**	- Image buttons changed to draw disabled state correctly using
-**	  CDC::DrawState()
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3FileDialog implementation                  **
 **                                                                      **
 *************************************************************************/

@@ -27,49 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
-**	Revision 1.8  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.7  2004/06/28 18:42:34  sm
-**	- Corrected some input types of texture dialogs.
-**	
-**	Revision 1.6  2004/05/08 17:36:39  sm
-**	- Unified scaling for materials and bumps.
-**	
-**	Revision 1.5  2004/04/24 20:15:51  sm
-**	- Further slide material dialog development
-**	
-**	Revision 1.4  2004/04/24 08:54:20  sm
-**	- Simplified property sheets inside dialogs.
-**	
-**	Revision 1.3  2004/04/23 16:51:09  sm
-**	- Color renaming finished.
-**	- Bug #18 fixed: The bump amplitude is read out correctly now.
-**	
-**	Revision 1.2  2004/04/23 08:23:14  sm
-**	- Adjusted wood dialog.
-**	- Updated copyright in splash window.
-**	
-**	Revision 1.1  2004/04/18 16:58:14  sm
-**	- Changed definitions for base classes of raytracing objects.
-**	- Put wood material and wood bump dialogs into property
-**	  pages.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CPageBump implementation                      **
 **                                                                      **
 *************************************************************************/

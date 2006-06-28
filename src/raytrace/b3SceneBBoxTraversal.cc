@@ -25,42 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/03/05 21:22:35  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.5  2005/10/19 15:14:10  sm
-**	- Added some debug messages.
-**	
-**	Revision 1.4  2005/05/09 17:38:09  sm
-**	- Fixed threading problem on Multi CPU machines for
-**	  material initialization.
-**	
-**	Revision 1.3  2005/05/05 07:58:03  sm
-**	- BBox visibility computed only for raytracing.
-**	
-**	Revision 1.2  2004/12/30 16:27:39  sm
-**	- Removed assertion problem when starting Lines III: The
-**	  image list were initialized twice due to double calling
-**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
-**	  calls OnInitDialog() automatically sinde MFC 7
-**	- Removed many global references from raytrace and base lib
-**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
-**	  method checks the vertex maintainer against a null pointer.
-**	
-**	Revision 1.1  2004/12/14 07:40:44  smork
-**	- Put scene/bbox traversion methods into their own source file.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Reorganizing hierarchy from plain             **
 **                        BBox stream.                                  **
 **                                                                      **

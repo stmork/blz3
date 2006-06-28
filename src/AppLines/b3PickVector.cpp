@@ -27,57 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2005/05/15 10:19:26  sm
-**	- Fixed picking operations for undo/redo
-**	
-**	Revision 1.7  2005/04/27 13:55:01  sm
-**	- Fixed open/new file error when last path is not accessable.
-**	- Divided base transformation into more general version and
-**	  some special versions for quadric shapes and camera
-**	  projections.
-**	- Optimized noise initialization.
-**	- Added correct picking with project/unproject for all
-**	  view modes. This uses GLU projectton methods.
-**	- Added optimization for first level bounding box intersections.
-**	
-**	Revision 1.6  2003/02/26 16:36:16  sm
-**	- Sorted drawing colors and added configuration support
-**	  to dialog.
-**	
-**	Revision 1.5  2003/02/23 21:15:41  sm
-**	- First shape picking
-**	
-**	Revision 1.4  2003/01/28 15:58:27  sm
-**	- Added support for undoing/redoing picking
-**	
-**	Revision 1.3  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.2  2002/02/14 16:32:33  sm
-**	- Added activation via mouse selection
-**	
-**	Revision 1.1  2002/02/12 18:39:03  sm
-**	- Some b3ModellerInfo cleanups concerning measurement.
-**	- Added raster drawing via OpenGL. Nice!
-**	- Added pick points for light sources.
-**	- Added support for post OpenGL rendering for Win DC. This
-**	  is needed for drawing pick points. Note that there is a
-**	  slight offset when drawing pick points into a printer DC.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3PickPoint implementation                    **
 **                                                                      **
 *************************************************************************/

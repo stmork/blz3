@@ -33,6 +33,12 @@
 #define MEM_LOW_MULT       2
 #define MEM_HIGH_MULT    200
 
+/*************************************************************************
+**                                                                      **
+**                        b3SelfTest implementation                     **
+**                                                                      **
+*************************************************************************/
+
 b3_bool b3SelfTest::b3TestDataSize()
 {
 	b3_bool         *ptr;

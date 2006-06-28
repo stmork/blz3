@@ -26,66 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.13  2006/05/23 20:23:41  sm
-**  - Some view/bitmap cleanups.
-**  - Some more ocean wave ctrl development.
-**  - Some preview property page cleanups.
-**  - Changed data access methods of b3Tx.
-**
-**  Revision 1.12  2006/03/05 21:22:34  sm
-**  - Added precompiled support for faster comiling :-)
-**
-**  Revision 1.11  2006/02/05 19:07:24  sm
-**  - Added locale support for Windows.
-**
-**  Revision 1.10  2006/02/04 19:19:30  sm
-**  - Corrected image sampler. Check the used data
-**    type in constructor by using tx->b3IsHDR or some
-**    sort!
-**  - The RenderShapeSampler needs integer frame
-**    buffer for OpenGL use. All other use HDR images.
-**
-**  Revision 1.9  2005/12/12 16:01:32  smork
-**  - Some more const correction in samplers.
-**
-**  Revision 1.8  2005/12/07 10:48:54  smork
-**  - Some more const
-**
-**  Revision 1.7  2004/05/16 18:50:59  sm
-**  - Added new simple image sampler.
-**  - We need better water!
-**
-**  Revision 1.6  2004/04/09 17:30:31  sm
-**  - Wood dialog fine tuning.
-**
-**  Revision 1.5  2004/04/09 14:11:58  sm
-**  - Removed CRs
-**
-**  Revision 1.4  2004/04/09 14:09:36  sm
-**  - Wood sampling corrected.
-**  - b3FloatSliderCtrls range computation corrected.
-**
-**  Revision 1.3  2004/04/09 12:08:05  sm
-**  - New CStatic control introduced for material sampling.
-**
-**  Revision 1.2  2004/04/09 11:09:01  sm
-**  - Removed any display reference from sampler
-**
-**  Revision 1.1  2004/04/09 08:49:16  sm
-**  - Splitted up sampler for Lines use and capable for
-**    using other metherials.
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Sampler implementation                      **
 **                                                                      **
 *************************************************************************/

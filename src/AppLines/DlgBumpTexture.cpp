@@ -29,53 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
-**	Revision 1.6  2006/03/05 22:12:31  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.5  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.4  2004/06/28 18:42:34  sm
-**	- Corrected some input types of texture dialogs.
-**	
-**	Revision 1.3  2004/05/29 13:38:10  sm
-**	- Made shading model visible to material an bump dialogs.
-**	
-**	Revision 1.2  2004/05/12 19:10:50  sm
-**	- Completed bump mapping dialog.
-**	
-**	Revision 1.1  2004/05/12 14:13:27  sm
-**	- Added bump dialogs:
-**	  o noise
-**	  o marble
-**	  o texture
-**	  o glossy
-**	  o groove
-**	  o water
-**	  o wave
-**	- Setup all bump items with default values.
-**	- Found bug 22 which show a camera deletion bug in
-**	  toolbar and camera property dialog.
-**	- Added bump example bwd
-**	- Recounted resource.h (full compile necessary)
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgBumpWave implementation                   **
 **                                                                      **
 *************************************************************************/

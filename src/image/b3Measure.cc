@@ -25,34 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/27 10:32:06  smork
-**	- Renamed member variables of spline template class.
-**
-**	Revision 1.3  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.2  2005/08/11 13:16:11  smork
-**	- Documentation.
-**	- b3Tx cleanup.
-**	
-**	Revision 1.1  2001/10/09 20:47:01  sm
-**	- some further texture handling.
-**	
-**	Revision 1.1  2001/07/07 21:21:15  sm
-**	- OK! Imported some display stuff using the CScrollView. After getting linked today
-**	  it should possible to display real things tomorrow.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Measure routines                            **
 **                                                                      **
 *************************************************************************/

@@ -20,60 +20,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.12  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.11  2005/06/18 07:31:41  sm
-**	- Windows doesn't have truncate()
-**	
-**	Revision 1.10  2005/06/14 13:24:08  smork
-**	- Changed remove to truncate.
-**	
-**	Revision 1.9  2005/06/13 10:43:41  smork
-**	- Log file moved into home directory.
-**	
-**	Revision 1.8  2005/06/02 13:21:19  smork
-**	- Cleanup.
-**	
-**	Revision 1.7  2005/06/02 13:20:01  smork
-**	- Write log file error reason on stderr.
-**	
-**	Revision 1.6  2004/01/18 13:51:58  sm
-**	- Done further security issues.
-**	
-**	Revision 1.5  2003/08/27 14:54:23  sm
-**	- sprintf changed into snprintf to avoid buffer overflows.
-**	
-**	Revision 1.4  2003/06/15 14:18:18  sm
-**	- Updated item maintain dialog to icons
-**	- Changed b3Log into a singleton
-**	
-**	Revision 1.3  2003/02/22 15:17:18  sm
-**	- Added support for selected shapes in object modeller
-**	- Glued b3Shape and b3ShapeRenderObject. There was no
-**	  distinct access method in use.
-**	- Made some b3Shape methods inline and/or static which
-**	  saves some memory.
-**	
-**	Revision 1.2  2003/02/20 16:34:47  sm
-**	- Some logging cleanup
-**	- New base class for b3CPU (b3CPUBase)
-**	- b3Realloc bug fix on Solaris
-**	
-**	Revision 1.1  2003/02/19 16:52:53  sm
-**	- Cleaned up logging
-**	- Clean up b3CPU/b3Runtime
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        static variables                              **
 **                                                                      **
 *************************************************************************/

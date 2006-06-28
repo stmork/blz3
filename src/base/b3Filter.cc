@@ -26,35 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 21:22:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2005/10/02 09:51:12  sm
-**	- Added OpenEXR configuration.
-**	- Added more excpetion handling.
-**	
-**	Revision 1.2  2002/08/22 14:06:32  sm
-**	- Corrected filter support and added test suite.
-**	- Added animation computing to brt3. Now we are near to
-**	  real time raytracing: 8 fps for Animationtest.
-**	
-**	Revision 1.1  2002/08/21 20:13:32  sm
-**	- Introduced distributed raytracing with all sampling methods
-**	  and filter computations. This made some class movements
-**	  inside files necessary. The next step would be to integrate
-**	  motion blur.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Filter implementation                       **
 **                                                                      **
 *************************************************************************/

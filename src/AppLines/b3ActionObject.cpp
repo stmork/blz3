@@ -26,26 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.2  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.1  2002/01/16 16:17:13  sm
-**	- Introducing object edit painting and acting.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3ActionShapeMove implementation             **
 **                                                                      **
 *************************************************************************/

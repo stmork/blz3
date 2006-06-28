@@ -36,39 +36,6 @@ using namespace Iex;
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/05/24 16:07:55  sm
-**	- Done some Un*x b3GetData() corrections.
-**
-**	Revision 1.5  2006/05/11 15:34:22  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**	
-**	Revision 1.4  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.3  2005/10/17 18:51:33  sm
-**	- Compile fix.
-**	
-**	Revision 1.2  2005/10/16 09:43:41  sm
-**	- Minor changes.
-**	
-**	Revision 1.1  2005/10/16 09:35:45  sm
-**	- Added OpenEXR parsing file.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        OpenEXR - decoder                             **
 **                                                                      **
 *************************************************************************/

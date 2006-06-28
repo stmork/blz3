@@ -25,61 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.7  2006/02/05 19:07:24  sm
-**	- Added locale support for Windows.
-**	
-**	Revision 1.6  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.5  2004/09/23 21:27:39  sm
-**	- VBOs still don't work.
-**	
-**	Revision 1.4  2004/09/23 20:02:25  sm
-**	- Introduced VBOs on Windows - with success!
-**	
-**	Revision 1.3  2004/09/23 15:47:04  sm
-**	- Splitted b3RenderContext into own file.
-**	- Added vertex buffer object support which does not
-**	  run yet.
-**	
-**	Revision 1.2  2003/02/19 16:52:53  sm
-**	- Cleaned up logging
-**	- Clean up b3CPU/b3Runtime
-**	
-**	Revision 1.1  2001/10/20 16:15:00  sm
-**	- Some runtime environment cleanups. The CPU count is determined
-**	  only once.
-**	- Introduced preparing routines for raytring to shapes.
-**	- Found 5% performance loss: No problem, this was eaten by
-**	  bug fxing of the rotation spline shapes. (Phuu!)
-**	- The next job is to implement different row sampler. Then we
-**	  should implemented the base set of the Blizzard II raytracer.
-**	
-**	Revision 1.4  2001/07/08 12:30:07  sm
-**	- New tool to remove nasty CR/LF from Windoze.
-**	- Removing some nasty CR/LF with that new tool.
-**	
-**	Revision 1.3  2001/07/07 21:21:15  sm
-**	- OK! Imported some display stuff using the CScrollView. After getting linked today
-**	  it should possible to display real things tomorrow.
-**	
-**	Revision 1.2  2001/07/02 19:52:03  sm
-**	- Cleaning up comments
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Blizzard III runtime environment              **
 **                                                                      **
 *************************************************************************/

@@ -27,63 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.11  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.10  2005/01/24 18:32:34  sm
-**	- Removed some static variables and functions.
-**	
-**	Revision 1.9  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.8  2003/08/31 10:44:07  sm
-**	- Further buffer overflow avoidments.
-**	
-**	Revision 1.7  2003/02/22 17:21:32  sm
-**	- Changed some global variables into static class members:
-**	  o b3Scene::epsilon
-**	  o b3Scene::m_TexturePool et. al.
-**	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**	
-**	Revision 1.6  2003/02/09 13:58:14  sm
-**	- cleaned up file selection dialogs
-**	
-**	Revision 1.5  2002/02/26 20:43:28  sm
-**	- Moved creation dialogs into property sheets
-**	- Added material creation dialog
-**	
-**	Revision 1.4  2002/01/11 16:14:39  sm
-**	- Fixed damaged b3Transform() by correcting used parameter vor
-**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
-**	- Fixed Preview selection dialog.
-**	
-**	Revision 1.3  2002/01/10 20:18:54  sm
-**	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
-**	  what to do...
-**	
-**	Revision 1.2  2002/01/10 17:31:11  sm
-**	- Some minor GUI updates.
-**	- b3BBox::b3Transform() changes m_Matrix member.
-**	- Added image selection with image preview.
-**	
-**	Revision 1.1  2001/11/11 11:51:21  sm
-**	- Added image select feature
-**	- Cleaned up scene dialog (Now ready to improve it)
-**	- some b3Path fixes
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3SelectLoadTexture implementation           **
 **                                                                      **
 *************************************************************************/

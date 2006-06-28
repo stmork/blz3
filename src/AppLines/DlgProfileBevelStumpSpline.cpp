@@ -28,38 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2003/01/11 12:30:29  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.2  2002/03/10 20:34:17  sm
-**	- Cleaned up and tested CB3ShapeDialgo derivates:
-**	  o Ordered meaning of methods
-**	  o Made registry entries of stencil creation unique for
-**	    each shape.
-**	  o Fixed some bugs.
-**	
-**	Revision 1.1  2002/03/09 19:48:14  sm
-**	- Added a second profile for spline cylinders.
-**	- BSpline shape creation dialog added.
-**	- Added some features to b3SplineTemplate class:
-**	  o call b3ThroughEndControl() for open splines
-**	  o optimize subdivision on b3InitCurve()
-**	- Fine tuing and fixed much minor bugs.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgProfileBevelStumpSpline implementation    **
 **                                                                      **
 *************************************************************************/

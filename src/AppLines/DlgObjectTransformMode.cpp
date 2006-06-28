@@ -28,27 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.2  2004/05/28 15:32:06  sm
-**	- Corrected class wizard file
-**	
-**	Revision 1.1  2004/05/17 13:00:33  sm
-**	- Fixed inverse/reverse handling of object editing.
-**	- Added diverse handling vor object loading/replacing.
-**		
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgObjectTransformMode implementation        **
 **                                                                      **
 *************************************************************************/

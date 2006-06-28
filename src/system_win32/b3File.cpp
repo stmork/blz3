@@ -31,56 +31,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.7  2004/05/13 08:14:29  sm
-**	- Fixed some uninitialized variables.
-**	
-**	Revision 1.6  2004/05/13 07:53:26  sm
-**	- Fixed b3File caching problem which occured becaus
-**	  of a variable hiding problem.
-**	
-**	Revision 1.5  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	Revision 1.4  2002/08/15 13:56:44  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.3  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.2  2001/07/02 19:52:03  sm
-**	- Cleaning up comments
-**	
-**	Revision 1.1  2001/07/01 16:31:52  sm
-**	- Creating MSVC Projects
-**	- Welcome to Windows 32
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3File implementation                         **
 **                                                                      **
 *************************************************************************/

@@ -26,41 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/31 17:29:09  sm
-**	- CMenuBar braced by #ifdef's
-**
-**	Revision 1.4  2006/03/05 22:12:31  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.3  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.2  2001/12/28 15:17:44  sm
-**	- Added clipboard-copy to raytraced view
-**	- Added printing to raytraced view
-**	- Much minor UI tuning done:
-**	  o added accelerators
-**	  o open maximized window
-**	  o fixed some UpdateUI methods
-**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**	
-**	Revision 1.1  2001/08/05 19:51:56  sm
-**	- Now having OpenGL software for Windows NT and created
-**	  new Lines III.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CChildFrame implementation                    **
 **                                                                      **
 *************************************************************************/

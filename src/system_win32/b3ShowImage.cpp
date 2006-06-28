@@ -29,55 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.10  2006/05/28 09:46:14  sm
-**	- Fixed CB3ColorField problem
-**
-**	Revision 1.9  2006/03/05 21:22:37  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.8  2002/08/25 13:01:11  sm
-**	- b3ShowImage updated to handle empty images.
-**	
-**	Revision 1.7  2002/08/09 14:05:51  sm
-**	- Minor bug fixes.
-**	
-**	Revision 1.6  2002/02/27 20:14:52  sm
-**	- Added stencil creation for creating simple shapes.
-**	- Fixed material creation.
-**	- Cleaned up some files.
-**	
-**	Revision 1.5  2002/01/11 16:14:39  sm
-**	- Fixed damaged b3Transform() by correcting used parameter vor
-**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
-**	- Fixed Preview selection dialog.
-**	
-**	Revision 1.4  2001/12/16 11:07:45  sm
-**	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
-**	  These images are converted into B3_TX_VGA now
-**	- b3ScaleToGrey() fixed using correct palette
-**	
-**	Revision 1.3  2001/12/02 16:30:39  sm
-**	- CDlgScene draw error fix
-**	
-**	Revision 1.2  2001/11/04 21:12:14  sm
-**	- New CB3ShowRaytrace control
-**	
-**	Revision 1.1  2001/11/03 16:24:16  sm
-**	- Added scene property dialog
-**	- Added raytrace view title
-**	- Added raytrace abort on button press
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3ShowImage: Display an image inside         **
 **                                      a static control                **
 **                                                                      **

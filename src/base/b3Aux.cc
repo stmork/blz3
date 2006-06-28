@@ -26,49 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/05 21:22:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.7  2003/03/08 16:08:14  sm
-**	- Optimized b3_pkd_color <-> b3Color conversion.
-**	
-**	Revision 1.6  2002/08/10 14:36:31  sm
-**	- Some shapes had cleared the vertex array whenever the
-**	  b3AllocVertices() method were called. Without calling
-**	  b3Recomute() the shapes disoccured.
-**	- Some methods moved as static methods into the
-**	  b3Mem class.
-**	
-**	Revision 1.5  2001/10/31 14:46:35  sm
-**	- Filling b3IsCancelled() with sense.
-**	- Inlining b3RGB
-**	
-**	Revision 1.4  2001/07/08 13:02:19  sm
-**	- Merging with Windoze stuff.
-**	
-**	Revision 1.3  2001/07/08 12:56:43  sm
-**	- Now displaying Mandelbrot set. It's like switching all light on together.
-**	
-**	Revision 1.2  2001/07/08 12:30:06  sm
-**	- New tool to remove nasty CR/LF from Windoze.
-**	- Removing some nasty CR/LF with that new tool.
-**	
-**	Revision 1.1  2001/07/07 21:21:15  sm
-**	- OK! Imported some display stuff using the CScrollView. After getting linked today
-**	  it should possible to display real things tomorrow.
-**	
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                    Blizzard III color representation                 **
 **                                                                      **
 *************************************************************************/

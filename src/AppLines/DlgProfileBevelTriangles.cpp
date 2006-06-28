@@ -28,25 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.2  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.1  2002/03/11 13:48:54  sm
-**	- Cleaned up dialog titles
-**	- Fixed some texture bugs concerning palette copying.
-**	- Added a triangles profile.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgProfileBevelTriangles implementation      **
 **                                                                      **
 *************************************************************************/

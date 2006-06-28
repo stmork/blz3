@@ -24,43 +24,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.5  2005/06/16 10:15:39  smork
-**	- Corrected PostScript handling.
-**	
-**	Revision 1.4  2005/06/02 07:45:44  smork
-**	- Fixed RGB8 image saving in brt3.
-**	- Added PostScript image save.
-**	
-**	Revision 1.3  2001/12/01 17:48:42  sm
-**	- Added raytraced image saving
-**	- Added texture search path configuration
-**	- Always drawing fulcrum and view volume. The
-**	  depth buffer problem persists
-**	
-**	Revision 1.2  2001/11/09 16:15:35  sm
-**	- Image file encoder
-**	- Performance meter for triangles / second added.
-**	- Corrected Windows b3TimeSpan computation
-**	
-**	Revision 1.1  2001/11/08 19:31:33  sm
-**	- Nasty CR/LF removal!
-**	- Added TGA/RGB8/PostScript image saving.
-**	- Hoping to win Peter H. for powerful MFC programming...
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                          PS                                          **
 **                                                                      **
 *************************************************************************/

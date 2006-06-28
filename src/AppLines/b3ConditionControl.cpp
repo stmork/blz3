@@ -26,40 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2004/06/28 18:42:34  sm
-**	- Corrected some input types of texture dialogs.
-**	
-**	Revision 1.3  2004/06/27 11:36:54  sm
-**	- Changed texture dialog for editing negative direction in
-**	  contrast to length.
-**	- Set document to modified if materials or bumps are changed.
-**	- Check for empty textures inside OpenGL subsystem. May this
-**	  be ticket no. 21?
-**	- Animation values initialization fix.
-**	
-**	Revision 1.2  2004/05/10 17:05:37  sm
-**	- Added texture material dialog. Now we have completed all
-**	  material dialogs. I Continue completing bump mapping dialogs.
-**	
-**	Revision 1.1  2004/05/10 15:12:09  sm
-**	- Unified condition legends for conditions and
-**	  texture materials.
-**	- Added wrap texture material dialog.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgCreateStencil implementation              **
 **                                                                      **
 *************************************************************************/

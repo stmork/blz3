@@ -36,60 +36,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.7  2004/05/06 08:38:33  sm
-**	- Demerged raytracing includes of Lines
-**	
-**	Revision 1.6  2002/03/05 20:38:24  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
-**	Revision 1.5  2002/03/03 21:22:22  sm
-**	- Added support for creating surfaces using profile curves.
-**	- Added simple creating of triangle fields.
-**	
-**	Revision 1.4  2002/02/28 16:58:45  sm
-**	- Added torus dialogs.
-**	- Fixed material and stencil handling when not activating
-**	  sheet page.
-**	- Further cleanup of edit dialogs done.
-**	- Corrected shading of CSG cylinder and CSG cone (added
-**	  shaded top and bottom plate).
-**	
-**	Revision 1.3  2002/02/24 17:45:32  sm
-**	- Added CSG edit dialogs
-**	- Corrected shape edit inheritance.
-**	
-**	Revision 1.2  2002/02/23 22:02:49  sm
-**	- Added shape/object edit.
-**	- Added shape/object deletion.
-**	- Added (de-)activation even for shapes.
-**	- Added create/change dialogs for following shapes:
-**	  o sphere
-**	  o area, disk
-**	  o cylinder, cone, ellipsoid, box
-**	- Changed hierarchy to reflect these changes.
-**	
-**	Revision 1.1  2002/02/22 20:18:09  sm
-**	- Added shape/bbox creation in object editor. So bigger
-**	  icons (64x64) for shape selection are created.
-**	- Created new class for image list maintainance.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3ImageList implementation                   **
 **                                                                      **
 *************************************************************************/

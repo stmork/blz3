@@ -26,61 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/05/23 20:23:41  sm
-**	- Some view/bitmap cleanups.
-**	- Some more ocean wave ctrl development.
-**	- Some preview property page cleanups.
-**	- Changed data access methods of b3Tx.
-**
-**	Revision 1.6  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.5  2004/12/30 16:27:39  sm
-**	- Removed assertion problem when starting Lines III: The
-**	  image list were initialized twice due to double calling
-**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
-**	  calls OnInitDialog() automatically sinde MFC 7
-**	- Removed many global references from raytrace and base lib
-**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
-**	  method checks the vertex maintainer against a null pointer.
-**	
-**	Revision 1.4  2002/08/15 13:56:44  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.3  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.2  2001/12/28 15:17:44  sm
-**	- Added clipboard-copy to raytraced view
-**	- Added printing to raytraced view
-**	- Much minor UI tuning done:
-**	  o added accelerators
-**	  o open maximized window
-**	  o fixed some UpdateUI methods
-**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**	
-**	Revision 1.1  2001/07/07 21:21:15  sm
-**	- OK! Imported some display stuff using the CScrollView. After getting linked today
-**	  it should possible to display real things tomorrow.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Blizzard III CB3DIB                           **
 **                                                                      **
 *************************************************************************/

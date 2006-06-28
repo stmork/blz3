@@ -25,30 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.2  2006/03/05 21:22:35  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.1  2004/05/09 15:06:56  sm
-**	- Added inverse transformation for mapping.
-**	- Unified scale mapping source via b3Scaling.
-**	- Moved b3Scaling in its own files.
-**	- Added property pages for scaling and removed
-**	  scaling input fields from dialogs.
-**	
-**	Revision 1.1  2004/05/08 17:36:39  sm
-**	- Unified scaling for materials and bumps.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/

@@ -33,67 +33,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.13  2006/03/12 23:20:38  sm
-**	- Refined item loading.
-**	- Adjusted dialog item handling of vector elements.
-**
-**	Revision 1.12  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.11  2005/01/23 20:57:22  sm
-**	- Moved some global static variables into class static ones.
-**	
-**	Revision 1.10  2003/06/09 17:33:30  sm
-**	- New item maintainance dialog added.
-**	
-**	Revision 1.9  2003/06/01 12:35:43  sm
-**	- added invalid increment exception to b3Array
-**	
-**	Revision 1.8  2003/02/02 14:22:32  sm
-**	- Added TGF import facility.
-**	
-**	Revision 1.7  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.6  2002/08/15 13:56:42  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.5  2002/08/09 14:05:51  sm
-**	- Minor bug fixes.
-**	
-**	Revision 1.4  2002/08/09 13:20:18  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.3  2002/08/08 15:14:22  sm
-**	- Some problems concerning b3Mem::b3Realloc fixed.
-**	- Further error messages added.
-**	
-**	Revision 1.2  2002/08/07 17:25:01  sm
-**	- Added new error messages
-**	- Changed exception handling a little bit
-**	
-**	Revision 1.1  2002/08/07 14:26:23  sm
-**	- Introduced mapping from Blizzard III error codes to human
-**	  readable error messages supplied from Windows resources.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3ExceptionLogger implementation             **
 **                                                                      **
 *************************************************************************/

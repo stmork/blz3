@@ -29,57 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**      $Log$
-**      Revision 1.7  2006/05/11 15:34:22  sm
-**      - Added unit tests
-**      - Corrected normal computation for ocean waves
-**      - Optimized b3Complex
-**      - Added new FFT
-**      - Added own assertion include
-**
-**      Revision 1.6  2006/03/05 21:22:33  sm
-**      - Added precompiled support for faster comiling :-)
-**
-**      Revision 1.5  2004/09/23 09:31:33  sm
-**      - Changed b3Runtime into a real singleton.
-**      - Added functions for OpenGL extension.
-**      - Removed b3PrintF()s from singletons.
-**
-**      Revision 1.4  2003/07/20 09:21:18  sm
-**      - Added item register dump.
-**
-**      Revision 1.3  2002/08/05 16:04:55  sm
-**      - Found first texture init bug. This wasn't an OpenGL bug. This
-**        couldn't be because every implementation had got the same
-**        bug. The static aux image for creating textures wasn't initialized
-**        at the right time.
-**      - Version handling introduced: The version number is extracted
-**        from the version resource now.
-**      - The b3Tx::b3AllocTx() method uses b3Realloc() for better
-**        memory usage.
-**      - Some b3World messages removed.
-**      - The 0x7fff class is registered into the b3ItemRegister now. This
-**        prevents printing a warning when this class isn't found. Due to
-**        the fact that *every* Blizzard data contains this class every
-**        data read put out this warning.
-**
-**      Revision 1.2  2001/08/05 19:51:56  sm
-**      - Now having OpenGL software for Windows NT and created
-**        new Lines III.
-**
-**      Revision 1.1  2001/08/05 12:46:06  sm
-**      - Splitting b3ItemXXX routines
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3ItemRegisterEntry: handling one b3Item      **
 **                                                                      **
 *************************************************************************/

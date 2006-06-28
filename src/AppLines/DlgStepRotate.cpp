@@ -27,61 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.7  2004/05/06 08:38:32  sm
-**	- Demerged raytracing includes of Lines
-**	
-**	Revision 1.6  2003/02/22 17:21:32  sm
-**	- Changed some global variables into static class members:
-**	  o b3Scene::epsilon
-**	  o b3Scene::m_TexturePool et. al.
-**	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**	
-**	Revision 1.5  2002/03/08 16:46:14  sm
-**	- Added new CB3IntSpinButtonCtrl. This is much
-**	  better than standard integer CSpinButtonCtrl.
-**	- Added a test control to test spin button controls
-**	  and float control.
-**	- Made spin button controls and float edit control
-**	  DDXable. The spin button controls need only
-**	  a simple edit field without any DDX CEdit reference
-**	  or value reference inside a dialog.
-**	- Changed dialogs to reflect new controls. This was a
-**	  major cleanup which shortens the code in an elegant way.
-**	
-**	Revision 1.4  2002/01/09 17:47:54  sm
-**	- Finished CB3ImageButton implementation.
-**	- Finished CDlgObjectCopy
-**	
-**	Revision 1.3  2001/12/31 16:39:41  sm
-**	- Made hierarchy dialog a CDialogBar
-**	
-**	Revision 1.2  2001/12/26 18:17:56  sm
-**	- More status bar information displayed (e.g. coordinates)
-**	- Some minor UI updates
-**	
-**	Revision 1.1  2001/12/25 18:52:39  sm
-**	- Introduced CB3Dialogbar for dialogs opened any time.
-**	- Fulcrum fixed with snap to grid
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgStepRotate implementation                 **
 **                                                                      **
 *************************************************************************/

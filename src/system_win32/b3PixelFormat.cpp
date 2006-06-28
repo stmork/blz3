@@ -28,59 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.10  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.9  2005/01/23 19:54:07  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.8  2005/01/21 20:42:03  sm
-**	- Added error handling to Lines.
-**	- Try to use ChoosePixelFormat for OpenGL context selection.
-**	
-**	Revision 1.7  2005/01/18 11:49:05  smork
-**	- Added support for single buffered OpenGL drawing.
-**	
-**	Revision 1.6  2005/01/18 11:09:49  smork
-**	- More informative pixel format.
-**	
-**	Revision 1.5  2005/01/13 20:05:16  sm
-**	- Some Lines bugfixes
-**	
-**	Revision 1.4  2004/12/30 16:27:39  sm
-**	- Removed assertion problem when starting Lines III: The
-**	  image list were initialized twice due to double calling
-**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
-**	  calls OnInitDialog() automatically sinde MFC 7
-**	- Removed many global references from raytrace and base lib
-**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
-**	  method checks the vertex maintainer against a null pointer.
-**	
-**	Revision 1.3  2004/10/12 19:54:19  sm
-**	- Some camera/light resort. We have to draw the
-**	  light just after the camera to ensure a proper
-**	  view matrix as part of the model view matrix.
-**	
-**	Revision 1.2  2003/02/25 17:07:43  sm
-**	- Fixed wrong include
-**	
-**	Revision 1.1  2003/02/25 15:56:21  sm
-**	- Added SplineRot to control grid drawing.
-**	- Added support for pixel format selection in dialog items
-**	- Restructured b3PickInfo
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        OpenGL pixel format computation               **
 **                                                                      **
 *************************************************************************/

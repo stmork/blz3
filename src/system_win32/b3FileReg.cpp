@@ -27,38 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2005/06/10 21:31:43  sm
-**	- Vectorization fix for Windows
-**	- Read binary from registry returns null when no
-**	  entry is in registry.
-**	
-**	Revision 1.3  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.2  2004/05/09 16:37:59  sm
-**	- Added scaling property page to oak plank material
-**	- Corrected so,e input parameters.
-**	
-**	Revision 1.1  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3FileReg implementation                      **
 **                                                                      **
 *************************************************************************/

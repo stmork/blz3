@@ -26,52 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/05/29 15:13:45  smork
-**	- Resource IDs corrected.
-**
-**	Revision 1.2  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**	
-**	Revision 1.1  2006/03/19 14:47:18  sm
-**	- Fixed missing initiailization problems in b3BBox.
-**	- Moved some dialog elements into system library.
-**	
-**	Revision 1.6  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.5  2004/05/09 15:06:56  sm
-**	- Added inverse transformation for mapping.
-**	- Unified scale mapping source via b3Scaling.
-**	- Moved b3Scaling in its own files.
-**	- Added property pages for scaling and removed
-**	  scaling input fields from dialogs.
-**	
-**	Revision 1.4  2004/05/06 18:13:51  sm
-**	- Added support for changed only b3Items for a
-**	  better preview performance.
-**	
-**	Revision 1.3  2004/04/25 10:34:51  sm
-**	- Completed Cook/Torrance dialog
-**	
-**	Revision 1.2  2004/04/24 20:15:52  sm
-**	- Further slide material dialog development
-**	
-**	Revision 1.1  2004/04/24 15:40:12  sm
-**	- Started slide material dialog implementation
-**	- Added simple property sheet/preview dialog template
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3SimplePropertyPreviewDialog                **
 **                                    implementation                    **
 **                                                                      **

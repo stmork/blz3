@@ -29,64 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.12  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.11  2004/12/06 15:14:56  smork
-**	- Minor changes
-**	
-**	Revision 1.10  2004/12/04 12:54:07  sm
-**	- Disabling VBO check box if VBO not available.
-**	
-**	Revision 1.9  2004/12/04 12:32:49  sm
-**	- Disabling ATI VBOs.
-**	
-**	Revision 1.8  2004/11/28 20:20:17  sm
-**	- Added support for switchable VBOs.
-**	
-**	Revision 1.7  2004/11/21 16:44:46  sm
-**	- Corrected fulcrum drawing problem: The fulcrum was
-**	  updated before first initialization. And even the initialization
-**	  was before RenderContext init. So the fulcrum was not
-**	  able to use VBOs and used vertex arrays as fallback.
-**	  The vertex array drawing cannot be combined with
-**	  VBOs due to binding problems. Its likely that any VBO
-**	  is bound so a simple vertex array call should go wrong.
-**	
-**	Revision 1.6  2004/11/21 14:56:58  sm
-**	- Merged VBO development into main trunk.
-**	
-**	Revision 1.5  2004/10/16 17:00:52  sm
-**	- Moved lighting into own class to ensure light setup
-**	  after view setup.
-**	- Fixed lighting for scene and simple overview
-**	- Fixed Light cutoff exponent deadloop.
-**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**	
-**	Revision 1.4  2004/09/24 20:22:05  sm
-**	- Some VBO adjustments.
-**	
-**	Revision 1.3  2004/09/24 19:07:27  sm
-**	- VBOs on ATI running - or better: crawling.
-**	
-**	Revision 1.2  2004/09/24 15:39:31  sm
-**	- Added multisampling support which doesn't work.
-**	
-**	Revision 1.1  2004/09/24 13:45:36  sm
-**	- Extracted OpenGL extension vector buffer objects into own files.
-**	- Some cleanup for Lines.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/

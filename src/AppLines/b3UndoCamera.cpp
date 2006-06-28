@@ -28,46 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/06/01 14:17:24  smork
-**	- Added frame work controls for simpler plugin generation:
-**	  o CB3Checkbox
-**	  o CB3TextEdit
-**
-**	Revision 1.7  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.6  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.5  2004/05/15 14:37:46  sm
-**	- Added resolution combo box to scene dialog.
-**	- Fixed bug no. 3
-**	
-**	Revision 1.4  2003/08/31 10:44:07  sm
-**	- Further buffer overflow avoidments.
-**	
-**	Revision 1.3  2003/01/15 16:23:53  sm
-**	- Some other camera undo/redo operations added.
-**	- Fixed some undo(redo operations.
-**	
-**	Revision 1.2  2003/01/14 19:07:35  sm
-**	- Added some camera undo/redo actions.
-**	
-**	Revision 1.1  2003/01/12 19:21:37  sm
-**	- Some other undo/redo actions added (camera etc.)
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Undo/Redo camera creation                     **
 **                                                                      **
 *************************************************************************/

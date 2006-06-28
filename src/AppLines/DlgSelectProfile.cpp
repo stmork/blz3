@@ -31,67 +31,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.11  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.10  2005/01/23 20:57:22  sm
-**	- Moved some global static variables into class static ones.
-**	
-**	Revision 1.9  2004/05/29 13:38:11  sm
-**	- Made shading model visible to material an bump dialogs.
-**	
-**	Revision 1.8  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.7  2002/07/30 21:46:24  sm
-**	- More powerful pixel format selection.
-**	- Added b3Comparator class for sorting.
-**	
-**	Revision 1.6  2002/05/10 15:24:23  sm
-**	- Corrected some exceptions in b3Tx
-**	- Added double click support in list controls when creating
-**	  a new shape.
-**	- Some minor fixes done.
-**	
-**	Revision 1.5  2002/03/11 13:48:54  sm
-**	- Cleaned up dialog titles
-**	- Fixed some texture bugs concerning palette copying.
-**	- Added a triangles profile.
-**	
-**	Revision 1.4  2002/03/10 13:55:15  sm
-**	- Added creation dialog for rotation shapes.
-**	- Cleaned up derivation of b3SplineRotShape.
-**	- Added support for foreign BLZ3_HOME directories.
-**	
-**	Revision 1.3  2002/03/09 19:48:14  sm
-**	- Added a second profile for spline cylinders.
-**	- BSpline shape creation dialog added.
-**	- Added some features to b3SplineTemplate class:
-**	  o call b3ThroughEndControl() for open splines
-**	  o optimize subdivision on b3InitCurve()
-**	- Fine tuing and fixed much minor bugs.
-**	
-**	Revision 1.2  2002/03/05 20:38:24  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
-**	Revision 1.1  2002/03/03 21:22:22  sm
-**	- Added support for creating surfaces using profile curves.
-**	- Added simple creating of triangle fields.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgSelectProfile implementation              **
 **                                                                      **
 *************************************************************************/

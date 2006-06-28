@@ -29,45 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/25 22:11:20  sm
-**	- Fix shape/object creation problem in object editor.
-**	- Added double click option in hierarchy tree.
-**
-**	Revision 1.7  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.6  2005/06/12 11:38:51  sm
-**	- Fix ticket no.30. Surface property changes are reflected
-**	  to document modified changes.
-**	
-**	Revision 1.5  2005/05/13 15:33:54  sm
-**	- Tested surface property operations.
-**	
-**	Revision 1.4  2005/05/12 20:16:12  sm
-**	- Some more undo/redo surface operations.
-**	
-**	Revision 1.3  2005/05/12 12:16:25  sm
-**	- Added surface property editing for undo/redo editing.
-**	
-**	Revision 1.2  2005/05/11 16:13:19  sm
-**	- Added following undo/redo operations for object editor:
-**	  o shape edit
-**	  o shape delete
-**	
-**	Revision 1.1  2005/05/11 14:19:29  sm
-**	- Added first Undo operation for object editor.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Undo/Redo shape creation                      **
 **                                                                      **
 *************************************************************************/

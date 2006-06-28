@@ -36,62 +36,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.11  2006/05/23 20:23:41  sm
-**	- Some view/bitmap cleanups.
-**	- Some more ocean wave ctrl development.
-**	- Some preview property page cleanups.
-**	- Changed data access methods of b3Tx.
-**
-**	Revision 1.10  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.9  2005/12/06 15:10:08  smork
-**	- Windows const update.
-**	
-**	Revision 1.8  2005/10/16 12:11:22  sm
-**	- Some HDR fixes.
-**	
-**	Revision 1.7  2005/10/09 14:39:41  sm
-**	- Added HDR image processing
-**	
-**	Revision 1.6  2002/08/15 13:56:44  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.5  2002/08/11 11:03:41  sm
-**	- Moved b3Display and b3Row classes from base lib into system
-**	  independend lib.
-**	- Made b3TimeSpan more system independend;-)
-**	
-**	Revision 1.4  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.3  2001/12/23 14:59:05  sm
-**	- Updated new b3Display interface
-**	
-**	Revision 1.2  2001/11/04 21:12:14  sm
-**	- New CB3ShowRaytrace control
-**	
-**	Revision 1.1  2001/11/04 10:54:14  sm
-**	- Redesigned b3Display for control use.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        color display routines                        **
 **                                                                      **
 *************************************************************************/

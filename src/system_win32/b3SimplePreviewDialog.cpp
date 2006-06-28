@@ -26,55 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/05/29 15:13:45  smork
-**	- Resource IDs corrected.
-**
-**	Revision 1.2  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**	
-**	Revision 1.1  2006/03/19 14:47:18  sm
-**	- Fixed missing initiailization problems in b3BBox.
-**	- Moved some dialog elements into system library.
-**	
-**	Revision 1.6  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.5  2004/12/22 21:36:37  sm
-**	- Changed development environment to Visual C++ .net 2003
-**	
-**	Revision 1.4  2004/05/06 18:13:51  sm
-**	- Added support for changed only b3Items for a
-**	  better preview performance.
-**	
-**	Revision 1.3  2004/05/05 16:32:26  sm
-**	- Fixing following bugs:
-**	  o #19 because of variable shadowing
-**	  o #20 is no bug due to a KILLFOCUS event. This
-**	    is still a perfomrmance problem.
-**	  o #17 fixed. Now we use b3Scene::b3GetName() in
-**	    combination with the b3Scene filename.
-**	
-**	Revision 1.2  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	Revision 1.1  2004/04/25 10:34:51  sm
-**	- Completed Cook/Torrance dialog
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3SimplePreviewDialog implementation         **
 **                                                                      **
 *************************************************************************/

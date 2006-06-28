@@ -27,54 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.10  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
-**	Revision 1.9  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.8  2004/05/10 15:12:08  sm
-**	- Unified condition legends for conditions and
-**	  texture materials.
-**	- Added wrap texture material dialog.
-**	
-**	Revision 1.7  2004/05/08 17:36:39  sm
-**	- Unified scaling for materials and bumps.
-**	
-**	Revision 1.6  2004/04/25 10:34:51  sm
-**	- Completed Cook/Torrance dialog
-**	
-**	Revision 1.5  2004/04/24 20:15:51  sm
-**	- Further slide material dialog development
-**	
-**	Revision 1.4  2004/04/24 15:40:12  sm
-**	- Started slide material dialog implementation
-**	- Added simple property sheet/preview dialog template
-**	
-**	Revision 1.3  2004/04/24 08:54:20  sm
-**	- Simplified property sheets inside dialogs.
-**	
-**	Revision 1.2  2004/04/23 13:17:17  sm
-**	- Added simple material page and renamed wood material page.
-**	- Reflect material member renaming.
-**	
-**	Revision 1.1  2004/04/18 16:58:14  sm
-**	- Changed definitions for base classes of raytracing objects.
-**	- Put wood material and wood bump dialogs into property
-**	  pages.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CPageMaterial implementation                  **
 **                                                                      **
 *************************************************************************/

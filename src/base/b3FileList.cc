@@ -28,50 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 21:22:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2006/02/05 18:57:14  sm
-**	- Added locale support.
-**	
-**	Revision 1.7  2003/08/31 10:44:07  sm
-**	- Further buffer overflow avoidments.
-**	
-**	Revision 1.6  2003/05/24 13:46:49  sm
-**	- Added plugin support
-**	- Fixed b3FileList on non existing directory.
-**	
-**	Revision 1.5  2002/08/16 13:20:13  sm
-**	- Removed some unused methods.
-**	- Allocation bug found in brt3 - the Un*x version of the
-**	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
-**	  rather than b3renderContext which doesn't initialize subdivision
-**	  for shapes.
-**	
-**	Revision 1.4  2002/07/30 21:46:24  sm
-**	- More powerful pixel format selection.
-**	- Added b3Comparator class for sorting.
-**	
-**	Revision 1.3  2001/10/15 14:45:07  sm
-**	- Materials are accessing textures now.
-**	- Created image viewer "bimg3"
-**	
-**	Revision 1.2  2001/07/01 20:29:21  sm
-**	- Changing some comments
-**	
-**	Revision 1.1.1.1  2001/07/01 12:24:58  sm
-**	Blizzard III is born
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3FileEntry                                   **
 **                                                                      **
 *************************************************************************/

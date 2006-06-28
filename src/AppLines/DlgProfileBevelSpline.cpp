@@ -28,58 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.5  2002/03/11 13:48:54  sm
-**	- Cleaned up dialog titles
-**	- Fixed some texture bugs concerning palette copying.
-**	- Added a triangles profile.
-**	
-**	Revision 1.4  2002/03/10 20:34:17  sm
-**	- Cleaned up and tested CB3ShapeDialgo derivates:
-**	  o Ordered meaning of methods
-**	  o Made registry entries of stencil creation unique for
-**	    each shape.
-**	  o Fixed some bugs.
-**	
-**	Revision 1.3  2002/03/09 19:48:14  sm
-**	- Added a second profile for spline cylinders.
-**	- BSpline shape creation dialog added.
-**	- Added some features to b3SplineTemplate class:
-**	  o call b3ThroughEndControl() for open splines
-**	  o optimize subdivision on b3InitCurve()
-**	- Fine tuing and fixed much minor bugs.
-**	
-**	Revision 1.2  2002/03/08 16:46:14  sm
-**	- Added new CB3IntSpinButtonCtrl. This is much
-**	  better than standard integer CSpinButtonCtrl.
-**	- Added a test control to test spin button controls
-**	  and float control.
-**	- Made spin button controls and float edit control
-**	  DDXable. The spin button controls need only
-**	  a simple edit field without any DDX CEdit reference
-**	  or value reference inside a dialog.
-**	- Changed dialogs to reflect new controls. This was a
-**	  major cleanup which shortens the code in an elegant way.
-**	
-**	Revision 1.1  2002/03/05 20:38:24  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgProfileBevelSpline implementation         **
 **                                                                      **
 *************************************************************************/

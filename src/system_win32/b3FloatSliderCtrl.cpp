@@ -30,41 +30,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.6  2004/05/08 17:36:39  sm
-**	- Unified scaling for materials and bumps.
-**	
-**	Revision 1.5  2004/04/10 15:59:51  sm
-**	- Added control units as base class for
-**	  o CB3FloatSliderCtrl
-**	  o CB3FloatSpinButtonCtrl
-**	
-**	Revision 1.4  2004/04/10 14:33:25  sm
-**	- Added oak plank support.
-**	
-**	Revision 1.3  2004/04/09 17:30:31  sm
-**	- Wood dialog fine tuning.
-**	
-**	Revision 1.2  2004/04/09 14:09:36  sm
-**	- Wood sampling corrected.
-**	- b3FloatSliderCtrls range computation corrected.
-**	
-**	Revision 1.1  2004/04/04 19:28:25  sm
-**	- New wood dialog
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3FloatSliderCtrl implementation             **
 **                                                                      **
 *************************************************************************/

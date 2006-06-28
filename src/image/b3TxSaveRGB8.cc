@@ -24,62 +24,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.10  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.9  2005/06/02 07:45:44  smork
-**	- Fixed RGB8 image saving in brt3.
-**	- Added PostScript image save.
-**	
-**	Revision 1.8  2004/01/01 12:46:43  sm
-**	- Fixed RGB8 image writing
-**	- Added RGB8 image saving to brt3 and display all command line options.
-**	
-**	Revision 1.7  2002/08/15 13:56:43  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.6  2002/08/09 13:20:19  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.5  2002/02/17 21:58:11  sm
-**	- Done UnCR
-**	- Modified makefiles
-**	
-**	Revision 1.4  2002/02/01 16:08:26  sm
-**	- Corrected assert in saving routines for formats which
-**	  only support resolutions less than 65536.
-**	
-**	Revision 1.3  2002/02/01 15:41:52  sm
-**	- Fixed saving TGA and RGB8 missing last line to save
-**	
-**	Revision 1.2  2001/11/09 16:15:35  sm
-**	- Image file encoder
-**	- Performance meter for triangles / second added.
-**	- Corrected Windows b3TimeSpan computation
-**	
-**	Revision 1.1  2001/11/08 19:31:33  sm
-**	- Nasty CR/LF removal!
-**	- Added TGA/RGB8/PostScript image saving.
-**	- Hoping to win Peter H. for powerful MFC programming...
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                          RGB8                                        **
 **                                                                      **
 *************************************************************************/

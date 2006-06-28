@@ -27,53 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/03/05 22:12:31  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.6  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.5  2004/07/02 19:28:03  sm
-**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
-**	- Recoupled b3Scene include from CApp*Doc header files to allow
-**	  faster compilation.
-**	- Removed intersection counter completely because of a mysterious
-**	  destruction problem of b3Mutex.
-**	
-**	Revision 1.4  2003/02/22 17:21:32  sm
-**	- Changed some global variables into static class members:
-**	  o b3Scene::epsilon
-**	  o b3Scene::m_TexturePool et. al.
-**	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**	
-**	Revision 1.3  2003/01/11 12:30:29  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.2  2002/03/10 20:34:17  sm
-**	- Cleaned up and tested CB3ShapeDialgo derivates:
-**	  o Ordered meaning of methods
-**	  o Made registry entries of stencil creation unique for
-**	    each shape.
-**	  o Fixed some bugs.
-**	
-**	Revision 1.1  2002/03/10 13:55:15  sm
-**	- Added creation dialog for rotation shapes.
-**	- Cleaned up derivation of b3SplineRotShape.
-**	- Added support for foreign BLZ3_HOME directories.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgCreateSplineShape implementation          **
 **                                                                      **
 *************************************************************************/

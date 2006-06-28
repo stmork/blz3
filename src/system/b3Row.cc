@@ -26,37 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.5  2005/12/05 22:12:24  sm
-**	- More const declarations.
-**	
-**	Revision 1.4  2005/10/09 12:05:34  sm
-**	- Changed to HDR image computation.
-**	
-**	Revision 1.3  2002/08/11 11:03:40  sm
-**	- Moved b3Display and b3Row classes from base lib into system
-**	  independend lib.
-**	- Made b3TimeSpan more system independend;-)
-**	
-**	Revision 1.2  2001/11/04 12:15:15  sm
-**	- Renaming some attributes...
-**	- Taking account to redesign of b3Display
-**	
-**	Revision 1.1  2001/11/04 10:54:14  sm
-**	- Redesigned b3Display for control use.
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        row constructor                               **
 **                                                                      **
 *************************************************************************/

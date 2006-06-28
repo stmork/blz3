@@ -29,49 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.7  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.6  2004/12/27 21:21:45  sm
-**	- Adjusted type size (LPARAM vs. long)
-**	
-**	Revision 1.5  2004/05/10 15:12:08  sm
-**	- Unified condition legends for conditions and
-**	  texture materials.
-**	- Added wrap texture material dialog.
-**	
-**	Revision 1.4  2004/04/25 19:28:21  sm
-**	- Added available b3Items as list to maintain dialog.
-**	- Preview is done only on auto refresh activated.
-**	
-**	Revision 1.3  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	Revision 1.2  2003/06/15 14:18:17  sm
-**	- Updated item maintain dialog to icons
-**	- Changed b3Log into a singleton
-**	
-**	Revision 1.1  2003/06/15 09:24:21  sm
-**	- Added item creation dialog
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgItemCreate implementation                 **
 **                                                                      **
 *************************************************************************/

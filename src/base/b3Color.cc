@@ -26,59 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.12  2006/05/15 13:28:08  smork
-**	- Correct b3_pkd_color initialization.
-**
-**	Revision 1.11  2006/05/11 15:34:22  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**	
-**	Revision 1.10  2006/03/05 21:22:33  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.9  2005/12/04 15:35:58  sm
-**	- Added some const signatures.
-**	
-**	Revision 1.8  2005/10/22 10:51:41  sm
-**	- Some SSE optimizations.
-**	
-**	Revision 1.7  2005/10/20 19:55:17  sm
-**	- Introduced SSE intrinsics.
-**	
-**	Revision 1.6  2005/10/16 08:37:23  sm
-**	- Fixed OpenEXR configure.
-**	- Fixed bimg3 for HDR image output.
-**	- Optimized IFF-ILBM image access.
-**	
-**	Revision 1.5  2005/08/02 15:02:50  smork
-**	- Optimized b3Mix methods.
-**	- Documentation.
-**	
-**	Revision 1.4  2004/06/05 08:07:05  sm
-**	- Corrected b3Color for multiplying colors as filter.
-**	
-**	Revision 1.3  2004/05/28 19:35:39  sm
-**	- Added Mork shader enhancement as new extra shader.
-**	
-**	Revision 1.2  2003/05/17 21:09:48  sm
-**	- Added feeder scanning calibration
-**	
-**	Revision 1.1  2003/03/08 16:08:14  sm
-**	- Optimized b3_pkd_color <-> b3Color conversion.
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        color variables                               **
 **                                                                      **
 *************************************************************************/

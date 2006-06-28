@@ -27,60 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.6  2004/07/02 19:28:03  sm
-**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
-**	- Recoupled b3Scene include from CApp*Doc header files to allow
-**	  faster compilation.
-**	- Removed intersection counter completely because of a mysterious
-**	  destruction problem of b3Mutex.
-**	
-**	Revision 1.5  2004/05/29 13:38:11  sm
-**	- Made shading model visible to material an bump dialogs.
-**	
-**	Revision 1.4  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.3  2002/03/10 20:34:17  sm
-**	- Cleaned up and tested CB3ShapeDialgo derivates:
-**	  o Ordered meaning of methods
-**	  o Made registry entries of stencil creation unique for
-**	    each shape.
-**	  o Fixed some bugs.
-**	
-**	Revision 1.2  2002/03/08 16:46:14  sm
-**	- Added new CB3IntSpinButtonCtrl. This is much
-**	  better than standard integer CSpinButtonCtrl.
-**	- Added a test control to test spin button controls
-**	  and float control.
-**	- Made spin button controls and float edit control
-**	  DDXable. The spin button controls need only
-**	  a simple edit field without any DDX CEdit reference
-**	  or value reference inside a dialog.
-**	- Changed dialogs to reflect new controls. This was a
-**	  major cleanup which shortens the code in an elegant way.
-**	
-**	Revision 1.1  2002/02/28 16:58:45  sm
-**	- Added torus dialogs.
-**	- Fixed material and stencil handling when not activating
-**	  sheet page.
-**	- Further cleanup of edit dialogs done.
-**	- Corrected shading of CSG cylinder and CSG cone (added
-**	  shaded top and bottom plate).
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgShape3 implementation                     **
 **                                                                      **
 *************************************************************************/

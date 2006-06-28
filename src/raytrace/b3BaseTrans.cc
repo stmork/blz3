@@ -25,52 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/03/05 21:22:35  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.8  2005/12/04 16:48:40  sm
-**	- Converted some defines into inlined methods.
-**	
-**	Revision 1.7  2005/06/09 19:07:24  sm
-**	- Corrected TIFF files
-**	- Enabled SSE optimization
-**	
-**	Revision 1.6  2005/06/08 11:18:44  smork
-**	- Some more optimization.
-**	
-**	Revision 1.5  2005/06/08 11:09:05  smork
-**	- Base transformation optimized.
-**	
-**	Revision 1.4  2005/06/07 14:30:47  smork
-**	- Beautifying.
-**	
-**	Revision 1.3  2005/06/06 19:56:22  sm
-**	- Some optimizations.
-**	
-**	Revision 1.2  2005/06/01 12:28:55  smork
-**	- Removed some floating point operations.
-**	
-**	Revision 1.1  2005/04/27 13:55:01  sm
-**	- Fixed open/new file error when last path is not accessable.
-**	- Divided base transformation into more general version and
-**	  some special versions for quadric shapes and camera
-**	  projections.
-**	- Optimized noise initialization.
-**	- Added correct picking with project/unproject for all
-**	  view modes. This uses GLU projectton methods.
-**	- Added optimization for first level bounding box intersections.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        basis transformation class                    **
 **                                                                      **
 *************************************************************************/

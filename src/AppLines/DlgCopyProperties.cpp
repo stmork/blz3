@@ -28,46 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/03/05 22:12:31  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.5  2005/05/15 06:53:23  sm
-**	- Tested shape surface property copy operation.
-**	
-**	Revision 1.4  2005/05/14 19:01:24  sm
-**	- Added shape property copy to undo/redo operations
-**	
-**	Revision 1.3  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.2  2004/07/02 19:28:03  sm
-**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
-**	- Recoupled b3Scene include from CApp*Doc header files to allow
-**	  faster compilation.
-**	- Removed intersection counter completely because of a mysterious
-**	  destruction problem of b3Mutex.
-**	
-**	Revision 1.1  2004/05/07 16:30:33  sm
-**	- Bug #13 fixed. The BBox hierarchy is recounted on every
-**	  object edit finish.
-**	- Wooden materials contain a dark and a separate light
-**	  material. Changes were also made in Lines.
-**	- Introduced shape property copy including all materials,
-**	  bumps and conditions. Multiple copy modes are possible.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        DlgCopyProperties implementation              **
 **                                                                      **
 *************************************************************************/

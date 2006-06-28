@@ -26,38 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/05/28 16:29:09  sm
-**	- Added some constants.
-**	- Added some secure locks.
-**
-**	Revision 1.5  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.4  2005/05/18 09:16:55  smork
-**	- More selftest stability.
-**	- Using mutex as base class in b3Mem.
-**	
-**	Revision 1.3  2005/05/17 17:49:05  sm
-**	- Using non static mutex for memory management.
-**	
-**	Revision 1.2  2005/05/17 13:56:52  smork
-**	- Moved some code into library.
-**	
-**	Revision 1.1  2005/05/17 11:05:18  smork
-**	- New memory management based on array rather than doubly linked lists.
-**	
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/

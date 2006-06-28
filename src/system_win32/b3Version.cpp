@@ -28,50 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 21:22:37  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2005/01/02 21:18:34  sm
-**	- Changed version output
-**	
-**	Revision 1.3  2003/08/28 14:44:27  sm
-**	- Further buffer overflow prevention:
-**	  o added b3Path::b3Format
-**	  o added b3Path::b3Append
-**	- Further strcat/strcpy removal necessary
-**	
-**	Revision 1.2  2002/08/10 16:07:46  sm
-**	- Added some OS version output
-**	- Corrected language specifiers for version output.
-**	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
-**	  to avoid thousands point.
-**	
-**	Revision 1.1  2002/08/05 16:04:55  sm
-**	- Found first texture init bug. This wasn't an OpenGL bug. This
-**	  couldn't be because every implementation had got the same
-**	  bug. The static aux image for creating textures wasn't initialized
-**	  at the right time.
-**	- Version handling introduced: The version number is extracted
-**	  from the version resource now.
-**	- The b3Tx::b3AllocTx() method uses b3Realloc() for better
-**	  memory usage.
-**	- Some b3World messages removed.
-**	- The 0x7fff class is registered into the b3ItemRegister now. This
-**	  prevents printing a warning when this class isn't found. Due to
-**	  the fact that *every* Blizzard data contains this class every
-**	  data read put out this warning.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CB3Version: Gets Blizzard product version     **
 **                                                                      **
 *************************************************************************/

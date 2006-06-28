@@ -28,62 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.10  2006/03/05 21:22:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.9  2005/10/02 09:51:12  sm
-**	- Added OpenEXR configuration.
-**	- Added more excpetion handling.
-**	
-**	Revision 1.8  2005/01/04 15:13:59  smork
-**	- Changed some data types.
-**	
-**	Revision 1.7  2005/01/02 19:15:25  sm
-**	- Fixed signed/unsigned warnings
-**	
-**	Revision 1.6  2005/01/01 16:43:19  sm
-**	- Fixed some aliasing warnings.
-**	
-**	Revision 1.5  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	Revision 1.4  2002/08/15 13:56:42  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.3  2002/08/09 13:20:18  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.2  2002/01/03 15:50:14  sm
-**	- Added cut/copy/paste
-**	
-**	Revision 1.1  2001/12/30 14:16:57  sm
-**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
-**	- b3Item writing implemented and updated all raytracing classes
-**	  to work properly.
-**	- Cleaned up spline shapes and CSG shapes.
-**	- Added b3Caustic class for compatibility reasons.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3FileMem implementation                      **
 **                                                                      **
 *************************************************************************/

@@ -26,32 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2003/08/27 14:54:23  sm
-**	- sprintf changed into snprintf to avoid buffer overflows.
-**	
-**	Revision 1.2  2002/11/16 14:24:00  sm
-**	- Added a CPU benchmark
-**	- Removed system dependend #IF from raytracing
-**	
-**	Revision 1.1  2002/08/11 11:03:40  sm
-**	- Moved b3Display and b3Row classes from base lib into system
-**	  independend lib.
-**	- Made b3TimeSpan more system independend;-)
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TimeSpan routines                           **
 **                                                                      **
 *************************************************************************/

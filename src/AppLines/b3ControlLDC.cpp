@@ -29,67 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.14  2006/05/28 09:46:14  sm
-**	- Fixed CB3ColorField problem
-**
-**	Revision 1.13  2006/05/22 20:42:37  sm
-**	- Added ocean wave control.
-**	
-**	Revision 1.12  2006/03/27 11:22:35  smork
-**	- Renamed member variables of spline template class.
-**	
-**	Revision 1.11  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.10  2005/05/15 10:19:26  sm
-**	- Fixed picking operations for undo/redo
-**	
-**	Revision 1.9  2003/02/23 21:15:41  sm
-**	- First shape picking
-**	
-**	Revision 1.8  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.7  2002/03/02 15:24:35  sm
-**	- Templetized splines (uhff).
-**	- Prepared spline shapes for their creation.
-**	  *** And now: Testing! Testing! Testing! ***
-**	
-**	Revision 1.6  2002/02/12 18:39:03  sm
-**	- Some b3ModellerInfo cleanups concerning measurement.
-**	- Added raster drawing via OpenGL. Nice!
-**	- Added pick points for light sources.
-**	- Added support for post OpenGL rendering for Win DC. This
-**	  is needed for drawing pick points. Note that there is a
-**	  slight offset when drawing pick points into a printer DC.
-**	
-**	Revision 1.5  2001/12/07 16:36:12  sm
-**	- Added simple LDC editing dialog.
-**	
-**	Revision 1.4  2001/12/06 16:21:56  sm
-**	- Finished CB3ControlLDC - very nice!
-**	
-**	Revision 1.3  2001/12/06 07:08:55  sm
-**	- Further control programming
-**	
-**	Revision 1.2  2001/12/04 18:23:25  sm
-**	- Drawing LDC correctly
-**	- Added pick point support.
-**	
-**	Revision 1.1  2001/12/03 18:37:51  sm
-**	- Added light distribution curve control.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3PickLDC implementation                      **
 **                                                                      **
 *************************************************************************/

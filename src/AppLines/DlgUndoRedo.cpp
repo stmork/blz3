@@ -27,31 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2003/02/01 12:57:17  sm
-**	- Ready to undo/redo!
-**	
-**	Revision 1.3  2003/01/31 16:49:39  sm
-**	- Further dialog programming.
-**	
-**	Revision 1.2  2003/01/30 19:49:55  sm
-**	- Further undo/redo history dialog build.
-**	
-**	Revision 1.1  2003/01/30 16:19:58  sm
-**	- Added undo/redo list support.
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgUndoRedo implementation                   **
 **                                                                      **
 *************************************************************************/

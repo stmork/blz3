@@ -29,55 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.10  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.9  2005/05/15 10:19:27  sm
-**	- Fixed picking operations for undo/redo
-**	
-**	Revision 1.8  2003/02/23 21:15:41  sm
-**	- First shape picking
-**	
-**	Revision 1.7  2003/01/28 15:58:27  sm
-**	- Added support for undoing/redoing picking
-**	
-**	Revision 1.6  2002/02/17 21:58:11  sm
-**	- Done UnCR
-**	- Modified makefiles
-**	
-**	Revision 1.5  2002/02/14 16:51:49  sm
-**	- Done some cleanups concernig doubly linked lists. Moved
-**	  obsolete b3Node/b3Head into their own include.
-**	
-**	Revision 1.4  2002/02/12 18:39:03  sm
-**	- Some b3ModellerInfo cleanups concerning measurement.
-**	- Added raster drawing via OpenGL. Nice!
-**	- Added pick points for light sources.
-**	- Added support for post OpenGL rendering for Win DC. This
-**	  is needed for drawing pick points. Note that there is a
-**	  slight offset when drawing pick points into a printer DC.
-**	
-**	Revision 1.3  2001/12/06 19:45:06  sm
-**	- Minor bug fixes in DlgLight
-**	
-**	Revision 1.2  2001/12/06 16:21:56  sm
-**	- Finished CB3ControlLDC - very nice!
-**	
-**	Revision 1.1  2001/12/04 18:23:25  sm
-**	- Drawing LDC correctly
-**	- Added pick point support.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Pick implementation                         **
 **                                                                      **
 *************************************************************************/

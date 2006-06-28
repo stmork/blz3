@@ -29,61 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.12  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.11  2005/10/02 15:06:23  sm
-**	- Some b3Frac/b3FMod/fmod corrections
-**	- Documentation
-**	
-**	Revision 1.10  2004/10/07 10:33:08  sm
-**	- Added some GIF tools and made them usable with Blizzard III.
-**	
-**	Revision 1.9  2004/05/26 12:47:20  sm
-**	- Optimized recursive shading
-**	- Optimized pow to an integer version (b3Math::b3FastPow)
-**	
-**	Revision 1.8  2004/05/16 18:50:59  sm
-**	- Added new simple image sampler.
-**	- We need better water!
-**	
-**	Revision 1.7  2004/05/14 16:16:52  sm
-**	- Modified water
-**	- Added some water values to its property dialog
-**	
-**	Revision 1.6  2004/05/08 17:36:39  sm
-**	- Unified scaling for materials and bumps.
-**	
-**	Revision 1.5  2004/04/19 10:13:37  sm
-**	- Adjusted oak plank.
-**	
-**	Revision 1.4  2004/04/18 09:13:50  sm
-**	- Removed hardwired values.
-**	- Now we have congruent material and bump oakpank structure.
-**	
-**	Revision 1.3  2004/04/18 08:53:04  sm
-**	- Put temporiraly some hardwired values into the oakplank.
-**	
-**	Revision 1.2  2004/04/13 13:44:27  sm
-**	- Replaced some divisions by multiplications of their reciprocals.
-**	
-**	Revision 1.1  2004/04/10 19:12:46  sm
-**	- Splitted up some header/source files:
-**	  o b3Wood/b3OakPlank
-**	  o b3MaterialSampler
-**	- Cleaneup
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Wood implementation                           **
 **                                                                      **
 *************************************************************************/

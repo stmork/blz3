@@ -27,54 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.7  2006/02/19 18:58:47  sm
-**	- Some dialog inheritance corrections.
-**	
-**	Revision 1.6  2004/05/30 20:25:00  sm
-**	- Set paging size in supersampling dialog to 1 instead of 10.
-**	- Added support for debugging super sampling.
-**	- The object preview uses the shading model of its owning world.
-**	- Fixed animation problem when using rotating elements on
-**	  time bounds because of rounding problems. Now using
-**	  b3_f32 for time points.
-**	
-**	Revision 1.5  2003/03/04 20:37:36  sm
-**	- Introducing new b3Color which brings some
-**	  performance!
-**	
-**	Revision 1.4  2003/01/11 12:30:30  sm
-**	- Some additional undo/redo actions
-**	
-**	Revision 1.3  2001/11/25 12:25:31  sm
-**	- Completing some dialogs:
-**	  o super sampling
-**	  o distributed raytracing
-**	
-**	Revision 1.2  2001/11/12 16:50:29  sm
-**	- Scene properties dialog coding
-**	
-**	Revision 1.1  2001/11/11 15:09:56  sm
-**	- Introduced scene properties for:
-**	  o scene itself (done)
-**	  o distributed raytracing (controls layouted)
-**	  o super sampling (controls layouted)
-**	  o nebular (controls layouted)
-**	  o lens flares (controls layouted)
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgSuperSampling implementation              **
 **                                                                      **
 *************************************************************************/

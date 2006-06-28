@@ -28,39 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.4  2004/05/16 09:21:11  sm
-**	- Fixed ticket no. 22: Camera deletions are handled
-**	  correctly now
-**	
-**	Revision 1.3  2004/05/15 14:37:46  sm
-**	- Added resolution combo box to scene dialog.
-**	- Fixed bug no. 3
-**	
-**	Revision 1.2  2001/12/26 18:17:56  sm
-**	- More status bar information displayed (e.g. coordinates)
-**	- Some minor UI updates
-**	
-**	Revision 1.1  2001/08/18 15:38:27  sm
-**	- New action toolbar
-**	- Added comboboxes for camera and lights (but not filled in)
-**	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
-**	- Some RenderObject redesignes
-**	- Color selecting bug fix in RenderObject
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Blizzard III CB3ComboBox class                **
 **                                                                      **
 *************************************************************************/

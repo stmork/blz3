@@ -29,61 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.11  2006/05/27 13:32:22  sm
-**	- Added CB3Dialog base class for simple dialogs.
-**	- Adjusted all tool dialog base classes for better oAW MDA generation
-**
-**	Revision 1.10  2006/03/05 22:12:32  sm
-**	- Added precompiled support for faster comiling :-)
-**	
-**	Revision 1.9  2005/01/23 19:54:06  sm
-**	- Experimented with OpenGL settings for Linux Wine but there
-**	  is no solution for Wine/Windows MDI applications to use OpenGL.
-**	- Optimized precompiled header.
-**	
-**	Revision 1.8  2004/05/29 13:38:11  sm
-**	- Made shading model visible to material an bump dialogs.
-**	
-**	Revision 1.7  2004/05/10 15:12:08  sm
-**	- Unified condition legends for conditions and
-**	  texture materials.
-**	- Added wrap texture material dialog.
-**	
-**	Revision 1.6  2004/05/08 17:36:39  sm
-**	- Unified scaling for materials and bumps.
-**	
-**	Revision 1.5  2004/05/06 18:13:51  sm
-**	- Added support for changed only b3Items for a
-**	  better preview performance.
-**	
-**	Revision 1.4  2004/04/26 12:27:43  sm
-**	- Added following dialogs:
-**	  o granite
-**	  o chess
-**	- Added scaling to wood properties
-**	
-**	Revision 1.3  2004/04/25 13:40:59  sm
-**	- Added file saving into registry
-**	- Added last b3Item state saving for cloned b3Item
-**	  creation.
-**	- Now saving refresh state per b3Item dialog
-**	
-**	Revision 1.2  2004/03/14 16:18:26  sm
-**	- Added Windows support for granite.
-**	
-**	Revision 1.1  2004/03/14 08:19:17  sm
-**	- Added granite material.
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        CDlgMatGranite implementation                 **
 **                                                                      **
 *************************************************************************/

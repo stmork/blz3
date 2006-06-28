@@ -27,29 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/03/05 22:12:33  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.3  2005/05/15 10:19:26  sm
-**	- Fixed picking operations for undo/redo
-**	
-**	Revision 1.2  2003/01/28 16:49:09  sm
-**	- Added undo/redo picking
-**	- Fixed pick drawing problem with nVidia hardware
-**	
-**	Revision 1.1  2003/01/28 15:58:27  sm
-**	- Added support for undoing/redoing picking
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Undo/Redo picking                             **
 **                                                                      **
 *************************************************************************/

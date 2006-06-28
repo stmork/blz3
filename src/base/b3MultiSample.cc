@@ -31,44 +31,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/03/05 21:22:34  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.6  2005/10/11 16:59:18  sm
-**	- OpenGL compile fix.
-**	
-**	Revision 1.5  2005/05/04 10:16:10  mork
-**	- Added some GLenum castings.
-**	
-**	Revision 1.4  2004/12/06 15:14:56  smork
-**	- Minor changes
-**	
-**	Revision 1.3  2004/11/21 14:56:57  sm
-**	- Merged VBO development into main trunk.
-**	
-**	Revision 1.2.2.2  2004/11/21 14:13:29  sm
-**	- Multisample test corrected.
-**	
-**	Revision 1.2.2.1  2004/11/20 11:37:15  sm
-**	- Added Windows VBO support
-**	
-**	Revision 1.2  2004/09/24 20:22:05  sm
-**	- Some VBO adjustments.
-**	
-**	Revision 1.1  2004/09/24 15:39:31  sm
-**	- Added multisampling support which doesn't work.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/

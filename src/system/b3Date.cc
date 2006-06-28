@@ -42,64 +42,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.12  2006/03/05 21:22:36  sm
-**	- Added precompiled support for faster comiling :-)
-**
-**	Revision 1.11  2005/10/02 09:51:13  sm
-**	- Added OpenEXR configuration.
-**	- Added more excpetion handling.
-**	
-**	Revision 1.10  2005/05/07 14:48:06  sm
-**	- Searching for correct "latest possible" date on 64 bit machines.
-**	
-**	Revision 1.9  2005/05/07 09:40:00  sm
-**	- Changing va-list init to each vxprintf function call.
-**	
-**	Revision 1.8  2003/10/16 08:54:23  sm
-**	- Simpler max date generation.
-**	
-**	Revision 1.7  2003/10/16 08:46:44  sm
-**	- Adjusted most possible time_t value.
-**	
-**	Revision 1.6  2003/02/20 16:34:47  sm
-**	- Some logging cleanup
-**	- New base class for b3CPU (b3CPUBase)
-**	- b3Realloc bug fix on Solaris
-**	
-**	Revision 1.5  2002/08/15 13:56:44  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.4  2002/08/11 08:17:41  sm
-**	- Renamed system_independend to system like include
-**	
-**	Revision 1.3  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.2  2001/07/02 19:52:03  sm
-**	- Cleaning up comments
-**	
-**	Revision 1.1  2001/07/01 16:31:52  sm
-**	- Creating MSVC Projects
-**	- Welcome to Windows 32
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3Date routines                               **
 **                                                                      **
 *************************************************************************/
