@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:      b3World.cc $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3World.cc $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Blizzard file structure loading
+**	Blizzard III - Blizzard file structure loading
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **

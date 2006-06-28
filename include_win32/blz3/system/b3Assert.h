@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III Debug assertion
+**	Blizzard III - Debug assertion
 **
 **	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved

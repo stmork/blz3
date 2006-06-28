@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      b3World.h $
-**	$Release:       Dortmund 2001 $
+**	$Filename:	b3World.h $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - world loading
 **

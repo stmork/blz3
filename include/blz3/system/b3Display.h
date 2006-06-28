@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:	b3Display.h   $
-**      $Release:	Dortmund 2001 $
-**      $Revision:	1.07 
-**      $Date$
-**      $Developer:	Steffen A. Mork $
-**      $Id$
+**	$Filename:	b3Display.h   $
+**	$Release:	Dortmund 2001 $
+**	$Revision:	1.07 
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Display Hardware Routines
+**	Blizzard III - Display Hardware Routines
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 */

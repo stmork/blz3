@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2001, 2003 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork
 **
 **	Blizzard III - vector and matrix calculation proto types

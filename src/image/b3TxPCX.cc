@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Loading PCX images

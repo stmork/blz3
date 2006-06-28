@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      b3ItemRegister.h $
-**	$Release:       Dortmund 2001, 2002 $
+**	$Filename:	b3ItemRegister.h $
+**	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - a registry for class maintainance
 **

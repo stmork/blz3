@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      b3Vector.h $
-**	$Release:       Dortmund 2002 $
+**	$Filename:	b3Vector.h $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Vector template
 **

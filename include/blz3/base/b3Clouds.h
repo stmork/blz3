@@ -7,8 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Clouds.
-**	               functions.
+**	Blizzard III - Cloud functions.
 **
 **	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved

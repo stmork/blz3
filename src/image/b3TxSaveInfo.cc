@@ -2,8 +2,9 @@
 **
 **	$Filename:	b3TxSaveInfo.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision:	2.04 
+**	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - 	File format encoder

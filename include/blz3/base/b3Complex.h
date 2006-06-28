@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      b3Complex.h $
-**	$Release:       Dortmund 2005 $
+**	$Filename:	b3Complex.h $
+**	$Release:	Dortmund 2005 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Complex datatype
 **

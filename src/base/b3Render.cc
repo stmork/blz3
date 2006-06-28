@@ -1,10 +1,11 @@
 /*
 **
-**	$Filename:      b3Render.cc $
-**	$Release:       Dortmund 2001 - 2005 $
+**	$Filename:	b3Render.cc $
+**	$Release:	Dortmund 2001 - 2005 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Rendering some objects
 **

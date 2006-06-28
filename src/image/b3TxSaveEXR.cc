@@ -2,8 +2,9 @@
 **
 **	$Filename:	b3TxSaveEXR.cc $
 **	$Release:	Dortmund 2005 $
-**	$Revision:	2.04 
+**	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Saving an OpenEXR image

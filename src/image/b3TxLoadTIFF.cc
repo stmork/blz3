@@ -1,4 +1,3 @@
-
 /*
 **
 **	$Filename:	b3TxLoadTIFF.cc $

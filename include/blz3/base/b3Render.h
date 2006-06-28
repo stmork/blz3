@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Rendering class definitions

@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:      b3DisplayView.cpp $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3DisplayView.cpp $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Controlling a color display
+**	Blizzard III - Controlling a color display
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 */

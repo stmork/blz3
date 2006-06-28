@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2005 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Loading OpenEXR images

@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III base defines
+**	Blizzard III - base defines
 **
 **	(C) Copyright 2001-2006  Steffen A. Mork
 **	    All Rights Reserved

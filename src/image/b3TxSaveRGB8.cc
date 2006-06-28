@@ -2,8 +2,9 @@
 **
 **	$Filename:	b3TxSaveRGB8.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision:	2.04 
+**	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Saving a RGB8 image

@@ -3,7 +3,8 @@
 **	$Filename:	b3Cubic.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision: 2.02 
-**	$Date:		05-Jun-1998 
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - vector and matrix methods

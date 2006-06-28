@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Ocean wave bump map
