@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Base class for multhithreaded scene initialization
