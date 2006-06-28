@@ -4,12 +4,13 @@
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - The shading dispatcher
 **
-**      (C) Copyright 2004  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2004  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **

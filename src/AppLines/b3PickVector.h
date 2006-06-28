@@ -1,4 +1,3 @@
-
 /*
 **
 **	$Filename:	b3PickVector.h $

@@ -1,15 +1,16 @@
 /*
 **
-**      $Filename:      b3ActionObject.cpp $
-**      $Release:       Dortmund 2002 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3ActionObject.cpp $
+**	$Release:	Dortmund 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - What to do on mouse input (object action)
+**	Blizzard III - What to do on mouse input (object action)
 **
-**      (C) Copyright 2002  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2002  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **

@@ -1,15 +1,16 @@
 /*
 **
-**      $Filename:      b3Material.cc $
-**      $Release:       Dortmund 2001, 2002, 2003, 2004 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3Material.cc $
+**	$Release:	Dortmund 2001, 2002, 2003, 2004 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Raytracing materials
+**	Blizzard III - Raytracing materials
 **
-**      (C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **

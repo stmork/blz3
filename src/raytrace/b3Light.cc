@@ -1,10 +1,11 @@
 /*
 **
-**	$Filename:      b3Light.cc $
-**	$Release:       Dortmund 2001, 2002, 2003 $
+**	$Filename:	b3Light.cc $
+**	$Release:	Dortmund 2001, 2002, 2003 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing light sources
 **

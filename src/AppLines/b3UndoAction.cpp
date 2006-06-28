@@ -1,9 +1,10 @@
 /*
 **
-**	$Filename:	b3UndoAction.cpp
+**	$Filename:	b3UndoAction.cpp $
 **	$Release:	Dortmund 2003 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Undo/Redo for mouse actions

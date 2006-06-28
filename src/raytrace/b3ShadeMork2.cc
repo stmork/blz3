@@ -4,12 +4,13 @@
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Enhanced Mork shader
 **
-**      (C) Copyright 2004  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2004  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **

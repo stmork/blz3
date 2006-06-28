@@ -1,3 +1,20 @@
+/*
+**
+**	$Filename:	b3DocManager.h $
+**	$Release:	Dortmund 2006 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Document manager
+**
+**	(C) Copyright 2006  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
 #ifndef B3_DOCMANAGER_H
 #define B3_DOCMANAGER_H
 

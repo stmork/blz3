@@ -1,15 +1,16 @@
 /*
 **
-**      $Filename:      b3ReadCOB.cc $
-**      $Release:       Dortmund 2003 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3ReadCOB.cc $
+**	$Release:	Dortmund 2003 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Converting Caligari objects into Blizzard III
+**	Blizzard III - Converting Caligari objects into Blizzard III
 **
-**      (C) Copyright 2003  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2003  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **

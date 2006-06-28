@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Traversing scene and bounding boxes.

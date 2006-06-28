@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2003 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Undo/Redo for light handling

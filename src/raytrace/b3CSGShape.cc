@@ -1,15 +1,16 @@
 /*
 **
-**      $Filename:      b3CSGShape.cc $
-**      $Release:       Dortmund 2002 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3CSGShape.cc $
+**	$Release:	Dortmund 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Raytracing CSG shapes
+**	Blizzard III - Raytracing CSG shapes
 **
-**      (C) Copyright 2002  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2002  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
