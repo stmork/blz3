@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 1998 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III directory routines
@@ -25,97 +26,6 @@
 #include <sys/stat.h>	
 #include <unistd.h>
 #include <assert.h>
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.17  2003/09/28 20:33:20  sm
-**	- Ensure CPU count in image scaling methods.
-**
-**	Revision 1.16  2003/08/31 10:44:07  sm
-**	- Further buffer overflow avoidments.
-**	
-**	Revision 1.15  2003/08/28 14:44:26  sm
-**	- Further buffer overflow prevention:
-**	  o added b3Path::b3Format
-**	  o added b3Path::b3Append
-**	- Further strcat/strcpy removal necessary
-**	
-**	Revision 1.14  2003/05/26 11:20:52  sm
-**	- Used wrong data types for b3Path::b3ExtractExt() methods. Now using
-**	  signed versus unsigned int.
-**	
-**	Revision 1.13  2002/08/16 11:40:39  sm
-**	- Changed vertex handling for use without OpenGL. Vertex computation
-**	  is needed for bound computation which is needed for animation. There
-**	  are still some problems so we have to work further on Windows for
-**	  better debugging.
-**	- b3ExtractExt searches from right instead from left.
-**	
-**	Revision 1.12  2002/08/15 13:56:44  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.11  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.10  2002/01/17 15:46:00  sm
-**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
-**	- Opening a CAppRaytraceDoc for all image extensions.
-**	
-**	Revision 1.9  2002/01/06 21:38:18  sm
-**	- Nasty Un CR/LF
-**	- b3Dir fix. Not tested, yet!
-**	- make count/make count_all update
-**	
-**	Revision 1.8  2002/01/06 16:30:47  sm
-**	- Added Load/Save/Replace object
-**	- Enhanced "New world"
-**	- Added some non static methods to b3Dir (Un*x untested, yet!)
-**	- Fixed missing sphere/ellipsoid south pole triangles
-**	- Fixed Spline cylinder/ring triangle indexing
-**	
-**	Revision 1.7  2001/12/02 17:38:17  sm
-**	- Removing nasty CR/LF
-**	- Added b3ExtractExt()
-**	- Added stricmp() for Un*x
-**	- Fixed some defines
-**	
-**	Revision 1.6  2001/11/11 14:07:15  sm
-**	- Adjusted b3Path to Un*x port.
-**	
-**	Revision 1.5  2001/10/19 14:46:58  sm
-**	- Rotation spline shape bug found.
-**	- Major optimizations done.
-**	- Cleanups
-**	
-**	Revision 1.4  2001/10/17 14:46:03  sm
-**	- Adding triangle support.
-**	- Renaming b3TriangleShape into b3Triangles and introducing
-**	  new b3TriangleShape as base class. This results in
-**	  source file renaming, too.
-**	- Fixing soft shadow bug.
-**	- Only scene loading background image when activated.
-**	- Fixing LDC spline initialization.
-**	- Converting Windows paths into right paths on Un*x
-**	
-**	Revision 1.3  2001/07/08 12:30:06  sm
-**	- New tool to remove nasty CR/LF from Windoze.
-**	- Removing some nasty CR/LF with that new tool.
-**	
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

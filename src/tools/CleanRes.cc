@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      CleanRes.cc $
-**	$Release:       Dortmund 2002 $
+**	$Filename:	CleanRes.cc $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Cleaning up resource include
 **
@@ -26,32 +26,9 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
+**                        Typedefs and defines                          **
 **                                                                      **
 *************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.5  2004/11/29 09:58:01  smork
-**  - Changed exit states to correct defines.
-**  - Added switch for disabling VBO in OpenGL renderer.
-**  - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**  Revision 1.4  2004/07/08 10:43:00  sm
-**  - Make some makefile cleanups.
-**  - Removed some compiler warnings.
-**
-**  Revision 1.3  2004/01/18 13:51:58  sm
-**  - Done further security issues.
-**
-**  Revision 1.2  2002/08/18 13:06:08  sm
-**  - Some minor updates
-**
-**  Revision 1.1  2002/08/17 10:17:09  sm
-**  - Added a tool to cleanup the resource id include.
-**
-**
-*/
 
 static struct b3DefineType
 {
@@ -83,6 +60,12 @@ enum b3DefineMode
 	DM_NOP,
 	DM_END
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
 
 class b3Define : public b3Link<b3Define>
 {

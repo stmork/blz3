@@ -29,6 +29,7 @@ AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [The Blizzard III executable directory])
 AC_SUBST(BLZ3_DOC, "$BLZ3_DOC", [The Blizzard III documentation directory])
 AC_SUBST(GLUTLIBS)
 AC_SUBST(DIVXLIBS)
+AC_SUBST(CPPUNITLIBS)
 
 AC_LANG_PUSH(C++)
 
@@ -130,7 +131,7 @@ AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h s
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 AC_CHECK_LIB([z], [main])
-AC_CHECK_LIB([cppunit], [main])
+AC_CHECK_LIB([cppunit], [main], [CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
 
 # Check for OpenGL
 AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])

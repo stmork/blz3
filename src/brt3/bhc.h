@@ -4,7 +4,8 @@
 **	$Release:	Dortmund 2003 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Creating a house from a description file
 **

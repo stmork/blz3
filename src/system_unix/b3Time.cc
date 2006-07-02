@@ -29,65 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/04/29 11:25:49  sm
-**	- Added ocean bump to main packet.
-**	- b3Prepare signature: Added further initialization information
-**	  for animation preparation
-**	- Added test module for ocean waves.
-**	- Added module for random number generation.
-**	- Adjusted material and bump sampler to reflect preparation
-**	  signature change.
-**	- Added OpenGL test program for ocean waves.
-**	- Changed Phillips spectrum computation to be independent
-**	  from time.
-**	- Interpolated height field for ocean waves.
-**
-**	Revision 1.7  2004/11/26 16:28:17  smork
-**	- Equalizing VERBOSE print outs.
-**	- pthread error messages only in _DEBUG version.
-**	
-**	Revision 1.6  2002/11/16 14:24:00  sm
-**	- Added a CPU benchmark
-**	- Removed system dependend #IF from raytracing
-**	
-**	Revision 1.5  2002/08/19 16:50:39  sm
-**	- Now having animation running, running, running...
-**	- Activation handling modified to reflect animation
-**	  and user transformation actions.
-**	- Made some architectual redesigns.
-**	
-**	Revision 1.4  2002/08/16 13:20:14  sm
-**	- Removed some unused methods.
-**	- Allocation bug found in brt3 - the Un*x version of the
-**	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
-**	  rather than b3renderContext which doesn't initialize subdivision
-**	  for shapes.
-**	
-**	Revision 1.3  2002/08/11 11:03:41  sm
-**	- Moved b3Display and b3Row classes from base lib into system
-**	  independend lib.
-**	- Made b3TimeSpan more system independend;-)
-**	
-**	Revision 1.2  2001/11/07 15:55:09  sm
-**	- Introducing b3TimeSpan to Windows to get computation time on
-**	  Windows as well.
-**	- Changed some include dependencies.
-**	
-**	Revision 1.1  2001/11/02 19:05:36  sm
-**	- Introducing time mearuring.
-**	- Fixed wrong lens flare handling.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TimeSpan routines                           **
 **                                                                      **
 *************************************************************************/

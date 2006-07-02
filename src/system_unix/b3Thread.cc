@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
+**	$Author:$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III multi threading support
@@ -27,123 +28,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.24  2006/05/11 15:34:23  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**
-**	Revision 1.23  2005/06/03 09:00:34  smork
-**	- Moved b3CPU into own file.
-**	
-**	Revision 1.22  2005/05/10 15:30:57  sm
-**	- getrusage time correction message added.
-**	
-**	Revision 1.21  2005/03/26 09:03:42  sm
-**	- Some rpm spec updates
-**	- Speed up of correct rusage determination.
-**	
-**	Revision 1.20  2005/01/14 14:42:35  smork
-**	- Take into account that getrusage() time measuring was fixed in
-**	  Linux kernel 2.6.9 and later. getrusage() behaves now POSIX conform.
-**	
-**	Revision 1.19  2004/11/26 16:28:17  smork
-**	- Equalizing VERBOSE print outs.
-**	- pthread error messages only in _DEBUG version.
-**	
-**	Revision 1.18  2004/08/18 07:32:00  sm
-**	- Fixed b3Thread::b3Stop() bug on gcc 2.95 systems.
-**	
-**	Revision 1.17  2003/10/16 08:25:55  sm
-**	- Moved CPU bit count into b3CPUBase class
-**	
-**	Revision 1.16  2003/08/11 08:21:40  sm
-**	- Added priority scheduling to b3Thread class.
-**	- Cleaned up brt3 comments.
-**	
-**	Revision 1.15  2003/02/20 16:34:47  sm
-**	- Some logging cleanup
-**	- New base class for b3CPU (b3CPUBase)
-**	- b3Realloc bug fix on Solaris
-**	
-**	Revision 1.14  2003/02/19 16:52:53  sm
-**	- Cleaned up logging
-**	- Clean up b3CPU/b3Runtime
-**	
-**	Revision 1.13  2002/11/16 14:24:00  sm
-**	- Added a CPU benchmark
-**	- Removed system dependend #IF from raytracing
-**	
-**	Revision 1.12  2002/09/16 16:49:59  sm
-**	- Done some setup cleanups
-**	- Using _SC_NPROC_ONLN instead of _SC_NPROCESSORS_ONLN if
-**	  available.
-**	
-**	Revision 1.11  2002/09/15 09:08:30  sm
-**	- Some adjustments to compile on SGI Mips R10000:-) Which seems
-**	  to be the most efficient CPU on world...
-**	
-**	Revision 1.10  2002/08/24 13:59:54  sm
-**	- Corrected timing inside threads
-**	
-**	Revision 1.9  2002/08/24 13:22:02  sm
-**	- Extensive debugging on threading code done!
-**	  o Cleaned up POSIX threads
-**	  o Made safe thread handling available in raytracing code
-**	  o b3PrepareInfo instantiates threads only once.
-**	- Added new thread options to gcc: "-D_REENTRAND -pthread"
-**	  which I only can assume what they are doing;-)
-**	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
-**	  and corrected upper time limit.
-**	
-**	Revision 1.8  2002/08/23 13:40:28  sm
-**	- b3Event on Un*x platforms were broken.
-**	
-**	Revision 1.7  2002/08/02 11:59:25  sm
-**	- b3Thread::b3Wait now returns thread result.
-**	- b3Log_SetLevel returns old log level.
-**	- Introduced b3PrepareInfo class for multithreaded initialization
-**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
-**	- b3TxPool class is now thread safe.
-**	
-**	Revision 1.6  2001/11/07 15:55:09  sm
-**	- Introducing b3TimeSpan to Windows to get computation time on
-**	  Windows as well.
-**	- Changed some include dependencies.
-**	
-**	Revision 1.5  2001/11/06 17:14:02  sm
-**	- Introducing JPEG saving
-**	- Made some library fine tunings on TIFF and JPEG
-**	- Conversion tool any image in/ JPEG or TIFF image out. Includes:
-**	  o scaling
-**	  o filtering
-**	  o B/W conversion
-**	
-**	Revision 1.4  2001/10/20 16:15:00  sm
-**	- Some runtime environment cleanups. The CPU count is determined
-**	  only once.
-**	- Introduced preparing routines for raytring to shapes.
-**	- Found 5% performance loss: No problem, this was eaten by
-**	  bug fxing of the rotation spline shapes. (Phuu!)
-**	- The next job is to implement different row sampler. Then we
-**	  should implemented the base set of the Blizzard II raytracer.
-**	
-**	Revision 1.3  2001/07/08 12:30:07  sm
-**	- New tool to remove nasty CR/LF from Windoze.
-**	- Removing some nasty CR/LF with that new tool.
-**	
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

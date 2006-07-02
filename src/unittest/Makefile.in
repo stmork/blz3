@@ -9,6 +9,7 @@ CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
+CPPUNITLIBS		= @CPPUNITLIBS@
 
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE		= $(BLZ3_LIB)/libB3Raytrace.a
@@ -61,7 +62,7 @@ cleantest:
 	rm -f $(TEST_FILES)
 
 basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS) $(CPPUNITLIBS)
 
 test:	basetest
 	./basetest

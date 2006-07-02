@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	divx.cc $
+**	$ilename:	divx.cc $
 **	$Release:	Dortmund 2004, 2005 $
 **	$Revision$
 **	$Date$
@@ -38,50 +38,6 @@ extern "C"
 {
 #include "avilib.h"
 }
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/05/24 16:07:55  sm
-**	- Done some Un*x b3GetData() corrections.
-**
-**	Revision 1.8  2005/05/31 11:15:12  smork
-**	- Extraced avilib into own directory.
-**	
-**	Revision 1.7  2005/01/14 08:51:05  smork
-**	- Corrected lens flares to be in front of any object.
-**	- Added start banner to divx tool.
-**	
-**	Revision 1.6  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.5  2004/08/26 07:08:10  sm
-**	- Higher bitrate in DivX encoder.
-**	- Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
-**	
-**	Revision 1.4  2004/08/17 08:35:37  sm
-**	- Correct make depend command
-**	- Correct install
-**	
-**	Revision 1.3  2004/08/16 06:05:43  sm
-**	- Added divx define rules.
-**	
-**	Revision 1.2  2004/08/04 13:56:24  sm
-**	- More quiet divx encoder
-**	
-**	Revision 1.1  2004/08/03 10:46:26  sm
-**	- Added simgle frame to DivX/AVI conversion tool
-**	- Added image mirror (not completely implemented yet)
-**	
-**
-*/
 
 /*************************************************************************
 **                                                                      **

@@ -1,11 +1,11 @@
 /*
 **
-**      $Filename:      half.cc $
-**      $Release:       Dortmund 2003 $
+**      $Filename:	half.cc $
+**      $Release:	Dortmund 2003 $
 **      $Revision$
 **      $Date$
 **      $Author$
-**      $Developer:     Steffen A. Mork $
+**      $Developer:	Steffen A. Mork $
 **
 **      Blizzard III - Halfs an image
 **
@@ -27,30 +27,6 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3Tx.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/04/15 20:34:55  sm
-**	- Added support for ocean surface bump mapping.
-**
-**	Revision 1.3  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.2  2003/10/12 08:30:35  sm
-**	- Added rotating of image before scaling and saving.
-**	
-**	Revision 1.1  2003/09/28 20:33:20  sm
-**	- Ensure CPU count in image scaling methods.
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

@@ -4,7 +4,8 @@
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Converting tool for Utah teapot import
 **
@@ -28,37 +29,6 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Shape.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/03/27 10:32:06  smork
-**	- Renamed member variables of spline template class.
-**
-**	Revision 1.6  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.5  2004/05/11 14:01:14  sm
-**	- Added unified invert/revert for object editing.
-**	- Added deletion of transform history in scene
-**	  editor (= transformed history) and object editor
-**	  (= original form)
-**	
-**	Revision 1.4  2004/05/08 18:40:20  sm
-**	- Fixed minor compile warnings.
-**	
-**	Revision 1.3  2004/05/08 11:41:59  sm
-**	- Now have a Utah spoon, a Utah Teacup and the Utah teapot!!!
-**	
-**
-*/
 
 /*************************************************************************
 **                                                                      **

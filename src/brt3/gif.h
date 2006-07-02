@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 1997, 2004 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	some GIF definitions

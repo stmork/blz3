@@ -32,63 +32,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.11  2006/05/11 15:34:23  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**
-**	Revision 1.10  2005/11/29 22:23:44  sm
-**	- Added special error logging for b3Open.
-**	
-**	Revision 1.9  2004/05/13 08:13:21  sm
-**	- Removed some variable hidings.
-**	
-**	Revision 1.8  2002/08/15 13:56:44  sm
-**	- Introduced B3_THROW macro which supplies filename
-**	  and line number of source code.
-**	- Fixed b3AllocTx when allocating a zero sized image.
-**	  This case is definitely an error!
-**	- Added row refresh count into Lines
-**	
-**	Revision 1.7  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.6  2002/02/20 20:23:58  sm
-**	- Some type cleanups done.
-**	
-**	Revision 1.5  2001/10/16 15:21:24  sm
-**	- Minor changes to compile with GCC 3.x
-**	
-**	Revision 1.4  2001/10/09 20:47:02  sm
-**	- some further texture handling.
-**	
-**	Revision 1.3  2001/07/01 16:48:00  sm
-**	- FILESTRINGLEN -> B3_FILESTRINGLEN
-**	- Cleaned up some makefiles
-**	- Cleaned up some CVS conflicts
-**	
-**	Revision 1.2  2001/07/01 16:31:52  sm
-**	- Creating MSVC Projects
-**	- Welcome to Windows 32
-**	
-**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**	Blizzard III is born
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3File implementation                         **
 **                                                                      **
 *************************************************************************/

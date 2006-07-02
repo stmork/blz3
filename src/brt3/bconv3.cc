@@ -4,7 +4,8 @@
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Converting image formats
 **
@@ -23,36 +24,6 @@
 
 #include "blz3/system/b3Dir.h"  
 #include "blz3/image/b3Tx.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2005/06/09 11:00:57  smork
-**	- Call option cleanup.
-**
-**	Revision 1.3  2005/06/09 09:24:00  smork
-**	- Added image conversion tool to installation.
-**	
-**	Revision 1.2  2004/11/29 09:58:00  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.1  2001/11/06 17:14:02  sm
-**	- Introducing JPEG saving
-**	- Made some library fine tunings on TIFF and JPEG
-**	- Conversion tool any image in/ JPEG or TIFF image out. Includes:
-**	  o scaling
-**	  o filtering
-**	  o B/W conversion
-**	
-**
-*/
 
 static void convert_tiff(
 	b3Tx       *tx,

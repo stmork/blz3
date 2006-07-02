@@ -1,11 +1,11 @@
 /*
 **
-**      $Filename:      testimg.cc $
-**      $Release:       Dortmund 2003 $
+**      $Filename:	testimg.cc $
+**      $Release:	Dortmund 2003 $
 **      $Revision$
 **      $Date$
 **      $Author$
-**      $Developer:     Steffen A. Mork $
+**      $Developer:	Steffen A. Mork $
 **
 **      Blizzard III - Creating a test image
 **
@@ -25,35 +25,6 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/image/b3Tx.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/24 16:07:55  sm
-**	- Done some Un*x b3GetData() corrections.
-**
-**	Revision 1.4  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.3  2004/07/08 10:43:00  sm
-**	- Make some makefile cleanups.
-**	- Removed some compiler warnings.
-**	
-**	Revision 1.2  2003/08/11 18:49:34  sm
-**	- Some minor pattern changes
-**	
-**	Revision 1.1  2003/08/08 08:50:07  sm
-**	- Added test image creation
-**	
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

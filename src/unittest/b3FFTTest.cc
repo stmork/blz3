@@ -25,39 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2006/05/21 12:31:03  sm
-**	- Optimized cache access for FFT.
-**
-**	Revision 1.5  2006/05/19 15:58:47  smork
-**	- Correct exception handling in complex number computation.
-**	
-**	Revision 1.4  2006/05/19 07:02:58  sm
-**	- Corrected FFT unit test.
-**	
-**	Revision 1.3  2006/05/13 10:01:01  sm
-**	- Introduced special complex number computation for FFT handling.
-**	
-**	Revision 1.2  2006/05/12 14:06:28  smork
-**	- Added configurable CPPUNIT tests.
-**	
-**	Revision 1.1  2006/05/11 15:34:23  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        FFT unit test                                 **
 **                                                                      **
 *************************************************************************/

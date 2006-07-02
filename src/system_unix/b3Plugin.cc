@@ -28,31 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2003/06/07 11:58:07  sm
-**	- Changed plugin init method name to b3Init()
-**
-**	Revision 1.4  2003/06/01 13:03:45  sm
-**	- Is this the final plugin version?
-**	
-**	Revision 1.3  2003/06/01 12:07:01  sm
-**	- Minor plugin changes
-**	
-**	Revision 1.2  2003/05/25 16:47:31  sm
-**	- Added error messages in case a plugin fails.
-**	
-**	Revision 1.1  2003/05/24 16:37:06  sm
-**	- Added plugin support for Un*x
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        The Blizzard III loader functions             **
 **                                                                      **
 *************************************************************************/

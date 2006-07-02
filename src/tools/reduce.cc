@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      reduce.cc $
-**	$Release:       Dortmund 2004 $
+**	$Filename:	reduce.cc $
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Simple reduce of an image
 **
@@ -22,25 +22,6 @@
 *************************************************************************/
 
 #include "blz3/image/b3Tx.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.2  2004/11/29 09:58:01  smork
-**  - Changed exit states to correct defines.
-**  - Added switch for disabling VBO in OpenGL renderer.
-**  - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**  Revision 1.1  2004/08/09 10:09:06  sm
-**  - Added color palette reduction and its tool.
-**
-**
-*/
 
 /*************************************************************************
 **                                                                      **

@@ -4,7 +4,8 @@
 **	$Release:	Dortmund 2003 $
 **	$Revision$
 **	$Date$
-**	$Developer:     Steffen A. Mork $
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Creating a house from a description file
 **
@@ -23,73 +24,6 @@
   
 #include "bhc.h"
 #include "blz3/base/b3Matrix.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.18  2006/06/05 08:56:37  sm
-**	- Exception changes to std::exception.
-**
-**	Revision 1.17  2004/11/29 09:58:00  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.16  2004/05/20 19:10:30  sm
-**	- Separated shader from scene. this is easier
-**	  to handle.
-**	
-**	Revision 1.15  2004/05/16 09:21:50  sm
-**	- Corrected camera access methods.
-**	
-**	Revision 1.14  2004/04/23 11:09:04  sm
-**	- Refectored b3Materials for better dialog use.
-**	
-**	Revision 1.13  2003/11/01 09:47:26  sm
-**	- Added CPU bit version with compiler version string.
-**	
-**	Revision 1.12  2003/10/23 10:12:42  sm
-**	- Added more room indexes.
-**	
-**	Revision 1.11  2003/09/28 20:33:19  sm
-**	- Ensure CPU count in image scaling methods.
-**	
-**	Revision 1.10  2003/08/27 14:54:23  sm
-**	- sprintf changed into snprintf to avoid buffer overflows.
-**	
-**	Revision 1.9  2003/07/20 09:38:30  sm
-**	- Registering raytracing items manually.
-**	
-**	Revision 1.8  2003/07/13 12:19:07  sm
-**	- Added unit/measurement on object print
-**	- Adjusted bhc tool for level scaling
-**	
-**	Revision 1.7  2003/07/12 17:44:47  sm
-**	- Cleaned up raytracing b3Item registration
-**	
-**	Revision 1.6  2003/07/10 08:03:16  sm
-**	- Some further error messages added.
-**	
-**	Revision 1.5  2003/07/09 19:04:22  sm
-**	- Added white walls and ceils
-**	
-**	Revision 1.3  2003/07/09 16:15:06  sm
-**	- Fixed empty line bug.
-**	
-**	Revision 1.2  2003/07/09 12:57:18  sm
-**	- Further house buiding...
-**	
-**	Revision 1.1  2003/07/09 10:09:38  sm
-**	- Changed brt3's default image file format to JPEG
-**	- Increased default quality of JPEG images from 75 to 85
-**	- Added house creating support ;-)
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      b3RemCR.cc $
-**	$Release:       Dortmund 2001 $
+**	$Filename:	b3RemCR.cc $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Converting Windows style files to Un*x files.
 **
@@ -23,35 +23,6 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3File.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2005/06/03 13:49:27  smork
-**	- Some cleanup.
-**
-**	Revision 1.5  2005/06/03 13:47:17  smork
-**	- Reactivating RemCR
-**	
-**	Revision 1.3  2002/11/16 15:24:17  sm
-**	- Include cleanups in RemCR
-**	
-**	Revision 1.2  2001/10/22 14:47:38  sm
-**	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
-**	  on Windows.
-**	- Some minor fixes.
-**	
-**	Revision 1.1  2001/07/08 12:30:07  sm
-**	- New tool to remove nasty CR/LF from Windoze.
-**	- Removing some nasty CR/LF with that new tool.
-**	
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

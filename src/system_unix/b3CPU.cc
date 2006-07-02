@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 2005 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III CPU info
@@ -27,27 +28,6 @@
 #ifdef __linux__
 #include <sys/utsname.h>
 #endif
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.2  2006/05/11 15:34:23  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**
-**	Revision 1.1  2005/06/03 09:00:34  smork
-**	- Moved b3CPU into own file.
-**	
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

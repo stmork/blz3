@@ -9,6 +9,7 @@ CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
+DIVXLIBS		= @DIVXLIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
@@ -37,6 +38,6 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS) @DIVXLIBS@
+	$(LINK.cc) -o $@ $^ $(LIBS) $/DIVXLIBS)
 
 -include .dep

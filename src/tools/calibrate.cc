@@ -1,11 +1,11 @@
 /*
 **
-**      $Filename:      calibrate.cc $
-**      $Release:       Dortmund 2003 $
+**      $Filename:	calibrate.cc $
+**      $Release:	Dortmund 2003 $
 **      $Revision$
 **      $Date$
 **      $Author$
-**      $Developer:     Steffen A. Mork $
+**      $Developer:	Steffen A. Mork $
 **
 **      Blizzard III - Calibrating scanned photos.
 **
@@ -28,41 +28,6 @@
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3Tx.h"
-
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.7  2006/05/24 16:07:55  sm
-**	- Done some Un*x b3GetData() corrections.
-**
-**	Revision 1.6  2005/10/15 16:43:03  sm
-**	- Added HDR texture access.
-**	
-**	Revision 1.5  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.4  2004/07/08 10:43:00  sm
-**	- Make some makefile cleanups.
-**	- Removed some compiler warnings.
-**	
-**	Revision 1.3  2003/08/27 14:54:23  sm
-**	- sprintf changed into snprintf to avoid buffer overflows.
-**	
-**	Revision 1.2  2003/05/18 14:59:01  sm
-**	- Fixed predefined constat MAX
-**	- Fixed typo
-**	
-**	Revision 1.1  2003/05/17 21:09:48  sm
-**	- Added feeder scanning calibration
-**	
-*/
 
 /*************************************************************************
 **                                                                      **

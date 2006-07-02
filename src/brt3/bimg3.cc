@@ -25,107 +25,14 @@
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3TxPool.h"
 
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.23  2005/12/05 22:12:24  sm
-**	- More const declarations.
-**
-**	Revision 1.22  2005/06/09 11:00:57  smork
-**	- Call option cleanup.
-**	
-**	Revision 1.21  2005/06/09 09:24:00  smork
-**	- Added image conversion tool to installation.
-**	
-**	Revision 1.20  2005/01/21 10:28:59  smork
-**	- Corrected exe banner.
-**	
-**	Revision 1.19  2004/11/29 09:58:00  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.18  2004/08/22 09:39:26  sm
-**	- Found TGA file as JPEG. Fixed.
-**	- Some exception handling problems found in bimg3.
-**	
-**	Revision 1.17  2004/01/05 08:01:55  sm
-**	- Added new year.
-**	
-**	Revision 1.16  2003/02/20 16:34:47  sm
-**	- Some logging cleanup
-**	- New base class for b3CPU (b3CPUBase)
-**	- b3Realloc bug fix on Solaris
-**	
-**	Revision 1.15  2002/12/20 15:32:55  sm
-**	- Made some ICC optimazations :-)
-**	
-**	Revision 1.14  2002/10/06 14:58:18  sm
-**	- Done some finetuning on setup
-**	- Output of GCC version under Un*x
-**	
-**	Revision 1.13  2002/09/01 15:33:36  sm
-**	- Updated makefiles
-**	
-**	Revision 1.12  2002/08/28 15:31:00  sm
-**	- Added some help output to render and bimg3.
-**	
-**	Revision 1.11  2002/08/11 11:22:33  sm
-**	- Adjusted some includes concerning b3DisplayView.
-**	
-**	Revision 1.10  2002/07/20 10:49:34  sm
-**	- Added custom light support (not finished yet)
-**	- Added b3Light::b3IsActive() for compatibility.
-**	- Added texture search path support like in brt3.
-**	
-**	Revision 1.9  2002/05/08 14:44:46  sm
-**	- Insert Tag names
-**	
-**	Revision 1.8  2002/05/08 14:37:56  sm
-**	- Output some information when not specifying data files.
-**	
-**	Revision 1.7  2001/12/23 10:58:38  sm
-**	- Accelerated b3Display.
-**	- Fixed YUV conversion.
-**	- Accelerated ILBM access to image  pixel/row.
-**	
-**	Revision 1.6  2001/11/04 12:15:15  sm
-**	- Renaming some attributes...
-**	- Taking account to redesign of b3Display
-**	
-**	Revision 1.5  2001/11/01 09:43:11  sm
-**	- Some image logging cleanups.
-**	- Texture preparing now in b3Prepare().
-**	- Done some minor fixes.
-**	
-**	Revision 1.4  2001/10/24 14:59:08  sm
-**	- Some GIG bug fixes
-**	- An image viewing bug fixed in bimg3
-**	
-**	Revision 1.3  2001/10/23 15:50:31  sm
-**	- Now parsing PCX4 correctly
-**	- Found TGA parsing bug.
-**	- Correcting path following behaviour.
-**	
-**	Revision 1.2  2001/10/19 14:46:57  sm
-**	- Rotation spline shape bug found.
-**	- Major optimizations done.
-**	- Cleanups
-**	
-**	Revision 1.1  2001/10/15 14:46:11  sm
-**	- Materials are accessing textures now.
-**	- Created image viewer "bimg3"
-**	
-**
-*/
-
 static b3TxPool texture_pool;
 
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
+  
 class b3ImageRow : public b3Row
 {
 public:

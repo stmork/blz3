@@ -1,11 +1,11 @@
 /*
 **
-**	$Filename:      RestoreExt.cc $
-**	$Release:       Dortmund 2002 $
+**	$Filename:	RestoreExt.cc $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Developer:     Steffen A. Mork $
+**	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Setting correct extension on each file
 **
@@ -26,36 +26,9 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
+**                        Implementation                                **
 **                                                                      **
 *************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.5  2004/11/29 09:58:01  smork
-**  - Changed exit states to correct defines.
-**  - Added switch for disabling VBO in OpenGL renderer.
-**  - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**  Revision 1.4  2003/08/28 14:44:27  sm
-**  - Further buffer overflow prevention:
-**    o added b3Path::b3Format
-**    o added b3Path::b3Append
-**  - Further strcat/strcpy removal necessary
-**
-**  Revision 1.3  2003/07/12 17:44:47  sm
-**  - Cleaned up raytracing b3Item registration
-**
-**  Revision 1.2  2003/02/19 16:52:53  sm
-**  - Cleaned up logging
-**  - Clean up b3CPU/b3Runtime
-**
-**  Revision 1.1  2002/08/25 13:03:02  sm
-**  - Added a tool to restore correct file extensions.
-**  - b3Tx can determine the image types' file extension.
-**
-**
-*/
 
 static const char *b3GetClassExt(b3_u32 world_class)
 {

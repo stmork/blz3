@@ -4,6 +4,7 @@
 **	$Release:	Dortmund 1997, 2004 $
 **	$Revision$
 **	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Make a GIF transparent
@@ -24,31 +25,6 @@
 
 #include "gif.h"
 
-/*************************************************************************
-**                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-  
-/*
-**	$Log$
-**	Revision 1.5  2005/01/21 10:28:59  smork
-**	- Corrected exe banner.
-**
-**	Revision 1.4  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.3  2004/10/12 11:54:53  smork
-**	- Some minor GCC compiler errors.
-**	
-**	Revision 1.2  2004/10/07 10:33:08  sm
-**	- Added some GIF tools and made them usable with Blizzard III.
-**	
-**
-*/
-  
 /*************************************************************************
 **                                                                      **
 **                        routines                                      **
