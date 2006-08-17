@@ -131,7 +131,7 @@ AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h s
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 AC_CHECK_LIB([z], [main])
-AC_CHECK_LIB([cppunit], [main], [CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
+AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT]) CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
 
 # Check for OpenGL
 AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])

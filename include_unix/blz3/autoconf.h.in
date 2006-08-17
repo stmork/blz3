@@ -64,9 +64,13 @@
 #if defined(HAVE_LIBIMATH) && defined(HAVE_LIBHALF) && defined(HAVE_LIBIEX) && defined(HAVE_LIBILMIMF)
 #undef BLZ3_USE_OPENEXR
 #endif
+
+/*
 #ifndef HAVE_LIBX11
 #error "Need X11 for compiling!"
 #endif
+*/
+
 #undef BLZ3_USE_AVILIB
 #undef BLZ3_USE_DIVX4LINUX
 #undef BLZ3_IS_LINUX

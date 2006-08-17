@@ -281,7 +281,7 @@ b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 			name,e.b3GetErrorMsg());
 		if (throw_exception)
 		{
-			throw e;
+			throw;
 		}
 	}
 	catch(b3TxException &e)
@@ -290,7 +290,7 @@ b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 			name,e.b3GetErrorMsg());
 		if (throw_exception)
 		{
-			throw e;
+			throw;
 		}
 	}
 	catch(...)
