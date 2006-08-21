@@ -22,6 +22,7 @@
 #include "blz3/system/b3ThreadAbstract.h"
 #include "blz3/system/b3CPUBase.h"
 #include <pthread.h>
+#include <string.h>
 
 /**
  * This class provides information about the installed CPUs.

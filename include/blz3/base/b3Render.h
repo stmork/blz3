@@ -79,7 +79,8 @@ class b3RenderContext : protected b3Mem
 
 	static b3_vector            glSimpleLightPosition;
 	static b3_vector            glSimpleLightDirection;
-	
+	static b3_bool              glUse;
+
 #ifdef BLZ3_USE_OPENGL
 	static GLenum               glLightNum[];
 #endif
@@ -91,12 +92,31 @@ public:
 	b3_count                    glTextureSize; //!< The maximal texture resolution.
 	b3_bool                     glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
 	b3Color                     glBgColor;     //!< The background color.
-
 public:
 	/**
 	 * The constructor initializes this instance and initializes the OpenGL background color.
 	 */
 	b3RenderContext();
+
+	/**
+	 * This method defines whether OpenGL verex computation should be used.
+	 *
+	 * @param use The flag whether to use OpenGL vertex initialization.
+	 */
+	static inline void b3UseGL(b3_bool use = true)
+	{
+		glUse = use;
+	}
+
+	/**
+	 * This method returns a flag whether to use OpenGL vertex initialization.
+	 *
+	 * @return The OpenGL vertex initialization flag.
+	 */
+	static inline b3_bool b3IsGL()
+	{
+		return glUse;
+	}
 
 	/**
 	 * This method dumps some version information and initializes OpenGL

@@ -53,12 +53,12 @@ b3RenderObject::b3RenderObject()
 	glInit = false;
 
 #ifdef BLZ3_USE_OPENGL
-	glDisplayList  = 0;
-	glTextureId    = 0;
-	glTextureData  = null;
-	glTextureSize  = 0;
-	glTextureSizeX = 0;
-	glTextureSizeY = 0;
+	glDisplayList     = 0;
+	glTextureId       = 0;
+	glTextureData     = null;
+	glTextureSize     = 0;
+	glTextureSizeX    = 0;
+	glTextureSizeY    = 0;
 	glVertexElements  = null;
 	glGridElements    = null;
 	glPolygonElements = null;
@@ -238,30 +238,33 @@ void b3RenderObject::b3PreAlloc()
 {
 	if (!glInit)
 	{
-#ifdef BLZ3_USE_OPENGL
-		if (b3VectorBufferObjects::b3AllowVBO())
+		if (b3RenderContext::b3IsGL())
 		{
+			if (b3VectorBufferObjects::b3AllowVBO())
+			{
 #if 0
-			glVertexElements  = new b3VboVertexElements();
-			glGridElements    = new b3VboGridElements();
-			glPolygonElements = new b3VboPolygonElements();
+				glVertexElements  = new b3VboVertexElements();
+				glGridElements    = new b3VboGridElements();
+				glPolygonElements = new b3VboPolygonElements();
 #else
-			glVertexElements  = new b3VboStaticVertexElements();
-			glGridElements    = new b3VboStaticGridElements();
-			glPolygonElements = new b3VboStaticPolygonElements();
+				glVertexElements  = new b3VboStaticVertexElements();
+				glGridElements    = new b3VboStaticGridElements();
+				glPolygonElements = new b3VboStaticPolygonElements();
 #endif
+			}
+			else
+			{
+				glVertexElements  = new b3ArrayVertexElements();
+				glGridElements    = new b3ArrayGridElements();
+				glPolygonElements = new b3ArrayPolygonElements();
+			}
 		}
 		else
 		{
-			glVertexElements  = new b3ArrayVertexElements();
-			glGridElements    = new b3ArrayGridElements();
-			glPolygonElements = new b3ArrayPolygonElements();
+			glVertexElements  = new b3SimpleVertexElements();
+			glGridElements    = new b3SimpleGridElements();
+			glPolygonElements = new b3SimplePolygonElements();
 		}
-#else
-		glVertexElements  = new b3SimpleVertexElements();
-		glGridElements    = new b3SimpleGridElements();
-		glPolygonElements = new b3SimplePolygonElements();
-#endif
 		glInit = true;
 	}
 }

@@ -48,6 +48,12 @@ b3_vector b3RenderContext::glSimpleLightDirection =
 };
 
 #ifdef BLZ3_USE_OPENGL
+b3_bool b3RenderContext::glUse = true;
+#else
+b3_bool b3RenderContext::glUse = false;
+#endif
+
+#ifdef BLZ3_USE_OPENGL
 
 GLenum b3RenderContext::glLightNum[] =
 {

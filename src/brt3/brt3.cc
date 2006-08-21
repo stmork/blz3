@@ -31,6 +31,11 @@
 #include "blz3/system/b3Plugin.h"
 #include "blz3/image/b3TxPool.h"
 
+#include "blz3/raytrace/b3RenderLight.h"
+#include "blz3/raytrace/b3RenderView.h"
+#include "blz3/base/b3Aux.h"
+#include "blz3/base/b3SearchPath.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Implementation                                **
@@ -194,6 +199,8 @@ int main(int argc,char *argv[])
 	b3_index              i;
 	b3_count              CPUs = b3Runtime::b3GetNumCPUs();
 	b3_res                size = 0;
+
+	context.b3UseGL(false);
 
 	if (argc > 1)
 	{

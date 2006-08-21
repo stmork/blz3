@@ -38,6 +38,6 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS) $/DIVXLIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS) $(DIVXLIBS)
 
 -include .dep
