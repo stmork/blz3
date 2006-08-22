@@ -44,7 +44,7 @@ public:
 			m_Title, b3Now() - m_Start);
 	}
 
-	inline virtual ~b3TimeStop()
+	virtual ~b3TimeStop()
 	{
 		b3PrintF(m_Level, "TIME STOP  <%s>----- duration %2.6f\n",
 			m_Title, b3Now() - m_Start);

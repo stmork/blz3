@@ -59,14 +59,14 @@ public:
 		m_Seed = seed;
 	}
 
-	inline virtual T b3Rand()
+	virtual T b3Rand()
 	{
 		m_Seed = (m_Seed * 7141 + 54773)  % 259200;
 		
 		return static_cast<T>(m_Seed) / 259200;
 	}
 
-	inline virtual T b3Rand(const T mult)
+	virtual T b3Rand(const T mult)
 	{
 		m_Seed = (m_Seed * 7141 + 54773)  % 259200;
 		
@@ -96,12 +96,12 @@ public:
 		b3Seed48(&conv);
 	}
 
-	inline virtual T b3Rand()
+	virtual T b3Rand()
 	{
 		return static_cast<T>(b3DRand48());
 	}
 
-	inline virtual T b3Rand(const T mult)
+	virtual T b3Rand(const T mult)
 	{
 		return static_cast<T>(b3DRand48() * mult);
 	}

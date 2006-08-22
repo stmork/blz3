@@ -37,7 +37,7 @@ public:
 		btnText = null;
 	}
 
-	inline virtual ~CB3ToolbarInfo()
+	virtual ~CB3ToolbarInfo()
 	{
 		b3FreeText();
 	}

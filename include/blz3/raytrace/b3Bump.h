@@ -95,7 +95,7 @@ public:
 	 *
 	 * @param ray The b3_ray structure containing the intersection point.
 	 */
-	virtual inline void    b3BumpNormal(b3_ray *ray)
+	virtual void    b3BumpNormal(b3_ray *ray)
 	{
 	}
 
@@ -104,7 +104,7 @@ public:
 	 *
 	 * @return True if the derivatives should be computed manually.
 	 */
-	virtual inline b3_bool b3NeedDeriv()
+	virtual b3_bool b3NeedDeriv()
 	{
 		return false;
 	}
@@ -390,8 +390,8 @@ public:
 	char    *b3GetName();
 
 public:
-	virtual inline void    b3BumpNormal(b3_ray *ray);
-	virtual inline b3_bool b3NeedDeriv();
+	virtual void    b3BumpNormal(b3_ray *ray);
+	virtual b3_bool b3NeedDeriv();
 };
 
 

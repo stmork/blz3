@@ -117,7 +117,7 @@ public:
 	 */
 	static  void    b3Register();
 	
-	virtual inline b3_bool b3Prepare(b3_preparation_info *prep_info)
+	virtual b3_bool b3Prepare(b3_preparation_info *prep_info)
 	{
 		return true;
 	}
@@ -131,7 +131,7 @@ public:
 	 * @param surface The surface structure to fill in the material properties.
 	 * @return True if the material traversal should terminate.
 	 */
-	virtual inline b3_bool b3GetSurfaceValues(b3_surface *surface)
+	virtual b3_bool b3GetSurfaceValues(b3_surface *surface)
 	{
 		surface->m_Diffuse     = B3_LIGHT_BLUE;
 		surface->m_Ambient     = surface->m_Diffuse * 0.2;
@@ -153,7 +153,7 @@ public:
 	 * @param lit The lighting values.
 	 * @return True on material computation, false on shader computation.
 	 */
-	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit)
+	virtual b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit)
 	{
 		return false;
 	}
@@ -183,7 +183,7 @@ protected:
 	 * @param refraction The refractance.
 	 * @return True on component mixing, false on shader intelligence.
 	 */
-	virtual inline b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	virtual b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
 		return false;
 	}

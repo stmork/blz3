@@ -70,7 +70,7 @@ public:
 	/**
 	 * The destructor frees the allocated memory.
 	 */
-	inline virtual ~b3Array()
+	virtual ~b3Array()
 	{
 		if (m_Buffer != m_Start)
 		{

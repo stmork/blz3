@@ -38,7 +38,7 @@ public:
 	{
 	}
 
-	inline virtual ~CB3PaintDC(void)
+	virtual ~CB3PaintDC(void)
 	{
 	}
 };

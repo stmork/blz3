@@ -54,7 +54,7 @@ protected:
 	}
 
 public:
-	virtual inline void b3SetUnit(b3_unit unit)
+	virtual void b3SetUnit(b3_unit unit)
 	{
 		m_Unit = unit;
 	}

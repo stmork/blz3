@@ -111,7 +111,7 @@ public:
 	 * \param &xSize A reference where the x size is stored.
 	 * \param &ySize A reference where the y size is stored.
 	 */
-	virtual inline void b3GetRes(b3_res &xSize,b3_res &ySize)
+	virtual void b3GetRes(b3_res &xSize,b3_res &ySize)
 	{
 		xSize = m_xMax;
 		ySize = m_yMax;
@@ -124,7 +124,7 @@ public:
 	 * \param y The y coordinate.
 	 * \param pixel The pixel color.
 	 */
-	virtual inline void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &pixel)
+	virtual void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &pixel)
 	{
 		B3_ASSERT(m_Buffer != null);
 		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
@@ -141,7 +141,7 @@ public:
 	 * \param y The y coordinate.
 	 * \return  The color at the given coordinates.
 	 */
-	virtual inline b3_color b3GetPixel(const b3_coord x, const b3_coord y)
+	virtual b3_color b3GetPixel(const b3_coord x, const b3_coord y)
 	{
 		B3_ASSERT(m_Buffer != null);
 		return
@@ -159,7 +159,7 @@ public:
 	 * \param y The y coordinate to print.
 	 * \return True if an cancel event occured.
 	 */
-	virtual inline b3_bool b3IsCancelled(const b3_coord x, const b3_coord y)
+	virtual b3_bool b3IsCancelled(const b3_coord x, const b3_coord y)
 	{
 		return false;
 	}
@@ -167,7 +167,7 @@ public:
 	/**
 	 * This method waits until an close event occures.
 	 */
-	virtual inline void b3Wait()
+	virtual void b3Wait()
 	{
 	}
 

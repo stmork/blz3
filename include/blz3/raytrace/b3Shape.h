@@ -229,7 +229,7 @@ public:
 	 * @param ray The ray structure which contains all information of the incident
 	 *            ray and the intersection point.
 	 */
-	virtual inline void b3Normal(b3_ray *ray)
+	virtual void b3Normal(b3_ray *ray)
 	{
 	}
 
@@ -482,7 +482,7 @@ public:
 	 * @param polar The polar coordinates of the resulting intersection point.
 	 * @return The distance from the rays base point to the intersection point.
 	 */
-	virtual inline b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar)
+	virtual b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar)
 	{
 		return -1;
 	}

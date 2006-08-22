@@ -578,7 +578,7 @@ protected:
 	 *
 	 * @return The actual render mode.
 	 */
-	virtual inline b3_render_mode  b3GetRenderMode()
+	virtual b3_render_mode  b3GetRenderMode()
 	{
 		return B3_RENDER_LINE;
 	}
@@ -588,7 +588,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual inline void b3GetGridColor(b3Color &color)
+	virtual void b3GetGridColor(b3Color &color)
 	{
 		color = m_GridColor;
 	}
@@ -598,7 +598,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual inline void b3GetSelectedColor(b3Color &color)
+	virtual void b3GetSelectedColor(b3Color &color)
 	{
 		color = m_SelectedColor;
 	}
