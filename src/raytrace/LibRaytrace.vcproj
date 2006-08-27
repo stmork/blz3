@@ -616,5 +616,8 @@
 		</Filter>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="\blz3\src\AppLines\AppLines.rc"/>
 	</Globals>
 </VisualStudioProject>

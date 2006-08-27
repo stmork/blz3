@@ -75,10 +75,10 @@ void b3RayRow::b3Raytrace()
 	b3_f64   fx;
 
 	// Init eye position
-	ray.pos.x =  m_Scene->m_EyePoint.x;
-	ray.pos.y =  m_Scene->m_EyePoint.y;
-	ray.pos.z =  m_Scene->m_EyePoint.z;
-	fx        = -1;
+	ray.pos.x  =  m_Scene->m_EyePoint.x;
+	ray.pos.y  =  m_Scene->m_EyePoint.y;
+	ray.pos.z  =  m_Scene->m_EyePoint.z;
+	fx         = -1;
 
 	// Loop one row...
 	for (x = 0;x < m_xSize;x++)
@@ -254,10 +254,10 @@ inline void b3SupersamplingRayRow::b3Refine(const b3_bool this_row)
 	B3_ASSERT(m_RowState != B3_STATE_READY);
 
 	// Init eye position
-	ray.pos.x =  m_Scene->m_EyePoint.x;
-	ray.pos.y =  m_Scene->m_EyePoint.y;
-	ray.pos.z =  m_Scene->m_EyePoint.z;
-	ray.dir   = dir = m_preDir;
+	ray.pos.x  = m_Scene->m_EyePoint.x;
+	ray.pos.y  = m_Scene->m_EyePoint.y;
+	ray.pos.z  = m_Scene->m_EyePoint.z;
+	ray.dir    = dir = m_preDir;
 
 	// Init coord values
 	fxRight = -1;
@@ -371,10 +371,10 @@ void b3DistributedRayRow::b3Raytrace()
 	b3_f32       *samples = m_Samples;
 
 	// Init eye position
-	ray.pos.x =  m_Scene->m_EyePoint.x;
-	ray.pos.y =  m_Scene->m_EyePoint.y;
-	ray.pos.z =  m_Scene->m_EyePoint.z;
-	fx        = -1;
+	ray.pos.x  =  m_Scene->m_EyePoint.x;
+	ray.pos.y  =  m_Scene->m_EyePoint.y;
+	ray.pos.z  =  m_Scene->m_EyePoint.z;
+	fx         = -1;
 
 	for (x = 0;x < m_xSize;x++)
 	{
@@ -454,10 +454,10 @@ void b3MotionBlurRayRow::b3Raytrace()
 	b3_index      count = 0;
 
 	// Init eye position
-	ray.pos.x =  m_Scene->m_EyePoint.x;
-	ray.pos.y =  m_Scene->m_EyePoint.y;
-	ray.pos.z =  m_Scene->m_EyePoint.z;
-	fx        = -1;
+	ray.pos.x  =  m_Scene->m_EyePoint.x;
+	ray.pos.y  =  m_Scene->m_EyePoint.y;
+	ray.pos.z  =  m_Scene->m_EyePoint.z;
+	fx         = -1;
 
 	m_preDir = m_BackupDir;
 	for (x = 0;x < m_xSize;x++)
