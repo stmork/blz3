@@ -54,6 +54,19 @@ b3ExceptionBase::b3ExceptionBase(
 	m_Logger(this);	
 }
 
+b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase &exc)
+{
+	m_ErrorCode     = exc.m_ErrorCode;
+	m_ExceptionType = exc.m_ExceptionType;
+	m_LineNo        = exc.m_LineNo;
+	m_FileName      = exc.m_FileName;
+
+	if (m_Logger == null)     b3SetLogger(null);
+	if (m_GetMessage == null) b3SetMsgFunc(null);
+
+	m_Logger(this);	
+}
+
 void b3ExceptionBase::b3Log(const b3ExceptionBase *exception)
 {
 	b3PrintF(B3LOG_NORMAL,"EXCEPTION: %s\n",m_GetMessage(exception->m_ErrorCode));

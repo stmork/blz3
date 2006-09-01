@@ -29,6 +29,11 @@
 #include <sys/utsname.h>
 #endif
 
+#ifdef __APPLE__
+#include <sys/param.h>
+#include <sys/sysctl.h>
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        b3 count CPUs                                 **
@@ -49,7 +54,13 @@ b3CPU::b3CPU()
 	{
 		long    result;
 
-#ifdef _SC_NPROCESSORS_ONLN
+#if defined(__APPLE__)
+		int     val;
+		int     mib[[2]] = { CTL_HW, HW_NCPU };
+		size_t  len = sizeof(val);
+
+		result = sysctl(mib, 2, &val, &len, NULL, 0) == 0 ? val : 1;
+#elif defined(_SC_NPROCESSORS_ONLN)
 		result = sysconf(_SC_NPROCESSORS_ONLN);
 #else
 		result = 1;

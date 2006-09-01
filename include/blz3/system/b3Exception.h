@@ -59,6 +59,13 @@ protected:
 		const char     *filename);
 
 	/**
+	* This copy constructor creates an exception instance.
+	*
+	* @param exception The exception from where the data is copied from.
+	*/
+	explicit b3ExceptionBase(const b3ExceptionBase &exception);
+
+	/**
 	 * This method logs an exception.
 	 *
 	 * @param exception The exception to log.
