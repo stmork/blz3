@@ -16,10 +16,10 @@ AC_PROG_RANLIB
 AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 
 # FIXME!
-if test "$LD" = "ld"
-then
-  LDFLAGS="-Ur -Wl,-E"
-fi
+#if test "$LD" = "ld"
+#then
+#  LDFLAGS="-Ur -Wl,-E"
+#fi
 
 AC_SUBST(BLZ3_HOME, "$PWD", [This is the Blizzard III home directory])
 AC_SUBST(BLZ3_SYSINC, "$BLZ3_HOME/include_unix", [The Blizzard III system dependend include path])
