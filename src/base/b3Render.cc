@@ -29,7 +29,7 @@
 #include "blz3/base/b3Color.h"
 
 #ifdef BLZ3_USE_OPENGL
-#define B3_DISPLAY_LIST
+#define noB3_DISPLAY_LIST
 #define B3_DISPLAY_LIST_COUNT 1
 #endif
 
