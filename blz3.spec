@@ -6,7 +6,7 @@ Summary: A very fast raytracer named Blizzard III
 Name: %{name}
 Version: %{ver}
 Release: %{rel}
-Copyright: Copyright (C) Steffen A. Mork
+License: commercial
 Source: blz3.tar.gz
 Group: Productivity/Graphics/Visualization/Raytracers
 BuildRoot: /var/tmp/%{name}-buildroot
