@@ -56,8 +56,8 @@ b3CPU::b3CPU()
 
 #if defined(__APPLE__)
 		int     val;
-		int     mib[[2]] = { CTL_HW, HW_NCPU };
-		size_t  len = sizeof(val);
+		int     mib[2] = { CTL_HW, HW_NCPU };
+		size_t  len    = sizeof(val);
 
 		result = sysctl(mib, 2, &val, &len, NULL, 0) == 0 ? val : 1;
 #elif defined(_SC_NPROCESSORS_ONLN)
