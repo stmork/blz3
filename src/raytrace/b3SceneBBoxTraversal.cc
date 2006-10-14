@@ -479,6 +479,12 @@ b3_bool b3BBox::b3Transform(
 	return transformed;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Activation                                    **
+**                                                                      **
+*************************************************************************/
+
 void b3Scene::b3Activate(b3_bool activate)
 {
 	b3Item  *item;

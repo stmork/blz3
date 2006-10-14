@@ -70,9 +70,28 @@ void b3ShaderMork::b3ShadeLight(
 			}
 
 			// surface illumination (diffuse color)
-			if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
+			Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor;
+			if (Factor > 0)
 			{
 				Jit->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * Factor);
+			}
+		}
+	}
+	else
+	{
+		B3_ALIGN_16 b3_surface obsSurface;
+		obsSurface.m_Incoming = Jit;
+		b3Material *obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
+
+		if (obsSurface.m_Refraction > 0)
+		{
+			b3_f64 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
+			b3_f32 factor = (ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) * obsSurface.m_Refraction;
+
+			// specular high light
+			if (ShapeAngle >= 0)
+			{
+				Jit->m_DiffuseSum += (light->m_Color * factor * obsSurface.m_Diffuse);
 			}
 		}
 	}
