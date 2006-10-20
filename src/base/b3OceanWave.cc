@@ -165,7 +165,8 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 	return b3Math::b3Mix(c[0], c[1], dy);
 }
 
-void b3OceanWave::b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n)
+void b3OceanWave::b3ComputeOceanWaveDeriv(
+	const b3_vector *pos, b3_vector *n)
 {
 	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff, dy;
@@ -206,6 +207,11 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
+		m_Modified = true;
+	}
+
+	if (m_Modified)
+	{
 		m_FFT.b3Sample(this, b3FilterPhillipsSpectrum);
 		m_Modified = false;
 	}
@@ -237,23 +243,23 @@ void b3OceanWave::b3FilterPhillipsSpectrum(
 	const b3_index      index,
 	      b3FilterInfo *filter_info)
 {
-	b3OceanWave       *ocean  = (b3OceanWave *)filter_info;
+	b3OceanWave *ocean  = (b3OceanWave *)filter_info;
 
 	ocean->b3SamplePhillipsSpectrum(fx, fy, index);
 }
 
 void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 {
-	b3_f64             factor   = M_PI * 2 * m_fftMax / m_GridSize;
-	b3_f64             Kr       = fx * factor;
-	b3_f64             Ki       = fy * factor;
-	b3_f64             k2       = Kr * Kr + Ki * Ki;
-	b3_f64             k4       = k2 * k2;
-	b3_f64             quotient = fabs(Kr * m_Wx + Ki * m_Wy);
-	b3_f64             hf_scale = exp(-m_l2 * k2);
-	b3_f64             gr, gi;
-	b3_f64             w;
-	b3_f64             phillips;
+	b3_f64 factor   = M_PI * 2 * m_fftMax / m_GridSize;
+	b3_f64 Kr       = fx * factor;
+	b3_f64 Ki       = fy * factor;
+	b3_f64 k2       = Kr * Kr + Ki * Ki;
+	b3_f64 k4       = k2 * k2;
+	b3_f64 quotient = fabs(Kr * m_Wx + Ki * m_Wy);
+	b3_f64 hf_scale = exp(-m_l2 * k2);
+	b3_f64 gr, gi;
+	b3_f64 w;
+	b3_f64 phillips;
 
 	if(k4 == 0)
 	{

@@ -132,7 +132,7 @@ public:
 	CBitmap  *b3GetBitmap ();
 	CPalette *b3GetPalette();
 	void      b3InitImage (b3Tx *srcImage,CDC *srcDC,b3_coord yStart = 0,b3_coord yEnd = 0);
-	void      b3SetImage  (b3Tx *srcImage, b3_res xSize, b3_res ySize);
+	void      b3SetImage  (b3Tx *srcImage, b3_res yStart, b3_res yEnd);
 	b3_bool   b3InitBitmap(b3_res xSize,b3_res ySize);
 	b3_bool   b3DIBtoDDB  ();
 	b3_bool   b3DIBtoDDB  (CDC *dstDC);

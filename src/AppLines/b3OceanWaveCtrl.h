@@ -43,7 +43,7 @@ public:
 	{
 		m_Ocean        = null;
 		m_MouseCapture = false;
-		m_Factor       = 10.0;
+		m_Factor       = 20.0;
 	}
 
 	virtual ~CB3OceanWaveCtrl(void)
