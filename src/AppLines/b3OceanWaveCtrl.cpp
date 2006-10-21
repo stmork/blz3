@@ -40,7 +40,6 @@ END_MESSAGE_MAP()
 
 void CB3OceanWaveCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
 	m_MouseCapture = true;
 	SetCapture();
 	b3UpdateUI(&point);
@@ -49,7 +48,6 @@ void CB3OceanWaveCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CB3OceanWaveCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
 	if ((m_MouseCapture) && (m_LastPoint != point))
 	{
 		b3UpdateUI(&point);
@@ -59,7 +57,6 @@ void CB3OceanWaveCtrl::OnMouseMove(UINT nFlags, CPoint point)
 
 void CB3OceanWaveCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
 	if (m_MouseCapture)
 	{
 		if (m_LastPoint != point)
@@ -70,8 +67,9 @@ void CB3OceanWaveCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 		m_MouseCapture = false;
 	}
 	CStatic::OnLButtonUp(nFlags, point);
-	CWnd *parent = GetParentOwner();
 
+	// Send refresh hint to dialog
+	CWnd *parent = GetParentOwner();
 	if (parent != null)
 	{
 		parent->SendMessage(WM_USER);
@@ -99,15 +97,29 @@ void CB3OceanWaveCtrl::OnPaint()
 	}
 }
 
+void CB3OceanWaveCtrl::b3Refresh()
+{
+	m_Ocean->b3CopyHeightField(&m_Tx);
+	m_DDB.b3SetImage(&m_Tx, 0, m_ySize);
+	Invalidate();
+}
+
+void CB3OceanWaveCtrl::b3Update()
+{
+	m_LastPoint = m_MidPoint + CPoint(
+		 m_Ocean->m_Wx * m_Factor,
+		-m_Ocean->m_Wy * m_Factor);
+	m_Ocean->b3Modified();
+	m_Ocean->b3PrepareOceanWave(0.0); // Animate later
+
+	b3Refresh();
+}
+
 void CB3OceanWaveCtrl::b3UpdateUI(CPoint *point)
 {
 	if (point != null)
 	{
 		CPoint        diff;
-		b3Complex64  *buffer;
-		b3_pkd_color *ptr = m_Tx.b3GetTrueColorData();
-		b3_loop       x,y;
-		b3_loop       xDim = 1 << m_Ocean->m_Dim;
 
 		diff          = *point - m_MidPoint;
 		m_LastPoint   = *point;
@@ -116,24 +128,9 @@ void CB3OceanWaveCtrl::b3UpdateUI(CPoint *point)
 		m_Ocean->m_Wy = -b3_f64(diff.y) / m_Factor;
 		m_Ocean->b3Modified();
 		m_Ocean->b3PrepareOceanWave(0.0); // Animate later
-		buffer = m_Ocean->b3GetBuffer();
 
 		GetParent()->UpdateData(FALSE);
-
-		for (y = 0;y < m_ySize;y++)
-		{
-			for(x = 0;x < m_xSize;x++)
-			{
-				b3_f32 c = buffer[x].b3Real() * 0.00025 + 0.5;
-
-				ptr[x] = b3Color(c, c, c);
-			}
-			buffer += xDim;
-			ptr    += m_xSize;
-		}
-
-		m_DDB.b3SetImage(&m_Tx, 0, m_ySize);
-		Invalidate();
+		b3Refresh();
 	}
 }
 

@@ -49,6 +49,7 @@ b3OceanWave::b3OceanWave()
 	m_A        =     1;
 	m_GridSize =   400;
 	m_l        =     0.0f;
+	m_Denom    = 1.0 / 4096.0;
 	
 	m_Phillips = null;
 	m_Normals  = null;
@@ -229,10 +230,28 @@ void b3OceanWave::b3PrepareNormals()
 	{
 		for (x = 0;x < m_fftDiff;x++)
 		{
-			normal->x = b3GetHeight(x+1, y)   - b3GetHeight(x-1, y);
-			normal->y = b3GetHeight(x,   y+1) - b3GetHeight(x,   y-1);
+			normal->x = (b3GetHeight(x+1, y)   - b3GetHeight(x-1, y)) * m_Denom;
+			normal->y = (b3GetHeight(x,   y+1) - b3GetHeight(x,   y-1)) * m_Denom;
 			normal->z = 4 * grid;
 			normal++;
+		}
+	}
+}
+
+void b3OceanWave::b3CopyHeightField(b3Tx *tx)
+{
+	b3Complex64  *buffer = b3GetBuffer();
+	b3_pkd_color *ptr    = tx->b3GetTrueColorData();
+	b3_res        xSize  = tx->xSize;
+	b3_res        ySize  = tx->ySize;
+
+	for (b3_loop y = 0;y < ySize;y++)
+	{
+		for(b3_loop x = 0;x < xSize;x++)
+		{
+			b3_f32 c = buffer[b3GetIndex(x,y)].b3Real() * m_Denom + 0.5;
+
+			*ptr++ = b3Color(c, c, c);
 		}
 	}
 }

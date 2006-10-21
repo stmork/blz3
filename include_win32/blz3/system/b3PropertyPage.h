@@ -72,7 +72,7 @@ public:
 protected:
 	virtual void   b3PreInitDialog() = 0;
 	virtual void   b3PostInitDialog() = 0;
-	        void   b3UpdateUI();
+	virtual void   b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

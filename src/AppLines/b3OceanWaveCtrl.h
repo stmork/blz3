@@ -58,9 +58,11 @@ public:
 
 public:
 	void b3SetOcean(b3OceanWave *ocean);
+	void b3Update();
 
 private:
 	void b3UpdateUI(CPoint *point = null);
+	void b3Refresh();
 };
 
 #endif

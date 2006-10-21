@@ -71,6 +71,7 @@ protected:
 private:
 	void b3PreInitDialog();
 	void b3PostInitDialog();
+	void b3UpdateUI();
 };
 
 #endif

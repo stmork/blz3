@@ -88,8 +88,8 @@ void CDlgBumpOcean::b3PostInitDialog()
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);
 	m_BumpSampler->b3SetBump(m_Bump);
 
-	m_PageBump.b3AddToSheet(&m_PropertySheet);
 	m_PageOcean.b3AddToSheet(&m_PropertySheet);
+	m_PageBump.b3AddToSheet(&m_PropertySheet);
 	m_PageScaling.b3AddToSheet(&m_PropertySheet);
 }
 

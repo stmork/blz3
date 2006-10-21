@@ -45,6 +45,7 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3_f64                  m_L;           // windspeed and gravity constant
 	b3_f64                  m_L2;          // squard factor
 	b3_f64                  m_l2;          // wave length lower limit (squared)
+	b3_f64                  m_Denom;       // Height field corrector
 	b3Complex64             m_Cycle;       // e^j*omega*t
 	b3Fourier               m_FFT;
 	b3Rand48<b3_f64>        m_Random;
@@ -131,6 +132,13 @@ public:
 	 * spectrum into the temp directory.
 	 */
 	void              b3DumpImages();
+
+	/**
+	 * This method copies a height field into an image.
+	 *
+	 * @param tx The retrieving image.
+	 */
+	void b3CopyHeightField(b3Tx *tx);
 
 private:
 	void              b3ComputePhillipsSpectrum();

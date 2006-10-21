@@ -97,6 +97,11 @@ void CPageOcean::b3PostInitDialog()
 	m_OceanWaveCtrl.b3SetOcean(m_Ocean);
 }
 
+void CPageOcean::b3UpdateUI()
+{
+	m_OceanWaveCtrl.b3Update();
+}
+
 void CPageOcean::OnOK()
 {
 	CB3PropertyPage::OnOK();
