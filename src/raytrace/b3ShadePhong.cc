@@ -62,6 +62,21 @@ void b3ShaderPhong::b3ShadeLight(
 			Jit->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * ShapeAngle);
 		}
 	}
+#ifdef TRANSPARENT_SHADING
+	else
+	{
+		b3_surface  obsSurface;
+		b3Material *obsMat;
+
+		obsSurface.m_Incoming = Jit;
+		obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
+		if (obsSurface.m_Refraction > 0)
+		{
+			Jit->m_DiffuseSum += (
+				light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
+		}
+	}
+#endif
 }
 
 void b3ShaderPhong::b3ShadeSurface(

@@ -76,24 +76,21 @@ void b3ShaderMork2::b3ShadeLight(
 			}
 		}
 	}
+#ifdef TRANSPARENT_SHADING
 	else
 	{
-		b3_surface obsSurface;
-		obsSurface.m_Incoming = Jit;
-		b3Material *obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
+		b3_surface  obsSurface;
+		b3Material *obsMat;
 
+		obsSurface.m_Incoming = Jit;
+		obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
 		if (obsSurface.m_Refraction > 0)
 		{
-			b3_f64 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
-			b3_f32 factor = (ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor) * obsSurface.m_Refraction;
-
-			// specular high light
-			if (ShapeAngle >= 0)
-			{
-				illumination += (light->m_Color * factor * obsSurface.m_Diffuse);
-			}
+			Jit->m_DiffuseSum += (
+				light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
 		}
 	}
+#endif
 
 	Jit->m_DiffuseSum += (surface->m_Diffuse * illumination);
 }
