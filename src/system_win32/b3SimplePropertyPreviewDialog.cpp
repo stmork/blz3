@@ -69,8 +69,7 @@ BOOL CB3SimplePropertyPreviewDialog::OnInitDialog()
 
 		CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,m_PropertySheetId);
 
-		b3UpdateUI();
-		OnAutoRefresh();
+		OnRefresh();
 	}
 	catch(exception &exc)
 	{

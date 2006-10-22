@@ -82,10 +82,17 @@ void CB3OceanWaveCtrl::OnPaint()
 
 	if (m_Ocean != null)
 	{
+		CRgn region;
 		CPen pen(PS_SOLID, 2, RGB(0xff, 0x11, 0x44)), *oldPen;
 
+		// Define clipping at window borders.
+		region.CreateRectRgn(m_Rect.left, m_Rect.top, m_Rect.right, m_Rect.bottom);
+		dc.SelectClipRgn(&region, RGN_AND);
+
+		// Blit the height map
 		dc.BitBlt(0, 0, m_xSize, m_ySize,m_DDB.b3GetDC(),0,0,SRCCOPY);
 
+		// Draw the wind direction
 		oldPen = dc.SelectObject(&pen);
 		dc.MoveTo(m_MidPoint);
 		dc.LineTo(m_LastPoint);
