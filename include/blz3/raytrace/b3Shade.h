@@ -26,7 +26,7 @@
 class b3Light;
 class b3Nebular;
 
-#define TRANSPARENT_SHADING
+#define NO_TRANSPARENT_SHADING
 
 /**
  * This base class describes the shading process.
