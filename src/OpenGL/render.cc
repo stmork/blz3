@@ -265,7 +265,8 @@ static void b3Prepare(b3Scene *scene)
 	b3_res          xSize,ySize;
 
 	scene->b3Reorg();
-	scene->b3GetDisplaySize(xSize,ySize);
+	scene->b3GetDisplaySize(xSize, ySize);
+	scene->b3PrepareScene(xSize, ySize);
 	scene->b3SetCamera(scene->b3GetFirstCamera(false));
 
 	info = scene->b3GetModellerInfo();
