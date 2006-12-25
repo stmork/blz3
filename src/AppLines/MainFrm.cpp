@@ -223,6 +223,7 @@ void CMainFrame::OnDestroy()
 	// TODO: Add your message handler code here
 	CB3App *app = CB3GetApp();
 
+	app->b3SaveState();
 	app->b3SetWindowMode(false);
 	CMDIFrameWnd::OnDestroy();
 }

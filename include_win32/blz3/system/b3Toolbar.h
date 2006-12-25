@@ -25,6 +25,8 @@
 
 #include "../smart_gui/MenuBar.h"
 
+#define FLAT_TOOLBAR_HEIGHT 28
+
 class CB3ToolbarInfo
 {
 public:
