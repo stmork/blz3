@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	render.cc $
-**	$Release:	Dortmund 2001, 2002 $
+**	$Release:	Dortmund 2001-2007 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Show scene with OpenGL
 **
-**      (C) Copyright 2001, 2002  Steffen A. Mork
+**      (C) Copyright 2001-2007  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -282,7 +282,7 @@ static void b3Prepare(b3Scene *scene)
 static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
 	if (command != null)
 	{

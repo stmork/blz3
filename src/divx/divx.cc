@@ -1,7 +1,7 @@
 /*
 **
 **	$ilename:	divx.cc $
-**	$Release:	Dortmund 2004, 2005 $
+**	$Release:	Dortmund 2004, 2005, 2006, 2007 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **      Blizzard III - Encodes single frames into a DivX
 **
-**      (C) Copyright 2004, 2005  Steffen A. Mork
+**      (C) Copyright 2004, 2005, 2006, 2007  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -48,7 +48,7 @@ extern "C"
 static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III movie maker (DivX)\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
 	if (command != null)
 	{

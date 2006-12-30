@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	TestImage.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001-2007 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Testing image loading and displaying
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2001-2007  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -154,7 +154,7 @@ int main(int argc,char *argv[])
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Simple image viewer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s {Image files}\n",argv[0]);

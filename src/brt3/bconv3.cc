@@ -132,7 +132,7 @@ static void convert_jpeg(
 static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III Image converter\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
 	if (command != null)
 	{

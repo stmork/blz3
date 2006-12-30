@@ -547,11 +547,25 @@ int main(int argc,char *argv[])
 {
 	int i;
 
-	b3Log::b3SetLevel(B3LOG_FULL);	
-	b3RaytracingItems::b3Register();
-	for (i = 1;i < argc;i++)
+	if (argc > 1)
 	{
-		b3BHDParser::b3Parse(argv[i]);
+		b3Log::b3SetLevel(B3LOG_FULL);	
+		b3RaytracingItems::b3Register();
+		for (i = 1;i < argc;i++)
+		{
+			b3BHDParser::b3Parse(argv[i]);
+		}
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III house compiler\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s {bhd files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 	}
 
 	return EXIT_SUCCESS;
