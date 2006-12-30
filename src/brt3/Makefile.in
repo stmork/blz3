@@ -30,7 +30,7 @@ B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 B3_LIB_AVI		= $(BLZ3_LIB)/libB3avi.a
 
 PRGS			= brt3 bimg3 gif_info gif_trans gif_movie bconv3 bhc rp
-INSTALL_PRGS	= brt3 bimg3 gif_info gif_trans gif_movie bconv3
+INSTALL_PRGS	= brt3 bimg3 gif_info gif_trans gif_movie bhc bconv3
 
 all:	$(PRGS)
 

@@ -50,7 +50,7 @@ b3Runtime::b3Runtime()
 	locale = setlocale(LC_ALL, "");
 	if (locale == null)
 	{
-		fprintf(stderr, "Cannot set locale. Assuming w're right ;-)\n");
+		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
 	}
 	else
 	{
