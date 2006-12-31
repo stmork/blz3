@@ -59,10 +59,24 @@ void b3ColorTest::test()
 {
 //	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
 #if defined(BLZ3_USE_SSE) && defined(SSE_ALIGNED)
-	b3_f32 *fPtr = &color[b3Color::A];
-	b3_ptr  offset = reinterpret_cast<b3_ptr>(fPtr) & 0xf;
+	b3_f32    *fPtr = &color[b3Color::A];
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_ptr>(0), offset);
+#if 0
+	color[b3Color::A] = 0;
+	color[b3Color::R] = 1;
+	color[b3Color::G] = 2;
+	color[b3Color::B] = 3;
+
+	printf("this: %p\n", this);
+	for (int q = 0;q < 4;q++)
+	{
+		printf ("%d: %f %p\n", q, fPtr[q], &fPtr[q]);
+	}
+#endif
+
+	b3_offset  offset = reinterpret_cast<b3_offset>(fPtr) & 0xf;
+
+	CPPUNIT_ASSERT_EQUAL(static_cast<b3_offset>(0), offset);
 #endif
 
 	color = B3_WHITE;

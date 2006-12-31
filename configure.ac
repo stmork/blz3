@@ -68,7 +68,6 @@ AC_CHECK_HEADER([xmmintrin.h],[
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <xmmintrin.h>
 __m128 a;
-unsigned short q;
 __m128 b,r;],[
 char result[[128]];
 a = _mm_set_ps1(1);
@@ -87,7 +86,6 @@ AC_CHECK_HEADER([emmintrin.h],[
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
 __m128d a;
-unsigned short q;
 __m128d b,r;],[
 char result[[128]];
 a = _mm_set1_pd(1);
@@ -107,7 +105,6 @@ AC_CHECK_HEADER([pmmintrin.h],[
 #include <emmintrin.h>
 #include <pmmintrin.h>
 __m128d a;
-unsigned short q;
 __m128d b,r;],[
 char result[[128]];
 a = _mm_set1_pd(1);
@@ -117,6 +114,37 @@ r = _mm_hadd_pd(a,b);
 sprintf(result,"%lf\n",*((double *)&r));
 	])],
 	[AC_DEFINE([BLZ3_USE_SSE3]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+])
+
+AC_CHECK_HEADER([xmmintrin.h],[
+	AC_MSG_CHECKING([for 16 byte alignment])
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <xmmintrin.h>
+unsigned short pad;
+class alignment_test
+{
+public:
+__m128 a;
+unsigned short q;
+__m128 b;
+unsigned short r;
+};
+__m128 r;],[
+char result[[128]];
+alignment_test *str = new alignment_test;
+#if 0
+printf ("<SSE pointer %p>", str);
+printf ("<SSE member %p - %p %p %p>", str, &str->a, &str->b, &str->q);
+#endif
+
+str->a = _mm_set_ps1(1);
+str->b = _mm_set_ps1(1);
+r = _mm_add_ps(str->a, str->b);
+
+sprintf(result,"%f %d\n",*((float *)&r), str->q);
+	])],
+	[AC_DEFINE([SSE_ALIGNED]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
