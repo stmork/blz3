@@ -320,7 +320,7 @@ public:
 
 		for(b3_loop i = 0;i < B3_MAX_HASH_INDEX;i++)
 		{
-			while(pair = m_HashMap[i].b3RemoveFirst())
+			while((pair = m_HashMap[i].b3RemoveFirst()) != null)
 			{
 				delete pair;
 			}

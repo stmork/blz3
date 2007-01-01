@@ -23,6 +23,9 @@
 
 #include "blz3/b3Config.h"
 
+#include <malloc.h>
+#include <string.h>
+
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
@@ -68,6 +71,7 @@ int main(int argc, char *argv[])
 #ifdef B3_SSE2
 	b3PrintF(B3LOG_NORMAL, "Using SSE2 algorithms.\n");
 #endif
+
 #ifdef HAVE_LIBCPPUNIT
 	CppUnit::TextUi::TestRunner runner;
 	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();

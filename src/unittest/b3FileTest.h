@@ -39,10 +39,12 @@ template<class FILE> class b3FileTest : public CppUnit::TestFixture
 public:
 	void setUp()
 	{
+		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 	}
 
 	void tearDown()
 	{
+		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
 	b3_bool openRead(const char *filename);

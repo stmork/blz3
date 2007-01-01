@@ -105,7 +105,7 @@ const char *b3ExceptionBase::what() const throw()
 	char buffer[128];
 
 	b3GetErrorMsg();
-	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d",m_FileName, m_LineNo);
+	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d",m_FileName, static_cast<int>(m_LineNo));
 	strncat(m_LocalMessageBuffer, buffer, sizeof(m_LocalMessageBuffer));
 
 	return m_LocalMessageBuffer;

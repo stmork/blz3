@@ -35,10 +35,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3SkeletonTest);
 
 void b3SkeletonTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
 void b3SkeletonTest::tearDown()
 {
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
 void b3SkeletonTest::test()

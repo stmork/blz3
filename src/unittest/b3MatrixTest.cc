@@ -35,10 +35,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3MatrixTest);
 
 void b3MatrixTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
 void b3MatrixTest::tearDown()
 {
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
 void b3MatrixTest::testVector()

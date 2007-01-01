@@ -43,6 +43,7 @@ public:
 
 	void tearDown()
 	{
+		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
 	void testInit()

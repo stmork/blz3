@@ -25,12 +25,20 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #include <locale.h>
+#include <malloc.h>
 
 /*************************************************************************
 **                                                                      **
 **                        b3Runtime static methods                      **
 **                                                                      **
 *************************************************************************/
+
+#ifdef HAVE_NEW_OVERLOADING
+void *operator new(size_t size)
+{
+	return memalign(16, size);
+}
+#endif
 
 b3Runtime b3Runtime::m_Runtime;
 char      b3Runtime::m_Compiler[256];

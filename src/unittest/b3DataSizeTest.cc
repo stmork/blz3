@@ -35,6 +35,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3DataSizeTest);
 
 void b3DataSizeTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+
 	b3_loop i;
 	b3_u08  v;
 
@@ -52,8 +54,13 @@ void b3DataSizeTest::setUp()
 }
 
 void b3DataSizeTest::tearDown()
-{
-	if (ptr1 == null) return;
+{	
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+
+	if (ptr1 == null)
+	{
+		return;
+	}
 	for (b3_loop i = 0; i < MEM_MIN;i++)
 	{
 		if ((i & 7) == 0)

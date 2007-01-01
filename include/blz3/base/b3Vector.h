@@ -176,7 +176,11 @@ public:
 	 */
 	inline void b3Zero()
 	{
-		b3Value((F)0.0);
+b3PrintF(B3LOG_FULL, "--zero %p %p\n", this, v);
+		for (b3_loop i = 0;i < dim; i++)
+		{
+			v[i] = 0;
+		}
 	}
 
 	/**

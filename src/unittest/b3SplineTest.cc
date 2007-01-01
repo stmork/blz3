@@ -39,6 +39,8 @@ static b3_f64 curve_controls[B3_MAX_CONTROLS];
 
 template <> void b3SplineTest<b3Curve>::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+
 	a.m_Knots    = knots;
 	a.m_Controls = curve_controls;
 }

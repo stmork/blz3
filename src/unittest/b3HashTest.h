@@ -40,12 +40,15 @@ template<typename KEY, typename OBJECT> class b3HashTest : public CppUnit::TestF
 public:
 	void setUp()
 	{
+		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		keys = null;
 		objects = null;
 	}
 
 	void tearDown()
 	{
+		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+
 		if (keys != null)
 		{
 			delete keys;

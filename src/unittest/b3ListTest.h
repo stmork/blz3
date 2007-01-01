@@ -66,6 +66,7 @@ template<typename T> class b3ListTest : public CppUnit::TestFixture
 public:
 	void setUp()
 	{
+		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		a = 1;
 		b = 2;
 		c = 3;
@@ -75,6 +76,7 @@ public:
 
 	void tearDown()
 	{
+		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
 	void test()

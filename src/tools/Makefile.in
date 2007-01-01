@@ -52,7 +52,7 @@ RemCR:	$(REM_CR_OBJS)  $(B3_LIB_BASE)
 RestoreExt:	$(RESTOREEXT_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
-CleanRes:	$(CLEANRES_OBJS) $(B3_LIB_SYSTEM)
+CleanRes:	$(CLEANRES_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 scale:	$(SCALE_OBJS) $(B3_LIB_BASE)

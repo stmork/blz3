@@ -49,10 +49,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3ColorTest);
 
 void b3ColorTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
 void b3ColorTest::tearDown()
 {
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
 void b3ColorTest::test()

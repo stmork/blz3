@@ -22,6 +22,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef HAVE_MEMALIGN
+#include <string.h>
+#include <malloc.h>
+#endif
+
 #include "blz3/b3Types.h"
 
 /**
@@ -39,7 +44,16 @@ public:
 	 */
 	static inline void *b3Alloc(b3_size size)
 	{
+#ifdef HAVE_MEMALIGN
+		void *ptr = memalign(16,size);
+		if (ptr != null)
+		{
+			memset (ptr, 0, size);
+		}
+		return ptr;
+#else
 		return calloc(size,1);
+#endif
 	}
 
 	/**

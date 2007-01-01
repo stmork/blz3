@@ -35,10 +35,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3MathTest);
 
 void b3MathTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
 void b3MathTest::tearDown()
 {
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
 void b3MathTest::test()

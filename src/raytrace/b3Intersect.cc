@@ -731,10 +731,10 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_res          dxSize;
 	b3_vector32     aux,product;
 	b3_vector32     dir,pos;
-	b3_f32          denominator;
-	b3_f32          aValue,bValue;
-	b3_f32          e = b3Scene::epsilon;
-	b3_f32          OldValue = -1,lValue;
+	b3_f64          denominator;
+	b3_f64          aValue,bValue;
+	b3_f64          e = b3Scene::epsilon;
+	b3_f64          OldValue = -1,lValue;
 
 	 xSize   = m_xSize;
 	 ySize   = m_ySize;

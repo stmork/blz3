@@ -121,10 +121,10 @@ public:
 		b3_f32 B3_ALIGN_16 d[4];
 		b3_loop            i;
 
-		for (i = 0;i < 4;i++)
+		for (i = 3; i >= 0; i--)
 		{
-			c[3-i] = color & 0xf;
-			color  = color >> 4;
+			c[i]  = color & 0xf;
+			color = color >> 4;
 		}
 
 		for (i = 0;i < 4;i++)
@@ -132,9 +132,15 @@ public:
 			d[i] = (b3_f32)c[i];
 		}
 
+#ifdef SSE_ALIGNED
 		SSE_PS_STORE(v, _mm_mul_ps(
 			_mm_load_ps(d),
 			_mm_load_ps(m_Limit_d015)));
+#else
+		SSE_PS_STORE(v, _mm_mul_ps(
+			SSE_PS_LOAD(d),
+			SSE_PS_LOAD(m_Limit_d015)));
+#endif
 	}
 
 	/**
@@ -160,18 +166,24 @@ public:
 		ci = _mm_loadu_si128((__m128i *)c);
 		SSE_PS_STORE(v,_mm_mul_ps(
 			_mm_cvtepi32_ps(ci),
-			_mm_load_ps(m_Limit_d255)));
+			_mm_loadu_ps(m_Limit_d255)));
 #else
 		b3_f32 B3_ALIGN_16 c[4];
 
-		for (i = 0;i < 4;i++)
+		for (i = 3;i >= 0; i--)
 		{
 			c[i] = float(color & 0xff);
 			color  = color >> 8;
 		}
 		SSE_PS_STORE(v, _mm_mul_ps(
-			_mm_loadr_ps(c),
-			_mm_load_ps(m_Limit_d255)));
+#ifdef SSE_ALIGNED
+			_mm_load_ps(c),
+			_mm_load_ps(m_Limit_d255)
+#else
+			SSE_PS_LOAD(c),
+			SSE_PS_LOAD(m_Limit_d255)
+#endif
+			));
 #endif
 	}
 
@@ -644,7 +656,7 @@ public:
 	{
 		SSE_PS_STORE(v, _mm_and_ps(
 			SSE_PS_LOAD(v),
-			_mm_load_ps((const float *)m_AbsMask)));
+			_mm_loadu_ps((const float *)m_AbsMask)));
 	}
 
 	/**

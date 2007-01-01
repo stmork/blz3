@@ -38,11 +38,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3FFTTest);
 
 void b3FFTTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 	dim = 1 << 4;
 }
 
 void b3FFTTest::tearDown()
-{
+{	
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
 void b3FFTTest::testFFT()

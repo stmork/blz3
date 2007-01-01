@@ -148,6 +148,67 @@ sprintf(result,"%f %d\n",*((float *)&r), str->q);
 	[AC_MSG_RESULT(no)])
 ])
 
+AC_MSG_CHECKING([for memalign])
+AC_TRY_LINK([#include <malloc.h>],[
+memalign(16,10240);
+],[AC_DEFINE([HAVE_MEMALIGN]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+
+AC_MSG_CHECKING([for operator new overloading])
+AC_RUN_IFELSE([AC_LANG_PROGRAM([
+#include <stdlib.h>
+#include <stdio.h>
+#include <malloc.h>
+
+#define no_DEBUG
+int counter = 0;
+
+class test
+{
+public:
+	test()
+	{
+		counter+=1;
+#ifdef _DEBUG
+		printf("<ctor>");
+#endif
+	}
+
+	void call()
+	{
+		counter+=1;
+#ifdef _DEBUG
+		printf("<call>");
+#endif
+	}
+
+	~test()
+	{
+		counter+=1;
+#ifdef _DEBUG
+		printf("<dtor>");
+#endif
+	}
+};
+
+void *operator new (size_t size)
+{
+	void *ptr = memalign(16, size);
+#ifdef _DEBUG
+	printf("<ptr=%p>", ptr);
+#endif
+	counter+=1;
+	return ptr;
+}
+],[
+	test *ptr = new test();
+	ptr->call();
+	delete ptr;
+
+	return (counter == 4) && ((reinterpret_cast<int>(ptr) & 0xf) == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+])],
+	[AC_DEFINE([HAVE_NEW_OVERLOADING]) AC_DEFINE([SSE_ALIGNED]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+
 AC_PATH_XTRA
 
 # Checks for header files.

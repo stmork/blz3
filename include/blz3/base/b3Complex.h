@@ -295,7 +295,6 @@ public:
 		T B3_ALIGN_16 val[2];
 		T B3_ALIGN_16 den[2];
 		T B3_ALIGN_16 nom[2];
-		T             nominator;
 		T             denom;
 
 		for(b3_loop i = 0;i < 2;i++)

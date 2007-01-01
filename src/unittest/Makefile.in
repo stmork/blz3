@@ -65,6 +65,6 @@ basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS) $(CPPUNITLIBS)
 
 test:	basetest
-	./basetest
+	time ./basetest
 
 -include .dep

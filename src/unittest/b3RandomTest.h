@@ -42,11 +42,13 @@ template<class R, typename T> class b3RandomTest : public CppUnit::TestFixture
 public:
 	void setUp()
 	{
+		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		random.b3SetSeed();
 	}
 
 	void tearDown()
 	{
+		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
 	void test()

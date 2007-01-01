@@ -35,6 +35,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3ComplexTest);
 
 void b3ComplexTest::setUp()
 {
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 	a = b3Complex<b3_f64>(2, 3);
 	c = new b3Complex<b3_f64>(4, 5);
 	d = new b3Complex<b3_f64>(6, 7);
@@ -43,6 +44,7 @@ void b3ComplexTest::setUp()
 
 void b3ComplexTest::tearDown()
 {
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	delete c;
 	delete d;
 }
