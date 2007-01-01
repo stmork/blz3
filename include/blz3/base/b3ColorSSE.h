@@ -172,18 +172,18 @@ public:
 
 		for (i = 3;i >= 0; i--)
 		{
-			c[i] = float(color & 0xff);
-			color  = color >> 8;
+			c[i]  = b3_f32(color & 0xff);
+			color = color >> 8;
 		}
-		SSE_PS_STORE(v, _mm_mul_ps(
 #ifdef SSE_ALIGNED
+		SSE_PS_STORE(v,_mm_mul_ps(
 			_mm_load_ps(c),
-			_mm_load_ps(m_Limit_d255)
+			_mm_load_ps(m_Limit_d255)));
 #else
+		SSE_PS_STORE(v,_mm_mul_ps(
 			SSE_PS_LOAD(c),
-			SSE_PS_LOAD(m_Limit_d255)
+			SSE_PS_LOAD(m_Limit_d255)));
 #endif
-			));
 #endif
 	}
 
