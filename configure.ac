@@ -200,11 +200,12 @@ void *operator new (size_t size)
 	return ptr;
 }
 ],[
-	test *ptr = new test();
+	test      *ptr = new test();
+	long int   ip  = reinterpret_cast<long int>(ptr);
 	ptr->call();
 	delete ptr;
 
-	return (counter == 4) && ((reinterpret_cast<int>(ptr) & 0xf) == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+	return (counter == 4) && ((ip & 0xf) == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 ])],
 	[AC_DEFINE([HAVE_NEW_OVERLOADING]) AC_DEFINE([SSE_ALIGNED]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])

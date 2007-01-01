@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	b3Log::b3SetLevel(B3LOG_FULL);
 	fft2.b3SelfTest();
 
-	tx.b3LoadImage("/home/sm/Blizzard/Textures/StanOlli.gif");
+	tx.b3LoadImage("/home/smork/Blizzard/Textures/StanOlli.gif");
 	fft2.b3AllocBuffer(&tx);
 	fft2.b3GetBuffer(&tx, 1.0);
 	tx.b3SaveJPEG("/tmp/stan_orig.jpg");
