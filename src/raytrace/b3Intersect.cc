@@ -489,16 +489,17 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 	return l2;
 }
 
-b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
+b3_f64 b3Box::b3Intersect(b3_ray *ray, b3_polar *polar)
 {
 	b3_line64    BTLine;
-	b3_vector64  BasePoint,EndPoint;
-	b3_f64       l[2];
+	b3_vector64  BasePoint;
+	b3_vector64  EndPoint;
+	b3_f64       l[6];
 	b3_f64       x,y,z,m,l1;
-	b3_index     Index;
-	b3_index     n[2];
+	b3_index     Index = 0;
+	b3_index     n[6];
 
-	Index = n[0] = n[1] = 0;
+	n[0] = n[1] = 0;
 	b3BaseTransform (ray,&BTLine);
 
 	EndPoint.x = (BasePoint.x = -BTLine.pos.x) + 1;
@@ -511,10 +512,8 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		{
 			y = m * BTLine.dir.y;
 			z = m * BTLine.dir.z;
-			if ((y >= BasePoint.y) &&
-			    (y <= EndPoint.y)  &&
-			    (z >= BasePoint.z) &&
-				(z <= EndPoint.z))
+			if ((y >= BasePoint.y) && (y <= EndPoint.y)  &&
+			    (z >= BasePoint.z) && (z <= EndPoint.z))
 			{
 				l[Index] = m;
 				n[Index] = 0;
@@ -526,10 +525,8 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		{
 			y = m * BTLine.dir.y;
 			z = m * BTLine.dir.z;
-			if ((y >= BasePoint.y) &&
-			    (y <= EndPoint.y)  &&
-			    (z >= BasePoint.z) &&
-			    (z <= EndPoint.z))
+			if ((y >= BasePoint.y) && (y <= EndPoint.y)  &&
+			    (z >= BasePoint.z) && (z <= EndPoint.z))
 			{
 				l[Index] = m;
 				n[Index] = 0;
@@ -544,10 +541,8 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		{
 			x = m * BTLine.dir.x;
 			z = m * BTLine.dir.z;
-			if ((x >= BasePoint.x) &&
-			    (x <= EndPoint.x)  &&
-			    (z >= BasePoint.z) &&
-			    (z <= EndPoint.z))
+			if ((x >= BasePoint.x) && (x <= EndPoint.x)  &&
+			    (z >= BasePoint.z) && (z <= EndPoint.z))
 			{
 				l[Index] = m;
 				n[Index] = 1;
@@ -559,10 +554,8 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		{
 			x = m * BTLine.dir.x;
 			z = m * BTLine.dir.z;
-			if ((x >= BasePoint.x) &&
-			    (x <= EndPoint.x)  &&
-			    (z >= BasePoint.z) &&
-			    (z <= EndPoint.z))
+			if ((x >= BasePoint.x) && (x <= EndPoint.x)  &&
+			    (z >= BasePoint.z) && (z <= EndPoint.z))
 			{
 				l[Index] = m;
 				n[Index] = 1;
@@ -577,10 +570,8 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		{
 			y = m * BTLine.dir.y;
 			x = m * BTLine.dir.x;
-			if ((x >= BasePoint.x) &&
-			    (x <= EndPoint.x)  &&
-			    (y >= BasePoint.y) &&
-			    (y <= EndPoint.y))
+			if ((x >= BasePoint.x) && (x <= EndPoint.x)  &&
+			    (y >= BasePoint.y) && (y <= EndPoint.y))
 			{
 				l[Index] = m;
 				n[Index] = 2;
@@ -592,10 +583,8 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		{
 			y = m * BTLine.dir.y;
 			x = m * BTLine.dir.x;
-			if ((x >= BasePoint.x) &&
-			    (x <= EndPoint.x)  &&
-			    (y >= BasePoint.y) &&
-			    (y <= EndPoint.y))
+			if ((x >= BasePoint.x) && (x <= EndPoint.x)  &&
+			    (y >= BasePoint.y) && (y <= EndPoint.y))
 			{
 				l[Index] = m;
 				n[Index] = 2;
@@ -616,6 +605,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		break;
 		
 	case 2:
+		// Tow results
 		if (l[1] < l[0])
 		{
 			l1   = l[1];
@@ -629,6 +619,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 	default:
 		// Shouldn't be!
+		b3PrintF(B3LOG_FULL, "Index = %d\n", Index);
 		B3_ASSERT(false);
 		return -1;
 	}
@@ -828,7 +819,10 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	pos.x   = (ray->pos.x - m_Base.x);
 	start   = (                      - pos.x) * denom.x;
 	end     = (m_GridSize * m_Size.x - pos.x) * denom.x;
-	if (start > end) FSWAP(start,end,m);
+	if (start > end)
+	{
+		FSWAP(start,end,m);
+	}
 
 	denom.y = 1.0 / ray->dir.y;
 	pos.y   = (ray->pos.y - m_Base.y);
@@ -837,7 +831,10 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	if (tn    > tf)    FSWAP(tn,tf,m);
 	if (tn    > start) start = tn;
 	if (tf    < end)   end   = tf;
-	if (start > end) return result;
+	if (start > end)
+	{
+		return result;
+	}
 
 	denom.z = 1.0 / ray->dir.z;
 	pos.z   = (ray->pos.z - m_Base.z);
@@ -846,14 +843,25 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	if (tn    > tf)    FSWAP(tn,tf,m);
 	if (tn    > start) start = tn;
 	if (tf    < end)   end   = tf;
-	if (start > end) return result;
+	if (start > end)
+	{
+		return result;
+	}
 
-	if (end   < 0)      return result;
-	if (start > ray->Q) return result;
+	if ((end   < 0) ||  (start > ray->Q))
+	{
+		return result;
+	}
 
-	if (start < 0)   start = 0;
-	end    -= b3Scene::epsilon;
-	if (ray->Q < end) end = ray->Q;
+	if (start < 0)
+	{
+		start = 0;
+	}
+	end -= b3Scene::epsilon;
+	if (ray->Q < end)
+	{
+		end = ray->Q;
+	}
 
 	// start position
 	pos.x = (pos.x + start * ray->dir.x) / m_Size.x;
@@ -877,7 +885,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	// correct start point
 	if (d.x > b3Scene::epsilon)
 	{
-		if (ray->dir.x >= 0) d.x = (1.0 - d.x) * dmax.x;
+		if (ray->dir.x >= 0) d.x  = (1.0 - d.x) * dmax.x;
 		else                 d.x *= dmax.x;
 	}
 	else
@@ -887,8 +895,8 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 	if (d.y > b3Scene::epsilon)
 	{
-		if (ray->dir.y >= 0) d.y = (1.0 - d.y) * dmax.y;
-		else                  d.y *= dmax.y;
+		if (ray->dir.y >= 0) d.y  = (1.0 - d.y) * dmax.y;
+		else                 d.y *= dmax.y;
 	}
 	else
 	{
@@ -897,13 +905,16 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 	if (d.z > b3Scene::epsilon)
 	{
-		if (ray->dir.z >= 0) d.z = (1.0 - d.z) * dmax.z;
-		else                  d.z *= dmax.z;
+		if (ray->dir.z >= 0) d.z  = (1.0 - d.z) * dmax.z;
+		else                 d.z *= dmax.z;
 	}
 	else
 	{
 		d.z = dmax.z;
-		if (gz == m_GridSize) gz--;
+		if (gz == m_GridSize)
+		{
+			gz--;
+		}
 	}
 
 
@@ -936,13 +947,19 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 					}
 				}
 			}
-			if (start >= end) return result;
+			if (start >= end)
+			{
+				return result;
+			}
 		}
 
 		if      ((d.x <= d.y) && (d.x <= d.z))
 		{
 			gx    +=     sx;
-			if ((gx < 0) || (gx >= m_GridSize)) return result;
+			if ((gx < 0) || (gx >= m_GridSize))
+			{
+				return result;
+			}
 			start +=    d.x;
 			d.y   -=    d.x;
 			d.z   -=    d.x;
@@ -951,7 +968,10 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 		else if ((d.y <= d.x) && (d.y <= d.z))
 		{
 			gy    +=     sy;
-			if ((gy < 0) || (gy >= m_GridSize)) return result;
+			if ((gy < 0) || (gy >= m_GridSize))
+			{
+				return result;
+			}
 			start +=    d.y;
 			d.x   -=    d.y;
 			d.z   -=    d.y;
@@ -960,13 +980,19 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 		else if ((d.z <= d.x) && (d.z <= d.y))
 		{
 			gz    +=     sz;
-			if ((gz < 0) || (gz >= m_GridSize)) return result;
+			if ((gz < 0) || (gz >= m_GridSize))
+			{
+				return result;
+			}
 			start +=    d.z;
 			d.x   -=    d.z;
 			d.y   -=    d.z;
 			d.z    = dmax.z;
 		}
-		else B3_BEEP;
+		else
+		{
+			B3_BEEP;
+		}
 	}
 	while (true);
 

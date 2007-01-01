@@ -167,25 +167,25 @@ class test
 public:
 	test()
 	{
-		counter+=1;
+		counter++;
 #ifdef _DEBUG
-		printf("<ctor>");
+		printf("<ctor this=%p> ", this);
 #endif
 	}
 
 	void call()
 	{
-		counter+=1;
+		counter++;
 #ifdef _DEBUG
-		printf("<call>");
+		printf("<call> ");
 #endif
 	}
 
 	~test()
 	{
-		counter+=1;
+		counter++;
 #ifdef _DEBUG
-		printf("<dtor>");
+		printf("<dtor> ");
 #endif
 	}
 };
@@ -194,9 +194,9 @@ void *operator new (size_t size)
 {
 	void *ptr = memalign(16, size);
 #ifdef _DEBUG
-	printf("<ptr=%p>", ptr);
+	printf("<ptr=%p> ", ptr);
 #endif
-	counter+=1;
+	counter++;
 	return ptr;
 }
 ],[
