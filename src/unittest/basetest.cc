@@ -23,9 +23,6 @@
 
 #include "blz3/b3Config.h"
 
-#include <malloc.h>
-#include <string.h>
-
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
