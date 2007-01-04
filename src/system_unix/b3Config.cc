@@ -25,7 +25,10 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #include <locale.h>
+
+#ifdef HAVE_NEW_OVERLOADING
 #include <malloc.h>
+#endif
 
 /*************************************************************************
 **                                                                      **
