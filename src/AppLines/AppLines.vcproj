@@ -6879,6 +6879,9 @@
 				RelativePath="res\item_unknown.ico">
 			</File>
 			<File
+				RelativePath=".\res\itemis.ico">
+			</File>
+			<File
 				RelativePath="res\left.ico">
 			</File>
 			<File

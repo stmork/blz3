@@ -132,6 +132,7 @@ IDI_BUMP_NOISE          ICON                    "res\\bump_noise.ico"
 IDI_MAT_THIN_FILM       ICON                    "res\\mat_thin_film.ico"
 IDI_MAT_CAR_PAINT       ICON                    "res\\mat_car_paint.ico"
 IDI_BUMP_OCEAN          ICON                    "res\\bump_ocean.ico"
+IDI_ITEMIS              ICON                    "res\\itemis.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4010,6 +4011,20 @@ END
 STRINGTABLE 
 BEGIN
     IDS_UNKNOWN             "unbekannt"
+    IDS_MAT_CAR_PAINT       "Autolack"
+    IDS_TITLE_PARALLEL      "Parallel"
+    IDS_TITLE_PERPENDICULAR "Senkrecht"
+    IDS_DOC_UPDATE_MATERIAL "Die Materialien werden vorbereitet..."
+    IDS_OP_SHAPE_CREATE     "Körper erzeugen"
+    IDS_OP_SHAPE_EDIT       "Körper ändern"
+    IDS_OP_SHAPE_DELETE     "Körper löschen"
+    IDS_OP_SHAPE_MATERIAL_MAINTAIN "Material verwalten"
+    IDS_OP_SHAPE_MATERIAL_EDIT "Material ändern"
+    IDS_OP_SHAPE_BUMP_MAINTAIN "Struktur verwalten"
+    IDS_OP_SHAPE_BUMP_EDIT  "Struktur ändern"
+    IDS_OP_SHAPE_CONDITION_MAINTAIN "Stanzung verwalten"
+    IDS_OP_SHAPE_CONDITION_EDIT "Stanzung ändern"
+    IDS_OP_SHAPE_COPY_PROPERTY "Eigenschaften verteilen"
 END
 
 STRINGTABLE 
@@ -4380,16 +4395,6 @@ END
 STRINGTABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
-    IDS_MAT_CAR_PAINT       "Autolack"
-    IDS_TITLE_PARALLEL      "Parallel"
-    IDS_TITLE_PERPENDICULAR "Senkrecht"
-    IDS_DOC_UPDATE_MATERIAL "Die Materialien werden vorbereitet..."
-    IDS_OP_SHAPE_CREATE     "Körper erzeugen"
-    IDS_OP_SHAPE_EDIT       "Körper ändern"
-    IDS_OP_SHAPE_DELETE     "Körper löschen"
-    IDS_OP_SHAPE_MATERIAL_MAINTAIN "Material verwalten"
-    IDS_OP_SHAPE_MATERIAL_EDIT "Material ändern"
-    IDS_OP_SHAPE_BUMP_MAINTAIN "Struktur verwalten"
 END
 
 STRINGTABLE 
@@ -4399,10 +4404,6 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_OP_SHAPE_BUMP_EDIT  "Struktur ändern"
-    IDS_OP_SHAPE_CONDITION_MAINTAIN "Stanzung verwalten"
-    IDS_OP_SHAPE_CONDITION_EDIT "Stanzung ändern"
-    IDS_OP_SHAPE_COPY_PROPERTY "Eigenschaften verteilen"
     IDS_BBOX_UNNAMED        "Unbenannt"
     IDS_BUMP_OCEAN          "Ozeanwellen"
 END
