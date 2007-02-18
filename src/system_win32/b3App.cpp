@@ -141,15 +141,17 @@ void CB3App::b3GfxType(CWnd *wnd)
 	b3PrintF (B3LOG_NORMAL,"      Screen dimensions: %ldx%ld pixels\n",
 		xSize,ySize);
 	b3PrintF (B3LOG_NORMAL,"      Monitor dimensions: %2.2fx%2.2f inches "
-		"(using %2.2f monitor)\n",
+		"(using %2.2f inch monitor)\n",
 		width,height,sqrt(width * width + height * height));
 	b3PrintF (B3LOG_NORMAL,"      Monitor dimensions: %ldx%ld mm²\n",
 		dc->GetDeviceCaps(HORZSIZE),
 		dc->GetDeviceCaps(VERTSIZE));
 	b3PrintF (B3LOG_NORMAL,"      Using %ld bits per pixel\n",
 		dc->GetDeviceCaps(BITSPIXEL));
-	b3PrintF (B3LOG_NORMAL,"      Palette size %ld entries\n",
-		pSize < 0 ? 0 : pSize);
+	if (pSize > 0)
+	{
+		b3PrintF (B3LOG_NORMAL,"      Palette size %ld entries\n", pSize);
+	}
 	wnd->ReleaseDC(dc);
 }
 

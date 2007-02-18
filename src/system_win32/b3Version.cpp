@@ -156,7 +156,7 @@ void CB3Version::b3DumpOS()
 				" [Windows 95]" :
 				" [Windows 98]") :
 			"");
-	b3PrintF (B3LOG_NORMAL,"      MFC version: %d.%02d\n",
+	b3PrintF (B3LOG_NORMAL,"      MFC version: %x.%02x\n",
 		_MFC_VER >> 8, _MFC_VER & 0xff);
 
 	switch (CPUs)
