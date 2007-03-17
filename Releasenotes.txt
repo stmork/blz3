@@ -18,3 +18,4 @@ Version 2.99.2.20
 - Simulation von Ozeanwellen.
 
 Version 2.99.2.21
+- Fixed toolbar position saving.
