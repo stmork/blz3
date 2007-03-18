@@ -16,7 +16,6 @@
 #define IDR_TOOLBAR_LIGHT               120
 #define IDR_TOOLBAR_OBJECT              121
 #define IDR_TOOLBAR_VIEW                122
-#define IDI_ICON1                       124
 #define IDI_ITEMIS                      124
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500

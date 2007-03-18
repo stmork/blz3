@@ -155,6 +155,8 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -a        disable animation\n");
 		b3PrintF(B3LOG_NORMAL,"  -n        disable display\n");
 		b3PrintF(B3LOG_NORMAL,"  -w        nowait after display output\n");
+		b3PrintF(B3LOG_NORMAL,"  -S        force one raytracing thread\n");
+		b3PrintF(B3LOG_NORMAL,"  -M        use multithreading for raytracing using all CPU cores\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -s size   image size definition\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
@@ -196,6 +198,7 @@ int main(int argc,char *argv[])
 	b3_bool               force_no_anim    = false;
 	b3_bool               force_no_display = false;
 	b3_bool               force_no_wait    = false;
+	b3_bool               multi_threaded   = true;
 	b3_index              i;
 	b3_count              CPUs = b3Runtime::b3GetNumCPUs();
 	b3_res                size = 0;
@@ -229,9 +232,9 @@ int main(int argc,char *argv[])
 			b3Scene::m_RenderPriority = b3Math::b3Limit(atoi(BLZ3_RENDER_PRIO),-2 ,2);
 		}
 
-		b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
+		b3PrintF (B3LOG_NORMAL,"\nFound %d CPU core%s.\n",
 			CPUs,
-			CPUs > 1 ? "'s" : "");
+			CPUs > 1 ? "s" : "");
 
 		b3PrintF(B3LOG_DEBUG,"Used environment:\n");
 		b3PrintF(B3LOG_DEBUG,"HOME=%s\n",             HOME);
@@ -258,15 +261,15 @@ int main(int argc,char *argv[])
 					break;
 				case 'a' :
 					force_no_anim = true;
-					b3PrintF(B3LOG_NORMAL,"Forcing no animation\n");
+					b3PrintF(B3LOG_NORMAL,"Forcing no animation.\n");
 					break;
 				case 'n' :
 					force_no_display = true;
-					b3PrintF(B3LOG_NORMAL,"Forcing no display output\n");
+					b3PrintF(B3LOG_NORMAL,"Forcing no display output.\n");
 					break;
 				case 'w' :
 					force_no_wait = true;
-					b3PrintF(B3LOG_NORMAL,"Forcing no wait after display output\n");
+					b3PrintF(B3LOG_NORMAL,"Forcing no wait after display output.\n");
 					break;
 				case 's':
 					i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
@@ -286,6 +289,14 @@ int main(int argc,char *argv[])
 					break;
 				case 'p':
 					strlcpy(BLZ3_EXTENSION,".ps",sizeof(BLZ3_EXTENSION));
+					break;
+				case 'S':
+					multi_threaded = false;
+					b3PrintF(B3LOG_NORMAL,"Forcing one raytracing thread.\n");
+					break;
+				case 'M':
+					multi_threaded = true;
+					b3PrintF(B3LOG_NORMAL,"Using multithreading.\n");
 					break;
 #ifdef BLZ3_USE_OPENEXR
 				case 'x':
@@ -351,7 +362,7 @@ int main(int argc,char *argv[])
 											t = animation->b3AnimTimeCode(frame);
 											b3PrintF(B3LOG_NORMAL,"Rendering frame t=%1.2f\n",t);
 											scene->b3SetAnimation(t);
-											scene->b3Raytrace(display);
+											scene->b3Raytrace(display, multi_threaded);
 											img_name.b3Format("%s_%04ld",camera->b3GetName(),count++);
 											b3SaveRaytracedImage(
 												display,
@@ -361,7 +372,7 @@ int main(int argc,char *argv[])
 									else
 									{
 										scene->b3ComputeBounds(&lower,&upper);
-										scene->b3Raytrace(display);
+										scene->b3Raytrace(display, multi_threaded);
 										b3SaveRaytracedImage(
 											display,
 											BLZ3_PICTURES,camera->b3GetName());
@@ -382,7 +393,7 @@ int main(int argc,char *argv[])
 							// in special list
 							b3PrintF(B3LOG_NORMAL,"Rendering default camera...\n");
 							scene->b3ComputeBounds(&lower,&upper);
-							scene->b3Raytrace(display);
+							scene->b3Raytrace(display, multi_threaded);
 							if (!b3SaveRaytracedImage(
 								display,
 								BLZ3_PICTURES,scene->b3GetName()))

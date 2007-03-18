@@ -433,7 +433,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 		true);
 }
 
-void b3Scene::b3Raytrace(b3Display *display)
+void b3Scene::b3Raytrace(b3Display *display, b3_bool multi_threaded)
 {
 	b3Row      *row;
 	b3_res      xSize,ySize;
@@ -456,7 +456,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 		b3ComputeVisibility();
 
 		// Determine CPU count
-		CPUs = b3Runtime::b3GetNumCPUs();
+		CPUs = multi_threaded ? b3Runtime::b3GetNumCPUs() : 1;
 		
 		// add rows to list
 		fy     = 1.0;

@@ -297,8 +297,10 @@ public:
 	 * This method simply raytraces the scene onto the given display.
 	 *
 	 * @param display The display to raytrace into.
+	 * @param multi_threaded A flag which signals using all available CPU cores
+	 *                       for raytracing. Otherwise only one thread will be used.
 	 */
-	void             b3Raytrace(b3Display *display);
+	void             b3Raytrace(b3Display *display, b3_bool multi_threaded = true);
 
 	/**
 	 * This method aborts an active raytrace process.
