@@ -96,69 +96,105 @@ int main(int argc,char *argv[])
 	memset(&encoding,0,sizeof(encoding));
 	memset(&frame,   0,sizeof(frame));
 #endif
+
 	for (int i = 2;i < argc;i++)
 	{
-		b3Tx img;
+		b3Tx    img;
+		b3_bool hasFirst = false;
 
-		img.b3LoadImage(argv[i]);
-		img.b3MirrorVertical();
-#ifdef BLZ3_USE_DIVX4LINUX
-		if (encoding.handle == 0)
+		try
 		{
-			encoding.x_dim     = img.xSize;
-			encoding.y_dim     = img.ySize;
-			encoding.framerate =      25.0;
-			encoding.quality   =       5;
-			encoding.bitrate   = RATE_KBYTE(500);
-
-			size               = img.xSize * img.ySize;
-			buffer             = new b3_u08[size * 3];
-			bitstream          = new char[size * 6];
-
-			error = encore(0,ENC_OPT_INIT,&encoding,0);
-			if ((error != ENC_OK) || (encoding.handle == 0))
-			{
-				fprintf(stderr,"ERROR CODE: %d (starting encoding)\nexiting...\n",error);
-			}
-			else
-			{
-				b3PrintF(B3LOG_DEBUG,"Start encoding...");
-			}
-			AVI_set_video(out, img.xSize, img.ySize, encoding.framerate, "DIVX");
+			img.b3LoadImage(argv[i]);
+			img.b3MirrorVertical();
+			hasFirst = true;
 		}
+		catch(b3TxException &t)
+		{
+			b3PrintF(B3LOG_NORMAL,"\n");
+			b3PrintF(B3LOG_NORMAL,"Image error when processing image %s!\n", argv[i]);
+			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", t.b3GetError());
+			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", t.b3GetErrorMsg());
+		}
+		catch(b3ExceptionBase &e)
+		{
+			b3PrintF(B3LOG_NORMAL,"\n");
+			b3PrintF(B3LOG_NORMAL,"General Blizzard III error on image %s!\n", argv[i]);
+			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", e.b3GetError());
+			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", e.b3GetErrorMsg());
+		}
+		catch(...)
+		{
+			b3PrintF(B3LOG_NORMAL,"\n");
+			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n",argv[i]);
+		}
+
+		if (hasFirst)
+		{
+#ifdef BLZ3_USE_DIVX4LINUX
+			if (encoding.handle == 0)
+			{
+				encoding.x_dim     = img.xSize;
+				encoding.y_dim     = img.ySize;
+				encoding.framerate =      25.0;
+				encoding.quality   =       5;
+				encoding.bitrate   = RATE_KBYTE(500);
+
+				size               = img.xSize * img.ySize;
+				buffer             = new b3_u08[size * 3];
+				bitstream          = new char[size * 6];
+
+				error = encore(0,ENC_OPT_INIT,&encoding,0);
+				if ((error != ENC_OK) || (encoding.handle == 0))
+				{
+					fprintf(stderr,"ERROR CODE: %d (starting encoding)\nexiting...\n",error);
+				}
+				else
+				{
+					b3PrintF(B3LOG_DEBUG,"Start encoding...");
+				}
+				AVI_set_video(out, img.xSize, img.ySize, encoding.framerate, "DIVX");
+			}
 #endif
 
-		// Recode image
-		ptr  = buffer;
-		data = img.b3GetTrueColorData();
-		for (b3_size k = 0;k < size;k++)
-		{
-			color  = *data++;
-			*ptr++ =  color & 0x0000ff;
-			*ptr++ = (color & 0x00ff00) >>  8;
-			*ptr++ = (color & 0xff0000) >> 16;
-		}
+			data = img.b3GetTrueColorData();
+			if (data != null)
+			{
+				// Recode image
+				ptr  = buffer;
+				for (b3_size k = 0;k < size;k++)
+				{
+					color  = *data++;
+					*ptr++ =  color & 0x0000ff;
+					*ptr++ = (color & 0x00ff00) >>  8;
+					*ptr++ = (color & 0xff0000) >> 16;
+				}
 
 #ifdef BLZ3_USE_DIVX4LINUX
-		frame.image      = buffer;
-		frame.bitstream  = bitstream;
-		frame.length     =  0;
-		frame.quant      =  0;
-		frame.intra      = -1;
-		frame.colorspace = ENC_CSP_RGB24;
+				frame.image      = buffer;
+				frame.bitstream  = bitstream;
+				frame.length     =  0;
+				frame.quant      =  0;
+				frame.intra      = -1;
+				frame.colorspace = ENC_CSP_RGB24;
 
-		error = encore(encoding.handle,ENC_OPT_ENCODE,&frame,&result);
-		if (error != ENC_OK)
-		{
-			fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n",error,i-2);
+				error = encore(encoding.handle,ENC_OPT_ENCODE,&frame,&result);
+				if (error != ENC_OK)
+				{
+					fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n",error,i-2);
+				}
+				else
+				{
+					AVI_write_frame(out,bitstream,frame.length,0);
+					b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",argv[i],frame.length);
+					b3PrintF(B3LOG_NORMAL,".");
+				}
+#endif
+			}
 		}
 		else
 		{
-			AVI_write_frame(out,bitstream,frame.length,0);
-			b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",argv[i],frame.length);
-			b3PrintF(B3LOG_NORMAL,".");
+			b3PrintF(B3LOG_NORMAL, "Ignoring image %s\n", argv[i]);
 		}
-#endif
 	}
 
 #ifdef BLZ3_USE_DIVX4LINUX

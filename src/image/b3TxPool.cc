@@ -48,7 +48,7 @@ b3Base<b3Tx> *b3TxPool::b3GetTxHead()
 	return &m_Pool;
 }
 
-b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name)
+b3_bool b3TxPool::b3ReloadTexture (b3Tx *tx,const char *Name)
 {
 	b3Path    FullName;
 	b3_bool   result = false;
@@ -58,15 +58,15 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name)
 	// Check result of texture load
 	if (result)
 	{
-		result = (Texture->b3LoadImage(FullName) == B3_OK);
+		result = (tx->b3LoadImage(FullName) == B3_OK);
 		b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" %sloaded.\n",
-			Texture->b3Name(),result ? "" : "not ");
+			tx->b3Name(),result ? "" : "not ");
 	}
 	else
 	{
-		Texture->b3Name(Name);
+		tx->b3Name(Name);
 		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" available!\n",
-			Texture->b3Name());
+			tx->b3Name());
 	}
 	return result;
 }

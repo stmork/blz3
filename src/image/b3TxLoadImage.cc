@@ -51,14 +51,15 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	b3_index      i;
 
 	b3FreeTx();
+
+	// Check for small buffer
 	LongData = (b3_pkd_color *)buffer;
 	if (buffer_size < 4)
 	{
-		b3FreeTx();
-		B3_THROW(b3TxException,B3_TX_ERR_HEADER);
+		B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 	}
 
-	// schon mal irgend ein IFF
+	// Check for IFF
 	if (b3Endian::b3GetMot32(LongData) == IFF_FORM)
 	{
 		switch (b3Endian::b3GetMot32(&LongData[2]))
@@ -68,8 +69,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case IFF_RGBN : return b3ParseIFF_RGB4(buffer,buffer_size);
 			case IFF_YUVN : return b3ParseIFF_YUVN(buffer,buffer_size);
 			default :
-				b3FreeTx();
-				B3_THROW(b3TxException,B3_TX_ERR_HEADER);
+				B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 		}
 	}
 
@@ -159,8 +159,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 2 :
 			case 3 :
 			default :
-				b3FreeTx();
-				B3_THROW(b3TxException,B3_TX_UNSUPP);
+				B3_THROW(b3TxException, B3_TX_UNSUPP);
 		}
 	}
 
@@ -246,18 +245,16 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 8  : return b3ParsePCX8(buffer);
 			case 1 	: return b3ParsePCX4(buffer);
 			default :
-				b3FreeTx();
 				B3_THROW(b3TxException,B3_TX_UNSUPP);
 		}
 	}
 
 
 	// really unknown
-	b3FreeTx();
 	B3_THROW(b3TxException,B3_TX_UNSUPP);
 }
 
-b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
+b3_result b3Tx::b3LoadImage(const char *name, b3_bool throw_exception)
 {
 	b3File     file;
 	b3_u08    *buffer;

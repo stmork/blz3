@@ -85,11 +85,11 @@ static void load(const char *name)
 
 int main(int argc,char *argv[])
 {
-	char                 *BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
-	char                 *BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
-	char                 *HOME             = getenv("HOME");
-	b3Path                textures;
-	b3Path                pictures;
+	char        *BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
+	char        *BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
+	char        *HOME             = getenv("HOME");
+	b3Path       textures;
+	b3Path       pictures;
 	b3FileList   list;
 	b3FileEntry *entry;
 	b3Tx        *tx;
@@ -159,7 +159,7 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s {Image files}\n",argv[0]);
 		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n", __DATE__, __TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 	}
 	return EXIT_SUCCESS;

@@ -31,10 +31,13 @@ B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
 PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce BodThumb RemCR
+INSTALL_PRGS	= half
 
 all:	$(PRGS)
 
-install:
+install:	$(INSTALL_PRGS)
+	cp $^ @bindir@
+	(cd @bindir@; chmod 755 $^;)
 
 depend:
 	@CPP@ -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
