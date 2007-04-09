@@ -611,9 +611,10 @@
 #define IDC_SMP_REGULAR                 32310
 #define IDC_SMP_SEMI                    32311
 #define IDC_SMP_SEPARATED               32312
-#define IDC_SNAP_TO_ANGLE               32313
+#define IDC_SNAP_TO_ANGLE_OBJECT        32313
 #define IDC_SNAP_TO_GRID                32314
 #define IDC_SPEC_EXPONENT               32315
+#define IDC_SNAP_TO_ANGLE_CAMERA        32315
 #define IDC_SPEC_EXPONENT_SPIN          32316
 #define IDC_SPF                         32317
 #define IDC_SPF_SPIN                    32318

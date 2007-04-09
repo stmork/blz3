@@ -242,7 +242,7 @@ void CB3ActionObjectRotate::b3LMove(b3_coord x,b3_coord y)
 		angle = (xRel - m_xRelStart) * M_PI * 2;
 	}
 
-	m_Doc->m_Info->b3SnapToAngle(angle);
+	m_Doc->m_Info->b3SnapToObjectAngle(angle);
 	if (angle != m_LastAngle)
 	{
 		if (b3Matrix::b3Inverse(&m_Transformation,&inv))
@@ -277,7 +277,7 @@ void CB3ActionObjectRotate::b3LUp(b3_coord x,b3_coord y)
 		angle = (xRel - m_xRelStart) * M_PI * 2;
 	}
 
-	m_Doc->m_Info->b3SnapToAngle(angle);
+	m_Doc->m_Info->b3SnapToObjectAngle(angle);
 	if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 	{
 		b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
@@ -700,7 +700,7 @@ void CB3ActionCameraView::b3RMove(b3_coord x,b3_coord y)
 	{
 		b3GetRelCoord(x,y,xRel,yRel);
 		angle = (xRel - m_xRelStart) * M_PI * 2;
-		m_Doc->m_Info->b3SnapToAngle(angle);
+		m_Doc->m_Info->b3SnapToCameraAngle(angle);
 		if (angle != m_LastAngle)
 		{
 			if (b3Matrix::b3Inverse(&m_Transformation,&inv))
@@ -728,7 +728,7 @@ void CB3ActionCameraView::b3RUp(b3_coord x,b3_coord y)
 	{
 		b3GetRelCoord(x,y,xRel,yRel);
 		angle = (xRel - m_xRelStart) * M_PI * 2;
-		m_Doc->m_Info->b3SnapToAngle(angle);
+		m_Doc->m_Info->b3SnapToCameraAngle(angle);
 		if (angle != m_LastAngle)
 		{
 			if (b3Matrix::b3Inverse(&m_Transformation,&inv))

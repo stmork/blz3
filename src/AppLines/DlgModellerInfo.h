@@ -48,7 +48,8 @@ public:
 	CB3FloatEdit	m_zFulcrumCtrl;
 	CB3FloatEdit	m_yFulcrumCtrl;
 	CB3FloatEdit	m_xFulcrumCtrl;
-	CB3Checkbox		m_SnapToAngle;
+	CB3Checkbox		m_SnapToAngleObject;
+	CB3Checkbox		m_SnapToAngleCamera;
 	CB3Checkbox		m_SnapToGrid;
 	int				m_Unit;
 	int				m_Measure;

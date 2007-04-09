@@ -395,23 +395,25 @@ const b3_u32 b3ModellerInfo::m_MeasureTable[B3_MEASURE_MAX - 1] =
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
-	m_Center.x       = 0;
-	m_Center.y       = 0;
-	m_Center.z       = 0;
-	m_StepMove.x     =
-	m_StepMove.y     =
-	m_StepMove.z     = 10;
-	m_StepRotate.x   =
-	m_StepRotate.y   =
-	m_StepRotate.z   = 15;
-	m_Unit           = B3_UNIT_CM;
-	m_Measure        = B3_MEASURE_100;
-	m_CustomMeasure  = 100;
-	m_GridMove       = 10;
-	m_GridRot        = 15;
-	m_GridActive     = true;
-	m_AngleActive    = true;
-	m_UseSceneLights = false;
+	m_Center.x         = 0;
+	m_Center.y         = 0;
+	m_Center.z         = 0;
+	m_StepMove.x       =
+	m_StepMove.y       =
+	m_StepMove.z       = 10;
+	m_StepRotate.x     =
+	m_StepRotate.y     =
+	m_StepRotate.z     = 15;
+	m_Unit             = B3_UNIT_CM;
+	m_Measure          = B3_MEASURE_100;
+	m_CustomMeasure    = 100;
+	m_GridMove         = 10;
+	m_GridRot          = 15;
+	m_GridActive       = true;
+	m_AngleGridCamera  = false;
+	m_AngleGridObjects = true;
+	m_AngleGrid        = (m_AngleGridCamera << B3_ANGLE_GRID_CAMERA_BIT) | (m_AngleGridObjects << B3_ANGLE_GRID_OBJECT_BIT);
+	m_UseSceneLights   = false;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
@@ -422,9 +424,9 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_GridRot      = b3InitFloat();
 	m_ResizeFlag   = b3InitBool();
 	m_BBoxTitles   = b3InitBool();
-	m_GridActive   =
-	m_AngleActive  = b3InitBool();
+	m_GridActive   = b3InitBool();
 	m_CameraActive = b3InitBool();
+	m_AngleGrid    = B3_ANGLE_GRID_OBJECT;
 	m_StepMove.x   =
 	m_StepMove.y   =
 	m_StepMove.z   = 10;
@@ -440,9 +442,11 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 		{
 			b3InitVector(&m_StepMove);
 			b3InitVector(&m_StepRotate);
-			m_AngleActive  = b3InitBool();
+			m_AngleGrid        = b3InitInt();
 		}
 	}
+	m_AngleGridObjects = (m_AngleGrid & B3_ANGLE_GRID_OBJECT) != 0;
+	m_AngleGridCamera  = (m_AngleGrid & B3_ANGLE_GRID_CAMERA) != 0;
 	m_Unit           =    (b3_unit)((m_Flags & B3_UNIT_MASK)           >> B3_UNIT_SHIFT);
 	m_Measure        = (b3_measure)((m_Flags & B3_MEASURE_MASK)        >> B3_MEASURE_SHIFT);
 	m_CustomMeasure  =              (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
@@ -465,6 +469,9 @@ void b3ModellerInfo::b3Write()
 	{
 		m_Flags |= B3_USE_SCENE_LIGHTS;
 	}
+	m_AngleGrid =
+		(m_AngleGridCamera << B3_ANGLE_GRID_CAMERA_BIT) |
+		(m_AngleGridObjects << B3_ANGLE_GRID_OBJECT_BIT);
 
 	b3StoreVector(&m_Center);
 	b3StoreFloat(m_GridMove  );
@@ -477,7 +484,7 @@ void b3ModellerInfo::b3Write()
 	b3StoreFloat(b3ScaleUnitToMM());
 	b3StoreVector(&m_StepMove);
 	b3StoreVector(&m_StepRotate);
-	b3StoreBool(m_AngleActive);
+	b3StoreInt(m_AngleGrid);
 }
 
 void b3ModellerInfo::b3SnapToGrid(b3_vector *vector)
@@ -490,9 +497,19 @@ void b3ModellerInfo::b3SnapToGrid(b3_vector *vector)
 	}
 }
 
-void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
+void b3ModellerInfo::b3SnapToCameraAngle(b3_f64 &angle)
 {
-	if (m_AngleActive)
+	b3Snap(angle, m_AngleGridCamera); 
+}
+
+void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 &angle)
+{
+	b3Snap(angle, m_AngleGridObjects); 
+}
+
+void b3ModellerInfo::b3Snap(b3_f64 &angle, b3_bool activation)
+{
+	if (activation)
 	{
 		// Convert to radians
 		b3_f64 GridStep = m_GridRot * M_PI / 180.0;

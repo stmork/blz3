@@ -526,8 +526,9 @@ b3Scene *b3TGFReader::b3ReadTGFScene(const char *tgffile)
 
 			// Setup some Lines info
 			info = scene->b3GetModellerInfo();
-			info->m_Unit = B3_UNIT_MM;
-			info->m_AngleActive = false;
+			info->m_Unit             = B3_UNIT_MM;
+			info->m_AngleGridCamera  = false;
+			info->m_AngleGridObjects = true;
 
 			// Setup class hierarchy
 			scene->b3GetBBoxHead()->b3Append(bbox);

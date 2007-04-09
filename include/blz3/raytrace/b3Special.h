@@ -317,6 +317,18 @@ enum b3_measure
 };
 
 /**
+ * This enumeration lists type of snap to angle
+ */
+enum b3_angle_grid
+{
+	B3_ANGLE_GRID_OBJECT_BIT = 0,  //!< Activation for object snap to grid
+	B3_ANGLE_GRID_CAMERA_BIT       //!< Activation for camera snap to grid
+};
+
+#define B3_ANGLE_GRID_OBJECT (1 << B3_ANGLE_GRID_OBJECT_BIT)
+#define B3_ANGLE_GRID_CAMERA (1 << B3_ANGLE_GRID_CAMERA_BIT)
+
+/**
  * This class represents some helping values to model with Lines III.
  */
 class B3_PLUGIN b3ModellerInfo : public b3Special
@@ -326,6 +338,7 @@ class B3_PLUGIN b3ModellerInfo : public b3Special
 	static const b3_u32 m_MeasureTable[B3_MEASURE_MAX - 1];
 
 	b3_u32           m_Flags;
+	b3_u32           m_AngleGrid;        //!< Scale to angular grid active.
 
 public:
 	b3_vector        m_Center;           //!< The position of the frustrum.
@@ -336,7 +349,8 @@ public:
 	b3_bool          m_ResizeFlag;
 	b3_bool          m_BBoxTitles;       //!< Draw object names into scene.
 	b3_bool          m_GridActive;       //!< Scale to grid active.
-	b3_bool          m_AngleActive;      //!< Scale to angular grid active.
+	b3_bool          m_AngleGridCamera;  //!< Snap to camera angle.
+	b3_bool          m_AngleGridObjects; //!< Snap to object angle.
 	b3_bool          m_CameraActive;
 	b3_bool          m_UseSceneLights;   //!< Simple lighting (false) or scene lighting (true).
 	b3_unit          m_Unit;             //!< Used unit.
@@ -361,7 +375,14 @@ public:
 	 *
 	 * @param angle The angle to adjust.
 	 */
-	void        b3SnapToAngle(b3_f64 &angle);
+	void        b3SnapToCameraAngle(b3_f64 &angle);
+
+	/**
+	 * This method snaps the given angle into the next angular grid position.
+	 *
+	 * @param angle The angle to adjust.
+	 */
+	void        b3SnapToObjectAngle(b3_f64 &angle);
 
 	/**
 	 * This method returns the configured unit in milli meters.
@@ -404,6 +425,9 @@ public:
 	 * @see b3_measure
 	 */
 	b3_u32      b3GetMeasure(b3_bool forceCustomValue=true);
+
+private:
+	void        b3Snap(b3_f64 &angle, b3_bool activation);
 };
 
 #define B3_UNIT_MASK           0x0000f

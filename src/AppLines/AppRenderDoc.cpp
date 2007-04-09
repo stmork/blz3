@@ -268,12 +268,14 @@ void CAppRenderDoc::OnEditUndo()
 {
 	// TODO: Add your command handler code here
 	m_UndoBuffer->b3Undo();
+	m_DlgHierarchy->b3UpdateActivation();
 }
 
 void CAppRenderDoc::OnEditRedo() 
 {
 	// TODO: Add your command handler code here
 	m_UndoBuffer->b3Redo();
+	m_DlgHierarchy->b3UpdateActivation();
 }
 
 void CAppRenderDoc::OnUpdateEditUndo(CCmdUI* pCmdUI) 

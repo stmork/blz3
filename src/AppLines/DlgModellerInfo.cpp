@@ -55,8 +55,9 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FULCRUM_Z, m_zFulcrumCtrl);
 	DDX_Control(pDX, IDC_FULCRUM_Y, m_yFulcrumCtrl);
 	DDX_Control(pDX, IDC_FULCRUM_X, m_xFulcrumCtrl);
-	DDX_Control(pDX, IDC_SNAP_TO_ANGLE, m_SnapToAngle);
 	DDX_Control(pDX, IDC_SNAP_TO_GRID, m_SnapToGrid);
+	DDX_Control(pDX, IDC_SNAP_TO_ANGLE_OBJECT, m_SnapToAngleObject);
+	DDX_Control(pDX, IDC_SNAP_TO_ANGLE_CAMERA, m_SnapToAngleCamera);
 	DDX_CBIndex(pDX, IDC_UNIT, m_Unit);
 	DDX_CBIndex(pDX, IDC_MEASURE, m_Measure);
 	DDX_Text(pDX, IDC_CUSTOM_MEASURE, m_CustomMeasure);
@@ -67,7 +68,8 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	m_SnapToGridCtrl.b3DDX (pDX,m_ModellerInfo->m_GridMove);
 	m_SnapToAngleCtrl.b3DDX(pDX,m_ModellerInfo->m_GridRot);
 	m_SnapToGrid.b3DDX(pDX, m_ModellerInfo->m_GridActive);
-	m_SnapToAngle.b3DDX(pDX, m_ModellerInfo->m_AngleActive);
+	m_SnapToAngleCamera.b3DDX(pDX, m_ModellerInfo->m_AngleGridCamera);
+	m_SnapToAngleObject.b3DDX(pDX, m_ModellerInfo->m_AngleGridObjects);
 }
 
 
@@ -75,7 +77,8 @@ BEGIN_MESSAGE_MAP(CDlgModellerInfo, CDialog)
 	//{{AFX_MSG_MAP(CDlgModellerInfo)
 	ON_BN_CLICKED(IDC_SNAP_TO_GRID, OnSnap)
 	ON_BN_CLICKED(IDC_FULCRUM_CLR, OnFulcrumClear)
-	ON_BN_CLICKED(IDC_SNAP_TO_ANGLE, OnSnap)
+	ON_BN_CLICKED(IDC_SNAP_TO_ANGLE_CAMERA, OnSnap)
+	ON_BN_CLICKED(IDC_SNAP_TO_ANGLE_OBJECT, OnSnap)
 	ON_CBN_SELCHANGE(IDC_MEASURE, OnSelchangeMeasure)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -124,7 +127,7 @@ void CDlgModellerInfo::OnFulcrumClear()
 void CDlgModellerInfo::b3UpdateUI()
 {
 	GetDlgItem(IDC_STEP_GRID)->EnableWindow(m_ModellerInfo->m_GridActive);
-	GetDlgItem(IDC_STEP_ANGLE)->EnableWindow(m_ModellerInfo->m_AngleActive);
+	GetDlgItem(IDC_STEP_ANGLE)->EnableWindow(m_ModellerInfo->m_AngleGridObjects || m_ModellerInfo->m_AngleGridCamera);
 	GetDlgItem(IDC_CUSTOM_MEASURE)->EnableWindow(m_Measure == B3_MEASURE_CUSTOM);
 }
 
