@@ -86,7 +86,10 @@ public:
 	              ~b3FileList();
 	               
 	               /**
-	                * This method creates a file list from the given path.
+	                * This method creates a file list from the given path. The list
+	                * container is emptied before file collection. The file collection
+	                * is recursive using the b3RecCreateList() method. After collection
+	                * the file list is sorted.
 	                *
 	                * @param dir_name The path.
 	                */
@@ -114,7 +117,11 @@ public:
 	                */
 	void           b3Sort();
 
-private:
+	               /**
+	                * This method recursively creates a file list from the given path.
+	                *
+	                * @param dir_name The path.
+	                */
 	void           b3RecCreateList(const char *);
 };
 

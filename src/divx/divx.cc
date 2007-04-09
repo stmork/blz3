@@ -25,6 +25,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3FileList.h"
 
 #ifdef BLZ3_USE_DIVX4LINUX
 #include "encore2.h"
@@ -54,7 +55,10 @@ static void b3Banner(const char *command)
 	{
 #ifdef BLZ3_USE_DIVX4LINUX
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s Divx-File {frame images}\n",command);
+		b3PrintF(B3LOG_NORMAL,"%s Divx-File [-f][-d] {frame images}\n",command);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 #else
 		b3PrintF(B3LOG_NORMAL,"%s has no DivX support!\n",command);
@@ -64,8 +68,11 @@ static void b3Banner(const char *command)
 	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 }
 
+
 int main(int argc,char *argv[])
 {
+	b3FileList    list;
+	b3FileEntry  *entry;
 #ifdef BLZ3_USE_DIVX4LINUX
 	ENC_PARAM     encoding;
 	ENC_FRAME     frame;
@@ -85,6 +92,42 @@ int main(int argc,char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 
+	for (int i = 2;i < argc;i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			switch(argv[i][1])
+			{
+			case 'd' :
+				b3Log::b3SetLevel(B3LOG_DEBUG);
+				break;
+
+			case 'f' :
+				b3Log::b3SetLevel(B3LOG_FULL);
+				break;
+			}
+		}
+		else
+		{
+			switch(b3Dir::b3Exists(argv[i]))
+			{
+			case B3_TYPE_DIR:
+				list.b3RecCreateList(argv[i]);
+				break;
+
+			case B3_TYPE_FILE:
+				list.b3Add(argv[i]);
+				break;
+
+			case B3_NOT_EXISTANT:
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
 	out = AVI_open_output_file(argv[1]);
 	if (out == NULL)
 	{
@@ -97,35 +140,36 @@ int main(int argc,char *argv[])
 	memset(&frame,   0,sizeof(frame));
 #endif
 
-	for (int i = 2;i < argc;i++)
+	for (entry = list.b3First();entry != null;entry = entry->Succ)
 	{
 		b3Tx    img;
 		b3_bool hasFirst = false;
+		int     ino = 1;
 
 		try
 		{
-			img.b3LoadImage(argv[i]);
+			img.b3LoadImage(entry->b3Name());
 			img.b3MirrorVertical();
 			hasFirst = true;
 		}
 		catch(b3TxException &t)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"Image error when processing image %s!\n", argv[i]);
+			b3PrintF(B3LOG_NORMAL,"Image error when processing image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", t.b3GetError());
 			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", t.b3GetErrorMsg());
 		}
 		catch(b3ExceptionBase &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"General Blizzard III error on image %s!\n", argv[i]);
+			b3PrintF(B3LOG_NORMAL,"General Blizzard III error on image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", e.b3GetError());
 			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", e.b3GetErrorMsg());
 		}
 		catch(...)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n",argv[i]);
+			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n",entry->b3Name());
 		}
 
 		if (hasFirst)
@@ -180,12 +224,12 @@ int main(int argc,char *argv[])
 				error = encore(encoding.handle,ENC_OPT_ENCODE,&frame,&result);
 				if (error != ENC_OK)
 				{
-					fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n",error,i-2);
+					fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n", error, ino);
 				}
 				else
 				{
 					AVI_write_frame(out,bitstream,frame.length,0);
-					b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",argv[i],frame.length);
+					b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",entry->b3Name(),frame.length);
 					b3PrintF(B3LOG_NORMAL,".");
 				}
 #endif
@@ -193,8 +237,9 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
-			b3PrintF(B3LOG_NORMAL, "Ignoring image %s\n", argv[i]);
+			b3PrintF(B3LOG_NORMAL, "Ignoring image %s\n", entry->b3Name());
 		}
+		ino++;
 	}
 
 #ifdef BLZ3_USE_DIVX4LINUX

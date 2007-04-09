@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	TestImage.cc $
+**	$Filename:	bimg3.cc $
 **	$Release:	Dortmund 2001-2007 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Testing image loading and displaying
+**	Blizzard III - Image loading and displaying
 **
 **      (C) Copyright 2001-2007  Steffen A. Mork
 **          All Rights Reserved
@@ -157,7 +157,10 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s {Image files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"%s [-f][-d] {Image files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n", __DATE__, __TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
