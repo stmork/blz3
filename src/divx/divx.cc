@@ -140,6 +140,7 @@ int main(int argc,char *argv[])
 	memset(&frame,   0,sizeof(frame));
 #endif
 
+	list.b3Sort();
 	for (entry = list.b3First();entry != null;entry = entry->Succ)
 	{
 		b3Tx    img;
