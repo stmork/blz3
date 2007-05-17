@@ -80,10 +80,10 @@ void b3InfoTGA::b3Write()
 					i++;
 				}
 
-				m_SaveData[0] = 128 | i;
-				m_SaveData[1] = a;
-				m_SaveData[2] = a >>  8;
-				m_SaveData[3] = a >> 16;
+				m_SaveData[0] = 128 | (i & 0x7f);
+				m_SaveData[1] =  a        & 0xff;
+				m_SaveData[2] = (a >>  8) & 0xff;
+				m_SaveData[3] = (a >> 16) & 0xff;
 				m_File.b3Write(m_SaveData,4);
 			}
 			else
@@ -101,9 +101,9 @@ void b3InfoTGA::b3Write()
 				while (i!=0)
 				{
 					a = m_ThisRow[t++];
-					m_SaveData[0] = a;
-					m_SaveData[1] = a >>  8;
-					m_SaveData[2] = a >> 16;
+					m_SaveData[1] =  a        & 0xff;
+					m_SaveData[2] = (a >>  8) & 0xff;
+					m_SaveData[3] = (a >> 16) & 0xff;
 					m_File.b3Write (m_SaveData,3);
 					i--;
 				}

@@ -967,6 +967,7 @@
 #define IDS_BBOX_UNNAMED                60224
 #define IDS_BUMP_OCEANWAVE              60225
 #define IDS_BUMP_OCEAN                  60226
+#define IDS_ERR_COLORDEPTH              60227
 
 // Next default values for new objects
 // 

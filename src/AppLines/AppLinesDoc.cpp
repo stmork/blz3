@@ -1194,7 +1194,7 @@ void CAppLinesDoc::OnObjectSave()
 
 			app->b3WriteBBox(selected,result);
 
-			tx.b3AllocTx(120,120,24);
+			tx.b3AllocTx(120,120,128);
 			display = new b3Display(&tx);
 			scene = b3ExampleScene::b3CreateBBox(selected,m_Scene->b3GetClassType());
 			scene->b3GetSuperSample();
@@ -1207,7 +1207,7 @@ void CAppLinesDoc::OnObjectSave()
 		}
 		catch(b3TxException &t)
 		{
-			b3PrintF(B3LOG_NORMAL,"I/O ERROR: Creating object thumbnail %s from %s (code: %d)\n",
+			b3PrintF(B3LOG_NORMAL,"IMAGE ERROR: Creating object thumbnail %s from %s (code: %d)\n",
 				(const char *)result,selected->b3GetName(),t.b3GetError());
 			B3_MSG_ERROR(t);
 		}
@@ -1225,7 +1225,7 @@ void CAppLinesDoc::OnObjectSave()
 		}
 		catch(b3WorldException &w)
 		{
-			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to file %s (code: %d)\n",
+			b3PrintF(B3LOG_NORMAL,"DATA ERROR: writing object %s to file %s (code: %d)\n",
 				selected->b3GetName(),(const char *)result,w.b3GetError());
 			B3_MSG_ERROR(w);
 		}

@@ -406,6 +406,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_StepRotate.z     = 15;
 	m_Unit             = B3_UNIT_CM;
 	m_Measure          = B3_MEASURE_100;
+	m_ResizeFlag       = true;
 	m_CustomMeasure    = 100;
 	m_GridMove         = 10;
 	m_GridRot          = 15;
@@ -423,6 +424,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_GridMove     = b3InitFloat();
 	m_GridRot      = b3InitFloat();
 	m_ResizeFlag   = b3InitBool();
+	m_ResizeFlag   = true;
 	m_BBoxTitles   = b3InitBool();
 	m_GridActive   = b3InitBool();
 	m_CameraActive = b3InitBool();

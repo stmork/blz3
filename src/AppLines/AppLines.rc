@@ -4117,6 +4117,9 @@ BEGIN
     IDS_STENCIL_DIR_ANGLE   "Winkelrichtung"
     IDS_STENCIL_DIR_LENGTH  "Richtungslänge"
     IDS_STENCIL_DIR_UNIT    "rel. Richtung"
+    IDS_BBOX_UNNAMED        "Unbenannt"
+    IDS_BUMP_OCEAN          "Ozeanwellen"
+    IDS_ERR_COLORDEPTH      "Die darzustellende Ansicht hat eine falsche Farbtiefe!"
 END
 
 STRINGTABLE 
@@ -4402,12 +4405,6 @@ END
 STRINGTABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
-END
-
-STRINGTABLE 
-BEGIN
-    IDS_BBOX_UNNAMED        "Unbenannt"
-    IDS_BUMP_OCEAN          "Ozeanwellen"
 END
 
 #endif    // Deutsch (Deutschland) resources
