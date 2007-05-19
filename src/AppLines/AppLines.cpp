@@ -659,7 +659,7 @@ protected:
 };
 
 const char CAboutDlg::m_AppLinesVersionString[] = "$Revision$";
-const char CAboutDlg::m_AppLinesNameString[] = "$Name$";
+const char CAboutDlg::m_AppLinesNameString[] = "$Id$";
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {

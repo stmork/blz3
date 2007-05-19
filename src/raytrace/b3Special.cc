@@ -406,7 +406,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_StepRotate.z     = 15;
 	m_Unit             = B3_UNIT_CM;
 	m_Measure          = B3_MEASURE_100;
-	m_ResizeFlag       = true;
+	m_ResizeFlag       = true; // Not used in Blizzard III
 	m_CustomMeasure    = 100;
 	m_GridMove         = 10;
 	m_GridRot          = 15;
