@@ -34,6 +34,7 @@
 
 CPageScaling::CPageScaling() : CB3PropertyPage(CPageScaling::IDD)
 {
+	m_Scaling = null;
 	//{{AFX_DATA_INIT(CPageScaling)
 	m_ScaleMode = -1;
 	//}}AFX_DATA_INIT

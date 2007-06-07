@@ -31,18 +31,20 @@ class b3BumpSampler : public b3Sampler, protected b3_scene_preparation
 	static b3_vector             m_Light;
 
 protected:
-	      b3Tx     *m_Tx;    //!< The image to sample in.
-	      b3Bump   *m_Bump;  //!< The bump class instance to sample.
-	const b3_count  m_Tiles; //!< The horizontal tiles.
+	      b3Tx      *m_Tx;        //!< The image to sample in.
+	      b3Bump    *m_Bump;      //!< The bump class instance to sample.
+	const b3_count   m_Tiles;     //!< The horizontal tiles.
+	const b3_vector *m_BBoxSize;  //!< The bounding box dimension.
 
 public:
 	/**
 	 * This constructor initializes this instance.
 	 *
 	 * @param tx The image to sample in.
+	 * @param bbox_size The original bounding box size
 	 * @param tiles The number of tiles to use.
 	 */
-	b3BumpSampler(b3Tx *tx,const b3_count tiles = DEFAULT_BUMP_TILES);
+	b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles = DEFAULT_BUMP_TILES);
 
 	/**
 	 * This method sets the bump class instance.

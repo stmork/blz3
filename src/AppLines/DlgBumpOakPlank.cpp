@@ -32,10 +32,11 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpOakPlank::CDlgBumpOakPlank(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgBumpOakPlank::CDlgBumpOakPlank(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgBumpOakPlank::IDD, pParent)
 {
 	m_Bump                    = (b3BumpOakPlank *)item;
+	m_BBox                    = pDoc->m_BBox;
 	m_PageBump.m_Bump         = m_Bump;
 	m_PageOakPlank.m_OakPlank = m_Bump;
 	m_PageWood.m_Wood         = m_Bump;
@@ -74,7 +75,7 @@ void CDlgBumpOakPlank::b3Register()
 
 b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgBumpOakPlank dlg(item);
+	CDlgBumpOakPlank dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }
@@ -86,7 +87,7 @@ void CDlgBumpOakPlank::b3PreInitDialog()
 void CDlgBumpOakPlank::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
-	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl, &m_BBox->m_DimSize, 1);
 	m_BumpSampler->b3SetBump(m_Bump);
 
 	m_PageBump.b3AddToSheet(&m_PropertySheet);

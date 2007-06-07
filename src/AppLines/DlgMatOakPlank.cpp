@@ -32,10 +32,11 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item, CWnd* pParent /*=NULL*/)
+CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatOakPlank::IDD, pParent)
 {
 	m_Material                = (b3MatOakPlank *)item;
+	m_BBox                    = pDoc->m_BBox;
 	m_PageDark.m_Material     = &m_Material->m_DarkMaterial;
 	m_PageLight.m_Material    = &m_Material->m_LightMaterial;
 	m_PageWood.m_Wood         = m_Material;
@@ -76,7 +77,7 @@ void CDlgMatOakPlank::b3Register()
 
 b3_bool CDlgMatOakPlank::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatOakPlank dlg(item);
+	CDlgMatOakPlank dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }
@@ -88,7 +89,7 @@ void CDlgMatOakPlank::b3PreInitDialog()
 void CDlgMatOakPlank::b3PostInitDialog() 
 {
 	m_PreviewMaterialCtrl.b3Init();
-	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl,1);
+	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl, &m_BBox->m_DimSize, 1);
 	m_MatSampler->b3SetMaterial(m_Material);
 
 	m_PageDark.b3SetCaption(IDS_TITLE_DARK);

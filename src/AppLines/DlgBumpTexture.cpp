@@ -33,7 +33,7 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpTexture::CDlgBumpTexture(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
+CDlgBumpTexture::CDlgBumpTexture(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePreviewDialog(item, CDlgBumpTexture::IDD, pParent)
 {
 	m_BBox     = pDoc->m_BBox;
@@ -127,7 +127,7 @@ void CDlgBumpTexture::b3PreInitDialog()
 void CDlgBumpTexture::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
-	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl, &m_BBox->m_DimSize, 1);
 	m_BumpSampler->b3SetBump(m_Bump);
 }
 

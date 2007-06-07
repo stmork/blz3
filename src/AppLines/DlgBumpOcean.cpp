@@ -32,13 +32,14 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpOcean::CDlgBumpOcean(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgBumpOcean::CDlgBumpOcean(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgBumpOcean::IDD, pParent)
 {
-	m_Bump                    = (b3BumpOcean *)item;
-	m_PageBump.m_Bump         = m_Bump;
-	m_PageOcean.m_Ocean       = m_Bump;
-	m_PageScaling.m_Scaling   = m_Bump;
+	m_Bump                  = (b3BumpOcean *)item;
+	m_BBox                  = pDoc->m_BBox;
+	m_PageBump.m_Bump       = m_Bump;
+	m_PageOcean.m_Ocean     = m_Bump;
+	m_PageScaling.m_Scaling = m_Bump;
 	//{{AFX_DATA_INIT(CDlgBumpOceanWave)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -73,7 +74,7 @@ void CDlgBumpOcean::b3Register()
 
 b3_bool CDlgBumpOcean::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgBumpOcean dlg(item);
+	CDlgBumpOcean dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }
@@ -85,7 +86,7 @@ void CDlgBumpOcean::b3PreInitDialog()
 void CDlgBumpOcean::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
-	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl, &m_BBox->m_DimSize, 1);
 	m_BumpSampler->b3SetBump(m_Bump);
 
 	m_PageOcean.b3AddToSheet(&m_PropertySheet);

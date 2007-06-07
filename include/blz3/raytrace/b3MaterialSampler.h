@@ -30,18 +30,20 @@ class b3MaterialSampler : public b3Sampler, protected b3_scene_preparation
 	static const b3_count        DEFAULT_MATERIAL_TILES = 3;
 
 protected:
-	      b3Tx       *m_Tx;       //!< The image to sample in.
-	      b3Material *m_Material; //!< The material to sample.
-	const b3_count    m_Tiles;    //!< How many sample plains to use.
+	      b3Tx       *m_Tx;        //!< The image to sample in.
+	      b3Material *m_Material;  //!< The material to sample.
+	const b3_count    m_Tiles;     //!< How many sample plains to use.
+	const b3_vector  *m_BBoxSize;  //!< The bounding box dimension.
 
 public:
 	/**
 	 * This constructor initializes the material sampler.
 	 *
 	 * @param tx The image to sample into.
+	 * @param bbox_size The original bounding box size
 	 * @param tiles The number of intersection plains to sample.
 	 */
-	b3MaterialSampler(b3Tx *tx,const b3_count tiles = DEFAULT_MATERIAL_TILES);
+	b3MaterialSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles = DEFAULT_MATERIAL_TILES);
 
 	/** 
 	 * This method sets a material to sample.

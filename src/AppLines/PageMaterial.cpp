@@ -33,6 +33,7 @@
 
 CPageMaterial::CPageMaterial() : CB3PropertyPage(CPageMaterial::IDD)
 {
+	m_Material = null;
 	//{{AFX_DATA_INIT(CPageMaterial)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT

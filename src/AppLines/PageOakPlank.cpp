@@ -32,13 +32,14 @@
 
 CPageOakPlank::CPageOakPlank() : CB3PropertyPage(CPageOakPlank::IDD)
 {
+	m_OakPlank = null;
 	//{{AFX_DATA_INIT(CPageOakPlank)
 	//}}AFX_DATA_INIT
 	m_xScaleCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_xScaleCtrl.b3SetRange(0.0,10.0);
+	m_xScaleCtrl.b3SetRange(0.0,100.0);
 
 	m_yScaleCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_yScaleCtrl.b3SetRange(0.0,10.0);
+	m_yScaleCtrl.b3SetRange(0.0,100.0);
 	
 	m_xOffsetCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
 	m_xOffsetCtrl.b3SetRange(0.0,10.0);
@@ -71,11 +72,11 @@ void CPageOakPlank::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CPageOakPlank, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageOakPlank)
-	ON_EN_KILLFOCUS(IDC_SPIN_XSCALE, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_YSCALE, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_XOFFSET,OnEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_XTIMES, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_YTIMES, OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_XSCALE, OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_YSCALE, OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_XOFFSET,OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_XTIMES, OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_YTIMES, OnEdit)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XSCALE, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YSCALE, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XOFFSET,OnSpin)

@@ -32,10 +32,11 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpWood::CDlgBumpWood(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgBumpWood::CDlgBumpWood(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgBumpWood::IDD, pParent)
 {
 	m_Bump                  = (b3BumpWood *)item;
+	m_BBox                  = pDoc->m_BBox;
 	m_PageBump.m_Bump       = m_Bump;
 	m_PageWood.m_Wood       = m_Bump;
 	m_PageScaling.m_Scaling = m_Bump;
@@ -73,7 +74,7 @@ void CDlgBumpWood::b3Register()
 
 b3_bool CDlgBumpWood::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgBumpWood dlg(item);
+	CDlgBumpWood dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }
@@ -85,7 +86,7 @@ void CDlgBumpWood::b3PreInitDialog()
 void CDlgBumpWood::b3PostInitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
-	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl, &m_BBox->m_DimSize);
 	m_BumpSampler->b3SetBump(m_Bump);
 
 	m_PageBump.b3AddToSheet(&m_PropertySheet);

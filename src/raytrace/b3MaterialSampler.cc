@@ -31,7 +31,9 @@
 **                                                                      **
 *************************************************************************/
 
-b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_count tiles) : m_Tiles(tiles)
+b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles) :
+	m_Tiles(tiles),
+	m_BBoxSize(bbox_size)
 {
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
@@ -107,9 +109,9 @@ void b3MaterialSampler::b3SampleTask(const b3SampleInfo *info)
 			ray.polar.m_ObjectPolar.y = ray.polar.m_BoxPolar.y * 2 - 1;
 			ray.polar.m_ObjectPolar.z = 0;
 			ray.polar.m_Polar = ray.polar.m_ObjectPolar;
-			ray.ipoint.x = 100 * ray.polar.m_BoxPolar.x;
-			ray.ipoint.y = 100 * ray.polar.m_BoxPolar.y;
-			ray.ipoint.z = 100 * ray.polar.m_BoxPolar.z;
+			ray.ipoint.x = m_BBoxSize->x * ray.polar.m_BoxPolar.x;
+			ray.ipoint.y = m_BBoxSize->y * ray.polar.m_BoxPolar.y;
+			ray.ipoint.z = m_BBoxSize->z * ray.polar.m_BoxPolar.z;
 			bbox.b3ComputeBoxPolar(&ray);
 			material->b3GetSurfaceValues(&surface);
 
