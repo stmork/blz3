@@ -70,7 +70,7 @@ void b3ComplexTest::testEqual()
 void b3ComplexTest::testComplex64()
 {
 	ca = b3Complex64( 6.0, -7.0);
-	CPPUNIT_ASSERT_NO_THROW(ca.b3Square())
+	CPPUNIT_ASSERT_NO_THROW(ca.b3Square());
 	CPPUNIT_ASSERT_EQUAL( -13.0, ca.b3Real());
 	CPPUNIT_ASSERT_EQUAL( -84.0, ca.b3Imag());	
 

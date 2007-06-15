@@ -27,91 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.4  2006/04/29 11:25:50  sm
-**  - Added ocean bump to main packet.
-**  - b3Prepare signature: Added further initialization information
-**    for animation preparation
-**  - Added test module for ocean waves.
-**  - Added module for random number generation.
-**  - Adjusted material and bump sampler to reflect preparation
-**    signature change.
-**  - Added OpenGL test program for ocean waves.
-**  - Changed Phillips spectrum computation to be independent
-**    from time.
-**  - Interpolated height field for ocean waves.
-**
-**  Revision 1.3  2005/12/12 16:01:32  smork
-**  - Some more const correction in samplers.
-**
-**  Revision 1.2  2004/11/29 09:58:01  smork
-**  - Changed exit states to correct defines.
-**  - Added switch for disabling VBO in OpenGL renderer.
-**  - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**  Revision 1.1  2004/06/25 11:25:34  sm
-**  - Added pure wooden sampler.
-**
-**  Revision 1.13  2004/05/16 18:50:59  sm
-**  - Added new simple image sampler.
-**  - We need better water!
-**
-**  Revision 1.12  2004/05/13 17:11:35  sm
-**  - Fixed make tar bug
-**
-**  Revision 1.11  2004/04/25 16:22:40  sm
-**  - Added some colors for convenience.
-**  - Added some initial values to materials.
-**
-**  Revision 1.10  2004/04/19 10:13:37  sm
-**  - Adjusted oak plank.
-**
-**  Revision 1.9  2004/04/19 09:00:52  sm
-**  - Added bump sampler.
-**  - Reactivated bump sampler in bump dialogs.
-**
-**  Revision 1.8  2004/04/11 14:05:11  sm
-**  - Raytracer redesign:
-**    o The reflection/refraction/ior/specular exponent getter
-**      are removed. The values are copied via the b3GetColors()
-**      method.
-**    o The polar members are renamed.
-**    o The shape/bbox pointers moved into the ray structure
-**  - Introduced wood bump mapping.
-**
-**  Revision 1.7  2004/04/10 13:45:30  sm
-**  - Added wooden oak planks.
-**
-**  Revision 1.6  2004/04/09 14:11:58  sm
-**  - Removed CRs
-**
-**  Revision 1.5  2004/04/09 11:09:01  sm
-**  - Removed any display reference from sampler
-**
-**  Revision 1.4  2004/04/09 08:49:16  sm
-**  - Splitted up sampler for Lines use and capable for
-**    using other metherials.
-**
-**  Revision 1.3  2004/04/08 14:34:42  sm
-**  - Multithreading support for wood example.
-**
-**  Revision 1.2  2004/04/06 12:17:46  sm
-**  - Optimized some noise methods.
-**
-**  Revision 1.1  2004/04/05 09:16:03  sm
-**  - Added test wood for Lines wood dialog
-**  - Optimized noise a little bit.
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TestWood implementation                     **
 **                                                                      **
 *************************************************************************/
@@ -119,10 +34,17 @@
 #define WOOD_RES   400
 #define no_CREATE_ICON
 
+static b3_vector scale =
+{
+  1.0,
+  1.0,
+  1.0
+};
+
 class b3MatWoodSampler : public b3MaterialSampler
 {
 public:
-	b3MatWoodSampler(b3Tx *tx) : b3MaterialSampler(tx)
+	b3MatWoodSampler(b3Tx *tx) : b3MaterialSampler(tx, &scale)
 	{
 		// Init material
 		m_Material = new b3MatWood(WOOD);
@@ -138,7 +60,7 @@ public:
 class b3MatOakPlankSampler : public b3MaterialSampler
 {
 public:
-	b3MatOakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx,1)
+	b3MatOakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx, &scale, 1)
 	{
 		b3MatOakPlank *material = new b3MatOakPlank(OAKPLANK);
 
@@ -167,7 +89,7 @@ public:
 class b3BumpWoodSampler : public b3BumpSampler
 {
 public:
-	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx,1)
+	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx, &scale, 1)
 	{
 		// Init material
 		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
@@ -183,7 +105,7 @@ public:
 class b3BumpOakPlankSampler : public b3BumpSampler
 {
 public:
-	b3BumpOakPlankSampler(b3Tx *tx) : b3BumpSampler(tx,1)
+	b3BumpOakPlankSampler(b3Tx *tx) : b3BumpSampler(tx, &scale, 1)
 	{
 		b3BumpOakPlank *bump = new b3BumpOakPlank(BUMP_OAKPLANK);
 
