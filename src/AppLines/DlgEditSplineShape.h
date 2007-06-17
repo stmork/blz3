@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	DlgCreateTriangles.h $
-**	$Release:	Dortmund 2002 $
+**	$Filename:	DlgEditTriangles.h $
+**	$Release:	Dortmund 2007 $
 **	$Revision: 308 $
-**	$Date: 2002-03-10 21:34:18 +0100 (So, 10 Mrz 2002) $
+**	$Id:$
 **	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Dialog for creating spline shapes
+**	Blizzard III - Dialog for editing spline shapes
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved

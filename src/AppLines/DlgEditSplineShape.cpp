@@ -1,15 +1,15 @@
 /*
 **
-**	$Filename:	DlgCreateSplineShape.cpp $
-**	$Release:	Dortmund 2002 $
+**	$Filename:	DlgEditSplineShape.cpp $
+**	$Release:	Dortmund 2007 $
 **	$Revision: 1447 $
-**	$Date: 2006-06-28 18:35:42 +0200 (Mi, 28 Jun 2006) $
+**	$Id:$
 **	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Dialog for creating spline shapes
+**	Blizzard III - Dialog for editing spline shapes
 **
-**	(C) Copyright 2002  Steffen A. Mork
+**	(C) Copyright 2007  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
