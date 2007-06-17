@@ -2,9 +2,9 @@
 **
 **      $Filename:      b3Config.c $
 **      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
+**      $Revision: 1480 $
+**      $Date: 2007-01-04 12:19:14 +0100 (Do, 04 Jan 2007) $
+**      $Author: sm $
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - basic platform configuration

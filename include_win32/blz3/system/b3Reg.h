@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Reg.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1025 $
+**	$Date: 2005-01-09 16:04:30 +0100 (So, 09 Jan 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - registry prototypes

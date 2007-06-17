@@ -2,9 +2,9 @@
 **
 **	$Filename:	BumpOceanWave $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1467 $
+**	$Date: 2006-10-22 11:26:47 +0200 (So, 22 Okt 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Ozeanwellen

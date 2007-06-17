@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Special.h $ 
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1488 $
+**	$Date: 2007-04-09 14:38:39 +0200 (Mo, 09 Apr 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing class definitions for specials

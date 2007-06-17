@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgSearchPathList.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 168 $
+**	$Date: 2001-12-01 18:48:42 +0100 (Sa, 01 Dez 2001) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Changing path list

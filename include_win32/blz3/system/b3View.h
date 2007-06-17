@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3View.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1426 $
+**	$Date: 2006-05-23 22:23:42 +0200 (Di, 23 Mai 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - viewing routines (proto types)

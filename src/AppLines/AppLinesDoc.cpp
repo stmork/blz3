@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppLinesDoc.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1490 $
+**	$Date: 2007-05-17 17:20:35 +0200 (Do, 17 Mai 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CDocument part for scenes

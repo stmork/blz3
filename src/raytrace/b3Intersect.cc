@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Intersect.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1476 $
+**	$Date: 2007-01-01 17:48:24 +0100 (Mo, 01 Jan 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Intersection routines

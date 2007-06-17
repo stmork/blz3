@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Special.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1491 $
+**	$Date: 2007-05-19 12:58:39 +0200 (Sa, 19 Mai 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing special features

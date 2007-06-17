@@ -2,8 +2,8 @@
 **
 **      $Filename:      TestIo.cc $
 **      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
+**      $Revision: 1408 $
+**      $Date: 2006-05-18 12:06:42 +0200 (Do, 18 Mai 2006) $
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Test routines

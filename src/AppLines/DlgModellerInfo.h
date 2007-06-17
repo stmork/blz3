@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgModellerInfo.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1488 $
+**	$Date: 2007-04-09 14:38:39 +0200 (Mo, 09 Apr 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for defining geometry wide values

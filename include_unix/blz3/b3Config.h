@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Config.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1393 $
+**	$Date: 2006-05-12 16:24:23 +0200 (Fr, 12 Mai 2006) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - System configuration

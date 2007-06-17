@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgItemMaintain.h $
 **	$Release:	Dortmund 2003 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1089 $
+**	$Date: 2005-05-13 17:33:54 +0200 (Fr, 13 Mai 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Maintaining an item list

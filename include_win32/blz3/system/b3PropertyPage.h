@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3PropertyPage.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1466 $
+**	$Date: 2006-10-21 11:46:30 +0200 (Sa, 21 Okt 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Base class for property page dialog

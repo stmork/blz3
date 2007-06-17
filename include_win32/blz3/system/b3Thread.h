@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Thread.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1327 $
+**	$Date: 2006-02-18 23:02:23 +0100 (Sa, 18 Feb 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Multithreading routines (for generating dead locks)

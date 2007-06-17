@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3CPUBase.h $
 **	$Release:	Dortmund 2003 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1297 $
+**	$Date: 2005-10-23 14:30:30 +0200 (So, 23 Okt 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CPU information (Un*x)

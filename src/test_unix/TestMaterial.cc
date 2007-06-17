@@ -2,9 +2,9 @@
 **
 **	$Filename:	TestMaterial.cc $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1366 $
+**	$Date: 2006-04-29 13:25:50 +0200 (Sa, 29 Apr 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - constructing some example materials

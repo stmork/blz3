@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3TxTIFF.h $
 **	$Release:	Dortmund 2005 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1239 $
+**	$Date: 2005-08-11 15:37:29 +0200 (Do, 11 Aug 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - TIFF classes

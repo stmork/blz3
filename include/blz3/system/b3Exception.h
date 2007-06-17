@@ -2,9 +2,9 @@
 **
 **	$Filename:  b3Exception.h $
 **	$Release:   Dortmund 2001, 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1460 $
+**	$Date: 2006-09-01 22:43:12 +0200 (Fr, 01 Sep 2006) $
+**	$Author: sm $
 **	$Developer: Steffen A. Mork $
 **
 **	Blizzard III - Exception template

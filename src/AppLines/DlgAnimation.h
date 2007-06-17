@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgAnimation.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1410 $
+**	$Date: 2006-05-18 16:13:44 +0200 (Do, 18 Mai 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for b3Animation properties

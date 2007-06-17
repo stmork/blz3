@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgLight.cpp $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1438 $
+**	$Date: 2006-06-01 16:17:24 +0200 (Do, 01 Jun 2006) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Light properties

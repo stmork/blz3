@@ -2,11 +2,11 @@
 **
 **      $Filename:      b3DisplayView.cc $
 **      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
+**      $Revision: 1454 $
+**      $Date: 2006-07-02 10:10:09 +0200 (So, 02 Jul 2006) $
+**      $Author: smork $
 **      $Developer:     Steffen A. Mork $
-**      $Id$
+**      $Id: b3DisplayView.cc 1454 2006-07-02 08:10:09Z smork $
 **
 **      Blizzard III - Controlling a color display
 **

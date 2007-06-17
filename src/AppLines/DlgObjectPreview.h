@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgObjectPreview.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1341 $
+**	$Date: 2006-03-19 15:47:18 +0100 (So, 19 Mrz 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Preview actual object editing

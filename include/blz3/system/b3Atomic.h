@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Atomic.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1231 $
+**	$Date: 2005-08-10 12:32:08 +0200 (Mi, 10 Aug 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Atomic counter class

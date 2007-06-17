@@ -1,4 +1,4 @@
-/* $Id$ */
+/* $Id: tif_ojpeg.c 1151 2005-06-09 12:10:27Z smork $ */
 
 #include "tiffiop.h"
 #ifdef OJPEG_SUPPORT

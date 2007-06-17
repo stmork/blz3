@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SelectObject.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 479 $
+**	$Date: 2003-02-09 14:58:14 +0100 (So, 09 Feb 2003) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Selecting an object

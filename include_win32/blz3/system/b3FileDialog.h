@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FileDialog.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 316 $
+**	$Date: 2002-04-09 09:24:19 +0200 (Di, 09 Apr 2002) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - New Windows 2000 place bar file dialog

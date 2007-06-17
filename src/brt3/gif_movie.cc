@@ -2,9 +2,9 @@
 **
 **	$Filename:	gif_movie.cc $  
 **	$Release:	Dortmund 1997, 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1473 $
+**	$Date: 2006-12-30 14:00:32 +0100 (Sa, 30 Dez 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Insert delay for movie playing.

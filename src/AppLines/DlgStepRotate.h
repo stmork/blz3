@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgFulcrum.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1052 $
+**	$Date: 2005-01-23 20:54:07 +0100 (So, 23 Jan 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Setting angle steps

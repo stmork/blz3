@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Compare.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1388 $
+**	$Date: 2006-05-11 17:34:23 +0200 (Do, 11 Mai 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - some comparator definitions

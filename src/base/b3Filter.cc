@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Filter.cc $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1450 $
+**	$Date: 2006-06-28 19:48:22 +0200 (Mi, 28 Jun 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Some filter methods

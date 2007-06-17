@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3VectorEdit.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1339 $
+**	$Date: 2006-03-13 00:20:38 +0100 (Mo, 13 Mrz 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Group CB3FloatEdits to a vector group

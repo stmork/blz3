@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3CPU.cc $
 **	$Release:	Dortmund 2005 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1463 $
+**	$Date: 2006-10-07 20:33:54 +0200 (Sa, 07 Okt 2006) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III CPU info

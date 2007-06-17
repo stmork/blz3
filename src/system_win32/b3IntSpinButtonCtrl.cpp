@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3IntSpinButtonCtrl.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1447 $
+**	$Date: 2006-06-28 18:35:42 +0200 (Mi, 28 Jun 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Spin button control for int values

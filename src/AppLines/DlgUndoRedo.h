@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgUndoRedo.h $
 **	$Release:	Dortmund 2003 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 473 $
+**	$Date: 2003-02-01 13:57:17 +0100 (Sa, 01 Feb 2003) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for Undo/Redo selection

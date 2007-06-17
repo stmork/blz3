@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppLinesView.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 498 $
+**	$Date: 2003-03-04 21:37:39 +0100 (Di, 04 Mrz 2003) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CView part for scenes

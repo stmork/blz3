@@ -2,9 +2,9 @@
 **
 **      $Filename:      Mandel.cc $
 **      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
+**      $Revision: 980 $
+**      $Date: 2004-11-29 10:58:01 +0100 (Mo, 29 Nov 2004) $
+**      $Author: smork $
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - computing Mandelbrot set

@@ -3,9 +3,9 @@
 
 $Archive: /MfcExt/Source/CoolControlsManager.cpp $
 $Workfile: CoolControlsManager.cpp $
-$Author$
-$Date$
-$Revision$
+$Author: sm $
+$Date: 2001-08-11 17:59:59 +0200 (Sa, 11 Aug 2001) $
+$Revision: 54 $
 
 *******************************************************************/
 

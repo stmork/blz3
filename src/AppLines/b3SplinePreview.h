@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SplinePreview.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 302 $
+**	$Date: 2002-03-05 21:38:25 +0100 (Di, 05 Mrz 2002) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Image file select dialog box

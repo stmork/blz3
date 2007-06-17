@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ControlLDC.h $  
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 823 $
+**	$Date: 2004-07-27 21:05:59 +0200 (Di, 27 Jul 2004) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Controlling the LDC of a light source

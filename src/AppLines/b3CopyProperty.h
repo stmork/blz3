@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3CopyProperty.h $
 **	$Release:	Dortmund 2005 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1092 $
+**	$Date: 2005-05-15 08:53:23 +0200 (So, 15 Mai 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Select shape property copy modes

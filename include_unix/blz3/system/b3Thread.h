@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Thread.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1456 $
+**	$Date: 2006-08-21 17:56:28 +0200 (Mo, 21 Aug 2006) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Multithreading control

@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgMatGranite.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1431 $
+**	$Date: 2006-05-27 15:32:22 +0200 (Sa, 27 Mai 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Granite material

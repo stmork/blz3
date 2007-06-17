@@ -1,4 +1,4 @@
-/* $Id$ */
+/* $Id: tif_jpeg.c 1151 2005-06-09 12:10:27Z smork $ */
 
 /*
  * Copyright (c) 1994-1997 Sam Leffler

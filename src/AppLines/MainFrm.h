@@ -2,9 +2,9 @@
 **
 **	$Filename:	MainFrm.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1437 $
+**	$Date: 2006-05-31 19:29:09 +0200 (Mi, 31 Mai 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Lines MainFrame windows

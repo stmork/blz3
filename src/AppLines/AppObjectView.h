@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppObjectView.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 944 $
+**	$Date: 2004-10-16 19:00:52 +0200 (Sa, 16 Okt 2004) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CView part for objects

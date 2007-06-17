@@ -2,9 +2,9 @@
 **
 **	$Filename:	TestWood.cc $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1314 $
+**	$Date: 2005-12-12 17:01:32 +0100 (Mo, 12 Dez 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Displaying Wood

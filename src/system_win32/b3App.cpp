@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3App.cpp $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1483 $
+**	$Date: 2007-02-18 10:49:58 +0100 (So, 18 Feb 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - application base class

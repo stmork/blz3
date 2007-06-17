@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Water.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1366 $
+**	$Date: 2006-04-29 13:25:50 +0200 (Sa, 29 Apr 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Simple water surface bump map

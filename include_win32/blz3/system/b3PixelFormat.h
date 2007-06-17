@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3PixelFormat.h $
 **	$Release:	Dortmund 2003 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1046 $
+**	$Date: 2005-01-18 12:49:05 +0100 (Di, 18 Jan 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - maintainance of pixel format descriptors

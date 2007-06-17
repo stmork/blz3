@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgMatWood.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1492 $
+**	$Date: 2007-06-07 11:33:07 +0200 (Do, 07 Jun 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog with preview and property sheet

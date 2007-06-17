@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Locale.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1322 $
+**	$Date: 2006-02-05 19:57:14 +0100 (So, 05 Feb 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Locale routines (proto types)

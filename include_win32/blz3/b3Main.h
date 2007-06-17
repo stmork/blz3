@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Main.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 25 $
+**	$Date: 2001-07-08 14:30:07 +0200 (So, 08 Jul 2001) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III  main callback

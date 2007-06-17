@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppLines.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1357 $
+**	$Date: 2006-04-18 22:20:59 +0200 (Di, 18 Apr 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Lines application

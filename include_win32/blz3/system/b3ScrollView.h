@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ScrollView.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 379 $
+**	$Date: 2002-08-14 18:48:49 +0200 (Mi, 14 Aug 2002) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - scroll view control through Blizzard III

@@ -2,9 +2,9 @@
 **
 **	$Filename:	TestSampler.cc $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1493 $
+**	$Date: 2007-06-15 14:25:44 +0200 (Fr, 15 Jun 2007) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Displaying Wood

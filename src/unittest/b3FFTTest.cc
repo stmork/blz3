@@ -2,8 +2,8 @@
 **
 **	$Filename:	b3FFTTest.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
+**	$Revision: 1475 $
+**	$Date: 2007-01-01 14:04:37 +0100 (Mo, 01 Jan 2007) $
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - FFT unit test.

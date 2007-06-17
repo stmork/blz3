@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3DashPen.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 280 $
+**	$Date: 2002-02-13 21:13:13 +0100 (Mi, 13 Feb 2002) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Creating a dashed CPen

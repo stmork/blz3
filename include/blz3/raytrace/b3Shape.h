@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Shape.h $ 
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1494 $
+**	$Date: 2007-06-17 15:14:01 +0200 (So, 17 Jun 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing class definitions for shapes

@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SearchPath.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1234 $
+**	$Date: 2005-08-10 17:09:04 +0200 (Mi, 10 Aug 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Search path routines

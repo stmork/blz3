@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgObjectTransformMode.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 755 $
+**	$Date: 2004-05-28 17:32:06 +0200 (Fr, 28 Mai 2004) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for selecting transform when

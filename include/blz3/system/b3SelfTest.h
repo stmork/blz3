@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SelfTest.h $
 **	$Release:	Dortmund 2005 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1216 $
+**	$Date: 2005-08-07 15:03:48 +0200 (So, 07 Aug 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Some basic self testing for platform compatibility tests.

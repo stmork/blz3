@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FileMem.cc $  
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1450 $
+**	$Date: 2006-06-28 19:48:22 +0200 (Mi, 28 Jun 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Memory file access routines

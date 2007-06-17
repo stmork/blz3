@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgDistributed.cpp $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1334 $
+**	$Date: 2006-03-05 23:12:33 +0100 (So, 05 Mrz 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for b3Distributed properties

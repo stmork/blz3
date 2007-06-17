@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ImagePreviewFileDlg.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1042 $
+**	$Date: 2005-01-16 18:30:23 +0100 (So, 16 Jan 2005) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Image file select dialog box

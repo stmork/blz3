@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Error.h $
 **	$Release:	Dortmund 2005 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1220 $
+**	$Date: 2005-08-08 10:59:05 +0200 (Mo, 08 Aug 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Maintain system error code and error string

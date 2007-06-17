@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3RayRow.cc $
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1458 $
+**	$Date: 2006-08-27 22:37:42 +0200 (So, 27 Aug 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing row processing

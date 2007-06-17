@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ExampleScene.h $  
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1023 $
+**	$Date: 2005-01-07 13:38:51 +0100 (Fr, 07 Jan 2005) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - constructing simple scenes

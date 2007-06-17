@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FloatEdit.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1433 $
+**	$Date: 2006-05-28 18:29:09 +0200 (So, 28 Mai 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Editing a floating point number

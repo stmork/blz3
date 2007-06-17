@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgBumpOceanWave.cpp $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1492 $
+**	$Date: 2007-06-07 11:33:07 +0200 (Do, 07 Jun 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Ocean wave bump map

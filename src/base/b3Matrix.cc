@@ -3,8 +3,8 @@
 **	$Filename:	b3Matrix.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision: 2.02 
-**	$Date$
-**	$Author$
+**	$Date: 2006-06-28 19:48:22 +0200 (Mi, 28 Jun 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - vector and matrix methods

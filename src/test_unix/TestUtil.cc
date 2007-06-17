@@ -2,8 +2,8 @@
 **
 **      $Filename:      TestUtil.cc $
 **      $Release:       Dortmund 2002 $
-**      $Revision$
-**      $Date$
+**      $Revision: 1111 $
+**      $Date: 2005-05-31 21:06:24 +0200 (Di, 31 Mai 2005) $
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Test routines for b3Hash

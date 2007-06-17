@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3TreeCtrl.h $  
 **	$Release:	Dortmund 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 267 $
+**	$Date: 2002-02-01 16:04:09 +0100 (Fr, 01 Feb 2002) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - TreeCtrl handling

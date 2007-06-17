@@ -3,8 +3,8 @@
 **	$Filename:	b3DisplayView.h   $
 **	$Release:	Dortmund 2001, 2002 $
 **	$Revision:	1.07 
-**	$Date$
-**	$Author$
+**	$Date: 2006-07-02 10:10:09 +0200 (So, 02 Jul 2006) $
+**	$Author: smork $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Display Hardware Routines

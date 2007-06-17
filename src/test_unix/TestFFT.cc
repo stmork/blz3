@@ -2,9 +2,9 @@
 **
 **	$Filename:	TestFFT.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1486 $
+**	$Date: 2007-04-08 13:15:28 +0200 (So, 08 Apr 2007) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Testing FFT

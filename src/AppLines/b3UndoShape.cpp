@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3UndoShape.cpp
 **	$Release:	Dortmund 2005 $
-**	$Revision$
-**	$Date$
-**	$Author$
+**	$Revision: 1448 $
+**	$Date: 2006-06-28 19:07:36 +0200 (Mi, 28 Jun 2006) $
+**	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Undo/Redo for shape handling

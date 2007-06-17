@@ -2,10 +2,10 @@
 **
 **	$Filename:	AppLines.cpp $
 **	$Release:	Dortmund 2001, 2002 $
-**	$Revision$
-**	$Date$
-**	$Author$
-**	$Id$
+**	$Revision: 1491 $
+**	$Date: 2007-05-19 12:58:39 +0200 (Sa, 19 Mai 2007) $
+**	$Author: sm $
+**	$Id: AppLines.cpp 1491 2007-05-19 10:58:39Z sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Lines application
@@ -658,8 +658,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-const char CAboutDlg::m_AppLinesVersionString[] = "$Revision$";
-const char CAboutDlg::m_AppLinesNameString[] = "$Id$";
+const char CAboutDlg::m_AppLinesVersionString[] = "$Revision: 1491 $";
+const char CAboutDlg::m_AppLinesNameString[] = "$Id: AppLines.cpp 1491 2007-05-19 10:58:39Z sm $";
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {

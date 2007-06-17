@@ -3,7 +3,7 @@
 **	$Filename:	DlgEditSplineShape.cpp $
 **	$Release:	Dortmund 2007 $
 **	$Revision: 1447 $
-**	$Id:$
+**	$Date$
 **	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
