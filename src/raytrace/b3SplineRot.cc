@@ -168,7 +168,7 @@ b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info *prep_info) throw(b3Worl
 	/* initializing values */
 	m_xSize = xSize;
 	m_ySize = MySpline.m_SubDiv;
-	m_Flags = PHONG;
+	m_Flags = B3_PHONG;
 
 	return b3TriangleShape::b3Prepare(prep_info);
 }

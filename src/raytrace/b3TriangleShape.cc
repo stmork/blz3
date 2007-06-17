@@ -290,11 +290,11 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info *prep_info)
 			
 			m_TriaInfos.b3Add(info);
 
-			if ((m_Flags & NORMAL_FACE_VALID)==0)
+			if ((m_Flags & B3_NORMAL_FACE_VALID)==0)
 			{
 				disp = m_Triangles[i].Normal = info.Normal;
 
-				if ((m_Flags & NORMAL_VERTEX_VALID)==0)
+				if ((m_Flags & B3_NORMAL_VERTEX_VALID)==0)
 				{
 #ifdef NORMAL_NORMALIZED
 					b3Vector::b3Normalize(&disp);
@@ -311,7 +311,7 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info *prep_info)
 		{
 			b3Vector::b3AdjustBound(&m_Vertices[i].Point,&Start,&End);
 
-			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
+			if ((m_Flags & B3_NORMAL_VERTEX_VALID)==0)
 			{
 				b3Vector::b3Normalize(&m_Vertices[i].Normal);
 			}

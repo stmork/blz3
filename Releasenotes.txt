@@ -19,3 +19,5 @@ Version 2.99.2.20
 
 Version 2.99.2.21
 - Fixed toolbar position saving.
+- Fixed wood scaling input update.
+- Corrected preview sampler.

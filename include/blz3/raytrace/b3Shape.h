@@ -820,9 +820,9 @@ protected:
 *************************************************************************/
 
 // normal interpolation defines
-#define PHONG                   (1 << b3TriangleShape::B3_PHONG_B)     // use Phong interpolation
-#define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
-#define NORMAL_FACE_VALID       (1 << b3TriangleShape::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
+#define B3_PHONG                   (1 << b3TriangleShape::B3_PHONG_B)     // use Phong interpolation
+#define B3_NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
+#define B3_NORMAL_FACE_VALID       (1 << b3TriangleShape::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
 
 // Voxel index inside grid
 #define GRID_INDEX(x,y,z,g) (((z) * (g) + (y)) * (g) + (x))
@@ -902,6 +902,16 @@ public:
 	        void    b3Normal(b3_ray *ray);
 	virtual b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
+
+	inline  b3_bool b3GetFlag(b3_u32 flag)
+	{
+		return (m_Flags & flag) != 0;
+	}
+
+	inline void     b3SetFlag(b3_u32 flag, b3_bool state)
+	{
+		m_Flags = (m_Flags & (~flag)) | (state ? flag : 0);
+	}
 
 protected:
 	/**

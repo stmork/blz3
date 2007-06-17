@@ -584,7 +584,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			b3PrintF (B3LOG_FULL,"%ld triangles expected, %ld triangles counted.\n",faces,dbgCount);
 #endif
 #endif
-			TriaShape->m_Flags = PHONG;
+			TriaShape->m_Flags = B3_PHONG;
 		}
 	}
 	return size;

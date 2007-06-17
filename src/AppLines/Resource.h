@@ -105,9 +105,12 @@
 #define IDD_UNDO_REDO                   674
 #define IDD_MAT_CAR_PAINT               675
 #define IDD_BUMP_OCEANWAVE              676
-#define IDD_BUMP_OCEAN                  676
-#define IDD_PAGE_OCEANWAVE              677
-#define IDD_PAGE_OCEAN                  677
+#define IDD_BUMP_OCEAN                  677
+#define IDD_PAGE_OCEANWAVE              678
+#define IDD_PAGE_OCEAN                  679
+#define IDD_EDIT_ROTSHAPE               680
+#define IDD_EDIT_TRIANGLES              681
+#define IDD_EDIT_SPLINESHAPE            682
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -974,7 +977,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        125
+#define _APS_NEXT_RESOURCE_VALUE        127
 #define _APS_NEXT_COMMAND_VALUE         10128
 #define _APS_NEXT_CONTROL_VALUE         32441
 #define _APS_NEXT_SYMED_VALUE           60227

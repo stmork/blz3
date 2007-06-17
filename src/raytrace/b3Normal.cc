@@ -121,7 +121,7 @@ void b3TriangleShape::b3Normal(b3_ray *ray)
 	b3_f64   a,b;
 	b3_index P1,P2,P3;
 
-	if (m_Flags & PHONG)
+	if (m_Flags & B3_PHONG)
 	{
 		b3_vector dir1, dir2;
 

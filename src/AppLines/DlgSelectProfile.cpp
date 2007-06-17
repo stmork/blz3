@@ -27,6 +27,9 @@
 #include "DlgCreateTriangles.h"
 #include "DlgCreateRotShape.h"
 #include "DlgCreateSplineShape.h"
+#include "DlgEditTriangles.h"
+#include "DlgEditRotShape.h"
+#include "DlgEditSplineShape.h"
 #include "b3Profile.h"
 
 /*************************************************************************
@@ -70,9 +73,12 @@ END_MESSAGE_MAP()
 int CDlgSelectProfile::b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create)
 {
 	CDlgSelectProfile      dlg;
-	CDlgCreateTriangles    dlg_triangles;
-	CDlgCreateRotShape     dlg_rot_shape;
-	CDlgCreateSplineShape  dlg_spline_shape;
+	CDlgCreateTriangles    dlg_create_triangles;
+	CDlgCreateRotShape     dlg_create_rotshape;
+	CDlgCreateSplineShape  dlg_create_spline_shape;
+	CDlgEditTriangles      dlg_edit_triangles;
+	CDlgEditRotShape       dlg_edit_rotshape;
+	CDlgEditSplineShape    dlg_edit_spline_shape;
 	CB3ShapeDialog        *page = null;
 	int                    result;
 
@@ -91,17 +97,17 @@ int CDlgSelectProfile::b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool cr
 				switch(item->b3GetClassType())
 				{
 				case TRIANGLES:
-					page = &dlg_triangles;
+					page = &dlg_create_triangles;
 					break;
 
 				case SPLINE_ROT:
-					page = &dlg_rot_shape;
+					page = &dlg_create_rotshape;
 					break;
 
 				case SPLINES_AREA:
 				case SPLINES_CYL:
 				case SPLINES_RING:
-					page = &dlg_spline_shape;
+					page = &dlg_create_spline_shape;
 					break;
 				}
 				break;
@@ -113,17 +119,17 @@ int CDlgSelectProfile::b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool cr
 		switch (item->b3GetClassType())
 		{
 		case TRIANGLES:
-			page = null;
+			page = &dlg_edit_triangles;
 			break;
 
 		case SPLINE_ROT:
-			page = null;
+			page = &dlg_edit_rotshape;
 			break;
 
 		case SPLINES_AREA:
 		case SPLINES_CYL:
 		case SPLINES_RING:
-			page = null;
+			page = &dlg_edit_spline_shape;
 			break;
 		}
 	}

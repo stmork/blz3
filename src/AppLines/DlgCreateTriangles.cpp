@@ -113,12 +113,12 @@ void CDlgCreateTriangles::b3PostProcess()
 {
 	CB3App      *app = CB3GetApp();
 	b3Triangles *shape = (b3Triangles *)m_Shape;
-	b3_vertex    *vertex;
-	b3_triangle  *tria;
-	b3_index      index = 0;
-	b3_count      VertexCount,TriaCount;
-	b3_coord      x,y;
-	b3_res        xCount,yCount;
+	b3_vertex   *vertex;
+	b3_triangle *tria;
+	b3_index     index = 0;
+	b3_count     VertexCount,TriaCount;
+	b3_coord     x,y;
+	b3_res       xCount,yCount;
 
 	CB3ShapeDialog::b3PostProcess();
 
@@ -178,6 +178,7 @@ void CDlgCreateTriangles::b3PostProcess()
 		}
 		index += xCount;
 	}
+	shape->b3SetFlag(B3_PHONG, m_Phong);
 }
 
 void CDlgCreateTriangles::OnHorzClosed() 

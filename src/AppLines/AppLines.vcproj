@@ -3994,6 +3994,15 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DlgEditRotShape.cpp">
+			</File>
+			<File
+				RelativePath=".\DlgEditSplineShape.cpp">
+			</File>
+			<File
+				RelativePath=".\DlgEditTriangles.cpp">
+			</File>
+			<File
 				RelativePath="DlgFulcrum.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -6624,6 +6633,15 @@
 			</File>
 			<File
 				RelativePath="DlgDistributed.h">
+			</File>
+			<File
+				RelativePath=".\DlgEditRotShape.h">
+			</File>
+			<File
+				RelativePath=".\DlgEditSplineShape.h">
+			</File>
+			<File
+				RelativePath=".\DlgEditTriangles.h">
 			</File>
 			<File
 				RelativePath="DlgFulcrum.h">

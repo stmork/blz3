@@ -559,7 +559,7 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info *prep_info) throw(b3WorldEx
 
 	m_xSize = m_Spline[0].m_SubDiv;
 	m_ySize = m_Spline[1].m_SubDiv;
-	m_Flags = PHONG;
+	m_Flags = B3_PHONG;
 
 	b3Item::b3Free(Between);
 

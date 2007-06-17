@@ -121,7 +121,7 @@ void b3Triangles::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	vertCount = m_Flags & PHONG ? m_VertexCount : (m_TriaCount * 3);
+	vertCount = m_Flags & B3_PHONG ? m_VertexCount : (m_TriaCount * 3);
 	gridCount = m_TriaCount * 3;
 	polyCount = m_TriaCount;
 }
@@ -135,7 +135,7 @@ void b3Triangles::b3ComputeVertices()
 	Vertex = m_Vertices;
 	Vector = *glVertexElements;
 	
-	if (m_Flags & PHONG)
+	if (m_Flags & B3_PHONG)
 	{
 		// Copy positions
 		for (i = 0;i < m_VertexCount;i++)
@@ -265,7 +265,7 @@ void b3Triangles::b3ComputeIndices()
 	gPtr     = *glGridElements;
 	pPtr     = *glPolygonElements;
 
-	if (m_Flags & PHONG)
+	if (m_Flags & B3_PHONG)
 	{
 		for (i = 0;i < m_TriaCount;i++)
 		{

@@ -106,7 +106,6 @@ BOOL CDlgShape1::OnInitDialog()
 {
 	CB3SpanningShapeDialog::OnInitDialog();
 	
-	// TODO: Add extra initialization here
 	m_Dir1.b3Set(m_DirMode);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -124,26 +123,22 @@ void CDlgShape1::b3UpdateBase()
 
 void CDlgShape1::OnChangedBase() 
 {
-	// TODO: Add your control notification handler code here
 	m_Base.b3Update();
 	b3UpdateBase();
 }
 
 void CDlgShape1::OnChangedDir1() 
 {
-	// TODO: Add your control notification handler code here
 	m_Dir1.b3Update(m_DirMode);
 }
 
 void CDlgShape1::OnChangedLen1() 
 {
-	// TODO: Add your control notification handler code here
 	m_Dir1.b3UpdateLen(m_DirMode);
 }
 
 void CDlgShape1::b3PostProcess() 
 {
-	// TODO: Add extra validation here
 	CB3SpanningShapeDialog::b3PostProcess();
 	if (m_Creation)
 	{
