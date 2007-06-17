@@ -2,8 +2,8 @@
 **
 **	$Filename:	DlgEditTriangles.h $
 **	$Release:	Dortmund 2007 $
-**	$Revision: 308 $
-**	$Date$
+**	$Revision$
+**	$Id$
 **	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **

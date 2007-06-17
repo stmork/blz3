@@ -2,14 +2,14 @@
 **
 **	$Filename:	DlgEditTriangles.h $
 **	$Release:	Dortmund 2007 $
-**	$Revision: 308 $
-**	$Date$
+**	$Revision$
+**	$Id$
 **	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for editing spline shapes
 **
-**	(C) Copyright 2002  Steffen A. Mork
+**	(C) Copyright 2007  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
