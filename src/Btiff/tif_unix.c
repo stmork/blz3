@@ -1,4 +1,4 @@
-/* $Id: tif_unix.c 1151 2005-06-09 12:10:27Z smork $ */
+/* $Id$ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler

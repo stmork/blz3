@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgCSGMode.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 803 $
-**	$Date: 2004-07-02 21:28:04 +0200 (Fr, 02 Jul 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Change CSG operation mode

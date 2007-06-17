@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3MaterialSampler.cc $ 
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1492 $
-**	$Date: 2007-06-07 11:33:07 +0200 (Do, 07 Jun 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Sampler for testing materials

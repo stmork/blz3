@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ComboBox.h $  
 **	$Release:	Dortmund 2001 $
-**	$Revision: 726 $
-**	$Date: 2004-05-16 11:21:11 +0200 (So, 16 Mai 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Flat combo box

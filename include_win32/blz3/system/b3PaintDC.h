@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3PaintDC.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1457 $
-**	$Date: 2006-08-22 15:30:01 +0200 (Di, 22 Aug 2006) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - A thread safe CPaintDC

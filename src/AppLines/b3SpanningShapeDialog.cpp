@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SpanningShapeDialog.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 1447 $
-**	$Date: 2006-06-28 18:35:42 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Base class for editing spanning shapes

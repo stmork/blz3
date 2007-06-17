@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ItemRegister.h $
 **	$Release:	Dortmund 2001, 2002 $
-**	$Revision: 1450 $
-**	$Date: 2006-06-28 19:48:22 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - a registry for class maintainance

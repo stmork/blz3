@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SelectTexture.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 479 $
-**	$Date: 2003-02-09 14:58:14 +0100 (So, 09 Feb 2003) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Selecting an image or texture

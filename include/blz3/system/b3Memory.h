@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Memory.h $
 **	$Release:	Dortmund 2001, 2002, 2005 $
-**	$Revision: 1321 $
-**	$Date: 2006-02-04 20:19:30 +0100 (Sa, 04 Feb 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - memory routines (optimized handling)

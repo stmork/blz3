@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Procedure.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 1353 $
-**	$Date: 2006-04-18 17:48:59 +0200 (Di, 18 Apr 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - some procedure proto types for pseudo random noise

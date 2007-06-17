@@ -2,9 +2,9 @@
 **
 **	$ilename:	divx.cc $
 **	$Release:	Dortmund 2004, 2005, 2006, 2007 $
-**	$Revision: 1489 $
-**	$Date: 2007-04-21 18:18:55 +0200 (Sa, 21 Apr 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **      Blizzard III - Encodes single frames into a DivX

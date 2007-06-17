@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Render.cc $
 **	$Release:	Dortmund 2001 - 2005 $
-**	$Revision: 1461 $
-**	$Date: 2006-09-02 12:46:57 +0200 (Sa, 02 Sep 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Rendering some objects

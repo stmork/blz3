@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FFT.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1428 $
-**	$Date: 2006-05-24 18:07:55 +0200 (Mi, 24 Mai 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - 2D Fast Fourier transform

@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Log.h $
 **	$Release:	Dortmund 2001, 2003 $
-**	$Revision: 1215 $
-**	$Date: 2005-08-07 11:31:35 +0200 (So, 07 Aug 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - logging routines (proto types)

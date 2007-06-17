@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgSelectProfile.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 1494 $
-**	$Date: 2007-06-17 15:14:01 +0200 (So, 17 Jun 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Select profile for triangle or B spline shape

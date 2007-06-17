@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgShape1.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 761 $
-**	$Date: 2004-05-29 15:38:11 +0200 (Sa, 29 Mai 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Edit dialog for spheres

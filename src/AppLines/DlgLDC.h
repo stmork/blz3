@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgLDC.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1431 $
-**	$Date: 2006-05-27 15:32:22 +0200 (Sa, 27 Mai 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Light properties

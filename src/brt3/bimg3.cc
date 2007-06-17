@@ -2,8 +2,8 @@
 **
 **	$Filename:	bimg3.cc $
 **	$Release:	Dortmund 2001-2007 $
-**	$Revision: 1487 $
-**	$Date: 2007-04-09 12:16:18 +0200 (Mo, 09 Apr 2007) $
+**	$Revision$
+**	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Image loading and displaying

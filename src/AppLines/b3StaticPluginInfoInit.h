@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3StaticPluginInfoInit.cpp $
 **	$Release:	Dortmund 2003 $
-**	$Revision: 543 $
-**	$Date: 2003-06-20 11:02:45 +0200 (Fr, 20 Jun 2003) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Adding static plugin infos

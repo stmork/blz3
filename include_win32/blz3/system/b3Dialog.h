@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Dialog.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1435 $
-**	$Date: 2006-05-29 17:13:45 +0200 (Mo, 29 Mai 2006) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Simple dialog

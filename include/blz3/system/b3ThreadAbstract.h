@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ThreadAbstract.h $
 **	$Release:	Dortmund 2005 $
-**	$Revision: 1211 $
-**	$Date: 2005-08-05 12:59:40 +0200 (Fr, 05 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Threading control

@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ViewParam.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 577 $
-**	$Date: 2003-08-31 12:44:07 +0200 (So, 31 Aug 2003) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - View parameter handling

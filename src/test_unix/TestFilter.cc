@@ -2,9 +2,9 @@
 **
 **	$Filename:	TestFilter.cc $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 980 $
-**	$Date: 2004-11-29 10:58:01 +0100 (Mo, 29 Nov 2004) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Testing filter computations

@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SplineRing.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1448 $
-**	$Date: 2006-06-28 19:07:36 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing BSpline ring

@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ShadeMork2.cc $
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1468 $
-**	$Date: 2006-10-22 16:32:32 +0200 (So, 22 Okt 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Enhanced Mork shader

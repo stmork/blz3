@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgCopyProperties.cpp $
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1091 $
-**	$Date: 2005-05-14 21:01:24 +0200 (Sa, 14 Mai 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Select shape property copy modes

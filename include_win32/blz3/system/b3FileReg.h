@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FileReg.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision: 684 $
-**	$Date: 2004-04-25 15:40:59 +0200 (So, 25 Apr 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - IO into Windows registry

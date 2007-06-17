@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppRenderView.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1053 $
-**	$Date: 2005-01-23 21:57:22 +0100 (So, 23 Jan 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CView part for OpenGL Documents (scenes/objects)

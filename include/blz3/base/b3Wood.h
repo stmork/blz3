@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Wood.h $
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1234 $
-**	$Date: 2005-08-10 17:09:04 +0200 (Mi, 10 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Woodlike procedural textures

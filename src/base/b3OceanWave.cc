@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3OceanWave.c $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1467 $
-**	$Date: 2006-10-22 11:26:47 +0200 (So, 22 Okt 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Ocean wave bump map

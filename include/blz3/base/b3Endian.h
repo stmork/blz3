@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Tx.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1207 $
-**	$Date: 2005-08-01 11:19:25 +0200 (Mo, 01 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - imaging routines (proto types)

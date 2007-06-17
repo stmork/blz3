@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Aux.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1230 $
-**	$Date: 2005-08-10 11:01:37 +0200 (Mi, 10 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Master of little help

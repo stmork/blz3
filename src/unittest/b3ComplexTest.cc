@@ -2,8 +2,8 @@
 **
 **	$Filename:	b3ComplexTest.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1493 $
-**	$Date: 2007-06-15 14:25:44 +0200 (Fr, 15 Jun 2007) $
+**	$Revision$
+**	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Complex number unit test.

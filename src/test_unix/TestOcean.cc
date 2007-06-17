@@ -2,9 +2,9 @@
 **
 **	$Filename:	TestOcean.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1427 $
-**	$Date: 2006-05-23 22:25:12 +0200 (Di, 23 Mai 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Animating ocean water

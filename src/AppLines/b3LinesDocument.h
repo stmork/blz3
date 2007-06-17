@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppRenderDoc.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 476 $
-**	$Date: 2003-02-08 15:04:18 +0100 (Sa, 08 Feb 2003) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CDocument part for OpenGL Documents (scenes/objects)

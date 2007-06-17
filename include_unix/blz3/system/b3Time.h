@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Time.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1366 $
-**	$Date: 2006-04-29 13:25:50 +0200 (Sa, 29 Apr 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - time control

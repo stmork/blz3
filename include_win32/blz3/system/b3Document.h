@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Document.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 28 $
-**	$Date: 2001-07-08 15:02:19 +0200 (So, 08 Jul 2001) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - base for some MFC document classes

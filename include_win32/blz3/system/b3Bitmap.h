@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Bitmap.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1465 $
-**	$Date: 2006-10-20 17:39:10 +0200 (Fr, 20 Okt 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - bitmap routines (proto types)

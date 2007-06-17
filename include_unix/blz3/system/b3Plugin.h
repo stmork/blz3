@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Plugin.h $
 **	$Release:	Dortmund 2003 $
-**	$Revision: 1241 $
-**	$Date: 2005-08-12 11:59:28 +0200 (Fr, 12 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Plugin support

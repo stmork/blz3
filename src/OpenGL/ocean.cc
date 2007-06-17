@@ -2,8 +2,8 @@
 **
 **	$Filename:	ocean.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1427 $
-**	$Date: 2006-05-23 22:25:12 +0200 (Di, 23 Mai 2006) $
+**	$Revision$
+**	$Date$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Ocean wave testing with real triangles.

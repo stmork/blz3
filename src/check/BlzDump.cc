@@ -2,8 +2,8 @@
 **
 **      $Filename:      BlzDump.cc $
 **      $Release:       Dortmund 2001 $
-**      $Revision: 980 $
-**      $Date: 2004-11-29 10:58:01 +0100 (Mo, 29 Nov 2004) $
+**      $Revision$
+**      $Date$
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Make hexdump of Blizzard file

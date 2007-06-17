@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Raytrace.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1485 $
-**	$Date: 2007-03-18 11:09:03 +0100 (So, 18 Mrz 2007) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - The new Blizzard III raytracer

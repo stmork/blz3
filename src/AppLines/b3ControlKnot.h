@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ControlKnot.cpp $  
 **	$Release:	Dortmund 2004 $
-**	$Revision: 823 $
-**	$Date: 2004-07-27 21:05:59 +0200 (Di, 27 Jul 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Displaying the knot vector of a BSpline

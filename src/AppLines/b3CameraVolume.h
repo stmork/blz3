@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3CameraVolume.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 967 $
-**	$Date: 2004-11-21 15:56:59 +0100 (So, 21 Nov 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Drawing a fulcrum

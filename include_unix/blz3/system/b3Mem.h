@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Mem.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1475 $
-**	$Date: 2007-01-01 14:04:37 +0100 (Mo, 01 Jan 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - memory routines (proto types)

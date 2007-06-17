@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3RenderContext.cc $
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1456 $
-**	$Date: 2006-08-21 17:56:28 +0200 (Mo, 21 Aug 2006) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Render context for rendering some objects

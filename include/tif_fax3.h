@@ -1,4 +1,4 @@
-/* $Id: tif_fax3.h 1151 2005-06-09 12:10:27Z smork $ */
+/* $Id$ */
 
 /*
  * Copyright (c) 1990-1997 Sam Leffler

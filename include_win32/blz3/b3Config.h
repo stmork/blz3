@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Config.h $
 **	$Release:	Dortmund 2001-2006 $
-**	$Revision: 1478 $
-**	$Date: 2007-01-01 19:16:28 +0100 (Mo, 01 Jan 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - base defines

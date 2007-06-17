@@ -2,8 +2,8 @@
 **
 **	$Filename:	unittest.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1479 $
-**	$Date: 2007-01-04 11:59:13 +0100 (Do, 04 Jan 2007) $
+**	$Revision$
+**	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Base and system unit tests

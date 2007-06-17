@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Action.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1161 $
-**	$Date: 2005-06-11 19:47:12 +0200 (Sa, 11 Jun 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Actione what to do with mouse input

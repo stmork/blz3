@@ -2,9 +2,9 @@
 **
 **      $Filename:	scale.cc $
 **      $Release:	Dortmund 2003 $
-**      $Revision: 1454 $
-**      $Date: 2006-07-02 10:10:09 +0200 (So, 02 Jul 2006) $
-**      $Author: smork $
+**      $Revision$
+**      $Date$
+**      $Author$
 **      $Developer:	Steffen A. Mork $
 **
 **      Blizzard III - Preparing images for home page gallery

@@ -2,9 +2,9 @@
 **
 **      $Filename:      b3Mandel.cc $
 **      $Release:       Dortmund 2001 $
-**      $Revision: 1428 $
-**      $Date: 2006-05-24 18:07:55 +0200 (Mi, 24 Mai 2006) $
-**      $Author: sm $
+**      $Revision$
+**      $Date$
+**      $Author$
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Mandelbrot set renderer

@@ -2,9 +2,9 @@
 **
 **	$Filename:	AppRaytraceView.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 449 $
-**	$Date: 2003-01-11 13:30:30 +0100 (Sa, 11 Jan 2003) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - CView part for raytracing visualization

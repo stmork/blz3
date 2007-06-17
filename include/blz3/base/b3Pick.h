@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Pick.h $  
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1225 $
-**	$Date: 2005-08-09 13:57:57 +0200 (Di, 09 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Controlling the LDC of a light source

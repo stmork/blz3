@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ImageList.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 694 $
-**	$Date: 2004-05-06 10:38:33 +0200 (Do, 06 Mai 2004) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Image list for div. dialogs

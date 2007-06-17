@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Version.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 369 $
-**	$Date: 2002-08-10 18:07:46 +0200 (Sa, 10 Aug 2002) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Version handling

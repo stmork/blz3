@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3TxMeasure.h $
 **	$Release:	Dortmund 2005 $
-**	$Revision: 1238 $
-**	$Date: 2005-08-11 15:16:12 +0200 (Do, 11 Aug 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - image measurements.

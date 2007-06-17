@@ -2,8 +2,8 @@
 **
 **      $Filename:      TestVector.cc $
 **      $Release:       Dortmund 2002 $
-**      $Revision: 1388 $
-**      $Date: 2006-05-11 17:34:23 +0200 (Do, 11 Mai 2006) $
+**      $Revision$
+**      $Date$
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Test routines for vector computing

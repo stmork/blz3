@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Mem.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1099 $
-**	$Date: 2005-05-17 13:05:18 +0200 (Di, 17 Mai 2005) $
-**	$Author: smork $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - System dependent memory routines

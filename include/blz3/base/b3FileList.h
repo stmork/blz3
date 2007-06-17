@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FileList.h $  
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1487 $
-**	$Date: 2007-04-09 12:16:18 +0200 (Mo, 09 Apr 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - file list creation

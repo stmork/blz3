@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Procedure.c $
 **	$Release:	Dortmund 2005 $
-**	$Revision: 1450 $
-**	$Date: 2006-06-28 19:48:22 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Perlin noise

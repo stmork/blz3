@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3TxSaveTGA.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1490 $
-**	$Date: 2007-05-17 17:20:35 +0200 (Do, 17 Mai 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Saving a TGA image

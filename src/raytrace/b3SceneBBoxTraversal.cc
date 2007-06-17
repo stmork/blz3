@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SceneBBoxTraversal.cc $
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1464 $
-**	$Date: 2006-10-14 13:57:26 +0200 (Sa, 14 Okt 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Traversing scene and bounding boxes.

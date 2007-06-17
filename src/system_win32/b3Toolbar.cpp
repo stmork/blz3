@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Toolbar.cpp $  
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1471 $
-**	$Date: 2006-12-25 13:41:42 +0100 (Mo, 25 Dez 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Toolbar handling

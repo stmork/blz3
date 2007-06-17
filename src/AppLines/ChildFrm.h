@@ -2,9 +2,9 @@
 **
 **	$Filename:	ChildFrm.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 208 $
-**	$Date: 2001-12-28 16:17:44 +0100 (Fr, 28 Dez 2001) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Lines child window

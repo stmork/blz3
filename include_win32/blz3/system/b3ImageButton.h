@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ImageButton.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 257 $
-**	$Date: 2002-01-20 13:48:51 +0100 (So, 20 Jan 2002) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Repeating image button

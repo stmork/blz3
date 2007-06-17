@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3FileMem.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1267 $
-**	$Date: 2005-10-02 11:51:13 +0200 (So, 02 Okt 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Basic Input Output Functions

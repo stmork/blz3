@@ -2,8 +2,8 @@
 **
 **	$Filename:	b3MatrixTest.h $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1392 $
-**	$Date: 2006-05-12 16:06:28 +0200 (Fr, 12 Mai 2006) $
+**	$Revision$
+**	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Unit tests for matrix and vector operations.

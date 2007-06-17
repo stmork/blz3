@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3RaytraceInclude.h $ 
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1449 $
-**	$Date: 2006-06-28 19:17:02 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Precompiled header file for raytrace package

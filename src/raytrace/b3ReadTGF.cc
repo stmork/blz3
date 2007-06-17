@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ReadTGF.cc $
 **	$Release:	Dortmund 2003 $
-**	$Revision: 1488 $
-**	$Date: 2007-04-09 14:38:39 +0200 (Mo, 09 Apr 2007) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Converting ArCon scenes into Blizzard III

@@ -2,9 +2,9 @@
 **
 **	$Filename:	bhc.cc $
 **	$Release:	Dortmund 2003 $
-**	$Revision: 1473 $
-**	$Date: 2006-12-30 14:00:32 +0100 (Sa, 30 Dez 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Creating a house from a description file

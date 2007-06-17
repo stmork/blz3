@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Base.h $ 
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1449 $
-**	$Date: 2006-06-28 19:17:02 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Base structures for raytracing

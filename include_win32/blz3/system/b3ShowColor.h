@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ShowColor.h $  
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1426 $
-**	$Date: 2006-05-23 22:23:42 +0200 (Di, 23 Mai 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - displaying an HSV color cycle

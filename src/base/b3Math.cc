@@ -3,8 +3,8 @@
 **	$Filename:	b3Math.cc $
 **	$Release:	Dortmund 2004 $
 **	$Revision: 2.02 
-**	$Date: 2006-06-28 19:48:22 +0200 (Mi, 28 Jun 2006) $
-**	$Author: sm $
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Basic math methods

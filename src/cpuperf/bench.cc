@@ -2,8 +2,8 @@
 **
 **	$Filename:	bench.cc $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 1190 $
-**	$Date: 2005-07-01 18:27:43 +0200 (Fr, 01 Jul 2005) $
+**	$Revision$
+**	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Benchmarker 

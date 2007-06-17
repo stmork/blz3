@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgSpinTest.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 304 $
-**	$Date: 2002-03-08 17:46:15 +0100 (Fr, 08 Mrz 2002) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Dialog for testing spin button cotrols

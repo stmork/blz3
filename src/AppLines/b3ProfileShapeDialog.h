@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3ProfileShapeDialog.h $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 308 $
-**	$Date: 2002-03-10 21:34:18 +0100 (So, 10 Mrz 2002) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Base class for shapes which can be created via profiles

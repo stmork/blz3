@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Print.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1273 $
-**	$Date: 2005-10-08 15:09:42 +0200 (Sa, 08 Okt 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - print control

@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3Shade.h $ 
 **	$Release:	Dortmund 2004 $
-**	$Revision: 1469 $
-**	$Date: 2006-10-22 17:04:44 +0200 (So, 22 Okt 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing class definitions for root scene

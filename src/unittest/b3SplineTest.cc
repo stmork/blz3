@@ -2,8 +2,8 @@
 **
 **	$Filename:	b3SplineTest.cc $
 **	$Release:	Dortmund 2006 $
-**	$Revision: 1475 $
-**	$Date: 2007-01-01 14:04:37 +0100 (Mo, 01 Jan 2007) $
+**	$Revision$
+**	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Unit tests for spline methods.

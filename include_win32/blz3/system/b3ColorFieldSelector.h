@@ -2,9 +2,9 @@
 **
 **	$Filename:	b3SelectColor.h $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 1329 $
-**	$Date: 2006-03-03 22:54:06 +0100 (Fr, 03 Mrz 2006) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Selecting color

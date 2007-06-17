@@ -2,9 +2,9 @@
 **
 **	$Filename:	DlgNewObject.cpp $
 **	$Release:	Dortmund 2002 $
-**	$Revision: 1089 $
-**	$Date: 2005-05-13 17:33:54 +0200 (Fr, 13 Mai 2005) $
-**	$Author: sm $
+**	$Revision$
+**	$Date$
+**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Selecting a new shape or object
