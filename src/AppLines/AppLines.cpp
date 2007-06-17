@@ -5,7 +5,6 @@
 **	$Revision$
 **	$Date$
 **	$Author$
-**	$Id$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Lines application
