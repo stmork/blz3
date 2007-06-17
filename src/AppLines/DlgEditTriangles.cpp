@@ -2,8 +2,8 @@
 **
 **	$Filename:	DlgEditTriangles.cpp $
 **	$Release:	Dortmund 2007 $
-**	$Revision: 1447 $
-**	$Id$
+**	$Revision: 1332 $
+**	$Date: 2006-03-05 16:00:35 +0100 (So, 05 Mrz 2006) $
 **	$Author: sm $
 **	$Developer:	Steffen A. Mork $
 **
