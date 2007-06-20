@@ -379,6 +379,7 @@ int main(int argc,char *argv[])
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
 
+			glutInit(&argc, argv);
 			glutInitDisplayMode((double_buffered ? GLUT_DOUBLE : 0)|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow(filename);

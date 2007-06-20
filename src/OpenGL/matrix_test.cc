@@ -86,6 +86,7 @@ int main(int argc,char *argv[])
 	move.y = 2;
 	move.z = 3;
 
+	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
 	glutCreateWindow("Matrix Test");
 	glClearColor(0.7f,0.7f,1.0f,1.0f);
