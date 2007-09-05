@@ -39,7 +39,7 @@
 #	define B3_ALIGN_16  __declspec(align(16))
 #	define B3_ALIGN_32  __declspec(align(32))
 #	define B3_ALIGN_64  __declspec(align(64))
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && (__GNUC__ >= 3)
 #	define B3_ALIGN_16 __attribute__ ((aligned (16)))
 #	define B3_ALIGN_32 __attribute__ ((aligned (32)))
 #	define B3_ALIGN_64 __attribute__ ((aligned (64)))
