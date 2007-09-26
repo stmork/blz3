@@ -13,7 +13,7 @@ prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
 PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc\
-	testimg.cc half.cc pw.cc reduce.cc BodThumb.cc RemCR.cc
+	testimg.cc half.cc pw.cc reduce.cc BodThumb.cc RemCR.cc big.cc
 
 RESTOREEXT_OBJS	= RestoreExt.o
 CLEANRES_OBJS	= CleanRes.o
@@ -25,12 +25,13 @@ PW_OBJS			= pw.o
 REDUCE_OBJS		= reduce.o
 BOD_THUMB_OBJS	= BodThumb.o
 REM_CR_OBJS		= RemCR.o
+BIG_OBJS		= big.o
 
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce BodThumb RemCR
+PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce BodThumb RemCR big
 INSTALL_PRGS	= half
 
 all:	$(PRGS)
@@ -74,6 +75,9 @@ calibrate:	$(CALIBRATE_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 reduce:	$(REDUCE_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+big:	$(BIG_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep

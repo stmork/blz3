@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:	half.cc $
-**      $Release:	Dortmund 2003 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:	Steffen A. Mork $
+**	$Filename:	half.cc $
+**	$Release:	Dortmund 2003 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Halfs an image
+**	Blizzard III - Halfs an image
 **
-**      (C) Copyright 2003  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2003  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 */
