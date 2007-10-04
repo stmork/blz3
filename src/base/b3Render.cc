@@ -218,14 +218,14 @@ void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
 	b3_gl_polygon *glPolygons = *glPolygonElements;
 
 	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
-		 glVertexElements->b3GetCount(), glVertex,
-		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+			 glVertexElements->b3GetCount(), glVertex,
+			 glVertexElements->b3IsCustom() ? "custom" : "buffer");
 	b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
-		 glGridElements->b3GetCount(), glGrids,
-		 glGridElements->b3IsCustom() ? "custom" : "buffer");
+			 glGridElements->b3GetCount(), glGrids,
+			 glGridElements->b3IsCustom() ? "custom" : "buffer");
 	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
-		 glPolygonElements->b3GetCount(), glPolygons,
-		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
+			 glPolygonElements->b3GetCount(), glPolygons,
+			 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 
 	b3UnmapVertices();
 	b3UnmapIndices();
@@ -279,11 +279,11 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3GetCount(NV=%d, NG=%d, NP=%d)\n",
-		new_vertCount,new_gridCount,new_polyCount);
+			 new_vertCount,new_gridCount,new_polyCount);
 	b3PrintF(B3LOG_FULL,"      >b3AllocVertexMemory( V=%d,  G=%d,  P=%d)\n",
-		glVertexElements->b3GetCount(),
-		glGridElements->b3GetCount(),
-		glPolygonElements->b3GetCount());
+			 glVertexElements->b3GetCount(),
+			 glGridElements->b3GetCount(),
+			 glPolygonElements->b3GetCount());
 #endif
 
 	glVertexElements->b3AllocVertexMemory( context,new_vertCount);
@@ -311,7 +311,7 @@ void b3RenderObject::b3Update()
 	int mode = 0;
 
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Update() this = %p\n",this);
+	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Update() this = %p\n",this);
 #endif
 	if ((!glGridElements->b3IsComputed()) || (!glPolygonElements->b3IsComputed()))
 	{
@@ -346,13 +346,13 @@ void b3RenderObject::b3Update()
 
 		b3_gl_line    *glGrids    = *glGridElements;
 		b3_gl_polygon *glPolygons = *glPolygonElements;
-		
+
 		b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
-			 glGridElements->b3GetCount(), glGrids,
-			 glGridElements->b3IsCustom() ? "custom" : "buffer");
+				 glGridElements->b3GetCount(), glGrids,
+				 glGridElements->b3IsCustom() ? "custom" : "buffer");
 		b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
-			 glPolygonElements->b3GetCount(), glPolygons,
-			 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
+				 glPolygonElements->b3GetCount(), glPolygons,
+				 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
 		b3ComputeIndices();
@@ -373,8 +373,8 @@ void b3RenderObject::b3Update()
 		b3_gl_vertex  *glVertex   = *glVertexElements;
 
 		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
-			 glVertexElements->b3GetCount(), glVertex,
-			 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+				 glVertexElements->b3GetCount(), glVertex,
+				 glVertexElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 		b3ComputeVertices();
 		b3ComputeNormals();
@@ -429,14 +429,14 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3_gl_line    *glGrids    = *glGridElements;
 
 	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
-		 glVertexElements->b3GetCount(), glVertex,
-		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+			 glVertexElements->b3GetCount(), glVertex,
+			 glVertexElements->b3IsCustom() ? "custom" : "buffer");
 	b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
-		 glGridElements->b3GetCount(), glGrids,
-		 glGridElements->b3IsCustom() ? "custom" : "buffer");
+			 glGridElements->b3GetCount(), glGrids,
+			 glGridElements->b3IsCustom() ? "custom" : "buffer");
 	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
-		 glPolygonElements->b3GetCount(), glPolygons,
-		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
+			 glPolygonElements->b3GetCount(), glPolygons,
+			 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
 	// Clear normals
@@ -444,8 +444,8 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	for (i = start;i < end;i++)
 	{
 		glVertex[i].n.x =
-		glVertex[i].n.y =
-		glVertex[i].n.z = 0;
+			glVertex[i].n.y =
+				glVertex[i].n.z = 0;
 	}
 
 	// Collect normals
@@ -457,11 +457,11 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 
 		// Do some semantic checks
 		if ((v1 < start) || (v1 >= end) ||
-		    (v2 < start) || (v2 >= end) ||
-		    (v3 < start) || (v3 >= end))
+				(v2 < start) || (v2 >= end) ||
+				(v3 < start) || (v3 >= end))
 		{
 			b3PrintF(B3LOG_NORMAL,"###### %d: %d # %d %d %d # %d # (V: %d  P: %d  G: %d) # (%s:l.%d)\n",i,
-				start,v1,v2,v3,end,glVertexCount,glPolyCount,glGridCount,__FILE__,__LINE__);
+					 start,v1,v2,v3,end,glVertexCount,glPolyCount,glGridCount,__FILE__,__LINE__);
 		}
 		else
 		{
@@ -538,8 +538,8 @@ void b3RenderObject::b3TransformVertices(
 
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
-			glVertexElements->b3GetCount(), glVertex,
-			glVertexElements->b3IsCustom() ? "custom" : "buffer");
+				 glVertexElements->b3GetCount(), glVertex,
+				 glVertexElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
 		if (glVertex != null)
@@ -643,8 +643,8 @@ void b3RenderObject::b3DefineTexture()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
 	glTexImage2D(   GL_TEXTURE_2D,
-		0,GL_RGBA,glTextureSizeX,glTextureSizeY,
-		0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
+					0,GL_RGBA,glTextureSizeX,glTextureSizeY,
+					0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
 #endif
 }
 
@@ -685,7 +685,7 @@ void b3RenderObject::b3UpdateMaterial()
 			{
 				glTextureScaleX = 1;
 				glTextureScaleY = 1;
-				
+
 				// CRITICAL SECTION
 				{
 					b3CriticalSection lock(glTextureMutex);
@@ -764,7 +764,7 @@ void b3RenderObject::b3CreateTexture(
 			glGetError();
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d,%4d) # %5d previous: %5d\n",
-				xSize,ySize,size,glTextureSize);
+					 xSize,ySize,size,glTextureSize);
 #endif
 			if (size != 0)
 			{
@@ -894,7 +894,7 @@ void b3RenderObject::b3CopyTexture(
 	}
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CopyTexture(...) # xSize: %4d ySize: %4d # xMax: %4d yMax: %4d\n",
-		input->xSize,input->ySize,xMax,yMax);
+			 input->xSize,input->ySize,xMax,yMax);
 #endif
 	scale.b3AllocTx(xMax,yMax,24);
 	scale.b3Scale(input);
@@ -1050,14 +1050,14 @@ void b3RenderObject::b3CheckGeometry(
 
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
-		 glVertexElements->b3GetCount(), glVertex,
-		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+			 glVertexElements->b3GetCount(), glVertex,
+			 glVertexElements->b3IsCustom() ? "custom" : "buffer");
 	b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
-		 glGridElements->b3GetCount(), glGrids,
-		 glGridElements->b3IsCustom() ? "custom" : "buffer");
+			 glGridElements->b3GetCount(), glGrids,
+			 glGridElements->b3IsCustom() ? "custom" : "buffer");
 	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
-		 glPolygonElements->b3GetCount(), glPolygons,
-		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
+			 glPolygonElements->b3GetCount(), glPolygons,
+			 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
 	if (glVertex != null)
@@ -1131,9 +1131,9 @@ void b3RenderObject::b3CheckGeometry(
 }
 
 void b3RenderObject::b3DrawGeometry(
-	      b3RenderContext *context,
+	b3RenderContext *context,
 	const b3_render_mode   render_mode)
-{    
+{
 	switch (render_mode)
 	{
 	case B3_RENDER_LINE:
@@ -1223,10 +1223,10 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext *context)
 	glVertexElements->b3Draw();
 	glGridElements->b3Draw();
 }
- 
+
 void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext *context)
 {
-	glVertexElements->b3Draw(); 
+	glVertexElements->b3Draw();
 	glPolygonElements->b3Draw();
 }
 
@@ -1237,8 +1237,8 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3Draw lined:  %d vertices, %d lines\n",
-		glVertexElements->b3GetCount(),
-		glGridElements->b3GetCount());
+			 glVertexElements->b3GetCount(),
+			 glGridElements->b3GetCount());
 #endif
 
 	GLenum error = glGetError();
@@ -1257,8 +1257,8 @@ void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3Draw filled: %d vertices, %d polygons\n",
-		glVertexElements->b3GetCount(),
-		glPolygonElements->b3GetCount());
+			 glVertexElements->b3GetCount(),
+			 glPolygonElements->b3GetCount());
 #endif
 
 	GLenum error = glGetError();

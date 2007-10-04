@@ -78,7 +78,7 @@ b3_bool b3BaseTransformation::b3Prepare()
 
 void b3BaseTransformation::b3BaseTransform(
 	const b3_line64 *in,
-	      b3_line64 *out)
+	b3_line64 *out)
 {
 #ifdef B3_SSE2
 	b3_vector64         pos;
@@ -136,7 +136,7 @@ void b3BaseTransformation::b3BaseTransform(
 
 void b3BaseTransformation::b3BaseTransform(
 	const b3_vector *in,
-	      b3_vector *out)
+	b3_vector *out)
 {
 #ifdef B3_SSE2
 	b3_vector64            pos;
@@ -175,7 +175,7 @@ void b3BaseTransformation::b3BaseTransform(
 
 void b3BaseTransformation::b3Project(
 	const b3_vector *in,
-	      b3_vector *out)
+	b3_vector *out)
 {
 	b3_f64 xPos,yPos,zPos;
 
@@ -188,12 +188,12 @@ void b3BaseTransformation::b3Project(
 		yPos * m_Normals[2].y +
 		zPos * m_Normals[2].z;
 	out->x = (
-		xPos * m_Normals[0].x +
-		yPos * m_Normals[0].y +
-		zPos * m_Normals[0].z) / out->z;
+				 xPos * m_Normals[0].x +
+				 yPos * m_Normals[0].y +
+				 zPos * m_Normals[0].z) / out->z;
 	out->y = (
-		xPos * m_Normals[1].x +
-		yPos * m_Normals[1].y +
-		zPos * m_Normals[1].z) / out->z;
+				 xPos * m_Normals[1].x +
+				 yPos * m_Normals[1].y +
+				 zPos * m_Normals[1].z) / out->z;
 }
 

@@ -34,13 +34,13 @@
 class b3InfoPS : protected b3TxSaveInfo
 {
 public:
-	      b3InfoPS(b3Tx *tx,const char *filename);
-	     ~b3InfoPS();
+	b3InfoPS(b3Tx *tx,const char *filename);
+	~b3InfoPS();
 	void  b3Write();
 };
 
 b3InfoPS::b3InfoPS(b3Tx *tx,const char *filename) :
-	b3TxSaveInfo(tx,filename,B3_TWRITE)
+		b3TxSaveInfo(tx,filename,B3_TWRITE)
 {
 	b3_res  xSize,ySize;
 	b3_f64  xScale,yScale,width=20;
@@ -106,7 +106,7 @@ void b3InfoPS::b3Write()
 			b = (m_ThisRow[x] & 0x0000ff);
 
 			fprintf (m_FileHandle, "%02x",
-				(b3_pkd_color)(r * 0.35 + g * 0.51 + b * 0.14));
+					 (b3_pkd_color)(r * 0.35 + g * 0.51 + b * 0.14));
 		}
 		fprintf (m_FileHandle,"\n");
 	}

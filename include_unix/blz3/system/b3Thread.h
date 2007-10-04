@@ -67,7 +67,7 @@ public:
 		if(error_code != 0)
 		{
 			b3PrintF(B3LOG_NORMAL,"### CLASS: b3PLog # errno: %d (%s)!\n",
-				error_code,strerror(error_code));
+					 error_code,strerror(error_code));
 		}
 #endif
 		return error_code == 0;
@@ -124,7 +124,7 @@ class b3IPCMutex : public b3MutexAbstract
 {
 	pthread_mutex_t mutex;
 public:
-	         b3IPCMutex();
+	b3IPCMutex();
 	virtual ~b3IPCMutex();
 	b3_bool  b3Lock();
 	b3_bool  b3Unlock();
@@ -135,15 +135,15 @@ public:
  */
 class b3Event : public b3EventAbstract
 {
-	         pthread_cond_t  event;
-	         pthread_mutex_t mutex;
+	pthread_cond_t  event;
+	pthread_mutex_t mutex;
 	volatile b3_bool         pulse;
 
 public:
 	/**
 	 * This constructor initializes this event handler.
 	 */
-	         b3Event();
+	b3Event();
 
 	/**
 	 * This destructor deinitializes this event handler.
@@ -159,11 +159,11 @@ public:
  */
 class b3Thread : public b3ThreadAbstract
 {
-	         const char   *m_Name;
-	         b3TimeSpan    m_Span;
-	         int           m_Prio;
+	const char   *m_Name;
+	b3TimeSpan    m_Span;
+	int           m_Prio;
 
-	         pthread_t     m_Thread;
+	pthread_t     m_Thread;
 	volatile b3_bool       m_IsRunning;
 	volatile b3_u32        m_Result;
 	volatile b3ThreadProc  m_CallProc;
@@ -178,7 +178,7 @@ public:
 	 *
 	 * @param taskname The new thread name.
 	 */
-	         b3Thread(const char *taskname = null);
+	b3Thread(const char *taskname = null);
 
 	/**
 	 * This destructor terminates a running thread and deinitializes this instance.
@@ -194,8 +194,8 @@ public:
 
 private:
 	static void *b3Trampoline(void *thread);
-	       void  b3Inc();
-	       void  b3Dec();
+	void  b3Inc();
+	void  b3Dec();
 
 	friend class b3CPU;
 };

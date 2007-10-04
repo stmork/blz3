@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "blz3/system/b3Log.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"

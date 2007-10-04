@@ -60,8 +60,8 @@ void b3CSGCone::b3ComputeVertices()
 	for (i = 0;i < SinCosSteps;i++)
 	{
 		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,
-			b3ShapeRenderContext::m_Cos[i],
-			b3ShapeRenderContext::m_Sin[i],&Vector[i].v);
+								  b3ShapeRenderContext::m_Cos[i],
+								  b3ShapeRenderContext::m_Sin[i],&Vector[i].v);
 		Vector[i + SinCosSteps] = Vector[i];
 	}
 	Vector += (SinCosSteps << 1);
@@ -100,8 +100,8 @@ void b3CSGCone::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
 	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
 	polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(
-		polar->m_ObjectPolar.x,
-		polar->m_ObjectPolar.y);
+						   polar->m_ObjectPolar.x,
+						   polar->m_ObjectPolar.y);
 	polar->m_Polar.y     = polar->m_ObjectPolar.z;
 	polar->m_Polar.z     = 0;
 	polar->m_NormalIndex = point->m_Index;

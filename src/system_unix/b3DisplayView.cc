@@ -102,17 +102,17 @@ protected:
 };
 
 b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
-{
-	{  0, 8, 1, 9 },
-	{ 12, 4,13, 5 }, 
-	{  3,11, 2,10 },
-	{ 15, 7,14, 6 }
-};
+	{
+		{  0, 8, 1, 9 },
+		{ 12, 4,13, 5 },
+		{  3,11, 2,10 },
+		{ 15, 7,14, 6 }
+	};
 
 b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
-{
-	MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
-};
+	{
+		MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
+	};
 
 class b3DisplayPixel08 : public b3DisplayPixelImpl
 {
@@ -232,8 +232,8 @@ b3DisplayView::b3DisplayView(const char *title) : b3Display(title)
 	m_Title = (char *)title;
 	b3Open(m_xMax,m_yMax);
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
-		m_Title,
-		m_xs,m_ys);
+			  m_Title,
+			  m_xs,m_ys);
 }
 
 b3DisplayView::b3DisplayView(
@@ -244,8 +244,8 @@ b3DisplayView::b3DisplayView(
 	m_Title = (char *)title;
 	b3Open(xSize,ySize);
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
-		m_Title,
-		m_xs,m_ys);
+			  m_Title,
+			  m_xs,m_ys);
 }
 
 b3DisplayView::~b3DisplayView()
@@ -305,10 +305,10 @@ void b3DisplayView::b3Open(
 #endif
 
 	m_Window = XCreateSimpleWindow (
-		m_Display,RootWindow (m_Display,m_Screen),
-		0,0,m_xs,m_ys,0,
-		WhitePixel (m_Display,m_Screen),
-		BlackPixel (m_Display,m_Screen));
+				   m_Display,RootWindow (m_Display,m_Screen),
+				   0,0,m_xs,m_ys,0,
+				   WhitePixel (m_Display,m_Screen),
+				   BlackPixel (m_Display,m_Screen));
 
 	XStringListToTextProperty(&m_Title,1,&CInfoName);
 	XSetWMName(m_Display,m_Window,&CInfoName);
@@ -338,9 +338,9 @@ void b3DisplayView::b3Open(
 	XMapWindow          (m_Display,m_Window);
 	XSetWindowColormap  (m_Display,m_Window,m_Colormap);
 	XSelectInput        (m_Display,m_Window,
-		ExposureMask|
-		ButtonPressMask|
-		KeyPressMask);
+						 ExposureMask|
+						 ButtonPressMask|
+						 KeyPressMask);
 
 	// wait for window */
 	XSetForeground(m_Display,m_GC,0);
@@ -351,13 +351,13 @@ void b3DisplayView::b3Open(
 		XNextEvent (m_Display,&report);
 		switch (report.type)
 		{
-			case Expose :
-				if (report.xexpose.window == m_Window)
-				{
-					m_Opened = true;
-					Loop     = false;
-				}
-				break;
+		case Expose :
+			if (report.xexpose.window == m_Window)
+			{
+				m_Opened = true;
+				Loop     = false;
+			}
+			break;
 		}
 	}
 	while (Loop);
@@ -400,33 +400,33 @@ b3_bool b3DisplayView::b3CreateColormap ()
 		for (i = 0;i < count;i++)
 		{
 			b3PrintF(B3LOG_FULL,"%2d: %08x %08x %08x # %4d %4d # %08x\n",i,
-				info[i].red_mask,
-				info[i].green_mask,
-				info[i].blue_mask,
-				info[i].colormap_size,
-				info[i].bits_per_rgb,
-				info[i].c_class);
+					 info[i].red_mask,
+					 info[i].green_mask,
+					 info[i].blue_mask,
+					 info[i].colormap_size,
+					 info[i].bits_per_rgb,
+					 info[i].c_class);
 		}
 
 		if (info != null)
 		{
 			if ((info->red_mask  == 0x0000ff) &&
-			    (info->blue_mask == 0xff0000))
+					(info->blue_mask == 0xff0000))
 			{
 				// BGR format (e.g. Sun Ultra 10)
 				m_Pixel = new b3DisplayPixel24Inv();
 			}
 			if ((info->red_mask  == 0xff0000) &&
-			    (info->blue_mask == 0x0000ff))
+					(info->blue_mask == 0x0000ff))
 			{
 				// RGB format (Blizzard III native)
 				m_Pixel = new b3DisplayPixel24();
 			}
-			
+
 			XFree(info);
 		}
 		return m_Pixel != null;
-		
+
 	default:
 		b3PrintF(B3LOG_NORMAL,"Unsupported color depth!\n");
 		return false;
@@ -447,10 +447,10 @@ b3_bool b3DisplayView::b3CreateColormap ()
 
 		// create color map
 		cmap = XCreateColormap(
-			m_Display,
-			m_Window,
-			DefaultVisual (m_Display,m_Screen),
-			AllocAll);
+				   m_Display,
+				   m_Window,
+				   DefaultVisual (m_Display,m_Screen),
+				   AllocAll);
 		if (cmap != null)
 		{
 			// compute colors
@@ -501,9 +501,9 @@ inline void b3DisplayView::b3RefreshAll ()
 		b3CriticalSection lock(m_Mutex);
 
 		XCopyArea (m_Display,
-			m_Image,m_Window,
-			m_GC,0,0,
-			m_xs,m_ys,0,0);
+				   m_Image,m_Window,
+				   m_GC,0,0,
+				   m_xs,m_ys,0,0);
 	}
 }
 
@@ -539,7 +539,7 @@ inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 {
 	b3_color *ptr = &m_Buffer[y * m_xMax];
 	b3_coord  x;
-	
+
 	for (x = 0;x < m_xs;x++)
 	{
 		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel(*ptr++,x,y));
@@ -606,25 +606,25 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 
 		switch (report.type)
 		{
-			case Expose :
-				if (report.xexpose.window == m_Window)
-				{
-					b3FirstDrawing ();
-					b3RefreshAll   ();
-				}
-				break;
+		case Expose :
+			if (report.xexpose.window == m_Window)
+			{
+				b3FirstDrawing ();
+				b3RefreshAll   ();
+			}
+			break;
 
-			case ButtonPress:
-				m_Closed = true;
-				break;
+		case ButtonPress:
+			m_Closed = true;
+			break;
 
-			case KeyPress :
-				result   = true;
-				m_Closed = true;
-				// Walk through!
-			default :
-				loop   = false;
-				break;
+		case KeyPress :
+			result   = true;
+			m_Closed = true;
+			// Walk through!
+		default :
+			loop   = false;
+			break;
 		}
 	}
 	while (loop);
@@ -648,19 +648,19 @@ void b3DisplayView::b3Wait()
 		XNextEvent (m_Display,&report);
 		switch (report.type)
 		{
-			case Expose :
-				if (report.xexpose.window == m_Window)
-				{
-					b3FirstDrawing ();
-					b3RefreshAll   ();
-				}
-				break;
+		case Expose :
+			if (report.xexpose.window == m_Window)
+			{
+				b3FirstDrawing ();
+				b3RefreshAll   ();
+			}
+			break;
 
-			case ButtonPress :
-			case KeyPress :
-				loop = false;
-				m_Closed = true;
-				break;
+		case ButtonPress :
+		case KeyPress :
+			loop = false;
+			m_Closed = true;
+			break;
 		}
 	}
 	while (loop);

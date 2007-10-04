@@ -33,9 +33,9 @@
 *************************************************************************/
 
 const b3_u08 b3Tx::m_Bits[8] =
-{
-	128,64,32,16,8,4,2,1
-};
+	{
+		128,64,32,16,8,4,2,1
+	};
 
 b3_bool b3Tx::m_ErrorHandlerInstalled = false;
 
@@ -110,7 +110,7 @@ b3Tx::b3Tx(b3Tx *orig) : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 	b3Copy(orig);
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx instantiated (%ldx%ld, %ld bits, type=%d) (%p)\n",
-		xSize, ySize, depth, type, this);
+			 xSize, ySize, depth, type, this);
 #endif
 }
 
@@ -218,7 +218,7 @@ b3_bool b3Tx::b3AllocTx(
 	}
 	FileType  = FT_UNKNOWN;
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits) this=%p type=%d, %ld bytes)\n",
-		xSize,ySize,depth,this,type,dSize);
+			 xSize,ySize,depth,this,type,dSize);
 	return true;
 }
 
@@ -479,7 +479,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 			b3PrintF(B3LOG_FULL," [palette - %ld]",pSize);
 		}
 
-	
+
 		b3PrintF(B3LOG_FULL,"\n");
 	}
 	else
@@ -508,7 +508,7 @@ void b3Tx::b3Name(const char *ImageName)
 {
 	strlcpy (image_name,ImageName != null ? ImageName : "",sizeof(image_name));
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Name(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 }
 
 b3_pkd_color *b3Tx::b3GetPalette()
@@ -518,7 +518,7 @@ b3_pkd_color *b3Tx::b3GetPalette()
 
 void b3Tx::b3SetPalette(
 	const b3_pkd_color *newPalette,
-	      b3_count      NumColors)
+	b3_count      NumColors)
 {
 	// compute bit depth
 	for (depth = 0;NumColors > 1;depth++)
@@ -623,28 +623,28 @@ b3_pkd_color b3Tx::b3GetValue (
 
 	switch (type)
 	{
-		case B3_TX_ILBM:
-			return b3ILBMValue (x,y);
+	case B3_TX_ILBM:
+		return b3ILBMValue (x,y);
 
-		case B3_TX_RGB4:
-			return b3RGB4Value (x,y);
+	case B3_TX_RGB4:
+		return b3RGB4Value (x,y);
 
-		case B3_TX_RGB8:
-			lPtr  = (b3_pkd_color *)data;
-			return lPtr[y * xSize + x];
+	case B3_TX_RGB8:
+		lPtr  = (b3_pkd_color *)data;
+		return lPtr[y * xSize + x];
 
-		case B3_TX_VGA:
-			return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
+	case B3_TX_VGA:
+		return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
 
-		case B3_TX_FLOAT:
-			cPtr  = (b3_color *)data;
-			return b3Color(cPtr[y * xSize + x]);
+	case B3_TX_FLOAT:
+		cPtr  = (b3_color *)data;
+		return b3Color(cPtr[y * xSize + x]);
 
-		case B3_TX_UNDEFINED :
-			return B3_BLACK;
+	case B3_TX_UNDEFINED :
+		return B3_BLACK;
 
-		default :
-			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
+	default :
+		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 }
 
@@ -747,48 +747,48 @@ b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y)
 
 	switch (type)
 	{
-		case B3_TX_ILBM :
-			xBytes = TX_BWA(xSize);
-			bPtr   = (b3_u08 *)data;
-			bPtr  += ((y + 1) * xBytes * depth + (x >> 3));
-			bit    = m_Bits[x & 7];
-			for (i = 0;i < depth;i++)
+	case B3_TX_ILBM :
+		xBytes = TX_BWA(xSize);
+		bPtr   = (b3_u08 *)data;
+		bPtr  += ((y + 1) * xBytes * depth + (x >> 3));
+		bit    = m_Bits[x & 7];
+		for (i = 0;i < depth;i++)
+		{
+			bPtr   -= xBytes;
+			if (*bPtr & bit)
 			{
-				bPtr   -= xBytes;
-				if (*bPtr & bit)
-				{
-					return true;
-				}
+				return true;
 			}
+		}
 
-			// Check for first index.
-			return false;
+		// Check for first index.
+		return false;
 
-		case B3_TX_RGB8	:
-			lPtr = (b3_pkd_color *)data;
+	case B3_TX_RGB8	:
+		lPtr = (b3_pkd_color *)data;
 
-			// Check for alpha channel not equal to 0.
-			return (lPtr[x + y * xSize] & 0xff000000) != 0;
+		// Check for alpha channel not equal to 0.
+		return (lPtr[x + y * xSize] & 0xff000000) != 0;
 
-		case B3_TX_RGB4	:
-			sPtr = (b3_u16 *)data;
+	case B3_TX_RGB4	:
+		sPtr = (b3_u16 *)data;
 
-			// Check for alpha channel not equal to 0.
-			return (sPtr[x + y * xSize] & 0xf000) != 0;
+		// Check for alpha channel not equal to 0.
+		return (sPtr[x + y * xSize] & 0xf000) != 0;
 
-		case B3_TX_VGA	:
-			bPtr = (b3_u08 *)data;
+	case B3_TX_VGA	:
+		bPtr = (b3_u08 *)data;
 
-			// Check for first index.
-			return bPtr[x + y * xSize] != 0;
+		// Check for first index.
+		return bPtr[x + y * xSize] != 0;
 
-		case B3_TX_FLOAT :
-			cPtr = (b3_color *)data;
-			return cPtr[x + y * xSize].a > 0;
+	case B3_TX_FLOAT :
+		cPtr = (b3_color *)data;
+		return cPtr[x + y * xSize].a > 0;
 
-		default:
-			// No image -> no hit -> always transparent...
-			return true;
+	default:
+		// No image -> no hit -> always transparent...
+		return true;
 	}
 	return true;
 }
@@ -800,7 +800,7 @@ b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y)
 *************************************************************************/
 
 inline void b3Tx::b3GetILBM (
-	      b3_pkd_color *ColorLine,
+	b3_pkd_color *ColorLine,
 	const b3_coord      y)
 {
 	b3_u08       *Data;
@@ -856,7 +856,7 @@ inline void b3Tx::b3GetILBM (
 }
 
 inline void b3Tx::b3GetRGB8 (
-	      b3_pkd_color *dst,
+	b3_pkd_color *dst,
 	const b3_coord      y)
 {
 	b3_pkd_color *src;
@@ -891,7 +891,7 @@ inline void b3Tx::b3GetRGB8 (
 }
 
 inline void b3Tx::b3GetRGB4 (
-	      b3_pkd_color *ColorLine,
+	b3_pkd_color *ColorLine,
 	const b3_coord      y)
 {
 	b3_u16       *Data;
@@ -912,7 +912,7 @@ inline void b3Tx::b3GetRGB4 (
 }
 
 inline void b3Tx::b3GetVGA (
-	      b3_pkd_color *ColorLine,
+	b3_pkd_color *ColorLine,
 	const b3_coord      y)
 {
 	b3_u08   *Data;
@@ -929,7 +929,7 @@ inline void b3Tx::b3GetVGA (
 }
 
 inline void b3Tx::b3GetFloat(
-	      b3_pkd_color *ColorLine,
+	b3_pkd_color *ColorLine,
 	const b3_coord      y)
 {
 	b3_color *cPtr = (b3_color *)data;
@@ -943,7 +943,7 @@ inline void b3Tx::b3GetFloat(
 }
 
 void b3Tx::b3GetRow (
-	      b3_color *Line,
+	b3_color *Line,
 	const b3_coord  y)
 {
 	b3_u08       *bPtr;
@@ -1004,32 +1004,32 @@ void b3Tx::b3GetRow (
 }
 
 void b3Tx::b3GetRow (
-	      b3_pkd_color *Line,
+	b3_pkd_color *Line,
 	const b3_coord      y)
 {
 	switch (type)
 	{
-		case B3_TX_ILBM :
-			b3GetILBM (Line,y);
-			break;
+	case B3_TX_ILBM :
+		b3GetILBM (Line,y);
+		break;
 
-		case B3_TX_RGB8 :
-			b3GetRGB8 (Line,y);
-			break;
+	case B3_TX_RGB8 :
+		b3GetRGB8 (Line,y);
+		break;
 
-		case B3_TX_RGB4 :
-			b3GetRGB4 (Line,y);
-			break;
+	case B3_TX_RGB4 :
+		b3GetRGB4 (Line,y);
+		break;
 
-		case B3_TX_VGA :
-			b3GetVGA  (Line,y);
-			break;
+	case B3_TX_VGA :
+		b3GetVGA  (Line,y);
+		break;
 
-		case B3_TX_FLOAT:
-			b3GetFloat(Line,y);
-			break;
+	case B3_TX_FLOAT:
+		b3GetFloat(Line,y);
+		break;
 
-		default:
-			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
+	default:
+		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 }

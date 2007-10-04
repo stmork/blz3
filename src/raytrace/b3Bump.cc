@@ -108,9 +108,9 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 	b3Scale(ray,&m_Scale,&point);
 
 	Denom = 1.0 / sqrt(
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z);
+				ray->normal.x * ray->normal.x +
+				ray->normal.y * ray->normal.y +
+				ray->normal.z * ray->normal.z);
 
 	b3Noise::b3NoiseVector (point.x,point.y,point.z,&n);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
@@ -273,8 +273,8 @@ void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 	b3_f64       x,y;
 
 	if (b3GetNormalDeriv (
-		ray->polar.m_Polar.x,
-		ray->polar.m_Polar.y,&Deriv))
+				ray->polar.m_Polar.x,
+				ray->polar.m_Polar.y,&Deriv))
 	{
 		b3Vector::b3Normalize(&ray->normal);
 		b3Vector::b3Scale(&Deriv,m_Amplitude);
@@ -313,7 +313,7 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 		if (B3_PARSE_INDEX_VALID)
 		{
 			m_Km       = b3InitFloat();
-			m_Octaves  = b3InitCount(); 
+			m_Octaves  = b3InitCount();
 			m_WindAmp  = b3InitFloat();
 			m_WindFreq = b3InitFloat();
 			m_MinWind  = b3InitFloat();
@@ -379,9 +379,9 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z);
+				ray->normal.x * ray->normal.x +
+				ray->normal.y * ray->normal.y +
+				ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -445,9 +445,9 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z);
+				ray->normal.x * ray->normal.x +
+				ray->normal.y * ray->normal.y +
+				ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -490,11 +490,11 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	b3_vector point,ox,oy,n;
 	b3_f64    Denom,r,groove;
 
-	point.x = 
+	point.x =
 		ray->polar.m_ObjectPolar.x * m_Scale.x +
 		ray->polar.m_ObjectPolar.y * m_Scale.y;
-	point.y = 
-	point.z = 0;
+	point.y =
+		point.z = 0;
 
 	groove   = b3Noise::b3Wave(&point);
 	ox.x     = 0.125;
@@ -515,9 +515,9 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z);
+				ray->normal.x * ray->normal.x +
+				ray->normal.y * ray->normal.y +
+				ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -843,7 +843,7 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 *************************************************************************/
 
 b3BumpOcean::b3BumpOcean(b3_u32 class_type) :
-	b3Bump(sizeof(b3BumpOcean), class_type)
+		b3Bump(sizeof(b3BumpOcean), class_type)
 {
 	b3Vector::b3Init(&m_Scale, 0.1f, 0.1f, 0.1f);
 	m_ScaleFlags = B3_SCALE_IPOINT;
@@ -851,7 +851,7 @@ b3BumpOcean::b3BumpOcean(b3_u32 class_type) :
 }
 
 b3BumpOcean::b3BumpOcean(b3_u32 *src) :
-	b3Bump(src)
+		b3Bump(src)
 {
 	b3InitVector(&m_Scale);
 	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
@@ -906,9 +906,9 @@ void b3BumpOcean::b3BumpNormal(b3_ray *ray)
 	b3Vector::b3Normalize(&n, r);
 
 	Denom = 1.0 / sqrt(
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z);
+				ray->normal.x * ray->normal.x +
+				ray->normal.y * ray->normal.y +
+				ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x;
 	ray->normal.y = ray->normal.y * Denom + n.y;

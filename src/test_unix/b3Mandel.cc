@@ -182,7 +182,7 @@ public:
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
-	
+
 			// Loop
 			a     = 0;
 			count = 0;
@@ -215,15 +215,15 @@ public:
 			case 0x00 : /* blue */
 				color = (i & 0x0f) <<  4;
 				break;
-		
+
 			case 0x10 : /* green */
 				color = (i & 0x0f) << 12;
 				break;
-	
+
 			case 0x20 : /* red */
 				color = (i & 0x0f) << 20;
 				break;
-	
+
 			case 0x30 : /* magenta */
 				color = ((i & 0x0f) << 20) | ((i & 0x0f) <<  4);
 				break;
@@ -323,8 +323,8 @@ void b3Mandel::b3Compute(
 	// Determine number of CPU's
 	CPUs = b3Runtime::b3GetNumCPUs();
 	b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
-		CPUs,
-		CPUs > 1 ? "'s" : "");
+			  CPUs,
+			  CPUs > 1 ? "'s" : "");
 
 	// Allocate some instances
 	infos       = new mandel_info[CPUs];
@@ -343,7 +343,7 @@ void b3Mandel::b3Compute(
 
 	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
 	tStart = timepoint;
-	b3MandelRow::b3InitColor(); 
+	b3MandelRow::b3InitColor();
 	b3MandelRow::b3Init();
 	for (i = 0;i < CPUs;i++)
 	{

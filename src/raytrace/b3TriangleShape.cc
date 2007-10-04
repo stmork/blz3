@@ -31,19 +31,19 @@
 *************************************************************************/
 
 b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
-	b3SimpleShape(class_size, class_type)
+		b3SimpleShape(class_size, class_type)
 {
 	b3Clear();
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
-	b3SimpleShape(sizeof(b3TriangleShape), class_type)
+		b3SimpleShape(sizeof(b3TriangleShape), class_type)
 {
 	b3Clear();
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 *src) :
-	b3SimpleShape(src)
+		b3SimpleShape(src)
 {
 	b3Clear();
 }
@@ -138,7 +138,7 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	b3_index   triangle,
 	b3_count   max)
 {
-	b3_index i1 = b3GetGrid(P1); 
+	b3_index i1 = b3GetGrid(P1);
 	b3_index i2 = b3GetGrid(P2);
 	b3_index i3 = b3GetGrid(P3);
 
@@ -151,7 +151,7 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	{
 		b3_index dSum =
 			b3GridDistance(P1->x,P2->x,P3->x) +
-			b3GridDistance(P1->y,P2->y,P3->y) + 
+			b3GridDistance(P1->y,P2->y,P3->y) +
 			b3GridDistance(P1->z,P2->z,P3->z);
 
 		if (dSum == 1)
@@ -287,7 +287,7 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info *prep_info)
 			b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point, &info.dir1);
 			b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point, &info.dir2);
 			b3Vector::b3CrossProduct(&info.dir1, &info.dir2, &info.Normal);
-			
+
 			m_TriaInfos.b3Add(info);
 
 			if ((m_Flags & B3_NORMAL_FACE_VALID)==0)
@@ -335,8 +335,8 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info *prep_info)
 		End.z   += 0.1f;
 		b3Vector::b3Sub(&End, &Start, &diff);
 		if ((diff.x < 0.1) ||
-		    (diff.y < 0.1) ||
-		    (diff.z < 0.1))
+				(diff.y < 0.1) ||
+				(diff.z < 0.1))
 		{
 			m_GridSize = 1;
 		}

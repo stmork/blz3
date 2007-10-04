@@ -40,7 +40,7 @@ b3_result b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 	b3_index      i = 0;
 
 	b3PrintF(B3LOG_FULL,"IMG PCX  # b3ParsePCX8(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	xNewSize = b3Endian::b3GetIntel16(&buffer[ 8]) + 1;
 	yNewSize = b3Endian::b3GetIntel16(&buffer[10]) + 1;
@@ -68,7 +68,7 @@ b3_result b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 				i++;
 			}
 
-		}             
+		}
 
 		srcPtr++;      /* Zeiger auf Palette */
 
@@ -99,7 +99,7 @@ b3_result b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 	b3_index      i;
 
 	b3PrintF(B3LOG_FULL,"IMG PCX  # b3ParsePCX4(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	xSize = b3Endian::b3GetIntel16(&buffer[ 8]) + 1;
 	ySize = b3Endian::b3GetIntel16(&buffer[10]) + 1;
@@ -147,7 +147,7 @@ b3_result b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 				*dstPtr++ = Col;
 				i++;
 			}
-		}             
+		}
 	}
 	else
 	{

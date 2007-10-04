@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	b3OceanWave     ocean;
 	char           *HOME = getenv("HOME");
 	char            StanOlliImage[B3_FILESTRINGLEN];
-	
+
 	snprintf(StanOlliImage, sizeof(StanOlliImage), "%s/Blizzard/Textures/StanOlli.gif", HOME);
 
 	b3Log::b3SetLevel(B3LOG_FULL);

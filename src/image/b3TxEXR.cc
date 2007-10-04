@@ -95,7 +95,7 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 	b3_result result = B3_ERROR;
 
 	b3PrintF(B3LOG_FULL,"IMG EXR  # b3ParseOpenEXR(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	try
 	{

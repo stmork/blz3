@@ -51,7 +51,7 @@ b3_count b3Tx::b3BuildRLE(
 	bit   = 128;
 	i     = 0;
 	last  = true;	// true = last bit set/false = last bit cleared
-						// So: We start with black block!
+	// So: We start with black block!
 	count = 0;
 	num   = 0;
 	for (x = 0;x < xSize;x++)
@@ -163,7 +163,7 @@ void b3Tx::b3RemoveBlackBorder()
 	{
 		throw b3TxException(B3_TX_MEMORY);
 	}
-	
+
 	cPtr   = (b3_u08 *)data;
 	xBytes = TX_BWA(xSize);
 	for (y = 0;y < ySize;y++)
@@ -203,7 +203,7 @@ class b3_tx_border
 	static b3_tx_border TxBorder;
 
 	/********************************
-	  left border
+	left border
 	0XXXXXXX -> 0XXXXXXX (end case)
 	10XXXXXX -> 00XXXXXX      "
 	110XXXXX -> 000XXXXX      "
@@ -214,10 +214,10 @@ class b3_tx_border
 	11111110 -> 00000000      "
 	11111111 -> 00000000 (loop case)
 	*********************************/
-	       b3_u08       lRemoval[256];
+	b3_u08       lRemoval[256];
 
 	/********************************
-	  right border
+	right border
 	XXXXXXX0 -> XXXXXXX0 (end case)
 	XXXXXX01 -> XXXXXX00      "
 	XXXXX011 -> XXXXX000      "
@@ -228,8 +228,8 @@ class b3_tx_border
 	01111111 -> 00000000      "
 	11111111 -> 00000000 (loop case)
 	*********************************/
-	       b3_u08       rRemoval[256];
-	
+	b3_u08       rRemoval[256];
+
 	b3_tx_border()
 	{
 		b3_loop x,b;
@@ -302,16 +302,16 @@ xSize & %1111 = 15: XXXXXXXX XXXXXXXn -> 11111111 11111110
 
 ********************************/
 const b3_u08 b3Tx::m_RightMaskLeftByte[16] =
-{
-	0xff,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe,
-	0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff
-};
+	{
+		0xff,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe,
+		0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff
+	};
 
 const b3_u08 b3Tx::m_RightMaskRightByte[16] =
-{
-	0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe
-};
+	{
+		0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+		0x00,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe
+	};
 
 /********************************
 Set right border for right
@@ -329,9 +329,9 @@ XXXXXXXn -> XXXXXXX1
 XXXXXXXX -> XXXXXXXX
 ********************************/
 const b3_u08 b3Tx::m_RightBorder[] =
-{
-	0xff,0x7f,0x3f,0x1f,0x0f,0x07,0x03,0x01
-};
+	{
+		0xff,0x7f,0x3f,0x1f,0x0f,0x07,0x03,0x01
+	};
 
 
 // This is the nice version...
@@ -368,7 +368,7 @@ void b3Tx::b3RemoveBlackBorder()
 			cPtr[xEnd] |= m_RightBorder[x];
 			cPtr       += xBytes;
 		}
-	}			
+	}
 	else
 	{
 		xEnd--;
@@ -448,7 +448,7 @@ void b3Tx::b3Shrink(b3_count shrink)
 				if (line[k] != 0)
 				{
 					b3_count diff;
-		
+
 					// Set block block to width of
 					// one pixel and add the difference
 					// to white block.
@@ -488,7 +488,7 @@ void b3Tx::b3Negate()
 	if (b3IsBW())
 	{
 		bPtr   = (b3_u08 *)data;
-		xBytes = TX_BWA(xSize);			 
+		xBytes = TX_BWA(xSize);
 		max    = xBytes * ySize;
 		for (i = 0;i < max;i++)
 		{
@@ -518,7 +518,7 @@ void b3Tx::b3Negate()
 			sPtr++;
 		}
 		break;
-		
+
 	case B3_TX_RGB8:
 		lPtr = (b3_pkd_color *)data;
 		max  = xSize * ySize;
@@ -528,7 +528,7 @@ void b3Tx::b3Negate()
 			lPtr++;
 		}
 		break;
-		
+
 	case B3_TX_FLOAT:
 		cPtr = (b3_color *)data;
 		max  = xSize * ySize;
@@ -586,7 +586,7 @@ void b3Tx::b3TurnRightILBM()
 	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
+				 "### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
 		throw b3TxException(B3_TX_MEMORY);
 	}
 
@@ -668,7 +668,7 @@ void b3Tx::b3TurnRightILBM()
 	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
+				 "### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
@@ -932,7 +932,7 @@ void b3Tx::b3TurnLeftILBM()
 	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TurnLeftILBM() NOT ENOUGH MEMORY!\n");
+				 "### CLASS: b3Tx   # b3TurnLeftILBM() NOT ENOUGH MEMORY!\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
@@ -1191,8 +1191,8 @@ void b3Tx::b3TurnLeft()
 class b3_tx_turn
 {
 	static b3_tx_turn TxTurn;
-	       b3_u08     Turnbytes[256];
-	
+	b3_u08     Turnbytes[256];
+
 	b3_tx_turn()
 	{
 		b3_coord bit,byte,turn;
@@ -1502,10 +1502,10 @@ b3_bool b3Tx::b3TxColorFilter(
 	}
 
 	return b3TxTransformTable(
-		filter_r,
-		filter_g,
-		filter_b,
-		src);
+			   filter_r,
+			   filter_g,
+			   filter_b,
+			   src);
 }
 
 b3_f64 b3Tx::b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale)
@@ -1549,9 +1549,9 @@ b3_bool b3Tx::b3TxContrast(
 	}
 
 	return b3TxTransformTable(
-		correction_table,
-		correction_table,
-		correction_table,src);
+			   correction_table,
+			   correction_table,
+			   correction_table,src);
 }
 
 b3_bool b3Tx::b3TxReduce(b3Tx *src)

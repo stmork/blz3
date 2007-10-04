@@ -223,8 +223,8 @@ b3_bool b3Light::b3Illuminate(
 	b3_surface *surface)
 {
 	return (m_SoftShadow ?
-		b3AreaIllumination(shader,surface) :
-		b3PointIllumination(shader,surface));
+			b3AreaIllumination(shader,surface) :
+			b3PointIllumination(shader,surface));
 }
 
 inline b3_bool b3Light::b3PointIllumination(
@@ -295,7 +295,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3_f64         Factor,denomLightDist,q;
 	b3_coord       x,y,xs;
 	b3_count       max,Distr;
-	b3_bool        equal;				
+	b3_bool        equal;
 
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
@@ -331,8 +331,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 	}
 
 	Factor = denomLightDist / sqrt(
-		Jit.m_LightView.x * Jit.m_LightView.x +
-		Jit.m_LightView.y * Jit.m_LightView.y);
+				 Jit.m_LightView.x * Jit.m_LightView.x +
+				 Jit.m_LightView.y * Jit.m_LightView.y);
 	Jit.m_xDir.x	= -Jit.m_LightView.y * Factor;
 	Jit.m_xDir.y	=  Jit.m_LightView.x * Factor;
 	Jit.m_xDir.z	=  0;
@@ -448,7 +448,7 @@ b3_f64 b3Light::b3ComputeSpotExponent()
 		while ((i < max) && loop);
 		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
 		b3PrintF(B3LOG_FULL,"b3Light::b3ComputeSpotExponent(%s) = %3.2f lambda=%3.2f\n",
-			b3GetName(),p,angle);
+				 b3GetName(),p,angle);
 	}
 	return p;
 }

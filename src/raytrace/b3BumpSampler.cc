@@ -34,13 +34,13 @@
 #define BUMP_SLOPE 0.15
 
 b3_vector b3BumpSampler::m_Light =
-{
-	-1,1,1
-};
+	{
+		-1,1,1
+	};
 
 b3BumpSampler::b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles) :
-	m_Tiles(tiles),
-	m_BBoxSize(bbox_size)
+		m_Tiles(tiles),
+		m_BBoxSize(bbox_size)
 {
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
@@ -53,7 +53,7 @@ b3BumpSampler::b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_coun
 	m_yMax  = m_Tx->ySize;
 	m_Data  = m_Tx->b3GetHdrData();
 }
-	
+
 void b3BumpSampler::b3SetBump(b3Bump *bump)
 {
 	m_Bump = bump;
@@ -102,7 +102,7 @@ void b3BumpSampler::b3SampleTask(const b3SampleInfo *info)
 		for (x = 0;x < info->m_xMax;x++)
 		{
 			int ix = (m_Tiles * x) / info->m_xMax;
-			
+
 			ray.polar.m_BoxPolar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
 			ray.polar.m_BoxPolar.y = 1.0 - fy;
 			ray.polar.m_BoxPolar.z = 1.0 - fy * BUMP_SLOPE * ix;

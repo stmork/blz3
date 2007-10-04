@@ -88,10 +88,10 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 
 	// For unround rings...
 	r += m_AngularWobble * b3Math::b3Smoothstep(0,5,r) * b3Noise::b3SignedNoiseVector(
-		Pring.x * m_AngularWobbleFrequency,
-		Pring.y * m_AngularWobbleFrequency,
-		Pring.z * m_AngularWobbleFrequency * 0.1);
-	
+			 Pring.x * m_AngularWobbleFrequency,
+			 Pring.y * m_AngularWobbleFrequency,
+			 Pring.z * m_AngularWobbleFrequency * 0.1);
+
 	// Ensure unequally spaced rings
 	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseScalar(r);
 

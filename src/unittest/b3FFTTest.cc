@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3FFTTest.h"
 
 /*************************************************************************
@@ -43,7 +43,7 @@ void b3FFTTest::setUp()
 }
 
 void b3FFTTest::tearDown()
-{	
+{
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
@@ -95,7 +95,7 @@ void b3FFTTest::testSample()
 
 	CPPUNIT_ASSERT_NO_THROW(fft.b3Sample(this, setbuffer));
 	CPPUNIT_ASSERT_EQUAL((TEST_RE + TEST_IM) * dim * dim, b3Count());
-	
+
 	CPPUNIT_ASSERT_NO_THROW(fft.b3Sample(this, clear));
 	CPPUNIT_ASSERT_EQUAL(0.0, b3Count());
 }
@@ -111,7 +111,7 @@ b3_f64 b3FFTTest::b3Count()
 	{
 		count += fabs(buffer[i].b3Real());
 		count += fabs(buffer[i].b3Imag());
-	}	
+	}
 	return count;
 }
 
@@ -119,22 +119,22 @@ void b3FFTTest::clear(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	      b3FilterInfo *filter_info)
+	b3FilterInfo *filter_info)
 {
-	 b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
-	 
-	 buffer[index] = 0;
+	b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
+
+	buffer[index] = 0;
 }
 
 void b3FFTTest::setbuffer(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	      b3FilterInfo *filter_info)
+	b3FilterInfo *filter_info)
 {
-	 b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
-	 
-	 buffer[index] = b3Complex64(TEST_RE, TEST_IM);
+	b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
+
+	buffer[index] = b3Complex64(TEST_RE, TEST_IM);
 }
 
 void b3FFTTest::testOceanWave()

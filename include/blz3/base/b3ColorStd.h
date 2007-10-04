@@ -29,7 +29,7 @@
  */
 class B3_PLUGIN b3Color : public b3ColorBase
 {
-	             b3_f32 B3_ALIGN_16 v[4];            //!< These are the color channels of a b3Color instance.
+	b3_f32 B3_ALIGN_16 v[4];            //!< These are the color channels of a b3Color instance.
 
 	static const b3_f32 B3_ALIGN_16 m_Limit_m000[4]; //!< These color values represent black (for clamping).
 	static const b3_f32 B3_ALIGN_16 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
@@ -209,8 +209,8 @@ public:
 	inline void b3Init(const b3_f32 rgb, const b3_f32 a = 0)
 	{
 		v[R] =
-		v[G] =
-		v[B] = rgb;
+			v[G] =
+				v[B] = rgb;
 		v[A] = a;
 	}
 
@@ -630,7 +630,7 @@ public:
 	inline b3Color b3Pow(const b3_f32 exp)
 	{
 		b3Color result,exponent;
-		
+
 		exponent.b3Init(exp);
 		for (b3_loop i = 0;i < 4;i++)
 		{
@@ -788,9 +788,9 @@ public:
 	inline COLORREF b3GetColorref()
 	{
 		return RGB(
-			(b3_pkd_color)(v[R] * 255),
-			(b3_pkd_color)(v[G] * 255),
-			(b3_pkd_color)(v[B] * 255));
+				   (b3_pkd_color)(v[R] * 255),
+				   (b3_pkd_color)(v[G] * 255),
+				   (b3_pkd_color)(v[B] * 255));
 	}
 
 	/**

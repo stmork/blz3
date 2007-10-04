@@ -90,7 +90,7 @@ b3_f64 b3Filter::b3InvIntegral(b3_f64 val,b3_bool throw_exception) throw(b3Filte
 *************************************************************************/
 
 #define GAUSS_ND_MAX      3.0
-#define GAUSS_ND_STEP     (1.0 / 128.0) 
+#define GAUSS_ND_STEP     (1.0 / 128.0)
 
 #define GAUSS_ND_ENTRIES  ((b3_count)(GAUSS_ND_MAX / GAUSS_ND_STEP) + 2)
 
@@ -191,8 +191,8 @@ b3_f64 b3ShutterFilter::b3Integral(b3_f64 x)
 		b3_f64 y = (1 - x) / m_Max;
 
 		result = m_Area - (1 - x) * y * 0.5;
-	}	
-	else	
+	}
+	else
 	{
 		// High level
 		result = x + 1 - 0.5 * m_Max;

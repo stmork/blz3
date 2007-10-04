@@ -278,7 +278,7 @@ void b3AnimElement::b3AnimateRotate(
 
 		// Orientate
 		b3Matrix::b3Dress (&m_NeutralInverse,transform,
-			&m_Center,&lookTo,&refDir,future);
+						   &m_Center,&lookTo,&refDir,future);
 	}
 	else
 	{
@@ -321,17 +321,17 @@ void b3AnimElement::b3ComputeTransformationMatrix(
 {
 	switch (b3GetClassType())
 	{
-		case ANIM_MOVE :
-			b3AnimateMove   (AnimRoot,transform,t);
-			break;
+	case ANIM_MOVE :
+		b3AnimateMove   (AnimRoot,transform,t);
+		break;
 
-		case ANIM_ROTATE :
-			b3AnimateRotate (AnimRoot,transform,t);
-			break;
+	case ANIM_ROTATE :
+		b3AnimateRotate (AnimRoot,transform,t);
+		break;
 
-		case ANIM_SCALE :
-			b3AnimateScale  (AnimRoot,transform,t);
-			break;
+	case ANIM_SCALE :
+		b3AnimateScale  (AnimRoot,transform,t);
+		break;
 	}
 }
 
@@ -426,9 +426,9 @@ void b3Animation::b3ApplyTransformation (
 		{
 			b3PrintF(B3LOG_FULL,"  ANIM light %s\n",Anim->m_Object);
 			Anim->b3GetPosition (&Light->m_Position,
-				b3Math::b3Limit(t,Anim->m_Start,Anim->m_End));
+								 b3Math::b3Limit(t,Anim->m_Start,Anim->m_End));
 			if ((Light->m_SpotActive) &&
-			    ( Anim->b3GetClassType() == ANIM_ROTATE))
+					( Anim->b3GetClassType() == ANIM_ROTATE))
 			{
 				Light->m_Direction.x = Anim->m_Center.x - Light->m_Position.x;
 				Light->m_Direction.y = Anim->m_Center.y - Light->m_Position.y;
@@ -448,7 +448,7 @@ void b3Animation::b3ApplyTransformation (
 			height = b3Vector::b3Length (&Camera->m_Height);
 			diff   = Camera->m_EyePoint;
 			Anim->b3GetPosition (&Camera->m_EyePoint,
-				b3Math::b3Limit(t,Anim->m_Start,Anim->m_End));
+								 b3Math::b3Limit(t,Anim->m_Start,Anim->m_End));
 
 			if (Anim->b3GetClassType() == ANIM_ROTATE)
 			{
@@ -456,7 +456,7 @@ void b3Animation::b3ApplyTransformation (
 				Camera->b3Orientate(&Camera->m_EyePoint,&Anim->m_Center,focal,width,height);
 				Camera->b3SetTwirl(twirl);
 			}
-			
+
 			if (Anim->b3GetClassType() == ANIM_MOVE)
 			{
 				b3PrintF(B3LOG_FULL,"  ANIM camera %s (move)\n",Anim->m_Object);

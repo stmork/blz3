@@ -48,9 +48,9 @@ void b3Tx::b3MirrorHorizontal()
 			for (x = 0;x < xMax;x++)
 			{
 				ctPtr--;
-				 cColor   = *ctPtr;
+				cColor   = *ctPtr;
 				*ctPtr    =  cbPtr[x];
-				 cbPtr[x] =  cColor;
+				cbPtr[x] =  cColor;
 			}
 			cbPtr += xSize;
 		}
@@ -64,9 +64,9 @@ void b3Tx::b3MirrorHorizontal()
 			for (x = 0;x < xMax;x++)
 			{
 				ltPtr--;
-				 lColor   = *ltPtr;
+				lColor   = *ltPtr;
 				*ltPtr    =  lbPtr[x];
-				 lbPtr[x] =  lColor;
+				lbPtr[x] =  lColor;
 			}
 			lbPtr += xSize;
 		}
@@ -80,9 +80,9 @@ void b3Tx::b3MirrorHorizontal()
 			for (x = 0;x < xMax;x++)
 			{
 				stPtr--;
-				 sColor   = *stPtr;
+				sColor   = *stPtr;
 				*stPtr    =  sbPtr[x];
-				 sbPtr[x] =  sColor;
+				sbPtr[x] =  sColor;
 			}
 			sbPtr += xSize;
 		}
@@ -96,9 +96,9 @@ void b3Tx::b3MirrorHorizontal()
 			for (x = 0;x < xMax;x++)
 			{
 				btPtr--;
-				 bColor   = *btPtr;
+				bColor   = *btPtr;
 				*btPtr    =  bbPtr[x];
-				 bbPtr[x] =  bColor;
+				bbPtr[x] =  bColor;
 			}
 			bbPtr += xSize;
 		}

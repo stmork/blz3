@@ -95,7 +95,7 @@ struct b3_surface : public b3_material
 **                        Base class for all materials                  **
 **                                                                      **
 *************************************************************************/
- 
+
 struct b3_light_info;
 
 /**
@@ -116,7 +116,7 @@ public:
 	 * This method registers the default material implementations to the b3World item registry.
 	 */
 	static  void    b3Register();
-	
+
 	virtual b3_bool b3Prepare(b3_preparation_info *prep_info)
 	{
 		return true;
@@ -166,7 +166,7 @@ public:
 	 * @param reflection The reflectance.
 	 * @param refraction The refractance.
 	 * @return True if mixed via material properties. 
-	 */ 
+	 */
 	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
 		b3Material *material = surface->m_Incoming->material;
@@ -201,7 +201,7 @@ protected:
 	 * @see b3Math::b3Mix()
 	 */
 	static inline void b3Mix(
-		      b3_surface  *surface,
+		b3_surface  *surface,
 		const b3_material *a,
 		const b3_material *b,
 		const b3_f64       mix)
@@ -243,11 +243,11 @@ public:
 	B3_ITEM_INIT(b3MatNormal); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
 
-	        void    b3Write();
+	void    b3Write();
 	virtual b3_bool b3GetSurfaceValues(b3_surface *surface);
 
 private:
-	        void    b3Init();
+	void    b3Init();
 };
 
 /*************************************************************************
@@ -261,7 +261,7 @@ private:
  * a chess board. The materials must not be black or white but they are
  * named so for analogy.
  */
-class B3_PLUGIN b3MatChess : public b3Material 
+class B3_PLUGIN b3MatChess : public b3Material
 {
 public:
 	b3_material m_Material[2]; //!< The two used materials.
@@ -297,7 +297,7 @@ public:
  * are transformed into texture coordinate domain using start point (translation)
  * and scaling. The texture can be tiled.
  */
-class B3_PLUGIN b3MatTexture : public b3Material 
+class B3_PLUGIN b3MatTexture : public b3Material
 {
 public:
 	b3_f32            m_Reflection;         //!< The reflectance.
@@ -331,7 +331,7 @@ public:
  * This class implements a wrapping texture. This fits into the specified 2D
  * polar surface coordinates.
  */
-class B3_PLUGIN b3MatWrapTexture : public b3Material 
+class B3_PLUGIN b3MatWrapTexture : public b3Material
 {
 public:
 	b3_f32            m_Reflection;         //!< The reflectance.
@@ -366,7 +366,7 @@ public:
  * borders. This influences the further material computation during the b3GetSurfaceValues()
  * method when this class occures inside a material list.
  */
-class B3_PLUGIN b3MatSlide : public b3Material 
+class B3_PLUGIN b3MatSlide : public b3Material
 {
 public:
 	b3_material       m_Material[2];         //!< The border materials

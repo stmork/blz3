@@ -64,8 +64,8 @@ public:
 	b3_f32   m_l;          //!< Lower limit of wave length.
 
 public:
-	                b3OceanWave();
-		   virtual ~b3OceanWave();
+	b3OceanWave();
+	virtual ~b3OceanWave();
 
 	/**
 	 * This method precomputes some calculation invariant values.
@@ -147,13 +147,13 @@ private:
 		const b3_f64        fx,
 		const b3_f64        fy,
 		const b3_index      index,
-		      b3FilterInfo *filter_info);
+		b3FilterInfo *filter_info);
 
 	static void       b3SampleHeight(
 		const b3_f64        fx,
 		const b3_f64        fy,
 		const b3_index      index,
-		      b3FilterInfo *filter_info);
+		b3FilterInfo *filter_info);
 
 	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index);
 	void              b3PrepareNormals();
@@ -166,7 +166,7 @@ private:
 	{
 		return ((y & m_fftMask) << m_Dim) | (x & m_fftMask);
 	}
-	
+
 	inline b3_f64     b3GetHeight(const b3_index x, const b3_index y)
 	{
 		b3Complex64 *buffer = b3GetBuffer();

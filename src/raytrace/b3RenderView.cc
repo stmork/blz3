@@ -32,14 +32,14 @@
 *************************************************************************/
 
 b3RenderViewItem::b3RenderViewItem() :
-	b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
+		b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
 {
 	m_Mid.x =
-	m_Mid.y =
-	m_Mid.z = 0;
+		m_Mid.y =
+			m_Mid.z = 0;
 	m_Size.x =
-	m_Size.y =
-	m_Size.z = 0;
+		m_Size.y =
+			m_Size.z = 0;
 }
 
 b3RenderViewItem::b3RenderViewItem(
@@ -543,20 +543,20 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 
 void b3RenderView::b3Project(
 	const b3_vector *point,
-	      b3_f64    &xRel,
-		  b3_f64    &yRel,
-		  b3_f64    &zRel)
+	b3_f64    &xRel,
+	b3_f64    &yRel,
+	b3_f64    &zRel)
 {
 #ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
 	GLdouble modelview[16];
 	GLdouble projection[16];
 	GLdouble winX, winY, winZ;
-	
+
 	glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
 	glGetDoublev( GL_PROJECTION_MATRIX, projection );
 	glGetIntegerv( GL_VIEWPORT, viewport );
-	
+
 	gluProject(point->x,point->y,point->z,modelview,projection,viewport,&winX,&winY,&winZ);
 	xRel =       winX / m_xRes;
 	yRel = 1.0 - winY / m_yRes;
@@ -574,13 +574,13 @@ void b3RenderView::b3UnprojectInternal(
 	GLdouble modelview[16];
 	GLdouble projection[16];
 	GLdouble posX, posY, posZ;
- 
+
 	glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
 	glGetDoublev( GL_PROJECTION_MATRIX, projection );
 	glGetIntegerv( GL_VIEWPORT, viewport );
- 
+
 	gluUnProject( (GLfloat)x, (GLfloat)y, (GLfloat)z, modelview, projection, viewport, &posX, &posY, &posZ);
- 
+
 	point->x = (b3_f32)posX;
 	point->y = (b3_f32)posY;
 	point->z = (b3_f32)posZ;
@@ -704,7 +704,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
 	if (l > farCP) farCP = l;
 
- 	return farCP;// * 2 + 4;
+	return farCP;// * 2 + 4;
 #else
 	return 10000;
 #endif
@@ -1007,7 +1007,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3Color &color)
 	xCount  = B3_RASTER_COUNT(xStart,xEnd,grid);
 	yCount  = B3_RASTER_COUNT(yStart,yEnd,grid);
 	if ((xCount == 0 ? true : (m_xRes / xCount) >= B3_RASTER_MINDIST) &&
-	    (yCount == 0 ? true : (m_yRes / yCount) >= B3_RASTER_MINDIST))
+			(yCount == 0 ? true : (m_yRes / yCount) >= B3_RASTER_MINDIST))
 	{
 		glBegin(GL_LINES);
 		glColor3f(color[b3Color::R],color[b3Color::G],color[b3Color::B]);

@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3RandomTest.h"
 
 /*************************************************************************
@@ -41,9 +41,9 @@ typedef b3RandomTest<b3Rand48<double>, double> random_test_6;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_1);
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_2);
-CPPUNIT_TEST_SUITE_REGISTRATION(random_test_3);       
+CPPUNIT_TEST_SUITE_REGISTRATION(random_test_3);
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_4);
-CPPUNIT_TEST_SUITE_REGISTRATION(random_test_5);       
+CPPUNIT_TEST_SUITE_REGISTRATION(random_test_5);
 CPPUNIT_TEST_SUITE_REGISTRATION(random_test_6);
 
 #endif

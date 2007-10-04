@@ -31,18 +31,18 @@
 *************************************************************************/
 
 b3_csg_operation b3CSGShape::m_CSGMode[] =
-{
-	B3_CSG_UNION,
-	B3_CSG_INTERSECT,
-	B3_CSG_SUB
-};
+	{
+		B3_CSG_UNION,
+		B3_CSG_INTERSECT,
+		B3_CSG_SUB
+	};
 
 /*************************************************************************
 **                                                                      **
 **                        CSG shape base class                          **
 **                                                                      **
 *************************************************************************/
- 
+
 b3CSGShape::b3CSGShape(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
 {
 	m_Operation = B3_CSG_UNION;
@@ -140,7 +140,7 @@ void b3CSGShape::b3Operate(
 			stat = (aStat ? (!bStat) : false);
 			break;
 		}
-		
+
 		// Store only points which state (inside/outside)
 		// are changed.
 		if (stat != cStat)
@@ -166,7 +166,7 @@ b3_count b3CSGShape::b3GetMaxIntersections()
 **                        Base class for quadric CSG shapes             **
 **                                                                      **
 *************************************************************************/
- 
+
 b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3CSGShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);

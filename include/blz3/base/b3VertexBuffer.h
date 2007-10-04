@@ -38,8 +38,8 @@ enum b3_vbo_mapping
 #else
 
 /**
- * This enumeration defines the memory access rules for VBOs.
- */
+* This enumeration defines the memory access rules for VBOs.
+*/
 enum b3_vbo_mapping
 {
 	B3_MAP_VBO_RW,
@@ -320,9 +320,9 @@ public:
 class B3_PLUGIN b3SimpleVertexElements : public b3VertexElements
 {
 public:
-	             /**
-	              * This destructor deinitializes this instance.
-	              */
+	/**
+	 * This destructor deinitializes this instance.
+	 */
 	virtual      ~b3SimpleVertexElements();
 	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
 	virtual void  b3FreeVertexMemory();
@@ -334,9 +334,9 @@ public:
 class B3_PLUGIN b3SimpleGridElements : public b3GridElements
 {
 public:
-	             /**
-	              * This destructor deinitializes this instance.
-	              */
+	/**
+	 * This destructor deinitializes this instance.
+	 */
 	virtual      ~b3SimpleGridElements();
 	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
 	virtual void  b3FreeVertexMemory();
@@ -348,9 +348,9 @@ public:
 class B3_PLUGIN b3SimplePolygonElements : public b3PolygonElements
 {
 public:
-	             /**
-	              * This destructor deinitializes this instance.
-	              */
+	/**
+	 * This destructor deinitializes this instance.
+	 */
 	virtual      ~b3SimplePolygonElements();
 	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
 	virtual void  b3FreeVertexMemory();
@@ -368,7 +368,7 @@ public:
 class B3_PLUGIN b3ArrayVertexElements : public b3SimpleVertexElements
 {
 public:
-	             b3ArrayVertexElements();
+	b3ArrayVertexElements();
 	virtual void b3Draw();
 };
 
@@ -378,7 +378,7 @@ public:
 class B3_PLUGIN b3ArrayGridElements : public b3SimpleGridElements
 {
 public:
-	             b3ArrayGridElements();
+	b3ArrayGridElements();
 	virtual void b3Draw();
 };
 
@@ -388,7 +388,7 @@ public:
 class B3_PLUGIN b3ArrayPolygonElements : public b3SimplePolygonElements
 {
 public:
-	             b3ArrayPolygonElements();
+	b3ArrayPolygonElements();
 	virtual void b3Draw();
 };
 
@@ -405,18 +405,18 @@ class B3_PLUGIN b3VBO : protected b3VectorBufferObjects
 {
 protected:
 #ifdef BLZ3_USE_OPENGL
-	GLuint glVBO; //!< The VBO id. 
+	GLuint glVBO; //!< The VBO id.
 #endif
 
 public:
-	              /**
-	               * This constructor allocates an OpenGL VBO.
-	               */
-	              b3VBO();
+	/**
+	 * This constructor allocates an OpenGL VBO.
+	 */
+	b3VBO();
 
-	              /**
-	               * This destructor frees the OpenGL VBO.
-	               */
+	/**
+	 * This destructor frees the OpenGL VBO.
+	 */
 	virtual      ~b3VBO();
 };
 
@@ -432,10 +432,10 @@ public:
 class B3_PLUGIN b3VboVertexElements : public b3VertexElements, protected b3VBO
 {
 public:
-	             /**
-	              * This constructor initializes this instance.
-	              */
-	             b3VboVertexElements();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3VboVertexElements();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
 	virtual void b3FreeVertexMemory();
 	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW);
@@ -450,10 +450,10 @@ public:
 class B3_PLUGIN b3VboGridElements : public b3GridElements, protected b3VBO
 {
 public:
-	             /**
-	              * This constructor initializes this instance.
-	              */
-	             b3VboGridElements();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3VboGridElements();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
 	virtual void b3FreeVertexMemory();
 	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW);
@@ -468,10 +468,10 @@ public:
 class B3_PLUGIN b3VboPolygonElements : public b3PolygonElements, protected b3VBO
 {
 public:
-	             /**
-	              * This constructor initializes this instance.
-	              */
-	             b3VboPolygonElements();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3VboPolygonElements();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
 	virtual void b3FreeVertexMemory();
 	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW);
@@ -492,10 +492,10 @@ public:
 class B3_PLUGIN b3VboStaticVertexElements : public b3SimpleVertexElements, protected b3VBO
 {
 public:
-	             /**
-	              * This constructor initializes this instance.
-	              */
-	             b3VboStaticVertexElements();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3VboStaticVertexElements();
 	virtual void b3CustomData();
 	virtual void b3Draw();
 };
@@ -506,10 +506,10 @@ public:
 class B3_PLUGIN b3VboStaticGridElements : public b3SimpleGridElements, protected b3VBO
 {
 public:
-	             /**
-	              * This constructor initializes this instance.
-	              */
-	             b3VboStaticGridElements();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3VboStaticGridElements();
 	virtual void b3CustomData();
 	virtual void b3Draw();
 };
@@ -520,10 +520,10 @@ public:
 class B3_PLUGIN b3VboStaticPolygonElements : public b3SimplePolygonElements, protected b3VBO
 {
 public:
-	             /**
-	              * This constructor initializes this instance.
-	              */
-	             b3VboStaticPolygonElements();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3VboStaticPolygonElements();
 	virtual void b3CustomData();
 	virtual void b3Draw();
 };

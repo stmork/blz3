@@ -222,7 +222,7 @@ void b3BBox::b3UpdateBBox()
 	{
 		shape = (b3Shape *)item;
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,".");
+		b3PrintF(B3LOG_FULL,".");
 #endif
 		shape->b3Update();
 	}
@@ -315,7 +315,7 @@ void b3Scene::b3UpdateMaterial()
 {
 	b3Item  *item;
 	b3BBox  *bbox;
-	
+
 	b3PrintF(B3LOG_FULL,"    Updating materials...\n");
 
 	B3_FOR_BASE(b3GetBBoxHead(), item)
@@ -759,16 +759,16 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection *projection)
 		if (out.z <  0)
 		{
 			mask |= CLIP_BACK;
-			     if (out.x < -0) mask |= CLIP_RIGHT;
+			if (out.x < -0) mask |= CLIP_RIGHT;
 			else if (out.x >= 0) mask |= CLIP_LEFT;
-			     if (out.y <  0) mask |= CLIP_TOP;
+			if (out.y <  0) mask |= CLIP_TOP;
 			else if (out.y >= 0) mask |= CLIP_BOTTOM;
 		}
 		else
 		{
-			     if (out.x < -1) mask |= CLIP_LEFT;
+			if (out.x < -1) mask |= CLIP_LEFT;
 			else if (out.x >  1) mask |= CLIP_RIGHT;
-			     if (out.y < -1) mask |= CLIP_BOTTOM;
+			if (out.y < -1) mask |= CLIP_BOTTOM;
 			else if (out.y >  1) mask |= CLIP_TOP;
 		}
 

@@ -68,7 +68,7 @@ class B3_PLUGIN b3Noise
 
 	static int                 m_Permutation[512];
 
-	 b3Noise() throw(b3NoiseException);
+	b3Noise() throw(b3NoiseException);
 	~b3Noise();
 
 public:
@@ -92,7 +92,7 @@ public:
 	{
 		return b3NoiseScalar(x) * 2 - 1;
 	}
-	
+
 	/**
 	 * This method returns a Hermite interpolated pseudo random float based on Perlin noise.
 	 * The result is in range [0..1] and is computed from one scalar.
@@ -113,7 +113,7 @@ public:
 	{
 		return b3FilteredNoiseScalar(x) * 2 - 1;
 	}
-	
+
 	/**
 	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
 	 * The result is in range [0..1] and is computed from three scalars forming a vector.
@@ -138,7 +138,7 @@ public:
 	{
 		return b3NoiseVector(x,y,z) * 2 - 1;
 	}
-	
+
 	/**
 	 * This method returns a Hermite interpolated pseudo random float based on Perlin noise.
 	 * The result is in range [0..1] and is computed from three scalars forming a vector.
@@ -192,7 +192,7 @@ public:
 	 * @return The pseudo random value.
 	 */
 	static        b3_f64  b3SignedImprovedNoise    (const b3_f32 x, const b3_f32 y, const b3_f32 z);
-	
+
 	/**
 	 * This method returns a vector with linear interpolated pseudo random floats based on Perlin noise.
 	 * The result is in range [0..1] and is computed from three scalar forming a vector.
@@ -203,7 +203,7 @@ public:
 	 * @param result The vector with random value.
 	 */
 	static        void          b3NoiseVector         (const b3_f64 x, const b3_f64 y, const b3_f64 z,b3_vector *result);
-	
+
 	/**
 	 * This method returns a vector with linear interpolated pseudo random floats based on Perlin noise.
 	 * The result is in range [0..1] and is computed from three scalar forming a vector.
@@ -238,7 +238,7 @@ public:
 	static inline void b3SignedNoiseDeriv (const b3_f64 dx, const b3_f64 dy, const b3_f64 dz,b3_vector *result)
 	{
 		b3NoiseDeriv(dx,dy,dz,result);
-		
+
 		result->x = result->x * 2 - 1;
 		result->y = result->y * 2 - 1;
 		result->z = result->z * 2 - 1;
@@ -284,7 +284,7 @@ public:
 		v[1] = p->x;
 		v[2] = p->y;
 		v[3] = p->z;
-		
+
 		factor[0] = attenuation;
 		factor[1] = amplification;
 		factor[2] = amplification;
@@ -320,7 +320,7 @@ public:
 		const b3_count   octaves,
 		const b3_f32     amplification,
 		const b3_f32     attenuation,
-		      b3_vector *result)
+		b3_vector *result)
 	{
 		b3_f32 B3_ALIGN_16 v[4];
 		b3_f32 B3_ALIGN_16 factor[4];
@@ -332,7 +332,7 @@ public:
 		v[1] = p->x;
 		v[2] = p->y;
 		v[3] = p->z;
-		
+
 		factor[0] = attenuation;
 		factor[1] = amplification;
 		factor[2] = amplification;

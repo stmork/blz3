@@ -72,7 +72,7 @@ void b3LoaderBase::b3Unload()
 *************************************************************************/
 
 b3PluginBase::b3PluginBase(b3Path &library) :
-	b3Link<b3PluginBase>(sizeof(b3PluginBase)),
-	m_PluginPath(library)
+		b3Link<b3PluginBase>(sizeof(b3PluginBase)),
+		m_PluginPath(library)
 {
 }

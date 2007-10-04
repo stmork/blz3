@@ -46,7 +46,7 @@ public:
 		return (
 			((b3_pkd_color)r << 16) |
 			((b3_pkd_color)g <<  8) |
-			 (b3_pkd_color)b);
+			(b3_pkd_color)b);
 	}
 
 	/**
@@ -57,9 +57,9 @@ public:
 	inline               operator b3_pkd_color()
 	{
 		return (
-			((b3_pkd_color)r << 16) |
-			((b3_pkd_color)g <<  8) |
-			 (b3_pkd_color)b);
+				   ((b3_pkd_color)r << 16) |
+				   ((b3_pkd_color)g <<  8) |
+				   (b3_pkd_color)b);
 	}
 
 	/**
@@ -89,18 +89,18 @@ public:
 	}
 #ifdef WIN32
 	// Problem: COLORREF and b3_pkd_color are of the same type ???
-/*
-	inline COLORREF       operator()()
-	{
-		return RGB(r,g,b);
-	}
-	inline void           operator=(const COLORREF &color)
-	{
-		r = (color & 0x0000ff);
-		g = (color & 0x00ff00) >>  8;
-		b = (color & 0xff0000) >> 16;
-	}
-*/
+	/*
+		inline COLORREF       operator()()
+		{
+			return RGB(r,g,b);
+		}
+		inline void           operator=(const COLORREF &color)
+		{
+			r = (color & 0x0000ff);
+			g = (color & 0x00ff00) >>  8;
+			b = (color & 0xff0000) >> 16;
+		}
+	*/
 #endif
 };
 

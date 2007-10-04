@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Dir.h"  
+#include "blz3/system/b3Dir.h"
 #include "blz3/image/b3Tx.h"
 
 static void convert_tiff(
@@ -67,7 +67,7 @@ static void convert_tiff(
 		{
 			scaled.b3AllocTx(xNewSize,yNewSize,tx->depth);
 		}
-		
+
 		if (filtered)
 		{
 			scaled.b3ScaleToGrey(tx);
@@ -114,7 +114,7 @@ static void convert_jpeg(
 		{
 			scaled.b3AllocTx(xNewSize,yNewSize,24);
 		}
-		
+
 		// As opposed to TIFF new image is true color annyway
 		if (filtered)
 		{
@@ -137,8 +137,8 @@ static void b3Banner(const char *command)
 	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"%s -i input-img [-f][-u][g][-r thresh][-s scale]\n"
-			"   [-x width][-y height][-q quality] -j output-jpg|-t output-tiff\n",command);
+				 "%s -i input-img [-f][-u][g][-r thresh][-s scale]\n"
+				 "   [-x width][-y height][-q quality] -j output-jpg|-t output-tiff\n",command);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -f             filtered scaling\n");
 		b3PrintF(B3LOG_NORMAL,"  -u             unfiltered scaling\n");

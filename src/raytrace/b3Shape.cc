@@ -220,9 +220,9 @@ void b3Shape::b3BumpNormal(b3_ray *ray)
 	}
 
 	denom = 1.0 / sqrt(
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z);
+				ray->normal.x * ray->normal.x +
+				ray->normal.y * ray->normal.y +
+				ray->normal.z * ray->normal.z);
 
 	ray->normal.x *= denom;
 	ray->normal.y *= denom;
@@ -313,7 +313,7 @@ b3_bool b3SimpleShape::b3CheckStencil(b3_polar *polar)
 	{
 		cond   = (b3Condition *)item;
 		result = cond->b3Conditionate(
-			result,cond->b3CheckStencil(polar));
+					 result,cond->b3CheckStencil(polar));
 	}
 	return result;
 }

@@ -74,19 +74,19 @@ class TestUnit;
 class TestInfo
 {
 public:
-	         TestUnit *thisClass;
+	TestUnit *thisClass;
 	volatile b3_u32   *counter;
-	         int       num;
+	int       num;
 };
 
 class TestUnit
 {
-	         b3Mutex    tMutex;
-	         b3IPCMutex iMutex;
-	         b3Thread   thread[TEST_NUM_THREADS];
+	b3Mutex    tMutex;
+	b3IPCMutex iMutex;
+	b3Thread   thread[TEST_NUM_THREADS];
 	volatile b3_u32     counter;
 	volatile b3_u32     single_counter[TEST_NUM_THREADS];
-	         TestInfo   info[TEST_NUM_THREADS];
+	TestInfo   info[TEST_NUM_THREADS];
 
 public:
 	TestUnit()
@@ -197,8 +197,8 @@ public:
 
 			// Printing result
 			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-				counter,safe_count,
-				counter != safe_count ? "expected" : "not expected");
+					  counter,safe_count,
+					  counter != safe_count ? "expected" : "not expected");
 		}
 	}
 
@@ -212,8 +212,8 @@ public:
 
 			// Printing result
 			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-				counter,safe_count,
-				counter != safe_count ? "not OK" : "OK");
+					  counter,safe_count,
+					  counter != safe_count ? "not OK" : "OK");
 		}
 	}
 
@@ -227,8 +227,8 @@ public:
 
 			// Printing result
 			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-				counter,safe_count,
-				counter != safe_count ? "not OK" : "OK");
+					  counter,safe_count,
+					  counter != safe_count ? "not OK" : "OK");
 		}
 	}
 };
@@ -273,7 +273,7 @@ static void b3TestThreadStart1()
 		else
 		{
 			fprintf(stderr,"thread not created at attempt %d - errno: %d (%s)\n",i,
-				error_code,strerror(error_code));
+					error_code,strerror(error_code));
 			exit(EXIT_FAILURE);
 		}
 	}

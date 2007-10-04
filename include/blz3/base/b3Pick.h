@@ -36,7 +36,7 @@ protected:
 	b3_f64   m_z;   //!< The depth.
 
 public:
-	                         b3Pick(b3_coord x=0,b3_coord y=0);
+	b3Pick(b3_coord x=0,b3_coord y=0);
 	virtual                 ~b3Pick();
 	virtual void             b3Draw(b3DrawContext *dc);
 	virtual void             b3Update();
@@ -57,7 +57,7 @@ public:
 	static b3_coord  m_PickSize;  //!< The size of the pick point as radius.
 
 public:
-	                 b3PickBase();
+	b3PickBase();
 	b3_bool          b3IsActive();
 	b3_bool          b3Down(b3_coord x,b3_coord y);
 	b3_bool          b3Move(b3_coord x,b3_coord y);

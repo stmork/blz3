@@ -73,7 +73,7 @@ void b3ShaderPhong::b3ShadeLight(
 		if (obsSurface.m_Refraction > 0)
 		{
 			Jit->m_DiffuseSum += (
-				light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
+									 light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
 		}
 	}
 #endif

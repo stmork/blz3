@@ -74,7 +74,7 @@ public:
 	 * @return The double precision floating point number.
 	 */
 	static b3_f64   b3GetMotDouble  (void *Ptr);
-	
+
 
 	/**
 	 * This method gets a two byte integer in little endian order from the given pointer position.

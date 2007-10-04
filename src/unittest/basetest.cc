@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	runner.addTest( registry.makeTest());
-	
+
 	return runner.run ("", false) ? EXIT_SUCCESS : EXIT_FAILURE;
 #else
 	b3PrintF(B3LOG_NORMAL, "No cppunit package available.\n");

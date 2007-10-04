@@ -177,7 +177,7 @@ public:
 	 * @return The actual file size.
 	 */
 	virtual b3_size  b3Size      () = 0;
-	
+
 	/**
 	 * This method resizes the file cache. It calls b3Flush() to write old
 	 * content.

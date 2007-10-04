@@ -61,7 +61,7 @@ static void b3TestFile(const char *filename)
 		world.b3Read(filename);
 		first = world.b3GetFirst();
 		b3PrintF(B3LOG_DEBUG,"%s -> %08x\n",
-			filename,first->b3GetClassType());
+				 filename,first->b3GetClassType());
 		ext = b3GetClassExt(first->b3GetClass());
 	}
 	catch(b3WorldException &w)
@@ -76,7 +76,7 @@ static void b3TestFile(const char *filename)
 	catch(...)
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown error with file %s\n",
-			filename);
+				 filename);
 		return;
 	}
 
@@ -91,7 +91,7 @@ static void b3TestFile(const char *filename)
 			rename(filename,new_filename);
 #else
 			b3PrintF(B3LOG_NORMAL,"rename(%s,%s)\n",
-				filename,(const char *)new_filename);
+					 filename,(const char *)new_filename);
 #endif
 		}
 	}

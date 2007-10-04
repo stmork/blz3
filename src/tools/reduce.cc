@@ -30,23 +30,23 @@
 *************************************************************************/
 
 b3_pkd_color palette[8] =
-{
-	0xd8f0fa,
-	0x000000,
-	0xfa820a,
-	0xaf1414,
-	0x0f1e78,
-	0x3096fa,
-	0x084019,
-	0x641e10
-};
+	{
+		0xd8f0fa,
+		0x000000,
+		0xfa820a,
+		0xaf1414,
+		0x0f1e78,
+		0x3096fa,
+		0x084019,
+		0x641e10
+	};
 
 int main(int argc,char *argv[])
 {
 	for (int i = 1;i < argc;i++)
 	{
 		b3Tx src,dst;
-		
+
 		if (src.b3LoadImage(argv[i]) == B3_OK)
 		{
 			if (dst.b3AllocTx(src.xSize,src.ySize,3))
@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
 				if (dst.b3TxReduce(&src))
 				{
 					b3Path path(argv[i]);
-					
+
 					path.b3RemoveExt();
 					path.b3Append(".tga");
 					dst.b3SaveTGA(path);

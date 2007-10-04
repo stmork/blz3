@@ -35,11 +35,11 @@
 #define no_CREATE_ICON
 
 static b3_vector scale =
-{
-  1.0,
-  1.0,
-  1.0
-};
+	{
+		1.0,
+		1.0,
+		1.0
+	};
 
 class b3MatWoodSampler : public b3MaterialSampler
 {
@@ -50,7 +50,7 @@ public:
 		m_Material = new b3MatWood(WOOD);
 		m_Material->b3Prepare(null);
 	}
-	
+
 	virtual ~b3MatWoodSampler()
 	{
 		delete m_Material;
@@ -79,7 +79,7 @@ public:
 		m_Material = material;
 		m_Material->b3Prepare(null);
 	}
-	
+
 	virtual ~b3MatOakPlankSampler()
 	{
 		delete m_Material;
@@ -95,7 +95,7 @@ public:
 		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
 		m_Bump->b3Prepare(null);
 	}
-	
+
 	virtual ~b3BumpWoodSampler()
 	{
 		delete m_Bump;
@@ -116,7 +116,7 @@ public:
 		m_Bump = bump;
 		m_Bump->b3Prepare(null);
 	}
-	
+
 	virtual ~b3BumpOakPlankSampler()
 	{
 		delete m_Bump;
@@ -132,13 +132,13 @@ int main(int argc,char *argv[])
 	{
 		b3Tx   tx;
 		b3_res xMax,yMax;
-		
+
 		// Create display
 		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
 		display->b3GetRes(xMax,yMax);
-		
+
 		tx.b3AllocTx(xMax, yMax, 128);
-		
+
 		b3MatWoodSampler      sampler(&tx);
 //		b3MatOakPlankSampler  sampler(&tx);
 //		b3BumpWoodSampler     sampler(&tx);
@@ -161,7 +161,7 @@ int main(int argc,char *argv[])
 				small.b3AllocTx(32,32,24);
 				small.b3ScaleToGrey(&tx);
 				small.b3SaveTGA(argv[2]);
-			
+
 				big.b3AllocTx(48,48,24);
 				big.b3ScaleToGrey(&tx);
 				big.b3SaveTGA(argv[3]);

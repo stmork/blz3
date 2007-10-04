@@ -58,7 +58,7 @@ public:
 	{
 #ifdef _DEBUG
 		b3_bool locked = m_Mutex.b3Lock();
-		
+
 		B3_ASSERT(locked);
 #else
 		m_Mutex.b3Lock();
@@ -72,7 +72,7 @@ public:
 	{
 #ifdef _DEBUG
 		b3_bool unlocked = m_Mutex.b3Unlock();
-		
+
 		B3_ASSERT(unlocked);
 #else
 		m_Mutex.b3Unlock();

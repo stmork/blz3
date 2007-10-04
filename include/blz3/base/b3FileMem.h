@@ -44,7 +44,7 @@ public:
 	/**
 	 * This constructor initializes the instance.
 	 */
-	         b3FileMem   ();
+	b3FileMem   ();
 
 	/**
 	 * This constructor initializes the instance with the specified access mode.

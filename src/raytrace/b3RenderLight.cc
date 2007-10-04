@@ -31,9 +31,9 @@
 *************************************************************************/
 
 b3_vector b3RenderLight::m_LightDirection =
-{
-	0,0,-1
-};
+	{
+		0,0,-1
+	};
 
 b3RenderLight::b3RenderLight()
 {

@@ -31,26 +31,26 @@
 *************************************************************************/
 
 b3_gl_line b3Area::m_AreaGrids[4] =
-{
-	{ 0,1 },
-	{ 1,2 },
-	{ 2,3 },
-	{ 3,0 }
-};
+	{
+		{ 0,1 },
+		{ 1,2 },
+		{ 2,3 },
+		{ 3,0 }
+	};
 
 b3_gl_polygon b3Area::m_AreaPolygons[2] =
-{
-	{ 0,3,1 },
-	{ 2,1,3 }
-};
+	{
+		{ 0,3,1 },
+		{ 2,1,3 }
+	};
 
 b3_f32 b3Area::m_AreaTexcoord[8] =
-{
-	0,0,
-	0,1,
-	1,1,
-	1,0
-};
+	{
+		0,0,
+		0,1,
+		1,1,
+		1,0
+	};
 
 b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
 {
@@ -82,14 +82,14 @@ void b3Area::b3ComputeVertices()
 	Vector->v.y = (b3_f32)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
 	Vector++;
-															 
+
 	Vector->t.s = m_AreaTexcoord[2];
 	Vector->t.t = m_AreaTexcoord[3];
 	Vector->v.x = (b3_f32)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
 	Vector->v.y = (b3_f32)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
 	Vector++;
-	
+
 	Vector->t.s = m_AreaTexcoord[4];
 	Vector->t.t = m_AreaTexcoord[5];
 	Vector->v.x = (b3_f32)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);

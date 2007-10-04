@@ -185,9 +185,9 @@ b3_world_error b3Item::b3ParseLinkuage(
 #ifdef VERBOSE
 			b3Space(level);
 			b3PrintF (B3LOG_FULL,"         %08lx %08lx %p",
-				act_class,
-				cmp_class,
-				array[pos]);
+					  act_class,
+					  cmp_class,
+					  array[pos]);
 #endif
 			if (act_class == cmp_class)
 			{
@@ -305,8 +305,8 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 
 	m_Start = (b3FirstItem *)array[0];
 	result  = m_Start->b3ParseLinkuage(
-		array.b3GetBuffer(),
-		array.b3GetCount(),B3_CLASS_MAX);
+				  array.b3GetBuffer(),
+				  array.b3GetCount(),B3_CLASS_MAX);
 
 	return result;
 }
@@ -436,10 +436,10 @@ b3_bool b3World::b3ReadDump(const char *world_name) throw(b3WorldException)
 
 				// Print node class/type
 				b3PrintF(B3LOG_NORMAL,"%04lx:%04lx s:%6lu o:%6lu # ",
-					m_Buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
-					m_Buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
-					m_Buffer[i + B3_NODE_IDX_SIZE],
-					m_Buffer[i + B3_NODE_IDX_OFFSET]);
+						 m_Buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
+						 m_Buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
+						 m_Buffer[i + B3_NODE_IDX_SIZE],
+						 m_Buffer[i + B3_NODE_IDX_OFFSET]);
 
 				// Print heads
 				for (int k = B3_NODE_IDX_MIN;m_Buffer[i+k] != null;k += 3)
@@ -591,7 +591,7 @@ b3_world_error b3World::b3Write(b3FileAbstract *file, const b3_bool throw_except
 
 	// Write buffers to file
 	if ((error == B3_WORLD_OK) &&
-	    (file->b3Write(header,sizeof(header)) == sizeof(header)))
+			(file->b3Write(header,sizeof(header)) == sizeof(header)))
 	{
 		for (item = m_Start;item != null;item = item->Succ)
 		{

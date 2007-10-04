@@ -142,7 +142,7 @@ public:
 	b3_bg_type       m_BackgroundType;      //!< The background type.
 
 	b3_count         m_TraceDepth;          //!< The ray trace depth.
-	b3_u32           m_Flags;               //!< 
+	b3_u32           m_Flags;               //!<
 	b3_f32           m_ShadowBrightness;    //!< Ambient term of Mork shading.
 
 	// Some limits
@@ -167,7 +167,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void             b3Register();
-	        void             b3Write();
+	void             b3Write();
 
 	/**
 	 * This method returns the selected render image resolution.
@@ -181,7 +181,7 @@ public:
 	//////////////////////////
 	////////// Render handling
 	//////////////////////////
-	/** 
+	/**
 	 * This method iterates through all objects and shapes to setup
 	 * vertex memory.
 	 *
@@ -198,7 +198,7 @@ public:
 	 */
 	void             b3FreeVertices();
 
-	/** 
+	/**
 	 * This method iterates through all objects and shapes to draw
 	 * all render objects in its configured state.
 	 *
@@ -338,7 +338,7 @@ public:
 		ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
 		return ray->shape != null;
 	}
-	
+
 	//////////////////
 	////////// Shading
 	//////////////////
@@ -591,7 +591,7 @@ public:
 	 * of all other cameras.
 	 */
 	void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
-	
+
 	////////////////////////
 	////////// Light methods
 	////////////////////////
@@ -785,16 +785,16 @@ public:
 	static  b3_u32          b3PrepareBBoxThread(b3BBox *bbox,void *ptr);
 
 private:
-	        b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
-			void            b3ReallocateShader();
-	        void            b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareException);
-	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3PrepareException);
+	b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
+	void            b3ReallocateShader();
+	void            b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareException);
+	void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3PrepareException);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
 	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
 	static  b3_u32          b3RecomputeMaterialThread(b3BBox *bbox,void *ptr);
-		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray,b3_bool check_visibility);
-	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
+	b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray,b3_bool check_visibility);
+	b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
 
 	friend class b3Shader;
 	friend class b3RayRow;
@@ -814,15 +814,15 @@ class B3_PLUGIN b3RayRow : public b3Row
 protected:
 	const b3_res       m_ySize;        //!< The resulting image height.
 
-	      b3Display   *m_Display;      //!< The used b3Display.
-	      b3Scene     *m_Scene;        //!< The used b3Scene.
-	      b3Shader    *m_Shader;       //!< The used b3Shader.
-	      b3Color     *m_LastResult;   //!< The position of the previous color in row.
-	      b3Color     *m_ThisResult;   //!< The position of the actual color.
-	      b3_vector64  m_preDir;
-	      b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
-	      b3_f64       m_fy;           //!< 
-	      b3_f64       m_t;            //!< The actual time point.
+	b3Display   *m_Display;      //!< The used b3Display.
+	b3Scene     *m_Scene;        //!< The used b3Scene.
+	b3Shader    *m_Shader;       //!< The used b3Shader.
+	b3Color     *m_LastResult;   //!< The position of the previous color in row.
+	b3Color     *m_ThisResult;   //!< The position of the actual color.
+	b3_vector64  m_preDir;
+	b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
+	b3_f64       m_fy;           //!<
+	b3_f64       m_t;            //!< The actual time point.
 
 public:
 	/**
@@ -835,8 +835,8 @@ public:
 	 * @param ySize The image height.
 	 */
 	b3RayRow(
-		      b3Scene   *scene,
-		      b3Display *display,
+		b3Scene   *scene,
+		b3Display *display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);
@@ -901,12 +901,12 @@ public:
 	 * @param previous The super sampling row directly above this one.
 	 */
 	b3SupersamplingRayRow(
-		      b3Scene               *scene,
-		      b3Display             *display,
+		b3Scene               *scene,
+		b3Display             *display,
 		const b3_coord               y,
 		const b3_res                 xSize,
 		const b3_res                 ySize,
-		      b3SupersamplingRayRow *previous);
+		b3SupersamplingRayRow *previous);
 
 	/**
 	 * This destructor deinitializes this row instance.
@@ -945,8 +945,8 @@ public:
 	 * @param ySize The image height.
 	 */
 	b3DistributedRayRow(
-		      b3Scene   *scene,
-		      b3Display *display,
+		b3Scene   *scene,
+		b3Display *display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);
@@ -983,8 +983,8 @@ public:
 	 * @throws b3WorldException
 	 */
 	b3MotionBlurRayRow(
-		      b3Scene   *scene,
-		      b3Display *display,
+		b3Scene   *scene,
+		b3Display *display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize) throw(b3WorldException);

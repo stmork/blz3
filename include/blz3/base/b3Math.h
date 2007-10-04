@@ -64,18 +64,18 @@ public:
 	static inline b3_f64 b3GetFresnel(b3_f64 phi,const b3_f64 mu)
 	{
 		b3_f64 theta,a,b,c,d;
-	
+
 		if (phi < epsilon)
 		{
 			phi = epsilon;
 		}
 		theta = asin(sin(phi) / mu);
-		
+
 		a = b3Sqr(sin(phi - theta));
 		b = b3Sqr(sin(phi + theta));
 		c = b3Sqr(tan(phi - theta));
 		d = b3Sqr(tan(phi + theta));
-		
+
 		return 0.5 * (a / b + c / d);
 	}
 
@@ -272,7 +272,7 @@ public:
 		b3_f64 P4 = -2 * t3 + 3 * t2;
 		b3_f64 R1 =      t3 - 2 * t2 + t1;
 		b3_f64 R4 =      t3 -     t2;
-		
+
 		return P4 + s0 * R1 + s1 * R4;
 	}
 
@@ -297,9 +297,9 @@ public:
 		{
 			return 1;
 		}
-		
+
 		b3_f64 t = (x - s) / (e - s);
-		
+
 		return (3 - 2 * t) * t * t;
 	}
 
@@ -467,20 +467,20 @@ public:
 		xx = frexp (x,&expon);
 		n = expon % 3;
 		y = ((((((((((((((
-			m_CbrtCoeffs[14]) * xx +
-			m_CbrtCoeffs[13]) * xx +
-			m_CbrtCoeffs[12]) * xx +
-			m_CbrtCoeffs[11]) * xx +
-			m_CbrtCoeffs[10]) * xx +
-			m_CbrtCoeffs[ 9]) * xx +
-			m_CbrtCoeffs[ 8]) * xx +
-			m_CbrtCoeffs[ 7]) * xx +
-			m_CbrtCoeffs[ 6]) * xx +
-			m_CbrtCoeffs[ 5]) * xx +
-			m_CbrtCoeffs[ 4]) * xx +
-			m_CbrtCoeffs[ 3]) * xx +
-			m_CbrtCoeffs[ 2]) * xx +
-			m_CbrtCoeffs[ 1]) * xx +
+							 m_CbrtCoeffs[14]) * xx +
+						 m_CbrtCoeffs[13]) * xx +
+						m_CbrtCoeffs[12]) * xx +
+					   m_CbrtCoeffs[11]) * xx +
+					  m_CbrtCoeffs[10]) * xx +
+					 m_CbrtCoeffs[ 9]) * xx +
+					m_CbrtCoeffs[ 8]) * xx +
+				   m_CbrtCoeffs[ 7]) * xx +
+				  m_CbrtCoeffs[ 6]) * xx +
+				 m_CbrtCoeffs[ 5]) * xx +
+				m_CbrtCoeffs[ 4]) * xx +
+			   m_CbrtCoeffs[ 3]) * xx +
+			  m_CbrtCoeffs[ 2]) * xx +
+			 m_CbrtCoeffs[ 1]) * xx +
 			m_CbrtCoeffs[ 0];
 		y *= (4.0 / 3 - y * y * y * xx * (1.0/3));
 		y *= (y * xx);

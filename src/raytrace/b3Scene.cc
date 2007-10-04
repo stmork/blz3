@@ -340,7 +340,7 @@ b3SuperSample *b3Scene::b3GetSuperSample(b3_bool force)
 			return (b3SuperSample *)item;
 		}
 	}
-	
+
 	if (force)
 	{
 		supersample = new b3SuperSample(SUPERSAMPLE4);
@@ -611,19 +611,19 @@ b3Scene *b3Scene::b3ReadTGF(const char *filename)
 *************************************************************************/
 
 const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP] =
-{
-	0.55,0.0,0.0,0.25,0.45,0.55
-};
+	{
+		0.55,0.0,0.0,0.25,0.45,0.55
+	};
 
 const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP] =
-{
-	0.9,0.95,0.95,0.6,0.6,0.6
-};
+	{
+		0.9,0.95,0.95,0.6,0.6,0.6
+	};
 
 const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP] =
-{
-	2.4,1.5,1.5,2.0,7.0,4.0
-};
+	{
+		2.4,1.5,1.5,2.0,7.0,4.0
+	};
 
 void b3Scene::b3MixLensFlare(b3_ray *ray)
 {
@@ -666,9 +666,9 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 			nLight.z = cWeight * central.z + lWeight * toLight.z;
 
 			beta     = (
-				nLight.x * ray->dir.x +
-				nLight.y * ray->dir.y +
-				nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
+						   nLight.x * ray->dir.x +
+						   nLight.y * ray->dir.y +
+						   nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
 			angle    = pow(beta,m_LensFlare->m_Expon * m_Exponents[i]);
 			if (i < LENSFLARE_RING)
 			{
@@ -713,32 +713,32 @@ void b3Scene::b3GetBackgroundColor(
 
 	switch (m_BackgroundType)
 	{
-		case TP_TEXTURE :
-			x = (b3_coord)(((lx + 1) * 0.5 * (m_BackTexture->xSize - 1)));
-			y = (b3_coord)(((1 - ly) * 0.5 * (m_BackTexture->ySize - 1)));
-			if (x < 0)                     x = 0;
-			if (x >= m_BackTexture->xSize) x = m_BackTexture->xSize - 1;
-			if (y < 0)                     y = 0;
-			if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
+	case TP_TEXTURE :
+		x = (b3_coord)(((lx + 1) * 0.5 * (m_BackTexture->xSize - 1)));
+		y = (b3_coord)(((1 - ly) * 0.5 * (m_BackTexture->ySize - 1)));
+		if (x < 0)                     x = 0;
+		if (x >= m_BackTexture->xSize) x = m_BackTexture->xSize - 1;
+		if (y < 0)                     y = 0;
+		if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
 
-			ray->color = m_BackTexture->b3GetHdrValue(x,y);
-			break;
+		ray->color = m_BackTexture->b3GetHdrValue(x,y);
+		break;
 
-		case TP_SKY_N_HELL :
- 			sight      = m_Clouds->b3ComputeClouds(ray,r,b3GetTimePoint());
-			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(
-				B3_MAX(r,m_TopColor[b3Color::R]),
-				B3_MAX(r,m_TopColor[b3Color::G]),
-				B3_MAX(r,m_TopColor[b3Color::B])),sight);
-			break;
+	case TP_SKY_N_HELL :
+		sight      = m_Clouds->b3ComputeClouds(ray,r,b3GetTimePoint());
+		ray->color = b3Color::b3Mix(m_BottomColor,b3Color(
+										B3_MAX(r,m_TopColor[b3Color::R]),
+										B3_MAX(r,m_TopColor[b3Color::G]),
+										B3_MAX(r,m_TopColor[b3Color::B])),sight);
+		break;
 
-		case TP_SLIDE :
-			ray->color = m_AvrgColor + m_DiffColor * ly;
-			break;
+	case TP_SLIDE :
+		ray->color = m_AvrgColor + m_DiffColor * ly;
+		break;
 
-		default:
-			ray->color.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
-			break;
+	default:
+		ray->color.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
+		break;
 	}
 }
 

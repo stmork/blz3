@@ -162,7 +162,7 @@ b3_u32 b3Endian::b3Get32 (void *Ptr)
 		Value = (Value << 8) | (b3_u32)Pointer[1];
 		Value = (Value << 8) | (b3_u32)Pointer[0];
 	}
-	else 
+	else
 	{
 		Value =                (b3_u32)Pointer[0];
 		Value = (Value << 8) | (b3_u32)Pointer[1];

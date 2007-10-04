@@ -151,11 +151,11 @@ void b3UndoOperation::b3Do()
 void b3UndoOperation::b3Undo()
 {
 	b3PrintF(B3LOG_NORMAL,"Undo-Operation for ID %d not overloaded.\n",
-		b3GetId());
+			 b3GetId());
 }
 
 void b3UndoOperation::b3Redo()
 {
 	b3PrintF(B3LOG_NORMAL,"Redo-Operation for ID %d not overloaded.\n",
-		b3GetId());
+			 b3GetId());
 }

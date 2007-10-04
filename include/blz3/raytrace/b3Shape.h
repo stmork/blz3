@@ -108,8 +108,8 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 	static const b3_gl_polygon m_BoxPolygons[];
 	static const b3_f32        m_BoxTexcoord[];
 
-	             b3_bool       m_EndLine;
-	             b3_count      m_Overhead,m_Heights,m_Widths;
+	b3_bool       m_EndLine;
+	b3_count      m_Overhead,m_Heights,m_Widths;
 
 protected:
 	b3_count           xSize;         //!< The horizontal count of vertex subdivision.
@@ -132,7 +132,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void        b3Register();
-	        void        b3Write();
+	void        b3Write();
 	virtual b3_bool     b3Prepare(b3_preparation_info *prep_info);
 
 	/**
@@ -328,7 +328,7 @@ protected:
 	/**
 	 * This method computes the cylinder indices for wire frame and polygons.
 	 */
- 	void            b3ComputeCylinderIndices();
+	void            b3ComputeCylinderIndices();
 
 	/**
 	 * This method computes the cone vertices.
@@ -561,11 +561,11 @@ public:
 	B3_ITEM_INIT(b3Shape2); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Shape2); //!< This constructor handles deserialization.
 
-	        void    b3StoreShape();
-	        b3_bool b3Prepare(b3_preparation_info *prep_info);
-	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
-	        void    b3Normal(b3_ray *ray);
-			void    b3SetupPicking(b3PickInfo *info);
+	void    b3StoreShape();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
+	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	void    b3Normal(b3_ray *ray);
+	void    b3SetupPicking(b3PickInfo *info);
 
 	/**
 	 * This method computes the derivates along the normal given by the 
@@ -588,7 +588,7 @@ public:
  */
 class B3_PLUGIN b3Area : public b3Shape2
 {
-	       b3_gl_vertex  m_AreaVertex[4];
+	b3_gl_vertex  m_AreaVertex[4];
 	static b3_gl_line    m_AreaGrids[4];
 	static b3_gl_polygon m_AreaPolygons[2];
 	static b3_f32        m_AreaTexcoord[8];
@@ -598,12 +598,12 @@ public:
 	B3_ITEM_LOAD(b3Area); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 
 protected:
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void   b3ComputeVertices();
-	        void   b3ComputeIndices();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -622,12 +622,12 @@ public:
 	B3_ITEM_LOAD(b3Disk); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 
 protected:
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void   b3ComputeVertices();
-	        void   b3ComputeIndices();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -651,11 +651,11 @@ public:
 	B3_ITEM_INIT(b3Shape3); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Shape3); //!< This constructor handles deserialization.
 
-	        void    b3StoreShape();
-	        b3_bool b3Prepare(b3_preparation_info *prep_info);
+	void    b3StoreShape();
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
-			void    b3SetupPicking(b3PickInfo *info);
+	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	void    b3SetupPicking(b3PickInfo *info);
 
 protected:
 	virtual void    b3ComputeNormals(b3_bool normalize = true);
@@ -734,13 +734,13 @@ public:
 	B3_ITEM_LOAD(b3Ellipsoid); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void   b3Normal(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 
 protected:
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void   b3ComputeVertices();
-	        void   b3ComputeIndices();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -763,14 +763,14 @@ public:
 	B3_ITEM_LOAD(b3Box); //!< This constructor handles deserialization.
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void   b3Normal(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 
 protected:
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void   b3ComputeVertices();
-	        void   b3ComputeNormals(b3_bool normalize = true);
-	        void   b3ComputeIndices();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeNormals(b3_bool normalize = true);
+	void   b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -796,21 +796,21 @@ public:
 	B3_ITEM_INIT(b3Torus); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Torus); //!< This constructor handles deserialization.
 
-	        void    b3StoreShape();
+	void    b3StoreShape();
 
-	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void    b3Normal(b3_ray *ray);
-	        void    b3SetupPicking(b3PickInfo *info);
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	void    b3Normal(b3_ray *ray);
+	void    b3SetupPicking(b3PickInfo *info);
 
-	        b3_bool b3Prepare(b3_preparation_info *prep_info);
+	b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 protected:
-	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void    b3ComputeVertices();
-	        void    b3ComputeNormals(b3_bool normalize=true);
-	        void    b3ComputeIndices();
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3ComputeVertices();
+	void    b3ComputeNormals(b3_bool normalize=true);
+	void    b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -898,8 +898,8 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool b3Init(b3_count vertCount,b3_count triaCount,b3_res xSize,b3_res ySize);
-	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void    b3Normal(b3_ray *ray);
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	void    b3Normal(b3_ray *ray);
 	virtual b3_bool b3Prepare(b3_preparation_info *prep_info);
 	virtual void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
@@ -920,66 +920,66 @@ protected:
 	void    b3FreeTriaRefs();
 
 private:
-	        b3_f64   b3IntersectTriangleList(
-				b3_ray    *ray,
-				b3_polar  *polar,
-				b3_index   index);
+	b3_f64   b3IntersectTriangleList(
+		b3_ray    *ray,
+		b3_polar  *polar,
+		b3_index   index);
 
-	        void     b3Clear();
-	        void     b3PrepareGridList();
+	void     b3Clear();
+	void     b3PrepareGridList();
 
-			void     b3SubdivideIntoGrid(
-			    b3_vector *P1,
-			    b3_vector *P2,
-			    b3_vector *P3,
-			    b3_index   triangle,
-			    b3_count   max);
+	void     b3SubdivideIntoGrid(
+		b3_vector *P1,
+		b3_vector *P2,
+		b3_vector *P3,
+		b3_index   triangle,
+		b3_count   max);
 
-			inline b3_index b3GridDistance(b3_f32 v1,b3_f32 v2,b3_f32 v3)
+	inline b3_index b3GridDistance(b3_f32 v1,b3_f32 v2,b3_f32 v3)
+	{
+		b3_index i1 = (b3_index)v1;
+		b3_index i2 = (b3_index)v2;
+		b3_index i3 = (b3_index)v3;
+		b3_index d12 = B3_ABS(i2 - i1);
+		b3_index d23 = B3_ABS(i3 - i2);
+		b3_index d31 = B3_ABS(i1 - i3);
+
+		b3_index result = B3_MAX(d12,d23);
+		return B3_MAX(result,d31);
+	}
+
+	inline void b3ToGridSpace(const b3_vector *point,b3_vector *result)
+	{
+		result->x = (point->x - m_Base.x) / m_Size.x;
+		result->y = (point->y - m_Base.y) / m_Size.y;
+		result->z = (point->z - m_Base.z) / m_Size.z;
+	}
+
+	inline b3_index b3GetGrid(b3_vector *p)
+	{
+		return GRID_INDEX(
+				   b3_index(p->x),b3_index(p->y),b3_index(p->z),m_GridSize);
+	}
+
+	inline void b3AddTriangleToGrid(b3_index grid,b3_index triangle)
+	{
+		if((grid >= 0) && (grid < m_GridCount))
+		{
+			b3_count max = m_GridList[grid].b3GetCount();
+
+			if (max > 0)
 			{
-				b3_index i1 = (b3_index)v1;
-				b3_index i2 = (b3_index)v2;
-				b3_index i3 = (b3_index)v3;
-				b3_index d12 = B3_ABS(i2 - i1);
-				b3_index d23 = B3_ABS(i3 - i2);
-				b3_index d31 = B3_ABS(i1 - i3);
-				
-				b3_index result = B3_MAX(d12,d23);
-				return B3_MAX(result,d31);
+				if (m_GridList[grid][max - 1] == triangle)
+				{
+					return;
+				}
 			}
-			
-			inline void b3ToGridSpace(const b3_vector *point,b3_vector *result)
-			{
-				result->x = (point->x - m_Base.x) / m_Size.x;
-				result->y = (point->y - m_Base.y) / m_Size.y;
-				result->z = (point->z - m_Base.z) / m_Size.z;
-			}
+			m_GridList[grid].b3Add(triangle);
+		}
+	}
 
-			inline b3_index b3GetGrid(b3_vector *p)
-			{
-				return GRID_INDEX(
-					b3_index(p->x),b3_index(p->y),b3_index(p->z),m_GridSize);
-			}
-
-	        inline void b3AddTriangleToGrid(b3_index grid,b3_index triangle)
-	        {
-	        	if((grid >= 0) && (grid < m_GridCount))
-	        	{
-					b3_count max = m_GridList[grid].b3GetCount();
-
-					if (max > 0)
-					{
-						if (m_GridList[grid][max - 1] == triangle)
-						{
-							return;
-	 					}
-	 				}
- 					m_GridList[grid].b3Add(triangle);
-	 			}
-	        }
-
-			static b3_count b3IntLog2(b3_count value);
-			static b3_count b3IntLog3(b3_count value);
+	static b3_count b3IntLog2(b3_count value);
+	static b3_count b3IntLog3(b3_count value);
 };
 
 /*************************************************************************
@@ -1070,7 +1070,7 @@ class B3_PLUGIN b3SplineShape : public b3TriangleShape
 protected:
 	b3_count         m_GridVertexCount;  //!< The computed vertex count for fireframe shading.
 	b3_count         m_SolidVertexCount; //!< The computed vertex count for solid shading.
-	
+
 public:
 	b3Spline         m_Spline[2];  //!< The two spline representations.
 	b3_knot_vector   m_Knots[2];   //!< The two knot vectors.
@@ -1142,7 +1142,7 @@ public:
  *
  * @see b3SplineShape.
  */
-class B3_PLUGIN b3SplineCylinder : public b3SplineShape 
+class B3_PLUGIN b3SplineCylinder : public b3SplineShape
 {
 public:
 	B3_ITEM_INIT(b3SplineCylinder); //!< This constructor handles default initialization.
@@ -1160,7 +1160,7 @@ public:
  *
  * @see b3SplineShape.
  */
-class B3_PLUGIN b3SplineRing : public b3SplineShape 
+class B3_PLUGIN b3SplineRing : public b3SplineShape
 {
 public:
 	B3_ITEM_INIT(b3SplineRing); //!< This constructor handles default initialization.
@@ -1249,7 +1249,7 @@ protected:
 	b3_s32           m_Index; //!< This is for GUI purposes in Lines III.
 
 public:
-	       b3_csg_operation m_Operation;  //!< The CSG operation mode.
+	b3_csg_operation m_Operation;  //!< The CSG operation mode.
 	static b3_csg_operation m_CSGMode[];  //!< The list of possible operation modes.
 
 protected:
@@ -1365,12 +1365,12 @@ public:
 	B3_ITEM_INIT(b3CSGShape3); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGShape3); //!< This constructor handles deserialization.
 
-	        void     b3StoreShape();
-	        b3_bool  b3Prepare(b3_preparation_info *prep_info);
+	void     b3StoreShape();
+	b3_bool  b3Prepare(b3_preparation_info *prep_info);
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
-	        void     b3SetupPicking(b3PickInfo *info);
-	        b3_count b3GetMaxIntersections();
+	void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	void     b3SetupPicking(b3PickInfo *info);
+	b3_count b3GetMaxIntersections();
 
 protected:
 	virtual void     b3ComputeNormals(b3_bool normalize = true);
@@ -1447,15 +1447,15 @@ public:
 	B3_ITEM_INIT(b3CSGEllipsoid); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGEllipsoid); //!< This constructor handles deserialization.
 
-	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
-	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
-	        void     b3Normal(b3_ray *ray);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 
 protected:
-	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void     b3ComputeVertices();
-	        void     b3ComputeIndices();
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -1475,16 +1475,16 @@ public:
 	B3_ITEM_INIT(b3CSGBox); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGBox); //!< This constructor handles deserialization.
 
-	        b3_bool b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
-	        void    b3InverseMap(b3_ray *ray,b3_csg_point *point);
-	        void    b3Normal(b3_ray *ray);
+	b3_bool b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
+	void    b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void    b3Normal(b3_ray *ray);
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 
 protected:
-	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void    b3ComputeVertices();
-	        void    b3ComputeNormals(b3_bool normalize = true);
-	        void    b3ComputeIndices();
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3ComputeVertices();
+	void    b3ComputeNormals(b3_bool normalize = true);
+	void    b3ComputeIndices();
 };
 
 /*************************************************************************
@@ -1508,22 +1508,22 @@ public:
 	B3_ITEM_INIT(b3CSGTorus); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGTorus); //!< This constructor handles deserialization.
 
-	        void     b3StoreShape();
-	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
-	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
-	        b3_count b3GetMaxIntersections();
-	        void     b3Normal(b3_ray *ray);
-	        void     b3SetupPicking(b3PickInfo *info);
+	void     b3StoreShape();
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	b3_count b3GetMaxIntersections();
+	void     b3Normal(b3_ray *ray);
+	void     b3SetupPicking(b3PickInfo *info);
 
-	        b3_bool  b3Prepare(b3_preparation_info *prep_info);
+	b3_bool  b3Prepare(b3_preparation_info *prep_info);
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
+	void     b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 protected:
-	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void     b3ComputeVertices();
-	        void     b3ComputeNormals(b3_bool normalize=true);
-	        void     b3ComputeIndices();
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeNormals(b3_bool normalize=true);
+	void     b3ComputeIndices();
 };
 
 #endif

@@ -67,7 +67,7 @@ class b3JPEG
 	JSAMPARRAY                     m_SampleArray;
 
 public:
-	        b3JPEG();
+	b3JPEG();
 	b3_bool b3Init(b3_u08 *buffer,b3_size buffer_size);
 	b3_bool b3Decompress(b3Tx *tx);
 	void    b3Deinit();
@@ -117,8 +117,8 @@ b3_bool b3JPEG::b3Init(b3_u08 *buffer,b3_size buffer_size)
 	jpeg_start_decompress (&m_Decompress);
 	row_stride    = m_Decompress.output_width * m_Decompress.output_components;
 	m_SampleArray = (*m_Decompress.mem->alloc_sarray)
-		((j_common_ptr) &m_Decompress, JPOOL_IMAGE, row_stride, 1);
-	
+					((j_common_ptr) &m_Decompress, JPOOL_IMAGE, row_stride, 1);
+
 	return true;
 }
 
@@ -147,7 +147,7 @@ b3_bool b3JPEG::b3Decompress(b3Tx *tx)
 				*out++ =
 					((b3_pkd_color)line[0] << 16) |
 					((b3_pkd_color)line[1] <<  8) |
-					 (b3_pkd_color)line[2];
+					(b3_pkd_color)line[2];
 				line += 3;
 			}
 		}
@@ -218,7 +218,7 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	b3JPEG jpeg;
 
 	b3PrintF(B3LOG_FULL,"IMG JPEG # b3ParseJPEG(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	// NOTE: this is only dummy because the data is completly loaded.
 	if (!jpeg.b3Init(buffer,buffer_size))
@@ -231,9 +231,9 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	if (!jpeg.b3Decompress(this))
 	{
 		jpeg.b3Deinit();
-			b3FreeTx();
-			b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
-			B3_THROW(b3TxException,B3_TX_MEMORY);
+		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	jpeg.b3Deinit();
 

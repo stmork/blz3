@@ -157,7 +157,7 @@ protected:
 	{
 		b3Item      *item;
 		b3Light     *light;
-		
+
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
@@ -187,8 +187,8 @@ public:
 	b3ShaderPhong(b3Scene *scene);
 
 protected:
-	       void    b3ShadeSurface(b3_surface *surface,b3_count depth);
-	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
+	void    b3ShadeSurface(b3_surface *surface,b3_count depth);
+	void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 };
 
 //////////////

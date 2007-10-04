@@ -21,7 +21,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "bhc.h"
 #include "blz3/base/b3Matrix.h"
 
@@ -32,16 +32,16 @@
 *************************************************************************/
 
 const char *b3BHDParser::m_TokenNames[] =
-{
-	"begin",
-	"end",
-	"house",
-	"level",
-	"point",
-	"room",
-	"window",
-	"door"
-};
+	{
+		"begin",
+		"end",
+		"house",
+		"level",
+		"point",
+		"room",
+		"window",
+		"door"
+	};
 
 b3BHDParser::b3BHDParser(const char *filename)
 {
@@ -119,7 +119,7 @@ void b3BHDParser::b3ParseHouse()
 
 	b3PrintF(B3LOG_DEBUG,"Creating house...\n");
 	b3CheckToken(TKN_HOUSE);
-	
+
 	m_Scene = new b3Scene(TRACEPHOTO_MORK);
 	if (sscanf(&m_Line[m_Pos],"%*s %s %lf\n",(char *)name,&m_Scale) < 1)
 	{
@@ -230,10 +230,10 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height,b3_f64 sca
 	b3_vector        normal;
 
 	args = sscanf(&m_Line[m_Pos],"%*s %s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
-		room->m_BoxName,
-		&index[ 0],&index[ 1],&index[ 2],&index[ 3],&index[ 4],
-		&index[ 5],&index[ 6],&index[ 7],&index[ 8],&index[ 9],
-		&index[10],&index[11],&index[12],&index[13],&index[14]);
+				  room->m_BoxName,
+				  &index[ 0],&index[ 1],&index[ 2],&index[ 3],&index[ 4],
+				  &index[ 5],&index[ 6],&index[ 7],&index[ 8],&index[ 9],
+				  &index[10],&index[11],&index[12],&index[13],&index[14]);
 	if (args < 4)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
@@ -379,12 +379,12 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 			cond->m_xEnd   = (m_Openings[i].pos  + m_Openings[i].width)   / width;
 			cond->m_yEnd   = (m_Openings[i].base + m_Openings[i].height)  / height;
 			if ((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
-			    (cond->m_yStart < 0) || (cond->m_yEnd > 1))
+					(cond->m_yStart < 0) || (cond->m_yEnd > 1))
 			{
 				char message[1024];
 
 				snprintf(message,sizeof(message),"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
-					cond->m_xStart,cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
+						 cond->m_xStart,cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
 				throw b3ParseException(message,m_Openings[i].line);
 			}
 			area->b3GetConditionHead()->b3Append(cond);
@@ -457,15 +457,15 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 			cond->m_xEnd   =  (m_Openings[i].pos  + m_Openings[i].width)   / width;
 			cond->m_yEnd   =  (m_Openings[i].base + m_Openings[i].height)  / height;
 			if ((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
-			    (cond->m_yStart < 0) || (cond->m_yEnd > 1))
+					(cond->m_yStart < 0) || (cond->m_yEnd > 1))
 			{
 				char message[1024];
 
 				snprintf(message,sizeof(message),"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
-			         -cond->m_xStart,-cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
+						 -cond->m_xStart,-cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
 				throw b3ParseException(message,m_Openings[i].line);
 			}
- 			area->b3GetConditionHead()->b3Append(cond);
+			area->b3GetConditionHead()->b3Append(cond);
 
 			b3PrintF(B3LOG_DEBUG,"       Used door/window of line %d\n",m_Openings[i].line);
 		}
@@ -478,9 +478,9 @@ void b3BHDParser::b3ParseWindow(b3_f64 scale)
 
 	b3PrintF(B3LOG_DEBUG,"    creating window...\n");
 	if (sscanf(&m_Line[m_Pos],"%*s %ld %ld %lf %lf %lf %lf\n",
-		&window.a,&window.b,
-		&window.pos,&window.base,
-		&window.width,&window.height) != 6)
+			   &window.a,&window.b,
+			   &window.pos,&window.base,
+			   &window.width,&window.height) != 6)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
@@ -497,8 +497,8 @@ void b3BHDParser::b3ParseDoor(b3_f64 scale)
 
 	b3PrintF(B3LOG_DEBUG,"    creating door...\n");
 	if (sscanf(&m_Line[m_Pos],"%*s %ld %ld %lf %lf\n",
-		&door.a,&door.b,
-		&door.pos,&door.width) != 4)
+			   &door.a,&door.b,
+			   &door.pos,&door.width) != 4)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
@@ -549,7 +549,7 @@ int main(int argc,char *argv[])
 
 	if (argc > 1)
 	{
-		b3Log::b3SetLevel(B3LOG_FULL);	
+		b3Log::b3SetLevel(B3LOG_FULL);
 		b3RaytracingItems::b3Register();
 		for (i = 1;i < argc;i++)
 		{

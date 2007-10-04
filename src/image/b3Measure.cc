@@ -99,27 +99,27 @@ void b3TxMeasure::b3Print()
 	for (i = 0;i < 3;i++)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # %4ld x %4ld\n",
-			top[i].x,   top[i].y);
+				  top[i].x,   top[i].y);
 	}
 
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # left:\n");
 	for (i = 0;i < 3;i++)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # %4ld x %4ld\n",
-			left[i].x,  left[i].y);
+				  left[i].x,  left[i].y);
 	}
 
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # right:\n");
 	for (i = 0;i < 3;i++)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # %4ld x %4ld\n",
-			right[i].x, right[i].y);
+				  right[i].x, right[i].y);
 	}
 
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # bottom:\n");
 	for (i = 0;i < 3;i++)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Meas # %4ld x %4ld\n",
-			bottom[i].x,bottom[i].y);
+				  bottom[i].x,bottom[i].y);
 	}
 }

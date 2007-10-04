@@ -93,8 +93,8 @@ public:
 	b3ImageSampler(b3Tx *tx);
 
 protected:
-	        b3SampleInfo *b3SampleInit(const b3_count CPUs);
-	        void          b3SampleTask(const b3SampleInfo *info);
+	b3SampleInfo *b3SampleInit(const b3_count CPUs);
+	void          b3SampleTask(const b3SampleInfo *info);
 
 	/**
 	 * This method returns a pixel color at a given coordinate.

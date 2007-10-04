@@ -23,8 +23,8 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
-#include "blz3/b3Config.h" 
+
+#include "blz3/b3Config.h"
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Dir.h"
@@ -141,13 +141,13 @@ static void b3Banner(const char *command)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p]%s {Blizzard World Data files}\n",
-			command,
+				 command,
 #ifdef BLZ3_USE_OPENEXR
-			"[-x]"
+				 "[-x]"
 #else
-			""
+				 ""
 #endif
-			);
+				);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");
@@ -233,8 +233,8 @@ int main(int argc,char *argv[])
 		}
 
 		b3PrintF (B3LOG_NORMAL,"\nFound %d CPU core%s.\n",
-			CPUs,
-			CPUs > 1 ? "s" : "");
+				  CPUs,
+				  CPUs > 1 ? "s" : "");
 
 		b3PrintF(B3LOG_DEBUG,"Used environment:\n");
 		b3PrintF(B3LOG_DEBUG,"HOME=%s\n",             HOME);
@@ -315,8 +315,8 @@ int main(int argc,char *argv[])
 				{
 					world->b3Read(argv[i]);
 					for (item  = world->b3GetFirst();
-					     item != null;
-					     item  = scene->Succ)
+							item != null;
+							item  = scene->Succ)
 					{
 						scene = (b3Scene *)item;
 						scene->b3Reorg();
@@ -345,7 +345,7 @@ int main(int argc,char *argv[])
 								{
 									scene->b3SetCamera(camera);
 									b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
-										camera->m_CameraName);
+											 camera->m_CameraName);
 
 									if (animation != null)
 									{
@@ -381,7 +381,7 @@ int main(int argc,char *argv[])
 								else
 								{
 									b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
-										camera->m_CameraName);
+											 camera->m_CameraName);
 								}
 								camera = scene->b3GetNextCamera(camera);
 							}
@@ -395,8 +395,8 @@ int main(int argc,char *argv[])
 							scene->b3ComputeBounds(&lower,&upper);
 							scene->b3Raytrace(display, multi_threaded);
 							if (!b3SaveRaytracedImage(
-								display,
-								BLZ3_PICTURES,scene->b3GetName()))
+										display,
+										BLZ3_PICTURES,scene->b3GetName()))
 							{
 								b3PrintF(B3LOG_NORMAL, "Cannot save image %s!\n",scene->b3GetName());
 							}

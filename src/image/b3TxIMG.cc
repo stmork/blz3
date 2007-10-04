@@ -44,68 +44,68 @@ inline void b3Tx::b3UnpackSGI (
 
 	switch (bytes)
 	{
-		case 1 :
-			if (count != 0)
+	case 1 :
+		if (count != 0)
+		{
+			bBuffer  = (b3_u08 *)inPtr;
+			bBuffer += (512 / sizeof(unsigned char) + offset);
+			while (count-- > 0) *buffer++ = *bBuffer++;
+		}
+		else
+		{
+			bBuffer  = (b3_u08 *)inPtr;
+			bBuffer += offset;
+			do
 			{
-				bBuffer  = (b3_u08 *)inPtr;
-				bBuffer += (512 / sizeof(unsigned char) + offset);
-				while (count-- > 0) *buffer++ = *bBuffer++;
-			}
-			else
-			{
-				bBuffer  = (b3_u08 *)inPtr;
-				bBuffer += offset;
-				do
+				pixel = *bBuffer++;
+				count = (pixel & 0x7f);
+				if (count == 0) return;
+				if (pixel & 0x80)
 				{
-				    pixel = *bBuffer++;
-				    count = (pixel & 0x7f);
-				    if (count == 0) return;
-			    	if (pixel & 0x80)
-					{
-						while(count--) *buffer++ = *bBuffer++;
-				    }
-					else
-					{
-						pixel = *bBuffer++;
-						while(count--) *buffer++ = pixel;
-				    }
+					while(count--) *buffer++ = *bBuffer++;
 				}
-				while (true);
+				else
+				{
+					pixel = *bBuffer++;
+					while(count--) *buffer++ = pixel;
+				}
 			}
-			break;
+			while (true);
+		}
+		break;
 
-		case 2 :
-			if (count != 0)
+	case 2 :
+		if (count != 0)
+		{
+			bBuffer  = (b3_u08 *)inPtr;
+			bBuffer += (512 / sizeof(unsigned short) + offset);
+			while (count-- > 0)
 			{
-				bBuffer  = (b3_u08 *)inPtr;
-				bBuffer += (512 / sizeof(unsigned short) + offset);
-				while (count-- > 0)
+				*buffer++ = *bBuffer++;
+			}
+		}
+		else
+		{
+			sBuffer  = (b3_u16 *)inPtr;
+			sBuffer += offset;
+			do
+			{
+				pixel = *sBuffer++;
+				count = (pixel & 0x7f);
+				if (count == 0) return;
+				if (pixel & 0x80)
 				{
-					*buffer++ = *bBuffer++;
+					while(count--) *buffer++ = *sBuffer++;
+				}
+				else
+				{
+					pixel = *sBuffer++;
+					while(count--) *buffer++ = pixel;
 				}
 			}
-			else
-			{
-				sBuffer  = (b3_u16 *)inPtr;
-				sBuffer += offset;
-				do
-				{
-				    pixel = *sBuffer++;
-				    count = (pixel & 0x7f);
-				    if (count == 0) return;
-			    	if (pixel & 0x80)
-					{
-						while(count--) *buffer++ = *sBuffer++;
-				    }
-					else
-					{
-						pixel = *sBuffer++;
-						while(count--) *buffer++ = pixel;
-				    }
-				}
-				while (true);
-			}
-			break;
+			while (true);
+		}
+		break;
 	}
 }
 
@@ -141,7 +141,7 @@ void b3Tx::b3ParseSGI3(
 	bytes =   HeaderSGI->type & 0x00ff; /* check bytes per pixel */
 	rle   = ((HeaderSGI->type & 0xff00) == 0x0100) ? 0 : xSize; /* check RLE */
 
-		/* line buffer */
+	/* line buffer */
 	line = (b3_u08 *)b3Alloc(xSize * zSize * bytes);
 	if (line == null)
 	{
@@ -151,7 +151,7 @@ void b3Tx::b3ParseSGI3(
 	}
 
 
-		/* convert line offsets */
+	/* convert line offsets */
 	lineTable = (b3_pkd_color *)&buffer[512];
 	lineSizes = (b3_pkd_color *)&lineTable[zSize * ySize];
 	if (HeaderSGI->imagic == IMAGIC2) /* check for converting endian */
@@ -159,66 +159,66 @@ void b3Tx::b3ParseSGI3(
 		if (rle <= 0) /* RLE data */
 		{
 			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
-			{
-				b3Endian::b3ChangeEndian32 (&lineTable[y + z * ySize]);
-				b3Endian::b3ChangeEndian32 (&lineSizes[y + z * ySize]);
-				b3ConvertSGILine ((b3_u16 *)buffer,
-					lineTable[y + z * ySize],
-					lineSizes[y + z * ySize],bytes);
-			}
+				{
+					b3Endian::b3ChangeEndian32 (&lineTable[y + z * ySize]);
+					b3Endian::b3ChangeEndian32 (&lineSizes[y + z * ySize]);
+					b3ConvertSGILine ((b3_u16 *)buffer,
+									  lineTable[y + z * ySize],
+									  lineSizes[y + z * ySize],bytes);
+				}
 		}
 		else /* raw (VERBATIM) data */
 		{
 			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
-			{
-				b3ConvertSGILine ((b3_u16 *)buffer,
-					256 + y * xSize * zSize + z * xSize,xSize,bytes);
-			}
+				{
+					b3ConvertSGILine ((b3_u16 *)buffer,
+									  256 + y * xSize * zSize + z * xSize,xSize,bytes);
+				}
 		}
 	}
-	
+
 	switch (type)
 	{
-		case B3_TX_RGB8 :
-			lPtr  = (b3_pkd_color *)data;
-			block = xSize * ySize;
-			for (y = ySize - 1;y >= 0;y--)
+	case B3_TX_RGB8 :
+		lPtr  = (b3_pkd_color *)data;
+		block = xSize * ySize;
+		for (y = ySize - 1;y >= 0;y--)
+		{
+			if (rle > 0) /* read raw data */
 			{
-				if (rle > 0) /* read raw data */
-				{
-					b3UnpackSGI(&line[0],          buffer,rle,bytes,y * xSize);
-					b3UnpackSGI(&line[xSize],      buffer,rle,bytes,y * xSize + block);
-					b3UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,y * xSize + block + block);
-				}
-				else /* read RLE packed data */
-				{
-					b3UnpackSGI(&line[0],          buffer,rle,bytes,lineTable[y]);
-					b3UnpackSGI(&line[xSize],      buffer,rle,bytes,lineTable[y+ySize]);
-					b3UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,lineTable[y+ySize+ySize]);
-				}
-				for (x=0;x<xSize;x++)
-				{
-					value   = line[x];
-					value   = (value << 8) | line[x + xSize];
-					*lPtr++ = (value << 8) | line[x + xSize + xSize];
-				}
+				b3UnpackSGI(&line[0],          buffer,rle,bytes,y * xSize);
+				b3UnpackSGI(&line[xSize],      buffer,rle,bytes,y * xSize + block);
+				b3UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,y * xSize + block + block);
 			}
-			break;
-
-		case B3_TX_VGA :
-			cPtr = data;
-			for (y = ySize - 1;y >= 0;y--)
+			else /* read RLE packed data */
 			{
-				if (rle > 0) b3UnpackSGI (cPtr,buffer,rle,bytes,y * xSize);
-				else         b3UnpackSGI (cPtr,buffer,rle,bytes,lineTable[y]);
-				cPtr += xSize;
+				b3UnpackSGI(&line[0],          buffer,rle,bytes,lineTable[y]);
+				b3UnpackSGI(&line[xSize],      buffer,rle,bytes,lineTable[y+ySize]);
+				b3UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,lineTable[y+ySize+ySize]);
 			}
-			break;
+			for (x=0;x<xSize;x++)
+			{
+				value   = line[x];
+				value   = (value << 8) | line[x + xSize];
+				*lPtr++ = (value << 8) | line[x + xSize + xSize];
+			}
+		}
+		break;
 
-		default :
-			b3FreeTx();
-			b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
-			B3_THROW(b3TxException,B3_TX_UNSUPP);
+	case B3_TX_VGA :
+		cPtr = data;
+		for (y = ySize - 1;y >= 0;y--)
+		{
+			if (rle > 0) b3UnpackSGI (cPtr,buffer,rle,bytes,y * xSize);
+			else         b3UnpackSGI (cPtr,buffer,rle,bytes,lineTable[y]);
+			cPtr += xSize;
+		}
+		break;
+
+	default :
+		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
+		B3_THROW(b3TxException,B3_TX_UNSUPP);
 	}
 	b3Free(line);
 }
@@ -231,7 +231,7 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 	b3_index   c;
 
 	b3PrintF(B3LOG_FULL,"IMG SGI  # b3ParseSGI(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	HeaderSGI = (struct HeaderSGI *)buffer;
 	if (HeaderSGI->imagic == IMAGIC2)
@@ -255,59 +255,59 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 	// get texture type
 	switch (HeaderSGI->colormap)
 	{
-		case 0 :
-			switch (HeaderSGI->zsize)
-			{
-				case 1 :
-					success = b3AllocTx(xNewSize,yNewSize,8);
-					break;
-				case 3 :
-					success = b3AllocTx(xNewSize,yNewSize,24);
-					break;
-
-				default :
-					b3FreeTx();
-					b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
-					B3_THROW( b3TxException,B3_TX_UNSUPP);
-					break;
-			}
-			break;
-
-		case 3 :
+	case 0 :
+		switch (HeaderSGI->zsize)
+		{
+		case 1 :
 			success = b3AllocTx(xNewSize,yNewSize,8);
-			if (success)
-			{
-				for (c=0;c<256;c++)
-				{
-					palette[c] =
-						((c & 0xe0) << 16) |
-						((c & 0x1c) << 11) |
-						((c & 0x03) <<  6);
-				}
-			}
+			break;
+		case 3 :
+			success = b3AllocTx(xNewSize,yNewSize,24);
 			break;
 
 		default :
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
-			B3_THROW(b3TxException,B3_TX_UNSUPP);
+			B3_THROW( b3TxException,B3_TX_UNSUPP);
 			break;
+		}
+		break;
+
+	case 3 :
+		success = b3AllocTx(xNewSize,yNewSize,8);
+		if (success)
+		{
+			for (c=0;c<256;c++)
+			{
+				palette[c] =
+					((c & 0xe0) << 16) |
+					((c & 0x1c) << 11) |
+					((c & 0x03) <<  6);
+			}
+		}
+		break;
+
+	default :
+		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
+		B3_THROW(b3TxException,B3_TX_UNSUPP);
+		break;
 	}
 	if (success)
 	{
 		/* how are rows saved? */
 		switch (HeaderSGI->dim)
 		{
-			case 3 :
-				b3ParseSGI3(HeaderSGI,buffer);
-				break;
+		case 3 :
+			b3ParseSGI3(HeaderSGI,buffer);
+			break;
 
-			case 1 :
-			case 2 :
-			default :
-				b3FreeTx();
-				b3PrintF(B3LOG_NORMAL,"IMG SGI  # Wrong packing algorithms:\n");
-				B3_THROW(b3TxException,B3_TX_ERR_PACKING);
+		case 1 :
+		case 2 :
+		default :
+			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG SGI  # Wrong packing algorithms:\n");
+			B3_THROW(b3TxException,B3_TX_ERR_PACKING);
 		}
 
 		// Success

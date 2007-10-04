@@ -45,8 +45,8 @@ class b3InfoEXR : protected b3TxSaveInfo, protected OStream
 {
 public:
 	b3InfoEXR(b3Tx *tx,const char *filename) :
-		b3TxSaveInfo(tx, filename, B3_BWRITE),
-		OStream(filename)
+			b3TxSaveInfo(tx, filename, B3_BWRITE),
+			OStream(filename)
 	{
 		if (!tx->b3IsHDR())
 		{

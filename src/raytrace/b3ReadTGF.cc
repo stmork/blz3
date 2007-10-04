@@ -52,7 +52,7 @@ b3TGFReader::~b3TGFReader()
 }
 
 b3_size b3TGFReader::b3StrCpy(
-	      char *dst,
+	char *dst,
 	const char *src,
 	b3_size    	dst_size,
 	b3_size     src_size)
@@ -200,7 +200,7 @@ b3Triangles *b3TGFReader::b3ProcessOneShape(
 	// Init shape
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"F: %5d - %5d # %5d faces # V: %5d - %5d\n",
-		facStart,facEnd,faces,min,max);
+			 facStart,facEnd,faces,min,max);
 #endif
 	shape->b3Init(max - min,faces,0,0);
 
@@ -293,7 +293,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	}
 	ptr += 18;
 	pos  = 18;
-	
+
 	vPtr  = (b3_f64 *)ptr;
 	skip  = numVert * sizeof(b3_f64) * size;
 	for (i = 0;i < numVert;i++)
@@ -317,20 +317,20 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	}
 	ptr  += skip;
 	pos  += skip;
-	
+
 	skip  = numVert * sizeof(b3_u08);
 	ptr  += skip;
 	pos  += skip;
-	
+
 	sPtr  = (b3_u16 *)ptr;
 	skip  = numAttr * sizeof(b3_u16) * 3;
 	for (i = 0;i < numAttr;i++)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"%5u %5u - %5u\n",
-			b3Endian::b3GetIntel16(&sPtr[0]),
-			b3Endian::b3GetIntel16(&sPtr[1]),
-			b3Endian::b3GetIntel16(&sPtr[2]));
+				 b3Endian::b3GetIntel16(&sPtr[0]),
+				 b3Endian::b3GetIntel16(&sPtr[1]),
+				 b3Endian::b3GetIntel16(&sPtr[2]));
 #endif
 		sPtr += 3;
 	}
@@ -356,12 +356,12 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"%5u %5u %5u # %5u %5u %5u\n",
-			b3Endian::b3GetIntel32(&lPtr[0]),
-			b3Endian::b3GetIntel32(&lPtr[1]),
-			b3Endian::b3GetIntel32(&lPtr[2]),
-			b3Endian::b3GetIntel32(&lPtr[3]),
-			b3Endian::b3GetIntel32(&lPtr[4]),
-			b3Endian::b3GetIntel32(&lPtr[5]));
+				 b3Endian::b3GetIntel32(&lPtr[0]),
+				 b3Endian::b3GetIntel32(&lPtr[1]),
+				 b3Endian::b3GetIntel32(&lPtr[2]),
+				 b3Endian::b3GetIntel32(&lPtr[3]),
+				 b3Endian::b3GetIntel32(&lPtr[4]),
+				 b3Endian::b3GetIntel32(&lPtr[5]));
 #endif
 		lPtr += 6;
 	}
@@ -380,9 +380,9 @@ b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
 
 	mat.m_Index = b3Endian::b3GetIntel32(ptr);
 	b3ColorBase::b3Init(&mat.m_Color,
-		b3Endian::b3GetIntelFloat(&ptr[ 4]),
-		b3Endian::b3GetIntelFloat(&ptr[ 8]),
-		b3Endian::b3GetIntelFloat(&ptr[12]));
+						b3Endian::b3GetIntelFloat(&ptr[ 4]),
+						b3Endian::b3GetIntelFloat(&ptr[ 8]),
+						b3Endian::b3GetIntelFloat(&ptr[12]));
 
 	m_Materials.b3Add(mat);
 	return true;
@@ -414,7 +414,7 @@ b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename) throw(
 			if (!error)
 			{
 				b3PrintF(B3LOG_NORMAL,"GAMMA TGF Version %1.2f\n",
-					(double)b3Endian::b3GetIntel16(&ptr[10]) / 100);
+						 (double)b3Endian::b3GetIntel16(&ptr[10]) / 100);
 			}
 			break;
 

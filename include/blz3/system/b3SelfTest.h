@@ -32,7 +32,7 @@ public:
 	 * \return Correct data sizes.
 	 */
 	static b3_bool b3TestDataSize();
-	
+
 	/**
 	 * This method checks correct memory handling.
 	 *

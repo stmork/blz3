@@ -86,7 +86,7 @@ void b3PickInfo::b3AddVertex(b3_vector *point)
 	vertex.v.z = point->z;
 	vertex.t.s = 0;
 	vertex.t.t = 0;
-	
+
 	m_Vertices.b3Add(vertex);
 }
 

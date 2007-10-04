@@ -178,7 +178,7 @@ void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 
 	aQuad = polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
 	bQuad = polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
-	        polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
+	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
 
 	val = m_aRad - m_aQuad / sqrt(aQuad * aQuad + bQuad * bQuad);
 

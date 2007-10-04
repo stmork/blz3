@@ -174,8 +174,8 @@ typedef struct B3_ALIGN_16 b3_matrix64_4D
 {
 	b3_f64    m11,m12,m13,m14;
 	b3_f64    m21,m22,m23,m24;
-    b3_f64    m31,m32,m33,m34;
-    b3_f64    m41,m42,m43,m44;
+	b3_f64    m31,m32,m33,m34;
+	b3_f64    m41,m42,m43,m44;
 } b3_matrix64;
 
 /**

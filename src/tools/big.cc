@@ -29,7 +29,7 @@ int main (int argc,char *argv[])
 	for (int i = 2;i < argc;i++)
 	{
 		b3Tx tx;
-		
+
 		tx.b3AllocTx(size, size, 24);
 		tx.b3SaveImage(argv[i]);
 	}

@@ -87,27 +87,27 @@ class b3DisplayView : public b3Display
 	GC              m_GC;
 
 public:
-	                    /**
-	                     * This constructor opens a window with the given title in a default resolution.
-	                     *
-	                     * @param title The window title.
-	                     */
-	                    b3DisplayView(const char *title = null);
+	/**
+	 * This constructor opens a window with the given title in a default resolution.
+	 *
+	 * @param title The window title.
+	 */
+	b3DisplayView(const char *title = null);
 
-	                    /**
-	                     * This constructor opens a window with the given resolution and the given window
-	                     * title.
-	                     *
-	                     * @param xSize The window width.
-	                     * @param ySize The window height.
-	                     * @param title The window title.
-	                     */
-	                    b3DisplayView(const b3_res xSize, const b3_res ySize, const char *title = null);
+	/**
+	 * This constructor opens a window with the given resolution and the given window
+	 * title.
+	 *
+	 * @param xSize The window width.
+	 * @param ySize The window height.
+	 * @param title The window title.
+	 */
+	b3DisplayView(const b3_res xSize, const b3_res ySize, const char *title = null);
 
-	                    /**
-	                     * This destructor closes the window.
-	                     */
-	                   ~b3DisplayView();
+	/**
+	 * This destructor closes the window.
+	 */
+	~b3DisplayView();
 
 	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &pixel);
 	void                b3PutRow(const b3Row *row);
@@ -116,14 +116,14 @@ public:
 	void                b3Wait();
 
 private:
-	       void         b3RefreshRow(const b3_coord y);
+	void         b3RefreshRow(const b3_coord y);
 
-	       void         b3Open(const b3_res xSize, const b3_res ySize);
-	       b3_bool      b3CreateColormap();
-	       void         b3FreeColormap();
+	void         b3Open(const b3_res xSize, const b3_res ySize);
+	b3_bool      b3CreateColormap();
+	void         b3FreeColormap();
 	static Bool         b3SetPredicate(Display *display,XEvent *event,char *buffer);
-	       void         b3FirstDrawing();
-	       void         b3RefreshAll();
+	void         b3FirstDrawing();
+	void         b3RefreshAll();
 };
 
 #endif

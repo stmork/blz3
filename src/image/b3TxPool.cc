@@ -60,13 +60,13 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *tx,const char *Name)
 	{
 		result = (tx->b3LoadImage(FullName) == B3_OK);
 		b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" %sloaded.\n",
-			tx->b3Name(),result ? "" : "not ");
+				 tx->b3Name(),result ? "" : "not ");
 	}
 	else
 	{
 		tx->b3Name(Name);
 		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" available!\n",
-			tx->b3Name());
+				  tx->b3Name());
 	}
 	return result;
 }
@@ -126,7 +126,7 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name)
 	else
 	{
 		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" found.\n",
-			tx->b3Name());
+				  tx->b3Name());
 	}
 
 	return tx;
@@ -137,13 +137,13 @@ void b3TxPool::b3Dump()
 	b3Tx *tx;
 
 	b3PrintF(B3LOG_NORMAL,"Image pool dump with %d textures.\n",
-		m_Pool.b3GetCount());
+			 m_Pool.b3GetCount());
 	B3_FOR_BASE(&m_Pool,tx)
 	{
 		b3PrintF(B3LOG_NORMAL,"TX: %5d x %5d - %s\n",
-			tx->xSize,
-			tx->ySize,
-			tx->b3Name());
+				 tx->xSize,
+				 tx->ySize,
+				 tx->b3Name());
 	}
 }
 

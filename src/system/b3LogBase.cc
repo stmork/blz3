@@ -48,13 +48,13 @@ b3_bool b3LogBase::b3OpenLogFile()
 
 		// Prepare startup message
 		snprintf (m_Message,sizeof(m_Message),
-			"*** Blizzard III V%d.%02d # Debug log file ***\n"
-			"Debug file:  %s\n"
-			"Debug level: %d = 0x%x\n"
-			"*******************************************\n\n",
-			B3_VERSION,B3_REVISION,
-			m_LogFile,
-			m_LogLevel,m_LogLevel);
+				  "*** Blizzard III V%d.%02d # Debug log file ***\n"
+				  "Debug file:  %s\n"
+				  "Debug level: %d = 0x%x\n"
+				  "*******************************************\n\n",
+				  B3_VERSION,B3_REVISION,
+				  m_LogFile,
+				  m_LogLevel,m_LogLevel);
 
 		// Do output
 		m_Out = fopen (m_LogFile, B3_TAPPEND);
@@ -66,13 +66,13 @@ b3_bool b3LogBase::b3OpenLogFile()
 		else
 		{
 			fprintf(stderr, m_Message);
-			fprintf(stderr, 
-				"Cannot open log file %s\n"
-				"Reason: %s\n"
-				"Errno:  %d\n\n",
-				m_LogFile,
-				strerror(errno),
-				errno);
+			fprintf(stderr,
+					"Cannot open log file %s\n"
+					"Reason: %s\n"
+					"Errno:  %d\n\n",
+					m_LogFile,
+					strerror(errno),
+					errno);
 			fflush (stderr);
 		}
 	}

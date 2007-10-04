@@ -23,7 +23,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Array.h"
@@ -71,22 +71,22 @@ public:
 						b3_patch patch;
 
 						if (sscanf(line,"%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld",
-							&patch.m_Indices[ 0],
-							&patch.m_Indices[ 1],
-							&patch.m_Indices[ 2],
-							&patch.m_Indices[ 3],
-							&patch.m_Indices[ 4],
-							&patch.m_Indices[ 5],
-							&patch.m_Indices[ 6],
-							&patch.m_Indices[ 7],
-							&patch.m_Indices[ 8],
-							&patch.m_Indices[ 9],
-							&patch.m_Indices[10],
-							&patch.m_Indices[11],
-							&patch.m_Indices[12],
-							&patch.m_Indices[13],
-							&patch.m_Indices[14],
-							&patch.m_Indices[15]) == 16)
+								   &patch.m_Indices[ 0],
+								   &patch.m_Indices[ 1],
+								   &patch.m_Indices[ 2],
+								   &patch.m_Indices[ 3],
+								   &patch.m_Indices[ 4],
+								   &patch.m_Indices[ 5],
+								   &patch.m_Indices[ 6],
+								   &patch.m_Indices[ 7],
+								   &patch.m_Indices[ 8],
+								   &patch.m_Indices[ 9],
+								   &patch.m_Indices[10],
+								   &patch.m_Indices[11],
+								   &patch.m_Indices[12],
+								   &patch.m_Indices[13],
+								   &patch.m_Indices[14],
+								   &patch.m_Indices[15]) == 16)
 						{
 							m_Patches.b3Add(patch);
 						}
@@ -114,7 +114,7 @@ public:
 						b3_vector vertex;
 
 						if (sscanf(line,"%f,%f,%f",
-							&vertex.x,&vertex.y,&vertex.z) == 3)
+								   &vertex.x,&vertex.y,&vertex.z) == 3)
 						{
 							b3_f64 factor = 20;
 
@@ -133,7 +133,7 @@ public:
 
 			fclose(patchfile);
 			b3PrintF(B3LOG_NORMAL,"Read %d patches and %d vertices.\n",
-				m_Patches.b3GetCount(),m_Vertices.b3GetCount());
+					 m_Patches.b3GetCount(),m_Vertices.b3GetCount());
 		}
 	}
 

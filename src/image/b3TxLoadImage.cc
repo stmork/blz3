@@ -64,12 +64,16 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	{
 		switch (b3Endian::b3GetMot32(&LongData[2]))
 		{
-			case IFF_ILBM : return b3ParseIFF_ILBM(buffer,buffer_size);
-			case IFF_RGB8 :	return b3ParseIFF_RGB8(buffer,buffer_size);
-			case IFF_RGBN : return b3ParseIFF_RGB4(buffer,buffer_size);
-			case IFF_YUVN : return b3ParseIFF_YUVN(buffer,buffer_size);
-			default :
-				B3_THROW(b3TxException, B3_TX_ERR_HEADER);
+		case IFF_ILBM :
+			return b3ParseIFF_ILBM(buffer,buffer_size);
+		case IFF_RGB8 :
+			return b3ParseIFF_RGB8(buffer,buffer_size);
+		case IFF_RGBN :
+			return b3ParseIFF_RGB4(buffer,buffer_size);
+		case IFF_YUVN :
+			return b3ParseIFF_YUVN(buffer,buffer_size);
+		default :
+			B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 		}
 	}
 
@@ -80,8 +84,8 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
 			const char *jpg_start = (const char *)&buffer[i+6];
-			      char *jfif      = strstr(jpg_start,"JFIF");
-			      char *exif      = strstr(jpg_start,"Exif");
+			char *jfif      = strstr(jpg_start,"JFIF");
+			char *exif      = strstr(jpg_start,"Exif");
 
 			if ((jfif != null) || (exif != null))
 			{
@@ -128,38 +132,38 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	{
 		switch (ppm_type)
 		{
-			case 4 :
-				if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
-				{
-					pos = (b3_offset)buffer_size - ((x + 7) >> 3) * y;
-					FileType = FT_PBM;
-					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
-				}
-				break;
+		case 4 :
+			if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
+			{
+				pos = (b3_offset)buffer_size - ((x + 7) >> 3) * y;
+				FileType = FT_PBM;
+				return b3ParseRAW (&buffer[pos],x,y,ppm_type);
+			}
+			break;
 
-			case 5 :
-				if ((b3_size)(x * y + pos) <= buffer_size)
-				{
-					pos = (b3_offset)buffer_size - x * y;
-					FileType = FT_PGM;
-					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
-				}
-				break;
-				
-			case 6 :
-				if ((b3_size)(x * y * 3 + pos) <= buffer_size)
-				{
-					pos = (b3_offset)buffer_size - 3 * x * y;
-					FileType = FT_PPM;
-					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
-				}
-				break;
+		case 5 :
+			if ((b3_size)(x * y + pos) <= buffer_size)
+			{
+				pos = (b3_offset)buffer_size - x * y;
+				FileType = FT_PGM;
+				return b3ParseRAW (&buffer[pos],x,y,ppm_type);
+			}
+			break;
 
-			case 1 : /* ASCII pendants */
-			case 2 :
-			case 3 :
-			default :
-				B3_THROW(b3TxException, B3_TX_UNSUPP);
+		case 6 :
+			if ((b3_size)(x * y * 3 + pos) <= buffer_size)
+			{
+				pos = (b3_offset)buffer_size - 3 * x * y;
+				FileType = FT_PPM;
+				return b3ParseRAW (&buffer[pos],x,y,ppm_type);
+			}
+			break;
+
+		case 1 : /* ASCII pendants */
+		case 2 :
+		case 3 :
+		default :
+			B3_THROW(b3TxException, B3_TX_UNSUPP);
 		}
 	}
 
@@ -173,8 +177,8 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 
 	// BMP
 	if ((buffer[0] == 'B') &&
-	    (buffer[1] == 'M') &&
-	    (b3Endian::b3GetIntel32(&buffer[2]) == buffer_size))
+			(buffer[1] == 'M') &&
+			(b3Endian::b3GetIntel32(&buffer[2]) == buffer_size))
 	{
 		return b3ParseBMP(buffer);
 	}
@@ -200,21 +204,21 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	y = b3Endian::b3GetIntel16 (&buffer[4]);
 	switch (buffer[6])
 	{
-		case 2 :
-			i = 1;
-			break;
-		case 4 :
-			i = 3;
-			break;
-		default :
-			i = 0;
-			break;
+	case 2 :
+		i = 1;
+		break;
+	case 4 :
+		i = 3;
+		break;
+	default :
+		i = 0;
+		break;
 	}
 	if ((b3_size)(x * y * i + 16) == buffer_size)
 	{
 		return b3ParseBMF(buffer,buffer_size);
 	}
-	
+
 	// SGI RLE
 	HeaderSGI = (struct HeaderSGI *)buffer;
 	if ((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
@@ -227,7 +231,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	if ((buffer[2] == 2) || (buffer[2] == 10))
 	{
 		if ((b3Endian::b3Get32(&buffer[4]) == 0) &&
-		    (b3Endian::b3Get32(&buffer[8]) == 0))
+				(b3Endian::b3Get32(&buffer[8]) == 0))
 		{
 			if ((buffer[16]==32) || (buffer[16]==24))
 			{
@@ -242,10 +246,12 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	{
 		switch (buffer[3])			/* Bits pro Pixel */
 		{
-			case 8  : return b3ParsePCX8(buffer);
-			case 1 	: return b3ParsePCX4(buffer);
-			default :
-				B3_THROW(b3TxException,B3_TX_UNSUPP);
+		case 8  :
+			return b3ParsePCX8(buffer);
+		case 1 	:
+			return b3ParsePCX4(buffer);
+		default :
+			B3_THROW(b3TxException,B3_TX_UNSUPP);
 		}
 	}
 
@@ -275,7 +281,7 @@ b3_result b3Tx::b3LoadImage(const char *name, b3_bool throw_exception)
 	catch (b3FileException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Error loading %s (%s)\n",
-			name,e.b3GetErrorMsg());
+				 name,e.b3GetErrorMsg());
 		if (throw_exception)
 		{
 			throw;
@@ -284,7 +290,7 @@ b3_result b3Tx::b3LoadImage(const char *name, b3_bool throw_exception)
 	catch(b3TxException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Error parsing %s (%s)\n",
-			name,e.b3GetErrorMsg());
+				 name,e.b3GetErrorMsg());
 		if (throw_exception)
 		{
 			throw;
@@ -430,6 +436,6 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 			return B3_ERROR;
 		}
 	}
-	
+
 	return B3_ERROR;
 }

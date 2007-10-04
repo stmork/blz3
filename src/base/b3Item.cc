@@ -84,9 +84,9 @@ b3Item::b3Item(
 }
 
 b3Item::b3Item(b3_u32 *src) :
-	b3Link<b3Item>(
-		src[B3_NODE_IDX_SIZE] + sizeof(b3Item),
-		src[B3_NODE_IDX_CLASSTYPE])
+		b3Link<b3Item>(
+			src[B3_NODE_IDX_SIZE] + sizeof(b3Item),
+			src[B3_NODE_IDX_CLASSTYPE])
 {
 	b3_u32 i,k;
 
@@ -98,8 +98,8 @@ b3Item::b3Item(b3_u32 *src) :
 
 	// Count heads
 	for (i = B3_NODE_IDX_FIRSTHEAD_CLASS;
-	     m_Buffer[i + B3_HEAD_IDX_CLASS] != 0;
-		 i += B3_HEAD_SIZE)
+			m_Buffer[i + B3_HEAD_IDX_CLASS] != 0;
+			i += B3_HEAD_SIZE)
 	{
 		m_HeadCount++;
 	}
@@ -218,7 +218,7 @@ void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
 
 	for (i = 0;i < max;i++)
 	{
-		 b3PrintF (log_level,"  %08lx",m_Buffer[i]);
+		b3PrintF (log_level,"  %08lx",m_Buffer[i]);
 	}
 	b3PrintF (log_level,"\n");
 }
@@ -683,7 +683,7 @@ void b3Item::b3StoreVector(b3Vector32 &vec)
 	*ptr++ = vec[X];
 	*ptr++ = vec[Y];
 	*ptr++ = vec[Z];
-	
+
 	m_StoreIndex += 3;
 }
 
@@ -714,12 +714,12 @@ void b3Item::b3StoreVector4D(b3Vector32 &vec)
 	b3EnsureStoreBuffer(4);
 
 	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-	
+
 	*ptr++ = vec[X];
 	*ptr++ = vec[Y];
 	*ptr++ = vec[Z];
 	*ptr++ = vec[W];
-	
+
 	m_StoreIndex += 4;
 }
 
@@ -796,7 +796,7 @@ void b3Item::b3StoreColor(const b3_color *col)
 void b3Item::b3StoreColor(b3Color &col)
 {
 	b3_color aux = col;
-	
+
 	b3StoreColor(&aux);
 }
 

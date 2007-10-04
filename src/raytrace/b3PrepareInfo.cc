@@ -21,7 +21,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3RaytraceInclude.h"
 
 /*************************************************************************
@@ -64,7 +64,7 @@ void b3PrepareInfo::b3CollectBBoxes(b3BBox *bbox)
 		bbox->b3CollectBBoxes(m_BBoxRefArray);
 		bbox = (b3BBox *)bbox->Succ;
 	}
-	
+
 }
 
 b3BBoxReference *b3PrepareInfo::b3GetBBoxReference()
@@ -77,7 +77,7 @@ b3BBoxReference *b3PrepareInfo::b3GetBBoxReference()
 void b3PrepareInfo::b3RebuildListFromArray()
 {
 	b3CriticalSection lock(m_Mutex);
-	
+
 	m_BBoxRefList.b3RemoveAll();
 	for (int i = 0;i < m_BBoxRefArray.b3GetCount();i++)
 	{
@@ -95,7 +95,7 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 		if (!info->m_PrepareProc(reference->m_BBox,info->m_Ptr))
 		{
 			b3PrintF(B3LOG_NORMAL,"      Object %s didn't prepare successfully!\n",
-				reference->m_BBox->b3GetName());
+					 reference->m_BBox->b3GetName());
 			return 0;
 		}
 	}
@@ -147,6 +147,6 @@ b3_bool b3PrepareInfo::b3Prepare(
 		}
 	}
 	b3PrintF(B3LOG_FULL,"    Preparing finished %s.\n",
-		result ? "successfully" : "with errors");
+			 result ? "successfully" : "with errors");
 	return result;
 }

@@ -50,7 +50,7 @@ b3OceanWave::b3OceanWave()
 	m_GridSize =   400;
 	m_l        =     0.0f;
 	m_Denom    = 1.0 / 4096.0;
-	
+
 	m_Phillips = null;
 	m_Normals  = null;
 	m_Modified = true;
@@ -91,7 +91,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	m_fftDiff        =  m_fftMax - m_fftMin;
 	m_fftMask        =  m_fftDiff - 1;
 	m_GridScale      =  1.0 / m_GridSize;
-	
+
 	// Time values
 	m_t              =  t;
 	m_omega_t        =  M_PI * 2.0 * m_t / m_T;
@@ -187,8 +187,8 @@ void b3OceanWave::b3ComputeOceanWaveDeriv(
 	us = b3GetIndex(x,   y+1);
 	ue = b3GetIndex(x+1, y+1);
 
-	 b3Vector::b3Mix(&m_Normals[ls], &m_Normals[le], dx, &l);
-	 b3Vector::b3Mix(&m_Normals[us], &m_Normals[ue], dx, &u);
+	b3Vector::b3Mix(&m_Normals[ls], &m_Normals[le], dx, &l);
+	b3Vector::b3Mix(&m_Normals[us], &m_Normals[ue], dx, &u);
 	*b3Vector::b3Mix(&l, &u, dy, n);
 }
 
@@ -262,7 +262,7 @@ void b3OceanWave::b3FilterPhillipsSpectrum(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	      b3FilterInfo *filter_info)
+	b3FilterInfo *filter_info)
 {
 	b3OceanWave *ocean  = (b3OceanWave *)filter_info;
 
@@ -293,9 +293,9 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_NORMAL,"f: %f %f - K: %f %f # k²=%f k^4=%f L²=%f q=%f P=%f",
-		fx, fy,
-		Kr, Ki,
-		k2, k4, m_L2, quotient, phillips);
+			 fx, fy,
+			 Kr, Ki,
+			 k2, k4, m_L2, quotient, phillips);
 #endif
 
 
@@ -312,7 +312,7 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_NORMAL, " # %f %f %f\n",
-		m_Phillips[index].b3Real(),  m_Phillips[index].b3Imag(), w);
+			 m_Phillips[index].b3Real(),  m_Phillips[index].b3Imag(), w);
 #endif
 }
 
@@ -320,11 +320,11 @@ void b3OceanWave::b3SampleHeight(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	      b3FilterInfo *filter_info)
+	b3FilterInfo *filter_info)
 {
 	b3OceanWave *ocean  = (b3OceanWave *)filter_info;
 	b3Complex64 *buffer = ocean->b3GetBuffer();
-	
+
 	buffer[index] = ocean->m_Phillips[index] * ocean->m_Cycle;
 }
 
@@ -377,7 +377,7 @@ void b3OceanWave::b3DumpImages()
 	m_FFT.b3FFT2D();
 	m_FFT.b3GetSpectrum(&tx, 1);
 	tx.b3SaveJPEG("ow_spectrum.jpg");
- 	m_FFT.b3IFFT2D();
+	m_FFT.b3IFFT2D();
 
 	m_FFT.b3GetBuffer(&tx, 0.001);
 	tx.b3SaveJPEG("ow_buffer.jpg");

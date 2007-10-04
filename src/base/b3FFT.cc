@@ -38,13 +38,13 @@ b3Fourier::b3Fourier()
 {
 	// Dimension
 	m_xOrig  =
-	m_yOrig  = 0;
+		m_yOrig  = 0;
 	m_xSize  =
-	m_ySize  = 0;
+		m_ySize  = 0;
 	m_xStart =
-	m_yStart = 0;
+		m_yStart = 0;
 	m_xDim   =
-	m_yDim   = 0;
+		m_yDim   = 0;
 
 	m_Buffer = null;
 	m_Lines  = null;
@@ -109,10 +109,10 @@ void b3Fourier::b3FreeBuffer()
 b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 {
 	b3_res size = b3PowOf2(new_size);
-	
+
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%d)\n", size);
 	m_xOrig  =
-	m_yOrig  = new_size;
+		m_yOrig  = new_size;
 	m_xStart = (size - m_xOrig) >> 1;
 	m_yStart = (size - m_yOrig) >> 1;
 
@@ -125,7 +125,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3_res new_size)
 	b3FreeBuffer();
 
 	m_xSize  =
-	m_ySize  = size;
+		m_ySize  = size;
 	if (!b3ReallocBuffer())
 	{
 		b3FreeBuffer();
@@ -238,7 +238,7 @@ void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
    x and y are the real and imaginary arrays of 2^m points.
    dir =  1 gives forward transform
    dir = -1 gives reverse transform
-
+ 
      Formula: forward
                   N-1
                   ---
@@ -247,7 +247,7 @@ void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
               N   /                                n=0..N-1
                   ---
                   k=0
-
+ 
       Formula: reverse
                   N-1
                   ---
@@ -361,7 +361,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 		info[i].m_xDim  = m_xDim;
 		info[i].m_yDim  = m_yDim;
 		info[i].m_Dir   = dir;
-	}	
+	}
 
 	if (m_CPUs > 1)
 	{
@@ -458,7 +458,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 }
 
 b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
-	throw(b3FFTException)
+throw(b3FFTException)
 {
 	b3_u08       *cPtr;
 	b3_loop       x,y;
@@ -482,7 +482,7 @@ b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
 		}
 	}
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3GetBuffer(...) [%1.4f - %1.4f]\n",
-		cMin, cMax);
+			 cMin, cMax);
 	return true;
 }
 
@@ -520,19 +520,19 @@ b3_bool b3Fourier::b3GetSpectrum(b3Tx *tx, b3_f64 amp)
 b3_bool b3Fourier::b3SelfTest()
 {
 	b3Rand48<b3_f64> random;
-    b3_loop          x, y;
-    b3_f64           err = 0, e, divisor;
+	b3_loop          x, y;
+	b3_f64           err = 0, e, divisor;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest() %dx%d\n", m_xSize, m_ySize);
 
 	random.b3SetSeed();
 	for (y = 0; y < m_ySize; y++)
 	{
-        for (x = 0; x < m_xSize; x++)
+		for (x = 0; x < m_xSize; x++)
 		{
-            m_Lines[y][x].b3Real() = random.b3Rand();
-        }
-    }
+			m_Lines[y][x].b3Real() = random.b3Rand();
+		}
+	}
 
 	if (!b3FFT2D())
 	{
@@ -545,14 +545,14 @@ b3_bool b3Fourier::b3SelfTest()
 
 	random.b3SetSeed();
 	divisor = m_xSize * m_ySize * 0.5;
-    for (y = 0; y < m_ySize; y++)
+	for (y = 0; y < m_ySize; y++)
 	{
-        for (x = 0; x < m_xSize; x++)
+		for (x = 0; x < m_xSize; x++)
 		{
-            e   = fabs(random.b3Rand() - m_Lines[y][x].b3Real());
-            err = B3_MAX(err, fabs(e));
-        }
-    }
+			e   = fabs(random.b3Rand() - m_Lines[y][x].b3Real());
+			err = B3_MAX(err, fabs(e));
+		}
+	}
 	b3PrintF(B3LOG_NORMAL,"### CLASS: b3Four # error diff %g\n",err);
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3SelfTest()\n");
 	return err < 0.001;

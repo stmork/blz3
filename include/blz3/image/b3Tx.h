@@ -69,17 +69,17 @@
  */
 struct HeaderSGI
 {
-    b3_u16	imagic;		/* stuff saved on disk . . */
-    b3_u16 	type;
-    b3_u16 	dim;
-    b3_u16 	xsize;
-    b3_u16 	ysize;
-    b3_u16 	zsize;
-    b3_u32 	min;
-    b3_u32 	max;
-    b3_u32	wastebytes;	
-    char 	name[80];
-    b3_u32	colormap;
+	b3_u16	imagic;		/* stuff saved on disk . . */
+	b3_u16 	type;
+	b3_u16 	dim;
+	b3_u16 	xsize;
+	b3_u16 	ysize;
+	b3_u16 	zsize;
+	b3_u32 	min;
+	b3_u32 	max;
+	b3_u32	wastebytes;
+	char 	name[80];
+	b3_u32	colormap;
 };
 
 #define IMAGIC1 	0x01da
@@ -191,7 +191,7 @@ typedef b3Exception<b3_tx_error,0x5458> b3TxException;
 class b3TxQuad
 {
 	b3_pkd_color quad256[512];
-	
+
 	b3TxQuad()
 	{
 		b3_loop i;
@@ -199,7 +199,7 @@ class b3TxQuad
 		for (i = 0;i < 256;i++)
 		{
 			quad256[256 - i] =
-			quad256[256 + i] = i * i;
+				quad256[256 + i] = i * i;
 		}
 	}
 
@@ -213,11 +213,11 @@ class B3_PLUGIN b3ColorIndices : public b3Mem
 {
 	static b3TxQuad  m_TxQuad;
 
-	       b3_count    num;
-	       b3_count    max;
-	       b3_index   *indices;
+	b3_count    num;
+	b3_count    max;
+	b3_index   *indices;
 public:
-	          b3ColorIndices ();
+	b3ColorIndices ();
 	void      b3AddColorIndex(b3_index);
 	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
 };
@@ -244,7 +244,7 @@ class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 	static const b3_u08  m_RightBorder[];
 	static       b3_bool m_ErrorHandlerInstalled;
 
-private:           
+private:
 	b3_pkd_color     *palette;
 	b3_count         *histogramme;
 	b3_u08           *data;
@@ -460,7 +460,7 @@ public:
 	 */
 	void           b3GetRow       (b3_pkd_color *row, const b3_coord  y);
 
-	/** 
+	/**
 	 * This method returns a color value at the given coordinates.
 	 *
 	 * @param x The x coordinate.
@@ -469,7 +469,7 @@ public:
 	 */
 	b3_pkd_color   b3GetValue     (const b3_coord x, const b3_coord  y);
 
-	/** 
+	/**
 	 * This method returns a color value at the given coordinates. The
 	 * color may be in HDR format.
 	 *
@@ -479,7 +479,7 @@ public:
 	 */
 	b3Color b3GetHdrValue     (const b3_coord x, const b3_coord  y);
 
-	/** 
+	/**
 	 * This method returns the blue color channel as floating point value.
 	 * color may be in HDR format.
 	 *
@@ -763,7 +763,7 @@ public:
 	 * @see b3SetWhiteRatio().
 	 */
 	b3_bool        b3IsWhite    ();
-	
+
 	/**
 	 * This method sets the white level for white iamge computation. This
 	 * level is compared against the quotient of the black parts of the
@@ -808,7 +808,7 @@ public:
 	 * @see b3_tx_threshold.
 	 */
 	b3_bool        b3TransToBW       (b3Tx *srcTx,
-		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
+									  b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
 
 	/**
 	 * This method transforms a this image into a B/W image using a specified
@@ -1117,8 +1117,8 @@ private:
 	// b3TxLoadTIFF.cc
 	b3_result      b3LoadTIFF (const char *ImageName);
 	b3_result      b3LoadTIFF (const char *ImageName,
-		const b3_u08  *ImageBuffer,
-		const b3_size  BufferSize);
+							   const b3_u08  *ImageBuffer,
+							   const b3_size  BufferSize);
 	long           b3TIFFPalette(TIFF *handle,short PaletteMode);
 	long           b3TIFFDecode (TIFF *handle,short PlanarConfig);
 	long           b3TIFFAlloc  ();
@@ -1128,7 +1128,7 @@ private:
 	b3_result      b3SaveTIFFFax      (TIFF *handle);
 	b3_result      b3SaveTIFFPalette  (TIFF *handle);
 	b3_result      b3SaveTIFFTrueColor(TIFF *handle);
-	
+
 	static void    b3TIFFErrorHandler(const char *module,const char *fmt,va_list args);
 	static void    b3TIFFWarnHandler( const char *module,const char *fmt,va_list args);
 	static tsize_t b3ReadProc( thandle_t fd, tdata_t buf, tsize_t size);
@@ -1163,9 +1163,9 @@ private:
 	void           b3EHBPalette();
 	void           b3ConvertILBMLine (b3_u08 *Line,b3_u08 *Interleave,b3_res xMax,b3_count Planes);
 	void           b3HamPalette (b3_bool HAM8);
-	
+
 	static b3_u32  b3ShiftCount(b3_count Count);
-	
+
 	// b3TxGIF.cc
 	b3_result      b3ParseGIF  (b3_u08 *buffer);
 

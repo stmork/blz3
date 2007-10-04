@@ -67,39 +67,39 @@ protected:
 	b3Tx                 *m_Tx;          //!< An image for save control.
 
 public:
-						  /**
-						   * This constructor initializes the display.
-						   */
-						  b3Display();
+	/**
+	 * This constructor initializes the display.
+	 */
+	b3Display();
 
-						  /**
-	                       * This constructor initializes a display with a default size.
-						   * The window bar contains the given title.
-						   *
-	                       * \param *title The window title.
-	                       */
-	                      b3Display(const char *title);
+	/**
+	                * This constructor initializes a display with a default size.
+	 * The window bar contains the given title.
+	 *
+	                * \param *title The window title.
+	                */
+	b3Display(const char *title);
 
-						  /**
-						   * This constructor opens a display with the resolution of the
-						   * given image.
-						   *
-						   * \param *image The image to display.
-						   */
-						  b3Display(b3Tx *image);
+	/**
+	 * This constructor opens a display with the resolution of the
+	 * given image.
+	 *
+	 * \param *image The image to display.
+	 */
+	b3Display(b3Tx *image);
 
-						  /**
-	                       * This constructor initializes a display with the given resolution
-						   * and the given title.
-						   *
-	                       * \param xSize The new x resolution.
-	                       * \param ySize The new y resolution.
-	                       * \param *title The new window title.
-	                       */
-	                      b3Display(
-	                      	const b3_res  xSize,
-	                      	const b3_res  ySize,
-	                      	const char   *title = null);
+	/**
+	                * This constructor initializes a display with the given resolution
+	 * and the given title.
+	 *
+	                * \param xSize The new x resolution.
+	                * \param ySize The new y resolution.
+	                * \param *title The new window title.
+	                */
+	b3Display(
+		const b3_res  xSize,
+		const b3_res  ySize,
+		const char   *title = null);
 	/**
 	 * This destructor deinitializes the display.
 	 */
@@ -146,8 +146,8 @@ public:
 		B3_ASSERT(m_Buffer != null);
 		return
 			((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax)) ?
-				m_Buffer[y * m_xMax + x] :
-				0;
+			m_Buffer[y * m_xMax + x] :
+			0;
 	}
 #endif
 
@@ -163,7 +163,7 @@ public:
 	{
 		return false;
 	}
-	
+
 	/**
 	 * This method waits until an close event occures.
 	 */
@@ -177,7 +177,7 @@ public:
 	 * \param *row The row to put on the display.
 	 */
 	virtual void          b3PutRow(const b3Row *row);
-	
+
 	/**
 	 * This method puts an entire image on the display.
 	 *
@@ -194,7 +194,7 @@ public:
 	virtual b3_bool       b3SaveImage(const char *filename);
 
 private:
-	        void          b3Init(const b3_res xSize, const b3_res ySize,const char *title);
+	void          b3Init(const b3_res xSize, const b3_res ySize,const char *title);
 };
 
 /**
@@ -207,7 +207,7 @@ protected:
 
 public:
 	const b3_coord   m_y;      //!< The y positition of the row.
-	      b3_color  *m_buffer; //!< The color buffer of this row.
+	b3_color  *m_buffer; //!< The color buffer of this row.
 
 public:
 	/**

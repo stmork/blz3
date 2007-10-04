@@ -52,7 +52,7 @@ int main (int argc,char *argv[])
 		b3Tx   image,half;
 		b3_res xSize,ySize;
 
-		     if (strcmp(argv[i],"-r") == 0) operation = RIGHT;
+		if (strcmp(argv[i],"-r") == 0) operation = RIGHT;
 		else if (strcmp(argv[i],"-t") == 0) operation = TURN;
 		else if (strcmp(argv[i],"-l") == 0) operation = LEFT;
 		else

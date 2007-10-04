@@ -76,7 +76,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 	b3PrintF (B3LOG_NORMAL,"\n");
 	b3PrintF (B3LOG_NORMAL,"Pointer size:                     %d bytes.\n",sizeof(ptr));
 	b3PrintF (B3LOG_NORMAL,"Int size for pointer arithmetics: %d bytes (%s).\n",
-		sizeof(b3_ptr),sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
+			  sizeof(b3_ptr),sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
 
 	return true;
 }
@@ -134,27 +134,27 @@ b3_bool b3SelfTest::b3TestMemory()
 		((b3_u08 *)ptr1)[i] = buffer[i];
 	}
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p after b3Realloc() (%s)\n",
-		ptr1,
-		ptr1 != null ? "OK" : "wrong");
+			  ptr1,
+			  ptr1 != null ? "OK" : "wrong");
 	result &= (ptr1 != null);
 
 	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
 	mem.b3Dump();
 	b3PrintF (B3LOG_NORMAL,"ptr2 = %p, ptr1 = %p after b3Realloc() with size reduction (%s)\n",
-		ptr2,ptr1,
-		(ptr1 == ptr2) && (ptr2 != null) ? "OK" : "wrong");
+			  ptr2,ptr1,
+			  (ptr1 == ptr2) && (ptr2 != null) ? "OK" : "wrong");
 	result &= ((ptr1 == ptr2) && (ptr2 != null));
 
 	ptr1 = mem.b3Realloc(ptr2,MEM_MIN * MEM_HIGH_MULT);
 	mem.b3Dump();
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
-		ptr1,ptr2,
-		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
+			  ptr1,ptr2,
+			  (ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
 	result &= ((ptr1 != ptr2) && (ptr1 != null));
 
 	equal = memcmp(buffer,ptr1,MEM_MIN) == 0;
 	b3PrintF (B3LOG_NORMAL,"   Memory buffer is %s\n",
-		equal ? "preserved (OK)" : "corrupted (wrong)");
+			  equal ? "preserved (OK)" : "corrupted (wrong)");
 
 	if (!equal)
 	{
@@ -175,13 +175,13 @@ b3_bool b3SelfTest::b3TestMemory()
 		count += ((char *)ptr1)[i];
 	}
 	b3PrintF (B3LOG_NORMAL,"   Rest memory buffer is %s\n",
-		count == 0 ? "zero initialized (OK)" : "garbled (wrong)");
+			  count == 0 ? "zero initialized (OK)" : "garbled (wrong)");
 	result &= (count == 0);
 
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	b3PrintF (B3LOG_NORMAL,"ptr2 = %p, ptr1 = %p after b3Realloc() with zero size allocation (%s)\n",
-		ptr2,ptr1,
-		(ptr1 != ptr2) && (ptr2 == null) ? "OK" : "wrong");
+			  ptr2,ptr1,
+			  (ptr1 != ptr2) && (ptr2 == null) ? "OK" : "wrong");
 	result &= ((ptr1 != ptr2) && (ptr2 == null));
 
 	b3PrintF (B3LOG_NORMAL,"\n");
@@ -196,7 +196,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	B3_PSWAP (&v1,&v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
 	result &= ((v1 == 2) && (v2 == 1));
-	
+
 	return result;
 }
 
@@ -220,20 +220,20 @@ b3_bool b3SelfTest::b3TestDir()
 	{
 		switch (code)
 		{
-			case B3_TYPE_FILE :
-				b3PrintF (B3LOG_NORMAL,"f: %s\n",(const char *)name);
-				break;
-			case B3_TYPE_DIR :
-				b3PrintF (B3LOG_NORMAL,"d: %s\n",(const char *)name);
-				break;
-			default :
-				b3PrintF (B3LOG_NORMAL,"?: %s\n",(const char *)name);
-				break;
+		case B3_TYPE_FILE :
+			b3PrintF (B3LOG_NORMAL,"f: %s\n",(const char *)name);
+			break;
+		case B3_TYPE_DIR :
+			b3PrintF (B3LOG_NORMAL,"d: %s\n",(const char *)name);
+			break;
+		default :
+			b3PrintF (B3LOG_NORMAL,"?: %s\n",(const char *)name);
+			break;
 		}
 		name.b3Empty();
 	}
 	dir.b3CloseDir ();
-	
+
 	return true;
 }
 
@@ -279,20 +279,20 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract &file)
 	code = b3Dir::b3Exists ("Config.tst");
 	switch (code)
 	{
-		case B3_NOT_EXISTANT :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is not existant...\n");
-			break;
-		case B3_TYPE_DIR :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is a directory...\n");
-			break;
-		case B3_TYPE_FILE :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is a file...\n");
-			break;
+	case B3_NOT_EXISTANT :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is not existant...\n");
+		break;
+	case B3_TYPE_DIR :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is a directory...\n");
+		break;
+	case B3_TYPE_FILE :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is a file...\n");
+		break;
 
-		default :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
-			success = false;
-			break;
+	default :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
+		success = false;
+		break;
 	}
 
 	return success;
@@ -340,20 +340,20 @@ b3_bool b3SelfTest::b3TestIO()
 	code = b3Dir::b3Exists ("Config.tst");
 	switch (code)
 	{
-		case B3_NOT_EXISTANT :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is not existant... (all right)\n");
-			break;
-		case B3_TYPE_DIR :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is a directory...\n");
-			break;
-		case B3_TYPE_FILE :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is a file...\n");
-			break;
+	case B3_NOT_EXISTANT :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is not existant... (all right)\n");
+		break;
+	case B3_TYPE_DIR :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is a directory...\n");
+		break;
+	case B3_TYPE_FILE :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is a file...\n");
+		break;
 
-		default :
-			b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
-			success = false;
-			break;
+	default :
+		b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
+		success = false;
+		break;
 	}
 	success &= b3TestDir();
 

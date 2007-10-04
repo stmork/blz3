@@ -177,9 +177,9 @@ public:
 	B3_ITEM_INIT(b3BumpTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpTexture); //!< This constructor handles deserialization.
 
-	       void    b3Write();
-	       b3_bool b3Prepare(b3_preparation_info *info);
-	       void    b3BumpNormal(b3_ray *ray);
+	void    b3Write();
+	b3_bool b3Prepare(b3_preparation_info *info);
+	void    b3BumpNormal(b3_ray *ray);
 	inline b3_bool b3NeedDeriv()
 	{
 		return true;
@@ -314,7 +314,7 @@ public:
 **                        Wood bump                                     **
 **                                                                      **
 *************************************************************************/
- 
+
 /**
  * This class provides procedural bump mapping congruent to the wood material.
  *
@@ -353,7 +353,7 @@ public:
  */
 class B3_PLUGIN b3BumpOakPlank : public b3BumpWooden, public b3OakPlank
 {
-	b3Array<b3_f64> m_Amplitudes; //!< The amplitudes for the different planks. 
+	b3Array<b3_f64> m_Amplitudes; //!< The amplitudes for the different planks.
 
 public:
 	B3_ITEM_INIT(b3BumpOakPlank); //!< This constructor handles default initialization.

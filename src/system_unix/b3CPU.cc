@@ -92,7 +92,7 @@ b3CPU::b3CPU()
 		if (!m_CorrectRUsage)
 		{
 			b3PrintF(B3LOG_NORMAL,"Found Linux kernel %d.%d.%d with wrong resource usage measurement.\n",
-				a,b,c);
+					 a,b,c);
 		}
 #endif
 	}

@@ -92,18 +92,18 @@ public:
 
 #ifdef _DEBUG
 			b3PrintF(B3LOG_NORMAL,"%3d: %2.3f %2.3f %2.3f # %2.3f %2.3f %2.3f\n",
-				y,
-				scale[b3Color::R],scale[b3Color::G],scale[b3Color::B],
-				avrg[b3Color::R], avrg[b3Color::G], avrg[b3Color::B]);
+					 y,
+					 scale[b3Color::R],scale[b3Color::G],scale[b3Color::B],
+					 avrg[b3Color::R], avrg[b3Color::G], avrg[b3Color::B]);
 #endif
 
 			for (x = 0;x < source.xSize;x++)
 			{
 				diff = source.b3GetHdrValue(x,y) - avrg;
 				dist = sqrt(
-					diff[b3Color::R] * diff[b3Color::R] +
-					diff[b3Color::B] * diff[b3Color::B] +
-					diff[b3Color::G] * diff[b3Color::G]);
+						   diff[b3Color::R] * diff[b3Color::R] +
+						   diff[b3Color::B] * diff[b3Color::B] +
+						   diff[b3Color::G] * diff[b3Color::G]);
 				if (dist > 0.145)
 				{
 					error[x]++;
@@ -117,18 +117,18 @@ public:
 			b3PrintF(B3LOG_NORMAL,"%s",result ? "#" : ".");
 		}
 		m_Error[ 58] =
-		m_Error[ 75] =
-		m_Error[200] =
-		m_Error[202] =
-		m_Error[448] =
-		m_Error[449] =
-		m_Error[635] =
-		m_Error[771] =
-		m_Error[793] =
-		m_Error[794] =
-		m_Error[798] =
-		m_Error[799] =
-		m_Error[805] = true;
+			m_Error[ 75] =
+				m_Error[200] =
+					m_Error[202] =
+						m_Error[448] =
+							m_Error[449] =
+								m_Error[635] =
+									m_Error[771] =
+										m_Error[793] =
+											m_Error[794] =
+												m_Error[798] =
+													m_Error[799] =
+														m_Error[805] = true;
 		b3PrintF(B3LOG_NORMAL,"\n");
 	}
 
@@ -153,7 +153,7 @@ public:
 
 #if 0
 				b3PrintF(B3LOG_NORMAL,"%2.3f %2.3f %2.3f\n",
-					result[b3Color::R], result[b3Color::G], result[b3Color::B]);
+						 result[b3Color::R], result[b3Color::G], result[b3Color::B]);
 #endif
 			}
 			for (x = 1;x < (image.xSize - 1);x++)

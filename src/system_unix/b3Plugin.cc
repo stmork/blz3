@@ -65,12 +65,12 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 		{
 			init();
 			b3PrintF(B3LOG_DEBUG,"Plugin %s initialized.\n",
-				(const char *)m_PluginPath);
+					 (const char *)m_PluginPath);
 		}
 		else
 		{
 			b3PrintF(B3LOG_NORMAL,"Plugin %s doesn't have init method!\n",
-				(const char *)m_PluginPath);
+					 (const char *)m_PluginPath);
 		}
 	}
 	else

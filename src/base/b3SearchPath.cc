@@ -54,7 +54,7 @@ void b3SearchPath::b3AddPath(const char *path)
 		b3PathEntry *path_item = new b3PathEntry(path);
 
 		b3PrintF(B3LOG_DEBUG,"Adding search path \"%s\"\n",
-			(const char *)*path_item);
+				 (const char *)*path_item);
 		m_SearchPath.b3Append(path_item);
 	}
 #ifdef _DEBUG
@@ -128,8 +128,8 @@ b3_bool b3SearchPath::b3CutName(const char *fullname,char *result)
 		if (strncmp(fullname,*path,shortLen) == 0)
 		{
 			while(((fullname[shortLen] == '/') ||
-				   (fullname[shortLen] == '\\')) &&
-				   (fullname[shortLen] != 0))
+					(fullname[shortLen] == '\\')) &&
+					(fullname[shortLen] != 0))
 			{
 				shortLen++;
 			}

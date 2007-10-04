@@ -131,9 +131,9 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 
 //		return b3Color(water, water, water);
 		return b3Color(
-			water,
-			b3Math::b3Limit(water + n.x * m_Amplitude),
-			b3Math::b3Limit(water + n.y * m_Amplitude));
+				   water,
+				   b3Math::b3Limit(water + n.x * m_Amplitude),
+				   b3Math::b3Limit(water + n.y * m_Amplitude));
 //	printf("%d %d %f\n",x, y, n.x * factor + 0.5);
 //		return b3Color(n.x * factor + 0.5, n.x * factor + 0.5, n.x * factor + 0.5);
 //		return b3Color(n.y * factor + 0.5, n.y * factor + 0.5, n.y * factor + 0.5);
@@ -146,7 +146,7 @@ public:
 		m_Amplitude = 0.2f;
 		m_Dim       = 8;
 	}
-	
+
 	inline void b3SampleTime(b3_f64 time)
 	{
 		m_Time = time;
@@ -165,13 +165,13 @@ int main(int argc,char *argv[])
 	{
 		b3Tx   tx;
 		b3_res xMax,yMax;
-		
+
 		// Create display
 		display = new b3DisplayView(WATER_RES,WATER_RES,"OceanWave");
 		display->b3GetRes(xMax,yMax);
-		
+
 		tx.b3AllocTx(xMax, yMax, 128);
-		
+
 		b3OceanWaveSampler sampler(&tx);
 
 		if (argc > 1)

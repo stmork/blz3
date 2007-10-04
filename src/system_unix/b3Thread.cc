@@ -178,8 +178,8 @@ b3_bool b3Thread::b3Start(
 	{
 		threadSuccess++;
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # started thread %02lX (%s).\n",
-			m_Thread,
-			m_Name != null ? m_Name : "no name");
+				  m_Thread,
+				  m_Name != null ? m_Name : "no name");
 	}
 	else
 	{
@@ -187,11 +187,11 @@ b3_bool b3Thread::b3Start(
 
 		threadError++;
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Thrd # Thread (%x) not started!\n",
-			m_Thread);
+				 m_Thread);
 		b3PrintF(B3LOG_NORMAL,"    OK/error count: %d/%d\n",
-			threadSuccess,threadError);
+				 threadSuccess,threadError);
 		b3PrintF(B3LOG_NORMAL,"    thread count:   %d\n",
-			m_ThreadCount);
+				 m_ThreadCount);
 	}
 	return success;
 }
@@ -225,8 +225,8 @@ b3_bool b3Thread::b3Stop()
 	if (m_IsRunning)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # terminated thread %02lX (%s).\n",
-			m_Thread,
-			m_Name != null ? m_Name : "no name");
+				  m_Thread,
+				  m_Name != null ? m_Name : "no name");
 	}
 
 	b3Dec();
@@ -255,4 +255,4 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 		span->m_sTime += m_Span.m_sTime;
 	}
 #endif
-} 
+}

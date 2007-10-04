@@ -75,7 +75,7 @@ public:
 	static b3_count  m_Visible;                   //!< Statistic cound of completely camera visible bounding boxes.
 	static b3_count  m_PartiallyVisible;          //!< Statistic cound of partially camera visible bounding boxes.
 	static b3_count  m_Invisible;                 //!< Statistic cound of completely camera invisible bounding boxes
-	
+
 public:
 	B3_ITEM_INIT(b3BBox); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BBox); //!< This constructor handles deserialization.
@@ -84,40 +84,40 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static void            b3Register();
-	       void            b3Write();
-	       void            b3Dump(b3_count level);
-		   void            b3SetName(const char *name);
-		   void            b3SetupVertexMemory(b3RenderContext *context);
-	       void            b3FreeVertexMemory();
-	       void            b3Draw(b3RenderContext *context);
-		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool is_affine,b3_bool force_action = false);
-		   b3_bool         b3Inverse(b3_matrix *);
-		   b3_bool         b3Reverse(b3_matrix *);
-		   void            b3ResetTransformation();
-		   void            b3Activate(b3_bool activate=true,b3_bool recurse=true);
-		   void            b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE,b3_bool recurse=true);
-		   b3_bool         b3IsActive();
-		   void            b3Expand(b3_bool expand=true);
-		   b3_bool         b3IsExpanded();
-	       void            b3Update();
-		   void            b3UpdateMaterial();
-		   void            b3UpdateBBox();
-		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
-		   b3_count        b3Count();
-		   b3_bool         b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
-		   char           *b3GetName();
-		   b3_bool         b3BacktraceRecompute(b3BBox *search);
-		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
-		   b3BBox         *b3FindParentBBox(b3Shape *shape);
-	       b3_bool         b3Intersect(b3_ray *ray, b3_bool check_visibility);
-		   b3CSGShape     *b3IntersectCSG(b3_ray *ray);
-		   void            b3CollectBBoxes(b3Array<b3BBoxReference> &array);
-		   void            b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array);
-		   void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
-		   void            b3ComputeVisibility(b3CameraProjection *projection);
+	void            b3Write();
+	void            b3Dump(b3_count level);
+	void            b3SetName(const char *name);
+	void            b3SetupVertexMemory(b3RenderContext *context);
+	void            b3FreeVertexMemory();
+	void            b3Draw(b3RenderContext *context);
+	b3_bool         b3Transform(b3_matrix *transformation,b3_bool is_affine,b3_bool force_action = false);
+	b3_bool         b3Inverse(b3_matrix *);
+	b3_bool         b3Reverse(b3_matrix *);
+	void            b3ResetTransformation();
+	void            b3Activate(b3_bool activate=true,b3_bool recurse=true);
+	void            b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE,b3_bool recurse=true);
+	b3_bool         b3IsActive();
+	void            b3Expand(b3_bool expand=true);
+	b3_bool         b3IsExpanded();
+	void            b3Update();
+	void            b3UpdateMaterial();
+	void            b3UpdateBBox();
+	b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
+	b3_count        b3Count();
+	b3_bool         b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
+	char           *b3GetName();
+	b3_bool         b3BacktraceRecompute(b3BBox *search);
+	b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
+	b3BBox         *b3FindParentBBox(b3Shape *shape);
+	b3_bool         b3Intersect(b3_ray *ray, b3_bool check_visibility);
+	b3CSGShape     *b3IntersectCSG(b3_ray *ray);
+	void            b3CollectBBoxes(b3Array<b3BBoxReference> &array);
+	void            b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array);
+	void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
+	void            b3ComputeVisibility(b3CameraProjection *projection);
 
-		   void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
- 	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec,b3Item *insert_after=null);
+	void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
+	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec,b3Item *insert_after=null);
 	static void            b3Recount(b3Base<b3Item> *base,b3_count level = 1);
 	static b3_bool         b3FindBBox(b3Base<b3Item> *base,b3BBox *search);
 	static b3BBox         *b3ReadCOB(const char *filename);

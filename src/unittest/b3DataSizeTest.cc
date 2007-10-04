@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3DataSizeTest.h"
 
 /*************************************************************************
@@ -54,7 +54,7 @@ void b3DataSizeTest::setUp()
 }
 
 void b3DataSizeTest::tearDown()
-{	
+{
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
 	if (ptr1 == null)
@@ -90,7 +90,7 @@ void b3DataSizeTest::testDataSize()
 	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), sizeof(b3_f32));
 	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(8), sizeof(b3_f64));
 	CPPUNIT_ASSERT(sizeof(b3_f96) >= 10);
-	
+
 	CPPUNIT_ASSERT(sizeof(b3_ptr) == sizeof(ptr));
 }
 
@@ -101,12 +101,12 @@ void b3DataSizeTest::testMemory()
 	b3_u08   mask = 0;
 
 	ptr1 = mem.b3Alloc (MEM_MIN);
-	CPPUNIT_ASSERT(ptr1 != null);	
+	CPPUNIT_ASSERT(ptr1 != null);
 
 	ptr2 = mem.b3Alloc (MEM_MIN);
-	CPPUNIT_ASSERT(ptr2 != null); 
+	CPPUNIT_ASSERT(ptr2 != null);
 
-	CPPUNIT_ASSERT(mem.b3Free(ptr1));	
+	CPPUNIT_ASSERT(mem.b3Free(ptr1));
 	CPPUNIT_ASSERT(!mem.b3Free(null));
 	CPPUNIT_ASSERT(mem.b3Free());
 
@@ -125,12 +125,12 @@ void b3DataSizeTest::testMemory()
 	CPPUNIT_ASSERT(memcmp(buffer,ptr1,MEM_MIN)  == 0);
 
 	ptr = static_cast<b3_u08 *>(ptr1);
-	for (i = MEM_MIN;i < (MEM_MIN * MEM_HIGH_MULT);i++)  
+	for (i = MEM_MIN;i < (MEM_MIN * MEM_HIGH_MULT);i++)
 	{
 		mask |= ptr[i];
 	}
 	CPPUNIT_ASSERT_EQUAL(mask, static_cast<b3_u08>(0));
-	
+
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
 	CPPUNIT_ASSERT_EQUAL(ptr2, static_cast<void *>(null));

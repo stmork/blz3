@@ -52,7 +52,7 @@ public:
 	b3TxPoint points[(B3_MEASURE_EDGE - 1) * 4];
 	b3_count  num;
 public:
-	     b3TxMeasure();
+	b3TxMeasure();
 	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
 	void b3Print();
 };

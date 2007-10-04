@@ -82,7 +82,7 @@
 
 #define USE_TIFFLIB_LOAD
 #define USE_TIFFLIB_SAVE
-  
+
 #define B3_PLUGIN
 
 typedef unsigned long b3DrawContext;
@@ -137,7 +137,7 @@ static inline int stricmp(const char *a,const char *b)
 #define B3_BWRITE     "w"
 #define B3_BAPPEND    "a"
 #define B3_TREAD      "r"
-#define B3_TWRITE     "w"  
+#define B3_TWRITE     "w"
 #define B3_TAPPEND    "a"
 
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
@@ -152,7 +152,7 @@ class B3_PLUGIN b3Runtime : public b3CPU
 	static b3Runtime   m_Runtime;
 	static char        m_Compiler[256];
 
-	                   b3Runtime();
+	b3Runtime();
 
 public:
 	/**

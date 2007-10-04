@@ -67,8 +67,8 @@ struct b3_gl_line
 	GLuint   a,b;
 #else
 	/**
-	 * The line indices.
-	 */
+	* The line indices.
+	*/
 	b3_u32   a,b;
 #endif
 };
@@ -87,8 +87,8 @@ struct b3_gl_polygon
 	GLuint   a,b,c;
 #else
 	/**
-	 * The triangle indices.
-	 */
+	* The triangle indices.
+	*/
 	b3_u32   a,b,c;
 #endif
 };

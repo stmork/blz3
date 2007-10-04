@@ -35,27 +35,27 @@ class B3_PLUGIN b3FileEntry : public b3Link<b3FileEntry>, public b3Comparator<b3
 	b3Path       name;
 
 public:
-	             /**
-	              * This constructor creates one file list entry from the given file name.
-	              *
-	              * @param new_name The new file name.
-	              */
-	             b3FileEntry(const char *new_name);
+	/**
+	 * This constructor creates one file list entry from the given file name.
+	 *
+	 * @param new_name The new file name.
+	 */
+	b3FileEntry(const char *new_name);
 
-	             /**
-	              * This method implements the comparison method for the b3FileList::b3Sort
-	              * method.
-	              *
-	              * @param compare The file entry to compare with.
-	              * @return The position indicator.
-	              */
+	/**
+	 * This method implements the comparison method for the b3FileList::b3Sort
+	 * method.
+	 *
+	 * @param compare The file entry to compare with.
+	 * @return The position indicator.
+	 */
 	int          b3Cmp(b3FileEntry *compare);
 
-	             /**
-	              * This method returns the file name of this entry.
-	              *
-	              * @return File name.
-	              */
+	/**
+	 * This method returns the file name of this entry.
+	 *
+	 * @return File name.
+	 */
 	const char  *b3Name();
 };
 
@@ -68,60 +68,60 @@ class b3FileList
 {
 	b3Base<b3FileEntry> list;
 public:
-	               /**
-	                * This constructor initializes this instance.
-	                */
-	               b3FileList();
-	               
-	               /**
-	                * This costructor creates a file list from the given path.
-	                *
-	                * @param dir_name The path.
-	                */
-	               b3FileList(const char *dir_name);
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3FileList();
 
-	               /**
-	                * This destructor deinitializes this instance.
-	                */
-	              ~b3FileList();
-	               
-	               /**
-	                * This method creates a file list from the given path. The list
-	                * container is emptied before file collection. The file collection
-	                * is recursive using the b3RecCreateList() method. After collection
-	                * the file list is sorted.
-	                *
-	                * @param dir_name The path.
-	                */
+	/**
+	 * This costructor creates a file list from the given path.
+	 *
+	 * @param dir_name The path.
+	 */
+	b3FileList(const char *dir_name);
+
+	/**
+	 * This destructor deinitializes this instance.
+	 */
+	~b3FileList();
+
+	/**
+	 * This method creates a file list from the given path. The list
+	 * container is emptied before file collection. The file collection
+	 * is recursive using the b3RecCreateList() method. After collection
+	 * the file list is sorted.
+	 *
+	 * @param dir_name The path.
+	 */
 	void           b3CreateList(const char *dir_name);
 
-	               /**
-	                * This method deletes the file list.
-	                */
+	/**
+	 * This method deletes the file list.
+	 */
 	void           b3DeleteList();
 
-	               /**
-	                * This method returns the first entry in the file list.
-	                *
-	                * @return The first file list entry.
-	                */
+	/**
+	 * This method returns the first entry in the file list.
+	 *
+	 * @return The first file list entry.
+	 */
 	b3FileEntry   *b3First();
 
-	               /**
-	                * This element adds a file list entry.
-	                */
+	/**
+	 * This element adds a file list entry.
+	 */
 	b3_bool        b3Add(const char *file_name);
 
-	               /**
-	                * This method sorts the file entries alphabetically.
-	                */
+	/**
+	 * This method sorts the file entries alphabetically.
+	 */
 	void           b3Sort();
 
-	               /**
-	                * This method recursively creates a file list from the given path.
-	                *
-	                * @param dir_name The path.
-	                */
+	/**
+	 * This method recursively creates a file list from the given path.
+	 *
+	 * @param dir_name The path.
+	 */
 	void           b3RecCreateList(const char *);
 };
 

@@ -36,7 +36,7 @@ enum b3_view_mode
 	B3_VIEW_LEFT,     //!< Parallel projection left view.
 	B3_VIEW_BACK,     //!< Parallel projection back view.
 
-	B3_VIEW_MAX       //!< Maximum number of valid view modes. 
+	B3_VIEW_MAX       //!< Maximum number of valid view modes.
 };
 
 /**

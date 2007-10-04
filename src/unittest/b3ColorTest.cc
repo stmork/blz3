@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3ColorTest.h"
 
 /*************************************************************************
@@ -112,15 +112,15 @@ void b3ColorTest::test()
 	testColor(0.25f, 0.5f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-		b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f64>(0.25));
+				b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f64>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-		b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f32>(0.25));
+				b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f32>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-		b3Color(B3_WHITE), b3Color(B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
+				b3Color(B3_WHITE), b3Color(B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
 	testColor(1.0f, 0.5f, 0.0f, 0.0f);
 
 	color.b3Init(-1.0, 2.0, -3.0, 4.0);

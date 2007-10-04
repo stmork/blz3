@@ -104,7 +104,7 @@ public:
 		m_Mutex.b3Lock();
 		m_Counter++;
 		m_Mutex.b3Unlock();
-		
+
 		return m_Counter;
 	}
 

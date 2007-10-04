@@ -114,7 +114,7 @@ int main(int argc,char *argv[])
 
 			// Compute Mandelbrot set
 			b3Mandel::b3Compute(display,
-				xMin,xMax,yMin,yMax,iter);
+								xMin,xMax,yMin,yMax,iter);
 
 			// We want to see the computed picture until we make input
 			// into the display window.

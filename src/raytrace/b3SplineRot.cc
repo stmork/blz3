@@ -31,7 +31,7 @@
 *************************************************************************/
 
 b3SplineRotShape::b3SplineRotShape(b3_u32 class_type) :
-	b3TriangleShape(sizeof(b3SplineRotShape), class_type)
+		b3TriangleShape(sizeof(b3SplineRotShape), class_type)
 {
 	m_Controls = null;
 	b3Vector::b3Init(&m_Axis.pos);
@@ -39,7 +39,7 @@ b3SplineRotShape::b3SplineRotShape(b3_u32 class_type) :
 }
 
 b3SplineRotShape::b3SplineRotShape(b3_u32 *src) :
-	b3TriangleShape(src)
+		b3TriangleShape(src)
 {
 	b3_index i;
 
@@ -323,7 +323,7 @@ void b3SplineRotShape::b3ComputeIndices()
 	gPtr  = *glGridElements;
 	pPtr  = *glPolygonElements;
 	x1    = 0;
-	
+
 	// for each curve
 	for (a = 0;a < m_rSubDiv;a++)
 	{

@@ -87,81 +87,81 @@ static void TransGIF(char *name)
 	{
 		switch (data[0])
 		{
-			case 0x21 :
-				switch (data[1])
-				{
-					case 0x01 :
-						data += (data[2] + 3);
-						while ((diff = data[0]) != 0)
-						{
-							data += (diff + 1);
-						}
-						break;
-
-					case 0xf9 :
-						transPtr         = (struct Extension *)data;
-						transPtr->flags |= 1;
-						data += (transPtr->size + 3);
-						visited = true;
-						break;
-
-					case 0xfe :
-						data += 2;
-						while ((diff = data[0]) != 0)
-						{
-							data += (diff + 1);
-						}
-						break;
-
-					case 0xff :
-						data += (data[2] + 3);
-						while ((diff = data[0]) != 0)
-						{
-							data += (diff + 1);
-						}
-						break;
-				}
-				while (data[0] != 0)
-				{
-					data++;
-				}
-				data++;
-				break;
-
-			case 0x2e :
-				break;
-
-			case 0x2c :
-				if (!visited)
-				{
-					index = WriteGIF(out,buffer,data,index);
-					out.b3Write (&trans,sizeof(trans));
-				}
-				descrPtr = (struct Descriptor *)data;
-				data   += sizeof(struct Descriptor);
-				planes  = (descrPtr->flags & 0x07) + 1;
-				if (descrPtr->flags & 0x80)
-				{
-					data += ((1 << planes) * 3);
-				}
-				data++;
-
+		case 0x21 :
+			switch (data[1])
+			{
+			case 0x01 :
+				data += (data[2] + 3);
 				while ((diff = data[0]) != 0)
 				{
 					data += (diff + 1);
 				}
-				data++;
-				visited = false;
 				break;
 
-			case 0x3b :
-				data++;
-				loop = false;
+			case 0xf9 :
+				transPtr         = (struct Extension *)data;
+				transPtr->flags |= 1;
+				data += (transPtr->size + 3);
+				visited = true;
 				break;
 
-			default :
-				loop = false;
+			case 0xfe :
+				data += 2;
+				while ((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
 				break;
+
+			case 0xff :
+				data += (data[2] + 3);
+				while ((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
+				break;
+			}
+			while (data[0] != 0)
+			{
+				data++;
+			}
+			data++;
+			break;
+
+		case 0x2e :
+			break;
+
+		case 0x2c :
+			if (!visited)
+			{
+				index = WriteGIF(out,buffer,data,index);
+				out.b3Write (&trans,sizeof(trans));
+			}
+			descrPtr = (struct Descriptor *)data;
+			data   += sizeof(struct Descriptor);
+			planes  = (descrPtr->flags & 0x07) + 1;
+			if (descrPtr->flags & 0x80)
+			{
+				data += ((1 << planes) * 3);
+			}
+			data++;
+
+			while ((diff = data[0]) != 0)
+			{
+				data += (diff + 1);
+			}
+			data++;
+			visited = false;
+			break;
+
+		case 0x3b :
+			data++;
+			loop = false;
+			break;
+
+		default :
+			loop = false;
+			break;
 		}
 	}
 	while (loop);

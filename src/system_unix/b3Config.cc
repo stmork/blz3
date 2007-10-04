@@ -72,29 +72,36 @@ b3Runtime::b3Runtime()
 
 	switch (b3GetVectorUnit())
 	{
-	case B3_VU_FPU:     vu = "FPU"; break;
-	case B3_VU_MMX:     vu = "MMX"; break;
-	case B3_VU_SSE:     vu = "SSE"; break;
-	case B3_VU_SSE2:    vu = "SSE2"; break;
-	case B3_VU_SSE3:    vu = "SSE3"; break;
-	case B3_VU_3DNOW:   vu = "3DNow!"; break;
-	case B3_VU_ALTIVEC: vu = "AltiVec"; break;
+	case B3_VU_FPU:
+		vu = "FPU"; break;
+	case B3_VU_MMX:
+		vu = "MMX"; break;
+	case B3_VU_SSE:
+		vu = "SSE"; break;
+	case B3_VU_SSE2:
+		vu = "SSE2"; break;
+	case B3_VU_SSE3:
+		vu = "SSE3"; break;
+	case B3_VU_3DNOW:
+		vu = "3DNow!"; break;
+	case B3_VU_ALTIVEC:
+		vu = "AltiVec"; break;
 	}
 
 #ifdef __ICC
 	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit) vector unit: %s math mode: %s",
-		__ICC / 100,(__ICC / 10) % 10,bits,vu,math);
+			 __ICC / 100,(__ICC / 10) % 10,bits,vu,math);
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
 	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit) vector unit: %s math mode: %s",
-		__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,vu,math);
+			 __GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,vu,math);
 #	else
 	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",
-		__GNUC__,__GNUC_MINOR__,bits,vu,math);
+	         __GNUC__,__GNUC_MINOR__,bits,vu,math);
 #	endif
 #else
 	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler vector unit: %s math mode: %s",
-		vu, math);
+			 vu, math);
 #endif
 }
 

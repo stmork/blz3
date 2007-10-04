@@ -38,13 +38,13 @@ class b3_tx_yuv_table
 	static b3_tx_yuv_table  m_MultYuvTable;
 	static b3_u08           m_ConvertBits[8];
 
-	       b3_s16 MultRV[256];
-	       b3_s16 MultGU[256];
-	       b3_s16 MultGV[256];
-	       b3_s16 MultBU[256];
-	       b3_u32 MultR[768];
-	       b3_u32 MultG[768];
-	       b3_u32 MultB[768];
+	b3_s16 MultRV[256];
+	b3_s16 MultGU[256];
+	b3_s16 MultGV[256];
+	b3_s16 MultBU[256];
+	b3_u32 MultR[768];
+	b3_u32 MultG[768];
+	b3_u32 MultB[768];
 
 	inline b3_tx_yuv_table()
 	{
@@ -80,9 +80,9 @@ class b3_tx_yuv_table
 			MultR[i]     = 0;
 			MultG[i]     = 0;
 			MultB[i]     = 0;
-			MultR[i+512] = 0xff0000; 
-			MultG[i+512] = 0x00ff00; 
-			MultB[i+512] = 0x0000ff; 
+			MultR[i+512] = 0xff0000;
+			MultG[i+512] = 0x00ff00;
+			MultB[i+512] = 0x0000ff;
 		}
 	}
 
@@ -92,9 +92,9 @@ class b3_tx_yuv_table
 b3_tx_yuv_table b3_tx_yuv_table::m_MultYuvTable;
 
 b3_u08 b3_tx_yuv_table::m_ConvertBits[8] =
-{
-	128,64,32,16,8,4,2,1
-};
+	{
+		128,64,32,16,8,4,2,1
+	};
 
 /*************************************************************************
 **                                                                      **
@@ -111,7 +111,7 @@ b3_result b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 	b3_index      Pos = 12,i = 0,k;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_RGB8(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	palette	 = null;
 	while (Pos < (b3_index)buffer_size)
@@ -120,53 +120,53 @@ b3_result b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 		cPtr   = (b3_u08 *)srcPtr;
 		switch (b3Endian::b3GetMot32(srcPtr))
 		{
-			case IFF_BMHD :
-				xSize	= b3Endian::b3GetMot16 (&cPtr[ 8]);
-				ySize	= b3Endian::b3GetMot16 (&cPtr[10]);
-				depth	= cPtr[16];
-				break;
+		case IFF_BMHD :
+			xSize	= b3Endian::b3GetMot16 (&cPtr[ 8]);
+			ySize	= b3Endian::b3GetMot16 (&cPtr[10]);
+			depth	= cPtr[16];
+			break;
 
-			case IFF_BODY :
-				if (!b3AllocTx(xSize,ySize,24))
+		case IFF_BODY :
+			if (!b3AllocTx(xSize,ySize,24))
+			{
+				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
+				B3_THROW( b3TxException,B3_TX_MEMORY);
+			}
+			Max = xSize * ySize;
+			dstPtr = (b3_pkd_color *)data;
+
+			cPtr += 8;
+			while (i < Max)
+			{
+				Color =
+					((b3_pkd_color)cPtr[0] << 16) |
+					((b3_pkd_color)cPtr[1] <<  8) |
+					(b3_pkd_color)cPtr[2];
+				cPtr += 3;
+				Amount  = cPtr[0] & 0x7f;
+				if ((cPtr[0] & 0x80) == 0)
 				{
-					b3FreeTx();
-					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
-					B3_THROW( b3TxException,B3_TX_MEMORY);
+					Color |= 0xff000000;
 				}
-				Max = xSize * ySize;
-				dstPtr = (b3_pkd_color *)data;
-                
-				cPtr += 8;
-				while (i < Max)
-				{
-					Color =
-						((b3_pkd_color)cPtr[0] << 16) |
-						((b3_pkd_color)cPtr[1] <<  8) |
-						 (b3_pkd_color)cPtr[2];
-					cPtr += 3;
-					Amount  = cPtr[0] & 0x7f;
-					if ((cPtr[0] & 0x80) == 0)
-					{
-						Color |= 0xff000000;
-					}
-					cPtr++;
+				cPtr++;
 
+				if (Amount == 0)
+				{
+					Amount = *cPtr++;
 					if (Amount == 0)
 					{
-						Amount = *cPtr++;
-						if (Amount == 0)
-						{
-							Amount = b3Endian::b3GetMot16(cPtr);
-							cPtr += 2;
-						}
+						Amount = b3Endian::b3GetMot16(cPtr);
+						cPtr += 2;
 					}
-					for (k = 0;k < Amount;k++)
-					{
-						*dstPtr++ = Color;
-					}
-					i += Amount;
 				}
-				break;
+				for (k = 0;k < Amount;k++)
+				{
+					*dstPtr++ = Color;
+				}
+				i += Amount;
+			}
+			break;
 		}
 		Pos += (b3Endian::b3GetMot32 (&srcPtr[1])+8);
 		if (Pos & 1) Pos++;
@@ -185,7 +185,7 @@ b3_result b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 	b3_u16  Color;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_RGB4(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	palette  = null;
 	FileType = FT_RGB4;
@@ -195,47 +195,47 @@ b3_result b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 		CharData = (b3_u08 *)LongData;
 		switch (b3Endian::b3GetMot32(LongData))
 		{
-			case IFF_BMHD :
-				xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
-				ySize	= b3Endian::b3GetMot16 (&CharData[10]);
-				depth	= CharData[16];
-				break;
-			case IFF_BODY :
-				Max = xSize * ySize;
-				data = (b3_u08 *)b3Alloc(Max * 2);
-				if (data==null)
+		case IFF_BMHD :
+			xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
+			ySize	= b3Endian::b3GetMot16 (&CharData[10]);
+			depth	= CharData[16];
+			break;
+		case IFF_BODY :
+			Max = xSize * ySize;
+			data = (b3_u08 *)b3Alloc(Max * 2);
+			if (data==null)
+			{
+				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
+				B3_THROW(b3TxException,B3_TX_MEMORY);
+			}
+			dstPtr = (b3_u16 *)data;
+
+			CharData += 8;
+			while (i < Max)
+			{
+				Color  = (b3_u16)CharData[0] << 8;	CharData++;
+				Amount  = (b3_u32)CharData[0];		CharData++;
+				Color |= (b3_u16)Amount;
+				Color  = Color >> 4;
+				if ((Amount & 0x8)==0) Color |= 0xf000;
+				Amount &= 7;
+				if (Amount == 0)
 				{
-					b3FreeTx();
-					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
-					B3_THROW(b3TxException,B3_TX_MEMORY);
-				}
-				dstPtr = (b3_u16 *)data;
-                
-				CharData += 8;
-				while (i < Max)
-				{
-					Color  = (b3_u16)CharData[0] << 8;	CharData++;
-					Amount  = (b3_u32)CharData[0];		CharData++;
-					Color |= (b3_u16)Amount;
-					Color  = Color >> 4;
-					if ((Amount & 0x8)==0) Color |= 0xf000;
-					Amount &= 7;
+					Amount = *CharData++;
 					if (Amount == 0)
 					{
-						Amount = *CharData++;
-						if (Amount == 0)
-						{
-							Amount = b3Endian::b3GetMot16 (CharData);
-							CharData += 2;
-						}
+						Amount = b3Endian::b3GetMot16 (CharData);
+						CharData += 2;
 					}
-					for (k = 0;k < Amount;k++)
-					{
-						*dstPtr++ = Color;
-					}
-					i += Amount;
 				}
-				break;
+				for (k = 0;k < Amount;k++)
+				{
+					*dstPtr++ = Color;
+				}
+				i += Amount;
+			}
+			break;
 		}
 		Pos += (b3Endian::b3GetMot32 (&LongData[1])+8);
 		if (Pos & 1) Pos++;
@@ -360,17 +360,17 @@ void b3Tx::b3HamPalette (b3_bool HAM8)
 				Nibble = Line[x] & 0x3f;
 				switch  (Line[x] & 0xc0)
 				{
-					case 0x00 : /* mode */
-						Color  = palette[Nibble];
-						break;
-					case 0x40 : /* hold & modify blue */
-						Color = (Color & 0xffff00) | (Nibble <<  2);
-						break;
-					case 0x80 : /* hold & modify red */
-						Color = (Color & 0x00ffff) | (Nibble << 18);
-						break;
-					case 0xc0 : /* hold & modify green */
-						Color = (Color & 0xff00ff) | (Nibble << 10);						break;
+				case 0x00 : /* mode */
+					Color  = palette[Nibble];
+					break;
+				case 0x40 : /* hold & modify blue */
+					Color = (Color & 0xffff00) | (Nibble <<  2);
+					break;
+				case 0x80 : /* hold & modify red */
+					Color = (Color & 0x00ffff) | (Nibble << 18);
+					break;
+				case 0xc0 : /* hold & modify green */
+					Color = (Color & 0xff00ff) | (Nibble << 10);						break;
 				}
 				LData[0] = Color;
 				LData++;
@@ -392,20 +392,20 @@ void b3Tx::b3HamPalette (b3_bool HAM8)
 				Nibble = (long)Line[x] & 0x0f;
 				switch  (Line[x] & 0x30)
 				{
-					case 0x00 : /* mode */
-						Color  = (palette[Nibble] & 0xf00000) >> 12;
-						Color |= (palette[Nibble] & 0x00f000) >>  8;
-						Color |= (palette[Nibble] & 0x0000f0) >>  4;
-						break;
-					case 0x10 : /* hold & modify blue */
-						Color = (Color & 0x0ff0) |  Nibble;
-						break;
-					case 0x20 : /* hold & modify red */
-						Color = (Color & 0x00ff) | (Nibble << 8);
-						break;
-					case 0x30 : /* hold & modify green */
-						Color = (Color & 0x0f0f) | (Nibble << 4);
-						break;
+				case 0x00 : /* mode */
+					Color  = (palette[Nibble] & 0xf00000) >> 12;
+					Color |= (palette[Nibble] & 0x00f000) >>  8;
+					Color |= (palette[Nibble] & 0x0000f0) >>  4;
+					break;
+				case 0x10 : /* hold & modify blue */
+					Color = (Color & 0x0ff0) |  Nibble;
+					break;
+				case 0x20 : /* hold & modify red */
+					Color = (Color & 0x00ff) | (Nibble << 8);
+					break;
+				case 0x30 : /* hold & modify green */
+					Color = (Color & 0x0f0f) | (Nibble << 4);
+					break;
 				}
 				NewData[0] = Color;
 				NewData++;
@@ -434,7 +434,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 	b3_bool  Compressed=false,Ham=false,EHB=false,Ham8=false;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_ILBM(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	palette	 = null;
 	FileType = FT_ILBM;
@@ -444,120 +444,122 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 		CharData  = (b3_u08 *)LongData;
 		switch (b3Endian::b3GetMot32(LongData))
 		{
-			case IFF_BMHD :
-				xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
-				ySize	= b3Endian::b3GetMot16 (&CharData[10]);
-				depth	= CharData[16];
-				if (depth >= 24)
+		case IFF_BMHD :
+			xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
+			ySize	= b3Endian::b3GetMot16 (&CharData[10]);
+			depth	= CharData[16];
+			if (depth >= 24)
+			{
+				FileType = FT_ILBM_24;
+			}
+			switch (CharData[18])
+			{
+			case 0 :
+				Compressed = false; break;
+			case 1 :
+				Compressed = true;  break;
+			default :
+				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
+				B3_THROW(b3TxException,B3_TX_ERR_PACKING);
+			}
+			break;
+		case IFF_CMAP :
+			Max = b3Endian::b3GetMot32(&LongData[1]) / 3;
+			palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
+			pSize = Max;
+			if (palette==null)
+			{
+				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
+
+				B3_THROW(b3TxException,B3_TX_MEMORY);
+			}
+			Set = (b3_u32 *)palette;
+			CharData += 8;
+			for (k = 0;k < Max;k++)
+			{
+				Color  = ((b3_u32)CharData[0] << 16); CharData++;
+				Color |= ((b3_u32)CharData[0] <<  8); CharData++;
+				Color |=  (b3_u32)CharData[0];        CharData++;
+				*Set++ = Color;
+			}
+			break;
+		case IFF_CAMG :
+			if (b3Endian::b3GetMot32(&LongData[2]) & HAM)
+			{
+				Ham = true;
+				if  (b3Endian::b3GetMot32(&LongData[2]) & HIRES)
 				{
-					FileType = FT_ILBM_24;
+					Ham8 = true;
 				}
-				switch (CharData[18])
+			}
+			else
+			{
+				if (b3Endian::b3GetMot32(&LongData[2]) & EXTRA_HALFBRITE)
 				{
-					case 0 : Compressed = false; break;
-					case 1 : Compressed = true;  break;
-					default :
-						b3FreeTx();
-						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
-						B3_THROW(b3TxException,B3_TX_ERR_PACKING);
+					EHB = true;
 				}
-				break;
-			case IFF_CMAP :
-				Max = b3Endian::b3GetMot32(&LongData[1]) / 3;
-				palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
-				pSize = Max;
-				if (palette==null)
+			}
+			break;
+
+		case IFF_BODY :
+			if (Compressed)
+			{
+				Max  = ((xSize + 15) & 0x7ffffff0) >> 3;
+				Max *=  (ySize * depth);
+				data = (b3_u08 *)b3Alloc(Max + ySize + Max);
+				if (data==null)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
-
 					B3_THROW(b3TxException,B3_TX_MEMORY);
 				}
-				Set = (b3_u32 *)palette;
+
+				Copy = (b3_u08 *)data;
 				CharData += 8;
-				for (k = 0;k < Max;k++)
+				k = 0;
+				while (k < Max)
 				{
-					Color  = ((b3_u32)CharData[0] << 16); CharData++;
-					Color |= ((b3_u32)CharData[0] <<  8); CharData++;
-					Color |=  (b3_u32)CharData[0];        CharData++;
-					*Set++ = Color;
-				}
-				break;
-			case IFF_CAMG :
-				if (b3Endian::b3GetMot32(&LongData[2]) & HAM)
-				{
-					Ham = true;
-					if  (b3Endian::b3GetMot32(&LongData[2]) & HIRES)
+					Code = (b3_u32)CharData[0];
+					CharData++;
+					if (Code & 0x80)
 					{
-						Ham8 = true;
-					}
-				}
-				else
-				{
-					if (b3Endian::b3GetMot32(&LongData[2]) & EXTRA_HALFBRITE)
-					{
-						EHB = true;
-					}
-				}
-				break;
-
-			case IFF_BODY :
-				if (Compressed)
-				{
-					Max  = ((xSize + 15) & 0x7ffffff0) >> 3;
-					Max *=  (ySize * depth);
-					data = (b3_u08 *)b3Alloc(Max + ySize + Max);
-					if (data==null)
-					{
-						b3FreeTx();
-						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
-						B3_THROW(b3TxException,B3_TX_MEMORY);
-					}
-
-					Copy = (b3_u08 *)data;
-					CharData += 8;
-					k = 0;
-					while (k < Max)
-					{
-						Code = (b3_u32)CharData[0];
-						CharData++;
-						if (Code & 0x80)
+						Code = (256 - Code) & 0xff;
+						for (i = 0;i<=Code;i++)
 						{
-							Code = (256 - Code) & 0xff;
-							for (i = 0;i<=Code;i++)
-							{
-								Copy[0] = CharData[0];
-								Copy+=1;
-							}
-							CharData+=1;
+							Copy[0] = CharData[0];
+							Copy+=1;
 						}
-						else
-						{
-							for (i=0;i<=Code;i++)
-							{
-								Copy[0] = CharData[0];
-								CharData++;
-								Copy++;
-							}
-						}
-						k += (Code + 1);
+						CharData+=1;
 					}
-				}
-				else
-				{
-					Max = b3Endian::b3GetMot32 (&LongData[1]);
-					data = (b3_u08 *)b3Alloc(Max);
-					if (data==null)
+					else
 					{
-						b3FreeTx();
-						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
-						B3_THROW(b3TxException,B3_TX_MEMORY);
+						for (i=0;i<=Code;i++)
+						{
+							Copy[0] = CharData[0];
+							CharData++;
+							Copy++;
+						}
 					}
-					Copy = (b3_u08 *)data;
-					CharData += 8;
-					memcpy (data,CharData,Max);
+					k += (Code + 1);
 				}
-				break;
+			}
+			else
+			{
+				Max = b3Endian::b3GetMot32 (&LongData[1]);
+				data = (b3_u08 *)b3Alloc(Max);
+				if (data==null)
+				{
+					b3FreeTx();
+					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
+					B3_THROW(b3TxException,B3_TX_MEMORY);
+				}
+				Copy = (b3_u08 *)data;
+				CharData += 8;
+				memcpy (data,CharData,Max);
+			}
+			break;
 		}
 		LongData++;
 		Pos += (b3Endian::b3GetMot32(LongData) + 8);
@@ -604,7 +606,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 	b3_u32  i,k,Max,Pos = 12,Count = 0,Shift;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_YUVN(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 
 	palette  = null;
 	FileType = FT_YUV;
@@ -616,69 +618,69 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 		LongData = (b3_u32 *)CharData;
 		switch (b3Endian::b3GetMot32(LongData))
 		{
-			case IFF_YCHD :
-				xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
-				ySize	= b3Endian::b3GetMot16 (&CharData[10]);
-				depth	= 24;
-				switch (CharData[22])
+		case IFF_YCHD :
+			xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
+			ySize	= b3Endian::b3GetMot16 (&CharData[10]);
+			depth	= 24;
+			switch (CharData[22])
+			{
+			case 0 :
+				break;
+
+			default :
+				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
+
+				B3_THROW(b3TxException,B3_TX_ERR_PACKING);
+			}
+			switch (CharData[24])
+			{
+			case YCHD_MODE_200 :
+			case YCHD_MODE_400 :
+				Count = 0;
+				break;
+
+			case YCHD_MODE_222 :
+			case YCHD_MODE_444 :
+				Count = 1;
+				break;
+
+			case YCHD_MODE_422 :
+			case YCHD_MODE_211 :
+				Count = 2;
+				if (xSize & 1)
 				{
-					case 0 :
-						break;
-
-					default :
-						b3FreeTx();
-						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
-
-						B3_THROW(b3TxException,B3_TX_ERR_PACKING);
-				}
-				switch (CharData[24])
-				{
-					case YCHD_MODE_200 :
-					case YCHD_MODE_400 :
-						Count = 0;
-						break;
-
-					case YCHD_MODE_222 :
-					case YCHD_MODE_444 :
-						Count = 1;
-						break;
-
-					case YCHD_MODE_422 :
-					case YCHD_MODE_211 :
-						Count = 2;
-						if (xSize & 1)
-						{
-							b3FreeTx();
-							b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong resolution:\n");
-							B3_THROW(b3TxException,B3_TX_ERR_HEADER);
-						}
-						break;
-
-					case YCHD_MODE_411 :
-						Count = 4;
-						if (xSize & 3)
-						{
-							b3FreeTx();
-							b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong resolution:\n");
-							B3_THROW(b3TxException,B3_TX_ERR_HEADER);
-						}
-						break;
-
-					default :
-						Count = 1;
-						break;
+					b3FreeTx();
+					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong resolution:\n");
+					B3_THROW(b3TxException,B3_TX_ERR_HEADER);
 				}
 				break;
 
-			case IFF_DATY :
-				Y = (b3_u08 *)(CharData+8);
+			case YCHD_MODE_411 :
+				Count = 4;
+				if (xSize & 3)
+				{
+					b3FreeTx();
+					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong resolution:\n");
+					B3_THROW(b3TxException,B3_TX_ERR_HEADER);
+				}
 				break;
-			case IFF_DATU :
-				U = (b3_u08 *)(CharData+8);
+
+			default :
+				Count = 1;
 				break;
-			case IFF_DATV :
-				V = (b3_u08 *)(CharData+8);
-				break;
+			}
+			break;
+
+		case IFF_DATY :
+			Y = (b3_u08 *)(CharData+8);
+			break;
+		case IFF_DATU :
+			U = (b3_u08 *)(CharData+8);
+			break;
+		case IFF_DATV :
+			V = (b3_u08 *)(CharData+8);
+			break;
 
 		}
 		Pos			+= ((b3Endian::b3GetMot32(&LongData[1]) + 9) & 0xfffffffe);

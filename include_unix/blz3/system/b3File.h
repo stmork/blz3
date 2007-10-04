@@ -45,7 +45,7 @@ public:
 	 * This constructor initializes this instance. You need to call b3Open to do
 	 * file IO.
 	 */
-	         b3File      ();
+	b3File      ();
 
 	/**
 	 * This constructor prepares this instance to to file IO. It calls b3Open()
@@ -54,8 +54,8 @@ public:
 	 * @param filename The file to handle with.
 	 * @param mode The file access mode.
 	 */
-	         b3File      (const char *filename,const b3_access_mode mode);
-	        ~b3File      ();
+	b3File      (const char *filename,const b3_access_mode mode);
+	~b3File      ();
 
 	b3_bool  b3Open      (const char *filename,const b3_access_mode mode);
 	b3_size  b3Read      (void *read_buffer,const b3_size size);

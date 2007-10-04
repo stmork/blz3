@@ -82,7 +82,7 @@ b3_bool b3MultiSample::b3IsEnabled()
 	{
 		GLint     sample_buffers = 0;
 		GLboolean multisample;
-		
+
 		multisample = glIsEnabled((GLenum)GL_MULTISAMPLE_ARB);
 		glGetIntegerv((GLenum)GL_SAMPLE_BUFFERS_ARB,&sample_buffers);
 

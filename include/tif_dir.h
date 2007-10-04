@@ -69,7 +69,7 @@ typedef	struct {
 	char*	td_imagedescription;
 	char*	td_make;
 	char*	td_model;
-        char*   td_copyright;
+	char*   td_copyright;
 	char*	td_pagename;
 	tstrip_t td_stripsperimage;
 	tstrip_t td_nstrips;		/* size of offset & bytecount arrays */
@@ -103,18 +103,18 @@ typedef	struct {
 	/* IPTC parameters */
 	uint32	td_richtiffiptcLength;
 	void	*td_richtiffiptcData;
-        /* Begin Pixar Tag values. */
-        uint32	td_imagefullwidth, td_imagefulllength;
- 	char*	td_textureformat;
- 	char*	td_wrapmodes;
- 	float	td_fovcot;
- 	float*	td_matrixWorldToScreen;
- 	float*	td_matrixWorldToCamera;
- 	/* End Pixar Tag Values. */
+	/* Begin Pixar Tag values. */
+	uint32	td_imagefullwidth, td_imagefulllength;
+	char*	td_textureformat;
+	char*	td_wrapmodes;
+	float	td_fovcot;
+	float*	td_matrixWorldToScreen;
+	float*	td_matrixWorldToCamera;
+	/* End Pixar Tag Values. */
 	uint32	td_xmlpacketLength;
 	void	*td_xmlpacketData;
 	int     td_customValueCount;
-        TIFFTagValue *td_customValues;
+	TIFFTagValue *td_customValues;
 } TIFFDirectory;
 
 /*
@@ -130,7 +130,7 @@ typedef	struct {
  * Note that a bit *is* allocated for ignored tags;
  * this is understood by the directory reading logic
  * which uses this fact to avoid special-case handling
- */ 
+ */
 #define	FIELD_IGNORE			0
 
 /* multi-item fields */
@@ -229,9 +229,9 @@ typedef	struct {
 	(v) & (tif)->tif_typemask[type]))
 
 
-#define BITn(n)				(((unsigned long)1L)<<((n)&0x1f)) 
-#define BITFIELDn(tif, n)		((tif)->tif_dir.td_fieldsset[(n)/32]) 
-#define TIFFFieldSet(tif, field)	(BITFIELDn(tif, field) & BITn(field)) 
+#define BITn(n)				(((unsigned long)1L)<<((n)&0x1f))
+#define BITFIELDn(tif, n)		((tif)->tif_dir.td_fieldsset[(n)/32])
+#define TIFFFieldSet(tif, field)	(BITFIELDn(tif, field) & BITn(field))
 #define TIFFSetFieldBit(tif, field)	(BITFIELDn(tif, field) |= BITn(field))
 #define TIFFClrFieldBit(tif, field)	(BITFIELDn(tif, field) &= ~BITn(field))
 
@@ -241,14 +241,14 @@ typedef	struct {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-extern	void _TIFFSetupFieldInfo(TIFF*);
-extern	void _TIFFPrintFieldInfo(TIFF*, FILE*);
-extern	TIFFDataType _TIFFSampleToTagType(TIFF*);
-extern  const TIFFFieldInfo* _TIFFFindOrRegisterFieldInfo( TIFF *tif,
-							   ttag_t tag,
-							   TIFFDataType dt );
-extern  TIFFFieldInfo* _TIFFCreateAnonFieldInfo( TIFF *tif, ttag_t tag,
-                                                 TIFFDataType dt );
+	extern	void _TIFFSetupFieldInfo(TIFF*);
+	extern	void _TIFFPrintFieldInfo(TIFF*, FILE*);
+	extern	TIFFDataType _TIFFSampleToTagType(TIFF*);
+	extern  const TIFFFieldInfo* _TIFFFindOrRegisterFieldInfo( TIFF *tif,
+				ttag_t tag,
+				TIFFDataType dt );
+	extern  TIFFFieldInfo* _TIFFCreateAnonFieldInfo( TIFF *tif, ttag_t tag,
+				TIFFDataType dt );
 
 #define _TIFFMergeFieldInfo	    TIFFMergeFieldInfo
 #define _TIFFFindFieldInfo	    TIFFFindFieldInfo

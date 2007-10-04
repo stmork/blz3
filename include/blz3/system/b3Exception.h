@@ -37,10 +37,10 @@ class B3_PLUGIN b3ExceptionBase : public std::exception
 	static char                m_LocalMessageBuffer[512];
 	static b3ExceptionLogger   m_Logger;
 	static b3ExceptionMsgFunc  m_GetMessage;
-	       b3_excno            m_ExceptionType;
-	       b3_errno            m_ErrorCode;
-		   b3_count            m_LineNo;
-		   const char         *m_FileName;
+	b3_excno            m_ExceptionType;
+	b3_errno            m_ErrorCode;
+	b3_count            m_LineNo;
+	const char         *m_FileName;
 
 protected:
 	/**
@@ -137,10 +137,10 @@ public:
 		const T     error,
 		const char *FileName,
 		const int   LineNo) : b3ExceptionBase(
-			B3_MK_ERRNO(error,C),
-			C,
-			LineNo,
-			FileName)
+					B3_MK_ERRNO(error,C),
+					C,
+					LineNo,
+					FileName)
 	{
 	}
 };

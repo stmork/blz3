@@ -31,9 +31,9 @@
 *************************************************************************/
 
 const b3_u32 b3Condition::m_LogicOps[] =
-{
-	MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
-};
+	{
+		MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
+	};
 
 void b3Condition::b3Register()
 {
@@ -195,9 +195,9 @@ void b3CondRectangle::b3ComputeBound(b3_stencil_limit *Limit)
 		else
 		{
 			Bound.x1 =
-			Bound.y1 = -1;
+				Bound.y1 = -1;
 			Bound.x2 =
-			Bound.y2 =  1;
+				Bound.y2 =  1;
 		}
 		b3CheckOuterBound(Limit,&Bound);
 		break;
@@ -220,9 +220,9 @@ void b3CondRectangle::b3ComputeBound(b3_stencil_limit *Limit)
 		else
 		{
 			Bound.x1 =
-			Bound.y1 = -1;
+				Bound.y1 = -1;
 			Bound.x2 =
-			Bound.y2 =  1;
+				Bound.y2 =  1;
 		}
 		b3CheckInnerBound(Limit,&Bound);
 		break;
@@ -257,12 +257,12 @@ b3_bool b3CondRectangle::b3CheckStencil(b3_polar *polar)
 *************************************************************************/
 
 b3CondCircle::b3CondCircle(b3_u32 class_type) :
-	b3Condition(sizeof(b3CondCircle), class_type)
+		b3Condition(sizeof(b3CondCircle), class_type)
 {
 }
 
 b3CondCircle::b3CondCircle(b3_u32 *src) :
-	b3Condition(src)
+		b3Condition(src)
 {
 	m_xCenter = b3InitFloat();
 	m_yCenter = b3InitFloat();
@@ -374,7 +374,7 @@ b3_bool b3CondSegment::b3CheckStencil(b3_polar *polar)
 	{
 		return false;
 	}
- 
+
 	angle = atan (y/x) * 180.0 / M_PI;
 	if (x     < 0) angle += 180;
 	if (angle < 0) angle += 360;
@@ -581,9 +581,9 @@ void b3CondTexture::b3ComputeBound(b3_stencil_limit *Limit)
 	{
 	case MODE_OR:
 		Bound.x1  =
-		Bound.x2  = m_xStart;
+			Bound.x2  = m_xStart;
 		Bound.y1  =
-		Bound.y2  = m_yStart;
+			Bound.y2  = m_yStart;
 		Bound.x2 += (m_xScale * m_xTimes);
 		Bound.y2 += (m_yScale * m_yTimes);
 		b3CheckOuterBound (Limit,&Bound);
@@ -709,7 +709,7 @@ b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar *polar)
 		xEnd	= m_xEnd;
 		xPolar	= polar->m_Polar.x;
 		fy = (polar->m_Polar.y - m_yStart) /
-			(m_yEnd - m_yStart);
+			 (m_yEnd - m_yStart);
 		if ((fy < 0) || (fy > 1))
 		{
 			return false;
@@ -814,7 +814,7 @@ b3_bool b3CondEllipse::b3CheckStencil(b3_polar *polar)
 	{
 		return false;
 	}
- 
+
 	angle = atan (y/x) * 180.0 / M_PI;
 	if (x     < 0) angle += 180;
 	if (angle < 0) angle += 360;

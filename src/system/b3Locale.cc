@@ -41,7 +41,7 @@ void b3Locale::b3IsoToLocale(const char *src, char *dst, b3_size len)
 
 		max = sizeof(result) / sizeof(wchar_t);
 		B3_ASSERT(len < max);
-		
+
 		mbstowcs(result, src, max);
 
 		setlocale(LC_CTYPE,"");
@@ -60,7 +60,7 @@ void b3Locale::b3LocaleToIso(const char *src, char *dst, b3_size len)
 
 	max = sizeof(result) / sizeof(wchar_t);
 	B3_ASSERT(len < max);
-		
+
 	setlocale(LC_CTYPE,"");
 	mbstowcs(result, src, max);
 

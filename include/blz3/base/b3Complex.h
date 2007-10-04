@@ -35,7 +35,7 @@ template<typename T> class B3_PLUGIN b3Complex
 {
 	/**
 	 * The value array. We advise to use b3_f64 as template class.
-	 */	 
+	 */
 	T B3_ALIGN_16 v[2];
 
 public:
@@ -279,8 +279,8 @@ public:
 	inline b3Complex<T> operator*(const b3Complex<T> &a) const
 	{
 		return b3Complex<T>(
-			v[Re] * a.v[Re] - v[Im] * a.v[Im],
-			v[Im] * a.v[Re] + v[Re] * a.v[Im]);
+				   v[Re] * a.v[Re] - v[Im] * a.v[Im],
+				   v[Im] * a.v[Re] + v[Re] * a.v[Im]);
 	}
 
 	/**
@@ -397,7 +397,7 @@ public:
 	}
 
 	inline static b3Complex<T> b3Sqrt(const b3Complex<T> &a)
-		throw(std::domain_error)
+	throw(std::domain_error)
 	{
 		b3Complex<T> result;
 
@@ -434,9 +434,9 @@ public:
 	inline void b3Dump(const char *variable, const b3_log_level level = B3LOG_NORMAL)
 	{
 		b3PrintF(level,"%s.re=%2.5f %s.im=%2.5f\n",
-			variable,v[Re],
-			variable,v[Im]);
+				 variable,v[Re],
+				 variable,v[Im]);
 	}
-}; 
+};
 
 #endif

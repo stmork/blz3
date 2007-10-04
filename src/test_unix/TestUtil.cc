@@ -84,7 +84,7 @@ static void b3Dump(b3HashMap<int,char *> &map,const char *title)
 	b3Array<int>    *indices = map.b3GetKeys();
 	b3Array<char *> *args    = map.b3GetObjects();
 	int              i;
-	
+
 	b3PrintF(B3LOG_NORMAL,"******************** %s\n",title);
 	b3PrintF(B3LOG_NORMAL,"hash size:   %d\n",map.b3GetCount());
 
@@ -99,7 +99,7 @@ static void b3Dump(b3HashMap<int,char *> &map,const char *title)
 		for (i = 0;i < indices->b3GetCount();i++)
 		{
 			b3PrintF(B3LOG_NORMAL,"%3d: %d -> %s\n",i,
-				(*indices)[i],(*args)[i]);
+					 (*indices)[i],(*args)[i]);
 		}
 
 		// Sort here to hold reference from key to object right
@@ -110,7 +110,7 @@ static void b3Dump(b3HashMap<int,char *> &map,const char *title)
 			int key = (*indices)[i];
 
 			b3PrintF(B3LOG_NORMAL,"%3d: %d -> %s\n",i,
-				key,*map.b3Find(key));
+					 key,*map.b3Find(key));
 		}
 		delete indices;
 		delete args;
@@ -128,7 +128,7 @@ int main(int argc,char *argv[])
 		hash.b3Add(i,argv[i]);
 	}
 	b3Dump(hash,"Init");
-	
+
 	hash.b3Remove(0);
 	b3Dump(hash,"Remove");
 
@@ -157,7 +157,7 @@ int main(int argc,char *argv[])
 	{
 		container[i].m_Key    = i;
 		container[i].m_Object = argv[i];
-	}	
+	}
 	hash.b3Init(container,argc);
 	b3Dump(hash,"Container init");
 

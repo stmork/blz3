@@ -28,7 +28,7 @@
 **                        b3HashException implementation                **
 **                                                                      **
 *************************************************************************/
-  
+
 enum b3_hash_error
 {
 	B3_HASH_ERROR = -1,    //!< General error.
@@ -61,8 +61,8 @@ template <class Key,class Object> struct b3HashContainer
  * key object pair.
  */
 template <class Key,class Object> class b3HashPair :
-	public b3Link<b3HashPair<Key,Object> >,
-	protected b3HashContainer<Key,Object>
+			public b3Link<b3HashPair<Key,Object> >,
+			protected b3HashContainer<Key,Object>
 {
 	friend class b3HashMap<Key,Object>;
 
@@ -76,7 +76,7 @@ template <class Key,class Object> class b3HashPair :
 	 * @param key The object itself.
 	 */
 	b3HashPair(const Key &key,const Object &object) :
-		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
+			b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
 	{
 		m_Key    = key;
 		m_Object = object;
@@ -89,7 +89,7 @@ template <class Key,class Object> class b3HashPair :
 	 * @param constainer The given source b3HashContainer.
 	 */
 	b3HashPair(const b3HashContainer<Key,Object> &container) :
-		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
+			b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
 	{
 		m_Key    = container.m_Key;
 		m_Object = container.m_Object;
@@ -119,12 +119,12 @@ typedef b3_u32 b3_hash;
 /**
  * This class represents a key to object mapping. It is used
  * to find an object from a key in an average time of O(1).
- */ 
+ */
 template <class Key,class Object> class b3HashMap
 {
 	b3Base<b3HashPair<Key,Object > >   m_HashMap[B3_MAX_HASH_INDEX];
 	b3_hash                          (*m_HashFunc)(const Key &key);
-	
+
 public:
 	/**
 	 * This constructor initializes the hash map using the default
@@ -293,7 +293,7 @@ public:
 	 *
 	 * @param key The key to remove.
 	 * @return A flag if the key object pair was found.
-	 */ 
+	 */
 	inline b3_bool b3Remove(const Key &key)
 	{
 		b3HashPair<Key,Object> *pair;

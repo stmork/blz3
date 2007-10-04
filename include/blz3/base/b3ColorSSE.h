@@ -30,7 +30,7 @@
 class B3_PLUGIN b3Color : public b3ColorBase
 {
 #ifdef SSE_ALIGNED
-	             __m128 v;                   //!< These are the color channels of a b3Color instance.
+	__m128 v;                   //!< These are the color channels of a b3Color instance.
 #else
 	b3_f32 B3_ALIGN_16  v[4];
 #endif
@@ -134,12 +134,12 @@ public:
 
 #ifdef SSE_ALIGNED
 		SSE_PS_STORE(v, _mm_mul_ps(
-			_mm_load_ps(d),
-			_mm_load_ps(m_Limit_d015)));
+						 _mm_load_ps(d),
+						 _mm_load_ps(m_Limit_d015)));
 #else
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(d),
-			SSE_PS_LOAD(m_Limit_d015)));
+						 SSE_PS_LOAD(d),
+						 SSE_PS_LOAD(m_Limit_d015)));
 #endif
 	}
 
@@ -165,8 +165,8 @@ public:
 
 		ci = _mm_loadu_si128((__m128i *)c);
 		SSE_PS_STORE(v,_mm_mul_ps(
-			_mm_cvtepi32_ps(ci),
-			_mm_loadu_ps(m_Limit_d255)));
+						 _mm_cvtepi32_ps(ci),
+						 _mm_loadu_ps(m_Limit_d255)));
 #else
 		b3_f32 B3_ALIGN_16 c[4];
 
@@ -177,12 +177,12 @@ public:
 		}
 #ifdef SSE_ALIGNED
 		SSE_PS_STORE(v,_mm_mul_ps(
-			_mm_load_ps(c),
-			_mm_load_ps(m_Limit_d255)));
+						 _mm_load_ps(c),
+						 _mm_load_ps(m_Limit_d255)));
 #else
 		SSE_PS_STORE(v,_mm_mul_ps(
-			SSE_PS_LOAD(c),
-			SSE_PS_LOAD(m_Limit_d255)));
+						 SSE_PS_LOAD(c),
+						 SSE_PS_LOAD(m_Limit_d255)));
 #endif
 #endif
 	}
@@ -304,10 +304,10 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			l,
-			_mm_mul_ps(
-				mixer,
-				_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+						 l,
+						 _mm_mul_ps(
+							 mixer,
+							 _mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -332,10 +332,10 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			l,
-			_mm_mul_ps(
-				mixer,
-				_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+						 l,
+						 _mm_mul_ps(
+							 mixer,
+							 _mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -358,10 +358,10 @@ public:
 		__m128 l = SSE_PS_LOAD(low.v);
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			l,
-			_mm_mul_ps(
-				SSE_PS_LOAD(mixer.v),
-				_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+						 l,
+						 _mm_mul_ps(
+							 SSE_PS_LOAD(mixer.v),
+							 _mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -375,8 +375,8 @@ public:
 	inline b3Color &operator+=(const b3Color &a)
 	{
 		SSE_PS_STORE(v, _mm_add_ps(
-			SSE_PS_LOAD(v),
-			SSE_PS_LOAD(a.v)));
+						 SSE_PS_LOAD(v),
+						 SSE_PS_LOAD(a.v)));
 		return *this;
 	}
 
@@ -391,8 +391,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-			SSE_PS_LOAD(v),
-			SSE_PS_LOAD(a.v)));
+						 SSE_PS_LOAD(v),
+						 SSE_PS_LOAD(a.v)));
 
 		return result;
 	}
@@ -406,8 +406,8 @@ public:
 	inline b3Color &operator-=(const b3Color &a)
 	{
 		SSE_PS_STORE(v, _mm_sub_ps(
-			SSE_PS_LOAD(v),
-			SSE_PS_LOAD(a.v)));
+						 SSE_PS_LOAD(v),
+						 SSE_PS_LOAD(a.v)));
 		return *this;
 	}
 
@@ -422,8 +422,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_sub_ps(
-			SSE_PS_LOAD(v),
-			SSE_PS_LOAD(a.v)));
+						 SSE_PS_LOAD(v),
+						 SSE_PS_LOAD(a.v)));
 		return result;
 	}
 
@@ -436,8 +436,8 @@ public:
 	inline b3Color &operator*=(const b3Color &a)
 	{
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			SSE_PS_LOAD(a.v)));
+						 SSE_PS_LOAD(v),
+						 SSE_PS_LOAD(a.v)));
 		return *this;
 	}
 
@@ -452,8 +452,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			SSE_PS_LOAD(a.v)));
+						 SSE_PS_LOAD(v),
+						 SSE_PS_LOAD(a.v)));
 		return result;
 	}
 
@@ -466,8 +466,8 @@ public:
 	inline b3Color &operator*=(const b3_f32 value)
 	{
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(value)));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(value)));
 		return *this;
 	}
 
@@ -480,8 +480,8 @@ public:
 	inline b3Color &operator*=(const b3_f64 value)
 	{
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(value))));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(float(value))));
 		return *this;
 	}
 
@@ -496,8 +496,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(value)));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(value)));
 		return result;
 	}
 
@@ -512,8 +512,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(value))));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(float(value))));
 		return result;
 	}
 
@@ -527,8 +527,8 @@ public:
 	{
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(1.0 / value)));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(1.0 / value)));
 		return *this;
 	}
 
@@ -542,8 +542,8 @@ public:
 	{
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(float(1.0 / value))));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(float(1.0 / value))));
 		return *this;
 	}
 
@@ -557,8 +557,8 @@ public:
 	{
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(1.0 / float(value))));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(1.0 / float(value))));
 		return *this;
 	}
 
@@ -574,8 +574,8 @@ public:
 
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(1.0 / value)));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(1.0 / value)));
 		return result;
 	}
 
@@ -591,8 +591,8 @@ public:
 
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(1.0 / float(value))));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(1.0 / float(value))));
 		return result;
 	}
 
@@ -608,8 +608,8 @@ public:
 
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-			SSE_PS_LOAD(v),
-			_mm_set_ps1(1.0 / float(value))));
+						 SSE_PS_LOAD(v),
+						 _mm_set_ps1(1.0 / float(value))));
 		return result;
 	}
 
@@ -627,10 +627,10 @@ public:
 
 		_mm_store_ps(b, SSE_PS_LOAD(v));
 		SSE_PS_STORE(result.v, _mm_set_ps(
-			pow(b[A], exp), 
-			pow(b[R], exp), 
-			pow(b[G], exp), 
-			pow(b[B], exp)));
+						 pow(b[A], exp),
+						 pow(b[R], exp),
+						 pow(b[G], exp),
+						 pow(b[B], exp)));
 		return result;
 	}
 
@@ -655,8 +655,8 @@ public:
 	inline void b3Abs()
 	{
 		SSE_PS_STORE(v, _mm_and_ps(
-			SSE_PS_LOAD(v),
-			_mm_loadu_ps((const float *)m_AbsMask)));
+						 SSE_PS_LOAD(v),
+						 _mm_loadu_ps((const float *)m_AbsMask)));
 	}
 
 	/**
@@ -737,7 +737,7 @@ public:
 	inline void b3Min()
 	{
 		SSE_PS_STORE(v, _mm_max_ps(
-			SSE_PS_LOAD(v), _mm_setzero_ps()));
+						 SSE_PS_LOAD(v), _mm_setzero_ps()));
 	}
 
 	/**
@@ -758,7 +758,7 @@ public:
 
 		_mm_store_ps(a, SSE_PS_LOAD(v));
 		b3PrintF(B3LOG_NORMAL,"r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",
-			a[R], a[R], a[B], a[A]);
+				 a[R], a[R], a[B], a[A]);
 	}
 
 #ifdef WIN32
@@ -771,9 +771,9 @@ public:
 	{
 		b3_f32 *ptr = (b3_f32 *)&v;
 		return RGB(
-			(b3_pkd_color)(ptr[R] * 255),
-			(b3_pkd_color)(ptr[G] * 255),
-			(b3_pkd_color)(ptr[B] * 255));
+				   (b3_pkd_color)(ptr[R] * 255),
+				   (b3_pkd_color)(ptr[G] * 255),
+				   (b3_pkd_color)(ptr[B] * 255));
 	}
 
 	/**

@@ -270,7 +270,7 @@ public:
 	 * This method returns the nebular filter color.
 	 *
 	 * @param result The nebular filter color.
-	 */ 
+	 */
 	void    b3GetNebularColor(b3Color &result);
 
 	/**
@@ -473,7 +473,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static void            b3Register();
-	       void            b3Write();
+	void            b3Write();
 
 public:
 	/**
@@ -575,9 +575,9 @@ public:
 	}
 
 private:
-	       void            b3RecomputeNeutralInverse (b3AnimElement *Element);
-		   void            b3GetNeutralPosition(b3AnimElement *Element,b3_vector *neutral);
-		   void            b3ApplyTransformation (b3Scene *Global,b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	void            b3RecomputeNeutralInverse (b3AnimElement *Element);
+	void            b3GetNeutralPosition(b3AnimElement *Element,b3_vector *neutral);
+	void            b3ApplyTransformation (b3Scene *Global,b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
 	static b3AnimElement  *b3FindSameTrack(b3AnimElement *Element);
 };
 
@@ -671,7 +671,7 @@ public:
 
 /**
  * This class provides information about lens flares.
- */ 
+ */
 class B3_PLUGIN b3LensFlare : public b3Special
 {
 public:

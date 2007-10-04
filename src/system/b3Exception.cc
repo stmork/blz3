@@ -51,7 +51,7 @@ b3ExceptionBase::b3ExceptionBase(
 	if (m_Logger == null)     b3SetLogger(null);
 	if (m_GetMessage == null) b3SetMsgFunc(null);
 
-	m_Logger(this);	
+	m_Logger(this);
 }
 
 b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase &exc)
@@ -64,7 +64,7 @@ b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase &exc)
 	if (m_Logger == null)     b3SetLogger(null);
 	if (m_GetMessage == null) b3SetMsgFunc(null);
 
-	m_Logger(this);	
+	m_Logger(this);
 }
 
 void b3ExceptionBase::b3Log(const b3ExceptionBase *exception)
@@ -92,11 +92,11 @@ const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 	c = (ErrNo >>  8) & 0xff;
 
 	snprintf(m_LocalMessageBuffer,sizeof(m_LocalMessageBuffer),
-		"errno: %c%c%c:%02x",
-		isprint(a) ? a : '_',
-		isprint(b) ? b : '_',
-		isprint(c) ? c : '_',
-		ErrNo        & 0xff);
+			 "errno: %c%c%c:%02x",
+			 isprint(a) ? a : '_',
+			 isprint(b) ? b : '_',
+			 isprint(c) ? c : '_',
+			 ErrNo        & 0xff);
 	return m_LocalMessageBuffer;
 }
 

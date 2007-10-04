@@ -65,14 +65,14 @@ void b3CSGEllipsoid::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	b3_polar  *polar  = &ray->polar;
 	b3_line64 *BTLine = point->m_BTLine;
 	b3_f64     Q      = ray->Q;
-	
+
 	polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
 	polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
 	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
 
 	polar->m_Polar.x = b3Math::b3RelAngleOfScalars(
-		polar->m_ObjectPolar.x,
-		polar->m_ObjectPolar.y);
+						   polar->m_ObjectPolar.x,
+						   polar->m_ObjectPolar.y);
 	polar->m_Polar.y = asin(polar->m_ObjectPolar.z) * 2.0 / M_PI;
 	polar->m_Polar.z = 0;
 }

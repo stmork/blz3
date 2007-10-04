@@ -80,19 +80,19 @@
 #define OW_SKIP B3_OCEAN_XSKIP
 
 GLfloat ambient[] =
-{
-	1.0,1.0,1.0,1.0
-};
+	{
+		1.0,1.0,1.0,1.0
+	};
 
 GLfloat diffuse[] =
-{
-	1.0,1.0,0.95,1.0
-};
+	{
+		1.0,1.0,0.95,1.0
+	};
 
 GLfloat light0[] =
-{
-	10.0,15.0,20.0,1.0
-};
+	{
+		10.0,15.0,20.0,1.0
+	};
 
 GLfloat  *vPtr = null;
 GLuint   *iPtr = null;
@@ -300,7 +300,7 @@ void RenderScene()
 		glDrawElements(GL_LINES,4 * size * (size - 1) / OW_SKIP,GL_UNSIGNED_INT, iPtr);
 	}
 
-	glPopMatrix();	
+	glPopMatrix();
 
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -317,7 +317,7 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 		yWindow = 5;
 	}
 	else
- 	{
+	{
 		xWindow = 5 * xSize / ySize;
 		yWindow = 5;
 	}
@@ -328,13 +328,13 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 #if 0
 	glOrtho(-xWindow, xWindow, -yWindow, yWindow, 2.0f, -2.0f);
 #else
-/*
+	/*
 	gluLookAt(
-		0.0f, 0.0f, 5.0f,
-		0.0f, 0.0f, 4.0f,
-		0.0f, 1.0f, 0.0f);
+	0.0f, 0.0f, 5.0f,
+	0.0f, 0.0f, 4.0f,
+	0.0f, 1.0f, 0.0f);
 	glTranslated(0.0,0.0,2.0);
-*/
+	*/
 	gluPerspective (60.0f, aspect, 0.1f,size);
 	glTranslated(-halfgrid, -10.0, -2.0);
 	glRotatef(-00.0f,0.0f,1.0f,0.0f);

@@ -49,17 +49,17 @@ b3Scene *b3Factory::b3CreateNew(const char *filename, b3_u32 class_type)
 	b3CameraPart *camera = new b3CameraPart(CAMERA);
 	b3_vector     eye,view;
 
-/*
-	b3SetCameraName(camera,IDS_NEW_CAMERA_NAME);
-	b3SetLightName(light,IDS_NEW_LIGHT_NAME);
-	b3SetObjectName(bbox,IDS_NEW_OBJECT_NAME);
-*/
+	/*
+		b3SetCameraName(camera,IDS_NEW_CAMERA_NAME);
+		b3SetLightName(light,IDS_NEW_LIGHT_NAME);
+		b3SetObjectName(bbox,IDS_NEW_OBJECT_NAME);
+	*/
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
 	scene->b3SetFilename(filename);
 	bbox->b3GetShapeHead()->b3Append(area);
-	
+
 	// Init camera
 	b3Vector::b3Init(&eye, 0,-350,75);
 	b3Vector::b3Init(&view);
@@ -200,7 +200,7 @@ b3Scene *b3Factory::b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 class_t
 
 	bbox->b3GetShapeHead()->b3Append(area);
 	bbox->b3GetShapeHead()->b3Append(big);
-	
+
 	area->b3GetMaterialHead()->b3Append(chess);
 
 	// Transform ellipsoid
@@ -239,7 +239,7 @@ b3Scene *b3Factory::b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 class_type
 
 	bbox->b3GetShapeHead()->b3Append(area);
 	bbox->b3GetShapeHead()->b3Append(big);
-	
+
 	big->b3GetMaterialHead()->b3Append(chess);
 
 	mat->m_Reflection = 0.2f;

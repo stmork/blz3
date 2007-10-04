@@ -25,13 +25,13 @@ class B3_PLUGIN b3Locale
 public:
 	static void b3IsoToLocale(
 		const char     *src,
-		      char     *dst,
-		      b3_size   len);
+		char     *dst,
+		b3_size   len);
 
 	static void b3LocaleToIso(
 		const char     *src,
-		      char     *dst,
-		      b3_size   len);
+		char     *dst,
+		b3_size   len);
 };
 
 #endif

@@ -145,7 +145,7 @@ int main(int argc,char *argv[])
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown exception occured.\n");
 	}
-	
+
 	b3PrintF(B3LOG_NORMAL,"Tests %s.\n", success ? "successful" : "errornous");
 
 	for (i = 1;i < argc;i++)
@@ -159,8 +159,8 @@ int main(int argc,char *argv[])
 			world.b3Read("M:\\Blizzard\\Data\\AllShapes");
 #endif
 			for (item  = world.b3GetFirst();
-			     item != null;
-			     item  = scene->Succ)
+					item != null;
+					item  = scene->Succ)
 			{
 				scene = (b3Scene *)item;
 				scene->b3Reorg();

@@ -38,8 +38,8 @@ class b3Scene;
  */
 class B3_PLUGIN b3RenderLight
 {
-	       b3_light_mode  m_LightMode;
-	       b3Scene       *m_Scene;
+	b3_light_mode  m_LightMode;
+	b3Scene       *m_Scene;
 
 	static b3_vector      m_LightDirection;
 

@@ -67,7 +67,7 @@ public:
 	 * @param ptrMatHead This pointer receives the pointer to the example material map list base.
 	 * @param classType The class type for scene rendering.
 	 * @return The created scene.
-	 */ 
+	 */
 	static b3Scene      *b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 classType);
 
 	/**
@@ -77,7 +77,7 @@ public:
 	 * @param ptrBumpHead This pointer receives the pointer to the example bump map list base.
 	 * @param classType The class type for scene rendering.
 	 * @return The created scene.
-	 */ 
+	 */
 	static b3Scene      *b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 classType);
 
 private:

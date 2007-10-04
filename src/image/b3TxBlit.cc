@@ -71,7 +71,7 @@ void b3Tx::b3Blit(
 	}
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Blit(): size: %ldx%ld (%ld,%ld) -> (%ld,%ld)\n",
-		xMax,yMax,xSrcOff,ySrcOff,xDstOff,yDstOff);
+			 xMax,yMax,xSrcOff,ySrcOff,xDstOff,yDstOff);
 	switch (srcTx->type)
 	{
 	case B3_TX_ILBM:
@@ -102,7 +102,7 @@ void b3Tx::b3Blit(
 			ind = xSrcOff >> 3;
 			for (x = 0;x < xMax;x++)
 			{
-				
+
 				*lDst++ = pal[cSrc[ind] & bit ? 1 : 0];
 				bit     = bit >> 1;
 				if (bit == 0)

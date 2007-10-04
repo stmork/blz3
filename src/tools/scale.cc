@@ -50,7 +50,7 @@ class b3Site
 
 public:
 	b3Site(const char *source,const char *dest)
-		: m_Source(source),m_Dest(dest)
+			: m_Source(source),m_Dest(dest)
 	{
 		b3Dir::b3LinkFileName(m_Small, dest,"small");
 		b3Dir::b3LinkFileName(m_Normal,dest,"normal");
@@ -85,27 +85,27 @@ public:
 		{
 			b3PrintF(B3LOG_NORMAL,"Writing %s\n",(const char *)index);
 			fprintf(file,
-				"<html>\n"
-				"<head>\n"
-				"<title>%s</title>\n"
-				"</head>\n"
-				"\n"
-				"<body background=\"/sm/pictures/MORKNetBack.JPG\">\n",m_Title);
+					"<html>\n"
+					"<head>\n"
+					"<title>%s</title>\n"
+					"</head>\n"
+					"\n"
+					"<body background=\"/sm/pictures/MORKNetBack.JPG\">\n",m_Title);
 			fprintf(file,
-				"</body>\n"
-				"</html>\n");
+					"</body>\n"
+					"</html>\n");
 			fprintf(file,
-				"<table><tr>\n"
-				"<td width=\"200\" valign=\"top\">\n"
-				"<img SRC=\"/sm/pictures/HOME.gif\" ALT=\"[MORKNet Logo]\" HEIGHT=\"150\" WIDTH=\"150\">\n"
-				"</td>\n"
-				"\n"
-				"<td width=\"500\" valign=\"top\">\n");
+					"<table><tr>\n"
+					"<td width=\"200\" valign=\"top\">\n"
+					"<img SRC=\"/sm/pictures/HOME.gif\" ALT=\"[MORKNet Logo]\" HEIGHT=\"150\" WIDTH=\"150\">\n"
+					"</td>\n"
+					"\n"
+					"<td width=\"500\" valign=\"top\">\n");
 
 			fprintf(file,
-				"<center>\n"
-				"<h1>%s</h1>\n"
-				"</center>\n",m_Title);
+					"<center>\n"
+					"<h1>%s</h1>\n"
+					"</center>\n",m_Title);
 			fprintf(file,"<table>\n");
 			for (int i = 0;i < m_Num;i++)
 			{
@@ -120,15 +120,15 @@ public:
 					fprintf(file,"<tr>\n");
 				}
 				fprintf(file,
-					"<td align=\"center\" valign=\"center\">\n"
-					"  <a href=\"normal/%s\"><img src=\"small/%s\"></a>\n"
-					"</td>\n",
-					(const char *)name,(const char *)name);
+						"<td align=\"center\" valign=\"center\">\n"
+						"  <a href=\"normal/%s\"><img src=\"small/%s\"></a>\n"
+						"</td>\n",
+						(const char *)name,(const char *)name);
 			}
 			fprintf(file,"</tr>\n</table>\n");
 
 			fprintf(file,
-				"</td></tr></table>\n");
+					"</td></tr></table>\n");
 			fclose(file);
 		}
 		else
@@ -151,7 +151,7 @@ private:
 	b3_bool b3CopyImage(b3Tx *image,const char *full_normal)
 	{
 		const char *source = image->b3Name();
-			b3Path  ext;
+		b3Path  ext;
 
 		ext.b3ExtractExt(source);
 		if (b3Tx::b3GetFileType(ext) == FT_JPEG)
@@ -204,8 +204,8 @@ private:
 			{
 				b3Path::b3LinkFileName(full_small,m_Small,name);
 				scale = DEST_IMG_SIZE / (normal.xSize < normal.ySize ?
-					normal.ySize :
-					normal.xSize);
+										 normal.ySize :
+										 normal.xSize);
 				xSize = (b3_res)(scale * normal.xSize);
 				ySize = (b3_res)(scale * normal.ySize);
 
@@ -235,7 +235,7 @@ private:
 		}
 		else
 		{
-			 b3PrintF(B3LOG_NORMAL,"Cannot load image!\n");
+			b3PrintF(B3LOG_NORMAL,"Cannot load image!\n");
 		}
 
 		if (result)

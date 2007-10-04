@@ -38,14 +38,14 @@
 *************************************************************************/
 
 b3_vector b3RenderContext::glSimpleLightPosition =
-{
-	1000.0f,-2500.0f,2000.0f
-};
+	{
+		1000.0f,-2500.0f,2000.0f
+	};
 
 b3_vector b3RenderContext::glSimpleLightDirection =
-{
-	0,0,-1
-};
+	{
+		0,0,-1
+	};
 
 #ifdef BLZ3_USE_OPENGL
 b3_bool b3RenderContext::glUse = true;
@@ -56,16 +56,16 @@ b3_bool b3RenderContext::glUse = false;
 #ifdef BLZ3_USE_OPENGL
 
 GLenum b3RenderContext::glLightNum[] =
-{
-	GL_LIGHT0,
-	GL_LIGHT1,
-	GL_LIGHT2,
-	GL_LIGHT3,
-	GL_LIGHT4,
-	GL_LIGHT5,
-	GL_LIGHT6,
-	GL_LIGHT7
-};
+	{
+		GL_LIGHT0,
+		GL_LIGHT1,
+		GL_LIGHT2,
+		GL_LIGHT3,
+		GL_LIGHT4,
+		GL_LIGHT5,
+		GL_LIGHT6,
+		GL_LIGHT7
+	};
 
 #define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && (((size_t)num) < (sizeof(glLightNum) / sizeof(GLint))))
 
@@ -202,14 +202,14 @@ void b3RenderContext::b3ViewSet(const b3_render_view_info *info)
 		glFrustum(
 			-info->width,   info->width,
 			-info->height,  info->height,
-			 info->near_cp, info->far_cp);
+			info->near_cp, info->far_cp);
 	}
 	else
 	{
 		glOrtho(
 			-info->width,   info->width,
 			-info->height,  info->height,
-			 info->near_cp, info->far_cp);
+			info->near_cp, info->far_cp);
 	}
 	gluLookAt(
 		info->eye.x,    info->eye.y,    info->eye.z,
@@ -219,7 +219,7 @@ void b3RenderContext::b3ViewSet(const b3_render_view_info *info)
 		info->offset.x, info->offset.y, info->offset.z);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();	
+	glLoadIdentity();
 #endif
 }
 
@@ -235,7 +235,7 @@ void b3RenderContext::b3SetAmbient(const b3_pkd_color ambient)
 	GLfloat gl_ambient[4];
 
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3SetAmbient(%08lx)\n",
-		ambient);
+			 ambient);
 
 	b3PkdColorToGL(ambient,gl_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
@@ -246,7 +246,7 @@ void b3RenderContext::b3SetAmbient(b3Color &ambient)
 	GLfloat gl_ambient[4];
 
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3SetAmbient(%08lx)\n",
-		(b3_pkd_color)ambient);
+			 (b3_pkd_color)ambient);
 
 	b3ColorToGL(ambient,gl_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
@@ -363,16 +363,16 @@ void b3RenderContext::b3LightSet(
 	glLightf (light,GL_QUADRATIC_ATTENUATION, info->gl_Aq);
 
 	b3PrintF(B3LOG_FULL," A: %06x D: %06x S: %06x\n",
-		b3GLToPkdColor(info->gl_ambient),
-		b3GLToPkdColor(info->gl_diffuse),
-		b3GLToPkdColor(info->gl_specular));
+			 b3GLToPkdColor(info->gl_ambient),
+			 b3GLToPkdColor(info->gl_diffuse),
+			 b3GLToPkdColor(info->gl_specular));
 	b3PrintF(B3LOG_FULL," P: %1.3f %1.3f %1.3f  D: %1.3f %1.3f %1.3f\n",
-		info->gl_position[0],  info->gl_position[1],  info->gl_position[2],
-		info->gl_direction[0], info->gl_direction[1], info->gl_direction[2]);
+			 info->gl_position[0],  info->gl_position[1],  info->gl_position[2],
+			 info->gl_direction[0], info->gl_direction[1], info->gl_direction[2]);
 	b3PrintF(B3LOG_FULL," SE: %1.4f   SC: %1.4f\n",
-		info->gl_spot_exp, info->gl_spot_cutoff);
+			 info->gl_spot_exp, info->gl_spot_cutoff);
 	b3PrintF(B3LOG_FULL," Ac: %1.4f   Al: %1.4f   Aq: %1.4f\n",
-		info->gl_Ac, info->gl_Al, info->gl_Aq);
+			 info->gl_Ac, info->gl_Al, info->gl_Aq);
 #endif
 }
 

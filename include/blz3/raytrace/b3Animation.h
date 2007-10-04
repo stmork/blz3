@@ -133,10 +133,10 @@ public:
 	B3_ITEM_INIT(b3AnimElement); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3AnimElement); //!< This constructor handles deserialization.
 
-	       void b3Write();
+	void b3Write();
 
 public:
-	       char           *b3GetName();
+	char           *b3GetName();
 
 	/**
 	 * This method computes the center position.
@@ -180,9 +180,9 @@ public:
 	void            b3SelectObjects (b3BBox *BBox);
 
 private:
-	       void            b3AnimateMove  (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
-	       void            b3AnimateRotate(b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
-	       void            b3AnimateScale (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
+	void            b3AnimateMove  (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
+	void            b3AnimateRotate(b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
+	void            b3AnimateScale (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
 
 public:
 	static b3_f64 epsilon; //!< A near zero value for numeric purposes.

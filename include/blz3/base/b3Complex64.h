@@ -99,7 +99,7 @@ public:
 		_mm_stream_pd(&dst.b3Real(), src.v);
 #else
 		const int *srcPtr = reinterpret_cast<const int *>(&src.v);
-		      int *dstPtr = reinterpret_cast<int *>(&dst.v);
+		int *dstPtr = reinterpret_cast<int *>(&dst.v);
 
 		_mm_stream_si32(dstPtr++, *srcPtr++);
 		_mm_stream_si32(dstPtr++, *srcPtr++);
@@ -117,8 +117,8 @@ public:
 	inline bool operator==(const b3Complex64 &a)
 	{
 		__m128d eq = _mm_cmpneq_pd(
-			SSE_PD_LOAD(v),
-			SSE_PD_LOAD(a.v));
+						 SSE_PD_LOAD(v),
+						 SSE_PD_LOAD(a.v));
 
 		return _mm_movemask_pd(eq) == 0;
 	}
@@ -128,16 +128,16 @@ public:
 		b3Complex64 result;
 
 		SSE_PD_STORE(result.v, _mm_add_pd(
-			SSE_PD_LOAD(v),
-			SSE_PD_LOAD(sum.v)));
+						 SSE_PD_LOAD(v),
+						 SSE_PD_LOAD(sum.v)));
 		return result;
 	}
 
 	inline void operator+=(const b3Complex64 &sum)
 	{
 		SSE_PD_STORE(v, _mm_add_pd(
-			SSE_PD_LOAD(v),
-			SSE_PD_LOAD(sum.v)));
+						 SSE_PD_LOAD(v),
+						 SSE_PD_LOAD(sum.v)));
 	}
 
 	inline b3Complex64 operator-(const b3Complex64 &sum)
@@ -145,16 +145,16 @@ public:
 		b3Complex64 result;
 
 		SSE_PD_STORE(result.v, _mm_sub_pd(
-			SSE_PD_LOAD(v),
-			SSE_PD_LOAD(sum.v)));
+						 SSE_PD_LOAD(v),
+						 SSE_PD_LOAD(sum.v)));
 		return result;
 	}
 
 	inline void operator-=(const b3Complex64 &sum)
 	{
 		SSE_PD_STORE(v, _mm_sub_pd(
-			SSE_PD_LOAD(v),
-			SSE_PD_LOAD(sum.v)));
+						 SSE_PD_LOAD(v),
+						 SSE_PD_LOAD(sum.v)));
 	}
 
 	inline __m128d product(const b3Complex64 &mul)
@@ -163,12 +163,12 @@ public:
 		__m128d a = SSE_PD_LOAD(v);
 
 		__m128d p1 = _mm_mul_pd(
-			a,
-			_mm_unpacklo_pd(b,b));
+						 a,
+						 _mm_unpacklo_pd(b,b));
 
 		__m128d p2 = _mm_mul_pd(
-			_mm_shuffle_pd(a, a, _MM_SHUFFLE2(0,1)),
-			_mm_unpackhi_pd(b,b));
+						 _mm_shuffle_pd(a, a, _MM_SHUFFLE2(0,1)),
+						 _mm_unpackhi_pd(b,b));
 
 #ifdef BLZ3_USE_SSE3
 		return _mm_addsub_pd(p1, p2);
@@ -202,8 +202,8 @@ public:
 		__m128d     mul = _mm_set1_pd(value);
 
 		SSE_PD_STORE(result.v, _mm_mul_pd(
-			SSE_PD_LOAD(v),
-			mul));
+						 SSE_PD_LOAD(v),
+						 mul));
 		return result;
 	}
 
@@ -212,8 +212,8 @@ public:
 		__m128d     mul = _mm_set1_pd(value);
 
 		SSE_PD_STORE(v, _mm_mul_pd(
-			SSE_PD_LOAD(v),
-			mul));
+						 SSE_PD_LOAD(v),
+						 mul));
 	}
 
 	inline b3Complex64 operator/(const b3_f64 value)
@@ -222,8 +222,8 @@ public:
 		__m128d     mul = _mm_set1_pd(1.0 / value);
 
 		SSE_PD_STORE(result.v, _mm_mul_pd(
-			SSE_PD_LOAD(v),
-			mul));
+						 SSE_PD_LOAD(v),
+						 mul));
 		return result;
 	}
 
@@ -232,8 +232,8 @@ public:
 		__m128d mul = _mm_set1_pd(1.0 / value);
 
 		SSE_PD_STORE(v, _mm_mul_pd(
-			SSE_PD_LOAD(v),
-			mul));
+						 SSE_PD_LOAD(v),
+						 mul));
 	}
 
 	inline b3_f64 b3SquareLength()
@@ -265,7 +265,7 @@ public:
 	{
 #ifdef SSE_ALIGNED
 		b3_f64 *ptr = (b3_f64 *)&v;
-		
+
 		return ptr[1];
 #else
 		return v[1];
@@ -273,7 +273,7 @@ public:
 	}
 
 	inline static b3Complex64 b3Sqrt(const b3Complex64 &a)
-		throw(std::domain_error)
+	throw(std::domain_error)
 	{
 		_MM_SET_EXCEPTION_STATE(0);
 		__m128d s = _mm_sqrt_pd(SSE_PD_LOAD(a.v));
@@ -281,15 +281,15 @@ public:
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
-		
+
 		return b3Complex64(s);
 	}
 
 	inline void b3Scale(const b3Complex64 &a)
 	{
 		SSE_PD_STORE(v, _mm_mul_pd(
-			SSE_PD_LOAD(v),
-			SSE_PD_LOAD(a.v)));
+						 SSE_PD_LOAD(v),
+						 SSE_PD_LOAD(a.v)));
 	}
 
 	inline static void b3Swap(b3Complex64 &a, b3Complex64 &b)

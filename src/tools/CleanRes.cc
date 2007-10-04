@@ -37,19 +37,19 @@ static struct b3DefineType
 	int   m_Start;
 	int   m_Last;
 } define_types[] =
-{
-	{ "IDP_OLE_INIT_FAILED",  1, 101 },
-	{ "IDR_MAINFRAME",  1,   110 },
-	{ "IDR_",  2,   111 },
-	{ "IDB_",  3,   400 },
-	{ "IDM_",  4,   500 },
-	{ "IDD_",  5,   600 },
-	{ "IDI_",  6,  1001 },
-	{ "ID_",   7, 10000 },
-	{ "IDC_",  8, 32000 },
-	{ "IDS_",  9, 60000 },
-	{ "_APS", 10,     0 }
-};
+	{
+		{ "IDP_OLE_INIT_FAILED",  1, 101 },
+		{ "IDR_MAINFRAME",  1,   110 },
+		{ "IDR_",  2,   111 },
+		{ "IDB_",  3,   400 },
+		{ "IDM_",  4,   500 },
+		{ "IDD_",  5,   600 },
+		{ "IDI_",  6,  1001 },
+		{ "ID_",   7, 10000 },
+		{ "IDC_",  8, 32000 },
+		{ "IDS_",  9, 60000 },
+		{ "_APS", 10,     0 }
+	};
 
 #define TYPE_MAX ((int)(sizeof(define_types) / sizeof(b3DefineType)))
 
@@ -74,7 +74,7 @@ class b3Define : public b3Link<b3Define>
 	int           m_Value;
 	int           m_Type;
 	b3DefineMode  m_Mode;
-	
+
 public:
 	b3Define(const b3_bool start) : b3Link<b3Define>(sizeof(b3Define))
 	{
@@ -196,8 +196,8 @@ public:
 			if (diff == 0)
 			{
 				diff = strcmp(
-					&a->m_Define[strlen(define_types[a_type].m_Type)],
-					&b->m_Define[strlen(define_types[b_type].m_Type)]);
+						   &a->m_Define[strlen(define_types[a_type].m_Type)],
+						   &b->m_Define[strlen(define_types[b_type].m_Type)]);
 			}
 		}
 		else
@@ -231,7 +231,7 @@ static b3_bool b3ReadResource(const char *filename,b3Base<b3Define> &defines)
 			}
 		}
 		defines.b3Append(new b3Define(false));
-		
+
 		fclose(in);
 	}
 	return in != null;

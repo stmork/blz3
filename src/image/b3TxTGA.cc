@@ -43,7 +43,7 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 	yNewSize = b3Endian::b3GetIntel16(&buffer[14]);
 
 	b3PrintF(B3LOG_FULL,"IMG TGA  # b3ParseTGA(%s)\n",
-		(const char *)image_name);
+			 (const char *)image_name);
 	if (b3AllocTx(xNewSize,yNewSize,24))
 	{
 		DataSize = xSize * ySize;
@@ -59,7 +59,7 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 			srcPtr  += (xSize * (ySize - 1));  /* letze Zeile */
 		}
 
-		if (buffer[17] & 0x10)                          
+		if (buffer[17] & 0x10)
 		{                                           /* right left */
 			dNext -= (xSize * 8);
 			srcPtr  += (xSize - 1);
@@ -93,7 +93,7 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 				}
 			}
 			break;
-                                    
+
 		case 10:                                /* komprimiert */
 			buffer += (b3Endian::b3GetIntel16(buffer) + 18);
 			while (DataSize > 0)
@@ -101,9 +101,9 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 				count = (buffer[0] & 127) + 1;    /* Steuerbyte */
 				if (buffer[0] & 128)
 				{                               /* nächste Farbe count mal */
-					buffer++;                
+					buffer++;
 					Color = 0;
-					for (t = 0;t < depth1;t++)     /* schreiben. */   
+					for (t = 0;t < depth1;t++)     /* schreiben. */
 					{
 						Color = (Color << 8) | *buffer++;
 					}

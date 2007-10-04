@@ -78,14 +78,14 @@ int main(int argc, char *argv[])
 	{
 		b3Tx   tx;
 		b3_res xMax, yMax;
-		
+
 		xMax = yMax = 1 << wave.m_Dim;
-		
+
 		// Create display
 		display = new b3DisplayView(xMax, yMax, "OceanWave");
-		
+
 		tx.b3AllocTx(xMax, yMax, 128);
-		
+
 		b3Time now;
 		b3_f64 time_start = now.b3GetTime(),time_diff;
 

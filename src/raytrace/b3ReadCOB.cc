@@ -114,8 +114,8 @@ b3Item *b3COBReader::b3COB_Reconstruct()
 	/* First find root object in object list. */
 	/* Follow error messages for exceptions! */
 	for (cobInfo  = cobInfos.First;
-	     cobInfo != null;
-	     cobInfo  = next)
+			cobInfo != null;
+			cobInfo  = next)
 	{
 		next = cobInfo->Succ;
 		if (cobInfo->refParent == 0)
@@ -160,63 +160,63 @@ b3Item *b3COBReader::b3COB_Reconstruct()
 		if (next == null)
 		{
 			b3PrintF (B3LOG_NORMAL," ERROR: object with parent ID %ld not found!\n",
-				cobInfo->refParent);
+					  cobInfo->refParent);
 			return null;
 		}
 
 		switch (cobInfo->refType)
 		{
+		case COB_GROU :
+			switch (next->refType)
+			{
 			case COB_GROU :
-				switch (next->refType)
-				{
-					case COB_GROU :
 #ifndef ONE_BBOX
-						BBox = (b3BBox *)next->refNode;
-						BBox->b3GetBBoxHead()->b3Append (cobInfo->refNode);
+				BBox = (b3BBox *)next->refNode;
+				BBox->b3GetBBoxHead()->b3Append (cobInfo->refNode);
 #endif
-						break;
-
-					default :
-						b3PrintF (B3LOG_NORMAL," ERROR: Cannot insert BBox into this kind of object!\n");
-						return null;
-				}
 				break;
 
-			case COB_POLH :
-				switch (next->refType)
-				{
-					case COB_GROU :
+			default :
+				b3PrintF (B3LOG_NORMAL," ERROR: Cannot insert BBox into this kind of object!\n");
+				return null;
+			}
+			break;
+
+		case COB_POLH :
+			switch (next->refType)
+			{
+			case COB_GROU :
 #ifndef ONE_BBOX
-						BBox = (b3BBox *)next->refNode;
+				BBox = (b3BBox *)next->refNode;
 #else
-						BBox = root;
+				BBox = root;
 #endif
-						BBox->b3GetShapeHead()->b3Append (cobInfo->refNode);
-						break;
-
-					default :
-						b3PrintF (B3LOG_NORMAL," ERROR: Cannot insert polygons into this kind of object!\n");
-						return null;
-				}
+				BBox->b3GetShapeHead()->b3Append (cobInfo->refNode);
 				break;
 
-			case COB_MAT1 :
-				switch (next->refType)
-				{
-					case COB_POLH :
-						Shape = (b3TriangleShape *)next->refNode;
-						Shape->b3GetMaterialHead()->b3Append (cobInfo->refNode);
-						break;
+			default :
+				b3PrintF (B3LOG_NORMAL," ERROR: Cannot insert polygons into this kind of object!\n");
+				return null;
+			}
+			break;
 
-					default :
-						b3PrintF (B3LOG_NORMAL," ERROR: Cannot insert material into this kind of object!\n");
-						return null;
-				}
+		case COB_MAT1 :
+			switch (next->refType)
+			{
+			case COB_POLH :
+				Shape = (b3TriangleShape *)next->refNode;
+				Shape->b3GetMaterialHead()->b3Append (cobInfo->refNode);
 				break;
+
+			default :
+				b3PrintF (B3LOG_NORMAL," ERROR: Cannot insert material into this kind of object!\n");
+				return null;
+			}
+			break;
 
 			// Do nothing!
-			default:
-				break;
+		default:
+			break;
 		}
 
 		/* put object from object list to done list */
@@ -263,7 +263,7 @@ void b3COBReader::b3COB_ComputeAvrgColor (
 /*          the routine returns the negative length of the line buffer. */
 
 b3_size b3COBReader::b3COB_GetLine (
-	      char *line,
+	char *line,
 	const char *buffer,
 	b3_size     maxLine)
 
@@ -274,14 +274,14 @@ b3_size b3COBReader::b3COB_GetLine (
 	{
 		switch (*buffer)
 		{
-			case 10 :
-			case 13 :
-				*line = 0;
-				if (buffer[1] == 13)
-				{
-					i++;
-				}
-				return i;
+		case 10 :
+		case 13 :
+			*line = 0;
+			if (buffer[1] == 13)
+			{
+				i++;
+			}
+			return i;
 		}
 		*line++ = *buffer++;
 	}
@@ -328,7 +328,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"Grou V%ld.%ld Id %d Parent %d Size %08ld",
-		&ver,&rev,&id,&parent,&size);
+			&ver,&rev,&id,&parent,&size);
 
 	b3COB_GetLine (line,&buffer[len+1],sizeof(line));
 	if (sscanf (line,"Name %32s",boxName) != 1)
@@ -338,7 +338,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 
 #ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"G: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
-		ver,rev,id,parent,len,size);
+			  ver,rev,id,parent,len,size);
 #endif
 
 	BBox = new b3BBox (BBOX);
@@ -384,7 +384,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"PolH V%ld.%ld Id %d Parent %d Size %08ld",
-		&ver,&rev,&id,&parent,&size);
+			&ver,&rev,&id,&parent,&size);
 
 	if (parent == 0)
 	{
@@ -400,7 +400,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			else
 			{
 				b3PrintF (B3LOG_FULL,"R: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
-					0,0,1,0,0,0);
+						  0,0,1,0,0,0);
 			}
 #endif
 		}
@@ -409,7 +409,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 #ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"P: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
-		ver,rev,id,parent,len,size);
+			  ver,rev,id,parent,len,size);
 #endif
 
 	size += len;
@@ -450,22 +450,22 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			i += (len+1);
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf (line,"%f %f %f %f",
-				&transform.m11,&transform.m12,&transform.m13,&transform.m14);
+					&transform.m11,&transform.m12,&transform.m13,&transform.m14);
 
 			i += (len+1);
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf (line,"%f %f %f %f",
-				&transform.m21,&transform.m22,&transform.m23,&transform.m24);
+					&transform.m21,&transform.m22,&transform.m23,&transform.m24);
 
 			i += (len+1);
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf (line,"%f %f %f %f",
-				&transform.m31,&transform.m32,&transform.m33,&transform.m34);
+					&transform.m31,&transform.m32,&transform.m33,&transform.m34);
 
 			i += (len+1);
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf (line,"%f %f %f %f",
-				&transform.m41,&transform.m42,&transform.m43,&transform.m44);
+					&transform.m41,&transform.m42,&transform.m43,&transform.m44);
 		}
 	}
 #ifdef _DEBUG
@@ -609,11 +609,11 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08ld",
-		&ver,&rev,&id,&parent,&size);
+			&ver,&rev,&id,&parent,&size);
 
 #ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"M: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
-		ver,rev,id,parent,len,size);
+			  ver,rev,id,parent,len,size);
 #endif
 
 	size += len;
@@ -635,11 +635,11 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf(line,"rgb %f , %f , %f",&r,&g,&b);
 			sscanf(line,"alpha %f ka %f ks %f exp %f ior %f",
-				&alpha,
-				&ambient,
-				&specular,
-				&exp,
-				&ior);
+				   &alpha,
+				   &ambient,
+				   &specular,
+				   &exp,
+				   &ior);
 			Mat->m_SpecularExp = exp;
 			Mat->m_Ior         = ior;
 			sscanf(line,"texture: %s",name);
@@ -686,15 +686,15 @@ b3_size b3COBReader::b3COB_ParseDummy(const char *buffer)
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"%4s V%ld.%ld Id %d Parent %d Size %08ld",
-		command,&ver,&rev,&id,&parent,&size);
+			command,&ver,&rev,&id,&parent,&size);
 
 #ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"D: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld (%c%c%c%c)\n",
-		ver,rev,id,parent,len,size,
-		command[0],
-		command[1],
-		command[2],
-		command[3]);
+			  ver,rev,id,parent,len,size,
+			  command[0],
+			  command[1],
+			  command[2],
+			  command[3]);
 #endif
 
 	size += len;
@@ -750,16 +750,16 @@ b3Item *b3COBReader::b3COB_Parse(
 			len = b3COB_ParseDummy(buffer);
 			break;
 
-			default :
+		default :
 #ifdef _DEBUG
 			B3_BEEP;
 			b3PrintF (B3LOG_FULL,"%6ld - %6ld: %s\n",pos,size,token == COB_POLH ? "PolH" : "-");
 #endif
 			b3PrintF (B3LOG_NORMAL," ERROR: unknown token (%c%c%c%c) found in COB file!\n",
-				buffer[0],
-				buffer[1],
-				buffer[2],
-				buffer[3]);
+					  buffer[0],
+					  buffer[1],
+					  buffer[2],
+					  buffer[3]);
 		case COB_END  :
 			pos = size;
 			break;

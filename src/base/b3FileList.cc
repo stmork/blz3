@@ -33,7 +33,7 @@
 *************************************************************************/
 
 b3FileEntry::b3FileEntry (const char *new_name) :
-	b3Link<b3FileEntry>(sizeof(b3FileEntry))
+		b3Link<b3FileEntry>(sizeof(b3FileEntry))
 {
 	name.b3Format("%s",new_name);
 }

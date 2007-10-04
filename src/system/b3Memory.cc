@@ -35,7 +35,7 @@ b3_count b3Mem::m_Enlargement = 0;
 b3Mem::~b3Mem()
 {
 	b3Free();
-		
+
 	if (m_SlotPtr != m_Slots)
 	{
 		b3MemAccess::b3Free(m_SlotPtr);
@@ -98,7 +98,7 @@ void *b3Mem::b3Alloc(const b3_size size)
 			}
 		}
 	}
-		
+
 	return ptr;
 }
 
@@ -110,49 +110,49 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 	if (old_ptr == null)
 	{
 		new_ptr = b3Alloc(new_size);
-		}
-		else
+	}
+	else
+	{
+		if (new_size > 0)
 		{
-			if (new_size > 0)
-			{
-				b3CriticalSection lock(*this);
-				b3_index i;
+			b3CriticalSection lock(*this);
+			b3_index i;
 
-				i = b3FindIndex(old_ptr);
-				if (i >= 0)
+			i = b3FindIndex(old_ptr);
+			if (i >= 0)
+			{
+				if(m_SlotPtr[i].m_Size >= new_size)
 				{
-					if(m_SlotPtr[i].m_Size >= new_size)
-					{
-						new_ptr = m_SlotPtr[i].m_Ptr;
-					}
-					else
-					{
-						new_ptr = b3MemAccess::b3Alloc(new_size);
-						if (new_ptr != null)
-						{
-							memcpy(new_ptr, m_SlotPtr[i].m_Ptr, m_SlotPtr[i].m_Size);
-							b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
-							m_SlotPtr[i].m_Ptr  = new_ptr;
-							m_SlotPtr[i].m_Size = new_size;
-						}
-						else
-						{
-							// Error!
-						}
-					}
+					new_ptr = m_SlotPtr[i].m_Ptr;
 				}
 				else
 				{
-					// Error!
+					new_ptr = b3MemAccess::b3Alloc(new_size);
+					if (new_ptr != null)
+					{
+						memcpy(new_ptr, m_SlotPtr[i].m_Ptr, m_SlotPtr[i].m_Size);
+						b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
+						m_SlotPtr[i].m_Ptr  = new_ptr;
+						m_SlotPtr[i].m_Size = new_size;
+					}
+					else
+					{
+						// Error!
+					}
 				}
 			}
 			else
 			{
-				b3Free(old_ptr);
+				// Error!
 			}
 		}
-		return new_ptr;
+		else
+		{
+			b3Free(old_ptr);
+		}
 	}
+	return new_ptr;
+}
 
 b3_bool b3Mem::b3Free(const void *ptr)
 {

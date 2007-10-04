@@ -59,7 +59,7 @@ void b3Clouds::b3PrepareClouds()
 
 b3_f64 b3Clouds::b3ComputeClouds(
 	const b3_line64 *ray,
-	      b3_f64    &r,
+	b3_f64    &r,
 	const b3_f64     time)
 {
 	b3_f64 sight;

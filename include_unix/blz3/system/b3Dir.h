@@ -53,19 +53,19 @@ public:
 	{
 	}
 
-	       void b3Empty();
-		   void b3LinkFileName (const char *path,const char *name);
-	       void b3SplitFileName(char *path,char *name);
-	       void b3RemoveExt    (const char *filename);
-	       void b3RemoveExt    ();
-		   void b3ParentName   (const char *filename);
-	       void b3ParentName   ();
-		   void b3ExtractExt   (const char *filename);
-		   void b3ExtractExt   ();
-	       void b3Correct      (const char *path);
-		   void b3Correct      ();
-		   void b3Format       (const char *format,...);
-		   void b3Append       (const char *ext);
+	void b3Empty();
+	void b3LinkFileName (const char *path,const char *name);
+	void b3SplitFileName(char *path,char *name);
+	void b3RemoveExt    (const char *filename);
+	void b3RemoveExt    ();
+	void b3ParentName   (const char *filename);
+	void b3ParentName   ();
+	void b3ExtractExt   (const char *filename);
+	void b3ExtractExt   ();
+	void b3Correct      (const char *path);
+	void b3Correct      ();
+	void b3Format       (const char *format,...);
+	void b3Append       (const char *ext);
 
 	/**
 	 * This method concatenates a directory name and a filename and puts

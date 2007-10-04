@@ -83,123 +83,123 @@
 #if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
 GLfloat points[] =
-{
-	-1., -1., -1., // front
-	-1., -1.,  1.,
-	 1., -1.,  1.,
-	 1., -1., -1.,
+	{
+		-1., -1., -1., // front
+		-1., -1.,  1.,
+		1., -1.,  1.,
+		1., -1., -1.,
 
-	-1.,  1., -1., // left
-	-1.,  1.,  1.,
-	-1., -1.,  1.,
-	-1., -1., -1.,
+		-1.,  1., -1., // left
+		-1.,  1.,  1.,
+		-1., -1.,  1.,
+		-1., -1., -1.,
 
-	 1.,  1., -1., // back
-	 1.,  1.,  1.,
-	-1.,  1.,  1.,
-	-1.,  1., -1.,
+		1.,  1., -1., // back
+		1.,  1.,  1.,
+		-1.,  1.,  1.,
+		-1.,  1., -1.,
 
-	 1., -1., -1., // right
-	 1., -1.,  1.,
-	 1.,  1.,  1.,
-	 1.,  1., -1.,
+		1., -1., -1., // right
+		1., -1.,  1.,
+		1.,  1.,  1.,
+		1.,  1., -1.,
 
-	-1., -1.,  1., // top
-	-1.,  1.,  1.,
-	 1.,  1.,  1.,
-	 1., -1.,  1.,
+		-1., -1.,  1., // top
+		-1.,  1.,  1.,
+		1.,  1.,  1.,
+		1., -1.,  1.,
 
-	-1.,  1., -1., // bottom
-	-1., -1., -1.,
-	 1., -1., -1.,
-	 1.,  1., -1
-};
+		-1.,  1., -1., // bottom
+		-1., -1., -1.,
+		1., -1., -1.,
+		1.,  1., -1
+	};
 
 GLfloat normals[] =
-{
-	  0.0, -1.0,  0.0, // top
-	  0.0, -1.0,  0.0,
-	  0.0, -1.0,  0.0,
-	  0.0, -1.0,  0.0,
+	{
+		0.0, -1.0,  0.0, // top
+		0.0, -1.0,  0.0,
+		0.0, -1.0,  0.0,
+		0.0, -1.0,  0.0,
 
-	 -1.0,  0.0,  0.0, // left
-	 -1.0,  0.0,  0.0,
-	 -1.0,  0.0,  0.0,
-	 -1.0,  0.0,  0.0,
+		-1.0,  0.0,  0.0, // left
+		-1.0,  0.0,  0.0,
+		-1.0,  0.0,  0.0,
+		-1.0,  0.0,  0.0,
 
-	  0.0,  1.0,  0.0, // back
-	  0.0,  1.0,  0.0,
-	  0.0,  1.0,  0.0,
-	  0.0,  1.0,  0.0,
+		0.0,  1.0,  0.0, // back
+		0.0,  1.0,  0.0,
+		0.0,  1.0,  0.0,
+		0.0,  1.0,  0.0,
 
-	  1.0,  0.0,  0.0, // right
-	  1.0,  0.0,  0.0,
-	  1.0,  0.0,  0.0,
-	  1.0,  0.0,  0.0,
+		1.0,  0.0,  0.0, // right
+		1.0,  0.0,  0.0,
+		1.0,  0.0,  0.0,
+		1.0,  0.0,  0.0,
 
-	  0.0,  0.0,  1.0, // top
-	  0.0,  0.0,  1.0,
-	  0.0,  0.0,  1.0,
-	  0.0,  0.0,  1.0,
+		0.0,  0.0,  1.0, // top
+		0.0,  0.0,  1.0,
+		0.0,  0.0,  1.0,
+		0.0,  0.0,  1.0,
 
-	  0.0,  0.0, -1.0, // bottom
-	  0.0,  0.0, -1.0,
-	  0.0,  0.0, -1.0,
-	  0.0,  0.0, -1.0
-};
+		0.0,  0.0, -1.0, // bottom
+		0.0,  0.0, -1.0,
+		0.0,  0.0, -1.0,
+		0.0,  0.0, -1.0
+	};
 
 GLubyte indices[] =
-{
-	 0, 1, 2, 3,
-	 4, 5, 6, 7,
-	 8, 9,10,11,
-	12,13,14,15,
-	16,17,18,19,
-	20,21,22,23
-};
+	{
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9,10,11,
+		12,13,14,15,
+		16,17,18,19,
+		20,21,22,23
+	};
 
 GLfloat boxVertices[8 * 3] =
-{
-	-1.0,-1.0,-1.0,
-	-1.0,-1.0, 1.0,
-	 1.0,-1.0, 1.0,
-	 1.0,-1.0,-1.0,
-	-1.0, 1.0,-1.0,
-	-1.0, 1.0, 1.0,
-	 1.0, 1.0, 1.0,
-	 1.0, 1.0,-1.0
-};
+	{
+		-1.0,-1.0,-1.0,
+		-1.0,-1.0, 1.0,
+		1.0,-1.0, 1.0,
+		1.0,-1.0,-1.0,
+		-1.0, 1.0,-1.0,
+		-1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0, 1.0,-1.0
+	};
 
 GLubyte boxIndices[12 * 2] =
-{
-	0,1,
-	1,2,
-	2,3,
-	3,0,
-	4,5,
-	5,6,
-	6,7,
-	7,4,
-	0,4,
-	1,5,
-	2,6,
-	3,7
-};
+	{
+		0,1,
+		1,2,
+		2,3,
+		3,0,
+		4,5,
+		5,6,
+		6,7,
+		7,4,
+		0,4,
+		1,5,
+		2,6,
+		3,7
+	};
 
 GLfloat ambient[] =
-{
-	1.0,1.0,1.0,1.0
-};
+	{
+		1.0,1.0,1.0,1.0
+	};
 
 GLfloat diffuse[] =
-{
-	1.0,1.0,0.95,1.0
-};
+	{
+		1.0,1.0,0.95,1.0
+	};
 
 GLfloat light0[] =
-{
-	10.0,15.0,20.0,1.0
-};
+	{
+		10.0,15.0,20.0,1.0
+	};
 
 PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
 PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
@@ -262,7 +262,7 @@ void RenderScene()
 	glNormalPointer(   GL_FLOAT, 0, normals);
 	glDrawElements(GL_QUADS,24,GL_UNSIGNED_BYTE,indices);
 
-	glPopMatrix();	
+	glPopMatrix();
 #else
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -286,8 +286,8 @@ void RenderScene()
 		glVertexPointer(3, GL_FLOAT, 0, boxVertices);
 		glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE, boxIndices);
 	}
-	
-	glPopMatrix();	
+
+	glPopMatrix();
 #endif
 	glutSwapBuffers();
 }
@@ -303,7 +303,7 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 		yWindow = 5;
 	}
 	else
- 	{
+	{
 		xWindow = 5 * xSize / ySize;
 		yWindow = 5;
 	}
@@ -314,13 +314,13 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 #if 0
 	glOrtho(-xWindow, xWindow, -yWindow, yWindow, 2.0f, -2.0f);
 #else
-/*
+	/*
 	gluLookAt(
-		0.0f, 0.0f, 5.0f,
-		0.0f, 0.0f, 4.0f,
-		0.0f, 1.0f, 0.0f);
+	0.0f, 0.0f, 5.0f,
+	0.0f, 0.0f, 4.0f,
+	0.0f, 1.0f, 0.0f);
 	glTranslated(0.0,0.0,2.0);
-*/
+	*/
 	gluPerspective (60.0f, aspect, 0.1f,100.0f);
 	glTranslated(0.0,0.0,-5.0);
 	glRotatef(-30.0f,0.0f,1.0f,0.0f);
@@ -353,11 +353,11 @@ void SetupRC()
 		printf("Setup vertices...\n");
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 		glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(boxVertices), boxVertices, GL_DYNAMIC_DRAW_ARB);
-/*
-		ptr = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
-		memcpy(ptr,boxVertices,sizeof(boxVertices));
-		glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
-*/
+		/*
+				ptr = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
+				memcpy(ptr,boxVertices,sizeof(boxVertices));
+				glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
+		*/
 		printf("Setup indices...\n");
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, sizeof(boxIndices), NULL, GL_DYNAMIC_DRAW_ARB);
@@ -382,7 +382,7 @@ int main(int argc,char *argv[])
 	glutReshapeFunc(ChangeSize);
 
 	SetupRC();
-	
+
 	glutMainLoop();
 	return EXIT_SUCCESS;
 }

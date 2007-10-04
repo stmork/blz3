@@ -75,87 +75,87 @@ static void InfoGIF(char *name)
 	{
 		switch (data[0])
 		{
-			case 0x21 :
-				switch (data[1])
-				{
-					case 0x01 :
-						b3PrintF(B3LOG_NORMAL, "*** Plain text extension:\n");
-						data += (data[2] + 3);
-						while ((diff = data[0]) != 0) data += (diff + 1);
-						break;
-
-					case 0xf9 :
-						transPtr         = (struct Extension *)data;
-						b3PrintF(B3LOG_NORMAL, "*** Graphic Control Extension:\n");
-						b3PrintF(B3LOG_NORMAL, "flags: $%02x\n",transPtr->flags);
-						b3PrintF(B3LOG_NORMAL, "transparency: %s\n",
-							transPtr->flags & 1 ? "yes" : "no");
-						if (transPtr->flags & 1)
-						{
-							b3PrintF(B3LOG_NORMAL, "transparent color index: %ld\n",
-								transPtr->index);
-						}
-						b3PrintF(B3LOG_NORMAL, "delay time:  %ld/100 s\n",VAL2(transPtr->delay));
-						data += (transPtr->size + 3);
-						break;
-
-					case 0xfe :
-						b3PrintF(B3LOG_NORMAL, "*** Comment Extension:\n");
-						data += 2;
-						while ((diff = data[0]) != 0)
-						{
-							for (i=1;i <= diff;i++) b3PrintF(B3LOG_NORMAL, "%c",data[i]);
-							data += (diff + 1);
-						}
-						b3PrintF(B3LOG_NORMAL, "\n");
-						break;
-
-					case 0xff :
-						b3PrintF(B3LOG_NORMAL, "*** Application Extension:\n");
-						data += (data[2] + 3);
-						while ((diff = data[0]) != 0) data += (diff + 1);
-						break;
-				}
-				while (data[0] != 0) data++;
-				data++;
-				break;
-
-			case 0x2e :
-				b3PrintF(B3LOG_NORMAL, "*** $2E ???\n");
-				break;
-
-			case 0x2c :
-				descrPtr = (struct Descriptor *)data;
-				planes   = (descrPtr->flags & 0x07) + 1;
-				b3PrintF(B3LOG_NORMAL, "*** Image descriptor:\n");
-				b3PrintF(B3LOG_NORMAL, "xPos:   %4ld\n",VAL2(descrPtr->xPos));
-				b3PrintF(B3LOG_NORMAL, "yPos:   %4ld\n",VAL2(descrPtr->yPos));
-				b3PrintF(B3LOG_NORMAL, "xSize:  %4ld\n",VAL2(descrPtr->xSize));
-				b3PrintF(B3LOG_NORMAL, "ySize:  %4ld\n",VAL2(descrPtr->ySize));
-				b3PrintF(B3LOG_NORMAL, "planes: %4ld\n",planes);
-				b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n",descrPtr->flags);
-				b3PrintF(B3LOG_NORMAL, "local color table: %s\n",
-					descrPtr->flags & 0x80 ? "yes" : "no");
-				b3PrintF(B3LOG_NORMAL, "interlace: %s\n",
-					descrPtr->flags & 0x40 ? "yes" : "no");
-				data   += sizeof(struct Descriptor);
-				if (descrPtr->flags & 0x80) data += ((1 << planes) * 3);
-				data++;
-
+		case 0x21 :
+			switch (data[1])
+			{
+			case 0x01 :
+				b3PrintF(B3LOG_NORMAL, "*** Plain text extension:\n");
+				data += (data[2] + 3);
 				while ((diff = data[0]) != 0) data += (diff + 1);
-				data++;
 				break;
 
-			case 0x3b :
-				b3PrintF(B3LOG_NORMAL, "*** Trailer:\n");
-				data++;
-				loop = false;
+			case 0xf9 :
+				transPtr         = (struct Extension *)data;
+				b3PrintF(B3LOG_NORMAL, "*** Graphic Control Extension:\n");
+				b3PrintF(B3LOG_NORMAL, "flags: $%02x\n",transPtr->flags);
+				b3PrintF(B3LOG_NORMAL, "transparency: %s\n",
+						 transPtr->flags & 1 ? "yes" : "no");
+				if (transPtr->flags & 1)
+				{
+					b3PrintF(B3LOG_NORMAL, "transparent color index: %ld\n",
+							 transPtr->index);
+				}
+				b3PrintF(B3LOG_NORMAL, "delay time:  %ld/100 s\n",VAL2(transPtr->delay));
+				data += (transPtr->size + 3);
 				break;
 
-			default :
-				b3PrintF(B3LOG_NORMAL, "*** $%02lx:%02lx\n",(long)data[0],(long)data[1]);
-				loop = false;
+			case 0xfe :
+				b3PrintF(B3LOG_NORMAL, "*** Comment Extension:\n");
+				data += 2;
+				while ((diff = data[0]) != 0)
+				{
+					for (i=1;i <= diff;i++) b3PrintF(B3LOG_NORMAL, "%c",data[i]);
+					data += (diff + 1);
+				}
+				b3PrintF(B3LOG_NORMAL, "\n");
 				break;
+
+			case 0xff :
+				b3PrintF(B3LOG_NORMAL, "*** Application Extension:\n");
+				data += (data[2] + 3);
+				while ((diff = data[0]) != 0) data += (diff + 1);
+				break;
+			}
+			while (data[0] != 0) data++;
+			data++;
+			break;
+
+		case 0x2e :
+			b3PrintF(B3LOG_NORMAL, "*** $2E ???\n");
+			break;
+
+		case 0x2c :
+			descrPtr = (struct Descriptor *)data;
+			planes   = (descrPtr->flags & 0x07) + 1;
+			b3PrintF(B3LOG_NORMAL, "*** Image descriptor:\n");
+			b3PrintF(B3LOG_NORMAL, "xPos:   %4ld\n",VAL2(descrPtr->xPos));
+			b3PrintF(B3LOG_NORMAL, "yPos:   %4ld\n",VAL2(descrPtr->yPos));
+			b3PrintF(B3LOG_NORMAL, "xSize:  %4ld\n",VAL2(descrPtr->xSize));
+			b3PrintF(B3LOG_NORMAL, "ySize:  %4ld\n",VAL2(descrPtr->ySize));
+			b3PrintF(B3LOG_NORMAL, "planes: %4ld\n",planes);
+			b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n",descrPtr->flags);
+			b3PrintF(B3LOG_NORMAL, "local color table: %s\n",
+					 descrPtr->flags & 0x80 ? "yes" : "no");
+			b3PrintF(B3LOG_NORMAL, "interlace: %s\n",
+					 descrPtr->flags & 0x40 ? "yes" : "no");
+			data   += sizeof(struct Descriptor);
+			if (descrPtr->flags & 0x80) data += ((1 << planes) * 3);
+			data++;
+
+			while ((diff = data[0]) != 0) data += (diff + 1);
+			data++;
+			break;
+
+		case 0x3b :
+			b3PrintF(B3LOG_NORMAL, "*** Trailer:\n");
+			data++;
+			loop = false;
+			break;
+
+		default :
+			b3PrintF(B3LOG_NORMAL, "*** $%02lx:%02lx\n",(long)data[0],(long)data[1]);
+			loop = false;
+			break;
 		}
 	}
 	while (loop);

@@ -57,7 +57,7 @@ void b3Log::b3LogTime(const char *comment)
 
 	gettimeofday(&stamp,0);
 	b3LogFunction (B3LOG_FULL,"                      timecode %ld - %3hd (%s)\n",
-		stamp.tv_sec,stamp.tv_usec / 1000,comment ? comment : "-");
+				   stamp.tv_sec,stamp.tv_usec / 1000,comment ? comment : "-");
 }
 
 /* b3PrintF() has got the same proto types as printf(). This routine */

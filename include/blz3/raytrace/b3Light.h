@@ -50,7 +50,7 @@ struct b3_light_info : public b3_ray
 {
 	b3Color   m_AmbientSum;     //!< The collected ambient term over all shader feeler.
 	b3Color   m_DiffuseSum;     //!< The collected diffuse term over all shadow feeler.
-	b3Color   m_SpecularSum;    //!< The collected specular term over all shadow feeler. 
+	b3Color   m_SpecularSum;    //!< The collected specular term over all shadow feeler.
 	b3_vector m_LightView;      //!< The normalized direction from the intersection point to the light source.
 	b3_vector m_xDir;           //!< The horizontal spanning vector for soft lights.
 	b3_vector m_yDir;           //!< The vertical spanning vector for soft shadows.
@@ -99,9 +99,9 @@ public:
 	 * Method for registering the light source classes into the item registry.
 	 */
 	static void     b3Register();
-	       void     b3Write();
-		   void     b3Dump(b3_count level);
-	       b3_bool  b3Prepare(b3_preparation_info *prep_info);
+	void     b3Write();
+	void     b3Dump(b3_count level);
+	b3_bool  b3Prepare(b3_preparation_info *prep_info);
 
 	/**
 	 * This method returns the lights name.
@@ -151,7 +151,7 @@ private:
 	b3_bool      b3PointIllumination(b3Shader *shader,b3_surface *surface);
 	b3_bool      b3AreaIllumination( b3Shader *shader,b3_surface *surface);
 	b3Shape     *b3CheckSinglePoint (b3Shader *shader,b3_surface *surface,
-		b3_light_info *Jit,b3_coord x,b3_coord y);
+									 b3_light_info *Jit,b3_coord x,b3_coord y);
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
 	{

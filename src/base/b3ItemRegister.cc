@@ -67,8 +67,8 @@ b3ItemRegister b3ItemRegister::m_Register;
 b3ItemRegister::b3ItemRegister()
 {
 	b3ItemRegisterEntry *entry = new b3ItemRegisterEntry(
-		&b3FirstItem::b3StaticInit,
-		&b3FirstItem::b3StaticInit,B3_CLASS_MAX,true);
+									 &b3FirstItem::b3StaticInit,
+									 &b3FirstItem::b3StaticInit,B3_CLASS_MAX,true);
 	b3Append(entry);
 }
 

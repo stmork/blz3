@@ -23,7 +23,7 @@
 
 #include "blz3/system/b3Dir.h"
 #include <sys/types.h>
-#include <sys/stat.h>	
+#include <sys/stat.h>
 #include <unistd.h>
 #include <assert.h>
 
@@ -205,10 +205,10 @@ void b3Path::b3LinkFileName(
 
 	B3_ASSERT(File!=null);
 	snprintf(File,B3_FILESTRINGLEN,
-		"%s%s%s",
-		FilePath != null ? FilePath : "",
-		FileName != null ? "/" : "",
-		FileName != null ? FileName : "");
+			 "%s%s%s",
+			 FilePath != null ? FilePath : "",
+			 FileName != null ? "/" : "",
+			 FileName != null ? FileName : "");
 
 	// Convert Windows path to to something useful
 	len = strlen(File);
@@ -272,7 +272,7 @@ void b3Path::b3SplitFileName(
 			i = Length;
 			while ((i > 0)&&(File[i-1] != '/')&&(File[i-1] != '~')) i--;
 			if (i > 1) i--;
-			FilePath[i] = 0;	
+			FilePath[i] = 0;
 		}
 	}
 }
@@ -298,7 +298,7 @@ void b3Path::b3ParentName(const char *param_path)
 // Get the parent directory of a directory or file
 void b3Path::b3ParentName(
 	const char *file,
-	      char *parent)
+	char *parent)
 {
 	b3Path   actDir;
 	b3_index i;
@@ -323,7 +323,7 @@ void b3Path::b3ParentName(
 	// Remove trailing "/" or "\"
 	len = strlen(actDir);
 	for (i = len - 1;i >= 0;i--) switch(((char *)actDir)[i])
-	{
+		{
 		case '/' :
 			((char *)actDir)[i] = 0;
 			i = 0;
@@ -332,7 +332,7 @@ void b3Path::b3ParentName(
 		default :
 			((char *)actDir)[i] = 0;
 			break;
-	}
+		}
 
 	// Copy to destination if available else
 	// overwrite source

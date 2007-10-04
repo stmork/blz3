@@ -76,7 +76,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 	b3_tx_error  result = B3_TX_OK;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx:  # saving TIFF paletted image (%ldx%ld)\n",
-		xSize,ySize);
+			 xSize,ySize);
 	TIFFSetField(tiff,TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff,TIFFTAG_IMAGELENGTH,    ySize);
 	TIFFSetField(tiff,TIFFTAG_BITSPERSAMPLE,  depth);
@@ -98,7 +98,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 	for (y = 0;y < max;y++)
 	{
 		r[y] = (b3_u16)((palette[y] & 0xff0000) >> 8);
-		g[y] = (b3_u16) (palette[y] & 0x00ff00);  
+		g[y] = (b3_u16) (palette[y] & 0x00ff00);
 		b[y] = (b3_u16)((palette[y] & 0x0000ff) << 8);
 	}
 	TIFFSetField (tiff,TIFFTAG_COLORMAP,&r,&g,&b);
@@ -133,7 +133,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
 
 	// setting up tag directory
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx:  # saving TIFF fax G4 (%ldx%ld)\n",
-		xSize,ySize);
+			 xSize,ySize);
 	TIFFSetField(tiff,TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff,TIFFTAG_IMAGELENGTH,    ySize);
 	TIFFSetField(tiff,TIFFTAG_BITSPERSAMPLE,  1);
@@ -178,7 +178,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 
 	// setting the TIFF tags
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx:  # saving TIFF true color (%ldx%ld)\n",
-		xSize,ySize);
+			 xSize,ySize);
 	TIFFSetField(tiff,TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff,TIFFTAG_IMAGELENGTH,    ySize);
 	TIFFSetField(tiff,TIFFTAG_BITSPERSAMPLE,  8);
@@ -200,7 +200,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	if (row == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
+				 "### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
@@ -284,7 +284,7 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 	if (tiff)
 	{
 		b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx:  # saving TIFF (%s)\n",
-			(char *)image_name);
+				 (char *)image_name);
 		// Now select the saving version we need.
 		if (depth == 1)
 		{
@@ -304,7 +304,7 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 
 		TIFFClose(tiff);
 	}
-	else 
+	else
 	{
 		result = B3_TX_NOT_SAVED;
 	}

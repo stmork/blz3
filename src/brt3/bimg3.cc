@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3TxPool.h"
@@ -32,7 +32,7 @@ static b3TxPool texture_pool;
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
-  
+
 class b3ImageRow : public b3Row
 {
 public:
@@ -53,7 +53,7 @@ static void display(b3Tx *tx)
 	if (tx->b3IsLoaded())
 	{
 		b3PrintF(B3LOG_NORMAL,"%s: %dx%d\n",
-			tx->b3Name(),tx->xSize,tx->ySize);
+				 tx->b3Name(),tx->xSize,tx->ySize);
 		display = new b3DisplayView(tx->xSize,tx->ySize,tx->b3Name());
 		display->b3PutTx(tx);
 		display->b3Wait();
@@ -61,8 +61,8 @@ static void display(b3Tx *tx)
 	}
 	else
 	{
-		 b3PrintF(B3LOG_NORMAL,"%s not displayed\n",
-		 	tx->b3Name());
+		b3PrintF(B3LOG_NORMAL,"%s not displayed\n",
+				 tx->b3Name());
 	}
 }
 

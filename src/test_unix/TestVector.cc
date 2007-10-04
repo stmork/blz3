@@ -197,8 +197,8 @@ public:
 				&m_Array[k + 1],
 				&m_Array[k + 2],
 				&m_Array[k + 3],
-				 m_Array[k].x,
-				 m_Array[k].y,
+				m_Array[k].x,
+				m_Array[k].y,
 				&m_Array[k]);
 		}
 		b3Add("linear combination");

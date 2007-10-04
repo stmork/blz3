@@ -74,8 +74,8 @@ struct b3_render_light_info
  */
 class b3RenderContext : protected b3Mem
 {
-	       b3_index             glLightCount;
-	       b3RenderObject      *glSelectedObject;
+	b3_index             glLightCount;
+	b3RenderObject      *glSelectedObject;
 
 	static b3_vector            glSimpleLightPosition;
 	static b3_vector            glSimpleLightDirection;
@@ -303,7 +303,7 @@ public:
 		return
 			(((b3_pkd_color)(color[0] * 255)) << 16) |
 			(((b3_pkd_color)(color[1] * 255)) <<  8) |
-			  (b3_pkd_color)(color[2] * 255);
+			(b3_pkd_color)(color[2] * 255);
 	}
 
 	/**
@@ -388,7 +388,7 @@ protected:
 	GLfloat            glDiffuse[4];       //!< The diffuse material color.
 	GLfloat            glSpecular[4];      //!< The specular material color.
 	GLfloat            glShininess;        //!< The specular exponent.
-	
+
 	// Some texture values
 	GLuint             glTextureId;        //!< The OpenGL texture id.
 	GLubyte           *glTextureData;      //!< The bitmap data of the texture.
@@ -543,9 +543,9 @@ protected:
 	 * The implementation of this method computes the vertices. The vertex buffer is
 	 * already mapped into CPU address space for use. You can access the buffer by
 	 * using using following code snippet:
-\verbatim
+	\verbatim
 	b3_gl_vertex *Vector = *glVertexElements;
-\endverbatim
+	\endverbatim
 	 */
 	virtual void            b3ComputeVertices();
 
@@ -553,11 +553,11 @@ protected:
 	 * The implementation of this method computes the line indices and the triangle indices.
 	 * The index buffers are already mapped into CPU address space for use. You can acces
 	 * the buffers using following code snippet:
-\verbatim
-    b3_gl_line    *gPtr = *glGridElements;
-    b3_gl_polygon *pPtr = *glPolygonElements;
-\endverbatim
-    */
+	\verbatim
+	   b3_gl_line    *gPtr = *glGridElements;
+	   b3_gl_polygon *pPtr = *glPolygonElements;
+	\endverbatim
+	   */
 	virtual void            b3ComputeIndices();
 
 	/**
@@ -663,26 +663,26 @@ protected:
 	void b3TransformVertices(b3_matrix *transformation,b3_bool isAffine);
 
 private:
-	        void            b3DefineTexture();
-	        void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0) throw(b3TxException);
-	        void            b3CreateChess(  b3RenderContext *context,b3Color &bColor,b3Color &wColor);
-	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
-	        void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
-	        void            b3DeleteDisplayList();
+	void            b3DefineTexture();
+	void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0) throw(b3TxException);
+	void            b3CreateChess(  b3RenderContext *context,b3Color &bColor,b3Color &wColor);
+	void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
+	void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
+	void            b3DeleteDisplayList();
 
-	        void            b3CheckGeometry(const b3RenderContext *context, const b3_render_mode render_mode);
-	        void            b3DrawGeometry(b3RenderContext *context, const b3_render_mode render_mode);
+	void            b3CheckGeometry(const b3RenderContext *context, const b3_render_mode render_mode);
+	void            b3DrawGeometry(b3RenderContext *context, const b3_render_mode render_mode);
 
-			// Selecting material and drawing geometry in different modes
-	        void            b3SelectMaterialForLineDrawing(b3RenderContext *context);
-	        void            b3SelectMaterialForFilledDrawing(const b3RenderContext *context);
-	        void            b3DrawLinedGeometry(const b3RenderContext *context);
-	        void            b3DrawFilledGeometry(const b3RenderContext *context);
+	// Selecting material and drawing geometry in different modes
+	void            b3SelectMaterialForLineDrawing(b3RenderContext *context);
+	void            b3SelectMaterialForFilledDrawing(const b3RenderContext *context);
+	void            b3DrawLinedGeometry(const b3RenderContext *context);
+	void            b3DrawFilledGeometry(const b3RenderContext *context);
 
-			void            b3MapIndices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
-			void            b3MapVertices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
-			void            b3UnmapIndices();
-			void            b3UnmapVertices();
+	void            b3MapIndices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
+	void            b3MapVertices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
+	void            b3UnmapIndices();
+	void            b3UnmapVertices();
 	static  void            b3PrintMapping(const char *text,b3_vbo_mapping map_mode);
 };
 

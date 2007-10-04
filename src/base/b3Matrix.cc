@@ -32,17 +32,17 @@
 *************************************************************************/
 
 b3_matrix b3Matrix::m_UnitMatrix =
-{
-	1,0,0,0,
-	0,1,0,0,
-	0,0,1,0,
-	0,0,0,1
-};
+	{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
 
 b3_vector b3Matrix::m_EmptyVector =
-{
-	0,0,0
-};
+	{
+		0,0,0
+	};
 b3_bool b3Matrix::b3NormalizeCol (
 	b3_matrix *Matrix,
 	b3_count   col)
@@ -60,7 +60,7 @@ b3_bool b3Matrix::b3NormalizeCol (
 		Denom += (column[index] * column[index]);
 		index += 4;
 	}
-	
+
 	if (Denom != 0)
 	{
 		Denom = 1.0 / sqrt(Denom);
@@ -95,7 +95,7 @@ b3_bool b3Matrix::b3NormalizeRow (
 		Denom += (column[index] * column[index]);
 		index++;
 	}
-	
+
 	if (Denom != 0)
 	{
 		Denom = 1.0 / sqrt(Denom);
@@ -729,9 +729,9 @@ b3_matrix * b3Matrix::b3Dress (
 		orientation.m43 = 0;
 
 		// now compute y axis from x and z axis
-		orientation.m12 = lookTo->y * axis.z - lookTo->z * axis.y; 
-		orientation.m22 = lookTo->z * axis.x - lookTo->x * axis.z; 
-		orientation.m32 = lookTo->x * axis.y - lookTo->y * axis.x; 
+		orientation.m12 = lookTo->y * axis.z - lookTo->z * axis.y;
+		orientation.m22 = lookTo->z * axis.x - lookTo->x * axis.z;
+		orientation.m32 = lookTo->x * axis.y - lookTo->y * axis.x;
 		orientation.m42 = 0;
 		b3NormalizeCol (&orientation,1);
 	}

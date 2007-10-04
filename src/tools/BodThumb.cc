@@ -55,13 +55,13 @@ public:
 		if(m_World.b3Read(&file) == B3_WORLD_OK)
 		{
 			b3PrintF(B3LOG_NORMAL,"%s -> %s\n",
-				(const char *)m_ObjectName,
-				(const char *)m_ImageName);
+					 (const char *)m_ObjectName,
+					 (const char *)m_ImageName);
 
 			b3Base<b3Item> *depot = m_World.b3GetHead();
 			b3Base<b3Item>  base;
 			b3_u32          level;
-			
+
 			m_BBox  = (b3BBox *)m_World.b3GetFirst();
 			level = m_BBox->b3GetType();
 			base.b3InitBase(depot->b3GetClass());

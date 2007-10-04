@@ -63,7 +63,7 @@ void b3ShaderMork2::b3ShadeLight(
 			if (spec_exp < 100000) // test if surface if rough
 			{
 				b3_f64 lambda = b3Vector::b3SMul(&surface->m_ReflRay.dir,&Jit->dir);
-				
+
 				factor = b3Math::b3FastPow(lambda, spec_exp) * Jit->m_LightFrac;
 				Jit->m_SpecularSum += (light->m_Color * factor);
 			}
@@ -87,7 +87,7 @@ void b3ShaderMork2::b3ShadeLight(
 		if (obsSurface.m_Refraction > 0)
 		{
 			Jit->m_DiffuseSum += (
-				light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
+									 light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
 		}
 	}
 #endif
@@ -97,7 +97,7 @@ void b3ShaderMork2::b3ShadeLight(
 
 void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
 {
-    b3_f64 alpha    = b3Math::b3Acos(surface->m_CosAlpha);
+	b3_f64 alpha    = b3Math::b3Acos(surface->m_CosAlpha);
 	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
 	b3_f64 beta     = b3Math::b3Asin(sin_beta);
 	b3_f64 apb      = alpha + beta;

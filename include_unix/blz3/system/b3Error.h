@@ -29,10 +29,10 @@ class b3Error : public b3ErrorBase
 	char  m_ErrorText[1024];
 
 public:
-	      /**
-	       * This constructor initializes the error code interpreter.
-	       */
-	      b3Error();
+	/**
+	 * This constructor initializes the error code interpreter.
+	 */
+	b3Error();
 	char *b3GetErrorText();
 
 	/**

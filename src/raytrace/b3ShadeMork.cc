@@ -56,7 +56,7 @@ void b3ShaderMork::b3ShadeLight(
 	{
 		// specular high light
 		if ((ShapeAngle =
-			b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir)) >= 0)
+					b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir)) >= 0)
 		{
 			b3_f64 lambda   = b3Vector::b3SMul(&surface->m_ReflRay.dir,&Jit->dir);
 			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
@@ -86,7 +86,7 @@ void b3ShaderMork::b3ShadeLight(
 		if (obsSurface.m_Refraction > 0)
 		{
 			Jit->m_DiffuseSum += (
-				light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
+									 light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
 		}
 	}
 #endif

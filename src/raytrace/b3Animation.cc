@@ -88,9 +88,9 @@ b3AnimElement *b3Animation::b3FindSameTrack(b3AnimElement *Anim)
 	while ((prev = (b3AnimElement *)prev->Prev) != null)
 	{
 		if ((prev->b3GetClassType() == Anim->b3GetClassType()) &&
-			(prev->m_CurveUse       == Anim->m_CurveUse) &&
-		    (prev->m_End            <= Anim->m_Start) &&
-		    (strcmp(prev->m_Object,Anim->m_Object) == 0))
+				(prev->m_CurveUse       == Anim->m_CurveUse) &&
+				(prev->m_End            <= Anim->m_Start) &&
+				(strcmp(prev->m_Object,Anim->m_Object) == 0))
 		{
 			return prev;
 		}

@@ -31,7 +31,7 @@
 *************************************************************************/
 
 b3SplineShape::b3SplineShape(b3_size class_size,b3_u32 class_type) :
-	b3TriangleShape(class_size, class_type)
+		b3TriangleShape(class_size, class_type)
 {
 	m_Controls = null;
 }
@@ -42,7 +42,7 @@ b3SplineShape::b3SplineShape(b3_u32 class_type) : b3TriangleShape(sizeof(b3Splin
 }
 
 b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
-{				 
+{
 	b3_index i;
 	b3_count control_count;
 
@@ -59,7 +59,7 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 	control_count = m_Spline[0].m_ControlMax * m_Spline[1].m_ControlMax;
 	m_Controls    = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
 	m_Spline[0].m_Controls =
-	m_Spline[1].m_Controls = m_Controls;
+		m_Spline[1].m_Controls = m_Controls;
 	for (i = 0;i < control_count;i++)
 	{
 		b3InitVector(&m_Controls[i]);
@@ -103,8 +103,8 @@ void b3SplineShape::b3Init(
 {
 	// Allocate controls
 	m_Controls      = (b3_vector *)b3Item::b3Alloc(
-		m_Spline[0].m_ControlMax *
-		m_Spline[1].m_ControlMax * sizeof(b3_vector));
+						  m_Spline[0].m_ControlMax *
+						  m_Spline[1].m_ControlMax * sizeof(b3_vector));
 
 	// Init horizontal spline
 	m_Spline[0].m_Knots    = m_Knots[0];
@@ -329,14 +329,14 @@ void b3SplineShape::b3ComputeSolidIndices()
 		for (x = 0;x < xSubDiv;x++)
 		{
 			B3_GL_PINIT(pPtr,
-				m_GridVertexCount +  x              + xOffset *   y,
-				m_GridVertexCount + (x+1) % xModulo + xOffset *   y,
-				m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo));
+						m_GridVertexCount +  x              + xOffset *   y,
+						m_GridVertexCount + (x+1) % xModulo + xOffset *   y,
+						m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo));
 
 			B3_GL_PINIT(pPtr,
-				m_GridVertexCount + (x+1) % xModulo + xOffset * ((y+1) % yModulo),
-				m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo),
-				m_GridVertexCount + (x+1) % xModulo + xOffset *   y);
+						m_GridVertexCount + (x+1) % xModulo + xOffset * ((y+1) % yModulo),
+						m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo),
+						m_GridVertexCount + (x+1) % xModulo + xOffset *   y);
 		}
 	}
 	glPolygonElements->b3SetCount(xSubDiv * ySubDiv * 2);
@@ -375,14 +375,14 @@ void b3SplineShape::b3Draw()
 		glColor3f(color.r,color.g,color.b);
 		gluBeginSurface(glNURBS);
 		gluNurbsSurface(glNURBS,
-			m_Spline[0].m_KnotNum,m_Spline[0].m_Knots,
-			m_Spline[1].m_KnotNum,m_Spline[1].m_Knots,
-			m_Spline[0].m_Offset * 3,
-			m_Spline[1].m_Offset * 3,
-			(GLfloat *)m_Controls,
-			m_Spline[0].degree + 1,
-			m_Spline[1].degree + 1,
-			GL_MAP2_VERTEX_3);
+						m_Spline[0].m_KnotNum,m_Spline[0].m_Knots,
+						m_Spline[1].m_KnotNum,m_Spline[1].m_Knots,
+						m_Spline[0].m_Offset * 3,
+						m_Spline[1].m_Offset * 3,
+						(GLfloat *)m_Controls,
+						m_Spline[0].degree + 1,
+						m_Spline[1].degree + 1,
+						GL_MAP2_VERTEX_3);
 		gluEndSurface(glNURBS);
 	}
 }
@@ -495,7 +495,7 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info *prep_info) throw(b3WorldEx
 	b3_vector    VertexField[B3_MAX_SUBDIV+1];
 
 	Between = (b3_vector *)b3Item::b3Alloc (sizeof(b3_vector) *
-		(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
+											(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
 	if (Between == null)
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);

@@ -63,8 +63,8 @@ char *b3TimeSpanAbstract::b3PrintTime(char *buffer,b3_size size,b3_f64 value)
 	b3_s32 time_needed = (b3_s32)floor(value * 1000.0 + 0.5);
 
 	snprintf(buffer,size,"%3d:%02d,%02d",
-		 time_needed / 60000,
-		(time_needed /  1000) % 60,
-		 time_needed %  1000);
+			 time_needed / 60000,
+			 (time_needed /  1000) % 60,
+			 time_needed %  1000);
 	return buffer;
 }

@@ -63,7 +63,7 @@ public:
 	 * \return The integral.
 	 */
 	virtual b3_f64    b3Integral(b3_f64 x) = 0;
-	
+
 	/**
 	 * This method integrates over a filter kernel.
 	 *
@@ -121,7 +121,7 @@ class B3_PLUGIN b3GaussFilter : public b3Filter
 	static b3_f64          m_Area;
 
 public:
-	              b3GaussFilter();
+	b3GaussFilter();
 	b3_f64 b3Func(b3_f64 x);
 	b3_f64 b3Integral(b3_f64 x);
 };
@@ -136,7 +136,7 @@ class B3_PLUGIN b3ShutterFilter : public b3Filter
 	b3_f64 m_Area;
 
 public:
-	       b3ShutterFilter(b3_f64 max = 0.25);
+	b3ShutterFilter(b3_f64 max = 0.25);
 	b3_f64 b3Func(b3_f64 x);
 	b3_f64 b3Integral(b3_f64 x);
 };

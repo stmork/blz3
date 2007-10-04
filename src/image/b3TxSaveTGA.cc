@@ -37,13 +37,13 @@ class b3InfoTGA : protected b3TxSaveInfo
 	b3_index      m_SaveAs,m_SaveIndex;
 
 public:
-	      b3InfoTGA(b3Tx *tx,const char *filename);
-	     ~b3InfoTGA();
+	b3InfoTGA(b3Tx *tx,const char *filename);
+	~b3InfoTGA();
 	void  b3Write();
 };
 
 b3InfoTGA::b3InfoTGA(b3Tx *tx,const char *filename) :
-	b3TxSaveInfo(tx,filename)
+		b3TxSaveInfo(tx,filename)
 {
 	m_SaveData = (b3_u08 *)b3Alloc(BUFFERSIZE + 16);
 	if (m_SaveData == null)

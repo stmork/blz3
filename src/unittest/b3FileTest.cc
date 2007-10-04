@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3FileTest.h"
 #include "blz3/base/b3FileMem.h"
 

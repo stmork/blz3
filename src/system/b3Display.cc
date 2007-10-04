@@ -88,8 +88,8 @@ b3Display::b3Display(const b3_res xSize, const b3_res ySize, const char *title)
 void b3Display::b3Init(const b3_res xSize, const b3_res ySize,const char *title)
 {
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
-		title,
-		xSize,ySize);
+			  title,
+			  xSize,ySize);
 	m_OwnTx = true;
 	m_xMax  = xSize;
 	m_yMax  = ySize;

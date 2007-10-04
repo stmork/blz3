@@ -54,9 +54,9 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	b3_f64       Factor,cos_a,ior,ior_sqr;
 
 	Factor = 2 * (cos_a =
-		incoming_dir->x * Normal->x +
-		incoming_dir->y * Normal->y +
-		incoming_dir->z * Normal->z);
+					  incoming_dir->x * Normal->x +
+					  incoming_dir->y * Normal->y +
+					  incoming_dir->z * Normal->z);
 	b3Vector::b3LinearCombine(incoming_dir, Normal, -Factor, refl_dir);
 	b3Vector::b3Normalize(refl_dir);
 

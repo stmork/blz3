@@ -90,86 +90,86 @@ static void MovieGIF(char *name)
 	{
 		switch (data[0])
 		{
-			case 0x21 :
-				switch (data[1])
-				{
-					case 0x01 :
-						data += (data[2] + 3);
-						while ((diff = data[0]) != 0)
-						{
-							data += (diff + 1);
-						}
-						break;
-
-					case 0xf9 :
-						if (!visited)
-						{
-							index = WriteGIF(out,buffer,data,index);
-							out.b3Write (&repeat,sizeof(struct Repeator));
-							visited = true;
-						}
-						transPtr = (struct Extension *)data;
-						if (VAL2(transPtr->delay) == 0)
-						{
-							transPtr->delay[0] = 1;
-						}
-						transPtr->flags |= 8;
-						data += (transPtr->size + 3);
-						break;
-
-					case 0xfe :
-						data += 2;
-						while ((diff = data[0]) != 0)
-						{
-							data += (diff + 1);
-						}
-						break;
-
-					case 0xff :
-						data += (data[2] + 3);
-						while ((diff = data[0]) != 0)
-						{
-							data += (diff + 1);
-						}
-						visited = true;
-						break;
-				}
-				while (data[0] != 0)
-				{
-					data++;
-				}
-				data++;
-				break;
-
-			case 0x2e :
-				break;
-
-			case 0x2c :
-				descrPtr  = (struct Descriptor *)data;
-				data     += sizeof(struct Descriptor);
-				planes    = (descrPtr->flags & 0x07) + 1;
-				if (descrPtr->flags & 0x80)
-				{
-					data += ((1 << planes) * 3);
-				}
-				data++;
-
+		case 0x21 :
+			switch (data[1])
+			{
+			case 0x01 :
+				data += (data[2] + 3);
 				while ((diff = data[0]) != 0)
 				{
 					data += (diff + 1);
 				}
-				data++;
-				visited = false;
 				break;
 
-			case 0x3b :
-				data++;
-				loop = false;
+			case 0xf9 :
+				if (!visited)
+				{
+					index = WriteGIF(out,buffer,data,index);
+					out.b3Write (&repeat,sizeof(struct Repeator));
+					visited = true;
+				}
+				transPtr = (struct Extension *)data;
+				if (VAL2(transPtr->delay) == 0)
+				{
+					transPtr->delay[0] = 1;
+				}
+				transPtr->flags |= 8;
+				data += (transPtr->size + 3);
 				break;
 
-			default :
-				loop = false;
+			case 0xfe :
+				data += 2;
+				while ((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
 				break;
+
+			case 0xff :
+				data += (data[2] + 3);
+				while ((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
+				visited = true;
+				break;
+			}
+			while (data[0] != 0)
+			{
+				data++;
+			}
+			data++;
+			break;
+
+		case 0x2e :
+			break;
+
+		case 0x2c :
+			descrPtr  = (struct Descriptor *)data;
+			data     += sizeof(struct Descriptor);
+			planes    = (descrPtr->flags & 0x07) + 1;
+			if (descrPtr->flags & 0x80)
+			{
+				data += ((1 << planes) * 3);
+			}
+			data++;
+
+			while ((diff = data[0]) != 0)
+			{
+				data += (diff + 1);
+			}
+			data++;
+			visited = false;
+			break;
+
+		case 0x3b :
+			data++;
+			loop = false;
+			break;
+
+		default :
+			loop = false;
+			break;
 		}
 	}
 	while (loop);
@@ -195,7 +195,7 @@ static void b3Banner(const char *command)
 
 int main(int argc,char *argv[])
 {
-	if (argc > 1) 
+	if (argc > 1)
 	{
 		int i;
 

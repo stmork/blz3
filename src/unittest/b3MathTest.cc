@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3MathTest.h"
 
 /*************************************************************************
@@ -75,7 +75,7 @@ void b3MathTest::test()
 		{
 			CPPUNIT_ASSERT_EQUAL(pow(base, static_cast<double>(exp)), b3Math::b3FastPow(base, exp));
 		}
-	} 
+	}
 
 	for (base = -27; base <= 27;base += 0.125);
 	{

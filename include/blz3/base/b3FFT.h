@@ -68,7 +68,7 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 	b3_count               m_CPUs;
 
 public:
-	         b3Fourier();
+	b3Fourier();
 	virtual ~b3Fourier();
 
 	/**
@@ -124,7 +124,7 @@ public:
 	{
 		return m_Buffer;
 	}
-	
+
 	/**
 	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
 	 */
@@ -151,8 +151,8 @@ private:
 	static b3_u32  b3RowFFT(void *ptr);
 	static b3_u32  b3ColumnFFT(void *ptr);
 	static b3_bool b3FFT(int dir,b3_res m,b3Complex64 *line);
-	       b3_bool b3FFT2D(int dir);
-		   b3_bool b3ReallocBuffer();
+	b3_bool b3FFT2D(int dir);
+	b3_bool b3ReallocBuffer();
 };
 
 #endif

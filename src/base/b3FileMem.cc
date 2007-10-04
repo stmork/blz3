@@ -81,25 +81,25 @@ b3_bool b3FileMem::b3Open (const b3_access_mode access_mode) throw(b3FileExcepti
 
 	switch (access_mode)
 	{
-		case B_WRITE :
-		case T_WRITE :
-			b3Close();
-			// Walk through!
-		case B_READ :
-		case T_READ :
-			if (b3Buffer (16000))
+	case B_WRITE :
+	case T_WRITE :
+		b3Close();
+		// Walk through!
+	case B_READ :
+	case T_READ :
+		if (b3Buffer (16000))
+		{
+			if (b3EnsureBufferSize(0))
 			{
-				if (b3EnsureBufferSize(0))
-				{
-					b3Seek(0,B3_SEEK_START);
-					return true;
-				}
+				b3Seek(0,B3_SEEK_START);
+				return true;
 			}
-			error = B3_FILE_MEMORY;
-			// Walk through!
-		case B_APPEND:
-		case T_APPEND:
-			break;
+		}
+		error = B3_FILE_MEMORY;
+		// Walk through!
+	case B_APPEND:
+	case T_APPEND:
+		break;
 	}
 	B3_THROW(b3FileException,error);
 }
@@ -111,33 +111,33 @@ b3_bool b3FileMem::b3Open (const char *file_name,const b3_access_mode access_mod
 
 	switch (access_mode)
 	{
-		case B_READ :
-		case T_READ :
-			if (b3Buffer (16000))
+	case B_READ :
+	case T_READ :
+		if (b3Buffer (16000))
+		{
+			if (b3ReadBuffer(file_name))
 			{
-				if (b3ReadBuffer(file_name))
-				{
-					b3Seek(0,B3_SEEK_START);
-					return true;
-				}
+				b3Seek(0,B3_SEEK_START);
+				return true;
 			}
-			break;
+		}
+		break;
 
-		case B_WRITE:
-		case T_WRITE:
-			break;
+	case B_WRITE:
+	case T_WRITE:
+		break;
 
-		case B_APPEND:
-		case T_APPEND:
-			if (b3Buffer (16000))
+	case B_APPEND:
+	case T_APPEND:
+		if (b3Buffer (16000))
+		{
+			if (b3ReadBuffer(file_name))
 			{
-				if (b3ReadBuffer(file_name))
-				{
-					b3Seek(0,B3_SEEK_END);
-					return true;
-				}
+				b3Seek(0,B3_SEEK_END);
+				return true;
 			}
-			break;
+		}
+		break;
 	}
 	B3_THROW(b3FileException,error);
 }
@@ -190,21 +190,21 @@ b3_size b3FileMem::b3Seek (
 	old_pos = m_BufferPos;
 	switch (SeekMode)
 	{
-		case B3_SEEK_START :
-			new_pos = offset;
-			break;
+	case B3_SEEK_START :
+		new_pos = offset;
+		break;
 
-		case B3_SEEK_CURRENT :
-			new_pos = (b3_offset)m_BufferPos + offset;
-			break;
+	case B3_SEEK_CURRENT :
+		new_pos = (b3_offset)m_BufferPos + offset;
+		break;
 
-		case B3_SEEK_END :
-			new_pos = (b3_offset)m_BufferSize + offset;
-			break;
+	case B3_SEEK_END :
+		new_pos = (b3_offset)m_BufferSize + offset;
+		break;
 
-		default:
-			new_pos = offset;
-			break;
+	default:
+		new_pos = offset;
+		break;
 	}
 
 	if (new_pos < 0)

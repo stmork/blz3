@@ -71,14 +71,14 @@ b3Special::b3Special(b3_u32 *src) : b3Item(src)
 *************************************************************************/
 
 b3SuperSample::b3SuperSample(b3_u32 class_type) :
-	b3Special(sizeof(b3SuperSample),class_type)
+		b3Special(sizeof(b3SuperSample),class_type)
 {
 	m_Limit.b3Init(0.2f,0.2f,0.2f);
 	m_Active  = true;
 }
 
 b3SuperSample::b3SuperSample(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	b3_color limit;
 
@@ -134,7 +134,7 @@ void b3SuperSample::b3Activate(b3_bool flag)
 *************************************************************************/
 
 b3CameraPart::b3CameraPart(b3_u32 class_type) :
-	b3Special(sizeof(b3CameraPart),class_type)
+		b3Special(sizeof(b3CameraPart),class_type)
 {
 	b3Vector::b3Init(&m_EyePoint, 0,-200,  0);
 	b3Vector::b3Init(&m_ViewPoint,0,-100,  0);
@@ -145,7 +145,7 @@ b3CameraPart::b3CameraPart(b3_u32 class_type) :
 }
 
 b3CameraPart::b3CameraPart(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	b3InitVector(&m_Width);
 	b3InitVector(&m_Height);
@@ -231,8 +231,8 @@ void b3CameraPart::b3Orientate(
 void b3CameraPart::b3ComputeAngles(b3_f64 &xAngle,b3_f64 &yAngle)
 {
 	xAngle = atan2 (
-		m_EyePoint.y - m_ViewPoint.y,
-		m_EyePoint.x - m_ViewPoint.x);
+				 m_EyePoint.y - m_ViewPoint.y,
+				 m_EyePoint.x - m_ViewPoint.x);
 
 	b3_f64 x = m_EyePoint.x - m_ViewPoint.x;
 	b3_f64 y = m_EyePoint.y - m_ViewPoint.y;
@@ -313,10 +313,10 @@ b3_f64 b3CameraPart::b3GetTwirl()
 
 	// compute twirl
 	return asin ((
-		Vup.x * m_Width.x +
-		Vup.y * m_Width.y +
-		Vup.z * m_Width.z) /
-			(b3Vector::b3Length(&m_Width) * b3Vector::b3Length(&Vup)));
+					 Vup.x * m_Width.x +
+					 Vup.y * m_Width.y +
+					 Vup.z * m_Width.z) /
+				 (b3Vector::b3Length(&m_Width) * b3Vector::b3Length(&Vup)));
 }
 
 void b3CameraPart::b3SetTwirl(b3_f64 twirl)
@@ -373,37 +373,37 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 *************************************************************************/
 
 const b3_f64 b3ModellerInfo::m_UnitScaleTable[B3_UNIT_MAX] =
-{
-	1.0,   // B3_UNIT_MM
-	10.0,  // B3_UNIT_CM
-	25.4,  // B3_UNIT_IN
-	100.0, // B3_UNIT_DM
-	308.4, // B3_UNIT_FT
-	1000.0 // B3_UNIT_M
-};
+	{
+		1.0,   // B3_UNIT_MM
+		10.0,  // B3_UNIT_CM
+		25.4,  // B3_UNIT_IN
+		100.0, // B3_UNIT_DM
+		308.4, // B3_UNIT_FT
+		1000.0 // B3_UNIT_M
+	};
 
 const char *b3ModellerInfo::m_UnitDescrTable[B3_UNIT_MAX] =
-{
-	"mm","cm","in","dm","ft","m"
-};
+	{
+		"mm","cm","in","dm","ft","m"
+	};
 
 const b3_u32 b3ModellerInfo::m_MeasureTable[B3_MEASURE_MAX - 1] =
-{
-	1,10,20,50,100,200,500,1000
-};
+	{
+		1,10,20,50,100,200,500,1000
+	};
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
-	b3Special(sizeof(b3ModellerInfo),class_type)
+		b3Special(sizeof(b3ModellerInfo),class_type)
 {
 	m_Center.x         = 0;
 	m_Center.y         = 0;
 	m_Center.z         = 0;
 	m_StepMove.x       =
-	m_StepMove.y       =
-	m_StepMove.z       = 10;
+		m_StepMove.y       =
+			m_StepMove.z       = 10;
 	m_StepRotate.x     =
-	m_StepRotate.y     =
-	m_StepRotate.z     = 15;
+		m_StepRotate.y     =
+			m_StepRotate.z     = 15;
 	m_Unit             = B3_UNIT_CM;
 	m_Measure          = B3_MEASURE_100;
 	m_ResizeFlag       = true; // Not used in Blizzard III
@@ -418,7 +418,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	b3InitVector(&m_Center);
 	m_GridMove     = b3InitFloat();
@@ -430,16 +430,16 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_CameraActive = b3InitBool();
 	m_AngleGrid    = B3_ANGLE_GRID_OBJECT;
 	m_StepMove.x   =
-	m_StepMove.y   =
-	m_StepMove.z   = 10;
+		m_StepMove.y   =
+			m_StepMove.z   = 10;
 	m_StepRotate.x =
-	m_StepRotate.y =
-	m_StepRotate.z = 15;
+		m_StepRotate.y =
+			m_StepRotate.z = 15;
 	m_Flags        = 0;
 	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Flags    = b3InitInt();
-		b3InitFloat();	
+		b3InitFloat();
 		if (B3_PARSE_INDEX_VALID)
 		{
 			b3InitVector(&m_StepMove);
@@ -453,7 +453,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_Measure        = (b3_measure)((m_Flags & B3_MEASURE_MASK)        >> B3_MEASURE_SHIFT);
 	m_CustomMeasure  =              (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
 	m_UseSceneLights = (m_Flags & B3_USE_SCENE_LIGHTS) != 0;
-	
+
 	if (m_CustomMeasure == 0)
 	{
 		m_CustomMeasure = 100;
@@ -501,12 +501,12 @@ void b3ModellerInfo::b3SnapToGrid(b3_vector *vector)
 
 void b3ModellerInfo::b3SnapToCameraAngle(b3_f64 &angle)
 {
-	b3Snap(angle, m_AngleGridCamera); 
+	b3Snap(angle, m_AngleGridCamera);
 }
 
 void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 &angle)
 {
-	b3Snap(angle, m_AngleGridObjects); 
+	b3Snap(angle, m_AngleGridObjects);
 }
 
 void b3ModellerInfo::b3Snap(b3_f64 &angle, b3_bool activation)
@@ -533,12 +533,12 @@ const char *b3ModellerInfo::b3GetUnitDescr()
 b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value)
 {
 	return ((m_Measure == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
-		m_CustomMeasure : m_MeasureTable[m_Measure];
+		   m_CustomMeasure : m_MeasureTable[m_Measure];
 }
 
 void b3ModellerInfo::b3SetMeasure(b3_measure measure)
 {
-	m_Measure = measure; 
+	m_Measure = measure;
 }
 
 void b3ModellerInfo::b3SetMeasure(b3_u32 measure)
@@ -554,14 +554,14 @@ void b3ModellerInfo::b3SetMeasure(b3_u32 measure)
 *************************************************************************/
 
 b3Nebular::b3Nebular(b3_u32 class_type) :
-	b3Special(sizeof(b3Nebular),class_type)
+		b3Special(sizeof(b3Nebular),class_type)
 {
 	m_NebularVal = -100.0;
 	m_NebularColor.b3Init(0.8f,0.9f,1.0f);
 }
 
 b3Nebular::b3Nebular(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	b3InitColor(m_NebularColor);
 	m_NebularVal = b3InitFloat();
@@ -614,7 +614,7 @@ void b3Nebular::b3ComputeNebular(
 *************************************************************************/
 
 b3LensFlare::b3LensFlare(b3_u32 class_type) :
-	b3Special(sizeof(b3LensFlare),class_type)
+		b3Special(sizeof(b3LensFlare),class_type)
 {
 	b3Activate(false);
 	m_Color.b3Init(1.0,1.0,0.9f);
@@ -622,7 +622,7 @@ b3LensFlare::b3LensFlare(b3_u32 class_type) :
 }
 
 b3LensFlare::b3LensFlare(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	m_Flags = b3InitInt();
 	b3InitColor(m_Color);
@@ -660,7 +660,7 @@ void b3LensFlare::b3Activate(b3_bool flag)
 *************************************************************************/
 
 b3Distribute::b3Distribute(b3_u32 class_type) :
-	b3Special(sizeof(b3Distribute),class_type)
+		b3Special(sizeof(b3Distribute),class_type)
 {
 	SAMPLE_SET_FLAGS(this,0);
 	SAMPLE_SET_TYPE(this,SAMPLE_REGULAR);
@@ -674,7 +674,7 @@ b3Distribute::b3Distribute(b3_u32 class_type) :
 }
 
 b3Distribute::b3Distribute(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	m_Type            = b3InitInt();
 	m_SamplesPerPixel = b3InitInt();
@@ -701,7 +701,7 @@ b3Distribute::~b3Distribute()
 	{
 		delete m_FilterPixel;
 	}
-	
+
 	if (m_FilterFrame != null)
 	{
 		delete m_FilterFrame;
@@ -741,7 +741,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation) throw
 		delete m_FilterPixel;
 	}
 	m_FilterPixel = b3Filter::b3New(m_PixelAperture);
-	
+
 	if (m_FilterFrame != null)
 	{
 		delete m_FilterFrame;
@@ -853,14 +853,14 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation) throw
 *************************************************************************/
 
 b3Animation::b3Animation(b3_u32 class_type) :
-	b3Special(sizeof(b3Animation),class_type)
+		b3Special(sizeof(b3Animation),class_type)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_ANIMATION);
 }
 
 b3Animation::b3Animation(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_ANIMATION);
@@ -933,12 +933,12 @@ void b3Animation::b3Activate(b3_bool activate)
 *************************************************************************/
 
 b3Caustic::b3Caustic(b3_u32 class_type) :
-	b3Special(sizeof(b3Caustic),class_type)
+		b3Special(sizeof(b3Caustic),class_type)
 {
 }
 
 b3Caustic::b3Caustic(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	m_Flags      = b3InitInt();
 	m_NumPhotons = b3InitInt();
@@ -959,12 +959,12 @@ void b3Caustic::b3Write()
 *************************************************************************/
 
 b3CloudBackground::b3CloudBackground(b3_u32 class_type) :
-	b3Special(sizeof(b3Caustic),class_type)
+		b3Special(sizeof(b3Caustic),class_type)
 {
 }
 
 b3CloudBackground::b3CloudBackground(b3_u32 *src) :
-	b3Special(src)
+		b3Special(src)
 {
 	b3InitVector(&m_Anim);
 	b3InitVector(&m_PosScale);

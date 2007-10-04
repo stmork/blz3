@@ -239,7 +239,7 @@ public:
 				from->First->Prev = Last;
 				Last = from->Last;
 			}
-			
+
 			from->b3InitBase(Class);
 		}
 	}
@@ -596,7 +596,7 @@ public:
 
 		// & CONQUER
 		// This gives the algorithm the factor O(log n)
-			  b3Sort(func,Ptr);
+		b3Sort(func,Ptr);
 		Right.b3Sort(func,Ptr);
 
 		// Now we have to merge two sorted list into
@@ -616,7 +616,7 @@ public:
 				b3Insert (start->Prev,end);
 				end   = Right.First;
 			}
-			else 
+			else
 			{
 				start = start->Succ;	/* start <= end */
 			}

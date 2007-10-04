@@ -33,20 +33,21 @@
 *************************************************************************/
 
 const b3_gl_line b3BBox::m_BBoxIndices[12 * 2] =
-{
-	{ 0,1 },
-	{ 1,2 },
-	{ 2,3 },
-	{ 3,0 },
-	{ 4,5 },
-	{ 5,6 },
-	{ 6,7 },
-	{ 7,4 },
-	{ 0,4 },
-	{ 1,5 },
-	{ 2,6 },
-	{ 3,7 }
-};
+	{
+		{ 0,1 }
+		,
+		{ 1,2 },
+		{ 2,3 },
+		{ 3,0 },
+		{ 4,5 },
+		{ 5,6 },
+		{ 6,7 },
+		{ 7,4 },
+		{ 0,4 },
+		{ 1,5 },
+		{ 2,6 },
+		{ 3,7 }
+	};
 
 b3Color  b3BBox::m_GridColor(0.4f,0.4f,0.4f,0.0f);
 b3_bool  b3BBox::m_GridVisible = true;
@@ -60,7 +61,7 @@ void b3BBox::b3Register()
 	b3PrintF (B3LOG_DEBUG,"Registering bounding boxes...\n");
 	b3Item::b3Register(&b3BBox::b3StaticInit,&b3BBox::b3StaticInit,CLASS_BBOX,true);
 }
-                                                                                                                     
+
 b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 {
 	b3AllocHeads(2);
@@ -134,8 +135,8 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation *scene_prep, b3_bool recursiv
 		if (!shape->b3Prepare(scene_prep))
 		{
 			b3PrintF(B3LOG_NORMAL,
-				"Shape not initialized [%s].\n",
-				b3GetName());
+					 "Shape not initialized [%s].\n",
+					 b3GetName());
 			return false;
 		}
 
@@ -151,17 +152,17 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation *scene_prep, b3_bool recursiv
 			m_CSGIntersectionCount += csgShape->b3GetMaxIntersections();
 		}
 		if ((m_CSGIntersectionCount >= B3_MAX_CSG_INTERSECTIONS_PER_BBOX) ||
-		    (m_ShapeCount >= B3_MAX_CSG_SHAPES_PER_BBOX))
+				(m_ShapeCount >= B3_MAX_CSG_SHAPES_PER_BBOX))
 		{
 			b3PrintF(B3LOG_NORMAL,
-				"Not enough static memory for CSG computation [%s].\n",
-				b3GetName());
+					 "Not enough static memory for CSG computation [%s].\n",
+					 b3GetName());
 			b3PrintF(B3LOG_NORMAL,
-				"Found %d shapes with %d max. possible intersections.\n",
-				m_ShapeCount,m_CSGIntersectionCount);
-    		return false;
-    	}
-    }
+					 "Found %d shapes with %d max. possible intersections.\n",
+					 m_ShapeCount,m_CSGIntersectionCount);
+			return false;
+		}
+	}
 
 	if (recursive)
 	{
@@ -305,7 +306,7 @@ void b3BBox::b3ResetTransformation()
 	b3Item  *item;
 	b3BBox  *bbox;
 
-    b3Matrix::b3Unit(&m_Matrix);
+	b3Matrix::b3Unit(&m_Matrix);
 	b3Matrix::b3Unit(&m_Inverse);
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
@@ -362,7 +363,7 @@ b3_bool b3BBox::b3Reverse(b3_matrix *original)
 	b3Matrix::b3Dump(&m_Matrix, "b3BBox::m_Matrix");
 	b3Matrix::b3Dump(&m_Inverse,"b3BBox::m_Inverse");
 #endif
-	
+
 	return success;
 }
 
@@ -413,7 +414,7 @@ void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> &array)
 	b3BBoxReference  reference(this);
 	b3Item          *item;
 	b3BBox          *bbox;
-	
+
 	array.b3Add(reference);
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{

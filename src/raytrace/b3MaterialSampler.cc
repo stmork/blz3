@@ -32,8 +32,8 @@
 *************************************************************************/
 
 b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles) :
-	m_Tiles(tiles),
-	m_BBoxSize(bbox_size)
+		m_Tiles(tiles),
+		m_BBoxSize(bbox_size)
 {
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
@@ -46,7 +46,7 @@ b3MaterialSampler::b3MaterialSampler(b3Tx *tx, const b3_vector *bbox_size, const
 	m_yMax     = m_Tx->ySize;
 	m_Data     = m_Tx->b3GetHdrData();
 }
-	
+
 void b3MaterialSampler::b3SetMaterial(b3Material *material)
 {
 	m_Material = material;

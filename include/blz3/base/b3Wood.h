@@ -105,14 +105,14 @@ public:
 	b3_f32            m_xOffset;    //!< The offset in x direction.
 
 public:
-	         /**
-	          * This constructor initializes this instance.
-	          */
-	         b3OakPlank();
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3OakPlank();
 
-	         /**
-	          * This destructor deinitializes this instance.
-	          */
+	/**
+	 * This destructor deinitializes this instance.
+	 */
 	virtual ~b3OakPlank();
 
 	/**

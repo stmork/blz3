@@ -30,7 +30,7 @@
 *************************************************************************/
 
 /*****************************
-
+ 
 bits     bwBitsSet bwBitsClear
 00000000         0           8
 00000001         1           7
@@ -44,7 +44,7 @@ bits     bwBitsSet bwBitsClear
    .
 11111110         7           1
 11111111         8           0
-
+ 
 *****************************/
 
 class b3_tx_fill_bits
@@ -92,7 +92,7 @@ void b3Tx::b3SetWhiteRatio(b3_f64 newRatio)
 
 // We need histogrammes to determine if the image is a white page. The
 // histogramme is created blockwise to make sure that this block is
-// complete in the L2 cache (higher performance). 
+// complete in the L2 cache (higher performance).
 b3_bool b3Tx::b3StartHist()
 {
 	b3_index i;
@@ -101,15 +101,15 @@ b3_bool b3Tx::b3StartHist()
 	if (histogramme == null)
 	{
 		histogramme = (b3_count *)b3Alloc(
-			B3_TX_MAX_HISTGRM * sizeof(b3_count));
-		if (histogramme == null) 
+						  B3_TX_MAX_HISTGRM * sizeof(b3_count));
+		if (histogramme == null)
 		{
 			return false;
 		}
 	}
 
 	// clear histogramme
-	for (i = 0;i < B3_TX_MAX_HISTGRM;i++) 
+	for (i = 0;i < B3_TX_MAX_HISTGRM;i++)
 	{
 		histogramme[i] = 0;
 	}
@@ -118,7 +118,7 @@ b3_bool b3Tx::b3StartHist()
 
 void b3Tx::b3EndHist()
 {
-	if (histogramme != null) 
+	if (histogramme != null)
 	{
 		b3Free(histogramme);
 	}
@@ -128,7 +128,7 @@ void b3Tx::b3EndHist()
 // All what we need is: "Schwarze Weizen Frühstückskorn"!
 b3_bool b3Tx::b3Histogramme()
 {
-	if (!b3StartHist()) 
+	if (!b3StartHist())
 	{
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
@@ -158,7 +158,7 @@ b3_bool b3Tx::b3AddHist(
 			cPtr = &data[yStart * xSize];
 			for (y = yStart;y < yStop;y++)
 			{
-				for (x = xStart;x < xStop;x++) 
+				for (x = xStart;x < xStop;x++)
 				{
 					index = cPtr[x] ;
 					histogramme[index]++;
@@ -171,7 +171,7 @@ b3_bool b3Tx::b3AddHist(
 			cPtr = &data[yStart * xSize];
 			for (y = yStart;y < yStop;y++)
 			{
-				for (x = xStart;x < xStop;x++) 
+				for (x = xStart;x < xStop;x++)
 				{
 					color = palette[cPtr[x]];
 					r     = ((color & 0xff0000) >> 16) * 0.35;
@@ -288,11 +288,11 @@ b3_bool b3Tx::b3IsWhite()
 	b3_f64   ratio;
 	b3_bool  IsWhite;
 
-	if (histogramme == null) 
+	if (histogramme == null)
 	{
 		return false;
 	}
-	if (depth > B3_TX_MAX_HISTGRM_DEPTH) 
+	if (depth > B3_TX_MAX_HISTGRM_DEPTH)
 	{
 		return false;
 	}
@@ -324,7 +324,7 @@ b3_bool b3Tx::b3IsWhite()
 	if (!IsWhite)
 	{
 		ratio = (b3_f64)(black + middle) / (b3_f64)together;
-		if (ratio >= 1.0) ratio = 1.0 / ratio;	   
+		if (ratio >= 1.0) ratio = 1.0 / ratio;
 		IsWhite = (ratio < whiteRatio);
 	}
 	else
@@ -332,7 +332,7 @@ b3_bool b3Tx::b3IsWhite()
 		ratio = 0;
 	}
 	b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx:  # Is%sWhite (%1.4f)\n",
-		IsWhite ? "" : "Not",ratio);
+			 IsWhite ? "" : "Not",ratio);
 
 	return IsWhite;
 }
@@ -430,11 +430,11 @@ b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode)
 			threshold = i;
 		}
 		b3PrintF(B3LOG_FULL,
-			"### CLASS: b3Tx   # b3ComputeThreshold() using %ld as threshold.\n",threshold);
+				 "### CLASS: b3Tx   # b3ComputeThreshold() using %ld as threshold.\n",threshold);
 		b3PrintF(B3LOG_FULL,
-			"### CLASS: b3Tx   # b3ComputeThreshold() %ld histogramme entries.\n",max);
+				 "### CLASS: b3Tx   # b3ComputeThreshold() %ld histogramme entries.\n",max);
 		b3PrintF(B3LOG_FULL,
-			"### CLASS: b3Tx   # b3ComputeThreshold() ratio: %3.2f%%.\n",ratio * 100.0);
+				 "### CLASS: b3Tx   # b3ComputeThreshold() ratio: %3.2f%%.\n",ratio * 100.0);
 	}
 	return threshold;
 }
@@ -469,7 +469,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	if (dPtr == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TransToBW(): Not enogh memory for new image buffer!\n");
+				 "### CLASS: b3Tx   # b3TransToBW(): Not enogh memory for new image buffer!\n");
 		return result;
 	}
 
@@ -479,7 +479,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	{
 		b3Free (dPtr);
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TransToBW(): Not enogh memory for new palette!\n");
+				 "### CLASS: b3Tx   # b3TransToBW(): Not enogh memory for new palette!\n");
 		return result;
 	}
 	else
@@ -682,11 +682,11 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	catch (b3MemException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
+				 "### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   #               error code: %d\n",e.b3GetError());
+				 "### CLASS: b3Tx   #               error code: %d\n",e.b3GetError());
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   #               error msg:  %s\n",e.b3GetErrorMsg());
+				 "### CLASS: b3Tx   #               error msg:  %s\n",e.b3GetErrorMsg());
 	}
 	catch (...)
 	{

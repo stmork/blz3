@@ -65,7 +65,7 @@ tsize_t b3Tx::b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcRead: ");
 #endif
-	
+
 	memcpy (buf,&value->ptr[value->pos],size);
 	value->pos += size;
 
@@ -82,7 +82,7 @@ tsize_t b3Tx::b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcWrte: ");
 #endif
-	
+
 	memcpy (&value->ptr[value->pos],buf,size);
 	value->pos += size;
 
@@ -100,30 +100,30 @@ toff_t b3Tx::b3SeekProc(thandle_t fd, toff_t off, int whence)
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcSeek: ");
 #endif
-	
+
 	switch (whence)
 	{
-		case SEEK_SET :
-			value->pos  = off;
+	case SEEK_SET :
+		value->pos  = off;
 #ifdef _DEBUG
-			b3PrintF(B3LOG_FULL,"%p %9ld %9ld S\n",
-				value->ptr,value->pos,value->size);
+		b3PrintF(B3LOG_FULL,"%p %9ld %9ld S\n",
+				 value->ptr,value->pos,value->size);
 #endif
-			break;
+		break;
 
-		case SEEK_CUR :
-			value->pos += off;
+	case SEEK_CUR :
+		value->pos += off;
 #ifdef _DEBUG
-			b3PrintF(B3LOG_FULL,"%p %9ld %9ld C\n",value->ptr,value->pos,value->size);
+		b3PrintF(B3LOG_FULL,"%p %9ld %9ld C\n",value->ptr,value->pos,value->size);
 #endif
-			break;
+		break;
 
-		case SEEK_END :
-			value->pos  = value->size + off;
+	case SEEK_END :
+		value->pos  = value->size + off;
 #ifdef _DEBUG
-			b3PrintF(B3LOG_FULL,"%p %9ld %9ld E\n",value->ptr,value->pos,value->size);
+		b3PrintF(B3LOG_FULL,"%p %9ld %9ld E\n",value->ptr,value->pos,value->size);
 #endif
-			break;
+		break;
 	}
 	return offset;
 }
@@ -177,19 +177,19 @@ long b3Tx::b3TIFFPalette(
 	{
 		switch (PaletteMode)
 		{
-			case PHOTOMETRIC_MINISWHITE :
-				palette[0] = 0xffffff;
-				palette[1] = 0x000000;
-				break;
+		case PHOTOMETRIC_MINISWHITE :
+			palette[0] = 0xffffff;
+			palette[1] = 0x000000;
+			break;
 
-			case PHOTOMETRIC_MINISBLACK :
-				palette[0] = 0x000000;
-				palette[1] = 0xffffff;
-				break;
+		case PHOTOMETRIC_MINISBLACK :
+			palette[0] = 0x000000;
+			palette[1] = 0xffffff;
+			break;
 
-			default :
-				type = B3_TX_UNDEFINED;
-				break;
+		default :
+			type = B3_TX_UNDEFINED;
+			break;
 		}
 	}
 
@@ -202,38 +202,38 @@ long b3Tx::b3TIFFPalette(
 		step = 0x01010100 >> depth;
 		switch (PaletteMode)
 		{
-			case PHOTOMETRIC_MINISWHITE :
-				color = 0xffffff;
-				for (i = 0;i < max;i++)
-				{
-					palette[i]  = color;
-					color      -= step;
-				}
-				break;
+		case PHOTOMETRIC_MINISWHITE :
+			color = 0xffffff;
+			for (i = 0;i < max;i++)
+			{
+				palette[i]  = color;
+				color      -= step;
+			}
+			break;
 
-			case PHOTOMETRIC_MINISBLACK :
-				color = 0x000000;
-				for (i = 0;i < max;i++)
-				{
-					palette[i]  = color;
-					color      += step;
-				}
-				break;
+		case PHOTOMETRIC_MINISBLACK :
+			color = 0x000000;
+			for (i = 0;i < max;i++)
+			{
+				palette[i]  = color;
+				color      += step;
+			}
+			break;
 
-			case PHOTOMETRIC_PALETTE:
-				TIFFGetField (tiff,TIFFTAG_COLORMAP,&r,&g,&b);
-				for (i = 0;i < max;i++)
-				{
-					palette[i] =
-						(((unsigned long)r[i] & 0xff00) << 8) |
-						 ((unsigned long)g[i] & 0xff00) |
-						(((unsigned long)b[i] & 0xff00) >> 8);
-				}
-				break;
+		case PHOTOMETRIC_PALETTE:
+			TIFFGetField (tiff,TIFFTAG_COLORMAP,&r,&g,&b);
+			for (i = 0;i < max;i++)
+			{
+				palette[i] =
+					(((unsigned long)r[i] & 0xff00) << 8) |
+					((unsigned long)g[i] & 0xff00) |
+					(((unsigned long)b[i] & 0xff00) >> 8);
+			}
+			break;
 
-			default :
-				type = B3_TX_UNDEFINED;
-				break;
+		default :
+			type = B3_TX_UNDEFINED;
+			break;
 		}
 	}
 	if (depth > 8)
@@ -286,49 +286,49 @@ long b3Tx::b3TIFFDecode(
 		max = TIFFScanlineSize(tiff);
 		switch (PlanarConfig)
 		{
-			case PLANARCONFIG_CONTIG :
-				lPtr = (b3_u08 *)b3Alloc (max);
-				if (lPtr)
+		case PLANARCONFIG_CONTIG :
+			lPtr = (b3_u08 *)b3Alloc (max);
+			if (lPtr)
+			{
+				cPtr = (b3_u08 *)data;
+				for (y = 0;y < ySize;y++)
 				{
-					cPtr = (b3_u08 *)data;
-					for (y = 0;y < ySize;y++)
+					if (TIFFReadScanline (tiff,lPtr,y,0) != 1)
 					{
-						if (TIFFReadScanline (tiff,lPtr,y,0) != 1)
-						{
-							return type;
-						}
-						ScanLines++;
-
-						bit  = 1 << 7;
-						lVal = lPtr[pos = 0];
-						for (x = 0;x < xSize;x++)
-						{
-							cVal = 0;
-							for (b = 0;b < depth;b++)
-							{
-								cVal = (b3_u08)(cVal << 1);
-								if (lVal & bit) cVal |= 1;
-								bit = bit >> 1;
-								if (bit == 0)
-								{
-									bit = 1 << 7;
-									lVal = lPtr[++pos];
-								}
-							}
-							*cPtr++ = cVal;
-						}
+						return type;
 					}
-					b3Free (lPtr);
-				}
-				else
-				{
-					type = B3_TX_UNDEFINED;
-				}
-				break;
+					ScanLines++;
 
-			default :
+					bit  = 1 << 7;
+					lVal = lPtr[pos = 0];
+					for (x = 0;x < xSize;x++)
+					{
+						cVal = 0;
+						for (b = 0;b < depth;b++)
+						{
+							cVal = (b3_u08)(cVal << 1);
+							if (lVal & bit) cVal |= 1;
+							bit = bit >> 1;
+							if (bit == 0)
+							{
+								bit = 1 << 7;
+								lVal = lPtr[++pos];
+							}
+						}
+						*cPtr++ = cVal;
+					}
+				}
+				b3Free (lPtr);
+			}
+			else
+			{
 				type = B3_TX_UNDEFINED;
-				break;
+			}
+			break;
+
+		default :
+			type = B3_TX_UNDEFINED;
+			break;
 		}
 	}
 
@@ -355,11 +355,11 @@ long b3Tx::b3TIFFDecode(
 			{
 				fSwp =
 					((fPtr[x] & 0xff0000) >> 16) |
-					 (fPtr[x] & 0x00ff00) |
+					(fPtr[x] & 0x00ff00) |
 					((fPtr[x] & 0x0000ff) << 16);
 				bSwp =
 					((bPtr[x] & 0xff0000) >> 16) |
-					 (bPtr[x] & 0x00ff00) |
+					(bPtr[x] & 0x00ff00) |
 					((bPtr[x] & 0x0000ff) << 16);
 				fPtr[x] = bSwp;
 				bPtr[x] = fSwp;
@@ -385,7 +385,7 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 	catch (b3FileException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"IMG TIFF # Error loading %s (%s)\n",
-			tiff_name,e.b3GetErrorMsg());
+				 tiff_name,e.b3GetErrorMsg());
 		error_code = B3_ERROR;
 	}
 
@@ -410,18 +410,18 @@ b3_result b3Tx::b3LoadTIFF(
 	b3MemTiffInfo  tiff_info(tiff_buffer,(tsize_t)tiff_size);
 
 	tiff = TIFFClientOpen (
-		tiff_name,"r",(thandle_t)&tiff_info,
-		b3ReadProc,
-		b3WriteProc,
-		b3SeekProc,
-		b3CloseProc,
-		b3SizeProc,
-		b3MMapProc,
-		b3UnmapProc);
+			   tiff_name,"r",(thandle_t)&tiff_info,
+			   b3ReadProc,
+			   b3WriteProc,
+			   b3SeekProc,
+			   b3CloseProc,
+			   b3SizeProc,
+			   b3MMapProc,
+			   b3UnmapProc);
 #else
 	tiff = TIFFOpen (tiff_name,"r");
 #endif
-	if (tiff == null) 
+	if (tiff == null)
 	{
 		B3_THROW(b3TxException,B3_TX_NOT_FOUND);
 	}

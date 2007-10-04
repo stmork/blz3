@@ -95,8 +95,8 @@ public:
 	static inline void b3Clear(b3_vector *vector)
 	{
 		vector->x =
-		vector->y =
-		vector->z = 0;
+			vector->y =
+				vector->z = 0;
 	}
 
 	/**
@@ -105,9 +105,9 @@ public:
 	static inline void b3Clear(b3_vector4D *vector)
 	{
 		vector->x =
-		vector->y =
-		vector->z =
-		vector->w = 0;
+			vector->y =
+				vector->z =
+					vector->w = 0;
 	}
 
 	/**
@@ -143,7 +143,7 @@ public:
 	static inline void b3Sub(
 		const b3_f64 *aVec,
 		const b3_f64 *bVec,
-		      b3_f64 *result)
+		b3_f64 *result)
 	{
 		*result = *aVec - *bVec;
 	}
@@ -151,12 +151,12 @@ public:
 	static inline void b3Sub(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
-		      b3_vector *result)
+		b3_vector *result)
 	{
 #ifdef B3_SSE
 		const b3_f32 *a = &aVec->x;
 		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -172,12 +172,12 @@ public:
 	static inline void b3Sub(
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
-		      b3_vector4D *result)
+		b3_vector4D *result)
 	{
 #ifdef B3_SSE1
 		const b3_f32 *a = &aVec->x;
 		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < 4;i++)
 		{
@@ -194,7 +194,7 @@ public:
 	static inline void b3AddScaled(
 		const b3_f32  factor,
 		const b3_f64 *offset,
-		      b3_f64 *vector)
+		b3_f64 *vector)
 	{
 		*vector = *vector + factor * *offset;
 	}
@@ -202,11 +202,11 @@ public:
 	static inline void b3AddScaled(
 		const b3_f32     factor,
 		const b3_vector *offset,
-		      b3_vector *vector)
+		b3_vector *vector)
 	{
 #ifdef B3_SSE
 		const b3_f32 *o = &offset->x;
-		      b3_f32 *v = &vector->x;
+		b3_f32 *v = &vector->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -222,11 +222,11 @@ public:
 	static inline void b3AddScaled(
 		const b3_f32       factor,
 		const b3_vector4D *offset,
-		      b3_vector4D *vector)
+		b3_vector4D *vector)
 	{
 #ifdef B3_SSE1
 		const b3_f32 *o = &offset->x;
-		      b3_f32 *v = &vector->x;
+		b3_f32 *v = &vector->x;
 
 		for(b3_loop i = 0;i < 4;i++)
 		{
@@ -244,7 +244,7 @@ public:
 		const b3_f64 *a,
 		const b3_f64 *b,
 		const b3_f64  factor,
-		      b3_f64 *result)
+		b3_f64 *result)
 	{
 		*result = *a + factor * *b;
 	}
@@ -253,7 +253,7 @@ public:
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f32     b,
-		      b3_vector *result)
+		b3_vector *result)
 	{
 		result->x = (b3_f32)(aVec->x + b * bVec->x);
 		result->y = (b3_f32)(aVec->y + b * bVec->y);
@@ -264,12 +264,12 @@ public:
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
 		const b3_f32       f,
-		      b3_vector4D *result)
+		b3_vector4D *result)
 	{
 #ifdef B3_SSE1
 		const b3_f32 *a = &aVec->x;
 		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		b3_f32 *r = &result->x;
 
 		for (b3_loop i = 0;i < 4;i++)
 		{
@@ -284,7 +284,7 @@ public:
 	}
 
 	static inline void b3Mix(
-		      b3_f64 *result,
+		b3_f64 *result,
 		const b3_f64 *a,
 		const b3_f64 *b,
 		const b3_f64  f)
@@ -293,7 +293,7 @@ public:
 	}
 
 	static inline void b3Mix(
-		      b3_vector *result,
+		b3_vector *result,
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f32     f)
@@ -304,7 +304,7 @@ public:
 	}
 
 	static inline void b3Mix(
-		      b3_vector4D *result,
+		b3_vector4D *result,
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
 		const b3_f32       f)
@@ -312,7 +312,7 @@ public:
 #ifdef B3_SSE1
 		const b3_f32 *a = &aVec->x;
 		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		b3_f32 *r = &result->x;
 
 		for (b3_loop i = 0;i < 4;i++)
 		{
@@ -878,7 +878,7 @@ public:
 		b3SplineVector::b3Homogenize(point);
 		return i;
 	}
-	
+
 	static b3_count b3DeBoorSurfaceControl(
 		b3SplineTemplate<VECTOR> *controlSpline,
 		b3SplineTemplate<VECTOR> *curveSpline,
@@ -900,7 +900,7 @@ public:
 			for (x = 0;x < controlSpline->m_ControlNum;x++)
 			{
 				curveSpline->b3MansfieldVector (&point[x * ControlNum],it,
-					index,x * controlSpline->m_Offset);
+												index,x * controlSpline->m_Offset);
 			}
 			point++;
 		}
@@ -939,61 +939,61 @@ public:
 		bspline_errno = B3_BSPLINE_OK;
 
 		if (m_Closed) for (Count = 0;Count < Mult;Count++)
-		{
-			start = m_Knots[0];
-			end   = m_Knots[m];
-
-			b3InsertDeBoorClosed (o,index,q);
-
-			// insert new knot
-			for (l = KnotNum;l > i;l--)
 			{
-				m_Knots[l] = m_Knots[l-1];
-			}
-			m_Knots[i+1]  = (b3_knot)q;
-			m_KnotNum    = ++KnotNum;
-			m_ControlNum = ++m;
-			for (l = 0;l <= m_Degree;l++)
-			{
-				m_Knots[l+m] = m_Knots[l] - start + end;
-			}
+				start = m_Knots[0];
+				end   = m_Knots[m];
 
-			// insert o[x] into control points
-			for (l = m - 1;l > i;l--)
-			{
-				m_Controls[l * m_Offset] = m_Controls[(l - 1) * m_Offset];
-			}
+				b3InsertDeBoorClosed (o,index,q);
 
-			for (l = i - m_Degree + 1;l <= i;l++)
-			{
-				m_Controls[((l + m) % m) * m_Offset] = o[(l + (m - 1)) % (m - 1)];
+				// insert new knot
+				for (l = KnotNum;l > i;l--)
+				{
+					m_Knots[l] = m_Knots[l-1];
+				}
+				m_Knots[i+1]  = (b3_knot)q;
+				m_KnotNum    = ++KnotNum;
+				m_ControlNum = ++m;
+				for (l = 0;l <= m_Degree;l++)
+				{
+					m_Knots[l+m] = m_Knots[l] - start + end;
+				}
+
+				// insert o[x] into control points
+				for (l = m - 1;l > i;l--)
+				{
+					m_Controls[l * m_Offset] = m_Controls[(l - 1) * m_Offset];
+				}
+
+				for (l = i - m_Degree + 1;l <= i;l++)
+				{
+					m_Controls[((l + m) % m) * m_Offset] = o[(l + (m - 1)) % (m - 1)];
+				}
 			}
-		}
 		else for (Count = 0;Count < Mult;Count++)
-		{
-			i = b3InsertDeBoorOpened (o,index,q);
+			{
+				i = b3InsertDeBoorOpened (o,index,q);
 
 				/* insert new knot */
-			for (l = KnotNum;l > i;l--)
-			{
-				m_Knots[l+1] = m_Knots[l];
-			}
-			m_Knots[i+1] = q;
-			m_KnotNum = ++KnotNum;
+				for (l = KnotNum;l > i;l--)
+				{
+					m_Knots[l+1] = m_Knots[l];
+				}
+				m_Knots[i+1] = q;
+				m_KnotNum = ++KnotNum;
 
-			// insert o[x] into control points
-			for (l = m;l > i;l--)
-			{
-				m_Controls[l * m_Offset] = m_Controls[(l - 1) * m_Offset];
-			}
+				// insert o[x] into control points
+				for (l = m;l > i;l--)
+				{
+					m_Controls[l * m_Offset] = m_Controls[(l - 1) * m_Offset];
+				}
 
-			for (l = i - m_Degree + 1;l <= i;l++)
-			{
-				m_Controls[l * m_Offset] = o[l];
-			}
+				for (l = i - m_Degree + 1;l <= i;l++)
+				{
+					m_Controls[l * m_Offset] = o[l];
+				}
 
-			m_ControlNum = ++m;
-		}
+				m_ControlNum = ++m;
+			}
 		return true;
 	}
 
@@ -1046,70 +1046,70 @@ public:
 		bspline_errno = B3_BSPLINE_OK;
 
 		if (m_Closed) for (Count = 0;Count < Mult;Count++)
-		{
-			start = m_Knots[0];
-			end   = m_Knots[m];
-
-			for (y = 0;y < yLines;y++)
 			{
-				index = y * ControlOffset;
-				i = b3InsertDeBoorClosed (o,index,q);
-				m++;
+				start = m_Knots[0];
+				end   = m_Knots[m];
 
-				Controls = &m_Controls[index];
+				for (y = 0;y < yLines;y++)
+				{
+					index = y * ControlOffset;
+					i = b3InsertDeBoorClosed (o,index,q);
+					m++;
+
+					Controls = &m_Controls[index];
 
 					/* insert o[x] into control points */
-				for (l = m - 1;l > i;l--)
-				{
-					Controls[l * m_Offset] = Controls[(l - 1) * m_Offset];
+					for (l = m - 1;l > i;l--)
+					{
+						Controls[l * m_Offset] = Controls[(l - 1) * m_Offset];
+					}
+					for (l = i - m_Degree + 1;l <= i;l++)
+					{
+						Controls[((l + m) % m) * m_Offset] = o[(l + (m-1)) % (m-1)];
+					}
+					m--;
 				}
-				for (l = i - m_Degree + 1;l <= i;l++)
-				{
-					Controls[((l + m) % m) * m_Offset] = o[(l + (m-1)) % (m-1)];
-				}
-				m--;
-			}
 				/* insert new knot */
-			for (l = KnotNum;l > i;l--)
-			{
-				m_Knots[l] = m_Knots[l-1];
+				for (l = KnotNum;l > i;l--)
+				{
+					m_Knots[l] = m_Knots[l-1];
+				}
+				m_Knots[i + 1] = q;
+				m_KnotNum     = ++KnotNum;
+				m_ControlNum  = ++m;
+				for (l = 0;l <= m_Degree;l++)
+				{
+					m_Knots[l + m] = m_Knots[l] - start + end;
+				}
 			}
-			m_Knots[i + 1] = q;
-			m_KnotNum     = ++KnotNum;
-			m_ControlNum  = ++m;
-			for (l = 0;l <= m_Degree;l++)
-			{
-				m_Knots[l + m] = m_Knots[l] - start + end;
-			}
-		}
 		else for (Count = 0;Count < Mult;Count++)
-		{
-			for (y = 0;y < yLines;y++)
 			{
-				index = y * ControlOffset;
-				i = b3InsertDeBoorOpened (o,index,q);
-				m++;
-
-				// insert o[x] into control points
-				Controls = &m_Controls[index];
-				for (l = m;l > i;l--)
+				for (y = 0;y < yLines;y++)
 				{
-					Controls[l * m_Offset] = Controls[(l - 1) * m_Offset];
-				}
+					index = y * ControlOffset;
+					i = b3InsertDeBoorOpened (o,index,q);
+					m++;
 
-				for (l = i - m_Degree + 1;l <= i;l++)
-				{
-					Controls[l * m_Offset] = o[l];
+					// insert o[x] into control points
+					Controls = &m_Controls[index];
+					for (l = m;l > i;l--)
+					{
+						Controls[l * m_Offset] = Controls[(l - 1) * m_Offset];
+					}
+
+					for (l = i - m_Degree + 1;l <= i;l++)
+					{
+						Controls[l * m_Offset] = o[l];
+					}
+					m--;
 				}
-				m--;
-			}
 
 				/* insert new knot */
-			for (l = KnotNum;l > i;l--) m_Knots[l+1] = m_Knots[l];
-			m_Knots[i+1]  = q;
-			m_KnotNum    = ++KnotNum;
-			m_ControlNum = ++m;
-		}
+				for (l = KnotNum;l > i;l--) m_Knots[l+1] = m_Knots[l];
+				m_Knots[i+1]  = q;
+				m_KnotNum    = ++KnotNum;
+				m_ControlNum = ++m;
+			}
 		return true;
 	}
 
@@ -1422,7 +1422,7 @@ private:
 		b3_count max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
 
 		for (i = 0;i < max;i++)
-		{						 
+		{
 			if ((m_Knots[i] <= q) && (q < m_Knots[i+1]))
 			{
 				return i;
@@ -1444,6 +1444,6 @@ typedef b3SplineTemplate<b3_f64>      b3Curve;
 typedef b3SplineTemplate<b3_vector>   b3Spline;
 typedef b3SplineTemplate<b3_vector4D> b3Nurbs;
 
-template<class T> b3_bspline_error b3SplineTemplate<T>::bspline_errno = B3_BSPLINE_OK;      
+template<class T> b3_bspline_error b3SplineTemplate<T>::bspline_errno = B3_BSPLINE_OK;
 
 #endif

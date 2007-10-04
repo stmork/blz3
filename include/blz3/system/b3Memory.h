@@ -83,7 +83,7 @@ public:
 	 * b3Free() to do this.
 	 */
 	virtual ~b3Mem();
-	
+
 	/**
 	 * This method allocates a memory buffer of the requested size. It returns null if
 	 * the requested size is too large to allocate.
@@ -152,7 +152,7 @@ public:
 	 * @param value The unsigned 32 bit integer itself.
 	 */
 	inline static void b3LongMemSet(
-		      b3_u32   *data,
+		b3_u32   *data,
 		const b3_count  max,
 		const b3_u32    value)
 	{
@@ -202,7 +202,7 @@ public:
 	 * @param max  The number of color quadrupel values to copy.
 	 */
 	inline static void b3ColorMemCopy(
-		      b3_color *dst,
+		b3_color *dst,
 		const b3_color *src,
 		const b3_count  max)
 	{
@@ -213,7 +213,7 @@ public:
 			*dst++ = *src++;
 		}
 	}
-	
+
 	/**
 	 * This method copies a complete memory buffer of unsigned 32 bit integer values to another.
 	 * The data pointer must be on a 32 bit boundary. The max value is meant as the number
@@ -225,7 +225,7 @@ public:
 	 * @param max  The number of unsigned 32 bit values to copy.
 	 */
 	inline static void b3LongMemCopy(
-		      b3_u32   *dst,
+		b3_u32   *dst,
 		const b3_u32   *src,
 		const b3_count  max)
 	{

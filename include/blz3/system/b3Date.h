@@ -126,7 +126,7 @@ public:
 	 * @return Success.
 	 */
 	bool       b3SetTime(unsigned short hour=0,unsigned short minute=0,unsigned short second=0);
-	
+
 	/**
 	 * This method sets the time zone.
 	 *

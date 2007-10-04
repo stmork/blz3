@@ -20,8 +20,8 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
-#include "blz3/b3Config.h" 
+
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderLight.h"
@@ -52,7 +52,7 @@ static void b3SetLights()
 	if (all_lights)
 	{
 		b3PrintF(B3LOG_DEBUG,"Using multiple lights with%s spots...\n",
-			spot_light ? "" : "out");
+				 spot_light ? "" : "out");
 
 		lights.b3SetScene((b3Scene *)world->b3GetFirst());
 		lights.b3SetLightMode(spot_light ? B3_LIGHT_SCENE_SPOT : B3_LIGHT_SCENE);
@@ -125,10 +125,10 @@ static void b3PlayAnimation()
 			count++;
 		}
 		while(t < animation->m_End);
-		
+
 		span = now - start;
 		b3PrintF(B3LOG_NORMAL,"Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
-			count,span,(double)count / span);
+				 count,span,(double)count / span);
 	}
 }
 
@@ -243,7 +243,7 @@ static void b3Update(b3Scene *scene)
 	scene->b3SetupVertexMemory(&context);
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower,&upper);
-			
+
 	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
 	b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
@@ -373,8 +373,8 @@ int main(int argc,char *argv[])
 
 		world->b3Read(filename);
 		for (item  = world->b3GetFirst();
-		     item != null;
-		     item  = scene->Succ)
+				item != null;
+				item  = scene->Succ)
 		{
 			scene = (b3Scene *)item;
 			b3Prepare(scene);

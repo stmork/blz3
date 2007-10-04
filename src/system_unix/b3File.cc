@@ -81,66 +81,66 @@ b3_bool b3File::b3Open (
 
 	switch (AccessMode)
 	{
-		case B_READ :
-		case T_READ :
-			m_File = open(Name,O_RDONLY);
-			if (m_File != -1)
-			{
-				b3CriticalSection lock(m_FilesOpenedMutex);
+	case B_READ :
+	case T_READ :
+		m_File = open(Name,O_RDONLY);
+		if (m_File != -1)
+		{
+			b3CriticalSection lock(m_FilesOpenedMutex);
 
-				m_OpenFiles++;
-				return true;
-			}
-			else
-			{
-				strerror_r(errno, error_msg, sizeof(error_msg));
-				b3PrintF(B3LOG_NORMAL,"File read error\n  filename: %s\n  error msg: %s\n",
-					Name,error_msg);
-			}
-			break;
+			m_OpenFiles++;
+			return true;
+		}
+		else
+		{
+			strerror_r(errno, error_msg, sizeof(error_msg));
+			b3PrintF(B3LOG_NORMAL,"File read error\n  filename: %s\n  error msg: %s\n",
+					 Name,error_msg);
+		}
+		break;
 
-		case B_WRITE :
-		case T_WRITE :
-			remove (Name);
-			m_File = open(Name,O_WRONLY|O_CREAT,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
-			if (m_File != -1)
-			{
-				b3CriticalSection lock(m_FilesOpenedMutex);
+	case B_WRITE :
+	case T_WRITE :
+		remove (Name);
+		m_File = open(Name,O_WRONLY|O_CREAT,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
+		if (m_File != -1)
+		{
+			b3CriticalSection lock(m_FilesOpenedMutex);
 
-				m_OpenFiles++;
-				b3Buffer (DEFAULT_CACHESIZE);
-				return true;
-			}
-			else
-			{
-				strerror_r(errno, error_msg, sizeof(error_msg));
-				b3PrintF(B3LOG_NORMAL,"File write error\n  filename: %s\n  error msg: %s\n",
-					Name,error_msg);
-			}
-			break;
+			m_OpenFiles++;
+			b3Buffer (DEFAULT_CACHESIZE);
+			return true;
+		}
+		else
+		{
+			strerror_r(errno, error_msg, sizeof(error_msg));
+			b3PrintF(B3LOG_NORMAL,"File write error\n  filename: %s\n  error msg: %s\n",
+					 Name,error_msg);
+		}
+		break;
 
-		case B_APPEND :
-		case T_APPEND :
-			m_File = open(Name,O_WRONLY|O_APPEND,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
-			if (m_File != -1)
-			{
-				b3CriticalSection lock(m_FilesOpenedMutex);
+	case B_APPEND :
+	case T_APPEND :
+		m_File = open(Name,O_WRONLY|O_APPEND,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
+		if (m_File != -1)
+		{
+			b3CriticalSection lock(m_FilesOpenedMutex);
 
-				m_OpenFiles++;
-				b3Buffer (DEFAULT_CACHESIZE);
-				return true;
-			}
-			else
-			{
-				strerror_r(errno, error_msg, sizeof(error_msg));
-				b3PrintF(B3LOG_NORMAL,"File append error\n  filename: %s\n  error msg: %s\n",
-					Name,error_msg);
-			}
-			break;
+			m_OpenFiles++;
+			b3Buffer (DEFAULT_CACHESIZE);
+			return true;
+		}
+		else
+		{
+			strerror_r(errno, error_msg, sizeof(error_msg));
+			b3PrintF(B3LOG_NORMAL,"File append error\n  filename: %s\n  error msg: %s\n",
+					 Name,error_msg);
+		}
+		break;
 
-		default :
-			m_File = -1;
-			break;
+	default :
+		m_File = -1;
+		break;
 	}
 	return false;
 }
@@ -278,15 +278,15 @@ b3_size b3File::b3Seek (
 	{
 		switch (SeekMode)
 		{
-			case B3_SEEK_START :
-				lseek(m_File,offset,SEEK_SET);
-				return OldPos;
-			case B3_SEEK_CURRENT :
-				lseek(m_File,offset,SEEK_CUR);
-				return OldPos;
-			case B3_SEEK_END :
-				lseek(m_File,offset,SEEK_END);
-				return OldPos;
+		case B3_SEEK_START :
+			lseek(m_File,offset,SEEK_SET);
+			return OldPos;
+		case B3_SEEK_CURRENT :
+			lseek(m_File,offset,SEEK_CUR);
+			return OldPos;
+		case B3_SEEK_END :
+			lseek(m_File,offset,SEEK_END);
+			return OldPos;
 		}
 	}
 	lseek(m_File,0L,SEEK_CUR);
@@ -303,13 +303,13 @@ b3_size b3File::b3Size ()
 	pos  = lseek (m_File,0L,SEEK_CUR);
 
 	// Run to EOF
-	       lseek (m_File,0L,SEEK_END);
+	lseek (m_File,0L,SEEK_END);
 
 	// save end position (= file size)
 	size = lseek (m_File,0L,SEEK_CUR);
 
 	// Remember old position
-	       lseek (m_File,pos,SEEK_SET);
+	lseek (m_File,pos,SEEK_SET);
 	return size;
 }
 
@@ -330,7 +330,7 @@ b3_bool b3File::b3Buffer (b3_size size)
 	if (size > 32)
 	{
 		m_Cache = (b3_u08 *)b3Alloc (size);
-		if (m_Cache != null) 
+		if (m_Cache != null)
 		{
 			m_BufferSize =  size - 32;
 		}

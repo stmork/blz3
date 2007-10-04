@@ -81,7 +81,7 @@ public:
 	 * This constructor initializes all vector components with the same value.
 	 *
 	 * @param value The value to initialize.
-	 */ 
+	 */
 	inline b3VectorTemplate<F, dim>(F value)
 	{
 		b3Value(value);
@@ -176,7 +176,7 @@ public:
 	 */
 	inline void b3Zero()
 	{
-b3PrintF(B3LOG_FULL, "--zero %p %p\n", this, v);
+		b3PrintF(B3LOG_FULL, "--zero %p %p\n", this, v);
 		for (b3_loop i = 0;i < dim; i++)
 		{
 			v[i] = 0;
@@ -571,36 +571,36 @@ b3PrintF(B3LOG_FULL, "--zero %p %p\n", this, v);
 		return result;
 	}
 
- 	/**
-	 * This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
-	 *
-	 * @param a The first vector.
-	 * @param b The second vector.
-	 * @return The result as a new b3VectorTemplate instance.
-	 */
+	/**
+	* This method computes the cross product from two vectors: <code>result = aVec x bVec</code>.
+	*
+	* @param a The first vector.
+	* @param b The second vector.
+	* @return The result as a new b3VectorTemplate instance.
+	*/
 	inline static b3VectorTemplate<F,dim> b3CrossProduct(
 		const b3VectorTemplate<F,dim> &a,
 		const b3VectorTemplate<F,dim> &b)
 	{
 		return b3VectorTemplate<F,dim>(
-			a.v[Y] * b.v[Z] - a.v[Z] * b.v[Y],
-			a.v[Z] * b.v[X] - a.v[X] * b.v[Z],
-			a.v[X] * b.v[Y] - a.v[Y] * b.v[X],(F)0.0);
+				   a.v[Y] * b.v[Z] - a.v[Z] * b.v[Y],
+				   a.v[Z] * b.v[X] - a.v[X] * b.v[Z],
+				   a.v[X] * b.v[Y] - a.v[Y] * b.v[X],(F)0.0);
 	}
 
- 	/**
-	 * This method computes the cross product from two vectors: <code>result = this x bVec</code>.
-	 *
-	 * @param b The second vector the first vector is this instance.
-	 * @return The result as a new b3VectorTemplate instance.
-	 */
+	/**
+	* This method computes the cross product from two vectors: <code>result = this x bVec</code>.
+	*
+	* @param b The second vector the first vector is this instance.
+	* @return The result as a new b3VectorTemplate instance.
+	*/
 	inline b3VectorTemplate<F,dim> b3CrossProduct(
 		const b3VectorTemplate<F,dim> &b)
 	{
 		return b3VectorTemplate<F,dim>(
-			v[Y] * b.v[Z] - v[Z] * b.v[Y],
-			v[Z] * b.v[X] - v[X] * b.v[Z],
-			v[X] * b.v[Y] - v[Y] * b.v[X],(F)0.0);
+				   v[Y] * b.v[Z] - v[Z] * b.v[Y],
+				   v[Z] * b.v[X] - v[X] * b.v[Z],
+				   v[X] * b.v[Y] - v[Y] * b.v[X],(F)0.0);
 	}
 
 	/**

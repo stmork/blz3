@@ -31,7 +31,7 @@
 *************************************************************************/
 
 b3Triangles::b3Triangles(b3_u32 class_type) :
-	b3TriangleShape(class_type)
+		b3TriangleShape(class_type)
 {
 }
 
@@ -134,7 +134,7 @@ void b3Triangles::b3ComputeVertices()
 
 	Vertex = m_Vertices;
 	Vector = *glVertexElements;
-	
+
 	if (m_Flags & B3_PHONG)
 	{
 		// Copy positions
@@ -273,11 +273,11 @@ void b3Triangles::b3ComputeIndices()
 			p2 = (b3_u32)Triangle->P2;
 			p3 = (b3_u32)Triangle->P3;
 			Triangle++;
-		
+
 			B3_GL_LINIT(gPtr,p1,p2);
 			B3_GL_LINIT(gPtr,p2,p3);
 			B3_GL_LINIT(gPtr,p3,p1);
-		
+
 			B3_GL_PINIT(pPtr,p1,p2,p3);
 		}
 	}
@@ -291,7 +291,7 @@ void b3Triangles::b3ComputeIndices()
 			B3_GL_LINIT(gPtr,p1,p2);
 			B3_GL_LINIT(gPtr,p2,p3);
 			B3_GL_LINIT(gPtr,p3,p1);
-		
+
 			B3_GL_PINIT(pPtr,p1,p2,p3);
 			p1 += 3;
 			p2 += 3;

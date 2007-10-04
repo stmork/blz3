@@ -32,43 +32,45 @@
 *************************************************************************/
 
 const b3_gl_line b3Shape::m_BoxGrids[] =
-{
-	{ 0,1 },
-	{ 1,2 },
-	{ 2,3 },
-	{ 3,0 },
-	{ 7,6 },
-	{ 6,5 },
-	{ 5,4 },
-	{ 4,7 },
-	{ 0,7 },
-	{ 1,6 },
-	{ 2,5 },
-	{ 3,4 }
-};
+	{
+		{ 0,1 }
+		,
+		{ 1,2 },
+		{ 2,3 },
+		{ 3,0 },
+		{ 7,6 },
+		{ 6,5 },
+		{ 5,4 },
+		{ 4,7 },
+		{ 0,7 },
+		{ 1,6 },
+		{ 2,5 },
+		{ 3,4 }
+	};
 
 const b3_gl_polygon b3Shape::m_BoxPolygons[] =
-{
-	{  6, 7, 5 }, // top
-	{  4, 5, 7 },
-	{  0, 1, 3 }, // bottom
-	{  2, 3, 1 },
-	{ 13,12,10 }, // back
-	{ 11,10,12 },
-	{  9, 8,14 }, // front
-	{ 15,14, 8 },
-	{ 16,19,23 }, // right
-	{ 20,23,19 },
-	{ 18,17,21 }, // left
-	{ 22,21,17 }
-};
+	{
+		{  6, 7, 5 }
+		, // top
+		{  4, 5, 7 },
+		{  0, 1, 3 }, // bottom
+		{  2, 3, 1 },
+		{ 13,12,10 }, // back
+		{ 11,10,12 },
+		{  9, 8,14 }, // front
+		{ 15,14, 8 },
+		{ 16,19,23 }, // right
+		{ 20,23,19 },
+		{ 18,17,21 }, // left
+		{ 22,21,17 }
+	};
 
 const b3_f32 b3Shape::m_BoxTexcoord[] =
-{
-	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
-	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
-	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0
-};
+	{
+		0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
+		0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
+		0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0
+	};
 
 /*************************************************************************
 **                                                                      **
@@ -116,9 +118,9 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv) throw(b3WorldExcept
 	b3Free(m_ConePolygons);
 
 	m_CylinderIndices  = (b3_gl_line *)b3Alloc
-			((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
+						 ((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
 	m_CylinderPolygons = (b3_gl_polygon *)b3Alloc
-			((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
+						 ((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
 	if ((m_CylinderIndices != null) && (m_CylinderPolygons != null))
 	{
 		gPtr = m_CylinderIndices;
@@ -153,9 +155,9 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv) throw(b3WorldExcept
 	}
 
 	m_ConeIndices  = (b3_gl_line *)b3Alloc
-		((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
+					 ((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
 	m_ConePolygons = (b3_gl_polygon *)b3Alloc
-		((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
+					 ((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
 	if ((m_ConeIndices != null) && (m_ConePolygons != null))
 	{
 		gPtr = m_ConeIndices;
@@ -337,7 +339,7 @@ b3Tx *b3Shape::b3GetTexture(
 		yScale =  mat->m_yScale / yLocSize;
 
 		b3PrintF(B3LOG_FULL,"b3ShapeRenderObject::b3GetTexture(%2.2f,%2.2f,%2.2f,%2.2f) = %s\n",
-		xTrans,yTrans,xScale,yScale,tx->b3Name());
+				 xTrans,yTrans,xScale,yScale,tx->b3Name());
 	}
 	return tx;
 }
@@ -410,32 +412,32 @@ private:
 		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
 		ray.polar.m_NormalIndex = 0;
 		ray.polar.m_BoxPolar.z =
-		ray.polar.m_ObjectPolar.z =
-		ray.polar.m_Polar.z =
-		ray.polar.m_BBoxOriginal.z =
-		ray.ipoint.z = 0;
+			ray.polar.m_ObjectPolar.z =
+				ray.polar.m_Polar.z =
+					ray.polar.m_BBoxOriginal.z =
+						ray.ipoint.z = 0;
 		for (y = info->m_yStart;y < info->m_yEnd;y++)
 		{
 			ray.polar.m_BoxPolar.y =
-			ray.polar.m_ObjectPolar.y =
-			ray.polar.m_Polar.y =
-			ray.polar.m_BBoxOriginal.y =
-			ray.ipoint.y = fy;
-			
+				ray.polar.m_ObjectPolar.y =
+					ray.polar.m_Polar.y =
+						ray.polar.m_BBoxOriginal.y =
+							ray.ipoint.y = fy;
+
 			fx = limit.x1 + b3Scene::epsilon;
 			for (x = 0;x < info->m_xMax;x++)
 			{
 				ray.polar.m_BoxPolar.x =
-				ray.polar.m_ObjectPolar.x =
-				ray.polar.m_Polar.x =
-				ray.polar.m_BBoxOriginal.x =
-				ray.ipoint.x = fx;
+					ray.polar.m_ObjectPolar.x =
+						ray.polar.m_Polar.x =
+							ray.polar.m_BBoxOriginal.x =
+								ray.ipoint.x = fx;
 
 				color = B3_BLACK;
 				loop  = true;
 				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
-				   (material != null) && loop;
-				    material  = (b3Material *)material->Succ)
+						(material != null) && loop;
+						material  = (b3Material *)material->Succ)
 				{
 					if (material->b3GetSurfaceValues(&surface))
 					{
@@ -459,8 +461,8 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 	b3_u32        type;
 
 	for( item  = b3GetMaterialHead()->First;
-	    (item != null) && (!result);
-	     item  = item->Succ)
+			(item != null) && (!result);
+			item  = item->Succ)
 	{
 		type   = item->b3GetClassType();
 		result = ((type != MAT_NORMAL) && (type != CHESS));
@@ -636,7 +638,7 @@ void b3Shape::b3ComputeSphereVertices(
 			Vector++;
 		}
 	}
- }
+}
 
 void b3Shape::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
 {
@@ -653,7 +655,7 @@ void b3Shape::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
 			y = base.y - glVertex[i].v.y;
 			z = base.z - glVertex[i].v.z;
 			r = 1.0 / sqrt(x * x + y * y + z * z);
-			
+
 			glVertex[i].n.x = x * r;
 			glVertex[i].n.y = y * r;
 			glVertex[i].n.z = z * r;
@@ -814,7 +816,7 @@ void b3Shape::b3ComputeConeVertices(
 	b3_index      i;
 	b3_count      iMax;
 	b3_vector     Bottom;
- 	b3_count      glVertexCount = 0;
+	b3_count      glVertexCount = 0;
 
 	d        = m_Limit.y2 - m_Limit.y1;
 	b        = m_Limit.y1;
@@ -1272,7 +1274,7 @@ void b3Shape::b3ComputeBoxVertices(
 	glVertex[2].v.x = (Aux.x += Dir2.x);
 	glVertex[2].v.y = (Aux.y += Dir2.y);
 	glVertex[2].v.z = (Aux.z += Dir2.z);
-	        
+
 	glVertex[3].t.s = *tex_coord++;
 	glVertex[3].t.t = *tex_coord++;
 	glVertex[3].v.x = (Aux.x -= Dir1.x);
@@ -1284,7 +1286,7 @@ void b3Shape::b3ComputeBoxVertices(
 	glVertex[4].v.x = (Aux.x += Dir3.x);
 	glVertex[4].v.y = (Aux.y += Dir3.y);
 	glVertex[4].v.z = (Aux.z += Dir3.z);
-	        
+
 	glVertex[5].t.s = *tex_coord++;
 	glVertex[5].t.t = *tex_coord++;
 	glVertex[5].v.x = (Aux.x += Dir1.x);
@@ -1296,7 +1298,7 @@ void b3Shape::b3ComputeBoxVertices(
 	glVertex[6].v.x = (Aux.x -= Dir2.x);
 	glVertex[6].v.y = (Aux.y -= Dir2.y);
 	glVertex[6].v.z = (Aux.z -= Dir2.z);
-	        
+
 	glVertex[7].t.s = *tex_coord++;
 	glVertex[7].t.t = *tex_coord++;
 	glVertex[7].v.x = (Aux.x -= Dir1.x);
@@ -1308,7 +1310,7 @@ void b3Shape::b3ComputeBoxVertices(
 	for (i = 0;i < 8;i++)
 	{
 		glVertex[i +  8] =
-		glVertex[i + 16] = glVertex[i];
+			glVertex[i + 16] = glVertex[i];
 	}
 }
 

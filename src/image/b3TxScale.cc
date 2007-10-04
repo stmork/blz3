@@ -154,8 +154,8 @@ class b3_tx_divide
 {
 	static b3_tx_divide TxDivide;
 
-	       b3_u08       DivTable[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
-	       b3_u08       DivTable255[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
+	b3_u08       DivTable[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
+	b3_u08       DivTable255[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
 
 	b3_tx_divide()
 	{
@@ -222,8 +222,8 @@ class b3_tx_mask
 {
 	static       b3_tx_mask TxMask;
 
-	             b3_u08     TxBitCount[256];
-	             b3_u08     TxBitCountInv[256];
+	b3_u08     TxBitCount[256];
+	b3_u08     TxBitCountInv[256];
 	static const b3_u08     TxMaskLeft[8];
 	static const b3_u08     TxMaskRight[8];
 
@@ -231,7 +231,7 @@ class b3_tx_mask
 	{
 		b3_loop  i,bit;
 		b3_u08   count;
-		
+
 		// For each possible value...
 		for (i = 0;i < 256;i++)
 		{
@@ -249,35 +249,35 @@ class b3_tx_mask
 			TxBitCountInv[i] = (b3_u08)(8 - count);
 		}
 	}
-	
+
 	friend class b3Tx;
 };
 
 b3_tx_mask b3_tx_mask::TxMask;
 
 const b3_u08 b3_tx_mask::TxMaskLeft[8] =
-{
-	0xff,		// 11111111
-	0x7f,		// 01111111
-	0x3f,		// 00111111
-	0x1f,		// 00011111
-	0x0f,		// 00001111
-	0x07,		// 00000111
-	0x03,		// 00000011
-	0x01        // 00000001
-};
+	{
+		0xff,		// 11111111
+		0x7f,		// 01111111
+		0x3f,		// 00111111
+		0x1f,		// 00011111
+		0x0f,		// 00001111
+		0x07,		// 00000111
+		0x03,		// 00000011
+		0x01        // 00000001
+	};
 
 const b3_u08 b3_tx_mask::TxMaskRight[8] =
-{
-	0x00,		// 00000000
-	0x80,		// 10000000
-	0xc0,		// 11000000
-	0xe0,		// 11100000
-	0xf0,		// 11110000
-	0xf8,		// 11111000
-	0xfc,		// 11111100
-	0xfe		// 11111110
-};
+	{
+		0x00,		// 00000000
+		0x80,		// 10000000
+		0xc0,		// 11000000
+		0xe0,		// 11100000
+		0xf0,		// 11110000
+		0xf8,		// 11111000
+		0xfc,		// 11111100
+		0xfe		// 11111110
+	};
 
 #ifndef SLOW
 // NOTE:
@@ -454,21 +454,21 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 	pal      =  RectInfo->new_palette;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
-		yMin,yMax);
+			 yMin,yMax);
 
 	// Alloc some memory
 	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCounter == null)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3ScaleBW2Grey(): "
-			"Not enough memory for row counter\n");
+				 "Not enough memory for row counter\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCells == null)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3MakeItGrey(): "
-			"Not enough memory for row cell sizes\n");
+				 "Not enough memory for row cell sizes\n");
 		free(TxRowCounter);
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
@@ -611,9 +611,9 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 	dstBytes = RectInfo->xSizeDst;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
-		yMin,yMax);
+			 yMin,yMax);
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # palette %06lx %06lx\n",
-		tx_pal[0],tx_pal[1]);
+			 tx_pal[0],tx_pal[1]);
 
 
 	// For each new pixel in x- and y-direction...
@@ -630,8 +630,8 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 			// Second: Sample over this region
 			for (iy = 1;cy == cIndex[y + iy];iy++);
 			for (sy = cy;
-			     sy < cIndex[y + iy];
-				 sy++)
+					sy < cIndex[y + iy];
+					sy++)
 			{
 				// Adjust bits and bytes
 				rx    = rIndex[x];
@@ -642,8 +642,8 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 				// Second: Sample over this region
 				for (ix = 1;rx == rIndex[x + ix];ix++);
 				for (sx = rx;
-				     sx < rIndex[x + ix];
-					 sx++)
+						sx < rIndex[x + ix];
+						sx++)
 				{
 					byte   = src[num];
 					value += tx_pal[byte & bit ? 1 : 0];
@@ -713,7 +713,7 @@ void b3Tx::b3ScaleFilteredFromBW(
 		new_palette[i] =
 			((b3_pkd_color)(r0 * c0 + r1 * c1) << 16 ) |
 			((b3_pkd_color)(g0 * c0 + g1 * c1) <<  8 ) |
-			 (b3_pkd_color)(b0 * c0 + b1 * c1);
+			(b3_pkd_color)(b0 * c0 + b1 * c1);
 	}
 
 	// It doesn't worth multi threading
@@ -864,21 +864,21 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 	dstBytes =  RectInfo->xSizeDst;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(%5ld - %5ld)\n",
-		yMin,yMax);
+			 yMin,yMax);
 
 	// Alloc some memory
 	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count) * 3);
 	if (TxRowCounter == null)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
-			"Not enough memory for row counter\n");
+				 "Not enough memory for row counter\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCells == null)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
-			"Not enough memory for row cell sizes\n");
+				 "Not enough memory for row cell sizes\n");
 		free(TxRowCounter);
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
@@ -1266,29 +1266,29 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 	dstBytes =  RectInfo->xSizeDst;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(%5ld - %5ld)\n",
-		yMin,yMax);
+			 yMin,yMax);
 
 	// Alloc some memory
 	TxRowCounter = (b3_color *)malloc(xDstSize * sizeof(b3_color));
 	if (TxRowCounter == null)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
-			"Not enough memory for row counter\n");
+				 "Not enough memory for row counter\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCells == null)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
-			"Not enough memory for row cell sizes\n");
+				 "Not enough memory for row cell sizes\n");
 		free(TxRowCounter);
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// Select right line computation
 	ComputeLine = (
-		xDstSize < xSrcSize ?
-		b3FloatComputeLineSmaller : b3FloatComputeLineBigger);
+					  xDstSize < xSrcSize ?
+					  b3FloatComputeLineSmaller : b3FloatComputeLineBigger);
 
 	if (yDstSize < ySrcSize)
 	{
@@ -1324,12 +1324,12 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 					if (TxRowCells[xDst] > 0)
 					{
 						b3Color value = b3Color(TxRowCounter[i++]) / divisor;
-						
+
 						value.b3Sat();
 						*bDst = (b3_u08)(
-							value[b3Color::R] *  89.25 +
-							value[b3Color::G] * 130.05 +
-							value[b3Color::B] *  35.7);
+									value[b3Color::R] *  89.25 +
+									value[b3Color::G] * 130.05 +
+									value[b3Color::B] *  35.7);
 					}
 					bDst++;
 				}
@@ -1403,12 +1403,12 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 					if (TxRowCells[xDst] > 0)
 					{
 						b3Color value = b3Color(TxRowCounter[i++]) / divisor;
-						
+
 						value.b3Sat();
 						*bDst = (b3_u08)(
-							value[b3Color::R] *  89.25 +
-							value[b3Color::G] * 130.05 +
-							value[b3Color::B] *  35.7);
+									value[b3Color::R] *  89.25 +
+									value[b3Color::G] * 130.05 +
+									value[b3Color::B] *  35.7);
 					}
 					bDst++;
 				}
@@ -1623,15 +1623,15 @@ void b3Tx::b3VGAScaleToVGA(
 			// Second: Sample over this region
 			for (iy = 1;cIndex[y] == cIndex[y + iy];iy++);
 			for (sy = cIndex[y];
-				 sy < cIndex[y + iy];
-				 sy++)
+					sy < cIndex[y + iy];
+					sy++)
 			{
 				// First:  Find sample area greater zero [ri(x)..ri(x+ix)[.
 				// Second: Sample over this region
 				for (ix = 1;rIndex[x] == rIndex[x + ix];ix++);
 				for (sx = rIndex[x];
-					 sx < rIndex[x + ix];
-					 sx++)
+						sx < rIndex[x + ix];
+						sx++)
 				{
 					color = srcTx->b3GetValue(sx,sy);
 					rVal += (color & 0xff0000) >> 16;
@@ -1689,15 +1689,15 @@ void b3Tx::b3VGAScaleToRGB8(
 			// Second: Sample over this region
 			for (iy = 1;cIndex[y] == cIndex[y + iy];iy++);
 			for (sy = cIndex[y];
-				 sy < cIndex[y + iy];
-				 sy++)
+					sy < cIndex[y + iy];
+					sy++)
 			{
 				// First:  Find sample area greater zero [ri(x)..ri(x+ix)[.
 				// Second: Sample over this region
 				for (ix = 1;rIndex[x] == rIndex[x + ix];ix++);
 				for (sx = rIndex[x];
-					 sx < rIndex[x + ix];
-					 sx++)
+						sx < rIndex[x + ix];
+						sx++)
 				{
 					color = palette[cSrc[sx + sy * srcTx->xSize]];
 					rVal += (color & 0xff0000) >> 16;
@@ -1713,14 +1713,14 @@ void b3Tx::b3VGAScaleToRGB8(
 				*lDst++ =
 					(B3_TX_DIV2(rVal,count) << 16) |
 					(B3_TX_DIV2(gVal,count) <<  8) |
-					 B3_TX_DIV2(bVal,count);
+					B3_TX_DIV2(bVal,count);
 			}
 			else
 			{
 				*lDst++ =
 					((rVal / count) << 16) |
 					((gVal / count) <<  8) |
-					 (bVal / count);
+					(bVal / count);
 			}
 		}
 	}
@@ -1761,15 +1761,15 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 	if (srcTx->type == B3_TX_UNDEFINED)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3ScaleToGrey(): source image (0x%p) of undefined type!\n",
-			srcTx);
+				 "### CLASS: b3Tx   # b3ScaleToGrey(): source image (0x%p) of undefined type!\n",
+				 srcTx);
 		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 	if ((xSize <= 0) || (ySize <= 0))
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3ScaleToGrey(): destination image (0x%p) without extend (%ldx%ld)!\n",
-			this,xSize,ySize);
+				 "### CLASS: b3Tx   # b3ScaleToGrey(): destination image (0x%p) without extend (%ldx%ld)!\n",
+				 this,xSize,ySize);
 		return;
 	}
 	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
@@ -1783,7 +1783,7 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 	b3PrintT("ScaleToGrey: start");
 	for (x = 0;x <= xSize;x++) rIndex[x] = x * srcTx->xSize / xSize;
 	for (y = 0;y <= ySize;y++) cIndex[y] = y * srcTx->ySize / ySize;
- 	// NOTE:     ^^ This Lower/Equal preserves the resampler from overflow!
+	// NOTE:     ^^ This Lower/Equal preserves the resampler from overflow!
 	//              Very vecessary in "grey" resampling...
 
 	switch (srcTx->depth)
@@ -1843,7 +1843,7 @@ unsigned int b3Tx::b3ScaleBW2BW(void *ptr)
 	dstBytes = TX_BWA(RectInfo->xSizeDst);
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ScaleBW2BW(%5ld - %5ld)\n",
-		yMin,yMax);
+			 yMin,yMax);
 
 	dst += (yMin * dstBytes);
 	for (y = yMin;y < yMax;y++)
@@ -1939,7 +1939,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	}
 
 	if (type == B3_TX_RGB8)
-	{	
+	{
 		lData = (b3_pkd_color *)data;
 		for (y = 0;y < ySize;y++)
 		{
@@ -2181,15 +2181,15 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 	if (srcTx->type == B3_TX_UNDEFINED)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Scale(): source image (0x%p) of undefined type!\n",
-			srcTx);
+				 "### CLASS: b3Tx   # b3Scale(): source image (0x%p) of undefined type!\n",
+				 srcTx);
 		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 	if ((xSize <= 0) || (ySize <= 0))
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Scale(): destination image (0x%p) without extend (%ldx%ld)!\n",
-			this,xSize,ySize);
+				 "### CLASS: b3Tx   # b3Scale(): destination image (0x%p) without extend (%ldx%ld)!\n",
+				 this,xSize,ySize);
 		return;
 	}
 	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
@@ -2220,7 +2220,7 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 		break;
 
 	default:
-		if (srcTx->type == B3_TX_VGA) 
+		if (srcTx->type == B3_TX_VGA)
 		{
 			b3ScaleUnfilteredFromVGA(srcTx,rIndex,cIndex);
 		}
@@ -2257,7 +2257,7 @@ void b3Tx::b3TransToGrey()
 	if (cPtr == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new image buffer!\n");
+				 "### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new image buffer!\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
@@ -2267,7 +2267,7 @@ void b3Tx::b3TransToGrey()
 	{
 		b3Free (cPtr);
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new palette!\n");
+				 "### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new palette!\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 

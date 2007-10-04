@@ -20,7 +20,7 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
+
 #include "b3MatrixTest.h"
 
 /*************************************************************************
@@ -294,7 +294,7 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(  2.0f, as.z);
 	CPPUNIT_ASSERT_EQUAL(  2.0f, bs.x);
 	CPPUNIT_ASSERT_EQUAL(  1.5f, bs.y);
-	CPPUNIT_ASSERT_EQUAL(  4.0f, bs.z);	
+	CPPUNIT_ASSERT_EQUAL(  4.0f, bs.z);
 	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3SetMinimum(&as, 0.5));
 	CPPUNIT_ASSERT_EQUAL(  1.0f, as.x);
 	CPPUNIT_ASSERT_EQUAL(  0.5f, as.y);

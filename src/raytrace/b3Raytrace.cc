@@ -180,7 +180,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3P
 
 	b3PrintF(B3LOG_NORMAL,"Starting threads...\n");
 	b3PrintF(B3LOG_FULL,  "  Reference time point: %3.3lf FPS: %d\n",
-		base,anim->m_FramesPerSecond);
+			 base,anim->m_FramesPerSecond);
 	for (i = 0;i < CPUs;i++)
 	{
 		infos[i].m_Display = display;
@@ -195,7 +195,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3P
 			B3_THROW(b3PrepareException,B3_PREPARE_NO_THREAD);
 		}
 	}
-	
+
 	span.b3Start();
 	for (k = 0;k < m_Distributed->m_SamplesPerFrame;k++)
 	{
@@ -329,7 +329,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	{
 		m_Nebular = nebular;
 		b3PrintF(B3LOG_DEBUG,"Using nebular with %3.2f units distance to half value.\n",
-			m_Nebular->m_NebularVal);
+				 m_Nebular->m_NebularVal);
 	}
 	else
 	{
@@ -429,8 +429,8 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	b3PrintF(B3LOG_NORMAL,"Preparing took %3.3fs.\n",tEnd - tStart);
 
 	return (m_BackgroundType == TP_TEXTURE ?
-		b3CheckTexture(&m_BackTexture,m_TextureName) :
-		true);
+			b3CheckTexture(&m_BackTexture,m_TextureName) :
+			true);
 }
 
 void b3Scene::b3Raytrace(b3Display *display, b3_bool multi_threaded)
@@ -457,7 +457,7 @@ void b3Scene::b3Raytrace(b3Display *display, b3_bool multi_threaded)
 
 		// Determine CPU count
 		CPUs = multi_threaded ? b3Runtime::b3GetNumCPUs() : 1;
-		
+
 		// add rows to list
 		fy     = 1.0;
 		fyStep = 2.0 / (b3_f64)ySize;
@@ -469,13 +469,13 @@ void b3Scene::b3Raytrace(b3Display *display, b3_bool multi_threaded)
 				isMotionBlur = m_Distributed->b3IsMotionBlur();
 
 				row = isMotionBlur ?
-					new b3MotionBlurRayRow(this,display,i,xSize,ySize) :
-					new b3DistributedRayRow(this,display,i,xSize,ySize);
+					  new b3MotionBlurRayRow(this,display,i,xSize,ySize) :
+					  new b3DistributedRayRow(this,display,i,xSize,ySize);
 			}
 			if (m_SuperSample != null)
 			{
 				row = new b3SupersamplingRayRow(this,display,i,xSize,ySize,
-					(b3SupersamplingRayRow *)m_RowPool.Last);
+												(b3SupersamplingRayRow *)m_RowPool.Last);
 			}
 
 			// Add default row

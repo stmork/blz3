@@ -89,7 +89,7 @@ enum b3_head_indices
  */
 enum b3_world_error
 {
-	B3_WORLD_ERROR = -1,   //!< General serialization error. 
+	B3_WORLD_ERROR = -1,   //!< General serialization error.
 	B3_WORLD_OK    =  0,   //!< Serialization OK.
 	B3_WORLD_OPEN,         //!< File open error.
 	B3_WORLD_READ,         //!< Read access denied.
@@ -102,7 +102,7 @@ enum b3_world_error
 	B3_WORLD_IMPORT              //!< General import error during file conversion.
 };
 
-typedef b3Exception<b3_world_error,0x424c5a> b3WorldException; 
+typedef b3Exception<b3_world_error,0x424c5a> b3WorldException;
 
 /*************************************************************************
 **                                                                      **
@@ -152,7 +152,7 @@ public:
 	 * This destructor deinitializes this instance. If the auto deletion is activated
 	 * the b3Item hierarchy is deleted also.
 	 */
-	virtual        ~b3World(); 
+	virtual        ~b3World();
 
 	/**
 	 * This method frees all memory inside this world instance.
@@ -619,7 +619,7 @@ protected:
 	 * @return Null pointer.
 	 */
 	void    *b3InitNull();
-	
+
 	/**
 	 * This method simply bumps the read index.
 	 */
@@ -780,8 +780,8 @@ protected:
 	static void            b3DumpSpace(b3_count level,b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	       void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true) throw(b3WorldException);
-	       b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
+	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true) throw(b3WorldException);
+	b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
 
 	friend class b3World;
 };

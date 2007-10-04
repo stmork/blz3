@@ -20,8 +20,8 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
-#include "blz3/b3Config.h" 
+
+#include "blz3/b3Config.h"
 
 /*************************************************************************
 **                                                                      **
@@ -339,7 +339,7 @@ int main(int argc,char *argv[])
 		sscanf(argv[1],"%ld",&max);
 
 		b3Suite suite(max);
-		
+
 		suite.b3Execute(b3Test::run_test_a);
 		suite.b3Execute(b3Test::run_test_b);
 		suite.b3Execute(b3Test::run_test_c);
