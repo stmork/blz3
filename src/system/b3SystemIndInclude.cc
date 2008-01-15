@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3SystemIndInclude.cc $ 
+**	$Filename:	b3SystemIndInclude.cc $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$

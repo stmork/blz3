@@ -373,24 +373,24 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 *************************************************************************/
 
 const b3_f64 b3ModellerInfo::m_UnitScaleTable[B3_UNIT_MAX] =
-	{
-		1.0,   // B3_UNIT_MM
-		10.0,  // B3_UNIT_CM
-		25.4,  // B3_UNIT_IN
-		100.0, // B3_UNIT_DM
-		308.4, // B3_UNIT_FT
-		1000.0 // B3_UNIT_M
-	};
+{
+	1.0,   // B3_UNIT_MM
+	10.0,  // B3_UNIT_CM
+	25.4,  // B3_UNIT_IN
+	100.0, // B3_UNIT_DM
+	308.4, // B3_UNIT_FT
+	1000.0 // B3_UNIT_M
+};
 
 const char *b3ModellerInfo::m_UnitDescrTable[B3_UNIT_MAX] =
-	{
-		"mm","cm","in","dm","ft","m"
-	};
+{
+	"mm","cm","in","dm","ft","m"
+};
 
 const b3_u32 b3ModellerInfo::m_MeasureTable[B3_MEASURE_MAX - 1] =
-	{
-		1,10,20,50,100,200,500,1000
-	};
+{
+	1,10,20,50,100,200,500,1000
+};
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 		b3Special(sizeof(b3ModellerInfo),class_type)
@@ -763,7 +763,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation) throw
 	step    = 2.0 / spp;
 	for (i = 0;i < xSize;i++)
 	{
-		switch(type)
+		switch (type)
 		{
 		case SAMPLE_REGULAR:
 			start = 1.0 - step * 0.5;

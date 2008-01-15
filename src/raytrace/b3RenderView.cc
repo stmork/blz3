@@ -108,7 +108,7 @@ b3RenderViewItem *b3RenderView::b3NewRenderViewItem(b3RenderViewItem *last)
 		item = new b3RenderViewItem();
 	}
 
-	if(last != null)
+	if (last != null)
 	{
 		// Use dimension of last item
 		item->m_Mid  = last->m_Mid;
@@ -176,7 +176,7 @@ b3_bool b3RenderView::b3GetDimension(b3_f64 &xSize,b3_f64 &ySize)
 {
 	b3_bool success = true;
 
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 		xSize = 2.0 * b3Vector::b3Length(&m_Width);
@@ -280,7 +280,7 @@ void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 
 		xDir /= m_Actual->m_xRelation;
 		yDir *= m_Actual->m_yRelation;
-		switch(m_ViewMode)
+		switch (m_ViewMode)
 		{
 		case B3_VIEW_TOP:
 			m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
@@ -315,7 +315,7 @@ void b3RenderView::b3GetProjectionBase(b3_vector *eye)
 
 void b3RenderView::b3GetViewDirection(b3_vector *dir)
 {
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_TOP:
 		dir->x =  0;
@@ -351,7 +351,7 @@ b3_f64 b3RenderView::b3GetPositionAngle(b3_vector *center,b3_vector *position)
 {
 	b3_f64 result = 0;
 
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 		// Walk through!!
@@ -382,10 +382,10 @@ void b3RenderView::b3SetTranslationStepper(
 	b3_action_mode  mode)
 {
 	b3Vector::b3Init(mover);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_TOP:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->x =  steps->x;
@@ -405,7 +405,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_FRONT:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->x =  steps->x;
@@ -425,7 +425,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_RIGHT:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->y =  steps->y;
@@ -445,7 +445,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_BACK:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->x = -steps->x;
@@ -465,7 +465,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_LEFT:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->y = -steps->y;
@@ -499,7 +499,7 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 
 	// Prepare rotation axis
 	b3Vector::b3Init(axis);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 	case B3_VIEW_TOP:
@@ -618,7 +618,7 @@ void b3RenderView::b3Select(
 			xMove = (xStart + xEnd) * 0.5 - 0.5;
 			yMove = (yStart + yEnd) * 0.5 - 0.5;
 
-			switch(m_ViewMode)
+			switch (m_ViewMode)
 			{
 			case B3_VIEW_TOP:
 				m_Actual->m_Mid.x  += (m_Actual->m_Size.x * xMove);
@@ -908,7 +908,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3Color &color)
 
 	b3Vector::b3Init(&xDisp);
 	b3Vector::b3Init(&yDisp);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_TOP:
 		xDisp.x = grid;

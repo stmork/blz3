@@ -32,27 +32,27 @@
 **
 **	Revision 1.7  2006/05/13 10:01:01  sm
 **	- Introduced special complex number computation for FFT handling.
-**	
+**
 **	Revision 1.6  2006/05/11 15:34:22  sm
 **	- Added unit tests
 **	- Corrected normal computation for ocean waves
 **	- Optimized b3Complex
 **	- Added new FFT
 **	- Added own assertion include
-**	
+**
 **	Revision 1.5  2006/05/01 10:44:46  sm
 **	- Unifying ocean wave values.
-**	
+**
 **	Revision 1.4  2006/04/30 08:53:24  sm
 **	- Removed some signed/unsigned issues.
 **	- Reflect new FFT algorithm.
-**	
+**
 **	Revision 1.3  2006/04/29 20:45:57  sm
 **	- New scaling.
-**	
+**
 **	Revision 1.2  2006/04/29 17:58:27  sm
 **	- Minor value changes.
-**	
+**
 **	Revision 1.1  2006/04/29 11:39:04  sm
 **	- Added ocean bump to main packet.
 **	- b3Prepare signature: Added further initialization information
@@ -65,8 +65,8 @@
 **	- Changed Phillips spectrum computation to be independent
 **	  from time.
 **	- Interpolated height field for ocean waves.
-**	
-**              
+**
+**
 */
 
 /*************************************************************************
@@ -80,19 +80,19 @@
 #define OW_SKIP B3_OCEAN_XSKIP
 
 GLfloat ambient[] =
-	{
-		1.0,1.0,1.0,1.0
-	};
+{
+	1.0,1.0,1.0,1.0
+};
 
 GLfloat diffuse[] =
-	{
-		1.0,1.0,0.95,1.0
-	};
+{
+	1.0,1.0,0.95,1.0
+};
 
 GLfloat light0[] =
-	{
-		10.0,15.0,20.0,1.0
-	};
+{
+	10.0,15.0,20.0,1.0
+};
 
 GLfloat  *vPtr = null;
 GLuint   *iPtr = null;

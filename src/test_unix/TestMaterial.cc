@@ -27,58 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.9  2006/04/29 11:25:50  sm
-**	- Added ocean bump to main packet.
-**	- b3Prepare signature: Added further initialization information
-**	  for animation preparation
-**	- Added test module for ocean waves.
-**	- Added module for random number generation.
-**	- Adjusted material and bump sampler to reflect preparation
-**	  signature change.
-**	- Added OpenGL test program for ocean waves.
-**	- Changed Phillips spectrum computation to be independent
-**	  from time.
-**	- Interpolated height field for ocean waves.
-**
-**	Revision 1.8  2005/01/04 15:13:59  smork
-**	- Changed some data types.
-**	
-**	Revision 1.7  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.6  2004/05/20 19:10:30  sm
-**	- Separated shader from scene. this is easier
-**	  to handle.
-**	
-**	Revision 1.5  2004/04/23 11:09:04  sm
-**	- Refectored b3Materials for better dialog use.
-**	
-**	Revision 1.4  2004/03/15 10:38:37  sm
-**	- Found good values for granite.
-**	
-**	Revision 1.3  2004/03/05 13:20:21  sm
-**	- Some additional test materials added.
-**	
-**	Revision 1.2  2004/03/03 08:13:59  sm
-**	- Cook/Torrance examples ready with vases.
-**	
-**	Revision 1.1  2004/03/02 09:07:17  sm
-**	- Added read/write support for Cook/Torrance material.
-**	- Added test module for Cook/Torrance reflection model.
-**	- Fixed camera name handling if camera name is empty.
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TestMaterial implementation                 **
 **                                                                      **
 *************************************************************************/

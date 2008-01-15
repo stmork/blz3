@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3VectorBufferObjects.cc $ 
+**	$Filename:	b3VectorBufferObjects.cc $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

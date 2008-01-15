@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3MaterialSampler.cc $ 
+**	$Filename:	b3MaterialSampler.cc $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

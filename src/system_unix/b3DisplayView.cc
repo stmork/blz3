@@ -102,17 +102,17 @@ protected:
 };
 
 b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
-	{
-		{  0, 8, 1, 9 },
-		{ 12, 4,13, 5 },
-		{  3,11, 2,10 },
-		{ 15, 7,14, 6 }
-	};
+{
+	{  0, 8, 1, 9 },
+	{ 12, 4,13, 5 },
+	{  3,11, 2,10 },
+	{ 15, 7,14, 6 }
+};
 
 b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
-	{
-		MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
-	};
+{
+	MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
+};
 
 class b3DisplayPixel08 : public b3DisplayPixelImpl
 {

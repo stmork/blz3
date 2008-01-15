@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 	b3Log::b3SetLevel(B3LOG_NONE);
 	if ((argc >= 2) && (argv[1][0] == '-'))
 	{
-		switch(argv[1][1])
+		switch (argv[1][1])
 		{
 		case 'f':
 			b3Log::b3SetLevel(B3LOG_FULL);

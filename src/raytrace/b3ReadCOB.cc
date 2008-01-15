@@ -780,7 +780,7 @@ b3BBox *b3COBReader::b3ReadCOB(const char *cobfile)
 
 	b3PrintF(B3LOG_NORMAL,"Reading COB %s\n",cobfile);
 	buffer = (const char *)file.b3ReadBuffer(cobfile,size);
-	if(buffer != null)
+	if (buffer != null)
 	{
 		bbox = (b3BBox *)reader.b3COB_Parse(buffer,cobfile,size);
 	}

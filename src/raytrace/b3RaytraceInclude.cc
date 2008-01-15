@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3RaytraceInclude.cc $ 
+**	$Filename:	b3RaytraceInclude.cc $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$

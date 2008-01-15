@@ -33,9 +33,9 @@
 *************************************************************************/
 
 const b3_u08 b3Tx::m_Bits[8] =
-	{
-		128,64,32,16,8,4,2,1
-	};
+{
+	128,64,32,16,8,4,2,1
+};
 
 b3_bool b3Tx::m_ErrorHandlerInstalled = false;
 
@@ -236,7 +236,7 @@ void b3Tx::b3FreeTx()
 		{
 			b3Free ((void *)palette);
 		}
-		catch(...)
+		catch (...)
 		{
 			b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3Tx() Oops?\n");
 			b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3Tx() %s %d\n",__FILE__,__LINE__);
@@ -952,7 +952,7 @@ void b3Tx::b3GetRow (
 	b3_color     *cPtr;
 	b3_coord      x;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM:
 		for (x = 0;x < xSize;x++)

@@ -45,7 +45,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3ColorTest);
 	CPPUNIT_ASSERT_EQUAL(b, tb);\
 	CPPUNIT_ASSERT_EQUAL(a, ta);\
 }\
-
+ 
 
 void b3ColorTest::setUp()
 {

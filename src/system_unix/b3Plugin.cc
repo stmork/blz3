@@ -61,7 +61,7 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 		b3PrintF(B3LOG_DEBUG,"Plugin %s loaded.\n",(const char *)m_PluginPath);
 
 		init = (b3_plugin_init_func)dlsym(m_Handle,B3_PLUGIN_INIT_FUNC);
-		if(init != null)
+		if (init != null)
 		{
 			init();
 			b3PrintF(B3LOG_DEBUG,"Plugin %s initialized.\n",

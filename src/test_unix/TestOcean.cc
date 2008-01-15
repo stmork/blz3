@@ -30,67 +30,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.12  2006/05/23 20:25:12  sm
-**  - Some test updates.
-**  - Changed exception handling a little bit.
-**
-**  Revision 1.11  2006/05/01 10:44:46  sm
-**  - Unifying ocean wave values.
-**
-**  Revision 1.10  2006/04/30 14:26:07  sm
-**  - That's it!
-**
-**  Revision 1.9  2006/04/30 13:15:10  sm
-**  - More deriv development.
-**
-**  Revision 1.8  2006/04/30 10:52:54  sm
-**  - Done some height field corrections.
-**
-**  Revision 1.7  2006/04/30 08:53:24  sm
-**  - Removed some signed/unsigned issues.
-**  - Reflect new FFT algorithm.
-**
-**  Revision 1.6  2006/04/29 20:51:10  sm
-**  - New scaling.
-**
-**  Revision 1.5  2006/04/29 11:25:50  sm
-**  - Added ocean bump to main packet.
-**  - b3Prepare signature: Added further initialization information
-**    for animation preparation
-**  - Added test module for ocean waves.
-**  - Added module for random number generation.
-**  - Adjusted material and bump sampler to reflect preparation
-**    signature change.
-**  - Added OpenGL test program for ocean waves.
-**  - Changed Phillips spectrum computation to be independent
-**    from time.
-**  - Interpolated height field for ocean waves.
-**
-**  Revision 1.4  2006/04/19 15:19:58  sm
-**  - The break through! Ocean waves...
-**
-**  Revision 1.3  2006/04/19 10:20:30  sm
-**  - Adjusted splitted includes.
-**  - Adjusted ocean waves values.
-**
-**  Revision 1.2  2006/04/17 14:42:46  sm
-**  - Completed ocean waves. I see ocean waves. They are not nice but
-**    I can see them!
-**
-**  Revision 1.1  2006/04/15 20:34:55  sm
-**  - Added support for ocean surface bump mapping.
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TestOceanWave implementation                **
 **                                                                      **
 *************************************************************************/
@@ -213,13 +152,13 @@ int main(int argc,char *argv[])
 				display->b3PutTx(&tx);
 			}
 //			while(true);
-			while(!display->b3IsCancelled(xMax, yMax));
+			while (!display->b3IsCancelled(xMax, yMax));
 		}
 
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException &e)
+	catch (b3DisplayException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}

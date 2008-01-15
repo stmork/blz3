@@ -122,7 +122,7 @@ void b3RenderObject::b3PrintMapping(const char *text,b3_vbo_mapping map_mode)
 {
 	const char *mapping_text;
 
-	switch(map_mode)
+	switch (map_mode)
 	{
 	case B3_MAP_VBO_R:
 		mapping_text = "B3_MAP_VBO_R";
@@ -834,7 +834,7 @@ void b3RenderObject::b3CreateTexture(
 					  ((glTextureSize == 0) && (glTextureId == 0)));
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		// Restore to defined and unallocated state
 		if (glTextureData != null)

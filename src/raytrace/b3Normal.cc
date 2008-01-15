@@ -153,7 +153,7 @@ void b3CSGCylinder::b3Normal(b3_ray *ray)
 {
 	b3_f64 x,y;
 
-	switch(ray->polar.m_NormalIndex)
+	switch (ray->polar.m_NormalIndex)
 	{
 	case B3_CSG_NORMAL:
 		x = m_DirLen[1] * ray->polar.m_ObjectPolar.x;
@@ -180,7 +180,7 @@ void b3CSGCone::b3Normal(b3_ray *ray)
 	b3_f32    x,y,Factor,n1q;
 	b3_vector n1,z3;
 
-	switch(ray->polar.m_NormalIndex)
+	switch (ray->polar.m_NormalIndex)
 	{
 	case B3_CSG_NORMAL:
 		x     = ray->polar.m_ObjectPolar.x;

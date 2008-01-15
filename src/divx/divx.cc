@@ -96,7 +96,7 @@ int main(int argc,char *argv[])
 	{
 		if (argv[i][0] == '-')
 		{
-			switch(argv[i][1])
+			switch (argv[i][1])
 			{
 			case 'd' :
 				b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -109,7 +109,7 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
-			switch(b3Dir::b3Exists(argv[i]))
+			switch (b3Dir::b3Exists(argv[i]))
 			{
 			case B3_TYPE_DIR:
 				list.b3RecCreateList(argv[i]);
@@ -153,21 +153,21 @@ int main(int argc,char *argv[])
 			img.b3MirrorVertical();
 			hasFirst = true;
 		}
-		catch(b3TxException &t)
+		catch (b3TxException &t)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
 			b3PrintF(B3LOG_NORMAL,"Image error when processing image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", t.b3GetError());
 			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", t.b3GetErrorMsg());
 		}
-		catch(b3ExceptionBase &e)
+		catch (b3ExceptionBase &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
 			b3PrintF(B3LOG_NORMAL,"General Blizzard III error on image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", e.b3GetError());
 			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", e.b3GetErrorMsg());
 		}
-		catch(...)
+		catch (...)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
 			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n",entry->b3Name());

@@ -141,12 +141,14 @@ void b3DataSizeTest::testSwap()
 {
 	b3_u32    v1,v2;
 
-	v1 = 1; v2 = 2;
+	v1 = 1;
+	v2 = 2;
 	B3_SWAP (v1,v2);
 	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
 	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));
 
-	v1 = 1; v2 = 2;
+	v1 = 1;
+	v2 = 2;
 	B3_PSWAP (&v1,&v2);
 	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
 	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));

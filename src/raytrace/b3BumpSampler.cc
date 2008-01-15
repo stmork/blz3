@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3BumpSampler.cc $ 
+**	$Filename:	b3BumpSampler.cc $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -34,9 +34,9 @@
 #define BUMP_SLOPE 0.15
 
 b3_vector b3BumpSampler::m_Light =
-	{
-		-1,1,1
-	};
+{
+	-1,1,1
+};
 
 b3BumpSampler::b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles) :
 		m_Tiles(tiles),

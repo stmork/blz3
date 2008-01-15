@@ -217,7 +217,7 @@ private:
 						small.b3ScaleToGrey(&normal);
 						result = small.b3SaveJPEG(full_small) == B3_OK;
 					}
-					catch(b3TxException &t)
+					catch (b3TxException &t)
 					{
 						b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
 						b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());

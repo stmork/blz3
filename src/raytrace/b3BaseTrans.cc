@@ -89,7 +89,7 @@ void b3BaseTransformation::b3BaseTransform(
 	pos.y = in->pos.y - m_Base.y;
 	pos.z = in->pos.z - m_Base.z;
 
-	for(b3_loop o = 0;o < 3;o++)
+	for (b3_loop o = 0;o < 3;o++)
 	{
 		op[o] = b3Vector::b3SMul(&pos,     &m_Normals[o]);
 		od[o] = b3Vector::b3SMul(&in->dir, &m_Normals[o]);
@@ -146,7 +146,7 @@ void b3BaseTransformation::b3BaseTransform(
 	pos.y = in->y - m_Base.y;
 	pos.z = in->z - m_Base.z;
 
-	for(b3_loop i = 0;i < 3;i++)
+	for (b3_loop i = 0;i < 3;i++)
 	{
 		o[i] = b3Vector::b3SMul(&pos, &m_Normals[i]);
 	}

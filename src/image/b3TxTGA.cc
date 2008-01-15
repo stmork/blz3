@@ -60,7 +60,8 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 		}
 
 		if (buffer[17] & 0x10)
-		{                                           /* right left */
+		{
+			/* right left */
 			dNext -= (xSize * 8);
 			srcPtr  += (xSize - 1);
 			Inc    = -1;
@@ -100,7 +101,8 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 			{
 				count = (buffer[0] & 127) + 1;    /* Steuerbyte */
 				if (buffer[0] & 128)
-				{                               /* nächste Farbe count mal */
+				{
+					/* nächste Farbe count mal */
 					buffer++;
 					Color = 0;
 					for (t = 0;t < depth1;t++)     /* schreiben. */
@@ -126,7 +128,8 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 					}
 				}
 				else
-				{                               /* count Pixel übernehmen */
+				{
+					/* count Pixel übernehmen */
 					buffer++;
 					while (count)
 					{

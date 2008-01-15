@@ -322,7 +322,7 @@ void b3Path::b3ParentName(
 
 	// Remove trailing "/" or "\"
 	len = strlen(actDir);
-	for (i = len - 1;i >= 0;i--) switch(((char *)actDir)[i])
+	for (i = len - 1;i >= 0;i--) switch (((char *)actDir)[i])
 		{
 		case '/' :
 			((char *)actDir)[i] = 0;
@@ -367,7 +367,7 @@ void b3Path::b3RemoveExt(const char *name,char *output)
 
 	assert((name != null) && (output != null));
 	b3Path::b3SplitFileName (name,actPath,actName);
-	while(actName[i] != 0)
+	while (actName[i] != 0)
 	{
 		if (actName[i] == '.')
 		{

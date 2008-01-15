@@ -32,45 +32,45 @@
 *************************************************************************/
 
 const b3_gl_line b3Shape::m_BoxGrids[] =
-	{
-		{ 0,1 }
-		,
-		{ 1,2 },
-		{ 2,3 },
-		{ 3,0 },
-		{ 7,6 },
-		{ 6,5 },
-		{ 5,4 },
-		{ 4,7 },
-		{ 0,7 },
-		{ 1,6 },
-		{ 2,5 },
-		{ 3,4 }
-	};
+{
+	{ 0,1 }
+	,
+	{ 1,2 },
+	{ 2,3 },
+	{ 3,0 },
+	{ 7,6 },
+	{ 6,5 },
+	{ 5,4 },
+	{ 4,7 },
+	{ 0,7 },
+	{ 1,6 },
+	{ 2,5 },
+	{ 3,4 }
+};
 
 const b3_gl_polygon b3Shape::m_BoxPolygons[] =
-	{
-		{  6, 7, 5 }
-		, // top
-		{  4, 5, 7 },
-		{  0, 1, 3 }, // bottom
-		{  2, 3, 1 },
-		{ 13,12,10 }, // back
-		{ 11,10,12 },
-		{  9, 8,14 }, // front
-		{ 15,14, 8 },
-		{ 16,19,23 }, // right
-		{ 20,23,19 },
-		{ 18,17,21 }, // left
-		{ 22,21,17 }
-	};
+{
+	{  6, 7, 5 }
+	, // top
+	{  4, 5, 7 },
+	{  0, 1, 3 }, // bottom
+	{  2, 3, 1 },
+	{ 13,12,10 }, // back
+	{ 11,10,12 },
+	{  9, 8,14 }, // front
+	{ 15,14, 8 },
+	{ 16,19,23 }, // right
+	{ 20,23,19 },
+	{ 18,17,21 }, // left
+	{ 22,21,17 }
+};
 
 const b3_f32 b3Shape::m_BoxTexcoord[] =
-	{
-		0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
-		0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
-		0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0
-	};
+{
+	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
+	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
+	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0
+};
 
 /*************************************************************************
 **                                                                      **
@@ -435,7 +435,7 @@ private:
 
 				color = B3_BLACK;
 				loop  = true;
-				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
+				for (material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
 						(material != null) && loop;
 						material  = (b3Material *)material->Succ)
 				{
@@ -460,7 +460,7 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 	b3_bool       result = false;
 	b3_u32        type;
 
-	for( item  = b3GetMaterialHead()->First;
+	for ( item  = b3GetMaterialHead()->First;
 			(item != null) && (!result);
 			item  = item->Succ)
 	{
@@ -1213,7 +1213,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 			j = 0;
 		}
 
-		while(j < m_Heights)
+		while (j < m_Heights)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
 

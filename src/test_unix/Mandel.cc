@@ -33,50 +33,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.11  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**
-**	Revision 1.10  2003/02/19 16:52:53  sm
-**	- Cleaned up logging
-**	- Clean up b3CPU/b3Runtime
-**	
-**	Revision 1.9  2002/08/11 11:22:33  sm
-**	- Adjusted some includes concerning b3DisplayView.
-**	
-**	Revision 1.8  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.7  2002/01/22 17:11:18  sm
-**	- brt3 is now able to save images. The selection of image type
-**	  is unsoved yet.
-**	- Better b3DisplayView in Un*x port.
-**	- Fixed stricmp() in Un*x port.
-**	
-**	Revision 1.6  2002/01/14 16:13:02  sm
-**	- Some further cleanups done.
-**	- Icon reordering done.
-**	
-**	Revision 1.5  2001/09/30 15:46:07  sm
-**	- Displaying raytracing under Windows
-**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
-**	  CAppRaytraceView pair for displaying Raytracing
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Mandel implementation                         **
 **                                                                      **
 *************************************************************************/
@@ -123,7 +79,7 @@ int main(int argc,char *argv[])
 			// Delete Display
 			delete display;
 		}
-		catch(b3DisplayException &e)
+		catch (b3DisplayException &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 		}

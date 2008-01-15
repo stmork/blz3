@@ -464,7 +464,7 @@ b3_bool b3BBox::b3Transform(
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		if(bbox->b3Transform(transformation,is_affine,force_action))
+		if (bbox->b3Transform(transformation,is_affine,force_action))
 		{
 			transformed = true;
 		}

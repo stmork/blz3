@@ -127,7 +127,7 @@ b3_bool b3SearchPath::b3CutName(const char *fullname,char *result)
 		diff    = fullLen - shortLen;
 		if (strncmp(fullname,*path,shortLen) == 0)
 		{
-			while(((fullname[shortLen] == '/') ||
+			while (((fullname[shortLen] == '/') ||
 					(fullname[shortLen] == '\\')) &&
 					(fullname[shortLen] != 0))
 			{

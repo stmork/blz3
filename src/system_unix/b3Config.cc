@@ -73,19 +73,26 @@ b3Runtime::b3Runtime()
 	switch (b3GetVectorUnit())
 	{
 	case B3_VU_FPU:
-		vu = "FPU"; break;
+		vu = "FPU";
+		break;
 	case B3_VU_MMX:
-		vu = "MMX"; break;
+		vu = "MMX";
+		break;
 	case B3_VU_SSE:
-		vu = "SSE"; break;
+		vu = "SSE";
+		break;
 	case B3_VU_SSE2:
-		vu = "SSE2"; break;
+		vu = "SSE2";
+		break;
 	case B3_VU_SSE3:
-		vu = "SSE3"; break;
+		vu = "SSE3";
+		break;
 	case B3_VU_3DNOW:
-		vu = "3DNow!"; break;
+		vu = "3DNow!";
+		break;
 	case B3_VU_ALTIVEC:
-		vu = "AltiVec"; break;
+		vu = "AltiVec";
+		break;
 	}
 
 #ifdef __ICC
@@ -97,7 +104,7 @@ b3Runtime::b3Runtime()
 			 __GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,vu,math);
 #	else
 	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",
-	         __GNUC__,__GNUC_MINOR__,bits,vu,math);
+			 __GNUC__,__GNUC_MINOR__,bits,vu,math);
 #	endif
 #else
 	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler vector unit: %s math mode: %s",

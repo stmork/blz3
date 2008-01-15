@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3FileMem.cc $  
+**	$Filename:	b3FileMem.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$

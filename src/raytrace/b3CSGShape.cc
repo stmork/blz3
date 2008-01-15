@@ -31,11 +31,11 @@
 *************************************************************************/
 
 b3_csg_operation b3CSGShape::m_CSGMode[] =
-	{
-		B3_CSG_UNION,
-		B3_CSG_INTERSECT,
-		B3_CSG_SUB
-	};
+{
+	B3_CSG_UNION,
+	B3_CSG_INTERSECT,
+	B3_CSG_SUB
+};
 
 /*************************************************************************
 **                                                                      **
@@ -128,7 +128,7 @@ void b3CSGShape::b3Operate(
 		}
 
 		// Do compute boolean operation!
-		switch(m_Operation)
+		switch (m_Operation)
 		{
 		case B3_CSG_UNION:
 			stat = (aStat || bStat);

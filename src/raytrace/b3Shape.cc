@@ -68,7 +68,7 @@ b3Activation::b3Activation()
 
 b3_bool b3Activation::b3IsActive()
 {
-	switch(m_AnimActive)
+	switch (m_AnimActive)
 	{
 	case B3_ANIM_DISABLED:
 		return m_Active;

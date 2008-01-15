@@ -25,46 +25,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.6  2005/05/31 19:06:24  sm
-**	- Hash test fix.
-**
-**	Revision 1.5  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.4  2002/08/09 13:20:20  sm
-**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
-**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
-**	  seems to be broken:-(
-**	- Introduced b3DirAbstract and b3PathAbstract classes
-**	
-**	Revision 1.3  2002/08/07 12:38:43  sm
-**	- Modified exception definition. Exceptions are identified with
-**	  a three character code to unify error codes. This is necessary
-**	  to convert error codes into error messages inside applications.
-**	- Added some additional b3Hash methods.
-**	- Added -Wall compiler option to all C++ files.
-**	- Removed some compiler warnings.
-**	
-**	Revision 1.2  2002/08/06 16:16:59  sm
-**	- Added support for custom hash functions.
-**	
-**	Revision 1.1  2002/08/06 15:54:12  sm
-**	- Introduced b3HashMap<key,object> class incl. test prog.
-**	- Found some source files without header.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        implementation                                **
 **                                                                      **
 *************************************************************************/
@@ -142,7 +102,7 @@ int main(int argc,char *argv[])
 	{
 		hash.b3Add(0,"Exception");
 	}
-	catch(b3HashException &e)
+	catch (b3HashException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Exception caught correctly.\n");
 	}

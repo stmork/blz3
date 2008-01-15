@@ -35,11 +35,11 @@
 #define no_CREATE_ICON
 
 static b3_vector scale =
-	{
-		1.0,
-		1.0,
-		1.0
-	};
+{
+	1.0,
+	1.0,
+	1.0
+};
 
 class b3MatWoodSampler : public b3MaterialSampler
 {
@@ -175,7 +175,7 @@ int main(int argc,char *argv[])
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException &e)
+	catch (b3DisplayException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}

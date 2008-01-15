@@ -26,27 +26,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.3  2006/05/01 10:44:46  sm
-**	- Unifying ocean wave values.
-**
-**	Revision 1.2  2006/04/30 08:53:24  sm
-**	- Removed some signed/unsigned issues.
-**	- Reflect new FFT algorithm.
-**	
-**	Revision 1.1  2006/04/29 20:29:54  sm
-**	- Switched to other FFT 2D algorithm which works correctly.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TestOceanWave implementation                **
 **                                                                      **
 *************************************************************************/

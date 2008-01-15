@@ -28,41 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.5  2006/05/11 15:34:23  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**
-**	Revision 1.4  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.3  2003/05/18 14:59:01  sm
-**	- Fixed predefined constat MAX
-**	- Fixed typo
-**	
-**	Revision 1.2  2003/01/19 15:14:09  sm
-**	- Bound checking in b3VectorXX and b3Array only in debug version.
-**	- Added operator [] in b3VectorXX
-**	
-**	Revision 1.1  2002/12/31 15:11:03  sm
-**	- Fixed bound checking.
-**	- Added a vector test module.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        implementation                                **
 **                                                                      **
 *************************************************************************/
@@ -121,7 +86,8 @@ public:
 		for (int i = 0;i < MAX_DIM;i++)
 		{
 			b3Vector::b3Init(&m_Array[i],b3Random(),b3Random(),b3Random());
-		}		b3Add("constructor");
+		}
+		b3Add("constructor");
 	}
 
 	virtual ~b3VectorStruct()
@@ -159,7 +125,7 @@ public:
 		b3Vector::b3Scale(&m_Array[20],0.25);
 		b3Add("*= 0.25");
 
-		while(k < 40)
+		while (k < 40)
 		{
 			b3Vector::b3CrossProduct(&m_Array[k],&m_Array[k+1],&m_Array[k+2]);
 			k += 3;
@@ -265,7 +231,7 @@ public:
 		m_Array[20] *=    0.25;
 		b3Add("*= 0.25");
 
-		while(k < 40)
+		while (k < 40)
 		{
 			m_Array[k+2] = b3Vector32::b3CrossProduct(m_Array[k],m_Array[k+1]);
 			k += 3;
@@ -322,7 +288,7 @@ int main(int argc,char *argv[])
 
 	a = vStruct.b3Test();
 	b = vArray.b3Test();
-	if(a != b)
+	if (a != b)
 	{
 		b3PrintF(B3LOG_NORMAL,"Test failed (distance: %3.5f).\n",fabs(a - b));
 		vStruct.b3PrintResult();

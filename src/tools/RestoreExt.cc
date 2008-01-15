@@ -32,7 +32,7 @@
 
 static const char *b3GetClassExt(b3_u32 world_class)
 {
-	switch(world_class)
+	switch (world_class)
 	{
 	case CLASS_GLOBAL:
 		return "bwd";
@@ -64,7 +64,7 @@ static void b3TestFile(const char *filename)
 				 filename,first->b3GetClassType());
 		ext = b3GetClassExt(first->b3GetClass());
 	}
-	catch(b3WorldException &w)
+	catch (b3WorldException &w)
 	{
 		b3Tx image;
 
@@ -73,7 +73,7 @@ static void b3TestFile(const char *filename)
 			ext = image.b3GetExt();
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown error with file %s\n",
 				 filename);

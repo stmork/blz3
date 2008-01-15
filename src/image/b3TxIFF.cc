@@ -92,9 +92,9 @@ class b3_tx_yuv_table
 b3_tx_yuv_table b3_tx_yuv_table::m_MultYuvTable;
 
 b3_u08 b3_tx_yuv_table::m_ConvertBits[8] =
-	{
-		128,64,32,16,8,4,2,1
-	};
+{
+	128,64,32,16,8,4,2,1
+};
 
 /*************************************************************************
 **                                                                      **
@@ -214,8 +214,10 @@ b3_result b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 			CharData += 8;
 			while (i < Max)
 			{
-				Color  = (b3_u16)CharData[0] << 8;	CharData++;
-				Amount  = (b3_u32)CharData[0];		CharData++;
+				Color  = (b3_u16)CharData[0] << 8;
+				CharData++;
+				Amount  = (b3_u32)CharData[0];
+				CharData++;
 				Color |= (b3_u16)Amount;
 				Color  = Color >> 4;
 				if ((Amount & 0x8)==0) Color |= 0xf000;
@@ -370,7 +372,8 @@ void b3Tx::b3HamPalette (b3_bool HAM8)
 					Color = (Color & 0x00ffff) | (Nibble << 18);
 					break;
 				case 0xc0 : /* hold & modify green */
-					Color = (Color & 0xff00ff) | (Nibble << 10);						break;
+					Color = (Color & 0xff00ff) | (Nibble << 10);
+					break;
 				}
 				LData[0] = Color;
 				LData++;
@@ -455,9 +458,11 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 			switch (CharData[18])
 			{
 			case 0 :
-				Compressed = false; break;
+				Compressed = false;
+				break;
 			case 1 :
-				Compressed = true;  break;
+				Compressed = true;
+				break;
 			default :
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
@@ -479,9 +484,12 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 			CharData += 8;
 			for (k = 0;k < Max;k++)
 			{
-				Color  = ((b3_u32)CharData[0] << 16); CharData++;
-				Color |= ((b3_u32)CharData[0] <<  8); CharData++;
-				Color |=  (b3_u32)CharData[0];        CharData++;
+				Color  = ((b3_u32)CharData[0] << 16);
+				CharData++;
+				Color |= ((b3_u32)CharData[0] <<  8);
+				CharData++;
+				Color |=  (b3_u32)CharData[0];
+				CharData++;
 				*Set++ = Color;
 			}
 			break;

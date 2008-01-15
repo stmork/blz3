@@ -46,7 +46,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 
 	b3PrintF (B3LOG_NORMAL,"%d-Bit-CPU\n",b3Runtime::b3GetCPUBits());
 
-	switch(b3Runtime::b3GetCPUType())
+	switch (b3Runtime::b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
 		b3PrintF (B3LOG_NORMAL,"Big endian (MC 680x0)\n");
@@ -185,13 +185,15 @@ b3_bool b3SelfTest::b3TestMemory()
 	result &= ((ptr1 != ptr2) && (ptr2 == null));
 
 	b3PrintF (B3LOG_NORMAL,"\n");
-	v1 = 1; v2 = 2;
+	v1 = 1;
+	v2 = 2;
 	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",v1,v2);
 	B3_SWAP (v1,v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
 	result &= ((v1 == 2) && (v2 == 1));
 
-	v1 = 1; v2 = 2;
+	v1 = 1;
+	v2 = 2;
 	b3PrintF (B3LOG_NORMAL,"PSWAP: i=%ld k=%ld\n",v1,v2);
 	B3_PSWAP (&v1,&v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);

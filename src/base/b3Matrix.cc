@@ -2,7 +2,7 @@
 **
 **	$Filename:	b3Matrix.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 2.02 
+**	$Revision: 2.02
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
@@ -32,17 +32,17 @@
 *************************************************************************/
 
 b3_matrix b3Matrix::m_UnitMatrix =
-	{
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
+{
+	1,0,0,0,
+	0,1,0,0,
+	0,0,1,0,
+	0,0,0,1
+};
 
 b3_vector b3Matrix::m_EmptyVector =
-	{
-		0,0,0
-	};
+{
+	0,0,0
+};
 b3_bool b3Matrix::b3NormalizeCol (
 	b3_matrix *Matrix,
 	b3_count   col)
@@ -178,13 +178,19 @@ b3_matrix * b3Matrix::b3Inverse (
 	}
 	Denom = 1 /Denom;
 
-	Row1.x  = From->m12;	Row2.x  = From->m22;
-	Row1.y  = From->m13;	Row2.y  = From->m23;
-	Row1.z  = From->m14;	Row2.z  = From->m24;
+	Row1.x  = From->m12;
+	Row2.x  = From->m22;
+	Row1.y  = From->m13;
+	Row2.y  = From->m23;
+	Row1.z  = From->m14;
+	Row2.z  = From->m24;
 
-	Row3.x  = From->m32;	Row4.x  = From->m42;
-	Row3.y  = From->m33;	Row4.y  = From->m43;
-	Row3.z  = From->m34;	Row4.z  = From->m44;
+	Row3.x  = From->m32;
+	Row4.x  = From->m42;
+	Row3.y  = From->m33;
+	Row4.y  = From->m43;
+	Row3.z  = From->m34;
+	Row4.z  = From->m44;
 
 	/* inverting first line */
 	To->m11 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);

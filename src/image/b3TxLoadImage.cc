@@ -36,7 +36,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Image loading             
+**                        Image loading
 **                                                                      **
 *************************************************************************/
 
@@ -287,7 +287,7 @@ b3_result b3Tx::b3LoadImage(const char *name, b3_bool throw_exception)
 			throw;
 		}
 	}
-	catch(b3TxException &e)
+	catch (b3TxException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Error parsing %s (%s)\n",
 				 name,e.b3GetErrorMsg());
@@ -296,7 +296,7 @@ b3_result b3Tx::b3LoadImage(const char *name, b3_bool throw_exception)
 			throw;
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown error parsing %s\n",name);
 		if (throw_exception)
@@ -339,7 +339,7 @@ const char *b3Tx::b3GetExt()
 
 const char *b3Tx::b3GetExt(b3_tx_filetype type)
 {
-	switch(type)
+	switch (type)
 	{
 	case FT_PCX4:
 	case FT_PCX8:
@@ -414,7 +414,7 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 		ext.b3ExtractExt(filename);
 		filetype = b3GetFileType(ext);
 
-		switch(filetype)
+		switch (filetype)
 		{
 		case FT_JPEG:
 			return b3SaveJPEG(filename);

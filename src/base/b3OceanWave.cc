@@ -249,7 +249,7 @@ void b3OceanWave::b3CopyHeightField(b3Tx *tx)
 
 	for (b3_loop y = 0;y < ySize;y++)
 	{
-		for(b3_loop x = 0;x < xSize;x++)
+		for (b3_loop x = 0;x < xSize;x++)
 		{
 			b3_f32 c = buffer[b3GetIndex(x,y)].b3Real() * m_Denom + 0.5;
 
@@ -282,7 +282,7 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 	b3_f64 w;
 	b3_f64 phillips;
 
-	if(k4 == 0)
+	if (k4 == 0)
 	{
 		phillips = 0;
 	}
@@ -346,7 +346,7 @@ void b3OceanWave::b3TestSpectrum2()
 
 	for (n = m_fftMin; n < m_fftMax; n++)
 	{
-		for(m = m_fftMin; m < m_fftMax; m++)
+		for (m = m_fftMin; m < m_fftMax; m++)
 		{
 			*buffer++ = sin(M_PI * 4.0 * m / m_fftDiff);
 		}

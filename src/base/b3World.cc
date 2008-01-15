@@ -252,7 +252,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 		if (max_node < B3_NODE_IDX_MIN)
 		{
 			// On error - no chance to proceed
-			for(k = 0; k < array.b3GetCount(); k++)
+			for (k = 0; k < array.b3GetCount(); k++)
 			{
 				delete array[k];
 			}
@@ -266,7 +266,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 			if (node == null)
 			{
 				// On error - no chance to proceed
-				for(k = 0; k < array.b3GetCount(); k++)
+				for (k = 0; k < array.b3GetCount(); k++)
 				{
 					delete array[k];
 				}
@@ -274,7 +274,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 			}
 			array.b3Add(node);
 		}
-		catch(b3WorldException &we)
+		catch (b3WorldException &we)
 		{
 			m_Missed++;
 			b3PrintF(B3LOG_DEBUG,"%s\n", we.b3GetErrorMsg());
@@ -285,7 +285,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 
 	if (m_Missed > 0)
 	{
-		for(k = 0; k < array.b3GetCount(); k++)
+		for (k = 0; k < array.b3GetCount(); k++)
 		{
 			delete array[k];
 		}
@@ -296,7 +296,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 	if (b3CheckLevel(B3LOG_FULL))
 	{
 		b3PrintF (B3LOG_FULL,"Counted %d nodes.\n",node_count);
-		for(k = 0; k < array.b3GetCount(), k++)
+		for (k = 0; k < array.b3GetCount(), k++)
 		{
 			array[k]->b3DumpSimple();
 		}
@@ -358,7 +358,7 @@ b3_world_error b3World::b3Read(b3FileAbstract *file, const b3_bool throw_excepti
 	// Read specified file into buffer
 	if (file->b3Read(header,sizeof(header)) == sizeof(header))
 	{
-		switch(header[0])
+		switch (header[0])
 		{
 		case B3_BLiZ:
 			m_NeedEndianChange = false;
@@ -498,7 +498,7 @@ void b3World::b3CloneBase(
 		}
 
 		dstBase->b3Append(dstItem);
-		for(i = 0;i < srcItem->m_HeadCount;i++)
+		for (i = 0;i < srcItem->m_HeadCount;i++)
 		{
 			b3CloneBase(&srcItem->m_Heads[i],&dstItem->m_Heads[i], throw_exception);
 		}
@@ -532,7 +532,7 @@ b3Item *b3World::b3Clone(b3Item *original, const b3_bool throw_exception) throw(
 		}
 	}
 
-	for(i = 0;i < original->m_HeadCount;i++)
+	for (i = 0;i < original->m_HeadCount;i++)
 	{
 		b3CloneBase(&original->m_Heads[i],&item->m_Heads[i], throw_exception);
 	}
@@ -550,7 +550,7 @@ b3_bool b3World::b3Write(
 	b3File          file;
 	b3_world_error  error;
 
-	if(file.b3Open(filename,B_WRITE))
+	if (file.b3Open(filename,B_WRITE))
 	{
 		error = b3Write(&file, throw_exception);
 		file.b3Close();

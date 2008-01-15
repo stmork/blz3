@@ -29,39 +29,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.4  2006/05/01 10:44:46  sm
-**	- Unifying ocean wave values.
-**
-**	Revision 1.3  2006/04/29 20:29:54  sm
-**	- Switched to other FFT 2D algorithm which works correctly.
-**	
-**	Revision 1.2  2006/04/29 17:58:27  sm
-**	- Minor value changes.
-**	
-**	Revision 1.1  2006/04/29 11:25:50  sm
-**	- Added ocean bump to main packet.
-**	- b3Prepare signature: Added further initialization information
-**	  for animation preparation
-**	- Added test module for ocean waves.
-**	- Added module for random number generation.
-**	- Adjusted material and bump sampler to reflect preparation
-**	  signature change.
-**	- Added OpenGL test program for ocean waves.
-**	- Changed Phillips spectrum computation to be independent
-**	  from time.
-**	- Interpolated height field for ocean waves.
-**	
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TestOceanWave implementation                **
 **                                                                      **
 *************************************************************************/
@@ -99,12 +66,12 @@ int main(int argc, char *argv[])
 			wave.b3GetBuffer(&tx, 0.001);
 			display->b3PutTx(&tx);
 		}
-		while(!display->b3IsCancelled(xMax,yMax));
+		while (!display->b3IsCancelled(xMax,yMax));
 
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException &e)
+	catch (b3DisplayException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}

@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Benchmarker 
+**	Blizzard III - Benchmarker
 **
 **      (C) Copyright 2002  Steffen A. Mork
 **          All Rights Reserved
@@ -38,20 +38,20 @@
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
+**
 **	Revision 1.4  2004/11/23 08:13:32  smork
 **	- Added configure support.
-**	
+**
 **	Revision 1.3  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
-**	
+**
 **	Revision 1.2  2002/11/18 17:30:01  sm
 **	- GCC patch level define fix.
-**	
+**
 **	Revision 1.1  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
-**	
+**
 **
 */
 
@@ -78,7 +78,7 @@ public:
 
 	inline void init(TYPE value)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] = value;
 		}
@@ -86,7 +86,7 @@ public:
 
 	inline void add(vector<TYPE,COUNT> &src,TYPE value)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] += value;
 		}
@@ -94,7 +94,7 @@ public:
 
 	inline void sub(vector<TYPE,COUNT> &src,TYPE value)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] -= value;
 		}
@@ -102,7 +102,7 @@ public:
 
 	inline void add(vector<TYPE,COUNT> &src)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] += src.f[i];
 		}
@@ -110,7 +110,7 @@ public:
 
 	inline void sub(vector<TYPE,COUNT> &src)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] -= src.f[i];
 		}
@@ -118,7 +118,7 @@ public:
 
 	inline void mult(vector<TYPE,COUNT> &src)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] *= src.f[i];
 		}
@@ -126,7 +126,7 @@ public:
 
 	inline void comb1(vector<TYPE,COUNT> &a,vector<TYPE,COUNT> &b)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] = (f[i] + a.f[i]) * b.f[i];
 		}
@@ -134,7 +134,7 @@ public:
 
 	inline void comb2(vector<TYPE,COUNT> &a,vector<TYPE,COUNT> &b)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] = ((f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i];
 		}
@@ -142,7 +142,7 @@ public:
 
 	inline void comb4(vector<TYPE,COUNT> &a,vector<TYPE,COUNT> &b)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] = ((((f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i];
 		}
@@ -150,7 +150,7 @@ public:
 
 	inline void comb8(vector<TYPE,COUNT> &a,vector<TYPE,COUNT> &b)
 	{
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			f[i] = ((((((((f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i];
 		}
@@ -160,7 +160,7 @@ public:
 	{
 		int k;
 
-		for(int i = 0;i < COUNT;i++)
+		for (int i = 0;i < COUNT;i++)
 		{
 			TYPE val = f[i],aVal = a.f[i],bVal = b.f[i];
 

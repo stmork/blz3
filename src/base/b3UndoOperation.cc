@@ -56,7 +56,7 @@ void b3UndoBuffer::b3Delete(b3Base<b3UndoOperation> *buffer)
 {
 	b3UndoOperation *op;
 
-	while((op = buffer->b3RemoveFirst()) != null)
+	while ((op = buffer->b3RemoveFirst()) != null)
 	{
 		b3Delete(op);
 	}

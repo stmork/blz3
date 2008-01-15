@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3TxInclude.cc $ 
+**	$Filename:	b3TxInclude.cc $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$

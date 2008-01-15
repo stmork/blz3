@@ -33,7 +33,7 @@
 
 b3Filter *b3Filter::b3New(b3_filter filter)
 {
-	switch(filter)
+	switch (filter)
 	{
 	case B3_FILTER_BOX:
 		return new b3BoxFilter();
@@ -78,7 +78,7 @@ b3_f64 b3Filter::b3InvIntegral(b3_f64 val,b3_bool throw_exception) throw(b3Filte
 		}
 		diff = xUpper - xLower;
 	}
-	while(diff > 0.001);
+	while (diff > 0.001);
 
 	return xMid;
 }

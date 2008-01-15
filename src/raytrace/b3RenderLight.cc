@@ -31,9 +31,9 @@
 *************************************************************************/
 
 b3_vector b3RenderLight::m_LightDirection =
-	{
-		0,0,-1
-	};
+{
+	0,0,-1
+};
 
 b3RenderLight::b3RenderLight()
 {
@@ -62,7 +62,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 	b3PrintF(B3LOG_FULL,">b3RenderLight::b3SetupLight() # %d\n",m_LightMode);
 #endif
 
-	switch(m_LightMode)
+	switch (m_LightMode)
 	{
 	case B3_LIGHT_SIMPLE:
 	default:

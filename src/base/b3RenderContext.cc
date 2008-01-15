@@ -38,14 +38,14 @@
 *************************************************************************/
 
 b3_vector b3RenderContext::glSimpleLightPosition =
-	{
-		1000.0f,-2500.0f,2000.0f
-	};
+{
+	1000.0f,-2500.0f,2000.0f
+};
 
 b3_vector b3RenderContext::glSimpleLightDirection =
-	{
-		0,0,-1
-	};
+{
+	0,0,-1
+};
 
 #ifdef BLZ3_USE_OPENGL
 b3_bool b3RenderContext::glUse = true;
@@ -56,16 +56,16 @@ b3_bool b3RenderContext::glUse = false;
 #ifdef BLZ3_USE_OPENGL
 
 GLenum b3RenderContext::glLightNum[] =
-	{
-		GL_LIGHT0,
-		GL_LIGHT1,
-		GL_LIGHT2,
-		GL_LIGHT3,
-		GL_LIGHT4,
-		GL_LIGHT5,
-		GL_LIGHT6,
-		GL_LIGHT7
-	};
+{
+	GL_LIGHT0,
+	GL_LIGHT1,
+	GL_LIGHT2,
+	GL_LIGHT3,
+	GL_LIGHT4,
+	GL_LIGHT5,
+	GL_LIGHT6,
+	GL_LIGHT7
+};
 
 #define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && (((size_t)num) < (sizeof(glLightNum) / sizeof(GLint))))
 
@@ -390,7 +390,7 @@ b3_bool b3RenderContext::b3GetMatrix(
 	b3_bool result = false;
 	GLfloat values[16];
 
-	switch(mode)
+	switch (mode)
 	{
 	case B3_MATRIX_OBJECT:
 		glGetFloatv(GL_MODELVIEW_MATRIX,values);
@@ -462,7 +462,7 @@ b3_bool b3RenderContext::b3PutMatrix(
 	values[14] = matrix->m34;
 	values[15] = matrix->m44;
 
-	switch(mode)
+	switch (mode)
 	{
 	case B3_MATRIX_OBJECT:
 		glMatrixMode(GL_MODELVIEW);

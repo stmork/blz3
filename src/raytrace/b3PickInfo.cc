@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3PickInfo.cc $ 
+**	$Filename:	b3PickInfo.cc $
 **	$Release:	Dortmund 2003 $
 **	$Revision$
 **	$Date$

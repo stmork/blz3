@@ -28,55 +28,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**  $Log$
-**  Revision 1.8  2006/04/29 11:25:50  sm
-**  - Added ocean bump to main packet.
-**  - b3Prepare signature: Added further initialization information
-**    for animation preparation
-**  - Added test module for ocean waves.
-**  - Added module for random number generation.
-**  - Adjusted material and bump sampler to reflect preparation
-**    signature change.
-**  - Added OpenGL test program for ocean waves.
-**  - Changed Phillips spectrum computation to be independent
-**    from time.
-**  - Interpolated height field for ocean waves.
-**
-**  Revision 1.7  2006/04/19 10:20:30  sm
-**  - Adjusted splitted includes.
-**  - Adjusted ocean waves values.
-**
-**  Revision 1.6  2006/04/15 20:34:55  sm
-**  - Added support for ocean surface bump mapping.
-**
-**  Revision 1.5  2005/12/12 16:01:32  smork
-**  - Some more const correction in samplers.
-**
-**  Revision 1.4  2004/11/29 09:58:01  smork
-**  - Changed exit states to correct defines.
-**  - Added switch for disabling VBO in OpenGL renderer.
-**  - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**  Revision 1.3  2004/05/18 13:34:50  sm
-**  - Cleaned up water animation
-**
-**  Revision 1.2  2004/05/18 10:44:52  sm
-**  - Fine tuning animated water.
-**
-**  Revision 1.1  2004/05/16 18:50:59  sm
-**  - Added new simple image sampler.
-**  - We need better water!
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        b3TestWater implementation                    **
 **                                                                      **
 *************************************************************************/
@@ -181,13 +132,13 @@ int main(int argc,char *argv[])
 				display->b3PutTx(&tx);
 			}
 //			while(true);
-			while(!display->b3IsCancelled(xMax,yMax));
+			while (!display->b3IsCancelled(xMax,yMax));
 		}
 
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException &e)
+	catch (b3DisplayException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}

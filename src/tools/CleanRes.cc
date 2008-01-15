@@ -37,19 +37,19 @@ static struct b3DefineType
 	int   m_Start;
 	int   m_Last;
 } define_types[] =
-	{
-		{ "IDP_OLE_INIT_FAILED",  1, 101 },
-		{ "IDR_MAINFRAME",  1,   110 },
-		{ "IDR_",  2,   111 },
-		{ "IDB_",  3,   400 },
-		{ "IDM_",  4,   500 },
-		{ "IDD_",  5,   600 },
-		{ "IDI_",  6,  1001 },
-		{ "ID_",   7, 10000 },
-		{ "IDC_",  8, 32000 },
-		{ "IDS_",  9, 60000 },
-		{ "_APS", 10,     0 }
-	};
+{
+	{ "IDP_OLE_INIT_FAILED",  1, 101 },
+	{ "IDR_MAINFRAME",  1,   110 },
+	{ "IDR_",  2,   111 },
+	{ "IDB_",  3,   400 },
+	{ "IDM_",  4,   500 },
+	{ "IDD_",  5,   600 },
+	{ "IDI_",  6,  1001 },
+	{ "ID_",   7, 10000 },
+	{ "IDC_",  8, 32000 },
+	{ "IDS_",  9, 60000 },
+	{ "_APS", 10,     0 }
+};
 
 #define TYPE_MAX ((int)(sizeof(define_types) / sizeof(b3DefineType)))
 
@@ -104,7 +104,7 @@ public:
 
 	void b3Print()
 	{
-		switch(m_Mode)
+		switch (m_Mode)
 		{
 		case DM_START:
 			fprintf(m_File,"//{{NO_DEPENDENCIES}}\r\n");

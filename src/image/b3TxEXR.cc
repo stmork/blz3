@@ -119,7 +119,7 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 			result = B3_OK;
 		}
 	}
-	catch(std::exception &exc)
+	catch (std::exception &exc)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL,"IMG EXR  # Error reading file:\n");

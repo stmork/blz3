@@ -60,7 +60,7 @@ b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 				polar->m_Polar.y = polar->m_ObjectPolar.y = bValue;
 				polar->m_Polar.z = polar->m_ObjectPolar.z = 0;
 
-				if(b3CheckStencil(polar))
+				if (b3CheckStencil(polar))
 				{
 					result = lValue;
 				}
@@ -1702,7 +1702,7 @@ void b3BBox::b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array)
 			break;
 
 		case CLASS_CSG:
-			if(b3IntersectCSG(ray) != null)
+			if (b3IntersectCSG(ray) != null)
 			{
 				array->b3Add(this);
 			}

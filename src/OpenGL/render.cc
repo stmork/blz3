@@ -124,7 +124,7 @@ static void b3PlayAnimation()
 			}
 			count++;
 		}
-		while(t < animation->m_End);
+		while (t < animation->m_End);
 
 		span = now - start;
 		b3PrintF(B3LOG_NORMAL,"Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
@@ -323,7 +323,7 @@ int main(int argc,char *argv[])
 
 	for (i = 1;(i < argc) && (argv[i][0] == '-');i++)
 	{
-		switch(argv[i][1])
+		switch (argv[i][1])
 		{
 		case 'v' :
 			b3VectorBufferObjects::glAllowVBO = false;
@@ -393,13 +393,13 @@ int main(int argc,char *argv[])
 		}
 		delete world;
 	}
-	catch(b3ExceptionBase &e)
+	catch (b3ExceptionBase &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[1]);
 		b3PrintF(B3LOG_NORMAL,"Error code: %d\n",e.b3GetError());
 		b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",e.b3GetErrorMsg());
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown error occured processing %s\n",argv[1]);
 	}

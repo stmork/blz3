@@ -38,7 +38,7 @@ void b3Tx::b3MirrorHorizontal()
 	b3_u08       *btPtr,*bbPtr,bColor;
 
 	// Untested, yet.
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_FLOAT:
 		cbPtr = (b3_color *)data;
@@ -117,7 +117,7 @@ void b3Tx::b3MirrorVertical()
 	b3_u16       *stPtr,*sbPtr,sColor;
 	b3_u08       *btPtr,*bbPtr,bColor;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_FLOAT:
 		ctPtr = (b3_color *)data;

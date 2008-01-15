@@ -1472,9 +1472,9 @@ b3_bool b3MatCarPaint::b3ShadeComponents(b3_surface *surface, b3_f64 reflection,
 
 b3Color   b3MatThinFilm::m_WaveLength(700.0,510,485.0,0); // in nano meter
 b3_vector b3MatThinFilm::m_ScaleTime =
-	{
-		10,10,10
-	};
+{
+	10,10,10
+};
 
 b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm),class_type)
 {

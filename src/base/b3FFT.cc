@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Fourier transform 
+**	Blizzard III - Fourier transform
 **
 **	(C) Copyright 2006  Steffen A. Mork
 **	    All Rights Reserved
@@ -78,7 +78,7 @@ b3_count b3Fourier::b3Log2(b3_u32 value)
 {
 	b3_count count = -1;
 
-	while(value > 0)
+	while (value > 0)
 	{
 		value = value >> 1;
 		count++;
@@ -238,7 +238,7 @@ void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
    x and y are the real and imaginary arrays of 2^m points.
    dir =  1 gives forward transform
    dir = -1 gives reverse transform
- 
+
      Formula: forward
                   N-1
                   ---
@@ -247,7 +247,7 @@ void b3Fourier::b3Sample(b3FilterInfo *info,b3SampleFunc sample_func)
               N   /                                n=0..N-1
                   ---
                   k=0
- 
+
       Formula: reverse
                   N-1
                   ---
@@ -354,7 +354,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 	b3_fft_info info[B3_FFT_MAX_THREADS];
 	b3_loop     i;
 
-	for(i = 0;i < m_CPUs;i++)
+	for (i = 0;i < m_CPUs;i++)
 	{
 		info[i].m_Lines = m_Lines;
 		info[i].m_Aux   = &m_Aux[m_ySize * i];
@@ -365,7 +365,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 
 	if (m_CPUs > 1)
 	{
-		for(i = 0;i < m_CPUs;i++)
+		for (i = 0;i < m_CPUs;i++)
 		{
 			info[i].m_xMin = 0;
 			info[i].m_xMax = m_xSize;
@@ -375,14 +375,14 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 			threads[i].b3Start(b3RowFFT, &info[i]);
 		}
 
-		for(i = 0;i < m_CPUs;i++)
+		for (i = 0;i < m_CPUs;i++)
 		{
 			threads[i].b3Wait();
 		}
 
 		stop.b3TimePos();
 
-		for(i = 0;i < m_CPUs;i++)
+		for (i = 0;i < m_CPUs;i++)
 		{
 			info[i].m_xMin = m_xSize *   i      / m_CPUs;
 			info[i].m_xMax = m_xSize * ( i + 1) / m_CPUs;
@@ -392,7 +392,7 @@ b3_bool b3Fourier::b3FFT2D(int dir)
 			threads[i].b3Start(b3ColumnFFT, &info[i]);
 		}
 
-		for(i = 0;i < m_CPUs;i++)
+		for (i = 0;i < m_CPUs;i++)
 		{
 			threads[i].b3Wait();
 		}

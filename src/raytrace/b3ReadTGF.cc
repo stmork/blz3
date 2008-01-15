@@ -138,7 +138,7 @@ b3_bool b3TGFReader::b3ParseLight(char *ptr)
 	cone        = b3Endian::b3GetIntelDouble(&ptr[ 8]);
 	spot        = b3Endian::b3GetIntelDouble(&ptr[16]);
 
-	switch(type)
+	switch (type)
 	{
 	case 0:
 	case 1:
@@ -277,7 +277,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	numFac  = b3Endian::b3GetIntel32(&ptr[ 8]);
 	numDef  = b3Endian::b3GetIntel32(&ptr[12]);
 	type    = (b3_tgf_vertex)b3Endian::b3GetIntel16(&ptr[16]);
-	switch(type)
+	switch (type)
 	{
 	case TGF_VERTEX_POINT:
 		size = 3;
@@ -397,7 +397,7 @@ b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename) throw(
 	b3_u32      tagSize;
 	b3_bool     error = false;
 
-	while((pos < size) && (!error))
+	while ((pos < size) && (!error))
 	{
 		tag     = (b3_tgf_tag)b3Endian::b3GetIntel16(&ptr[0]);
 		tagSize = b3Endian::b3GetIntel32(&ptr[2]);
@@ -407,7 +407,7 @@ b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename) throw(
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"Tag: %4d size: %9d\n",tag,tagSize);
 #endif
-		switch(tag)
+		switch (tag)
 		{
 		case TGF_HEADER_TAG:
 			error = strcmp(ptr,"GAMMA TGF") != 0;
@@ -509,7 +509,7 @@ b3Scene *b3TGFReader::b3ReadTGFScene(const char *tgffile)
 
 	b3PrintF(B3LOG_NORMAL,"Reading TGF %s\n",tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile,size);
-	if(buffer != null)
+	if (buffer != null)
 	{
 		bbox = reader.b3Parse(buffer,size,tgffile);
 		if (bbox != null)
@@ -550,7 +550,7 @@ b3BBox *b3TGFReader::b3ReadTGFBBox(const char *tgffile)
 
 	b3PrintF(B3LOG_NORMAL,"Reading TGF %s\n",tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile,size);
-	if(buffer != null)
+	if (buffer != null)
 	{
 		bbox = reader.b3Parse(buffer,size,tgffile);
 	}

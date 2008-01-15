@@ -73,7 +73,7 @@ b3_scaling_mode b3Scaling::b3GetScaleMode()
 
 void b3Scaling::b3PrepareScaling()
 {
-	switch(b3GetScaleMode())
+	switch (b3GetScaleMode())
 	{
 	case B3_SCALE_BOX_POLAR:
 		m_ScaleMethod = b3ScaleBoxPolar;

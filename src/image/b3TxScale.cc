@@ -256,28 +256,28 @@ class b3_tx_mask
 b3_tx_mask b3_tx_mask::TxMask;
 
 const b3_u08 b3_tx_mask::TxMaskLeft[8] =
-	{
-		0xff,		// 11111111
-		0x7f,		// 01111111
-		0x3f,		// 00111111
-		0x1f,		// 00011111
-		0x0f,		// 00001111
-		0x07,		// 00000111
-		0x03,		// 00000011
-		0x01        // 00000001
-	};
+{
+	0xff,		// 11111111
+	0x7f,		// 01111111
+	0x3f,		// 00111111
+	0x1f,		// 00011111
+	0x0f,		// 00001111
+	0x07,		// 00000111
+	0x03,		// 00000011
+	0x01        // 00000001
+};
 
 const b3_u08 b3_tx_mask::TxMaskRight[8] =
-	{
-		0x00,		// 00000000
-		0x80,		// 10000000
-		0xc0,		// 11000000
-		0xe0,		// 11100000
-		0xf0,		// 11110000
-		0xf8,		// 11111000
-		0xfc,		// 11111100
-		0xfe		// 11111110
-	};
+{
+	0x00,		// 00000000
+	0x80,		// 10000000
+	0xc0,		// 11000000
+	0xe0,		// 11100000
+	0xf0,		// 11110000
+	0xf8,		// 11111000
+	0xfc,		// 11111100
+	0xfe		// 11111110
+};
 
 #ifndef SLOW
 // NOTE:
@@ -317,7 +317,7 @@ void b3Tx::b3ComputeLineBigger(
 ** memory.
 **
 ** Here are some examples:
-** 
+**
 ** src:  10010010 10010101 01111010 01010001 01001001 01101001 01001000 10100010
 **
 ** *****************************************************************************
@@ -325,24 +325,24 @@ void b3Tx::b3ComputeLineBigger(
 **
 ** interval:                [    ]
 ** mask left:              01111111
-** mask right:             11111110 
+** mask right:             11111110
 ** mask:                   01111110
 ** result:                 01111010
 ** count:                         5                                    =  5/ 6
 **
 ** *****************************************************************************
 ** This is otherwise (2)
-** 
+**
 ** interval:                [           ]
 ** mask left:              01111111
-** mask right:                      11111110 
+** mask right:                      11111110
 ** mask:                   01111111 11111110
 ** result:                 01111010 01010000
 ** count:                         5        2                           =  7/14
 **
 ** interval:                [                             ]
 ** mask left:              01111111
-** mask right:                                        11111000 
+** mask right:                                        11111000
 ** mask:                   01111111 11111111 11111111 11111000
 ** result:                 01111010 01010001 01001001 01101000
 ** count:                         5        3        3        3         = 14/28
@@ -495,7 +495,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 			}
 
 			// compute grey indices
-			switch(dstType)
+			switch (dstType)
 			{
 			case B3_TX_VGA:
 				for (xDst = 0;xDst < xDstSize;xDst++)
@@ -540,7 +540,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 			ComputeLine(TxRowCounter,TxRowCells,rIndex,&src[cIndex[yDst] * srcBytes],xDstSize);
 
 			// Compute grey indices
-			switch(dstType)
+			switch (dstType)
 			{
 			case B3_TX_VGA:
 				for (xDst = 0;xDst < xDstSize;xDst++)
@@ -908,7 +908,7 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 			}
 
 			// compute grey indices
-			switch(dstType)
+			switch (dstType)
 			{
 			case B3_TX_VGA:
 				i = 0;
@@ -942,15 +942,21 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 					{
 						if (divisor < B3_TX_MAX_DIVISOR)
 						{
-							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor);       i++;
+							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor);
+							i++;
 						}
 						else
 						{
-							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
+							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff);
+							i++;
 						}
 						*lDst = color;
 					}
@@ -968,15 +974,21 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 					{
 						if (divisor < B3_TX_MAX_DIVISOR)
 						{
-							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor);       i++;
+							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor);
+							i++;
 						}
 						else
 						{
-							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
+							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff);
+							i++;
 						}
 						*cDst = b3Color(color);
 					}
@@ -1008,7 +1020,7 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 			ComputeLine(TxRowCounter,TxRowCells,rIndex,&src[cIndex[yDst] * srcBytes],xDstSize);
 
 			// Compute grey indices
-			switch(dstType)
+			switch (dstType)
 			{
 			case B3_TX_VGA:
 				i = 0;
@@ -1042,15 +1054,21 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 					{
 						if (divisor < B3_TX_MAX_DIVISOR)
 						{
-							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor);       i++;
+							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor);
+							i++;
 						}
 						else
 						{
-							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
+							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff);
+							i++;
 						}
 						*lDst = color;
 					}
@@ -1068,15 +1086,21 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 					{
 						if (divisor < B3_TX_MAX_DIVISOR)
 						{
-							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8; i++;
-							color |= B3_TX_DIV2(TxRowCounter[i],divisor);       i++;
+							color  = B3_TX_DIV2(TxRowCounter[i],divisor) << 16;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor) <<  8;
+							i++;
+							color |= B3_TX_DIV2(TxRowCounter[i],divisor);
+							i++;
 						}
 						else
 						{
-							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8; i++;
-							color |= ((TxRowCounter[i] / divisor) & 0xff);       i++;
+							color  = ((TxRowCounter[i] / divisor) & 0xff) << 16;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff) <<  8;
+							i++;
+							color |= ((TxRowCounter[i] / divisor) & 0xff);
+							i++;
 						}
 						*cDst = b3Color(color);
 					}
@@ -1314,7 +1338,7 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 			}
 
 			// compute grey indices
-			switch(dstType)
+			switch (dstType)
 			{
 			case B3_TX_VGA:
 				i = 0;
@@ -1393,7 +1417,7 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 				TxRowCells,rIndex,&src[cIndex[yDst] * srcBytes],xDstSize);
 
 			// Compute grey indices
-			switch(dstType)
+			switch (dstType)
 			{
 			case B3_TX_VGA:
 				i = 0;
@@ -2142,7 +2166,7 @@ void b3Tx::b3ScaleUnfilteredFromILBM(
 	b3_u08       *cDst;
 	b3_pkd_color *lDst;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_VGA:
 		cDst = (b3_u08 *)data;

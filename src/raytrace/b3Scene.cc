@@ -611,19 +611,19 @@ b3Scene *b3Scene::b3ReadTGF(const char *filename)
 *************************************************************************/
 
 const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP] =
-	{
-		0.55,0.0,0.0,0.25,0.45,0.55
-	};
+{
+	0.55,0.0,0.0,0.25,0.45,0.55
+};
 
 const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP] =
-	{
-		0.9,0.95,0.95,0.6,0.6,0.6
-	};
+{
+	0.9,0.95,0.95,0.6,0.6,0.6
+};
 
 const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP] =
-	{
-		2.4,1.5,1.5,2.0,7.0,4.0
-	};
+{
+	2.4,1.5,1.5,2.0,7.0,4.0
+};
 
 void b3Scene::b3MixLensFlare(b3_ray *ray)
 {

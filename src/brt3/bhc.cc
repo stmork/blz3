@@ -32,16 +32,16 @@
 *************************************************************************/
 
 const char *b3BHDParser::m_TokenNames[] =
-	{
-		"begin",
-		"end",
-		"house",
-		"level",
-		"point",
-		"room",
-		"window",
-		"door"
-	};
+{
+	"begin",
+	"end",
+	"house",
+	"level",
+	"point",
+	"room",
+	"window",
+	"door"
+};
 
 b3BHDParser::b3BHDParser(const char *filename)
 {
@@ -68,14 +68,14 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 	b3_size  max = sizeof(m_TokenNames) / sizeof(const char *);
 	b3_size  i,len;
 
-	while(!feof(m_BHD))
+	while (!feof(m_BHD))
 	{
 		m_Line[0] = 0;
 		m_Pos     = 0;
 		if (fgets(m_Line,sizeof(m_Line),m_BHD) != null)
 		{
 			len = strlen(m_Line);
-			while(isspace(m_Line[m_Pos]) && (m_Pos < len))
+			while (isspace(m_Line[m_Pos]) && (m_Pos < len))
 			{
 				m_Pos++;
 			}
@@ -141,7 +141,7 @@ void b3BHDParser::b3ParseHouse()
 	do
 	{
 		token = b3ReadLine();
-		switch(token)
+		switch (token)
 		{
 		case TKN_LEVEL:
 			b3ParseLevel(m_Scale);
@@ -177,7 +177,7 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 	do
 	{
 		token = b3ReadLine();
-		switch(token)
+		switch (token)
 		{
 		case TKN_ROOM:
 			b3ParseRoom(level,base,height,scale);
@@ -525,17 +525,17 @@ b3Scene *b3BHDParser::b3Parse(const char *filename)
 		world.b3SetFirst(scene);
 		world.b3Write(scene->b3GetFilename());
 	}
-	catch(b3WorldException &we)
+	catch (b3WorldException &we)
 	{
 		b3PrintF(B3LOG_NORMAL,"ERROR:\n");
 		b3PrintF(B3LOG_NORMAL,"Write error: %s\n",we.b3GetErrorMsg());
 	}
-	catch(b3ParseException &pe)
+	catch (b3ParseException &pe)
 	{
 		b3PrintF(B3LOG_NORMAL,"ERROR:\n");
 		b3PrintF(B3LOG_NORMAL,"%s\n",pe.m_Message);
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL,"ERROR:\n");
 		b3PrintF(B3LOG_NORMAL,"Unknown source:\n");

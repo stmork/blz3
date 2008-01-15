@@ -31,9 +31,9 @@
 *************************************************************************/
 
 const b3_u32 b3Condition::m_LogicOps[] =
-	{
-		MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
-	};
+{
+	MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
+};
 
 void b3Condition::b3Register()
 {
@@ -78,7 +78,7 @@ b3_bool b3Condition::b3Conditionate(
 	b3_bool input,
 	b3_bool operation)
 {
-	switch(b3GetClassType() & MODE_MASK)
+	switch (b3GetClassType() & MODE_MASK)
 	{
 	case MODE_OR:
 		return input ||  operation;
@@ -174,7 +174,7 @@ void b3CondRectangle::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		if (m_Flags & RCF_ACTIVE)
@@ -280,7 +280,7 @@ void b3CondCircle::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		Bound.x1 = m_xCenter - m_Radius;
@@ -343,7 +343,7 @@ void b3CondSegment::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		Bound.x1 = m_xCenter - m_RadEnd;
@@ -436,7 +436,7 @@ void b3Cond2::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound,Aux;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		Bound.x1 = m_xPos   + m_xDir1;
@@ -577,7 +577,7 @@ void b3CondTexture::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		Bound.x1  =
@@ -663,7 +663,7 @@ void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		Bound.y1 = m_yStart;
@@ -783,7 +783,7 @@ void b3CondEllipse::b3ComputeBound(b3_stencil_limit *Limit)
 {
 	b3_stencil_limit Bound;
 
-	switch(ClassType & MODE_MASK)
+	switch (ClassType & MODE_MASK)
 	{
 	case MODE_OR:
 		Bound.x1 = m_xCenter - m_xRadius * m_RadEnd;

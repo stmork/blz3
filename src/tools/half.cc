@@ -85,7 +85,7 @@ int main (int argc,char *argv[])
 					}
 				}
 			}
-			catch(b3TxException &t)
+			catch (b3TxException &t)
 			{
 				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
 				b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());

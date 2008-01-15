@@ -71,7 +71,7 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 			scene->m_TrashPool.b3Append(row);
 		}
 	}
-	while(row != null);
+	while (row != null);
 
 	// Reach this if the row list ran empty.
 	b3PrintF(B3LOG_FULL,"  Raytracing thread %d terminates...\n",info->m_Num);
@@ -110,12 +110,12 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 				scene->m_TrashPool.b3Append(row);
 			}
 		}
-		while(row != null);
+		while (row != null);
 
 		b3PrintF(B3LOG_FULL,"  Signalling main thread done job of thread %d.\n",info->m_Num);
 		info->m_WaitForCompletion.b3Pulse();
 	}
-	while(info->m_Loop);
+	while (info->m_Loop);
 
 	b3PrintF(B3LOG_FULL,"  Raytracing thread %d for motion blur terminates...\n",info->m_Num);
 	return 0;
@@ -289,7 +289,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	b3PrintF(B3LOG_FULL,"  preparing special items...\n");
 	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
-		if(!item->b3Prepare(info))
+		if (!item->b3Prepare(info))
 		{
 			B3_THROW(b3PrepareException,B3_PREPARE_ERROR);
 		}
@@ -414,7 +414,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareExcept
 	// Init geometry
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if(!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info))
+	if (!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info))
 	{
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
@@ -496,11 +496,11 @@ void b3Scene::b3Raytrace(b3Display *display, b3_bool multi_threaded)
 			b3DoRaytrace(display,CPUs);
 		}
 	}
-	catch(b3PrepareException &p)
+	catch (b3PrepareException &p)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Problems preparing scene: %s\n",p.b3GetErrorMsg());
 	}
-	catch(b3DisplayException &e)
+	catch (b3DisplayException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}
@@ -543,5 +543,5 @@ void b3Scene::b3AbortRaytrace()
 			m_TrashPool.b3Append(row);
 		}
 	}
-	while(row != null);
+	while (row != null);
 }

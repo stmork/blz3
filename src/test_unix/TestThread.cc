@@ -27,41 +27,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/05/11 15:34:23  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**
-**	Revision 1.7  2004/12/23 22:22:42  sm
-**	- Adjusted further Visual C++ options
-**	
-**	Revision 1.6  2004/11/29 09:58:01  smork
-**	- Changed exit states to correct defines.
-**	- Added switch for disabling VBO in OpenGL renderer.
-**	- Added switches for logging level in OpenGL renderer as in brt3.
-**	
-**	Revision 1.5  2002/08/24 13:06:17  sm
-**	- Enhanced test suite for threading.
-**	
-**	Revision 1.4  2002/03/16 15:12:57  sm
-**	- Making b3Mem system independend using new system dependen b3MemAccess
-**	  class with static methods.
-**	- Adjusting TestThread with volatile keyword to avoid the compiler
-**	  optimizeing access to the test counter.
-**	
-**	
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        routines                                      **
 **                                                                      **
 *************************************************************************/

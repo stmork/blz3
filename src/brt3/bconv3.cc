@@ -181,7 +181,7 @@ int main(int argc,char *argv[])
 	{
 		if (argv[i][0] == '-')
 		{
-			switch(argv[i][1])
+			switch (argv[i][1])
 			{
 			case 'i':
 				i = b3Runtime::b3ParseOption(argc, argv, i, in_filename, B3_FILESTRINGLEN);

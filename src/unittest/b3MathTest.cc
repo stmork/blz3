@@ -71,7 +71,7 @@ void b3MathTest::test()
 
 	for (base = 0;base < 16;base++)
 	{
-		for(exp = 0;exp < 16;exp++)
+		for (exp = 0;exp < 16;exp++)
 		{
 			CPPUNIT_ASSERT_EQUAL(pow(base, static_cast<double>(exp)), b3Math::b3FastPow(base, exp));
 		}

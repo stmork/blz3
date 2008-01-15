@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3TxTIFF.cc $  
+**	$Filename:	b3TxTIFF.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -1431,14 +1431,18 @@ static long UnCodeTIFF (
 	switch (Texture->Planes)
 	{
 	case  1 :
-		Size = Texture->xSize + 7L & 0x7ffffff8; break;
+		Size = Texture->xSize + 7L & 0x7ffffff8;
+		break;
 	case  2 :
-		Size = Texture->xSize + 3L & 0x7ffffffc; break;
+		Size = Texture->xSize + 3L & 0x7ffffffc;
+		break;
 	case  4 :
-		Size = Texture->xSize + 1L & 0x7ffffffe; break;
+		Size = Texture->xSize + 1L & 0x7ffffffe;
+		break;
 	case  8 :
 	default :
-		Size = Texture->xSize;                   break;
+		Size = Texture->xSize;
+		break;
 	}
 	Size *= Texture->ySize;
 	if (PixelSamples == 3L) Size *= 4L;

@@ -121,7 +121,7 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 			i = b3FindIndex(old_ptr);
 			if (i >= 0)
 			{
-				if(m_SlotPtr[i].m_Size >= new_size)
+				if (m_SlotPtr[i].m_Size >= new_size)
 				{
 					new_ptr = m_SlotPtr[i].m_Ptr;
 				}

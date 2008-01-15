@@ -59,7 +59,7 @@ void b3PrepareInfo::b3CollectBBoxes(b3Scene *scene)
 void b3PrepareInfo::b3CollectBBoxes(b3BBox *bbox)
 {
 	m_BBoxRefArray.b3Clear();
-	while(bbox != null)
+	while (bbox != null)
 	{
 		bbox->b3CollectBBoxes(m_BBoxRefArray);
 		bbox = (b3BBox *)bbox->Succ;
@@ -132,7 +132,7 @@ b3_bool b3PrepareInfo::b3Prepare(
 		b3PrintF(B3LOG_FULL,"    Waiting for prepare threads...\n");
 		for (i = 0;i < m_CPUs;i++)
 		{
-			if(m_Threads[i].b3Wait() == 0)
+			if (m_Threads[i].b3Wait() == 0)
 			{
 				result = false;
 			}

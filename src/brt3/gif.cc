@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	gif.cc $  
+**	$Filename:	gif.cc $
 **	$Release:	Dortmund 1997, 2004 $
 **	$Revision$
 **	$Date$

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3FileList.cc $  
+**	$Filename:	b3FileList.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -128,7 +128,7 @@ b3_bool b3FileList::b3Add(const char *name)
 		entry = new b3FileEntry(name);
 		list.b3Append(entry);
 	}
-	catch(...)
+	catch (...)
 	{
 		entry = null;
 	}

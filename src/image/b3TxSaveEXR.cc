@@ -98,7 +98,7 @@ public:
 			file.setFrameBuffer(fb);
 			file.writePixels(m_Tx->ySize);
 		}
-		catch(const std::exception &e)
+		catch (const std::exception &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"Error writing OpenEXR file %s\n",e.what());
 			B3_THROW(b3TxException, B3_TX_NOT_SAVED);

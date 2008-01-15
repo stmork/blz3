@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3TxEasy.cc $  
+**	$Filename:	b3TxEasy.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -84,7 +84,7 @@ b3_result b3Tx::b3ParseRAW (
 		break;
 
 	case 6 : /* 24 Bit */
-		if(b3AllocTx(x,y,24))
+		if (b3AllocTx(x,y,24))
 		{
 			newLData = (b3_u32 *)data;
 			Max      = x * y;

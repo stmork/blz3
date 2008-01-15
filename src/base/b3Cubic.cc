@@ -2,7 +2,7 @@
 **
 **	$Filename:	b3Cubic.cc $
 **	$Release:	Dortmund 2001 $
-**	$Revision: 2.02 
+**	$Revision: 2.02
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $

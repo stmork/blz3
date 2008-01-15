@@ -804,7 +804,7 @@ void b3Item::b3StoreString(const char *name,const b3_size len)
 {
 	b3EnsureStoreBuffer((b3_u32)len >> 2,false);
 
-	if(m_StoreOffset == 0)
+	if (m_StoreOffset == 0)
 	{
 		m_StoreOffset = m_StoreIndex;
 	}

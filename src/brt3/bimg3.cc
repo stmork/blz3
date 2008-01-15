@@ -73,11 +73,11 @@ static void load(const char *name)
 		texture_pool.b3LoadTexture(name);
 		b3PrintF(B3LOG_NORMAL,".");
 	}
-	catch(b3TxException &txe)
+	catch (b3TxException &txe)
 	{
 		b3PrintF(B3LOG_NORMAL,"\nImage Exception of file %s!\n",name);
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL,"\nError of file %s!\n",name);
 	}
@@ -112,7 +112,7 @@ int main(int argc,char *argv[])
 		{
 			if (argv[i][0] == '-')
 			{
-				switch(argv[i][1])
+				switch (argv[i][1])
 				{
 				case 'd' :
 					b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -124,7 +124,7 @@ int main(int argc,char *argv[])
 			}
 			else
 			{
-				switch(b3Dir::b3Exists(argv[i]))
+				switch (b3Dir::b3Exists(argv[i]))
 				{
 				case B3_TYPE_DIR:
 					list.b3CreateList(argv[i]);

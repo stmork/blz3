@@ -24,7 +24,7 @@ int main(int argc,char *argv[])
 	b3_index  i;
 	b3World   world;
 
-	switch(b3Runtime::b3GetCPUType())
+	switch (b3Runtime::b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
 		b3PrintF (B3LOG_NORMAL,"Big endian (MC 680x0)\n");
@@ -46,7 +46,7 @@ int main(int argc,char *argv[])
 		{
 			world.b3ReadDump(argv[i]);
 		}
-		catch(b3WorldException &e)
+		catch (b3WorldException &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"Error catched loading %s\n",argv[i]);
 			b3PrintF(B3LOG_NORMAL,"  Error code: %d\n",e.b3GetError());

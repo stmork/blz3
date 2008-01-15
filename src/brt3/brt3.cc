@@ -251,7 +251,7 @@ int main(int argc,char *argv[])
 
 			if (argv[i][0] == '-')
 			{
-				switch(argv[i][1])
+				switch (argv[i][1])
 				{
 				case 'd' :
 					b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -409,25 +409,25 @@ int main(int argc,char *argv[])
 						delete display;
 					}
 				}
-				catch(b3WorldException &w)
+				catch (b3WorldException &w)
 				{
 					b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[i]);
 					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",w.b3GetError());
 					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",w.b3GetErrorMsg());
 				}
-				catch(b3FileException &f)
+				catch (b3FileException &f)
 				{
 					b3PrintF(B3LOG_NORMAL,"File IO error using %s\n",argv[i]);
 					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f.b3GetError());
 					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",f.b3GetErrorMsg());
 				}
-				catch(b3TxException &t)
+				catch (b3TxException &t)
 				{
 					b3PrintF(B3LOG_NORMAL,"Image error using %s\n",argv[i]);
 					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
 					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
 				}
-				catch(...)
+				catch (...)
 				{
 					b3PrintF(B3LOG_NORMAL,"Unknown error occured loading %s\n",argv[i]);
 				}

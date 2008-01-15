@@ -62,12 +62,12 @@ inline void b3Tx::b3UnpackSGI (
 				if (count == 0) return;
 				if (pixel & 0x80)
 				{
-					while(count--) *buffer++ = *bBuffer++;
+					while (count--) *buffer++ = *bBuffer++;
 				}
 				else
 				{
 					pixel = *bBuffer++;
-					while(count--) *buffer++ = pixel;
+					while (count--) *buffer++ = pixel;
 				}
 			}
 			while (true);
@@ -95,12 +95,12 @@ inline void b3Tx::b3UnpackSGI (
 				if (count == 0) return;
 				if (pixel & 0x80)
 				{
-					while(count--) *buffer++ = *sBuffer++;
+					while (count--) *buffer++ = *sBuffer++;
 				}
 				else
 				{
 					pixel = *sBuffer++;
-					while(count--) *buffer++ = pixel;
+					while (count--) *buffer++ = pixel;
 				}
 			}
 			while (true);
