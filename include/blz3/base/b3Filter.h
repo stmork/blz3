@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Filter.h $ 
+**	$Filename:	b3Filter.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$

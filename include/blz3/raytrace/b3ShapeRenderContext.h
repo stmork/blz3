@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ShapeRenderContext.h $ 
+**	$Filename:	b3ShapeRenderContext.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -48,7 +48,7 @@ public:
 	/**
 	 * This method initializes the sub division for render object indices.
 	 *
-	 * @note All render objects should be recomputed after this call. 
+	 * @note All render objects should be recomputed after this call.
 	 * @param subdiv The new sub division value.
 	 * @throws b3WorldException
 	 */

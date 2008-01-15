@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3MultiSample.h $ 
+**	$Filename:	b3MultiSample.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

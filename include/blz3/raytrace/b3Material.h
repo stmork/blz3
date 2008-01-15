@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Material.h $ 
+**	$Filename:	b3Material.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -162,10 +162,10 @@ public:
 	 * This method is the static entry point for component mixing (ambient, diffuse, specular terms plus refracted and
 	 * reflected parts.
 	 *
-	 * @param surface 
+	 * @param surface
 	 * @param reflection The reflectance.
 	 * @param refraction The refractance.
-	 * @return True if mixed via material properties. 
+	 * @return True if mixed via material properties.
 	 */
 	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{

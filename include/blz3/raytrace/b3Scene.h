@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Scene.h $ 
+**	$Filename:	b3Scene.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -283,7 +283,7 @@ public:
 	/**
 	 * This method returns info for using with all sub b3Items for initialisation
 	 * via the b3Prepare() method call.
-	 * 
+	 *
 	 * \return The scene's preparation info.
 	 */
 	inline b3_scene_preparation *b3GetPrepareInfo()

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Render.h $ 
+**	$Filename:	b3Render.h $
 **	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
@@ -158,7 +158,7 @@ public:
 	/**
 	 * This method resets the lighting with the specified color as ambient color
 	 * using the b3SetAmbient() method. All lights sources except the first one
-	 * are disabled. 
+	 * are disabled.
 	 *
 	 * @param color The ambient color.
 	 */

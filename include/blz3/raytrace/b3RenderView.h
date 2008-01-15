@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3RenderView.h $ 
+**	$Filename:	b3RenderView.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -217,7 +217,7 @@ public:
 	void              b3Scale(b3_f64 scale);
 
 	/**
-	 * This method moves the current view section. The coordinates are in view port 
+	 * This method moves the current view section. The coordinates are in view port
 	 * relative coordinates.
 	 *
 	 * @param xDir The relative horizontal movement.
@@ -302,7 +302,7 @@ public:
 	 * This method projects a point onto the projection plane of the actually
 	 * configured view. The xRelParam and yRelParam are relative coordinates
 	 * in the range of [0..1[ where
-	 * the coordinate 0,0 is at the upper left corner of the view port screen. 
+	 * the coordinate 0,0 is at the upper left corner of the view port screen.
 	 *
 	 * @param point The point to project.
 	 * @param xRel The resulting relative x view port coordinate.

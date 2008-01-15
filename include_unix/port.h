@@ -8,7 +8,8 @@
 #ifndef _PORT_
 #define _PORT_ 1
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #include <sys/types.h>
 #define HOST_FILLORDER FILLORDER_LSB2MSB

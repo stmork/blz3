@@ -4,23 +4,23 @@
  * Copyright (c) 1988-1997 Sam Leffler
  * Copyright (c) 1991-1997 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and 
+ * Permission to use, copy, modify, distribute, and sell this software and
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- * 
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
- * 
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -131,7 +131,8 @@ typedef	void* thandle_t;	/* client data handle */
 
 typedef	unsigned char TIFFRGBValue;		/* 8-bit samples */
 
-typedef struct {
+typedef struct
+{
 	float d_mat[3][3]; 		/* XYZ -> luminance matrix */
 	float d_YCR;			/* Light o/p for reference white */
 	float d_YCG;
@@ -147,7 +148,8 @@ typedef struct {
 	float d_gammaB;
 } TIFFDisplay;
 
-typedef struct {				/* YCbCr->RGB support */
+typedef struct  				/* YCbCr->RGB support */
+{
 	TIFFRGBValue* clamptab;			/* range clamping table */
 	int*	Cr_r_tab;
 	int*	Cb_b_tab;
@@ -156,7 +158,8 @@ typedef struct {				/* YCbCr->RGB support */
 	int32*  Y_tab;
 } TIFFYCbCrToRGB;
 
-typedef struct {				/* CIE Lab 1976->RGB support */
+typedef struct  				/* CIE Lab 1976->RGB support */
+{
 	int	range;				/* Size of conversion table */
 #define CIELABTORGB_TABLE_RANGE 1500
 	float	rstep, gstep, bstep;
@@ -174,7 +177,7 @@ typedef struct _TIFFRGBAImage TIFFRGBAImage;
 /*
  * The image reading and conversion routines invoke
  * ``put routines'' to copy/image/whatever tiles of
- * raw image data.  A default set of routines are 
+ * raw image data.  A default set of routines are
  * provided to convert/copy raw image data to 8-bit
  * packed ABGR format rasters.  Applications can supply
  * alternate routines that unpack the data into a
@@ -190,7 +193,8 @@ typedef void (*tileSeparateRoutine)
 /*
  * RGBA-reader state.
  */
-struct _TIFFRGBAImage {
+struct _TIFFRGBAImage
+{
 	TIFF*	tif;				/* image handle */
 	int	stoponerr;			/* stop on read error */
 	int	isContig;			/* data is packed/separate */
@@ -207,7 +211,8 @@ struct _TIFFRGBAImage {
 	uint16*	bluecmap;
 	/* get image data routine */
 	int	(*get)(TIFFRGBAImage*, uint32*, uint32, uint32);
-	union {
+	union
+	{
 		void (*any)(TIFFRGBAImage*);
 		tileContigRoutine	contig;
 		tileSeparateRoutine	separate;
@@ -239,7 +244,8 @@ struct _TIFFRGBAImage {
  * and/or the builtin implementations may be overridden.
  */
 typedef	int (*TIFFInitMethod)(TIFF*, int);
-typedef struct {
+typedef struct
+{
 	char*		name;
 	uint16		scheme;
 	TIFFInitMethod	init;
@@ -254,7 +260,8 @@ typedef struct {
 #endif
 
 #if defined(c_plusplus) || defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 	typedef	void (*TIFFErrorHandler)(const char*, const char*, va_list);
 	typedef	tsize_t (*TIFFReadWriteProc)(thandle_t, tdata_t, tsize_t);
@@ -444,7 +451,8 @@ extern "C" {
 
 #define FIELD_CUSTOM    65
 
-	typedef	struct {
+	typedef	struct
+	{
 		ttag_t	field_tag;		/* field's tag */
 		short	field_readcount;	/* read count/TIFF_VARIABLE/TIFF_SPP */
 		short	field_writecount;	/* write count/TIFF_VARIABLE */
@@ -455,7 +463,8 @@ extern "C" {
 		char	*field_name;		/* ASCII name */
 	} TIFFFieldInfo;
 
-	typedef struct _TIFFTagValue {
+	typedef struct _TIFFTagValue
+	{
 		const TIFFFieldInfo  *info;
 		int             count;
 		void           *value;
@@ -472,7 +481,8 @@ extern "C" {
 	typedef	int (*TIFFVGetMethod)(TIFF*, ttag_t, va_list);
 	typedef	void (*TIFFPrintMethod)(TIFF*, FILE*, long);
 
-	typedef struct {
+	typedef struct
+	{
 		TIFFVSetMethod	vsetfield;	/* tag set routine */
 		TIFFVGetMethod	vgetfield;	/* tag get routine */
 		TIFFPrintMethod	printdir;	/* directory print routine */

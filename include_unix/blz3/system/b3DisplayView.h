@@ -2,7 +2,7 @@
 **
 **	$Filename:	b3DisplayView.h   $
 **	$Release:	Dortmund 2001, 2002 $
-**	$Revision:	1.07 
+**	$Revision:	1.07
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $

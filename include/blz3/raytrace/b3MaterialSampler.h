@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3MaterialSampler.h $ 
+**	$Filename:	b3MaterialSampler.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

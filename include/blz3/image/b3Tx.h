@@ -567,7 +567,7 @@ public:
 	// b3TxBlit.cc
 	/**
 	 * This method creates an image mask from a specified key color. If the image
-	 * type is B3_TX_ILBM the image data itself is used. In all other cases the 
+	 * type is B3_TX_ILBM the image data itself is used. In all other cases the
 	 * color mask must be equal to the pixel value to set the mask bit to one.
 	 *
 	 * @param mask The resulting mask buffer.
@@ -638,7 +638,7 @@ public:
 
 	/**
 	 * This method computes devignette on an given image. If the source image
-	 * pointer is null this image instance is assumed. The 
+	 * pointer is null this image instance is assumed. The
 	 *
 	 * @param xPos The x center position to devignette.
 	 * @param yPos The y center position to devignette.
@@ -719,7 +719,7 @@ public:
 
 	// b3TxHist.cc
 	/**
-	 * This method computes a complete histogramme of the image. This 
+	 * This method computes a complete histogramme of the image. This
 	 * method works only on images of type B3_TX_ILBM, B3_TX_VGA and
 	 * B3_TX_RGB8.
 	 *
@@ -729,7 +729,7 @@ public:
 	b3_bool        b3Histogramme();
 
 	/**
-	 * This method initializes the histogramme. 
+	 * This method initializes the histogramme.
 	 *
 	 * @return True on success.
 	 */
@@ -741,7 +741,7 @@ public:
 	void           b3EndHist    ();
 
 	/**
-	 * This method computes the history for the given image area. This 
+	 * This method computes the history for the given image area. This
 	 * method works only on images of type B3_TX_ILBM, B3_TX_VGA and
 	 * B3_TX_RGB8.
 	 *

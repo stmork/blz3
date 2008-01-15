@@ -43,7 +43,7 @@ public:
 	/**
 	 * This computes a Fresnel term from an input value.
 	 *
-	 * \param F0 
+	 * \param F0
 	 * \return The computed Fresnel term.
 	 */
 	static inline b3_f64 b3GetMu(const b3_f64 F0)
@@ -57,8 +57,8 @@ public:
 	 * This method computes a Fresnel term from two values. This is
 	 * known as Schlick's hack.
 	 *
-	 * \param phi 
-	 * \param mu 
+	 * \param phi
+	 * \param mu
 	 * \return The fresnel computed value.
 	 */
 	static inline b3_f64 b3GetFresnel(b3_f64 phi,const b3_f64 mu)
@@ -347,8 +347,8 @@ public:
 
 	/**
 	 *
-	 * \param t 
-	 * \return 
+	 * \param t
+	 * \return
 	 */
 	static inline b3_f64 b3Fade(const b3_f64 t)
 	{

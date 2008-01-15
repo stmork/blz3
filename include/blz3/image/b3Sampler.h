@@ -1,5 +1,5 @@
 /*
-**   
+**
 **  $Filename:  b3Sampler.cc $
 **  $Release:   Dortmund 2004 $
 **  $Revision$

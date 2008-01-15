@@ -43,7 +43,7 @@ public:
 	 *
 	 * @param a The first element to compare.
 	 * @param b The second element to compare.
-	 * @param dummy A pointer to provide additional information into the 
+	 * @param dummy A pointer to provide additional information into the
 	 *              comparing process.
 	 */
 	static int b3Sort(T *a,T *b,const void *dummy)

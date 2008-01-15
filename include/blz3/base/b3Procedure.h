@@ -219,9 +219,9 @@ public:
 	 * This method returns the derivative vector of the given position based on Perlin noise. The
 	 * values are in range [0..1].
 	 *
-	 * @param dx The x derivative.	
-	 * @param dy The y derivative.	
-	 * @param dz The z derivative.	
+	 * @param dx The x derivative.
+	 * @param dy The y derivative.
+	 * @param dz The z derivative.
 	 * @param result The resulting vector.
 	 */
 	static        void       b3NoiseDeriv (const b3_f64 dx, const b3_f64 dy, const b3_f64 dz,b3_vector *result);
@@ -230,9 +230,9 @@ public:
 	 * This method returns the derivative vector of the given position based on Perlin noise. The
 	 * values are in range [-1..1].
 	 *
-	 * @param dx The x derivative.	
-	 * @param dy The y derivative.	
-	 * @param dz The z derivative.	
+	 * @param dx The x derivative.
+	 * @param dy The y derivative.
+	 * @param dz The z derivative.
 	 * @param result The resulting vector.
 	 */
 	static inline void b3SignedNoiseDeriv (const b3_f64 dx, const b3_f64 dy, const b3_f64 dz,b3_vector *result)

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Matrix.h            
+**	$Filename:	b3Matrix.h
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$

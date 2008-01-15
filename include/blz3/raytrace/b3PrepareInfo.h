@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3PrepareInfo.h $ 
+**	$Filename:	b3PrepareInfo.h $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$

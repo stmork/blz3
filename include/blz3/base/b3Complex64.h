@@ -295,12 +295,18 @@ public:
 	inline static void b3Swap(b3Complex64 &a, b3Complex64 &b)
 	{
 #ifdef SSE_ALIGNED
-		__m128d aux = a.v; a.v = b.v; b.v = aux;
+		__m128d aux = a.v;
+		a.v = b.v;
+		b.v = aux;
 #else
 		b3_f64 aux;
 
-		aux = a.v[0]; a.v[0] = b.v[0]; b.v[0] = aux;
-		aux = a.v[1]; a.v[1] = b.v[1]; b.v[1] = aux;
+		aux = a.v[0];
+		a.v[0] = b.v[0];
+		b.v[0] = aux;
+		aux = a.v[1];
+		a.v[1] = b.v[1];
+		b.v[1] = aux;
 #endif
 	}
 };

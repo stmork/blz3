@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3VertexBuffer.h $ 
+**	$Filename:	b3VertexBuffer.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

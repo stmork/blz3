@@ -158,7 +158,7 @@ public:
 		const b3_f32 *b = &bVec->x;
 		b3_f32 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -179,7 +179,7 @@ public:
 		const b3_f32 *b = &bVec->x;
 		b3_f32 *r = &result->x;
 
-		for(b3_loop i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -208,7 +208,7 @@ public:
 		const b3_f32 *o = &offset->x;
 		b3_f32 *v = &vector->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			v[i] = v[i] + factor * o[i];
 		}
@@ -228,7 +228,7 @@ public:
 		const b3_f32 *o = &offset->x;
 		b3_f32 *v = &vector->x;
 
-		for(b3_loop i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] = v[i] + factor * o[i];
 		}

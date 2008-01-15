@@ -63,7 +63,7 @@ public:
 	 * This method initializes the class. The method must be reinvocated
 	 * if the material properties are changed.
 	 *
-	 * \param *scale 
+	 * \param *scale
 	 */
 	void   b3PrepareWood(b3_vector *scale);
 
@@ -73,10 +73,10 @@ public:
 	 * a disturbance factor and the values fx,fy determines the position inside
 	 * an oak plank.
 	 *
-	 * \param *wood 
-	 * \param wobble 
-	 * \param fx 
-	 * \param fy 
+	 * \param *wood
+	 * \param wobble
+	 * \param fx
+	 * \param fy
 	 * \see b3OakPlank
 	 */
 	void   b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy);
@@ -134,7 +134,7 @@ public:
 	 * This method initializes the class. The method must be reinvocated
 	 * if the material properties are changed.
 	 *
-	 * \param *scale 
+	 * \param *scale
 	 */
 	void     b3PrepareOakPlank(b3_vector *scale);
 };

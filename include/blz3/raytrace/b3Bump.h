@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Bump.h $ 
+**	$Filename:	b3Bump.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -58,7 +58,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Base class for all bump classes               **               
+**                        Base class for all bump classes               **
 **                                                                      **
 *************************************************************************/
 

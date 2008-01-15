@@ -4,23 +4,23 @@
  * Copyright (c) 1990-1997 Sam Leffler
  * Copyright (c) 1991-1997 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and 
+ * Permission to use, copy, modify, distribute, and sell this software and
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- * 
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
- * 
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -58,7 +58,8 @@ typedef	void (*TIFFFaxFillFunc)(unsigned char*, uint32*, uint32*, uint32);
  * The default run filler; made external for other decoders.
  */
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 	extern	void _TIFFFax3fillruns(unsigned char*, uint32*, uint32*, uint32);
 #if defined(__cplusplus)
@@ -81,7 +82,8 @@ extern "C" {
 #define S_MakeUp	11
 #define S_EOL		12
 
-typedef struct {		/* state table entry */
+typedef struct  		/* state table entry */
+{
 	unsigned char State;	/* see above */
 	unsigned char Width;	/* width of code in bits */
 	uint32	Param;		/* unsigned 32-bit run length in bits */
@@ -176,21 +178,22 @@ extern	const TIFFFaxTabEnt TIFFFaxBlackTable[];
 } while (0)
 
 #ifdef FAX3_DEBUG
-static const char* StateNames[] = {
-									  "Null   ",
-									  "Pass   ",
-									  "Horiz  ",
-									  "V0     ",
-									  "VR     ",
-									  "VL     ",
-									  "Ext    ",
-									  "TermW  ",
-									  "TermB  ",
-									  "MakeUpW",
-									  "MakeUpB",
-									  "MakeUp ",
-									  "EOL    ",
-								  };
+static const char* StateNames[] =
+{
+	"Null   ",
+	"Pass   ",
+	"Horiz  ",
+	"V0     ",
+	"VR     ",
+	"VL     ",
+	"Ext    ",
+	"TermW  ",
+	"TermB  ",
+	"MakeUpW",
+	"MakeUpB",
+	"MakeUp ",
+	"EOL    ",
+};
 #define DEBUG_SHOW putchar(BitAcc & (1 << t) ? '1' : '0')
 #define LOOKUP8(wid,tab,eoflab) do {					\
     int t;								\

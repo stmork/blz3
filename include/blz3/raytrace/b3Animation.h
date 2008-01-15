@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Animation.h $ 
+**	$Filename:	b3Animation.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

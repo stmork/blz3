@@ -227,7 +227,7 @@ public:
 #endif
 		if (!from->b3IsEmpty())
 		{
-			if(b3IsEmpty())
+			if (b3IsEmpty())
 			{
 				// Simple move
 				First = from->First;
@@ -251,7 +251,7 @@ public:
 	{
 		T *node,*succ;
 
-		for(node = First;node != null;node = succ)
+		for (node = First;node != null;node = succ)
 		{
 			succ = node->Succ;
 			delete node;
@@ -271,7 +271,7 @@ public:
 		First = null;
 		Last  = null;
 
-		while(node != null)
+		while (node != null)
 		{
 			// unlink every node
 			succ = node->Succ;

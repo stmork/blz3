@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Pick.h $  
+**	$Filename:	b3Pick.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$

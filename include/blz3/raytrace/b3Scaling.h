@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Scaling.h $ 
+**	$Filename:	b3Scaling.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Condition.h $ 
+**	$Filename:	b3Condition.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

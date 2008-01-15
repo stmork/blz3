@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3RenderTypes.h $ 
+**	$Filename:	b3RenderTypes.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

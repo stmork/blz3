@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3VectorBufferObjects.h $ 
+**	$Filename:	b3VectorBufferObjects.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Factory.h $  
+**	$Filename:	b3Factory.h $
 **	$Release:	Dortmund 2005 $
 **	$Revision$
 **	$Date$

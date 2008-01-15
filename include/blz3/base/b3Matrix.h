@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Matrix.h            
+**	$Filename:	b3Matrix.h
 **	$Release:	Dortmund 2001, 2003 $
 **	$Revision$
 **	$Date$
@@ -89,7 +89,7 @@ public:
 	/**
 	 * This method copies a vector.
 	 *
-	 * @param vec The destination vector. 
+	 * @param vec The destination vector.
 	 * @param src The source vector.
 	 * @return The result (= vec input).
 	 */
@@ -104,7 +104,7 @@ public:
 	/**
 	 * This method copies a vector.
 	 *
-	 * @param vec The destination vector. 
+	 * @param vec The destination vector.
 	 * @param src The source vector.
 	 * @return The result (= vec input).
 	 */
@@ -125,7 +125,7 @@ public:
 	/**
 	 * This method copies a vector.
 	 *
-	 * @param vec The destination vector. 
+	 * @param vec The destination vector.
 	 * @param src The source vector.
 	 * @return The result (= vec input).
 	 */
@@ -146,7 +146,7 @@ public:
 	/**
 	 * This method copies a vector.
 	 *
-	 * @param vec The destination vector. 
+	 * @param vec The destination vector.
 	 * @param src The source vector.
 	 * @return The result (= vec input).
 	 */
@@ -430,9 +430,9 @@ public:
 		return result;
 #else
 		return
-		    aVec->x * bVec->x +
-		    aVec->y * bVec->y +
-		    aVec->z * bVec->z;
+			aVec->x * bVec->x +
+			aVec->y * bVec->y +
+			aVec->z * bVec->z;
 #endif
 	}
 
@@ -469,7 +469,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] += a[i];
 		}
@@ -537,7 +537,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] = a[i] + b[i];
 		}
@@ -602,7 +602,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] -= a[i];
 		}
@@ -652,7 +652,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -717,7 +717,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] *= a[i];
 		}
@@ -785,7 +785,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] = a[i] * b[i];
 		}
@@ -874,9 +874,12 @@ public:
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 		b3_f64 B3_ALIGN_16  a[4],b[4],c[4],d[4];
 
-		a[Z] = c[Y] = aVec->x; b[Y] = d[Z] = bVec->x;
-		a[X] = c[Z] = aVec->y; b[Z] = d[X] = bVec->y;
-		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
+		a[Z] = c[Y] = aVec->x;
+		b[Y] = d[Z] = bVec->x;
+		a[X] = c[Z] = aVec->y;
+		b[Z] = d[X] = bVec->y;
+		a[Y] = c[X] = aVec->z;
+		b[X] = d[Y] = bVec->z;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -964,7 +967,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *v = &vector->x;
 		b3_f64              result = 0;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			result += v[i] * v[i];
 		}
@@ -1069,7 +1072,7 @@ public:
 #ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *v = &vector->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			v[i] *= factor;
 		}
@@ -1099,7 +1102,7 @@ public:
 		const b3_f64 B3_ALIGN_16 *v = &vector->x;
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			r[i] = v[i] * factor;
 		}
@@ -1205,7 +1208,7 @@ public:
 
 	/**
 	 * This method computes the angle between two vectors.
-	 * 
+	 *
 	 * @param Vector1 The first vector.
 	 * @param Vector2 The second vector.
 	 * @return The resulting angle.
@@ -1701,17 +1704,23 @@ public:
 
 		if (lower->x > upper->x)
 		{
-			aux = lower->x; lower->x = upper->x; upper->x = aux;
+			aux = lower->x;
+			lower->x = upper->x;
+			upper->x = aux;
 		}
 
 		if (lower->y > upper->y)
 		{
-			aux = lower->y; lower->y = upper->y; upper->y = aux;
+			aux = lower->y;
+			lower->y = upper->y;
+			upper->y = aux;
 		}
 
 		if (lower->z > upper->z)
 		{
-			aux = lower->z; lower->z = upper->z; upper->z = aux;
+			aux = lower->z;
+			lower->z = upper->z;
+			upper->z = aux;
 		}
 	}
 
@@ -1733,7 +1742,9 @@ public:
 		{
 			if (l[i] > u[i])
 			{
-				aux = l[i]; l[i] = u[i]; u[i] = aux;
+				aux = l[i];
+				l[i] = u[i];
+				u[i] = aux;
 			}
 		}
 #else
@@ -1741,17 +1752,23 @@ public:
 
 		if (lower->x > upper->x)
 		{
-			aux = lower->x; lower->x = upper->x; upper->x = aux;
+			aux = lower->x;
+			lower->x = upper->x;
+			upper->x = aux;
 		}
 
 		if (lower->y > upper->y)
 		{
-			aux = lower->y; lower->y = upper->y; upper->y = aux;
+			aux = lower->y;
+			lower->y = upper->y;
+			upper->y = aux;
 		}
 
 		if (lower->z > upper->z)
 		{
-			aux = lower->z; lower->z = upper->z; upper->z = aux;
+			aux = lower->z;
+			lower->z = upper->z;
+			upper->z = aux;
 		}
 #endif
 	}
@@ -1927,7 +1944,7 @@ public:
 	static b3_matrix *b3Transport    (b3_matrix *Src,b3_matrix *Dst);
 
 	/**
-	 * This method creates a translation transformation, multiplies it with an input matrix and stores the 
+	 * This method creates a translation transformation, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal.
@@ -1940,7 +1957,7 @@ public:
 	static b3_matrix *b3Move         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Move);
 
 	/**
-	 * This method creates a translation transformation, multiplies it with an input matrix and stores the 
+	 * This method creates a translation transformation, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal.
@@ -1955,10 +1972,10 @@ public:
 	static b3_matrix *b3Move         (b3_matrix *Src,b3_matrix *Dst,b3_f64 x,b3_f64 y,b3_f64 z);
 
 	/**
-	 * This method creates a translation transformation in negative direction, multiplies it with an input matrix and stores the 
+	 * This method creates a translation transformation in negative direction, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
-	 * equal. 
+	 * equal.
 	 *
 	 * @param Src The source matrix or null.
 	 * @param Dst The destination matrix.
@@ -1968,7 +1985,7 @@ public:
 	static b3_matrix *b3MoveNegative (b3_matrix *Src,b3_matrix *Dst,b3_vector *MoveNeg);
 
 	/**
-	 * This method creates a scale transformation, multiplies it with an input matrix and stores the 
+	 * This method creates a scale transformation, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the scaling center.
@@ -1982,7 +1999,7 @@ public:
 	static b3_matrix *b3Scale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Scale);
 
 	/**
-	 * This method creates a scale transformation, multiplies it with an input matrix and stores the 
+	 * This method creates a scale transformation, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the scaling center.
@@ -1998,7 +2015,7 @@ public:
 	static b3_matrix *b3Scale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 x = 1.0,b3_f64 y = 1.0,b3_f64 z = 1.0);
 
 	/**
-	 * This method creates a rotation transformation around the x axis, multiplies it with an input matrix and stores the 
+	 * This method creates a rotation transformation around the x axis, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the rotating center. This transformation
@@ -2013,7 +2030,7 @@ public:
 	static b3_matrix *b3RotateX      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
 
 	/**
-	 * This method creates a rotation transformation around the y axis, multiplies it with an input matrix and stores the 
+	 * This method creates a rotation transformation around the y axis, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the rotating center. This transformation
@@ -2028,7 +2045,7 @@ public:
 	static b3_matrix *b3RotateY      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
 
 	/**
-	 * This method creates a rotation transformation around the z axis, multiplies it with an input matrix and stores the 
+	 * This method creates a rotation transformation around the z axis, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the rotating center. This transformation
@@ -2043,7 +2060,7 @@ public:
 	static b3_matrix *b3RotateZ      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
 
 	/**
-	 * This method creates a rotation transformation around a given half ray, multiplies it with an input matrix and stores the 
+	 * This method creates a rotation transformation around a given half ray, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the rotating center specified in the half ray. This transformation
@@ -2058,7 +2075,7 @@ public:
 	static b3_matrix *b3RotateVector (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 angle);
 
 	/**
-	 * This method creates a point mirror transformation around a given center point, multiplies it with an input matrix and stores the 
+	 * This method creates a point mirror transformation around a given center point, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the mirror center.
@@ -2072,7 +2089,7 @@ public:
 	static b3_matrix *b3MirrorPoint  (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 scale);
 
 	/**
-	 * This method creates a axis mirror transformation around a given ray, multiplies it with an input matrix and stores the 
+	 * This method creates a axis mirror transformation around a given ray, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the mirror center.
@@ -2086,7 +2103,7 @@ public:
 	static b3_matrix *b3MirrorAxis   (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 scale);
 
 	/**
-	 * This method creates a plane mirror transformation around a given plane, multiplies it with an input matrix and stores the 
+	 * This method creates a plane mirror transformation around a given plane, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a temporarily translation towards the mirror center.
@@ -2107,7 +2124,7 @@ public:
 	 * The alignment vectors needs to be a unit vector. The new y axis lies in the old xy plane. The new
 	 * z axis is the cross product from the new xy plane but if the direction is up or down depends on the
 	 * future flag and the previous alignment vector. The new base lies in the axis' position.
-	 * 
+	 *
 	 * \param *M The transformation matrix to fill.
 	 * \param *axis The alignment axis.
 	 * \return The input matrix.
@@ -2115,7 +2132,7 @@ public:
 	static b3_matrix *b3Align        (b3_matrix *M,const b3_line *axis);
 
 	/**
-	 * This method creates an alignment transformation to a given half ray, multiplies it with an input matrix and stores the 
+	 * This method creates an alignment transformation to a given half ray, multiplies it with an input matrix and stores the
 	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
 	 * will be assumed. The destination must not be null. The source and the destination matrix may be
 	 * equal. The transformation includes a translation towards the position specified in the half ray.

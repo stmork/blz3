@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Shape.h $ 
+**	$Filename:	b3Shape.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -71,7 +71,7 @@ class B3_PLUGIN b3ShapeBaseTransformation : public b3BaseTransformation
 {
 public:
 	/**
-	 * This method computes the derivates along the normal given by the 
+	 * This method computes the derivates along the normal given by the
 	 * ray structure.
 	 *
 	 * @param ray The ray which contains the normal.
@@ -190,7 +190,7 @@ public:
 	 * This method transforms the shape with the given transformation matrix. The
 	 * affine flag signals if the normals must be recomputed. Otherwise the
 	 * normals can be simply transformed, too.
-	 * 
+	 *
 	 * @param transformation The transformation matrix.
 	 * @param isAffine The flag if the transformation is affine.
 	 */
@@ -264,7 +264,7 @@ public:
 	}
 
 	/**
-	 * This method computes the derivates along the normal given by the 
+	 * This method computes the derivates along the normal given by the
 	 * ray structure.
 	 *
 	 * @param ray The ray which contains the normal.
@@ -519,7 +519,7 @@ public:
 	void    b3Transform(b3_matrix *transformation,b3_bool isAffine);
 
 	/**
-	 * This method computes the derivates along the normal given by the 
+	 * This method computes the derivates along the normal given by the
 	 * ray structure.
 	 *
 	 * @param ray The ray which contains the normal.
@@ -568,7 +568,7 @@ public:
 	void    b3SetupPicking(b3PickInfo *info);
 
 	/**
-	 * This method computes the derivates along the normal given by the 
+	 * This method computes the derivates along the normal given by the
 	 * ray structure.
 	 *
 	 * @param ray The ray which contains the normal.
@@ -697,7 +697,7 @@ protected:
 
 /**
  * This class represents a cone.
- * 
+ *
  * @see b3Shape3
  */
 class B3_PLUGIN b3Cone : public b3Shape3
@@ -724,7 +724,7 @@ protected:
 
 /**
  * This class represents an ellipsoid,
- * 
+ *
  * @see b3Shape3
  */
 class B3_PLUGIN b3Ellipsoid : public b3Shape3
@@ -751,7 +751,7 @@ protected:
 
 /**
  * This class represents a box,
- * 
+ *
  * @see b3Shape3
  */
 class B3_PLUGIN b3Box : public b3Shape3
@@ -963,7 +963,7 @@ private:
 
 	inline void b3AddTriangleToGrid(b3_index grid,b3_index triangle)
 	{
-		if((grid >= 0) && (grid < m_GridCount))
+		if ((grid >= 0) && (grid < m_GridCount))
 		{
 			b3_count max = m_GridList[grid].b3GetCount();
 
@@ -1014,7 +1014,7 @@ protected:
 *************************************************************************/
 
 /**
- * This class represents a rotation shape formed by a rotation axis and 
+ * This class represents a rotation shape formed by a rotation axis and
  * a outline spline curve.
  */
 class B3_PLUGIN b3SplineRotShape : public b3TriangleShape

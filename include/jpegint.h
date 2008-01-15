@@ -13,7 +13,8 @@
 
 /* Declarations for both compression & decompression */
 
-typedef enum {			/* Operating modes for buffer controllers */
+typedef enum  			/* Operating modes for buffer controllers */
+{
 	JBUF_PASS_THRU,		/* Plain stripwise operation */
 	/* Remaining modes require a full-image buffer to have been created */
 	JBUF_SAVE_SOURCE,	/* Run source subobject only, save output */
@@ -42,7 +43,8 @@ typedef enum {			/* Operating modes for buffer controllers */
 /* Declarations for compression modules */
 
 /* Master control module */
-struct jpeg_comp_master {
+struct jpeg_comp_master
+{
 	JMETHOD(void, prepare_for_pass, (j_compress_ptr cinfo));
 	JMETHOD(void, pass_startup, (j_compress_ptr cinfo));
 	JMETHOD(void, finish_pass, (j_compress_ptr cinfo));
@@ -53,7 +55,8 @@ struct jpeg_comp_master {
 };
 
 /* Main buffer control (downsampled-data buffer) */
-struct jpeg_c_main_controller {
+struct jpeg_c_main_controller
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(void, process_data, (j_compress_ptr cinfo,
 								 JSAMPARRAY input_buf, JDIMENSION *in_row_ctr,
@@ -61,7 +64,8 @@ struct jpeg_c_main_controller {
 };
 
 /* Compression preprocessing (downsampling input buffer control) */
-struct jpeg_c_prep_controller {
+struct jpeg_c_prep_controller
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(void, pre_process_data, (j_compress_ptr cinfo,
 									 JSAMPARRAY input_buf,
@@ -73,14 +77,16 @@ struct jpeg_c_prep_controller {
 };
 
 /* Coefficient buffer control */
-struct jpeg_c_coef_controller {
+struct jpeg_c_coef_controller
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(boolean, compress_data, (j_compress_ptr cinfo,
 									 JSAMPIMAGE input_buf));
 };
 
 /* Colorspace conversion */
-struct jpeg_color_converter {
+struct jpeg_color_converter
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo));
 	JMETHOD(void, color_convert, (j_compress_ptr cinfo,
 								  JSAMPARRAY input_buf, JSAMPIMAGE output_buf,
@@ -88,7 +94,8 @@ struct jpeg_color_converter {
 };
 
 /* Downsampling */
-struct jpeg_downsampler {
+struct jpeg_downsampler
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo));
 	JMETHOD(void, downsample, (j_compress_ptr cinfo,
 							   JSAMPIMAGE input_buf, JDIMENSION in_row_index,
@@ -99,7 +106,8 @@ struct jpeg_downsampler {
 };
 
 /* Forward DCT (also controls coefficient quantization) */
-struct jpeg_forward_dct {
+struct jpeg_forward_dct
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo));
 	/* perhaps this should be an array??? */
 	JMETHOD(void, forward_DCT, (j_compress_ptr cinfo,
@@ -110,14 +118,16 @@ struct jpeg_forward_dct {
 };
 
 /* Entropy encoding */
-struct jpeg_entropy_encoder {
+struct jpeg_entropy_encoder
+{
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo, boolean gather_statistics));
 	JMETHOD(boolean, encode_mcu, (j_compress_ptr cinfo, JBLOCKROW *MCU_data));
 	JMETHOD(void, finish_pass, (j_compress_ptr cinfo));
 };
 
 /* Marker writing */
-struct jpeg_marker_writer {
+struct jpeg_marker_writer
+{
 	JMETHOD(void, write_file_header, (j_compress_ptr cinfo));
 	JMETHOD(void, write_frame_header, (j_compress_ptr cinfo));
 	JMETHOD(void, write_scan_header, (j_compress_ptr cinfo));
@@ -134,7 +144,8 @@ struct jpeg_marker_writer {
 /* Declarations for decompression modules */
 
 /* Master control module */
-struct jpeg_decomp_master {
+struct jpeg_decomp_master
+{
 	JMETHOD(void, prepare_for_output_pass, (j_decompress_ptr cinfo));
 	JMETHOD(void, finish_output_pass, (j_decompress_ptr cinfo));
 
@@ -143,7 +154,8 @@ struct jpeg_decomp_master {
 };
 
 /* Input control module */
-struct jpeg_input_controller {
+struct jpeg_input_controller
+{
 	JMETHOD(int, consume_input, (j_decompress_ptr cinfo));
 	JMETHOD(void, reset_input_controller, (j_decompress_ptr cinfo));
 	JMETHOD(void, start_input_pass, (j_decompress_ptr cinfo));
@@ -155,7 +167,8 @@ struct jpeg_input_controller {
 };
 
 /* Main buffer control (downsampled-data buffer) */
-struct jpeg_d_main_controller {
+struct jpeg_d_main_controller
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(void, process_data, (j_decompress_ptr cinfo,
 								 JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
@@ -163,7 +176,8 @@ struct jpeg_d_main_controller {
 };
 
 /* Coefficient buffer control */
-struct jpeg_d_coef_controller {
+struct jpeg_d_coef_controller
+{
 	JMETHOD(void, start_input_pass, (j_decompress_ptr cinfo));
 	JMETHOD(int, consume_data, (j_decompress_ptr cinfo));
 	JMETHOD(void, start_output_pass, (j_decompress_ptr cinfo));
@@ -174,7 +188,8 @@ struct jpeg_d_coef_controller {
 };
 
 /* Decompression postprocessing (color quantization buffer control) */
-struct jpeg_d_post_controller {
+struct jpeg_d_post_controller
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(void, post_process_data, (j_decompress_ptr cinfo,
 									  JSAMPIMAGE input_buf,
@@ -186,7 +201,8 @@ struct jpeg_d_post_controller {
 };
 
 /* Marker reading & parsing */
-struct jpeg_marker_reader {
+struct jpeg_marker_reader
+{
 	JMETHOD(void, reset_marker_reader, (j_decompress_ptr cinfo));
 	/* Read markers until SOS or EOI.
 	 * Returns same codes as are defined for jpeg_consume_input:
@@ -206,7 +222,8 @@ struct jpeg_marker_reader {
 };
 
 /* Entropy decoding */
-struct jpeg_entropy_decoder {
+struct jpeg_entropy_decoder
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
 	JMETHOD(boolean, decode_mcu, (j_decompress_ptr cinfo,
 								  JBLOCKROW *MCU_data));
@@ -222,14 +239,16 @@ typedef JMETHOD(void, inverse_DCT_method_ptr,
 				 JCOEFPTR coef_block,
 				 JSAMPARRAY output_buf, JDIMENSION output_col));
 
-struct jpeg_inverse_dct {
+struct jpeg_inverse_dct
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
 	/* It is useful to allow each component to have a separate IDCT method. */
 	inverse_DCT_method_ptr inverse_DCT[MAX_COMPONENTS];
 };
 
 /* Upsampling (note that upsampler must also call color converter) */
-struct jpeg_upsampler {
+struct jpeg_upsampler
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
 	JMETHOD(void, upsample, (j_decompress_ptr cinfo,
 							 JSAMPIMAGE input_buf,
@@ -243,7 +262,8 @@ struct jpeg_upsampler {
 };
 
 /* Colorspace conversion */
-struct jpeg_color_deconverter {
+struct jpeg_color_deconverter
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
 	JMETHOD(void, color_convert, (j_decompress_ptr cinfo,
 								  JSAMPIMAGE input_buf, JDIMENSION input_row,
@@ -251,7 +271,8 @@ struct jpeg_color_deconverter {
 };
 
 /* Color quantization or color precision reduction */
-struct jpeg_color_quantizer {
+struct jpeg_color_quantizer
+{
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo, boolean is_pre_scan));
 	JMETHOD(void, color_quantize, (j_decompress_ptr cinfo,
 								   JSAMPARRAY input_buf, JSAMPARRAY output_buf,
@@ -386,7 +407,13 @@ extern const int jpeg_natural_order[]; /* zigzag coef order to natural order */
 
 #ifdef INCOMPLETE_TYPES_BROKEN
 #ifndef AM_MEMORY_MANAGER	/* only jmemmgr.c defines these */
-struct jvirt_sarray_control { long dummy; };
-struct jvirt_barray_control { long dummy; };
+struct jvirt_sarray_control
+{
+	long dummy;
+};
+struct jvirt_barray_control
+{
+	long dummy;
+};
 #endif
 #endif /* INCOMPLETE_TYPES_BROKEN */

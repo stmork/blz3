@@ -231,7 +231,7 @@ public:
 		param[2] = z;
 		param[3] = w;
 
-		for(b3_loop i = 0; i < max; i++)
+		for (b3_loop i = 0; i < max; i++)
 		{
 			v[i] = static_cast<F>(param[i]);
 		}
@@ -518,7 +518,7 @@ public:
 
 	/**
 	 * This method returns the length of this vector.
-	 * 
+	 *
 	 * @return The length of this vector.
 	 */
 	inline F b3Length()
@@ -739,7 +739,9 @@ public:
 		{
 			if (lower.v[i] > upper.v[i])
 			{
-				aux = lower.v[i]; lower.v[i] = upper.v[i]; upper.v[i] = aux;
+				aux = lower.v[i];
+				lower.v[i] = upper.v[i];
+				upper.v[i] = aux;
 			}
 		}
 	}

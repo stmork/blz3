@@ -59,7 +59,7 @@ public:
 	 */
 	inline b3Complex<T>(const b3Complex<T> &complex)
 	{
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] = complex.v[i];
 		}
@@ -92,7 +92,7 @@ public:
 	 */
 	inline b3Complex<T> operator+=(const b3Complex<T> &a)
 	{
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -109,7 +109,7 @@ public:
 	 */
 	inline b3Complex<T> &operator-=(const b3Complex<T> &a)
 	{
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -131,7 +131,7 @@ public:
 		val[Re] = v[Re] * a.v[Re] - v[Im] * a.v[Im];
 		val[Im] = v[Im] * a.v[Re] + v[Re] * a.v[Im];
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] = val[i];
 		}
@@ -154,7 +154,7 @@ public:
 		T             nominator;
 		T             denom;
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			nom[i] =   v[i] * a.v[i];
 			den[i] = a.v[i] * a.v[i];
@@ -163,7 +163,7 @@ public:
 		denom   = den[Re] + den[Im];
 		val[Re] = nom[Re] + nom[Im];
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] = val[i] / denom;
 		}
@@ -188,7 +188,7 @@ public:
 	/**
 	 * The -= operator. The operation subtracts the scalar <code>a</code>
 	 * from the real part of this complex number.
-	 * 
+	 *
 	 * @param a The scalar to subtract from the real part.
 	 * @return This as result.
 	 */
@@ -202,13 +202,13 @@ public:
 	/**
 	 * The *= operator. The operation scales this complex number
 	 * with the scalar <code>a</code>.
-	 * 
+	 *
 	 * @param a The scalar to scale this complex number.
 	 * @return This as result.
 	 */
 	inline b3Complex<T> &operator*=(const T a)
 	{
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] *= a;
 		}
@@ -219,13 +219,13 @@ public:
 	/**
 	 * The /= operator. The operation divides this complex number
 	 * by the scalar <code>a</code>.
-	 * 
+	 *
 	 * @param a The scalar to divide this complex number.
 	 * @return This as result.
 	 */
 	inline b3Complex<T> operator/=(const T a)
 	{
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			v[i] /= a;
 		}
@@ -244,7 +244,7 @@ public:
 	{
 		b3Complex<T> result;
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			result.v[i] = v[i] + a.v[i];
 		}
@@ -262,7 +262,7 @@ public:
 	{
 		b3Complex<T> result;
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			result.v[i] = v[i] - a.v[i];
 		}
@@ -297,7 +297,7 @@ public:
 		T B3_ALIGN_16 nom[2];
 		T             denom;
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			nom[i] =   v[i] * a.v[i];
 			den[i] = a.v[i] * a.v[i];
@@ -330,7 +330,7 @@ public:
 		{
 			T new_len = len / old_len;
 
-			for(b3_loop i = 0;i < 2;i++)
+			for (b3_loop i = 0;i < 2;i++)
 			{
 				v[i] *= new_len;
 			}
@@ -351,7 +351,7 @@ public:
 	{
 		T B3_ALIGN_16 val[2];
 
-		for(b3_loop i = 0;i < 2;i++)
+		for (b3_loop i = 0;i < 2;i++)
 		{
 			val[i] = v[i] * v[i];
 		}
@@ -424,7 +424,9 @@ public:
 	{
 		b3Complex<T> aux;
 
-		aux = a; a = b; b = aux;
+		aux = a;
+		a = b;
+		b = aux;
 	}
 
 	/**
