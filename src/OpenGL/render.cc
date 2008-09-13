@@ -313,13 +313,13 @@ int main(int argc,char *argv[])
 	b3Loader        loader;
 	b3_index        i;
 
-	glutInit(&argc,argv);
 
 	if (argc <= 1)
 	{
 		b3Banner(argv[0]);
 		exit(EXIT_SUCCESS);
 	}
+	glutInit(&argc,argv);
 
 	for (i = 1;(i < argc) && (argv[i][0] == '-');i++)
 	{
@@ -379,7 +379,7 @@ int main(int argc,char *argv[])
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
 
-			glutInit(&argc, argv);
+//			glutInit(&argc, argv);
 			glutInitDisplayMode((double_buffered ? GLUT_DOUBLE : 0)|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow(filename);
