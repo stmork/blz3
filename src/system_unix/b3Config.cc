@@ -47,14 +47,14 @@ b3Runtime b3Runtime::m_Runtime;
 char      b3Runtime::m_Compiler[256];
 b3Runtime::b3Runtime()
 {
-	char     *vu;
-	b3_count  bits = b3GetCPUBits();
+	const char *vu;
+	b3_count    bits = b3GetCPUBits();
 #if defined(B3_SSE2)
-	char *math = "SSE2";
+	const char *math = "SSE2";
 #elif defined(B3_SSE)
-	char *math = "SSE";
+	const char *math = "SSE";
 #else
-	char *math = "FPU";
+	const char *math = "FPU";
 #endif
 	char *locale;
 

@@ -34,7 +34,7 @@
 **                                                                      **
 *************************************************************************/
 
-char * b3TIFF::b3GetModeString(long mode)
+const char * b3TIFF::b3GetModeString(long mode)
 {
 	switch (mode)
 	{

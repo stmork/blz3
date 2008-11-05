@@ -73,7 +73,7 @@ public:
 class b3DisplayView : public b3Display
 {
 	b3_res          m_xs,m_ys; // This is the max. visible size
-	char           *m_Title;
+	const char     *m_Title;
 	b3DisplayPixel *m_Pixel;
 
 	// Some X values

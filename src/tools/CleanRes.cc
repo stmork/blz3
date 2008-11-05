@@ -32,10 +32,10 @@
 
 static struct b3DefineType
 {
-	char *m_Type;
-	int   m_Prio;
-	int   m_Start;
-	int   m_Last;
+	const char *m_Type;
+	int         m_Prio;
+	int         m_Start;
+	int         m_Last;
 } define_types[] =
 {
 	{ "IDP_OLE_INIT_FAILED",  1, 101 },

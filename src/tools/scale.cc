@@ -40,7 +40,7 @@
 
 class b3Site
 {
-	char         *m_Title;
+	const char   *m_Title;
 	b3Path        m_Source;
 	b3Path        m_Dest;
 	b3Path        m_Small;
@@ -137,7 +137,7 @@ public:
 		}
 	}
 
-	void setTitle(char *title)
+	void setTitle(const char *title)
 	{
 		m_Title = title;
 	}
@@ -253,8 +253,8 @@ private:
 
 int main(int argc,char *argv[])
 {
-	b3Path  dir;
-	char   *title = TITLE;
+	b3Path      dir;
+	const char *title = TITLE;
 
 	switch (argc)
 	{
@@ -270,7 +270,7 @@ int main(int argc,char *argv[])
 		break;
 	}
 
-	b3Site site(dir,"/tmp/im");
+	b3Site site(dir, "/tmp/im");
 	site.setTitle(title);
 	site.b3Dump();
 

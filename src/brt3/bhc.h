@@ -85,12 +85,12 @@ public:
 	char m_Message[1024];
 
 public:
-	explicit b3ParseException(char *text)
+	explicit b3ParseException(const char *text)
 	{
 		strcpy(m_Message,text);
 	}
 
-	explicit b3ParseException(char *text,b3_count line)
+	explicit b3ParseException(const char *text, b3_count line)
 	{
 		sprintf(m_Message,"%s (line: %ld)",text,line);
 	}

@@ -173,7 +173,7 @@ public:
 public:
 	static long           b3GetTIFFTypeSize (struct TagTIFF *DataTag);
 	static long           b3GetTIFFSize (struct TagTIFF *DataTag);
-	static char          *b3GetModeString(long mode);
+	static const char    *b3GetModeString(long mode);
 	static long           b3GetTIFFValue (void *PtrTIFF,struct TagTIFF *DataTag,long Index);
 	static long           b3TAFcorrectOffset (long offset);
 	static long           b3TAFwriteGap (b3FileAbstract *out,long offset);
