@@ -26,6 +26,7 @@
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
+#include <cppunit/XmlOutputter.h>
 #endif
 
 using namespace std;
@@ -70,8 +71,11 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef HAVE_LIBCPPUNIT
-	CppUnit::TextUi::TestRunner runner;
-	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+	ofstream xml("test-results.xml");
+
+	CppUnit::TextUi::TestRunner   runner;
+	CppUnit::TestFactoryRegistry &registry  = CppUnit::TestFactoryRegistry::getRegistry();
+	CppUnit::XmlOutputter        *outputter = new CppUnit::XmlOutputter( &runner.result(), xml);
 
 	b3Log::b3SetLevel(B3LOG_NONE);
 	if ((argc >= 2) && (argv[1][0] == '-'))
@@ -92,9 +96,13 @@ int main(int argc, char *argv[])
 			break;
 		}
 	}
+	runner.setOutputter(outputter);
 	runner.addTest( registry.makeTest());
 
-	return runner.run ("", false) ? EXIT_SUCCESS : EXIT_FAILURE;
+	int result = runner.run ("", false) ? EXIT_SUCCESS : EXIT_FAILURE;
+	xml.close();
+
+	return result;
 #else
 	b3PrintF(B3LOG_NORMAL, "No cppunit package available.\n");
 	return EXIT_SUCCESS;
