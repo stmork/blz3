@@ -30,7 +30,9 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3RandomTest.cc\
 	b3SplineTest.cc\
 	b3VectorTest.cc\
-	b3WorldTest.cc
+	b3WorldTest.cc\
+	JUnitTestResultCollector.cc\
+	JUnitXmlOutputter.cc
 
 BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3ArrayTest.o\
@@ -46,7 +48,9 @@ BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3RandomTest.o\
 	b3SplineTest.o\
 	b3VectorTest.o\
-	b3WorldTest.o
+	b3WorldTest.o\
+	JUnitTestResultCollector.o\
+	JUnitXmlOutputter.o
 
 TEST_FILES = Config.tst *.jpg test1.bwd test2.bwd
 
