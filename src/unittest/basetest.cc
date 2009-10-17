@@ -26,7 +26,8 @@
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
-#include <cppunit/XmlOutputter.h>
+#include "JUnitTestResultCollector.h"
+#include "JUnitXmlOutputter.h"
 #endif
 
 using namespace std;
@@ -73,9 +74,10 @@ int main(int argc, char *argv[])
 #ifdef HAVE_LIBCPPUNIT
 	ofstream xml("test-results.xml");
 
-	CppUnit::TextUi::TestRunner   runner;
-	CppUnit::TestFactoryRegistry &registry  = CppUnit::TestFactoryRegistry::getRegistry();
-	CppUnit::XmlOutputter        *outputter = new CppUnit::XmlOutputter( &runner.result(), xml);
+	CppUnit::TextUi::TestRunner           runner;
+	CppUnit::TestFactoryRegistry         &registry  = CppUnit::TestFactoryRegistry::getRegistry();
+	CPPUNIT_NS::JUnitTestResultCollector  collector;
+	CPPUNIT_NS::JUnitXmlOutputter        *outputter = new CPPUNIT_NS::JUnitXmlOutputter( &collector, xml);
 
 	b3Log::b3SetLevel(B3LOG_NONE);
 	if ((argc >= 2) && (argv[1][0] == '-'))
