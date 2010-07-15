@@ -103,6 +103,7 @@ public:
 	 * This returns the FFT spectral buffer as texture.
 	 *
 	 * @param tx The image to put the spectrum in.
+	 * @param scale A global scaling factor.
 	 */
 	inline void b3GetSpectrum(b3Tx *tx, b3_f64 scale)
 	{

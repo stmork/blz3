@@ -67,7 +67,7 @@ public:
 	/**
 	 * This copy constructor copies one vector template instance.
 	 *
-	 * @oaram src The source vector template.
+	 * @param src The source vector template.
 	 */
 	inline b3VectorTemplate<F, dim>(const b3VectorTemplate<F, dim> &src)
 	{

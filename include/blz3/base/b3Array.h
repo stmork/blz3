@@ -171,7 +171,7 @@ public:
 	 * This index operator provides access to a special indexed array element.
 	 *
 	 * @param index The array index.
-	 * @param b3ArrayException
+	 * @throw b3ArrayException
 	 * @return The reference to the indexed array element.
 	 */
 	inline T & operator [](const b3_index index) throw(b3ArrayException)

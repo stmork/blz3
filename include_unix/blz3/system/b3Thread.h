@@ -131,7 +131,7 @@ public:
 };
 
 /**
- * This class implements a simple signalling event pipe..
+ * This class implements a simple signalling event pipe.
  */
 class b3Event : public b3EventAbstract
 {

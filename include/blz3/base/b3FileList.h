@@ -122,7 +122,7 @@ public:
 	 *
 	 * @param dir_name The path.
 	 */
-	void           b3RecCreateList(const char *);
+	void           b3RecCreateList(const char *dir_name);
 };
 
 #endif

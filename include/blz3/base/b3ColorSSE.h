@@ -318,7 +318,7 @@ public:
 	 *
 	 * @param low The low component if the mixer is 0.
 	 * @param high The high component if the mixer is 1.
-	 * @param mix The mixer component as double precision floating point number.
+	 * @param dMix The mixer component as double precision floating point number.
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
