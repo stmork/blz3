@@ -2,7 +2,7 @@
 
 export BLZ3_HOME=$PWD
 export BLZ3_DOC=$BLZ3_HOME/doc
-env
+#env
 
 set -e
 
