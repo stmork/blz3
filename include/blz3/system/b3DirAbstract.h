@@ -66,7 +66,7 @@ public:
 	 */
 	inline b3PathAbstract(const char *path)
 	{
-		strncpy (m_Path,path, sizeof(m_Path));
+		strncpy (m_Path, path, sizeof(m_Path));
 		m_Path[sizeof(m_Path) - 1] = 0;
 	}
 
@@ -188,7 +188,6 @@ public:
 	{
 		return m_Path;
 	}
-
 private:
 	static void b3RemoveDelimiter(char *path);
 };

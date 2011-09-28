@@ -224,7 +224,12 @@ AC_CHECK_LIB([z], [main])
 AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT]) CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
 
 # Check for OpenGL
-AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
+AC_CHECK_HEADER([GL/glut.h],
+	[
+		AC_DEFINE([BLZ3_USE_GLUT])
+		GLUTLIBS="$GLUTLIBS -lglut"
+		AC_CHECK_LIB([Xmu], [main])
+	])
 AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
 
 # Check for nvidia Cg

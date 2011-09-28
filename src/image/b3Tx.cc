@@ -506,7 +506,7 @@ const char *b3Tx::b3Name()
 
 void b3Tx::b3Name(const char *ImageName)
 {
-	strlcpy (image_name,ImageName != null ? ImageName : "",sizeof(image_name));
+	strlcpy (image_name, ImageName != null ? ImageName : "", B3_FILESTRINGLEN);
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Name(%s)\n",
 			 (const char *)image_name);
 }

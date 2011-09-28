@@ -84,8 +84,8 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
 			const char *jpg_start = (const char *)&buffer[i+6];
-			char *jfif      = strstr(jpg_start,"JFIF");
-			char *exif      = strstr(jpg_start,"Exif");
+			const char *jfif      = strstr(jpg_start,"JFIF");
+			const char *exif      = strstr(jpg_start,"Exif");
 
 			if ((jfif != null) || (exif != null))
 			{
