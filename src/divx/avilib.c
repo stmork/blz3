@@ -2123,7 +2123,11 @@ int avi_parse_index_from_file(avi_t *AVI, char *filename)
     if (!(fd = fopen(filename, "r"))) { perror ("avi_parse_index_from_file: fopen"); return -1; }
 
     // read header
-    fgets(data, 100, fd);
+    if (fgets(data, sizeof(data), fd) == 0)
+    {
+        fprintf(stderr, "%s: file too small!\n", filename);
+        return -1;
+    }
 
     if ( strncasecmp((char *)data, "AVIIDX1", 7) != 0) {
 	fprintf(stderr, "%s: Not an AVI index file\n", filename);
@@ -2131,9 +2135,14 @@ int avi_parse_index_from_file(avi_t *AVI, char *filename)
     }
 
     // read comment
-    fgets(data, 100, fd);
+    if (fgets(data, sizeof(data), fd) == 0)
+    {
+        fprintf(stderr, "%s: file too small!\n", filename);
+        return -1;
+    }
+
     f_pos = ftell(fd);
-    while (fgets(data, 100, fd)) {
+    while (fgets(data, sizeof(data), fd)) {
 	d = data[5] - '1';
 	if        (d == 0) {
 	    vid_chunks++;

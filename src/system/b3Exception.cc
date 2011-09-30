@@ -26,6 +26,7 @@
 #include "b3SystemIndInclude.h"
 #include "blz3/system/b3Exception.h"
 #include <ctype.h>
+#include <string.h>
 
 /*************************************************************************
 **                                                                      **
@@ -106,7 +107,7 @@ const char *b3ExceptionBase::what() const throw()
 
 	b3GetErrorMsg();
 	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d",m_FileName, static_cast<int>(m_LineNo));
-	strncat(m_LocalMessageBuffer, buffer, sizeof(m_LocalMessageBuffer));
+	strncat(m_LocalMessageBuffer, buffer, sizeof(m_LocalMessageBuffer) - strlen(m_LocalMessageBuffer));
 
 	return m_LocalMessageBuffer;
 }

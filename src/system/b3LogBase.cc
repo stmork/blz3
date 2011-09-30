@@ -60,13 +60,13 @@ b3_bool b3LogBase::b3OpenLogFile()
 		m_Out = fopen (m_LogFile, B3_TAPPEND);
 		if (m_Out != null)
 		{
-			fprintf(m_Out, m_Message);
+			fputs  (m_Message, m_Out);
 			fflush (m_Out);
 		}
 		else
 		{
-			fprintf(stderr, m_Message);
-			fprintf(stderr,
+			fputs   (m_Message, m_Out);
+			fprintf (stderr,
 					"Cannot open log file %s\n"
 					"Reason: %s\n"
 					"Errno:  %d\n\n",
