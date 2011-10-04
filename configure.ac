@@ -8,6 +8,7 @@ AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_CPP
 AC_PROG_CC
 AC_CHECK_TOOL(LD, ld, :)
 AC_PROG_MAKE_SET
