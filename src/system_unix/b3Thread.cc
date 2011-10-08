@@ -35,7 +35,6 @@
 **                                                                      **
 *************************************************************************/
 
-
 b3IPCMutex::b3IPCMutex()
 {
 	b3PThread::b3CheckResult(pthread_mutex_init(&mutex,NULL));

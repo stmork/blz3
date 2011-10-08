@@ -1,4 +1,4 @@
-/* $Header$ */
+/* $Header: /cvs/maptools/cvsroot/libtiff/libtiff/tif_extension.c,v 1.4 2004/10/02 13:29:41 dron Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler

@@ -53,6 +53,9 @@
 /* Define to 1 if you have the `isascii' function. */
 #define HAVE_ISASCII 1
 
+/* Define to 1 if you have the `lfind' function. */
+#define HAVE_LFIND 1
+
 /* Define to 1 if you have the `c' library (-lc). */
 #define HAVE_LIBC 1
 
@@ -82,6 +85,9 @@
 
 /* Define if you have POSIX threads libraries and header files. */
 #define HAVE_PTHREAD 1
+
+/* Define to 1 if you have the <search.h> header file. */
+#define HAVE_SEARCH_H 1
 
 /* Define to 1 if you have the `sqrt' function. */
 #define HAVE_SQRT 1
@@ -136,7 +142,7 @@
 #define HOST_BIGENDIAN 0
 
 /* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
-#define HOST_FILLORDER FILLORDER_LSB2MSB
+#define HOST_FILLORDER FILLORDER_MSB2LSB
 
 /* Support JPEG compression (requires IJG JPEG library) */
 #define JPEG_SUPPORT 1
@@ -144,8 +150,15 @@
 /* Support LogLuv high dynamic range encoding */
 #define LOGLUV_SUPPORT 1
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#define LT_OBJDIR ".libs/"
+
 /* Support LZW algorithm */
 #define LZW_SUPPORT 1
+
+/* Support Microsoft Document Imaging format */
+#define MDI_SUPPORT 1
 
 /* Support NeXT 2-bit RLE algorithm */
 #define NEXT_SUPPORT 1
@@ -161,27 +174,27 @@
 #define PACKAGE "tiff"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "tiff@remotesensing.org"
+#define PACKAGE_BUGREPORT "tiff@lists.maptools.org"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "LibTIFF Software"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LibTIFF Software 3.7.2"
+#define PACKAGE_STRING "LibTIFF Software 3.8.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "tiff"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.7.2"
+#define PACKAGE_VERSION "3.8.2"
 
 /* Support Macintosh PackBits algorithm */
 #define PACKBITS_SUPPORT 1
 
 /* Support Pixar log-format algorithm (requires Zlib) */
-/* #undef PIXARLOG_SUPPORT */
+#define PIXARLOG_SUPPORT 1
 
-/* Define to the necessary symbol if this constant uses a non-standard name on
+/* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
 /* #undef PTHREAD_CREATE_JOINABLE */
 
@@ -189,14 +202,17 @@
 #define SIZEOF_INT 4
 
 /* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
+#define SIZEOF_LONG 8
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Support strip chopping (whether or not to convert single-strip uncompressed
-   images to mutiple strips of ~8Kb to reduce memory usage) */
+   images to mutiple strips of specified size to reduce memory usage) */
 #define STRIPCHOP_DEFAULT TIFF_STRIPCHOP
+
+/* Default size of the strip in bytes (when strip chopping enabled) */
+#define STRIP_SIZE_DEFAULT 8192
 
 /* Enable SubIFD tag (330) support */
 #define SUBIFD_SUPPORT 1
@@ -211,7 +227,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "3.7.2"
+#define VERSION "3.8.2"
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
@@ -221,10 +237,10 @@
 /* #undef X_DISPLAY_MISSING */
 
 /* Support Deflate compression */
-/* #undef ZIP_SUPPORT */
+#define ZIP_SUPPORT 1
 
 /* Number of bits in a file offset, on hosts where this is settable. */
-#define _FILE_OFFSET_BITS 64
+/* #undef _FILE_OFFSET_BITS */
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */

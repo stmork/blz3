@@ -92,7 +92,7 @@ static inline size_t strlcpy(char *dst,const char *src,size_t size)
 {
 	if (size > 0)
 	{
-		strncpy(dst,src,size);
+		strncpy(dst, src, size);
 		dst[size-1] = 0;
 	}
 	return strlen(dst);
