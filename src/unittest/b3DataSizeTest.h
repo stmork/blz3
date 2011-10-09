@@ -21,6 +21,7 @@
 #include "blz3/b3Config.h"
 
 #ifdef HAVE_LIBCPPUNIT
+
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 

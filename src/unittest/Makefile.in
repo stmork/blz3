@@ -24,6 +24,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3FFTTest.cc\
 	b3FileTest.cc\
 	b3HashTest.cc\
+	b3ImageTest.cc\
 	b3ListTest.cc\
 	b3MathTest.cc\
 	b3MatrixTest.cc\
@@ -40,6 +41,7 @@ BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3FFTTest.o\
 	b3FileTest.o\
 	b3HashTest.o\
+	b3ImageTest.o\
 	b3ListTest.o\
 	b3MathTest.o\
 	b3MatrixTest.o\
@@ -56,7 +58,7 @@ depend:
 	@CPP@ -M  $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
 
 clean:	cleantest
-	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
+	rm -f *.o *.bak *~ core img_test.* $(PRGS) ALL QUIET
 
 cleantest:
 	rm -f $(TEST_FILES)
