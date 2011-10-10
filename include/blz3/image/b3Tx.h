@@ -1128,6 +1128,7 @@ private:
 	b3_result      b3SaveTIFFFax      (TIFF *handle);
 	b3_result      b3SaveTIFFPalette  (TIFF *handle);
 	b3_result      b3SaveTIFFTrueColor(TIFF *handle);
+	b3_result      b3SaveTIFFRealColor(TIFF *handle);
 
 	static void    b3TIFFErrorHandler(const char *module,const char *fmt,va_list args);
 	static void    b3TIFFWarnHandler( const char *module,const char *fmt,va_list args);

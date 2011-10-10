@@ -204,7 +204,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
-	lPtr = (b3_pkd_color *)data;
+	lPtr = b3GetTrueColorData();
 	rPtr =  row;
 	gPtr = &row[xSize];
 	bPtr = &row[xSize + xSize];
@@ -256,6 +256,97 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	return B3_OK;
 }
 
+b3_result b3Tx::b3SaveTIFFRealColor(TIFF *tiff)
+{
+	b3_color     *lPtr;
+	b3_coord      x,y;
+	b3_u16       *row, *rPtr, *gPtr, *bPtr;
+	char          software[128];
+	b3_tx_error   result = B3_TX_OK;
+
+	// setting the TIFF tags
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx:  # saving TIFF real color (%ldx%ld)\n",
+			 xSize,ySize);
+	TIFFSetField(tiff,TIFFTAG_IMAGEWIDTH,     xSize);
+	TIFFSetField(tiff,TIFFTAG_IMAGELENGTH,    ySize);
+	TIFFSetField(tiff,TIFFTAG_BITSPERSAMPLE,  16);
+	TIFFSetField(tiff,TIFFTAG_SAMPLESPERPIXEL, 3);
+	TIFFSetField(tiff,TIFFTAG_XRESOLUTION,    (b3_f64)xDPI);
+	TIFFSetField(tiff,TIFFTAG_YRESOLUTION,    (b3_f64)yDPI);
+	TIFFSetField(tiff,TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH);
+
+	TIFFSetField(tiff,TIFFTAG_COMPRESSION,  COMPRESSION_PACKBITS);
+	TIFFSetField(tiff,TIFFTAG_PHOTOMETRIC,  PHOTOMETRIC_RGB);
+	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP, 1);
+	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG, PLANARCONFIG_SEPARATE);
+
+	snprintf (software,sizeof(software),"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
+	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
+
+	// alloc memory for three channels of one row
+	row = (b3_u16 *)b3Alloc (xSize * 3 * sizeof(b3_u16));
+	if (row == null)
+	{
+		b3PrintF(B3LOG_NORMAL,
+				 "### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
+		B3_THROW(b3TxException,B3_TX_MEMORY);
+	}
+
+	lPtr = b3GetHdrData();
+	rPtr =  row;
+	gPtr = &row[xSize];
+	bPtr = &row[xSize + xSize];
+	for (y = 0; y < ySize;y++)
+	{
+		// resample row
+		for (x = 0;x < xSize;x++)
+		{
+		        b3Color color = lPtr[x];
+
+                        color.b3Sat();
+			rPtr[x]  = (b3_u16)(color[b3Color::R] * 65535.0);
+			gPtr[x]  = (b3_u16)(color[b3Color::G] * 65535.0);
+			bPtr[x]  = (b3_u16)(color[b3Color::B] * 65535.0);
+		}
+
+		// try to save red channel
+		if (TIFFWriteScanline(tiff, rPtr, y,0) != 1)
+		{
+			y      = ySize;
+			result = B3_TX_NOT_SAVED;
+		}
+		else
+		{
+			// try to save green channel
+			if (TIFFWriteScanline(tiff,gPtr,y,1) != 1)
+			{
+				y = ySize;
+				result = B3_TX_NOT_SAVED;
+			}
+			else
+			{
+				// try to save blue channel
+				if (TIFFWriteScanline(tiff,bPtr,y,2) != 1)
+				{
+					y = ySize;
+					result = B3_TX_NOT_SAVED;
+				}
+			}
+		}
+
+		// increase color source ptr by xSize
+		lPtr += xSize;
+	}
+	b3Free (row);
+
+
+	if (result != B3_TX_OK)
+	{
+		B3_THROW(b3TxException, result);
+	}
+	return B3_OK;
+}
+
 b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 {
 	TIFF        *tiff;
@@ -292,13 +383,20 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 		}
 		else
 		{
-			if ((type == B3_TX_RGB4) || (type == B3_TX_RGB8))
-			{
+		        switch (type)
+		        {
+		        case B3_TX_RGB4:
+		        case B3_TX_RGB8:
 				b3SaveTIFFTrueColor (tiff);
-			}
-			else
-			{
+				break;
+
+			case B3_TX_FLOAT:
+			        b3SaveTIFFRealColor (tiff);
+			        break;
+
+                        default:
 				b3SaveTIFFPalette (tiff);
+				break;
 			}
 		}
 
