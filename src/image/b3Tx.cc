@@ -161,9 +161,10 @@ b3_bool b3Tx::b3AllocTx(
 		dSize = (x * y) * sizeof(b3_pkd_color);
 		type  = B3_TX_RGB8;
 	}
-	if ((d == 96) || (d == 128))
+	if ((d == 48) || (d == 96) || (d == 128))
 	{
 		dSize = (x * y) * sizeof(b3_color);
+		d     = sizeof(b3_color) << 3;
 		type  = B3_TX_FLOAT;
 	}
 
@@ -185,7 +186,7 @@ b3_bool b3Tx::b3AllocTx(
 
 	if (pSize > 0)
 	{
-		new_ptr = b3Realloc(palette,pSize * sizeof(b3_pkd_color));
+		new_ptr = b3Realloc(palette, pSize * sizeof(b3_pkd_color));
 		if (new_ptr == null)
 		{
 			b3FreeTx();

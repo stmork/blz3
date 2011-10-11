@@ -287,13 +287,13 @@ long b3Tx::b3TIFFDecode(
 		switch (PlanarConfig)
 		{
 		case PLANARCONFIG_CONTIG :
-			lPtr = (b3_u08 *)b3Alloc (max);
-			if (lPtr)
+			lPtr = (b3_u08 *)b3Alloc(max);
+			if (lPtr != null)
 			{
 				cPtr = (b3_u08 *)data;
 				for (y = 0;y < ySize;y++)
 				{
-					if (TIFFReadScanline (tiff,lPtr,y,0) != 1)
+					if (TIFFReadScanline(tiff, lPtr, y,0) != 1)
 					{
 						return type;
 					}
@@ -332,18 +332,20 @@ long b3Tx::b3TIFFDecode(
 		}
 	}
 
-	if ((depth > 8) && (type != B3_TX_UNDEFINED))
+	if ((depth > 8) && (depth <= 32 ) && (type != B3_TX_UNDEFINED))
 	{
 		uint32         *fPtr,*bPtr;
 		b3_pkd_color    fSwp, bSwp;
 		b3_count        max;
 
 		max  = xSize * ySize;
-		fPtr = (uint32 *)data;
+		fPtr = (uint32 *)b3GetTrueColorData();
 		bPtr = fPtr + max;
 		max  = ySize >> 1;
-		if (TIFFReadRGBAImage (tiff,xSize,ySize,fPtr) == 0)
+
+		if (TIFFReadRGBAImage(tiff, xSize, ySize, fPtr) == 0)
 		{
+			type = B3_TX_UNDEFINED;
 			return type;
 		}
 		ScanLines = ySize;
@@ -355,16 +357,54 @@ long b3Tx::b3TIFFDecode(
 			{
 				fSwp =
 					((fPtr[x] & 0xff0000) >> 16) |
-					(fPtr[x] & 0x00ff00) |
+					 (fPtr[x] & 0x00ff00) |
 					((fPtr[x] & 0x0000ff) << 16);
 				bSwp =
 					((bPtr[x] & 0xff0000) >> 16) |
-					(bPtr[x] & 0x00ff00) |
+					 (bPtr[x] & 0x00ff00) |
 					((bPtr[x] & 0x0000ff) << 16);
 				fPtr[x] = bSwp;
 				bPtr[x] = fSwp;
 			}
 			fPtr += xSize;
+		}
+	}
+
+	if ((depth > 32) && (type != B3_TX_UNDEFINED))
+	{
+		b3_count  max  = xSize * ySize;
+		b3_color *fPtr = b3GetHdrData();
+		uint16   *rPtr = (uint16 *)b3Alloc(xSize * sizeof(uint16) * 3);
+
+		if (rPtr != null)
+		{
+			uint16 *gPtr = rPtr + xSize;
+			uint16 *bPtr = gPtr + xSize;
+
+			ScanLines = ySize;
+			for (y = 0;y < ySize;y++)
+			{
+				if ((TIFFReadScanline(tiff, rPtr, y, 0) != 1) ||
+				    (TIFFReadScanline(tiff, gPtr, y, 1) != 1) ||
+				    (TIFFReadScanline(tiff, bPtr, y, 2) != 1))
+				{
+					type = B3_TX_UNDEFINED;
+					return type;
+				}
+				for (x = 0;x < xSize;x++)
+				{
+					fPtr->r = (b3_f32)rPtr[x] / 65535.0;
+					fPtr->g = (b3_f32)gPtr[x] / 65535.0;
+					fPtr->b = (b3_f32)bPtr[x] / 65535.0;
+					fPtr->a = 0;
+					fPtr++;
+				}
+			}
+			b3Free(rPtr);
+		}
+		else
+		{
+			type = B3_TX_UNDEFINED;
 		}
 	}
 	return type;
@@ -441,26 +481,28 @@ b3_result b3Tx::b3LoadTIFF(
 	TIFFGetField (tiff,TIFFTAG_YRESOLUTION,     &yDoubleDPI);
 	TIFFGetField (tiff,TIFFTAG_COMPRESSION,     &compression);
 	TIFFGetField (tiff,TIFFTAG_FILLORDER,       &fillorder);
-	xDPI = (long)xDoubleDPI;
-	yDPI = (long)yDoubleDPI;
+	xDPI = (b3_res)xDoubleDPI;
+	yDPI = (b3_res)yDoubleDPI;
 
 	depth = spp * bps;
-	b3PrintF(B3LOG_FULL,"IMG TIFF # xmax:              %4lu\n",xSize);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # ymax:              %4lu\n",ySize);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # samples per pixel: %4hu\n",spp);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # bits per sample:   %4hu\n",bps);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # photometric:       %4hu\n",pm);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # planar config:     %4hu\n",pc);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # compression:       %4hu\n",compression);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # xmax:              %4lu\n", xSize);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # ymax:              %4lu\n", ySize);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # x DPI:             %4lu\n", xDPI);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # y DPI:             %4lu\n", yDPI);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # samples per pixel: %4hu\n", spp);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # bits per sample:   %4hu\n", bps);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # photometric:       %4hu\n", pm);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # planar config:     %4hu\n", pc);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # compression:       %4hu\n", compression);
 	if (my_username) b3PrintF(B3LOG_FULL,"IMG TIFF # creator:           %s\n",my_username);
 	if (my_software) b3PrintF(B3LOG_FULL,"IMG TIFF # creator software:  %s\n",my_software);
 	if (my_hostname) b3PrintF(B3LOG_FULL,"IMG TIFF # creator host:      %s\n",my_hostname);
 
-	if (b3AllocTx (xSize,ySize,depth))
+	if (b3AllocTx(xSize, ySize, depth))
 	{
 		if (b3TIFFPalette(tiff,pm) != B3_TX_UNDEFINED)
 		{
-			b3TIFFDecode(tiff,pc);
+			b3TIFFDecode(tiff, pc);
 		}
 	}
 	TIFFClose(tiff);
@@ -468,7 +510,7 @@ b3_result b3Tx::b3LoadTIFF(
 	if (type == B3_TX_UNDEFINED)
 	{
 		b3FreeTx();
-		B3_THROW(b3TxException,B3_TX_NOT_FOUND);
+		B3_THROW(b3TxException, B3_TX_NOT_FOUND);
 	}
 
 	return B3_OK;
