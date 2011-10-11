@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Tx.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2011 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - imaging routines (proto types)
 **
-**	(C) Copyright 2001 Steffen A. Mork
+**	(C) Copyright 2011 Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -400,7 +400,7 @@ public:
 		{
 			return null;
 		}
-		if (!b3IsHDR())
+		if (!b3IsHdr())
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
@@ -542,7 +542,7 @@ public:
 	 *
 	 * @return True if this image is a high dynamic range image.
 	 */
-	inline b3_bool b3IsHDR()
+	inline b3_bool b3IsHdr()
 	{
 		return (depth >= 96) && (type == B3_TX_FLOAT);
 	}

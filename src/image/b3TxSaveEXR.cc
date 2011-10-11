@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveEXR.cc $
-**	$Release:	Dortmund 2005 $
+**	$Release:	Dortmund 2011 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Saving an OpenEXR image
 **
-**	(C) Copyright 2005  Steffen A. Mork
+**	(C) Copyright 2011  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -48,7 +48,7 @@ public:
 			b3TxSaveInfo(tx, filename, B3_BWRITE),
 			OStream(filename)
 	{
-		if (!tx->b3IsHDR())
+		if (!tx->b3IsHdr())
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}

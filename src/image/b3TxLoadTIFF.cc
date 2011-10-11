@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxLoadTIFF.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2011 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - TIFF loading
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2011  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
