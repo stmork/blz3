@@ -83,7 +83,9 @@ int main(int argc,char *argv[])
 	b3_u08       *buffer = null;
 	b3_u08       *ptr;
 	b3_pkd_color *data,color;
-	b3_size       size = 0;
+	b3_size       size  = 0;
+	b3_res        xSize = 0;
+	b3_res        ySize = 0;
 	avi_t        *out;
 
 	if (argc <= 1)
@@ -131,7 +133,7 @@ int main(int argc,char *argv[])
 	out = AVI_open_output_file(argv[1]);
 	if (out == NULL)
 	{
-		fprintf(stderr,"Cannot write %s\n",argv[1]);
+		fprintf(stderr,"Cannot write %s\n", argv[1]);
 		exit (EXIT_FAILURE);
 	}
 
@@ -150,8 +152,13 @@ int main(int argc,char *argv[])
 		try
 		{
 			img.b3LoadImage(entry->b3Name());
-			img.b3MirrorVertical();
 			hasFirst = true;
+			if (size == 0)
+			{
+				xSize = (img.xSize + 15) & 0xfff0;
+				ySize = (img.ySize +  7) & 0xfff8;
+				size  = xSize * ySize;
+			}
 		}
 		catch (b3TxException &t)
 		{
@@ -178,17 +185,16 @@ int main(int argc,char *argv[])
 #ifdef BLZ3_USE_DIVX4LINUX
 			if (encoding.handle == 0)
 			{
-				encoding.x_dim     = img.xSize;
-				encoding.y_dim     = img.ySize;
+				encoding.x_dim     = xSize;
+				encoding.y_dim     = ySize;
 				encoding.framerate =      25.0;
 				encoding.quality   =       5;
 				encoding.bitrate   = RATE_KBYTE(500);
 
-				size               = img.xSize * img.ySize;
 				buffer             = new b3_u08[size * 3];
 				bitstream          = new char[size * 6];
 
-				error = encore(0,ENC_OPT_INIT,&encoding,0);
+				error = encore(0, ENC_OPT_INIT, &encoding, 0);
 				if ((error != ENC_OK) || (encoding.handle == 0))
 				{
 					fprintf(stderr,"ERROR CODE: %d (starting encoding)\nexiting...\n",error);
@@ -197,7 +203,7 @@ int main(int argc,char *argv[])
 				{
 					b3PrintF(B3LOG_DEBUG,"Start encoding...");
 				}
-				AVI_set_video(out, img.xSize, img.ySize, encoding.framerate, "DIVX");
+				AVI_set_video(out, xSize, ySize, encoding.framerate, "DIVX");
 			}
 #endif
 
@@ -205,13 +211,18 @@ int main(int argc,char *argv[])
 			if (data != null)
 			{
 				// Recode image
-				ptr  = buffer;
-				for (b3_size k = 0;k < size;k++)
+				ptr  = buffer + size;
+				for (b3_res y = 0; y < ySize;y++)
 				{
-					color  = *data++;
-					*ptr++ =  color & 0x0000ff;
-					*ptr++ = (color & 0x00ff00) >>  8;
-					*ptr++ = (color & 0xff0000) >> 16;
+					ptr -= (xSize * 3);
+					b3_u08 *pixel = ptr;
+					for (b3_res x = 0;x < xSize; x++)
+					{
+						color  = *data++;
+						*pixel++ =  color & 0x0000ff;
+						*pixel++ = (color & 0x00ff00) >>  8;
+						*pixel++ = (color & 0xff0000) >> 16;
+					}
 				}
 
 #ifdef BLZ3_USE_DIVX4LINUX
@@ -222,15 +233,15 @@ int main(int argc,char *argv[])
 				frame.intra      = -1;
 				frame.colorspace = ENC_CSP_RGB24;
 
-				error = encore(encoding.handle,ENC_OPT_ENCODE,&frame,&result);
+				error = encore(encoding.handle,ENC_OPT_ENCODE, &frame, &result);
 				if (error != ENC_OK)
 				{
 					fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n", error, ino);
 				}
 				else
 				{
-					AVI_write_frame(out,bitstream,frame.length,0);
-					b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",entry->b3Name(),frame.length);
+					AVI_write_frame(out, bitstream,frame.length, 0);
+					b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n", entry->b3Name(), frame.length);
 					b3PrintF(B3LOG_NORMAL,".");
 				}
 #endif
