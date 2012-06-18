@@ -81,8 +81,8 @@ int main(int argc,char *argv[])
 	int           error;
 #endif
 	b3_u08       *buffer = null;
-	b3_u08       *ptr;
-	b3_pkd_color *data,color;
+	b3_u08       *dstPtr;
+	b3_pkd_color *srcPtr, color;
 	b3_size       size  = 0;
 	b3_res        xSize = 0;
 	b3_res        ySize = 0;
@@ -138,21 +138,21 @@ int main(int argc,char *argv[])
 	}
 
 #ifdef BLZ3_USE_DIVX4LINUX
-	memset(&encoding,0,sizeof(encoding));
-	memset(&frame,   0,sizeof(frame));
+	memset(&encoding, 0, sizeof(encoding));
+	memset(&frame,    0, sizeof(frame));
 #endif
 
 	list.b3Sort();
 	for (entry = list.b3First();entry != null;entry = entry->Succ)
 	{
 		b3Tx    img;
-		b3_bool hasFirst = false;
+		b3_bool isFirst = false;
 		int     ino = 1;
 
 		try
 		{
 			img.b3LoadImage(entry->b3Name());
-			hasFirst = true;
+			isFirst = true;
 			if (size == 0)
 			{
 				xSize = (img.xSize + 15) & 0xfff0;
@@ -177,10 +177,10 @@ int main(int argc,char *argv[])
 		catch (...)
 		{
 			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n",entry->b3Name());
+			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n", entry->b3Name());
 		}
 
-		if (hasFirst)
+		if (isFirst)
 		{
 #ifdef BLZ3_USE_DIVX4LINUX
 			if (encoding.handle == 0)
@@ -207,22 +207,24 @@ int main(int argc,char *argv[])
 			}
 #endif
 
-			data = img.b3GetTrueColorData();
-			if (data != null)
+			srcPtr = img.b3GetTrueColorData();
+			memset(buffer, 0, size * 3);
+			if (srcPtr != null)
 			{
 				// Recode image
-				ptr  = buffer + size;
-				for (b3_res y = 0; y < ySize;y++)
+				dstPtr  = &buffer[size * 3];
+				for (b3_res y = 0; y < img.ySize;y++)
 				{
-					ptr -= (xSize * 3);
-					b3_u08 *pixel = ptr;
-					for (b3_res x = 0;x < xSize; x++)
+					dstPtr -= (xSize * 3);
+					b3_u08 *pixel  = dstPtr;
+					for (b3_res x = 0;x < img.xSize; x++)
 					{
-						color  = *data++;
+						color    = srcPtr[x];
 						*pixel++ =  color & 0x0000ff;
 						*pixel++ = (color & 0x00ff00) >>  8;
 						*pixel++ = (color & 0xff0000) >> 16;
 					}
+					srcPtr += img.xSize;
 				}
 
 #ifdef BLZ3_USE_DIVX4LINUX
@@ -233,14 +235,14 @@ int main(int argc,char *argv[])
 				frame.intra      = -1;
 				frame.colorspace = ENC_CSP_RGB24;
 
-				error = encore(encoding.handle,ENC_OPT_ENCODE, &frame, &result);
+				error = encore(encoding.handle, ENC_OPT_ENCODE, &frame, &result);
 				if (error != ENC_OK)
 				{
 					fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n", error, ino);
 				}
 				else
 				{
-					AVI_write_frame(out, bitstream,frame.length, 0);
+					AVI_write_frame(out, bitstream, frame.length, 0);
 					b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n", entry->b3Name(), frame.length);
 					b3PrintF(B3LOG_NORMAL,".");
 				}
