@@ -148,20 +148,23 @@ int main(int argc,char *argv[])
 		}
 	}
 
+#ifdef BLZ3_USE_X264
 	b3File file(argv[1], B_WRITE);
 
-#ifdef BLZ3_USE_X264
 	x264_param_default(&param);
 #ifdef HAVE_X264_V2
 	x264_param_default_preset( &param, "superfast", "zerolatency" ) ;
+	param.b_vfr_input  = 0;
 #endif
-	param.i_threads    = cpu.b3GetNumCPUs();
-	param.i_fps_num    =  25;
-	param.i_fps_den    =   1;
-	param.rc.i_bitrate = 500000;
-	param.i_keyint_max = param.i_fps_num;
-	param.i_csp        = X264_CSP_I420;
-	param.i_log_level  = X264_LOG_NONE;
+	param.i_threads     = cpu.b3GetNumCPUs();
+	param.i_frame_total = list.b3GetCount();
+	param.i_fps_num     =  25;
+	param.i_fps_den     =   1;
+	param.rc.i_bitrate  = 500000;
+	param.i_keyint_max  = param.i_fps_num;
+	param.i_csp         = X264_CSP_I420;
+	param.i_log_level   = X264_LOG_NONE;
+	param.b_interlaced  = 0;
 #endif
 	b3_bool isFirst = true;
 
@@ -257,8 +260,7 @@ int main(int argc,char *argv[])
 
 #ifdef BLZ3_USE_X264
 #ifdef HAVE_X264_V2
-	int delayed = x264_encoder_delayed_frames(x264);
-	while(delayed-- > 0)
+	for(int delayed = x264_encoder_delayed_frames(x264); delayed > 0; delayed--)
 	{
 		encode(x264, &pic_in, file);
 	}
