@@ -51,6 +51,7 @@
 #undef HAVE_LIBX11
 #undef HAVE_LIBZ
 #undef HAVE_LIBCPPUNIT
+#undef HAVE_X264_V2
 
 #ifndef __ICC
 #undef SSE_ALIGNED
@@ -75,6 +76,7 @@
 
 #undef BLZ3_USE_AVILIB
 #undef BLZ3_USE_DIVX4LINUX
+#undef BLZ3_USE_X264
 #undef BLZ3_IS_LINUX
 
 #endif

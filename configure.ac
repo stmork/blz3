@@ -30,6 +30,7 @@ AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [The Blizzard III executable directory])
 AC_SUBST(BLZ3_DOC, "$BLZ3_DOC", [The Blizzard III documentation directory])
 AC_SUBST(GLUTLIBS)
 AC_SUBST(DIVXLIBS)
+AC_SUBST(X264LIBS)
 AC_SUBST(CPPUNITLIBS)
 
 AC_LANG_PUSH(C++)
@@ -255,6 +256,10 @@ AC_CHECK_LIB([IlmImf], [main])
 
 # Check for DivX
 AC_CHECK_LIB([divxencore], [encore], [AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])])
+
+# Check for x264
+AC_CHECK_LIB([x264], [x264_encoder_encode], [AC_CHECK_HEADER([x264.h],[AC_DEFINE([BLZ3_USE_X264]) X264LIBS="$X264LIBS -lx264"])])
+AC_CHECK_LIB([x264], [x264_encoder_delayed_frames], [AC_DEFINE([BLZ3_X264_V2])])
 
 AC_LANG_POP(C++)
 

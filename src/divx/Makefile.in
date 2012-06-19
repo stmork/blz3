@@ -10,19 +10,21 @@ CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
 DIVXLIBS		= @DIVXLIBS@
+X264LIBS		= @X264LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
-PRG_SOURCE		= divx.cc avilib.c libxio.c
+PRG_SOURCE		= divx.cc avilib.c libxio.c h264.cc
 
 DIVX_OBJS		= divx.o avilib.o libxio.o
+H264_OBJS		= h264.o
 
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= divx
-INSTALL_PRGS	= divx
+PRGS			= divx h264
+INSTALL_PRGS	= divx h264
 
 all:	$(PRGS)
 
@@ -39,5 +41,8 @@ clean:
 
 divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS) $(DIVXLIBS)
+
+h264:	$(H264_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS) $(X264LIBS)
 
 -include .dep
