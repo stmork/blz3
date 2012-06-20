@@ -238,7 +238,7 @@ int main(int argc,char *argv[])
 				x264_param_apply_profile(&param, "baseline");
 #endif
 				x264 = x264_encoder_open(&param);
-				x264_encoder_parameters(x264, &param);
+//				x264_encoder_parameters(x264, &param);
 
 				if (!param.b_repeat_headers)
 				{
