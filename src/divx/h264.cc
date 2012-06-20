@@ -78,9 +78,9 @@ static void b3Banner(const char *command)
 static void encode(x264_t *x264, x264_picture_t *pic_in, b3File &file)
 {
 	x264_picture_t  pic_out;
-	x264_nal_t     *nals;
-	int i_nals;
-	int i_size;
+	x264_nal_t     *nals; 
+	int             i_nals;
+	int             i_size;
 
 	x264_encoder_encode(x264, &nals, &i_nals, pic_in, &pic_out);
 	for (int i = 0; i < i_nals; i++)
@@ -95,16 +95,18 @@ int main(int argc,char *argv[])
 {
 	b3FileList      list;
 	b3FileEntry    *entry;
-	b3CPU           cpu;
 #ifdef BLZ3_USE_X264
+	b3CPU           cpu;
 	x264_t         *x264;
 	x264_param_t    param;
 	x264_picture_t  pic_in;
+	x264_nal_t     *nals; 
+	int             i_nals = 0;
 #endif
-	b3_pkd_color   *srcPtr, pixel;
 	b3_size         size  = 0;
 	b3_res          xSize = 0;
 	b3_res          ySize = 0;
+	b3_bool         isFirst = true;
 
 	if (argc <= 1)
 	{
@@ -153,20 +155,24 @@ int main(int argc,char *argv[])
 
 	x264_param_default(&param);
 #ifdef HAVE_X264_V2
-	x264_param_default_preset( &param, "superfast", "zerolatency" ) ;
-	param.b_vfr_input  = 0;
+	x264_param_default_preset( &param, "fast", "zerolatency" ) ;
+	param.b_vfr_input    = 0;
 #endif
-	param.i_threads     = cpu.b3GetNumCPUs();
-	param.i_frame_total = list.b3GetCount();
-	param.i_fps_num     =  25;
-	param.i_fps_den     =   1;
-	param.rc.i_bitrate  = 500000;
-	param.i_keyint_max  = param.i_fps_num;
-	param.i_csp         = X264_CSP_I420;
-	param.i_log_level   = X264_LOG_NONE;
-	param.b_interlaced  = 0;
+	param.i_threads        = cpu.b3GetNumCPUs();
+	param.i_frame_total    = list.b3GetCount();
+	param.i_fps_num        =  25;
+	param.i_fps_den        =   1;
+	param.rc.i_bitrate     = 512;
+	param.i_keyint_max     = param.i_fps_num;
+    param.b_intra_refresh  = 1;
+    param.i_csp            = X264_CSP_I420;
+//	param.i_log_level      = X264_LOG_NONE;
+	param.b_interlaced     = 0;
+	param.b_repeat_headers = 1;
+	param.b_annexb         = 1;
+	param.i_timebase_num   = param.i_fps_den;
+	param.i_timebase_den   = param.i_fps_num;
 #endif
-	b3_bool isFirst = true;
 
 	list.b3Sort();
 	for (entry = list.b3First();entry != null;entry = entry->Succ)
@@ -191,6 +197,7 @@ int main(int argc,char *argv[])
 #endif
 				x264 = x264_encoder_open(&param);
 				x264_picture_alloc(&pic_in, param.i_csp, param.i_width, param.i_height);
+				pic_in.i_type = X264_TYPE_AUTO;
 #endif
 				isFirst = false;
 				b3PrintF(B3LOG_DEBUG,"Start encoding...");
@@ -221,7 +228,7 @@ int main(int argc,char *argv[])
 		b3_u08       *uPtr = (b3_u08 *)pic_in.img.plane[1];
 		b3_u08       *vPtr = (b3_u08 *)pic_in.img.plane[2];
 		b3_pkd_color *line = img.b3GetTrueColorData();
-		b3_pkd_color  r, g, b;
+		b3_pkd_color  pixel, r, g, b;
 
 		memset(yPtr,   0, ySize * pic_in.img.i_stride[0]);
 		memset(uPtr, 128, ySize * pic_in.img.i_stride[1] >> 1);
@@ -266,7 +273,10 @@ int main(int argc,char *argv[])
 	}
 #endif
 	b3PrintF(B3LOG_NORMAL, "\n");
-	x264_picture_clean(&pic_in);
+	if (!isFirst)
+	{
+		x264_picture_clean(&pic_in);
+	}
 	x264_encoder_close(x264);
 #endif
 

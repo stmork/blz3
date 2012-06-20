@@ -123,6 +123,14 @@ public:
 	 * @param dir_name The path.
 	 */
 	void           b3RecCreateList(const char *dir_name);
+
+	/**
+	 * Thie method returns the amount of file entries.
+	 */
+	inline b3_count b3GetCount()
+	{
+		return list.b3GetCount();
+	}
 };
 
 #endif
