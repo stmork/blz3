@@ -259,7 +259,8 @@ AC_CHECK_LIB([divxencore], [encore], [AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BL
 
 # Check for x264
 AC_CHECK_LIB([x264], [x264_encoder_encode], [AC_CHECK_HEADER([x264.h],[AC_DEFINE([BLZ3_USE_X264]) X264LIBS="$X264LIBS -lx264"])])
-AC_CHECK_LIB([x264], [x264_encoder_delayed_frames], [AC_DEFINE([HAVE_X264_V2])])
+AC_CHECK_LIB([x264], [x264_param_default_preset], [AC_DEFINE([HAVE_X264_PARAMETER_DEFINITION])])
+AC_CHECK_LIB([x264], [x264_encoder_delayed_frames], [AC_DEFINE([HAVE_X264_DELAYED_FRAMES])])
 
 AC_LANG_POP(C++)
 

@@ -192,7 +192,7 @@ int main(int argc,char *argv[])
 	b3File file(argv[1], B_WRITE);
 
 	x264_param_default(&param);
-#ifdef HAVE_X264_V2
+#ifdef HAVE_X264_PARAMETER_DEFINITION
 	x264_param_default_preset( &param, "medium", "stillimage" ) ;
 	param.b_vfr_input      = 0;
 	param.i_timebase_num   = param.i_fps_den;
@@ -246,7 +246,7 @@ int main(int argc,char *argv[])
 				param.i_height         = ySize;
 //				param.vui.i_sar_width  = xSize;
 //				param.vui.i_sar_height = ySize;
-#ifdef HAVE_X264_V2
+#ifdef HAVE_X264_PARAMETER_DEFINITION
 				x264_param_apply_profile(&param, "baseline");
 #endif
 				x264 = x264_encoder_open(&param);
@@ -278,7 +278,6 @@ int main(int argc,char *argv[])
 		}
 
 #ifdef BLZ3_USE_X264
-
 		pic_in.i_pts = ino;
 		b3RecodeRGB2YUV(img, pic_in, ySize);
 		b3Encode(x264, &pic_in, file);
@@ -287,7 +286,7 @@ int main(int argc,char *argv[])
 	}
 
 #ifdef BLZ3_USE_X264
-#ifdef HAVE_X264_V2
+#ifdef HAVE_X264_DELAYED_FRAMES
 	for(int delayed = x264_encoder_delayed_frames(x264); delayed > 0; delayed--)
 	{
 		b3Encode(x264, &pic_in, file);
