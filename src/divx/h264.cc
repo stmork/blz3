@@ -75,7 +75,46 @@ static void b3Banner(const char *command)
 }
 
 #ifdef BLZ3_USE_X264
-static void encode(x264_t *x264, x264_picture_t *pic_in, b3File &file)
+static void b3RecodeRGB2YUV(b3Tx &img, x264_picture_t &pic_in, b3_res ySize)
+{
+	b3_u08       *yPtr = (b3_u08 *)pic_in.img.plane[0];
+	b3_u08       *uPtr = (b3_u08 *)pic_in.img.plane[1];
+	b3_u08       *vPtr = (b3_u08 *)pic_in.img.plane[2];
+	b3_pkd_color *line = img.b3GetTrueColorData();
+	b3_pkd_color  pixel, r, g, b;
+
+	memset(yPtr,   0, ySize * pic_in.img.i_stride[0]);
+	memset(uPtr, 128, ySize * pic_in.img.i_stride[1] >> 1);
+	memset(vPtr, 128, ySize * pic_in.img.i_stride[2] >> 1);
+
+	for (b3_res iy = 0; iy < img.ySize; iy++)  
+	{
+		for (b3_res ix = 0; ix < img.xSize; ix++)
+		{
+			pixel = line[ix];
+			r = (pixel & 0xff0000) >> 16;
+			g = (pixel & 0x00ff00) >>  8;
+			b = (pixel & 0x0000ff);
+
+			yPtr[ix] =  0.257 * r + 0.504 * g + 0.098 * b;
+
+			if ((ix & 1) && (iy & 1))
+			{
+				uPtr[ix >> 1] = -0.148 * r - 0.291 * g + 0.439 * b + 128;
+					vPtr[ix >> 1] =  0.439 * r - 0.368 * g - 0.071 * b + 128;
+			}
+		}
+		line += img.xSize;
+		yPtr += pic_in.img.i_stride[0];
+		if (iy & 1)
+		{
+			uPtr += pic_in.img.i_stride[1];
+			vPtr += pic_in.img.i_stride[2];
+		}
+	}
+}
+
+static void b3Encode(x264_t *x264, x264_picture_t *pic_in, b3File &file)
 {
 	x264_picture_t  pic_out;
 	x264_nal_t     *nals; 
@@ -96,7 +135,6 @@ int main(int argc,char *argv[])
 	b3FileList      list;
 	b3FileEntry    *entry;
 #ifdef BLZ3_USE_X264
-	b3CPU           cpu;
 	x264_t         *x264;
 	x264_param_t    param;
 	x264_picture_t  pic_in;
@@ -155,24 +193,39 @@ int main(int argc,char *argv[])
 
 	x264_param_default(&param);
 #ifdef HAVE_X264_V2
-	x264_param_default_preset( &param, "fast", "zerolatency" ) ;
-	param.b_vfr_input    = 0;
+	x264_param_default_preset( &param, "medium", "stillimage" ) ;
+	param.b_vfr_input      = 0;
+	param.i_timebase_num   = param.i_fps_den;
+	param.i_timebase_den   = param.i_fps_num;
+#else
+	param.rc.i_rc_method   = X264_RC_CRF;
 #endif
-	param.i_threads        = cpu.b3GetNumCPUs();
 	param.i_frame_total    = list.b3GetCount();
 	param.i_fps_num        =  25;
 	param.i_fps_den        =   1;
-	param.rc.i_bitrate     = 512;
+	param.b_interlaced     =   0;
+//	param.b_vfr_input      =   0;
+//	param.rc.i_bitrate     = 512;
 	param.i_keyint_max     = param.i_fps_num;
-    param.b_intra_refresh  = 1;
-    param.i_csp            = X264_CSP_I420;
-//	param.i_log_level      = X264_LOG_NONE;
-	param.b_interlaced     = 0;
+//	param.b_intra_refresh  = 1;
 	param.b_repeat_headers = 1;
-	param.b_annexb         = 1;
-	param.i_timebase_num   = param.i_fps_den;
-	param.i_timebase_den   = param.i_fps_num;
+//	param.b_annexb         = 1;
+    param.i_csp            = X264_CSP_I420;
+//	param.i_log_level      = X264_LOG_ERROR;
 #endif
+
+	if (!param.b_repeat_headers)
+	{
+		x264_nal_t *headers;
+		int         i_nals;
+
+		b3PrintF(B3LOG_DEBUG, "Writing header...\n");
+		x264_encoder_headers(x264, &headers, &i_nals);
+		for (int i = 0; i < i_nals; i++)
+		{
+			file.b3Write(headers[i].p_payload, headers[i].i_payload);
+		}
+	}
 
 	list.b3Sort();
 	for (entry = list.b3First();entry != null;entry = entry->Succ)
@@ -189,9 +242,10 @@ int main(int argc,char *argv[])
 				ySize          = (img.ySize +  7) & 0xfff8;
 				size           = xSize * ySize;
 #ifdef BLZ3_USE_X264
-				param.i_width  = xSize;
-				param.i_height = ySize;
-
+				param.i_width          = xSize;
+				param.i_height         = ySize;
+//				param.vui.i_sar_width  = xSize;
+//				param.vui.i_sar_height = ySize;
 #ifdef HAVE_X264_V2
 				x264_param_apply_profile(&param, "baseline");
 #endif
@@ -200,7 +254,7 @@ int main(int argc,char *argv[])
 				pic_in.i_type = X264_TYPE_AUTO;
 #endif
 				isFirst = false;
-				b3PrintF(B3LOG_DEBUG,"Start encoding...");
+				b3PrintF(B3LOG_DEBUG,"Start encoding...\n");
 			}
 		}
 		catch (b3TxException &t)
@@ -224,43 +278,10 @@ int main(int argc,char *argv[])
 		}
 
 #ifdef BLZ3_USE_X264
-		b3_u08       *yPtr = (b3_u08 *)pic_in.img.plane[0];
-		b3_u08       *uPtr = (b3_u08 *)pic_in.img.plane[1];
-		b3_u08       *vPtr = (b3_u08 *)pic_in.img.plane[2];
-		b3_pkd_color *line = img.b3GetTrueColorData();
-		b3_pkd_color  pixel, r, g, b;
 
-		memset(yPtr,   0, ySize * pic_in.img.i_stride[0]);
-		memset(uPtr, 128, ySize * pic_in.img.i_stride[1] >> 1);
-		memset(vPtr, 128, ySize * pic_in.img.i_stride[2] >> 1);
-
-		for (b3_res iy = 0; iy < img.ySize; iy++)  
-		{
-			for (b3_res ix = 0; ix < img.xSize; ix++)
-			{
-				pixel = line[ix];
-				r = (pixel & 0xff0000) >> 16;
-				g = (pixel & 0x00ff00) >>  8;
-				b = (pixel & 0x0000ff);
-
-				yPtr[ix] =  0.257 * r + 0.504 * g + 0.098 * b;
-
-				if ((ix & 1) && (iy & 1))
-				{
-					uPtr[ix >> 1] = -0.148 * r - 0.291 * g + 0.439 * b + 128;
-					vPtr[ix >> 1] =  0.439 * r - 0.368 * g - 0.071 * b + 128;
-				}
-			}
-			line += img.xSize;
-			yPtr += pic_in.img.i_stride[0];
-			if (iy & 1)
-			{
-				uPtr += pic_in.img.i_stride[1];
-				vPtr += pic_in.img.i_stride[2];
-			}
-		}
-
-		encode(x264, &pic_in, file);
+		pic_in.i_pts = ino;
+		b3RecodeRGB2YUV(img, pic_in, ySize);
+		b3Encode(x264, &pic_in, file);
 #endif
 		ino++;
 	}
@@ -269,7 +290,7 @@ int main(int argc,char *argv[])
 #ifdef HAVE_X264_V2
 	for(int delayed = x264_encoder_delayed_frames(x264); delayed > 0; delayed--)
 	{
-		encode(x264, &pic_in, file);
+		b3Encode(x264, &pic_in, file);
 	}
 #endif
 	b3PrintF(B3LOG_NORMAL, "\n");
