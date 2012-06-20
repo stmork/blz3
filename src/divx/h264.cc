@@ -201,31 +201,19 @@ int main(int argc,char *argv[])
 	param.rc.i_rc_method   = X264_RC_CRF;
 #endif
 	param.i_frame_total    = list.b3GetCount();
-	param.i_fps_num        =  25;
+	param.i_fps_num        =  50;
 	param.i_fps_den        =   1;
 	param.b_interlaced     =   0;
 //	param.b_vfr_input      =   0;
 //	param.rc.i_bitrate     = 512;
 	param.i_keyint_max     = param.i_fps_num;
 //	param.b_intra_refresh  = 1;
-	param.b_repeat_headers = 1;
+	param.b_repeat_headers = 0;
 //	param.b_annexb         = 1;
     param.i_csp            = X264_CSP_I420;
 //	param.i_log_level      = X264_LOG_ERROR;
 #endif
 
-	if (!param.b_repeat_headers)
-	{
-		x264_nal_t *headers;
-		int         i_nals;
-
-		b3PrintF(B3LOG_DEBUG, "Writing header...\n");
-		x264_encoder_headers(x264, &headers, &i_nals);
-		for (int i = 0; i < i_nals; i++)
-		{
-			file.b3Write(headers[i].p_payload, headers[i].i_payload);
-		}
-	}
 
 	list.b3Sort();
 	for (entry = list.b3First();entry != null;entry = entry->Succ)
@@ -250,11 +238,27 @@ int main(int argc,char *argv[])
 				x264_param_apply_profile(&param, "baseline");
 #endif
 				x264 = x264_encoder_open(&param);
+				x264_encoder_parameters(x264, &param);
+
+				if (!param.b_repeat_headers)
+				{
+					x264_nal_t *headers;
+					int         i_nals = 0;
+
+					b3PrintF(B3LOG_DEBUG, "Writing header...\n");
+					x264_encoder_headers(x264, &headers, &i_nals);
+					for (int i = 0; i < i_nals; i++)
+					{
+						file.b3Write(headers[i].p_payload, headers[i].i_payload);
+					}
+				}
+
 				x264_picture_alloc(&pic_in, param.i_csp, param.i_width, param.i_height);
-				pic_in.i_type = X264_TYPE_AUTO;
+				pic_in.i_type       = X264_TYPE_AUTO;
+				pic_in.i_pic_struct = 0;
 #endif
 				isFirst = false;
-				b3PrintF(B3LOG_DEBUG,"Start encoding...\n");
+				b3PrintF(B3LOG_DEBUG,"Start encoding of %d frames...\n", param.i_frame_total);
 			}
 		}
 		catch (b3TxException &t)
