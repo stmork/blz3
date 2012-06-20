@@ -255,7 +255,6 @@ int main(int argc,char *argv[])
 
 				x264_picture_alloc(&pic_in, param.i_csp, param.i_width, param.i_height);
 				pic_in.i_type       = X264_TYPE_AUTO;
-				pic_in.i_pic_struct = 0;
 #endif
 				isFirst = false;
 				b3PrintF(B3LOG_DEBUG,"Start encoding of %d frames...\n", param.i_frame_total);
