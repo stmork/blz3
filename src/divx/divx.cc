@@ -203,7 +203,7 @@ int main(int argc,char *argv[])
 				{
 					b3PrintF(B3LOG_DEBUG,"Start encoding...");
 				}
-				AVI_set_video(out, xSize, ySize, encoding.framerate, "DIVX");
+				AVI_set_video(out, xSize, ySize, encoding.framerate, (char *)"DIVX");
 			}
 #endif
 

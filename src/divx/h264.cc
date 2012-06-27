@@ -101,7 +101,7 @@ static void b3RecodeRGB2YUV(b3Tx &img, x264_picture_t &pic_in, b3_res ySize)
 			if ((ix & 1) && (iy & 1))
 			{
 				uPtr[ix >> 1] = -0.148 * r - 0.291 * g + 0.439 * b + 128;
-					vPtr[ix >> 1] =  0.439 * r - 0.368 * g - 0.071 * b + 128;
+				vPtr[ix >> 1] =  0.439 * r - 0.368 * g - 0.071 * b + 128;
 			}
 		}
 		line += img.xSize;
@@ -152,6 +152,14 @@ int main(int argc,char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 
+#ifdef BLZ3_USE_X264  
+	x264_param_default(&param);
+#ifdef HAVE_X264_PARAMETER_DEFINITION
+	x264_param_default_preset( &param, "medium", "stillimage" ) ;
+#endif
+	param.i_log_level      = X264_LOG_NONE;
+#endif
+
 	for (int i = 2;i < argc;i++)
 	{
 		if (argv[i][0] == '-')
@@ -160,10 +168,16 @@ int main(int argc,char *argv[])
 			{
 			case 'd' :
 				b3Log::b3SetLevel(B3LOG_DEBUG);
+#ifdef BLZ3_USE_X264  
+				param.i_log_level = X264_LOG_INFO;
+#endif
 				break;
 
 			case 'f' :
 				b3Log::b3SetLevel(B3LOG_FULL);
+#ifdef BLZ3_USE_X264  
+				param.i_log_level = X264_LOG_DEBUG;
+#endif
 				break;
 			}
 		}
@@ -191,9 +205,9 @@ int main(int argc,char *argv[])
 #ifdef BLZ3_USE_X264
 	b3File file(argv[1], B_WRITE);
 
-	x264_param_default(&param);
+	param.i_fps_num        =  25;
+	param.i_fps_den        =   1;
 #ifdef HAVE_X264_PARAMETER_DEFINITION
-	x264_param_default_preset( &param, "medium", "stillimage" ) ;
 	param.b_vfr_input      = 0;
 	param.i_timebase_num   = param.i_fps_den;
 	param.i_timebase_den   = param.i_fps_num;
@@ -201,8 +215,6 @@ int main(int argc,char *argv[])
 	param.rc.i_rc_method   = X264_RC_CRF;
 #endif
 	param.i_frame_total    = list.b3GetCount();
-	param.i_fps_num        =  50;
-	param.i_fps_den        =   1;
 	param.b_interlaced     =   0;
 //	param.b_vfr_input      =   0;
 //	param.rc.i_bitrate     = 512;
@@ -211,7 +223,6 @@ int main(int argc,char *argv[])
 	param.b_repeat_headers = 0;
 //	param.b_annexb         = 1;
     param.i_csp            = X264_CSP_I420;
-//	param.i_log_level      = X264_LOG_ERROR;
 #endif
 
 
@@ -255,9 +266,9 @@ int main(int argc,char *argv[])
 
 				x264_picture_alloc(&pic_in, param.i_csp, param.i_width, param.i_height);
 				pic_in.i_type       = X264_TYPE_AUTO;
+				b3PrintF(B3LOG_DEBUG,"Start encoding of %d frames...\n", param.i_frame_total);
 #endif
 				isFirst = false;
-				b3PrintF(B3LOG_DEBUG,"Start encoding of %d frames...\n", param.i_frame_total);
 			}
 		}
 		catch (b3TxException &t)
