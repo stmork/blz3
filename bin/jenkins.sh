@@ -6,7 +6,7 @@ export BLZ3_DOC=$BLZ3_HOME/doc
 
 set -e
 
-make clean configure
+make configure
 ./configure
-make depend
+make clean depend
 make 
