@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export BLZ3_HOME=$PWD
-export BLZ3_DOC=$BLZ3_HOME/doc
-
+BLZ3_HOME=$PWD
 BLZ3_DEBIAN=${PWD}/../debian/blz3
 BLZ3_DEBIAN_DEV=${PWD}/../debian/blz3-dev
 ARCH=`dpkg --print-architecture`
@@ -17,6 +15,11 @@ mkdir -p ${BLZ3_DEBIAN_DEV}/usr/share/blz3
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/include
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/lib
 mkdir -p ${BLZ3_DEBIAN_DEV}/DEBIAN
+
+export FLAGS=-O3 -ffast-math -ftree-vectorize -s
+export CFLAGS="${FLAGS}"
+export CPPFLAGS="${FLAGS}"
+export CXXFLAGS="${FLAGS}"
 
 set -e
 

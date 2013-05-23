@@ -3,7 +3,7 @@ Version: 2.99.2-21
 Section: misc
 Priority: extra
 Architecture: amd64
-Depends: libc6-dev, libstdc++6-dev
+Depends: libc6-dev, libstdc++6-dev, manpages-dev, xorg-dev, make
 Installed-Size: 8
 Maintainer: Steffen A. Mork <linux-dev@morknet.de>
 Homepage: morknet.de
