@@ -3,8 +3,9 @@
 export BLZ3_HOME=$PWD
 export BLZ3_DOC=$BLZ3_HOME/doc
 
-BLZ3_DEBIAN=../debian/blz3
-BLZ3_DEBIAN_DEV=../debian/blz3-dev
+BLZ3_DEBIAN=${PWD}/../debian/blz3
+BLZ3_DEBIAN_DEV=${PWD}/../debian/blz3-dev
+ARCH=`dpkg --print-architecture`
 
 rm -rf ${BLZ3_DEBIAN} ${BLZ3_DEBIAN_DEV} 
 umask 022
@@ -25,10 +26,10 @@ make clean depend
 make 
 make install documentation
 
-cp -a control-blz3 ${BLZ3_DEBIAN}/DEBIAN/control
+sed -e s/%ARCH%/${ARCH}/g control-blz3 >${BLZ3_DEBIAN}/DEBIAN/control
 dpkg -b ${BLZ3_DEBIAN} blz3.deb
 
-cp -a control-blz3-dev ${BLZ3_DEBIAN_DEV}/DEBIAN/control
+sed -e s/%ARCH%/${ARCH}/g control-blz3-dev >${BLZ3_DEBIAN_DEV}/DEBIAN/control
 cp -a include/blz3 include_unix/blz3 ${BLZ3_DEBIAN_DEV}/usr/include
 cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
