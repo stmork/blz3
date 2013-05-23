@@ -1,8 +1,8 @@
 Package: blz3
 Version: 2.99.2-21
-Section: misc
-Priority: extra
-Architecture: amd64
+Section: universe/graphics
+Priority: optional
+Architecture: %ARCH%
 Depends: libc6, libstdc++6, libgcc1, libx11-6, libxext6, libxau6, libxdmcp6,
  libopenexr6, freeglut3, libgl1-mesa-glx, libglu1-mesa, 
  zlib1g, libx264-120, libxcb1
