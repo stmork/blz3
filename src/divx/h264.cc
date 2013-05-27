@@ -216,12 +216,12 @@ int main(int argc,char *argv[])
 #endif
 	param.i_frame_total    = list.b3GetCount();
 	param.b_interlaced     =   0;
-//	param.b_vfr_input      =   0;
-//	param.rc.i_bitrate     = 512;
+	param.b_vfr_input      =   0;
+	param.rc.i_bitrate     = 512;
 	param.i_keyint_max     = param.i_fps_num;
-//	param.b_intra_refresh  = 1;
+	param.b_intra_refresh  = 1;
 	param.b_repeat_headers = 0;
-//	param.b_annexb         = 1;
+	param.b_annexb         = 1;
     param.i_csp            = X264_CSP_I420;
 #endif
 
@@ -249,7 +249,7 @@ int main(int argc,char *argv[])
 				x264_param_apply_profile(&param, "baseline");
 #endif
 				x264 = x264_encoder_open(&param);
-//				x264_encoder_parameters(x264, &param);
+				x264_encoder_parameters(x264, &param);
 
 				if (!param.b_repeat_headers)
 				{
