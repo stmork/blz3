@@ -35,7 +35,7 @@ sed\
 	-e "s/%ARCH%/${ARCH}/g"\
 	-e "s/%BUILD%/$BUILD_NUMBER/g"\
 	control-blz3 >${BLZ3_DEBIAN}/DEBIAN/control
-dpkg -b ${BLZ3_DEBIAN} blz3-${VERSION}-${BUILD_NUMBER}-${ARCH}.deb
+dpkg -b ${BLZ3_DEBIAN} blz3_${VERSION}-${BUILD_NUMBER}_${ARCH}.deb
 
 VERSION=`grep Version control-blz3-dev | cut -d" " -f2`
 sed\
@@ -46,4 +46,4 @@ rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
-fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} blz3-dev-${VERSION}-${BUILD_NUMBER}-${ARCH}.deb
+fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} blz3-dev_${VERSION}-${BUILD_NUMBER}_${ARCH}.deb
