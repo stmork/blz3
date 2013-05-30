@@ -4,7 +4,7 @@ BLZ3_HOME=$PWD
 BLZ3_DEBIAN=${PWD}/../debian/blz3
 BLZ3_DEBIAN_DEV=${PWD}/../debian/blz3-dev
 ARCH=`dpkg --print-architecture`
-${BUILD_NUMBER:=0}
+BUILD_NUMBER=${BUILD_NUMBER:=0}
 
 rm -rf ${BLZ3_DEBIAN} ${BLZ3_DEBIAN_DEV} 
 umask 022
