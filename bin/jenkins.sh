@@ -30,9 +30,11 @@ make
 make install documentation
 make test
 
+VERSION=`grep Version control-blz3 | cut -d" " -f2`
 sed -e s/%ARCH%/${ARCH}/g control-blz3 >${BLZ3_DEBIAN}/DEBIAN/control
 dpkg -b ${BLZ3_DEBIAN} blz3-${VERSION}-${BUILD_NUMBER}-${ARCH}.deb
 
+VERSION=`grep Version control-blz3-dev | cut -d" " -f2`
 sed -e s/%ARCH%/${ARCH}/g control-blz3-dev >${BLZ3_DEBIAN_DEV}/DEBIAN/control
 rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/

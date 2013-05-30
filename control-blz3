@@ -1,5 +1,5 @@
 Package: blz3
-Version: 2.99.2-21
+Version: 2.99.2
 Section: universe/graphics
 Priority: optional
 Architecture: %ARCH%
