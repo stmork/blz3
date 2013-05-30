@@ -37,4 +37,4 @@ rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
-dpkg -b ${BLZ3_DEBIAN_DEV} blz3-dev-${BUILD_NUMBER}-${ARCH}.deb
+fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} blz3-dev-${BUILD_NUMBER}-${ARCH}.deb
