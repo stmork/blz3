@@ -73,7 +73,7 @@ GLenum b3RenderContext::glLightNum[] =
 
 b3RenderContext::b3RenderContext()
 {
-	b3PrintF(B3LOG_FULL," b3RenderContext::b3RenderContext()\n");
+//	b3PrintF(B3LOG_FULL," b3RenderContext::b3RenderContext()\n");
 	b3LightNum();
 	glDrawCachedTextures = true;
 	glSelectedObject     = null;
@@ -307,7 +307,7 @@ void b3RenderContext::b3LightDefault(b3_pkd_color ambient)
 
 void b3RenderContext::b3LightNum(b3_index num)
 {
-	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightNum(%d)\n",num);
+//	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightNum(%d)\n",num);
 
 #ifdef BLZ3_USE_OPENGL
 	if (VALIDATE_LIGHT_NUM(num))
