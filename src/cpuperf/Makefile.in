@@ -12,8 +12,9 @@ LDLIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
-PRG_SOURCE		= bench.cc
+LINK.o			= $(LINK.cc)
 
+PRG_SOURCE		= bench.cc
 BENCH_OBJS		= bench.o
 
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a

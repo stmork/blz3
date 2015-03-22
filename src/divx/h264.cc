@@ -55,7 +55,7 @@ extern "C"
 static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III movie maker (h.264)\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-20012\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-20013\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
 	if (command != null)
 	{
@@ -155,7 +155,7 @@ int main(int argc,char *argv[])
 #ifdef BLZ3_USE_X264  
 	x264_param_default(&param);
 #ifdef HAVE_X264_PARAMETER_DEFINITION
-	x264_param_default_preset( &param, "medium", "stillimage" ) ;
+	x264_param_default_preset( &param, "slow", "stillimage" ) ;
 #endif
 	param.i_log_level      = X264_LOG_NONE;
 #endif
@@ -205,6 +205,8 @@ int main(int argc,char *argv[])
 #ifdef BLZ3_USE_X264
 	b3File file(argv[1], B_WRITE);
 
+	param.i_threads        = b3Runtime::b3GetNumCPUs();
+printf("%d\n", param.i_threads);
 	param.i_fps_num        =  25;
 	param.i_fps_den        =   1;
 #ifdef HAVE_X264_PARAMETER_DEFINITION
@@ -218,7 +220,8 @@ int main(int argc,char *argv[])
 	param.b_interlaced     =   0;
 	param.b_vfr_input      =   0;
 	param.rc.i_bitrate     = 512;
-	param.i_keyint_max     = param.i_fps_num;
+	param.i_keyint_min     = 25;
+	param.i_keyint_max     = param.i_fps_num * 10;
 	param.b_intra_refresh  = 1;
 	param.b_repeat_headers = 0;
 	param.b_annexb         = 1;
@@ -246,7 +249,7 @@ int main(int argc,char *argv[])
 //				param.vui.i_sar_width  = xSize;
 //				param.vui.i_sar_height = ySize;
 #ifdef HAVE_X264_PARAMETER_DEFINITION
-				x264_param_apply_profile(&param, "baseline");
+				x264_param_apply_profile(&param, "high");
 #endif
 				x264 = x264_encoder_open(&param);
 				x264_encoder_parameters(x264, &param);

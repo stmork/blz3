@@ -8,11 +8,13 @@ CFLAGS			= @CFLAGS@
 CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
-LIBS			= @LIBS@
+LDLIBS			= @LIBS@ -lx264
 DIVXLIBS		= @DIVXLIBS@
 X264LIBS		= @X264LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
+
+LINK.o			= $(LINK.cc)
 
 PRG_SOURCE		= divx.cc avilib.c libxio.c h264.cc
 
@@ -40,9 +42,7 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS) $(DIVXLIBS)
 
 h264:	$(H264_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS) $(X264LIBS)
 
 -include .dep

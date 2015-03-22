@@ -12,6 +12,8 @@ LDLIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
+LINK.o			= $(LINK.cc)
+
 PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc\
 	testimg.cc half.cc pw.cc reduce.cc BodThumb.cc RemCR.cc big.cc
 
