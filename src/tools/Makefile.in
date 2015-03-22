@@ -8,7 +8,7 @@ CFLAGS			= @CFLAGS@
 CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
-LIBS			= @LIBS@
+LDLIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
@@ -48,36 +48,25 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 BodThumb:	$(BOD_THUMB_OBJS)  $(B3_LIB_BASE) $(B3_LIB_RAYTRACE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 RemCR:	$(REM_CR_OBJS)  $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 RestoreExt:	$(RESTOREEXT_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 CleanRes:	$(CLEANRES_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 scale:	$(SCALE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 half:	$(HALF_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 pw:	$(PW_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 testimg:	$(TESTIMG_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 calibrate:	$(CALIBRATE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 reduce:	$(REDUCE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 big:	$(BIG_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep

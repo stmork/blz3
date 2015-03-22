@@ -8,7 +8,7 @@ CFLAGS			= @CFLAGS@
 CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
-LIBS			= @LIBS@
+LDLIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
@@ -46,27 +46,19 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 brt3:	$(BRT3_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 bimg3:	$(BIMG3_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 gif_info:	$(GIF_INFO_OBJS) $(B3_LIB_BASE) 
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 gif_movie:	$(GIF_MOVIE_OBJS) $(B3_LIB_BASE) 
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 gif_trans:	$(GIF_TRANS_OBJS) $(B3_LIB_BASE) 
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 bconv3:	$(BCONV3_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 bhc:	$(BHC_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 rp:	$(RP_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep

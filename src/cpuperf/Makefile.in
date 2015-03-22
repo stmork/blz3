@@ -8,7 +8,7 @@ CFLAGS			= @CFLAGS@
 CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
-LIBS			= @LIBS@
+LDLIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
@@ -36,6 +36,5 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 bench:	$(BENCH_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep
