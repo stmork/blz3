@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveRGB8.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -154,7 +154,7 @@ b3InfoRGB8::~b3InfoRGB8()
 	m_File.b3Write(m_SaveBuffer,48);
 }
 
-b3_result b3Tx::b3SaveRGB8(const char *filename)
+const b3_result b3Tx::b3SaveRGB8(const char *filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving RGB8: %s\n", filename);
 

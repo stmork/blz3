@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Matrix.h
-**	$Release:	Dortmund 2001, 2003 $
+**	$Release:	Dortmund 2001, 2003, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$

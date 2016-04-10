@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3ColorSSE.h $
-**	$Release:	Dortmund 2005 $
+**	$Release:	Dortmund 2005, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -263,6 +263,20 @@ public:
 
 	/**
 	 * This index operator returns the spedified color component and returns them.
+	 * This is the L value variant.
+	 *
+	 * @param index The color channel.
+	 */
+	inline const b3_f32 &operator[](const b3_color_index index) const
+	{
+		b3_f32 *ptr = (b3_f32 *)&v;
+
+		return ptr[index];
+	}
+
+	/**
+	 * This index operator returns the spedified color component and returns them.
+	 * This is the R value variant.
 	 *
 	 * @param index The color channel.
 	 */
@@ -275,6 +289,20 @@ public:
 
 	/**
 	 * This index operator returns the spedified color component and returns them.
+	 * This is the L value variant.
+	 *
+	 * @param index The color channel.
+	 */
+	inline const b3_f32 &operator[](const int index) const
+	{
+		b3_f32 *ptr = (b3_f32 *)&v;
+
+		return ptr[index];
+	}
+
+	/**
+	 * This index operator returns the spedified color component and returns them.
+	 * This is the R value variant.
 	 *
 	 * @param index The color channel.
 	 */
@@ -386,7 +414,7 @@ public:
 	 * @param a The color to add.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator+(const b3Color &a)
+	inline const b3Color operator+(const b3Color &a) const
 	{
 		b3Color result;
 
@@ -417,7 +445,7 @@ public:
 	 * @param a The color to subtract.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator-(const b3Color &a)
+	inline const b3Color operator-(const b3Color &a) const
 	{
 		b3Color result;
 
@@ -447,7 +475,7 @@ public:
 	 * @param a The color filter.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator*(const b3Color &a)
+	inline const b3Color operator*(const b3Color &a) const
 	{
 		b3Color result;
 
@@ -491,7 +519,7 @@ public:
 	 * @param value The color filter value.
 	 * @return The new b3Color instance.
 	 */
-	inline b3Color operator*(const b3_f32 value)
+	inline const b3Color operator*(const b3_f32 value) const
 	{
 		b3Color result;
 
@@ -507,7 +535,7 @@ public:
 	 * @param value The color filter value.
 	 * @return The new b3Color instance.
 	 */
-	inline b3Color operator*(const b3_f64 value)
+	inline const b3Color operator*(const b3_f64 value) const
 	{
 		b3Color result;
 
@@ -568,7 +596,7 @@ public:
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_f32 value)
+	inline const b3Color operator/(const b3_f32 value) const
 	{
 		b3Color result;
 
@@ -585,7 +613,7 @@ public:
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_f64 value)
+	inline const b3Color operator/(const b3_f64 value) const
 	{
 		b3Color result;
 
@@ -602,7 +630,7 @@ public:
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_count value)
+	inline const b3Color operator/(const b3_count value) const
 	{
 		b3Color result;
 
@@ -620,7 +648,7 @@ public:
 	 * @param exp The exponent.
 	 * @return The resulting color.
 	 */
-	inline b3Color b3Pow(const b3_f32 exp)
+	inline const b3Color b3Pow(const b3_f32 exp) const
 	{
 		b3_f32 B3_ALIGN_16 b[4];
 		b3Color            result;
@@ -664,7 +692,7 @@ public:
 	 *
 	 * @return The color channels as ::b3_pkd_color.
 	 */
-	inline operator b3_pkd_color()
+	inline operator b3_pkd_color() const
 	{
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_f32 B3_ALIGN_16 sat[4];
@@ -767,7 +795,7 @@ public:
 	 *
 	 * @return The colors as ::COLORREF.
 	 */
-	inline COLORREF b3GetColorref()
+	inline const COLORREF b3GetColorref() const
 	{
 		b3_f32 *ptr = (b3_f32 *)&v;
 		return RGB(

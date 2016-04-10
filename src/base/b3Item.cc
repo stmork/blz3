@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Item.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$

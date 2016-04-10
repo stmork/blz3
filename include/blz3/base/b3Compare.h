@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Compare.h $
-**	$Release:	Dortmund 2002 $
+**	$Release:	Dortmund 2002, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$

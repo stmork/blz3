@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveJPEG.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -74,6 +74,7 @@ public:
 	b3InfoJPEG(b3Tx *tx,const char *filename,b3_u32 quality = 75);
 	~b3InfoJPEG();
 	void  b3Write();
+
 private:
 	void    b3JpegStdioDestPrivate (j_compress_ptr cinfo);
 	static void    b3InitDestination      (j_compress_ptr cinfo);
@@ -239,11 +240,11 @@ b3InfoJPEG::~b3InfoJPEG()
 	jpeg_destroy_compress(&JPEGcinfo);
 }
 
-b3_result b3Tx::b3SaveJPEG(const char *filename,b3_u32 quality)
+const b3_result b3Tx::b3SaveJPEG(const char *filename,b3_u32 quality)
 {
 	b3PrintF(B3LOG_FULL, "Saving JPEG: %s, quality %u\n", filename, quality);
 
-	b3InfoJPEG info(this,filename,quality);
+	b3InfoJPEG info(this,filename, quality);
 	info.b3Write();
 	return B3_OK;
 }

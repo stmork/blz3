@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Complex.h $
-**	$Release:	Dortmund 2005 $
+**	$Release:	Dortmund 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -239,7 +239,7 @@ public:
 	 * @param a The complex number to add.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator+(const b3Complex<T> &a)
+	inline const b3Complex<T> operator+(const b3Complex<T> &a) const
 	{
 		b3Complex<T> result;
 
@@ -257,7 +257,7 @@ public:
 	 * @param a The complex number to subtract.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator-(const b3Complex<T> &a)
+	inline const b3Complex<T> operator-(const b3Complex<T> &a) const
 	{
 		b3Complex<T> result;
 
@@ -275,7 +275,7 @@ public:
 	 * @param a The complex number to multiply.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator*(const b3Complex<T> &a) const
+	inline const b3Complex<T> operator*(const b3Complex<T> &a) const
 	{
 		return b3Complex<T>(
 				   v[Re] * a.v[Re] - v[Im] * a.v[Im],
@@ -289,7 +289,7 @@ public:
 	 * @param a The complex number to divide.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator/(const b3Complex<T> &a)
+	inline const b3Complex<T> operator/(const b3Complex<T> &a) const
 	{
 		T B3_ALIGN_16 val[2];
 		T B3_ALIGN_16 den[2];

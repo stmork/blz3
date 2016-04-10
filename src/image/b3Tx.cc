@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Tx.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -254,7 +254,7 @@ void b3Tx::b3FreeTx()
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
-b3_bool b3Tx::b3IsGreyPalette()
+const b3_bool b3Tx::b3IsGreyPalette() const
 {
 	b3_loop      i,max;
 	b3_pkd_color mul,step;
@@ -495,12 +495,12 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 	ScanLines   = srcTx->ScanLines;
 }
 
-b3_bool b3Tx::b3IsLoaded()
+const b3_bool b3Tx::b3IsLoaded() const
 {
 	return ((xSize != 0) && (ySize != 0) && (data != null) && (type != B3_TX_UNDEFINED));
 }
 
-const char *b3Tx::b3Name()
+const char *b3Tx::b3Name() const
 {
 	return image_name;
 }
@@ -512,7 +512,7 @@ void b3Tx::b3Name(const char *ImageName)
 			 (const char *)image_name);
 }
 
-b3_pkd_color *b3Tx::b3GetPalette()
+b3_pkd_color *b3Tx::b3GetPalette() const
 {
 	return palette;
 }
@@ -543,7 +543,7 @@ void b3Tx::b3SetData(const void *newData, const b3_res newXSize, const b3_res ne
 	ySize = newYSize;
 }
 
-void b3Tx::b3GetResolution(b3_res &xd,b3_res &yd)
+void b3Tx::b3GetResolution(b3_res &xd,b3_res &yd) const
 {
 	xd = xDPI;
 	yd = yDPI;
@@ -555,7 +555,7 @@ void b3Tx::b3GetResolution(b3_res &xd,b3_res &yd)
 **                                                                      **
 *************************************************************************/
 
-b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y)
+const b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 {
 	b3_pkd_color *lPtr;
 	b3_color     *cPtr;
@@ -585,7 +585,7 @@ b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y)
 	}
 }
 
-b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y)
+const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 {
 	b3_pkd_color *lPtr;
 	b3_color     *cPtr;
@@ -615,9 +615,9 @@ b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y)
 	}
 }
 
-b3_pkd_color b3Tx::b3GetValue (
+const b3_pkd_color b3Tx::b3GetValue (
 	const b3_coord x,
-	const b3_coord y)
+	const b3_coord y) const
 {
 	b3_pkd_color *lPtr;
 	b3_color     *cPtr;
@@ -649,9 +649,9 @@ b3_pkd_color b3Tx::b3GetValue (
 	}
 }
 
-inline b3_pkd_color b3Tx::b3ILBMValue (
+inline const b3_pkd_color b3Tx::b3ILBMValue (
 	const b3_coord x,
-	const b3_coord y)
+	const b3_coord y) const
 {
 	b3_u08       *Address;
 	b3_pkd_color  Bit;
@@ -689,16 +689,16 @@ inline b3_pkd_color b3Tx::b3ILBMValue (
 	return PlaneValue;
 }
 
-inline b3_pkd_color b3Tx::b3VGAValue (
+inline const b3_pkd_color b3Tx::b3VGAValue (
 	const b3_coord x,
-	const b3_coord y)
+	const b3_coord y) const
 {
 	return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
 }
 
-inline b3_pkd_color b3Tx::b3RGB4Value (
+inline const b3_pkd_color b3Tx::b3RGB4Value (
 	const b3_coord x,
-	const b3_coord y)
+	const b3_coord y) const
 {
 	b3_u16       *Address;
 	b3_pkd_color  Color,Result;
@@ -712,9 +712,9 @@ inline b3_pkd_color b3Tx::b3RGB4Value (
 	return Result;
 }
 
-inline b3_pkd_color b3Tx::b3RGB8Value (
+inline const b3_pkd_color b3Tx::b3RGB8Value (
 	const b3_coord x,
-	const b3_coord y)
+	const b3_coord y) const
 {
 	b3_pkd_color *Address;
 
@@ -722,9 +722,9 @@ inline b3_pkd_color b3Tx::b3RGB8Value (
 	return Address[y * xSize + x];
 }
 
-inline b3_pkd_color b3Tx::b3FloatValue(
+inline const b3_pkd_color b3Tx::b3FloatValue(
 	const b3_coord x,
-	const b3_coord y)
+	const b3_coord y) const
 {
 	b3_color *Address;
 
@@ -738,7 +738,7 @@ inline b3_pkd_color b3Tx::b3FloatValue(
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y)
+const b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 {
 	b3_u08       *bPtr,bit;
 	b3_u16       *sPtr;
@@ -802,7 +802,7 @@ b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y)
 
 inline void b3Tx::b3GetILBM (
 	b3_pkd_color *ColorLine,
-	const b3_coord      y)
+	const b3_coord      y) const
 {
 	b3_u08       *Data;
 	b3_coord      x,d,BytesPerLine;
@@ -858,7 +858,7 @@ inline void b3Tx::b3GetILBM (
 
 inline void b3Tx::b3GetRGB8 (
 	b3_pkd_color *dst,
-	const b3_coord      y)
+	const b3_coord      y) const
 {
 	b3_pkd_color *src;
 
@@ -893,7 +893,7 @@ inline void b3Tx::b3GetRGB8 (
 
 inline void b3Tx::b3GetRGB4 (
 	b3_pkd_color *ColorLine,
-	const b3_coord      y)
+	const b3_coord      y) const
 {
 	b3_u16       *Data;
 	b3_coord      x;
@@ -914,7 +914,7 @@ inline void b3Tx::b3GetRGB4 (
 
 inline void b3Tx::b3GetVGA (
 	b3_pkd_color *ColorLine,
-	const b3_coord      y)
+	const b3_coord      y) const
 {
 	b3_u08   *Data;
 	b3_coord  x;
@@ -931,7 +931,7 @@ inline void b3Tx::b3GetVGA (
 
 inline void b3Tx::b3GetFloat(
 	b3_pkd_color *ColorLine,
-	const b3_coord      y)
+	const b3_coord      y) const
 {
 	b3_color *cPtr = (b3_color *)data;
 	b3_coord  x;
@@ -945,7 +945,7 @@ inline void b3Tx::b3GetFloat(
 
 void b3Tx::b3GetRow (
 	b3_color *Line,
-	const b3_coord  y)
+	const b3_coord  y) const
 {
 	b3_u08       *bPtr;
 	b3_u16       *sPtr;
@@ -1006,7 +1006,7 @@ void b3Tx::b3GetRow (
 
 void b3Tx::b3GetRow (
 	b3_pkd_color *Line,
-	const b3_coord      y)
+	const b3_coord      y) const
 {
 	switch (type)
 	{

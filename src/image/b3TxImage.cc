@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxImage.c $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -1350,7 +1350,7 @@ void b3Tx::b3Turn()
 	}
 }
 
-b3_bool b3Tx::b3TxGauss(
+const b3_bool b3Tx::b3TxGauss(
 	long   xPos,
 	long   yPos,
 	b3_f64 scale,
@@ -1427,7 +1427,7 @@ b3_bool b3Tx::b3TxGauss(
 	return true;
 }
 
-b3_bool b3Tx::b3TxTransformTable(
+const b3_bool b3Tx::b3TxTransformTable(
 	b3_pkd_color *rTable,
 	b3_pkd_color *gTable,
 	b3_pkd_color *bTable,
@@ -1483,7 +1483,7 @@ b3_bool b3Tx::b3TxTransformTable(
 	return num > 0;
 }
 
-b3_bool b3Tx::b3TxColorFilter(
+const b3_bool b3Tx::b3TxColorFilter(
 	b3_f64  fr,
 	b3_f64  fg,
 	b3_f64  fb,
@@ -1508,7 +1508,7 @@ b3_bool b3Tx::b3TxColorFilter(
 			   src);
 }
 
-b3_f64 b3Tx::b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale)
+const b3_f64 b3Tx::b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale)
 {
 	b3_f64 diff = h - s;
 	b3_f64 result;
@@ -1532,7 +1532,7 @@ b3_f64 b3Tx::b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale)
 	return pow(result,1.0 / gamma) * scale;
 }
 
-b3_bool b3Tx::b3TxContrast(
+const b3_bool b3Tx::b3TxContrast(
 	b3_f64  h,
 	b3_f64  s,
 	b3_f64  gamma,
@@ -1554,7 +1554,7 @@ b3_bool b3Tx::b3TxContrast(
 			   correction_table,src);
 }
 
-b3_bool b3Tx::b3TxReduce(b3Tx *src)
+const b3_bool b3Tx::b3TxReduce(b3Tx *src)
 {
 	b3_index      i,p,count,index;
 	b3_pkd_color *srcPtr = src->b3GetTrueColorData(), color;

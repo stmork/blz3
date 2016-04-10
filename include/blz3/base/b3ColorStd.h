@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Color.h $
-**	$Release:	Dortmund 2005 $
+**	$Release:	Dortmund 2005, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -247,6 +247,18 @@ public:
 
 	/**
 	 * This index operator returns the spedified color component and returns them.
+	 * This is the L value variant.
+	 *
+	 * @param index The color channel.
+	 */
+	inline const b3_f32 &operator[](const b3_color_index index) const
+	{
+		return v[index];
+	}
+
+	/**
+	 * This index operator returns the spedified color component and returns them.
+	 * This is the R value variant.
 	 *
 	 * @param index The color channel.
 	 */
@@ -257,6 +269,18 @@ public:
 
 	/**
 	 * This index operator returns the spedified color component and returns them.
+	 * This is the L value variant.
+	 *
+	 * @param index The color channel.
+	 */
+	inline const b3_f32 &operator[](const int index) const
+	{
+		return v[(b3_color_index)index];
+	}
+
+	/**
+	 * This index operator returns the spedified color component and returns them.
+	 * This is the R value variant.
 	 *
 	 * @param index The color channel.
 	 */

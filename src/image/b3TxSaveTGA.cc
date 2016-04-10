@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveTGA.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -140,7 +140,7 @@ b3InfoTGA::~b3InfoTGA()
 	m_File.b3Write(m_SaveData,18);
 }
 
-b3_result b3Tx::b3SaveTGA(const char *filename)
+const b3_result b3Tx::b3SaveTGA(const char *filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving TGA: %s\n", filename);
 

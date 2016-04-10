@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Array.h $
-**	$Release:	Dortmund 2002, 2005 $
+**	$Release:	Dortmund 2002, 2005, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$

@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxScale.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -83,9 +83,9 @@ void b3ColorIndices::b3AddColorIndex(b3_index index)
 	}
 }
 
-b3_index b3ColorIndices::b3ColorIndex(
+const b3_index b3ColorIndices::b3ColorIndex(
 	b3_pkd_color *palette,
-	b3_pkd_color  color)
+	b3_pkd_color  color) const
 {
 	b3_s32   r,rDiff;
 	b3_s32   g,gDiff;
@@ -2135,9 +2135,9 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 #ifndef _DEBUG
 inline
 #endif
-b3_index b3Tx::b3ILBMPlaneValue (
-	b3_coord x,
-	b3_coord y)
+const b3_index b3Tx::b3ILBMPlaneValue (
+	const b3_coord x,
+	const b3_coord y) const
 {
 	b3_u08       *Address;
 	b3_index  Bit,PlaneValue;

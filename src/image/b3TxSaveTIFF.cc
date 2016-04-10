@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveTIFF.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -66,7 +66,7 @@ void b3Tx::b3GetSampleValues (
 	}
 }
 
-b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
+const b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 {
 	b3_u08      *cPtr,*pPtr;
 	b3_u16       r[256],g[256],b[256];
@@ -123,7 +123,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
+const b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
 {
 	b3_coord     y;
 	b3_count     xBytes;
@@ -168,7 +168,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
+const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 {
 	b3_pkd_color *lPtr;
 	b3_coord      x,y;
@@ -256,7 +256,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3SaveTIFFRealColor(TIFF *tiff)
+const b3_result b3Tx::b3SaveTIFFRealColor(TIFF *tiff)
 {
 	b3_color     *lPtr;
 	b3_coord      x,y;
@@ -347,7 +347,7 @@ b3_result b3Tx::b3SaveTIFFRealColor(TIFF *tiff)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3SaveTIFF(const char *nameTx)
+const b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 {
 	TIFF        *tiff;
 	b3_tx_error  result = B3_TX_OK;

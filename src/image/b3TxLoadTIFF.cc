@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxLoadTIFF.cc $
-**	$Release:	Dortmund 2011 $
+**	$Release:	Dortmund 2011, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -169,7 +169,7 @@ void b3Tx::b3UnmapProc(thandle_t fd, tdata_t base, toff_t size)
 // These methods load a TIFF image into this instance.
 // Look at the TIFF programming manual for understanding this. Be happy
 // with this piece of code.
-long b3Tx::b3TIFFPalette(
+const long b3Tx::b3TIFFPalette(
 	TIFF  *tiff,
 	short  PaletteMode)
 {
@@ -246,7 +246,7 @@ long b3Tx::b3TIFFPalette(
 	return type;
 }
 
-long b3Tx::b3TIFFDecode(
+const long b3Tx::b3TIFFDecode(
 	TIFF  *tiff,
 	short  PlanarConfig)
 {
@@ -410,7 +410,7 @@ long b3Tx::b3TIFFDecode(
 	return type;
 }
 
-b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
+const b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 {
 	b3File     tiff_file;
 	b3_u08    *buffer;
@@ -432,7 +432,7 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 	return error_code;
 }
 
-b3_result b3Tx::b3LoadTIFF(
+const b3_result b3Tx::b3LoadTIFF(
 	const char    *tiff_name,
 	const b3_u08  *tiff_buffer,
 	const b3_size  tiff_size)

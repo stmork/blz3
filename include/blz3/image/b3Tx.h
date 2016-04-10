@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Tx.h $
-**	$Release:	Dortmund 2011 $
+**	$Release:	Dortmund 2011, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -218,8 +218,8 @@ class B3_PLUGIN b3ColorIndices : public b3Mem
 	b3_index   *indices;
 public:
 	b3ColorIndices ();
-	void      b3AddColorIndex(b3_index);
-	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
+	void            b3AddColorIndex(b3_index);
+	const b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color) const;
 };
 
 #define CLASS_TEXTURE       0x20000000
@@ -320,7 +320,7 @@ public:
 	 *
 	 * @return The palette data.
 	 */
-	b3_pkd_color  *b3GetPalette   ();
+	b3_pkd_color  *b3GetPalette   () const;
 
 	/**
 	 * This method sets the given color palette. The bit depth is adjusted according
@@ -340,7 +340,7 @@ public:
 	 *
 	 * @return The image palette index data.
 	 */
-	inline b3_u08 *b3GetIndexData()
+	inline b3_u08 *b3GetIndexData() const
 	{
 		if (data == null)
 		{
@@ -358,7 +358,7 @@ public:
 	 *
 	 * @return The image palette index data.
 	 */
-	inline b3_u16 *b3GetHighColorData()
+	inline b3_u16 *b3GetHighColorData() const
 	{
 		if (data == null)
 		{
@@ -376,7 +376,7 @@ public:
 	 *
 	 * @return The image true color data.
 	 */
-	inline b3_pkd_color *b3GetTrueColorData()
+	inline b3_pkd_color *b3GetTrueColorData() const
 	{
 		if (data == null)
 		{
@@ -394,7 +394,7 @@ public:
 	 *
 	 * @return The image HDR data pointer.
 	 */
-	inline b3_color *b3GetHdrData()
+	inline b3_color *b3GetHdrData() const
 	{
 		if (data == null)
 		{
@@ -423,7 +423,7 @@ public:
 	 *
 	 * @return The file name of the image.
 	 */
-	const char    *b3Name         ();
+	const char    *b3Name         () const;
 
 	/**
 	 * This method sets a new file name.
@@ -438,7 +438,7 @@ public:
 	 * @param xDPI The resulting horizontal pixel density.
 	 * @param yDPI The resulting vertical pixel density.
 	 */
-	void           b3GetResolution(b3_res &xDPI,b3_res &yDPI);
+	void           b3GetResolution(b3_res &xDPI,b3_res &yDPI) const;
 
 	/**
 	 * This method fills a given row buffer with the hdr color of the
@@ -448,7 +448,7 @@ public:
 	 * @param row The row buffer.
 	 * @param y The y coordinate of the row.
 	 */
-	void           b3GetRow       (b3_color *row, const b3_coord  y);
+	void           b3GetRow       (b3_color *row, const b3_coord  y) const;
 
 	/**
 	 * This method fills a given row buffer with the true color of the
@@ -458,7 +458,7 @@ public:
 	 * @param row The row buffer.
 	 * @param y The y coordinate of the row.
 	 */
-	void           b3GetRow       (b3_pkd_color *row, const b3_coord  y);
+	void           b3GetRow       (b3_pkd_color *row, const b3_coord  y) const;
 
 	/**
 	 * This method returns a color value at the given coordinates.
@@ -467,7 +467,7 @@ public:
 	 * @param y The y coordinate.
 	 * @return The resulting color as b3_pkd_color value.
 	 */
-	b3_pkd_color   b3GetValue     (const b3_coord x, const b3_coord  y);
+	const b3_pkd_color   b3GetValue     (const b3_coord x, const b3_coord  y) const;
 
 	/**
 	 * This method returns a color value at the given coordinates. The
@@ -477,7 +477,7 @@ public:
 	 * @param y The y coordinate.
 	 * @result The resulting color as HDR value.
 	 */
-	b3Color b3GetHdrValue     (const b3_coord x, const b3_coord  y);
+	const b3Color b3GetHdrValue     (const b3_coord x, const b3_coord  y) const;
 
 	/**
 	 * This method returns the blue color channel as floating point value.
@@ -487,7 +487,7 @@ public:
 	 * @param y The y coordinate.
 	 * @return The resulting blue channel as floting point value.
 	 */
-	b3_f32 b3GetBlue(b3_coord x,b3_coord  y);
+	const b3_f32 b3GetBlue(b3_coord x,b3_coord  y) const;
 
 	/**
 	 * This method returns true if the given pixel is transparent.
@@ -498,21 +498,21 @@ public:
 	 * @param y The y coordinate to test.
 	 * @return True if the pixel is transparent.
 	 */
-	b3_bool        b3IsBackground (const b3_coord x, const b3_coord  y);
+	const b3_bool  b3IsBackground (const b3_coord x, const b3_coord  y) const;
 
 	/**
 	 * This method returns true if this instance holds an image.
 	 *
 	 * @return True if this instance holds an image.
 	 */
-	b3_bool        b3IsLoaded     ();
+	const b3_bool  b3IsLoaded     () const;
 
 	/**
 	 * This method returns true if this image is black/white.
 	 *
 	 * @return True if this image is b/w.
 	 */
-	inline b3_bool b3IsBW()
+	inline const b3_bool b3IsBW() const
 	{
 		return (depth == 1) && (type == B3_TX_ILBM);
 	}
@@ -522,7 +522,7 @@ public:
 	 *
 	 * @return True if this image is high color.
 	 */
-	inline b3_bool b3IsHighColor()
+	inline const b3_bool b3IsHighColor() const
 	{
 		return ((depth == 12) || (depth == 16)) && (type == B3_TX_RGB4);
 	}
@@ -532,7 +532,7 @@ public:
 	 *
 	 * @return True if this image is true color.
 	 */
-	inline b3_bool b3IsTrueColor()
+	inline const b3_bool b3IsTrueColor() const
 	{
 		return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
 	}
@@ -542,7 +542,7 @@ public:
 	 *
 	 * @return True if this image is a high dynamic range image.
 	 */
-	inline b3_bool b3IsHdr()
+	inline const b3_bool b3IsHdr() const
 	{
 		return (depth >= 96) && (type == B3_TX_FLOAT);
 	}
@@ -552,7 +552,7 @@ public:
 	 *
 	 * @return True if this image is palettized.
 	 */
-	inline b3_bool b3IsPalette()
+	inline const b3_bool b3IsPalette() const
 	{
 		return palette != null;
 	}
@@ -562,7 +562,7 @@ public:
 	 *
 	 * @return True if this image is a palettized grey image.
 	 */
-	b3_bool        b3IsGreyPalette();
+	const b3_bool        b3IsGreyPalette() const;
 
 	// b3TxBlit.cc
 	/**
@@ -649,7 +649,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	b3_bool        b3TxGauss    (
+	const b3_bool  b3TxGauss    (
 		b3_coord xPos,b3_coord yPos,
 		b3_f64   scale,b3_f64 sigma,b3_f64 niveau,b3_f64 slope,
 		b3Tx        *srcTx = null);
@@ -664,7 +664,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	b3_bool        b3TxColorFilter(
+	const b3_bool  b3TxColorFilter(
 		b3_f64       redFilter,
 		b3_f64       greenFilter,
 		b3_f64       blueFilter,
@@ -680,7 +680,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	b3_bool        b3TxContrast(
+	const b3_bool  b3TxContrast(
 		b3_f64        highlight,
 		b3_f64        shadow,
 		b3_f64        gamma,
@@ -699,7 +699,7 @@ public:
 	 * @bug This method is only implemented for B3_TX_RGB8 images as source and
 	 *      destination. No type checking is performed yet.
 	 */
-	b3_bool        b3TxTransformTable(
+	const b3_bool  b3TxTransformTable(
 		b3_pkd_color *rTable,
 		b3_pkd_color *gTable,
 		b3_pkd_color *bTable,
@@ -715,7 +715,7 @@ public:
 	 * @param src The source image.
 	 * @return True on successful reduce operation.
 	 */
-	b3_bool        b3TxReduce(b3Tx *src);
+	const b3_bool  b3TxReduce(b3Tx *src);
 
 	// b3TxHist.cc
 	/**
@@ -954,7 +954,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result      b3SaveTIFF (const char *ImageName);
+	const b3_result b3SaveTIFF (const char *ImageName);
 
 	// b3TxSaveXXX.cc
 
@@ -966,7 +966,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = B3_JPG_QUALITY);
+	const b3_result b3SaveJPEG (const char *ImageName, b3_u32 quality = B3_JPG_QUALITY);
 
 	/**
 	 * This method saves the image as PostScript file.
@@ -975,7 +975,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result      b3SavePS   (const char *ImageName);
+	const b3_result b3SavePS   (const char *ImageName);
 
 	/**
 	 * This method saves the image as OpenEXR file.
@@ -984,7 +984,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result      b3SaveEXR  (const char *ImageName);
+	const b3_result b3SaveEXR  (const char *ImageName);
 
 	/**
 	 * This method saves the image as RGB8 file.
@@ -993,7 +993,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result      b3SaveRGB8 (const char *ImageName);
+	const b3_result b3SaveRGB8 (const char *ImageName);
 
 	/**
 	 * This method saves the image as TGA file.
@@ -1002,7 +1002,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result      b3SaveTGA  (const char *ImageName);
+	const b3_result b3SaveTGA  (const char *ImageName);
 
 private:
 	// b3TxScale.cc
@@ -1088,14 +1088,14 @@ private:
 	void           b3ScaleUnfilteredFromVGA      (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ScaleUnfilteredFromColor    (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ScaleUnfilteredFromFloat    (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
-	b3_index       b3ILBMPlaneValue  (b3_coord x,b3_coord y);
+	const b3_index b3ILBMPlaneValue  (const b3_coord x, const b3_coord y) const;
 
 	// b3Tx.cc
-	b3_pkd_color   b3ILBMValue (b3_coord x,b3_coord y);
-	b3_pkd_color   b3RGB4Value (b3_coord x,b3_coord y);
-	b3_pkd_color   b3RGB8Value (b3_coord x,b3_coord y);
-	b3_pkd_color   b3VGAValue  (b3_coord x,b3_coord y);
-	b3_pkd_color   b3FloatValue(b3_coord x,b3_coord y);
+	const b3_pkd_color   b3ILBMValue (const b3_coord x, const b3_coord y) const;
+	const b3_pkd_color   b3RGB4Value (const b3_coord x, const b3_coord y) const;
+	const b3_pkd_color   b3RGB8Value (const b3_coord x, const b3_coord y) const;
+	const b3_pkd_color   b3VGAValue  (const b3_coord x, const b3_coord y) const;
+	const b3_pkd_color   b3FloatValue(const b3_coord x, const b3_coord y) const;
 
 	// b3Tx.cc
 	void           b3CopyILBMtoVGA  (b3_u08       *row, b3_coord y);
@@ -1103,32 +1103,32 @@ private:
 	void           b3CopyILBMtoFloat(b3_color     *row, b3_coord y);
 
 	// b3Tx.cc
-	void           b3GetILBM  (b3_pkd_color *row,b3_coord y);
-	void           b3GetRGB4  (b3_pkd_color *row,b3_coord y);
-	void           b3GetRGB8  (b3_pkd_color *row,b3_coord y);
-	void           b3GetVGA   (b3_pkd_color *row,b3_coord y);
-	void           b3GetFloat (b3_pkd_color *row,b3_coord y);
+	void           b3GetILBM  (b3_pkd_color *row,b3_coord y) const;
+	void           b3GetRGB4  (b3_pkd_color *row,b3_coord y) const;
+	void           b3GetRGB8  (b3_pkd_color *row,b3_coord y) const;
+	void           b3GetVGA   (b3_pkd_color *row,b3_coord y) const;
+	void           b3GetFloat (b3_pkd_color *row,b3_coord y) const;
 
 	// b3TxImage.cc
 	b3_count       b3BuildRLE (b3_count *row,b3_u08 *rle);
 	void           b3BuildRow (b3_count *row,b3_u08 *rle,b3_count codeNum,b3_count byteNum);
-	static b3_f64  b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
+	static const b3_f64  b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
 
 	// b3TxLoadTIFF.cc
-	b3_result      b3LoadTIFF (const char *ImageName);
-	b3_result      b3LoadTIFF (const char *ImageName,
+	const b3_result b3LoadTIFF (const char *ImageName);
+	const b3_result b3LoadTIFF (const char *ImageName,
 							   const b3_u08  *ImageBuffer,
 							   const b3_size  BufferSize);
-	long           b3TIFFPalette(TIFF *handle,short PaletteMode);
-	long           b3TIFFDecode (TIFF *handle,short PlanarConfig);
-	long           b3TIFFAlloc  ();
+	const long      b3TIFFPalette(TIFF *handle,short PaletteMode);
+	const long      b3TIFFDecode (TIFF *handle,short PlanarConfig);
+	const long      b3TIFFAlloc  ();
 
 	// b3TxSaveTIFF.cc
-	void           b3GetSampleValues  (long &BitsPerPixel,long &SamplesPerPixel);
-	b3_result      b3SaveTIFFFax      (TIFF *handle);
-	b3_result      b3SaveTIFFPalette  (TIFF *handle);
-	b3_result      b3SaveTIFFTrueColor(TIFF *handle);
-	b3_result      b3SaveTIFFRealColor(TIFF *handle);
+	void            b3GetSampleValues  (long &BitsPerPixel,long &SamplesPerPixel);
+	const b3_result b3SaveTIFFFax      (TIFF *handle);
+	const b3_result b3SaveTIFFPalette  (TIFF *handle);
+	const b3_result b3SaveTIFFTrueColor(TIFF *handle);
+	const b3_result b3SaveTIFFRealColor(TIFF *handle);
 
 	static void    b3TIFFErrorHandler(const char *module,const char *fmt,va_list args);
 	static void    b3TIFFWarnHandler( const char *module,const char *fmt,va_list args);

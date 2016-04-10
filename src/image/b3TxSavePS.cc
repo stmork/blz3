@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSavePS.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -148,7 +148,7 @@ b3InfoPS::~b3InfoPS()
 #endif
 }
 
-b3_result b3Tx::b3SavePS(const char *filename)
+const b3_result b3Tx::b3SavePS(const char *filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving PS: %s\n", filename);
 

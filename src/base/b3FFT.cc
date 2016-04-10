@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3FFT.cc $
-**	$Release:	Dortmund 2006 $
+**	$Release:	Dortmund 2006, 2016 $
 **	$Revision$
 **	$Date$
 **	$Author$
