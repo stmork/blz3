@@ -41,7 +41,7 @@ public:
 	 *
 	 * \return The color in ::b3_pkd_color representation.
 	 */
-	inline b3_pkd_color  operator()()
+	inline const b3_pkd_color  operator()() const
 	{
 		return (
 			((b3_pkd_color)r << 16) |
@@ -54,7 +54,7 @@ public:
 	 *
 	 * \return The color in ::b3_pkd_color representation.
 	 */
-	inline               operator b3_pkd_color()
+	inline operator b3_pkd_color() const
 	{
 		return (
 				   ((b3_pkd_color)r << 16) |

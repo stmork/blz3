@@ -670,7 +670,7 @@ public:
 	 *
 	 * @return The color channels as ::b3_pkd_color.
 	 */
-	inline operator b3_pkd_color()
+	inline operator b3_pkd_color() const
 	{
 		b3_pkd_color       result = 0;
 		b3_loop                i;
@@ -708,7 +708,7 @@ public:
 	 *
 	 * @return The color channels as ::b3_color.
 	 */
-	inline operator b3_color()
+	inline operator b3_color() const
 	{
 		b3_color result;
 

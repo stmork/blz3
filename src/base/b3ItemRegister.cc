@@ -50,7 +50,7 @@ void b3FirstItem::b3Write()
 {
 }
 
-b3Base<b3Item> *b3FirstItem::b3GetHead()
+b3Base<b3Item> *b3FirstItem::b3GetHead() const
 {
 	return &m_Heads[0];
 }

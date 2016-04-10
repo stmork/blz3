@@ -1898,7 +1898,7 @@ public:
 	{
 		b3_vector test;
 
-		b3Vector::b3Init(&test,point->x,point->y,point->z);
+		b3Init(&test,point->x,point->y,point->z);
 		b3CheckLowerBound(lower,&test);
 		b3CheckUpperBound(upper,&test);
 	}

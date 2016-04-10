@@ -140,14 +140,14 @@ b3Item::~b3Item()
 	}
 }
 
-b3_bool b3Item::b3IsClass(b3_u32 class_type,b3_u32 class_id)
+const b3_bool b3Item::b3IsClass(const b3_u32 class_type, const b3_u32 class_id)
 {
 	return (class_type & B3_CLASS_MASK) == class_id;
 }
 
-b3_bool b3Item::b3IsClass(b3_u32 class_id)
+const b3_bool b3Item::b3IsClass(const b3_u32 class_id) const
 {
-	return b3IsClass(b3GetClassType(),class_id);
+	return b3IsClass(b3GetClassType(), class_id);
 }
 
 b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
@@ -166,7 +166,7 @@ b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
 	return m_Heads != null;
 }
 
-char *b3Item::b3GetName()
+const char *b3Item::b3GetName() const
 {
 	return null;
 }
@@ -176,7 +176,7 @@ b3_bool b3Item::b3Prepare(b3_preparation_info *prep_info)
 	return true;
 }
 
-void b3Item::b3DumpSpace(b3_count level,b3_log_level log_level)
+void b3Item::b3DumpSpace(const b3_count level, const b3_log_level log_level)
 {
 	for (b3_count i = 0;i < level;i++)
 	{
@@ -184,7 +184,7 @@ void b3Item::b3DumpSpace(b3_count level,b3_log_level log_level)
 	}
 }
 
-void b3Item::b3Dump(b3_count level)
+void b3Item::b3Dump(b3_count level) const
 {
 	b3Item *node;
 	b3_u32  i;
@@ -203,7 +203,7 @@ void b3Item::b3Dump(b3_count level)
 	}
 }
 
-void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
+void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level) const
 {
 	b3_u32  i,max = (b3_count)(m_ItemSize >> 2);
 
@@ -826,7 +826,7 @@ void b3Item::b3StoreNOP()
 	m_StoreIndex++;
 }
 
-b3_u32 b3Item::b3Checksum()
+const b3_u32 b3Item::b3Checksum()
 {
 	b3_u32 result = 0;
 

@@ -38,7 +38,7 @@ b3_result b3Tx::b3ParseRAW (
 	b3_s32  ppm_type)
 {
 	b3_u08       *newCData;
-	b3_pkd_color *newLData,value;
+	b3_pkd_color  value;
 	b3_count      i,Max;
 
 	b3PrintF(B3LOG_FULL,"IMG RAW  # b3ParseRAW(%s)\n",
@@ -86,7 +86,8 @@ b3_result b3Tx::b3ParseRAW (
 	case 6 : /* 24 Bit */
 		if (b3AllocTx(x,y,24))
 		{
-			newLData = (b3_u32 *)data;
+			b3_pkd_color *newLData = (b3_u32 *)data;
+
 			Max      = x * y;
 			for (i = 0;i < Max;i++)
 			{
@@ -274,7 +275,6 @@ b3_result b3Tx::b3ParseBMP(b3_u08 *buffer)
 
 b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 {
-	b3_pkd_color *pixel;
 	b3_u08       *gray;
 	b3_coord      x,y;
 	b3_res        xNewSize,yNewSize;
@@ -311,6 +311,8 @@ b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 	case 4 :
 		if (b3AllocTx(xNewSize,yNewSize,24))
 		{
+			b3_pkd_color *pixel;
+
 			pixel   = (b3_pkd_color *)data;
 			buffer += buffer_size;
 			lSize   = xSize + xSize + xSize;

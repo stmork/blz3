@@ -598,7 +598,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 	b3_coord      x,y,sx,sy,ix,iy,rx,cy;
 	b3_res        xSize,yMin,yMax;
 
-	RectInfo = (b3_rect_info *)ptr;
+	RectInfo = b3_rect_info<ptr>;
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
@@ -1913,7 +1913,6 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	b3_pkd_color  pal[2];
 	b3_pkd_color *tx_pal,color;
 	b3_u08       *bData,bit;
-	b3_pkd_color *lData;
 	b3_f64        r,g,b;
 	b3_rect_info  RectInfo[CPU_MAX];
 	b3_index      i;
@@ -1964,7 +1963,8 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 
 	if (type == B3_TX_RGB8)
 	{
-		lData = (b3_pkd_color *)data;
+		b3_pkd_color *lData = (b3_pkd_color *)data;
+
 		for (y = 0;y < ySize;y++)
 		{
 			num = cIndex[y] * bytes;
@@ -2081,14 +2081,15 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 {
 	b3_coord      x,y;
 	b3_count      num;
-	b3_pkd_color *pSrc,*pDst,*lDst;
-	b3_u08       *cSrc,*cDst;
+	b3_pkd_color *pSrc;
+	b3_u08       *cSrc;
 
 	// copying palette
 	if (depth == Tx->depth)
 	{
+		b3_pkd_color *pDst = (b3_pkd_color *)palette;
+
 		pSrc = (b3_pkd_color *)Tx->b3GetPalette();
-		pDst = (b3_pkd_color *)palette;
 		num  = 1 << depth;
 		for (x = 0;x < num;x++)
 		{
@@ -2099,8 +2100,9 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 	// scaling textures
 	if (type == B3_TX_VGA)
 	{
+		b3_u08 *cDst = b3GetIndexData();
+
 		cSrc = Tx->b3GetIndexData();
-		cDst = b3GetIndexData();
 		for (y = 0;y < ySize;y++)
 		{
 			num = cIndex[y] * Tx->xSize;
@@ -2114,9 +2116,11 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 	// scaling textures
 	if (type == B3_TX_RGB8)
 	{
+		b3_pkd_color *lDst = b3GetTrueColorData();
+
 		pSrc = Tx->b3GetPalette();
 		cSrc = Tx->b3GetIndexData();
-		lDst = b3GetTrueColorData();
+
 		for (y = 0;y < ySize;y++)
 		{
 			num = cIndex[y] * Tx->xSize;

@@ -143,7 +143,7 @@ public:
 	 *
 	 * @return The allocated amount of elements.
 	 */
-	inline b3_count b3GetCount()
+	inline const b3_count b3GetCount() const
 	{
 		return m_Index;
 	}
@@ -153,7 +153,7 @@ public:
 	 *
 	 * @return The allocated buffer with the elements.
 	 */
-	inline T *b3GetBuffer()
+	inline T *b3GetBuffer() const
 	{
 		return m_Buffer;
 	}

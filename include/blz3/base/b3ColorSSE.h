@@ -696,7 +696,7 @@ public:
 	 *
 	 * @return The color channels as ::b3_color.
 	 */
-	inline operator b3_color()
+	inline operator b3_color() const
 	{
 		b3_f32 B3_ALIGN_16  a[4];
 		b3_color            result;
@@ -752,7 +752,7 @@ public:
 		SSE_PS_STORE(v, _mm_max_ps(SSE_PS_LOAD(v), m));
 	}
 
-	inline void b3Dump()
+	inline void b3Dump() const
 	{
 		b3_f32 B3_ALIGN_16  a[4];
 

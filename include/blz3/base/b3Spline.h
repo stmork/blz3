@@ -95,8 +95,8 @@ public:
 	static inline void b3Clear(b3_vector *vector)
 	{
 		vector->x =
-			vector->y =
-				vector->z = 0;
+		vector->y =
+		vector->z = 0;
 	}
 
 	/**
@@ -105,9 +105,9 @@ public:
 	static inline void b3Clear(b3_vector4D *vector)
 	{
 		vector->x =
-			vector->y =
-				vector->z =
-					vector->w = 0;
+		vector->y =
+		vector->z =
+		vector->w = 0;
 	}
 
 	/**
@@ -407,7 +407,7 @@ public:
 		b3_f64   scale = 1)
 	{
 		b3_f64 result;
-		b3_u32 sum,back;
+		b3_u32 back;
 
 		if (((Degree - 1) * 2) < ControlNum)
 		{
@@ -416,19 +416,12 @@ public:
 		}
 		else
 		{
-			if (n <= Degree)
+			if (n > Degree)
 			{
-				// first ramp
-				sum = (n * (n + 1)) >> 1;
-			}
-			else
-			{
-				sum = ((Degree * (Degree + 1)) >> 1) + (n - Degree) * Degree;
 				if (n > (ControlNum - Degree))
 				{
 					// last ramp
 					back = Degree - (ControlNum - n);
-					sum -= ((back * (back + 1)) >> 1);
 				}
 			}
 			result = (b3_f64)n / (Degree * (ControlNum - Degree));
@@ -568,7 +561,7 @@ public:
 	b3_bool b3Degree(const b3_count newDegree)
 	{
 		b3_knot	  start,end;
-		b3_index  i,diff;
+		b3_index  i;
 
 		bspline_errno = B3_BSPLINE_OK;
 		if (m_Degree == newDegree)
@@ -588,7 +581,8 @@ public:
 
 		if (newDegree < m_Degree)     /* decreasing degree */
 		{
-			diff = m_Degree - newDegree;
+			b3_index diff = m_Degree - newDegree;
+
 			end = m_Knots[m_ControlNum];
 			for (i = 0;i <  diff;i++)
 			{

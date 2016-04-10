@@ -242,7 +242,7 @@ public:
 	 *
 	 * @return A new b3_vector32 instance.
 	 */
-	inline operator b3_vector32 ()
+	inline operator b3_vector32 () const
 	{
 		b3_vector32 result;
 
@@ -274,7 +274,7 @@ public:
 	 *
 	 * @return A new b3_vector64 instance.
 	 */
-	inline operator b3_vector64 ()
+	inline operator b3_vector64 () const
 	{
 		b3_vector64 result;
 
@@ -292,7 +292,7 @@ public:
 	 * @param index The component index.
 	 * @return The indexed compontent.
 	 */
-	inline F & operator [](const b3_vector_index index)
+	inline const F & operator [](const b3_vector_index index) const
 	{
 #ifdef _DEBUG
 		if ((index < 0) || (index >= dim))
@@ -460,7 +460,7 @@ public:
 	 * @param value The scaling factor.
 	 * @return The new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator*(const b3_f64 value)
+	inline b3VectorTemplate<F,dim> operator*(const b3_f64 value) const
 	{
 		b3VectorTemplate<F,dim> result,multiplicator(value);
 
@@ -494,7 +494,7 @@ public:
 	 * @param value The divisor.
 	 * @return The new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator/(const b3_f64 value)
+	inline b3VectorTemplate<F,dim> operator/(const b3_f64 value) const
 	{
 		b3VectorTemplate<F,dim> result,divisor(value);
 
@@ -521,7 +521,7 @@ public:
 	 *
 	 * @return The length of this vector.
 	 */
-	inline F b3Length()
+	inline const F b3Length() const
 	{
 		return sqrt(b3QuadLength());
 	}
@@ -560,7 +560,7 @@ public:
 	 * @return The resulting dot product.
 	 */
 	inline F b3SMul(
-		const b3VectorTemplate<F,dim> &a)
+		const b3VectorTemplate<F,dim> &a) const
 	{
 		F result = 0;
 
@@ -595,7 +595,7 @@ public:
 	* @return The result as a new b3VectorTemplate instance.
 	*/
 	inline b3VectorTemplate<F,dim> b3CrossProduct(
-		const b3VectorTemplate<F,dim> &b)
+		const b3VectorTemplate<F,dim> &b) const
 	{
 		return b3VectorTemplate<F,dim>(
 				   v[Y] * b.v[Z] - v[Z] * b.v[Y],
@@ -608,7 +608,7 @@ public:
 	 *
 	 * @return The resulting squared vector length.
 	 */
-	inline F b3QuadLength()
+	inline const F b3QuadLength() const
 	{
 		F result = 0;
 
@@ -776,7 +776,7 @@ public:
 	 */
 	inline void b3AdjustBound(
 		b3VectorTemplate<F,dim> &lower,
-		b3VectorTemplate<F,dim> &upper)
+		b3VectorTemplate<F,dim> &upper) const
 	{
 		lower.b3CheckLowerBound(*this);
 		upper.b3CheckUpperBound(*this);
@@ -812,7 +812,7 @@ public:
 	 *
 	 * @param comment An additional comment.
 	 */
-	inline void b3Print(const char *comment)
+	inline void b3Print(const char *comment) const
 	{
 		if (comment != 0)
 		{

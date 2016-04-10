@@ -413,7 +413,7 @@ public:
 	 *
 	 * @return The individual instance name.
 	 */
-	virtual char           *b3GetName();
+	virtual const char     *b3GetName() const;
 
 	/**
 	 * This virtual function initializes this class in an implementation specific manner.
@@ -430,7 +430,7 @@ public:
 	 *
 	 * @param level The actual recursion depth.
 	 */
-	virtual void            b3Dump(b3_count level);
+	virtual void            b3Dump(b3_count level) const;
 
 	/**
 	 * This method dumps the maintainance information of this class for debugging purposes.
@@ -438,7 +438,7 @@ public:
 	 * @param level The recursion level.
 	 * @param loglevel The log level.
 	 */
-	void b3DumpSimple(b3_count level = 0,b3_log_level loglevel = B3LOG_NORMAL);
+	void b3DumpSimple(b3_count level = 0,b3_log_level loglevel = B3LOG_NORMAL) const;
 
 	/**
 	 * This method allocates memory for the specified amount of list heads.
@@ -475,7 +475,7 @@ public:
 	 *
 	 * @return The computed checksum.
 	 */
-	b3_u32          b3Checksum();
+	const b3_u32    b3Checksum();
 
 	/**
 	 * This method returns true if the specified class type is in the same class
@@ -485,7 +485,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type is in the given class.
 	 */
-	static  b3_bool         b3IsClass(b3_u32 classtype,b3_u32 classid);
+	static const b3_bool  b3IsClass(const b3_u32 classtype, const b3_u32 classid);
 
 	/**
 	 * This method returns true if the class type of this instance is in the same class
@@ -494,7 +494,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type of this instance  is in the given class.
 	 */
-	b3_bool b3IsClass(b3_u32 classid);
+	const b3_bool b3IsClass(const b3_u32 classid) const;
 
 protected:
 	////////////////////////////////////////////// Parsing routines
@@ -777,7 +777,7 @@ protected:
 	 * @param level The nesting level.
 	 * @param loglevel The log level used for logging.
 	 */
-	static void            b3DumpSpace(b3_count level,b3_log_level loglevel = B3LOG_NORMAL);
+	static void     b3DumpSpace(const b3_count level, const b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
 	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true) throw(b3WorldException);
@@ -819,7 +819,7 @@ protected:
 	 *
 	 * @return The content list header.
 	 */
-	b3Base<b3Item> *b3GetHead();
+	b3Base<b3Item> *b3GetHead() const;
 
 	/**
 	 * This method initializes the internal list head with the type

@@ -97,7 +97,7 @@ public:
 	 *
 	 * @return The class part of the class type.
 	 */
-	inline b3_u32 b3GetClass()
+	inline const b3_u32 b3GetClass() const
 	{
 		return ClassType & B3_CLASS_MASK;
 	}
@@ -117,7 +117,7 @@ public:
 	 *
 	 * @return The class type of this list element.
 	 */
-	inline b3_u32 b3GetClassType()
+	inline const b3_u32 b3GetClassType() const
 	{
 		return ClassType;
 	}
@@ -127,7 +127,7 @@ public:
 	 *
 	 * @return The class instance size.
 	 */
-	inline b3_size b3GetSize()
+	inline const b3_size b3GetSize() const
 	{
 		return Size;
 	}
@@ -195,7 +195,7 @@ public:
 	 *
 	 * @return The class specifier.
 	 */
-	inline b3_u32 b3GetClass()
+	inline const b3_u32 b3GetClass() const
 	{
 		return Class;
 	}
@@ -205,7 +205,7 @@ public:
 	 *
 	 * \return True if list is empty.
 	 */
-	inline b3_bool b3IsEmpty()
+	inline const b3_bool b3IsEmpty() const
 	{
 		return (First == null) && (Last == null);
 	}
@@ -286,7 +286,7 @@ public:
 	 *
 	 * \return The amount of listed elements.
 	 */
-	inline b3_count b3GetCount()
+	inline const b3_count b3GetCount() const
 	{
 		T        *node;
 		b3_count  count = 0;
