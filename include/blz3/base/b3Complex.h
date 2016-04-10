@@ -78,7 +78,7 @@ public:
 		v[Im] = im;
 	}
 
-	inline bool operator==(const b3Complex<T> &a) const
+	inline const bool operator==(const b3Complex<T> &a) const
 	{
 		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
 	}
@@ -313,7 +313,7 @@ public:
 	 *
 	 * @return Length of this complex number.
 	 */
-	inline T b3Length() const
+	inline const T b3Length() const
 	{
 		return sqrt(b3SquareLength());
 	}
@@ -321,7 +321,7 @@ public:
 	/**
 	 * This method normalizes this complex number.
 	 */
-	inline b3_bool b3Normalize(const T len = 1)
+	inline const b3_bool b3Normalize(const T len = 1)
 	{
 		T old_len = b3Length();
 
@@ -346,7 +346,7 @@ public:
 	 *
 	 * @return Squared length of this complex number.
 	 */
-	inline T b3SquareLength() const
+	inline const T b3SquareLength() const
 	{
 		T B3_ALIGN_16 val[2];
 
@@ -363,7 +363,7 @@ public:
 	 *
 	 * @return Phase of this complex number.
 	 */
-	inline T b3Phase() const
+	inline const T b3Phase() const
 	{
 		return atan2 (v[Im], v[Re]);
 	}
@@ -432,7 +432,7 @@ public:
 	 * This method dumps the contents.
 	 *
 	 */
-	inline void b3Dump(const char *variable, const b3_log_level level = B3LOG_NORMAL)
+	inline void b3Dump(const char *variable, const b3_log_level level = B3LOG_NORMAL) const
 	{
 		b3PrintF(level,"%s.re=%2.5f %s.im=%2.5f\n",
 				 variable,v[Re],

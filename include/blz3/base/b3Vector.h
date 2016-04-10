@@ -303,7 +303,25 @@ public:
 		return v[index];
 	}
 
-	inline bool operator==(const b3VectorTemplate<F,dim> &a)
+	/**
+	 * This index operator returns a vector component depending on
+	 * the given index.
+	 *
+	 * @param index The component index.
+	 * @return The indexed compontent.
+	 */
+	inline F & operator [](const b3_vector_index index)
+	{
+#ifdef _DEBUG
+		if ((index < 0) || (index >= dim))
+		{
+			B3_THROW(b3VectorException,B3_VECTOR_OUT_OF_BOUNDS);
+		}
+#endif
+		return v[index];
+	}
+
+	inline const bool operator==(const b3VectorTemplate<F,dim> &a) const
 	{
 		bool result = true;
 
@@ -314,7 +332,7 @@ public:
 		return result;
 	}
 
-	inline bool operator!=(const b3VectorTemplate<F,dim> &a)
+	inline const bool operator!=(const b3VectorTemplate<F,dim> &a) const
 	{
 		bool result = false;
 
@@ -346,7 +364,7 @@ public:
 	 * @param a The vector to add.
 	 * @return A new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator+(const b3VectorTemplate<F,dim> &a)
+	inline const b3VectorTemplate<F,dim> operator+(const b3VectorTemplate<F,dim> &a) const
 	{
 		b3VectorTemplate<F,dim> result;
 
@@ -378,7 +396,7 @@ public:
 	 * @param a The vector to subtract.
 	 * @return A new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator-(const b3VectorTemplate<F,dim> &a)
+	inline const b3VectorTemplate<F,dim> operator-(const b3VectorTemplate<F,dim> &a) const
 	{
 		b3VectorTemplate<F,dim> result;
 
@@ -394,7 +412,7 @@ public:
 	 *
 	 * @return The resulting negated vector.
 	 */
-	inline b3VectorTemplate<F,dim> operator-()
+	inline const b3VectorTemplate<F,dim> operator-() const
 	{
 		b3VectorTemplate<F,dim> result;
 
@@ -426,7 +444,7 @@ public:
 	 * @param a The vector to multiply.
 	 * @return A new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator*(const b3VectorTemplate<F,dim> &a)
+	inline const b3VectorTemplate<F,dim> operator*(const b3VectorTemplate<F,dim> &a) const
 	{
 		b3VectorTemplate<F,dim> result;
 
@@ -460,7 +478,7 @@ public:
 	 * @param value The scaling factor.
 	 * @return The new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator*(const b3_f64 value) const
+	inline const b3VectorTemplate<F,dim> operator*(const b3_f64 value) const
 	{
 		b3VectorTemplate<F,dim> result,multiplicator(value);
 
@@ -494,7 +512,7 @@ public:
 	 * @param value The divisor.
 	 * @return The new b3VectorTemplate instance.
 	 */
-	inline b3VectorTemplate<F,dim> operator/(const b3_f64 value) const
+	inline const b3VectorTemplate<F,dim> operator/(const b3_f64 value) const
 	{
 		b3VectorTemplate<F,dim> result,divisor(value);
 

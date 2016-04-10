@@ -184,10 +184,11 @@ public:
 	 *
 	 * \return  The actual filename.
 	 */
-	inline operator const char *()
+	inline operator const char *() const
 	{
 		return m_Path;
 	}
+
 private:
 	static void b3RemoveDelimiter(char *path);
 };

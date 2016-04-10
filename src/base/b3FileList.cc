@@ -38,12 +38,12 @@ b3FileEntry::b3FileEntry (const char *new_name) :
 	name.b3Format("%s",new_name);
 }
 
-int b3FileEntry::b3Cmp(b3FileEntry *compare)
+const int b3FileEntry::b3Cmp(const b3FileEntry *compare) const
 {
-	return strcoll(b3Name(),compare->b3Name());
+	return strcoll(b3Name(), compare->b3Name());
 }
 
-const char *b3FileEntry::b3Name()
+const char *b3FileEntry::b3Name() const
 {
 	return name;
 }
@@ -114,12 +114,12 @@ void b3FileList::b3RecCreateList(const char *startDir)
 	dir.b3CloseDir();
 }
 
-b3FileEntry *b3FileList::b3First()
+b3FileEntry *b3FileList::b3First() const
 {
 	return list.First;
 }
 
-b3_bool b3FileList::b3Add(const char *name)
+const b3_bool b3FileList::b3Add(const char *name)
 {
 	b3FileEntry *entry;
 

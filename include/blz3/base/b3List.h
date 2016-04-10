@@ -437,7 +437,7 @@ public:
 	 * \param *pre The element after that the element is inserted.
 	 * \param *ptr The element to insert.
 	 */
-	inline void b3Insert(T *pre,T *ptr)
+	inline void b3Insert(T *pre, T *ptr)
 	{
 		T *succ;
 
@@ -514,7 +514,7 @@ public:
 	 * \param *ptr The element
 	 * \return The state of the element.
 	 */
-	inline b3_link_state b3State(const T *ptr)
+	inline const b3_link_state b3State(const T *ptr) const
 	{
 		int flags;
 
@@ -546,7 +546,7 @@ public:
 	 * \param *func The sorting method.
 	 * \param *Ptr A pointer to custom information.
 	 */
-	inline void b3Sort(int (*func)(T *,T *,const void *),const void *Ptr = null)
+	inline void b3Sort(const int (*func)(const T *, const T *, const void *),const void *Ptr = null)
 	{
 		b3Base    Right;
 		T        *start,*end;

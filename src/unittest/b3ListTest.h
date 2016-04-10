@@ -46,7 +46,7 @@ public:
 		this->element = value;
 	}
 
-	inline int b3GetElement()
+	inline const int b3GetElement() const
 	{
 		return this->element;
 	}
@@ -199,7 +199,7 @@ public:
 	}
 
 private:
-	static int sorter(T *aPtr, T *bPtr, const void *ptr)
+	static const int sorter(const T *aPtr, const T *bPtr, const void *ptr)
 	{
 		return aPtr->b3GetElement() - bPtr->b3GetElement();
 	}

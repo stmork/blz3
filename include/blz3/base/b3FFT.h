@@ -77,7 +77,7 @@ public:
 	 * @param new_size The needed new size
 	 * @return True on success
 	 */
-	b3_bool b3AllocBuffer(b3_res new_size);
+	const b3_bool b3AllocBuffer(const b3_res new_size);
 
 	/**
 	 * This method copies the values from a given image into the internal FFT
@@ -85,7 +85,7 @@ public:
 	 *
 	 * @param tx The image with the values to initialize.
 	 */
-	b3_bool b3AllocBuffer  (b3Tx *tx);
+	const b3_bool b3AllocBuffer  (b3Tx *tx);
 
 	/**
 	 * This method frees all used memory.
@@ -104,7 +104,7 @@ public:
 	/**
 	 * This method computes the forward FFT of the internal buffer.
 	 */
-	inline b3_bool b3FFT2D()
+	inline const b3_bool b3FFT2D()
 	{
 		return b3FFT2D(1);
 	}
@@ -112,15 +112,15 @@ public:
 	/**
 	 * This method computes the inverse FFT of the internal buffer.
 	 */
-	inline b3_bool  b3IFFT2D()
+	inline const b3_bool  b3IFFT2D()
 	{
 		return b3FFT2D(-1);
 	}
 
-	b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp) throw(b3FFTException);
-	b3_bool   b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
+	const b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp) throw(b3FFTException);
+	const b3_bool   b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
 
-	inline b3Complex64 *b3GetBuffer()
+	inline b3Complex64 *b3GetBuffer() const
 	{
 		return m_Buffer;
 	}
@@ -128,7 +128,7 @@ public:
 	/**
 	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
 	 */
-	b3_bool    b3SelfTest();
+	const b3_bool    b3SelfTest();
 
 	/**
 	 * This method returns the number which is a power of 2 number
@@ -137,7 +137,7 @@ public:
 	 * @param value The value to compute the power of 2 number from.
 	 * @return The value which is a power of two number and greater or equal to the given number.
 	 */
-	static b3_loop  b3PowOf2(b3_loop value);
+	static const b3_loop  b3PowOf2(const b3_loop value);
 
 	/**
 	 * This method returns the log of the given value.
@@ -145,14 +145,15 @@ public:
 	 * @param value The value to compute the log2 from.
 	 * @return The resulting log2 value.
 	 */
-	static b3_count b3Log2(b3_u32 value);
+	static const b3_count b3Log2(b3_u32 value);
 
 private:
-	static b3_u32  b3RowFFT(void *ptr);
-	static b3_u32  b3ColumnFFT(void *ptr);
-	static b3_bool b3FFT(int dir,b3_res m,b3Complex64 *line);
-	b3_bool b3FFT2D(int dir);
-	b3_bool b3ReallocBuffer();
+	static       b3_u32  b3RowFFT(void *ptr);
+	static       b3_u32  b3ColumnFFT(void *ptr);
+	static const b3_bool b3FFT(const int dir, const b3_res m, b3Complex64 *line);
+
+	const b3_bool b3FFT2D(const int dir);
+	const b3_bool b3ReallocBuffer();
 };
 
 #endif

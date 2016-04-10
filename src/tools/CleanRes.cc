@@ -95,14 +95,14 @@ public:
 		}
 	}
 
-	static int b3GetDefineTypesLastValue(const char *define)
+	static const int b3GetDefineTypesLastValue(const char *define)
 	{
 		int type = b3FindDefineType(define);
 
 		return type < TYPE_MAX ? define_types[type].m_Last : 0;
 	}
 
-	void b3Print()
+	void b3Print() const
 	{
 		switch (m_Mode)
 		{
@@ -179,7 +179,7 @@ public:
 		return i;
 	}
 
-	static int b3SortFunc(b3Define *a,b3Define *b,const void *ptr)
+	static const int b3SortFunc(const b3Define *a, const b3Define *b, const void *ptr)
 	{
 		int a_type = a->m_Type;
 		int b_type = b->m_Type;

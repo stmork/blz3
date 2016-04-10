@@ -32,7 +32,7 @@ public:
 	 * @param a The first element to compare.
 	 * @param b The second element to compare.
 	 */
-	static int b3Sort(T *a,T *b)
+	static int b3Sort(const T *a, const T *b)
 	{
 		return a->b3Cmp(b);
 	}
@@ -46,7 +46,7 @@ public:
 	 * @param dummy A pointer to provide additional information into the
 	 *              comparing process.
 	 */
-	static int b3Sort(T *a,T *b,const void *dummy)
+	static const int b3Sort(const T *a, const T *b,const void *dummy)
 	{
 		return a->b3Cmp(b);
 	}
@@ -61,7 +61,7 @@ public:
 	 * @param compare The external instance to compare to.
 	 * @return The comparison value as documented above.
 	 */
-	virtual int b3Cmp(T *compare) = 0;
+	virtual const int b3Cmp(const T *compare) const = 0;
 };
 
 /**

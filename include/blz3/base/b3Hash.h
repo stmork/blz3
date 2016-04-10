@@ -171,7 +171,7 @@ public:
 	 * @param object The object itself.
 	 * @throws b3HashException
 	 */
-	inline void b3Add(const Key &key,const Object &object) throw(b3HashException)
+	inline void b3Add(const Key &key, const Object &object) throw(b3HashException)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -194,7 +194,7 @@ public:
 	 * @param object The object to replace.
 	 * @return True if an key object pair already existed.
 	 */
-	inline b3_bool b3Replace(const Key &key,const Object &object)
+	inline b3_bool b3Replace(const Key &key, const Object &object)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -217,7 +217,7 @@ public:
 	 *
 	 * @return True if the map is empty.
 	 */
-	inline b3_bool b3IsEmpty()
+	inline const b3_bool b3IsEmpty() const
 	{
 		for (b3_loop i = 0;i < B3_MAX_HASH_INDEX;i++)
 		{
@@ -234,7 +234,7 @@ public:
 	 *
 	 * @return The amount of mapped objects.
 	 */
-	inline b3_count b3GetCount()
+	inline const b3_count b3GetCount() const
 	{
 		b3_count count = 0;
 
@@ -252,7 +252,7 @@ public:
 	 * @param key The search key.
 	 * @return The resulting object.
 	 */
-	inline Object *b3Find(const Key &key)
+	inline const Object *b3Find(const Key &key) const
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -273,7 +273,7 @@ public:
 	 * @param key The key to check.
 	 * @return A flag if the given key is inside the hash map.
 	 */
-	inline b3_bool b3HasKey(const Key &key)
+	inline const b3_bool b3HasKey(const Key &key) const
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -332,7 +332,7 @@ public:
 	 *
 	 * @return An array with all mapping keys.
 	 */
-	inline b3Array<Key> *b3GetKeys()
+	inline b3Array<Key> *b3GetKeys() const
 	{
 		b3Array<Key>           *keys = new b3Array<Key>;
 		b3HashPair<Key,Object> *pair;
@@ -369,7 +369,7 @@ public:
 	}
 
 private:
-	inline b3_hash b3Hash(const Key &key) throw(b3HashException)
+	inline const b3_hash b3Hash(const Key &key) const throw(b3HashException)
 	{
 		b3_hash hash = m_HashFunc(key);
 

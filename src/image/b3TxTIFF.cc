@@ -1095,9 +1095,9 @@ static long WriteIFW (
 }
 #endif
 
-int b3TIFF_Entry::b3SortTags (
-	b3TIFF_Entry *a,
-	b3TIFF_Entry *b,
+const int b3TIFF_Entry::b3SortTags (
+	const b3TIFF_Entry *a,
+	const b3TIFF_Entry *b,
 	const void         *ptr)
 {
 	if (a->tag.Code < b->tag.Code) return -1;
