@@ -2,7 +2,7 @@
 
 BLZ3_HOME=$PWD
 BLZ3_DEBIAN=${PWD}/../debian/blz3
-BLZ3_DEBIAN_DEV=${PWD}/../debian/blz3-dev
+BLZ3_DEBIAN_DEV=${PWD}/../debian/libblz3-dev
 ARCH=`dpkg --print-architecture`
 BUILD_NUMBER=${BUILD_NUMBER:=0}
 
@@ -40,10 +40,10 @@ dpkg -b ${BLZ3_DEBIAN} blz3_${VERSION}_${ARCH}.deb
 sed\
 	-e "s/%ARCH%/${ARCH}/g"\
 	-e "s/%BUILD%/$BUILD_NUMBER/g"\
-	control-blz3-dev >${BLZ3_DEBIAN_DEV}/DEBIAN/control
+	control-libblz3-dev >${BLZ3_DEBIAN_DEV}/DEBIAN/control
 VERSION=`grep Version ${BLZ3_DEBIAN_DEV}/DEBIAN/control | cut -d" " -f2`
 rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
-fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} blz3-dev_${VERSION}_${ARCH}.deb
+fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} libblz3-dev_${VERSION}_${ARCH}.deb

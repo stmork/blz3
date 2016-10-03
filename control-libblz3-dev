@@ -1,10 +1,10 @@
-Package: blz3-dev
+Package: libblz3-dev
 Version: 2.99.2-%BUILD%
 Section: libdevel
 Priority: optional
 Architecture: %ARCH%
 Depends: gcc, g++, binutils, libopenexr-dev, manpages-dev, xorg-dev, make
 Maintainer: Steffen A. Mork <linux-dev@morknet.de>
-Homepage: morknet.de
+Homepage: http://morknet.de
 Description: This package proviles C++ header files, libraries and
  documentation of Blizzard III.

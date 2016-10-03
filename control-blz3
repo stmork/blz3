@@ -8,6 +8,6 @@ Depends: libc6, libstdc++6, libgcc1, libx11-6, libxext6, libxau6, libxdmcp6,
  zlib1g, libx264-120(>=2:0.120), libxcb1
 Installed-Size: 8
 Maintainer: Steffen A. Mork <linux-dev@morknet.de>
-Homepage: morknet.de
+Homepage: http://morknet.de
 Description: This is a very fast raytracer developed since the early 1990s.
  It contains some tools for image conversion.
