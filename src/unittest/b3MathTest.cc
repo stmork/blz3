@@ -69,7 +69,7 @@ void b3MathTest::test()
 	CPPUNIT_ASSERT_EQUAL(2.5,   b3Math::b3Limit(2.5, 1.0, 4.0));
 	CPPUNIT_ASSERT_EQUAL(4.0,   b3Math::b3Limit(4.5, 1.0, 4.0));
 
-	for (base = 0;base < 16;base++)
+	for (base = 0;base < 13;base++)
 	{
 		for (exp = 0;exp < 16;exp++)
 		{
