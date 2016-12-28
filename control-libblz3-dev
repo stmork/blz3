@@ -1,9 +1,10 @@
 Package: libblz3-dev
-Version: 2.99.2-%BUILD%
+Version: 2.99.3-%BUILD%
 Section: libdevel
 Priority: optional
 Architecture: %ARCH%
-Depends: gcc, g++, binutils, libopenexr-dev, manpages-dev, xorg-dev, make
+Depends: gcc, g++, binutils, libopenexr-dev, manpages-dev, xorg-dev, make,
+ libjpeg8-dev
 Maintainer: Steffen A. Mork <linux-dev@morknet.de>
 Homepage: http://morknet.de
 Description: This package proviles C++ header files, libraries and
