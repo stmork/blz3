@@ -41,11 +41,8 @@
 #undef FAR
 #endif
 
-extern "C"
-{
-#	include "jpeglib.h"
-#	include <setjmp.h>
-}
+#include <jpeglib.h>
+#include <setjmp.h>
 
 /*************************************************************************
 **                                                                      **

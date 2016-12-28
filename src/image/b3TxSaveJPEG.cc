@@ -37,13 +37,8 @@
 #undef FAR
 #endif
 
-extern "C"
-{
-#	include "jinclude.h"
-#	include "jpeglib.h"
-#	include "jerror.h"
-#	include <setjmp.h>
-}
+#include <jpeglib.h>
+#include <jerror.h>
 
 #define JPEG_ROWS           8
 #define OUTPUT_BUF_SIZE  4096	/* choose an efficiently fwrite'able size */
@@ -88,7 +83,7 @@ void b3InfoJPEG::b3InitDestination (j_compress_ptr cinfo)
 
 	/* Allocate the output buffer --- it will be released when done with image */
 	dest->buffer = (JOCTET *)(*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-				   OUTPUT_BUF_SIZE * SIZEOF(JOCTET));
+				   OUTPUT_BUF_SIZE * sizeof(JOCTET));
 
 	dest->pub.next_output_byte = dest->buffer;
 	dest->pub.free_in_buffer   = OUTPUT_BUF_SIZE;
@@ -134,8 +129,8 @@ void b3InfoJPEG::b3JpegStdioDestPrivate (j_compress_ptr  cinfo)
 	{
 		/* first time for this JPEG object? */
 		cinfo->dest = (struct jpeg_destination_mgr *)
-					  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
-												  SIZEOF(my_destination_mgr));
+			 (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
+			sizeof(my_destination_mgr));
 	}
 
 	dest = (my_dest_ptr) cinfo->dest;

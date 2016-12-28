@@ -19,7 +19,6 @@ RANLIB		= @RANLIB@
 SUB_DIRS +=\
 	system_unix\
 	system\
-	Bjpeg\
 	Btiff\
 	base\
 	image\
@@ -128,8 +127,8 @@ $(BLZ3_LIB)/libB3System.a:	lib_system lib_system_ind
 	$(AR) $(ARFLAGS) $@  system_unix/libB3System.o system/libB3System_ind.o
 	$(RANLIB) $@
 
-$(BLZ3_LIB)/libB3Base.a:	lib_jpeg lib_tiff lib_image lib_base $(BLZ3_LIB)/libB3System.a
-	$(AR) $(ARFLAGS) $@ Bjpeg/libB3jpeg.o Btiff/libB3tiff.o image/libB3Image.o base/libB3Base.o system_unix/libB3System.o system/libB3System_ind.o
+$(BLZ3_LIB)/libB3Base.a:	lib_tiff lib_image lib_base $(BLZ3_LIB)/libB3System.a
+	$(AR) $(ARFLAGS) $@ Btiff/libB3tiff.o image/libB3Image.o base/libB3Base.o system_unix/libB3System.o system/libB3System_ind.o
 	$(RANLIB) $@
 
 $(BLZ3_LIB)/libB3Raytrace.a:	lib_raytrace
@@ -150,9 +149,6 @@ lib_image:
 
 lib_raytrace:
 	+@make -C raytrace
-
-lib_jpeg:
-	+@make -C Bjpeg
 
 lib_tiff:
 	+@make -C Btiff

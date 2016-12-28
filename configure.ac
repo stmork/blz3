@@ -220,6 +220,8 @@ AC_HEADER_STDC
 
 AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
 
+AC_CHECK_LIB([tiff], [main])
+AC_CHECK_LIB([jpeg], [main])
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 AC_CHECK_LIB([z], [main])
@@ -295,7 +297,6 @@ AC_CONFIG_FILES([
 	src/icc.make
 	src/system_unix/Makefile
 	src/system/Makefile
-	src/Bjpeg/Makefile
 	src/Btiff/Makefile
 	src/base/Makefile
 	src/image/Makefile
