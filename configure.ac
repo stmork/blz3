@@ -297,7 +297,6 @@ AC_CONFIG_FILES([
 	src/icc.make
 	src/system_unix/Makefile
 	src/system/Makefile
-	src/Btiff/Makefile
 	src/base/Makefile
 	src/image/Makefile
 	src/raytrace/Makefile
