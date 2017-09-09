@@ -366,13 +366,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F,dim> operator+(const b3VectorTemplate<F,dim> &a) const
 	{
-		b3VectorTemplate<F,dim> result;
-
-		for (b3_loop i = 0;i < dim;i++)
-		{
-			result.v[i] = v[i] + (F)a.v[i];
-		}
-		return result;
+		return b3VectorTemplate<F,dim>(*this) += a;
 	}
 
 	/**
@@ -398,13 +392,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F,dim> operator-(const b3VectorTemplate<F,dim> &a) const
 	{
-		b3VectorTemplate<F,dim> result;
-
-		for (b3_loop i = 0;i < dim;i++)
-		{
-			result.v[i] = v[i] - (F)a.v[i];
-		}
-		return result;
+		return b3VectorTemplate<F,dim>(*this) -= a;
 	}
 
 	/**
@@ -414,13 +402,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F,dim> operator-() const
 	{
-		b3VectorTemplate<F,dim> result;
-
-		for (b3_loop i = 0;i < dim;i++)
-		{
-			result.v[i] = -v[i];
-		}
-		return result;
+		return b3VectorTemplate<F,dim>(*this).b3Negate();
 	}
 
 	/**
@@ -446,13 +428,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F,dim> operator*(const b3VectorTemplate<F,dim> &a) const
 	{
-		b3VectorTemplate<F,dim> result;
-
-		for (b3_loop i = 0;i < dim;i++)
-		{
-			result.v[i] = v[i] * (F)a.v[i];
-		}
-		return result;
+		return b3VectorTemplate<F,dim>(*this) *= a;
 	}
 
 	/**
@@ -461,7 +437,7 @@ public:
 	 * @param value The scaling factor.
 	 * @return A reference to this vector.
 	 */
-	inline b3VectorTemplate<F,dim> &operator*=(const b3_f64 value)
+	inline const b3VectorTemplate<F,dim> &operator*=(const b3_f64 value)
 	{
 		b3VectorTemplate<F,dim> prod(value);
 
@@ -480,13 +456,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F,dim> operator*(const b3_f64 value) const
 	{
-		b3VectorTemplate<F,dim> result,multiplicator(value);
-
-		for (b3_loop i = 0;i < dim;i++)
-		{
-			result.v[i] = v[i] * multiplicator.v[i];
-		}
-		return result;
+		return b3VectorTemplate<F,dim>(*this) *= value;
 	}
 
 	/**
@@ -495,13 +465,11 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this vector.
 	 */
-	inline b3VectorTemplate<F,dim> &operator/=(const b3_f64 value)
+	inline const b3VectorTemplate<F,dim> &operator/=(const b3_f64 value)
 	{
-		b3VectorTemplate<F,dim> prod(value);
-
 		for (b3_loop i = 0;i < dim;i++)
 		{
-			v[i] /= prod.v[i];
+			v[i] /= value;
 		}
 		return *this;
 	}
@@ -514,24 +482,20 @@ public:
 	 */
 	inline const b3VectorTemplate<F,dim> operator/(const b3_f64 value) const
 	{
-		b3VectorTemplate<F,dim> result,divisor(value);
-
-		for (b3_loop i = 0;i < dim;i++)
-		{
-			result.v[i] = v[i] / divisor.v[i];
-		}
-		return result;
+		return b3VectorTemplate<F,dim>(*this) /= value;
 	}
 
 	/**
 	 * This method negates all components of this vector.
+	 * @return A reference to this vector.
 	 */
-	inline void b3Negate()
+	inline const b3VectorTemplate<F,dim> & b3Negate()
 	{
 		for (b3_loop i = 0;i < dim;i++)
 		{
 			v[i] = -v[i];
 		}
+		return *this;
 	}
 
 	/**

@@ -241,31 +241,19 @@ public:
 	 */
 	inline const b3Complex<T> operator+(const b3Complex<T> &a) const
 	{
-		b3Complex<T> result;
-
-		for (b3_loop i = 0;i < 2;i++)
-		{
-			result.v[i] = v[i] + a.v[i];
-		}
-		return result;
+		return b3Complex<T>(*this) += a;
 	}
 
 	/**
 	 * The - operator. The operation is <code>result = this - a</code>.
 	 * Where <code>a</code> is a complex number.
 	 *
-	 * @param a The complex number to subtract.
+	 * @param a The complex number.
 	 * @return This as result.
 	 */
 	inline const b3Complex<T> operator-(const b3Complex<T> &a) const
 	{
-		b3Complex<T> result;
-
-		for (b3_loop i = 0;i < 2;i++)
-		{
-			result.v[i] = v[i] - a.v[i];
-		}
-		return result;
+		return b3Complex<T>(*this) -= a;
 	}
 
 	/**
@@ -291,21 +279,7 @@ public:
 	 */
 	inline const b3Complex<T> operator/(const b3Complex<T> &a) const
 	{
-		T B3_ALIGN_16 val[2];
-		T B3_ALIGN_16 den[2];
-		T B3_ALIGN_16 nom[2];
-		T             denom;
-
-		for (b3_loop i = 0;i < 2;i++)
-		{
-			nom[i] =   v[i] * a.v[i];
-			den[i] = a.v[i] * a.v[i];
-		}
-		val[Im] = v[Im] * a.v[Re] - v[Re] * a.v[Im];
-		denom   = den[Re] + den[Im];
-		val[Re] = nom[Re] + nom[Im];
-
-		return b3Complex<T>(val[Re] / denom,val[Im] / denom);
+		return b3Complex<T>(*this) /= a;
 	}
 
 	/**

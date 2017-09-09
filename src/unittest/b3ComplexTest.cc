@@ -125,7 +125,7 @@ void b3ComplexTest::testComplex64()
 	ca = cc + cd;
 	CPPUNIT_ASSERT_EQUAL(  10.0, ca.b3Real());
 	CPPUNIT_ASSERT_EQUAL(  12.0, ca.b3Imag());
-	ca = cc -cd;
+	ca = cc - cd;
 	CPPUNIT_ASSERT_EQUAL(  -2.0, ca.b3Real());
 	CPPUNIT_ASSERT_EQUAL(  -2.0, ca.b3Imag());
 	ca = cb * 2.0;

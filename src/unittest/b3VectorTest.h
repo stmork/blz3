@@ -135,7 +135,25 @@ public:
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  2.0), cs[X]);
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  3.0), cs[Y]);
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  8.0), cs[Z]);
-		
+
+		b3PrintF(B3LOG_FULL, "* scalar\n");
+		cs = as * 2.0;
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  2.0), cs[X]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( -6.0), cs[Y]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( -8.0), cs[Z]);
+
+		b3PrintF(B3LOG_FULL, "/ scalar\n");
+		cs = as / 2.0;
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  0.5), cs[X]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( -1.5), cs[Y]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( -2.0), cs[Z]);
+
+		b3PrintF(B3LOG_FULL, "negate\n");
+		cs = -cs;
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>( -0.5), cs[X]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  1.5), cs[Y]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  2.0), cs[Z]);
+
 		b3PrintF(B3LOG_FULL, "b3CrossProduct()\n");
 		cs = VECTOR::b3CrossProduct(as, bs);
 		CPPUNIT_ASSERT_EQUAL(static_cast<T>(  2.0), cs[X]);
