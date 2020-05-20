@@ -715,7 +715,6 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_polar  *polar,
 	b3_index   TriaField)
 {
-	b3_triangle    *Triangle;
 	b3_index        Index,i,max;
 	b3_index       *buffer;
 	b3_triainfo    *infos,*info;
@@ -746,7 +745,6 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	for (i = 0;i < max;i++)
 	{
 		Index    = buffer[i];
-		Triangle = &m_Triangles[Index];
 		info     = &infos[Index];
 
 		denominator = -1.0 / b3Vector::b3SMul(&info->Normal, &ray->dir);

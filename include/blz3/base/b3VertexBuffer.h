@@ -217,6 +217,8 @@ public:
 		glVertex = null;
 	}
 
+	virtual ~b3VertexElements() = default;
+
 	/**
 	 * This method sets a pointer to custom vertex data.
 	 *
@@ -253,6 +255,8 @@ public:
 		glGrids = null;
 	}
 
+	virtual ~b3GridElements() = default;
+
 	/**
 	 * This method sets a pointer to custom line index data.
 	 *
@@ -288,6 +292,8 @@ public:
 	{
 		glPolygons = null;
 	}
+
+	virtual ~b3PolygonElements() = default;
 
 	/**
 	 * This method sets a pointer to custom polygon index data.

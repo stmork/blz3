@@ -51,6 +51,8 @@ public:
 	 */
 	b3Shader(b3Scene *scene);
 
+	virtual ~b3Shader() = default;
+
 	/**
 	 * This method prepares the shader for use.
 	 */

@@ -1044,9 +1044,11 @@ void b3RenderObject::b3CheckGeometry(
 	b3MapIndices(B3_MAP_VBO_R);
 
 	b3_gl_vertex  *glVertex   = *glVertexElements;
+#ifdef _DEBUG
 	b3_gl_line    *glGrids    = *glGridElements;
 	b3_gl_polygon *glPolygons = *glPolygonElements;
 	b3_index       i;
+#endif
 
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
@@ -1065,6 +1067,7 @@ void b3RenderObject::b3CheckGeometry(
 		switch (render_mode)
 		{
 		case B3_RENDER_LINE:
+#ifdef _DEBUG
 			// This loop collects access vialoations
 			// prior calling OpenGL routines. This
 			// makes it possible to catch to faulty
@@ -1074,7 +1077,6 @@ void b3RenderObject::b3CheckGeometry(
 			{
 				b3_vector aPoint,bPoint;
 				b3_index  a,b;
-				b3_f64    len;
 
 				a = glGrids[i].a;
 				aPoint.x = glVertex[a].v.x;
@@ -1085,17 +1087,16 @@ void b3RenderObject::b3CheckGeometry(
 				bPoint.x = glVertex[b].v.x;
 				bPoint.y = glVertex[b].v.y;
 				bPoint.z = glVertex[b].v.z;
-
-				len = b3Vector::b3Distance(&aPoint,&bPoint);
 			}
+#endif
 			break;
 
 		case B3_RENDER_FILLED:
+#ifdef _DEBUG
 			for (i = 0;i < glPolygonElements->b3GetCount();i++)
 			{
 				b3_vector aPoint,bPoint,cPoint;
 				b3_index  a,b,c;
-				b3_f64    aLen,bLen;
 
 				a = glPolygons[i].a;
 				aPoint.x = glVertex[a].v.x;
@@ -1111,10 +1112,8 @@ void b3RenderObject::b3CheckGeometry(
 				cPoint.x = glVertex[c].v.x;
 				cPoint.y = glVertex[c].v.y;
 				cPoint.z = glVertex[c].v.z;
-
-				aLen = b3Vector::b3Distance(&aPoint,&bPoint);
-				bLen = b3Vector::b3Distance(&aPoint,&cPoint);
 			}
+#endif
 			break;
 
 		case B3_RENDER_NOTHING:

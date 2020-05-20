@@ -49,6 +49,8 @@ class b3ShutterFilter;
 class B3_PLUGIN b3Filter
 {
 public:
+	virtual ~b3Filter() = default;
+
 	/**
 	 * This computes a filter value from the given position.
 	 *

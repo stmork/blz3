@@ -294,19 +294,8 @@ void RenderScene()
 
 void ChangeSize(GLsizei xSize,GLsizei ySize)
 {
-	GLfloat xWindow, yWindow, aspect;
+	GLfloat aspect = (GLfloat)xSize / (GLfloat)ySize;
 
-	aspect = (GLfloat)xSize / (GLfloat)ySize;
-	if (aspect <= 1.0)
-	{
-		xWindow = 5 * ySize / xSize;
-		yWindow = 5;
-	}
-	else
-	{
-		xWindow = 5 * xSize / ySize;
-		yWindow = 5;
-	}
 	glViewport(0,0,xSize,ySize);
 
 	glMatrixMode(GL_PROJECTION);

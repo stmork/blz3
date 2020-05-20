@@ -43,12 +43,9 @@ b3InfoPS::b3InfoPS(b3Tx *tx,const char *filename) :
 		b3TxSaveInfo(tx,filename,B3_TWRITE)
 {
 	b3_res  xSize,ySize;
-	b3_f64  xScale,yScale,width=20;
 
 	xSize  = m_Tx->xSize;
 	ySize  = m_Tx->ySize;
-	xScale = width * 72 / 2.54;
-	yScale = xScale * ySize / xSize;
 
 	fprintf (m_FileHandle, "%%!PS-Adobe-2.0\n");
 	fprintf (m_FileHandle, "%%%%Creator: Blizzard III - Steffen A. Mork\n");

@@ -629,14 +629,10 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 {
 	b3Item    *item;
 	b3Light   *light;
-	b3_vector  central,toLight,nLight,nView;
+	b3_vector  central,toLight,nLight;
 	b3Color    result;
 	b3_f64     distance,weight = 0.6;
 	b3_count   i;
-
-	nView.x = m_ViewAxis.y * ray->dir.z - m_ViewAxis.z * ray->dir.y;
-	nView.y = m_ViewAxis.z * ray->dir.x - m_ViewAxis.x * ray->dir.z;
-	nView.z = m_ViewAxis.x * ray->dir.y - m_ViewAxis.y * ray->dir.x;
 
 	B3_FOR_BASE(b3GetLightHead(),item)
 	{

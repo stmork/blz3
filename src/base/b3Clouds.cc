@@ -68,7 +68,6 @@ b3_f64 b3Clouds::b3ComputeClouds(
 	{
 		b3_vector Dir;
 		b3_f64    p,D,len;
-		b3_f64    fog;
 		b3_f32    t;
 
 		p     = ray->dir.z * -m_EarthRadius;
@@ -85,7 +84,6 @@ b3_f64 b3Clouds::b3ComputeClouds(
 		{
 			r = 0;
 		}
-		fog   = exp(-len * log(2.0) / m_Seeing);
 		sight = ray->dir.z;
 	}
 	else

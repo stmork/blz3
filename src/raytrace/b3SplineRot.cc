@@ -315,11 +315,8 @@ void b3SplineRotShape::b3ComputeIndices()
 	b3_gl_polygon *pPtr;
 	b3_index       a,x1,x2,y1,y2;
 	b3_count       yStep;
-	b3_f64         sStep;
 
 	yStep = m_Spline.m_SubDiv + 1;
-	sStep = (b3_f64)m_Spline.m_SubDiv / m_rSubDiv;
-
 	gPtr  = *glGridElements;
 	pPtr  = *glPolygonElements;
 	x1    = 0;

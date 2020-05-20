@@ -53,6 +53,8 @@
 class b3DisplayPixel
 {
 public:
+	virtual ~b3DisplayPixel() = default;
+
 	/**
 	 * This method converts a given color value at the given position into
 	 * a native color value.

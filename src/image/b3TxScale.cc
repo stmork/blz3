@@ -1258,7 +1258,7 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 	b3_res        xDstSize,yDstSize;
 	b3_coord      ySrc;
 	b3_coord      xDst,yDst;
-	b3_count      srcBytes,dstBytes;
+	b3_count      srcBytes;
 	b3_index      i;
 	b3_color      color;
 	b3_count      divisor = 1;
@@ -1287,7 +1287,6 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void *ptr)
 	ySrcSize =  RectInfo->ySizeSrc;
 	yDstSize =  RectInfo->ySizeDst;
 	srcBytes =  RectInfo->xSizeSrc;
-	dstBytes =  RectInfo->xSizeDst;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3FloatScaleToRGB8(%5ld - %5ld)\n",
 			 yMin,yMax);

@@ -109,7 +109,6 @@ b3_bool b3TGFReader::b3ParseLight(char *ptr)
 	b3Light     *light = new b3Light(SPOT_LIGHT);
 	b3_vector64  pos,dir;
 	b3_u16       type;
-	b3_f64       attenuation,cone,spot;
 
 	b3StrCpy(light->m_Name,ptr,sizeof(light->m_Name),81);
 	ptr += 81;
@@ -133,10 +132,6 @@ b3_bool b3TGFReader::b3ParseLight(char *ptr)
 		b3Endian::b3GetIntelFloat(&ptr[4]),
 		b3Endian::b3GetIntelFloat(&ptr[8]));
 	ptr += 12;
-
-	attenuation = b3Endian::b3GetIntelDouble(&ptr[ 0]);
-	cone        = b3Endian::b3GetIntelDouble(&ptr[ 8]);
-	spot        = b3Endian::b3GetIntelDouble(&ptr[16]);
 
 	switch (type)
 	{
@@ -268,7 +263,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	b3_u32                   numDef;
 	b3_tgf_vertex            type;
 	b3_size                  size,skip,i,pos;
-	b3_f64                  *vPtr,u,v;
+	b3_f64                  *vPtr;
 	b3_u32                  *lPtr;
 	b3_u16                  *sPtr;
 
@@ -306,11 +301,6 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 			vertex.Normal.x = b3Endian::b3GetIntelDouble(&vPtr[3]) / 1000000.0;
 			vertex.Normal.y = b3Endian::b3GetIntelDouble(&vPtr[4]) / 1000000.0;
 			vertex.Normal.z = b3Endian::b3GetIntelDouble(&vPtr[5]) / 1000000.0;
-			if (size > 6)
-			{
-				u = b3Endian::b3GetIntelDouble(&vPtr[6]);
-				v = b3Endian::b3GetIntelDouble(&vPtr[7]);
-			}
 		}
 		vertices.b3Add(vertex);
 		vPtr += size;

@@ -256,11 +256,9 @@ void b3Triangles::b3ComputeIndices()
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;
 	b3_triangle   *Triangle;
-	b3_vertex     *Vertex;
 	b3_count       i;
 	b3_u32         p1,p2,p3;
 
-	Vertex   = m_Vertices;
 	Triangle = m_Triangles;
 	gPtr     = *glGridElements;
 	pPtr     = *glPolygonElements;

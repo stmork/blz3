@@ -520,7 +520,7 @@ const b3_bool b3Fourier::b3SelfTest()
 {
 	b3Rand48<b3_f64> random;
 	b3_loop          x, y;
-	b3_f64           err = 0, e, divisor;
+	b3_f64           err = 0, e;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest() %dx%d\n", m_xSize, m_ySize);
 
@@ -543,7 +543,6 @@ const b3_bool b3Fourier::b3SelfTest()
 	}
 
 	random.b3SetSeed();
-	divisor = m_xSize * m_ySize * 0.5;
 	for (y = 0; y < m_ySize; y++)
 	{
 		for (x = 0; x < m_xSize; x++)

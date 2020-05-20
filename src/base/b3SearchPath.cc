@@ -118,13 +118,11 @@ b3_bool b3SearchPath::b3IsValid(const char *Name,char *FullName)
 b3_bool b3SearchPath::b3CutName(const char *fullname,char *result)
 {
 	b3PathEntry *path;
-	b3_size      fullLen,shortLen,diff;
+	b3_size      shortLen;
 
 	B3_FOR_BASE(&m_SearchPath,path)
 	{
-		fullLen  = strlen(fullname);
 		shortLen = strlen(*path);
-		diff    = fullLen - shortLen;
 		if (strncmp(fullname,*path,shortLen) == 0)
 		{
 			while (((fullname[shortLen] == '/') ||

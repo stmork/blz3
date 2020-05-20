@@ -119,7 +119,6 @@ static void b3Encode(x264_t *x264, x264_picture_t *pic_in, b3File &file)
 	x264_picture_t  pic_out;
 	x264_nal_t     *nals; 
 	int             i_nals;
-	int             i_size;
 
 	x264_encoder_encode(x264, &nals, &i_nals, pic_in, &pic_out);
 	for (int i = 0; i < i_nals; i++)
@@ -138,10 +137,7 @@ int main(int argc,char *argv[])
 	x264_t         *x264;
 	x264_param_t    param;
 	x264_picture_t  pic_in;
-	x264_nal_t     *nals; 
-	int             i_nals = 0;
 #endif
-	b3_size         size  = 0;
 	b3_res          xSize = 0;
 	b3_res          ySize = 0;
 	b3_bool         isFirst = true;
@@ -242,7 +238,6 @@ printf("%d\n", param.i_threads);
 			{
 				xSize          = (img.xSize + 15) & 0xfff0;
 				ySize          = (img.ySize +  7) & 0xfff8;
-				size           = xSize * ySize;
 #ifdef BLZ3_USE_X264
 				param.i_width          = xSize;
 				param.i_height         = ySize;

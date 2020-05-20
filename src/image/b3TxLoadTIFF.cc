@@ -371,7 +371,6 @@ const long b3Tx::b3TIFFDecode(
 
 	if ((depth > 32) && (type != B3_TX_UNDEFINED))
 	{
-		b3_count  max  = xSize * ySize;
 		b3_color *fPtr = b3GetHdrData();
 		uint16   *rPtr = (uint16 *)b3Alloc(xSize * sizeof(uint16) * 3);
 
