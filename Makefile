@@ -28,7 +28,7 @@ clean:
 	rm -rf doc/html doc/latex Doxyfile
 
 configure:	configure.ac
-	autoconf
+	autoreconf
 	rm -rf autom4te.cache
 
 config:	configure
