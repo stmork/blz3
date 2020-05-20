@@ -113,7 +113,7 @@ b3Noise       b3Noise::m_Noise;
 b3_noisetype *b3Noise::m_NoiseTable = null;
 b3_f64        b3Noise::epsilon      = FLT_EPSILON;
 
-b3Noise::b3Noise () throw(b3NoiseException)
+b3Noise::b3Noise ()
 {
 	b3Rand48<b3_noisetype> random_noise;
 	b3Rand48<b3_f64>       random_wave;

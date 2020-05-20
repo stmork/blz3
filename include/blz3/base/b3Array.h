@@ -55,7 +55,7 @@ public:
 	 * @param increment The incremental reallocations of memory.
 	 * @throws b3ArrayException
 	 */
-	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT) throw(b3ArrayException)
+	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
 	{
 		if (increment <= 0)
 		{
@@ -84,7 +84,7 @@ public:
 	 * @param element The new element to add.
 	 * @throws b3ArrayException
 	 */
-	inline void b3Add(const T &element) throw(b3ArrayException)
+	inline void b3Add(const T &element)
 	{
 		T        *buffer;
 		b3_count  max = m_Max + m_Increment;
@@ -174,7 +174,7 @@ public:
 	 * @throw b3ArrayException
 	 * @return The reference to the indexed array element.
 	 */
-	inline T & operator [](const b3_index index) throw(b3ArrayException)
+	inline T & operator [](const b3_index index)
 	{
 #ifdef _DEBUG
 		if ((index < 0) || (index >= m_Index))

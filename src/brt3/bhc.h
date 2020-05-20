@@ -95,7 +95,7 @@ public:
 		sprintf(m_Message,"%s (line: %ld)",text,line);
 	}
 
-	const char *what() const throw()
+	const char *what() const noexcept override
 	{
 		return m_Message;
 	}

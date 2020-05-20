@@ -324,8 +324,8 @@ public:
 	 * This destructor deinitializes this instance.
 	 */
 	virtual      ~b3SimpleVertexElements();
-	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
-	virtual void  b3FreeVertexMemory();
+	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void  b3FreeVertexMemory() override;
 };
 
 /**
@@ -338,8 +338,8 @@ public:
 	 * This destructor deinitializes this instance.
 	 */
 	virtual      ~b3SimpleGridElements();
-	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
-	virtual void  b3FreeVertexMemory();
+	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void  b3FreeVertexMemory() override;
 };
 
 /**
@@ -352,8 +352,8 @@ public:
 	 * This destructor deinitializes this instance.
 	 */
 	virtual      ~b3SimplePolygonElements();
-	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
-	virtual void  b3FreeVertexMemory();
+	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void  b3FreeVertexMemory() override;
 };
 
 /*************************************************************************
@@ -369,7 +369,7 @@ class B3_PLUGIN b3ArrayVertexElements : public b3SimpleVertexElements
 {
 public:
 	b3ArrayVertexElements();
-	virtual void b3Draw();
+	virtual void b3Draw() override;
 };
 
 /**
@@ -379,7 +379,7 @@ class B3_PLUGIN b3ArrayGridElements : public b3SimpleGridElements
 {
 public:
 	b3ArrayGridElements();
-	virtual void b3Draw();
+	virtual void b3Draw() override;
 };
 
 /**
@@ -389,7 +389,7 @@ class B3_PLUGIN b3ArrayPolygonElements : public b3SimplePolygonElements
 {
 public:
 	b3ArrayPolygonElements();
-	virtual void b3Draw();
+	virtual void b3Draw() override;
 };
 
 /*************************************************************************
@@ -436,12 +436,12 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboVertexElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
-	virtual void b3FreeVertexMemory();
-	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW);
-	virtual void b3Unmap();
-	virtual void b3CustomData();
-	virtual void b3Draw();
+	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void b3FreeVertexMemory() override;
+	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW) override;
+	virtual void b3Unmap() override;
+	virtual void b3CustomData() override;
+	virtual void b3Draw() override;
 };
 
 /**
@@ -454,12 +454,12 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboGridElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
-	virtual void b3FreeVertexMemory();
-	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW);
-	virtual void b3Unmap();
-	virtual void b3CustomData();
-	virtual void b3Draw();
+	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void b3FreeVertexMemory() override;
+	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW) override;
+	virtual void b3Unmap() override;
+	virtual void b3CustomData() override;
+	virtual void b3Draw() override;
 };
 
 /**
@@ -472,12 +472,12 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboPolygonElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount);
-	virtual void b3FreeVertexMemory();
-	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW);
-	virtual void b3Unmap();
-	virtual void b3CustomData();
-	virtual void b3Draw();
+	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void b3FreeVertexMemory() override;
+	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW) override;
+	virtual void b3Unmap() override;
+	virtual void b3CustomData() override;
+	virtual void b3Draw() override;
 };
 
 /*************************************************************************
@@ -496,8 +496,8 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboStaticVertexElements();
-	virtual void b3CustomData();
-	virtual void b3Draw();
+	virtual void b3CustomData() override;
+	virtual void b3Draw() override;
 };
 
 /**
@@ -510,8 +510,8 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboStaticGridElements();
-	virtual void b3CustomData();
-	virtual void b3Draw();
+	virtual void b3CustomData() override;
+	virtual void b3Draw() override;
 };
 
 /**
@@ -524,8 +524,8 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboStaticPolygonElements();
-	virtual void b3CustomData();
-	virtual void b3Draw();
+	virtual void b3CustomData() override;
+	virtual void b3Draw() override;
 };
 
 #endif

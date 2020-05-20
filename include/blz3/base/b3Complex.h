@@ -370,7 +370,6 @@ public:
 	}
 
 	inline static b3Complex<T> b3Sqrt(const b3Complex<T> &a)
-	throw(std::domain_error)
 	{
 		b3Complex<T> result;
 

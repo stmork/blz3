@@ -87,7 +87,7 @@ public:
 	B3_ITEM_INIT(b3SuperSample); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3SuperSample); //!< This constructor handles deserialization.
 
-	void    b3Write();
+	void    b3Write() override;
 
 	/**
 	 * This method returns the activations state of super sampling.
@@ -121,8 +121,8 @@ public:
 	B3_ITEM_INIT(b3CameraPart); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CameraPart); //!< This constructor handles deserialization.
 
-	void     b3Write();
-	b3_bool  b3Prepare(b3_preparation_info *prep_info);
+	void     b3Write() override;
+	b3_bool  b3Prepare(b3_preparation_info *prep_info) override;
 
 	/**
 	 * This method orientates the camera to the given values. The internal vectors
@@ -249,8 +249,8 @@ public:
 	B3_ITEM_INIT(b3Nebular); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Nebular); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
 
 	/**
 	 * This method returns the activation state.
@@ -361,7 +361,7 @@ public:
 	B3_ITEM_INIT(b3ModellerInfo); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3ModellerInfo); //!< This constructor handles deserialization.
 
-	void        b3Write();
+	void        b3Write() override;
 
 	/**
 	 * This method snaps the given translation point into the next grid position.
@@ -473,7 +473,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static void            b3Register();
-	void            b3Write();
+	void            b3Write() override;
 
 public:
 	/**
@@ -629,7 +629,7 @@ public:
 	 * This destructor deinitializes the distributed raytracing.
 	 */
 	virtual ~b3Distribute();
-	void     b3Write();
+	void     b3Write() override;
 
 	/**
 	 * This method returns the activation state of distributed raytracing in general.
@@ -653,7 +653,7 @@ public:
 	 * @param animation The animation for motion blur if any.
 	 * @throws b3WorldException
 	 */
-	void     b3PrepareAnimation(b3_res xSize,b3Animation *animation=null) throw(b3WorldException);
+	void     b3PrepareAnimation(b3_res xSize,b3Animation *animation = null);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -683,7 +683,7 @@ public:
 	B3_ITEM_INIT(b3LensFlare); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3LensFlare); //!< This constructor handles deserialization.
 
-	void    b3Write();
+	void    b3Write() override;
 
 	/**
 	 * This method returns the activation state of this lens flare.
@@ -719,7 +719,7 @@ public:
 	B3_ITEM_INIT(b3Caustic); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Caustic); //!< This constructor handles deserialization.
 
-	void b3Write();
+	void b3Write() override;
 };
 
 #define CAUSTIC_ENABLE_B 0
@@ -736,8 +736,8 @@ public:
 	B3_ITEM_INIT(b3CloudBackground); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CloudBackground); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
 };
 
 #endif

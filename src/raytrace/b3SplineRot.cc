@@ -98,7 +98,7 @@ void b3SplineRotShape::b3Init(
 	m_Spline.b3InitCurve(Degree,ControlNum,Closed);
 }
 
-b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info *prep_info) throw(b3WorldException)
+b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3Spline     MySpline;
 	b3_triangle *Triangle;

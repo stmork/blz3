@@ -93,9 +93,11 @@ b3_bool b3File::b3Open (
 		}
 		else
 		{
-			strerror_r(errno, error_msg, sizeof(error_msg));
-			b3PrintF(B3LOG_NORMAL,"File read error\n  filename: %s\n  error msg: %s\n",
-					 Name,error_msg);
+			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
+			{
+				b3PrintF(B3LOG_NORMAL,"File read error\n  filename: %s\n  error msg: %s\n",
+						 Name,error_msg);
+			}
 		}
 		break;
 
@@ -113,9 +115,11 @@ b3_bool b3File::b3Open (
 		}
 		else
 		{
-			strerror_r(errno, error_msg, sizeof(error_msg));
-			b3PrintF(B3LOG_NORMAL,"File write error\n  filename: %s\n  error msg: %s\n",
-					 Name,error_msg);
+			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
+			{
+				b3PrintF(B3LOG_NORMAL,"File write error\n  filename: %s\n  error msg: %s\n",
+						 Name,error_msg);
+			}
 		}
 		break;
 
@@ -132,7 +136,11 @@ b3_bool b3File::b3Open (
 		}
 		else
 		{
-			strerror_r(errno, error_msg, sizeof(error_msg));
+			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
+			{
+				b3PrintF(B3LOG_NORMAL,"File append error\n  filename: %s\n  error msg: %s\n",
+						 Name,error_msg);
+			}
 			b3PrintF(B3LOG_NORMAL,"File append error\n  filename: %s\n  error msg: %s\n",
 					 Name,error_msg);
 		}

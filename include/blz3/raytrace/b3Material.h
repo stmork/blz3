@@ -117,7 +117,7 @@ public:
 	 */
 	static  void    b3Register();
 
-	virtual b3_bool b3Prepare(b3_preparation_info *prep_info)
+	virtual b3_bool b3Prepare(b3_preparation_info *prep_info) override
 	{
 		return true;
 	}
@@ -243,8 +243,8 @@ public:
 	B3_ITEM_INIT(b3MatNormal); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	virtual b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	virtual b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 
 private:
 	void    b3Init();
@@ -282,8 +282,8 @@ public:
 	B3_ITEM_INIT(b3MatChess); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatChess); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 /*************************************************************************
@@ -315,10 +315,10 @@ public:
 	B3_ITEM_INIT(b3MatTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatTexture); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
 	void    b3SetTexture(const char *name);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 /*************************************************************************
@@ -348,10 +348,10 @@ public:
 	B3_ITEM_INIT(b3MatWrapTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatWrapTexture); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
 	void    b3SetTexture(const char *name);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 /*************************************************************************
@@ -377,8 +377,8 @@ public:
 	B3_ITEM_INIT(b3MatSlide); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatSlide); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 #define DIR_SLIDE_BIT       0
@@ -420,9 +420,9 @@ public:
 	B3_ITEM_INIT(b3MatMarble); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatMarble); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 /*************************************************************************
@@ -474,9 +474,9 @@ public:
 	B3_ITEM_INIT(b3MatWood); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatWood); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 
 private:
 	void    b3Init();
@@ -506,9 +506,9 @@ public:
 
 	virtual ~b3MatOakPlank();
 
-	void     b3Write();
-	b3_bool  b3Prepare(b3_preparation_info *prep_info);
-	b3_bool  b3GetSurfaceValues(b3_surface *surface);
+	void     b3Write() override;
+	b3_bool  b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool  b3GetSurfaceValues(b3_surface *surface) override;
 
 private:
 	void     b3Init();
@@ -539,10 +539,10 @@ public:
 	B3_ITEM_INIT(b3MatCookTorrance); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatCookTorrance); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit) override;
 };
 
 /*************************************************************************
@@ -567,9 +567,9 @@ public:
 	B3_ITEM_INIT(b3MatGranite); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatGranite); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 /*************************************************************************
@@ -595,13 +595,13 @@ public:
 	B3_ITEM_INIT(b3MatCarPaint); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatCarPaint); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit) override;
 
 protected:
-	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
+	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction) override;
 
 private:
 	static inline void b3Randomize(const b3_vector64 *src,b3_vector64 *dst,b3_f64 scale,b3_f64 half)
@@ -640,9 +640,9 @@ public:
 	B3_ITEM_INIT(b3MatThinFilm); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatThinFilm); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
 };
 
 #endif

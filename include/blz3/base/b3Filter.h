@@ -72,7 +72,7 @@ public:
 	 * \throws b3FilterException
 	 * \return The inverse integral.
 	 */
-	virtual b3_f64    b3InvIntegral(b3_f64 val,b3_bool throw_exception = false) throw(b3FilterException);
+	virtual b3_f64    b3InvIntegral(b3_f64 val,b3_bool throw_exception = false);
 
 	/**
 	 * A factory method for generating several filters.
@@ -89,19 +89,19 @@ public:
 class B3_PLUGIN b3BoxFilter : public b3Filter
 {
 public:
-	inline b3_f64 b3Func(b3_f64 x)
+	inline b3_f64 b3Func(b3_f64 x) override
 	{
 		return fabs(x) <= 1 ? 1 : 0;
 	}
 
-	inline b3_f64 b3Integral(b3_f64 x)
+	inline b3_f64 b3Integral(b3_f64 x) override
 	{
 		if (x < -1) return 0;
 		else if (x >  1) return 1;
 		else return (x + 1) * 0.5;
 	}
 
-	inline b3_f64 b3InvIntegral(b3_f64 val,b3_bool throw_exception = false) throw(b3FilterException)
+	inline b3_f64 b3InvIntegral(b3_f64 val,b3_bool throw_exception = false) override
 	{
 		if ((fabs(val) > 1) && throw_exception)
 		{
@@ -122,8 +122,8 @@ class B3_PLUGIN b3GaussFilter : public b3Filter
 
 public:
 	b3GaussFilter();
-	b3_f64 b3Func(b3_f64 x);
-	b3_f64 b3Integral(b3_f64 x);
+	b3_f64 b3Func(b3_f64 x) override;
+	b3_f64 b3Integral(b3_f64 x) override;
 };
 
 /**
@@ -137,8 +137,8 @@ class B3_PLUGIN b3ShutterFilter : public b3Filter
 
 public:
 	b3ShutterFilter(b3_f64 max = 0.25);
-	b3_f64 b3Func(b3_f64 x);
-	b3_f64 b3Integral(b3_f64 x);
+	b3_f64 b3Func(b3_f64 x) override;
+	b3_f64 b3Integral(b3_f64 x) override;
 };
 
 #endif

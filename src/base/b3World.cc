@@ -311,7 +311,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 	return result;
 }
 
-b3_bool b3World::b3Read(const char *name, const b3_bool throw_exception) throw(b3WorldException)
+b3_bool b3World::b3Read(const char *name, const b3_bool throw_exception)
 {
 	b3Path         world_name;
 	b3_world_error error;
@@ -406,7 +406,7 @@ b3_world_error b3World::b3Read(b3FileAbstract *file, const b3_bool throw_excepti
 	return error;
 }
 
-b3_bool b3World::b3ReadDump(const char *world_name) throw(b3WorldException)
+b3_bool b3World::b3ReadDump(const char *world_name)
 {
 	b3File         file;
 	b3_world_error error;
@@ -471,7 +471,7 @@ b3_bool b3World::b3ReadDump(const char *world_name) throw(b3WorldException)
 
 void b3World::b3CloneBase(
 	b3Base<b3Item> *srcBase,
-	b3Base<b3Item> *dstBase, const b3_bool throw_exception) throw(b3WorldException)
+	b3Base<b3Item> *dstBase, const b3_bool throw_exception)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *srcItem;
@@ -508,7 +508,7 @@ void b3World::b3CloneBase(
 	}
 }
 
-b3Item *b3World::b3Clone(b3Item *original, const b3_bool throw_exception) throw(b3WorldException)
+b3Item *b3World::b3Clone(b3Item *original, const b3_bool throw_exception)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
@@ -545,7 +545,7 @@ b3Item *b3World::b3Clone(b3Item *original, const b3_bool throw_exception) throw(
 
 b3_bool b3World::b3Write(
 	const char    *filename,
-	const b3_bool  throw_exception) throw(b3WorldException)
+	const b3_bool  throw_exception)
 {
 	b3File          file;
 	b3_world_error  error;

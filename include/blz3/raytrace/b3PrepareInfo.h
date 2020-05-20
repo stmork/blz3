@@ -113,7 +113,7 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3Prepare(b3PrepareProc prepareFunc,void *ptr = null,b3_bool threaded = true) throw(b3PrepareException);
+	b3_bool          b3Prepare(b3PrepareProc prepareFunc,void *ptr = null,b3_bool threaded = true);
 
 private:
 	b3BBoxReference *b3GetBBoxReference();

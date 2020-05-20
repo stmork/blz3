@@ -115,7 +115,7 @@ public:
 	 */
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 
-	const char *what() const throw();
+	const char *what() const noexcept override;
 };
 
 #define B3_MK_ERRNO(e,t) (((e) & 0xff) | ((t) << 8))

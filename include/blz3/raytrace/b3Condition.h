@@ -138,7 +138,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void    b3Register();
-	virtual b3_bool b3Prepare(b3_preparation_info *prep_info);
+	virtual b3_bool b3Prepare(b3_preparation_info *prep_info) override;
 
 	/**
 	 * This method compute the bounding box of this stencil condition
@@ -232,9 +232,9 @@ public:
 	B3_ITEM_INIT(b3Cond2); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Cond2); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	void    b3ComputeBound(b3_stencil_limit *limit);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	void    b3ComputeBound(b3_stencil_limit *limit) override;
 };
 
 /**
@@ -246,7 +246,7 @@ public:
 	B3_ITEM_INIT(b3CondPara); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondPara); //!< This constructor handles deserialization.
 
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 /**
@@ -258,7 +258,7 @@ public:
 	B3_ITEM_INIT(b3CondTria); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondTria); //!< This constructor handles deserialization.
 
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 /**
@@ -275,9 +275,9 @@ public:
 	B3_ITEM_INIT(b3CondCircle); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondCircle); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	void    b3Write() override;
+	void    b3ComputeBound(b3_stencil_limit *limit) override;
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 /**
@@ -294,9 +294,9 @@ public:
 	B3_ITEM_INIT(b3CondSegment); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondSegment); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	void    b3Write() override;
+	void    b3ComputeBound(b3_stencil_limit *limit) override;
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 /**
@@ -314,9 +314,9 @@ public:
 	B3_ITEM_INIT(b3CondEllipse); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondEllipse); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	void    b3Write() override;
+	void    b3ComputeBound(b3_stencil_limit *limit) override;
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 /**
@@ -338,10 +338,10 @@ public:
 	B3_ITEM_INIT(b3CondTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondTexture); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	void    b3ComputeBound(b3_stencil_limit *limit) override;
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 /**
@@ -361,10 +361,10 @@ public:
 	B3_ITEM_INIT(b3CondWrapTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondWrapTexture); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *prep_info);
-	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	void    b3ComputeBound(b3_stencil_limit *limit) override;
+	b3_bool b3CheckStencil(b3_polar *polar) override;
 };
 
 #endif

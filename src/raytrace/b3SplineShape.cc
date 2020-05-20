@@ -483,7 +483,7 @@ void b3SplineShape::b3SetupGrid(b3PickInfo *info)
 	}
 }
 
-b3_bool b3SplineShape::b3Prepare(b3_preparation_info *prep_info) throw(b3WorldException)
+b3_bool b3SplineShape::b3Prepare(b3_preparation_info *prep_info)
 {
 	b3_vertex   *Vertex;
 	b3_triangle *Triangle;

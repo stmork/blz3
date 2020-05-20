@@ -458,7 +458,6 @@ b3_u32 b3Fourier::b3ColumnFFT(void *ptr)
 }
 
 const b3_bool b3Fourier::b3GetBuffer(b3Tx *tx, b3_f64 amp)
-throw(b3FFTException)
 {
 	b3_u08       *cPtr;
 	b3_loop       x,y;

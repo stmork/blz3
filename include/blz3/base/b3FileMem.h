@@ -53,7 +53,7 @@ public:
 	 * @param mode The access mode.
 	 * @throws b3FileException
 	 */
-	b3FileMem   (const b3_access_mode mode) throw(b3FileException);
+	b3FileMem   (const b3_access_mode mode);
 
 	/**
 	 * This constructor opens an existing file for reading or appending. It reads the
@@ -64,7 +64,7 @@ public:
 	 * @param mode     The access mode.
 	 * @throws b3FileException
 	 */
-	b3FileMem   (const char *filename,const b3_access_mode mode) throw(b3FileException);
+	b3FileMem   (const char *filename,const b3_access_mode mode);
 
 	/**
 	 * This destructor cleans up the instance. It calls b3Close().
@@ -78,7 +78,7 @@ public:
 	 * @param mode The access mode.
 	 * @throws b3FileException
 	 */
-	b3_bool  b3Open      (const b3_access_mode mode) throw(b3FileException);
+	b3_bool  b3Open      (const b3_access_mode mode);
 
 	/**
 	 * This method opens an existing file for reading or appending. It reads the
@@ -90,7 +90,7 @@ public:
 	 * @return True if the file open was successful.
 	 * @throws b3FileException
 	 */
-	b3_bool  b3Open      (const char *filename,const b3_access_mode mode) throw(b3FileException);
+	b3_bool  b3Open      (const char *filename,const b3_access_mode mode);
 	b3_size  b3Read      (void *read_buffer,const b3_size size);
 
 	/**
@@ -109,7 +109,7 @@ public:
 	void     b3Close     ();
 
 private:
-	b3_bool  b3EnsureBufferSize(b3_size new_size) throw(b3FileException);
+	b3_bool  b3EnsureBufferSize(b3_size new_size);
 };
 
 #endif

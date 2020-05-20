@@ -167,7 +167,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void             b3Register();
-	void             b3Write();
+	void             b3Write() override;
 
 	/**
 	 * This method returns the selected render image resolution.
@@ -278,7 +278,7 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareException);
+	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
 
 	/**
 	 * This method returns info for using with all sub b3Items for initialisation
@@ -787,8 +787,8 @@ public:
 private:
 	b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
 	void            b3ReallocateShader();
-	void            b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareException);
-	void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3PrepareException);
+	void            b3DoRaytrace(b3Display *display,b3_count CPUs);
+	void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
 	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
@@ -913,7 +913,7 @@ public:
 	 */
 	virtual      ~b3SupersamplingRayRow();
 
-	virtual void  b3Raytrace();
+	virtual void  b3Raytrace() override;
 
 private:
 	b3_bool b3Test(const b3_res x);
@@ -956,7 +956,7 @@ public:
 	 */
 	virtual        ~b3DistributedRayRow();
 
-	virtual void    b3Raytrace();
+	virtual void    b3Raytrace() override;
 };
 
 /**
@@ -987,7 +987,7 @@ public:
 		b3Display *display,
 		const b3_coord   y,
 		const b3_res     xSize,
-		const b3_res     ySize) throw(b3WorldException);
+		const b3_res     ySize);
 
 	/**
 	 * This destructor deinitializes this row instance.
@@ -1002,7 +1002,7 @@ public:
 	 */
 	void    b3SetTimePoint(b3_f64 t);
 
-	virtual void    b3Raytrace();
+	virtual void    b3Raytrace() override;
 };
 
 // m_Flags

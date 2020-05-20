@@ -52,7 +52,7 @@ public:
 	 * @param subdiv The new sub division value.
 	 * @throws b3WorldException
 	 */
-	void             b3InitSubdiv(b3_count subdiv) throw(b3WorldException);
+	void             b3InitSubdiv(b3_count subdiv);
 
 	/**
 	 * This method returns precomputed line indices for cylinder shapes.

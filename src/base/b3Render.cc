@@ -746,7 +746,7 @@ void b3RenderObject::b3UpdateMaterial()
 void b3RenderObject::b3CreateTexture(
 	b3RenderContext *context,
 	b3_res           xSize,
-	b3_res           ySize) throw(b3TxException)
+	b3_res           ySize)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_res size;

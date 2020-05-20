@@ -99,9 +99,9 @@ public:
 	 * Method for registering the light source classes into the item registry.
 	 */
 	static void     b3Register();
-	void     b3Write();
+	void     b3Write() override;
 	void     b3Dump(b3_count level);
-	b3_bool  b3Prepare(b3_preparation_info *prep_info);
+	b3_bool  b3Prepare(b3_preparation_info *prep_info) override;
 
 	/**
 	 * This method returns the lights name.

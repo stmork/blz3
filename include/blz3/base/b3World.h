@@ -195,7 +195,7 @@ public:
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Read(const char *worldname, const b3_bool throw_exception = true) throw(b3WorldException);
+	b3_bool         b3Read(const char *worldname, const b3_bool throw_exception = true);
 
 	/**
 	 * This method serialize the content of the named file.
@@ -206,7 +206,7 @@ public:
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Write(const char *worldname, const b3_bool throw_exception = true) throw(b3WorldException);
+	b3_bool         b3Write(const char *worldname, const b3_bool throw_exception = true);
 
 	/**
 	 * This method deserialize the content from the given file handle.
@@ -236,7 +236,7 @@ public:
 	 * @return True if the content is correct.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3ReadDump(const char *worldname) throw(b3WorldException);
+	b3_bool         b3ReadDump(const char *worldname);
 
 	/**
 	 * This method dumps the b3Item hierarchy for debugging purposes.
@@ -291,7 +291,7 @@ public:
 	 * @throws b3WorldException
 	 */
 	static b3Item  *b3Clone(
-		b3Item *original, const b3_bool throw_exception = true) throw(b3WorldException);
+		b3Item *original, const b3_bool throw_exception = true);
 
 	/**
 	 * This method clones a complete b3Base list. The items must be stored
@@ -305,7 +305,7 @@ public:
 	 */
 	static void     b3CloneBase(
 		b3Base<b3Item> *srcBase,
-		b3Base<b3Item> *dstBase, const b3_bool throw_exception = true) throw(b3WorldException);
+		b3Base<b3Item> *dstBase, const b3_bool throw_exception = true);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
@@ -398,7 +398,7 @@ public:
 		b3_item_init_func initfunc,
 		b3_item_load_func loadfunc,
 		b3_u32            classtype,
-		b3_bool           isclass = false) throw(b3WorldException);
+		b3_bool           isclass = false);
 
 	/**
 	 * This method serializes the content of this instance. The header is written
@@ -456,7 +456,7 @@ public:
 	 * @throws b3WorldException
 	 * @return The overall size in bytes written yet.
 	 */
-	b3_u32          b3Store() throw(b3WorldException);
+	b3_u32          b3Store();
 
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
@@ -780,7 +780,7 @@ protected:
 	static void     b3DumpSpace(const b3_count level, const b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true) throw(b3WorldException);
+	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data = true);
 	b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
 
 	friend class b3World;

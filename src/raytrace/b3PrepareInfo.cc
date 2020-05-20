@@ -107,7 +107,7 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 b3_bool b3PrepareInfo::b3Prepare(
 	b3PrepareProc  prepare_proc,
 	void          *ptr,
-	b3_bool        threaded) throw(b3PrepareException)
+	b3_bool        threaded)
 {
 	b3_bool  result = true;
 

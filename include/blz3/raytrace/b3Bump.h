@@ -127,8 +127,8 @@ public:
 	B3_ITEM_INIT(b3BumpNoise); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpNoise); //!< This constructor handles deserialization.
 
-	void b3Write();
-	void b3BumpNormal(b3_ray *ray);
+	void b3Write() override;
+	void b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -148,9 +148,9 @@ public:
 	B3_ITEM_INIT(b3BumpMarble); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpMarble); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3BumpNormal(b3_ray *ray);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -177,10 +177,10 @@ public:
 	B3_ITEM_INIT(b3BumpTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpTexture); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3BumpNormal(b3_ray *ray);
-	inline b3_bool b3NeedDeriv()
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3BumpNormal(b3_ray *ray) override;
+	inline b3_bool b3NeedDeriv() override
 	{
 		return true;
 	}
@@ -214,9 +214,9 @@ public:
 	B3_ITEM_INIT(b3BumpWater); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpWater); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3BumpNormal(b3_ray *ray);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -234,9 +234,9 @@ public:
 	B3_ITEM_INIT(b3BumpWave); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpWave); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3BumpNormal(b3_ray *ray);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -254,9 +254,9 @@ public:
 	B3_ITEM_INIT(b3BumpGroove); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpGroove); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3BumpNormal(b3_ray *ray);
+	void    b3Write() override;
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -280,8 +280,8 @@ public:
 	B3_ITEM_INIT(b3BumpGlossy); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpGlossy); //!< This constructor handles deserialization.
 
-	void b3Write();
-	void b3BumpNormal(b3_ray *ray);
+	void b3Write() override;
+	void b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -328,14 +328,14 @@ public:
 	B3_ITEM_INIT(b3BumpWood); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpWood); //!< This constructor handles deserialization.
 
-	inline b3_bool b3NeedDeriv()
+	inline b3_bool b3NeedDeriv() override
 	{
 		return true;
 	}
 
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3Write();
-	void    b3BumpNormal(b3_ray *ray);
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3Write() override;
+	void    b3BumpNormal(b3_ray *ray) override;
 };
 
 /*************************************************************************
@@ -359,14 +359,14 @@ public:
 	B3_ITEM_INIT(b3BumpOakPlank); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpOakPlank); //!< This constructor handles deserialization.
 
-	inline b3_bool b3NeedDeriv()
+	inline b3_bool b3NeedDeriv() override
 	{
 		return true;
 	}
 
-	b3_bool b3Prepare(b3_preparation_info *info);
-	void    b3Write();
-	void    b3BumpNormal(b3_ray *ray);
+	b3_bool b3Prepare(b3_preparation_info *info) override;
+	void    b3Write() override;
+	void    b3BumpNormal(b3_ray *ray) override;
 };
 
 //flags for WaterBump, WaveBump
@@ -390,8 +390,8 @@ public:
 	char    *b3GetName();
 
 public:
-	virtual void    b3BumpNormal(b3_ray *ray);
-	virtual b3_bool b3NeedDeriv();
+	virtual void    b3BumpNormal(b3_ray *ray) override;
+	virtual b3_bool b3NeedDeriv() override;
 };
 
 

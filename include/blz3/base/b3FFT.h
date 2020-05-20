@@ -117,7 +117,7 @@ public:
 		return b3FFT2D(-1);
 	}
 
-	const b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp) throw(b3FFTException);
+	const b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp);
 	const b3_bool   b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
 
 	inline b3Complex64 *b3GetBuffer() const

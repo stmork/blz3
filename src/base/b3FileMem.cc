@@ -43,7 +43,7 @@ b3FileMem::b3FileMem()
 }
 
 // Instantiate as opened file
-b3FileMem::b3FileMem (const b3_access_mode access_mode) throw(b3FileException)
+b3FileMem::b3FileMem (const b3_access_mode access_mode)
 {
 	m_Buffer     = null;
 	m_BufferSize = 0;
@@ -57,7 +57,7 @@ b3FileMem::b3FileMem (const b3_access_mode access_mode) throw(b3FileException)
 }
 
 // Instantiate as opened file
-b3FileMem::b3FileMem (const char *file_name,const b3_access_mode access_mode) throw(b3FileException)
+b3FileMem::b3FileMem (const char *file_name,const b3_access_mode access_mode)
 {
 	m_Buffer     = null;
 	m_BufferSize = 0;
@@ -75,7 +75,7 @@ b3FileMem::~b3FileMem()
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3FileMem::b3Open (const b3_access_mode access_mode) throw(b3FileException)
+b3_bool b3FileMem::b3Open (const b3_access_mode access_mode)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -105,7 +105,7 @@ b3_bool b3FileMem::b3Open (const b3_access_mode access_mode) throw(b3FileExcepti
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3FileMem::b3Open (const char *file_name,const b3_access_mode access_mode) throw(b3FileException)
+b3_bool b3FileMem::b3Open (const char *file_name,const b3_access_mode access_mode)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -262,7 +262,7 @@ b3_bool b3FileMem::b3ReadBuffer(const char *filename)
 	return false;
 }
 
-b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size) throw(b3FileException)
+b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 {
 	b3_u08 *new_buffer;
 

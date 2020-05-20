@@ -101,7 +101,7 @@ const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 	return m_LocalMessageBuffer;
 }
 
-const char *b3ExceptionBase::what() const throw()
+const char *b3ExceptionBase::what() const noexcept
 {
 	char buffer[128];
 

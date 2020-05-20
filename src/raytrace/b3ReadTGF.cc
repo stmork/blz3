@@ -388,7 +388,7 @@ b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
 	return true;
 }
 
-b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename) throw(b3WorldException)
+b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 {
 	b3BBox     *bbox  = new b3BBox(BBOX);
 	b3_count    cameras = 0;

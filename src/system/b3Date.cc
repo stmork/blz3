@@ -54,7 +54,7 @@ b3Date::b3Date()
 b3Date::b3Date(
 	unsigned short newDay,
 	unsigned short newMonth,
-	unsigned long  newYear) throw(b3DateException)
+	unsigned long  newYear)
 {
 	if (!b3SetDate(newDay,newMonth,newYear))
 	{
@@ -404,7 +404,7 @@ void b3Date::operator-=(const b3Date &diff)
 	b3SetMode (B3_DT_DIFF);
 }
 
-void b3Date::operator+=(const b3Date &diff) throw(b3DateException)
+void b3Date::operator+=(const b3Date &diff)
 {
 	if ((diff.mode != B3_DT_DIFF) && (mode != B3_DT_DIFF))
 	{

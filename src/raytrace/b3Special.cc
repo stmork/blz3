@@ -728,7 +728,7 @@ b3_bool b3Distribute::b3IsMotionBlur()
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
 
-void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation) throw(b3WorldException)
+void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation)
 {
 	b3_f32       *samples;
 	b3_f64        start,step;

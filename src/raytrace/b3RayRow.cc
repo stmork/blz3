@@ -413,7 +413,7 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 	b3Display *display,
 	const b3_coord   y,
 	const b3_res     xSize,
-	const b3_res     ySize) throw(b3WorldException) :
+	const b3_res     ySize) :
 		b3DistributedRayRow(scene,display,y,xSize,ySize)
 {
 	b3_coord x;

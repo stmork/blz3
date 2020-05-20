@@ -121,7 +121,7 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 	return 0;
 }
 
-void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareException)
+void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 {
 	b3_rt_info *infos;
 	b3TimeSpan  span;
@@ -164,7 +164,7 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs) throw(b3PrepareExce
 	delete [] infos;
 }
 
-void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs) throw(b3PrepareException)
+void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 {
 	b3_rt_info  *infos;
 	b3Animation *anim = b3GetAnimation();
@@ -269,7 +269,7 @@ b3_bool b3Scene::b3PrepareBBoxThread(b3BBox *bbox,void *ptr)
 	return bbox->b3PrepareBBox((b3_scene_preparation *)ptr);
 }
 
-b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize) throw(b3PrepareException)
+b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 {
 	b3Item                *item;
 	b3Nebular             *nebular;

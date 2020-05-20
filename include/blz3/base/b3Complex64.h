@@ -273,7 +273,6 @@ public:
 	}
 
 	inline static b3Complex64 b3Sqrt(const b3Complex64 &a)
-	throw(std::domain_error)
 	{
 		_MM_SET_EXCEPTION_STATE(0);
 		__m128d s = _mm_sqrt_pd(SSE_PD_LOAD(a.v));

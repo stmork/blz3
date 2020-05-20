@@ -664,7 +664,7 @@ protected:
 
 private:
 	void            b3DefineTexture();
-	void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0) throw(b3TxException);
+	void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0);
 	void            b3CreateChess(  b3RenderContext *context,b3Color &bColor,b3Color &wColor);
 	void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
 	void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
