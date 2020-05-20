@@ -22,6 +22,26 @@ AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 #  LDFLAGS="-Ur -Wl,-E"
 #fi
 
+AC_SUBST(BLZ3_IS_LINUX)
+AC_SUBST(BLZ3_USE_CG)
+AC_SUBST(BLZ3_USE_GLUT)
+AC_SUBST(BLZ3_USE_OPENGL)
+AC_SUBST(BLZ3_USE_SSE)
+AC_SUBST(BLZ3_USE_SSE2)
+AC_SUBST(BLZ3_USE_SSE3)
+AC_SUBST(BLZ3_USE_X264)
+AC_SUBST(HAVE_LIBCPPUNIT)
+AC_SUBST(HAVE_MEMALIGN)
+AC_SUBST(HAVE_NEW_OVERLOADING)
+AC_SUBST(HAVE_SSE)
+AC_SUBST(HAVE_SSE2)
+AC_SUBST(HAVE_SSE3)
+AC_SUBST(HAVE_STRCASECMP)
+AC_SUBST(HAVE_STRICMP)
+AC_SUBST(HAVE_STRLCPY)
+AC_SUBST(HAVE_X264_DELAYED_FRAMES)
+AC_SUBST(HAVE_X264_PARAMETER_DEFINITION)
+AC_SUBST(SSE_ALIGNED)
 AC_SUBST(BLZ3_HOME, "$PWD", [This is the Blizzard III home directory])
 AC_SUBST(BLZ3_SYSINC, "$BLZ3_HOME/include_unix", [The Blizzard III system dependend include path])
 AC_SUBST(BLZ3_INCLUDE, "$BLZ3_HOME/include", [The Blizzard III system independend include path])
@@ -43,30 +63,30 @@ AC_TRY_LINK([#include <stdio.h>],[
 #ifndef __linux__
 #error "This is not Linux!"
 #endif
-],[AC_DEFINE([BLZ3_IS_LINUX]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+],[AC_DEFINE([BLZ3_IS_LINUX], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_MSG_CHECKING([for stricmp])
 AC_TRY_LINK([#include <strings.h>],[
 stricmp("small","BIG");
-],[AC_DEFINE([HAVE_STRICMP]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+],[AC_DEFINE([HAVE_STRICMP], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_MSG_CHECKING([for strcasecmp])
 AC_TRY_LINK([#include <strings.h>],[
 strcasecmp("small","BIG");
-],[AC_DEFINE([HAVE_STRCASECMP]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+],[AC_DEFINE([HAVE_STRCASECMP], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_MSG_CHECKING([for strlcpy])
 AC_TRY_LINK([#include <string.h>],[
 char example[16];strlcpy(example,"Example",sizeof(example));
-],[AC_DEFINE([HAVE_STRLCPY]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+],[AC_DEFINE([HAVE_STRLCPY], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_MSG_CHECKING([for strerror])
 AC_TRY_LINK([#include <string.h>],[
 char msg[1024];strerror_r(0,msg,sizeof(msg)));
-],[AC_DEFINE([HAVE_STRERROR]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+],[AC_DEFINE([HAVE_STRERROR], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_CHECK_HEADER([xmmintrin.h],[
-	AC_DEFINE([HAVE_SSE])
+	AC_DEFINE([HAVE_SSE], [], [Description])
 	AC_MSG_CHECKING([for SSE])
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <xmmintrin.h>
@@ -79,12 +99,12 @@ r = _mm_add_ps(a,b);
 // printf ("SSE1 %p %p\n", &a, &b);
 sprintf(result,"%f\n",*((float *)&r));
 	])],
-	[AC_DEFINE([BLZ3_USE_SSE]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([BLZ3_USE_SSE], [], [Description]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
 AC_CHECK_HEADER([emmintrin.h],[
-	AC_DEFINE([HAVE_SSE2])
+	AC_DEFINE([HAVE_SSE2], [], [Description])
 	AC_MSG_CHECKING([for SSE2])
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
@@ -97,12 +117,12 @@ r = _mm_add_pd(a,b);
 // printf ("SSE2 %p %p\n", &a, &b);
 sprintf(result,"%lf\n",*((double *)&r));
 	])],
-	[AC_DEFINE([BLZ3_USE_SSE2]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([BLZ3_USE_SSE2], [], [Description]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
 AC_CHECK_HEADER([pmmintrin.h],[
-	AC_DEFINE([HAVE_SSE3])
+	AC_DEFINE([HAVE_SSE3], [], [Description])
 	AC_MSG_CHECKING([for SSE3])
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
@@ -116,7 +136,7 @@ r = _mm_hadd_pd(a,b);
 // printf ("SSE3 %p %p\n", &a, &b);
 sprintf(result,"%lf\n",*((double *)&r));
 	])],
-	[AC_DEFINE([BLZ3_USE_SSE3]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([BLZ3_USE_SSE3], [], [Description]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
@@ -147,14 +167,14 @@ r = _mm_add_ps(str->a, str->b);
 
 sprintf(result,"%f %d\n",*((float *)&r), str->q);
 	])],
-	[AC_DEFINE([SSE_ALIGNED]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([SSE_ALIGNED], [], [Description]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
 AC_MSG_CHECKING([for memalign])
 AC_TRY_LINK([#include <malloc.h>],[
 memalign(16,10240);
-],[AC_DEFINE([HAVE_MEMALIGN]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+],[AC_DEFINE([HAVE_MEMALIGN], [], [Description]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING([for operator new overloading])
 AC_RUN_IFELSE([AC_LANG_PROGRAM([
@@ -210,7 +230,7 @@ void *operator new (size_t size)
 
 	return (counter == 4) && ((ip & 0xf) == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 ])],
-	[AC_DEFINE([HAVE_NEW_OVERLOADING]) AC_DEFINE([SSE_ALIGNED]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([HAVE_NEW_OVERLOADING], [], [Description]) AC_DEFINE([SSE_ALIGNED], [], [Description]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 
 AC_PATH_XTRA
@@ -226,19 +246,19 @@ AC_CHECK_LIB([jpeg], [main])
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 AC_CHECK_LIB([z], [main])
-AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT]) CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
+AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT], [], [Description]) CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
 
 # Check for OpenGL
 AC_CHECK_HEADER([GL/glut.h],
 	[
-		AC_DEFINE([BLZ3_USE_GLUT])
+		AC_DEFINE([BLZ3_USE_GLUT], [], [Description])
 		GLUTLIBS="$GLUTLIBS -lglut"
 		AC_CHECK_LIB([Xmu], [main])
 	])
-AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
+AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL], [], [Description]) LIBS="$LIBS -lGLU -lGL"])
 
 # Check for nvidia Cg
-AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG])])
+AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG], [], [Description])])
 AC_CHECK_LIB([CgGL], [main])
 
 # Check for OpenEXR
@@ -249,7 +269,7 @@ fi
 
 save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -I$OPENEXR"
-AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
+AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR], [], [Description])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
 # END OpenEXR
 
 AC_CHECK_LIB([Half], [main])
@@ -258,12 +278,12 @@ AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
 
 # Check for DivX
-AC_CHECK_LIB([divxencore], [encore], [AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])])
+AC_CHECK_LIB([divxencore], [encore], [AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX], [], [Description]) DIVXLIBS="$DIVXLIBS -ldivxencore"])])
 
 # Check for x264
-AC_CHECK_LIB([x264], [x264_encoder_encode], [AC_CHECK_HEADER([x264.h],[AC_DEFINE([BLZ3_USE_X264]) X264LIBS="$X264LIBS -lx264"])])
-AC_CHECK_LIB([x264], [x264_param_default_preset], [AC_DEFINE([HAVE_X264_PARAMETER_DEFINITION])])
-AC_CHECK_LIB([x264], [x264_encoder_delayed_frames], [AC_DEFINE([HAVE_X264_DELAYED_FRAMES])])
+AC_CHECK_LIB([x264], [x264_encoder_encode], [AC_CHECK_HEADER([x264.h],[AC_DEFINE([BLZ3_USE_X264], [], [Description]) X264LIBS="$X264LIBS -lx264"])])
+AC_CHECK_LIB([x264], [x264_param_default_preset], [AC_DEFINE([HAVE_X264_PARAMETER_DEFINITION], [], [Description])])
+AC_CHECK_LIB([x264], [x264_encoder_delayed_frames], [AC_DEFINE([HAVE_X264_DELAYED_FRAMES], [], [Description])])
 
 AC_LANG_POP(C++)
 
