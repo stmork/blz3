@@ -78,7 +78,7 @@ b3_bool b3Dir::b3MkDir (const char *Name)
 
 b3Dir::b3Dir()
 {
-	dir       = null;
+	dir       = nullptr;
 	b3Empty();
 }
 
@@ -101,18 +101,18 @@ b3Dir::~b3Dir()
 // Open a directory list
 b3_bool b3Dir::b3OpenDir (const char *open_path)
 {
-	if ((dir = opendir (open_path)) != null)
+	if ((dir = opendir (open_path)) != nullptr)
 	{
 		strcpy (m_Path, open_path);
 	}
-	return dir != null;
+	return dir != nullptr;
 }
 
 b3_path_type b3Dir::b3DirNext (char *name)
 {
 	struct dirent *entry;
 	b3_path_type   type;
-	char           fileName[B3_FILESTRINGLEN];
+	char           filename[B3_FILESTRINGLEN];
 	b3_bool        loop;
 
 	name[0] = 0;
@@ -120,15 +120,15 @@ b3_path_type b3Dir::b3DirNext (char *name)
 	{
 		loop = false;
 		type = B3_NOT_EXISTANT;
-		if ((entry = readdir(dir)) != null)
+		if ((entry = readdir(dir)) != nullptr)
 		{
-			strcpy(name, entry->d_name);
-			b3LinkFileName (fileName,m_Path, name);
-			type = b3Exists (fileName);
+			strncpy(name, entry->d_name, B3_FILESTRINGLEN);
+			b3LinkFileName (filename, m_Path, name);
+			type = b3Exists (filename);
 			if (type == B3_TYPE_DIR)
 			{
-				if (strcmp(name,"..") == 0) loop = true;
-				if (strcmp(name,".")  == 0) loop = true;
+				if (strcmp(name, "..") == 0) loop = true;
+				if (strcmp(name, ".")  == 0) loop = true;
 			}
 		}
 	}
@@ -142,7 +142,7 @@ void b3Dir::b3CloseDir ()
 	if (dir)
 	{
 		closedir (dir);
-		dir = null;
+		dir = nullptr;
 		b3Empty();
 	}
 }
@@ -177,7 +177,7 @@ void b3Path::b3Correct(const char *input,char *output)
 {
 	b3_index i,len;
 
-	assert((input != null) && (output != null));
+	assert((input != nullptr) && (output != nullptr));
 	len = strlen(input);
 	for (i = 0;i < len;i++)
 	{
@@ -201,18 +201,32 @@ void b3Path::b3LinkFileName(
 	const char *FilePath,
 	const char *FileName)
 {
-	b3_size i,len;
+	b3_size i, len;
 
-	B3_ASSERT(File!=null);
-	snprintf(File,B3_FILESTRINGLEN,
+	B3_ASSERT(File != nullptr);
+
+#if 1
+	File[0] = 0;
+	if (FilePath != nullptr)
+	{
+		strncat(File, FilePath, B3_FILESTRINGLEN);
+	}
+	if (FileName != nullptr)
+	{
+		strncat(File, "/", B3_FILESTRINGLEN);
+		strncat(File, FileName, B3_FILESTRINGLEN);
+	}
+#else	
+	snprintf(File, B3_FILESTRINGLEN,
 			 "%s%s%s",
-			 FilePath != null ? FilePath : "",
-			 FileName != null ? "/" : "",
-			 FileName != null ? FileName : "");
+			 FilePath != nullptr ? FilePath : "",
+			 FileName != nullptr ? "/" : "",
+			 FileName != nullptr ? FileName : "");
+#endif
 
 	// Convert Windows path to to something useful
 	len = strlen(File);
-	for (i = 0;i < len;i++)
+	for (i = 0; i < len; i++)
 	{
 		if (File[i] == '\\')
 		{
@@ -241,7 +255,7 @@ void b3Path::b3SplitFileName(
 	b3_size Length,i;
 	b3_bool Dir=false;
 
-	if (File == null)
+	if (File == nullptr)
 	{
 		return;
 	}
@@ -304,12 +318,12 @@ void b3Path::b3ParentName(
 	b3_index i;
 	b3_count len;
 
-	assert((file != null) && (parent != null));
+	assert((file != nullptr) && (parent != nullptr));
 
 	// Source is a file so split directory first
 	if (b3Dir::b3Exists(file) == B3_TYPE_FILE)
 	{
-		b3SplitFileName (file,actDir,null);
+		b3SplitFileName (file, actDir, nullptr);
 	}
 	else
 	{
@@ -336,7 +350,7 @@ void b3Path::b3ParentName(
 
 	// Copy to destination if available else
 	// overwrite source
-	strcpy (parent != null ? parent : (char *)file,actDir);
+	strcpy (parent != nullptr ? parent : (char *)file,actDir);
 }
 
 // Non static one...
@@ -365,7 +379,7 @@ void b3Path::b3RemoveExt(const char *name,char *output)
 	char    actName[B3_FILESTRINGLEN];
 	b3_size i = 0;
 
-	assert((name != null) && (output != null));
+	assert((name != nullptr) && (output != nullptr));
 	b3Path::b3SplitFileName (name,actPath,actName);
 	while (actName[i] != 0)
 	{
@@ -407,7 +421,7 @@ void b3Path::b3ExtractExt(const char *filename,char *ext)
 	b3_index i;
 	b3_count len;
 
-	b3SplitFileName (filename,null,actName);
+	b3SplitFileName (filename, nullptr, actName);
 	len = strlen(actName);
 	for (i = len - 1;i >= 0;i--)
 	{
