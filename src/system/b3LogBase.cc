@@ -65,7 +65,6 @@ b3_bool b3LogBase::b3OpenLogFile()
 		}
 		else
 		{
-			fputs   (m_Message, m_Out);
 			fprintf (stderr,
 					"Cannot open log file %s\n"
 					"Reason: %s\n"
