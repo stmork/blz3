@@ -119,8 +119,8 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL( 3.0,  b3Vector::b3Length(&bd));
 	CPPUNIT_ASSERT_EQUAL( 9.0,  b3Vector::b3QuadLength(&bd));
 	CPPUNIT_ASSERT_EQUAL( 3.0,  b3Vector::b3Normalize(&bd));
-	CPPUNIT_ASSERT_EQUAL( 1.0,  b3Vector::b3Length(&bd));
-	CPPUNIT_ASSERT_EQUAL( 1.0,  b3Vector::b3Normalize(&bd, 6.0));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0,  b3Vector::b3Length(&bd), DELTA);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0,  b3Vector::b3Normalize(&bd, 6.0), DELTA);
 	CPPUNIT_ASSERT_EQUAL( 6.0,  b3Vector::b3Length(&bd));
 
 	CPPUNIT_ASSERT_EQUAL(&as,  b3Vector::b3Init(&as, 1.0, -3.0, -4.0));

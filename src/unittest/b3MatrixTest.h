@@ -36,6 +36,8 @@ class b3MatrixTest : public CppUnit::TestFixture
 
 	b3_matrix    am, bm, cm, dm;
 
+	constexpr static double DELTA = 0.0000001;
+
 	CPPUNIT_TEST_SUITE(b3MatrixTest);
 	CPPUNIT_TEST(testVector);
 	CPPUNIT_TEST(testMatrix);

@@ -31,6 +31,8 @@ template<typename T, b3_loop dim> class b3VectorTest : public CppUnit::TestFixtu
 {
 	typedef b3VectorTemplate<T, dim> VECTOR;
 
+	constexpr static T DELTA = 0.00001;
+
 	VECTOR as, bs, cs, ds;
 
 	CPPUNIT_TEST_SUITE(b3VectorTest);
@@ -92,25 +94,25 @@ public:
 		bs.b3Init(2.0, -1.0, -2.0);
 		
 		b3PrintF(B3LOG_FULL, "b3SMul()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>(-6.0),   VECTOR::b3SMul(as, bs));
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(-6.0,  VECTOR::b3SMul(as, bs), DELTA);
 		
 		b3PrintF(B3LOG_FULL, "b3Length()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 3.0),   bs.b3Length());
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(3.0,   bs.b3Length(), DELTA);
 		
 		b3PrintF(B3LOG_FULL, "b3QuadLength()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 9.0),   bs.b3QuadLength());
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(9.0,   bs.b3QuadLength(), DELTA);
 		
 		b3PrintF(B3LOG_FULL, "b3Normalize()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 3.0),   bs.b3Normalize());
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(3.0,   bs.b3Normalize(), DELTA);
 		
 		b3PrintF(B3LOG_FULL, "b3Length()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 1.0),   bs.b3Length());
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,   bs.b3Length(), DELTA);
 		
 		b3PrintF(B3LOG_FULL, "b3Normalize()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 1.0),   bs.b3Normalize( 6.0));
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,   bs.b3Normalize( 6.0), DELTA);
 		
 		b3PrintF(B3LOG_FULL, "b3Length()\n");
-		CPPUNIT_ASSERT_EQUAL(static_cast<T>( 6.0),   bs.b3Length());
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(6.0,   bs.b3Length(), DELTA);
 
 		b3PrintF(B3LOG_FULL, "b3Init()\n");
 		as.b3Init( 1.0, -3.0, -4.0);
