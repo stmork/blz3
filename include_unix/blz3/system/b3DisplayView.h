@@ -33,12 +33,14 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef HAVE_LIBX11
 #include <X11/Intrinsic.h>
 #include <X11/Shell.h>
 #include <X11/Xos.h>
 #include <X11/Xutil.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -81,12 +83,14 @@ class b3DisplayView : public b3Display
 	// Some X values
 	b3_bool         m_Opened;
 	b3_bool         m_Closed;
+#ifdef HAVE_LIBX11
 	Display        *m_Display;
 	int             m_Screen;
 	Window          m_Window;
 	Colormap        m_Colormap;
 	Pixmap          m_Image;
 	GC              m_GC;
+#endif
 
 public:
 	/**
@@ -118,6 +122,7 @@ public:
 	void                b3Wait();
 
 private:
+#ifdef HAVE_LIBX11
 	void         b3RefreshRow(const b3_coord y);
 
 	void         b3Open(const b3_res xSize, const b3_res ySize);
@@ -126,6 +131,8 @@ private:
 	static Bool         b3SetPredicate(Display *display,XEvent *event,char *buffer);
 	void         b3FirstDrawing();
 	void         b3RefreshAll();
+#endif
 };
 
 #endif
+

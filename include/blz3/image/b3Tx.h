@@ -25,8 +25,10 @@
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3List.h"
 
-#include "tiff.h"
-#include "tiffio.h"
+#ifdef HAVE_LIBTIFF
+#	include "tiff.h"
+#	include "tiffio.h"
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -1114,6 +1116,7 @@ private:
 	void           b3BuildRow (b3_count *row,b3_u08 *rle,b3_count codeNum,b3_count byteNum);
 	static const b3_f64  b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
 
+#ifdef HAVE_LIBTIFF
 	// b3TxLoadTIFF.cc
 	const b3_result b3LoadTIFF (const char *ImageName);
 	const b3_result b3LoadTIFF (const char *ImageName,
@@ -1139,6 +1142,7 @@ private:
 	static toff_t  b3SizeProc( thandle_t fd);
 	static int     b3MMapProc( thandle_t fd, tdata_t* pbase, toff_t* psize);
 	static void    b3UnmapProc(thandle_t fd, tdata_t base, toff_t size);
+#endif
 
 	// b3TxScale.cc (color indexing)
 	void           b3ColorGrid();

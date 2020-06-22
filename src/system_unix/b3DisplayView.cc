@@ -223,14 +223,18 @@ public:
 *************************************************************************/
 
 static b3Mutex  display_mutex;
+#ifdef HAVE_LIBX11
 static Colormap cmap;
+#endif
 static b3_count cmap_count;
 static long     count = READY;
 
 b3DisplayView::b3DisplayView(const char *title) : b3Display(title)
 {
 	m_Title = (char *)title;
+#ifdef HAVE_LIBX11
 	b3Open(m_xMax,m_yMax);
+#endif
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
 			  m_Title,
 			  m_xs,m_ys);
@@ -242,7 +246,9 @@ b3DisplayView::b3DisplayView(
 	const char       *title) : b3Display(xSize,ySize,title)
 {
 	m_Title = (char *)title;
+#ifdef HAVE_LIBX11
 	b3Open(xSize,ySize);
+#endif
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
 			  m_Title,
 			  m_xs,m_ys);
@@ -254,17 +260,20 @@ b3DisplayView::~b3DisplayView()
 	{
 		delete m_Pixel;
 	}
+#ifdef HAVE_LIBX11
 	b3FreeColormap();
 	XFreeGC       (m_Display,m_GC);
 	XFreePixmap   (m_Display,m_Image);
 	XDestroyWindow(m_Display,m_Window);
 	XCloseDisplay (m_Display);
+#endif
 }
 
 void b3DisplayView::b3Open(
 	const b3_res xSize,
 	const b3_res ySize)
 {
+#ifdef HAVE_X11
 	XGCValues      Values;
 	XEvent         report;
 	b3_bool        Loop = true;
@@ -361,10 +370,12 @@ void b3DisplayView::b3Open(
 		}
 	}
 	while (Loop);
+#endif
 }
 
 b3_bool b3DisplayView::b3CreateColormap ()
 {
+#ifdef HAVE_LIBX11
 	XVisualInfo *info;
 	XVisualInfo  temp;
 	b3_bool      result = false;
@@ -472,6 +483,7 @@ b3_bool b3DisplayView::b3CreateColormap ()
 			result     = true;
 		}
 	}
+#endif
 	return result;
 }
 
