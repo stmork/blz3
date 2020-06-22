@@ -161,8 +161,12 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -s size   image size definition\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -g        TGA image saving\n");
+#ifdef HAVE_LIBTIFF
 		b3PrintF(B3LOG_NORMAL,"  -i        TIFF image saving\n");
+#endif
+#ifdef HAVE_LIBJPEG
 		b3PrintF(B3LOG_NORMAL,"  -j        JPEG image saving (default)\n");
+#endif
 		b3PrintF(B3LOG_NORMAL,"  -r        RGB8 image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -p        PostScript image saving\n");
 #ifdef BLZ3_USE_OPENEXR

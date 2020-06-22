@@ -131,7 +131,9 @@ int main(int argc,char *argv[])
 	create(img);
 	if (imgname != null)
 	{
+#ifdef HAVE_LIBJPEG
 		img.b3SaveJPEG(imgname);
+#endif
 	}
 
 	return EXIT_SUCCESS;

@@ -131,7 +131,7 @@ public:
 	 */
 	static inline void b3Homogenize(b3_vector4D *vector)
 	{
-		register b3_f32 w;
+		b3_f32 w;
 
 		B3_ASSERT(vector->w != 0);
 		w = 1.0 / vector->w;

@@ -25,6 +25,8 @@
 
 #include <math.h>
 
+#ifdef HAVE_LIBTIFF
+
 /*************************************************************************
 **                                                                      **
 **                        b3Tx saving TIFFs                             **
@@ -413,3 +415,5 @@ const b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 	}
 	return B3_OK;
 }
+#endif
+

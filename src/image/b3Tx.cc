@@ -45,6 +45,7 @@ b3_bool b3Tx::m_ErrorHandlerInstalled = false;
 **                                                                      **
 *************************************************************************/
 
+#ifdef HAVE_LIBTIFF
 void b3Tx::b3TIFFErrorHandler(
 	const char *module,
 	const char *fmt,
@@ -66,6 +67,7 @@ void b3Tx::b3TIFFWarnHandler(
 	vsnprintf (message,sizeof(message),fmt,args);
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);
 }
+#endif
 
 b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 {
@@ -91,8 +93,10 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 	// set TIFF error und warning handler
 	if (!m_ErrorHandlerInstalled)
 	{
+#ifdef HAVE_LIBTIFF
 		TIFFSetErrorHandler   (b3TIFFErrorHandler);
 		TIFFSetWarningHandler (b3TIFFWarnHandler);
+#endif
 		m_ErrorHandlerInstalled = true;
 	}
 #ifdef VERBOSE

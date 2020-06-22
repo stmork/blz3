@@ -510,7 +510,7 @@ public:
 	B3_ITEM_INIT(b3Sphere); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Sphere); //!< This constructor handles deserialization.
 
-	void    b3StoreShape();
+	void    b3StoreShape() override;
 	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
 	void    b3GetStencilBoundInfo(b3_stencil_bound *info) override;
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar) override;

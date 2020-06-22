@@ -992,7 +992,7 @@ public:
 		const b3_vector *from,
 		const b3_vector *to)
 	{
-		register b3_f64 x,y,z;
+		b3_f64 x,y,z;
 
 		x = to->x - from->x;
 		y = to->y - from->y;
@@ -1013,7 +1013,7 @@ public:
 		const b3_vector64 *from,
 		const b3_vector64 *to)
 	{
-		register b3_f64 x,y,z;
+		b3_f64 x,y,z;
 
 		x = to->x - from->x;
 		y = to->y - from->y;
@@ -1148,7 +1148,7 @@ public:
 			m    += 4;
 		}
 #else
-		register b3_f32 x,y,z;
+		b3_f32 x,y,z;
 
 		x = vector->x;
 		y = vector->y;
@@ -1194,7 +1194,7 @@ public:
 			m    += 4;
 		}
 #else
-		register b3_f64 x,y,z;
+		b3_f64 x,y,z;
 
 		x = vector->x;
 		y = vector->y;

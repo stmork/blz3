@@ -175,10 +175,14 @@ private:
 		}
 		else
 		{
+#ifdef HAVE_LIBJPEG
 			if (image->b3SaveJPEG(full_normal) != B3_OK)
 			{
 				return false;
 			}
+#else
+			return false;
+#endif
 			b3PrintF(B3LOG_NORMAL,"   %s (save)\n",(const char *)full_normal);
 		}
 		return true;
@@ -215,7 +219,11 @@ private:
 					try
 					{
 						small.b3ScaleToGrey(&normal);
+#ifdef HAVE_LIBJPEG
 						result = small.b3SaveJPEG(full_small) == B3_OK;
+#else
+						result = false;
+#endif
 					}
 					catch (b3TxException &t)
 					{

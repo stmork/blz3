@@ -26,6 +26,8 @@
 
 #include "b3TxTIFF.h"
 
+#ifdef HAVE_LIBTIFF
+
 /*************************************************************************
 **                                                                      **
 **                        memory routines for TIFF-library              **
@@ -513,3 +515,6 @@ const b3_result b3Tx::b3LoadTIFF(
 
 	return B3_OK;
 }
+
+#endif
+

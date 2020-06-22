@@ -46,7 +46,7 @@ void b3Shape2::b3Normal(b3_ray *ray)
 
 void b3Cylinder::b3Normal(b3_ray *ray)
 {
-	register double	x,y;
+	double	x,y;
 
 	x = m_DirLen[1] * ray->polar.m_ObjectPolar.x;
 	y = m_DirLen[0] * ray->polar.m_ObjectPolar.y;

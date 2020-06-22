@@ -94,7 +94,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 		return b3ParseGIF (buffer);
 	}
 
-
+#ifdef HAVE_LIBTIFF
 	// TIFF
 	TIFF = (HeaderTIFF *)buffer;
 	if ((TIFF->TypeCPU == B3_BIG_ENDIAN) || (TIFF->TypeCPU == B3_LITTLE_ENDIAN))
@@ -112,7 +112,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 		return b3LoadTIFF(b3Name(),buffer,buffer_size);
 #endif
 	}
-
+#endif
 
 	// PPM6
 	pos      = 0;
@@ -409,10 +409,14 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 
 		switch (filetype)
 		{
+#ifdef HAVE_LIBJPEG
 		case FT_JPEG:
 			return b3SaveJPEG(filename);
+#endif
+#ifdef HAVE_LIBTIFF
 		case FT_TIFF:
 			return b3SaveTIFF(filename);
+#endif
 		case FT_TGA:
 			return b3SaveTGA(filename);
 		case FT_RGB8:

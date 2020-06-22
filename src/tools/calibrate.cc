@@ -193,7 +193,9 @@ int main(int argc,char *argv[])
 		calibrate->b3Adjust(image);
 		snprintf(name,sizeof(name),"%08x.tif",(unsigned)++count);
 		file.b3LinkFileName(dest,name);
+#ifdef HAVE_LIBTIFF
 		image.b3SaveTIFF(file);
+#endif
 		b3PrintF(B3LOG_NORMAL,"%s\n",(const char *)file);
 	}
 	return EXIT_SUCCESS;

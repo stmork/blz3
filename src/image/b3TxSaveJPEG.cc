@@ -29,6 +29,7 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef HAVE_LIBJPEG
 #ifdef GLOBAL
 #undef GLOBAL /* ausser JPEG brauchen wir sowieso nur noch ANSI-C */
 #endif
@@ -243,3 +244,5 @@ const b3_result b3Tx::b3SaveJPEG(const char *filename,b3_u32 quality)
 	info.b3Write();
 	return B3_OK;
 }
+#endif
+

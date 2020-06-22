@@ -550,8 +550,8 @@ inline void b3Noise::b3MarbleCurve (
 	b3_vector *result,
 	const b3_f64     x)
 {
-	register b3_f32  *knots;
-	register b3_f64  q;
+	b3_f32  *knots;
+	b3_f64  q;
 
 	knots = Spline->m_Knots;
 	q =         x  * knots[Spline->m_Degree] +

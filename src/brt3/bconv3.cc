@@ -76,7 +76,9 @@ static void convert_tiff(
 		{
 			scaled.b3Scale(tx);
 		}
+#ifdef HAVE_LIBTIFF
 		scaled.b3SaveTIFF(out);
+#endif
 		tx->b3FreeTx();
 	}
 }
@@ -124,7 +126,9 @@ static void convert_jpeg(
 		{
 			scaled.b3Scale(tx);
 		}
+#ifdef HAVE_LIBJPEG
 		scaled.b3SaveJPEG(out,quality);
+#endif
 		tx->b3FreeTx();
 	}
 }

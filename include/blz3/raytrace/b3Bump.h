@@ -385,8 +385,8 @@ class B3_PLUGIN b3BumpOcean : public b3Bump, public b3OceanWave, public b3Scalin
 public:
 	B3_ITEM_INIT(b3BumpOcean);
 	B3_ITEM_LOAD(b3BumpOcean);
-	void     b3Write();
-	b3_bool  b3Prepare(b3_preparation_info *info);
+	void     b3Write() override;
+	b3_bool  b3Prepare(b3_preparation_info *info) override;
 	char    *b3GetName();
 
 public:

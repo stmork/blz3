@@ -41,6 +41,7 @@
 #undef FAR
 #endif
 
+#ifdef HAVE_LIBJPEG
 #include <jpeglib.h>
 #include <setjmp.h>
 
@@ -248,3 +249,5 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 }
 
 #endif
+#endif
+

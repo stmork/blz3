@@ -81,7 +81,11 @@ int main (int argc,char *argv[])
 					if (half.b3AllocTx(xSize, ySize, 24))
 					{
 						half.b3ScaleToGrey(&image);
+#ifdef HAVE_LIBJPEG
 						half.b3SaveJPEG(argv[i]);
+#else
+						// TODO: Save as TGA image instead!
+#endif
 					}
 				}
 			}

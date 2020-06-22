@@ -85,10 +85,10 @@ void b3TIFF::b3ChangeTag (
 	void           *PtrTIFF,
 	struct TagTIFF *DataTag)
 {
-	register short *Short;
-	register char  *TIFF = (char *)PtrTIFF;
-	register long  *Long;
-	register long   i,TagSize;
+	short *Short;
+	char  *TIFF = (char *)PtrTIFF;
+	long  *Long;
+	long   i,TagSize;
 
 	b3Endian::b3ChangeEndian16	(&DataTag->Code);
 	b3Endian::b3ChangeEndian16	(&DataTag->Type);
@@ -146,10 +146,10 @@ void b3TIFF::b3ChangeTag (
 
 void b3TIFF::b3ChangeTIFF (struct HeaderTIFF *TIFF)
 {
-	register long            offset,i,Tags;
-	register b3_u08  *Data;
-	b3_u16 *Shorts;
-	unsigned long  *Longs;
+	long            offset,i,Tags;
+	b3_u08 *        Data;
+	b3_u16 *        Shorts;
+	unsigned long * Longs;
 
 	b3Endian::b3ChangeEndian16 (&TIFF->VersionTIFF);
 	b3Endian::b3ChangeEndian32 (&TIFF->FirstTag);
@@ -785,10 +785,10 @@ b3TIFF::b3TIFF() : b3Link<b3TIFF>(sizeof(b3TIFF),CLASS_TIFF_HEAD)
 
 b3TIFF::b3TIFF(struct HeaderTIFF *TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF),CLASS_TIFF_HEAD)
 {
-	register long               offset,Tags;
-	register b3_u08     *Data;
-	b3_u16    *Shorts;
-	b3TIFF_Dir      *dirTIFF;
+	long         offset,Tags;
+	b3_u08 *     Data;
+	b3_u16 *     Shorts;
+	b3TIFF_Dir * dirTIFF;
 
 	// convert TIFF saved on other CPU type
 #if THISPROCESSOR == INTEL
@@ -933,9 +933,9 @@ static b3_bool GetIFW (
 	void           *TIFF,
 	struct TagTIFF *DataTag)
 {
-	register char   *Char  = (char *)TIFF;
-	register b3_bool    image = false;
-	register long    value,size,index = 8,type,len,subtype,offset,i;
+	char *  Char  = (char *)TIFF;
+	b3_bool image = false;
+	long    value,size,index = 8,type,len,subtype,offset,i;
 	time_t  tPoint;
 	char    text[12];
 
@@ -1340,7 +1340,7 @@ static b3_bool CreateGrayTIFFPalette (
 	struct HeaderTIFF	*TIFF,
 	struct TagTIFF		*DataTag)
 {
-	register unsigned long *Palette,Color,i,Step,Colors,Value;
+	unsigned long *Palette,Color,i,Step,Colors,Value;
 
 	Value = GetTIFFValue (TIFF,DataTag,0);
 	if (Value >= 2) return true;
@@ -1395,8 +1395,8 @@ static b3_bool GetTIFFPalette (
 	void           *TIFF,
 	struct TagTIFF *ColorTag)
 {
-	register unsigned long *Palette;
-	register long           Colors,i,Index = 0;
+	unsigned long *Palette;
+	long           Colors,i,Index = 0;
 
 	Colors  = b3Endian::b3Get32 (&ColorTag->Data[0]) / 3;
 	Palette = Texture->Palette = (unsigned long *)AllocTextureMem (Texture,Colors*4);
@@ -1423,10 +1423,10 @@ static long UnCodeTIFF (
 	long            RowsPerStrip,
 	long            PixelSamples)
 {
-	register unsigned long *LongData;
-	register b3_u08 *Data;
-	register b3_u08 *StripPtr;
-	register unsigned long  Bytes,Strip,Size,i,Value,OffsetSize;
+	unsigned long * LongData;
+	b3_u08 *        Data;
+	b3_u08 *        StripPtr;
+	unsigned long   Bytes,Strip,Size,i,Value,OffsetSize;
 
 	switch (Texture->Planes)
 	{
@@ -1567,12 +1567,12 @@ long ParseTIFF (
 	struct HeaderTIFF    *TIFF,
 	unsigned long         Size)
 {
-	register long            offset,i,Tags,Compression = 0;
-	register long            PixelSamples = 0xabadcafe;
-	register struct TagTIFF *ThisTag;
-	register b3_u08  *Data;
-	b3_u16 *Shorts;
-	unsigned long   sep = TAF_SEPARATOR;
+	long             offset,i,Tags,Compression = 0;
+	long             PixelSamples = 0xabadcafe;
+	struct TagTIFF * ThisTag;
+	b3_u08 *         Data;
+	b3_u16 *         Shorts;
+	unsigned long    sep = TAF_SEPARATOR;
 
 	offset = TIFF->FirstTag;
 

@@ -374,9 +374,17 @@ void b3OceanWave::b3DumpImages()
 
 	m_FFT.b3FFT2D();
 	m_FFT.b3GetSpectrum(&tx, 1);
+#ifdef HAVE_LIBJPEG
 	tx.b3SaveJPEG("ow_spectrum.jpg");
+#else
+	// TODO: Save TGA image instead.
+#endif
 	m_FFT.b3IFFT2D();
 
 	m_FFT.b3GetBuffer(&tx, 0.001);
+#ifdef HAVE_LIBJPEG
 	tx.b3SaveJPEG("ow_buffer.jpg");
+#else
+	// TODO: Save TGA image instead.
+#endif
 }

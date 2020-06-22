@@ -1047,8 +1047,8 @@ b3_bool b3CSGCylinder::b3Intersect(
 	b3_shape_intervals *interval,
 	b3_line64          *BTLine)
 {
-	register   double l1,l2,z,Discriminant,a,p,x,y;
-	register   bool   check;
+	double l1,l2,z,Discriminant,a,p,x,y;
+	bool   check;
 
 	interval->m_Count = 0;
 
