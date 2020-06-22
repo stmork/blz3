@@ -261,6 +261,129 @@ b3DisplayView::~b3DisplayView()
 	XCloseDisplay (m_Display);
 }
 
+void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &Color)
+{
+#ifdef HAVE_LIBX11
+	b3Display::b3PutPixel(x,y,Color);
+
+	if (m_Opened)
+	{
+		b3CriticalSection lock(m_Mutex);
+
+		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel (Color,x,y));
+		XDrawPoint     (m_Display,m_Window,m_GC,x,y);
+		XDrawPoint     (m_Display,m_Image, m_GC,x,y);
+	}
+#endif
+}
+
+b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
+{
+#ifdef HAVE_LIBX11
+	b3_bool	 loop = true,result=false,really_ask;
+	XEvent	 report;
+
+	// CRITICAL SECTION
+	{
+		b3CriticalSection lock(display_mutex);
+
+		if (--count > 0)
+		{
+			really_ask = false;
+		}
+		else
+		{
+			count      = READY;
+			really_ask = true;
+		}
+	}
+
+	if (!really_ask)
+	{
+		return false;
+	}
+
+	do	/* check pending events */
+	{
+		// CRITICAL SECTION
+		{
+			b3CriticalSection lock(m_Mutex);
+
+			if (XPending  (m_Display) <= 0)
+			{
+				return result;
+			}
+			XCheckIfEvent (m_Display,&report,&b3SetPredicate,0);
+		}
+
+		switch (report.type)
+		{
+		case Expose :
+			if (report.xexpose.window == m_Window)
+			{
+				b3FirstDrawing ();
+				b3RefreshAll   ();
+			}
+			break;
+
+		case ButtonPress:
+			m_Closed = true;
+			break;
+
+		case KeyPress :
+			result   = true;
+			m_Closed = true;
+			// Walk through!
+		default :
+			loop   = false;
+			break;
+		}
+	}
+	while (loop);
+
+	return result;
+#else
+	return false;
+#endif
+}
+
+void b3DisplayView::b3Wait()
+{
+#ifdef HAVE_LIBX11
+	b3_bool	 loop = true;
+	XEvent	 report;
+
+	if (m_Closed)
+	{
+		// If already marked as closed.
+		return;
+	}
+
+	do
+	{
+		XNextEvent (m_Display,&report);
+		switch (report.type)
+		{
+		case Expose :
+			if (report.xexpose.window == m_Window)
+			{
+				b3FirstDrawing ();
+				b3RefreshAll   ();
+			}
+			break;
+
+		case ButtonPress :
+		case KeyPress :
+			loop = false;
+			m_Closed = true;
+			break;
+		}
+	}
+	while (loop);
+#endif
+}
+
+#ifdef HAVE_LIBX11
 void b3DisplayView::b3Open(
 	const b3_res xSize,
 	const b3_res ySize)
@@ -506,9 +629,11 @@ inline void b3DisplayView::b3RefreshAll ()
 				   m_xs,m_ys,0,0);
 	}
 }
+#endif
 
 void b3DisplayView::b3PutRow(const b3Row *row)
 {
+#ifdef HAVE_LIBX11
 	b3_coord y = row->m_y;
 
 	b3Display::b3PutRow(row);
@@ -519,10 +644,12 @@ void b3DisplayView::b3PutRow(const b3Row *row)
 		b3RefreshRow(y);
 		XCopyArea (m_Display,m_Image,m_Window,m_GC,0,y,m_xs,1,0,y);
 	}
+#endif
 }
 
 void b3DisplayView::b3PutTx(b3Tx *tx)
 {
+#ifdef HAVE_LIBX11
 	b3_coord y;
 
 	b3Display::b3PutTx(tx);
@@ -533,8 +660,10 @@ void b3DisplayView::b3PutTx(b3Tx *tx)
 		b3RefreshRow(y);
 	}
 	XCopyArea (m_Display,m_Image,m_Window,m_GC,0,0,m_xs,m_ys,0,0);
+#endif
 }
 
+#ifdef HAVE_LIBX11
 inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 {
 	b3_color *ptr = &m_Buffer[y * m_xMax];
@@ -547,121 +676,8 @@ inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 	}
 }
 
-void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &Color)
-{
-	b3Display::b3PutPixel(x,y,Color);
-
-	if (m_Opened)
-	{
-		b3CriticalSection lock(m_Mutex);
-
-		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel (Color,x,y));
-		XDrawPoint     (m_Display,m_Window,m_GC,x,y);
-		XDrawPoint     (m_Display,m_Image, m_GC,x,y);
-	}
-}
-
 Bool b3DisplayView::b3SetPredicate (Display *display,XEvent *event, char *buffer)
 {
 	return True;
 }
-
-b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
-{
-	b3_bool	 loop = true,result=false,really_ask;
-	XEvent	 report;
-
-	// CRITICAL SECTION
-	{
-		b3CriticalSection lock(display_mutex);
-
-		if (--count > 0)
-		{
-			really_ask = false;
-		}
-		else
-		{
-			count      = READY;
-			really_ask = true;
-		}
-	}
-
-	if (!really_ask)
-	{
-		return false;
-	}
-
-	do	/* check pending events */
-	{
-		// CRITICAL SECTION
-		{
-			b3CriticalSection lock(m_Mutex);
-
-			if (XPending  (m_Display) <= 0)
-			{
-				return result;
-			}
-			XCheckIfEvent (m_Display,&report,&b3SetPredicate,0);
-		}
-
-		switch (report.type)
-		{
-		case Expose :
-			if (report.xexpose.window == m_Window)
-			{
-				b3FirstDrawing ();
-				b3RefreshAll   ();
-			}
-			break;
-
-		case ButtonPress:
-			m_Closed = true;
-			break;
-
-		case KeyPress :
-			result   = true;
-			m_Closed = true;
-			// Walk through!
-		default :
-			loop   = false;
-			break;
-		}
-	}
-	while (loop);
-
-	return result;
-}
-
-void b3DisplayView::b3Wait()
-{
-	b3_bool	 loop = true;
-	XEvent	 report;
-
-	if (m_Closed)
-	{
-		// If already marked as closed.
-		return;
-	}
-
-	do
-	{
-		XNextEvent (m_Display,&report);
-		switch (report.type)
-		{
-		case Expose :
-			if (report.xexpose.window == m_Window)
-			{
-				b3FirstDrawing ();
-				b3RefreshAll   ();
-			}
-			break;
-
-		case ButtonPress :
-		case KeyPress :
-			loop = false;
-			m_Closed = true;
-			break;
-		}
-	}
-	while (loop);
-}
+#endif
