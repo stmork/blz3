@@ -17,6 +17,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_RAYTRACE_FACTORY_H
 #define B3_RAYTRACE_FACTORY_H
 

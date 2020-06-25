@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_RAYTRACE_SHAPE_H
 #define B3_RAYTRACE_SHAPE_H
 

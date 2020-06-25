@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_RAYTRACE_BBOX_H
 #define B3_RAYTRACE_BBOX_H
 

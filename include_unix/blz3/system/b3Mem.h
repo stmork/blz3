@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_SYSTEM_MEM_H
 #define B3_SYSTEM_MEM_H
 

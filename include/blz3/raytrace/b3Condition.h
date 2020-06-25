@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_RAYTRACE_CONDITION_H
 #define B3_RAYTRACE_CONDITION_H
 

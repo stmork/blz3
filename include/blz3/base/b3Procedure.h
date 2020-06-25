@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_BASE_NOISE_H
 #define B3_BASE_NOISE_H
 

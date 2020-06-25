@@ -17,6 +17,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_CONFIG_H
 #define B3_CONFIG_H
 

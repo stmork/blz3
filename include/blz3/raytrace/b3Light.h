@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_RAYTRACE_LIGHT_H
 #define B3_RAYTRACE_LIGHT_H
 

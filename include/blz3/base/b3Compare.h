@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_BASE_COMPARE_H
 #define B3_BASE_COMPARE_H
 

@@ -17,6 +17,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_PLUGINDEF_H
 #define B3_PLUGINDEF_H
 

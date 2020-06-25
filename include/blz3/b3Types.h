@@ -17,6 +17,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_TYPES_H
 #define B3_TYPES_H
 

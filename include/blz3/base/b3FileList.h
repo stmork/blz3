@@ -17,6 +17,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_BASE_FILELIST_H
 #define B3_BASE_FILELIST_H
 

@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_IMAGE_AUX_H
 #define B3_IMAGE_AUX_H
 

@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_BASE_WOOD_H
 #define B3_BASE_WOOD_H
 

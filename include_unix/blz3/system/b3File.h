@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_SYSTEM_FILE_H
 #define B3_SYSTEM_FILE_H
 

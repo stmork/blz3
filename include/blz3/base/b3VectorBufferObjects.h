@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_BASE_VECTORBUFFEROBJECTS_H
 #define B3_BASE_VECTORBUFFEROBJECTS_H
 
