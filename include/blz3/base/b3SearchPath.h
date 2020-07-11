@@ -35,17 +35,17 @@ public:
 	/**
 	 * This copy constructor initializes this instance with a path.
 	 */
-	b3PathEntry(const b3PathEntry &src);
+	b3PathEntry(const b3PathEntry & src);
 
 	/**
 	 * This constructor initializes this instance with a path.
 	 */
-	b3PathEntry(const b3PathEntry *src);
+	b3PathEntry(const b3PathEntry * src);
 
 	/**
 	 * This constructor initializes this instance with a path.
 	 */
-	b3PathEntry(const char *path);
+	b3PathEntry(const char * path);
 };
 
 /**
@@ -76,7 +76,7 @@ public:
 	 *
 	 * @param path The new search path.
 	 */
-	void     b3AddPath(const char *path);
+	void     b3AddPath(const char * path);
 
 	/**
 	 * This deletes all entries from the path search list.
@@ -92,7 +92,7 @@ public:
 	 * @return True if a full qualified file name was found.
 	 * @see b3Path::b3LinkFileName
 	 */
-	b3_bool  b3IsValid(const char *testname,char *fullname);
+	b3_bool  b3IsValid(const char * testname, char * fullname);
 
 	/**
 	 * This method cuts the search path from the full qualified name if any. If no
@@ -102,7 +102,7 @@ public:
 	 * @param shortname The cut name.
 	 * @return True if a mathing search path was found.
 	 */
-	b3_bool  b3CutName(const char *fullname,char *shortname);
+	b3_bool  b3CutName(const char * fullname, char * shortname);
 };
 
 #endif

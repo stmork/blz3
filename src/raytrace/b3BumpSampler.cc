@@ -35,12 +35,12 @@
 
 b3_vector b3BumpSampler::m_Light =
 {
-	-1,1,1
-};
+	-1, 1, 1
+	};
 
-b3BumpSampler::b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles) :
-		m_Tiles(tiles),
-		m_BBoxSize(bbox_size)
+b3BumpSampler::b3BumpSampler(b3Tx * tx, const b3_vector * bbox_size, const b3_count tiles) :
+	m_Tiles(tiles),
+	m_BBoxSize(bbox_size)
 {
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
@@ -54,22 +54,22 @@ b3BumpSampler::b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_coun
 	m_Data  = m_Tx->b3GetHdrData();
 }
 
-void b3BumpSampler::b3SetBump(b3Bump *bump)
+void b3BumpSampler::b3SetBump(b3Bump * bump)
 {
 	m_Bump = bump;
 }
 
-b3SampleInfo *b3BumpSampler::b3SampleInit(const b3_count CPUs)
+b3SampleInfo * b3BumpSampler::b3SampleInit(const b3_count CPUs)
 {
-	b3SampleInfo         *info = new b3SampleInfo[CPUs];
+	b3SampleInfo     *    info = new b3SampleInfo[CPUs];
 	b3_loop               i;
-	b3_res                yStart,yEnd;
-	b3_color             *data = (b3_color *)m_Data;
+	b3_res                yStart, yEnd;
+	b3_color       *      data = (b3_color *)m_Data;
 
 	B3_ASSERT(m_Bump != null);
 	m_Bump->b3Prepare(this);
 	yStart = 0;
-	for (i = 0;i < CPUs;i++)
+	for(i = 0; i < CPUs; i++)
 	{
 		yEnd = m_yMax * (i + 1) / CPUs;
 		info[i].m_Sampler = this;
@@ -84,26 +84,26 @@ b3SampleInfo *b3BumpSampler::b3SampleInit(const b3_count CPUs)
 	return info;
 }
 
-void b3BumpSampler::b3SampleTask(const b3SampleInfo *info)
+void b3BumpSampler::b3SampleTask(const b3SampleInfo * info)
 {
-	b3Bump    *bump = (b3Bump *)info->m_Ptr;
+	b3Bump  *  bump = (b3Bump *)info->m_Ptr;
 	b3BBox     bbox = BBOX;
-	b3_coord   x,y;
+	b3_coord   x, y;
 	b3_ray     ray;
-	b3_f64     fy,angle;
+	b3_f64     fy, angle;
 	b3_vector  normal;
-	b3_color  *data = (b3_color *)info->m_Data;
+	b3_color * data = (b3_color *)info->m_Data;
 
 	ray.bbox = &bbox;
-	b3Vector::b3Init(&ray.xDeriv,1.0,0.0,0.0);
-	for (y = info->m_yStart;y < info->m_yEnd;y++)
+	b3Vector::b3Init(&ray.xDeriv, 1.0, 0.0, 0.0);
+	for(y = info->m_yStart; y < info->m_yEnd; y++)
 	{
 		fy = (b3_f64)y / info->m_yMax;
-		for (x = 0;x < info->m_xMax;x++)
+		for(x = 0; x < info->m_xMax; x++)
 		{
 			int ix = (m_Tiles * x) / info->m_xMax;
 
-			ray.polar.m_BoxPolar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
+			ray.polar.m_BoxPolar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax, 1.0);
 			ray.polar.m_BoxPolar.y = 1.0 - fy;
 			ray.polar.m_BoxPolar.z = 1.0 - fy * BUMP_SLOPE * ix;
 			ray.polar.m_ObjectPolar.x = ray.polar.m_BoxPolar.x * 2 - 1;
@@ -118,11 +118,11 @@ void b3BumpSampler::b3SampleTask(const b3SampleInfo *info)
 			ray.normal.z = sqrt(1 - ray.normal.y * ray.normal.y);
 			bbox.b3ComputeBoxPolar(&ray);
 
-			b3Vector::b3Init(&ray.yDeriv,0,-ray.normal.z,ray.normal.x);
+			b3Vector::b3Init(&ray.yDeriv, 0, -ray.normal.z, ray.normal.x);
 			bump->b3BumpNormal(&ray);
-			b3Vector::b3Init(&normal,&ray.normal);
-			angle   = b3Vector::b3AngleOfVectors(&m_Light,&normal);
-			*data++ = b3Color(angle,angle,angle);
+			b3Vector::b3Init(&normal, &ray.normal);
+			angle   = b3Vector::b3AngleOfVectors(&m_Light, &normal);
+			*data++ = b3Color(angle, angle, angle);
 		}
 	}
 }

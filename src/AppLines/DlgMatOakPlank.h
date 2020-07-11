@@ -37,9 +37,9 @@
 
 class CDlgMatOakPlank : public CB3SimplePropertyPreviewDialog
 {
-	b3MatOakPlank     *m_Material;
-	b3BBox            *m_BBox;
-	b3MaterialSampler *m_MatSampler;
+	b3MatOakPlank   *  m_Material;
+	b3BBox      *      m_BBox;
+	b3MaterialSampler * m_MatSampler;
 
 	CPageMaterial      m_PageDark;
 	CPageMaterial      m_PageLight;
@@ -49,26 +49,26 @@ class CDlgMatOakPlank : public CB3SimplePropertyPreviewDialog
 
 	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgMatOakPlank(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgMatOakPlank(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgMatOakPlank();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgMatOakPlank)
 	enum { IDD = IDD_MAT_OAKPLANK };
 	CB3ShowSample	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgMatOakPlank)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

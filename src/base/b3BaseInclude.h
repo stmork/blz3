@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3BaseInclude.h $ 
+**	$Filename:	b3BaseInclude.h $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$

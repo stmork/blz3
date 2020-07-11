@@ -28,9 +28,9 @@
 class B3_PLUGIN b3TxPoint
 {
 public:
-	b3_coord x,y;
+	b3_coord x, y;
 
-	b3TxPoint(b3_coord new_x = 0,b3_coord new_y = 0)
+	b3TxPoint(b3_coord new_x = 0, b3_coord new_y = 0)
 	{
 		x = new_x;
 		y = new_y;
@@ -55,7 +55,7 @@ public:
 	b3_count  num;
 public:
 	b3TxMeasure();
-	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
+	void b3Init(b3_res xSize, b3_res ySize, b3_res depth);
 	void b3Print();
 };
 

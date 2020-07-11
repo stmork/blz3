@@ -41,7 +41,7 @@ b3Water::b3Water()
 	m_WindFreq  = 0.5;
 	m_WindAmp   = 0.2f;
 	m_MinWind   = 1.0f;
-	b3Vector::b3Init(&m_Anim,1.5f,1.5f,4.0f);
+	b3Vector::b3Init(&m_Anim, 1.5f, 1.5f, 4.0f);
 	b3PrepareWater(0.0);
 }
 
@@ -51,15 +51,15 @@ void b3Water::b3PrepareWater(const b3_f64 t)
 	m_t      = t;
 }
 
-b3_f64 b3Water::b3ComputeWater(const b3_vector *point)
+b3_f64 b3Water::b3ComputeWater(const b3_vector * point)
 {
 	b3_vector P;
-	b3_f64    offset,turbulence;
+	b3_f64    offset, turbulence;
 
 	P.x = point->x * m_Factor + m_t * m_Anim.x;
 	P.y = point->y * m_Factor + m_t * m_Anim.y;
 	P.z = point->z * m_Factor + m_t * m_Anim.z * m_ScaleTime;
-	offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P,m_Octaves,2.0,1.0);
+	offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P, m_Octaves, 2.0, 1.0);
 
 	P.x *= 8;
 	P.y *= 8;

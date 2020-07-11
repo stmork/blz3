@@ -38,9 +38,9 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 	b3_item_load_func new_load_func,
 	b3_u32            new_class_type,
 	b3_bool           new_is_class) :
-		b3Link<b3ItemRegisterEntry>(sizeof(b3ItemRegisterEntry))
+	b3Link<b3ItemRegisterEntry>(sizeof(b3ItemRegisterEntry))
 {
-	if (new_is_class)
+	if(new_is_class)
 	{
 		new_class_type &= 0xffff0000;
 	}
@@ -59,7 +59,7 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 
 b3_bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check)
 {
-	if (is_class)
+	if(is_class)
 	{
 		return (class_type_to_check & 0xffff0000) == class_type;
 	}
@@ -71,9 +71,9 @@ b3_bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check)
 	return false;
 }
 
-b3Item *b3ItemRegisterEntry::b3Init()
+b3Item * b3ItemRegisterEntry::b3Init()
 {
-	b3Item *item = init_func(class_type);
+	b3Item * item = init_func(class_type);
 
 	item->Succ = null;
 	item->Prev = null;
@@ -81,9 +81,9 @@ b3Item *b3ItemRegisterEntry::b3Init()
 	return item;
 }
 
-b3Item *b3ItemRegisterEntry::b3Load(b3_u32 *buffer)
+b3Item * b3ItemRegisterEntry::b3Load(b3_u32 * buffer)
 {
-	b3Item *item = load_func(buffer);
+	b3Item * item = load_func(buffer);
 
 	item->Succ = null;
 	item->Prev = null;
@@ -93,6 +93,6 @@ b3Item *b3ItemRegisterEntry::b3Load(b3_u32 *buffer)
 
 void b3ItemRegisterEntry::b3Dump()
 {
-	b3PrintF(B3LOG_FULL,"  class %04lx:%04lx%s.\n",
-			 class_type >> 16,class_type & 0xffff,is_class ? " (class)" : "");
+	b3PrintF(B3LOG_FULL, "  class %04lx:%04lx%s.\n",
+		class_type >> 16, class_type & 0xffff, is_class ? " (class)" : "");
 }

@@ -25,12 +25,12 @@ class CB3Tracker : public CRectTracker, public CObject
 {
 protected:
 	b3_bool       create;
-	b3Tx         *tx;
+	b3Tx     *    tx;
 public:
 	// virtual ovverride from CRectTracker
-	              CB3Tracker(b3Tx *);
-	        void  b3Create(b3_bool mode=true);
-	virtual void  AdjustRect(int,RECT *);
+	CB3Tracker(b3Tx *);
+	void  b3Create(b3_bool mode = true);
+	virtual void  AdjustRect(int, RECT *);
 };
 
 #endif

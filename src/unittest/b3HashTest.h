@@ -30,8 +30,8 @@ using namespace std;
 template<typename KEY, typename OBJECT> class b3HashTest : public CppUnit::TestFixture
 {
 	b3HashMap<KEY, OBJECT>  hash;
-	b3Array<KEY>           *keys;
-	b3Array<OBJECT>        *objects;
+	b3Array<KEY>      *     keys;
+	b3Array<OBJECT>    *    objects;
 
 	CPPUNIT_TEST_SUITE(b3HashTest);
 	CPPUNIT_TEST(test);
@@ -49,12 +49,12 @@ public:
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
-		if (keys != null)
+		if(keys != null)
 		{
 			delete keys;
 		}
 
-		if (objects != null)
+		if(objects != null)
 		{
 			delete objects;
 		}

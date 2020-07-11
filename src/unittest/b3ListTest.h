@@ -41,7 +41,7 @@ public:
 		this->element = element;
 	}
 
-	inline void operator=(const int &value)
+	inline void operator=(const int & value)
 	{
 		this->element = value;
 	}
@@ -57,7 +57,7 @@ template<typename T> class b3ListTest : public CppUnit::TestFixture
 	b3Base<T> base;
 	b3Base<T> src;
 	b3Base<T> dst;
-	T         a,b,c,d,e,f;
+	T         a, b, c, d, e, f;
 
 	CPPUNIT_TEST_SUITE(b3ListTest);
 	CPPUNIT_TEST(test);
@@ -97,15 +97,15 @@ public:
 
 		CPPUNIT_ASSERT_EQUAL(
 			static_cast<b3_link_state>(
-				B3_NODE_NOT_NULL|B3_NODE_FIRST|B3_NODE_NOT_LAST|B3_NODE_NOT_PREV|B3_NODE_SUCC),
+				B3_NODE_NOT_NULL | B3_NODE_FIRST | B3_NODE_NOT_LAST | B3_NODE_NOT_PREV | B3_NODE_SUCC),
 			src.b3State(&a));
 		CPPUNIT_ASSERT_EQUAL(
 			static_cast<b3_link_state>(
-				B3_NODE_NOT_NULL|B3_NODE_NOT_FIRST|B3_NODE_NOT_LAST|B3_NODE_PREV|B3_NODE_SUCC),
+				B3_NODE_NOT_NULL | B3_NODE_NOT_FIRST | B3_NODE_NOT_LAST | B3_NODE_PREV | B3_NODE_SUCC),
 			src.b3State(&b));
 		CPPUNIT_ASSERT_EQUAL(
 			static_cast<b3_link_state>(
-				B3_NODE_NOT_NULL|B3_NODE_NOT_FIRST|B3_NODE_LAST|B3_NODE_PREV|B3_NODE_NOT_SUCC),
+				B3_NODE_NOT_NULL | B3_NODE_NOT_FIRST | B3_NODE_LAST | B3_NODE_PREV | B3_NODE_NOT_SUCC),
 			src.b3State(&c));
 		CPPUNIT_ASSERT_EQUAL(B3_NODE_NULL, src.b3State(null));
 
@@ -199,7 +199,7 @@ public:
 	}
 
 private:
-	static const int sorter(const T *aPtr, const T *bPtr, const void *ptr)
+	static const int sorter(const T * aPtr, const T * bPtr, const void * ptr)
 	{
 		return aPtr->b3GetElement() - bPtr->b3GetElement();
 	}

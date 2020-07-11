@@ -18,6 +18,6 @@
 #ifndef B3_MAIN_H
 #define B3_MAIN_H
 
-extern int _Blizzard3Main(int argc,char *argv[]);
+extern int _Blizzard3Main(int argc, char * argv[]);
 
 #endif

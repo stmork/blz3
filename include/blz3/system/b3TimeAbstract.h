@@ -33,7 +33,7 @@ public:
 	/**
 	 * This method initializes this instance with the given slices.
 	 */
-	virtual void  b3Init(unsigned long slice=10) = 0;
+	virtual void  b3Init(unsigned long slice = 10) = 0;
 
 	/**
 	 * This call is a measurement mark. The returned time is in milliseconds and must
@@ -43,7 +43,7 @@ public:
 	 * @param refSpan The runtime.
 	 * @param refCount The measurement mark span count.
 	 */
-	virtual void  b3Get(unsigned long &refSpan,unsigned long &refCount) = 0;
+	virtual void  b3Get(unsigned long & refSpan, unsigned long & refCount) = 0;
 };
 
 /**
@@ -93,7 +93,7 @@ public:
 	void    b3Print(b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	static char    *b3PrintTime(char *buffer,b3_size size,b3_f64 time_needed);
+	static char  *  b3PrintTime(char * buffer, b3_size size, b3_f64 time_needed);
 };
 
 /**

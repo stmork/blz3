@@ -66,7 +66,7 @@ public:
 		const b3_f32 b,
 		const b3_f32 a = 0)
 	{
-		b3Init(r,g,b,a);
+		b3Init(r, g, b, a);
 	}
 
 	/**
@@ -75,9 +75,9 @@ public:
 	 *
 	 * @param color The other b3Color instance to copy.
 	 */
-	inline b3Color(const b3Color &color)
+	inline b3Color(const b3Color & color)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = color.v[i];
 		}
@@ -88,9 +88,9 @@ public:
 	 *
 	 * @param color The other ::b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color &color)
+	inline b3Color(const b3_color & color)
 	{
-		b3Init(color.r,color.g,color.b,color.a);
+		b3Init(color.r, color.g, color.b, color.a);
 	}
 
 	/**
@@ -98,9 +98,9 @@ public:
 	 *
 	 * @param color The other ::b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color *color)
+	inline b3Color(const b3_color * color)
 	{
-		b3Init(color->r,color->g,color->b,color->a);
+		b3Init(color->r, color->g, color->b, color->a);
 	}
 
 	/**
@@ -114,18 +114,18 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_loop            i;
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
-			c[3-i] = color & 0xf;
+			c[3 - i] = color & 0xf;
 			color  = color >> 4;
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			v[i] *= m_Limit_d015[i];
 		}
@@ -142,18 +142,18 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_loop            i;
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
-			c[3-i] = color & 0xff;
+			c[3 - i] = color & 0xff;
 			color  = color >> 8;
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			v[i] *= m_Limit_d255[i];
 		}
@@ -166,7 +166,7 @@ public:
 	 */
 	inline void b3Init()
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = 0;
 		}
@@ -180,7 +180,7 @@ public:
 	 */
 	inline void b3InitFactor(const b3_f32 value)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = value;
 		}
@@ -196,7 +196,7 @@ public:
 	{
 		b3_f32 value = (b3_f32)dvalue;
 
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = value;
 		}
@@ -253,7 +253,7 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline const b3_f32 &operator[](const b3_color_index index) const
+	inline const b3_f32 & operator[](const b3_color_index index) const
 	{
 		return v[index];
 	}
@@ -264,7 +264,7 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline b3_f32 &operator[](const b3_color_index index)
+	inline b3_f32 & operator[](const b3_color_index index)
 	{
 		return v[index];
 	}
@@ -275,7 +275,7 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline const b3_f32 &operator[](const int index) const
+	inline const b3_f32 & operator[](const int index) const
 	{
 		return v[(b3_color_index)index];
 	}
@@ -286,7 +286,7 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline b3_f32 &operator[](const int index)
+	inline b3_f32 & operator[](const int index)
 	{
 		return v[(b3_color_index)index];
 	}
@@ -301,15 +301,15 @@ public:
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
-		const b3Color &low,
-		const b3Color &high,
+		const b3Color & low,
+		const b3Color & high,
 		const b3_f32   mix)
 	{
 		b3Color result;
 		b3Color mixer;
 
 		mixer.b3InitFactor(mix);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
 		}
@@ -326,15 +326,15 @@ public:
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
-		const b3Color &low,
-		const b3Color &high,
+		const b3Color & low,
+		const b3Color & high,
 		const b3_f64   mix)
 	{
 		b3Color result;
 		b3Color mixer;
 
 		mixer.b3InitFactor(mix);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
 		}
@@ -351,13 +351,13 @@ public:
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
-		const b3Color &low,
-		const b3Color &high,
-		const b3Color &mixer)
+		const b3Color & low,
+		const b3Color & high,
+		const b3Color & mixer)
 	{
 		b3Color result;
 
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
 		}
@@ -370,9 +370,9 @@ public:
 	 * @param a The color to add.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator+=(const b3Color &a)
+	inline b3Color & operator+=(const b3Color & a)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -385,11 +385,11 @@ public:
 	 * @param a The color to add.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator+(const b3Color &a)
+	inline b3Color operator+(const b3Color & a)
 	{
 		b3Color result;
 
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] + a.v[i];
 		}
@@ -402,9 +402,9 @@ public:
 	 * @param a The color to subtract.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator-=(const b3Color &a)
+	inline b3Color & operator-=(const b3Color & a)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -417,11 +417,11 @@ public:
 	 * @param a The color to subtract.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator-(const b3Color &a)
+	inline b3Color operator-(const b3Color & a)
 	{
 		b3Color result;
 
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] - a.v[i];
 		}
@@ -434,9 +434,9 @@ public:
 	 * @param a The color filter.
 	 * @return A reference to this color.
 	 */
-	inline b3Color &operator*=(const b3Color &a)
+	inline b3Color & operator*=(const b3Color & a)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] *= a.v[i];
 		}
@@ -449,11 +449,11 @@ public:
 	 * @param a The color filter.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator*(const b3Color &a)
+	inline b3Color operator*(const b3Color & a)
 	{
 		b3Color result;
 
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] * a.v[i];
 		}
@@ -466,12 +466,12 @@ public:
 	 * @param value The color filter value.
 	 * @return A reference to this color.
 	 */
-	inline b3Color &operator*=(const b3_f32 value)
+	inline b3Color & operator*=(const b3_f32 value)
 	{
 		b3Color prod;
 
 		prod.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -484,12 +484,12 @@ public:
 	 * @param value The color filter value.
 	 * @return A reference to this color.
 	 */
-	inline b3Color &operator*=(const b3_f64 value)
+	inline b3Color & operator*=(const b3_f64 value)
 	{
 		b3Color prod;
 
 		prod.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -504,10 +504,10 @@ public:
 	 */
 	inline b3Color operator*(const b3_f32 value)
 	{
-		b3Color result,multiplicator;
+		b3Color result, multiplicator;
 
 		multiplicator.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] * multiplicator.v[i];
 		}
@@ -522,10 +522,10 @@ public:
 	 */
 	inline b3Color operator*(const b3_f64 value)
 	{
-		b3Color result,multiplicator;
+		b3Color result, multiplicator;
 
 		multiplicator.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] * multiplicator.v[i];
 		}
@@ -538,13 +538,13 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator/=(const b3_f32 value)
+	inline b3Color & operator/=(const b3_f32 value)
 	{
 		b3Color prod;
 
 		B3_ASSERT(value != 0);
 		prod.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= prod.v[i];
 		}
@@ -557,13 +557,13 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator/=(const b3_f64 value)
+	inline b3Color & operator/=(const b3_f64 value)
 	{
 		b3Color prod;
 
 		B3_ASSERT(value != 0);
 		prod.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= prod.v[i];
 		}
@@ -576,13 +576,13 @@ public:
 	 * @param value The divisor.
 	 * ¶return A reference to this instance.
 	 */
-	inline b3Color &operator/=(const b3_count value)
+	inline b3Color & operator/=(const b3_count value)
 	{
 		b3Color divisor;
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor((b3_f32)value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= divisor.v[i];
 		}
@@ -597,11 +597,11 @@ public:
 	 */
 	inline b3Color operator/(const b3_f32 value)
 	{
-		b3Color result,divisor;
+		b3Color result, divisor;
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -616,11 +616,11 @@ public:
 	 */
 	inline b3Color operator/(const b3_f64 value)
 	{
-		b3Color result,divisor;
+		b3Color result, divisor;
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor(value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -635,11 +635,11 @@ public:
 	 */
 	inline b3Color operator/(const b3_count value)
 	{
-		b3Color result,divisor;
+		b3Color result, divisor;
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor((b3_f32)value);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -655,12 +655,12 @@ public:
 	 */
 	inline b3Color b3Pow(const b3_f32 exp)
 	{
-		b3Color result,exponent;
+		b3Color result, exponent;
 
 		exponent.b3Init(exp);
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
-			result.v[i] = pow(v[i],exponent.v[i]);
+			result.v[i] = pow(v[i], exponent.v[i]);
 		}
 		return result;
 	}
@@ -672,7 +672,7 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(const b3Color &limit)
+	inline b3_bool b3IsGreater(const b3Color & limit)
 	{
 		return
 			(fabs(v[R]) >= limit.v[R]) ||
@@ -685,7 +685,7 @@ public:
 	 */
 	inline void b3Abs()
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = fabs(v[i]);
 		}
@@ -703,26 +703,26 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_f32 B3_ALIGN_16 sat[4];
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			sat[i] = v[i];
-			if (sat[i] < m_Limit_m000[i])
+			if(sat[i] < m_Limit_m000[i])
 			{
 				sat[i] = m_Limit_m000[i];
 			}
-			if (sat[i] > m_Limit_m001[i])
+			if(sat[i] > m_Limit_m001[i])
 			{
 				sat[i] = m_Limit_m001[i];
 			}
 			sat[i] *= m_Limit_m255[i];
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			c[i] = (b3_s32)sat[i];
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			result = (result << 8) | c[i];
 		}
@@ -750,9 +750,9 @@ public:
 	 */
 	inline void b3Sat()
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
-			if (v[i] > m_Limit_m001[i])
+			if(v[i] > m_Limit_m001[i])
 			{
 				v[i] = m_Limit_m001[i];
 			}
@@ -766,9 +766,9 @@ public:
 	 */
 	inline void b3Sat(const b3_f32 sat)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
-			if (v[i] > sat)
+			if(v[i] > sat)
 			{
 				v[i] = sat;
 			}
@@ -780,9 +780,9 @@ public:
 	 */
 	inline void b3Min()
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
-			if (v[i] < m_Limit_m000[i])
+			if(v[i] < m_Limit_m000[i])
 			{
 				v[i] = m_Limit_m000[i];
 			}
@@ -796,9 +796,9 @@ public:
 	 */
 	inline void b3Min(const b3_f32 min)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for(b3_loop i = 0; i < 4; i++)
 		{
-			if (v[i] < min)
+			if(v[i] < min)
 			{
 				v[i] = min;
 			}
@@ -814,9 +814,9 @@ public:
 	inline COLORREF b3GetColorref()
 	{
 		return RGB(
-				   (b3_pkd_color)(v[R] * 255),
-				   (b3_pkd_color)(v[G] * 255),
-				   (b3_pkd_color)(v[B] * 255));
+				(b3_pkd_color)(v[R] * 255),
+				(b3_pkd_color)(v[G] * 255),
+				(b3_pkd_color)(v[B] * 255));
 	}
 
 	/**

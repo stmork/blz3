@@ -58,7 +58,7 @@ public:
 
 private:
 	static b3_bool b3TestDir();
-	static b3_bool b3TestFile(b3FileAbstract &file);
+	static b3_bool b3TestFile(b3FileAbstract & file);
 };
 
 #endif

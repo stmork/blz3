@@ -2,7 +2,7 @@
 **
 **	$Filename:	b3DisplayView.h   $
 **	$Release:	Dortmund 2001, 2002 $
-**	$Revision:	1.07 
+**	$Revision:	1.07
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
@@ -38,25 +38,25 @@
 
 class b3DisplayView : public b3Display
 {
-	char               *m_Title;
+	char        *       m_Title;
 
 	// Some X values
 	b3_count            m_RowCounter;
-	CB3ScrollView      *m_View;
-	b3Document         *m_Doc;
+	CB3ScrollView   *   m_View;
+	b3Document     *    m_Doc;
 	b3_count            m_RowRefreshCount;
 
 public:
-	                    b3DisplayView(CB3ScrollView *view,const char *title = null);
-	                    b3DisplayView(CB3ScrollView *view,const b3_res xSize, const b3_res ySize,const char *title = null);
-	                   ~b3DisplayView();
-	void                b3PutRow(const b3Row *row);
-	void                b3PutTx(b3Tx *tx);
+	b3DisplayView(CB3ScrollView * view, const char * title = null);
+	b3DisplayView(CB3ScrollView * view, const b3_res xSize, const b3_res ySize, const char * title = null);
+	~b3DisplayView();
+	void                b3PutRow(const b3Row * row);
+	void                b3PutTx(b3Tx * tx);
 	void                b3Wait();
 	void                b3SetRowRefreshCount(b3_count refresh_count = B3_DISPLAY_ROWREFRESHCOUNT);
 
 private:
-	       void         b3Open(CB3ScrollView *view, const b3_res xSize, const b3_res ySize);
+	void         b3Open(CB3ScrollView * view, const b3_res xSize, const b3_res ySize);
 };
 
 #endif

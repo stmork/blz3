@@ -53,14 +53,14 @@ public:
 	/**
 	 * This copy constructor copies the time from another instance.
 	 */
-	b3Time(b3Time &orig);
+	b3Time(b3Time & orig);
 	b3_f64  b3Now();
 	b3_f64  b3GetTime();
 
 	/**
 	 * This assignment operator copies the time from another instance.
 	 */
-	b3Time &operator=(b3Time &orig);
+	b3Time & operator=(b3Time & orig);
 };
 
 #endif

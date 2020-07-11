@@ -48,13 +48,13 @@ enum b3_vector_error
 	B3_VECTOR_OUT_OF_BOUNDS
 };
 
-typedef b3Exception<b3_vector_error,0x564543> b3VectorException;
+typedef b3Exception<b3_vector_error, 0x564543> b3VectorException;
 
 /**
  * This is a template class fur use in the b3Spline template class.
  * It can take a component type and the dimension of the vector space.
  */
-template<class F,b3_loop dim> class B3_PLUGIN b3VectorTemplate
+template<class F, b3_loop dim> class B3_PLUGIN b3VectorTemplate
 {
 	F B3_ALIGN_16 v[dim]; //!< The values.
 
@@ -71,9 +71,9 @@ public:
 	 *
 	 * @param src The source vector template.
 	 */
-	inline b3VectorTemplate<F, dim>(const b3VectorTemplate<F, dim> &src)
+	inline b3VectorTemplate<F, dim>(const b3VectorTemplate<F, dim> & src)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = src.v[i];
 		}
@@ -103,7 +103,7 @@ public:
 		b3_f32 z,
 		b3_f32 w)
 	{
-		b3Init(x,y,z,w);
+		b3Init(x, y, z, w);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public:
 		b3_f64 z,
 		b3_f64 w)
 	{
-		b3Init(x,y,z,w);
+		b3Init(x, y, z, w);
 	}
 
 	/**
@@ -128,9 +128,9 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector32 &vec)
+	inline b3VectorTemplate(const b3_vector32 & vec)
 	{
-		b3Init(vec.x,vec.y,vec.z);
+		b3Init(vec.x, vec.y, vec.z);
 	}
 
 	/**
@@ -138,9 +138,9 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_gl_vector &vec)
+	inline b3VectorTemplate(const b3_gl_vector & vec)
 	{
-		b3Init(vec.x,vec.y,vec.z);
+		b3Init(vec.x, vec.y, vec.z);
 	}
 
 	/**
@@ -148,9 +148,9 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector64 &vec)
+	inline b3VectorTemplate(const b3_vector64 & vec)
 	{
-		b3Init(vec.x,vec.y,vec.z);
+		b3Init(vec.x, vec.y, vec.z);
 	}
 
 	/**
@@ -158,9 +158,9 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector32_4D &vec)
+	inline b3VectorTemplate(const b3_vector32_4D & vec)
 	{
-		b3Init(vec.x,vec.y,vec.z,vec.w);
+		b3Init(vec.x, vec.y, vec.z, vec.w);
 	}
 
 	/**
@@ -168,9 +168,9 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector64_4D &vec)
+	inline b3VectorTemplate(const b3_vector64_4D & vec)
 	{
-		b3Init(vec.x,vec.y,vec.z,vec.w);
+		b3Init(vec.x, vec.y, vec.z, vec.w);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public:
 	inline void b3Zero()
 	{
 		b3PrintF(B3LOG_FULL, "--zero %p %p\n", this, v);
-		for (b3_loop i = 0;i < dim; i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = 0;
 		}
@@ -192,7 +192,7 @@ public:
 	 */
 	inline void b3Value(const b3_f32 value = 0)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = (F)value;
 		}
@@ -205,7 +205,7 @@ public:
 	 */
 	inline void b3Value(const b3_f64 value = 0)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = (F)value;
 		}
@@ -233,7 +233,7 @@ public:
 		param[2] = z;
 		param[3] = w;
 
-		for (b3_loop i = 0; i < max; i++)
+		for(b3_loop i = 0; i < max; i++)
 		{
 			v[i] = static_cast<F>(param[i]);
 		}
@@ -244,7 +244,7 @@ public:
 	 *
 	 * @return A new b3_vector32 instance.
 	 */
-	inline operator b3_vector32 () const
+	inline operator b3_vector32() const
 	{
 		b3_vector32 result;
 
@@ -261,7 +261,7 @@ public:
 	 *
 	 * @return A new b3_gl_vector instance.
 	 */
-	inline operator b3_gl_vector ()
+	inline operator b3_gl_vector()
 	{
 		b3_gl_vector result;
 
@@ -276,7 +276,7 @@ public:
 	 *
 	 * @return A new b3_vector64 instance.
 	 */
-	inline operator b3_vector64 () const
+	inline operator b3_vector64() const
 	{
 		b3_vector64 result;
 
@@ -297,9 +297,9 @@ public:
 	inline const F & operator [](const b3_vector_index index) const
 	{
 #ifdef _DEBUG
-		if ((index < 0) || (index >= dim))
+		if((index < 0) || (index >= dim))
 		{
-			B3_THROW(b3VectorException,B3_VECTOR_OUT_OF_BOUNDS);
+			B3_THROW(b3VectorException, B3_VECTOR_OUT_OF_BOUNDS);
 		}
 #endif
 		return v[index];
@@ -315,30 +315,30 @@ public:
 	inline F & operator [](const b3_vector_index index)
 	{
 #ifdef _DEBUG
-		if ((index < 0) || (index >= dim))
+		if((index < 0) || (index >= dim))
 		{
-			B3_THROW(b3VectorException,B3_VECTOR_OUT_OF_BOUNDS);
+			B3_THROW(b3VectorException, B3_VECTOR_OUT_OF_BOUNDS);
 		}
 #endif
 		return v[index];
 	}
 
-	inline const bool operator==(const b3VectorTemplate<F,dim> &a) const
+	inline const bool operator==(const b3VectorTemplate<F, dim> & a) const
 	{
 		bool result = true;
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			result &= (v[i] == a.v[i]);
 		}
 		return result;
 	}
 
-	inline const bool operator!=(const b3VectorTemplate<F,dim> &a) const
+	inline const bool operator!=(const b3VectorTemplate<F, dim> & a) const
 	{
 		bool result = false;
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			result |= (v[i] != a.v[i]);
 		}
@@ -351,9 +351,9 @@ public:
 	 * @param a The vector to add.
 	 * @return A reference to this instance.
 	 */
-	inline b3VectorTemplate<F,dim> &operator+=(const b3VectorTemplate<F,dim> &a)
+	inline b3VectorTemplate<F, dim> & operator+=(const b3VectorTemplate<F, dim> & a)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -366,9 +366,9 @@ public:
 	 * @param a The vector to add.
 	 * @return A new b3VectorTemplate instance.
 	 */
-	inline const b3VectorTemplate<F,dim> operator+(const b3VectorTemplate<F,dim> &a) const
+	inline const b3VectorTemplate<F, dim> operator+(const b3VectorTemplate<F, dim> & a) const
 	{
-		return b3VectorTemplate<F,dim>(*this) += a;
+		return b3VectorTemplate<F, dim>(*this) += a;
 	}
 
 	/**
@@ -377,9 +377,9 @@ public:
 	 * @param a The vector to subtract.
 	 * @return A reference to this instance.
 	 */
-	inline b3VectorTemplate<F,dim> &operator-=(const b3VectorTemplate<F,dim> &a)
+	inline b3VectorTemplate<F, dim> & operator-=(const b3VectorTemplate<F, dim> & a)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -392,9 +392,9 @@ public:
 	 * @param a The vector to subtract.
 	 * @return A new b3VectorTemplate instance.
 	 */
-	inline const b3VectorTemplate<F,dim> operator-(const b3VectorTemplate<F,dim> &a) const
+	inline const b3VectorTemplate<F, dim> operator-(const b3VectorTemplate<F, dim> & a) const
 	{
-		return b3VectorTemplate<F,dim>(*this) -= a;
+		return b3VectorTemplate<F, dim>(*this) -= a;
 	}
 
 	/**
@@ -402,9 +402,9 @@ public:
 	 *
 	 * @return The resulting negated vector.
 	 */
-	inline const b3VectorTemplate<F,dim> operator-() const
+	inline const b3VectorTemplate<F, dim> operator-() const
 	{
-		return b3VectorTemplate<F,dim>(*this).b3Negate();
+		return b3VectorTemplate<F, dim>(*this).b3Negate();
 	}
 
 	/**
@@ -413,9 +413,9 @@ public:
 	 * @param a The vector to multiply.
 	 * @return A reference to this instance.
 	 */
-	inline b3VectorTemplate<F,dim> &operator*=(const b3VectorTemplate<F,dim> &a)
+	inline b3VectorTemplate<F, dim> & operator*=(const b3VectorTemplate<F, dim> & a)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] *= a.v[i];
 		}
@@ -428,9 +428,9 @@ public:
 	 * @param a The vector to multiply.
 	 * @return A new b3VectorTemplate instance.
 	 */
-	inline const b3VectorTemplate<F,dim> operator*(const b3VectorTemplate<F,dim> &a) const
+	inline const b3VectorTemplate<F, dim> operator*(const b3VectorTemplate<F, dim> & a) const
 	{
-		return b3VectorTemplate<F,dim>(*this) *= a;
+		return b3VectorTemplate<F, dim>(*this) *= a;
 	}
 
 	/**
@@ -439,11 +439,11 @@ public:
 	 * @param value The scaling factor.
 	 * @return A reference to this vector.
 	 */
-	inline const b3VectorTemplate<F,dim> &operator*=(const b3_f64 value)
+	inline const b3VectorTemplate<F, dim> & operator*=(const b3_f64 value)
 	{
-		b3VectorTemplate<F,dim> prod(value);
+		b3VectorTemplate<F, dim> prod(value);
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -456,9 +456,9 @@ public:
 	 * @param value The scaling factor.
 	 * @return The new b3VectorTemplate instance.
 	 */
-	inline const b3VectorTemplate<F,dim> operator*(const b3_f64 value) const
+	inline const b3VectorTemplate<F, dim> operator*(const b3_f64 value) const
 	{
-		return b3VectorTemplate<F,dim>(*this) *= value;
+		return b3VectorTemplate<F, dim>(*this) *= value;
 	}
 
 	/**
@@ -467,9 +467,9 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this vector.
 	 */
-	inline const b3VectorTemplate<F,dim> &operator/=(const b3_f64 value)
+	inline const b3VectorTemplate<F, dim> & operator/=(const b3_f64 value)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] /= value;
 		}
@@ -482,18 +482,18 @@ public:
 	 * @param value The divisor.
 	 * @return The new b3VectorTemplate instance.
 	 */
-	inline const b3VectorTemplate<F,dim> operator/(const b3_f64 value) const
+	inline const b3VectorTemplate<F, dim> operator/(const b3_f64 value) const
 	{
-		return b3VectorTemplate<F,dim>(*this) /= value;
+		return b3VectorTemplate<F, dim>(*this) /= value;
 	}
 
 	/**
 	 * This method negates all components of this vector.
 	 * @return A reference to this vector.
 	 */
-	inline const b3VectorTemplate<F,dim> & b3Negate()
+	inline const b3VectorTemplate<F, dim> & b3Negate()
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = -v[i];
 		}
@@ -518,19 +518,19 @@ public:
 	 * @return The resulting dot product.
 	 */
 	inline static F b3SMul(
-		const b3VectorTemplate<F,dim> &a,
-		const b3VectorTemplate<F,dim> &b)
+		const b3VectorTemplate<F, dim> & a,
+		const b3VectorTemplate<F, dim> & b)
 	{
 		F B3_ALIGN_16 r[dim];
 		F             result = 0;
 		b3_loop       i;
 
-		for (i = 0;i < dim;i++)
+		for(i = 0; i < dim; i++)
 		{
 			r[i] = a.v[i] * b.v[i];
 		}
 
-		for (i = 0;i < dim;i++)
+		for(i = 0; i < dim; i++)
 		{
 			result += r[i];
 		}
@@ -544,11 +544,11 @@ public:
 	 * @return The resulting dot product.
 	 */
 	inline F b3SMul(
-		const b3VectorTemplate<F,dim> &a) const
+		const b3VectorTemplate<F, dim> & a) const
 	{
 		F result = 0;
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			result += (a.v[i] * v[i]);
 		}
@@ -562,14 +562,14 @@ public:
 	* @param b The second vector.
 	* @return The result as a new b3VectorTemplate instance.
 	*/
-	inline static b3VectorTemplate<F,dim> b3CrossProduct(
-		const b3VectorTemplate<F,dim> &a,
-		const b3VectorTemplate<F,dim> &b)
+	inline static b3VectorTemplate<F, dim> b3CrossProduct(
+		const b3VectorTemplate<F, dim> & a,
+		const b3VectorTemplate<F, dim> & b)
 	{
-		return b3VectorTemplate<F,dim>(
-				   a.v[Y] * b.v[Z] - a.v[Z] * b.v[Y],
-				   a.v[Z] * b.v[X] - a.v[X] * b.v[Z],
-				   a.v[X] * b.v[Y] - a.v[Y] * b.v[X],(F)0.0);
+		return b3VectorTemplate<F, dim>(
+				a.v[Y] * b.v[Z] - a.v[Z] * b.v[Y],
+				a.v[Z] * b.v[X] - a.v[X] * b.v[Z],
+				a.v[X] * b.v[Y] - a.v[Y] * b.v[X], (F)0.0);
 	}
 
 	/**
@@ -578,13 +578,13 @@ public:
 	* @param b The second vector the first vector is this instance.
 	* @return The result as a new b3VectorTemplate instance.
 	*/
-	inline b3VectorTemplate<F,dim> b3CrossProduct(
-		const b3VectorTemplate<F,dim> &b) const
+	inline b3VectorTemplate<F, dim> b3CrossProduct(
+		const b3VectorTemplate<F, dim> & b) const
 	{
-		return b3VectorTemplate<F,dim>(
-				   v[Y] * b.v[Z] - v[Z] * b.v[Y],
-				   v[Z] * b.v[X] - v[X] * b.v[Z],
-				   v[X] * b.v[Y] - v[Y] * b.v[X],(F)0.0);
+		return b3VectorTemplate<F, dim>(
+				v[Y] * b.v[Z] - v[Z] * b.v[Y],
+				v[Z] * b.v[X] - v[X] * b.v[Z],
+				v[X] * b.v[Y] - v[Y] * b.v[X], (F)0.0);
 	}
 
 	/**
@@ -596,7 +596,7 @@ public:
 	{
 		F result = 0;
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			result += (v[i] * v[i]);
 		}
@@ -612,10 +612,10 @@ public:
 	 * @return The resulting distance.
 	 */
 	inline static F b3Distance(
-		const b3VectorTemplate<F,dim> &a,
-		const b3VectorTemplate<F,dim> &b)
+		const b3VectorTemplate<F, dim> & a,
+		const b3VectorTemplate<F, dim> & b)
 	{
-		b3VectorTemplate<F,dim> diff = b3VectorTemplate<F,dim>(a) - b3VectorTemplate<F,dim>(b);
+		b3VectorTemplate<F, dim> diff = b3VectorTemplate<F, dim>(a) - b3VectorTemplate<F, dim>(b);
 
 		return diff.b3Length();
 	}
@@ -630,7 +630,7 @@ public:
 	{
 		F old = b3Length();
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = v[i] * len / old;
 		}
@@ -645,10 +645,10 @@ public:
 	 * @param upper The upper bound of the bounding box.
 	 */
 	static inline void b3InitBound(
-		b3VectorTemplate<F,dim> &lower,
-		b3VectorTemplate<F,dim> &upper)
+		b3VectorTemplate<F, dim> & lower,
+		b3VectorTemplate<F, dim> & upper)
 	{
-		lower.b3Value( FLT_MAX);
+		lower.b3Value(FLT_MAX);
 		upper.b3Value(-FLT_MAX);
 	}
 
@@ -659,9 +659,12 @@ public:
 	 */
 	inline void b3SetMinimum(const F min)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
-			if (v[i] < min) v[i] = min;
+			if(v[i] < min)
+			{
+				v[i] = min;
+			}
 		}
 	}
 
@@ -671,11 +674,14 @@ public:
 	 *
 	 * @param lower The lower corner to adjust.
 	 */
-	inline void b3CheckLowerBound(const b3VectorTemplate<F,dim> &lower)
+	inline void b3CheckLowerBound(const b3VectorTemplate<F, dim> & lower)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
-			if (v[i] > lower.v[i]) v[i] = lower.v[i];
+			if(v[i] > lower.v[i])
+			{
+				v[i] = lower.v[i];
+			}
 		}
 	}
 
@@ -686,9 +692,12 @@ public:
 	 */
 	inline void b3SetMaximum(const F max)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
-			if (v[i] > max) v[i] = max;
+			if(v[i] > max)
+			{
+				v[i] = max;
+			}
 		}
 	}
 
@@ -698,11 +707,14 @@ public:
 	 *
 	 * @param upper The lower corner to adjust.
 	 */
-	inline void b3CheckUpperBound(const b3VectorTemplate<F,dim> &upper)
+	inline void b3CheckUpperBound(const b3VectorTemplate<F, dim> & upper)
 	{
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
-			if (v[i] < upper.v[i]) v[i] = upper.v[i];
+			if(v[i] < upper.v[i])
+			{
+				v[i] = upper.v[i];
+			}
 		}
 	}
 
@@ -714,14 +726,14 @@ public:
 	 * @param upper The sorted upper vector.
 	 */
 	static inline void b3Sort(
-		b3VectorTemplate<F,dim> &lower,
-		b3VectorTemplate<F,dim> &upper)
+		b3VectorTemplate<F, dim> & lower,
+		b3VectorTemplate<F, dim> & upper)
 	{
 		F aux;
 
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
-			if (lower.v[i] > upper.v[i])
+			if(lower.v[i] > upper.v[i])
 			{
 				aux = lower.v[i];
 				lower.v[i] = upper.v[i];
@@ -738,14 +750,14 @@ public:
 	 * @return The resulting angle.
 	 */
 	static inline F b3AngleOfVectors(
-		const b3VectorTemplate<F,dim> &Vector1,
-		const b3VectorTemplate<F,dim> &Vector2)
+		const b3VectorTemplate<F, dim> & Vector1,
+		const b3VectorTemplate<F, dim> & Vector2)
 	{
 		F Denom;
 
-		if ((Denom = Vector1.b3Length() * Vector2.b3Length()) != 0)
+		if((Denom = Vector1.b3Length() * Vector2.b3Length()) != 0)
 		{
-			return b3SMul(Vector1,Vector2) / Denom;
+			return b3SMul(Vector1, Vector2) / Denom;
 
 		}
 		return 0;
@@ -759,8 +771,8 @@ public:
 	 * @param upper The upper corner of the bounding box to adjust.
 	 */
 	inline void b3AdjustBound(
-		b3VectorTemplate<F,dim> &lower,
-		b3VectorTemplate<F,dim> &upper) const
+		b3VectorTemplate<F, dim> & lower,
+		b3VectorTemplate<F, dim> & upper) const
 	{
 		lower.b3CheckLowerBound(*this);
 		upper.b3CheckUpperBound(*this);
@@ -772,11 +784,11 @@ public:
 	 * @param Mat The transformation matrix.
 	 * @param Use4D If true this vector is a position. Otherwise it is a direction.
 	 */
-	inline void b3MatrixVMul(const b3_matrix *Mat,const b3_bool Use4D)
+	inline void b3MatrixVMul(const b3_matrix * Mat, const b3_bool Use4D)
 	{
-		F x = v[X],y = v[Y],z = v[Z];
+		F x = v[X], y = v[Y], z = v[Z];
 
-		if (Use4D)
+		if(Use4D)
 		{
 			v[X] = (F)(x * Mat->m11 + y * Mat->m12 + z * Mat->m13 + Mat->m14);
 			v[Y] = (F)(x * Mat->m21 + y * Mat->m22 + z * Mat->m23 + Mat->m24);
@@ -796,22 +808,22 @@ public:
 	 *
 	 * @param comment An additional comment.
 	 */
-	inline void b3Print(const char *comment) const
+	inline void b3Print(const char * comment) const
 	{
-		if (comment != 0)
+		if(comment != 0)
 		{
-			b3PrintF(B3LOG_NORMAL,comment);
+			b3PrintF(B3LOG_NORMAL, comment);
 		}
-		for (b3_loop i = 0;i < dim;i++)
+		for(b3_loop i = 0; i < dim; i++)
 		{
-			b3PrintF(B3LOG_NORMAL,"%3.5f ",v[i]);
+			b3PrintF(B3LOG_NORMAL, "%3.5f ", v[i]);
 		}
-		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 };
 
-typedef b3VectorTemplate<b3_f32,B3_MAX_DIM> b3Vector32;
-typedef b3VectorTemplate<b3_f64,B3_MAX_DIM> b3Vector64;
+typedef b3VectorTemplate<b3_f32, B3_MAX_DIM> b3Vector32;
+typedef b3VectorTemplate<b3_f64, B3_MAX_DIM> b3Vector64;
 
 /**
  * This structure holds a half ray in single precision.

@@ -38,136 +38,136 @@
 #if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
 static b3ShapeRenderContext  context;
-static b3World              *world = null;
+static b3World       *       world = null;
 static b3RenderLight         lights;
 static b3RenderView          view;
 static b3_bool               all_lights = true;
 static b3_bool               spot_light = true;
 static b3_bool               double_buffered = true;
-static b3_res                xWinSize,yWinSize;
+static b3_res                xWinSize, yWinSize;
 
 static void b3SetLights()
 {
 	context.b3LightReset();
-	if (all_lights)
+	if(all_lights)
 	{
-		b3PrintF(B3LOG_DEBUG,"Using multiple lights with%s spots...\n",
-				 spot_light ? "" : "out");
+		b3PrintF(B3LOG_DEBUG, "Using multiple lights with%s spots...\n",
+			spot_light ? "" : "out");
 
 		lights.b3SetScene((b3Scene *)world->b3GetFirst());
 		lights.b3SetLightMode(spot_light ? B3_LIGHT_SCENE_SPOT : B3_LIGHT_SCENE);
 	}
 	else
 	{
-		b3PrintF(B3LOG_DEBUG,"Using one light...\n");
+		b3PrintF(B3LOG_DEBUG, "Using one light...\n");
 		lights.b3SetLightMode(B3_LIGHT_SIMPLE);
 	}
 }
 
-static void b3ReshapeFunc(GLsizei xSize,GLsizei ySize)
+static void b3ReshapeFunc(GLsizei xSize, GLsizei ySize)
 {
-	b3PrintF(B3LOG_FULL,">b3ReshapeFunc(%d, %d );\n",xSize, ySize);
-	view.b3SetupView(xWinSize = xSize,yWinSize = ySize);
+	b3PrintF(B3LOG_FULL, ">b3ReshapeFunc(%d, %d );\n", xSize, ySize);
+	view.b3SetupView(xWinSize = xSize, yWinSize = ySize);
 	lights.b3SetupLight(&context);
-	b3PrintF(B3LOG_FULL,"<b3ReshapeFunc()\n");
+	b3PrintF(B3LOG_FULL, "<b3ReshapeFunc()\n");
 }
 
 static void b3DisplayFunc()
 {
-	b3Scene  *scene;
+	b3Scene * scene;
 
-	b3PrintF(B3LOG_FULL,">b3DisplayFunc()\n");
+	b3PrintF(B3LOG_FULL, ">b3DisplayFunc()\n");
 	context.b3StartDrawing();
 	scene = (b3Scene *)world->b3GetFirst();
 	scene->b3Draw(&context);
 
 	glutSwapBuffers();
-	b3PrintF(B3LOG_FULL,"<b3DisplayFunc()\n");
+	b3PrintF(B3LOG_FULL, "<b3DisplayFunc()\n");
 }
 
 static void b3PlayAnimation()
 {
-	b3Scene     *scene;
-	b3Animation *animation;
+	b3Scene   *  scene;
+	b3Animation * animation;
 
 	scene = (b3Scene *)world->b3GetFirst();
 	animation = scene->b3GetAnimation();
-	if (animation == null)
+	if(animation == null)
 	{
 		return;
 	}
-	if (animation->m_Flags & ANIMF_ON)
+	if(animation->m_Flags & ANIMF_ON)
 	{
-		b3Time    start,now,last;
-		b3_vector lower,upper;
-		b3_f64    t,span;
+		b3Time    start, now, last;
+		b3_vector lower, upper;
+		b3_f64    t, span;
 		b3_count  count = 0;
-		b3_res    xSize,ySize;
+		b3_res    xSize, ySize;
 
-		b3PrintF(B3LOG_FULL,"Playing animation...\n");
+		b3PrintF(B3LOG_FULL, "Playing animation...\n");
 		last = start;
-		scene->b3GetDisplaySize(xSize,ySize);
+		scene->b3GetDisplaySize(xSize, ySize);
 		do
 		{
 			now.b3Now();
 			t = animation->m_Start + now - start;
 			scene->b3SetAnimation(t);
-			scene->b3ComputeBounds(&lower,&upper);
+			scene->b3ComputeBounds(&lower, &upper);
 			context.b3StartDrawing();
-			view.b3SetBounds(&lower,&upper);
+			view.b3SetBounds(&lower, &upper);
 			view.b3SetCamera(scene);
-			b3ReshapeFunc(xWinSize,yWinSize);
+			b3ReshapeFunc(xWinSize, yWinSize);
 			scene->b3Draw(&context);
-			if (double_buffered)
+			if(double_buffered)
 			{
 				glutSwapBuffers();
 			}
 			count++;
 		}
-		while (t < animation->m_End);
+		while(t < animation->m_End);
 
 		span = now - start;
-		b3PrintF(B3LOG_NORMAL,"Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
-				 count,span,(double)count / span);
+		b3PrintF(B3LOG_NORMAL, "Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
+			count, span, (double)count / span);
 	}
 }
 
-static void b3NextCamera(b3Scene *scene)
+static void b3NextCamera(b3Scene * scene)
 {
-	b3CameraPart *camera,*act;
+	b3CameraPart * camera, *act;
 
 	act = scene->b3GetActualCamera();
-	if (act != null)
+	if(act != null)
 	{
 		camera = scene->b3GetNextCamera(act);
-		if (camera == null)
+		if(camera == null)
 		{
 			// Take first camera
 			camera = scene->b3GetFirstCamera(false);
 		}
-		if (camera != null)
+		if(camera != null)
 		{
-			b3PrintF(B3LOG_NORMAL,"Using camera %s\n",camera->b3GetName());
+			b3PrintF(B3LOG_NORMAL, "Using camera %s\n", camera->b3GetName());
 			scene->b3SetCamera(camera);
 			view.b3SetCamera(scene);
-			b3ReshapeFunc(xWinSize,yWinSize);
+			b3ReshapeFunc(xWinSize, yWinSize);
 		}
 	}
 }
 
 static void b3SetupRC()
 {
-	context.glBgColor.b3Init(0.7f,0.7f,1.0f);
+	context.glBgColor.b3Init(0.7f, 0.7f, 1.0f);
 	context.b3Init(double_buffered);
 }
 
-static void b3KeyboardFunc(unsigned char key,int x,int y)
+static void b3KeyboardFunc(unsigned char key, int x, int y)
 {
-	b3Scene  *scene;
+	b3Scene * scene;
 	b3_bool   refresh = false;
 
 	scene = (b3Scene *)world->b3GetFirst();
-	switch (key)
+	switch(key)
 	{
 	case 'l':
 		all_lights = !all_lights;
@@ -184,28 +184,28 @@ static void b3KeyboardFunc(unsigned char key,int x,int y)
 	case 'a':
 		scene->b3Activate();
 		refresh = true;
-		b3PrintF(B3LOG_DEBUG,"Activating all...\n");
+		b3PrintF(B3LOG_DEBUG, "Activating all...\n");
 		break;
 
 	case 'e':
 		scene->b3Activate(false);
 		refresh = true;
-		b3PrintF(B3LOG_DEBUG,"Deactivating all...\n");
+		b3PrintF(B3LOG_DEBUG, "Deactivating all...\n");
 		break;
 
 	case 'c':
 		b3Log::b3SetLevel(B3LOG_NORMAL);
-		b3PrintF(B3LOG_NORMAL,"Normal logging...\n");
+		b3PrintF(B3LOG_NORMAL, "Normal logging...\n");
 		break;
 
 	case 'd':
 		b3Log::b3SetLevel(B3LOG_DEBUG);
-		b3PrintF(B3LOG_NORMAL,"Debug logging...\n");
+		b3PrintF(B3LOG_NORMAL, "Debug logging...\n");
 		break;
 
 	case 'f':
 		b3Log::b3SetLevel(B3LOG_FULL);
-		b3PrintF(B3LOG_NORMAL,"Full logging...\n");
+		b3PrintF(B3LOG_NORMAL, "Full logging...\n");
 		break;
 
 	case 'p':
@@ -218,38 +218,38 @@ static void b3KeyboardFunc(unsigned char key,int x,int y)
 		break;
 
 	case 'r':
-		b3PrintF(B3LOG_FULL,"Refreshing...\n");
+		b3PrintF(B3LOG_FULL, "Refreshing...\n");
 		refresh = true;
 		break;
 
 	case 27: // ESC
 	case 'q':
 	case 'x':
-		b3PrintF(B3LOG_NORMAL,"Exit!\n");
+		b3PrintF(B3LOG_NORMAL, "Exit!\n");
 		exit(EXIT_SUCCESS);
 	}
 
-	if (refresh)
+	if(refresh)
 	{
-		b3ReshapeFunc(xWinSize,yWinSize);
+		b3ReshapeFunc(xWinSize, yWinSize);
 		glutPostRedisplay();
 	}
 }
 
-static void b3Update(b3Scene *scene)
+static void b3Update(b3Scene * scene)
 {
-	b3_vector       lower,upper;
+	b3_vector       lower, upper;
 
 	scene->b3SetupVertexMemory(&context);
 	scene->b3ResetAnimation();
-	scene->b3ComputeBounds(&lower,&upper);
+	scene->b3ComputeBounds(&lower, &upper);
 
-	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
+	b3PrintF(B3LOG_NORMAL, "%d vertices\n", context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL, "%d triangles\n", context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL, "%d grids\n",    context.glGridCount);
 
 	// Setup view
-	view.b3SetBounds(&lower,&upper);
+	view.b3SetBounds(&lower, &upper);
 	view.b3SetCamera(scene);
 	view.b3SetViewMode(B3_VIEW_3D);
 
@@ -259,10 +259,10 @@ static void b3Update(b3Scene *scene)
 	glutPostRedisplay();
 }
 
-static void b3Prepare(b3Scene *scene)
+static void b3Prepare(b3Scene * scene)
 {
-	b3ModellerInfo *info;
-	b3_res          xSize,ySize;
+	b3ModellerInfo * info;
+	b3_res          xSize, ySize;
 
 	scene->b3Reorg();
 	scene->b3GetDisplaySize(xSize, ySize);
@@ -270,7 +270,7 @@ static void b3Prepare(b3Scene *scene)
 	scene->b3SetCamera(scene->b3GetFirstCamera(false));
 
 	info = scene->b3GetModellerInfo();
-	if (info != null)
+	if(info != null)
 	{
 		all_lights = info->m_UseSceneLights;
 	}
@@ -279,34 +279,34 @@ static void b3Prepare(b3Scene *scene)
 	yWinSize = ySize;
 }
 
-static void b3Banner(const char *command)
+static void b3Banner(const char * command)
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
-	b3PrintF(B3LOG_NORMAL,"\n");
-	if (command != null)
+	b3PrintF(B3LOG_NORMAL, "Blizzard III OpenGL scene viewer\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
+	b3PrintF(B3LOG_NORMAL, "\n");
+	if(command != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-v][-s] BWD-file\n", command);
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -v  disable vertex buffer objects\n");
-		b3PrintF(B3LOG_NORMAL,"  -s  draw with single buffer\n");
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
+		b3PrintF(B3LOG_NORMAL, "%s [-d][-f][-v][-s] BWD-file\n", command);
+		b3PrintF(B3LOG_NORMAL, "\n");
+		b3PrintF(B3LOG_NORMAL, "  -d  debug level output\n");
+		b3PrintF(B3LOG_NORMAL, "  -f  verbose level output\n");
+		b3PrintF(B3LOG_NORMAL, "  -v  disable vertex buffer objects\n");
+		b3PrintF(B3LOG_NORMAL, "  -s  draw with single buffer\n");
+		b3PrintF(B3LOG_NORMAL, "\n");
+		b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
+		b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
 	}
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	const char     *filename;
-	b3Item         *item;
-	b3Scene        *scene;
-	char           *BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
-	char           *BLZ3_BIN     = getenv("BLZ3_BIN");
-	char           *HOME         = getenv("HOME");
+	const char   *  filename;
+	b3Item     *    item;
+	b3Scene    *    scene;
+	char      *     BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
+	char      *     BLZ3_BIN     = getenv("BLZ3_BIN");
+	char      *     HOME         = getenv("HOME");
 	b3Path          textures;
 	b3Path          pictures;
 	b3Path          data;
@@ -314,16 +314,16 @@ int main(int argc,char *argv[])
 	b3_index        i;
 
 
-	if (argc <= 1)
+	if(argc <= 1)
 	{
 		b3Banner(argv[0]);
 		exit(EXIT_SUCCESS);
 	}
-	glutInit(&argc,argv);
+	glutInit(&argc, argv);
 
-	for (i = 1;(i < argc) && (argv[i][0] == '-');i++)
+	for(i = 1; (i < argc) && (argv[i][0] == '-'); i++)
 	{
-		switch (argv[i][1])
+		switch(argv[i][1])
 		{
 		case 'v' :
 			b3VectorBufferObjects::glAllowVBO = false;
@@ -340,18 +340,18 @@ int main(int argc,char *argv[])
 		}
 	}
 
-	if (i >= argc)
+	if(i >= argc)
 	{
-		b3PrintF(B3LOG_NORMAL,"No filename given!\n");
+		b3PrintF(B3LOG_NORMAL, "No filename given!\n");
 		exit(EXIT_FAILURE);
 	}
 
 	try
 	{
-		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
-		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
-		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
-		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
+		b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
+		b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
+		b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
+		b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
 
 		b3Scene::m_TexturePool.b3AddPath(textures);
 		b3Scene::m_TexturePool.b3AddPath(pictures);
@@ -361,56 +361,56 @@ int main(int argc,char *argv[])
 		world->b3AddPath(data);
 
 		b3RaytracingItems::b3Register();
-		if (BLZ3_BIN != null)
+		if(BLZ3_BIN != null)
 		{
 			loader.b3AddPath(BLZ3_BIN);
 		}
-		if (BLZ3_PLUGINS != null)
+		if(BLZ3_PLUGINS != null)
 		{
 			loader.b3AddPath(BLZ3_PLUGINS);
 		}
 		loader.b3Load();
 
 		world->b3Read(filename);
-		for (item  = world->b3GetFirst();
-				item != null;
-				item  = scene->Succ)
+		for(item  = world->b3GetFirst();
+			item != null;
+			item  = scene->Succ)
 		{
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
 
-//			glutInit(&argc, argv);
-			glutInitDisplayMode((double_buffered ? GLUT_DOUBLE : 0)|GLUT_RGBA|GLUT_DEPTH);
-			glutInitWindowSize(xWinSize,yWinSize);
+			//			glutInit(&argc, argv);
+			glutInitDisplayMode((double_buffered ? GLUT_DOUBLE : 0) | GLUT_RGBA | GLUT_DEPTH);
+			glutInitWindowSize(xWinSize, yWinSize);
 			glutCreateWindow(filename);
-			glutDisplayFunc (&b3DisplayFunc);
+			glutDisplayFunc(&b3DisplayFunc);
 			glutKeyboardFunc(&b3KeyboardFunc);
-			glutReshapeFunc (&b3ReshapeFunc);
+			glutReshapeFunc(&b3ReshapeFunc);
 
 			b3SetupRC();
-			b3Update (scene);
+			b3Update(scene);
 			glutMainLoop();
 		}
 		delete world;
 	}
-	catch (b3ExceptionBase &e)
+	catch(b3ExceptionBase & e)
 	{
-		b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[1]);
-		b3PrintF(B3LOG_NORMAL,"Error code: %d\n",e.b3GetError());
-		b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",e.b3GetErrorMsg());
+		b3PrintF(B3LOG_NORMAL, "Error parsing %s\n", argv[1]);
+		b3PrintF(B3LOG_NORMAL, "Error code: %d\n", e.b3GetError());
+		b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", e.b3GetErrorMsg());
 	}
-	catch (...)
+	catch(...)
 	{
-		b3PrintF(B3LOG_NORMAL,"Unknown error occured processing %s\n",argv[1]);
+		b3PrintF(B3LOG_NORMAL, "Unknown error occured processing %s\n", argv[1]);
 	}
 	return EXIT_SUCCESS;
 }
 
 #else
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	b3PrintF(B3LOG_NORMAL,"This platform has got no OpenGL support!\n");
+	b3PrintF(B3LOG_NORMAL, "This platform has got no OpenGL support!\n");
 
 	return EXIT_SUCCESS;
 }

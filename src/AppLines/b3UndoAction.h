@@ -31,12 +31,12 @@ class b3OpObjectTransformation : public b3Operation
 	b3Array<b3BBox *>  m_Active;
 
 protected:
-	b3Scene           *m_Scene;
+	b3Scene      *     m_Scene;
 	b3_matrix          m_UndoAction;
 	b3_matrix          m_RedoAction;
 
 protected:
-	     b3OpObjectTransformation(b3Scene *scene);
+	b3OpObjectTransformation(b3Scene * scene);
 	void b3Undo();
 	void b3Redo();
 
@@ -47,7 +47,7 @@ private:
 class b3OpObjectAction : public b3OpObjectTransformation
 {
 public:
-	     b3OpObjectAction(b3Scene *scene,b3_matrix *matrix);
+	b3OpObjectAction(b3Scene * scene, b3_matrix * matrix);
 
 protected:
 	inline void b3Do()
@@ -64,7 +64,7 @@ protected:
 class b3OpMove : public b3OpObjectTransformation
 {
 public:
-	b3OpMove(b3Scene *scene,b3_vector *stepper);
+	b3OpMove(b3Scene * scene, b3_vector * stepper);
 
 protected:
 	inline int  b3GetId()
@@ -76,7 +76,7 @@ protected:
 class b3OpRotate : public b3OpObjectTransformation
 {
 public:
-	b3OpRotate(b3Scene *scene,b3_line *axis,b3_f64 angle);
+	b3OpRotate(b3Scene * scene, b3_line * axis, b3_f64 angle);
 
 protected:
 	inline int  b3GetId()
@@ -87,18 +87,18 @@ protected:
 
 class b3OpCameraAction : public b3Operation
 {
-	b3CameraPart      *m_Camera;
+	b3CameraPart   *   m_Camera;
 	b3_matrix          m_UndoAction;
 	b3_matrix          m_RedoAction;
 
 public:
-	     b3OpCameraAction(b3CameraPart *camera,b3_matrix *matrix);
+	b3OpCameraAction(b3CameraPart * camera, b3_matrix * matrix);
 
 protected:
 	void b3Do();
 	void b3Undo();
 	void b3Redo();
-	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Prepare(CAppRenderDoc * pDoc);
 
 	inline int  b3GetId()
 	{

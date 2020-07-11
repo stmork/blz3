@@ -32,7 +32,7 @@ enum b3_array_error
 	B3_ARRAY_INVALID_INCREMENT	//!< Invalid increment. Increments must be greater than zero.
 };
 
-typedef b3Exception<b3_array_error,0x415252> b3ArrayException;
+typedef b3Exception<b3_array_error, 0x415252> b3ArrayException;
 
 /**
  * This class implements a dynamic sized array of elements. It includes
@@ -46,7 +46,7 @@ template <class T> class B3_PLUGIN b3Array
 	b3_count  m_Increment;
 	b3_index  m_Index;
 	b3_count  m_Max;
-	T        *m_Buffer;
+	T    *    m_Buffer;
 	T         m_Start[B3_ARRAY_INITIAL];
 
 
@@ -59,9 +59,9 @@ public:
 	 */
 	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
 	{
-		if (increment <= 0)
+		if(increment <= 0)
 		{
-			B3_THROW(b3ArrayException,B3_ARRAY_INVALID_INCREMENT);
+			B3_THROW(b3ArrayException, B3_ARRAY_INVALID_INCREMENT);
 		}
 		m_Increment = increment;
 		m_Index     = 0;
@@ -74,7 +74,7 @@ public:
 	 */
 	virtual ~b3Array()
 	{
-		if (m_Buffer != m_Start)
+		if(m_Buffer != m_Start)
 		{
 			delete [] m_Buffer;
 		}
@@ -86,22 +86,22 @@ public:
 	 * @param element The new element to add.
 	 * @throws b3ArrayException
 	 */
-	inline void b3Add(const T &element)
+	inline void b3Add(const T & element)
 	{
-		T        *buffer;
+		T    *    buffer;
 		b3_count  max = m_Max + m_Increment;
 
-		if (m_Index >= m_Max)
+		if(m_Index >= m_Max)
 		{
 			buffer = new T[max];
-			if (buffer != null)
+			if(buffer != null)
 			{
 				// Copy old memory (should be done by realloc later!
-				if (m_Index > 0)
+				if(m_Index > 0)
 				{
 					B3_ASSERT(m_Buffer != null);
-					memcpy (buffer,m_Buffer,m_Index * sizeof(T));
-					if (m_Buffer != m_Start)
+					memcpy(buffer, m_Buffer, m_Index * sizeof(T));
+					if(m_Buffer != m_Start)
 					{
 						delete [] m_Buffer;
 					}
@@ -113,7 +113,7 @@ public:
 			}
 			else
 			{
-				B3_THROW(b3ArrayException,B3_ARRAY_NO_MEMORY);
+				B3_THROW(b3ArrayException, B3_ARRAY_NO_MEMORY);
 			}
 		}
 		m_Buffer[m_Index++] = element;
@@ -129,9 +129,9 @@ public:
 	inline void b3Clear(const b3_bool really_free = false)
 	{
 		m_Index = 0;
-		if (really_free)
+		if(really_free)
 		{
-			if (m_Buffer != m_Start)
+			if(m_Buffer != m_Start)
 			{
 				delete [] m_Buffer;
 			}
@@ -155,7 +155,7 @@ public:
 	 *
 	 * @return The allocated buffer with the elements.
 	 */
-	inline T *b3GetBuffer() const
+	inline T * b3GetBuffer() const
 	{
 		return m_Buffer;
 	}
@@ -179,9 +179,9 @@ public:
 	inline T & operator [](const b3_index index)
 	{
 #ifdef _DEBUG
-		if ((index < 0) || (index >= m_Index))
+		if((index < 0) || (index >= m_Index))
 		{
-			B3_THROW(b3ArrayException,B3_ARRAY_OUT_OF_BOUNDS);
+			B3_THROW(b3ArrayException, B3_ARRAY_OUT_OF_BOUNDS);
 		}
 #endif
 		return m_Buffer[index];
@@ -194,9 +194,9 @@ public:
 	 * @param ptr Custom pointer for custom informations inside comparison
 	 *            procedure.
 	 */
-	inline void b3Sort(int (*sorter)(T *a,T *b,const void *ptr),const void *ptr)
+	inline void b3Sort(int (*sorter)(T * a, T * b, const void * ptr), const void * ptr)
 	{
-		qsort(m_Buffer,b3GetCount(),sizeof(T),(b3QSortFunc)sorter);
+		qsort(m_Buffer, b3GetCount(), sizeof(T), (b3QSortFunc)sorter);
 	}
 
 	/**
@@ -204,9 +204,9 @@ public:
 	 *
 	 * @param sorter Sorting method.
 	 */
-	inline void b3Sort(int (*sorter)(T *a,T *b))
+	inline void b3Sort(int (*sorter)(T * a, T * b))
 	{
-		qsort(m_Buffer,b3GetCount(),sizeof(T),(b3QSortFunc)sorter);
+		qsort(m_Buffer, b3GetCount(), sizeof(T), (b3QSortFunc)sorter);
 	}
 
 	/**
@@ -218,9 +218,9 @@ public:
 	 *            procedure.
 	 * @see b3Comparator
 	 */
-	inline void b3Sort(b3Comparator<T> &comparator,const void *ptr = null)
+	inline void b3Sort(b3Comparator<T> & comparator, const void * ptr = null)
 	{
-		qsort(m_Buffer,b3GetCount(),sizeof(T),comparator.b3Sort,ptr);
+		qsort(m_Buffer, b3GetCount(), sizeof(T), comparator.b3Sort, ptr);
 	}
 };
 

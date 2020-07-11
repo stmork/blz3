@@ -42,13 +42,13 @@ class b3Calibrate
 	b3Array<b3_bool> m_Error;
 
 public:
-	b3Calibrate(b3Tx &source)
+	b3Calibrate(b3Tx & source)
 	{
 		b3Color avrg;
 		b3Color scale;
 		b3Color diff;
 		b3Color white(B3_WHITE);
-		b3_coord x,y;
+		b3_coord x, y;
 		b3_f64   fxSize = source.xSize;
 		b3_f64   size   = source.ySize * fxSize;
 		b3_f64   grey;
@@ -56,29 +56,29 @@ public:
 		b3_count error[source.xSize];
 		b3_bool  result = false;
 
-		for (x = 0;x < source.xSize;x++)
+		for(x = 0; x < source.xSize; x++)
 		{
 			error[x] = 0;
 		}
 
 		avrg.b3Init();
-		for (y = 20;y < source.ySize;y++)
+		for(y = 20; y < source.ySize; y++)
 		{
-			for (x = 0;x < source.xSize;x++)
+			for(x = 0; x < source.xSize; x++)
 			{
-				avrg += source.b3GetHdrValue(x,y);
+				avrg += source.b3GetHdrValue(x, y);
 			}
 		}
 		avrg /= size;
 		grey  = 0.35 * avrg[b3Color::R] + 0.54 * avrg[b3Color::G] + 0.11 * avrg[b3Color::B];
 
-		white.b3Init(grey,grey,grey);
-		for (y = 0;y < source.ySize;y++)
+		white.b3Init(grey, grey, grey);
+		for(y = 0; y < source.ySize; y++)
 		{
 			avrg.b3Init();
-			for (x = 0;x < source.xSize;x++)
+			for(x = 0; x < source.xSize; x++)
 			{
-				avrg += source.b3GetHdrValue(x,y);
+				avrg += source.b3GetHdrValue(x, y);
 			}
 
 			avrg /= fxSize;
@@ -91,30 +91,30 @@ public:
 			m_WhiteScale.b3Add(scale);
 
 #ifdef _DEBUG
-			b3PrintF(B3LOG_NORMAL,"%3d: %2.3f %2.3f %2.3f # %2.3f %2.3f %2.3f\n",
-					 y,
-					 scale[b3Color::R],scale[b3Color::G],scale[b3Color::B],
-					 avrg[b3Color::R], avrg[b3Color::G], avrg[b3Color::B]);
+			b3PrintF(B3LOG_NORMAL, "%3d: %2.3f %2.3f %2.3f # %2.3f %2.3f %2.3f\n",
+				y,
+				scale[b3Color::R], scale[b3Color::G], scale[b3Color::B],
+				avrg[b3Color::R], avrg[b3Color::G], avrg[b3Color::B]);
 #endif
 
-			for (x = 0;x < source.xSize;x++)
+			for(x = 0; x < source.xSize; x++)
 			{
-				diff = source.b3GetHdrValue(x,y) - avrg;
+				diff = source.b3GetHdrValue(x, y) - avrg;
 				dist = sqrt(
-						   diff[b3Color::R] * diff[b3Color::R] +
-						   diff[b3Color::B] * diff[b3Color::B] +
-						   diff[b3Color::G] * diff[b3Color::G]);
-				if (dist > 0.145)
+						diff[b3Color::R] * diff[b3Color::R] +
+						diff[b3Color::B] * diff[b3Color::B] +
+						diff[b3Color::G] * diff[b3Color::G]);
+				if(dist > 0.145)
 				{
 					error[x]++;
 				}
 			}
 		}
 
-		for (x = 0;x < source.xSize;x++)
+		for(x = 0; x < source.xSize; x++)
 		{
 			m_Error.b3Add(result);
-			b3PrintF(B3LOG_NORMAL,"%s",result ? "#" : ".");
+			b3PrintF(B3LOG_NORMAL, "%s", result ? "#" : ".");
 		}
 		m_Error[ 58] =
 			m_Error[ 75] =
@@ -127,24 +127,24 @@ public:
 										m_Error[793] =
 											m_Error[794] =
 												m_Error[798] =
-													m_Error[799] =
-														m_Error[805] = true;
-		b3PrintF(B3LOG_NORMAL,"\n");
+														m_Error[799] =
+																m_Error[805] = true;
+		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 
-	void b3Adjust(b3Tx &image)
+	void b3Adjust(b3Tx & image)
 	{
-		b3PrintF(B3LOG_NORMAL,"%s\n",image.b3Name());
+		b3PrintF(B3LOG_NORMAL, "%s\n", image.b3Name());
 
-		b3_pkd_color *ptr = image.b3GetTrueColorData();
-		b3_coord      x,y;
-		b3Color       result,scale(B3_WHITE),offset(B3_BLACK);
+		b3_pkd_color * ptr = image.b3GetTrueColorData();
+		b3_coord      x, y;
+		b3Color       result, scale(B3_WHITE), offset(B3_BLACK);
 
-		for (y = 0;y < image.ySize;y++)
+		for(y = 0; y < image.ySize; y++)
 		{
 			offset = m_RowAvrg[y];
 			scale  = m_WhiteScale[y];
-			for (x = 0;x < image.xSize;x++)
+			for(x = 0; x < image.xSize; x++)
 			{
 				b3Color pixel(ptr[x]);
 
@@ -152,15 +152,15 @@ public:
 				ptr[x] = result;
 
 #if 0
-				b3PrintF(B3LOG_NORMAL,"%2.3f %2.3f %2.3f\n",
-						 result[b3Color::R], result[b3Color::G], result[b3Color::B]);
+				b3PrintF(B3LOG_NORMAL, "%2.3f %2.3f %2.3f\n",
+					result[b3Color::R], result[b3Color::G], result[b3Color::B]);
 #endif
 			}
-			for (x = 1;x < (image.xSize - 1);x++)
+			for(x = 1; x < (image.xSize - 1); x++)
 			{
-				if (m_Error[x])
+				if(m_Error[x])
 				{
-					ptr[x] = b3Color(ptr[x-1]) * 0.5 + b3Color(ptr[x+1]) * 0.5;
+					ptr[x] = b3Color(ptr[x - 1]) * 0.5 + b3Color(ptr[x + 1]) * 0.5;
 				}
 			}
 			ptr += image.xSize;
@@ -169,16 +169,16 @@ public:
 };
 
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	b3Tx         reference,image;
-	b3Calibrate *calibrate;
+	b3Tx         reference, image;
+	b3Calibrate * calibrate;
 	b3Path       source = "/tmp/maui";
 	b3Path       dest   = "/usr/local/maui/postproc2/data";
 	b3Path       file;
 	char         name[32];
 	b3FileList   list;
-	b3FileEntry *entry;
+	b3FileEntry * entry;
 	b3_count     count = 0;
 
 	reference.b3LoadImage("/home/sm/Kalibrierung.tif");
@@ -187,16 +187,16 @@ int main(int argc,char *argv[])
 	list.b3CreateList(source);
 	list.b3Sort();
 
-	for (entry = list.b3First();entry != null;entry = entry->Succ)
+	for(entry = list.b3First(); entry != null; entry = entry->Succ)
 	{
 		image.b3LoadImage(entry->b3Name());
 		calibrate->b3Adjust(image);
-		snprintf(name,sizeof(name),"%08x.tif",(unsigned)++count);
-		file.b3LinkFileName(dest,name);
+		snprintf(name, sizeof(name), "%08x.tif", (unsigned)++count);
+		file.b3LinkFileName(dest, name);
 #ifdef HAVE_LIBTIFF
 		image.b3SaveTIFF(file);
 #endif
-		b3PrintF(B3LOG_NORMAL,"%s\n",(const char *)file);
+		b3PrintF(B3LOG_NORMAL, "%s\n", (const char *)file);
 	}
 	return EXIT_SUCCESS;
 }

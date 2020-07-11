@@ -20,7 +20,7 @@ extern "C"
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
-	typedef double dblparam_t;
+typedef double dblparam_t;
 #ifdef __STRICT_ANSI__
 #define	INLINE	__inline__
 #else

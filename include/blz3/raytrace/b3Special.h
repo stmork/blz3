@@ -103,7 +103,7 @@ public:
 	 *
 	 * @param activate The new activation state.
 	 */
-	void    b3Activate(b3_bool activate=true);
+	void    b3Activate(b3_bool activate = true);
 };
 
 /**
@@ -124,7 +124,7 @@ public:
 	B3_ITEM_LOAD(b3CameraPart); //!< This constructor handles deserialization.
 
 	void     b3Write() override;
-	b3_bool  b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method orientates the camera to the given values. The internal vectors
@@ -136,7 +136,7 @@ public:
 	 * @param width The new projection width. This value is a half value noted from the center to the horizontal border.
 	 * @param height The new projection height.This value is a half value noted from the center to the vertical border.
 	 */
-	void     b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focalLength,b3_f64 width,b3_f64 height);
+	void     b3Orientate(b3_vector * eye, b3_vector * view, b3_f64 focalLength, b3_f64 width, b3_f64 height);
 
 	/**
 	 * This method orientates the camera around a center point. The eye point is computed
@@ -148,7 +148,7 @@ public:
 	 * @param xAngle The longitude.
 	 * @param yAngle The latitide.
 	 */
-	void     b3Overview(b3_vector *center,b3_vector *size,b3_f64 xAngle,b3_f64 yAngle);
+	void     b3Overview(b3_vector * center, b3_vector * size, b3_f64 xAngle, b3_f64 yAngle);
 
 	/**
 	 * This method converts the camera in longitude and latitude. These values are computed
@@ -159,7 +159,7 @@ public:
 	 * @param xAngle The longitude.
 	 * @param yAngle The latitude.
 	 */
-	void     b3ComputeAngles(b3_f64 &xAngle,b3_f64 &yAngle);
+	void     b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle);
 
 	/**
 	 * This method adjusts the focal length of the camera.
@@ -202,21 +202,21 @@ public:
 	 *
 	 * @param transformation The transformation matrix.
 	 */
-	void     b3Transform(b3_matrix *transformation);
+	void     b3Transform(b3_matrix * transformation);
 
 	/**
 	 * This method returns the camera name.
 	 *
 	 * @return The camera name.
 	 */
-	char    *b3GetName();
+	char  *  b3GetName();
 
 	/**
 	 * This method sets a new camera name.
 	 *
 	 * @param name The new camera name.
 	 */
-	void     b3SetName(const char *name);
+	void     b3SetName(const char * name);
 
 	/**
 	 * This method returns the activation state of this camera.
@@ -252,7 +252,7 @@ public:
 	B3_ITEM_LOAD(b3Nebular); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method returns the activation state.
@@ -266,14 +266,14 @@ public:
 	 *
 	 * @param activate The activation state of the nebular.
 	 */
-	void    b3Activate(b3_bool activate=true);
+	void    b3Activate(b3_bool activate = true);
 
 	/**
 	 * This method returns the nebular filter color.
 	 *
 	 * @param result The nebular filter color.
 	 */
-	void    b3GetNebularColor(b3Color &result);
+	void    b3GetNebularColor(b3Color & result);
 
 	/**
 	 * This method computes the nebular color depending on the input color, the
@@ -284,7 +284,7 @@ public:
 	 * @param result The resulting nebulated color.
 	 * @param distance The real distance.
 	 */
-	void    b3ComputeNebular(b3Color &input,b3Color &result,b3_f64 distance);
+	void    b3ComputeNebular(b3Color & input, b3Color & result, b3_f64 distance);
 };
 
 /**
@@ -370,21 +370,21 @@ public:
 	 *
 	 * @param translation The point to adjust to the grid.
 	 */
-	void        b3SnapToGrid(b3_vector *translation);
+	void        b3SnapToGrid(b3_vector * translation);
 
 	/**
 	 * This method snaps the given angle into the next angular grid position.
 	 *
 	 * @param angle The angle to adjust.
 	 */
-	void        b3SnapToCameraAngle(b3_f64 &angle);
+	void        b3SnapToCameraAngle(b3_f64 & angle);
 
 	/**
 	 * This method snaps the given angle into the next angular grid position.
 	 *
 	 * @param angle The angle to adjust.
 	 */
-	void        b3SnapToObjectAngle(b3_f64 &angle);
+	void        b3SnapToObjectAngle(b3_f64 & angle);
 
 	/**
 	 * This method returns the configured unit in milli meters.
@@ -398,7 +398,7 @@ public:
 	 *
 	 * @return The unit as clear text.
 	 */
-	const char *b3GetUnitDescr();
+	const char * b3GetUnitDescr();
 
 	/**
 	 * This method sets a new custom measuring unit.
@@ -426,10 +426,10 @@ public:
 	 * @return The measuring unit as value.
 	 * @see b3_measure
 	 */
-	b3_u32      b3GetMeasure(b3_bool forceCustomValue=true);
+	b3_u32      b3GetMeasure(b3_bool forceCustomValue = true);
 
 private:
-	void        b3Snap(b3_f64 &angle, b3_bool activation);
+	void        b3Snap(b3_f64 & angle, b3_bool activation);
 };
 
 #define B3_UNIT_MASK           0x0000f
@@ -456,7 +456,7 @@ class B3_PLUGIN b3Animation : public b3Special
 	b3_index        m_FrameIndex;      //!< Start frame in window.
 	b3_count        m_WTracks;         //!< Actual number of tracks.
 	b3_count        m_WFrames;         //!< Whole of frames.
-	b3AnimElement  *m_Element;         //!< Actual animation element.
+	b3AnimElement * m_Element;         //!< Actual animation element.
 	b3_vector       m_AnimCenter;      //!< Actual animation center.
 
 public:
@@ -483,7 +483,7 @@ public:
 	 *
 	 * @param Element The animation element to compute.
 	 */
-	void            b3SetAnimElement (b3AnimElement *Element);
+	void            b3SetAnimElement(b3AnimElement * Element);
 
 	/**
 	 * This method returns the activation state of the animation.
@@ -506,14 +506,14 @@ public:
 	 * @param Global The scene to animate.
 	 * @param t The time point to compute.
 	 */
-	void            b3SetAnimation (b3Scene *Global,b3_f64 t);
+	void            b3SetAnimation(b3Scene * Global, b3_f64 t);
 
 	/**
 	 * This method resets the given scene to the given neutral time point.
 	 *
 	 * @param Global The scene to reset.
 	 */
-	void            b3ResetAnimation (b3Scene *Global);
+	void            b3ResetAnimation(b3Scene * Global);
 
 	/**
 	 * This method resets the animation and sets the activation state.
@@ -522,7 +522,7 @@ public:
 	 * @param activate The activation flag.
 	 * @return The old activation state.
 	 */
-	b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
+	b3_bool         b3ActivateAnimation(b3Scene * scene, b3_bool activate = true);
 
 	/**
 	 * This method computes the animation center position for the given time point.
@@ -531,7 +531,7 @@ public:
 	 * @param center The center point.
 	 * @param t The time point to use.
 	 */
-	void            b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
+	void            b3RecomputeCenter(b3AnimElement * Element, b3_vector * center, b3_f64 t);
 
 	/**
 	 * This method converts a frame index into a time point.
@@ -539,7 +539,7 @@ public:
 	 * @param index The frame index to convert.
 	 * @return The converted time point.
 	 */
-	inline b3_f64   b3AnimTimeCode (b3_index index)
+	inline b3_f64   b3AnimTimeCode(b3_index index)
 	{
 		return m_Start + (b3_f64)index / m_FramesPerSecond;
 	}
@@ -550,7 +550,7 @@ public:
 	 * @param t The time point.
 	 * @return The converted frame index.
 	 */
-	inline b3_index b3AnimFrameIndex (b3_f64 t)
+	inline b3_index b3AnimFrameIndex(b3_f64 t)
 	{
 		return (b3_index)((t - m_Start) * m_FramesPerSecond);
 	}
@@ -563,7 +563,7 @@ public:
 	 */
 	inline b3_f64   b3ClipTimePoint(b3_f64 val)
 	{
-		return b3Math::b3Limit(val,m_Start,m_End);
+		return b3Math::b3Limit(val, m_Start, m_End);
 	}
 
 	/**
@@ -571,16 +571,16 @@ public:
 	 *
 	 * @return The list base of animation elements.
 	 */
-	inline b3Base<b3Item> *b3GetAnimElementHead()
+	inline b3Base<b3Item> * b3GetAnimElementHead()
 	{
 		return &m_Heads[0];
 	}
 
 private:
-	void            b3RecomputeNeutralInverse (b3AnimElement *Element);
-	void            b3GetNeutralPosition(b3AnimElement *Element,b3_vector *neutral);
-	void            b3ApplyTransformation (b3Scene *Global,b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
-	static b3AnimElement  *b3FindSameTrack(b3AnimElement *Element);
+	void            b3RecomputeNeutralInverse(b3AnimElement * Element);
+	void            b3GetNeutralPosition(b3AnimElement * Element, b3_vector * neutral);
+	void            b3ApplyTransformation(b3Scene * Global, b3AnimElement * Anim, b3_matrix * transform, b3_f64 t);
+	static b3AnimElement * b3FindSameTrack(b3AnimElement * Element);
 };
 
 #define ANIMB_ON     1
@@ -617,9 +617,9 @@ public:
 	b3_f32             m_DepthOfField;     //!< A place holder for depth of field but unused, yet.
 	b3_filter          m_PixelAperture;    //!< The pixel aperture type.
 	b3_filter          m_FrameAperture;    //!< The frame aperture type.
-	b3Filter          *m_FilterPixel;      //!< The pixel aperture instance.
-	b3Filter          *m_FilterFrame;      //!< The frame aperture instance.
-	b3_f32            *m_Samples;          //!< This pointer points to an array of sampling positions inside one pixel.
+	b3Filter     *     m_FilterPixel;      //!< The pixel aperture instance.
+	b3Filter     *     m_FilterFrame;      //!< The frame aperture instance.
+	b3_f32      *      m_Samples;          //!< This pointer points to an array of sampling positions inside one pixel.
 	b3_count           m_SPP;              //!< The real amount of samples per pixel.
 	b3_u32             m_Type;             //!< Flags of activated effects.
 
@@ -655,7 +655,7 @@ public:
 	 * @param animation The animation for motion blur if any.
 	 * @throws b3WorldException
 	 */
-	void     b3PrepareAnimation(b3_res xSize,b3Animation *animation = null);
+	void     b3PrepareAnimation(b3_res xSize, b3Animation * animation = null);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -699,7 +699,7 @@ public:
 	 *
 	 * @param activate The new activation state.
 	 */
-	void    b3Activate(b3_bool activate=true);
+	void    b3Activate(b3_bool activate = true);
 };
 
 #define LENSFLARE_ACTIVE 1
@@ -739,7 +739,7 @@ public:
 	B3_ITEM_LOAD(b3CloudBackground); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 };
 
 #endif

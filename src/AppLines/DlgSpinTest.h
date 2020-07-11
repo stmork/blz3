@@ -37,11 +37,11 @@ class CDlgSpinTest : public CDialog
 	b3_s32 m_Int;
 	b3_f32 m_Min;
 	b3_f64 m_Max;
-// Construction
+	// Construction
 public:
-	CDlgSpinTest(CWnd* pParent = NULL);   // standard constructor
+	CDlgSpinTest(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgSpinTest)
 	enum { IDD = IDD_SPINTEST };
 	CB3FloatEdit	m_FloatMinCtrl;
@@ -51,14 +51,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgSpinTest)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

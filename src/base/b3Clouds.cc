@@ -38,7 +38,7 @@
 b3Clouds::b3Clouds()
 {
 	b3Vector::b3Init(&m_Anim,    0.1f,  0.1f,  0.05f);
-	b3Vector::b3Init(&m_PosScale,0.01f, 0.01f, 0.01f);
+	b3Vector::b3Init(&m_PosScale, 0.01f, 0.01f, 0.01f);
 	m_EarthRadius = EARTH_RADIUS_KM;
 	m_CloudHeight =   1.0f;
 	m_Seeing      =   7.5;
@@ -58,16 +58,16 @@ void b3Clouds::b3PrepareClouds()
 }
 
 b3_f64 b3Clouds::b3ComputeClouds(
-	const b3_line64 *ray,
-	b3_f64    &r,
+	const b3_line64 * ray,
+	b3_f64  &  r,
 	const b3_f64     time)
 {
 	b3_f64 sight;
 
-	if (ray->dir.z > 0)
+	if(ray->dir.z > 0)
 	{
 		b3_vector Dir;
-		b3_f64    p,D,len;
+		b3_f64    p, D, len;
 		b3_f32    t;
 
 		p     = ray->dir.z * -m_EarthRadius;
@@ -78,9 +78,9 @@ b3_f64 b3Clouds::b3ComputeClouds(
 		Dir.y = ray->pos.y * m_PosScale.y + ray->dir.y * len + m_Anim.y * time;
 		Dir.z = ray->pos.z * m_PosScale.z + ray->dir.z * len + m_Anim.z * time;
 
-		t = b3Noise::b3Turbulence (&Dir);
+		t = b3Noise::b3Turbulence(&Dir);
 		r = 1.0 - pow(t, -m_Sharpness);
-		if (r < 0)
+		if(r < 0)
 		{
 			r = 0;
 		}

@@ -35,9 +35,9 @@ b3_bool b3BaseTransformation::b3Prepare()
 	b3_f64  denom;
 	b3_bool is_zero_volume;
 
-	denom = b3Matrix::b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
+	denom = b3Matrix::b3Det3(&m_Dir1, &m_Dir2, &m_Dir3);
 	is_zero_volume = denom == 0;
-	if (!is_zero_volume)
+	if(!is_zero_volume)
 	{
 		m_Denom = 1.0 / denom;
 
@@ -65,7 +65,7 @@ b3_bool b3BaseTransformation::b3Prepare()
 	}
 	else
 	{
-		b3PrintF(B3LOG_NORMAL,"A quadric has zero volume!\n");
+		b3PrintF(B3LOG_NORMAL, "A quadric has zero volume!\n");
 		m_Denom = 0;
 	}
 
@@ -77,26 +77,26 @@ b3_bool b3BaseTransformation::b3Prepare()
 }
 
 void b3BaseTransformation::b3BaseTransform(
-	const b3_line64 *in,
-	b3_line64 *out)
+	const b3_line64 * in,
+	b3_line64 * out)
 {
 #ifdef B3_SSE2
 	b3_vector64         pos;
-	b3_f64 B3_ALIGN_16 *op = &out->pos.x;
-	b3_f64 B3_ALIGN_16 *od = &out->dir.x;
+	b3_f64 B3_ALIGN_16 * op = &out->pos.x;
+	b3_f64 B3_ALIGN_16 * od = &out->dir.x;
 
 	pos.x = in->pos.x - m_Base.x;
 	pos.y = in->pos.y - m_Base.y;
 	pos.z = in->pos.z - m_Base.z;
 
-	for (b3_loop o = 0;o < 3;o++)
+	for(b3_loop o = 0; o < 3; o++)
 	{
 		op[o] = b3Vector::b3SMul(&pos,     &m_Normals[o]);
 		od[o] = b3Vector::b3SMul(&in->dir, &m_Normals[o]);
 	}
 #else
-	b3_f64 xPos,yPos,zPos;
-	b3_f64 xDir,yDir,zDir;
+	b3_f64 xPos, yPos, zPos;
+	b3_f64 xDir, yDir, zDir;
 
 	xPos = in->pos.x - m_Base.x;
 	yPos = in->pos.y - m_Base.y;
@@ -135,23 +135,23 @@ void b3BaseTransformation::b3BaseTransform(
 
 
 void b3BaseTransformation::b3BaseTransform(
-	const b3_vector *in,
-	b3_vector *out)
+	const b3_vector * in,
+	b3_vector * out)
 {
 #ifdef B3_SSE2
 	b3_vector64            pos;
-	b3_f32    B3_ALIGN_16 *o = &out->x;
+	b3_f32    B3_ALIGN_16 * o = &out->x;
 
 	pos.x = in->x - m_Base.x;
 	pos.y = in->y - m_Base.y;
 	pos.z = in->z - m_Base.z;
 
-	for (b3_loop i = 0;i < 3;i++)
+	for(b3_loop i = 0; i < 3; i++)
 	{
 		o[i] = b3Vector::b3SMul(&pos, &m_Normals[i]);
 	}
 #else
-	b3_f64 xPos,yPos,zPos;
+	b3_f64 xPos, yPos, zPos;
 
 	xPos = in->x - m_Base.x;
 	yPos = in->y - m_Base.y;
@@ -174,10 +174,10 @@ void b3BaseTransformation::b3BaseTransform(
 
 
 void b3BaseTransformation::b3Project(
-	const b3_vector *in,
-	b3_vector *out)
+	const b3_vector * in,
+	b3_vector * out)
 {
-	b3_f64 xPos,yPos,zPos;
+	b3_f64 xPos, yPos, zPos;
 
 	xPos = in->x - m_Base.x;
 	yPos = in->y - m_Base.y;
@@ -188,12 +188,12 @@ void b3BaseTransformation::b3Project(
 		yPos * m_Normals[2].y +
 		zPos * m_Normals[2].z;
 	out->x = (
-				 xPos * m_Normals[0].x +
-				 yPos * m_Normals[0].y +
-				 zPos * m_Normals[0].z) / out->z;
+			xPos * m_Normals[0].x +
+			yPos * m_Normals[0].y +
+			zPos * m_Normals[0].z) / out->z;
 	out->y = (
-				 xPos * m_Normals[1].x +
-				 yPos * m_Normals[1].y +
-				 zPos * m_Normals[1].z) / out->z;
+			xPos * m_Normals[1].x +
+			yPos * m_Normals[1].y +
+			zPos * m_Normals[1].z) / out->z;
 }
 

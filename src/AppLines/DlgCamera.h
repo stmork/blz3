@@ -40,15 +40,15 @@ struct b3_predefined_camera
 class CDlgCamera : public CDialog
 {
 	static b3_predefined_camera  m_CameraDefinition[];
-	       b3_f64                m_UnitFactor;
-// Construction
+	b3_f64                m_UnitFactor;
+	// Construction
 public:
-	       b3Scene              *m_Scene;
-	       b3CameraPart         *m_Camera;
+	b3Scene       *       m_Scene;
+	b3CameraPart     *    m_Camera;
 
-	CDlgCamera(CWnd* pParent = NULL);   // standard constructor
+	CDlgCamera(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCamera)
 	enum { IDD = IDD_CAMERA };
 	CComboBox	m_TypeCtrl;
@@ -67,14 +67,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCamera)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

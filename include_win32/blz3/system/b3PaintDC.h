@@ -34,7 +34,7 @@ public:
 	 *
 	 * @param wnd The CWnd object which contains a valid HWND.
 	 */
-	inline CB3PaintDC(CWnd *wnd) : CPaintDC(CWnd::FromHandle(wnd->m_hWnd))
+	inline CB3PaintDC(CWnd * wnd) : CPaintDC(CWnd::FromHandle(wnd->m_hWnd))
 	{
 	}
 

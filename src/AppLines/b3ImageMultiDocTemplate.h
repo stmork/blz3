@@ -24,30 +24,30 @@ class CB3ImageMultiDocTemplate : public CMultiDocTemplate
 {
 	DECLARE_DYNAMIC(CB3ImageMultiDocTemplate)
 
-// Constructors
+	// Constructors
 public:
 	CB3ImageMultiDocTemplate(
 		UINT           nIDResource,
-		CRuntimeClass *pDocClass,
-		CRuntimeClass *pFrameClass,
-		CRuntimeClass *pViewClass) :
-			CMultiDocTemplate(nIDResource,pDocClass,pFrameClass,pViewClass)
+		CRuntimeClass * pDocClass,
+		CRuntimeClass * pFrameClass,
+		CRuntimeClass * pViewClass) :
+		CMultiDocTemplate(nIDResource, pDocClass, pFrameClass, pViewClass)
 	{
 	}
-	
+
 	virtual Confidence MatchDocType(
 		LPCTSTR lpszPathName,
-		CDocument*& rpDocMatch)
+		CDocument *& rpDocMatch)
 	{
 		Confidence result;
-		
-		result = CMultiDocTemplate::MatchDocType(lpszPathName,rpDocMatch);
+
+		result = CMultiDocTemplate::MatchDocType(lpszPathName, rpDocMatch);
 		if(result == yesAttemptForeign)
 		{
 			b3Path ext;
 
 			ext.b3ExtractExt(lpszPathName);
-			if (b3Tx::b3GetFileType(ext) != FT_UNKNOWN)
+			if(b3Tx::b3GetFileType(ext) != FT_UNKNOWN)
 			{
 				result = yesAttemptNative;
 			}

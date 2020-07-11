@@ -35,11 +35,11 @@ class b3CopyPropertyInfo;
 
 class CDlgCopyProperties : public CDialog
 {
-// Construction
+	// Construction
 public:
-	CDlgCopyProperties(CWnd* pParent = NULL);   // standard constructor
+	CDlgCopyProperties(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCopyProperties)
 	enum { IDD = IDD_COPY_PROPERTIES };
 	int		m_ModeBump;
@@ -54,14 +54,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCopyProperties)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -71,13 +71,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	b3_bool b3CopyProperties(b3CopyPropertyInfo *info,b3BBox *bbox, b3Shape *shape);
+	b3_bool b3CopyProperties(b3CopyPropertyInfo * info, b3BBox * bbox, b3Shape * shape);
 
 private:
-	static b3_bool b3HandleHead(b3CopyPropertyInfo *info,
-		b3Shape *srcShape,b3Shape *dstShape,
-		b3Base<b3Item> *src,b3Base<b3Item> *dst,
-		int mode,BOOL test_equal,BOOL test_active);
+	static b3_bool b3HandleHead(b3CopyPropertyInfo * info,
+		b3Shape * srcShape, b3Shape * dstShape,
+		b3Base<b3Item> * src, b3Base<b3Item> * dst,
+		int mode, BOOL test_equal, BOOL test_active);
 };
 
 //{{AFX_INSERT_LOCATION}}

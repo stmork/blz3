@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-static void save(b3Tx *tx, const char *name, int num)
+static void save(b3Tx * tx, const char * name, int num)
 {
 	char filename[B3_FILESTRINGLEN];
 
@@ -38,12 +38,12 @@ static void save(b3Tx *tx, const char *name, int num)
 	tx->b3SaveJPEG(name);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
 	b3Fourier       fft2;
 	b3Tx            tx;
 	b3OceanWave     ocean;
-	char           *HOME = getenv("HOME");
+	char      *     HOME = getenv("HOME");
 	char            StanOlliImage[B3_FILESTRINGLEN];
 
 	snprintf(StanOlliImage, sizeof(StanOlliImage), "%s/Blizzard/Textures/StanOlli.gif", HOME);

@@ -89,7 +89,7 @@ class B3_PLUGIN b3AnimControl : public b3Item
 	b3_count      m_Dimension;           // vector dimension
 	b3_count      m_Used;                // used number of vectors
 	b3_count      m_Max;                 // maximum number of vectors
-	b3_vector4D  *m_Controls;
+	b3_vector4D * m_Controls;
 
 public:
 	B3_ITEM_INIT(b3AnimControl); //!< This constructor handles default initialization.
@@ -102,7 +102,7 @@ public:
 	 *
 	 * @param nurbs A NURBS class to initialize with default values.
 	 */
-	void b3InitNurbs(b3Nurbs &nurbs);
+	void b3InitNurbs(b3Nurbs & nurbs);
 };
 
 class b3Animation;
@@ -138,7 +138,7 @@ public:
 	void b3Write();
 
 public:
-	char           *b3GetName();
+	char      *     b3GetName();
 
 	/**
 	 * This method computes the center position.
@@ -146,7 +146,7 @@ public:
 	 * @param position The center position.
 	 * @param t The actual time point.
 	 */
-	void            b3GetPosition(b3_vector32_4D *position,b3_f64 t);
+	void            b3GetPosition(b3_vector32_4D * position, b3_f64 t);
 
 	/**
 	 * This method computes the center position.
@@ -154,7 +154,7 @@ public:
 	 * @param position The center position.
 	 * @param t The actual time point.
 	 */
-	void            b3GetPosition(b3_vector      *position,b3_f64 t);
+	void            b3GetPosition(b3_vector   *   position, b3_f64 t);
 
 	/**
 	 * This method computes a transformation matrix depending on the actual time point and
@@ -164,7 +164,7 @@ public:
 	 * @param transform The computed transformation matrix as result.
 	 * @param t The new time point to compute.
 	 */
-	void            b3ComputeTransformationMatrix(b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
+	void            b3ComputeTransformationMatrix(b3Animation * AnimRoot, b3_matrix * transform, b3_f64 t);
 
 	/**
 	 * This routine sets the activation state of a bounding box depending
@@ -172,19 +172,19 @@ public:
 	 *
 	 * @param scene The scene to animate.
 	 */
-	b3_bool         b3SelectAnimElement (b3Scene *scene);
+	b3_bool         b3SelectAnimElement(b3Scene * scene);
 
 	/**
 	 * This method activates the objects for animation.
 	 *
 	 * @param BBox The starting bbox.
 	 */
-	void            b3SelectObjects (b3BBox *BBox);
+	void            b3SelectObjects(b3BBox * BBox);
 
 private:
-	void            b3AnimateMove  (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
-	void            b3AnimateRotate(b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
-	void            b3AnimateScale (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
+	void            b3AnimateMove(b3Animation * AnimRoot, b3_matrix * transform, b3_f64 t);
+	void            b3AnimateRotate(b3Animation * AnimRoot, b3_matrix * transform, b3_f64 t);
+	void            b3AnimateScale(b3Animation * AnimRoot, b3_matrix * transform, b3_f64 t);
 
 public:
 	static b3_f64 epsilon; //!< A near zero value for numeric purposes.

@@ -89,7 +89,7 @@ struct b3_surface : public b3_material
 	b3_f64       m_Fresnel;          //!< The Fresnel term depending on the angle of incidence and the index of refraction.
 	b3_f64       m_IorComputed;      //!< The real index of refraction depending if the incoming ray is inside or outside.
 	b3_f64       m_CosAlpha;         //!< The angle of incidence as cosine value.
-	b3_ray      *m_Incoming;         //!< The incoming ray
+	b3_ray   *   m_Incoming;         //!< The incoming ray
 };
 
 /*************************************************************************
@@ -119,7 +119,7 @@ public:
 	 */
 	static  void    b3Register();
 
-	virtual b3_bool b3Prepare(b3_preparation_info *prep_info) override
+	virtual b3_bool b3Prepare(b3_preparation_info * prep_info) override
 	{
 		return true;
 	}
@@ -133,7 +133,7 @@ public:
 	 * @param surface The surface structure to fill in the material properties.
 	 * @return True if the material traversal should terminate.
 	 */
-	virtual b3_bool b3GetSurfaceValues(b3_surface *surface)
+	virtual b3_bool b3GetSurfaceValues(b3_surface * surface)
 	{
 		surface->m_Diffuse     = B3_LIGHT_BLUE;
 		surface->m_Ambient     = surface->m_Diffuse * 0.2;
@@ -155,7 +155,7 @@ public:
 	 * @param lit The lighting values.
 	 * @return True on material computation, false on shader computation.
 	 */
-	virtual b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit)
+	virtual b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit)
 	{
 		return false;
 	}
@@ -169,11 +169,11 @@ public:
 	 * @param refraction The refractance.
 	 * @return True if mixed via material properties.
 	 */
-	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	static inline b3_bool b3MixComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
 	{
-		b3Material *material = surface->m_Incoming->material;
+		b3Material * material = surface->m_Incoming->material;
 
-		return material != null ? material->b3ShadeComponents(surface,reflection,refraction) : false;
+		return material != null ? material->b3ShadeComponents(surface, reflection, refraction) : false;
 	}
 
 protected:
@@ -185,7 +185,7 @@ protected:
 	 * @param refraction The refractance.
 	 * @return True on component mixing, false on shader intelligence.
 	 */
-	virtual b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	virtual b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
 	{
 		return false;
 	}
@@ -203,9 +203,9 @@ protected:
 	 * @see b3Math::b3Mix()
 	 */
 	static inline void b3Mix(
-		b3_surface  *surface,
-		const b3_material *a,
-		const b3_material *b,
+		b3_surface * surface,
+		const b3_material * a,
+		const b3_material * b,
 		const b3_f64       mix)
 	{
 		b3Color mixer;
@@ -246,7 +246,7 @@ public:
 	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	virtual b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	virtual b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 
 private:
 	void    b3Init();
@@ -285,7 +285,7 @@ public:
 	B3_ITEM_LOAD(b3MatChess); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 /*************************************************************************
@@ -306,21 +306,21 @@ public:
 	b3_f32            m_Refraction;         //!< The refractance.
 	b3_f32            m_Ior;                //!< The index of refraction.
 	b3_f32            m_SpecularExp;        //!< The specular exponent in range [1..100000].
-	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start.
-	b3_f32            m_xScale,m_yScale;    //!< Texture scale.
-	b3_s32            m_xTimes,m_yTimes;    //!< Repeatition in x- y-direction.
+	b3_f32            m_xStart, m_yStart;   //!< Surface coordinate start.
+	b3_f32            m_xScale, m_yScale;   //!< Texture scale.
+	b3_s32            m_xTimes, m_yTimes;   //!< Repeatition in x- y-direction.
 	b3_s32            m_Flags;              //!< Unused.
 	b3Path            m_Name;               //!< The texture file name.
-	b3Tx             *m_Texture;            //!< The selected texture.
+	b3Tx       *      m_Texture;            //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3MatTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatTexture); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	void    b3SetTexture(const char *name);
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3SetTexture(const char * name);
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 /*************************************************************************
@@ -340,20 +340,20 @@ public:
 	b3_f32            m_Refraction;         //!< The refractance.
 	b3_f32            m_Ior;                //!< The index of refraction.
 	b3_f32            m_SpecularExp;        //!< The specular exponent in range [1..100000].
-	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start
-	b3_f32            m_xEnd,m_yEnd;        //!< Surface coordinate end
+	b3_f32            m_xStart, m_yStart;   //!< Surface coordinate start
+	b3_f32            m_xEnd, m_yEnd;       //!< Surface coordinate end
 	b3_s32            m_Flags;              //!< Unused.
 	b3Path            m_Name;               //!< The texture file name.
-	b3Tx             *m_Texture;            //!< The selected texture.
+	b3Tx       *      m_Texture;            //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3MatWrapTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatWrapTexture); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	void    b3SetTexture(const char *name);
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3SetTexture(const char * name);
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 /*************************************************************************
@@ -372,7 +372,7 @@ class B3_PLUGIN b3MatSlide : public b3Material
 {
 public:
 	b3_material       m_Material[2];         //!< The border materials
-	b3_f32            m_From,m_To;           //!< The relative polar values of start, end
+	b3_f32            m_From, m_To;          //!< The relative polar values of start, end
 	b3_s32            m_ModeFlag;            //!< The direction and cut flags, see below
 
 public:
@@ -380,7 +380,7 @@ public:
 	B3_ITEM_LOAD(b3MatSlide); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 #define DIR_SLIDE_BIT       0
@@ -412,7 +412,7 @@ public:
  */
 class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling
 {
-	b3_s32            m_xTimes,m_yTimes;
+	b3_s32            m_xTimes, m_yTimes;
 
 public:
 	b3_material       m_DarkMaterial;  //!< The darkest material.
@@ -423,8 +423,8 @@ public:
 	B3_ITEM_LOAD(b3MatMarble); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 /*************************************************************************
@@ -470,15 +470,15 @@ protected:
  */
 class B3_PLUGIN b3MatWood : public b3MaterialWooden, public b3Wood
 {
-	b3_u32            m_xTimes,m_yTimes; // not used
+	b3_u32            m_xTimes, m_yTimes; // not used
 
 public:
 	B3_ITEM_INIT(b3MatWood); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3MatWood); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 
 private:
 	void    b3Init();
@@ -499,8 +499,8 @@ private:
  */
 class B3_PLUGIN b3MatOakPlank : public b3MaterialWooden, public b3OakPlank
 {
-	b3_material     *m_LightMaterials;
-	b3_material     *m_DarkMaterials;
+	b3_material   *  m_LightMaterials;
+	b3_material   *  m_DarkMaterials;
 
 public:
 	B3_ITEM_INIT(b3MatOakPlank); //!< This constructor handles default initialization.
@@ -509,8 +509,8 @@ public:
 	virtual ~b3MatOakPlank();
 
 	void     b3Write() override;
-	b3_bool  b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool  b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool  b3GetSurfaceValues(b3_surface * surface) override;
 
 private:
 	void     b3Init();
@@ -542,9 +542,9 @@ public:
 	B3_ITEM_LOAD(b3MatCookTorrance); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
 };
 
 /*************************************************************************
@@ -570,8 +570,8 @@ public:
 	B3_ITEM_LOAD(b3MatGranite); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 /*************************************************************************
@@ -598,15 +598,15 @@ public:
 	B3_ITEM_LOAD(b3MatCarPaint); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *lit) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
 
 protected:
-	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction) override;
+	b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) override;
 
 private:
-	static inline void b3Randomize(const b3_vector64 *src,b3_vector64 *dst,b3_f64 scale,b3_f64 half)
+	static inline void b3Randomize(const b3_vector64 * src, b3_vector64 * dst, b3_f64 scale, b3_f64 half)
 	{
 		dst->x = src->x + B3_FRAN(scale) - half;
 		dst->y = src->y + B3_FRAN(scale) - half;
@@ -643,8 +643,8 @@ public:
 	B3_ITEM_LOAD(b3MatThinFilm); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface *surface) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
 };
 
 #endif

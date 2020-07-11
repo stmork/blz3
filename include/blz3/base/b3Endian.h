@@ -35,7 +35,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The two byte integer.
 	 */
-	static const b3_u16   b3Get16         (void *Ptr);
+	static const b3_u16   b3Get16(void * Ptr);
 
 	/**
 	 * This method gets a four byte integer in native order from the given pointer position.
@@ -43,7 +43,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The four byte integer.
 	 */
-	static const b3_u32   b3Get32         (void *Ptr);
+	static const b3_u32   b3Get32(void * Ptr);
 
 	/**
 	 * This method gets a two byte integer in big endian order from the given pointer position.
@@ -51,7 +51,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The two byte integer.
 	 */
-	static const b3_u16   b3GetMot16      (void *Ptr);
+	static const b3_u16   b3GetMot16(void * Ptr);
 
 	/**
 	 * This method gets a four byte integer in big endian order from the given pointer position.
@@ -59,7 +59,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The four byte integer.
 	 */
-	static const b3_u32   b3GetMot32      (void *Ptr);
+	static const b3_u32   b3GetMot32(void * Ptr);
 
 	/**
 	 * This method gets floating point number in big endian order from the given pointer position.
@@ -67,7 +67,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The floating point number.
 	 */
-	static const b3_f32   b3GetMotFloat   (void *Ptr);
+	static const b3_f32   b3GetMotFloat(void * Ptr);
 
 	/**
 	 * This method gets double precision floating point number in big endian order from the given pointer position.
@@ -75,7 +75,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The double precision floating point number.
 	 */
-	static const b3_f64   b3GetMotDouble  (void *Ptr);
+	static const b3_f64   b3GetMotDouble(void * Ptr);
 
 
 	/**
@@ -84,7 +84,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The two byte integer.
 	 */
-	static const b3_u16   b3GetIntel16    (void *Ptr);
+	static const b3_u16   b3GetIntel16(void * Ptr);
 
 	/**
 	 * This method gets a four byte integer in little endian order from the given pointer position.
@@ -92,7 +92,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The four byte integer.
 	 */
-	static const b3_u32   b3GetIntel32    (void *Ptr);
+	static const b3_u32   b3GetIntel32(void * Ptr);
 
 	/**
 	 * This method gets floating point number in little endian order from the given pointer position.
@@ -100,7 +100,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The floating point number.
 	 */
-	static const b3_f32   b3GetIntelFloat (void *Ptr);
+	static const b3_f32   b3GetIntelFloat(void * Ptr);
 
 	/**
 	 * This method gets double precision floating point number in little endian order from the given pointer position.
@@ -108,7 +108,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The double precision floating point number.
 	 */
-	static const b3_f64   b3GetIntelDouble(void *Ptr);
+	static const b3_f64   b3GetIntelDouble(void * Ptr);
 
 
 	/**
@@ -117,7 +117,7 @@ public:
 	 * @param Ptr The pointer zo the given 16 bit number.
 	 * @return The needed size.
 	 */
-	static const b3_size  b3ChangeEndian16(void *Ptr);
+	static const b3_size  b3ChangeEndian16(void * Ptr);
 
 	/**
 	 * This method converts a 32 bit number from another endian to the native endian and vice versa.
@@ -125,7 +125,7 @@ public:
 	 * @param Ptr The pointer zo the given 32 bit number.
 	 * @return The needed size.
 	 */
-	static const b3_size  b3ChangeEndian32(void *Ptr);
+	static const b3_size  b3ChangeEndian32(void * Ptr);
 
 	/**
 	 * This method converts a 64 bit number from another endian to the native endian and vice versa.
@@ -133,7 +133,7 @@ public:
 	 * @param Ptr The pointer zo the given 64 bit number.
 	 * @return The needed size.
 	 */
-	static const b3_size  b3ChangeEndian64(void *Ptr);
+	static const b3_size  b3ChangeEndian64(void * Ptr);
 };
 
 #endif

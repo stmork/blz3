@@ -33,7 +33,7 @@
 
 void b3Scene::b3Register()
 {
-	b3PrintF(B3LOG_DEBUG,"Registering scene classes...\n");
+	b3PrintF(B3LOG_DEBUG, "Registering scene classes...\n");
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEANGLE_MORK);
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_MORK);
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_MORK2);
@@ -43,17 +43,17 @@ void b3Scene::b3Register()
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, GLOBAL_ILLUM);
 }
 
-b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
+b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene), class_type)
 {
-	b3PrintF(B3LOG_DEBUG,"Blizzard III scene init.\n");
+	b3PrintF(B3LOG_DEBUG, "Blizzard III scene init.\n");
 
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BBOX);
 	m_Heads[1].b3InitBase(CLASS_LIGHT);
 	m_Heads[2].b3InitBase(CLASS_SPECIAL);
 
-	m_TopColor.b3Init   (0.5f,0.0f,1.0f);
-	m_BottomColor.b3Init(0.0f,0.0f,1.0f);
+	m_TopColor.b3Init(0.5f, 0.0f, 1.0f);
+	m_BottomColor.b3Init(0.0f, 0.0f, 1.0f);
 
 	m_xAngle           = 0;
 	m_yAngle           = 0;
@@ -73,9 +73,9 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 	b3ReallocateShader();
 }
 
-b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
+b3Scene::b3Scene(b3_u32 * buffer) : b3Item(buffer)
 {
-	b3PrintF(B3LOG_DEBUG,"Blizzard III scene load.\n");
+	b3PrintF(B3LOG_DEBUG, "Blizzard III scene load.\n");
 
 	// Background color
 	b3InitColor(m_TopColor);
@@ -99,7 +99,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_Epsilon          = b3InitFloat();
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
-	b3InitString(m_TextureName,B3_TEXSTRINGLEN);
+	b3InitString(m_TextureName, B3_TEXSTRINGLEN);
 	m_BackTexture      = null;
 	m_ActualCamera     = null;
 	m_Nebular          = null;
@@ -113,7 +113,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 
 void b3Scene::b3Write()
 {
-	b3PrintF(B3LOG_DEBUG,"Blizzard III scene storage.\n");
+	b3PrintF(B3LOG_DEBUG, "Blizzard III scene storage.\n");
 
 	// Background color
 	b3StoreColor(m_TopColor);
@@ -126,23 +126,23 @@ void b3Scene::b3Write()
 	b3StoreVector(&m_Height);
 
 	// Some other values
-	b3StoreNull  ();
-	b3StoreFloat (m_xAngle);
-	b3StoreFloat (m_yAngle);
-	b3StoreFloat (m_BBoxOverSize);
-	b3StoreInt   (m_BackgroundType);
-	b3StoreCount (m_TraceDepth);
-	b3StoreInt   (m_Flags);
-	b3StoreFloat (m_ShadowBrightness);
-	b3StoreFloat (m_Epsilon);
-	b3StoreRes   (m_xSize);
-	b3StoreRes   (m_ySize);
-	b3StoreString(m_TextureName,B3_TEXSTRINGLEN);
+	b3StoreNull();
+	b3StoreFloat(m_xAngle);
+	b3StoreFloat(m_yAngle);
+	b3StoreFloat(m_BBoxOverSize);
+	b3StoreInt(m_BackgroundType);
+	b3StoreCount(m_TraceDepth);
+	b3StoreInt(m_Flags);
+	b3StoreFloat(m_ShadowBrightness);
+	b3StoreFloat(m_Epsilon);
+	b3StoreRes(m_xSize);
+	b3StoreRes(m_ySize);
+	b3StoreString(m_TextureName, B3_TEXSTRINGLEN);
 }
 
 b3Scene::~b3Scene()
 {
-	if (m_Shader != null)
+	if(m_Shader != null)
 	{
 		delete m_Shader;
 	}
@@ -156,16 +156,16 @@ void b3Scene::b3SetShading(b3_u32 class_type)
 
 void b3Scene::b3ReallocateShader()
 {
-	if (m_Shader != null)
+	if(m_Shader != null)
 	{
 		delete m_Shader;
 	}
-	switch (b3GetClassType())
+	switch(b3GetClassType())
 	{
 	case TRACEPHOTO_ALBRECHT:
 	case GLOBAL_ILLUM:
-		b3PrintF(B3LOG_NORMAL,"Warning: Scene type %08lx not implemented yet...\n",b3GetClassType());
-		// Walk through!!!
+		b3PrintF(B3LOG_NORMAL, "Warning: Scene type %08lx not implemented yet...\n", b3GetClassType());
+	// Walk through!!!
 	case TRACEPHOTO_MORK:
 	case TRACEANGLE_MORK:
 		m_Shader = new b3ShaderMork(this);
@@ -184,10 +184,10 @@ void b3Scene::b3ReallocateShader()
 		m_Shader = null;
 		break;
 	}
-	b3PrintF(B3LOG_DEBUG,"Using shader type %08x with instance %p\n",b3GetClassType(),m_Shader);
+	b3PrintF(B3LOG_DEBUG, "Using shader type %08x with instance %p\n", b3GetClassType(), m_Shader);
 }
 
-b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
+b3_bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize)
 {
 	xSize = this->m_xSize;
 	ySize = this->m_ySize;
@@ -200,26 +200,26 @@ b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 **                                                                      **
 *************************************************************************/
 
-char *b3Scene::b3GetName()
+char * b3Scene::b3GetName()
 {
-	m_Filename.b3SplitFileName(null,m_SceneName);
+	m_Filename.b3SplitFileName(null, m_SceneName);
 	m_SceneName.b3RemoveExt();
 	return m_SceneName;
 }
 
-char *b3Scene::b3GetFilename()
+char * b3Scene::b3GetFilename()
 {
 	return m_Filename;
 }
 
-void b3Scene::b3SetFilename(const char *filename)
+void b3Scene::b3SetFilename(const char * filename)
 {
-	m_Filename.b3Format("%s",filename);
+	m_Filename.b3Format("%s", filename);
 }
 
-void b3Scene::b3SetTexture(const char *name)
+void b3Scene::b3SetTexture(const char * name)
 {
-	b3Item::b3SetString(m_TextureName,sizeof(m_TextureName),name);
+	b3Item::b3SetString(m_TextureName, sizeof(m_TextureName), name);
 }
 
 /*************************************************************************
@@ -228,20 +228,20 @@ void b3Scene::b3SetTexture(const char *name)
 **                                                                      **
 *************************************************************************/
 
-b3Animation *b3Scene::b3GetAnimation(b3_bool force)
+b3Animation * b3Scene::b3GetAnimation(b3_bool force)
 {
-	b3Animation *animation;
-	b3Item      *item;
+	b3Animation * animation;
+	b3Item   *   item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == ANIMATION)
+		if(item->b3GetClassType() == ANIMATION)
 		{
 			return (b3Animation *)item;
 		}
 	}
 
-	if (force)
+	if(force)
 	{
 		animation = new b3Animation(ANIMATION);
 		b3GetSpecialHead()->b3Append(animation);
@@ -255,19 +255,19 @@ b3Animation *b3Scene::b3GetAnimation(b3_bool force)
 
 b3_f64 b3Scene::b3GetTimePoint()
 {
-	b3Animation *anim = b3GetAnimation();
+	b3Animation * anim = b3GetAnimation();
 
 	return anim != null ? anim->m_Time : 0;
 }
 
-b3ModellerInfo *b3Scene::b3GetModellerInfo()
+b3ModellerInfo * b3Scene::b3GetModellerInfo()
 {
-	b3ModellerInfo *info;
-	b3Item         *item;
+	b3ModellerInfo * info;
+	b3Item     *    item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == LINES_INFO)
+		if(item->b3GetClassType() == LINES_INFO)
 		{
 			return (b3ModellerInfo *)item;
 		}
@@ -278,20 +278,20 @@ b3ModellerInfo *b3Scene::b3GetModellerInfo()
 	return info;
 }
 
-b3Distribute *b3Scene::b3GetDistributed(b3_bool force)
+b3Distribute * b3Scene::b3GetDistributed(b3_bool force)
 {
-	b3Distribute *distributed;
-	b3Item       *item;
+	b3Distribute * distributed;
+	b3Item    *   item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == DISTRIBUTE)
+		if(item->b3GetClassType() == DISTRIBUTE)
 		{
 			return (b3Distribute *)item;
 		}
 	}
 
-	if (force)
+	if(force)
 	{
 		distributed = new b3Distribute(DISTRIBUTE);
 		b3GetSpecialHead()->b3Append(distributed);
@@ -303,20 +303,20 @@ b3Distribute *b3Scene::b3GetDistributed(b3_bool force)
 	return distributed;
 }
 
-b3Nebular *b3Scene::b3GetNebular(b3_bool force)
+b3Nebular * b3Scene::b3GetNebular(b3_bool force)
 {
-	b3Nebular *nebular;
-	b3Item    *item;
+	b3Nebular * nebular;
+	b3Item  *  item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == NEBULAR)
+		if(item->b3GetClassType() == NEBULAR)
 		{
 			return (b3Nebular *)item;
 		}
 	}
 
-	if (force)
+	if(force)
 	{
 		nebular = new b3Nebular(NEBULAR);
 		b3GetSpecialHead()->b3Append(nebular);
@@ -328,20 +328,20 @@ b3Nebular *b3Scene::b3GetNebular(b3_bool force)
 	return nebular;
 }
 
-b3SuperSample *b3Scene::b3GetSuperSample(b3_bool force)
+b3SuperSample * b3Scene::b3GetSuperSample(b3_bool force)
 {
-	b3SuperSample *supersample;
-	b3Item        *item;
+	b3SuperSample * supersample;
+	b3Item    *    item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == SUPERSAMPLE4)
+		if(item->b3GetClassType() == SUPERSAMPLE4)
 		{
 			return (b3SuperSample *)item;
 		}
 	}
 
-	if (force)
+	if(force)
 	{
 		supersample = new b3SuperSample(SUPERSAMPLE4);
 		b3GetSpecialHead()->b3Append(supersample);
@@ -353,20 +353,20 @@ b3SuperSample *b3Scene::b3GetSuperSample(b3_bool force)
 	return supersample;
 }
 
-b3LensFlare *b3Scene::b3GetLensFlare(b3_bool force)
+b3LensFlare * b3Scene::b3GetLensFlare(b3_bool force)
 {
-	b3LensFlare *lensflare;
-	b3Item      *item;
+	b3LensFlare * lensflare;
+	b3Item   *   item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == LENSFLARE)
+		if(item->b3GetClassType() == LENSFLARE)
 		{
 			return (b3LensFlare *)item;
 		}
 	}
 
-	if (force)
+	if(force)
 	{
 		lensflare = new b3LensFlare(LENSFLARE);
 		b3GetSpecialHead()->b3Append(lensflare);
@@ -379,20 +379,20 @@ b3LensFlare *b3Scene::b3GetLensFlare(b3_bool force)
 	return lensflare;
 }
 
-b3CloudBackground*b3Scene::b3GetCloudBackground(b3_bool force)
+b3CloudBackground * b3Scene::b3GetCloudBackground(b3_bool force)
 {
-	b3CloudBackground *clouds;
-	b3Item            *item;
+	b3CloudBackground * clouds;
+	b3Item      *      item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == CLOUDS)
+		if(item->b3GetClassType() == CLOUDS)
 		{
 			return (b3CloudBackground *)item;
 		}
 	}
 
-	if (force)
+	if(force)
 	{
 		clouds = new b3CloudBackground(CLOUDS);
 		b3GetSpecialHead()->b3Append(clouds);
@@ -411,28 +411,28 @@ b3CloudBackground*b3Scene::b3GetCloudBackground(b3_bool force)
 **                                                                      **
 *************************************************************************/
 
-b3CameraPart *b3Scene::b3GetFirstCamera(b3_bool must_active)
+b3CameraPart * b3Scene::b3GetFirstCamera(b3_bool must_active)
 {
-	b3CameraPart *camera,*first = null;
-	b3Item       *item;
+	b3CameraPart * camera, *first = null;
+	b3Item    *   item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == CAMERA)
+		if(item->b3GetClassType() == CAMERA)
 		{
 			camera = (b3CameraPart *)item;
-			if (first == null)
+			if(first == null)
 			{
 				first = camera;
 			}
-			if ((!must_active) || (camera->m_Flags & CAMERA_ACTIVE))
+			if((!must_active) || (camera->m_Flags & CAMERA_ACTIVE))
 			{
 				return camera;
 			}
 		}
 	}
 
-	if (first == null)
+	if(first == null)
 	{
 		camera = new b3CameraPart(CAMERA);
 		camera->m_EyePoint  = m_EyePoint;
@@ -440,7 +440,7 @@ b3CameraPart *b3Scene::b3GetFirstCamera(b3_bool must_active)
 		camera->m_Width     = m_Width;
 		camera->m_Height    = m_Height;
 		camera->m_Flags     = CAMERA_ACTIVE;
-		b3GetTitle(camera->m_CameraName,sizeof(camera->m_CameraName));
+		b3GetTitle(camera->m_CameraName, sizeof(camera->m_CameraName));
 		b3GetSpecialHead()->b3Append(camera);
 	}
 	else
@@ -452,17 +452,17 @@ b3CameraPart *b3Scene::b3GetFirstCamera(b3_bool must_active)
 }
 
 
-b3CameraPart *b3Scene::b3GetCameraByName(const char *camera_name)
+b3CameraPart * b3Scene::b3GetCameraByName(const char * camera_name)
 {
-	b3CameraPart *camera;
-	b3Item       *item;
+	b3CameraPart * camera;
+	b3Item    *   item;
 
-	B3_FOR_BASE(b3GetSpecialHead(),item)
+	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if (item->b3GetClassType() == CAMERA)
+		if(item->b3GetClassType() == CAMERA)
 		{
 			camera = (b3CameraPart *)item;
-			if (stricmp(camera->b3GetName(),camera_name) == 0)
+			if(stricmp(camera->b3GetName(), camera_name) == 0)
 			{
 				return camera;
 			}
@@ -471,9 +471,9 @@ b3CameraPart *b3Scene::b3GetCameraByName(const char *camera_name)
 	return null;
 }
 
-b3CameraPart *b3Scene::b3GetActualCamera()
+b3CameraPart * b3Scene::b3GetActualCamera()
 {
-	if (m_ActualCamera == null)
+	if(m_ActualCamera == null)
 	{
 		b3SetCamera(b3GetFirstCamera(false));
 	}
@@ -481,11 +481,11 @@ b3CameraPart *b3Scene::b3GetActualCamera()
 	return m_ActualCamera;
 }
 
-b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
+b3CameraPart * b3Scene::b3GetNextCamera(b3CameraPart * camera)
 {
-	while ((camera = (b3CameraPart *)camera->Succ) != null)
+	while((camera = (b3CameraPart *)camera->Succ) != null)
 	{
-		if (camera->b3GetClassType() == CAMERA)
+		if(camera->b3GetClassType() == CAMERA)
 		{
 			return camera;
 		}
@@ -493,11 +493,11 @@ b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 	return null;
 }
 
-b3CameraPart *b3Scene::b3UpdateCamera()
+b3CameraPart * b3Scene::b3UpdateCamera()
 {
-	if (m_ActualCamera != null)
+	if(m_ActualCamera != null)
 	{
-		b3PrintF(B3LOG_DEBUG,"Using camera %s\n",m_ActualCamera->b3GetName());
+		b3PrintF(B3LOG_DEBUG, "Using camera %s\n", m_ActualCamera->b3GetName());
 		m_EyePoint 	= m_ActualCamera->m_EyePoint;
 		m_ViewPoint = m_ActualCamera->m_ViewPoint;
 		m_Width     = m_ActualCamera->m_Width;
@@ -506,38 +506,38 @@ b3CameraPart *b3Scene::b3UpdateCamera()
 	return m_ActualCamera;
 }
 
-void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
+void b3Scene::b3SetCamera(b3CameraPart * camera, b3_bool reorder)
 {
 	m_ActualCamera = camera;
 	b3UpdateCamera();
-	if (camera != null)
+	if(camera != null)
 	{
-		if (reorder)
+		if(reorder)
 		{
 			b3GetSpecialHead()->b3Remove(camera);
 			b3GetSpecialHead()->b3First(camera);
 		}
 
-		if (strlen(camera->m_CameraName) == 0)
+		if(strlen(camera->m_CameraName) == 0)
 		{
-			b3Dir::b3SplitFileName(m_Filename,null,camera->m_CameraName);
+			b3Dir::b3SplitFileName(m_Filename, null, camera->m_CameraName);
 		}
 	}
 }
 
-b3_bool b3Scene::b3GetTitle(char *title,size_t size)
+b3_bool b3Scene::b3GetTitle(char * title, size_t size)
 {
 	title[0] = 0;
-	if (m_ActualCamera != null)
+	if(m_ActualCamera != null)
 	{
-		if (strlen(m_ActualCamera->m_CameraName) > 0)
+		if(strlen(m_ActualCamera->m_CameraName) > 0)
 		{
-			strlcpy(title,m_ActualCamera->m_CameraName,size);
+			strlcpy(title, m_ActualCamera->m_CameraName, size);
 		}
 	}
 	else
 	{
-		b3Dir::b3SplitFileName(m_Filename,null,title);
+		b3Dir::b3SplitFileName(m_Filename, null, title);
 	}
 	return strlen(title) > 0;
 }
@@ -548,15 +548,15 @@ b3_bool b3Scene::b3GetTitle(char *title,size_t size)
 **                                                                      **
 *************************************************************************/
 
-b3Light *b3Scene::b3GetLightByName(const char *light_name)
+b3Light * b3Scene::b3GetLightByName(const char * light_name)
 {
-	b3Light *light;
-	b3Item  *item;
+	b3Light * light;
+	b3Item * item;
 
-	B3_FOR_BASE(b3GetLightHead(),item)
+	B3_FOR_BASE(b3GetLightHead(), item)
 	{
 		light = (b3Light *)item;
-		if (stricmp(light->b3GetName(),light_name) == 0)
+		if(stricmp(light->b3GetName(), light_name) == 0)
 		{
 			return light;
 		}
@@ -569,24 +569,24 @@ b3_count b3Scene::b3GetLightCount()
 	return m_LightCount;
 }
 
-b3Light *b3Scene::b3GetLight(b3_bool must_active)
+b3Light * b3Scene::b3GetLight(b3_bool must_active)
 {
-	b3Light *light;
-	b3Item  *item;
+	b3Light * light;
+	b3Item * item;
 
-	B3_FOR_BASE(b3GetLightHead(),item)
+	B3_FOR_BASE(b3GetLightHead(), item)
 	{
 		light = (b3Light *)item;
-		if ((!must_active) || ((light->m_Flags & LIGHT_OFF) == 0))
+		if((!must_active) || ((light->m_Flags & LIGHT_OFF) == 0))
 		{
 			return light;
 		}
 	}
 
-	if ((light = (b3Light *)b3GetLightHead()->First) == null)
+	if((light = (b3Light *)b3GetLightHead()->First) == null)
 	{
 		light = new b3Light(SPOT_LIGHT);
-		strlcpy(light->m_Name,"Light",sizeof(light->m_Name));
+		strlcpy(light->m_Name, "Light", sizeof(light->m_Name));
 		b3GetLightHead()->b3Append(light);
 	}
 
@@ -599,7 +599,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 **                                                                      **
 *************************************************************************/
 
-b3Scene *b3Scene::b3ReadTGF(const char *filename)
+b3Scene * b3Scene::b3ReadTGF(const char * filename)
 {
 	return b3TGFReader::b3ReadTGFScene(filename);
 }
@@ -612,45 +612,45 @@ b3Scene *b3Scene::b3ReadTGF(const char *filename)
 
 const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP] =
 {
-	0.55,0.0,0.0,0.25,0.45,0.55
+	0.55, 0.0, 0.0, 0.25, 0.45, 0.55
 };
 
 const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP] =
 {
-	0.9,0.95,0.95,0.6,0.6,0.6
+	0.9, 0.95, 0.95, 0.6, 0.6, 0.6
 };
 
 const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP] =
 {
-	2.4,1.5,1.5,2.0,7.0,4.0
+	2.4, 1.5, 1.5, 2.0, 7.0, 4.0
 };
 
-void b3Scene::b3MixLensFlare(b3_ray *ray)
+void b3Scene::b3MixLensFlare(b3_ray * ray)
 {
-	b3Item    *item;
-	b3Light   *light;
-	b3_vector  central,toLight,nLight;
+	b3Item  *  item;
+	b3Light  * light;
+	b3_vector  central, toLight, nLight;
 	b3Color    result;
-	b3_f64     distance,weight = 0.6;
+	b3_f64     distance, weight = 0.6;
 	b3_count   i;
 
-	B3_FOR_BASE(b3GetLightHead(),item)
+	B3_FOR_BASE(b3GetLightHead(), item)
 	{
 		light = (b3Light *)item;
 
 		toLight.x = light->m_Position.x - m_ViewPoint.x;
 		toLight.y = light->m_Position.y - m_ViewPoint.y;
 		toLight.z = light->m_Position.z - m_ViewPoint.z;
-		distance  = b3Vector::b3Length (&toLight) / m_ViewAxisLen;
+		distance  = b3Vector::b3Length(&toLight) / m_ViewAxisLen;
 		central.x = distance * m_ViewAxis.x;
 		central.y = distance * m_ViewAxis.y;
 		central.z = distance * m_ViewAxis.z;
 
-		b3Vector::b3CrossProduct (&m_ViewAxis,&toLight,&nLight);
+		b3Vector::b3CrossProduct(&m_ViewAxis, &toLight, &nLight);
 
-		for (i = 0;i < LENSFLARE_LOOP;i++)
+		for(i = 0; i < LENSFLARE_LOOP; i++)
 		{
-			b3_f64    cWeight,lWeight,angle,reverse,beta;
+			b3_f64    cWeight, lWeight, angle, reverse, beta;
 #ifdef TX_DISTURB
 			b3_vector diff;
 #endif
@@ -662,28 +662,43 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 			nLight.z = cWeight * central.z + lWeight * toLight.z;
 
 			beta     = (
-						   nLight.x * ray->dir.x +
-						   nLight.y * ray->dir.y +
-						   nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
-			angle    = pow(beta,m_LensFlare->m_Expon * m_Exponents[i]);
-			if (i < LENSFLARE_RING)
+					nLight.x * ray->dir.x +
+					nLight.y * ray->dir.y +
+					nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
+			angle    = pow(beta, m_LensFlare->m_Expon * m_Exponents[i]);
+			if(i < LENSFLARE_RING)
 			{
-				if ((angle > 0.5) && (angle < 0.55)) angle = 0.3;
-				else angle = 0;
+				if((angle > 0.5) && (angle < 0.55))
+				{
+					angle = 0.3;
+				}
+				else
+				{
+					angle = 0;
+				}
 			}
 			else
 			{
-				if (angle > 0.9)  angle  = 0.9;
+				if(angle > 0.9)
+				{
+					angle  = 0.9;
+				}
 				else
 				{
-					if (angle > 0.89) angle = 0.95;
-					else angle *= m_ResultWeights[i];
+					if(angle > 0.89)
+					{
+						angle = 0.95;
+					}
+					else
+					{
+						angle *= m_ResultWeights[i];
+					}
 				}
 				angle *= weight;
 			}
 
 			reverse  = 1.0 - angle;
-			if (i < LENSFLARE_RING)
+			if(i < LENSFLARE_RING)
 			{
 				result.b3Init(
 					ray->color[b3Color::R] * reverse + angle * light->m_Color[b3Color::R] * m_LensFlare->m_Color[b3Color::R],
@@ -700,32 +715,44 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 }
 
 void b3Scene::b3GetBackgroundColor(
-	b3_ray *ray,
+	b3_ray * ray,
 	b3_f64  lx,
 	b3_f64  ly)
 {
-	b3_coord  x,y;
-	b3_f64    r,sight;
+	b3_coord  x, y;
+	b3_f64    r, sight;
 
-	switch (m_BackgroundType)
+	switch(m_BackgroundType)
 	{
 	case TP_TEXTURE :
 		x = (b3_coord)(((lx + 1) * 0.5 * (m_BackTexture->xSize - 1)));
 		y = (b3_coord)(((1 - ly) * 0.5 * (m_BackTexture->ySize - 1)));
-		if (x < 0)                     x = 0;
-		if (x >= m_BackTexture->xSize) x = m_BackTexture->xSize - 1;
-		if (y < 0)                     y = 0;
-		if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
+		if(x < 0)
+		{
+			x = 0;
+		}
+		if(x >= m_BackTexture->xSize)
+		{
+			x = m_BackTexture->xSize - 1;
+		}
+		if(y < 0)
+		{
+			y = 0;
+		}
+		if(y >= m_BackTexture->ySize)
+		{
+			y = m_BackTexture->ySize - 1;
+		}
 
-		ray->color = m_BackTexture->b3GetHdrValue(x,y);
+		ray->color = m_BackTexture->b3GetHdrValue(x, y);
 		break;
 
 	case TP_SKY_N_HELL :
-		sight      = m_Clouds->b3ComputeClouds(ray,r,b3GetTimePoint());
-		ray->color = b3Color::b3Mix(m_BottomColor,b3Color(
-										B3_MAX(r,m_TopColor[b3Color::R]),
-										B3_MAX(r,m_TopColor[b3Color::G]),
-										B3_MAX(r,m_TopColor[b3Color::B])),sight);
+		sight      = m_Clouds->b3ComputeClouds(ray, r, b3GetTimePoint());
+		ray->color = b3Color::b3Mix(m_BottomColor, b3Color(
+					B3_MAX(r, m_TopColor[b3Color::R]),
+					B3_MAX(r, m_TopColor[b3Color::G]),
+					B3_MAX(r, m_TopColor[b3Color::B])), sight);
 		break;
 
 	case TP_SLIDE :
@@ -733,14 +760,14 @@ void b3Scene::b3GetBackgroundColor(
 		break;
 
 	default:
-		ray->color.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
+		ray->color.b3Init(m_ShadowBrightness, m_ShadowBrightness, m_ShadowBrightness);
 		break;
 	}
 }
 
-void b3Scene::b3GetInfiniteColor(b3_ray *ray)
+void b3Scene::b3GetInfiniteColor(b3_ray * ray)
 {
-	b3_f64 ly,lx;
+	b3_f64 ly, lx;
 
 	ly =
 		ray->dir.x * m_NormHeight.x +
@@ -751,5 +778,5 @@ void b3Scene::b3GetInfiniteColor(b3_ray *ray)
 		ray->dir.y * m_NormWidth.y +
 		ray->dir.z * m_NormWidth.z;
 
-	b3GetBackgroundColor (ray,lx,ly);
+	b3GetBackgroundColor(ray, lx, ly);
 }

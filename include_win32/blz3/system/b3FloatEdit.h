@@ -36,7 +36,7 @@ class B3_PLUGIN CB3FloatEdit : public CEdit
 {
 	DECLARE_DYNAMIC(CB3FloatEdit)
 
-// Construction
+	// Construction
 	char    m_Format[16];
 	char    m_Buffer[32];
 	int     m_PreDigits;
@@ -49,34 +49,34 @@ public:
 	b3_f64  m_Value;
 	CB3FloatEdit();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
-	void    b3DDX(CDataExchange *pDX,b3_f32 &pos);
-	void    b3DDX(CDataExchange *pDX,b3_f64 &pos);
+	void    b3DDX(CDataExchange * pDX, b3_f32 & pos);
+	void    b3DDX(CDataExchange * pDX, b3_f64 & pos);
 	b3_f64  b3SetMin(b3_f64 min);
 	b3_f64  b3SetMax(b3_f64 max);
-	b3_f64  b3SetRange(b3_f64 min,b3_f64 max);
+	b3_f64  b3SetRange(b3_f64 min, b3_f64 max);
 	void    b3DisableBound();
-	void    b3SetDigits(int pre,int post);
+	void    b3SetDigits(int pre, int post);
 	b3_f64  b3SetPos(b3_f64 value);
 	b3_f64  b3GetPos();
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3FloatEdit)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CB3FloatEdit();
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CB3FloatEdit)
-	afx_msg void OnKillFocus(CWnd* pNewWnd);
+	afx_msg void OnKillFocus(CWnd * pNewWnd);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

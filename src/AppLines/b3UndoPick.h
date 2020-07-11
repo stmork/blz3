@@ -28,11 +28,11 @@ class b3OpUndoPick : public b3Operation
 {
 	b3_vector       m_UndoVec;
 	b3_vector       m_RedoVec;
-	b3_vector      *m_Vector;
-	b3RenderObject *m_RenderObject;
+	b3_vector   *   m_Vector;
+	b3RenderObject * m_RenderObject;
 
 protected:
-	     b3OpUndoPick(b3_vector *undo,b3_vector *redo, b3RenderObject *object);
+	b3OpUndoPick(b3_vector * undo, b3_vector * redo, b3RenderObject * object);
 	void b3Do();
 	void b3Undo();
 	void b3Redo();
@@ -41,7 +41,7 @@ protected:
 class b3OpPickPoint : public b3OpUndoPick
 {
 public:
-	inline b3OpPickPoint(b3_vector *undo,b3_vector *redo, b3RenderObject *object) : b3OpUndoPick(undo, redo, object)
+	inline b3OpPickPoint(b3_vector * undo, b3_vector * redo, b3RenderObject * object) : b3OpUndoPick(undo, redo, object)
 	{
 	}
 
@@ -54,7 +54,7 @@ public:
 class b3OpPickDir : public b3OpUndoPick
 {
 public:
-	inline b3OpPickDir(b3_vector *undo,b3_vector *redo, b3RenderObject *object) : b3OpUndoPick(undo, redo, object)
+	inline b3OpPickDir(b3_vector * undo, b3_vector * redo, b3RenderObject * object) : b3OpUndoPick(undo, redo, object)
 	{
 	}
 

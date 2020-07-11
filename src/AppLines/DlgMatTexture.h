@@ -37,25 +37,25 @@
 class CDlgMatTexture : public CB3SimplePreviewDialog
 {
 	b3_stencil_bound   m_Bound;
-	b3BBox            *m_BBox;
-	b3Shape           *m_Shape;
-	b3Scene           *m_MatScene;
-	b3Base<b3Item>    *m_MatHead;
-	b3MatTexture      *m_Material;
+	b3BBox      *      m_BBox;
+	b3Shape      *     m_Shape;
+	b3Scene      *     m_MatScene;
+	b3Base<b3Item>  *  m_MatHead;
+	b3MatTexture   *   m_Material;
 
 	b3ConditionControl m_xStart;
 	b3ConditionControl m_xScale;
 	b3ConditionControl m_yStart;
 	b3ConditionControl m_yScale;
 
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgMatTexture(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgMatTexture(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgMatTexture();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgMatTexture)
 	enum { IDD = IDD_MAT_TEXTURE };
 	CB3FloatSpinButtonCtrl	m_xStartCtrl;
@@ -78,14 +78,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgMatTexture)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

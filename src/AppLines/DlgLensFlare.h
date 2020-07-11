@@ -34,15 +34,15 @@
 
 class CDlgLensFlare : public CPropertyPage
 {
-// Construction
+	// Construction
 	b3_u32       m_ShadingClassType;
-	b3Scene     *m_LensFlareScene;
-	b3LensFlare *m_EditLensFlare;
+	b3Scene   *  m_LensFlareScene;
+	b3LensFlare * m_EditLensFlare;
 public:
-	b3LensFlare *m_LensFlare;
-	CDlgLensFlare(b3_u32 class_type,CWnd* pParent = NULL);   // standard constructor
+	b3LensFlare * m_LensFlare;
+	CDlgLensFlare(b3_u32 class_type, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgLensFlare)
 	enum { IDD = IDD_LENS_FLARE };
 	CB3ShowRaytrace	m_LensFlarePreviewCtrl;
@@ -52,14 +52,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgLensFlare)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

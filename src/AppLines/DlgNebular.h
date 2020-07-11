@@ -35,16 +35,16 @@
 
 class CDlgNebular : public CPropertyPage
 {
-// Construction
+	// Construction
 	b3_u32       m_ShadingClassType;
-	b3Scene     *m_NebularScene;
-	b3Nebular   *m_EditNebular;
+	b3Scene   *  m_NebularScene;
+	b3Nebular  * m_EditNebular;
 
 public:
-	b3Nebular   *m_Nebular;
-	CDlgNebular(b3_u32 class_type, CWnd* pParent = NULL);   // standard constructor
+	b3Nebular  * m_Nebular;
+	CDlgNebular(b3_u32 class_type, CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgNebular)
 	enum { IDD = IDD_NEBULAR };
 	CB3ShowRaytrace	m_NebularPreviewCtrl;
@@ -54,14 +54,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgNebular)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

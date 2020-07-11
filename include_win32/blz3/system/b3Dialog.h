@@ -25,29 +25,29 @@ class B3_PLUGIN CB3Dialog : public CDialog
 {
 public:
 	DECLARE_DYNAMIC(CB3Dialog)
-	CB3Dialog(int dlgId,CWnd* pParent = NULL);   // standard constructor
+	CB3Dialog(int dlgId, CWnd * pParent = NULL); // standard constructor
 	virtual ~CB3Dialog(void);
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CB3Dialog)
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3Dialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3Dialog)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnEdit();
-	afx_msg void OnSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnSpin(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

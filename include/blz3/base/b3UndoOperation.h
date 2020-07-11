@@ -98,7 +98,7 @@ protected:
 	 *
 	 * @param info Custom application dependend information.
 	 */
-	virtual void     b3Prepare(b3UndoPrepareInfo *info) = 0;
+	virtual void     b3Prepare(b3UndoPrepareInfo * info) = 0;
 
 	/**
 	 * This method sets the initialization state. This method must be called during
@@ -164,7 +164,7 @@ class b3UndoBuffer
 protected:
 	b3Base<b3UndoOperation>  m_UndoBuffer;   //!< The list of undo operations.
 	b3Base<b3UndoOperation>  m_RedoBuffer;   //!< The list of redo operations.
-	b3UndoPrepareInfo       *m_PrepareInfo;  //!< An information class for custom purposes.
+	b3UndoPrepareInfo    *   m_PrepareInfo;  //!< An information class for custom purposes.
 
 public:
 	/**
@@ -196,7 +196,7 @@ public:
 	 * @param operation The new operation for doing.
 	 * @return True if the operation was initialized.
 	 */
-	b3_bool  b3Do(b3UndoOperation *operation);
+	b3_bool  b3Do(b3UndoOperation * operation);
 
 	/**
 	 * This method removes the last undo operation from the list if any
@@ -229,8 +229,8 @@ public:
 	b3_bool  b3HasRedo();
 
 private:
-	void     b3Delete(b3UndoOperation *op);
-	void     b3Delete(b3Base<b3UndoOperation> *buffer);
+	void     b3Delete(b3UndoOperation * op);
+	void     b3Delete(b3Base<b3UndoOperation> * buffer);
 };
 
 #endif

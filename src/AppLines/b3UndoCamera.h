@@ -26,12 +26,12 @@
 class b3OpCamera : public b3Operation
 {
 protected:
-	CMainFrame   *m_Main;
-	b3Scene      *m_Scene;
-	b3CameraPart *m_Camera;
+	CMainFrame  * m_Main;
+	b3Scene   *   m_Scene;
+	b3CameraPart * m_Camera;
 
 protected:
-	inline b3OpCamera(b3Scene *scene,b3CameraPart *camera)
+	inline b3OpCamera(b3Scene * scene, b3CameraPart * camera)
 	{
 		m_Scene  = scene;
 		m_Camera = camera;
@@ -41,15 +41,15 @@ protected:
 
 class b3OpCameraCreate : public b3OpCamera
 {
-	b3CameraPart *m_Selected;
+	b3CameraPart * m_Selected;
 
 public:
-	b3OpCameraCreate(b3Scene *scene,b3CameraPart *camera);
-	
+	b3OpCameraCreate(b3Scene * scene, b3CameraPart * camera);
+
 protected:
 	void b3Undo();
 	void b3Redo();
-	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Prepare(CAppRenderDoc * pDoc);
 	void b3Delete();
 
 	inline int  b3GetId()
@@ -60,14 +60,14 @@ protected:
 
 class b3OpCameraDelete : public b3OpCamera
 {
-	b3CameraPart *m_Selected;
+	b3CameraPart * m_Selected;
 
 public:
-	           b3OpCameraDelete(b3Scene *scene,b3CameraPart *camera);
+	b3OpCameraDelete(b3Scene * scene, b3CameraPart * camera);
 protected:
 	void b3Undo();
 	void b3Redo();
-	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Prepare(CAppRenderDoc * pDoc);
 	void b3Delete();
 
 	inline int  b3GetId()
@@ -78,20 +78,20 @@ protected:
 
 class b3OpCameraOrientate : public b3OpCamera
 {
-	b3CameraPart   *m_Prev;      // previous camera dimensions
-	b3CameraPart   *m_Computed;  // computed camera dimensions
+	b3CameraPart  * m_Prev;      // previous camera dimensions
+	b3CameraPart  * m_Computed;  // computed camera dimensions
 
 public:
 	b3OpCameraOrientate(
-		b3Scene      *scene,
-		b3CameraPart *camera,
-		b3_vector    *fulcrum);
-	
+		b3Scene   *   scene,
+		b3CameraPart * camera,
+		b3_vector  *  fulcrum);
+
 protected:
 	void b3Delete();
 	void b3Undo();
 	void b3Redo();
-	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Prepare(CAppRenderDoc * pDoc);
 
 	inline int  b3GetId()
 	{
@@ -99,7 +99,7 @@ protected:
 	}
 
 private:
-	void b3Copy(const b3CameraPart *src);
+	void b3Copy(const b3CameraPart * src);
 };
 
 class b3OpCameraEnable : public b3OpCamera
@@ -107,10 +107,10 @@ class b3OpCameraEnable : public b3OpCamera
 	b3_bool       m_Activation;
 
 public:
-	     b3OpCameraEnable(b3Scene *scene,b3CameraPart *camera);
+	b3OpCameraEnable(b3Scene * scene, b3CameraPart * camera);
 
 protected:
-	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Prepare(CAppRenderDoc * pDoc);
 	void b3Undo();
 	void b3Redo();
 

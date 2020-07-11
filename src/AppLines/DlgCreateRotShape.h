@@ -38,13 +38,13 @@ class CDlgCreateRotShape : public CB3ProfileShapeDialog
 	b3_s32         m_Degree;
 	b3_s32         m_Controls;
 	b3_s32         m_SubDiv;
-// Construction
+	// Construction
 public:
 	CDlgCreateRotShape();
 	~CDlgCreateRotShape();
 
 	virtual void b3PostProcess();
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCreateRotShape)
 	enum { IDD = IDD_CREATE_ROTSHAPE };
 	CStatic	m_LegendCtrl;
@@ -57,20 +57,20 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCreateRotShape)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateRotShape)
-	afx_msg void OnDegreeSpin(NMHDR* pNMHDR, LRESULT* pResult) ;
+	afx_msg void OnDegreeSpin(NMHDR * pNMHDR, LRESULT * pResult) ;
 	afx_msg void OnDegreeEdit();
 	afx_msg void OnClosed();
 	virtual BOOL OnInitDialog();

@@ -34,13 +34,13 @@
 
 class CPageOakPlank : public CB3PropertyPage
 {
-// Construction
+	// Construction
 public:
-	b3OakPlank *m_OakPlank;
+	b3OakPlank * m_OakPlank;
 	CPageOakPlank();
 	~CPageOakPlank();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPageOakPlank)
 	enum { IDD = IDD_PAGE_OAKPLANK };
 	CB3IntSpinButtonCtrl	m_xTimesCtrl;
@@ -51,14 +51,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPageOakPlank)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageOakPlank)

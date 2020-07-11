@@ -28,7 +28,7 @@ typedef unsigned int b3_excno;
 
 class b3ExceptionBase;
 
-typedef void         (*b3ExceptionLogger)(const b3ExceptionBase *exception);
+typedef void (*b3ExceptionLogger)(const b3ExceptionBase * exception);
 typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 
 /**
@@ -42,7 +42,7 @@ class B3_PLUGIN b3ExceptionBase : public std::exception
 	b3_excno                   m_ExceptionType;
 	b3_errno                   m_ErrorCode;
 	b3_count                   m_LineNo;
-	const char                *m_FileName;
+	const char        *        m_FileName;
 
 protected:
 	/**
@@ -58,21 +58,21 @@ protected:
 		const b3_errno  ErrNo,
 		const b3_excno  ExcNo,
 		const b3_count  lineno,
-		const char     *filename);
+		const char   *  filename);
 
 	/**
 	* This copy constructor creates an exception instance.
 	*
 	* @param exception The exception from where the data is copied from.
 	*/
-	explicit b3ExceptionBase(const b3ExceptionBase &exception);
+	explicit b3ExceptionBase(const b3ExceptionBase & exception);
 
 	/**
 	 * This method logs an exception.
 	 *
 	 * @param exception The exception to log.
 	 */
-	static void        b3Log(const b3ExceptionBase *exception);
+	static void        b3Log(const b3ExceptionBase * exception);
 
 	/**
 	 * This method computes an error message from the given error code.
@@ -80,7 +80,7 @@ protected:
 	 * @param ErrNo The error code.
 	 * @return The resulting error message.
 	 */
-	static const char *b3GetMessage(const b3_errno ErrNo);
+	static const char * b3GetMessage(const b3_errno ErrNo);
 
 public:
 	/**
@@ -98,7 +98,7 @@ public:
 	 *
 	 * \return The exceptions error message.
 	 */
-	inline const char *b3GetErrorMsg() const
+	inline const char * b3GetErrorMsg() const
 	{
 		return m_GetMessage(m_ErrorCode);
 	}
@@ -117,7 +117,7 @@ public:
 	 */
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 
-	const char *what() const noexcept override;
+	const char * what() const noexcept override;
 };
 
 #define B3_MK_ERRNO(e,t) (((e) & 0xff) | ((t) << 8))
@@ -125,7 +125,7 @@ public:
 /**
  * This template class is the main exception class.
  */
-template <class T,b3_excno C> class B3_PLUGIN b3Exception : public b3ExceptionBase
+template <class T, b3_excno C> class B3_PLUGIN b3Exception : public b3ExceptionBase
 {
 public:
 	/**
@@ -137,12 +137,12 @@ public:
 	 */
 	explicit b3Exception(
 		const T     error,
-		const char *FileName,
+		const char * FileName,
 		const int   LineNo) : b3ExceptionBase(
-					B3_MK_ERRNO(error,C),
-					C,
-					LineNo,
-					FileName)
+				B3_MK_ERRNO(error, C),
+				C,
+				LineNo,
+				FileName)
 	{
 	}
 };

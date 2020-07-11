@@ -31,28 +31,28 @@
 
 class CDlgObjectPreview : public CDialog
 {
-	b3Scene  *m_PreviewScene;
+	b3Scene * m_PreviewScene;
 
-// Construction
+	// Construction
 public:
-	CDlgObjectPreview(b3_u32 shading_class_type, b3BBox *bbox,b3CameraPart *camera,CWnd* pParent = NULL);   // standard constructor
+	CDlgObjectPreview(b3_u32 shading_class_type, b3BBox * bbox, b3CameraPart * camera, CWnd * pParent = NULL); // standard constructor
 	~CDlgObjectPreview();
-	
-// Dialog Data
+
+	// Dialog Data
 	//{{AFX_DATA(CDlgObjectPreview)
 	enum { IDD = IDD_OBJECT_PREVIEW };
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgObjectPreview)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

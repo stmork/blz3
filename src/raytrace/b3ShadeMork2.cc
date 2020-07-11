@@ -30,39 +30,39 @@
 **                                                                      **
 *************************************************************************/
 
-b3ShaderMork2::b3ShaderMork2(b3Scene *scene) : b3Shader(scene)
+b3ShaderMork2::b3ShaderMork2(b3Scene * scene) : b3Shader(scene)
 {
 }
 
-void b3ShaderMork2::b3Prepare(b3_preparation_info *prep_info)
+void b3ShaderMork2::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3Shader::b3Prepare(prep_info);
 	m_ShadowFactor = m_Scene->m_ShadowBrightness / m_Scene->b3GetLightCount();
 }
 
 void b3ShaderMork2::b3ShadeLight(
-	b3Light       *light,
-	b3_light_info *Jit,
-	b3_surface    *surface)
+	b3Light    *   light,
+	b3_light_info * Jit,
+	b3_surface  *  surface)
 {
 	b3Color illumination;
 
 	illumination.b3InitFactor(m_ShadowFactor);
 
 	// No shadow => surface in light
-	if (Jit->shape == null)
+	if(Jit->shape == null)
 	{
 		b3_f64 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
 		b3_f32 factor;
 
 		// specular high light
-		if (ShapeAngle >= 0)
+		if(ShapeAngle >= 0)
 		{
 			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
-			if (spec_exp < 100000) // test if surface if rough
+			if(spec_exp < 100000)  // test if surface if rough
 			{
-				b3_f64 lambda = b3Vector::b3SMul(&surface->m_ReflRay.dir,&Jit->dir);
+				b3_f64 lambda = b3Vector::b3SMul(&surface->m_ReflRay.dir, &Jit->dir);
 
 				factor = b3Math::b3FastPow(lambda, spec_exp) * Jit->m_LightFrac;
 				Jit->m_SpecularSum += (light->m_Color * factor);
@@ -70,7 +70,7 @@ void b3ShaderMork2::b3ShadeLight(
 
 			// surface illumination (diffuse color)
 			factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor;
-			if (factor >= 0)
+			if(factor >= 0)
 			{
 				illumination += (light->m_Color * factor);
 			}
@@ -80,14 +80,14 @@ void b3ShaderMork2::b3ShadeLight(
 	else
 	{
 		b3_surface  obsSurface;
-		b3Material *obsMat;
+		b3Material * obsMat;
 
 		obsSurface.m_Incoming = Jit;
 		obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
-		if (obsSurface.m_Refraction > 0)
+		if(obsSurface.m_Refraction > 0)
 		{
 			Jit->m_DiffuseSum += (
-									 light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
+					light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
 		}
 	}
 #endif
@@ -95,7 +95,7 @@ void b3ShaderMork2::b3ShadeLight(
 	Jit->m_DiffuseSum += (surface->m_Diffuse * illumination);
 }
 
-void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
+void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface * surface, b3_f32 & refl, b3_f32 & refr)
 {
 	b3_f64 alpha    = b3Math::b3Acos(surface->m_CosAlpha);
 	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
@@ -123,26 +123,26 @@ void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3
 }
 
 void b3ShaderMork2::b3ShadeSurface(
-	b3_surface *surface,
+	b3_surface * surface,
 	b3_count    depth_count)
 {
-	b3_ray   *ray = surface->m_Incoming;
-	b3_f32    refl,refr,factor;
+	b3_ray  * ray = surface->m_Incoming;
+	b3_f32    refl, refr, factor;
 
 	// Refraction
-	if (surface->m_Transparent)
+	if(surface->m_Transparent)
 	{
-		if (surface->m_Ior == 1)
+		if(surface->m_Ior == 1)
 		{
 			surface->m_RefrRay.inside = false;
 			surface->m_ReflRay.inside = false;
 		}
-		b3ComputeFresnelCoeffs(surface,refl,refr);
-		b3Shade(&surface->m_RefrRay,depth_count);
+		b3ComputeFresnelCoeffs(surface, refl, refr);
+		b3Shade(&surface->m_RefrRay, depth_count);
 	}
 	else
 	{
-		if (surface->m_Ior != 1)
+		if(surface->m_Ior != 1)
 		{
 			// simulate dielectric metal
 			b3ComputeFresnel(surface);
@@ -158,9 +158,9 @@ void b3ShaderMork2::b3ShadeSurface(
 	}
 
 	// Reflection
-	if (refl > 0)
+	if(refl > 0)
 	{
-		b3Shade(&surface->m_ReflRay,depth_count);
+		b3Shade(&surface->m_ReflRay, depth_count);
 	}
 	else
 	{
@@ -170,7 +170,7 @@ void b3ShaderMork2::b3ShadeSurface(
 
 	// Mix colors
 	factor = (1.0 - refl - refr);
-	if (factor > 0)
+	if(factor > 0)
 	{
 		// For each light source
 		surface->m_AmbientSum.b3Init();
@@ -179,7 +179,7 @@ void b3ShaderMork2::b3ShadeSurface(
 
 		// For each light source...
 		b3Illuminate(surface);
-		if (!b3Material::b3MixComponents(surface, refl, refr))
+		if(!b3Material::b3MixComponents(surface, refl, refr))
 		{
 			ray->color =
 				surface->m_AmbientSum +
@@ -191,7 +191,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	}
 	else
 	{
-		if (!b3Material::b3MixComponents(surface, refl, refr))
+		if(!b3Material::b3MixComponents(surface, refl, refr))
 		{
 			ray->color =
 				surface->m_ReflRay.color * refl +

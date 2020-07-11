@@ -24,12 +24,12 @@
 class b3Error : public b3ErrorBase
 {
 	DWORD    m_ErrorCode;
-	char    *m_ErrorText;
+	char  *  m_ErrorText;
 
 public:
-	         b3Error();
+	b3Error();
 	virtual ~b3Error();
-	char    *b3GetErrorText();
+	char  *  b3GetErrorText();
 	DWORD    b3GetError();
 
 protected:

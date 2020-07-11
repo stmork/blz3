@@ -30,39 +30,39 @@ protected: // create from serialization only
 	CAppRaytraceView();
 	DECLARE_DYNCREATE(CAppRaytraceView)
 
-// Attributes
+	// Attributes
 public:
-	CAppRaytraceDoc* GetDocument();
+	CAppRaytraceDoc * GetDocument();
 
-// Operations
+	// Operations
 public:
 	void b3BestFit();
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppRaytraceView)
-	public:
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	protected:
+public:
+	virtual void OnDraw(CDC * pDC); // overridden to draw this view
+protected:
 	virtual void OnInitialUpdate(); // called first time after construct
-	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
-	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
+	virtual void OnActivateView(BOOL bActivate, CView * pActivateView, CView * pDeactiveView);
+	virtual BOOL OnPreparePrinting(CPrintInfo * pInfo);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CAppRaytraceView();
-	virtual b3Document *b3GetDocument();
+	virtual b3Document * b3GetDocument();
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext & dc) const;
 #endif
 
 protected:
 	virtual void b3ViewParamChanged();
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppRaytraceView)
 	afx_msg void OnUnfiltered();
@@ -74,25 +74,27 @@ protected:
 	afx_msg void OnMore();
 	afx_msg void OnLess();
 	afx_msg void OnMagnify();
-	afx_msg void OnUpdateUnfiltered(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateFiltered(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateOriginal(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateWidth(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateHeight(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateFull(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateMore(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
-	afx_msg void OnUpdatePrintable(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateUnfiltered(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateFiltered(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateOriginal(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateWidth(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateHeight(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateFull(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateMore(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateLess(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateMagnify(CCmdUI * pCmdUI);
+	afx_msg void OnUpdatePrintable(CCmdUI * pCmdUI);
 	afx_msg void OnEditCopy();
-	afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEditCopy(CCmdUI * pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
 
 #ifndef _DEBUG  // debug version in AppRaytraceView.cpp
-inline CAppRaytraceDoc* CAppRaytraceView::GetDocument()
-   { return (CAppRaytraceDoc*)m_pDocument; }
+inline CAppRaytraceDoc * CAppRaytraceView::GetDocument()
+{
+	return (CAppRaytraceDoc *)m_pDocument;
+}
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

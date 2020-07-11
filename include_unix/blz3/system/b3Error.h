@@ -35,7 +35,7 @@ public:
 	 * This constructor initializes the error code interpreter.
 	 */
 	b3Error();
-	char *b3GetErrorText();
+	char * b3GetErrorText();
 
 	/**
 	 * This method returns the error code.

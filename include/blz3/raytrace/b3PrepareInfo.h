@@ -37,12 +37,12 @@ class b3BBox;
 class B3_PLUGIN b3BBoxReference : public b3Link<b3BBoxReference>
 {
 public:
-	b3BBox *m_BBox; //!< The bounding box reference.
+	b3BBox * m_BBox; //!< The bounding box reference.
 
 	/**
 	 * This contructor initializes the bounding box reference.
 	 */
-	b3BBoxReference(b3BBox *bbox = null) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
+	b3BBoxReference(b3BBox * bbox = null) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
 	{
 		m_BBox = bbox;
 	}
@@ -59,8 +59,8 @@ enum b3_error_prepare
 	B3_PREPARE_NO_THREAD   //!< No thread available.
 };
 
-typedef b3_bool (*b3PrepareProc)(b3BBox *bbox,void *ptr);
-typedef b3Exception<b3_error_prepare,0x505250> b3PrepareException;
+typedef b3_bool(*b3PrepareProc)(b3BBox * bbox, void * ptr);
+typedef b3Exception<b3_error_prepare, 0x505250> b3PrepareException;
 
 #define B3_MIN_BBOXES_FOR_THREADING 50
 
@@ -69,9 +69,9 @@ typedef b3Exception<b3_error_prepare,0x505250> b3PrepareException;
  */
 class B3_PLUGIN b3PrepareInfo : b3_preparation_info
 {
-	b3Thread                *m_Threads;
+	b3Thread        *        m_Threads;
 	b3PrepareProc            m_PrepareProc;
-	void                    *m_Ptr;
+	void          *          m_Ptr;
 	b3_count                 m_CPUs;
 
 protected:
@@ -96,14 +96,14 @@ public:
 	 *
 	 * @param scene The scene which contains the bounding box.
 	 */
-	void             b3CollectBBoxes(b3Scene *scene);
+	void             b3CollectBBoxes(b3Scene * scene);
 
 	/**
 	 * This method collects all sub bounding boxes of the given bounding box.
 	 *
 	 * @param firstBBox The first bounding box to collect.
 	 */
-	void             b3CollectBBoxes(b3BBox  *firstBBox);
+	void             b3CollectBBoxes(b3BBox * firstBBox);
 
 	/**
 	 * This method prepares all collected bounding boxes in multi threaded manner.
@@ -115,12 +115,12 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3Prepare(b3PrepareProc prepareFunc,void *ptr = null,b3_bool threaded = true);
+	b3_bool          b3Prepare(b3PrepareProc prepareFunc, void * ptr = null, b3_bool threaded = true);
 
 private:
-	b3BBoxReference *b3GetBBoxReference();
+	b3BBoxReference * b3GetBBoxReference();
 	void             b3RebuildListFromArray();
-	static b3_u32    b3PrepareThread(void *ptr);
+	static b3_u32    b3PrepareThread(void * ptr);
 };
 
 #endif

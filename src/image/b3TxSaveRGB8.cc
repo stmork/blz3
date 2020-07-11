@@ -31,19 +31,19 @@
 
 class b3InfoRGB8 : protected b3TxSaveInfo
 {
-	b3_pkd_color  DataRGB8,OldValue;
+	b3_pkd_color  DataRGB8, OldValue;
 	b3_count      OldAmount;
 
 public:
-	b3InfoRGB8(b3Tx *tx,const char *filename);
+	b3InfoRGB8(b3Tx * tx, const char * filename);
 	~b3InfoRGB8();
 	void  b3Write();
 };
 
-b3InfoRGB8::b3InfoRGB8(b3Tx *tx,const char *filename) :
-		b3TxSaveInfo(tx,filename)
+b3InfoRGB8::b3InfoRGB8(b3Tx * tx, const char * filename) :
+	b3TxSaveInfo(tx, filename)
 {
-	m_File.b3Write (m_SaveBuffer,48);
+	m_File.b3Write(m_SaveBuffer, 48);
 	DataRGB8  =  40;
 	OldAmount =   0;
 	OldValue  =   0;
@@ -51,28 +51,28 @@ b3InfoRGB8::b3InfoRGB8(b3Tx *tx,const char *filename) :
 
 void b3InfoRGB8::b3Write()
 {
-	b3_coord x,y;
+	b3_coord x, y;
 
-	for (y = 0;y < m_Tx->ySize;y++)
+	for(y = 0; y < m_Tx->ySize; y++)
 	{
-		m_Tx->b3GetRow(m_ThisRow,y);
-		for (x = 0;x < m_Tx->xSize;x++)
+		m_Tx->b3GetRow(m_ThisRow, y);
+		for(x = 0; x < m_Tx->xSize; x++)
 		{
-			if (OldAmount == 0)
+			if(OldAmount == 0)
 			{
 				OldValue  = m_ThisRow[x];
 				OldAmount = 1;
 			}							/* Schreibfall */
-			else if ((OldValue!=m_ThisRow[x])||(OldAmount >= 127))
+			else if((OldValue != m_ThisRow[x]) || (OldAmount >= 127))
 			{
 				m_SaveBuffer[0] = (OldValue & 0xff0000) >> 16;
 				m_SaveBuffer[1] = (OldValue & 0x00ff00) >>  8;
 				m_SaveBuffer[2] =  OldValue & 0x0000ff;
 				m_SaveBuffer[3] =  OldAmount;
 
-				if (m_File.b3Write(m_SaveBuffer,4) < 4)
+				if(m_File.b3Write(m_SaveBuffer, 4) < 4)
 				{
-					B3_THROW(b3TxException,B3_TX_NOT_SAVED);
+					B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 				}
 				DataRGB8 += 4;
 
@@ -97,16 +97,16 @@ b3InfoRGB8::~b3InfoRGB8()
 	m_SaveBuffer[1] = (OldValue & 0x00ff00) >>  8;
 	m_SaveBuffer[2] =  OldValue & 0x0000ff;
 	m_SaveBuffer[3] =  OldAmount;
-	m_File.b3Write(m_SaveBuffer,4);
+	m_File.b3Write(m_SaveBuffer, 4);
 	DataRGB8 += 4;
 
 	m_SaveBuffer[ 0] = 'F';
 	m_SaveBuffer[ 1] = 'O';
 	m_SaveBuffer[ 2] = 'R';
 	m_SaveBuffer[ 3] = 'M';
-	m_SaveBuffer[ 4] = (DataRGB8 & 0x7f000000 ) >> 24;
-	m_SaveBuffer[ 5] = (DataRGB8 & 0x00ff0000 ) >> 16;
-	m_SaveBuffer[ 6] = (DataRGB8 & 0x0000ff00 ) >>  8;
+	m_SaveBuffer[ 4] = (DataRGB8 & 0x7f000000) >> 24;
+	m_SaveBuffer[ 5] = (DataRGB8 & 0x00ff0000) >> 16;
+	m_SaveBuffer[ 6] = (DataRGB8 & 0x0000ff00) >>  8;
 	m_SaveBuffer[ 7] =  DataRGB8 & 0x000000ff;
 	m_SaveBuffer[ 8] = 'R';
 	m_SaveBuffer[ 9] = 'G';
@@ -145,20 +145,20 @@ b3InfoRGB8::~b3InfoRGB8()
 	m_SaveBuffer[42] = 'D';
 	m_SaveBuffer[43] = 'Y';
 	DataRGB8 -= 40;
-	m_SaveBuffer[44] = (DataRGB8 & 0x7f000000 ) >> 24;
-	m_SaveBuffer[45] = (DataRGB8 & 0xff0000 )   >> 16;
-	m_SaveBuffer[46] = (DataRGB8 & 0xff00 )     >>  8;
+	m_SaveBuffer[44] = (DataRGB8 & 0x7f000000) >> 24;
+	m_SaveBuffer[45] = (DataRGB8 & 0xff0000)   >> 16;
+	m_SaveBuffer[46] = (DataRGB8 & 0xff00)     >>  8;
 	m_SaveBuffer[47] =  DataRGB8 & 0xff;
 
-	m_File.b3Seek (0,B3_SEEK_START);
-	m_File.b3Write(m_SaveBuffer,48);
+	m_File.b3Seek(0, B3_SEEK_START);
+	m_File.b3Write(m_SaveBuffer, 48);
 }
 
-const b3_result b3Tx::b3SaveRGB8(const char *filename)
+const b3_result b3Tx::b3SaveRGB8(const char * filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving RGB8: %s\n", filename);
 
-	b3InfoRGB8 info(this,filename);
+	b3InfoRGB8 info(this, filename);
 	info.b3Write();
 	return B3_OK;
 }

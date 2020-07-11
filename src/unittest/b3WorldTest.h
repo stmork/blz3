@@ -30,7 +30,7 @@ using namespace std;
 
 template<int index> class b3WorldTest : public CppUnit::TestFixture
 {
-	static const char *m_Filename;
+	static const char * m_Filename;
 
 	b3World   world1;
 	b3World   world2;
@@ -54,14 +54,14 @@ public:
 	{
 		b3File          srcFile;
 		b3File          dstFile;
-		b3_u08         *src = null;
-		b3_u08         *dst = null;
+		b3_u08     *    src = null;
+		b3_u08     *    dst = null;
 		b3_size         srcSize = 0;
 		b3_size         dstSize = 0;
-		b3Item         *item1 = null;
-		b3Item         *item2 = null;
-		b3Base<b3Item> *base1 = null;
-		b3Base<b3Item> *base2 = null;
+		b3Item     *    item1 = null;
+		b3Item     *    item2 = null;
+		b3Base<b3Item> * base1 = null;
+		b3Base<b3Item> * base2 = null;
 
 		CPPUNIT_ASSERT(world1.b3Read(m_Filename, false));
 		CPPUNIT_ASSERT(world1.b3Write("test1.bwd", false));
@@ -88,7 +88,7 @@ public:
 		CPPUNIT_ASSERT_NO_THROW(dst = dstFile.b3ReadBuffer("test2.bwd", dstSize));
 		CPPUNIT_ASSERT(dst != null);
 		CPPUNIT_ASSERT(dstSize != null);
-		
+
 		CPPUNIT_ASSERT(srcSize == dstSize);
 		CPPUNIT_ASSERT(memcmp(src, dst, srcSize));
 	}

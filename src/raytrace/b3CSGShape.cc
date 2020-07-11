@@ -43,7 +43,7 @@ b3_csg_operation b3CSGShape::m_CSGMode[] =
 **                                                                      **
 *************************************************************************/
 
-b3CSGShape::b3CSGShape(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+b3CSGShape::b3CSGShape(b3_size class_size, b3_u32 class_type) : b3Shape(class_size, class_type)
 {
 	m_Operation = B3_CSG_UNION;
 }
@@ -53,7 +53,7 @@ b3CSGShape::b3CSGShape(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape), class_ty
 	m_Operation = B3_CSG_UNION;
 }
 
-b3CSGShape::b3CSGShape(b3_u32 *src) : b3Shape(src)
+b3CSGShape::b3CSGShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
@@ -61,9 +61,9 @@ b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
 {
 	b3_size i;
 
-	for (i = 0;i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation));i++)
+	for(i = 0; i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation)); i++)
 	{
-		if (m_CSGMode[i] == mode)
+		if(m_CSGMode[i] == mode)
 		{
 			return i;
 		}
@@ -72,13 +72,13 @@ b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
 }
 
 void b3CSGShape::b3Operate(
-	b3_shape_intervals *local,
-	b3_bbox_intervals  *source,
-	b3_bbox_intervals  *result)
+	b3_shape_intervals * local,
+	b3_bbox_intervals * source,
+	b3_bbox_intervals * result)
 {
-	b3_csg_point      *Point,*PointA,*PointB;
-	b3_count           aCount,bCount;
-	b3_bool            stat,aStat,bStat,cStat;
+	b3_csg_point   *   Point, *PointA, *PointB;
+	b3_count           aCount, bCount;
+	b3_bool            stat, aStat, bStat, cStat;
 
 	// pointer to result interval
 	result->m_Count = 0;
@@ -91,10 +91,10 @@ void b3CSGShape::b3Operate(
 	PointB = local->m_x;
 
 	// while both intervals are not empty.
-	while ((aCount != 0) || (bCount != 0))
+	while((aCount != 0) || (bCount != 0))
 	{
 		// if A is empty read B
-		if (aCount == 0)
+		if(aCount == 0)
 		{
 			Point = PointB++;
 			bCount--;
@@ -103,7 +103,7 @@ void b3CSGShape::b3Operate(
 		else
 		{
 			// if B is empty, read point from A.
-			if (bCount == 0)
+			if(bCount == 0)
 			{
 				Point = PointA++;
 				aCount--;
@@ -112,7 +112,7 @@ void b3CSGShape::b3Operate(
 			else
 			{
 				// else read smallest point
-				if (PointA->m_Q < PointB->m_Q)
+				if(PointA->m_Q < PointB->m_Q)
 				{
 					Point = PointA++;
 					aCount--;
@@ -128,7 +128,7 @@ void b3CSGShape::b3Operate(
 		}
 
 		// Do compute boolean operation!
-		switch (m_Operation)
+		switch(m_Operation)
 		{
 		case B3_CSG_UNION:
 			stat = (aStat || bStat);
@@ -143,7 +143,7 @@ void b3CSGShape::b3Operate(
 
 		// Store only points which state (inside/outside)
 		// are changed.
-		if (stat != cStat)
+		if(stat != cStat)
 		{
 			// insert result
 			result->m_x[result->m_Count++] = *Point;
@@ -152,7 +152,7 @@ void b3CSGShape::b3Operate(
 	}
 }
 
-void b3CSGShape::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+void b3CSGShape::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 {
 }
 
@@ -167,23 +167,23 @@ b3_count b3CSGShape::b3GetMaxIntersections()
 **                                                                      **
 *************************************************************************/
 
-b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3CSGShape(class_size, class_type)
+b3CSGShape3::b3CSGShape3(b3_size class_size, b3_u32 class_type) : b3CSGShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
-	b3Vector::b3Init(&m_Dir3, 0, 0,50);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
 b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGShape3), class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
-	b3Vector::b3Init(&m_Dir3, 0, 0,50);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
-b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3CSGShape(src)
+b3CSGShape3::b3CSGShape3(b3_u32 * src) : b3CSGShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -209,7 +209,7 @@ b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3CSGShape(src)
 
 void b3CSGShape3::b3StoreShape()
 {
-	for (b3_loop i = 0;i < 3;i++)
+	for(b3_loop i = 0; i < 3; i++)
 	{
 		b3_vector normal;
 
@@ -237,35 +237,35 @@ void b3CSGShape3::b3ComputeNormals(b3_bool normalize)
 	b3ComputeQuadricNormals(normalize);
 }
 
-void b3CSGShape3::b3Transform(b3_matrix *transformation,b3_bool is_affine)
+void b3CSGShape3::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 {
-	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
-	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3Matrix::b3VMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3TransformVertices(transformation,is_affine);
+	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
+	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
+	b3Matrix::b3VMul(transformation, &m_Dir2, &m_Dir2, false);
+	b3Matrix::b3VMul(transformation, &m_Dir3, &m_Dir3, false);
+	b3TransformVertices(transformation, is_affine);
 }
 
-void b3CSGShape3::b3SetupPicking(b3PickInfo *info)
+void b3CSGShape3::b3SetupPicking(b3PickInfo * info)
 {
-	info->b3AddPickPoint(&m_Base,"b");
-	info->b3AddPickDir(  &m_Base,&m_Dir1,"1");
-	info->b3AddPickDir(  &m_Base,&m_Dir2,"2");
-	info->b3AddPickDir(  &m_Base,&m_Dir3,"3");
+	info->b3AddPickPoint(&m_Base, "b");
+	info->b3AddPickDir(&m_Base, &m_Dir1, "1");
+	info->b3AddPickDir(&m_Base, &m_Dir2, "2");
+	info->b3AddPickDir(&m_Base, &m_Dir3, "3");
 }
 
-b3_bool b3CSGShape3::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3CSGShape3::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_bool result = false;
 
-	if (b3ShapeBaseTransformation::b3Prepare())
+	if(b3ShapeBaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare(prep_info);
 	}
 	return result;
 }
 
-void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

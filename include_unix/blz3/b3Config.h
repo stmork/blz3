@@ -90,12 +90,12 @@
 typedef unsigned long b3DrawContext;
 
 #ifndef HAVE_STRLCPY
-static inline size_t strlcpy(char *dst,const char *src,size_t size)
+static inline size_t strlcpy(char * dst, const char * src, size_t size)
 {
-	if (size > 0)
+	if(size > 0)
 	{
 		strncpy(dst, src, size);
-		dst[size-1] = 0;
+		dst[size - 1] = 0;
 	}
 	return strlen(dst);
 }
@@ -105,21 +105,21 @@ static inline size_t strlcpy(char *dst,const char *src,size_t size)
 #ifdef HAVE_STRCASECMP
 #define stricmp(a,b) strcasecmp(a,b)
 #else
-static inline int stricmp(const char *a,const char *b)
+static inline int stricmp(const char * a, const char * b)
 {
-	int diff,i;
+	int diff, i;
 
 	i = 0;
 	do
 	{
 		diff = tolower(a[i]) - tolower(b[i]);
-		if ((a[i] == 0) || (b[i] == 0))
+		if((a[i] == 0) || (b[i] == 0))
 		{
 			return diff;
 		}
 		i++;
 	}
-	while (diff == 0);
+	while(diff == 0);
 
 	return diff;
 }
@@ -163,7 +163,7 @@ public:
 	 * @param uPtr1 The first pointer.
 	 * @param uPtr2 The second pointer.
 	 */
-	static void        b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
+	static void        b3PSwap(b3_u32 * uPtr1, b3_u32 * uPtr2);
 
 	/**
 	 * This method creates a beep.
@@ -177,7 +177,7 @@ public:
 	 * @param size     The buffer size.
 	 * @return True on success.
 	 */
-	static b3_bool     b3Hostname(char *hostname,const b3_size size);
+	static b3_bool     b3Hostname(char * hostname, const b3_size size);
 
 	/**
 	 * This method executes another program.
@@ -186,12 +186,12 @@ public:
 	 * @param async If the command should start asynchronously.
 	 * @return The execution result when executing synchronously.
 	 */
-	static b3_s32      b3Execute(const char *command, const b3_bool async);
+	static b3_s32      b3Execute(const char * command, const b3_bool async);
 
 	/**
 	 * This method returns information about the used compiler.
 	 */
-	static char       *b3GetCompiler();
+	static char    *   b3GetCompiler();
 
 	/**
 	 * This method returns an OpenGL function pointer from the given procedure name.
@@ -199,7 +199,7 @@ public:
 	 * @param procedure The procedure name to solve.
 	 * @return The mapped procedure.
 	 */
-	static void       *b3GetOpenGLExtension(const char *procedure);
+	static void    *   b3GetOpenGLExtension(const char * procedure);
 
 	/**
 	 * This method parses the command line arguments.
@@ -211,7 +211,7 @@ public:
 	 * @param size The size of the option buffer.
 	 * @return The next index to process.
 	 */
-	static int         b3ParseOption(int argc, char *argv[], int index, char *option, size_t size);
+	static int         b3ParseOption(int argc, char * argv[], int index, char * option, size_t size);
 };
 
 #endif

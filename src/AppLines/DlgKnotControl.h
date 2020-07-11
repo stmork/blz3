@@ -32,14 +32,14 @@
 
 class CDlgKnotControl : public CDialog
 {
-	b3Spline  *m_Spline;
+	b3Spline * m_Spline;
 	b3_index   m_KnotNum;
 
-// Construction
+	// Construction
 public:
-	CDlgKnotControl(b3Spline *spline,CWnd* pParent = NULL);   // standard constructor
+	CDlgKnotControl(b3Spline * spline, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgKnotControl)
 	enum { IDD = IDD_BSPLINE_CTRL };
 	CB3ControlKnot	m_KnotDisplay;
@@ -48,21 +48,21 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgKnotControl)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgKnotControl)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnKnotNumEdit();
-	afx_msg void OnKnotNumSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnKnotNumSpin(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -65,7 +65,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	b3RenderViewItem(b3_vector *lower,b3_vector *upper);
+	b3RenderViewItem(b3_vector * lower, b3_vector * upper);
 
 	/**
 	 * This method sets a new boundary to this view item.
@@ -73,7 +73,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	void b3Set(b3_vector *lower,b3_vector *upper);
+	void b3Set(b3_vector * lower, b3_vector * upper);
 };
 
 /**
@@ -112,7 +112,7 @@ class b3RenderView
 
 	b3Base<b3RenderViewItem>  m_ViewStack[B3_VIEW_MAX];
 	b3Base<b3RenderViewItem>  m_Depot;
-	b3RenderViewItem         *m_Actual;
+	b3RenderViewItem     *    m_Actual;
 
 public:
 	b3_bool                   m_AntiAliased; //!< Use anti aliasing.
@@ -153,7 +153,7 @@ public:
 	 *
 	 * @param camera The camera to set.
 	 */
-	void              b3SetCamera(b3CameraPart *camera);
+	void              b3SetCamera(b3CameraPart * camera);
 
 	/**
 	 * This method switches the perspective to the camera set as
@@ -161,7 +161,7 @@ public:
 	 *
 	 * @param scene The scene with the actual camera.
 	 */
-	void              b3SetCamera(b3Scene *scene);
+	void              b3SetCamera(b3Scene * scene);
 
 	/**
 	 * This method resizes the view section so that the whole scene
@@ -170,7 +170,7 @@ public:
 	 * @param scene The scene to use.
 	 * @return True on success.
 	 */
-	b3_bool           b3SetBounds(b3Scene *scene);
+	b3_bool           b3SetBounds(b3Scene * scene);
 
 	/**
 	 * This method sets the view section to the given bounds.
@@ -178,7 +178,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	void              b3SetBounds(b3_vector *lower,b3_vector *upper);
+	void              b3SetBounds(b3_vector * lower, b3_vector * upper);
 
 	/**
 	 * This method returns the dimensions of the view section in world
@@ -188,7 +188,7 @@ public:
 	 * @param ySize The view height in world coordinates.
 	 * @return True on success.
 	 */
-	b3_bool           b3GetDimension(b3_f64 &xSize,b3_f64 &ySize);
+	b3_bool           b3GetDimension(b3_f64 & xSize, b3_f64 & ySize);
 
 	/**
 	 * This method pops the actual view item from the actual view mode.
@@ -225,21 +225,21 @@ public:
 	 * @param xDir The relative horizontal movement.
 	 * @param yDir The relative vertical movement.
 	 */
-	void              b3Move(b3_f64 xDir,b3_f64 yDir);
+	void              b3Move(b3_f64 xDir, b3_f64 yDir);
 
 	/**
 	 * This method returns the eye point of the selected view.
 	 *
 	 * @param eye The resulting eye point.
 	 */
-	void              b3GetProjectionBase(b3_vector *eye);
+	void              b3GetProjectionBase(b3_vector * eye);
 
 	/**
 	 * This method returns the view direction.
 	 *
 	 * @param direction The resulting view direction.
 	 */
-	void              b3GetViewDirection(b3_vector *direction);
+	void              b3GetViewDirection(b3_vector * direction);
 
 	/**
 	 * This method returns a position angle between a given center and a given
@@ -249,7 +249,7 @@ public:
 	 * @param position The cursor position.
 	 * @return The resulting position angle.
 	 */
-	b3_f64            b3GetPositionAngle(b3_vector *center,b3_vector *position);
+	b3_f64            b3GetPositionAngle(b3_vector * center, b3_vector * position);
 
 	/**
 	 * This Method selects a new view section and puts the new view onto
@@ -260,7 +260,7 @@ public:
 	 * @param xEnd The upper x coordinate of the new bound.
 	 * @param yEnd The upper y coordinate of the new bound.
 	 */
-	void              b3Select(b3_f64 xStart,b3_f64 yStart,b3_f64 xEnd,b3_f64 yEnd);
+	void              b3Select(b3_f64 xStart, b3_f64 yStart, b3_f64 xEnd, b3_f64 yEnd);
 
 	/**
 	 * This method initializes the real OpenGL view.
@@ -270,7 +270,7 @@ public:
 	 * @param xOffset The horizontal view port offset.
 	 * @param yOffset The vertical view port offset.
 	 */
-	void              b3SetupView(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	void              b3SetupView(b3_res xSize, b3_res ySize, b3_f64 xOffset = 0.0, b3_f64 yOffset = 0.0);
 
 	/**
 	 * This method draws the snap grid.
@@ -278,7 +278,7 @@ public:
 	 * @param grid The snap to grid grid distance.
 	 * @param color The grid color.
 	 */
-	void              b3DrawRaster(b3_f64 grid,b3Color &color);
+	void              b3DrawRaster(b3_f64 grid, b3Color & color);
 
 	/**
 	 * This method initializes a real move direction vector from an initial stepper
@@ -288,7 +288,7 @@ public:
 	 * @param mover The resulting mover.
 	 * @param mode The view mode to use.
 	 */
-	void              b3SetTranslationStepper(b3_vector *steps,b3_vector *mover,b3_action_mode mode);
+	void              b3SetTranslationStepper(b3_vector * steps, b3_vector * mover, b3_action_mode mode);
 
 	/**
 	 * This method initializes a rotation axis and a step vector which contains
@@ -298,7 +298,7 @@ public:
 	 * @param axisDir The resulting direction vector of the axis.
 	 * @param mode The view mode to use.
 	 */
-	b3_f64            b3SetRotationStepper(b3_vector *steps,b3_vector *axisDir,b3_action_mode mode);
+	b3_f64            b3SetRotationStepper(b3_vector * steps, b3_vector * axisDir, b3_action_mode mode);
 
 	/**
 	 * This method projects a point onto the projection plane of the actually
@@ -311,7 +311,7 @@ public:
 	 * @param yRel The resulting relative y view port coordinate.
 	 * @param zRel The resulting view depth.
 	 */
-	void              b3Project(const b3_vector *point,b3_f64 &xRel,b3_f64 &yRel,b3_f64 &zRel);
+	void              b3Project(const b3_vector * point, b3_f64 & xRel, b3_f64 & yRel, b3_f64 & zRel);
 
 	/**
 	 * This method projects a point onto the projection plane of the actually
@@ -322,11 +322,11 @@ public:
 	 * @param y The resulting y view port coordinate.
 	 * @param z The resulting view depth.
 	 */
-	inline void       b3Project(const b3_vector *point,b3_coord &x,b3_coord &y,b3_f64 &z)
+	inline void       b3Project(const b3_vector * point, b3_coord & x, b3_coord & y, b3_f64 & z)
 	{
-		b3_f64 xRel,yRel;
+		b3_f64 xRel, yRel;
 
-		b3Project(point,xRel,yRel,z);
+		b3Project(point, xRel, yRel, z);
 		x = (b3_coord)floor(xRel * m_xRes + 0.5);
 		y = (b3_coord)floor(yRel * m_yRes + 0.5);
 	}
@@ -340,7 +340,7 @@ public:
 	 * @param y The y view port coordinate.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_coord x, const b3_coord y, b3_vector *point)
+	inline void       b3Unproject(const b3_coord x, const b3_coord y, b3_vector * point)
 	{
 		b3Unproject(x, y, 0.5, point);
 	}
@@ -355,7 +355,7 @@ public:
 	 * @param yRel The relative vertical view port coordinate.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_f64 xRel,const b3_f64 yRel,b3_vector *point)
+	inline void       b3Unproject(const b3_f64 xRel, const b3_f64 yRel, b3_vector * point)
 	{
 		b3Unproject(xRel, yRel, 0.5, point);
 	}
@@ -369,12 +369,12 @@ public:
 	 * @param z The view depth.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_coord x, const b3_coord y, const b3_f64 z,b3_vector *point)
+	inline void       b3Unproject(const b3_coord x, const b3_coord y, const b3_f64 z, b3_vector * point)
 	{
 		b3UnprojectInternal(
 			(b3_f64)x,
 			(b3_f64)(m_yRes - y),
-			z,point);
+			z, point);
 	}
 
 	/**
@@ -387,18 +387,18 @@ public:
 	 * @param zRelParam The view depth.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_f64 xRelParam, const b3_f64 yRelParam, const b3_f64 zRelParam,b3_vector *point)
+	inline void       b3Unproject(const b3_f64 xRelParam, const b3_f64 yRelParam, const b3_f64 zRelParam, b3_vector * point)
 	{
 		b3UnprojectInternal(
 			xRelParam * m_xRes,
 			m_yRes - yRelParam * m_yRes,
-			zRelParam,point);
+			zRelParam, point);
 	}
 
 private:
-	b3RenderViewItem *b3NewRenderViewItem(b3RenderViewItem *lastItem = null);
+	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = null);
 	b3_f64            b3ComputeFarClippingPlane();
-	void              b3UnprojectInternal(const b3_f64 xRel,const b3_f64 yRel,const b3_f64 z, b3_vector *point);
+	void              b3UnprojectInternal(const b3_f64 xRel, const b3_f64 yRel, const b3_f64 z, b3_vector * point);
 };
 
 #endif

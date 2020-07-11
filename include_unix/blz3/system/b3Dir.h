@@ -30,7 +30,7 @@
 #include "blz3/system/b3Exception.h"
 #include "blz3/system/b3DirAbstract.h"
 
-typedef b3Exception<b3_dir_error,0x00444952> b3DirException;
+typedef b3Exception<b3_dir_error, 0x00444952> b3DirException;
 
 /**
  * This class implements the b3PathAbstract class. It additionally provides some
@@ -51,23 +51,23 @@ public:
 	 *
 	 * @param path The filename for initializing.
 	 */
-	inline      b3Path(const char *path) : b3PathAbstract(path)
+	inline      b3Path(const char * path) : b3PathAbstract(path)
 	{
 	}
 
 	void b3Empty();
-	void b3LinkFileName (const char *path,const char *name);
-	void b3SplitFileName(char *path,char *name);
-	void b3RemoveExt    (const char *filename);
-	void b3RemoveExt    ();
-	void b3ParentName   (const char *filename);
-	void b3ParentName   ();
-	void b3ExtractExt   (const char *filename);
-	void b3ExtractExt   ();
-	void b3Correct      (const char *path);
-	void b3Correct      ();
-	void b3Format       (const char *format,...);
-	void b3Append       (const char *ext);
+	void b3LinkFileName(const char * path, const char * name);
+	void b3SplitFileName(char * path, char * name);
+	void b3RemoveExt(const char * filename);
+	void b3RemoveExt();
+	void b3ParentName(const char * filename);
+	void b3ParentName();
+	void b3ExtractExt(const char * filename);
+	void b3ExtractExt();
+	void b3Correct(const char * path);
+	void b3Correct();
+	void b3Format(const char * format, ...);
+	void b3Append(const char * ext);
 
 	/**
 	 * This method concatenates a directory name and a filename and puts
@@ -77,7 +77,7 @@ public:
 	 * @param *path The directory name component.
 	 * @param *name The filename component.
 	 */
-	static void b3LinkFileName (char *full,const char *path,const char *name);
+	static void b3LinkFileName(char * full, const char * path, const char * name);
 
 	/**
 	 * This method splits the filename of the given full filename into the directory
@@ -89,7 +89,7 @@ public:
 	 * @param *path The directory name component.
 	 * @param *name The filename component.
 	 */
-	static void b3SplitFileName(const char *full,char *path,char *name);
+	static void b3SplitFileName(const char * full, char * path, char * name);
 
 	/**
 	 * This method removes from the actual file name the filename component
@@ -99,7 +99,7 @@ public:
 	 * @param path The filesystem entry.
 	 * @param result The resulting parent directory.
 	 */
-	static void b3ParentName   (const char *path,char *result);
+	static void b3ParentName(const char * path, char * result);
 
 	/**
 	 * This method removes from the actual file name the filename component
@@ -108,7 +108,7 @@ public:
 	 *
 	 * @param parent The filename as input and the parent directory as output.
 	 */
-	static void b3ParentName   (char *parent);
+	static void b3ParentName(char * parent);
 
 	/**
 	 * This method removes the extension from a given filename and puts
@@ -117,14 +117,14 @@ public:
 	 * @param filename The filename for removing.
 	 * @param result The filename without the extension
 	 */
-	static void b3RemoveExt    (const char *filename,char *result);
+	static void b3RemoveExt(const char * filename, char * result);
 
 	/**
 	 * This method removes the extension from the given filename.
 	 *
 	 * @param result The buffer for removing the extension.
 	 */
-	static void b3RemoveExt    (char *result);
+	static void b3RemoveExt(char * result);
 
 	/**
 	 * This method extracts the file extension from the given file name and
@@ -133,7 +133,7 @@ public:
 	 * @param filename The file name where to extract.
 	 * @param ext The extenstion as result.
 	 */
-	static void b3ExtractExt   (const char *filename,char *ext);
+	static void b3ExtractExt(const char * filename, char * ext);
 
 	/**
 	 * This method extracts the extension of the given filename and puts
@@ -141,7 +141,7 @@ public:
 	 *
 	 * @param *ext The filename as input and the extension as output.
 	 */
-	static void b3ExtractExt   (char *ext);
+	static void b3ExtractExt(char * ext);
 
 	/**
 	 * This method corrects the syntax of the given filename and stores
@@ -150,7 +150,7 @@ public:
 	 * @param path The filename to correct.
 	 * @param result The buffer for the corrected filename.
 	 */
-	static void b3Correct      (const char *path,char *result);
+	static void b3Correct(const char * path, char * result);
 
 	/**
 	 * This method corrects the syntax of the given filename and stores there
@@ -158,7 +158,7 @@ public:
 	 *
 	 * @param path The filename to correct.
 	 */
-	static void b3Correct      (char *path);
+	static void b3Correct(char * path);
 };
 
 /**
@@ -168,7 +168,7 @@ public:
 class b3Dir : public b3DirAbstract, public b3Mem, public b3Path
 {
 protected:
-	DIR                 *dir;
+	DIR         *        dir;
 public:
 	/**
 	 * This constructor initializes the directory list class.
@@ -181,7 +181,7 @@ public:
 	 *
 	 * @param dirname The directory name to list.
 	 */
-	b3Dir(const char *dirname);
+	b3Dir(const char * dirname);
 
 	/**
 	 * This destructor deinitializes this class by calling
@@ -189,8 +189,8 @@ public:
 	 */
 	~b3Dir();
 
-	b3_bool       b3OpenDir(const char *dirname);
-	b3_path_type  b3DirNext(char *direntry);
+	b3_bool       b3OpenDir(const char * dirname);
+	b3_path_type  b3DirNext(char * direntry);
 	void          b3CloseDir();
 
 	/**
@@ -199,7 +199,7 @@ public:
 	 * @param newworkingdir The new working directory.
 	 * @return True on success.
 	 */
-	static b3_bool       b3ChDir        (const char *newworkingdir);
+	static b3_bool       b3ChDir(const char * newworkingdir);
 
 	/**
 	 * This method checks whether the specified filesystem entry exists as a directory.
@@ -207,7 +207,7 @@ public:
 	 * @param testdir The filesystem entry to check.
 	 * @return True if the directory exists.
 	 */
-	static b3_bool       b3ChkDir       (const char *testdir);
+	static b3_bool       b3ChkDir(const char * testdir);
 
 	/**
 	 * This method creates a new directory. The parent directory must exist.
@@ -215,7 +215,7 @@ public:
 	 * @param newdir The new directory to create.
 	 * @return True on success.
 	 */
-	static b3_bool       b3MkDir        (const char *newdir);
+	static b3_bool       b3MkDir(const char * newdir);
 
 	/**
 	 * This method checks the given filesystem entry for existance and returns the
@@ -225,7 +225,7 @@ public:
 	 * @return The entry type.
 	 * @see b3_path_entry
 	 */
-	static b3_path_type  b3Exists       (const char *path);
+	static b3_path_type  b3Exists(const char * path);
 };
 
 #endif

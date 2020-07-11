@@ -37,27 +37,27 @@
 **                                                                      **
 *************************************************************************/
 
-char b3LogBase::m_LogFile[B3_MAX_LOGFILENAME]= "/tmp/b3.log";
+char b3LogBase::m_LogFile[B3_MAX_LOGFILENAME] = "/tmp/b3.log";
 
 b3Log b3Log::m_Log;
 
 b3Log::b3Log()
 {
 	uid_t          uid    = getuid();
-	struct passwd *pw_ent = getpwuid(uid);
+	struct passwd * pw_ent = getpwuid(uid);
 
 	snprintf(b3LogBase::m_LogFile, sizeof(b3LogBase::m_LogFile), "%s/b3.log", pw_ent->pw_dir);
 
 	m_Logger = &m_Log;
 }
 
-void b3Log::b3LogTime(const char *comment)
+void b3Log::b3LogTime(const char * comment)
 {
 	struct timeval stamp;
 
-	gettimeofday(&stamp,0);
-	b3LogFunction (B3LOG_FULL,"                      timecode %ld - %3hd (%s)\n",
-				   stamp.tv_sec,stamp.tv_usec / 1000,comment ? comment : "-");
+	gettimeofday(&stamp, 0);
+	b3LogFunction(B3LOG_FULL, "                      timecode %ld - %3hd (%s)\n",
+		stamp.tv_sec, stamp.tv_usec / 1000, comment ? comment : "-");
 }
 
 /* b3PrintF() has got the same proto types as printf(). This routine */
@@ -68,37 +68,37 @@ void b3Log::b3LogTime(const char *comment)
 /* format: format string for output */
 /* ...:    arguments used */
 
-void b3Log::b3LogFunction (
+void b3Log::b3LogFunction(
 	const b3_log_level  level,
-	const char         *format,...)
+	const char     *    format, ...)
 {
 	va_list  argptr;
 
-	if (b3CheckLevel(level))
+	if(b3CheckLevel(level))
 	{
 		b3CriticalSection lock(m_LogMutex);
 
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this
 		// piece of code.
-		if (b3OpenLogFile())
+		if(b3OpenLogFile())
 		{
-			va_start (argptr,format);
-			vfprintf (m_Out,  format, argptr);
-			fflush   (m_Out);	// We want to do the output immediately!
-			va_end   (argptr);
+			va_start(argptr, format);
+			vfprintf(m_Out,  format, argptr);
+			fflush(m_Out);	// We want to do the output immediately!
+			va_end(argptr);
 
-			va_start (argptr,format);
-			vfprintf (stdout, format, argptr);
-			fflush   (stdout);
-			va_end   (argptr);
+			va_start(argptr, format);
+			vfprintf(stdout, format, argptr);
+			fflush(stdout);
+			va_end(argptr);
 		}
 		else
 		{
-			va_start (argptr,format);
-			vfprintf (stderr,format,argptr);
-			fflush   (stderr);
-			va_end   (argptr);
+			va_start(argptr, format);
+			vfprintf(stderr, format, argptr);
+			fflush(stderr);
+			va_end(argptr);
 		}
 		// That's it! Let's doing other to make the same...
 	}

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ShowRaytrace.h $  
+**	$Filename:	b3ShowRaytrace.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -28,11 +28,11 @@ class B3_PLUGIN CB3ShowRaytrace : public CB3ShowImage
 {
 	DECLARE_DYNAMIC(CB3ShowRaytrace)
 
-    b3Display *m_Display;
+	b3Display * m_Display;
 
 public:
-	     CB3ShowRaytrace();
-	void b3Update(b3Scene *scene);
+	CB3ShowRaytrace();
+	void b3Update(b3Scene * scene);
 
 	// Implementation
 protected:

@@ -45,31 +45,31 @@ class B3_PLUGIN CB3IntSpinButtonCtrl : public CSpinButtonCtrl
 	b3_s32 m_Accel;
 
 public:
-	         CB3IntSpinButtonCtrl();
+	CB3IntSpinButtonCtrl();
 	virtual ~CB3IntSpinButtonCtrl();
-	
+
 	b3_s32   b3SetPos(b3_s32 pos);
 	b3_s32   b3SetRange(b3_s32 min, b3_s32 max);
 	void     b3SetIncrement(b3_s32 increment = B3_ISBC_DEFAULT_INCREMENT);
-	void     b3SetAccel(b3_s32 increment = B3_ISBC_DEFAULT_ACCEL,int secs = 2);
-	void     b3DDX(CDataExchange *pDX,b3_s32 &pos);
-	void     b3DDX(CDataExchange *pDX,b3_offset &pos);
+	void     b3SetAccel(b3_s32 increment = B3_ISBC_DEFAULT_ACCEL, int secs = 2);
+	void     b3DDX(CDataExchange * pDX, b3_s32 & pos);
+	void     b3DDX(CDataExchange * pDX, b3_offset & pos);
 	b3_s32   b3GetPos();
 	b3_s32   b3GetAccel();
 
 public:
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3IntSpinButtonCtrl)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CB3IntSpinButtonCtrl)
-	afx_msg void OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDeltapos(NMHDR * pNMHDR, LRESULT * pResult);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 

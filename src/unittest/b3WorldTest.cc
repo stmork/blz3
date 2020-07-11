@@ -34,7 +34,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(b3WorldTest<0>);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3WorldTest<1>);
 
-template <> const char *b3WorldTest<0>::m_Filename = "Data1.bwd";
-template <> const char *b3WorldTest<1>::m_Filename = "Data2.bwd";
+template <> const char * b3WorldTest<0>::m_Filename = "Data1.bwd";
+template <> const char * b3WorldTest<1>::m_Filename = "Data2.bwd";
 
 #endif

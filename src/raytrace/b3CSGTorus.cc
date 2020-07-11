@@ -33,14 +33,14 @@
 b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGTorus), class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
-	b3Vector::b3Init(&m_Dir3, 0, 0,10);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0, 10);
 	m_aRad = 1;
 	m_bRad = 1;
 }
 
-b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3CSGShape(src)
+b3CSGTorus::b3CSGTorus(b3_u32 * src) : b3CSGShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -71,7 +71,7 @@ b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3CSGShape(src)
 
 void b3CSGTorus::b3StoreShape()
 {
-	for (b3_loop i = 0;i < 3;i++)
+	for(b3_loop i = 0; i < 3; i++)
 	{
 		b3_vector normal;
 
@@ -83,7 +83,7 @@ void b3CSGTorus::b3StoreShape()
 	b3StoreVector(&m_Dir2);
 	b3StoreVector(&m_Dir3);
 
-	b3StoreInt  (0);
+	b3StoreInt(0);
 	b3StoreFloat(m_Denom);
 	b3StoreFloat(m_DirLen[0]);
 	b3StoreFloat(m_DirLen[1]);
@@ -102,27 +102,27 @@ void b3CSGTorus::b3StoreShape()
 }
 
 void b3CSGTorus::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
+	b3RenderContext * ctx,
+	b3_count    &    vertCount,
+	b3_count    &    gridCount,
+	b3_count    &    polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount = (SinCosSteps + 2) * (SinCosSteps + 2);
-	b3GetTorusIndexCount(gridCount,polyCount);
+	b3GetTorusIndexCount(gridCount, polyCount);
 }
 
 void b3CSGTorus::b3ComputeVertices()
 {
-	b3ComputeTorusVertices(m_Base,m_Dir1,m_Dir2,m_Dir3,m_aRad,m_bRad);
+	b3ComputeTorusVertices(m_Base, m_Dir1, m_Dir2, m_Dir3, m_aRad, m_bRad);
 }
 
 void b3CSGTorus::b3ComputeNormals(b3_bool normalize)
 {
 	// b3ComputeVertices() does already compute the normals
 	// So only normalize if needed
-	if (normalize)
+	if(normalize)
 	{
 		b3ComputeTorusNormals();
 	}
@@ -133,23 +133,23 @@ void b3CSGTorus::b3ComputeIndices()
 	b3ComputeTorusIndices();
 }
 
-void b3CSGTorus::b3Transform(b3_matrix *transformation,b3_bool is_affine)
+void b3CSGTorus::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 {
-	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
-	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3Matrix::b3VMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3TransformVertices(transformation,is_affine);
+	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
+	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
+	b3Matrix::b3VMul(transformation, &m_Dir2, &m_Dir2, false);
+	b3Matrix::b3VMul(transformation, &m_Dir3, &m_Dir3, false);
+	b3TransformVertices(transformation, is_affine);
 }
 
-void b3CSGTorus::b3SetupPicking(b3PickInfo *info)
+void b3CSGTorus::b3SetupPicking(b3PickInfo * info)
 {
-	info->b3AddPickPoint(&m_Base,"b");
+	info->b3AddPickPoint(&m_Base, "b");
 }
 
-b3_bool b3CSGTorus::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3CSGTorus::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_f64  denom,scale;
+	b3_f64  denom, scale;
 	b3_bool result = false;
 
 	scale    = b3Vector::b3Normalize(&m_Dir1);
@@ -162,19 +162,19 @@ b3_bool b3CSGTorus::b3Prepare(b3_preparation_info *prep_info)
 	m_aQuad  = m_aRad * m_aRad;
 	m_bQuad  = m_bRad * m_bRad;
 
-	if (b3ShapeBaseTransformation::b3Prepare())
+	if(b3ShapeBaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare(prep_info);
 	}
 	return result;
 }
 
-void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+void b3CSGTorus::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 {
-	b3_polar  *polar  = &ray->polar;
-	b3_line64 *BTLine = point->m_BTLine;
+	b3_polar * polar  = &ray->polar;
+	b3_line64 * BTLine = point->m_BTLine;
 	b3_f64     Q      = ray->Q;
-	b3_f64     aQuad,bQuad,val;
+	b3_f64     aQuad, bQuad, val;
 
 	aQuad = polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
 	bQuad = polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
@@ -182,8 +182,8 @@ void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 
 	val = m_aRad - m_aQuad / sqrt(aQuad * aQuad + bQuad * bQuad);
 
-	polar->m_Polar.x = b3Math::b3RelAngleOfScalars(aQuad,bQuad);
-	polar->m_Polar.y = b3Math::b3RelAngleOfScalars (val,polar->m_ObjectPolar.z);
+	polar->m_Polar.x = b3Math::b3RelAngleOfScalars(aQuad, bQuad);
+	polar->m_Polar.y = b3Math::b3RelAngleOfScalars(val, polar->m_ObjectPolar.z);
 	polar->m_Polar.z = 0;
 }
 
@@ -192,7 +192,7 @@ b3_count b3CSGTorus::b3GetMaxIntersections()
 	return 4;
 }
 
-void b3CSGTorus::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3CSGTorus::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

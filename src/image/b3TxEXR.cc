@@ -43,23 +43,23 @@ using namespace Iex;
 
 class b3ExrInputStream: public IStream
 {
-	b3_u08   *m_Buffer;
+	b3_u08  * m_Buffer;
 	b3_size   m_Size;
 	b3_index  m_Index;
 
 public:
-	b3ExrInputStream(b3_u08 *buffer, b3_size size, const char *filename) : IStream(filename)
+	b3ExrInputStream(b3_u08 * buffer, b3_size size, const char * filename) : IStream(filename)
 	{
 		m_Buffer = buffer;
 		m_Size   = size;
 		m_Index  = 0;
 	}
 
-	virtual bool read (char c[/*n*/], int n)
+	virtual bool read(char c[/*n*/], int n)
 	{
 		b3_size max = m_Index + n;
 
-		if (max > m_Size)
+		if(max > m_Size)
 		{
 			n = m_Size - m_Index;
 		}
@@ -70,32 +70,32 @@ public:
 		return m_Index < static_cast<b3_index>(m_Size);
 	}
 
-	virtual Int64 tellg ()
+	virtual Int64 tellg()
 	{
 		return m_Index;
 	}
 
-	virtual void seekg (Int64 pos)
+	virtual void seekg(Int64 pos)
 	{
-		if (pos >= m_Size)
+		if(pos >= m_Size)
 		{
-			throw Iex::InputExc ("New file position greater than file size.");
+			throw Iex::InputExc("New file position greater than file size.");
 		}
 		m_Index = pos;
 	}
 
-	virtual void clear ()
+	virtual void clear()
 	{
 		// We know now error state since everything is already in memory.
 	}
 };
 
-b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
+b3_result b3Tx::b3ParseOpenEXR(b3_u08 * buffer, b3_size size)
 {
 	b3_result result = B3_ERROR;
 
-	b3PrintF(B3LOG_FULL,"IMG EXR  # b3ParseOpenEXR(%s)\n",
-			 (const char *)image_name);
+	b3PrintF(B3LOG_FULL, "IMG EXR  # b3ParseOpenEXR(%s)\n",
+		(const char *)image_name);
 
 	try
 	{
@@ -105,9 +105,9 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 		b3_res           width  = dw.max.x - dw.min.x + 1;
 		b3_res           height = dw.max.y - dw.min.y + 1;
 
-		if (b3AllocTx(width, height, 128))
+		if(b3AllocTx(width, height, 128))
 		{
-			b3_color    *ptr = b3GetHdrData();
+			b3_color  *  ptr = b3GetHdrData();
 			FrameBuffer  fb;
 
 			fb.insert("R", Slice(FLOAT, (char *)&ptr->r, sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
@@ -119,12 +119,12 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 *buffer, b3_size size)
 			result = B3_OK;
 		}
 	}
-	catch (std::exception &exc)
+	catch(std::exception & exc)
 	{
 		b3FreeTx();
-		b3PrintF(B3LOG_NORMAL,"IMG EXR  # Error reading file:\n");
-		b3PrintF(B3LOG_NORMAL,"           Cause:\n%s", exc.what());
-		B3_THROW(b3TxException,B3_TX_ERR_HEADER);
+		b3PrintF(B3LOG_NORMAL, "IMG EXR  # Error reading file:\n");
+		b3PrintF(B3LOG_NORMAL, "           Cause:\n%s", exc.what());
+		B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 	}
 	return result;
 }

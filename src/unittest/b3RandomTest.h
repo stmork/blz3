@@ -57,7 +57,7 @@ public:
 		b3_loop i;
 		b3_f64  err;
 
-		for(i = 0;i < RANDOM_MAX;i++)
+		for(i = 0; i < RANDOM_MAX; i++)
 		{
 			count += random.b3Rand(RANDOM_SPACE);
 		}

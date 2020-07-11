@@ -30,27 +30,27 @@
 **                                                                      **
 *************************************************************************/
 
-b3Box::b3Box(b3_u32 class_type) : b3Shape3(sizeof(b3Box),class_type)
+b3Box::b3Box(b3_u32 class_type) : b3Shape3(sizeof(b3Box), class_type)
 {
 }
 
-b3Box::b3Box(b3_u32 *src) : b3Shape3(src)
+b3Box::b3Box(b3_u32 * src) : b3Shape3(src)
 {
 }
 
-void b3BBox::b3SetName(const char *name)
+void b3BBox::b3SetName(const char * name)
 {
-	b3Item::b3SetString(m_BoxName,sizeof(m_BoxName),name);
+	b3Item::b3SetString(m_BoxName, sizeof(m_BoxName), name);
 }
 
-void b3Box::b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount)
+void b3Box::b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount)
 {
 	vertCount = 24;
 }
 
 void b3Box::b3ComputeVertices()
 {
-	b3ComputeBoxVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
+	b3ComputeBoxVertices(m_Base, m_Dir1, m_Dir2, m_Dir3);
 }
 
 void b3Box::b3ComputeNormals(b3_bool normalize)
@@ -66,7 +66,7 @@ void b3Box::b3ComputeIndices()
 	b3ComputeBoxIndices();
 }
 
-void b3Box::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3Box::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

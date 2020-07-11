@@ -30,14 +30,14 @@
 class CB3LinesDocument : public CDocument, public b3Document
 {
 public:
-	virtual const char       *b3GetDocumentName() = 0;
-	static  CB3LinesDocument *b3GetLinesDocument(CView *pView);
-	static  void              b3HandleBarState(CView *pView,b3_bool activation);
+	virtual const char    *   b3GetDocumentName() = 0;
+	static  CB3LinesDocument * b3GetLinesDocument(CView * pView);
+	static  void              b3HandleBarState(CView * pView, b3_bool activation);
 
 	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3LinesDocument)
-	public:
+public:
 	virtual void OnCloseDocument();
 	//}}AFX_VIRTUAL
 

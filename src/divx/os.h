@@ -18,7 +18,7 @@
 #else
 # define COMP_GCC
 # define SYS_UNIX
-# if defined(__bsdi__) || defined(__FreeBSD__) 
+# if defined(__bsdi__) || defined(__FreeBSD__)
 #  define SYS_BSD
 # else
 #  define SYS_LINUX

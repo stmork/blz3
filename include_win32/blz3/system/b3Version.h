@@ -22,7 +22,7 @@
 
 #define B3_VERSION_LEN 128
 
-class CB3Version  
+class CB3Version
 {
 	b3_u32   m_VerMajor;
 	b3_u32   m_VerMinor;
@@ -32,16 +32,16 @@ class CB3Version
 	CString  m_Version;
 	CString  m_Copyright;
 public:
-	             CB3Version(b3_bool no_cr = false);
-	void         b3CopyVersionString(char *version);
-	void         b3CopyCopyrightString(char *copyright);
-	const char  *b3GetVersionString();
-	const char  *b3GetCopyrightString();
+	CB3Version(b3_bool no_cr = false);
+	void         b3CopyVersionString(char * version);
+	void         b3CopyCopyrightString(char * copyright);
+	const char * b3GetVersionString();
+	const char * b3GetCopyrightString();
 	b3_bool      b3IsPreRelease();
 
 	static void  b3DumpOS();
 private:
-	const char  *b3GetFileInfo(void *info,const char *key,void **ptr,unsigned int *len,DWORD langID);
+	const char * b3GetFileInfo(void * info, const char * key, void ** ptr, unsigned int * len, DWORD langID);
 };
 
 /*
@@ -66,8 +66,8 @@ private:
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**	
-**	
+**
+**
 */
 
 #endif

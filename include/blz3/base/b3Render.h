@@ -77,7 +77,7 @@ struct b3_render_light_info
 class b3RenderContext : protected b3Mem
 {
 	b3_index             glLightCount;
-	b3RenderObject      *glSelectedObject;
+	b3RenderObject   *   glSelectedObject;
 
 	static b3_vector            glSimpleLightPosition;
 	static b3_vector            glSimpleLightDirection;
@@ -147,7 +147,7 @@ public:
 	 * @param info The specified projection.
 	 * @see b3_render_view_info
 	 */
-	static  void     b3ViewSet(const b3_render_view_info *info);
+	static  void     b3ViewSet(const b3_render_view_info * info);
 
 	/**
 	 * This method resets the lighting with the specified color as ambient color
@@ -184,7 +184,7 @@ public:
 	 * @return True if the light was added.
 	 * @see b3_render_light_info
 	 */
-	b3_bool b3LightAdd(const b3_render_light_info *info);
+	b3_bool b3LightAdd(const b3_render_light_info * info);
 
 	/**
 	 * This method converts the information from the given information structure
@@ -194,7 +194,7 @@ public:
 	 * @param info The light information structure.
 	 * @see b3_render_light_info
 	 */
-	static void b3LightSet(const b3_index index, const b3_render_light_info *info);
+	static void b3LightSet(const b3_index index, const b3_render_light_info * info);
 
 	/**
 	 * This method sets the given matrix into the specified OpenGL matrix mode.
@@ -204,7 +204,7 @@ public:
 	 * @return True on success.
 	 * @see b3_matrix_mode
 	 */
-	static  b3_bool  b3GetMatrix(const b3_matrix_mode mode, b3_matrix *matrix);
+	static  b3_bool  b3GetMatrix(const b3_matrix_mode mode, b3_matrix * matrix);
 
 	/**
 	 * This method retrieves the current selected matrix in the specified OpenGL matrix mode.
@@ -213,14 +213,14 @@ public:
 	 * @param matrix The matrix to retrieve.
 	 * @return True on success.
 	 */
-	static  b3_bool  b3PutMatrix(const b3_matrix_mode mode, const b3_matrix *matrix);
+	static  b3_bool  b3PutMatrix(const b3_matrix_mode mode, const b3_matrix * matrix);
 
 	/**
 	 * This method returns the actual selected render object.
 	 *
 	 * @return The selected object.
 	 */
-	inline b3RenderObject  *b3GetSelected()
+	inline b3RenderObject * b3GetSelected()
 	{
 		return glSelectedObject;
 	}
@@ -230,7 +230,7 @@ public:
 	 *
 	 * @param selected The new selected render object.
 	 */
-	inline void b3SetSelected(b3RenderObject *selected)
+	inline void b3SetSelected(b3RenderObject * selected)
 	{
 		glSelectedObject = selected;
 	}
@@ -244,7 +244,7 @@ public:
 	 * @param src The b3Color instance to convert.
 	 * @param dst The resulting OpenGL floats.
 	 */
-	static inline void b3ColorToGL(b3Color &src,GLfloat *dst)
+	static inline void b3ColorToGL(b3Color & src, GLfloat * dst)
 	{
 		*dst++ =       src[b3Color::R];
 		*dst++ =       src[b3Color::G];
@@ -258,7 +258,7 @@ public:
 	 * @param src The b3Color instance to convert.
 	 * @param dst The resulting OpenGL unsigned bytes.
 	 */
-	static inline void b3ColorToGL(b3Color &src,GLubyte *dst)
+	static inline void b3ColorToGL(b3Color & src, GLubyte * dst)
 	{
 		*dst++ = (GLubyte)(src[b3Color::R] * 255);
 		*dst++ = (GLubyte)(src[b3Color::G] * 255);
@@ -272,7 +272,7 @@ public:
 	 * @param input The b3_pkd_color to convert.
 	 * @param buffer The resulting OpenGL unsigned bytes.
 	 */
-	static inline void b3PkdColorToGL(const b3_pkd_color input,GLubyte *buffer)
+	static inline void b3PkdColorToGL(const b3_pkd_color input, GLubyte * buffer)
 	{
 		*buffer++ = (GLubyte)((input & 0x00ff0000) >> 16);
 		*buffer++ = (GLubyte)((input & 0x0000ff00) >>  8);
@@ -286,11 +286,11 @@ public:
 	 * @param input The b3_pkd_color to convert.
 	 * @param dst The resulting OpenGL floats.
 	 */
-	static inline void b3PkdColorToGL(const b3_pkd_color input,GLfloat *dst)
+	static inline void b3PkdColorToGL(const b3_pkd_color input, GLfloat * dst)
 	{
-		*dst++ =       ((input & 0x00ff0000) >> 16) * 0.0039215686;
-		*dst++ =       ((input & 0x0000ff00) >>  8) * 0.0039215686;
-		*dst++ =       ((input & 0x000000ff))       * 0.0039215686;
+		*dst++ = ((input & 0x00ff0000) >> 16) * 0.0039215686;
+		*dst++ = ((input & 0x0000ff00) >>  8) * 0.0039215686;
+		*dst++ = ((input & 0x000000ff))       * 0.0039215686;
 		*dst   = 1.0 - ((input & 0xff000000) >> 24) * 0.0039215686;
 	}
 
@@ -300,7 +300,7 @@ public:
 	 * @param color The OpenGL floats to convert.
 	 * @return The resulting b3_pkd_color.
 	 */
-	static inline b3_pkd_color b3GLToPkdColor(const GLfloat *color)
+	static inline b3_pkd_color b3GLToPkdColor(const GLfloat * color)
 	{
 		return
 			(((b3_pkd_color)(color[0] * 255)) << 16) |
@@ -315,7 +315,7 @@ public:
 	 * @param src The b3_vector instance.
 	 * @param dst The resulting OpenGL floats.
 	 */
-	static inline void b3VectorToGL(const b3_vector *src,GLfloat *dst)
+	static inline void b3VectorToGL(const b3_vector * src, GLfloat * dst)
 	{
 		*dst++ = src->x;
 		*dst++ = src->y;
@@ -330,9 +330,9 @@ public:
 	 * @param src The b3_vector direction instance.
 	 * @param dst The resulting normalized OpenGL floats representing a direction.
 	 */
-	static inline void b3VectorToDirectionalGL(const b3_vector *src,GLfloat *dst)
+	static inline void b3VectorToDirectionalGL(const b3_vector * src, GLfloat * dst)
 	{
-		b3_f32 x,y,z,len;
+		b3_f32 x, y, z, len;
 
 		x = src->x;
 		y = src->y;
@@ -350,7 +350,7 @@ public:
 	 * @param src The b3_vector4D instance.
 	 * @param dst The resulting OpenGL floats.
 	 */
-	static inline void b3Vector4dToGL(const b3_vector4D *src,GLfloat *dst)
+	static inline void b3Vector4dToGL(const b3_vector4D * src, GLfloat * dst)
 	{
 		*dst++ = src->x;
 		*dst++ = src->y;
@@ -360,7 +360,7 @@ public:
 
 private:
 	static  void     b3SetAmbient(const b3_pkd_color  ambient);
-	static  void     b3SetAmbient(b3Color      &ambient);
+	static  void     b3SetAmbient(b3Color   &   ambient);
 #endif
 };
 
@@ -378,9 +378,9 @@ class B3_PLUGIN b3RenderObject
 	b3_bool            glInit;
 
 protected:
-	b3VertexElements  *glVertexElements;   //!< The vertex data.
-	b3GridElements    *glGridElements;     //!< The line index data.
-	b3PolygonElements *glPolygonElements;  //!< The triangle index data.
+	b3VertexElements * glVertexElements;   //!< The vertex data.
+	b3GridElements  *  glGridElements;     //!< The line index data.
+	b3PolygonElements * glPolygonElements; //!< The triangle index data.
 
 #ifdef BLZ3_USE_OPENGL
 	GLuint             glDisplayList;      //!< The display list for defining material properties.
@@ -393,7 +393,7 @@ protected:
 
 	// Some texture values
 	GLuint             glTextureId;        //!< The OpenGL texture id.
-	GLubyte           *glTextureData;      //!< The bitmap data of the texture.
+	GLubyte      *     glTextureData;      //!< The bitmap data of the texture.
 	b3_res             glTextureSize;      //!< The bitmap buffer size.
 	b3_res             glTextureSizeX;     //!< The x resolution of the texture.
 	b3_res             glTextureSizeY;     //!< The y resolution of the texture.
@@ -425,7 +425,7 @@ public:
 	 *
 	 * @param context The render context containg the counter.
 	 */
-	void b3AddCount(b3RenderContext *context);
+	void b3AddCount(b3RenderContext * context);
 
 	/**
 	 * This method call initializes the vertex buffer objects for this render
@@ -443,7 +443,7 @@ public:
 	 * @see b3VectorBufferObjects
 	 * @see b3VertexBuffer
 	 */
-	virtual void            b3SetupVertexMemory(b3RenderContext *context);
+	virtual void            b3SetupVertexMemory(b3RenderContext * context);
 
 	/**
 	 * This method frees the memory of the participating VBOs.
@@ -458,7 +458,7 @@ public:
 	 *
 	 * @param context The render context to use.
 	 */
-	virtual void b3Draw(b3RenderContext *context);
+	virtual void b3Draw(b3RenderContext * context);
 
 	/**
 	 * This call forces this instance to recompute the geometry. It means
@@ -502,7 +502,7 @@ public:
 	 * @param upper The upper bounding box corner.
 	 * @return True on success.
 	 */
-	b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+	b3_bool         b3ComputeBounds(b3_vector * lower, b3_vector * upper);
 
 protected:
 	/**
@@ -514,7 +514,7 @@ protected:
 	 * @param gridCount The computed line indexing count.
 	 * @param polyCount The computed polygon indexing count.
 	 */
-	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	virtual void            b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
 
 	/**
 	 * This method returns the used vertex range. The default implementation
@@ -523,7 +523,7 @@ protected:
 	 * @param start The start index including.
 	 * @param end The end index excluding.
 	 */
-	virtual void            b3GetVertexRange(b3_index &start,b3_index &end);
+	virtual void            b3GetVertexRange(b3_index & start, b3_index & end);
 
 	/**
 	 * This method sets up the b3VectorBuffer object implementation as needed.
@@ -539,7 +539,7 @@ protected:
 	 * @see b3VectorBufferObjects
 	 * @see b3VertexBuffer
 	 */
-	virtual void            b3AllocVertexMemory(b3RenderContext *context);
+	virtual void            b3AllocVertexMemory(b3RenderContext * context);
 
 	/**
 	 * The implementation of this method computes the vertices. The vertex buffer is
@@ -568,7 +568,7 @@ protected:
 	 *
 	 * @param normalize The flag if the computed normals shoud be normalized.
 	 */
-	virtual void            b3ComputeNormals(b3_bool normalize=true);
+	virtual void            b3ComputeNormals(b3_bool normalize = true);
 
 	/**
 	 * The implementation of this method computes the render mode depending
@@ -590,7 +590,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual void b3GetGridColor(b3Color &color)
+	virtual void b3GetGridColor(b3Color & color)
 	{
 		color = m_GridColor;
 	}
@@ -600,7 +600,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual void b3GetSelectedColor(b3Color &color)
+	virtual void b3GetSelectedColor(b3Color & color)
 	{
 		color = m_SelectedColor;
 	}
@@ -610,7 +610,7 @@ protected:
 	 *
 	 * @param diffuse The resulting color.
 	 */
-	virtual void b3GetDiffuseColor(b3Color &diffuse);
+	virtual void b3GetDiffuseColor(b3Color & diffuse);
 
 	/**
 	 * The imlementation of this method retrieves the object color components.
@@ -620,7 +620,7 @@ protected:
 	 * @param specular The resulting specular color.
 	 * @return The resulting specular exponent.
 	 */
-	virtual b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
+	virtual b3_f64          b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular);
 
 	/**
 	 * If this method returns true the referenced values are initialized by the implementation of
@@ -633,7 +633,7 @@ protected:
 	 * @param yRepeat The repitition count in y direction.
 	 * @return True if the object has a chess material.
 	 */
-	virtual b3_bool b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
+	virtual b3_bool b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat);
 
 	/**
 	 * If the implementation of this method can simply return its texture this method returns this
@@ -645,7 +645,7 @@ protected:
 	 * @param yScale texture translation in y direction.
 	 * @return The texture to use.
 	 */
-	virtual b3Tx *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
+	virtual b3Tx * b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale);
 
 	/**
 	 * If the render object is not a normal material nor a chess board nor a simple texture material the
@@ -654,7 +654,7 @@ protected:
 	 * @param image The image to which the surface colors are sampled in.
 	 * @return True if sampling was OK.
 	 */
-	virtual b3_bool b3GetImage(b3Tx *image);
+	virtual b3_bool b3GetImage(b3Tx * image);
 
 	/**
 	 * This method transforms the vertex data with the given transformation.
@@ -662,30 +662,30 @@ protected:
 	 * @param transformation The transformation matrix.
 	 * @param isAffine If false the normals must be recomputed.
 	 */
-	void b3TransformVertices(b3_matrix *transformation,b3_bool isAffine);
+	void b3TransformVertices(b3_matrix * transformation, b3_bool isAffine);
 
 private:
 	void            b3DefineTexture();
-	void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0);
-	void            b3CreateChess(  b3RenderContext *context,b3Color &bColor,b3Color &wColor);
-	void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
-	void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
+	void            b3CreateTexture(b3RenderContext * context, b3_res xSize = 128, b3_res ySize = 0);
+	void            b3CreateChess(b3RenderContext * context, b3Color & bColor, b3Color & wColor);
+	void            b3CopyTexture(b3RenderContext * context, b3Tx * image);
+	void            b3CreateImage(b3RenderContext * context, b3Tx * image);
 	void            b3DeleteDisplayList();
 
-	void            b3CheckGeometry(const b3RenderContext *context, const b3_render_mode render_mode);
-	void            b3DrawGeometry(b3RenderContext *context, const b3_render_mode render_mode);
+	void            b3CheckGeometry(const b3RenderContext * context, const b3_render_mode render_mode);
+	void            b3DrawGeometry(b3RenderContext * context, const b3_render_mode render_mode);
 
 	// Selecting material and drawing geometry in different modes
-	void            b3SelectMaterialForLineDrawing(b3RenderContext *context);
-	void            b3SelectMaterialForFilledDrawing(const b3RenderContext *context);
-	void            b3DrawLinedGeometry(const b3RenderContext *context);
-	void            b3DrawFilledGeometry(const b3RenderContext *context);
+	void            b3SelectMaterialForLineDrawing(b3RenderContext * context);
+	void            b3SelectMaterialForFilledDrawing(const b3RenderContext * context);
+	void            b3DrawLinedGeometry(const b3RenderContext * context);
+	void            b3DrawFilledGeometry(const b3RenderContext * context);
 
 	void            b3MapIndices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	void            b3MapVertices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	void            b3UnmapIndices();
 	void            b3UnmapVertices();
-	static  void            b3PrintMapping(const char *text,b3_vbo_mapping map_mode);
+	static  void            b3PrintMapping(const char * text, b3_vbo_mapping map_mode);
 };
 
 #endif

@@ -52,26 +52,26 @@ public:
 	b3_bool         m_Filtered;
 
 	// Part of image
-	b3_coord        m_xImgPos,m_yImgPos;
-	b3_f64          m_xImgScale,m_yImgScale;
+	b3_coord        m_xImgPos, m_yImgPos;
+	b3_f64          m_xImgScale, m_yImgScale;
 
 	// Position of window
-	b3_coord        m_xWinPos,m_yWinPos;
-	b3_res          m_xWinSize,m_yWinSize;
+	b3_coord        m_xWinPos, m_yWinPos;
+	b3_res          m_xWinSize, m_yWinSize;
 	b3_window_mode  m_WinMode;
 public:
-	                CB3ViewParam(const char *param_name);
-	char           *b3GetName();
+	CB3ViewParam(const char * param_name);
+	char      *     b3GetName();
 };
 
 class CB3ViewParamBase
 {
 	b3Base<CB3ViewParam> m_Params;
 public:
-	               ~CB3ViewParamBase();
-	CB3ViewParam   *b3GetViewParam(const char *param_name,b3_bool &new_one);
-	void            b3DeleteParam(CB3ViewParam *param,b3_bool delete_reg_entry=false);
-	CB3ViewParam   *b3GetFirstParam();
+	~CB3ViewParamBase();
+	CB3ViewParam  * b3GetViewParam(const char * param_name, b3_bool & new_one);
+	void            b3DeleteParam(CB3ViewParam * param, b3_bool delete_reg_entry = false);
+	CB3ViewParam  * b3GetFirstParam();
 	b3_bool         b3LoadParams();
 	b3_bool         b3SaveParams();
 };

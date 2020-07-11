@@ -36,20 +36,20 @@ b3Mem::~b3Mem()
 {
 	b3Free();
 
-	if (m_SlotPtr != m_Slots)
+	if(m_SlotPtr != m_Slots)
 	{
 		b3MemAccess::b3Free(m_SlotPtr);
 	}
 }
 
-void *b3Mem::b3Alloc(const b3_size size)
+void * b3Mem::b3Alloc(const b3_size size)
 {
-	void              *ptr = b3MemAccess::b3Alloc(size);
+	void       *       ptr = b3MemAccess::b3Alloc(size);
 	b3_index           i;
 	b3CriticalSection  lock(*this);
 
 	i = b3FindIndex(null);
-	if (i >= 0)
+	if(i >= 0)
 	{
 		// Found empty slot
 		m_SlotPtr[i].m_Ptr  = ptr;
@@ -57,7 +57,7 @@ void *b3Mem::b3Alloc(const b3_size size)
 	}
 	else
 	{
-		if (m_SlotMax < m_SlotCount)
+		if(m_SlotMax < m_SlotCount)
 		{
 			// There are enough unused slots available
 			m_SlotPtr[m_SlotMax].m_Ptr  = ptr;
@@ -68,12 +68,12 @@ void *b3Mem::b3Alloc(const b3_size size)
 		{
 			// We need more slots...
 			b3_count     max   = m_SlotCount + B3_MEM_ADDITIONAL_SLOTS;
-			b3_mem_info *slots = (b3_mem_info*)b3MemAccess::b3Alloc(max * sizeof(b3_mem_info));
+			b3_mem_info * slots = (b3_mem_info *)b3MemAccess::b3Alloc(max * sizeof(b3_mem_info));
 
-			if (slots != null)
+			if(slots != null)
 			{
-				memcpy(slots,m_SlotPtr,m_SlotMax * sizeof(b3_mem_info));
-				if (m_SlotPtr != m_Slots)
+				memcpy(slots, m_SlotPtr, m_SlotMax * sizeof(b3_mem_info));
+				if(m_SlotPtr != m_Slots)
 				{
 					b3MemAccess::b3Free(m_SlotPtr);
 				}
@@ -90,7 +90,7 @@ void *b3Mem::b3Alloc(const b3_size size)
 			{
 				// If there is no memory for new slots we should better
 				// check really requested memory chunk.
-				if (ptr != null)
+				if(ptr != null)
 				{
 					b3MemAccess::b3Free(ptr);
 				}
@@ -102,33 +102,33 @@ void *b3Mem::b3Alloc(const b3_size size)
 	return ptr;
 }
 
-void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
+void * b3Mem::b3Realloc(const void * old_ptr, const b3_size new_size)
 {
-	void      *new_ptr  = null;
+	void   *   new_ptr  = null;
 
 	B3_ASSERT((old_ptr != null) || (new_size > 0));
-	if (old_ptr == null)
+	if(old_ptr == null)
 	{
 		new_ptr = b3Alloc(new_size);
 	}
 	else
 	{
-		if (new_size > 0)
+		if(new_size > 0)
 		{
 			b3CriticalSection lock(*this);
 			b3_index i;
 
 			i = b3FindIndex(old_ptr);
-			if (i >= 0)
+			if(i >= 0)
 			{
-				if (m_SlotPtr[i].m_Size >= new_size)
+				if(m_SlotPtr[i].m_Size >= new_size)
 				{
 					new_ptr = m_SlotPtr[i].m_Ptr;
 				}
 				else
 				{
 					new_ptr = b3MemAccess::b3Alloc(new_size);
-					if (new_ptr != null)
+					if(new_ptr != null)
 					{
 						memcpy(new_ptr, m_SlotPtr[i].m_Ptr, m_SlotPtr[i].m_Size);
 						b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
@@ -154,19 +154,19 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 	return new_ptr;
 }
 
-b3_bool b3Mem::b3Free(const void *ptr)
+b3_bool b3Mem::b3Free(const void * ptr)
 {
 	b3_index i;
 	b3_bool  found = false;
 
-	if (ptr != null)
+	if(ptr != null)
 	{
 		// Critical Section
 		{
 			b3CriticalSection lock(*this);
 
 			i = b3FindIndex(ptr);
-			if (i >= 0)
+			if(i >= 0)
 			{
 				m_SlotPtr[i].m_Ptr  = null;
 				m_SlotPtr[i].m_Size = 0;
@@ -174,7 +174,7 @@ b3_bool b3Mem::b3Free(const void *ptr)
 			}
 		}
 
-		if (found)
+		if(found)
 		{
 			b3MemAccess::b3Free(ptr);
 		}
@@ -188,9 +188,9 @@ b3_bool b3Mem::b3Free()
 	b3CriticalSection lock(*this);
 	b3_index          i;
 
-	for (i = 0;i < m_SlotMax;i++)
+	for(i = 0; i < m_SlotMax; i++)
 	{
-		if (m_SlotPtr[i].m_Ptr != null)
+		if(m_SlotPtr[i].m_Ptr != null)
 		{
 			b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
 			m_SlotPtr[i].m_Ptr  = null;
@@ -207,10 +207,10 @@ void b3Mem::b3Dump()
 	b3CriticalSection lock(*this);
 	b3_index          i;
 
-	b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # slot max: %d  slot count: %d\n",m_SlotMax,m_SlotCount);
-	b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # slots: %p   initial slots: %p\n",m_SlotPtr, m_Slots);
-	for (i = 0;i < m_SlotMax;i++)
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slot max: %d  slot count: %d\n", m_SlotMax, m_SlotCount);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slots: %p   initial slots: %p\n", m_SlotPtr, m_Slots);
+	for(i = 0; i < m_SlotMax; i++)
 	{
-		b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # %3d: %p\n",i,m_SlotPtr[i]);
+		b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # %3d: %p\n", i, m_SlotPtr[i]);
 	}
 }

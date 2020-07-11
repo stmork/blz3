@@ -91,7 +91,7 @@ class CAppRenderView : public CScrollView, public CB3PixelFormat
 	b3_res          m_prtLineHeight;
 	b3_count        m_prtLineNum;
 	b3_bool         m_DoubleBuffered;
-	
+
 protected:
 	CB3DashPen      m_RedDash;
 
@@ -100,64 +100,64 @@ protected:
 	b3_select_mode  m_SelectMode;
 	CPoint          m_SelectStart;
 	CPoint          m_SelectAct;
-	CB3Action      *m_Action[B3_MODE_MAX];
+	CB3Action   *   m_Action[B3_MODE_MAX];
 
 	// camera data
 	b3RenderView    m_RenderView;
 	b3RenderLight   m_RenderLight;
-	b3CameraPart   *m_Camera;
+	b3CameraPart  * m_Camera;
 	b3CameraVolume  m_CameraVolume;
 
 protected: // create from serialization only
 	CAppRenderView();
 	DECLARE_DYNCREATE(CAppRenderView)
 
-// Attributes
+	// Attributes
 public:
-	CAppRenderDoc* GetDocument();
+	CAppRenderDoc * GetDocument();
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppRenderView)
-	public:
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	protected:
+public:
+	virtual void OnDraw(CDC * pDC); // overridden to draw this view
+	virtual BOOL PreCreateWindow(CREATESTRUCT & cs);
+protected:
 	virtual void OnInitialUpdate(); // called first time after construct
-	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
-	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
-	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
+	virtual void OnUpdate(CView * pSender, LPARAM lHint, CObject * pHint);
+	virtual BOOL OnPreparePrinting(CPrintInfo * pInfo);
+	virtual void OnBeginPrinting(CDC * pDC, CPrintInfo * pInfo);
+	virtual void OnEndPrinting(CDC * pDC, CPrintInfo * pInfo);
+	virtual void OnPrint(CDC * pDC, CPrintInfo * pInfo);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CAppRenderView();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext & dc) const;
 #endif
 
 protected:
 	virtual b3_bool   b3IsMouseActionAllowed();
-	virtual b3_bool   b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
-	virtual void      b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
-	virtual void      b3DrawDC(HDC hDC,b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
-	virtual void      b3DrawLegend(CDC *pDC); 
+	virtual b3_bool   b3GetDimension(b3_f64 & xSize, b3_f64 & ySize, b3_f64 & unit, b3_f64 & measure);
+	virtual void      b3Draw(b3_res xSize, b3_res ySize, b3_f64 xOffset = 0.0, b3_f64 yOffset = 0.0);
+	virtual void      b3DrawDC(HDC hDC, b3_res xSize, b3_res ySize, b3_f64 xOffset = 0.0, b3_f64 yOffset = 0.0);
+	virtual void      b3DrawLegend(CDC * pDC);
 	virtual void      b3UpdateLight();
-	        void      b3DrawText(CDC *pDC,const char *text);
+	void      b3DrawText(CDC * pDC, const char * text);
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppRenderView)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg BOOL OnEraseBkgnd(CDC * pDC);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
@@ -178,24 +178,24 @@ protected:
 	afx_msg void OnViewMoveLeft();
 	afx_msg void OnViewMoveUp();
 	afx_msg void OnViewMoveDown();
-	afx_msg void OnUpdateViewPerspective(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewTop(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewFront(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewRight(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewLeft(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewSmaller(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewSelect(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewBigger(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewOptimal(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewPerspective(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewTop(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewFront(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewRight(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewLeft(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewBack(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewSmaller(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewSelect(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewBigger(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewOptimal(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewPop(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateViewMove(CCmdUI * pCmdUI);
 	afx_msg void OnPaint();
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
-	void b3DrawRect(b3_coord x1,b3_coord y1,b3_coord x2,b3_coord y2);
+	void b3DrawRect(b3_coord x1, b3_coord y1, b3_coord x2, b3_coord y2);
 	void b3Update(b3_u32 update_mask);
 	void b3Paint();
 
@@ -219,8 +219,10 @@ protected:
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp
-inline CAppRenderDoc* CAppRenderView::GetDocument()
-   { return (CAppRenderDoc*)m_pDocument; }
+inline CAppRenderDoc * CAppRenderView::GetDocument()
+{
+	return (CAppRenderDoc *)m_pDocument;
+}
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

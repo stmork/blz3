@@ -47,23 +47,23 @@ public:
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
-	b3_bool openRead(const char *filename);
-	b3_bool openWrite(const char *filename);
-	void    removeFile(const char *filename);
+	b3_bool openRead(const char * filename);
+	b3_bool openWrite(const char * filename);
+	void    removeFile(const char * filename);
 
 	void testWrite()
 	{
 		char   array[1024];
 
 		CPPUNIT_ASSERT(openWrite("Config.tst"));
-		CPPUNIT_ASSERT(file.b3Buffer (2048));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write  (array,1024));
-		CPPUNIT_ASSERT(file.b3Flush  ());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write  (array,1024));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write  (array,1024));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write  (array,1024));
-		CPPUNIT_ASSERT(file.b3Buffer (512));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write  (array,1024));
+		CPPUNIT_ASSERT(file.b3Buffer(2048));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write(array, 1024));
+		CPPUNIT_ASSERT(file.b3Flush());
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write(array, 1024));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write(array, 1024));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write(array, 1024));
+		CPPUNIT_ASSERT(file.b3Buffer(512));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Write(array, 1024));
 		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(5120), file.b3Size());
 		CPPUNIT_ASSERT_NO_THROW(file.b3Close());
 		CPPUNIT_ASSERT_NO_THROW(removeFile("Config.tst"));
@@ -74,11 +74,11 @@ public:
 		char   array[1024];
 
 		CPPUNIT_ASSERT(openRead("Data1.bwd"));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>( 128), file.b3Read(array,128));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>( 128), file.b3Seek( 512,B3_SEEK_START));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>( 512), file.b3Seek( 512,B3_SEEK_CURRENT));
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Seek(-120,B3_SEEK_END));
-		CPPUNIT_ASSERT_EQUAL(file.b3Size()-120, file.b3Seek(   0,B3_SEEK_CURRENT));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(128), file.b3Read(array, 128));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(128), file.b3Seek(512, B3_SEEK_START));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(512), file.b3Seek(512, B3_SEEK_CURRENT));
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_size>(1024), file.b3Seek(-120, B3_SEEK_END));
+		CPPUNIT_ASSERT_EQUAL(file.b3Size() - 120, file.b3Seek(0, B3_SEEK_CURRENT));
 		CPPUNIT_ASSERT_NO_THROW(file.b3Close());
 	}
 };

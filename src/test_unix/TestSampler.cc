@@ -44,7 +44,7 @@ static b3_vector scale =
 class b3MatWoodSampler : public b3MaterialSampler
 {
 public:
-	b3MatWoodSampler(b3Tx *tx) : b3MaterialSampler(tx, &scale)
+	b3MatWoodSampler(b3Tx * tx) : b3MaterialSampler(tx, &scale)
 	{
 		// Init material
 		m_Material = new b3MatWood(WOOD);
@@ -60,9 +60,9 @@ public:
 class b3MatOakPlankSampler : public b3MaterialSampler
 {
 public:
-	b3MatOakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx, &scale, 1)
+	b3MatOakPlankSampler(b3Tx * tx) : b3MaterialSampler(tx, &scale, 1)
 	{
-		b3MatOakPlank *material = new b3MatOakPlank(OAKPLANK);
+		b3MatOakPlank * material = new b3MatOakPlank(OAKPLANK);
 
 #ifdef CREATE_ICON
 		material->m_LightWood = material->m_DarkWood * 2.0;
@@ -89,7 +89,7 @@ public:
 class b3BumpWoodSampler : public b3BumpSampler
 {
 public:
-	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx, &scale, 1)
+	b3BumpWoodSampler(b3Tx * tx) : b3BumpSampler(tx, &scale, 1)
 	{
 		// Init material
 		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
@@ -105,9 +105,9 @@ public:
 class b3BumpOakPlankSampler : public b3BumpSampler
 {
 public:
-	b3BumpOakPlankSampler(b3Tx *tx) : b3BumpSampler(tx, &scale, 1)
+	b3BumpOakPlankSampler(b3Tx * tx) : b3BumpSampler(tx, &scale, 1)
 	{
-		b3BumpOakPlank *bump = new b3BumpOakPlank(BUMP_OAKPLANK);
+		b3BumpOakPlank * bump = new b3BumpOakPlank(BUMP_OAKPLANK);
 
 		bump->m_xScale *= 4;
 		bump->m_yScale *= 4;
@@ -123,26 +123,26 @@ public:
 	}
 };
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	b3Display   *display;
+	b3Display  * display;
 
 	b3RaytracingItems::b3Register();
 	try
 	{
 		b3Tx   tx;
-		b3_res xMax,yMax;
+		b3_res xMax, yMax;
 
 		// Create display
-		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
-		display->b3GetRes(xMax,yMax);
+		display = new b3DisplayView(WOOD_RES, WOOD_RES, "Wood");
+		display->b3GetRes(xMax, yMax);
 
 		tx.b3AllocTx(xMax, yMax, 128);
 
 		b3MatWoodSampler      sampler(&tx);
-//		b3MatOakPlankSampler  sampler(&tx);
-//		b3BumpWoodSampler     sampler(&tx);
-//		b3BumpOakPlankSampler sampler(&tx);
+		//		b3MatOakPlankSampler  sampler(&tx);
+		//		b3BumpWoodSampler     sampler(&tx);
+		//		b3BumpOakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();
 
@@ -151,18 +151,18 @@ int main(int argc,char *argv[])
 		display->b3PutTx(&tx);
 		display->b3Wait();
 
-		if (argc > 1)
+		if(argc > 1)
 		{
 #ifdef CREATE_ICON
-			if (argc > 3)
+			if(argc > 3)
 			{
-				b3Tx small,big;
+				b3Tx small, big;
 
-				small.b3AllocTx(32,32,24);
+				small.b3AllocTx(32, 32, 24);
 				small.b3ScaleToGrey(&tx);
 				small.b3SaveTGA(argv[2]);
 
-				big.b3AllocTx(48,48,24);
+				big.b3AllocTx(48, 48, 24);
 				big.b3ScaleToGrey(&tx);
 				big.b3SaveTGA(argv[3]);
 			}
@@ -175,9 +175,9 @@ int main(int argc,char *argv[])
 		// Delete Display
 		delete display;
 	}
-	catch (b3DisplayException &e)
+	catch(b3DisplayException & e)
 	{
-		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
+		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}
 	return EXIT_SUCCESS;
 }

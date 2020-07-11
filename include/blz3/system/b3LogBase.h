@@ -48,8 +48,8 @@ class B3_PLUGIN b3LogBase
 	static const b3_count B3_MAX_LOGFILENAME =   128;
 
 protected:
-	static b3LogBase    *m_Logger;     //!< The logging instance.
-	static FILE         *m_Out;        //!< The log file where to log into.
+	static b3LogBase  *  m_Logger;     //!< The logging instance.
+	static FILE     *    m_Out;        //!< The log file where to log into.
 	static b3_log_level  m_LogLevel;   //!< The log level to use.
 	static b3Mutex       m_LogMutex;   //!< A mutex for thread safe logging.
 	static char          m_Message[B3_MAX_LOGSIZE];     //!< A temporary message buffer.
@@ -100,7 +100,7 @@ public:
 	 *
 	 * @return The logging instance.
 	 */
-	static  inline b3LogBase *b3GetLogger()
+	static  inline b3LogBase * b3GetLogger()
 	{
 		assert(m_Logger != null);
 		return m_Logger;
@@ -111,21 +111,21 @@ public:
 	 *
 	 * @return The new log file name.
 	 */
-	static  void    b3GetLogFile (      char         *logfile);
+	static  void    b3GetLogFile(char     *    logfile);
 
 	/**
 	 * This method specifies the log file wher to log into.
 	 *
 	 * @param logfile The new log file name.
 	 */
-	static  b3_bool b3SetLogFile (const char         *logfile);
+	static  b3_bool b3SetLogFile(const char     *    logfile);
 
 	/**
 	 * This method logs a comment including a time stamp.
 	 *
 	 * \param *comment The comment to print.
 	 */
-	virtual void    b3LogTime    (const char         *comment = 0) = 0;
+	virtual void    b3LogTime(const char     *    comment = 0) = 0;
 
 	/**
 	 * Tis method logs a message with a specified log level. The message is a
@@ -136,7 +136,7 @@ public:
 	 * \param *format     The format string.
 	 * \param ...         The arguments used by the format string.
 	 */
-	virtual void    b3LogFunction(const b3_log_level  debug_level,const char *format,...) = 0;
+	virtual void    b3LogFunction(const b3_log_level  debug_level, const char * format, ...) = 0;
 };
 
 #define b3PrintT b3LogBase::b3GetLogger()->b3LogTime

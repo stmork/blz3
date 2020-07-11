@@ -24,7 +24,7 @@
 //		2.06 : CMenuItem::ComputeMenuTrackPoint fixed a little
 //		2.05 : CMenuDockBar fixed
 //			 : Inactive state problem fixed
-//		2.04 : bug with ::TrackPopupEx carelessly fixed 
+//		2.04 : bug with ::TrackPopupEx carelessly fixed
 //           : synchronizing TrackPopup animation with win98 effect
 //
 //						written by MB <mb2@geocities.co.jp> 1999.11.27
@@ -32,24 +32,36 @@
 // CMenuItem interface
 class CMenuItem
 {
-// Construction
+	// Construction
 public:
 	CMenuItem();
 
-// Attributes
-	BYTE GetStyle() const { return m_fsStyle; }
+	// Attributes
+	BYTE GetStyle() const
+	{
+		return m_fsStyle;
+	}
 	void ModifyState(BYTE fsRemove, BYTE fsAdd);
-	BYTE GetState() const { return m_fsState; }
+	BYTE GetState() const
+	{
+		return m_fsState;
+	}
 	CSize GetHorizontalSize() const;
-	CRect GetRect() const { return m_rcItem; }
-	TCHAR GetAccessKey() const { return m_cAccessKey; }
+	CRect GetRect() const
+	{
+		return m_rcItem;
+	}
+	TCHAR GetAccessKey() const
+	{
+		return m_cAccessKey;
+	}
 
-// Overidables
-	virtual void Update(CDC*) = 0;
+	// Overidables
+	virtual void Update(CDC *) = 0;
 	virtual void Layout(CPoint, BOOL bHorz) = 0;
-	virtual void TrackPopup(CWnd* pBar, CWnd* pWndSentCmd) = 0;
+	virtual void TrackPopup(CWnd * pBar, CWnd * pWndSentCmd) = 0;
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CMenuItem() { }
 
@@ -73,18 +85,18 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 // CMenuButton class
-class CMenuButton : public CMenuItem  
+class CMenuButton : public CMenuItem
 {
-// Construction
+	// Construction
 public:
 	CMenuButton(HMENU hMenu, int nIndex);
 
-// Overidables
-	virtual void Update(CDC*);
+	// Overidables
+	virtual void Update(CDC *);
 	virtual void Layout(CPoint, BOOL bHorz);
-	virtual void TrackPopup(CWnd* pBar, CWnd* pWndSentCmd);
+	virtual void TrackPopup(CWnd * pBar, CWnd * pWndSentCmd);
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CMenuButton() { }
 
@@ -96,11 +108,11 @@ private:
 
 	// Implementation helper
 	// used on Update
-	void DrawHot(CDC*);
-	void DrawPressed(CDC*);
-	void DrawNone(CDC*);
-	void DrawHorzText(CDC*, CPoint ptOffset = CPoint(0, 0));
-	void DrawVertText(CDC*, CPoint ptOffset = CPoint(0, 0));
+	void DrawHot(CDC *);
+	void DrawPressed(CDC *);
+	void DrawNone(CDC *);
+	void DrawHorzText(CDC *, CPoint ptOffset = CPoint(0, 0));
+	void DrawVertText(CDC *, CPoint ptOffset = CPoint(0, 0));
 	// used on constructing
 	void InitButtonStringAndSubMenuHandle(HMENU hMenu, int nIndex);
 	void InitHorizontalButtonSize();
@@ -109,61 +121,64 @@ private:
 
 //////////////////////////////////////////////////////////////////////
 // CMenuIcon class
-class CMenuIcon : public CMenuItem  
+class CMenuIcon : public CMenuItem
 {
-// Construction
+	// Construction
 public:
-	CMenuIcon(CWnd* pMenuBar);
+	CMenuIcon(CWnd * pMenuBar);
 
-// Operations
+	// Operations
 	void OnActivateChildWnd();
-	
-// Overidables
-	virtual void Update(CDC*);
-	virtual void Layout(CPoint, BOOL bHorz);
-	virtual void TrackPopup(CWnd* pBar, CWnd* pWndSentCmd);
 
-// Implementation
+	// Overidables
+	virtual void Update(CDC *);
+	virtual void Layout(CPoint, BOOL bHorz);
+	virtual void TrackPopup(CWnd * pBar, CWnd * pWndSentCmd);
+
+	// Implementation
 public:
 	virtual ~CMenuIcon();
 
 private:
-	CWnd* m_pMenuBar;
+	CWnd * m_pMenuBar;
 	HICON m_hDocIcon;
 	HICON m_hIconWinLogo;// used on View which has no own Doc icon
 };
 
 //////////////////////////////////////////////////////////////////////
 // CMenuControl class
-class CMenuControl : public CMenuItem  
+class CMenuControl : public CMenuItem
 {
-// Construction
+	// Construction
 public:
-	CMenuControl(CWnd* pMenuBar);
+	CMenuControl(CWnd * pMenuBar);
 
-// Operations
+	// Operations
 	void OnActivateChildWnd();
 	BOOL OnMouseMsg(UINT msg, UINT nFlags, CPoint pt);
-	void ForceDrawControl(CDC*);
-	void DelayLayoutAndDraw(CDC* pDC, CSize sizeBar);
-	
-// Overidables
-	virtual void Update(CDC*);
-	virtual void Layout(CPoint, BOOL bHorz);
-	virtual void TrackPopup(CWnd* pBar, CWnd* pWndSentCmd) { ASSERT(TRUE); }
+	void ForceDrawControl(CDC *);
+	void DelayLayoutAndDraw(CDC * pDC, CSize sizeBar);
 
-// Implementation
+	// Overidables
+	virtual void Update(CDC *);
+	virtual void Layout(CPoint, BOOL bHorz);
+	virtual void TrackPopup(CWnd * pBar, CWnd * pWndSentCmd)
+	{
+		ASSERT(TRUE);
+	}
+
+	// Implementation
 public:
 	virtual ~CMenuControl() { }
 
 private:
-	CWnd* m_pMenuBar;
+	CWnd * m_pMenuBar;
 	CRect m_arrCaption[3];
 	BOOL  m_bDown;
 	int	  m_nTracking;
 
 	// Implementation helper
-	void DrawControl(CDC*, int nIndex, BOOL bDown);
+	void DrawControl(CDC *, int nIndex, BOOL bDown);
 	int HitTest(CPoint point);
 	CSize GetCaptionSize();
 };
@@ -176,32 +191,32 @@ class CMainFrameHook : public CSubclassWnd
 {
 public:
 	CMainFrameHook();
-	BOOL Install(CMenuBar* pMenuBar, HWND hWndToHook);
+	BOOL Install(CMenuBar * pMenuBar, HWND hWndToHook);
 	virtual ~CMainFrameHook();
 
 protected:
 	virtual LRESULT WindowProc(UINT nMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CMenuBar* m_pMenuBar;
+	CMenuBar * m_pMenuBar;
 };
 
 class CMDIClientHook : public CSubclassWnd
 {
 public:
 	CMDIClientHook();
-	BOOL Install(CMenuBar* pMenuBar, HWND hWndToHook);
+	BOOL Install(CMenuBar * pMenuBar, HWND hWndToHook);
 	virtual ~CMDIClientHook();
 
 protected:
 	virtual LRESULT WindowProc(UINT nMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CMenuBar* m_pMenuBar;
+	CMenuBar * m_pMenuBar;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// CMenuBar 
+// CMenuBar
 
 #if _MFC_VER >= 0x0600
 #define AFX_IDW_MENUBAR			0xE806  // Menu bar
@@ -215,13 +230,13 @@ private:
 class /*AFX_EXT_CLASS*/ CMenuBar : public CControlBar
 {
 	DECLARE_DYNAMIC(CMenuBar)
-// Constructors
+	// Constructors
 public:
 	CMenuBar();
-	BOOL Create(CWnd* pParentWnd,
+	BOOL Create(CWnd * pParentWnd,
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBRS_TOP,
 		UINT nID = AFX_IDW_MENUBAR);
-	BOOL CreateEx(CWnd* pParentWnd,
+	BOOL CreateEx(CWnd * pParentWnd,
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP,
 		CRect rcBorders = CRect(0, 0, 0, 0),
 		UINT nID = AFX_IDW_MENUBAR);
@@ -229,25 +244,25 @@ public:
 	BOOL LoadMenuBar(UINT nIDResource);
 	HMENU LoadMenu(HMENU hMenu, HMENU hMenuWindow);
 
-// Operations
+	// Operations
 public:
-	BOOL TranslateFrameMessage(MSG* pMsg);
+	BOOL TranslateFrameMessage(MSG * pMsg);
 	void EnableDockingEx(DWORD dwStyle);
 	static const UINT WM_GETMENU;
-	
-// Overidables
+
+	// Overidables
 	//{{AFX_VIRTUAL(CMenuBar)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CMenuBar();
-	virtual void DoPaint(CDC* pDC);
-	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+	virtual void DoPaint(CDC * pDC);
+	virtual void OnUpdateCmdUI(CFrameWnd * pTarget, BOOL bDisableIfNoHndler);
 	virtual CSize CalcFixedLayout(BOOL bStretch, BOOL bHorz);
 	virtual CSize CalcDynamicLayout(int nLength, DWORD dwMode);
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CMenuBar)
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -256,7 +271,7 @@ protected:
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnDestroy();
-	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp);
+	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR * lpncsp);
 	afx_msg void OnNcPaint();
 	afx_msg UINT OnNcHitTest(CPoint point);
 	//}}AFX_MSG
@@ -267,7 +282,7 @@ protected:
 	// for message hook
 	void OnMenuSelect(HMENU hMenu, UINT nIndex);
 	void OnSetMenu(HMENU hNewMenu, HMENU hWindowMenu);
-	void OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu);
+	void OnInitMenuPopup(CMenu * pPopupMenu, UINT nIndex, BOOL bSysMenu);
 	void OnFrameNcActivate(BOOL bActive);
 
 protected:
@@ -288,34 +303,42 @@ protected:
 	// draw
 	void RefreshBar();
 	void EraseNonClientEx();
-	void DrawRaisedBorders(CDC*, CRect&);
+	void DrawRaisedBorders(CDC *, CRect &);
 	// won't use MFC6 functions
-	void _DrawGripper(CDC* pDC, const CRect& rect);
-	void _CalcInsideRect(CRect& rect, BOOL bHorz) const;
+	void _DrawGripper(CDC * pDC, const CRect & rect);
+	void _CalcInsideRect(CRect & rect, BOOL bHorz) const;
 
 	// Items
 	BOOL InitItems();
 	void DeleteItems();
-	int GetItemCount() const { return m_arrItem.GetSize(); }
-	BOOL IsValidIndex(int nIndex) const { return 0 <= nIndex && nIndex < GetItemCount(); }
-	BOOL MapAccessKey(TCHAR cKey, int& nIndex);
+	int GetItemCount() const
+	{
+		return m_arrItem.GetSize();
+	}
+	BOOL IsValidIndex(int nIndex) const
+	{
+		return 0 <= nIndex && nIndex < GetItemCount();
+	}
+	BOOL MapAccessKey(TCHAR cKey, int & nIndex);
 	int HitTestOnTrack(CPoint point);
 
 	// system hook
 	static LRESULT CALLBACK MenuInputFilter(int code, WPARAM wParam, LPARAM lParam);
-	BOOL OnMenuInput(MSG&);
+	BOOL OnMenuInput(MSG &);
 
 	// popup
 	void TrackPopup(int nIndex);
 	int GetNextOrPrevButton(int nIndex, BOOL bPrev);
 
 	void CheckActiveChildWndMaximized();
-	HWND GetActiveChildWnd(BOOL& bMaximized);
+	HWND GetActiveChildWnd(BOOL & bMaximized);
 
 #if _MFC_VER < 0x0600
 	void SetBorders(int cxLeft, int cyTop, int cxRight, int cyBottom);
 	void SetBorders(LPCRECT lpRect)
-	{ SetBorders(lpRect->left, lpRect->top, lpRect->right, lpRect->bottom); }
+	{
+		SetBorders(lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
+	}
 #endif
 
 private:
@@ -324,8 +347,8 @@ private:
 	int  m_nCurIndex;
 	BOOL m_bIgnoreAlt;
 	TrackingState m_nTrackingState;
-	CArray<CMenuItem*, CMenuItem*> m_arrItem;
-public:	
+	CArray<CMenuItem *, CMenuItem *> m_arrItem;
+public:
 	HMENU m_hMenu;// CMenu object is unavaiable, cause we have to share menu with MFC in MDI app.
 
 	CPoint m_ptMouse;// cursor position while hooking
@@ -338,8 +361,8 @@ public:
 	CMDIClientHook m_hookMDIClient;
 	BOOL m_bMDIApp;// this is a MDI application?
 	HWND m_hWndMDIClient;
-	CMenuControl* m_pMenuControl;
-	CMenuIcon* m_pMenuIcon;
+	CMenuControl * m_pMenuControl;
+	CMenuIcon * m_pMenuIcon;
 	BOOL m_bMDIMaximized;
 	HMENU m_hWindowMenu;
 	HWND m_hWndActiveChild;
@@ -351,16 +374,16 @@ public:
 	friend class CMDIClientHook;
 
 	// for OLE menu
-	HWND OleMenuDescriptor(BOOL& bSend, UINT nMsg, WPARAM wParam, LPARAM lParam);
-	CWnd* GetCmdSentOleWnd();
+	HWND OleMenuDescriptor(BOOL & bSend, UINT nMsg, WPARAM wParam, LPARAM lParam);
+	CWnd * GetCmdSentOleWnd();
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// CMenuDocBar 
+// CMenuDocBar
 //     for insisting its own line on DockBar
 // I'm afraid this trick will make some problems.
 
-class CMenuDockBar : public CDockBar  
+class CMenuDockBar : public CDockBar
 {
 public:
 	CMenuDockBar() { }

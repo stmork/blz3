@@ -61,7 +61,7 @@ enum b3_date_error
 	B3_DATE_ILLEGAL_MODE  //!< Unknown time zone.
 };
 
-typedef b3Exception<b3_date_error,0x444154> b3DateException;
+typedef b3Exception<b3_date_error, 0x444154> b3DateException;
 
 /**
  * This class provides methods for dealing with dates and to
@@ -102,7 +102,7 @@ public:
 	 * @param year  The year to set.
 	 * @throws b3DateException
 	 */
-	b3Date(unsigned short day,unsigned short month,unsigned long year);
+	b3Date(unsigned short day, unsigned short month, unsigned long year);
 
 	/**
 	 * This method sets the date values to the actual time point.
@@ -117,7 +117,7 @@ public:
 	 * @param year  The year to set.
 	 * @return Success.
 	 */
-	bool       b3SetDate(unsigned short day,unsigned short month,unsigned long year);
+	bool       b3SetDate(unsigned short day, unsigned short month, unsigned long year);
 
 	/**
 	 * This method sets the date values to the days time point.
@@ -127,7 +127,7 @@ public:
 	 * @param second The seconds to set.
 	 * @return Success.
 	 */
-	bool       b3SetTime(unsigned short hour=0,unsigned short minute=0,unsigned short second=0);
+	bool       b3SetTime(unsigned short hour = 0, unsigned short minute = 0, unsigned short second = 0);
 
 	/**
 	 * This method sets the time zone.
@@ -149,7 +149,7 @@ public:
 	 * @param time_tm The tm structure to fill.
 	 * @return The given tm structure.
 	 */
-	struct tm *b3TM(struct tm *time_tm);
+	struct tm * b3TM(struct tm * time_tm);
 
 
 	/////////////////////////////// Operators
@@ -158,7 +158,7 @@ public:
 	 *
 	 * @param date The date to subtract.
 	 */
-	void     operator-=(const b3Date &date);
+	void     operator-=(const b3Date & date);
 
 	/**
 	 * This operator adds the given date to this instance.
@@ -166,21 +166,21 @@ public:
 	 * @param date The date to add.
 	 * @throws b3DateException
 	 */
-	void     operator+=(const b3Date &date);
+	void     operator+=(const b3Date & date);
 
 	/**
 	 * This operator assigns a given date to this instance.
 	 *
 	 * @param date The date to assign.
 	 */
-	void     operator=(const b3Date &date);
+	void     operator=(const b3Date & date);
 
 	/**
 	 * This operator assigns a given date as <code>time_t</code> to this instance.
 	 *
 	 * @param time_point The time value to assign.
 	 */
-	void     operator=(const time_t &time_point);
+	void     operator=(const time_t & time_point);
 
 	/**
 	 * This operator adds a given Date to this instance and results in a new date.
@@ -188,7 +188,7 @@ public:
 	 * @param date The date to add.
 	 * @return The resulting date.
 	 */
-	b3Date   operator+(const b3Date &date);
+	b3Date   operator+(const b3Date & date);
 
 	/**
 	 * This operator subtracts a given Date from this instance and results in a new date.
@@ -196,7 +196,7 @@ public:
 	 * @param date The date to subtract.
 	 * @return The resulting date.
 	 */
-	b3Date   operator-(const b3Date &date);
+	b3Date   operator-(const b3Date & date);
 
 	/**
 	 * This operator returns the date of this instance as <code>time_t</code> value.
@@ -211,42 +211,42 @@ public:
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator<(const b3Date &date);
+	int      operator<(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is smaller or equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator<=(const b3Date &date);
+	int      operator<=(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator==(const b3Date &date);
+	int      operator==(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is not equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator!=(const b3Date &date);
+	int      operator!=(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is greater or equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator>=(const b3Date &date);
+	int      operator>=(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is greater than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator>(const b3Date &date);
+	int      operator>(const b3Date & date);
 
 	/////////////////////////////// Special case...
 	/**
@@ -261,9 +261,9 @@ private:
 	void b3GMTime();
 	void b3DiffTime();
 	long b3Check(
-		unsigned short,unsigned short,unsigned short,
-		unsigned short,unsigned short,unsigned long,
-		unsigned short,bool);
+		unsigned short, unsigned short, unsigned short,
+		unsigned short, unsigned short, unsigned long,
+		unsigned short, bool);
 };
 
 #endif

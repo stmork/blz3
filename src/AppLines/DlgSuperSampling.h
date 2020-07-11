@@ -31,12 +31,12 @@
 
 class CDlgSuperSampling : public CPropertyPage
 {
-// Construction
+	// Construction
 public:
 	b3SuperSample * m_SuperSample;
-	CDlgSuperSampling(CWnd* pParent = NULL);   // standard constructor
+	CDlgSuperSampling(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgSuperSampling)
 	enum { IDD = IDD_SUPER_SAMPLE };
 	CSliderCtrl	m_RedCtrl;
@@ -49,16 +49,16 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgSuperSampling)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

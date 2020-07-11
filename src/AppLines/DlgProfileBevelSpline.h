@@ -44,12 +44,12 @@ class CDlgProfileBevelSpline : public CB3ProfileShapeDialog
 	b3_f64         m_Oblique;
 	b3_s32         m_yControls;
 	b3_s32         m_yDegree;
-// Construction
+	// Construction
 public:
 	virtual void b3PostProcess();
-	CDlgProfileBevelSpline(CWnd* pParent = NULL);   // standard constructor
+	CDlgProfileBevelSpline(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgProfileBevelSpline)
 	enum { IDD = IDD_PROFILE_BEVEL_SPLINE };
 	CB3IntSpinButtonCtrl	m_yControlsCtrl;
@@ -62,26 +62,26 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgProfileBevelSpline)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
-	virtual const char *b3GetSection();
+	virtual const char * b3GetSection();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgProfileBevelSpline)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnObliqueSpin(NMHDR* pNMHDR, LRESULT* pResult) ;
+	afx_msg void OnObliqueSpin(NMHDR * pNMHDR, LRESULT * pResult) ;
 	afx_msg void OnObliqueEdit();
-	afx_msg void OnEdgeSpin(NMHDR* pNMHDR, LRESULT* pResult) ;
+	afx_msg void OnEdgeSpin(NMHDR * pNMHDR, LRESULT * pResult) ;
 	afx_msg void OnEdgeEdit();
-	afx_msg void OnDegreeSpin(NMHDR* pNMHDR, LRESULT* pResult) ;
+	afx_msg void OnDegreeSpin(NMHDR * pNMHDR, LRESULT * pResult) ;
 	afx_msg void OnDegreeEdit();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

@@ -35,13 +35,13 @@
 class CPageMaterial : public CB3PropertyPage
 {
 public:
-	b3_material *m_Material;
+	b3_material * m_Material;
 
-// Construction
+	// Construction
 	CPageMaterial();
 	~CPageMaterial();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPageMaterial)
 	enum { IDD = IDD_PAGE_MATERIAL };
 	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
@@ -54,14 +54,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CPageMaterial)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

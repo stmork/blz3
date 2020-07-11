@@ -40,13 +40,13 @@ class CDlgCreateSplineShape : public CB3ProfileShapeDialog
 	b3_s32         m_yControls;
 	b3_f64         m_ySize;
 
-// Construction
+	// Construction
 public:
 	CDlgCreateSplineShape();
 	~CDlgCreateSplineShape();
 
 	virtual void b3PostProcess();
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCreateSplineShape)
 	enum { IDD = IDD_CREATE_SPLINESHAPE };
 	CB3FloatEdit	m_ySizeCtrl;
@@ -60,22 +60,22 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCreateSplineShape)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateSplineShape)
-	afx_msg void OnXDegreeSpin(NMHDR* pNMHDR, LRESULT* pResult) ;
+	afx_msg void OnXDegreeSpin(NMHDR * pNMHDR, LRESULT * pResult) ;
 	afx_msg void OnXDegreeEdit();
-	afx_msg void OnYDegreeSpin(NMHDR* pNMHDR, LRESULT* pResult) ;
+	afx_msg void OnYDegreeSpin(NMHDR * pNMHDR, LRESULT * pResult) ;
 	afx_msg void OnYDegreeEdit();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

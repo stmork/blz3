@@ -33,16 +33,16 @@ enum b3_fft_error
 	B3_FFT_SRC_TX_EMPTY
 };
 
-typedef b3Exception<b3_fft_error,0x464654> b3FFTException;
+typedef b3Exception<b3_fft_error, 0x464654> b3FFTException;
 
 class b3Fourier;
 
 struct b3FilterInfo
 {
-	b3Fourier *m_Fourier;
+	b3Fourier * m_Fourier;
 };
 
-typedef void (*b3SampleFunc)(const b3_f64 fx,const b3_f64 fy, const b3_index index, b3FilterInfo *info);
+typedef void (*b3SampleFunc)(const b3_f64 fx, const b3_f64 fy, const b3_index index, b3FilterInfo * info);
 
 #define B3_FFT_MAX_THREADS 4
 
@@ -50,8 +50,8 @@ struct b3_fft_info
 {
 	b3_loop       m_xMin, m_xMax;
 	b3_loop       m_yMin, m_yMax;
-	b3Complex64 **m_Lines;
-	b3Complex64  *m_Aux;
+	b3Complex64 ** m_Lines;
+	b3Complex64 * m_Aux;
 	b3_res        m_xDim;
 	b3_res        m_yDim;
 	int           m_Dir;
@@ -61,11 +61,11 @@ class B3_PLUGIN b3Fourier : protected b3Mem
 {
 	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
 	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
-//	b3_count               m_Size;
+	//	b3_count               m_Size;
 
-	b3Complex64           *m_Buffer;
-	b3Complex64          **m_Lines;
-	b3Complex64           *m_Aux;
+	b3Complex64      *     m_Buffer;
+	b3Complex64     **     m_Lines;
+	b3Complex64      *     m_Aux;
 
 	b3_count               m_CPUs;
 
@@ -87,7 +87,7 @@ public:
 	 *
 	 * @param tx The image with the values to initialize.
 	 */
-	const b3_bool b3AllocBuffer  (b3Tx *tx);
+	const b3_bool b3AllocBuffer(b3Tx * tx);
 
 	/**
 	 * This method frees all used memory.
@@ -101,7 +101,7 @@ public:
 	 * @param info The info structure to pass to the sample method.
 	 * @param func The sample callback method which is called for every buffer sample.
 	 */
-	void    b3Sample       (b3FilterInfo *info, b3SampleFunc func);
+	void    b3Sample(b3FilterInfo * info, b3SampleFunc func);
 
 	/**
 	 * This method computes the forward FFT of the internal buffer.
@@ -119,10 +119,10 @@ public:
 		return b3FFT2D(-1);
 	}
 
-	const b3_bool   b3GetBuffer    (b3Tx *tx, b3_f64 amp);
-	const b3_bool   b3GetSpectrum  (b3Tx *tx, b3_f64 amp);
+	const b3_bool   b3GetBuffer(b3Tx * tx, b3_f64 amp);
+	const b3_bool   b3GetSpectrum(b3Tx * tx, b3_f64 amp);
 
-	inline b3Complex64 *b3GetBuffer() const
+	inline b3Complex64 * b3GetBuffer() const
 	{
 		return m_Buffer;
 	}
@@ -150,9 +150,9 @@ public:
 	static const b3_count b3Log2(b3_u32 value);
 
 private:
-	static       b3_u32  b3RowFFT(void *ptr);
-	static       b3_u32  b3ColumnFFT(void *ptr);
-	static const b3_bool b3FFT(const int dir, const b3_res m, b3Complex64 *line);
+	static       b3_u32  b3RowFFT(void * ptr);
+	static       b3_u32  b3ColumnFFT(void * ptr);
+	static const b3_bool b3FFT(const int dir, const b3_res m, b3Complex64 * line);
 
 	const b3_bool b3FFT2D(const int dir);
 	const b3_bool b3ReallocBuffer();

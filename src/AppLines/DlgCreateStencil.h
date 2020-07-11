@@ -45,18 +45,18 @@ class CDlgCreateStencil : public CPropertyPage
 
 	DECLARE_DYNCREATE(CDlgCreateStencil)
 
-// Construction
+	// Construction
 public:
-	b3Shape         *m_Shape;
-	b3CondRectangle *m_Stencil;
+	b3Shape     *    m_Shape;
+	b3CondRectangle * m_Stencil;
 
 public:
-	              CDlgCreateStencil();
-	             ~CDlgCreateStencil();
+	CDlgCreateStencil();
+	~CDlgCreateStencil();
 	void          b3Init();
 	void          b3PostProcess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCreateStencil)
 	enum { IDD = IDD_CREATE_STENCIL };
 	CB3FloatSpinButtonCtrl	m_xStartCtrl;
@@ -72,16 +72,16 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCreateStencil)
-	public:
+public:
 	virtual BOOL OnSetActive();
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateStencil)

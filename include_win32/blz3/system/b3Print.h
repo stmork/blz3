@@ -29,14 +29,14 @@ enum b3_print_error
 	B3_PRINT_NO_MEMORY
 };
 
-typedef b3Exception<b3_print_error,505254> b3PrintException;
+typedef b3Exception<b3_print_error, 505254> b3PrintException;
 
 class CB3Print
 {
-	CB3View  *m_Print;
-	b3Tx     *m_Tx;
-	b3Tx     *m_TxBuffer;
-	b3Tx     *m_PrtLine;
+	CB3View * m_Print;
+	b3Tx   *  m_Tx;
+	b3Tx   *  m_TxBuffer;
+	b3Tx   *  m_PrtLine;
 	b3_bool   m_NeedGreyScale;
 
 	// size of one strip in original image
@@ -64,11 +64,11 @@ class CB3Print
 	b3_res    m_ScaleHeight;
 
 public:
-	      CB3Print(b3Tx *,b3_count strips,b3_res strip_height,CDC *pDC,CPrintInfo *pInfo,b3_bool FitOnPage=false);
-		  CB3Print(CDC *pDC,CPrintInfo *pInfo,b3_bool FitOnPage = true);
-	     ~CB3Print();
-	void  b3PrintPage(CDC *pDC,CPrintInfo *pInfo);
-	void  b3PrintPage(CDC *srcDC,CDC *pDC,CPrintInfo *pInfo,b3Tx *pTX);
+	CB3Print(b3Tx *, b3_count strips, b3_res strip_height, CDC * pDC, CPrintInfo * pInfo, b3_bool FitOnPage = false);
+	CB3Print(CDC * pDC, CPrintInfo * pInfo, b3_bool FitOnPage = true);
+	~CB3Print();
+	void  b3PrintPage(CDC * pDC, CPrintInfo * pInfo);
+	void  b3PrintPage(CDC * srcDC, CDC * pDC, CPrintInfo * pInfo, b3Tx * pTX);
 };
 
 #endif

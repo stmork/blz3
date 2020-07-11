@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
+b3ShaderPhong::b3ShaderPhong(b3Scene * scene) : b3Shader(scene)
 {
 }
 
@@ -39,23 +39,23 @@ b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
 #define MIX_BOTH       (MIX_REFLECTION | MIX_REFRACTION)
 
 void b3ShaderPhong::b3ShadeLight(
-	b3Light       *light,
-	b3_light_info *Jit,
-	b3_surface    *surface)
+	b3Light    *   light,
+	b3_light_info * Jit,
+	b3_surface  *  surface)
 {
 	// No shadow => surface in light
-	if (Jit->shape == null)
+	if(Jit->shape == null)
 	{
 		b3_f32 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
 
-		if (ShapeAngle >= 0) // test for far side to light
+		if(ShapeAngle >= 0)  // test for far side to light
 		{
 			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
-			if (spec_exp < 100000) // test if surface if rough
+			if(spec_exp < 100000)  // test if surface if rough
 			{
-				b3_f64 lambda = b3Vector::b3SMul(&surface->m_ReflRay.dir,&Jit->dir);
-				b3_f32 factor = b3Math::b3FastPow (lambda, spec_exp) * Jit->m_LightFrac;
+				b3_f64 lambda = b3Vector::b3SMul(&surface->m_ReflRay.dir, &Jit->dir);
+				b3_f32 factor = b3Math::b3FastPow(lambda, spec_exp) * Jit->m_LightFrac;
 
 				Jit->m_SpecularSum += (surface->m_Specular * light->m_Color * factor);
 			}
@@ -66,35 +66,35 @@ void b3ShaderPhong::b3ShadeLight(
 	else
 	{
 		b3_surface  obsSurface;
-		b3Material *obsMat;
+		b3Material * obsMat;
 
 		obsSurface.m_Incoming = Jit;
 		obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
-		if (obsSurface.m_Refraction > 0)
+		if(obsSurface.m_Refraction > 0)
 		{
 			Jit->m_DiffuseSum += (
-									 light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
+					light->m_Color * obsSurface.m_Diffuse * obsSurface.m_Refraction);
 		}
 	}
 #endif
 }
 
 void b3ShaderPhong::b3ShadeSurface(
-	b3_surface *surface,
+	b3_surface * surface,
 	b3_count    depth_count)
 {
-	b3_ray      *ray = surface->m_Incoming;
-	b3_f32       refl,refr,factor;
+	b3_ray   *   ray = surface->m_Incoming;
+	b3_f32       refl, refr, factor;
 
-	if (surface->m_Transparent)
+	if(surface->m_Transparent)
 	{
-		if (surface->m_Ior == 1)
+		if(surface->m_Ior == 1)
 		{
 			surface->m_RefrRay.inside = false;
 			surface->m_ReflRay.inside = false;
 		}
 		refr = surface->m_Refraction;
-		b3Shade(&surface->m_RefrRay,depth_count);
+		b3Shade(&surface->m_RefrRay, depth_count);
 	}
 	else
 	{
@@ -103,9 +103,9 @@ void b3ShaderPhong::b3ShadeSurface(
 	}
 
 	refl = surface->m_Reflection;
-	if (refl > 0)
+	if(refl > 0)
 	{
-		b3Shade(&surface->m_ReflRay,depth_count);
+		b3Shade(&surface->m_ReflRay, depth_count);
 	}
 	else
 	{
@@ -116,7 +116,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	surface->m_SpecularSum.b3Init();
 	b3Illuminate(surface);
 
-	if (!b3Material::b3MixComponents(surface, refl, refr))
+	if(!b3Material::b3MixComponents(surface, refl, refr))
 	{
 		factor = (1.0 - refl - refr);
 		ray->color =

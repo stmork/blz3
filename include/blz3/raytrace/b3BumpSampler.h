@@ -33,10 +33,10 @@ class b3BumpSampler : public b3Sampler, protected b3_scene_preparation
 	static b3_vector             m_Light;
 
 protected:
-	b3Tx      *m_Tx;        //!< The image to sample in.
-	b3Bump    *m_Bump;      //!< The bump class instance to sample.
+	b3Tx   *   m_Tx;        //!< The image to sample in.
+	b3Bump  *  m_Bump;      //!< The bump class instance to sample.
 	const b3_count   m_Tiles;     //!< The horizontal tiles.
-	const b3_vector *m_BBoxSize;  //!< The bounding box dimension.
+	const b3_vector * m_BBoxSize; //!< The bounding box dimension.
 
 public:
 	/**
@@ -46,14 +46,14 @@ public:
 	 * @param bbox_size The original bounding box size
 	 * @param tiles The number of tiles to use.
 	 */
-	b3BumpSampler(b3Tx *tx, const b3_vector *bbox_size, const b3_count tiles = DEFAULT_BUMP_TILES);
+	b3BumpSampler(b3Tx * tx, const b3_vector * bbox_size, const b3_count tiles = DEFAULT_BUMP_TILES);
 
 	/**
 	 * This method sets the bump class instance.
 	 *
 	 * @param bump The bump class instance to sample.
 	 */
-	void          b3SetBump(b3Bump *bump);
+	void          b3SetBump(b3Bump * bump);
 
 	/**
 	 * This method sets the actual time point.
@@ -66,8 +66,8 @@ public:
 	}
 
 protected:
-	b3SampleInfo *b3SampleInit(const b3_count CPUs);
-	void          b3SampleTask(const b3SampleInfo *info);
+	b3SampleInfo * b3SampleInit(const b3_count CPUs);
+	void          b3SampleTask(const b3SampleInfo * info);
 };
 
 #endif

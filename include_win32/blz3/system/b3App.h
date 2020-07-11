@@ -29,36 +29,36 @@ class CB3App : public CWinApp, public CB3Reg, public CB3ToolbarState
 	HDC           m_lastDC;
 	b3_bool       m_UncheckedContextSwitch;
 
-	const char   *m_ClientName;
+	const char  * m_ClientName;
 public:
 	bool          m_RunAutomated;
 	bool          m_AutoSave;
 
 public:
-	                    CB3App(const char *appName = "");
-				       ~CB3App();
-	        bool        b3InitInstance();
-			const char *b3ClientName();
-			bool        b3ExitInstance();
-			void        b3GfxType(CWnd *wnd);
+	CB3App(const char * appName = "");
+	~CB3App();
+	bool        b3InitInstance();
+	const char * b3ClientName();
+	bool        b3ExitInstance();
+	void        b3GfxType(CWnd * wnd);
 	virtual void        b3GetWindowMode();
 	virtual void        b3SetWindowMode(bool ForceSave);
-			void        b3MoveWindow(CWnd *wnd);
-			void        b3CoolEnable(bool enable=true);
-	        void        b3SelectRenderContext(HDC dc,HGLRC gc);
-	        b3_f64      b3ReadProfileFloat(const char *title,b3_f64 default_value);
-	        b3_bool     b3WriteProfileFloat(const char *title,b3_f64 default_value);
-	        void        b3ReadProfileVector(const char *title,b3_vector *default_vector);
-	        b3_bool     b3WriteProfileVector(const char *title,const b3_vector *vector);
-	        void        b3ReadProfileColor(const char *title,b3Color &default_vector);
-	        b3_bool     b3WriteProfileColor(const char *title,b3Color &vector);
+	void        b3MoveWindow(CWnd * wnd);
+	void        b3CoolEnable(bool enable = true);
+	void        b3SelectRenderContext(HDC dc, HGLRC gc);
+	b3_f64      b3ReadProfileFloat(const char * title, b3_f64 default_value);
+	b3_bool     b3WriteProfileFloat(const char * title, b3_f64 default_value);
+	void        b3ReadProfileVector(const char * title, b3_vector * default_vector);
+	b3_bool     b3WriteProfileVector(const char * title, const b3_vector * vector);
+	void        b3ReadProfileColor(const char * title, b3Color & default_vector);
+	b3_bool     b3WriteProfileColor(const char * title, b3Color & vector);
 
-// From CWinApp
-// Overrides
+	// From CWinApp
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3App)
 public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
 	//}}AFX_VIRTUAL
 
 	//{{AFX_MSG(CB3App)

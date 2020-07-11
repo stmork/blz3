@@ -33,7 +33,7 @@
 
 void b3Bump::b3Register()
 {
-	b3PrintF (B3LOG_DEBUG,"Registering bump mapping...\n");
+	b3PrintF(B3LOG_DEBUG, "Registering bump mapping...\n");
 	b3Item::b3Register(&b3BumpNoise::b3StaticInit,     &b3BumpNoise::b3StaticInit,     BUMP_NOISE);
 	b3Item::b3Register(&b3BumpMarble::b3StaticInit,    &b3BumpMarble::b3StaticInit,    BUMP_MARBLE);
 	b3Item::b3Register(&b3BumpTexture::b3StaticInit,   &b3BumpTexture::b3StaticInit,   BUMP_TEXTURE);
@@ -52,17 +52,17 @@ void b3Bump::b3Register()
 **                                                                      **
 *************************************************************************/
 
-b3Bump::b3Bump(b3_size class_size,b3_u32 class_type) : b3Item(class_size,class_type)
+b3Bump::b3Bump(b3_size class_size, b3_u32 class_type) : b3Item(class_size, class_type)
 {
 	m_Amplitude = 0.2f;
 }
 
-b3Bump::b3Bump(b3_u32 class_type) : b3Item(sizeof(b3Bump),class_type)
+b3Bump::b3Bump(b3_u32 class_type) : b3Item(sizeof(b3Bump), class_type)
 {
 	m_Amplitude = 0.2f;
 }
 
-b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
+b3Bump::b3Bump(b3_u32 * src) : b3Item(src)
 {
 }
 
@@ -72,19 +72,19 @@ b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
 **                                                                      **
 *************************************************************************/
 
-b3BumpNoise::b3BumpNoise(b3_u32 class_type) : b3Bump(sizeof(b3BumpNoise),class_type)
+b3BumpNoise::b3BumpNoise(b3_u32 class_type) : b3Bump(sizeof(b3BumpNoise), class_type)
 {
 	m_Amplitude = 0.2f;
-	b3InitScaling(0.05,B3_SCALE_IPOINT_ORIGINAL);
+	b3InitScaling(0.05, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3BumpNoise::b3BumpNoise(b3_u32 *src) : b3Bump(src)
+b3BumpNoise::b3BumpNoise(b3_u32 * src) : b3Bump(src)
 {
 	m_Scale.x   = b3InitFloat() * 1024.0;
 	m_Scale.y   = b3InitFloat() * 1024.0;
 	m_Scale.z   = b3InitFloat() * 1024.0;
 	m_Amplitude = b3InitFloat();
-	if (B3_PARSE_INDEX_VALID)
+	if(B3_PARSE_INDEX_VALID)
 	{
 		m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	}
@@ -99,20 +99,20 @@ void b3BumpNoise::b3Write()
 	b3StoreInt(m_ScaleFlags);
 }
 
-void b3BumpNoise::b3BumpNormal(b3_ray *ray)
+void b3BumpNoise::b3BumpNormal(b3_ray * ray)
 {
 	b3_vector n;
 	b3_vector point;
 	b3_f64    Denom;
 
-	b3Scale(ray,&m_Scale,&point);
+	b3Scale(ray, &m_Scale, &point);
 
 	Denom = 1.0 / sqrt(
-				ray->normal.x * ray->normal.x +
-				ray->normal.y * ray->normal.y +
-				ray->normal.z * ray->normal.z);
+			ray->normal.x * ray->normal.x +
+			ray->normal.y * ray->normal.y +
+			ray->normal.z * ray->normal.z);
 
-	b3Noise::b3NoiseVector (point.x,point.y,point.z,&n);
+	b3Noise::b3NoiseVector(point.x, point.y, point.z, &n);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;
@@ -124,19 +124,19 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpMarble::b3BumpMarble(b3_u32 class_type) : b3Bump(sizeof(b3BumpMarble),class_type)
+b3BumpMarble::b3BumpMarble(b3_u32 class_type) : b3Bump(sizeof(b3BumpMarble), class_type)
 {
 	m_Amplitude = 0.3f;
-	b3InitScaling(0.1f,B3_SCALE_IPOINT_ORIGINAL);
+	b3InitScaling(0.1f, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3BumpMarble::b3BumpMarble(b3_u32 *src) : b3Bump(src)
+b3BumpMarble::b3BumpMarble(b3_u32 * src) : b3Bump(src)
 {
 	m_Scale.x   = b3InitFloat() * M_PI;
 	m_Scale.y   = b3InitFloat() * M_PI;
 	m_Scale.z   = b3InitFloat() * M_PI;
 	m_Amplitude = b3InitFloat();
-	if (B3_PARSE_INDEX_VALID)
+	if(B3_PARSE_INDEX_VALID)
 	{
 		m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	}
@@ -155,18 +155,18 @@ void b3BumpMarble::b3Write()
 	b3StoreInt(m_ScaleFlags);
 }
 
-b3_bool b3BumpMarble::b3Prepare(b3_preparation_info *info)
+b3_bool b3BumpMarble::b3Prepare(b3_preparation_info * info)
 {
 	b3PrepareScaling();
 	return true;
 }
 
-void b3BumpMarble::b3BumpNormal(b3_ray *ray)
+void b3BumpMarble::b3BumpNormal(b3_ray * ray)
 {
 	b3_vector point;
 	b3_f64    r;
 
-	b3Scale(ray,&m_Scale,&point);
+	b3Scale(ray, &m_Scale, &point);
 
 	b3Vector::b3Normalize(&ray->normal);
 
@@ -182,7 +182,7 @@ void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpTexture::b3BumpTexture(b3_u32 class_type) : b3Bump(sizeof(b3BumpTexture),class_type)
+b3BumpTexture::b3BumpTexture(b3_u32 class_type) : b3Bump(sizeof(b3BumpTexture), class_type)
 {
 	// Init texture repetition values
 	m_xStart =  0;
@@ -198,7 +198,7 @@ b3BumpTexture::b3BumpTexture(b3_u32 class_type) : b3Bump(sizeof(b3BumpTexture),c
 	m_Flags   = 0;
 }
 
-b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
+b3BumpTexture::b3BumpTexture(b3_u32 * src) : b3Bump(src)
 {
 	m_xStart    = b3InitFloat();
 	m_yStart    = b3InitFloat();
@@ -209,7 +209,7 @@ b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 	m_Amplitude = b3InitFloat();
 	m_Texture   = (b3Tx *)b3InitNull();
 	m_Flags     = b3InitInt();
-	b3InitString(m_Name,B3_TEXSTRINGLEN);
+	b3InitString(m_Name, B3_TEXSTRINGLEN);
 }
 
 void b3BumpTexture::b3Write()
@@ -223,23 +223,23 @@ void b3BumpTexture::b3Write()
 	b3StoreFloat(m_Amplitude);
 	b3StoreNull();
 	b3StoreInt(m_Flags);
-	b3StoreString(m_Name,B3_TEXSTRINGLEN);
+	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3BumpTexture::b3Prepare(b3_preparation_info *info)
+b3_bool b3BumpTexture::b3Prepare(b3_preparation_info * info)
 {
-	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
+	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
 
 inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	b3_f64     lx,
 	b3_f64     ly,
-	b3_vector *Deriv)
+	b3_vector * Deriv)
 {
-	b3_f32    p1,p2,p3;
-	b3_coord  x,y;
+	b3_f32    p1, p2, p3;
+	b3_coord  x, y;
 
-	if (!m_Texture->b3IsLoaded())
+	if(!m_Texture->b3IsLoaded())
 	{
 		return false;
 	}
@@ -247,7 +247,7 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	lx = (lx - m_xStart) / m_xScale;
 	ly = (ly - m_yStart) / m_yScale;
 
-	if ((ly < 0) || (ly >= m_yTimes) || (lx < 0) || (lx >= m_xTimes))
+	if((ly < 0) || (ly >= m_yTimes) || (lx < 0) || (lx >= m_xTimes))
 	{
 		return false;
 	}
@@ -255,9 +255,9 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	x = (b3_coord)((lx - (b3_coord)lx) * m_Texture->xSize);
 	y = (b3_coord)((ly - (b3_coord)ly) * m_Texture->ySize);
 
-	p1 = m_Texture->b3GetBlue( x,y);
-	p2 = m_Texture->b3GetBlue((x+1) % m_Texture->xSize,y);
-	p3 = m_Texture->b3GetBlue( x, (y+1) % m_Texture->ySize);
+	p1 = m_Texture->b3GetBlue(x, y);
+	p2 = m_Texture->b3GetBlue((x + 1) % m_Texture->xSize, y);
+	p3 = m_Texture->b3GetBlue(x, (y + 1) % m_Texture->ySize);
 
 	Deriv->x = p2 - p1;
 	Deriv->y = p3 - p1;
@@ -265,19 +265,19 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 
 	return true;
 }
-void b3BumpTexture::b3BumpNormal(b3_ray *ray)
+void b3BumpTexture::b3BumpNormal(b3_ray * ray)
 {
-	b3_vector64 *xDeriv = &ray->xDeriv;
-	b3_vector64 *yDeriv = &ray->yDeriv;
+	b3_vector64 * xDeriv = &ray->xDeriv;
+	b3_vector64 * yDeriv = &ray->yDeriv;
 	b3_vector    Deriv;
-	b3_f64       x,y;
+	b3_f64       x, y;
 
-	if (b3GetNormalDeriv (
-				ray->polar.m_Polar.x,
-				ray->polar.m_Polar.y,&Deriv))
+	if(b3GetNormalDeriv(
+			ray->polar.m_Polar.x,
+			ray->polar.m_Polar.y, &Deriv))
 	{
 		b3Vector::b3Normalize(&ray->normal);
-		b3Vector::b3Scale(&Deriv,m_Amplitude);
+		b3Vector::b3Scale(&Deriv, m_Amplitude);
 
 		x = (m_xScale < 0 ? Deriv.x : -Deriv.x) / b3Vector::b3Length(xDeriv);
 		y = (m_yScale < 0 ? Deriv.y : -Deriv.y) / b3Vector::b3Length(yDeriv);
@@ -293,31 +293,31 @@ void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpWater::b3BumpWater(b3_u32 class_type) : b3Bump(sizeof(b3BumpWater),class_type)
+b3BumpWater::b3BumpWater(b3_u32 class_type) : b3Bump(sizeof(b3BumpWater), class_type)
 {
 	m_Amplitude = 0.2f;
-	b3InitScaling(0.006f,B3_SCALE_IPOINT_ORIGINAL);
+	b3InitScaling(0.006f, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
+b3BumpWater::b3BumpWater(b3_u32 * src) : b3Bump(src)
 {
 	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	m_Amplitude  = b3InitFloat();
-	if (B3_PARSE_INDEX_VALID)
+	if(B3_PARSE_INDEX_VALID)
 	{
 		m_Scale.x   = m_Amplitude;
 		m_Scale.y   = b3InitFloat();
 		m_Scale.z   = b3InitFloat();
 		m_Amplitude = b3InitFloat();
 		m_ScaleTime = b3InitFloat();
-		if (B3_PARSE_INDEX_VALID)
+		if(B3_PARSE_INDEX_VALID)
 		{
 			m_Km       = b3InitFloat();
 			m_Octaves  = b3InitCount();
 			m_WindAmp  = b3InitFloat();
 			m_WindFreq = b3InitFloat();
 			m_MinWind  = b3InitFloat();
-			if (B3_PARSE_INDEX_VALID)
+			if(B3_PARSE_INDEX_VALID)
 			{
 				b3InitVector(&m_Anim);
 			}
@@ -325,7 +325,7 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 	}
 	else
 	{
-		b3InitScaling(1.0,B3_SCALE_BOX_POLAR);
+		b3InitScaling(1.0, B3_SCALE_BOX_POLAR);
 	}
 }
 
@@ -343,9 +343,9 @@ void b3BumpWater::b3Write()
 	b3StoreVector(&m_Anim);
 }
 
-b3_bool b3BumpWater::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3BumpWater::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_scene_preparation *info = (b3_scene_preparation *)prep_info;
+	b3_scene_preparation * info = (b3_scene_preparation *)prep_info;
 	b3_f64                t = (m_ScaleTime < 0.0001 ? 0 : info->m_t / m_ScaleTime);
 
 	b3PrepareScaling();
@@ -353,12 +353,12 @@ b3_bool b3BumpWater::b3Prepare(b3_preparation_info *prep_info)
 	return true;
 }
 
-void b3BumpWater::b3BumpNormal(b3_ray *ray)
+void b3BumpWater::b3BumpNormal(b3_ray * ray)
 {
-	b3_vector point,ox,oy,n;
-	b3_f64    Denom,r,water;
+	b3_vector point, ox, oy, n;
+	b3_f64    Denom, r, water;
 
-	b3Scale(ray,&m_Scale,&point);
+	b3Scale(ray, &m_Scale, &point);
 
 	water = b3ComputeWater(&point);
 	ox.x     = 0.125;
@@ -369,19 +369,19 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	oy.z     = water;
 
 	point.x += ox.x;
-	ox.z    -= b3ComputeWater (&point);
+	ox.z    -= b3ComputeWater(&point);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= b3ComputeWater (&point);
+	oy.z    -= b3ComputeWater(&point);
 
 	r   = m_Amplitude;
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
-				ray->normal.x * ray->normal.x +
-				ray->normal.y * ray->normal.y +
-				ray->normal.z * ray->normal.z);
+			ray->normal.x * ray->normal.x +
+			ray->normal.y * ray->normal.y +
+			ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -394,12 +394,12 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpWave::b3BumpWave(b3_u32 class_type) : b3Bump(sizeof(b3BumpWave),class_type)
+b3BumpWave::b3BumpWave(b3_u32 class_type) : b3Bump(sizeof(b3BumpWave), class_type)
 {
 	m_Amplitude = 0.2f;
 }
 
-b3BumpWave::b3BumpWave(b3_u32 *src) : b3Bump(src)
+b3BumpWave::b3BumpWave(b3_u32 * src) : b3Bump(src)
 {
 	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
@@ -413,18 +413,18 @@ void b3BumpWave::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-b3_bool b3BumpWave::b3Prepare(b3_preparation_info *info)
+b3_bool b3BumpWave::b3Prepare(b3_preparation_info * info)
 {
 	b3PrepareScaling();
 	return true;
 }
 
-void b3BumpWave::b3BumpNormal(b3_ray *ray)
+void b3BumpWave::b3BumpNormal(b3_ray * ray)
 {
-	b3_vector point,ox,oy,n;
-	b3_f64    Denom,r,wave;
+	b3_vector point, ox, oy, n;
+	b3_f64    Denom, r, wave;
 
-	b3Scale(ray,&m_Scale,&point);
+	b3Scale(ray, &m_Scale, &point);
 
 	wave     = b3Noise::b3Wave(&point);
 	ox.x     = 0.125;
@@ -435,19 +435,19 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 	oy.z     = wave;
 
 	point.x += ox.x;
-	ox.z    -= b3Noise::b3Wave (&point);
+	ox.z    -= b3Noise::b3Wave(&point);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= b3Noise::b3Wave (&point);
+	oy.z    -= b3Noise::b3Wave(&point);
 
 	r   = m_Amplitude;
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
-				ray->normal.x * ray->normal.x +
-				ray->normal.y * ray->normal.y +
-				ray->normal.z * ray->normal.z);
+			ray->normal.x * ray->normal.x +
+			ray->normal.y * ray->normal.y +
+			ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -460,12 +460,12 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpGroove::b3BumpGroove(b3_u32 class_type) : b3Bump(sizeof(b3BumpGroove),class_type)
+b3BumpGroove::b3BumpGroove(b3_u32 class_type) : b3Bump(sizeof(b3BumpGroove), class_type)
 {
 	m_Amplitude = 0.8f;
 }
 
-b3BumpGroove::b3BumpGroove(b3_u32 *src) : b3Bump(src)
+b3BumpGroove::b3BumpGroove(b3_u32 * src) : b3Bump(src)
 {
 	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
@@ -479,16 +479,16 @@ void b3BumpGroove::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-b3_bool b3BumpGroove::b3Prepare(b3_preparation_info *info)
+b3_bool b3BumpGroove::b3Prepare(b3_preparation_info * info)
 {
 	b3PrepareScaling();
 	return true;
 }
 
-void b3BumpGroove::b3BumpNormal(b3_ray *ray)
+void b3BumpGroove::b3BumpNormal(b3_ray * ray)
 {
-	b3_vector point,ox,oy,n;
-	b3_f64    Denom,r,groove;
+	b3_vector point, ox, oy, n;
+	b3_f64    Denom, r, groove;
 
 	point.x =
 		ray->polar.m_ObjectPolar.x * m_Scale.x +
@@ -505,19 +505,19 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	oy.z     = groove;
 
 	point.x += ox.x;
-	ox.z    -= b3Noise::b3Wave (&point);
+	ox.z    -= b3Noise::b3Wave(&point);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= b3Noise::b3Wave (&point);
+	oy.z    -= b3Noise::b3Wave(&point);
 
 	r   = m_Amplitude;
 	b3Vector::b3CrossProduct(&ox, &oy, &n);
 
 	Denom = 1.0 / sqrt(
-				ray->normal.x * ray->normal.x +
-				ray->normal.y * ray->normal.y +
-				ray->normal.z * ray->normal.z);
+			ray->normal.x * ray->normal.x +
+			ray->normal.y * ray->normal.y +
+			ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -531,13 +531,13 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpGlossy::b3BumpGlossy(b3_u32 class_type) : b3Bump(sizeof(b3BumpGlossy),class_type)
+b3BumpGlossy::b3BumpGlossy(b3_u32 class_type) : b3Bump(sizeof(b3BumpGlossy), class_type)
 {
 	m_Flags     = 0;
 	m_Amplitude = 0.1f;
 }
 
-b3BumpGlossy::b3BumpGlossy(b3_u32 *src) : b3Bump(src)
+b3BumpGlossy::b3BumpGlossy(b3_u32 * src) : b3Bump(src)
 {
 	m_Flags     = b3InitInt();
 	m_Amplitude = b3Math::b3Limit(b3InitFloat());
@@ -549,13 +549,13 @@ void b3BumpGlossy::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-void b3BumpGlossy::b3BumpNormal(b3_ray *ray)
+void b3BumpGlossy::b3BumpNormal(b3_ray * ray)
 {
 	b3_f64 Denom =
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
 		ray->normal.z * ray->normal.z;
-	if (Denom > 0)
+	if(Denom > 0)
 	{
 		Denom = 1 / sqrt(Denom);
 
@@ -571,17 +571,17 @@ void b3BumpGlossy::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpWooden::b3BumpWooden(b3_size class_size,b3_u32 class_type) : b3Bump(class_size,class_type)
+b3BumpWooden::b3BumpWooden(b3_size class_size, b3_u32 class_type) : b3Bump(class_size, class_type)
 {
-	b3InitScaling(1.0,B3_SCALE_IPOINT_ORIGINAL);
+	b3InitScaling(1.0, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3BumpWooden::b3BumpWooden(b3_u32 class_type) : b3Bump(sizeof(b3Bump),class_type)
+b3BumpWooden::b3BumpWooden(b3_u32 class_type) : b3Bump(sizeof(b3Bump), class_type)
 {
-	b3InitScaling(1.0,B3_SCALE_IPOINT_ORIGINAL);
+	b3InitScaling(1.0, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3BumpWooden::b3BumpWooden(b3_u32 *src) : b3Bump(src)
+b3BumpWooden::b3BumpWooden(b3_u32 * src) : b3Bump(src)
 {
 }
 
@@ -594,7 +594,7 @@ b3BumpWooden::b3BumpWooden(b3_u32 *src) : b3Bump(src)
 **                                                                      **
 *************************************************************************/
 
-b3BumpWood::b3BumpWood(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpWood),class_type)
+b3BumpWood::b3BumpWood(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpWood), class_type)
 {
 	m_Amplitude = 0.003f;
 	m_dX = 1.0 / BUMP_dX;
@@ -603,7 +603,7 @@ b3BumpWood::b3BumpWood(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpWood),clas
 	b3InitWood();
 }
 
-b3BumpWood::b3BumpWood(b3_u32 *src) : b3BumpWooden(src)
+b3BumpWood::b3BumpWood(b3_u32 * src) : b3BumpWooden(src)
 {
 	m_ScaleFlags     = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
@@ -645,7 +645,7 @@ void b3BumpWood::b3Write()
 	b3StoreFloat(m_Ringy);
 }
 
-b3_bool b3BumpWood::b3Prepare(b3_preparation_info *info)
+b3_bool b3BumpWood::b3Prepare(b3_preparation_info * info)
 {
 	b3PrepareWood(&m_Scale);
 	b3PrepareScaling();
@@ -656,14 +656,14 @@ b3_bool b3BumpWood::b3Prepare(b3_preparation_info *info)
 	return true;
 }
 
-void b3BumpWood::b3BumpNormal(b3_ray *ray)
+void b3BumpWood::b3BumpNormal(b3_ray * ray)
 {
-	b3_vector   point,n;
-	b3_vector   xWood,yWood;
-	b3_ray      xRay,yRay;
-	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
+	b3_vector   point, n;
+	b3_vector   xWood, yWood;
+	b3_ray      xRay, yRay;
+	b3_f64      Denom, wood, dX, dY, x, y, xLen, yLen;
 
-	b3Scale(ray,null,&point);
+	b3Scale(ray, null, &point);
 	wood = b3Wood::b3ComputeWood(&point, ray->Q);
 
 	// Note: xDeriv and yDeriv are not normalized!
@@ -673,8 +673,8 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	xRay.ipoint.y = x * ray->xDeriv.y + ray->ipoint.y;
 	xRay.ipoint.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xRay);
-	b3Scale(&xRay,null,&xWood);
-	dX = (b3Wood::b3ComputeWood (&xWood, ray->Q) - wood) * m_dX / xLen;
+	b3Scale(&xRay, null, &xWood);
+	dX = (b3Wood::b3ComputeWood(&xWood, ray->Q) - wood) * m_dX / xLen;
 
 	yLen    = b3Vector::b3Length(&ray->yDeriv);
 	y       = 1.0 / (yLen * m_dY);
@@ -682,8 +682,8 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	yRay.ipoint.y = y * ray->yDeriv.y + ray->ipoint.y;
 	yRay.ipoint.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yRay);
-	b3Scale(&yRay,null,&yWood);
-	dY = (b3Wood::b3ComputeWood (&yWood, ray->Q) - wood) * m_dY / yLen;
+	b3Scale(&yRay, null, &yWood);
+	dY = (b3Wood::b3ComputeWood(&yWood, ray->Q) - wood) * m_dY / yLen;
 
 	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
 	n.y = ray->xDeriv.y * dX + ray->yDeriv.y * dY;
@@ -701,13 +701,13 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpOakPlank),class_type)
+b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpOakPlank), class_type)
 {
 	m_Amplitude = 0.025f;
 	b3InitOakPlank();
 }
 
-b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3BumpWooden(src)
+b3BumpOakPlank::b3BumpOakPlank(b3_u32 * src) : b3BumpWooden(src)
 {
 	// Bump parameter
 	m_ScaleFlags     = (b3_scaling_mode)b3InitInt();
@@ -769,10 +769,10 @@ void b3BumpOakPlank::b3Write()
 	b3StoreFloat(m_Wobble);
 }
 
-b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info *info)
+b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info * info)
 {
-	b3_index x,y;
-	b3_f64   fx,fy,wobble;
+	b3_index x, y;
+	b3_f64   fx, fy, wobble;
 
 	b3PrepareOakPlank(&m_Scale);
 	b3PrepareScaling();
@@ -781,14 +781,14 @@ b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info *info)
 	m_dY = 1.0 / BUMP_dY;
 
 	m_Amplitudes.b3Clear();
-	for (y = 0;y < m_yTimes;y++)
+	for(y = 0; y < m_yTimes; y++)
 	{
 		fy = (b3_f64)y / m_yTimes;
-		for (x = 0;x < m_xTimes;x++)
+		for(x = 0; x < m_xTimes; x++)
 		{
 			fx = (b3_f64)x / m_xTimes;
 
-			wobble = b3Noise::b3SignedFilteredNoiseVector(fx,fy,0) * m_Amplitude * m_Wobble;
+			wobble = b3Noise::b3SignedFilteredNoiseVector(fx, fy, 0) * m_Amplitude * m_Wobble;
 			m_Amplitudes.b3Add(m_Amplitude + wobble);
 		}
 	}
@@ -796,15 +796,15 @@ b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info *info)
 	return true;
 }
 
-void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
+void b3BumpOakPlank::b3BumpNormal(b3_ray * ray)
 {
-	b3_vector   point,n;
-	b3_vector   xWood,yWood;
-	b3_ray      xRay,yRay;
-	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
-	b3_index    index,iX,iY;
+	b3_vector   point, n;
+	b3_vector   xWood, yWood;
+	b3_ray      xRay, yRay;
+	b3_f64      Denom, wood, dX, dY, x, y, xLen, yLen;
+	b3_index    index, iX, iY;
 
-	b3Scale(ray,null,&point);
+	b3Scale(ray, null, &point);
 	wood = b3OakPlank::b3ComputeOakPlank(&point, ray->Q, index);
 
 	// Note: xDeriv and yDeriv are not normalized!
@@ -814,8 +814,8 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	xRay.ipoint.y = x * ray->xDeriv.y + ray->ipoint.y;
 	xRay.ipoint.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xRay);
-	b3Scale(&xRay,null,&xWood);
-	dX = (b3OakPlank::b3ComputeOakPlank (&xWood, ray->Q, iX) - wood) * m_dX / xLen;
+	b3Scale(&xRay, null, &xWood);
+	dX = (b3OakPlank::b3ComputeOakPlank(&xWood, ray->Q, iX) - wood) * m_dX / xLen;
 
 	yLen    = b3Vector::b3Length(&ray->yDeriv);
 	y       = 1.0 / (yLen * m_dY);
@@ -823,8 +823,8 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	yRay.ipoint.y = y * ray->yDeriv.y + ray->ipoint.y;
 	yRay.ipoint.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yRay);
-	b3Scale(&yRay,null,&yWood);
-	dY = (b3OakPlank::b3ComputeOakPlank (&yWood, ray->Q, iY) - wood) * m_dY / yLen;
+	b3Scale(&yRay, null, &yWood);
+	dY = (b3OakPlank::b3ComputeOakPlank(&yWood, ray->Q, iY) - wood) * m_dY / yLen;
 
 	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
 	n.y = ray->xDeriv.y * dX + ray->yDeriv.y * dY;
@@ -843,15 +843,15 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 *************************************************************************/
 
 b3BumpOcean::b3BumpOcean(b3_u32 class_type) :
-		b3Bump(sizeof(b3BumpOcean), class_type)
+	b3Bump(sizeof(b3BumpOcean), class_type)
 {
 	b3Vector::b3Init(&m_Scale, 0.1f, 0.1f, 0.1f);
 	m_ScaleFlags = B3_SCALE_IPOINT;
 	m_Amplitude  = 1;
 }
 
-b3BumpOcean::b3BumpOcean(b3_u32 *src) :
-		b3Bump(src)
+b3BumpOcean::b3BumpOcean(b3_u32 * src) :
+	b3Bump(src)
 {
 	b3InitVector(&m_Scale);
 	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
@@ -879,9 +879,9 @@ void b3BumpOcean::b3Write()
 	b3StoreFloat(m_Wy);
 }
 
-b3_bool b3BumpOcean::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3BumpOcean::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_scene_preparation *scene_info = (b3_scene_preparation *)prep_info;
+	b3_scene_preparation * scene_info = (b3_scene_preparation *)prep_info;
 
 	b3PrepareOceanWave(scene_info->m_t);
 	b3PrepareScaling();
@@ -889,12 +889,12 @@ b3_bool b3BumpOcean::b3Prepare(b3_preparation_info *prep_info)
 	return true;
 }
 
-char *b3BumpOcean::b3GetName()
+char * b3BumpOcean::b3GetName()
 {
 	return null;
 }
 
-void b3BumpOcean::b3BumpNormal(b3_ray *ray)
+void b3BumpOcean::b3BumpNormal(b3_ray * ray)
 {
 	b3_vector point, n;
 	b3_f64    Denom;
@@ -906,9 +906,9 @@ void b3BumpOcean::b3BumpNormal(b3_ray *ray)
 	b3Vector::b3Normalize(&n, r);
 
 	Denom = 1.0 / sqrt(
-				ray->normal.x * ray->normal.x +
-				ray->normal.y * ray->normal.y +
-				ray->normal.z * ray->normal.z);
+			ray->normal.x * ray->normal.x +
+			ray->normal.y * ray->normal.y +
+			ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x;
 	ray->normal.y = ray->normal.y * Denom + n.y;

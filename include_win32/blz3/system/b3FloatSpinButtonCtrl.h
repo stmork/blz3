@@ -49,33 +49,33 @@ class B3_PLUGIN CB3FloatSpinButtonCtrl : public CSpinButtonCtrl, public b3Contro
 	char          m_Format[16];
 
 public:
-	         CB3FloatSpinButtonCtrl();
+	CB3FloatSpinButtonCtrl();
 	virtual ~CB3FloatSpinButtonCtrl();
-	
-	void     b3DDX(CDataExchange *pDX,b3_f32 &pos);
-	void     b3DDX(CDataExchange *pDX,b3_f64 &pos);
+
+	void     b3DDX(CDataExchange * pDX, b3_f32 & pos);
+	void     b3DDX(CDataExchange * pDX, b3_f64 & pos);
 	b3_f64   b3SetPos(b3_f64 pos);
-	b3_f64   b3SetRange(b3_f64 min,b3_f64 max);
-	void     b3SetDigits(int pre=0,int post = B3_FSBC_DEFAULT_DIGITS);
+	b3_f64   b3SetRange(b3_f64 min, b3_f64 max);
+	void     b3SetDigits(int pre = 0, int post = B3_FSBC_DEFAULT_DIGITS);
 	void     b3SetIncrement(b3_f64 increment = B3_FSBC_DEFAULT_INCREMENT);
-	void     b3SetAccel(b3_f64 increment = B3_FSBC_DEFAULT_ACCEL,int secs = 2);
+	void     b3SetAccel(b3_f64 increment = B3_FSBC_DEFAULT_ACCEL, int secs = 2);
 	b3_f64   b3GetPos();
 	b3_f64   b3GetAccel();
 	void     b3SetUnit(b3_unit unit);
 
 public:
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3FloatSpinButtonCtrl)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CB3FloatSpinButtonCtrl)
-	afx_msg void OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDeltapos(NMHDR * pNMHDR, LRESULT * pResult);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 

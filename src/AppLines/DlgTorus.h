@@ -41,12 +41,12 @@ protected:
 	CB3DirGroup m_Dir3;
 
 public:
-	CDlgTorus(CWnd* pParent = NULL);   // standard constructor
+	CDlgTorus(CWnd * pParent = NULL);  // standard constructor
 
-	static  int  b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3_u32 shading_class_type, b3Item * item, b3_bool create = true);
 	virtual void b3PostProcess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgTorus)
 	enum { IDD = IDD_TORUS };
 	CB3FloatEdit	m_xDir2Ctrl;
@@ -59,14 +59,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgTorus)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 	virtual void        b3SetDirMode(int dirmode);

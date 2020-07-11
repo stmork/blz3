@@ -24,14 +24,14 @@
 
 class b3OpDrop : public b3Operation
 {
-	b3Scene        *m_Scene;
-	b3Base<b3Item> *m_SrcBase;
-	b3Base<b3Item> *m_DstBase;
-	b3BBox         *m_SrcBBox;
-	b3Item         *m_Prev;
+	b3Scene    *    m_Scene;
+	b3Base<b3Item> * m_SrcBase;
+	b3Base<b3Item> * m_DstBase;
+	b3BBox     *    m_SrcBBox;
+	b3Item     *    m_Prev;
 
 public:
-	     b3OpDrop(b3Scene *scene,b3BBox *src,b3BBox *dst);
+	b3OpDrop(b3Scene * scene, b3BBox * src, b3BBox * dst);
 
 protected:
 	void b3Undo();
@@ -45,15 +45,15 @@ protected:
 
 class b3OpCut : public b3Operation
 {
-	CDlgHierarchy  *m_DlgHierarchy;
-	b3Scene        *m_Scene;
-	b3BBox         *m_BBox;
-	b3Item         *m_Select;
-	b3Item         *m_Prev;
-	b3Base<b3Item> *m_Base;
+	CDlgHierarchy * m_DlgHierarchy;
+	b3Scene    *    m_Scene;
+	b3BBox     *    m_BBox;
+	b3Item     *    m_Select;
+	b3Item     *    m_Prev;
+	b3Base<b3Item> * m_Base;
 
 public:
-	     b3OpCut(CDlgHierarchy *hierarchy,b3Scene *scene);
+	b3OpCut(CDlgHierarchy * hierarchy, b3Scene * scene);
 
 protected:
 	void b3Undo();
@@ -68,16 +68,16 @@ protected:
 
 class b3OpPaste : public b3Operation
 {
-	CDlgHierarchy  *m_DlgHierarchy;
-	b3Scene        *m_Scene;
-	b3BBox         *m_BBox;
-	b3Item         *m_InsertAfter;
-	b3Base<b3Item> *m_Base;
+	CDlgHierarchy * m_DlgHierarchy;
+	b3Scene    *    m_Scene;
+	b3BBox     *    m_BBox;
+	b3Item     *    m_InsertAfter;
+	b3Base<b3Item> * m_Base;
 	b3World         m_World;
 	b3_count        m_Level;
 
 public:
-	     b3OpPaste(CDlgHierarchy *hierarchy,b3Scene *scene,b3_bool insert_sub);
+	b3OpPaste(CDlgHierarchy * hierarchy, b3Scene * scene, b3_bool insert_sub);
 
 protected:
 	void b3Do();

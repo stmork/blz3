@@ -37,8 +37,8 @@ class b3DataSizeTest : public CppUnit::TestFixture
 {
 	b3Mem     mem;
 	b3_u08    buffer[MEM_MIN];
-	void     *ptr1, *ptr2;
-	
+	void   *  ptr1, *ptr2;
+
 	CPPUNIT_TEST_SUITE(b3DataSizeTest);
 	CPPUNIT_TEST(testDataSize);
 	CPPUNIT_TEST(testMemory);

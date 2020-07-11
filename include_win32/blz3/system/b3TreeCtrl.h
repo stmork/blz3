@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3TreeCtrl.h $  
+**	$Filename:	b3TreeCtrl.h $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
@@ -33,24 +33,24 @@
 
 class CB3TreeCtrl : public CTreeCtrl
 {
-// Construction
+	// Construction
 public:
 	CB3TreeCtrl();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3TreeCtrl)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CB3TreeCtrl();
 
@@ -64,7 +64,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	HTREEITEM b3FindLParam(HTREEITEM parent,LPARAM lParam);
+	HTREEITEM b3FindLParam(HTREEITEM parent, LPARAM lParam);
 };
 
 /////////////////////////////////////////////////////////////////////////////

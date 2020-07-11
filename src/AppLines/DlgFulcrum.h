@@ -30,14 +30,14 @@
 
 class CDlgFulcrum : public CB3Dialogbar
 {
-// Construction
+	// Construction
 public:
-	CAppRenderDoc *m_pDoc;
-	     CDlgFulcrum(CWnd* pParent = NULL);   // standard constructor
+	CAppRenderDoc * m_pDoc;
+	CDlgFulcrum(CWnd * pParent = NULL);  // standard constructor
 	void b3SetData();
 	void b3GetData();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgFulcrum)
 	enum { IDD = IDD_FULCRUM };
 	CB3FloatEdit	m_zCtrl;
@@ -46,14 +46,14 @@ public:
 	//}}AFX_DATA
 
 public:
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgFulcrum)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

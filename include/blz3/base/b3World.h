@@ -104,7 +104,7 @@ enum b3_world_error
 	B3_WORLD_IMPORT              //!< General import error during file conversion.
 };
 
-typedef b3Exception<b3_world_error,0x424c5a> b3WorldException;
+typedef b3Exception<b3_world_error, 0x424c5a> b3WorldException;
 
 /*************************************************************************
 **                                                                      **
@@ -123,10 +123,10 @@ class b3FirstItem;
  */
 class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 {
-	b3_u32         *m_Buffer;
+	b3_u32     *    m_Buffer;
 	b3_u32          m_BufferSize;
 	b3_bool         m_NeedEndianChange;
-	b3FirstItem    *m_Start;
+	b3FirstItem  *  m_Start;
 	b3_count        m_Missed;
 
 public:
@@ -148,7 +148,7 @@ public:
 	 *
 	 * @param worldname The file to deserialize.
 	 */
-	b3World(const char *worldname);
+	b3World(const char * worldname);
 
 	/**
 	 * This destructor deinitializes this instance. If the auto deletion is activated
@@ -172,7 +172,7 @@ public:
 	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item  *b3AllocNode(b3_u32  classtype, const b3_bool throw_exception = false);
+	static b3Item * b3AllocNode(b3_u32  classtype, const b3_bool throw_exception = false);
 
 	/**
 	 * This method allocates a b3Item instance from the item registry. If the
@@ -186,7 +186,7 @@ public:
 	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item  *b3AllocNode(b3_u32 *buffer, const b3_bool throw_exception = false);
+	static b3Item * b3AllocNode(b3_u32 * buffer, const b3_bool throw_exception = false);
 
 	/**
 	 * This method deserialize the content of the named file.
@@ -197,7 +197,7 @@ public:
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Read(const char *worldname, const b3_bool throw_exception = true);
+	b3_bool         b3Read(const char * worldname, const b3_bool throw_exception = true);
 
 	/**
 	 * This method serialize the content of the named file.
@@ -208,7 +208,7 @@ public:
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Write(const char *worldname, const b3_bool throw_exception = true);
+	b3_bool         b3Write(const char * worldname, const b3_bool throw_exception = true);
 
 	/**
 	 * This method deserialize the content from the given file handle.
@@ -218,7 +218,7 @@ public:
 	 *                        not registered.
 	 * @return True on success.
 	 */
-	b3_world_error  b3Read (b3FileAbstract *filehandle, const b3_bool throw_exception = true);
+	b3_world_error  b3Read(b3FileAbstract * filehandle, const b3_bool throw_exception = true);
 
 	/**
 	 * This method serialize the content into the given file handle.
@@ -228,7 +228,7 @@ public:
 	 *                        not registered.
 	 * @return The error code.
 	 */
-	b3_world_error  b3Write(b3FileAbstract *filehandle, const b3_bool throw_exception = true);
+	b3_world_error  b3Write(b3FileAbstract * filehandle, const b3_bool throw_exception = true);
 
 	/**
 	 * this method dumps the content of the given file name to show the b3Item
@@ -238,7 +238,7 @@ public:
 	 * @return True if the content is correct.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3ReadDump(const char *worldname);
+	b3_bool         b3ReadDump(const char * worldname);
 
 	/**
 	 * This method dumps the b3Item hierarchy for debugging purposes.
@@ -251,7 +251,7 @@ public:
 	 *
 	 * @return The removed b3Item.
 	 */
-	b3Item         *b3RemoveFirst();
+	b3Item     *    b3RemoveFirst();
 
 	/**
 	 * This method returns the first b3Item listed in this instance. This is the
@@ -259,14 +259,14 @@ public:
 	 *
 	 * @return The first b3Item.
 	 */
-	b3Item         *b3GetFirst();
+	b3Item     *    b3GetFirst();
 
 	/**
 	 * This method sets the given b3Item as the first b3Item.
 	 *
 	 * @param item The first item to set.
 	 */
-	void            b3SetFirst(b3Item *item);
+	void            b3SetFirst(b3Item * item);
 
 	/**
 	 * This method returns the base of the first b3Item. The given
@@ -276,7 +276,7 @@ public:
 	 * @param classid The matching class id.
 	 * @return The base of the first b3Item.
 	 */
-	b3Base<b3Item> *b3GetHead(b3_u32 classid = 0);
+	b3Base<b3Item> * b3GetHead(b3_u32 classid = 0);
 
 	/**
 	 * This method clones the given b3Item. First b3Store is called to serialize
@@ -292,8 +292,8 @@ public:
 	 * @return The cloned b3Item.
 	 * @throws b3WorldException
 	 */
-	static b3Item  *b3Clone(
-		b3Item *original, const b3_bool throw_exception = true);
+	static b3Item * b3Clone(
+		b3Item * original, const b3_bool throw_exception = true);
 
 	/**
 	 * This method clones a complete b3Base list. The items must be stored
@@ -306,8 +306,8 @@ public:
 	 * @throws b3WorldException
 	 */
 	static void     b3CloneBase(
-		b3Base<b3Item> *srcBase,
-		b3Base<b3Item> *dstBase, const b3_bool throw_exception = true);
+		b3Base<b3Item> * srcBase,
+		b3Base<b3Item> * dstBase, const b3_bool throw_exception = true);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
@@ -328,7 +328,7 @@ typedef b3Item * (*b3_item_init_func)(b3_u32  class_type);
 /**
  * This defines an initialization function for b3Item initialization from a serialization buffer.
  */
-typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
+typedef b3Item * (*b3_item_load_func)(b3_u32 * src);
 
 #define B3_ITEM_BASE(item_class)  item_class(b3_size class_size,b3_u32 classtype);
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3StaticInit(b3_u32  class_type) { return new item_class(class_type); }
@@ -346,18 +346,18 @@ class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 protected:
 	b3_u32          m_ItemSize;    //!< The stored size of this item in bytes.
 	b3_s32          m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
-	b3Base<b3Item> *m_Heads;       //!< The list heads.
+	b3Base<b3Item> * m_Heads;      //!< The list heads.
 	b3_u32          m_HeadCount;   //!< The number of list heads.
 
 	// Attributes for parsing
-	b3_u32         *m_Buffer;      //!< This is a memory buffer of an archived b3Item.
+	b3_u32     *    m_Buffer;      //!< This is a memory buffer of an archived b3Item.
 	b3_u32          m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
 
 	// Attributes for writing
 	b3_u32          m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
 	b3_s32          m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
 	b3_u32          m_StoreSize;   //!< The number of 32 bit unsigned integers.
-	b3_u32         *m_StoreBuffer; //!< A temporary store buffer.
+	b3_u32     *    m_StoreBuffer; //!< A temporary store buffer.
 
 public:
 	/**
@@ -372,7 +372,7 @@ public:
 	 * @param classsize The instance size.
 	 * @param classtype The class type of the new instance.
 	 */
-	b3Item(b3_size classsize,b3_u32 classtype);
+	b3Item(b3_size classsize, b3_u32 classtype);
 
 	/**
 	 * This constructor initializes the instance content from a serialization buffer. The
@@ -380,7 +380,7 @@ public:
 	 *
 	 * @param buffer The serialization buffer.
 	 */
-	b3Item(b3_u32 *buffer);
+	b3Item(b3_u32 * buffer);
 
 	/**
 	 * This destructor deinitializes this instance.
@@ -415,7 +415,7 @@ public:
 	 *
 	 * @return The individual instance name.
 	 */
-	virtual const char     *b3GetName() const;
+	virtual const char   *  b3GetName() const;
 
 	/**
 	 * This virtual function initializes this class in an implementation specific manner.
@@ -424,7 +424,7 @@ public:
 	 *
 	 * @return True on success.
 	 */
-	virtual b3_bool         b3Prepare(b3_preparation_info *info);
+	virtual b3_bool         b3Prepare(b3_preparation_info * info);
 
 	/**
 	 * This method dumps the content of this instance. This method can be overloaded to
@@ -440,7 +440,7 @@ public:
 	 * @param level The recursion level.
 	 * @param loglevel The log level.
 	 */
-	void b3DumpSimple(b3_count level = 0,b3_log_level loglevel = B3LOG_NORMAL) const;
+	void b3DumpSimple(b3_count level = 0, b3_log_level loglevel = B3LOG_NORMAL) const;
 
 	/**
 	 * This method allocates memory for the specified amount of list heads.
@@ -469,7 +469,7 @@ public:
 	 * @return The error code for storing.
 	 * @see b3FileAbstract.
 	 */
-	b3_world_error  b3StoreFile(b3FileAbstract *file);
+	b3_world_error  b3StoreFile(b3FileAbstract * file);
 
 	/**
 	 * This method computes a checksum of the written content. The checksum is used to determine
@@ -545,49 +545,49 @@ protected:
 	 *
 	 * @param vec The vector buffer as pointer.
 	 */
-	void     b3InitVector  (b3_vector   *vec = null);
+	void     b3InitVector(b3_vector  * vec = null);
 
 	/**
 	 * This method reads a three component vector into the given vector reference.
 	 *
 	 * @param vec The vector buffer as reference.
 	 */
-	void     b3InitVector  (b3Vector32  &vec);
+	void     b3InitVector(b3Vector32 & vec);
 
 	/**
 	 * This method reads a four component vector into the given vector pointer.
 	 *
 	 * @param vec The vector buffer as pointer.
 	 */
-	void     b3InitVector4D(b3_vector4D *vec = null);
+	void     b3InitVector4D(b3_vector4D * vec = null);
 
 	/**
 	 * This method reads a four component vector into the given vector reference.
 	 *
 	 * @param vec The vector buffer as reference.
 	 */
-	void     b3InitVector4D(b3Vector32  &vec);
+	void     b3InitVector4D(b3Vector32 & vec);
 
 	/**
 	 * This method reads a 4x4 matrix into the given matrix pointer.
 	 *
 	 * @param mat The matrix buffer as pointer.
 	 */
-	void     b3InitMatrix  (b3_matrix   *mat);
+	void     b3InitMatrix(b3_matrix  * mat);
 
 	/**
 	 * This method reads a four component color value into the given b3_color pointer.
 	 *
 	 * @param col The color buffer as pointer.
 	 */
-	void     b3InitColor   (b3_color    *col);
+	void     b3InitColor(b3_color  *  col);
 
 	/**
 	 * This method reads a four component color value into the given b3Color pointer.
 	 *
 	 * @param color The color instance as pointer.
 	 */
-	void     b3InitColor   (b3Color     &color);
+	void     b3InitColor(b3Color   &  color);
 
 	/**
 	 * This method reads back a spline instance.
@@ -596,7 +596,7 @@ protected:
 	 * @param controls The pointer to the spline control pointer.
 	 * @param knots The knot vector of the spline.
 	 */
-	void     b3InitSpline  (b3Spline   *spline,b3_vector   *controls = null,b3_f32 *knots = null);
+	void     b3InitSpline(b3Spline  * spline, b3_vector  * controls = null, b3_f32 * knots = null);
 
 	/**
 	 * This method reads back a NURBS instance.
@@ -605,7 +605,7 @@ protected:
 	 * @param controls The pointer to the NURBS control pointer.
 	 * @param knots The knot vector of the NURBS.
 	 */
-	void     b3InitNurbs   (b3Nurbs *nurbs, b3_vector4D *controls = null,b3_f32 *knots = null);
+	void     b3InitNurbs(b3Nurbs * nurbs, b3_vector4D * controls = null, b3_f32 * knots = null);
 
 	/**
 	 * This method reads back a string of the given size and corrects the read index.
@@ -613,14 +613,14 @@ protected:
 	 * @param name The text buffer.
 	 * @param len  The size of the text buffer.
 	 */
-	void     b3InitString  (char *name,b3_size len);
+	void     b3InitString(char * name, b3_size len);
 
 	/**
 	 * This method bumps the read index and returns a null pointer.
 	 *
 	 * @return Null pointer.
 	 */
-	void    *b3InitNull();
+	void  *  b3InitNull();
 
 	/**
 	 * This method simply bumps the read index.
@@ -634,49 +634,49 @@ protected:
 	 *
 	 * @param value The signed integer to store.
 	 */
-	void     b3StoreInt     (const b3_s32       value);
+	void     b3StoreInt(const b3_s32       value);
 
 	/**
 	 * This method stores one unsigned integer value.
 	 *
 	 * @param value The unsigned integer to store.
 	 */
-	void     b3StoreInt     (const b3_u32       value);
+	void     b3StoreInt(const b3_u32       value);
 
 	/**
 	 * This method stores one index value.
 	 *
 	 * @param value The index to store.
 	 */
-	void     b3StoreIndex   (const b3_index     value);
+	void     b3StoreIndex(const b3_index     value);
 
 	/**
 	 * This method stores one resolution value.
 	 *
 	 * @param value The resolution value to store.
 	 */
-	void     b3StoreRes     (const b3_res       value);
+	void     b3StoreRes(const b3_res       value);
 
 	/**
 	 * This method stores one counter value.
 	 *
 	 * @param value The counter to store.
 	 */
-	void     b3StoreCount   (const b3_count     value);
+	void     b3StoreCount(const b3_count     value);
 
 	/**
 	 * This method stores one single precision floating point value.
 	 *
 	 * @param value The float value to store.
 	 */
-	void     b3StoreFloat   (const b3_f32       value);
+	void     b3StoreFloat(const b3_f32       value);
 	/**
 	 * This method stores one boolean value. Note that this value
 	 * is 32 bits wide!
 	 *
 	 * @param value The boolean value to store.
 	 */
-	void     b3StoreBool    (const b3_bool      value);
+	void     b3StoreBool(const b3_bool      value);
 
 	/**
 	 * This method stores one pointer place holder. Note that this
@@ -685,70 +685,70 @@ protected:
 	 *
 	 * @param ptr The pointer.
 	 */
-	void     b3StorePtr     (const void        *ptr);
+	void     b3StorePtr(const void    *    ptr);
 
 	/**
 	 * This method stores a three component vector.
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector  (const b3_vector   *vec = null);
+	void     b3StoreVector(const b3_vector  * vec = null);
 
 	/**
 	 * This method stores a three component vector.
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector  (      b3Vector32  &vec);
+	void     b3StoreVector(b3Vector32 & vec);
 
 	/**
 	 * This method stores a four component vector.
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector4D(const b3_vector4D *vec = null);
+	void     b3StoreVector4D(const b3_vector4D * vec = null);
 
 	/**
 	 * This method stores a four component vector.
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector4D(      b3Vector32  &vec);
+	void     b3StoreVector4D(b3Vector32 & vec);
 
 	/**
 	 * This method stores a 4x4 matrix.
 	 *
 	 * @param matrix The matrix to store.
 	 */
-	void     b3StoreMatrix  (const b3_matrix   *matrix);
+	void     b3StoreMatrix(const b3_matrix  * matrix);
 
 	/**
 	 * This method stores a four component color.
 	 *
 	 * @param col The color.
 	 */
-	void     b3StoreColor   (const b3_color    *col);
+	void     b3StoreColor(const b3_color  *  col);
 
 	/**
 	 * This method stores a four component color.
 	 *
 	 * @param col The color.
 	 */
-	void     b3StoreColor   (      b3Color     &col);
+	void     b3StoreColor(b3Color   &  col);
 
 	/**
 	 * This method stores the contents of a b3Spline class.
 	 *
 	 * @param spline The spline structure.
 	 */
-	void     b3StoreSpline  (const b3Spline   *spline);
+	void     b3StoreSpline(const b3Spline  * spline);
 
 	/**
 	 * This method stores the contents of a b3Nurbs class.
 	 *
 	 * @param nurbs The NURBS structure.
 	 */
-	void     b3StoreNurbs   (const b3Nurbs *nurbs);
+	void     b3StoreNurbs(const b3Nurbs * nurbs);
 
 	/**
 	 * This method stores a text string. The offset is adjusted automatically
@@ -758,7 +758,7 @@ protected:
 	 * @param name The text buffer.
 	 * @param len  The size of the text buffer.
 	 */
-	void     b3StoreString  (const char        *name,const b3_size len);
+	void     b3StoreString(const char    *    name, const b3_size len);
 
 	/**
 	 * This method stores a null pointer. The size of the stored pointer
@@ -782,8 +782,8 @@ protected:
 	static void     b3DumpSpace(const b3_count level, const b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data = true);
-	b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
+	void            b3EnsureStoreBuffer(b3_u32 needed, b3_bool is_data = true);
+	b3_world_error  b3ParseLinkuage(b3Item ** array, b3_u32 node_count, b3_u32 class_limit, b3_count level = 0);
 
 	friend class b3World;
 };
@@ -821,7 +821,7 @@ protected:
 	 *
 	 * @return The content list header.
 	 */
-	b3Base<b3Item> *b3GetHead() const;
+	b3Base<b3Item> * b3GetHead() const;
 
 	/**
 	 * This method initializes the internal list head with the type

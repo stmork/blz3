@@ -50,7 +50,7 @@ enum b3_display_error
 	B3_DISPLAY_OPEN          //!< Unable to open a window.
 };
 
-typedef b3Exception<b3_display_error,0x445350> b3DisplayException;
+typedef b3Exception<b3_display_error, 0x445350> b3DisplayException;
 
 class b3Row;
 
@@ -64,9 +64,9 @@ protected:
 	b3_res                m_xMax;        //!< The display width.
 	b3_res                m_yMax;        //!< The display height.
 	b3_res                m_depth;       //!< The real color depth.
-	b3_color             *m_Buffer;      //!< The color back buffer.
+	b3_color       *      m_Buffer;      //!< The color back buffer.
 	b3Mutex               m_Mutex;       //!< A mutex for thread safe display.
-	b3Tx                 *m_Tx;          //!< An image for save control.
+	b3Tx         *        m_Tx;          //!< An image for save control.
 
 public:
 	/**
@@ -80,7 +80,7 @@ public:
 	 *
 	                * \param *title The window title.
 	                */
-	b3Display(const char *title);
+	b3Display(const char * title);
 
 	/**
 	 * This constructor opens a display with the resolution of the
@@ -88,7 +88,7 @@ public:
 	 *
 	 * \param *image The image to display.
 	 */
-	b3Display(b3Tx *image);
+	b3Display(b3Tx * image);
 
 	/**
 	                * This constructor initializes a display with the given resolution
@@ -101,7 +101,7 @@ public:
 	b3Display(
 		const b3_res  xSize,
 		const b3_res  ySize,
-		const char   *title = null);
+		const char  * title = null);
 	/**
 	 * This destructor deinitializes the display.
 	 */
@@ -113,7 +113,7 @@ public:
 	 * \param &xSize A reference where the x size is stored.
 	 * \param &ySize A reference where the y size is stored.
 	 */
-	virtual void b3GetRes(b3_res &xSize,b3_res &ySize)
+	virtual void b3GetRes(b3_res & xSize, b3_res & ySize)
 	{
 		xSize = m_xMax;
 		ySize = m_yMax;
@@ -126,10 +126,10 @@ public:
 	 * \param y The y coordinate.
 	 * \param pixel The pixel color.
 	 */
-	virtual void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &pixel)
+	virtual void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel)
 	{
 		B3_ASSERT(m_Buffer != null);
-		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
+		if((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
 		{
 			m_Buffer[y * m_xMax + x] = pixel;
 		}
@@ -178,14 +178,14 @@ public:
 	 *
 	 * \param *row The row to put on the display.
 	 */
-	virtual void          b3PutRow(const b3Row *row);
+	virtual void          b3PutRow(const b3Row * row);
 
 	/**
 	 * This method puts an entire image on the display.
 	 *
 	 * \param *tx The image to display.
 	 */
-	virtual void          b3PutTx(b3Tx *tx);
+	virtual void          b3PutTx(b3Tx * tx);
 
 	/**
 	 * This method safes the display content to the given file name.
@@ -193,10 +193,10 @@ public:
 	 * \param *filename The image file name.
 	 * \return True on success.
 	 */
-	virtual b3_bool       b3SaveImage(const char *filename);
+	virtual b3_bool       b3SaveImage(const char * filename);
 
 private:
-	void          b3Init(const b3_res xSize, const b3_res ySize,const char *title);
+	void          b3Init(const b3_res xSize, const b3_res ySize, const char * title);
 };
 
 /**
@@ -209,7 +209,7 @@ protected:
 
 public:
 	const b3_coord   m_y;      //!< The y positition of the row.
-	b3_color  *m_buffer; //!< The color buffer of this row.
+	b3_color * m_buffer; //!< The color buffer of this row.
 
 public:
 	/**
@@ -228,7 +228,7 @@ public:
 	 * \param xSize The row width.
 	 * \param *buffer The initial color buffer.
 	 */
-	b3Row(const b3_coord y, const b3_res xSize,b3_color *buffer);
+	b3Row(const b3_coord y, const b3_res xSize, b3_color * buffer);
 
 	/**
 	 * This destrucotr does nothing.

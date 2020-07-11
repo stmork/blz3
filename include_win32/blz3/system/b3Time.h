@@ -30,9 +30,9 @@ class b3TimeAccum : b3TimeAccumAbstract
 	struct _timeb buffer[B3_MAX_TIME_SLICE];
 
 public:
-	      b3TimeAccum();
-	void  b3Init(b3_u32 slice=10);
-	void  b3Get(b3_u32 &refSpan,b3_u32 &refCount);
+	b3TimeAccum();
+	void  b3Init(b3_u32 slice = 10);
+	void  b3Get(b3_u32 & refSpan, b3_u32 & refCount);
 };
 
 class b3TimeSpan : public b3TimeSpanAbstract
@@ -43,13 +43,13 @@ class b3TimeSpan : public b3TimeSpanAbstract
 	struct timeb  m_RealTime;
 
 public:
-	               b3TimeSpan();
-	       void    b3Start();
-	       void    b3Stop();
+	b3TimeSpan();
+	void    b3Start();
+	void    b3Stop();
 
 private:
-	static b3_f64      b3DiffDiv10000(FILETIME *first,FILETIME *last);
-	static inline void b3Div_64_By_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor);
+	static b3_f64      b3DiffDiv10000(FILETIME * first, FILETIME * last);
+	static inline void b3Div_64_By_16(b3_u32 & high, b3_u32 & low, b3_u16 divisor);
 };
 
 class b3Time : public b3TimeAbstract
@@ -57,11 +57,11 @@ class b3Time : public b3TimeAbstract
 	struct timeb m_TimePoint;
 
 public:
-	        b3Time();
-			b3Time(b3Time &orig);
+	b3Time();
+	b3Time(b3Time & orig);
 	b3_f64  b3Now();
 	b3_f64  b3GetTime();
-	b3Time &operator=(b3Time &orig);
+	b3Time & operator=(b3Time & orig);
 };
 
 #endif

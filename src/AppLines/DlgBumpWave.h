@@ -34,40 +34,40 @@
 
 class CDlgBumpWave : public CB3SimplePropertyPreviewDialog
 {
-	b3Scene           *m_BumpScene;
-	b3Base<b3Item>    *m_BumpHead;
-	b3BumpWave        *m_Bump;
+	b3Scene      *     m_BumpScene;
+	b3Base<b3Item>  *  m_BumpHead;
+	b3BumpWave    *    m_Bump;
 
 	CPageBump          m_PageBump;
 	CPageScaling       m_PageScaling;
 
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void    b3Register();
-	CDlgBumpWave(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpWave(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgBumpWave();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgBumpWave)
 	enum { IDD = IDD_BUMP_WAVE };
 	CB3ShowRaytrace	m_PreviewBumpCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgBumpWave)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgBumpWave)
-		// NOTE: the ClassWizard will add member functions here
+	// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ControlKnot.cpp $  
+**	$Filename:	b3ControlKnot.cpp $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -33,26 +33,26 @@ class CB3ControlKnot : public CStatic
 {
 	static int m_LeftOffset;
 	static int m_RightOffset;
-	b3Spline  *m_Spline;
+	b3Spline * m_Spline;
 
-// Construction
+	// Construction
 public:
 	CB3ControlKnot();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
-	void b3Init(b3Spline *spline);
+	void b3Init(b3Spline * spline);
 	void b3Update(b3_bool refresh = true);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ControlKnot)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CB3ControlKnot();
 

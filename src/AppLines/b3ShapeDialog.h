@@ -31,7 +31,7 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3World.h"
 
-typedef int (*b3ItemEditCall)(b3_u32 shading_class_type, b3Item *item,b3_bool create);
+typedef int (*b3ItemEditCall)(b3_u32 shading_class_type, b3Item * item, b3_bool create);
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3ShapeDialog dialog
@@ -42,34 +42,34 @@ class CB3ShapeDialog : public CPropertyPage
 {
 	CString              m_Section;      // Used as default for b3GetSection()
 	CString              m_SectionTitle; // Used by b3MakeSection()
-// Construction
+	// Construction
 public:
-	b3Shape             *m_Shape;
+	b3Shape       *      m_Shape;
 	b3_bool              m_Creation;
 
 public:
-	     CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
+	CB3ShapeDialog(UINT IDD, CWnd * pParent = NULL); // standard constructor
 
 	virtual void b3PostProcess();
-	static  int  b3Edit(CB3ShapeDialog *page,b3_u32 class_type, b3Item *item,b3_bool create);
+	static  int  b3Edit(CB3ShapeDialog * page, b3_u32 class_type, b3Item * item, b3_bool create);
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CB3ShapeDialog)
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ShapeDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
-	virtual const char *b3GetSection();
-	        const char *b3MakeSection(const char *title);
+	virtual const char * b3GetSection();
+	const char * b3MakeSection(const char * title);
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3ShapeDialog)

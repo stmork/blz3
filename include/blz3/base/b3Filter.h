@@ -39,7 +39,7 @@ enum b3_error_filter
 	B3_FILTER_OUT_OF_RANGE
 };
 
-typedef b3Exception<b3_error_filter,0x46494c> b3FilterException;
+typedef b3Exception<b3_error_filter, 0x46494c> b3FilterException;
 
 class b3BoxFilter;
 class b3GaussFilter;
@@ -76,7 +76,7 @@ public:
 	 * \throws b3FilterException
 	 * \return The inverse integral.
 	 */
-	virtual b3_f64    b3InvIntegral(b3_f64 val,b3_bool throw_exception = false);
+	virtual b3_f64    b3InvIntegral(b3_f64 val, b3_bool throw_exception = false);
 
 	/**
 	 * A factory method for generating several filters.
@@ -84,7 +84,7 @@ public:
 	 * \param filter The filter enum.
 	 * \return The filter class instance.
 	 */
-	static  b3Filter *b3New(b3_filter filter);
+	static  b3Filter * b3New(b3_filter filter);
 };
 
 /**
@@ -100,16 +100,25 @@ public:
 
 	inline b3_f64 b3Integral(b3_f64 x) override
 	{
-		if (x < -1) return 0;
-		else if (x >  1) return 1;
-		else return (x + 1) * 0.5;
+		if(x < -1)
+		{
+			return 0;
+		}
+		else if(x >  1)
+		{
+			return 1;
+		}
+		else
+		{
+			return (x + 1) * 0.5;
+		}
 	}
 
-	inline b3_f64 b3InvIntegral(b3_f64 val,b3_bool throw_exception = false) override
+	inline b3_f64 b3InvIntegral(b3_f64 val, b3_bool throw_exception = false) override
 	{
-		if ((fabs(val) > 1) && throw_exception)
+		if((fabs(val) > 1) && throw_exception)
 		{
-			B3_THROW(b3FilterException,B3_FILTER_OUT_OF_RANGE);
+			B3_THROW(b3FilterException, B3_FILTER_OUT_OF_RANGE);
 		}
 		return val;
 	}
@@ -135,7 +144,7 @@ public:
  */
 class B3_PLUGIN b3ShutterFilter : public b3Filter
 {
-	b3_f64 m_lMax,m_uMax,m_Max;
+	b3_f64 m_lMax, m_uMax, m_Max;
 	b3_f64 m_Slope;
 	b3_f64 m_Area;
 

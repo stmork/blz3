@@ -104,7 +104,7 @@ public:
 	 * @param context The render context to use.
 	 * @param amount  The new amount of vertices.
 	 */
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) = 0;
+	virtual void b3AllocVertexMemory(b3RenderContext * context, b3_count amount) = 0;
 
 	/**
 	 * This method frees the VBO memory.
@@ -194,7 +194,7 @@ public:
 	 */
 	inline void b3Recomputed()
 	{
-		if (!glComputed)
+		if(!glComputed)
 		{
 			b3CustomData();
 		}
@@ -208,7 +208,7 @@ public:
 class B3_PLUGIN b3VertexElements : public b3VertexBuffer
 {
 protected:
-	b3_gl_vertex *glVertex; //!< The pointer to the vertex data.
+	b3_gl_vertex * glVertex; //!< The pointer to the vertex data.
 
 public:
 	/**
@@ -226,7 +226,7 @@ public:
 	 *
 	 * @param vertices The vertex data.
 	 */
-	inline void b3SetVertices(b3_gl_vertex *vertices)
+	inline void b3SetVertices(b3_gl_vertex * vertices)
 	{
 		glVertex = vertices;
 	}
@@ -234,7 +234,7 @@ public:
 	/**
 	 * This cast operator returns a pointer to the vertex data.
 	 */
-	inline operator b3_gl_vertex *()
+	inline operator b3_gl_vertex * ()
 	{
 		return glVertex;
 	}
@@ -246,7 +246,7 @@ public:
 class B3_PLUGIN b3GridElements : public b3VertexBuffer
 {
 protected:
-	b3_gl_line   *glGrids; //!< The pointer to the line index data.
+	b3_gl_line  * glGrids; //!< The pointer to the line index data.
 
 public:
 	/**
@@ -264,7 +264,7 @@ public:
 	 *
 	 * @param grids The line index data.
 	 */
-	inline void b3SetGrids(b3_gl_line *grids)
+	inline void b3SetGrids(b3_gl_line * grids)
 	{
 		glGrids = grids;
 	}
@@ -272,7 +272,7 @@ public:
 	/**
 	 * This cast operator returns a pointer to the line index data.
 	 */
-	inline operator b3_gl_line *()
+	inline operator b3_gl_line * ()
 	{
 		return glGrids;
 	}
@@ -284,7 +284,7 @@ public:
 class B3_PLUGIN b3PolygonElements : public b3VertexBuffer
 {
 protected:
-	b3_gl_polygon  *glPolygons; //!< The pointer to the polygon index data.
+	b3_gl_polygon * glPolygons; //!< The pointer to the polygon index data.
 
 public:
 	/**
@@ -302,7 +302,7 @@ public:
 	 *
 	 * @param polygons The polygon index data.
 	 */
-	inline void b3SetPolygons(b3_gl_polygon *polygons)
+	inline void b3SetPolygons(b3_gl_polygon * polygons)
 	{
 		glPolygons = polygons;
 	}
@@ -310,7 +310,7 @@ public:
 	/**
 	 * This cast operator returns a pointer to the polygon index data.
 	 */
-	inline operator b3_gl_polygon *()
+	inline operator b3_gl_polygon * ()
 	{
 		return glPolygons;
 	}
@@ -332,7 +332,7 @@ public:
 	 * This destructor deinitializes this instance.
 	 */
 	virtual      ~b3SimpleVertexElements();
-	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void  b3AllocVertexMemory(b3RenderContext * context, b3_count amount) override;
 	virtual void  b3FreeVertexMemory() override;
 };
 
@@ -346,7 +346,7 @@ public:
 	 * This destructor deinitializes this instance.
 	 */
 	virtual      ~b3SimpleGridElements();
-	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void  b3AllocVertexMemory(b3RenderContext * context, b3_count amount) override;
 	virtual void  b3FreeVertexMemory() override;
 };
 
@@ -360,7 +360,7 @@ public:
 	 * This destructor deinitializes this instance.
 	 */
 	virtual      ~b3SimplePolygonElements();
-	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void  b3AllocVertexMemory(b3RenderContext * context, b3_count amount) override;
 	virtual void  b3FreeVertexMemory() override;
 };
 
@@ -444,7 +444,7 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboVertexElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void b3AllocVertexMemory(b3RenderContext * context, b3_count amount) override;
 	virtual void b3FreeVertexMemory() override;
 	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW) override;
 	virtual void b3Unmap() override;
@@ -462,7 +462,7 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboGridElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void b3AllocVertexMemory(b3RenderContext * context, b3_count amount) override;
 	virtual void b3FreeVertexMemory() override;
 	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW) override;
 	virtual void b3Unmap() override;
@@ -480,7 +480,7 @@ public:
 	 * This constructor initializes this instance.
 	 */
 	b3VboPolygonElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count amount) override;
+	virtual void b3AllocVertexMemory(b3RenderContext * context, b3_count amount) override;
 	virtual void b3FreeVertexMemory() override;
 	virtual void b3Map(b3_vbo_mapping mode = B3_MAP_VBO_RW) override;
 	virtual void b3Unmap() override;

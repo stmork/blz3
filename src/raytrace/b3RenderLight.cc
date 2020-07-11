@@ -32,7 +32,7 @@
 
 b3_vector b3RenderLight::m_LightDirection =
 {
-	0,0,-1
+	0, 0, -1
 };
 
 b3RenderLight::b3RenderLight()
@@ -46,23 +46,23 @@ void b3RenderLight::b3SetLightMode(b3_light_mode mode)
 	m_LightMode = mode;
 }
 
-void b3RenderLight::b3SetScene(b3Scene *scene)
+void b3RenderLight::b3SetScene(b3Scene * scene)
 {
 	m_Scene = scene;
 }
 
-void b3RenderLight::b3SetupLight(b3RenderContext *context)
+void b3RenderLight::b3SetupLight(b3RenderContext * context)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Item  *item;
-	b3Light *light;
+	b3Item * item;
+	b3Light * light;
 	b3Color  ambient;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,">b3RenderLight::b3SetupLight() # %d\n",m_LightMode);
+	b3PrintF(B3LOG_FULL, ">b3RenderLight::b3SetupLight() # %d\n", m_LightMode);
 #endif
 
-	switch (m_LightMode)
+	switch(m_LightMode)
 	{
 	case B3_LIGHT_SIMPLE:
 	default:
@@ -80,10 +80,10 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 		context->b3LightNum();
 		context->b3LightReset(ambient);
 
-		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
 		{
 			light = (b3Light *)item;
-			if (light->b3IsActive())
+			if(light->b3IsActive())
 			{
 				b3_render_light_info info;
 
@@ -95,7 +95,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 				// Geometry
 				b3RenderContext::b3VectorToGL(&light->m_Position, info.gl_position);
 
-				if ((m_LightMode == B3_LIGHT_SCENE_SPOT) && (light->m_SpotActive))
+				if((m_LightMode == B3_LIGHT_SCENE_SPOT) && (light->m_SpotActive))
 				{
 					b3RenderContext::b3VectorToGL(&light->m_Direction, info.gl_direction);
 					info.gl_spot_cutoff = 90;
@@ -120,7 +120,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 	}
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"<b3RenderLight::b3SetupLight() # %d\n",m_LightMode);
+	b3PrintF(B3LOG_FULL, "<b3RenderLight::b3SetupLight() # %d\n", m_LightMode);
 #endif
 #endif
 }

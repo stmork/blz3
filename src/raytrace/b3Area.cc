@@ -32,43 +32,43 @@
 
 b3_gl_line b3Area::m_AreaGrids[4] =
 {
-	{ 0,1 },
-	{ 1,2 },
-	{ 2,3 },
-	{ 3,0 }
+	{ 0, 1 },
+	{ 1, 2 },
+	{ 2, 3 },
+	{ 3, 0 }
 };
 
 b3_gl_polygon b3Area::m_AreaPolygons[2] =
 {
-	{ 0,3,1 },
-	{ 2,1,3 }
+	{ 0, 3, 1 },
+	{ 2, 1, 3 }
 };
 
 b3_f32 b3Area::m_AreaTexcoord[8] =
 {
-	0,0,
-	0,1,
-	1,1,
-	1,0
+	0, 0,
+	0, 1,
+	1, 1,
+	1, 0
 };
 
-b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
+b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area), class_type)
 {
 }
 
-b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
+b3Area::b3Area(b3_u32 * src) : b3Shape2(src)
 {
 }
 
-void b3Area::b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys)
+void b3Area::b3GetCount(b3RenderContext * context, b3_count & verts, b3_count & grids, b3_count & polys)
 {
 	verts = 4;
 }
 
 void b3Area::b3ComputeVertices()
 {
-	b3_gl_vertex *Vector = *glVertexElements;
-	b3_f32        x1,y1,x2,y2;
+	b3_gl_vertex * Vector = *glVertexElements;
+	b3_f32        x1, y1, x2, y2;
 
 	x1 = m_Limit.x1;
 	y1 = m_Limit.y1;
@@ -118,7 +118,7 @@ void b3Area::b3ComputeIndices()
 	b3ComputeBound(&m_Limit);
 }
 
-void b3Area::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3Area::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = -1;
 	info->xInfo.max    =  1;

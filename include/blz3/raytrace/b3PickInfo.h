@@ -47,7 +47,7 @@ class b3PickInfo : public b3PickBase, public b3RenderObject
 	b3Array<b3_gl_line>   m_Grid;
 
 protected:
-	b3Shape         *m_Shape;           //!< The shape for which the pick points should be created.
+	b3Shape     *    m_Shape;           //!< The shape for which the pick points should be created.
 
 public:
 	b3_pick_mode     m_AllowedMode;     //!< The move mode.
@@ -70,7 +70,7 @@ public:
 	 * @param shape The new shape.
 	 * @return True when the shape is not null.
 	 */
-	b3_bool  b3SetShape(b3Shape *shape);
+	b3_bool  b3SetShape(b3Shape * shape);
 
 	/**
 	 * This method marks the pick info as modified. The vertex and index
@@ -88,7 +88,7 @@ public:
 	 * @param point The position of the point.
 	 * @param title The title to display.
 	 */
-	virtual void     b3AddPickPoint(b3_vector *point,const char *title = null) = 0;
+	virtual void     b3AddPickPoint(b3_vector * point, const char * title = null) = 0;
 
 	/**
 	 * This method adds a direction pick to this instance with a given title.
@@ -97,14 +97,14 @@ public:
 	 * @param dir The direction vector which results in the pick point.
 	 * @param title The title to display.
 	 */
-	virtual void     b3AddPickDir(b3_vector *point,b3_vector *dir,const char *title = null) = 0;
+	virtual void     b3AddPickDir(b3_vector * point, b3_vector * dir, const char * title = null) = 0;
 
 	/**
 	 * This method adds a vertex for drawing a line between two pick points.
 	 *
 	 * @param point The point to add.
 	 */
-	void     b3AddVertex(b3_vector *point);
+	void     b3AddVertex(b3_vector * point);
 
 	/**
 	 * This method adds a line which connects to vertices.
@@ -112,12 +112,12 @@ public:
 	 * @param a The first vertex index.
 	 * @param b The second vertex index.
 	 */
-	void     b3AddLine(b3_index a,b3_index b);
+	void     b3AddLine(b3_index a, b3_index b);
 
 protected:
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	void     b3GetGridColor(b3Color &color);
+	void     b3GetGridColor(b3Color & color);
 };
 
 #endif

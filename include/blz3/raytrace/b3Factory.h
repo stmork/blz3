@@ -39,7 +39,7 @@ public:
 	 * @param classType The class type of the new scene.
 	 * @return The new empty scene.
 	 */
-	static b3Scene      *b3CreateNew(const char *filename, b3_u32 classType = TRACEPHOTO_MORK);
+	static b3Scene   *   b3CreateNew(const char * filename, b3_u32 classType = TRACEPHOTO_MORK);
 
 	/**
 	 * This method creates an example scene containing a checker board and
@@ -49,7 +49,7 @@ public:
 	 * @param classType The shading type of the new scene.
 	 * @return The new preview scene.
 	 */
-	static b3Scene      *b3CreateGlobal(b3_u32 classType);
+	static b3Scene   *   b3CreateGlobal(b3_u32 classType);
 
 	/**
 	 * This method creates an example scene which contains only the given object for
@@ -60,7 +60,7 @@ public:
 	 * @param originalCamera
 	 * @return The preview scene with the cloned object.
 	 */
-	static b3Scene      *b3CreateBBox(b3BBox *originalBBox, b3_u32 classType,b3CameraPart *originalCamera = null);
+	static b3Scene   *   b3CreateBBox(b3BBox * originalBBox, b3_u32 classType, b3CameraPart * originalCamera = null);
 
 	/**
 	 * This method creates a scene for previewing materials. The scene contains a checker
@@ -70,7 +70,7 @@ public:
 	 * @param classType The class type for scene rendering.
 	 * @return The created scene.
 	 */
-	static b3Scene      *b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 classType);
+	static b3Scene   *   b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, b3_u32 classType);
 
 	/**
 	 * This method creates a scene for previewing bump mapping. The scene contains a checker
@@ -80,11 +80,11 @@ public:
 	 * @param classType The class type for scene rendering.
 	 * @return The created scene.
 	 */
-	static b3Scene      *b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 classType);
+	static b3Scene   *   b3CreateBump(b3Base<b3Item> ** ptrBumpHead, b3_u32 classType);
 
 private:
-	static void          b3Consolidate(b3Scene *scene);
-	static b3CameraPart *b3CreateCamera(b3Scene *scene,b3_f64 xAngle = 225,b3_f64 yAngle =  30);
+	static void          b3Consolidate(b3Scene * scene);
+	static b3CameraPart * b3CreateCamera(b3Scene * scene, b3_f64 xAngle = 225, b3_f64 yAngle =  30);
 
 };
 

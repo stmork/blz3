@@ -77,7 +77,7 @@ public:
 		const b3_f32 b,
 		const b3_f32 a = 0)
 	{
-		b3Init(r,g,b,a);
+		b3Init(r, g, b, a);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public:
 	 *
 	 * @param color The other b3Color instance to copy.
 	 */
-	inline b3Color(const b3Color &color)
+	inline b3Color(const b3Color & color)
 	{
 		SSE_PS_STORE(v, SSE_PS_LOAD(color.v));
 	}
@@ -96,9 +96,9 @@ public:
 	 *
 	 * @param color The other ::b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color &color)
+	inline b3Color(const b3_color & color)
 	{
-		b3Init(color.r,color.g,color.b,color.a);
+		b3Init(color.r, color.g, color.b, color.a);
 	}
 
 	/**
@@ -106,9 +106,9 @@ public:
 	 *
 	 * @param color The other ::b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color *color)
+	inline b3Color(const b3_color * color)
 	{
-		b3Init(color->r,color->g,color->b,color->a);
+		b3Init(color->r, color->g, color->b, color->a);
 	}
 
 	/**
@@ -123,25 +123,25 @@ public:
 		b3_f32 B3_ALIGN_16 d[4];
 		b3_loop            i;
 
-		for (i = 3; i >= 0; i--)
+		for(i = 3; i >= 0; i--)
 		{
 			c[i]  = color & 0xf;
 			color = color >> 4;
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			d[i] = (b3_f32)c[i];
 		}
 
 #ifdef SSE_ALIGNED
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 _mm_load_ps(d),
-						 _mm_load_ps(m_Limit_d015)));
+				_mm_load_ps(d),
+				_mm_load_ps(m_Limit_d015)));
 #else
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(d),
-						 SSE_PS_LOAD(m_Limit_d015)));
+				SSE_PS_LOAD(d),
+				SSE_PS_LOAD(m_Limit_d015)));
 #endif
 	}
 
@@ -159,32 +159,32 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		__m128i            ci;
 
-		for (i = 3;i >= 0;i--)
+		for(i = 3; i >= 0; i--)
 		{
 			c[i]  = color & 0xff;
 			color = color >> 8;
 		}
 
 		ci = _mm_loadu_si128((__m128i *)c);
-		SSE_PS_STORE(v,_mm_mul_ps(
-						 _mm_cvtepi32_ps(ci),
-						 _mm_loadu_ps(m_Limit_d255)));
+		SSE_PS_STORE(v, _mm_mul_ps(
+				_mm_cvtepi32_ps(ci),
+				_mm_loadu_ps(m_Limit_d255)));
 #else
 		b3_f32 B3_ALIGN_16 c[4];
 
-		for (i = 3;i >= 0; i--)
+		for(i = 3; i >= 0; i--)
 		{
 			c[i]  = b3_f32(color & 0xff);
 			color = color >> 8;
 		}
 #ifdef SSE_ALIGNED
-		SSE_PS_STORE(v,_mm_mul_ps(
-						 _mm_load_ps(c),
-						 _mm_load_ps(m_Limit_d255)));
+		SSE_PS_STORE(v, _mm_mul_ps(
+				_mm_load_ps(c),
+				_mm_load_ps(m_Limit_d255)));
 #else
-		SSE_PS_STORE(v,_mm_mul_ps(
-						 SSE_PS_LOAD(c),
-						 SSE_PS_LOAD(m_Limit_d255)));
+		SSE_PS_STORE(v, _mm_mul_ps(
+				SSE_PS_LOAD(c),
+				SSE_PS_LOAD(m_Limit_d255)));
 #endif
 #endif
 	}
@@ -269,9 +269,9 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline const b3_f32 &operator[](const b3_color_index index) const
+	inline const b3_f32 & operator[](const b3_color_index index) const
 	{
-		b3_f32 *ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = (b3_f32 *)&v;
 
 		return ptr[index];
 	}
@@ -282,9 +282,9 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline b3_f32 &operator[](const b3_color_index index)
+	inline b3_f32 & operator[](const b3_color_index index)
 	{
-		b3_f32 *ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = (b3_f32 *)&v;
 
 		return ptr[index];
 	}
@@ -295,9 +295,9 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline const b3_f32 &operator[](const int index) const
+	inline const b3_f32 & operator[](const int index) const
 	{
-		b3_f32 *ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = (b3_f32 *)&v;
 
 		return ptr[index];
 	}
@@ -308,9 +308,9 @@ public:
 	 *
 	 * @param index The color channel.
 	 */
-	inline b3_f32 &operator[](const int index)
+	inline b3_f32 & operator[](const int index)
 	{
-		b3_f32 *ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = (b3_f32 *)&v;
 
 		return ptr[index];
 	}
@@ -325,8 +325,8 @@ public:
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
-		const b3Color &low,
-		const b3Color &high,
+		const b3Color & low,
+		const b3Color & high,
 		const b3_f32   mix)
 	{
 		__m128  mixer = _mm_set_ps1(mix);
@@ -334,10 +334,10 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-						 l,
-						 _mm_mul_ps(
-							 mixer,
-							 _mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+				l,
+				_mm_mul_ps(
+					mixer,
+					_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -352,8 +352,8 @@ public:
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
-		const b3Color &low,
-		const b3Color &high,
+		const b3Color & low,
+		const b3Color & high,
 		const b3_f64   dMix)
 	{
 		float mix = dMix;
@@ -362,10 +362,10 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-						 l,
-						 _mm_mul_ps(
-							 mixer,
-							 _mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+				l,
+				_mm_mul_ps(
+					mixer,
+					_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -380,18 +380,18 @@ public:
 	 * @return The resulting mixed color.
 	 */
 	inline static b3Color b3Mix(
-		const b3Color &low,
-		const b3Color &high,
-		const b3Color &mixer)
+		const b3Color & low,
+		const b3Color & high,
+		const b3Color & mixer)
 	{
 		b3Color result;
 		__m128 l = SSE_PS_LOAD(low.v);
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-						 l,
-						 _mm_mul_ps(
-							 SSE_PS_LOAD(mixer.v),
-							 _mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+				l,
+				_mm_mul_ps(
+					SSE_PS_LOAD(mixer.v),
+					_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
 
 		return result;
 	}
@@ -402,11 +402,11 @@ public:
 	 * @param a The color to add.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator+=(const b3Color &a)
+	inline b3Color & operator+=(const b3Color & a)
 	{
 		SSE_PS_STORE(v, _mm_add_ps(
-						 SSE_PS_LOAD(v),
-						 SSE_PS_LOAD(a.v)));
+				SSE_PS_LOAD(v),
+				SSE_PS_LOAD(a.v)));
 		return *this;
 	}
 
@@ -416,13 +416,13 @@ public:
 	 * @param a The color to add.
 	 * @return A new b3Color instance.
 	 */
-	inline const b3Color operator+(const b3Color &a) const
+	inline const b3Color operator+(const b3Color & a) const
 	{
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_add_ps(
-						 SSE_PS_LOAD(v),
-						 SSE_PS_LOAD(a.v)));
+				SSE_PS_LOAD(v),
+				SSE_PS_LOAD(a.v)));
 
 		return result;
 	}
@@ -433,11 +433,11 @@ public:
 	 * @param a The color to subtract.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator-=(const b3Color &a)
+	inline b3Color & operator-=(const b3Color & a)
 	{
 		SSE_PS_STORE(v, _mm_sub_ps(
-						 SSE_PS_LOAD(v),
-						 SSE_PS_LOAD(a.v)));
+				SSE_PS_LOAD(v),
+				SSE_PS_LOAD(a.v)));
 		return *this;
 	}
 
@@ -447,13 +447,13 @@ public:
 	 * @param a The color to subtract.
 	 * @return A new b3Color instance.
 	 */
-	inline const b3Color operator-(const b3Color &a) const
+	inline const b3Color operator-(const b3Color & a) const
 	{
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_sub_ps(
-						 SSE_PS_LOAD(v),
-						 SSE_PS_LOAD(a.v)));
+				SSE_PS_LOAD(v),
+				SSE_PS_LOAD(a.v)));
 		return result;
 	}
 
@@ -463,11 +463,11 @@ public:
 	 * @param a The color filter.
 	 * @return A reference to this color.
 	 */
-	inline b3Color &operator*=(const b3Color &a)
+	inline b3Color & operator*=(const b3Color & a)
 	{
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 SSE_PS_LOAD(a.v)));
+				SSE_PS_LOAD(v),
+				SSE_PS_LOAD(a.v)));
 		return *this;
 	}
 
@@ -477,13 +477,13 @@ public:
 	 * @param a The color filter.
 	 * @return A new b3Color instance.
 	 */
-	inline const b3Color operator*(const b3Color &a) const
+	inline const b3Color operator*(const b3Color & a) const
 	{
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 SSE_PS_LOAD(a.v)));
+				SSE_PS_LOAD(v),
+				SSE_PS_LOAD(a.v)));
 		return result;
 	}
 
@@ -493,11 +493,11 @@ public:
 	 * @param value The color filter value.
 	 * @return A reference to this color.
 	 */
-	inline b3Color &operator*=(const b3_f32 value)
+	inline b3Color & operator*=(const b3_f32 value)
 	{
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(value)));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(value)));
 		return *this;
 	}
 
@@ -507,11 +507,11 @@ public:
 	 * @param value The color filter value.
 	 * @return A reference to this color.
 	 */
-	inline b3Color &operator*=(const b3_f64 value)
+	inline b3Color & operator*=(const b3_f64 value)
 	{
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(float(value))));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(float(value))));
 		return *this;
 	}
 
@@ -526,8 +526,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(value)));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(value)));
 		return result;
 	}
 
@@ -542,8 +542,8 @@ public:
 		b3Color result;
 
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(float(value))));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(float(value))));
 		return result;
 	}
 
@@ -553,12 +553,12 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator/=(const b3_f32 value)
+	inline b3Color & operator/=(const b3_f32 value)
 	{
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(1.0 / value)));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(1.0 / value)));
 		return *this;
 	}
 
@@ -568,12 +568,12 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator/=(const b3_f64 value)
+	inline b3Color & operator/=(const b3_f64 value)
 	{
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(float(1.0 / value))));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(float(1.0 / value))));
 		return *this;
 	}
 
@@ -583,12 +583,12 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color &operator/=(const b3_count value)
+	inline b3Color & operator/=(const b3_count value)
 	{
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(1.0 / float(value))));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(1.0 / float(value))));
 		return *this;
 	}
 
@@ -604,8 +604,8 @@ public:
 
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(1.0 / value)));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(1.0 / value)));
 		return result;
 	}
 
@@ -621,8 +621,8 @@ public:
 
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(1.0 / float(value))));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(1.0 / float(value))));
 		return result;
 	}
 
@@ -638,8 +638,8 @@ public:
 
 		B3_ASSERT(value != 0);
 		SSE_PS_STORE(result.v, _mm_mul_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_set_ps1(1.0 / float(value))));
+				SSE_PS_LOAD(v),
+				_mm_set_ps1(1.0 / float(value))));
 		return result;
 	}
 
@@ -657,10 +657,10 @@ public:
 
 		_mm_store_ps(b, SSE_PS_LOAD(v));
 		SSE_PS_STORE(result.v, _mm_set_ps(
-						 pow(b[A], exp),
-						 pow(b[R], exp),
-						 pow(b[G], exp),
-						 pow(b[B], exp)));
+				pow(b[A], exp),
+				pow(b[R], exp),
+				pow(b[G], exp),
+				pow(b[B], exp)));
 		return result;
 	}
 
@@ -671,10 +671,10 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(const b3Color &limit)
+	inline b3_bool b3IsGreater(const b3Color & limit)
 	{
-		const b3_f32 *a = (const b3_f32 *)&v;
-		const b3_f32 *b = (const b3_f32 *)&limit.v;
+		const b3_f32 * a = (const b3_f32 *)&v;
+		const b3_f32 * b = (const b3_f32 *)&limit.v;
 
 		return (fabs(a[R]) >= b[R]) || (fabs(a[G]) >= b[G]) || (fabs(a[B]) >= b[B]);
 	}
@@ -685,8 +685,8 @@ public:
 	inline void b3Abs()
 	{
 		SSE_PS_STORE(v, _mm_and_ps(
-						 SSE_PS_LOAD(v),
-						 _mm_loadu_ps((const float *)m_AbsMask)));
+				SSE_PS_LOAD(v),
+				_mm_loadu_ps((const float *)m_AbsMask)));
 	}
 
 	/**
@@ -709,12 +709,12 @@ public:
 					_mm_max_ps(SSE_PS_LOAD(v), _mm_set_ps1(0))),
 				_mm_set_ps1(255)));
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			c[i] = (b3_s32)sat[i];
 		}
 
-		for (i = 0;i < 4;i++)
+		for(i = 0; i < 4; i++)
 		{
 			result = (result << 8) | c[i];
 		}
@@ -767,7 +767,7 @@ public:
 	inline void b3Min()
 	{
 		SSE_PS_STORE(v, _mm_max_ps(
-						 SSE_PS_LOAD(v), _mm_setzero_ps()));
+				SSE_PS_LOAD(v), _mm_setzero_ps()));
 	}
 
 	/**
@@ -787,8 +787,8 @@ public:
 		b3_f32 B3_ALIGN_16  a[4];
 
 		_mm_store_ps(a, SSE_PS_LOAD(v));
-		b3PrintF(B3LOG_NORMAL,"r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",
-				 a[R], a[R], a[B], a[A]);
+		b3PrintF(B3LOG_NORMAL, "r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",
+			a[R], a[R], a[B], a[A]);
 	}
 
 #ifdef WIN32
@@ -799,11 +799,11 @@ public:
 	 */
 	inline const COLORREF b3GetColorref() const
 	{
-		b3_f32 *ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = (b3_f32 *)&v;
 		return RGB(
-				   (b3_pkd_color)(ptr[R] * 255),
-				   (b3_pkd_color)(ptr[G] * 255),
-				   (b3_pkd_color)(ptr[B] * 255));
+				(b3_pkd_color)(ptr[R] * 255),
+				(b3_pkd_color)(ptr[G] * 255),
+				(b3_pkd_color)(ptr[B] * 255));
 	}
 
 	/**

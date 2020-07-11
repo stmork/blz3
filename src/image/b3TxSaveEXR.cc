@@ -44,63 +44,63 @@ using namespace Imath;
 class b3InfoEXR : protected b3TxSaveInfo, protected OStream
 {
 public:
-	b3InfoEXR(b3Tx *tx,const char *filename) :
-			b3TxSaveInfo(tx, filename, B3_BWRITE),
-			OStream(filename)
+	b3InfoEXR(b3Tx * tx, const char * filename) :
+		b3TxSaveInfo(tx, filename, B3_BWRITE),
+		OStream(filename)
 	{
-		if (!tx->b3IsHdr())
+		if(!tx->b3IsHdr())
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
-		b3PrintF(B3LOG_FULL,"  b3InfoEXR initialized.\n");
+		b3PrintF(B3LOG_FULL, "  b3InfoEXR initialized.\n");
 	}
 
-	virtual void        write (const char c[/*n*/], int n)
+	virtual void        write(const char c[/*n*/], int n)
 	{
-		clearerr (m_FileHandle);
+		clearerr(m_FileHandle);
 
-		if (fwrite (c, 1, n, m_FileHandle) != static_cast<size_t>(n))
+		if(fwrite(c, 1, n, m_FileHandle) != static_cast<size_t>(n))
 		{
 			B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 		}
 	}
 
-	virtual Int64       tellp ()
+	virtual Int64       tellp()
 	{
-		return ftell (m_FileHandle);
+		return ftell(m_FileHandle);
 	}
 
-	virtual void        seekp (Int64 pos)
+	virtual void        seekp(Int64 pos)
 	{
-		clearerr (m_FileHandle);
-		fseek    (m_FileHandle, pos, SEEK_SET);
+		clearerr(m_FileHandle);
+		fseek(m_FileHandle, pos, SEEK_SET);
 	}
 
 	void  b3Write()
 	{
 		try
 		{
-			b3_color    *data = m_Tx->b3GetHdrData();
-			Header       header (m_Tx->xSize, m_Tx->ySize);
+			b3_color  *  data = m_Tx->b3GetHdrData();
+			Header       header(m_Tx->xSize, m_Tx->ySize);
 
 			header.compression() = ZIP_COMPRESSION;
 			header.channels().insert("R", Channel(FLOAT));
 			header.channels().insert("G", Channel(FLOAT));
 			header.channels().insert("B", Channel(FLOAT));
 
-			OutputFile   file (*this, header);
+			OutputFile   file(*this, header);
 			FrameBuffer  fb;
 
-			fb.insert("R", Slice(FLOAT,(char *)&data->r,sizeof(b3_color),sizeof(b3_color) * m_Tx->xSize));
-			fb.insert("G", Slice(FLOAT,(char *)&data->g,sizeof(b3_color),sizeof(b3_color) * m_Tx->xSize));
-			fb.insert("B", Slice(FLOAT,(char *)&data->b,sizeof(b3_color),sizeof(b3_color) * m_Tx->xSize));
+			fb.insert("R", Slice(FLOAT, (char *)&data->r, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
+			fb.insert("G", Slice(FLOAT, (char *)&data->g, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
+			fb.insert("B", Slice(FLOAT, (char *)&data->b, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
 
 			file.setFrameBuffer(fb);
 			file.writePixels(m_Tx->ySize);
 		}
-		catch (const std::exception &e)
+		catch(const std::exception & e)
 		{
-			b3PrintF(B3LOG_NORMAL,"Error writing OpenEXR file %s\n",e.what());
+			b3PrintF(B3LOG_NORMAL, "Error writing OpenEXR file %s\n", e.what());
 			B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 		}
 	}
@@ -111,7 +111,7 @@ public:
 };
 #endif
 
-const b3_result b3Tx::b3SaveEXR(const char *filename)
+const b3_result b3Tx::b3SaveEXR(const char * filename)
 {
 #ifdef BLZ3_USE_OPENEXR
 	b3PrintF(B3LOG_FULL, "Saving EXR: %s\n", filename);

@@ -34,7 +34,7 @@
 
 struct b3_resolution
 {
-	b3_res xRes,yRes;
+	b3_res xRes, yRes;
 };
 
 struct b3_shading
@@ -50,14 +50,14 @@ class CDlgScene : public CPropertyPage
 	static b3_resolution m_ResolutionTable[];
 	static b3_shading    m_ShadingTable[];
 
-// Construction
+	// Construction
 public:
 	b3_u32   m_ShadingClassType;
-	b3Scene *m_Scene;
-	b3Scene *m_PreviewScene;
-	CDlgScene(b3_u32 class_type, CWnd* pParent = NULL);   // standard constructor
+	b3Scene * m_Scene;
+	b3Scene * m_PreviewScene;
+	CDlgScene(b3_u32 class_type, CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgScene)
 	enum { IDD = IDD_SCENE };
 	CB3ShowRaytrace	m_PreviewSceneCtrl;
@@ -76,16 +76,16 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgScene)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -108,7 +108,7 @@ private:
 	int m_LastShadowBrightness;
 	void    b3PrintLegend();
 	void    b3UpdateUI();
-	b3_bool b3SetResolution(b3_res xRes,b3_res yRes);
+	b3_bool b3SetResolution(b3_res xRes, b3_res yRes);
 	void    b3SetShading();
 	b3_u32  b3GetShading();
 };

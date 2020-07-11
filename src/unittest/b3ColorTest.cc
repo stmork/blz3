@@ -45,7 +45,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3ColorTest);
 	CPPUNIT_ASSERT_EQUAL(b, tb);\
 	CPPUNIT_ASSERT_EQUAL(a, ta);\
 }\
- 
+
 
 void b3ColorTest::setUp()
 {
@@ -59,9 +59,9 @@ void b3ColorTest::tearDown()
 
 void b3ColorTest::test()
 {
-//	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
+	//	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
 #if defined(BLZ3_USE_SSE) && defined(SSE_ALIGNED)
-	b3_f32    *fPtr = &color[b3Color::A];
+	b3_f32  *  fPtr = &color[b3Color::A];
 
 #if 0
 	color[b3Color::A] = 0;
@@ -70,9 +70,9 @@ void b3ColorTest::test()
 	color[b3Color::B] = 3;
 
 	printf("this: %p\n", this);
-	for (int q = 0;q < 4;q++)
+	for(int q = 0; q < 4; q++)
 	{
-		printf ("%d: %f %p\n", q, fPtr[q], &fPtr[q]);
+		printf("%d: %f %p\n", q, fPtr[q], &fPtr[q]);
 	}
 #endif
 
@@ -112,15 +112,15 @@ void b3ColorTest::test()
 	testColor(0.25f, 0.5f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-				b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f64>(0.25));
+			b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f64>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-				b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f32>(0.25));
+			b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f32>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-				b3Color(B3_WHITE), b3Color(B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
+			b3Color(B3_WHITE), b3Color(B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
 	testColor(1.0f, 0.5f, 0.0f, 0.0f);
 
 	color.b3Init(-1.0, 2.0, -3.0, 4.0);

@@ -28,9 +28,9 @@ class B3_PLUGIN CB3Checkbox :
 public:
 	CB3Checkbox(void);
 	~CB3Checkbox(void);
-	void    b3DDX(CDataExchange *pDX,b3_bool &value);
+	void    b3DDX(CDataExchange * pDX, b3_bool & value);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3Checkbox)
 	//}}AFX_VIRTUAL

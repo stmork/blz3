@@ -60,21 +60,21 @@ class b3TIFF_Dir;
 class b3TIFF_Strip : public b3Link<b3TIFF_Strip>
 {
 	unsigned long   end;
-	char           *buffer;
+	char      *     buffer;
 	long            size;
 	long            offset;
 public:
-	     b3TIFF_Strip();
+	b3TIFF_Strip();
 	void b3Init(char *);
 	long b3Size(long);
 	long b3Offset();
-	long b3WriteData (b3FileAbstract *file_handle,long);
-	long b3OrgTags   (long);
-	long b3OrgStrips (long);
+	long b3WriteData(b3FileAbstract * file_handle, long);
+	long b3OrgTags(long);
+	long b3OrgStrips(long);
 	void b3Traverse(
-		b3Base<class T> *head,
-		void             (*func)(b3Base<class T> *,b3Link<class T> *,void *),
-		void              *ptr);
+		b3Base<class T> * head,
+		void (*func)(b3Base<class T> *, b3Link<class T> *, void *),
+		void       *       ptr);
 };
 
 /**
@@ -83,28 +83,28 @@ public:
  */
 class b3TIFF_Entry : public b3Link<b3TIFF_Entry>, public b3Mem
 {
-	char           *TIFF;
+	char      *     TIFF;
 	unsigned long   end;
 	struct TagTIFF  tag;
-	void           *buffer;		// buffer to data
-	long           *ptr;		// new offsets of strips
+	void      *     buffer;		// buffer to data
+	long      *     ptr;		// new offsets of strips
 	long            size;		// size of data
 	long            offset;		// offset of this tag
 	long            act;        // offset of buffer (if buffer != null)
 
 public:
-	             b3TIFF_Entry(b3TIFF_Dir *,struct TagTIFF *,char *);
-				~b3TIFF_Entry();
-	       long  b3WriteTag  (b3FileAbstract *file_handle,b3Base<b3TIFF_Strip> *,long,long);
-	       long  b3WriteData (b3FileAbstract *file_handle,long);
-		   void  b3Traverse  (
-			   b3Base<class T> *head,
-			   void           (*func)(b3Base<class T> *base,b3Link<class T> *link,void *ptr),
-			   void            *ptr);
-		   void  b3RemoveIFW (b3Base<b3TIFF_Entry> *);
-		   long  b3OrgTags   (long);
-		   long  b3OrgStrips (long);
-	static const int  b3SortTags  (const b3TIFF_Entry *a, const b3TIFF_Entry *b, const void *ptr);
+	b3TIFF_Entry(b3TIFF_Dir *, struct TagTIFF *, char *);
+	~b3TIFF_Entry();
+	long  b3WriteTag(b3FileAbstract * file_handle, b3Base<b3TIFF_Strip> *, long, long);
+	long  b3WriteData(b3FileAbstract * file_handle, long);
+	void  b3Traverse(
+		b3Base<class T> * head,
+		void (*func)(b3Base<class T> * base, b3Link<class T> * link, void * ptr),
+		void      *      ptr);
+	void  b3RemoveIFW(b3Base<b3TIFF_Entry> *);
+	long  b3OrgTags(long);
+	long  b3OrgStrips(long);
+	static const int  b3SortTags(const b3TIFF_Entry * a, const b3TIFF_Entry * b, const void * ptr);
 };
 
 /**
@@ -115,33 +115,33 @@ class b3TIFF_Dir : public b3Link<b3TIFF_Dir>
 	b3Base<b3TIFF_Entry>  tags;
 	b3Base<b3TIFF_Strip>  strips;
 	unsigned long         end;
-	b3TIFF_Strip         *stripArray;
+	b3TIFF_Strip     *    stripArray;
 	long                  num;			// number of tags inside directory
 	long                  stripNum;		// number of strips
 	long                  offset;		// offset of this dir structure
 	long                  next;			// offset of next dir structure
 public:
-	                b3TIFF_Dir(char *,struct TagTIFF *,long);
-	               ~b3TIFF_Dir();
-	void            b3Append (b3TIFF_Strip *);
-	void            b3Append (b3TIFF_Entry *);
-	b3TIFF_Strip *b3FirstStrip();
-	b3TIFF_Entry *b3FirstEntry();
+	b3TIFF_Dir(char *, struct TagTIFF *, long);
+	~b3TIFF_Dir();
+	void            b3Append(b3TIFF_Strip *);
+	void            b3Append(b3TIFF_Entry *);
+	b3TIFF_Strip * b3FirstStrip();
+	b3TIFF_Entry * b3FirstEntry();
 	void            b3TravRemoveIFW();
 	void            b3Traverse(
-		b3Base<class T>  *head,
-		void              (*func)(b3Base<class T> *,b3Link<class T> *,void *),
-		void               *ptr);
+		b3Base<class T> * head,
+		void (*func)(b3Base<class T> *, b3Link<class T> *, void *),
+		void        *       ptr);
 	long            b3StripInc();
 	long            b3TagInc();
 	long            b3Offset();
 	void            b3SetStrips(b3TIFF_Strip *);
-	long            b3OrgTags   (long);
-	void            b3OrgStrips ();
-	long            b3WriteTags(b3FileAbstract *file_handle,long);
+	long            b3OrgTags(long);
+	void            b3OrgStrips();
+	long            b3WriteTags(b3FileAbstract * file_handle, long);
 };
 
-typedef void (*b3LogTiffFunc)(const char *output,void *ptr);
+typedef void (*b3LogTiffFunc)(const char * output, void * ptr);
 
 /**
  * This class is for TIFF format inspection.
@@ -154,40 +154,40 @@ class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 	long                offset;	// offset of this header (= 0)
 
 public:
-	      b3TIFF      (struct HeaderTIFF *);
-		  b3TIFF      ();
-		 ~b3TIFF      ();
-	long  b3DirCount  ();
-	void  b3Remove    (b3TIFF *);
-	void  b3Append    (b3TIFF *);
-	void  b3Write     (char *);
+	b3TIFF(struct HeaderTIFF *);
+	b3TIFF();
+	~b3TIFF();
+	long  b3DirCount();
+	void  b3Remove(b3TIFF *);
+	void  b3Append(b3TIFF *);
+	void  b3Write(char *);
 
-	long  b3OrgTags   (long);
-	void  b3OrgStrips ();
+	long  b3OrgTags(long);
+	void  b3OrgStrips();
 	void  b3TravRemoveIFW();
-	void  b3Traverse  (
-		b3Base<class T>  *head,
-		void            (*func)(b3Base<class T> *,b3Link<class T> *,void *),
-		void             *ptr);
+	void  b3Traverse(
+		b3Base<class T> * head,
+		void (*func)(b3Base<class T> *, b3Link<class T> *, void *),
+		void       *      ptr);
 
 public:
-	static long           b3GetTIFFTypeSize (struct TagTIFF *DataTag);
-	static long           b3GetTIFFSize (struct TagTIFF *DataTag);
-	static const char    *b3GetModeString(long mode);
-	static long           b3GetTIFFValue (void *PtrTIFF,struct TagTIFF *DataTag,long Index);
-	static long           b3TAFcorrectOffset (long offset);
-	static long           b3TAFwriteGap (b3FileAbstract *out,long offset);
-	static void           b3LogTIFF(const char *format,...);
+	static long           b3GetTIFFTypeSize(struct TagTIFF * DataTag);
+	static long           b3GetTIFFSize(struct TagTIFF * DataTag);
+	static const char  *  b3GetModeString(long mode);
+	static long           b3GetTIFFValue(void * PtrTIFF, struct TagTIFF * DataTag, long Index);
+	static long           b3TAFcorrectOffset(long offset);
+	static long           b3TAFwriteGap(b3FileAbstract * out, long offset);
+	static void           b3LogTIFF(const char * format, ...);
 
 private:
-	static void           b3ChangeTag (void *PtrTIFF,struct TagTIFF *DataTag);
-	static void           b3ChangeTIFF (struct HeaderTIFF *TIFF);
-	static void          *b3LogFuncPtr;
+	static void           b3ChangeTag(void * PtrTIFF, struct TagTIFF * DataTag);
+	static void           b3ChangeTIFF(struct HeaderTIFF * TIFF);
+	static void     *     b3LogFuncPtr;
 	static b3LogTiffFunc  b3LogFuncTIFF;
-	static void           b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr);
-	static void           b3TravTIFF  (b3Base<class T> *Head,b3Link<class T> *Node,void *ptr);
-	static void           b3TravRemIFW(b3Base<class T> *Head,b3Link<class T> *Node,void *ptr);
-	static void           b3TravOffset(b3Base<class T> *Head,b3Link<class T> *Node,void *ptr);
+	static void           b3SetLogTiffFunc(b3LogTiffFunc log_func, void * ptr);
+	static void           b3TravTIFF(b3Base<class T> * Head, b3Link<class T> * Node, void * ptr);
+	static void           b3TravRemIFW(b3Base<class T> * Head, b3Link<class T> * Node, void * ptr);
+	static void           b3TravOffset(b3Base<class T> * Head, b3Link<class T> * Node, void * ptr);
 };
 
 // void          b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr = null);

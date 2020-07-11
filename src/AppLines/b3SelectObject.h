@@ -24,31 +24,31 @@
 class CB3SelectLoadObject
 {
 public:
-	static b3_bool b3Select(b3Path &name,const char *reg_entry);
+	static b3_bool b3Select(b3Path & name, const char * reg_entry);
 };
 
 class CB3SelectSaveObject
 {
-	static const char *m_RegEntry;
+	static const char * m_RegEntry;
 
 public:
-	static b3_bool b3Select(b3Path &name,const char *box_name);
+	static b3_bool b3Select(b3Path & name, const char * box_name);
 };
 
 class CB3SelectLoadCOB
 {
-	static const char *m_RegEntry;
+	static const char * m_RegEntry;
 
 public:
-	static b3_bool b3Select(b3Path &name);
+	static b3_bool b3Select(b3Path & name);
 };
 
 class CB3SelectLoadArcon
-{					
-	static const char *m_RegEntry;
+{
+	static const char * m_RegEntry;
 
 public:
-	static b3_bool b3Select(b3Path &path);
+	static b3_bool b3Select(b3Path & path);
 };
 
 #endif

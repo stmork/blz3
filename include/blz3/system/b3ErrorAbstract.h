@@ -30,7 +30,7 @@ public:
 	 * This method returns an error message.
 	 * \return The error message.
 	 */
-	virtual char *b3GetErrorText() = 0;
+	virtual char * b3GetErrorText() = 0;
 
 protected:
 	/**

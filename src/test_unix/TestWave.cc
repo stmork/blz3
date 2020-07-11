@@ -33,13 +33,13 @@
 **                                                                      **
 *************************************************************************/
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
-	b3Display   *display;
+	b3Display  * display;
 	b3OceanWave  wave;
 
 	wave.m_Dim = 9;
-//	b3Log::b3SetLevel(B3LOG_FULL);
+	//	b3Log::b3SetLevel(B3LOG_FULL);
 
 	try
 	{
@@ -54,26 +54,26 @@ int main(int argc, char *argv[])
 		tx.b3AllocTx(xMax, yMax, 128);
 
 		b3Time now;
-		b3_f64 time_start = now.b3GetTime(),time_diff;
+		b3_f64 time_start = now.b3GetTime(), time_diff;
 
 		do
 		{
 			now.b3Now();
 			time_diff = now.b3GetTime() - time_start;
-			b3PrintF(B3LOG_NORMAL, "t=%3.3f\n",time_diff);
+			b3PrintF(B3LOG_NORMAL, "t=%3.3f\n", time_diff);
 
 			wave.b3PrepareOceanWave(time_diff);
 			wave.b3GetBuffer(&tx, 0.001);
 			display->b3PutTx(&tx);
 		}
-		while (!display->b3IsCancelled(xMax,yMax));
+		while(!display->b3IsCancelled(xMax, yMax));
 
 		// Delete Display
 		delete display;
 	}
-	catch (b3DisplayException &e)
+	catch(b3DisplayException & e)
 	{
-		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
+		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}
 
 	return EXIT_SUCCESS;

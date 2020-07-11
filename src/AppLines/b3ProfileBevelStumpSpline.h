@@ -26,12 +26,12 @@ class b3ProfileBevelStumpSpline : public b3Profile
 	static b3ProfileBevelStumpSpline  m_RegisterProfile;
 
 public:
-	                               b3ProfileBevelStumpSpline();
+	b3ProfileBevelStumpSpline();
 	virtual b3_bool                b3Create();
 	virtual b3_bool                b3MatchClassType(b3_u32 class_type);
-	virtual int                    b3AddImage(CImageList *images);
-	virtual b3_bool                b3ComputeProfile(b3Spline *spline,...);
-	virtual b3_bool                b3ComputeShape(  b3Spline *spline,b3Shape *shape,...);
+	virtual int                    b3AddImage(CImageList * images);
+	virtual b3_bool                b3ComputeProfile(b3Spline * spline, ...);
+	virtual b3_bool                b3ComputeShape(b3Spline * spline, b3Shape * shape, ...);
 };
 
 #endif

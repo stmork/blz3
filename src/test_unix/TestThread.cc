@@ -39,8 +39,8 @@ class TestUnit;
 class TestInfo
 {
 public:
-	TestUnit *thisClass;
-	volatile b3_u32   *counter;
+	TestUnit * thisClass;
+	volatile b3_u32  * counter;
 	int       num;
 };
 
@@ -58,7 +58,7 @@ public:
 	{
 		int i;
 
-		for (i = 0;i < TEST_NUM_THREADS;i++)
+		for(i = 0; i < TEST_NUM_THREADS; i++)
 		{
 			info[i].thisClass = this;
 			info[i].counter   = single_counter;
@@ -73,9 +73,9 @@ public:
 		int i;
 
 		// Starting...
-		for (i = 0;i < TEST_NUM_THREADS;i++)
+		for(i = 0; i < TEST_NUM_THREADS; i++)
 		{
-			if (!thread[i].b3Start(proc,&info[i]))
+			if(!thread[i].b3Start(proc, &info[i]))
 			{
 				return false;
 			}
@@ -89,7 +89,7 @@ public:
 		int    i;
 
 		// Waiting...
-		for (i = 0;i < TEST_NUM_THREADS;i++)
+		for(i = 0; i < TEST_NUM_THREADS; i++)
 		{
 			thread[i].b3Wait();
 			safe_count += single_counter[i];
@@ -97,58 +97,58 @@ public:
 		return safe_count;
 	}
 
-	static b3_u32 task_unsafe(void *ptr)
+	static b3_u32 task_unsafe(void * ptr)
 	{
-		TestInfo *info = (TestInfo *)ptr;
-		TestUnit *thisClass = info->thisClass;
-		int       i,num;
+		TestInfo * info = (TestInfo *)ptr;
+		TestUnit * thisClass = info->thisClass;
+		int       i, num;
 
 		num = info->num;
-		b3PrintF (B3LOG_NORMAL,"Thread %d started.\n",num + 1);
-		for (i = 0;i < TEST_LOOP;i++)
+		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
+		for(i = 0; i < TEST_LOOP; i++)
 		{
 			thisClass->counter++;
 			info->counter[num]++;
 		}
-		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
+		b3PrintF(B3LOG_NORMAL, "Thread %d stopped.\n", num + 1);
 		return 0;
 	}
 
-	static b3_u32 task_thread(void *ptr)
+	static b3_u32 task_thread(void * ptr)
 	{
-		TestInfo *info = (TestInfo *)ptr;
-		TestUnit *thisClass = info->thisClass;
-		int       i,num;
+		TestInfo * info = (TestInfo *)ptr;
+		TestUnit * thisClass = info->thisClass;
+		int       i, num;
 
 		num = info->num;
-		b3PrintF (B3LOG_NORMAL,"Thread %d started.\n",num + 1);
-		for (i = 0;i < TEST_LOOP;i++)
+		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
+		for(i = 0; i < TEST_LOOP; i++)
 		{
 			b3CriticalSection lock(thisClass->tMutex);
 
 			info->counter[num]++;
 			thisClass->counter++;
 		}
-		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
+		b3PrintF(B3LOG_NORMAL, "Thread %d stopped.\n", num + 1);
 		return 0;
 	}
 
-	static b3_u32 task_ipc(void *ptr)
+	static b3_u32 task_ipc(void * ptr)
 	{
-		TestInfo *info = (TestInfo *)ptr;
-		TestUnit *thisClass = info->thisClass;
-		int       i,num;
+		TestInfo * info = (TestInfo *)ptr;
+		TestUnit * thisClass = info->thisClass;
+		int       i, num;
 
 		num = info->num;
-		b3PrintF (B3LOG_NORMAL,"Thread %d started.\n",num + 1);
-		for (i = 0;i < TEST_LOOP;i++)
+		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
+		for(i = 0; i < TEST_LOOP; i++)
 		{
 			b3CriticalSection lock(thisClass->iMutex);
 
 			info->counter[num]++;
 			thisClass->counter++;
 		}
-		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
+		b3PrintF(B3LOG_NORMAL, "Thread %d stopped.\n", num + 1);
 		return 0;
 	}
 
@@ -156,14 +156,14 @@ public:
 	{
 		b3_u32 safe_count;
 
-		if (TestStart(task_unsafe))
+		if(TestStart(task_unsafe))
 		{
 			safe_count = TestWait();
 
 			// Printing result
-			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-					  counter,safe_count,
-					  counter != safe_count ? "expected" : "not expected");
+			b3PrintF(B3LOG_NORMAL, "counter %u - counted %u (%s)\n",
+				counter, safe_count,
+				counter != safe_count ? "expected" : "not expected");
 		}
 	}
 
@@ -171,14 +171,14 @@ public:
 	{
 		b3_u32 safe_count;
 
-		if (TestStart(task_thread))
+		if(TestStart(task_thread))
 		{
 			safe_count = TestWait();
 
 			// Printing result
-			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-					  counter,safe_count,
-					  counter != safe_count ? "not OK" : "OK");
+			b3PrintF(B3LOG_NORMAL, "counter %u - counted %u (%s)\n",
+				counter, safe_count,
+				counter != safe_count ? "not OK" : "OK");
 		}
 	}
 
@@ -186,31 +186,31 @@ public:
 	{
 		b3_u32 safe_count;
 
-		if (TestStart(task_ipc))
+		if(TestStart(task_ipc))
 		{
 			safe_count = TestWait();
 
 			// Printing result
-			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-					  counter,safe_count,
-					  counter != safe_count ? "not OK" : "OK");
+			b3PrintF(B3LOG_NORMAL, "counter %u - counted %u (%s)\n",
+				counter, safe_count,
+				counter != safe_count ? "not OK" : "OK");
 		}
 	}
 };
 
 #define MAX_TEST_THREAD_COUNT 20000
 
-static void *b3Counter(void *ptr)
+static void * b3Counter(void * ptr)
 {
-	int *counter = (int *)ptr;
+	int * counter = (int *)ptr;
 
 	counter[0]++;
 	return 0;
 }
 
-static b3_u32 b3CounterThread(void *ptr)
+static b3_u32 b3CounterThread(void * ptr)
 {
-	b3_count *counter = (b3_count *)ptr;
+	b3_count * counter = (b3_count *)ptr;
 
 	b3Counter(ptr);
 	return counter[0];
@@ -225,25 +225,25 @@ static void b3TestThreadStart1()
 	int       error_code;
 	int       result = 0;
 
-	b3PrintF(B3LOG_NORMAL,"Threads using original POSIX calls...\n");
-	for (i = 0;i < MAX_TEST_THREAD_COUNT;i++)
+	b3PrintF(B3LOG_NORMAL, "Threads using original POSIX calls...\n");
+	for(i = 0; i < MAX_TEST_THREAD_COUNT; i++)
 	{
 		thread = 0;
 		result = 0;
-		error_code = pthread_create(&thread,NULL,&b3Counter,&counter);
-		if (error_code == 0)
+		error_code = pthread_create(&thread, NULL, &b3Counter, &counter);
+		if(error_code == 0)
 		{
-			pthread_join(thread,(void **)&result);
+			pthread_join(thread, (void **)&result);
 		}
 		else
 		{
-			fprintf(stderr,"thread not created at attempt %d - errno: %d (%s)\n",i,
-					error_code,strerror(error_code));
+			fprintf(stderr, "thread not created at attempt %d - errno: %d (%s)\n", i,
+				error_code, strerror(error_code));
 			exit(EXIT_FAILURE);
 		}
 	}
-	b3PrintF(B3LOG_NORMAL,"  Counter: %d\n",counter);
-	b3PrintF(B3LOG_NORMAL,"Done.\n\n");
+	b3PrintF(B3LOG_NORMAL, "  Counter: %d\n", counter);
+	b3PrintF(B3LOG_NORMAL, "Done.\n\n");
 #endif
 }
 
@@ -253,25 +253,25 @@ static void b3TestThreadStart2()
 	b3_count counter = 0;
 	b3_index i;
 
-	b3PrintF(B3LOG_NORMAL,"Threads using Blizzard III semantics...\n");
-	for (i = 0;i < MAX_TEST_THREAD_COUNT;i++)
+	b3PrintF(B3LOG_NORMAL, "Threads using Blizzard III semantics...\n");
+	for(i = 0; i < MAX_TEST_THREAD_COUNT; i++)
 	{
-		if (!thread.b3Start(&b3CounterThread,&counter))
+		if(!thread.b3Start(&b3CounterThread, &counter))
 		{
-			b3PrintF(B3LOG_NORMAL,"Thread not started!\n");
-			b3PrintF(B3LOG_NORMAL,"  attempt: %d\n",i);
-			b3PrintF(B3LOG_NORMAL,"  counter: %d\n",counter);
+			b3PrintF(B3LOG_NORMAL, "Thread not started!\n");
+			b3PrintF(B3LOG_NORMAL, "  attempt: %d\n", i);
+			b3PrintF(B3LOG_NORMAL, "  counter: %d\n", counter);
 			return;
 		}
 		thread.b3Wait();
 	}
-	b3PrintF(B3LOG_NORMAL,"  Counter: %d\n",counter);
-	b3PrintF(B3LOG_NORMAL,"Done.\n\n");
+	b3PrintF(B3LOG_NORMAL, "  Counter: %d\n", counter);
+	b3PrintF(B3LOG_NORMAL, "Done.\n\n");
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	TestUnit *ptr;
+	TestUnit * ptr;
 
 	b3TestThreadStart1();
 	b3TestThreadStart2();
@@ -288,7 +288,7 @@ int main(int argc,char *argv[])
 	ptr->test3();
 	delete ptr;
 
-//	b3LockerTest test;
+	//	b3LockerTest test;
 
 	return EXIT_SUCCESS;
 }

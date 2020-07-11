@@ -54,7 +54,7 @@ public:
 	 * \param distance Distance from eye point to give a level of detail.
 	 * \return The wooden pattern.
 	 */
-	b3_f64 b3ComputeWood(b3_vector *polar, b3_f64 distance);
+	b3_f64 b3ComputeWood(b3_vector * polar, b3_f64 distance);
 
 	/**
 	 * This method initializes the class with default propertiy values.
@@ -67,7 +67,7 @@ public:
 	 *
 	 * \param *scale
 	 */
-	void   b3PrepareWood(b3_vector *scale);
+	void   b3PrepareWood(b3_vector * scale);
 
 	/**
 	 * This method copies the property values from this class into a given
@@ -81,7 +81,7 @@ public:
 	 * \param fy
 	 * \see b3OakPlank
 	 */
-	void   b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy);
+	void   b3CopyWobbled(b3Wood * wood, b3_f64 wobble, b3_f64 fx, b3_f64 fy);
 };
 
 /**
@@ -95,7 +95,7 @@ class B3_PLUGIN b3OakPlank : public b3Wood
 	b3_f64            m_ryTimes;
 
 protected:
-	b3Wood           *m_Planks;     //!< The wood array for the planks.
+	b3Wood      *     m_Planks;     //!< The wood array for the planks.
 	b3_count          m_PlankCount; //!< The number of different wood definitions.
 
 public:
@@ -125,7 +125,7 @@ public:
 	 * \param index The used wood instance.
 	 * \return The wooden oak plank pattern.
 	 */
-	b3_f64   b3ComputeOakPlank(b3_vector *polar, b3_f64 distance, b3_index &index);
+	b3_f64   b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index);
 
 	/**
 	 * This method initializes the class with default propertiy values.
@@ -138,7 +138,7 @@ public:
 	 *
 	 * \param *scale
 	 */
-	void     b3PrepareOakPlank(b3_vector *scale);
+	void     b3PrepareOakPlank(b3_vector * scale);
 };
 
 #endif

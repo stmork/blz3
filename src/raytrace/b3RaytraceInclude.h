@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3RaytraceInclude.h $ 
+**	$Filename:	b3RaytraceInclude.h $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$

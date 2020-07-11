@@ -23,14 +23,14 @@
 
 class B3_PLUGIN CB3ColorFieldSelector : public CB3ColorField
 {
-	b3Color  *m_Color;
-	CWnd     *m_Parent;
+	b3Color * m_Color;
+	CWnd   *  m_Parent;
 
 public:
-	               CB3ColorFieldSelector();
-	       void    b3Init(b3Color *color,CWnd *parent = null);
-		   b3_bool b3Select();
-	static b3_bool b3Select(b3Color &color,CWnd *parent = null);
+	CB3ColorFieldSelector();
+	void    b3Init(b3Color * color, CWnd * parent = null);
+	b3_bool b3Select();
+	static b3_bool b3Select(b3Color & color, CWnd * parent = null);
 };
 
 #endif

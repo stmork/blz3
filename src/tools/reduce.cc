@@ -41,18 +41,18 @@ b3_pkd_color palette[8] =
 	0x641e10
 };
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	for (int i = 1;i < argc;i++)
+	for(int i = 1; i < argc; i++)
 	{
-		b3Tx src,dst;
+		b3Tx src, dst;
 
-		if (src.b3LoadImage(argv[i]) == B3_OK)
+		if(src.b3LoadImage(argv[i]) == B3_OK)
 		{
-			if (dst.b3AllocTx(src.xSize,src.ySize,3))
+			if(dst.b3AllocTx(src.xSize, src.ySize, 3))
 			{
-				dst.b3SetPalette(palette,8);
-				if (dst.b3TxReduce(&src))
+				dst.b3SetPalette(palette, 8);
+				if(dst.b3TxReduce(&src))
 				{
 					b3Path path(argv[i]);
 

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ExampleScene.h $  
+**	$Filename:	b3ExampleScene.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -25,9 +25,9 @@
 class b3ExampleScene : public b3Factory
 {
 private:
-	static void          b3SetCameraName(b3CameraPart *camera,int id);
-	static void          b3SetObjectName(b3BBox *bbox,int id);
-	static void          b3SetLightName(b3Light *light,int id);
+	static void          b3SetCameraName(b3CameraPart * camera, int id);
+	static void          b3SetObjectName(b3BBox * bbox, int id);
+	static void          b3SetLightName(b3Light * light, int id);
 };
 
 #endif

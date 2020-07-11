@@ -58,7 +58,7 @@ b3OceanWave::b3OceanWave()
 
 b3OceanWave::~b3OceanWave()
 {
-	if (m_Phillips != null)
+	if(m_Phillips != null)
 	{
 		delete [] m_Phillips;
 	}
@@ -67,12 +67,12 @@ b3OceanWave::~b3OceanWave()
 void b3OceanWave::b3Modified(b3_bool modified)
 {
 	m_Modified = modified;
-	if (m_Phillips != null)
+	if(m_Phillips != null)
 	{
 		delete [] m_Phillips;
 		m_Phillips = null;
 	}
-	if (m_Normals != null)
+	if(m_Normals != null)
 	{
 		b3Free(m_Normals);
 		m_Normals = null;
@@ -104,7 +104,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	m_L2             = -m_L * m_L;
 	m_l2             =  m_l * m_l;
 
-	if (!m_FFT.b3AllocBuffer(1 << m_Dim))
+	if(!m_FFT.b3AllocBuffer(1 << m_Dim))
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
@@ -130,10 +130,10 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 #endif
 }
 
-b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
+b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector * pos)
 {
 	b3TimeStop             stop("Prepare ocean wave");
-	b3Complex64           *buffer = b3GetBuffer();
+	b3Complex64      *     buffer = b3GetBuffer();
 	b3_f64                 fx     = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
 	b3_f64                 fy     = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
 	b3_f64                 dy;
@@ -153,14 +153,14 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 	b[0] = buffer[index + xe].b3Real();
 
 	index += m_fftDiff;
-	if (index >= max)
+	if(index >= max)
 	{
 		index -= max;
 	}
 	a[1] = buffer[index + xs].b3Real();
 	b[1] = buffer[index + xe].b3Real();
 
-	for (b3_loop i = 0;i < 2;i++)
+	for(b3_loop i = 0; i < 2; i++)
 	{
 		c[i] = a[i] + dx[i] * (b[i] - a[i]);
 	}
@@ -169,22 +169,22 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector *pos)
 }
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(
-	const b3_vector *pos, b3_vector *n)
+	const b3_vector * pos, b3_vector * n)
 {
 	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
 	b3_index  x, y;
 	b3_index  ls, le, us, ue;
-	b3_vector l,u;
+	b3_vector l, u;
 
 	x  = (b3_index)fx;
 	y  = (b3_index)fy;
 	dx = fx - x;
 
 	ls = b3GetIndex(x,   y);
-	le = b3GetIndex(x+1, y);
-	us = b3GetIndex(x,   y+1);
-	ue = b3GetIndex(x+1, y+1);
+	le = b3GetIndex(x + 1, y);
+	us = b3GetIndex(x,   y + 1);
+	ue = b3GetIndex(x + 1, y + 1);
 
 	b3Vector::b3Mix(&m_Normals[ls], &m_Normals[le], dx, &l);
 	b3Vector::b3Mix(&m_Normals[us], &m_Normals[ue], dx, &u);
@@ -194,24 +194,24 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 {
 	b3TimeStop stop("Compute Phillips spectrum");
 
-	if (m_Phillips == null)
+	if(m_Phillips == null)
 	{
 		b3_size size = m_fftDiff * m_fftDiff;
 
 		m_Phillips = new b3Complex64[size];
-		if (m_Phillips == null)
+		if(m_Phillips == null)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
 		m_Normals = (b3_vector *)b3Alloc(size * sizeof(b3_vector));
-		if (m_Normals == null)
+		if(m_Normals == null)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
 		m_Modified = true;
 	}
 
-	if (m_Modified)
+	if(m_Modified)
 	{
 		m_FFT.b3Sample(this, b3FilterPhillipsSpectrum);
 		m_Modified = false;
@@ -222,34 +222,34 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 
 void b3OceanWave::b3PrepareNormals()
 {
-	b3_index   x,y;
-	b3_vector *normal = m_Normals;
+	b3_index   x, y;
+	b3_vector * normal = m_Normals;
 	b3_f64     grid   = m_GridSize / m_fftDiff;
 
-	for (y = 0;y < m_fftDiff;y++)
+	for(y = 0; y < m_fftDiff; y++)
 	{
-		for (x = 0;x < m_fftDiff;x++)
+		for(x = 0; x < m_fftDiff; x++)
 		{
-			normal->x = (b3GetHeight(x+1, y)   - b3GetHeight(x-1, y)) * m_Denom;
-			normal->y = (b3GetHeight(x,   y+1) - b3GetHeight(x,   y-1)) * m_Denom;
+			normal->x = (b3GetHeight(x + 1, y)   - b3GetHeight(x - 1, y)) * m_Denom;
+			normal->y = (b3GetHeight(x,   y + 1) - b3GetHeight(x,   y - 1)) * m_Denom;
 			normal->z = 4 * grid;
 			normal++;
 		}
 	}
 }
 
-void b3OceanWave::b3CopyHeightField(b3Tx *tx)
+void b3OceanWave::b3CopyHeightField(b3Tx * tx)
 {
-	b3Complex64  *buffer = b3GetBuffer();
-	b3_pkd_color *ptr    = tx->b3GetTrueColorData();
+	b3Complex64 * buffer = b3GetBuffer();
+	b3_pkd_color * ptr    = tx->b3GetTrueColorData();
 	b3_res        xSize  = tx->xSize;
 	b3_res        ySize  = tx->ySize;
 
-	for (b3_loop y = 0;y < ySize;y++)
+	for(b3_loop y = 0; y < ySize; y++)
 	{
-		for (b3_loop x = 0;x < xSize;x++)
+		for(b3_loop x = 0; x < xSize; x++)
 		{
-			b3_f32 c = buffer[b3GetIndex(x,y)].b3Real() * m_Denom + 0.5;
+			b3_f32 c = buffer[b3GetIndex(x, y)].b3Real() * m_Denom + 0.5;
 
 			*ptr++ = b3Color(c, c, c);
 		}
@@ -260,9 +260,9 @@ void b3OceanWave::b3FilterPhillipsSpectrum(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	b3FilterInfo *filter_info)
+	b3FilterInfo * filter_info)
 {
-	b3OceanWave *ocean  = (b3OceanWave *)filter_info;
+	b3OceanWave * ocean  = (b3OceanWave *)filter_info;
 
 	ocean->b3SamplePhillipsSpectrum(fx, fy, index);
 }
@@ -280,20 +280,20 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 	b3_f64 w;
 	b3_f64 phillips;
 
-	if (k4 == 0)
+	if(k4 == 0)
 	{
 		phillips = 0;
 	}
 	else
 	{
-		phillips = m_A * exp( m_L2 / k2 ) * quotient * quotient * quotient * hf_scale / k4;
+		phillips = m_A * exp(m_L2 / k2) * quotient * quotient * quotient * hf_scale / k4;
 	}
 
 #ifdef VERBOSE_DUMP
-	b3PrintF(B3LOG_NORMAL,"f: %f %f - K: %f %f # k²=%f k^4=%f L²=%f q=%f P=%f",
-			 fx, fy,
-			 Kr, Ki,
-			 k2, k4, m_L2, quotient, phillips);
+	b3PrintF(B3LOG_NORMAL, "f: %f %f - K: %f %f # k²=%f k^4=%f L²=%f q=%f P=%f",
+		fx, fy,
+		Kr, Ki,
+		k2, k4, m_L2, quotient, phillips);
 #endif
 
 
@@ -304,13 +304,13 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 
 		w  = gr * gr + gi * gi;
 	}
-	while (w >= 1.0);
+	while(w >= 1.0);
 
-	m_Phillips[index] = b3Complex64(gr, gi) * sqrt( -phillips * log(w) / w);
+	m_Phillips[index] = b3Complex64(gr, gi) * sqrt(-phillips * log(w) / w);
 
 #ifdef VERBOSE_DUMP
 	b3PrintF(B3LOG_NORMAL, " # %f %f %f\n",
-			 m_Phillips[index].b3Real(),  m_Phillips[index].b3Imag(), w);
+		m_Phillips[index].b3Real(),  m_Phillips[index].b3Imag(), w);
 #endif
 }
 
@@ -318,17 +318,17 @@ void b3OceanWave::b3SampleHeight(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	b3FilterInfo *filter_info)
+	b3FilterInfo * filter_info)
 {
-	b3OceanWave *ocean  = (b3OceanWave *)filter_info;
-	b3Complex64 *buffer = ocean->b3GetBuffer();
+	b3OceanWave * ocean  = (b3OceanWave *)filter_info;
+	b3Complex64 * buffer = ocean->b3GetBuffer();
 
 	buffer[index] = ocean->m_Phillips[index] * ocean->m_Cycle;
 }
 
 void b3OceanWave::b3TestSpectrum1()
 {
-	b3Complex64 *buffer = b3GetBuffer();
+	b3Complex64 * buffer = b3GetBuffer();
 
 	buffer[5] = 0.5;
 	buffer[0] = 1;
@@ -339,12 +339,12 @@ void b3OceanWave::b3TestSpectrum1()
 
 void b3OceanWave::b3TestSpectrum2()
 {
-	b3Complex64 *buffer = b3GetBuffer();
-	b3_loop      n,m;
+	b3Complex64 * buffer = b3GetBuffer();
+	b3_loop      n, m;
 
-	for (n = m_fftMin; n < m_fftMax; n++)
+	for(n = m_fftMin; n < m_fftMax; n++)
 	{
-		for (m = m_fftMin; m < m_fftMax; m++)
+		for(m = m_fftMin; m < m_fftMax; m++)
 		{
 			*buffer++ = sin(M_PI * 4.0 * m / m_fftDiff);
 		}
@@ -356,7 +356,7 @@ void b3OceanWave::b3TestSpectrum3()
 {
 	b3Tx tx;
 
-//	tx.b3LoadImage("/home/sm/Kram/Bilder/openBC4.jpg");
+	//	tx.b3LoadImage("/home/sm/Kram/Bilder/openBC4.jpg");
 	tx.b3LoadImage("s:/blz3/WWW/lines/normal/window_raytrace.jpg");
 	m_FFT.b3AllocBuffer(&tx);
 	m_FFT.b3FFT2D();

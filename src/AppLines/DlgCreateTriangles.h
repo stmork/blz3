@@ -37,12 +37,12 @@ class CDlgCreateTriangles : public CB3ShapeDialog
 	b3_f64  m_ySize;
 	b3_s32  m_xCount;
 	b3_s32  m_yCount;
-// Construction
+	// Construction
 public:
-	CDlgCreateTriangles(CWnd* pParent = NULL);   // standard constructor
+	CDlgCreateTriangles(CWnd * pParent = NULL);  // standard constructor
 
 	virtual void b3PostProcess();
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCreateTriangles)
 	enum { IDD = IDD_CREATE_TRIANGLES };
 	CStatic	m_LegendCtrl;
@@ -55,14 +55,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCreateTriangles)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 

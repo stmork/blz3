@@ -30,19 +30,19 @@
 **                                                                      **
 *************************************************************************/
 
-b3Disk::b3Disk(b3_u32 class_type) : b3Shape2(sizeof(b3Disk),class_type)
+b3Disk::b3Disk(b3_u32 class_type) : b3Shape2(sizeof(b3Disk), class_type)
 {
 }
 
-b3Disk::b3Disk(b3_u32 *src) : b3Shape2(src)
+b3Disk::b3Disk(b3_u32 * src) : b3Shape2(src)
 {
 }
 
 void b3Disk::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
+	b3RenderContext * ctx,
+	b3_count    &    vertCount,
+	b3_count    &    gridCount,
+	b3_count    &    polyCount)
 {
 	vertCount = b3ShapeRenderContext::m_SubDiv * 2 + 6;
 	gridCount = b3ShapeRenderContext::m_SubDiv * 2 + 6;
@@ -51,9 +51,9 @@ void b3Disk::b3GetCount(
 
 void b3Disk::b3ComputeVertices()
 {
-	b3_gl_vertex *Vector      = *glVertexElements;
+	b3_gl_vertex * Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	b3_f64        sx,sy,b,a,h,start,end;
+	b3_f64        sx, sy, b, a, h, start, end;
 	b3_index      i;
 	b3_count      iMax;
 	b3_count      vertex_count = 0;
@@ -69,7 +69,7 @@ void b3Disk::b3ComputeVertices()
 	ySize = 1;
 
 	// This is a ring formed disk
-	if ((i - start) > b3Scene::epsilon)
+	if((i - start) > b3Scene::epsilon)
 	{
 		//compute front fractional disk ring
 		a  = m_Limit.x1 * M_PI * 2;
@@ -94,7 +94,7 @@ void b3Disk::b3ComputeVertices()
 		xSize++;
 	}
 
-	for (;i<=iMax;i++)
+	for(; i <= iMax; i++)
 	{
 		b3_f64 pos = (double)i / SinCosSteps;
 		b3_f64 s   = pos / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
@@ -122,7 +122,7 @@ void b3Disk::b3ComputeVertices()
 		xSize++;
 	}
 
-	if ((end - iMax) > b3Scene::epsilon)
+	if((end - iMax) > b3Scene::epsilon)
 	{
 		// compute rest fractional ring disk
 		a  = m_Limit.x2 * M_PI * 2;
@@ -151,17 +151,17 @@ void b3Disk::b3ComputeVertices()
 
 void b3Disk::b3ComputeIndices()
 {
-	b3_gl_line    *gPtr;
-	b3_gl_polygon *pPtr;
+	b3_gl_line  *  gPtr;
+	b3_gl_polygon * pPtr;
 	b3_bool        EndLines = false;
-	b3_index       i,pos;
+	b3_index       i, pos;
 	b3_count       Overhead;
 	b3_count       grid_count = 0;
 	b3_count       poly_count = 0;
 
 	b3ComputeBound(&m_Limit);
-	Overhead = b3GetIndexOverhead (0.0,0.0);
-	if (Overhead < 0)
+	Overhead = b3GetIndexOverhead(0.0, 0.0);
+	if(Overhead < 0)
 	{
 		EndLines = true;
 		Overhead = -Overhead;
@@ -170,23 +170,23 @@ void b3Disk::b3ComputeIndices()
 	gPtr = *glGridElements;
 	pPtr = *glPolygonElements;
 
-	for (i = pos = 0;i < Overhead;i++)
+	for(i = pos = 0; i < Overhead; i++)
 	{
-		B3_GL_LINIT(gPtr,pos,  pos+2);
-		B3_GL_LINIT(gPtr,pos+1,pos+3);
+		B3_GL_LINIT(gPtr, pos,  pos + 2);
+		B3_GL_LINIT(gPtr, pos + 1, pos + 3);
 
-		B3_GL_PINIT(pPtr,pos,  pos+2,pos+1);
-		B3_GL_PINIT(pPtr,pos+3,pos+1,pos+2);
+		B3_GL_PINIT(pPtr, pos,  pos + 2, pos + 1);
+		B3_GL_PINIT(pPtr, pos + 3, pos + 1, pos + 2);
 
 		grid_count += 2;
 		poly_count += 2;
 		pos += 2;
 	}
 
-	if (EndLines)
+	if(EndLines)
 	{
-		B3_GL_LINIT(gPtr,0,1);
-		B3_GL_LINIT(gPtr,Overhead + Overhead,Overhead + Overhead + 1);
+		B3_GL_LINIT(gPtr, 0, 1);
+		B3_GL_LINIT(gPtr, Overhead + Overhead, Overhead + Overhead + 1);
 
 		grid_count += 2;
 	}
@@ -195,7 +195,7 @@ void b3Disk::b3ComputeIndices()
 	glPolygonElements->b3SetCount(poly_count);
 }
 
-void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

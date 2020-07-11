@@ -30,42 +30,42 @@
 
 class CAppRaytraceDoc : public CB3LinesDocument
 {
-	b3Scene       *m_Scene;
-	CAppRenderDoc *m_RenderDoc;
+	b3Scene    *   m_Scene;
+	CAppRenderDoc * m_RenderDoc;
 protected: // create from serialization only
 	CAppRaytraceDoc();
 	DECLARE_DYNCREATE(CAppRaytraceDoc)
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
-	void        b3SetRenderDoc(CAppRenderDoc *LinesDoc);
+	void        b3SetRenderDoc(CAppRenderDoc * LinesDoc);
 	b3_bool     b3IsRaytracing();
-	b3Display  *b3GetDisplay(const char *title);
-	b3Display  *b3GetDisplay(b3_res xSize,b3_res ySize,const char *title);
+	b3Display * b3GetDisplay(const char * title);
+	b3Display * b3GetDisplay(b3_res xSize, b3_res ySize, const char * title);
 	void        b3ActivateDoc();
 	void        b3ActivateView();
-	const char *b3GetDocumentName();
-	void        b3UpdateTitle(const char *title);
+	const char * b3GetDocumentName();
+	void        b3UpdateTitle(const char * title);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppRaytraceDoc)
-	public:
+public:
 	virtual BOOL OnNewDocument();
 	virtual void OnCloseDocument();
-	virtual void Serialize(CArchive& ar);
+	virtual void Serialize(CArchive & ar);
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CAppRaytraceDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext & dc) const;
 #endif
 
 protected:
@@ -74,9 +74,9 @@ protected:
 protected:
 	//{{AFX_MSG(CAppRaytraceDoc)
 	afx_msg void OnRaytrace();
-	afx_msg void OnUpdateRaytrace(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateRaytrace(CCmdUI * pCmdUI);
 	afx_msg void OnSaveImage();
-	afx_msg void OnUpdateSaveImage(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateSaveImage(CCmdUI * pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

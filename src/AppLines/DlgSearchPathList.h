@@ -33,27 +33,27 @@
 
 class CDlgSearchPathList : public CDialog
 {
-// Construction
+	// Construction
 public:
-	b3SearchPath *m_SearchPath;
+	b3SearchPath * m_SearchPath;
 	b3_bool       m_IsList;
-	CDlgSearchPathList(CWnd* pParent = NULL);   // standard constructor
+	CDlgSearchPathList(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgSearchPathList)
 	enum { IDD = IDD_SEARCH_PATH_LIST };
 	CComboBox	m_List;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgSearchPathList)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -75,8 +75,8 @@ private:
 	void b3SetSelection(int index);
 	void b3RefreshList();
 	int m_Index;
-	b3PathEntry *m_PathEntry;
-	b3Base<b3PathEntry> *m_ListBase;
+	b3PathEntry * m_PathEntry;
+	b3Base<b3PathEntry> * m_ListBase;
 };
 
 //{{AFX_INSERT_LOCATION}}

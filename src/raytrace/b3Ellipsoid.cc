@@ -30,29 +30,29 @@
 **                                                                      **
 *************************************************************************/
 
-b3Ellipsoid::b3Ellipsoid(b3_u32 class_type) : b3Shape3(sizeof(b3Ellipsoid),class_type)
+b3Ellipsoid::b3Ellipsoid(b3_u32 class_type) : b3Shape3(sizeof(b3Ellipsoid), class_type)
 {
 }
 
-b3Ellipsoid::b3Ellipsoid(b3_u32 *src) : b3Shape3(src)
+b3Ellipsoid::b3Ellipsoid(b3_u32 * src) : b3Shape3(src)
 {
 }
 
 void b3Ellipsoid::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
+	b3RenderContext * ctx,
+	b3_count    &    vertCount,
+	b3_count    &    gridCount,
+	b3_count    &    polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = (SinCosSteps + 2) * ((SinCosSteps >> 1) + 1);
-	b3GetEllipsoidIndexCount(gridCount,polyCount);
+	b3GetEllipsoidIndexCount(gridCount, polyCount);
 }
 
 void b3Ellipsoid::b3ComputeVertices()
 {
-	b3ComputeEllipsoidVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
+	b3ComputeEllipsoidVertices(m_Base, m_Dir1, m_Dir2, m_Dir3);
 }
 
 void b3Ellipsoid::b3ComputeIndices()
@@ -60,7 +60,7 @@ void b3Ellipsoid::b3ComputeIndices()
 	b3ComputeEllipsoidIndices();
 }
 
-void b3Ellipsoid::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3Ellipsoid::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    =  0;
 	info->xInfo.max    =  1;

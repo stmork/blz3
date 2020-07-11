@@ -41,7 +41,7 @@ class b3Scene;
 class B3_PLUGIN b3RenderLight
 {
 	b3_light_mode  m_LightMode;
-	b3Scene       *m_Scene;
+	b3Scene    *   m_Scene;
 
 	static b3_vector      m_LightDirection;
 
@@ -57,7 +57,7 @@ public:
 	 * @param context The render context.
 	 * @see b3RenderContext.
 	 */
-	void b3SetupLight(b3RenderContext *context);
+	void b3SetupLight(b3RenderContext * context);
 
 	/**
 	 * This method sets the scene which contains the light sources to
@@ -65,7 +65,7 @@ public:
 	 *
 	 * @param scene The scene which contains the light sources.
 	 */
-	void b3SetScene(b3Scene *scene);
+	void b3SetScene(b3Scene * scene);
 
 	/**
 	 * This method sets the light initialization mode.

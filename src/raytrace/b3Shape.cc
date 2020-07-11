@@ -32,7 +32,7 @@
 
 void b3Shape::b3Register()
 {
-	b3PrintF (B3LOG_DEBUG,"Registering shapes...\n");
+	b3PrintF(B3LOG_DEBUG, "Registering shapes...\n");
 	b3Item::b3Register(&b3Sphere::b3StaticInit,           &b3Sphere::b3StaticInit,           SPHERE);
 	b3Item::b3Register(&b3Area::b3StaticInit,             &b3Area::b3StaticInit,             AREA);
 	b3Item::b3Register(&b3Disk::b3StaticInit,             &b3Disk::b3StaticInit,             DISK);
@@ -68,7 +68,7 @@ b3Activation::b3Activation()
 
 b3_bool b3Activation::b3IsActive()
 {
-	switch (m_AnimActive)
+	switch(m_AnimActive)
 	{
 	case B3_ANIM_DISABLED:
 		return m_Active;
@@ -103,7 +103,7 @@ void b3Activation::b3Animate(b3_anim_activation activate)
 **                                                                      **
 *************************************************************************/
 
-b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
+b3Shape::b3Shape(b3_size class_size, b3_u32 class_type) : b3Item(class_size, class_type)
 {
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
@@ -119,7 +119,7 @@ b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
+b3Shape::b3Shape(b3_u32 * src) : b3Item(src)
 {
 	b3InitVector(); // This is the normal
 	b3InitVector(); // This is Polar.Polar
@@ -152,35 +152,35 @@ void b3Shape::b3StoreShape()
 {
 }
 
-b3_bool b3Shape::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3Item      *item;
-	b3Condition *cond;
-	b3Bump      *bump;
-	b3Material  *material;
+	b3Item   *   item;
+	b3Condition * cond;
+	b3Bump   *   bump;
+	b3Material * material;
 
-	B3_FOR_BASE(b3GetConditionHead(),item)
+	B3_FOR_BASE(b3GetConditionHead(), item)
 	{
 		cond = (b3Condition *)item;
-		if (!cond->b3Prepare(prep_info))
+		if(!cond->b3Prepare(prep_info))
 		{
 			return false;
 		}
 	}
 
-	B3_FOR_BASE(b3GetBumpHead(),item)
+	B3_FOR_BASE(b3GetBumpHead(), item)
 	{
 		bump = (b3Bump *)item;
-		if (!bump->b3Prepare(prep_info))
+		if(!bump->b3Prepare(prep_info))
 		{
 			return false;
 		}
 	}
 
-	B3_FOR_BASE(b3GetMaterialHead(),item)
+	B3_FOR_BASE(b3GetMaterialHead(), item)
 	{
 		material = (b3Material *)item;
-		if (!material->b3Prepare(prep_info))
+		if(!material->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -189,26 +189,26 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info *prep_info)
 	return true;
 }
 
-void b3Shape::b3BumpNormal(b3_ray *ray)
+void b3Shape::b3BumpNormal(b3_ray * ray)
 {
-	b3Item  *item;
-	b3Bump  *bump;
+	b3Item * item;
+	b3Bump * bump;
 	b3_f64   denom;
 	b3_bool  deriv_computed = false;
 	b3_bool  deriv_ok       = false;
 
 	b3Normal(ray);
-	B3_FOR_BASE(b3GetBumpHead(),item)
+	B3_FOR_BASE(b3GetBumpHead(), item)
 	{
 		bump = (b3Bump *)item;
-		if (bump->b3NeedDeriv())
+		if(bump->b3NeedDeriv())
 		{
-			if (!deriv_computed)
+			if(!deriv_computed)
 			{
 				deriv_ok       = b3NormalDeriv(ray);
 				deriv_computed = true;
 			}
-			if (deriv_ok)
+			if(deriv_ok)
 			{
 				bump->b3BumpNormal(ray);
 			}
@@ -220,39 +220,39 @@ void b3Shape::b3BumpNormal(b3_ray *ray)
 	}
 
 	denom = 1.0 / sqrt(
-				ray->normal.x * ray->normal.x +
-				ray->normal.y * ray->normal.y +
-				ray->normal.z * ray->normal.z);
+			ray->normal.x * ray->normal.x +
+			ray->normal.y * ray->normal.y +
+			ray->normal.z * ray->normal.z);
 
 	ray->normal.x *= denom;
 	ray->normal.y *= denom;
 	ray->normal.z *= denom;
 }
 
-void b3Shape::b3SetupPicking(b3PickInfo *info)
+void b3Shape::b3SetupPicking(b3PickInfo * info)
 {
 }
 
-void b3Shape::b3SetupGrid(b3PickInfo *info)
+void b3Shape::b3SetupGrid(b3PickInfo * info)
 {
 }
 
-b3Material *b3Shape::b3GetSurfaceValues(b3_surface *surface)
+b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
 {
-	b3Item     *item;
-	b3Material *material;
+	b3Item   *  item;
+	b3Material * material;
 
-	B3_FOR_BASE(b3GetMaterialHead(),item)
+	B3_FOR_BASE(b3GetMaterialHead(), item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetSurfaceValues(surface))
+		if(material->b3GetSurfaceValues(surface))
 		{
 			return material;
 		}
 	}
-	surface->m_Diffuse.b3Init( 0.1f, 0.5f, 1.0f,0.0f);
-	surface->m_Ambient.b3Init( 0.05f,0.25f,0.5f,0.0f);
-	surface->m_Specular.b3Init(0.1f, 0.1f, 0.1f,0.0f);
+	surface->m_Diffuse.b3Init(0.1f, 0.5f, 1.0f, 0.0f);
+	surface->m_Ambient.b3Init(0.05f, 0.25f, 0.5f, 0.0f);
+	surface->m_Specular.b3Init(0.1f, 0.1f, 0.1f, 0.0f);
 
 	surface->m_Reflection  =      0.0f;
 	surface->m_Refraction  =      0.0f;
@@ -262,12 +262,12 @@ b3Material *b3Shape::b3GetSurfaceValues(b3_surface *surface)
 	return null;
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
+b3_bool b3Shape::b3CheckStencil(b3_polar * polar)
 {
 	return true;
 }
 
-void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;
@@ -279,9 +279,9 @@ void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound *info)
 	info->yInfo.factor = 1;
 }
 
-void b3Shape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
+void b3Shape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 {
-	b3PrintF(B3LOG_NORMAL,"b3Shape::b3Transform() not overloaded!\n");
+	b3PrintF(B3LOG_NORMAL, "b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);
 }
 
@@ -291,7 +291,7 @@ void b3Shape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 **                                                                      **
 *************************************************************************/
 
-b3SimpleShape::b3SimpleShape(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+b3SimpleShape::b3SimpleShape(b3_size class_size, b3_u32 class_type) : b3Shape(class_size, class_type)
 {
 }
 
@@ -299,21 +299,21 @@ b3SimpleShape::b3SimpleShape(b3_u32 class_type) : b3Shape(sizeof(b3SimpleShape),
 {
 }
 
-b3SimpleShape::b3SimpleShape(b3_u32 *src) : b3Shape(src)
+b3SimpleShape::b3SimpleShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
-b3_bool b3SimpleShape::b3CheckStencil(b3_polar *polar)
+b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar)
 {
-	b3Item      *item;
-	b3Condition *cond;
+	b3Item   *   item;
+	b3Condition * cond;
 	b3_bool      result = true;
 
-	B3_FOR_BASE(b3GetConditionHead(),item)
+	B3_FOR_BASE(b3GetConditionHead(), item)
 	{
 		cond   = (b3Condition *)item;
 		result = cond->b3Conditionate(
-					 result,cond->b3CheckStencil(polar));
+				result, cond->b3CheckStencil(polar));
 	}
 	return result;
 }
@@ -324,21 +324,21 @@ b3_bool b3SimpleShape::b3CheckStencil(b3_polar *polar)
 **                                                                      **
 *************************************************************************/
 
-b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
+b3Shape2::b3Shape2(b3_size class_size, b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
 }
 
 b3Shape2::b3Shape2(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape2), class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
 }
 
-b3Shape2::b3Shape2(b3_u32 *src) : b3SimpleShape(src)
+b3Shape2::b3Shape2(b3_u32 * src) : b3SimpleShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir1);
@@ -355,26 +355,26 @@ void b3Shape2::b3StoreShape()
 	b3StoreFloat(m_NormalLength);
 }
 
-b3_bool b3Shape2::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3Shape2::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&m_Normal);
+	b3Vector::b3CrossProduct(&m_Dir1, &m_Dir2, &m_Normal);
 	m_NormalLength = b3Vector::b3Length(&m_Normal);
 	return b3Shape::b3Prepare(prep_info);
 }
 
-void b3Shape2::b3Transform(b3_matrix *transformation,b3_bool is_affine)
+void b3Shape2::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 {
-	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
-	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3TransformVertices(transformation,is_affine);
+	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
+	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
+	b3Matrix::b3VMul(transformation, &m_Dir2, &m_Dir2, false);
+	b3TransformVertices(transformation, is_affine);
 }
 
-void b3Shape2::b3SetupPicking(b3PickInfo *info)
+void b3Shape2::b3SetupPicking(b3PickInfo * info)
 {
-	info->b3AddPickPoint(&m_Base,"b");
-	info->b3AddPickDir(  &m_Base,&m_Dir1,"1");
-	info->b3AddPickDir(  &m_Base,&m_Dir2,"2");
+	info->b3AddPickPoint(&m_Base, "b");
+	info->b3AddPickDir(&m_Base, &m_Dir1, "1");
+	info->b3AddPickDir(&m_Base, &m_Dir2, "2");
 }
 
 /*************************************************************************
@@ -383,23 +383,23 @@ void b3Shape2::b3SetupPicking(b3PickInfo *info)
 **                                                                      **
 *************************************************************************/
 
-b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
+b3Shape3::b3Shape3(b3_size class_size, b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
-	b3Vector::b3Init(&m_Dir3, 0, 0,50);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
 b3Shape3::b3Shape3(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape3), class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir1,50, 0, 0);
-	b3Vector::b3Init(&m_Dir2, 0,50, 0);
-	b3Vector::b3Init(&m_Dir3, 0, 0,50);
+	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
-b3Shape3::b3Shape3(b3_u32 *src) : b3SimpleShape(src)
+b3Shape3::b3Shape3(b3_u32 * src) : b3SimpleShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -418,7 +418,7 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3SimpleShape(src)
 
 void b3Shape3::b3StoreShape()
 {
-	for (b3_loop i = 0;i < 3;i++)
+	for(b3_loop i = 0; i < 3; i++)
 	{
 		b3_vector normal;
 
@@ -436,18 +436,18 @@ void b3Shape3::b3StoreShape()
 	b3StoreFloat(m_DirLen[2]);
 }
 
-b3_bool b3Shape3::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3Shape3::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_bool result = false;
 
-	if (b3BaseTransformation::b3Prepare())
+	if(b3BaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare(prep_info);
 	}
 	return result;
 }
 
-void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;
@@ -464,19 +464,19 @@ void b3Shape3::b3ComputeNormals(b3_bool normalize)
 	b3ComputeQuadricNormals(normalize);
 }
 
-void b3Shape3::b3Transform(b3_matrix *transformation,b3_bool is_affine)
+void b3Shape3::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 {
-	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
-	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3Matrix::b3VMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3TransformVertices(transformation,is_affine);
+	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
+	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
+	b3Matrix::b3VMul(transformation, &m_Dir2, &m_Dir2, false);
+	b3Matrix::b3VMul(transformation, &m_Dir3, &m_Dir3, false);
+	b3TransformVertices(transformation, is_affine);
 }
 
-void b3Shape3::b3SetupPicking(b3PickInfo *info)
+void b3Shape3::b3SetupPicking(b3PickInfo * info)
 {
-	info->b3AddPickPoint(&m_Base,"b");
-	info->b3AddPickDir(  &m_Base,&m_Dir1,"1");
-	info->b3AddPickDir(  &m_Base,&m_Dir2,"2");
-	info->b3AddPickDir(  &m_Base,&m_Dir3,"3");
+	info->b3AddPickPoint(&m_Base, "b");
+	info->b3AddPickDir(&m_Base, &m_Dir1, "1");
+	info->b3AddPickDir(&m_Base, &m_Dir2, "2");
+	info->b3AddPickDir(&m_Base, &m_Dir3, "3");
 }

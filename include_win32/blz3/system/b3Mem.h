@@ -26,12 +26,12 @@
 class B3_PLUGIN b3MemAccess
 {
 public:
-	static inline void *b3Alloc(b3_size size)
+	static inline void * b3Alloc(b3_size size)
 	{
-		return ::GlobalAlloc(GPTR,size);
+		return ::GlobalAlloc(GPTR, size);
 	}
 
-	static inline void b3Free(const void *ptr)
+	static inline void b3Free(const void * ptr)
 	{
 #ifdef REALLY_FREE
 		::GlobalFree((void *)ptr);

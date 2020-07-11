@@ -37,7 +37,7 @@
 // This struct is transfered to the thread procedure
 struct mandel_info
 {
-	b3Display *display;
+	b3Display * display;
 	b3_count   iter;
 	b3_res     xSize;
 };
@@ -64,7 +64,7 @@ class b3MandelRow : public b3Row
 
 	b3_count iter;
 	b3_u64   cnt;
-	b3_f64   fx,fy,xStep;
+	b3_f64   fx, fy, xStep;
 
 public:
 	b3MandelRow(
@@ -73,7 +73,7 @@ public:
 		b3_f64   xStart,
 		b3_f64   xStep,
 		b3_f64   fy,
-		b3_count iterations) : b3Row(y,xSize)
+		b3_count iterations) : b3Row(y, xSize)
 	{
 		iter        = iterations;
 		cnt         = 0;
@@ -90,9 +90,9 @@ public:
 		b3_pkd_color       color;
 
 		b3Cmplx  a = 0;
-		b3Cmplx  f = b3Cmplx(fx,fy);
+		b3Cmplx  f = b3Cmplx(fx, fy);
 
-		for (x = 0;x < m_xSize;x++)
+		for(x = 0; x < m_xSize; x++)
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
@@ -106,7 +106,7 @@ public:
 				a -= f;
 				count++;
 			}
-			while ((count <= iter) && (a.b3SquareLength() < 4));
+			while((count <= iter) && (a.b3SquareLength() < 4));
 			// Snap! --!>
 
 			// Fill in color
@@ -121,10 +121,10 @@ public:
 	{
 		b3_pkd_color color;
 
-		for (b3_loop i = 0;i < 64;i++)
+		for(b3_loop i = 0; i < 64; i++)
 		{
 			// Compute pixel color from number of iterations
-			switch (i & 0x30)
+			switch(i & 0x30)
 			{
 			case 0x00 : /* blue */
 				color = (i & 0x0f) <<  4;
@@ -151,10 +151,10 @@ public:
 		iter_counter = 0;
 	}
 
-	static b3_u32 compute(void *ptr)
+	static b3_u32 compute(void * ptr)
 	{
-		mandel_info *info = (mandel_info *)ptr;
-		b3MandelRow *row;
+		mandel_info * info = (mandel_info *)ptr;
+		b3MandelRow * row;
 		b3_res       xSize;
 		b3_count     iter;
 
@@ -166,14 +166,14 @@ public:
 			{
 				b3CriticalSection lock(row_mutex);
 
-				if ((row = (b3MandelRow *)rows.First) != null)
+				if((row = (b3MandelRow *)rows.First) != null)
 				{
 					rows.b3Remove(row);
 				}
 			}
 			// Leave critical section
 
-			if (row != null)
+			if(row != null)
 			{
 				// We can handle the row for its own!
 				row->compute();
@@ -186,13 +186,13 @@ public:
 				delete row;
 			}
 		}
-		while (row != null);
+		while(row != null);
 
 		// Reach this if the row list ran empty.
 		return 0;
 	}
 
-	inline static void b3Append(b3MandelRow *row)
+	inline static void b3Append(b3MandelRow * row)
 	{
 		rows.b3Append(row);
 	}
@@ -209,36 +209,36 @@ b3Base<b3Row>    b3MandelRow::rows;
 b3Mutex          b3MandelRow::row_mutex;
 
 void b3Mandel::b3Compute(
-	b3Display *display,
+	b3Display * display,
 	b3_f64     xMin,
 	b3_f64     xMax,
 	b3_f64     yMin,
 	b3_f64     yMax,
 	b3_count   iter)
 {
-	b3_f64       xStep,yStep;
+	b3_f64       xStep, yStep;
 	b3_f64       fy;
-	b3MandelRow *row;
-	b3_res       xSize,ySize;
-	b3_count     CPUs,i;
+	b3MandelRow * row;
+	b3_res       xSize, ySize;
+	b3_count     CPUs, i;
 	b3_u64       count;
-	b3Thread    *threads;
-	mandel_info *infos;
+	b3Thread  *  threads;
+	mandel_info * infos;
 	b3Time       timepoint;
-	b3_f64       tStart,tEnd,tDiff;
+	b3_f64       tStart, tEnd, tDiff;
 
-	b3PrintF(B3LOG_NORMAL,"Using following values:\n");
-	b3PrintF(B3LOG_NORMAL,"Width  %f - %f.\n",xMin,xMax);
-	b3PrintF(B3LOG_NORMAL,"Height %f - %f.\n",yMin,yMax);
-	b3PrintF(B3LOG_NORMAL,"Max. %lu iterations per pixel.\n",iter);
+	b3PrintF(B3LOG_NORMAL, "Using following values:\n");
+	b3PrintF(B3LOG_NORMAL, "Width  %f - %f.\n", xMin, xMax);
+	b3PrintF(B3LOG_NORMAL, "Height %f - %f.\n", yMin, yMax);
+	b3PrintF(B3LOG_NORMAL, "Max. %lu iterations per pixel.\n", iter);
 
-	display->b3GetRes(xSize,ySize);
+	display->b3GetRes(xSize, ySize);
 
 	// Determine number of CPU's
 	CPUs = b3Runtime::b3GetNumCPUs();
-	b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
-			  CPUs,
-			  CPUs > 1 ? "'s" : "");
+	b3PrintF(B3LOG_NORMAL, "Using %d CPU%s.\n",
+		CPUs,
+		CPUs > 1 ? "'s" : "");
 
 	// Allocate some instances
 	infos       = new mandel_info[CPUs];
@@ -248,29 +248,29 @@ void b3Mandel::b3Compute(
 	fy    = yMin;
 	xStep = (xMax - xMin) / (double)xSize;
 	yStep = (yMax - yMin) / (double)ySize;
-	for (i = 0;i < ySize;i++)
+	for(i = 0; i < ySize; i++)
 	{
-		row = new b3MandelRow(i,xSize,xMin,xStep,fy,iter);
+		row = new b3MandelRow(i, xSize, xMin, xStep, fy, iter);
 		b3MandelRow::b3Append(row);
 		fy += yStep;
 	}
 
-	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
+	b3PrintF(B3LOG_NORMAL, "Starting threads...\n");
 	tStart = timepoint;
 	b3MandelRow::b3InitColor();
 	b3MandelRow::b3Init();
-	for (i = 0;i < CPUs;i++)
+	for(i = 0; i < CPUs; i++)
 	{
 		infos[i].xSize   = xSize;
 		infos[i].iter    = iter;
 		infos[i].display = display;
 
-		threads[i].b3Start(b3MandelRow::compute,&infos[i]);
+		threads[i].b3Start(b3MandelRow::compute, &infos[i]);
 	}
 
 	// Wait for completion
-	b3PrintF (B3LOG_NORMAL,"Waiting for threads...\n");
-	for (i = 0;i < CPUs;i++)
+	b3PrintF(B3LOG_NORMAL, "Waiting for threads...\n");
+	for(i = 0; i < CPUs; i++)
 	{
 		threads[i].b3Wait();
 	}
@@ -280,16 +280,16 @@ void b3Mandel::b3Compute(
 	tDiff = tEnd - tStart;
 	count = b3MandelRow::b3GetIterations();
 
-	b3PrintF(B3LOG_NORMAL,"Computing took %3.3fs.\n",tDiff);
-	b3PrintF(B3LOG_NORMAL,"Iterations: %llu\n", count);
-	b3PrintF(B3LOG_NORMAL,"%3.3fM iterations/s\n", (b3_f64)count / tDiff / 1000000);
-	b3PrintF(B3LOG_NORMAL,"%3.3fM complex ops/s\n",count * 3 / tDiff / 1000000);
-	b3PrintF(B3LOG_NORMAL,"%3.3fM mults/s\n",count * 5 / tDiff / 1000000);
-	b3PrintF(B3LOG_NORMAL,"%3.3fM adds/s\n",count * 6 / tDiff / 1000000);
-	b3PrintF(B3LOG_NORMAL,"%3.3fMFlOp/s\n",count * 11 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL, "Computing took %3.3fs.\n", tDiff);
+	b3PrintF(B3LOG_NORMAL, "Iterations: %llu\n", count);
+	b3PrintF(B3LOG_NORMAL, "%3.3fM iterations/s\n", (b3_f64)count / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL, "%3.3fM complex ops/s\n", count * 3 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL, "%3.3fM mults/s\n", count * 5 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL, "%3.3fM adds/s\n", count * 6 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL, "%3.3fMFlOp/s\n", count * 11 / tDiff / 1000000);
 
 	// Free what we have allocated.
 	delete [] threads;
 	delete [] infos;
-	b3PrintF (B3LOG_NORMAL,"Done.\n");
+	b3PrintF(B3LOG_NORMAL, "Done.\n");
 }

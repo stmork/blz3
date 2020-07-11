@@ -29,37 +29,37 @@
 
 class CDlgItemCreate : public CDialog
 {
-	CAppRenderDoc *m_pDoc;
+	CAppRenderDoc * m_pDoc;
 	CImageList     m_ImageList;
 	b3_u32         m_ClassId;
-// Construction
+	// Construction
 public:
 	b3Item * m_Item;
-	static b3Item * b3Create(CAppRenderDoc *pDoc,b3_u32 class_id);
-	CDlgItemCreate(CAppRenderDoc *pDoc,b3_u32 class_id,CWnd* pParent = NULL);   // standard constructor
+	static b3Item * b3Create(CAppRenderDoc * pDoc, b3_u32 class_id);
+	CDlgItemCreate(CAppRenderDoc * pDoc, b3_u32 class_id, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgItemCreate)
 	enum { IDD = IDD_ITEM_CREATE };
 	CListCtrl	m_ListCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgItemCreate)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgItemCreate)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-	afx_msg void OnDblclkItemlist(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDblclkItemlist(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

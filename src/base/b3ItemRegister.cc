@@ -36,13 +36,13 @@
 **                                                                      **
 *************************************************************************/
 
-b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem),class_type)
+b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem), class_type)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase();
 }
 
-b3FirstItem::b3FirstItem(b3_u32 *src) : b3Item(src)
+b3FirstItem::b3FirstItem(b3_u32 * src) : b3Item(src)
 {
 }
 
@@ -50,7 +50,7 @@ void b3FirstItem::b3Write()
 {
 }
 
-b3Base<b3Item> *b3FirstItem::b3GetHead() const
+b3Base<b3Item> * b3FirstItem::b3GetHead() const
 {
 	return &m_Heads[0];
 }
@@ -66,9 +66,9 @@ b3ItemRegister b3ItemRegister::m_Register;
 
 b3ItemRegister::b3ItemRegister()
 {
-	b3ItemRegisterEntry *entry = new b3ItemRegisterEntry(
+	b3ItemRegisterEntry * entry = new b3ItemRegisterEntry(
 		&b3FirstItem::b3StaticInit,
-		&b3FirstItem::b3StaticInit,B3_CLASS_MAX,true);
+		&b3FirstItem::b3StaticInit, B3_CLASS_MAX, true);
 	b3Append(entry);
 }
 
@@ -77,16 +77,16 @@ b3ItemRegister::~b3ItemRegister()
 	b3Free();
 }
 
-b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
+b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
 {
-	b3ItemRegisterEntry *entry;
+	b3ItemRegisterEntry * entry;
 
-	B3_FOR_BASE(&m_Register,entry)
+	B3_FOR_BASE(&m_Register, entry)
 	{
-		if (entry->b3IsClassType(class_type))
+		if(entry->b3IsClassType(class_type))
 		{
 #ifdef VERBOSE
-			b3PrintF (B3LOG_FULL,"%08lx found,\n",class_type);
+			b3PrintF(B3LOG_FULL, "%08lx found,\n", class_type);
 #endif
 			// Some kind of LRU
 			m_Register.b3Remove(entry);
@@ -94,16 +94,16 @@ b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
 			return entry;
 		}
 	}
-	b3PrintF (B3LOG_DEBUG,"b3ItemRegister::b3Find(%08lx) not found.\n",class_type);
+	b3PrintF(B3LOG_DEBUG, "b3ItemRegister::b3Find(%08lx) not found.\n", class_type);
 	return null;
 }
 
 void b3ItemRegister::b3Dump()
 {
-	b3ItemRegisterEntry *entry;
+	b3ItemRegisterEntry * entry;
 
-	b3PrintF(B3LOG_FULL,"Item register contains following classes:\n");
-	B3_FOR_BASE(&m_Register,entry)
+	b3PrintF(B3LOG_FULL, "Item register contains following classes:\n");
+	B3_FOR_BASE(&m_Register, entry)
 	{
 		entry->b3Dump();
 	}

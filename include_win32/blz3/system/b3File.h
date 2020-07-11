@@ -32,24 +32,24 @@ class b3File : public b3FileAbstract, public b3Mem
 {
 	static b3_count m_OpenFiles;
 
-	b3_u08     *m_Cache;      // cache buffer
+	b3_u08   *  m_Cache;      // cache buffer
 	b3_index    m_Index;      // index in cache
 	b3_size     m_BufferSize; // size of cache
 	int         m_File;       // fileno
 public:
-	         b3File  ();
-	         b3File  (const char *file_name,const b3_access_mode mode);
-	        ~b3File  ();
+	b3File();
+	b3File(const char * file_name, const b3_access_mode mode);
+	~b3File();
 
-	b3_bool  b3Open      (const char *file_name,const b3_access_mode mode);
-	b3_size  b3Read      (void *read_buffer,const b3_size size);
-	b3_u08  *b3ReadBuffer(const char *filename,b3_size &filesize);
-	b3_size  b3Write     (const void * write_buffer,const b3_size size);
-	b3_bool  b3Flush     ();
-	b3_size  b3Seek      (const b3_offset offset,const b3_seek_type type);
-	b3_size  b3Size      ();
-	b3_bool  b3Buffer    (const b3_size new_cache_size);
-	void     b3Close     ();
+	b3_bool  b3Open(const char * file_name, const b3_access_mode mode);
+	b3_size  b3Read(void * read_buffer, const b3_size size);
+	b3_u08 * b3ReadBuffer(const char * filename, b3_size & filesize);
+	b3_size  b3Write(const void * write_buffer, const b3_size size);
+	b3_bool  b3Flush();
+	b3_size  b3Seek(const b3_offset offset, const b3_seek_type type);
+	b3_size  b3Size();
+	b3_bool  b3Buffer(const b3_size new_cache_size);
+	void     b3Close();
 };
 
 #endif

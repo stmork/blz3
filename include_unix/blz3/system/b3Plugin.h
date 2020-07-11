@@ -30,8 +30,8 @@
 class b3Loader : public b3LoaderBase
 {
 protected:
-	b3_bool       b3IsPlugin(b3Path &library);
-	b3PluginBase *b3CreatePlugin(b3Path &library);
+	b3_bool       b3IsPlugin(b3Path & library);
+	b3PluginBase * b3CreatePlugin(b3Path & library);
 };
 
 /**
@@ -39,7 +39,7 @@ protected:
  */
 class b3Plugin : public b3PluginBase
 {
-	void    *m_Handle;
+	void  *  m_Handle;
 
 public:
 	/**
@@ -47,7 +47,7 @@ public:
 	 *
 	 * @param library The plugin file.
 	 */
-	b3Plugin(b3Path &library);
+	b3Plugin(b3Path & library);
 
 	/**
 	 * This destructor deinitializes the plugin.

@@ -25,8 +25,8 @@ class b3Shape;
 
 struct b3CopyPropertyItem
 {
-	b3Shape        *m_Shape;
-	b3Base<b3Item> *m_DstBase;
+	b3Shape    *    m_Shape;
+	b3Base<b3Item> * m_DstBase;
 	b3Base<b3Item>  m_Original;
 	b3Base<b3Item>  m_Cloned;
 };
@@ -37,17 +37,17 @@ class b3CopyPropertyInfo
 
 public:
 	void b3Add(
-		b3Shape        *srcShape,
-		b3Shape        *dstShape,
-		b3Base<b3Item> *srcBase,
-		b3Base<b3Item> *dstBase);
+		b3Shape    *    srcShape,
+		b3Shape    *    dstShape,
+		b3Base<b3Item> * srcBase,
+		b3Base<b3Item> * dstBase);
 
 	void b3Undo();
 	void b3Redo();
 	void b3Delete(b3_bool done);
 
 private:
-	static void b3RecomputeShape(b3Shape *shape,b3_u32 surface_class);
+	static void b3RecomputeShape(b3Shape * shape, b3_u32 surface_class);
 };
 
 #endif

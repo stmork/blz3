@@ -25,16 +25,16 @@
 class b3OpShape : public b3Operation
 {
 protected:
-	b3BBox        *m_BBox;
-	CDlgHierarchy *m_DlgHierarchy;
-	CAppObjectDoc *m_pObjDoc;
+	b3BBox    *    m_BBox;
+	CDlgHierarchy * m_DlgHierarchy;
+	CAppObjectDoc * m_pObjDoc;
 	BOOL           m_Modified;
 
 protected:
 	inline b3OpShape(
-		b3BBox        *bbox,
-		CAppObjectDoc *pDoc,
-		CDlgHierarchy *hierarchy)
+		b3BBox    *    bbox,
+		CAppObjectDoc * pDoc,
+		CDlgHierarchy * hierarchy)
 	{
 		m_BBox         = bbox;
 		m_DlgHierarchy = hierarchy;
@@ -45,16 +45,16 @@ protected:
 
 class b3OpShapeCreate : public b3OpShape
 {
-	b3BBox         *m_Selected;
-	b3Item         *m_NewItem;
-	b3Item         *m_InsertAfter;
-	b3Base<b3Item> *m_Base;
+	b3BBox     *    m_Selected;
+	b3Item     *    m_NewItem;
+	b3Item     *    m_InsertAfter;
+	b3Base<b3Item> * m_Base;
 
 public:
 	b3OpShapeCreate(
-		b3BBox        *root, 
-		CAppObjectDoc *pDoc,
-		CDlgHierarchy *hierarchy);
+		b3BBox    *    root,
+		CAppObjectDoc * pDoc,
+		CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -69,16 +69,16 @@ protected:
 
 class b3OpShapeEdit : public b3OpShape
 {
-	b3Item         *m_Selected;
-	b3Item         *m_Clone;
-	b3Item         *m_InsertAfter;
-	b3Base<b3Item> *m_Base;
+	b3Item     *    m_Selected;
+	b3Item     *    m_Clone;
+	b3Item     *    m_InsertAfter;
+	b3Base<b3Item> * m_Base;
 
 public:
 	b3OpShapeEdit(
-		b3BBox        *root,
-		CAppObjectDoc *pDoc,
-		CDlgHierarchy *hierarchy);
+		b3BBox    *    root,
+		CAppObjectDoc * pDoc,
+		CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -93,16 +93,16 @@ protected:
 
 class b3OpShapeDelete : public b3OpShape
 {
-	b3Item         *m_Select;      // Item to select after deletion
-	b3Item         *m_Selected;    // The item to delete
-	b3Item         *m_InsertAfter; // The previous item for undeletion
-	b3Base<b3Item> *m_Base;        // The base where the item to delete belongs to.
+	b3Item     *    m_Select;      // Item to select after deletion
+	b3Item     *    m_Selected;    // The item to delete
+	b3Item     *    m_InsertAfter; // The previous item for undeletion
+	b3Base<b3Item> * m_Base;       // The base where the item to delete belongs to.
 
 public:
 	b3OpShapeDelete(
-		b3BBox        *root,
-		CAppObjectDoc *pDoc,
-		CDlgHierarchy *hierarchy);
+		b3BBox    *    root,
+		CAppObjectDoc * pDoc,
+		CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();

@@ -39,9 +39,9 @@ class CB3DashPen : public CPen
 	DWORD m_Stipple[6];
 
 public:
-	        CB3DashPen();
-	        CB3DashPen(     COLORREF color,b3_dash dash = B3_DASH,DWORD *stipple = null,b3_count stipple_len = 0);
-	b3_bool b3CreateDashPen(COLORREF color,b3_dash dash = B3_DASH,DWORD *stipple = null,b3_count stipple_len = 0);
+	CB3DashPen();
+	CB3DashPen(COLORREF color, b3_dash dash = B3_DASH, DWORD * stipple = null, b3_count stipple_len = 0);
+	b3_bool b3CreateDashPen(COLORREF color, b3_dash dash = B3_DASH, DWORD * stipple = null, b3_count stipple_len = 0);
 };
 
 #endif

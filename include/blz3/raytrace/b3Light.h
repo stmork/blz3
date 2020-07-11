@@ -103,21 +103,21 @@ public:
 	static void     b3Register();
 	void     b3Write() override;
 	void     b3Dump(b3_count level);
-	b3_bool  b3Prepare(b3_preparation_info *prep_info) override;
+	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method returns the lights name.
 	 *
 	 * @return The light name.
 	 */
-	char    *b3GetName();
+	char  *  b3GetName();
 
 	/**
 	 * This method renames the light source.
 	 *
 	 * @param name The new light name.
 	 */
-	void     b3SetName(const char *name);
+	void     b3SetName(const char * name);
 
 	/**
 	 * This method returns the activation flag of this light source.
@@ -146,22 +146,22 @@ public:
 	 * @see b3Shader
 	 * @see b3_surface.
 	 */
-	b3_bool  b3Illuminate(b3Shader *shader,b3_surface *surface);
+	b3_bool  b3Illuminate(b3Shader * shader, b3_surface * surface);
 
 private:
 	void         b3InitValues();
-	b3_bool      b3PointIllumination(b3Shader *shader,b3_surface *surface);
-	b3_bool      b3AreaIllumination( b3Shader *shader,b3_surface *surface);
-	b3Shape     *b3CheckSinglePoint (b3Shader *shader,b3_surface *surface,
-									 b3_light_info *Jit,b3_coord x,b3_coord y);
+	b3_bool      b3PointIllumination(b3Shader * shader, b3_surface * surface);
+	b3_bool      b3AreaIllumination(b3Shader * shader, b3_surface * surface);
+	b3Shape   *  b3CheckSinglePoint(b3Shader * shader, b3_surface * surface,
+		b3_light_info * Jit, b3_coord x, b3_coord y);
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
 	{
-		if (m_SpotActive)
+		if(m_SpotActive)
 		{
 			b3_vector point;
 
-			m_Spline.b3DeBoorOpened(&point,0,angle);
+			m_Spline.b3DeBoorOpened(&point, 0, angle);
 			return point.y;
 		}
 		else

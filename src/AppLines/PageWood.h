@@ -39,9 +39,9 @@ public:
 	CPageWood();
 	~CPageWood();
 
-	b3Wood *m_Wood;
+	b3Wood * m_Wood;
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPageWood)
 	enum { IDD = IDD_PAGE_WOOD };
 	CStatic	m_zRotLegend;
@@ -62,16 +62,16 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPageWood)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageWood)

@@ -31,40 +31,40 @@
 
 enum b3_list_mode
 {
-	B3_LIST_UNDO,B3_LIST_REDO
+	B3_LIST_UNDO, B3_LIST_REDO
 };
 
 class CDlgUndoRedo : public CDialog
 {
-	CRect             *m_ParentRect;
-	b3LinesUndoBuffer *m_UndoBuffer;
+	CRect       *      m_ParentRect;
+	b3LinesUndoBuffer * m_UndoBuffer;
 	b3_list_mode       m_ListMode;
 
-// Construction
+	// Construction
 public:
 	CDlgUndoRedo(
-		b3LinesUndoBuffer *buffer,
+		b3LinesUndoBuffer * buffer,
 		b3_list_mode       mode,
-		CRect             *rect = null,
-		CWnd              *pParent = NULL);   // standard constructor
+		CRect       *      rect = null,
+		CWnd       *       pParent = NULL);   // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgUndoRedo)
 	enum { IDD = IDD_UNDO_REDO };
 	CListBox	m_OpList;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgUndoRedo)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual BOOL PreCreateWindow(CREATESTRUCT & cs);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

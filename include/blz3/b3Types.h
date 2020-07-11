@@ -162,10 +162,10 @@ typedef struct B3_ALIGN_16 b3_vector64_4D
 typedef struct B3_ALIGN_16 b3_matrix32_4D
 {
 	b3_f32 B3_ALIGN_16 m11;
-	b3_f32                 m12,m13,m14;
-	b3_f32             m21,m22,m23,m24;
-	b3_f32             m31,m32,m33,m34;
-	b3_f32             m41,m42,m43,m44;
+	b3_f32                 m12, m13, m14;
+	b3_f32             m21, m22, m23, m24;
+	b3_f32             m31, m32, m33, m34;
+	b3_f32             m41, m42, m43, m44;
 } b3_matrix;
 
 /**
@@ -174,10 +174,10 @@ typedef struct B3_ALIGN_16 b3_matrix32_4D
  */
 typedef struct B3_ALIGN_16 b3_matrix64_4D
 {
-	b3_f64    m11,m12,m13,m14;
-	b3_f64    m21,m22,m23,m24;
-	b3_f64    m31,m32,m33,m34;
-	b3_f64    m41,m42,m43,m44;
+	b3_f64    m11, m12, m13, m14;
+	b3_f64    m21, m22, m23, m24;
+	b3_f64    m31, m32, m33, m34;
+	b3_f64    m41, m42, m43, m44;
 } b3_matrix64;
 
 /**
@@ -209,7 +209,7 @@ struct B3_ALIGN_16 b3_pos
 	/**
 	 * The x and y component of a window or screen position.
 	 */
-	b3_s32    x,y;
+	b3_s32    x, y;
 };
 
 /**
@@ -221,7 +221,7 @@ struct B3_ALIGN_16 b3_point
 	/**
 	 * The floating point representation of a point.
 	 */
-	b3_f32    x,y;
+	b3_f32    x, y;
 };
 
 /**

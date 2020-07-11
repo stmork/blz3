@@ -26,21 +26,21 @@
 
 class b3Profile;
 
-class CB3ProfileShapeDialog : public CB3ShapeDialog  
+class CB3ProfileShapeDialog : public CB3ShapeDialog
 {
 protected:
 	CB3PosGroup   m_BaseGroup;
 	b3_vector     m_Base;
 
 public:
-	b3Profile    *m_Profile;
+	b3Profile  *  m_Profile;
 
 public:
-	              CB3ProfileShapeDialog(UINT IDD,CWnd* pParent = NULL);
+	CB3ProfileShapeDialog(UINT IDD, CWnd * pParent = NULL);
 	virtual      ~CB3ProfileShapeDialog();
 	virtual void  b3PostProcess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CB3ProfileShapeDialog)
 	CB3FloatEdit	m_xBaseCtrl;
 	CB3FloatEdit	m_yBaseCtrl;
@@ -49,14 +49,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ProfileShapeDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void b3Init();
 

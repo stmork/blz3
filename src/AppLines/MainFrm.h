@@ -42,25 +42,25 @@ class CMainFrame : public CMDIFrameWnd
 public:
 	CMainFrame();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CMainFrame)
-	public:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+public:
+	virtual BOOL PreCreateWindow(CREATESTRUCT & cs);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CMainFrame();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext & dc) const;
 #endif
 
 protected:  // control bar embedded members
@@ -86,15 +86,15 @@ protected:  // control bar embedded members
 public:
 	CDlgHierarchy      m_dlgHierarchy;
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnToolbarDropDown(NMHDR* pnmh, LRESULT* plRes);
+	afx_msg void OnToolbarDropDown(NMHDR * pnmh, LRESULT * plRes);
 	afx_msg void OnDestroy();
 	afx_msg void OnPrefSave();
 	afx_msg void OnPrefAutosave();
-	afx_msg void OnUpdatePrefAutosave(CCmdUI* pCmdUI);
+	afx_msg void OnUpdatePrefAutosave(CCmdUI * pCmdUI);
 	afx_msg void OnCustMain();
 	afx_msg void OnCustView();
 	afx_msg void OnCustDisplay();
@@ -113,39 +113,39 @@ protected:
 	afx_msg void OnBarFulcrum();
 	afx_msg void OnBarStepMove();
 	afx_msg void OnBarStepRotate();
-	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarDisplay(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarAction(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarCamera(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarLight(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarScene(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarAnim(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarFulcrum(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarStepMove(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateBarStepRotate(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarView(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarDisplay(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarAction(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarCamera(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarLight(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarScene(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarAnim(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarFulcrum(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarStepMove(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateBarStepRotate(CCmdUI * pCmdUI);
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();
 	afx_msg LRESULT OnUpdateControls(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnUpdateCamSelect(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateLightSelect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCamSelect(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateLightSelect(CCmdUI * pCmdUI);
 	afx_msg void OnHierachy();
-	afx_msg void OnUpdateHierachy(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateHierachy(CCmdUI * pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 public:
 	void          b3Clear();
-	void          b3UpdateCameraBox(b3Scene *scene,b3CameraPart *camera);
-	b3CameraPart *b3GetSelectedCamera();
-	void          b3UpdateLightBox(b3Scene *scene,b3Light *light);
-	b3Light      *b3GetSelectedLight();
-	void          b3UpdateModellerInfo(CAppRenderDoc *pDoc = null);
+	void          b3UpdateCameraBox(b3Scene * scene, b3CameraPart * camera);
+	b3CameraPart * b3GetSelectedCamera();
+	void          b3UpdateLightBox(b3Scene * scene, b3Light * light);
+	b3Light   *   b3GetSelectedLight();
+	void          b3UpdateModellerInfo(CAppRenderDoc * pDoc = null);
 	void          b3UpdateFulcrum();
-	void          b3SetStatusMessage(const char *message);
+	void          b3SetStatusMessage(const char * message);
 	void          b3SetStatusMessage(const int message_id);
-	void          b3SetPosition(b3_vector *position);
-	void          b3SetPerformance(CView *drawing_window,b3_f64 time_diff,b3_count poly_count);
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void          b3SetPosition(b3_vector * position);
+	void          b3SetPerformance(CView * drawing_window, b3_f64 time_diff, b3_count poly_count);
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -36,37 +36,37 @@
 
 class CDlgMatWood : public CB3SimplePropertyPreviewDialog
 {
-	b3MatWood         *m_Material;
-	b3BBox            *m_BBox;
-	b3MaterialSampler *m_MatSampler;
+	b3MatWood     *    m_Material;
+	b3BBox      *      m_BBox;
+	b3MaterialSampler * m_MatSampler;
 
 	CPageMaterial      m_PageDark;
 	CPageMaterial      m_PageLight;
 	CPageWood          m_PageWood;
 	CPageScaling       m_PageScaling;
 
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgMatWood(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgMatWood(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgMatWood();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgMatWood)
 	enum { IDD = IDD_MAT_WOOD };
 	CB3ShowSample	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgMatWood)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

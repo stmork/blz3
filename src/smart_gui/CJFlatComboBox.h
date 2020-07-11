@@ -5,14 +5,14 @@
 //		http://www.codejockeys.com/kstowell/
 //
 // This code may be used in compiled form in any way you desire. This
-// file may be redistributed unmodified by any means PROVIDING it is 
-// not sold for profit without the authors written consent, and 
-// providing that this notice and the authors name and all copyright 
-// notices remains intact. If the source code in this file is used in 
-// any  commercial application then a statement along the lines of 
-// "Portions Copyright © 1998 Kirk Stowell" must be included in 
-// the startup banner, "About" box or printed documentation. An email 
-// letting me know that you are using it would be nice as well. That's 
+// file may be redistributed unmodified by any means PROVIDING it is
+// not sold for profit without the authors written consent, and
+// providing that this notice and the authors name and all copyright
+// notices remains intact. If the source code in this file is used in
+// any  commercial application then a statement along the lines of
+// "Portions Copyright © 1998 Kirk Stowell" must be included in
+// the startup banner, "About" box or printed documentation. An email
+// letting me know that you are using it would be nice as well. That's
 // not much to ask considering the amount of work that went into this.
 //
 // This file is provided "as is" with no expressed or implied warranty.
@@ -20,10 +20,10 @@
 // this product may cause.
 //
 // Expect bugs!
-// 
-// Please use and enjoy, and let me know of any bugs/mods/improvements 
-// that you have found/implemented and I will fix/incorporate them into 
-// this file. 
+//
+// Please use and enjoy, and let me know of any bugs/mods/improvements
+// that you have found/implemented and I will fix/incorporate them into
+// this file.
 //
 /////////////////////////////////////////////////////////////////////////////
 /****************************************************************************
@@ -33,67 +33,67 @@
  * $Archive: /CodeJockey/Include/CJFlatComboBox.h $
  *
  * $History: CJFlatComboBox.h $
- * 
+ *
  * *****************  Version 9  *****************
  * User: Kirk Stowell Date: 5/17/99    Time: 9:24p
  * Updated in $/CodeJockey/Include
  * Gilberto Botaro [seafox@techno.com.br] - Added code for auto
  * completion.
- * 
+ *
  * *****************  Version 8  *****************
  * User: Kirk Stowell Date: 5/03/99    Time: 10:44p
  * Updated in $/CodeJockey/Include
  * Fixed code ommisions.
- * 
+ *
  * *****************  Version 7  *****************
  * User: Kirk Stowell Date: 5/03/99    Time: 8:42p
  * Updated in $/CodeJockey/Include
  * Danilo Lax [Danilo_Lax@www2.alpeng.com] - The control is painted flat
  * when the mouse leaves the box, even if the control has the focus, now
  * checking for the focus in OnTimer(.
- * 
+ *
  * Removed, unhandled msgs are processed by
  * CComboBox::PreTranslateMessage(pMsg). Used reflected msgs
  * BN_GETFOCUS/CBN_KILLFOCUS instead of WM_GETFOCUS/WM_KILLFOCUS.
- * 
+ *
  * ::GetFocus() doesn't return CFlatComboBox::m_hWnd, even if the control
  * has the focus (don't know why, maybe ::GetFocus() only returns the
  * handle to the EditField part of the ComboBox), used flag m_bHasFocus
  * instead.
- * 
+ *
  * *****************  Version 6  *****************
  * User: Kirk Stowell Date: 4/03/99    Time: 4:26p
  * Updated in $/CodeJockey/Include
  * Added comments and cleaned up code.
- * 
+ *
  * *****************  Version 5  *****************
  * User: Kirk Stowell Date: 1/22/99    Time: 4:26p
  * Updated in $/CodeJockey/Include
  * Fixed accelerator problem reported by YOSH YAMASHITA
  * (yosh@muj.biglobe.ne.jp) with Matt Weagle's solution of overloading
  * PreTranslateMessage().
- * 
+ *
  * *****************  Version 4  *****************
  * User: Kirk Stowell Date: 1/02/99    Time: 4:25p
  * Updated in $/CodeJockey/Include
  * Renamed class from CJComboBox to CCJFlatComboBox, changed DRAWSTATE to
  * enum, removed method Offset(), and replaced with a direct call to
  * ::GetSystemMetrics().
- * 
+ *
  * *****************  Version 3  *****************
  * User: Kirk Stowell Date: 11/02/98   Time: 4:24p
  * Updated in $/CodeJockey/Include
  * Added OnSetFocus(), OnKillFocus() and modified OnPaint() so the control
  * remains beveled until it actually looses focus - (Vachik
  * Hovhannissian).
- * 
+ *
  * *****************  Version 2  *****************
  * User: Kirk Stowell Date: 10/05/98   Time: 4:24p
  * Updated in $/CodeJockey/Include
  * Fixed offset bug to use GetSystemMetrics(), instead of hard coded
  * values -
  * Todd Brannam (tbrannam@msn.com).
- * 
+ *
  * *****************  Version 1  *****************
  * User: Kirk Stowell Date: 10/02/98   Time: 4:23p
  * Created in $/CodeJockey/Include
@@ -116,7 +116,7 @@ class CCJFlatComboBox : public CComboBox
 	DECLARE_DYNAMIC(CCJFlatComboBox)
 
 public:
-	
+
 	// Default constructor
 	//
 	CCJFlatComboBox();
@@ -144,7 +144,7 @@ public:
 
 	// Call this member function to enable auto completion.
 	//
-	void EnableAutoCompletion(BOOL bEnable=TRUE);
+	void EnableAutoCompletion(BOOL bEnable = TRUE);
 
 protected:
 
@@ -153,11 +153,11 @@ protected:
 	//
 	void DrawCombo(STATE eState, COLORREF clrTopLeft, COLORREF clrBottomRight);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCJFlatComboBox)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
 	//}}AFX_VIRTUAL
 
 	// Generated message map functions
@@ -182,7 +182,10 @@ protected:
 /////////////////////////////////////////////////////////////////////////////
 
 inline void CCJFlatComboBox::EnableAutoCompletion(BOOL bEnable/*=TRUE*/)
-	{ ASSERT(::IsWindow(m_hWnd)); m_bAutoComp = bEnable; }
+{
+	ASSERT(::IsWindow(m_hWnd));
+	m_bAutoComp = bEnable;
+}
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

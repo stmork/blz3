@@ -36,11 +36,11 @@
 void b3TimeSpan::b3Start()
 {
 	ftime(&m_RealTime);
-	getrusage(RUSAGE_SELF,&m_UsageTime);
+	getrusage(RUSAGE_SELF, &m_UsageTime);
 #ifdef VERBOSE
-	b3PrintF(B3LOG_NORMAL,"Thread time start: %9d,%06d\n",
-			 m_UsageTime.ru_utime.tv_sec,
-			 m_UsageTime.ru_utime.tv_usec);
+	b3PrintF(B3LOG_NORMAL, "Thread time start: %9d,%06d\n",
+		m_UsageTime.ru_utime.tv_sec,
+		m_UsageTime.ru_utime.tv_usec);
 #endif
 }
 
@@ -49,25 +49,25 @@ void b3TimeSpan::b3Stop()
 	struct rusage usage_stop;
 	struct timeb  real_stop;
 
-	getrusage(RUSAGE_SELF,&usage_stop);
+	getrusage(RUSAGE_SELF, &usage_stop);
 	ftime(&real_stop);
 #ifdef VERBOSE
-	b3PrintF(B3LOG_NORMAL,"Thread time stop:  %9d,%06d\n",
-			 usage_stop.ru_utime.tv_sec,
-			 usage_stop.ru_utime.tv_usec);
+	b3PrintF(B3LOG_NORMAL, "Thread time stop:  %9d,%06d\n",
+		usage_stop.ru_utime.tv_sec,
+		usage_stop.ru_utime.tv_usec);
 #endif
 
 	m_uTime += (
-				   usage_stop.ru_utime.tv_sec + (b3_f64)usage_stop.ru_utime.tv_usec  / 1000000.0 -
-				   m_UsageTime.ru_utime.tv_sec - (b3_f64)m_UsageTime.ru_utime.tv_usec / 1000000.0);
+			usage_stop.ru_utime.tv_sec + (b3_f64)usage_stop.ru_utime.tv_usec  / 1000000.0 -
+			m_UsageTime.ru_utime.tv_sec - (b3_f64)m_UsageTime.ru_utime.tv_usec / 1000000.0);
 
 	m_sTime += (
-				   usage_stop.ru_stime.tv_sec + (b3_f64)usage_stop.ru_stime.tv_usec  / 1000000.0 -
-				   m_UsageTime.ru_stime.tv_sec - (b3_f64)m_UsageTime.ru_stime.tv_usec / 1000000.0);
+			usage_stop.ru_stime.tv_sec + (b3_f64)usage_stop.ru_stime.tv_usec  / 1000000.0 -
+			m_UsageTime.ru_stime.tv_sec - (b3_f64)m_UsageTime.ru_stime.tv_usec / 1000000.0);
 
 	m_rTime += (
-				   real_stop.time  + (b3_f64)real_stop.millitm  / 1000.0  -
-				   m_RealTime.time - (b3_f64)m_RealTime.millitm / 1000.0);
+			real_stop.time  + (b3_f64)real_stop.millitm  / 1000.0  -
+			m_RealTime.time - (b3_f64)m_RealTime.millitm / 1000.0);
 }
 
 /*************************************************************************
@@ -81,14 +81,14 @@ b3Time::b3Time()
 	b3Now();
 }
 
-b3Time::b3Time(b3Time &orig)
+b3Time::b3Time(b3Time & orig)
 {
 	m_TimePoint = orig.m_TimePoint;
 }
 
 b3_f64 b3Time::b3Now()
 {
-	gettimeofday(&m_TimePoint,0);
+	gettimeofday(&m_TimePoint, 0);
 	return b3GetTime();
 }
 
@@ -97,7 +97,7 @@ b3_f64 b3Time::b3GetTime()
 	return m_TimePoint.tv_sec + (double)m_TimePoint.tv_usec / 1000000.0;
 }
 
-b3Time &b3Time::operator=(b3Time &orig)
+b3Time & b3Time::operator=(b3Time & orig)
 {
 	m_TimePoint = orig.m_TimePoint;
 	return *this;

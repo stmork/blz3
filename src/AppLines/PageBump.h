@@ -33,28 +33,28 @@
 
 class CPageBump : public CB3PropertyPage
 {
-// Construction
+	// Construction
 public:
-	b3Bump     *m_Bump;
+	b3Bump   *  m_Bump;
 
 	CPageBump();
 	~CPageBump();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPageBump)
 	enum { IDD = IDD_PAGE_BUMP };
 	CB3FloatSpinButtonCtrl	m_AmplitudeCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPageBump)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageBump)

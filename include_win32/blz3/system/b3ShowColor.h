@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ShowColor.h $  
+**	$Filename:	b3ShowColor.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -25,14 +25,14 @@
 
 class CB3ShowColor : public CStatic
 {
-	CB3BitmapDDB  m_DDB;	  
+	CB3BitmapDDB  m_DDB;
 	b3_res        m_xSize;
 	b3_res        m_ySize;
 
 public:
-	b3_f64        h,s,v;
+	b3_f64        h, s, v;
 	b3_f64        niveau;
-	              CB3ShowColor();
+	CB3ShowColor();
 	b3_bool       b3Update();
 
 	// Generated message map functions

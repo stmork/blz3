@@ -35,20 +35,20 @@
 
 class CDlgMatChess : public CB3SimplePropertyPreviewDialog
 {
-	b3Scene           *m_MatScene;
-	b3Base<b3Item>    *m_MatHead;
-	b3MatChess        *m_Material;
+	b3Scene      *     m_MatScene;
+	b3Base<b3Item>  *  m_MatHead;
+	b3MatChess    *    m_Material;
 
 	CPageMaterial      m_PageBlack;
 	CPageMaterial      m_PageWhite;
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgMatChess(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgMatChess(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgMatChess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgMatChess)
 	enum { IDD = IDD_MAT_CHESS };
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
@@ -57,19 +57,19 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgMatChess)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatChess)
-		// NOTE: the ClassWizard will add member functions here
+	// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

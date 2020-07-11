@@ -26,10 +26,10 @@ class CAppRenderDoc;
 class b3LinesUndoPrepareInfo : public b3UndoPrepareInfo
 {
 public:
- 	CAppRenderDoc *m_pDoc;
+	CAppRenderDoc * m_pDoc;
 
 public:
-	inline b3LinesUndoPrepareInfo(CAppRenderDoc *pDoc)
+	inline b3LinesUndoPrepareInfo(CAppRenderDoc * pDoc)
 	{
 		m_pDoc = pDoc;
 	}
@@ -47,26 +47,26 @@ protected:
 	b3_bool          m_UpdateMaterial;
 
 public:
-	                 b3Operation();
+	b3Operation();
 	virtual         ~b3Operation();
 
 protected:
 	virtual void     b3Undo();
 	virtual void     b3Redo();
-	virtual void     b3Prepare(b3UndoPrepareInfo *info);
-	virtual void     b3Prepare(CAppRenderDoc *pDoc);
+	virtual void     b3Prepare(b3UndoPrepareInfo * info);
+	virtual void     b3Prepare(CAppRenderDoc * pDoc);
 };
 
 class b3LinesUndoBuffer : public b3UndoBuffer
 {
 public:
-	         b3LinesUndoBuffer(CAppRenderDoc *pDoc);
+	b3LinesUndoBuffer(CAppRenderDoc * pDoc);
 	virtual ~b3LinesUndoBuffer();
-	
-	void     b3FillUndoList(CListBox &listbox);
-	void     b3FillRedoList(CListBox &listbox);
-	void     b3UndoList(b3UndoOperation *op);
-	void     b3RedoList(b3UndoOperation *op);
+
+	void     b3FillUndoList(CListBox & listbox);
+	void     b3FillRedoList(CListBox & listbox);
+	void     b3UndoList(b3UndoOperation * op);
+	void     b3RedoList(b3UndoOperation * op);
 };
 
 #endif

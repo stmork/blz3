@@ -40,26 +40,26 @@ enum b3_object_transform_mode
 
 class CDlgObjectTransformMode : public CDialog
 {
-	const char *m_RegistryKey;
+	const char * m_RegistryKey;
 
-// Construction
+	// Construction
 public:
-	CDlgObjectTransformMode(const char *key,int id,CWnd* pParent = NULL);   // standard constructor
+	CDlgObjectTransformMode(const char * key, int id, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgObjectTransformMode)
 	int		m_TransformMode;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgObjectTransformMode)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -79,9 +79,9 @@ protected:
 class CDlgObjectTransformReplace : public CDlgObjectTransformMode
 {
 public:
-	CDlgObjectTransformReplace(CWnd* pParent = NULL);   // standard constructor
+	CDlgObjectTransformReplace(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgObjectTransformReplace)
 	enum { IDD = IDD_OBJECT_REPLACE };
 	//}}AFX_DATA
@@ -93,7 +93,7 @@ public:
 		return dlg.b3GetMode();
 	}
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -105,9 +105,9 @@ protected:
 class CDlgObjectTransformLoad : public CDlgObjectTransformMode
 {
 public:
-	CDlgObjectTransformLoad(CWnd* pParent = NULL);   // standard constructor
+	CDlgObjectTransformLoad(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgObjectTransformLoad)
 	enum { IDD = IDD_OBJECT_LOAD };
 	//}}AFX_DATA
@@ -119,7 +119,7 @@ public:
 		return dlg.b3GetMode();
 	}
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

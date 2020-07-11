@@ -52,44 +52,44 @@ extern "C"
 **                                                                      **
 *************************************************************************/
 
-static void b3Banner(const char *command)
+static void b3Banner(const char * command)
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III movie maker (h.264)\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-20013\n");
-	b3PrintF(B3LOG_NORMAL,"\n");
-	if (command != null)
+	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker (h.264)\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-20013\n");
+	b3PrintF(B3LOG_NORMAL, "\n");
+	if(command != null)
 	{
 #ifdef BLZ3_USE_X264
-		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s h.264-File [-f][-d] {frame images}\n", command);
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");
-		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
+		b3PrintF(B3LOG_NORMAL, "%s h.264-File [-f][-d] {frame images}\n", command);
+		b3PrintF(B3LOG_NORMAL, "\n");
+		b3PrintF(B3LOG_NORMAL, "  -d        debug level output\n");
+		b3PrintF(B3LOG_NORMAL, "  -f        verbose level output\n");
+		b3PrintF(B3LOG_NORMAL, "\n");
 #else
-		b3PrintF(B3LOG_NORMAL,"%s has no h.264 support!\n",command);
+		b3PrintF(B3LOG_NORMAL, "%s has no h.264 support!\n", command);
 #endif
 	}
-	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
+	b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
 }
 
 #ifdef BLZ3_USE_X264
-static void b3RecodeRGB2YUV(b3Tx &img, x264_picture_t &pic_in, b3_res ySize)
+static void b3RecodeRGB2YUV(b3Tx & img, x264_picture_t & pic_in, b3_res ySize)
 {
-	b3_u08       *yPtr = (b3_u08 *)pic_in.img.plane[0];
-	b3_u08       *uPtr = (b3_u08 *)pic_in.img.plane[1];
-	b3_u08       *vPtr = (b3_u08 *)pic_in.img.plane[2];
-	b3_pkd_color *line = img.b3GetTrueColorData();
+	b3_u08    *   yPtr = (b3_u08 *)pic_in.img.plane[0];
+	b3_u08    *   uPtr = (b3_u08 *)pic_in.img.plane[1];
+	b3_u08    *   vPtr = (b3_u08 *)pic_in.img.plane[2];
+	b3_pkd_color * line = img.b3GetTrueColorData();
 	b3_pkd_color  pixel, r, g, b;
 
 	memset(yPtr,   0, ySize * pic_in.img.i_stride[0]);
 	memset(uPtr, 128, ySize * pic_in.img.i_stride[1] >> 1);
 	memset(vPtr, 128, ySize * pic_in.img.i_stride[2] >> 1);
 
-	for (b3_res iy = 0; iy < img.ySize; iy++)  
+	for(b3_res iy = 0; iy < img.ySize; iy++)
 	{
-		for (b3_res ix = 0; ix < img.xSize; ix++)
+		for(b3_res ix = 0; ix < img.xSize; ix++)
 		{
 			pixel = line[ix];
 			r = (pixel & 0xff0000) >> 16;
@@ -98,7 +98,7 @@ static void b3RecodeRGB2YUV(b3Tx &img, x264_picture_t &pic_in, b3_res ySize)
 
 			yPtr[ix] =  0.257 * r + 0.504 * g + 0.098 * b;
 
-			if ((ix & 1) && (iy & 1))
+			if((ix & 1) && (iy & 1))
 			{
 				uPtr[ix >> 1] = -0.148 * r - 0.291 * g + 0.439 * b + 128;
 				vPtr[ix >> 1] =  0.439 * r - 0.368 * g - 0.071 * b + 128;
@@ -106,7 +106,7 @@ static void b3RecodeRGB2YUV(b3Tx &img, x264_picture_t &pic_in, b3_res ySize)
 		}
 		line += img.xSize;
 		yPtr += pic_in.img.i_stride[0];
-		if (iy & 1)
+		if(iy & 1)
 		{
 			uPtr += pic_in.img.i_stride[1];
 			vPtr += pic_in.img.i_stride[2];
@@ -114,27 +114,27 @@ static void b3RecodeRGB2YUV(b3Tx &img, x264_picture_t &pic_in, b3_res ySize)
 	}
 }
 
-static void b3Encode(x264_t *x264, x264_picture_t *pic_in, b3File &file)
+static void b3Encode(x264_t * x264, x264_picture_t * pic_in, b3File & file)
 {
 	x264_picture_t  pic_out;
-	x264_nal_t     *nals; 
+	x264_nal_t   *  nals;
 	int             i_nals;
 
 	x264_encoder_encode(x264, &nals, &i_nals, pic_in, &pic_out);
-	for (int i = 0; i < i_nals; i++)
+	for(int i = 0; i < i_nals; i++)
 	{
 		file.b3Write(nals[i].p_payload, nals[i].i_payload);
 	}
-	b3PrintF(B3LOG_NORMAL,".");
+	b3PrintF(B3LOG_NORMAL, ".");
 }
 #endif
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
 	b3FileList      list;
-	b3FileEntry    *entry;
+	b3FileEntry  *  entry;
 #ifdef BLZ3_USE_X264
-	x264_t         *x264;
+	x264_t     *    x264;
 	x264_param_t    param;
 	x264_picture_t  pic_in;
 #endif
@@ -142,36 +142,36 @@ int main(int argc,char *argv[])
 	b3_res          ySize = 0;
 	b3_bool         isFirst = true;
 
-	if (argc <= 1)
+	if(argc <= 1)
 	{
 		b3Banner(argv[0]);
 		exit(EXIT_SUCCESS);
 	}
 
-#ifdef BLZ3_USE_X264  
+#ifdef BLZ3_USE_X264
 	x264_param_default(&param);
 #ifdef HAVE_X264_PARAMETER_DEFINITION
-	x264_param_default_preset( &param, "slow", "stillimage" ) ;
+	x264_param_default_preset(&param, "slow", "stillimage") ;
 #endif
 	param.i_log_level      = X264_LOG_NONE;
 #endif
 
-	for (int i = 2;i < argc;i++)
+	for(int i = 2; i < argc; i++)
 	{
-		if (argv[i][0] == '-')
+		if(argv[i][0] == '-')
 		{
-			switch (argv[i][1])
+			switch(argv[i][1])
 			{
 			case 'd' :
 				b3Log::b3SetLevel(B3LOG_DEBUG);
-#ifdef BLZ3_USE_X264  
+#ifdef BLZ3_USE_X264
 				param.i_log_level = X264_LOG_INFO;
 #endif
 				break;
 
 			case 'f' :
 				b3Log::b3SetLevel(B3LOG_FULL);
-#ifdef BLZ3_USE_X264  
+#ifdef BLZ3_USE_X264
 				param.i_log_level = X264_LOG_DEBUG;
 #endif
 				break;
@@ -179,7 +179,7 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
-			switch (b3Dir::b3Exists(argv[i]))
+			switch(b3Dir::b3Exists(argv[i]))
 			{
 			case B3_TYPE_DIR:
 				list.b3RecCreateList(argv[i]);
@@ -202,7 +202,7 @@ int main(int argc,char *argv[])
 	b3File file(argv[1], B_WRITE);
 
 	param.i_threads        = b3Runtime::b3GetNumCPUs();
-printf("%d\n", param.i_threads);
+	printf("%d\n", param.i_threads);
 	param.i_fps_num        =  25;
 	param.i_fps_den        =   1;
 #ifdef HAVE_X264_PARAMETER_DEFINITION
@@ -216,17 +216,17 @@ printf("%d\n", param.i_threads);
 	param.b_interlaced     =   0;
 	param.b_vfr_input      =   0;
 	param.rc.i_bitrate     = 512;
-	param.i_keyint_min     = 25;
+	param.i_keyint_min     =  25;
 	param.i_keyint_max     = param.i_fps_num * 10;
 	param.b_intra_refresh  = 1;
-	param.b_repeat_headers = 0;
+	param.b_repeat_headers = 1;
 	param.b_annexb         = 1;
-    param.i_csp            = X264_CSP_I420;
+	param.i_csp            = X264_CSP_I420;
 #endif
 
 
 	list.b3Sort();
-	for (entry = list.b3First();entry != null;entry = entry->Succ)
+	for(entry = list.b3First(); entry != null; entry = entry->Succ)
 	{
 		b3Tx    img;
 		int     ino = 1;
@@ -234,29 +234,29 @@ printf("%d\n", param.i_threads);
 		try
 		{
 			img.b3LoadImage(entry->b3Name());
-			if (isFirst)
+			if(isFirst)
 			{
 				xSize          = (img.xSize + 15) & 0xfff0;
 				ySize          = (img.ySize +  7) & 0xfff8;
 #ifdef BLZ3_USE_X264
 				param.i_width          = xSize;
 				param.i_height         = ySize;
-//				param.vui.i_sar_width  = xSize;
-//				param.vui.i_sar_height = ySize;
+				//				param.vui.i_sar_width  = xSize;
+				//				param.vui.i_sar_height = ySize;
 #ifdef HAVE_X264_PARAMETER_DEFINITION
 				x264_param_apply_profile(&param, "high");
 #endif
 				x264 = x264_encoder_open(&param);
 				x264_encoder_parameters(x264, &param);
 
-				if (!param.b_repeat_headers)
+				if(!param.b_repeat_headers)
 				{
-					x264_nal_t *headers;
+					x264_nal_t * headers;
 					int         i_nals = 0;
 
 					b3PrintF(B3LOG_DEBUG, "Writing header...\n");
 					x264_encoder_headers(x264, &headers, &i_nals);
-					for (int i = 0; i < i_nals; i++)
+					for(int i = 0; i < i_nals; i++)
 					{
 						file.b3Write(headers[i].p_payload, headers[i].i_payload);
 					}
@@ -264,29 +264,29 @@ printf("%d\n", param.i_threads);
 
 				x264_picture_alloc(&pic_in, param.i_csp, param.i_width, param.i_height);
 				pic_in.i_type       = X264_TYPE_AUTO;
-				b3PrintF(B3LOG_DEBUG,"Start encoding of %d frames...\n", param.i_frame_total);
+				b3PrintF(B3LOG_DEBUG, "Start encoding of %d frames...\n", param.i_frame_total);
 #endif
 				isFirst = false;
 			}
 		}
-		catch (b3TxException &t)
+		catch(b3TxException & t)
 		{
-			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"Image error when processing image %s!\n", entry->b3Name());
-			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", t.b3GetError());
-			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", t.b3GetErrorMsg());
+			b3PrintF(B3LOG_NORMAL, "\n");
+			b3PrintF(B3LOG_NORMAL, "Image error when processing image %s!\n", entry->b3Name());
+			b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
+			b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
 		}
-		catch (b3ExceptionBase &e)
+		catch(b3ExceptionBase & e)
 		{
-			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"General Blizzard III error on image %s!\n", entry->b3Name());
-			b3PrintF(B3LOG_NORMAL,"Error code: %d\n", e.b3GetError());
-			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n", e.b3GetErrorMsg());
+			b3PrintF(B3LOG_NORMAL, "\n");
+			b3PrintF(B3LOG_NORMAL, "General Blizzard III error on image %s!\n", entry->b3Name());
+			b3PrintF(B3LOG_NORMAL, "Error code: %d\n", e.b3GetError());
+			b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", e.b3GetErrorMsg());
 		}
-		catch (...)
+		catch(...)
 		{
-			b3PrintF(B3LOG_NORMAL,"\n");
-			b3PrintF(B3LOG_NORMAL,"Unknown error occured on image %s!\n", entry->b3Name());
+			b3PrintF(B3LOG_NORMAL, "\n");
+			b3PrintF(B3LOG_NORMAL, "Unknown error occured on image %s!\n", entry->b3Name());
 		}
 
 #ifdef BLZ3_USE_X264
@@ -305,7 +305,7 @@ printf("%d\n", param.i_threads);
 	}
 #endif
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (!isFirst)
+	if(!isFirst)
 	{
 		x264_picture_clean(&pic_in);
 	}

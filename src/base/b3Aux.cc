@@ -61,26 +61,26 @@ b3_res b3Rect::b3Height()
 	return y2 - y1;
 }
 
-b3_bool b3Rect::b3UpdateBound(b3Rect *rect)
+b3_bool b3Rect::b3UpdateBound(b3Rect * rect)
 {
 	b3_bool changed = false;
 
-	if (rect->x1 < x1)
+	if(rect->x1 < x1)
 	{
 		x1 = rect->x1;
 		changed = true;
 	}
-	if (rect->y1 < y1)
+	if(rect->y1 < y1)
 	{
 		y1 = rect->y1;
 		changed = true;
 	}
-	if (rect->x2 > x2)
+	if(rect->x2 > x2)
 	{
 		x2 = rect->x2;
 		changed = true;
 	}
-	if (rect->y2 > y2)
+	if(rect->y2 > y2)
 	{
 		y2 = rect->y2;
 		changed = true;
@@ -88,36 +88,36 @@ b3_bool b3Rect::b3UpdateBound(b3Rect *rect)
 	return changed;
 }
 
-b3_bool b3Rect::b3CheckBound(b3Rect *rect)
+b3_bool b3Rect::b3CheckBound(b3Rect * rect)
 {
 	bool changed = false;
 
-	if (x1 < rect->x1)
+	if(x1 < rect->x1)
 	{
 		x1 = rect->x1;
 		changed = true;
 	}
-	if (y1 < rect->y1)
+	if(y1 < rect->y1)
 	{
 		y1 = rect->y1;
 		changed = true;
 	}
-	if (x2 > rect->x2)
+	if(x2 > rect->x2)
 	{
 		x2 = rect->x2;
 		changed = true;
 	}
-	if (y2 > rect->y2)
+	if(y2 > rect->y2)
 	{
 		y2 = rect->y2;
 		changed = true;
 	}
-	if (x1 > x2)
+	if(x1 > x2)
 	{
 		x1 = x2;
 		changed = true;
 	}
-	if (y1 > y2)
+	if(y1 > y2)
 	{
 		y1 = y2;
 		changed = true;

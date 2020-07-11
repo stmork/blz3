@@ -32,19 +32,19 @@
 
 class CDlgEditRotShape : public CB3SpanningShapeDialog
 {
-// Construction
+	// Construction
 protected:
 	CB3PosGroup m_Base;
 	CB3DirGroup m_Dir1;
 
 public:
-	CDlgEditRotShape(CWnd* pParent = NULL);   // standard constructor
-	CDlgEditRotShape(UINT id,CWnd* pParent = NULL);
+	CDlgEditRotShape(CWnd * pParent = NULL);  // standard constructor
+	CDlgEditRotShape(UINT id, CWnd * pParent = NULL);
 
-	static  int  b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3_u32 shading_class_type, b3Item * item, b3_bool create = true);
 	virtual void b3PostProcess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgEditRotShape)
 	enum { IDD = IDD_EDIT_ROTSHAPE };
 	CB3FloatEdit	m_xBaseCtrl;
@@ -57,17 +57,17 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgEditRotShape)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	afx_msg void OnChangedBase();
 	afx_msg void OnChangedDir1();
 	afx_msg void OnChangedLen1();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 	virtual void        b3SetDirMode(int dirmode);

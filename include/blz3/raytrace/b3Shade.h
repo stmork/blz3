@@ -41,8 +41,8 @@ class b3Nebular;
 class B3_PLUGIN b3Shader
 {
 protected:
-	b3Scene                *m_Scene;      //!< The scene to shade through the raytracer.
-	b3Nebular              *m_Nebular;    //!< The nebular definition if any.
+	b3Scene        *        m_Scene;      //!< The scene to shade through the raytracer.
+	b3Nebular       *       m_Nebular;    //!< The nebular definition if any.
 	b3_count                m_TraceDepth; //!< The maximum recursion depth.
 
 public:
@@ -51,14 +51,14 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3Shader(b3Scene *scene);
+	b3Shader(b3Scene * scene);
 
 	virtual ~b3Shader() = default;
 
 	/**
 	 * This method prepares the shader for use.
 	 */
-	virtual void            b3Prepare(b3_preparation_info *prep_info);
+	virtual void            b3Prepare(b3_preparation_info * prep_info);
 
 	/**
 	 * This method collects all necessary values for shading. These components are:
@@ -75,7 +75,7 @@ public:
 	 * @return True if an intersection point was found.
 	 * @see b3RayRow
 	 */
-	b3_bool         b3Shade(b3_ray *ray,b3_count depth = 0);
+	b3_bool         b3Shade(b3_ray * ray, b3_count depth = 0);
 
 	/**
 	 * This method decides between material shading and light shading. If material
@@ -90,7 +90,7 @@ public:
 	 * @param jit The lighting info.
 	 * @param surface The surface values needed for shading.
 	 */
-	void            b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface);
+	void            b3Shade(b3Light * light, b3_light_info * jit, b3_surface * surface);
 
 	/**
 	 * This method find any obscurer so that an intersection point may be
@@ -101,9 +101,9 @@ public:
 	 * This is because shapes behind the light source doesn't matter.
 	 * @return True if an obscurer was found.
 	 */
-	inline  b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX)
+	inline  b3_bool         b3FindObscurer(b3_ray * ray, b3_f64 max = DBL_MAX)
 	{
-		return m_Scene->b3Intersect(ray,false,max);
+		return m_Scene->b3Intersect(ray, false, max);
 	}
 
 protected:
@@ -120,7 +120,7 @@ protected:
 	 * @param surface The collected surface values.
 	 * @param depth The maximal raytrace recursion depth for reflection or refraction.
 	 */
-	virtual void            b3ShadeSurface(b3_surface *surface,b3_count depth) = 0;
+	virtual void            b3ShadeSurface(b3_surface * surface, b3_count depth) = 0;
 
 	/**
 	 * This method mixes the surface lighting for one light source. This may
@@ -131,7 +131,7 @@ protected:
 	 * @param jit The position information of the light source.
 	 * @param surface The surface values to mix.
 	 */
-	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface) = 0;
+	virtual void            b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface) = 0;
 
 protected:
 	/**
@@ -140,7 +140,7 @@ protected:
 	 * The refraction ray is computed if the refractance is higher than zero
 	 * and no total reflection occurs.
 	 */
-	void                    b3ComputeOutputRays(b3_surface *surface);
+	void                    b3ComputeOutputRays(b3_surface * surface);
 
 	/**
 	 * This method computes the Fresnel terms of the given surface.
@@ -148,7 +148,7 @@ protected:
 	 * @param surface The surface values.
 	 * @return The resulting intensity level.
 	 */
-	b3_f64                  b3ComputeFresnel(b3_surface *surface);
+	b3_f64                  b3ComputeFresnel(b3_surface * surface);
 
 	/**
 	 * This method illuminates the given surface by all activated
@@ -157,17 +157,17 @@ protected:
 	 * @param surface The surface to illuminate. The surface also contains the intersection point.
 	 * @see b3Light::b3Illuminate().
 	 */
-	inline void b3Illuminate(b3_surface *surface)
+	inline void b3Illuminate(b3_surface * surface)
 	{
-		b3Item      *item;
-		b3Light     *light;
+		b3Item   *   item;
+		b3Light   *  light;
 
-		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
 		{
 			light = (b3Light *)item;
-			if (light->b3IsActive())
+			if(light->b3IsActive())
 			{
-				light->b3Illuminate(this,surface);
+				light->b3Illuminate(this, surface);
 			}
 		}
 	}
@@ -188,11 +188,11 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3ShaderPhong(b3Scene *scene);
+	b3ShaderPhong(b3Scene * scene);
 
 protected:
-	void    b3ShadeSurface(b3_surface *surface,b3_count depth);
-	void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
+	void    b3ShadeSurface(b3_surface * surface, b3_count depth);
+	void    b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
 };
 
 //////////////
@@ -212,13 +212,13 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3ShaderMork(b3Scene *scene);
+	b3ShaderMork(b3Scene * scene);
 
-	void     b3Prepare(b3_preparation_info *prep_info);
+	void     b3Prepare(b3_preparation_info * prep_info);
 
 protected:
-	void     b3ShadeSurface(b3_surface *surface,b3_count depth);
-	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
+	void     b3ShadeSurface(b3_surface * surface, b3_count depth);
+	void     b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
 };
 
 ///////////////////////
@@ -240,16 +240,16 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3ShaderMork2(b3Scene *scene);
+	b3ShaderMork2(b3Scene * scene);
 
-	void     b3Prepare(b3_preparation_info *prep_info);
+	void     b3Prepare(b3_preparation_info * prep_info);
 
 protected:
-	void     b3ShadeSurface(b3_surface *surface,b3_count depth);
-	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
+	void     b3ShadeSurface(b3_surface * surface, b3_count depth);
+	void     b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
 
 private:
-	void     b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3_f32 &refr);
+	void     b3ComputeFresnelCoeffs(b3_surface * surface, b3_f32 & refl, b3_f32 & refr);
 };
 
 #endif

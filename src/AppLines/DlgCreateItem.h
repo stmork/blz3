@@ -34,33 +34,33 @@
 class CDlgCreateItem : public CB3Dialog
 {
 	CString         m_NewName;
-// Construction
+	// Construction
 public:
-	b3Base<b3Item> *m_ItemBase;
+	b3Base<b3Item> * m_ItemBase;
 	b3_u32          m_ClassType;
 	CString         m_Suggest;
 	b3_count        m_MaxNameLen;
 	b3_bool         m_NoNameCheck;
-	CDlgCreateItem(CWnd* pParent = NULL);   // standard constructor
+	CDlgCreateItem(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCreateItem)
 	enum { IDD = IDD_NEW_ITEM };
 	CString	m_Label;
 	CB3TextEdit	m_NewNameCtrl;
 	//}}AFX_DATA
 
-	void b3GetText(char *buffer);
-	const char *b3GetText();
+	void b3GetText(char * buffer);
+	const char * b3GetText();
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCreateItem)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -72,7 +72,7 @@ private:
 	void    b3PreInitDialog();
 	void    b3PostInitDialog();
 	void    b3UpdateUI();
-	b3_bool b3IsNameOK(const char *suggest);
+	b3_bool b3IsNameOK(const char * suggest);
 	void    b3Suggest();
 };
 

@@ -23,7 +23,7 @@
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Time.h"
 
-typedef b3_u32 (*b3ThreadProc)(void *);
+typedef b3_u32(*b3ThreadProc)(void *);
 
 /**
  * This abstract class defines basic thread handling operations.
@@ -36,7 +36,7 @@ public:
 	 *
 	 * @param taskname The thread name.
 	 */
-	virtual void     b3Name(const char *taskname = null) = 0;
+	virtual void     b3Name(const char * taskname = null) = 0;
 
 	/**
 	 * This method starts a new thread. There can be 5 different thread
@@ -47,7 +47,7 @@ public:
 	 * @param priority The threads priority.
 	 * @return True if there wa no thread running and the new thread started successfully.
 	 */
-	virtual b3_bool  b3Start(b3ThreadProc thread, void *ptr, b3_s32 priority=0) = 0;
+	virtual b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0) = 0;
 
 	/**
 	 * This method returns true if the thread is in running state.
@@ -76,7 +76,7 @@ public:
 	 *
 	 * @param span The time span to add the cpu time used from the thread.
 	 */
-	virtual void     b3AddTimeSpan(b3TimeSpan *span) = 0;
+	virtual void     b3AddTimeSpan(b3TimeSpan * span) = 0;
 };
 
 #endif

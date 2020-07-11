@@ -49,9 +49,9 @@ const b3_bool b3PickBase::b3IsActive() const
 
 void b3PickBase::b3Update()
 {
-	b3Pick *pick;
+	b3Pick * pick;
 
-	B3_FOR_BASE(this,pick)
+	B3_FOR_BASE(this, pick)
 	{
 		pick->b3Update();
 	}
@@ -59,11 +59,11 @@ void b3PickBase::b3Update()
 
 const b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
 {
-	b3Pick *pick;
+	b3Pick * pick;
 
-	B3_FOR_BASE(this,pick)
+	B3_FOR_BASE(this, pick)
 	{
-		if (pick->b3Hit(x,y))
+		if(pick->b3Hit(x, y))
 		{
 			m_Selected = pick;
 			return true;
@@ -74,9 +74,9 @@ const b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
 
 const b3_bool b3PickBase::b3Move(const b3_coord x, const b3_coord y)
 {
-	if (m_Selected != null)
+	if(m_Selected != null)
 	{
-		return m_Selected->b3Moved(x,y);
+		return m_Selected->b3Moved(x, y);
 	}
 	return false;
 }
@@ -90,16 +90,16 @@ const b3_bool b3PickBase::b3Up(const b3_coord x, const b3_coord y)
 	return result;
 }
 
-b3UndoOperation *b3PickBase::b3GetOperation(const b3RenderObject *object) const
+b3UndoOperation * b3PickBase::b3GetOperation(const b3RenderObject * object) const
 {
 	return m_Selected != null ? m_Selected->b3GetOperation(object) : null;
 }
 
-void b3PickBase::b3Draw(const b3DrawContext *dc)
+void b3PickBase::b3Draw(const b3DrawContext * dc)
 {
-	b3Pick *pick;
+	b3Pick * pick;
 
-	B3_FOR_BASE(this,pick)
+	B3_FOR_BASE(this, pick)
 	{
 		pick->b3Draw(dc);
 	}
@@ -125,7 +125,7 @@ void b3Pick::b3Update()
 {
 }
 
-void b3Pick::b3Draw(const b3DrawContext *dc)
+void b3Pick::b3Draw(const b3DrawContext * dc)
 {
 }
 
@@ -144,7 +144,7 @@ const b3_bool b3Pick::b3Moved(const b3_coord x, const b3_coord y)
 	b3_bool result;
 
 	result = (x != m_x) || (y != m_y);
-	if (result)
+	if(result)
 	{
 		m_x = x;
 		m_y = y;

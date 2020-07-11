@@ -32,7 +32,7 @@
 
 struct OPENFILENAMEEX : public OPENFILENAME
 {
-	void  *pvReserved;
+	void * pvReserved;
 	DWORD  dwReserved;
 	DWORD  FlagsEx;
 };
@@ -52,22 +52,22 @@ public:
 		LPCTSTR lpszFileName = NULL,
 		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 		LPCTSTR lpszFilter = NULL,
-		CWnd* pParentWnd = NULL);
+		CWnd * pParentWnd = NULL);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3FileDialog)
-	public:
+public:
 	virtual int DoModal();
-	protected:
-	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+protected:
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT * pResult);
 	//}}AFX_VIRTUAL
 
 protected:
 	//{{AFX_MSG(CB3FileDialog)
 	//}}AFX_MSG
 
-// Implementation
+	// Implementation
 	DECLARE_MESSAGE_MAP()
 };
 

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ComboBox.h $  
+**	$Filename:	b3ComboBox.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -28,18 +28,18 @@
 class CB3ComboBox : public CCJFlatComboBox
 {
 	b3_s32        m_ID;
-	CB3Toolbar   *m_Toolbar;
+	CB3Toolbar  * m_Toolbar;
 
 public:
-	        CB3ComboBox();
-	b3_bool b3Create(CB3Toolbar *toolbar,b3_s32 id,b3_res width=200,b3_bool sort=true);
+	CB3ComboBox();
+	b3_bool b3Create(CB3Toolbar * toolbar, b3_s32 id, b3_res width = 200, b3_bool sort = true);
 
 	// Access functions
-	void    b3Clear     ();
-	b3_s32  b3AddString (const char    *text,void *ptr);
-	b3_s32  b3FindString(const char    *text);
-	b3_s32  b3SetString (const char    *text,b3_bool notify);
-	void    b3Sort      (const b3_bool  sort=true);
+	void    b3Clear();
+	b3_s32  b3AddString(const char  *  text, void * ptr);
+	b3_s32  b3FindString(const char  *  text);
+	b3_s32  b3SetString(const char  *  text, b3_bool notify);
+	void    b3Sort(const b3_bool  sort = true);
 };
 
 #endif

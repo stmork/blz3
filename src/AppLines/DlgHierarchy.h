@@ -35,63 +35,63 @@
 
 class CDlgHierarchy : public CB3Dialogbar, public b3Mem
 {
-	CAppRenderDoc *m_pDoc;
-	HTREEITEM      m_DragItem,m_DropItem;
+	CAppRenderDoc * m_pDoc;
+	HTREEITEM      m_DragItem, m_DropItem;
 	CB3ImageList   m_ImageList;
 
-// Construction
+	// Construction
 public:
-	 ~CDlgHierarchy();
-	CDlgHierarchy(CWnd* pParent = NULL);   // standard constructor
+	~CDlgHierarchy();
+	CDlgHierarchy(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgHierarchy)
 	enum { IDD = IDD_HIERARCHY };
 	CB3TreeCtrl	m_Hierarchy;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgHierarchy)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgHierarchy)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnEndLabelEditHierarchy(NMHDR * pNMHDR, LRESULT * pResult);
+	afx_msg void OnBeginlabeleditHierarchy(NMHDR * pNMHDR, LRESULT * pResult);
+	afx_msg void OnBeginDrag(NMHDR * pNMHDR, LRESULT * pResult);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnHierarchySelectionChanged(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnContextMenu(NMHDR * pNMHDR, LRESULT * pResult);
+	afx_msg void OnHierarchySelectionChanged(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void                  b3AddBBoxes(HTREEITEM parent,b3BBox *BBox,b3_bool AddShapes);
-	b3_bool               b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
+	void                  b3AddBBoxes(HTREEITEM parent, b3BBox * BBox, b3_bool AddShapes);
+	b3_bool               b3InitTree(CAppRenderDoc * pDoc, b3_bool force_refresh = false);
 	void                  b3UpdateActivation();
-	b3Item               *b3GetSelectedItem();
-	b3BBox               *b3GetSelectedBBox();
-	b3Shape              *b3GetSelectedShape();
-	HTREEITEM             b3SelectItem(b3Item *item);
+	b3Item        *       b3GetSelectedItem();
+	b3BBox        *       b3GetSelectedBBox();
+	b3Shape       *       b3GetSelectedShape();
+	HTREEITEM             b3SelectItem(b3Item * item);
 	void                  b3GetData();
 	void                  b3SetData();
 	LPARAM                b3GetLParam(HTREEITEM item);
 
 private:
-	b3_count              b3GetExpansion (HTREEITEM parent);
-	HTREEITEM             b3FindItem (HTREEITEM parent,b3Item *item);
+	b3_count              b3GetExpansion(HTREEITEM parent);
+	HTREEITEM             b3FindItem(HTREEITEM parent, b3Item * item);
 	void                  b3UpdateIcons(HTREEITEM parent);
 public:
-	afx_msg void OnNMDblclkHierarchy(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMDblclkHierarchy(NMHDR * pNMHDR, LRESULT * pResult);
 };
 
 //{{AFX_INSERT_LOCATION}}

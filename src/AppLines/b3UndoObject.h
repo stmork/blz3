@@ -25,11 +25,11 @@
 class b3OpObject : public b3Operation
 {
 protected:
-	b3Scene       *m_Scene;
-	CDlgHierarchy *m_DlgHierarchy;
+	b3Scene    *   m_Scene;
+	CDlgHierarchy * m_DlgHierarchy;
 
 protected:
-	inline b3OpObject(b3Scene *scene,CDlgHierarchy *hierarchy)
+	inline b3OpObject(b3Scene * scene, CDlgHierarchy * hierarchy)
 	{
 		m_Scene        = scene;
 		m_DlgHierarchy = hierarchy;
@@ -38,13 +38,13 @@ protected:
 
 class b3OpObjectCreate : public b3OpObject
 {
-	b3BBox         *m_Selected;
-	b3BBox         *m_BBox;
-	b3Item         *m_InsertAfter;
-	b3Base<b3Item> *m_Base;
+	b3BBox     *    m_Selected;
+	b3BBox     *    m_BBox;
+	b3Item     *    m_InsertAfter;
+	b3Base<b3Item> * m_Base;
 
 public:
-	         b3OpObjectCreate(b3Scene *scene,CDlgHierarchy *hierarchy,b3_bool insert_sub);
+	b3OpObjectCreate(b3Scene * scene, CDlgHierarchy * hierarchy, b3_bool insert_sub);
 
 protected:
 	void b3Undo();
@@ -59,13 +59,13 @@ protected:
 
 class b3OpObjectDelete : public b3OpObject
 {
-	b3Base<b3Item> *m_Base;
-	b3Item         *m_Prev;
-	b3Item         *m_Select;
-	b3BBox         *m_Selected;
+	b3Base<b3Item> * m_Base;
+	b3Item     *    m_Prev;
+	b3Item     *    m_Select;
+	b3BBox     *    m_Selected;
 
 public:
-	         b3OpObjectDelete(b3Scene *scene,CDlgHierarchy *hierarchy);
+	b3OpObjectDelete(b3Scene * scene, CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -81,20 +81,20 @@ protected:
 class b3OpObjectFile : public b3OpObject
 {
 protected:
-	b3BBox         *m_Selected;
-	b3BBox         *m_BBox;
-	b3Base<b3Item> *m_Base;
+	b3BBox     *    m_Selected;
+	b3BBox     *    m_BBox;
+	b3Base<b3Item> * m_Base;
 	b3World         m_World;
 	b3_count        m_Level;
 
 protected:
-	        b3OpObjectFile(b3Scene *scene,CDlgHierarchy *hierarchy,const char *reg_entry);
+	b3OpObjectFile(b3Scene * scene, CDlgHierarchy * hierarchy, const char * reg_entry);
 };
 
 class b3OpObjectLoad : public b3OpObjectFile
 {
 public:
-	         b3OpObjectLoad(b3Scene *scene,CDlgHierarchy *hierarchy);
+	b3OpObjectLoad(b3Scene * scene, CDlgHierarchy * hierarchy);
 
 protected:
 	virtual void b3Do();
@@ -111,7 +111,7 @@ protected:
 class b3OpObjectReplace : public b3OpObjectFile
 {
 public:
-	         b3OpObjectReplace(b3Scene *scene,CDlgHierarchy *hierarchy);
+	b3OpObjectReplace(b3Scene * scene, CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Do();
@@ -128,12 +128,12 @@ protected:
 class b3OpObjectLoadCob : public b3OpObject
 {
 protected:
-	b3BBox         *m_Selected;
-	b3BBox         *m_BBox;
-	b3Base<b3Item> *m_Base;
+	b3BBox     *    m_Selected;
+	b3BBox     *    m_BBox;
+	b3Base<b3Item> * m_Base;
 
 public:
-	         b3OpObjectLoadCob(b3Scene *scene,CDlgHierarchy *hierarchy);
+	b3OpObjectLoadCob(b3Scene * scene, CDlgHierarchy * hierarchy);
 
 protected:
 	virtual void b3Do();
@@ -150,12 +150,12 @@ protected:
 class b3OpObjectLoadTgf : public b3OpObject
 {
 protected:
-	b3BBox         *m_Selected;
-	b3BBox         *m_BBox;
-	b3Base<b3Item> *m_Base;
+	b3BBox     *    m_Selected;
+	b3BBox     *    m_BBox;
+	b3Base<b3Item> * m_Base;
 
 public:
-	         b3OpObjectLoadTgf(b3Scene *scene,CDlgHierarchy *hierarchy);
+	b3OpObjectLoadTgf(b3Scene * scene, CDlgHierarchy * hierarchy);
 
 protected:
 	virtual void b3Do();
@@ -171,12 +171,12 @@ protected:
 
 class b3OpObjectCopy : public b3OpObject
 {
-	b3BBox            *m_Selected;
-	b3Base<b3Item>    *m_Base;
+	b3BBox      *      m_Selected;
+	b3Base<b3Item>  *  m_Base;
 	b3Array<b3BBox *>  m_ClonedBBoxes;
 
 public:
-	         b3OpObjectCopy(b3Scene *scene,CDlgHierarchy *hierarchy,b3_vector *fulcrum);
+	b3OpObjectCopy(b3Scene * scene, CDlgHierarchy * hierarchy, b3_vector * fulcrum);
 
 protected:
 	void b3Undo();

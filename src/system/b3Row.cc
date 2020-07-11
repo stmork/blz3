@@ -31,17 +31,17 @@
 *************************************************************************/
 
 b3Row::b3Row(const b3_coord y, const b3_res xSize) :
-		b3Link<b3Row>(sizeof(b3Row)),
-		m_xSize(xSize),
-		m_y(y)
+	b3Link<b3Row>(sizeof(b3Row)),
+	m_xSize(xSize),
+	m_y(y)
 {
 	m_buffer = (b3_color *)b3Alloc(sizeof(b3_color) * xSize);
 }
 
-b3Row::b3Row(const b3_coord y, const b3_res xSize, b3_color *buffer) :
-		b3Link<b3Row>(sizeof(b3Row)),
-		m_xSize(xSize),
-		m_y(y)
+b3Row::b3Row(const b3_coord y, const b3_res xSize, b3_color * buffer) :
+	b3Link<b3Row>(sizeof(b3Row)),
+	m_xSize(xSize),
+	m_y(y)
 {
 	m_buffer = buffer;
 }

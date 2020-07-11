@@ -62,7 +62,7 @@ public:
 		b3_loop i;
 		T       element;
 
-		for (i = 0;i < count;i++)
+		for(i = 0; i < count; i++)
 		{
 			element = i;
 			CPPUNIT_ASSERT_NO_THROW(array.b3Add(element));
@@ -70,14 +70,14 @@ public:
 		CPPUNIT_ASSERT_EQUAL(whole, array.b3GetCount());
 
 #ifdef _DEBUG
-		CPPUNIT_ASSERT_NO_THROW(array[whole-1]);
+		CPPUNIT_ASSERT_NO_THROW(array[whole - 1]);
 		CPPUNIT_ASSERT_THROW(array[whole], b3ArrayException);
 #endif
-		
+
 		return count;
 	}
-	
-	static int sorter(T *a, T *b)
+
+	static int sorter(T * a, T * b)
 	{
 		return *b - *a;
 	}

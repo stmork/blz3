@@ -57,7 +57,7 @@ protected:
 	 * \param &library The file name of the plugin.
 	 * \return If the plugin is a correct Blizzard III plugin.
 	 */
-	virtual b3_bool       b3IsPlugin(b3Path &library) = 0;
+	virtual b3_bool       b3IsPlugin(b3Path & library) = 0;
 
 	/**
 	 * This method loads the specified library and adds the plugin to the internal list.
@@ -65,7 +65,7 @@ protected:
 	 * \param &library The plugin to load
 	 * \return The plugin itself.
 	 */
-	virtual b3PluginBase *b3CreatePlugin(b3Path &library) = 0;
+	virtual b3PluginBase * b3CreatePlugin(b3Path & library) = 0;
 };
 
 /**
@@ -82,7 +82,7 @@ public:
 	 *
 	 * \param &library The file name of the plugin.
 	 */
-	b3PluginBase(b3Path &library);
+	b3PluginBase(b3Path & library);
 };
 
 #endif

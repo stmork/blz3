@@ -38,20 +38,20 @@ b3LoaderBase::~b3LoaderBase()
 
 void b3LoaderBase::b3Load()
 {
-	b3PathEntry  *entry;
+	b3PathEntry * entry;
 	b3FileList    list;
-	b3FileEntry  *file;
-	b3PluginBase *plugin;
+	b3FileEntry * file;
+	b3PluginBase * plugin;
 	b3Path        name;
 
-	B3_FOR_BASE(&m_SearchPath,entry)
+	B3_FOR_BASE(&m_SearchPath, entry)
 	{
 		list.b3CreateList(*entry);
 
-		for (file = list.b3First();file != null;file = file->Succ)
+		for(file = list.b3First(); file != null; file = file->Succ)
 		{
-			strlcpy(name,file->b3Name(),B3_FILESTRINGLEN);
-			if (b3IsPlugin(name))
+			strlcpy(name, file->b3Name(), B3_FILESTRINGLEN);
+			if(b3IsPlugin(name))
 			{
 				plugin = b3CreatePlugin(name);
 				m_PluginList.b3Append(plugin);
@@ -71,8 +71,8 @@ void b3LoaderBase::b3Unload()
 **                                                                      **
 *************************************************************************/
 
-b3PluginBase::b3PluginBase(b3Path &library) :
-		b3Link<b3PluginBase>(sizeof(b3PluginBase)),
-		m_PluginPath(library)
+b3PluginBase::b3PluginBase(b3Path & library) :
+	b3Link<b3PluginBase>(sizeof(b3PluginBase)),
+	m_PluginPath(library)
 {
 }

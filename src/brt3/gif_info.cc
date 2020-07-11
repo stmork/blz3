@@ -32,79 +32,85 @@
 **                                                                      **
 *************************************************************************/
 
-static void InfoGIF(char *name)
+static void InfoGIF(char * name)
 {
 	b3File             in;
-	b3_u08            *buffer,*data;
+	b3_u08      *      buffer, *data;
 	b3_size            size;
-	b3_count           i,diff,planes;
+	b3_count           i, diff, planes;
 	b3_bool            loop = true;
-	struct Extension  *transPtr;
-	struct Descriptor *descrPtr;
+	struct Extension * transPtr;
+	struct Descriptor * descrPtr;
 
 	b3PrintF(B3LOG_NORMAL, "\n");
-	b3PrintF(B3LOG_NORMAL, "FILE: %s\n",name);
+	b3PrintF(B3LOG_NORMAL, "FILE: %s\n", name);
 
-	buffer = in.b3ReadBuffer(name,size);
-	if (buffer == null)
+	buffer = in.b3ReadBuffer(name, size);
+	if(buffer == null)
 	{
 		b3PrintF(B3LOG_NORMAL, "no memory available.\n");
 		return;
 	}
 	data = buffer;
 
-	if (strncmp((const char *)buffer,"GIF8",4) != 0)
+	if(strncmp((const char *)buffer, "GIF8", 4) != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "not a GIF image!\n");
 		return;
 	}
 
 	b3PrintF(B3LOG_NORMAL, "*** ");
-	for (i = 0; i < 6; i++)
+	for(i = 0; i < 6; i++)
 	{
-		b3PrintF(B3LOG_NORMAL, "%c",*data++);
+		b3PrintF(B3LOG_NORMAL, "%c", *data++);
 	}
 	b3PrintF(B3LOG_NORMAL, "\n");
-	b3PrintF(B3LOG_NORMAL, "width:  %4ld\n",VAL2(data));
-	b3PrintF(B3LOG_NORMAL, "height: %4ld\n",VAL2(data+2));
-	b3PrintF(B3LOG_NORMAL, "planes: %4ld\n",planes = ((long)data[4] & 0x07) + 1);
+	b3PrintF(B3LOG_NORMAL, "width:  %4ld\n", VAL2(data));
+	b3PrintF(B3LOG_NORMAL, "height: %4ld\n", VAL2(data + 2));
+	b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", planes = ((long)data[4] & 0x07) + 1);
 	data += 7;
 	data += ((1 << planes) * 3);
 
 	do
 	{
-		switch (data[0])
+		switch(data[0])
 		{
 		case 0x21 :
-			switch (data[1])
+			switch(data[1])
 			{
 			case 0x01 :
 				b3PrintF(B3LOG_NORMAL, "*** Plain text extension:\n");
 				data += (data[2] + 3);
-				while ((diff = data[0]) != 0) data += (diff + 1);
+				while((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
 				break;
 
 			case 0xf9 :
 				transPtr         = (struct Extension *)data;
 				b3PrintF(B3LOG_NORMAL, "*** Graphic Control Extension:\n");
-				b3PrintF(B3LOG_NORMAL, "flags: $%02x\n",transPtr->flags);
+				b3PrintF(B3LOG_NORMAL, "flags: $%02x\n", transPtr->flags);
 				b3PrintF(B3LOG_NORMAL, "transparency: %s\n",
-						 transPtr->flags & 1 ? "yes" : "no");
-				if (transPtr->flags & 1)
+					transPtr->flags & 1 ? "yes" : "no");
+				if(transPtr->flags & 1)
 				{
 					b3PrintF(B3LOG_NORMAL, "transparent color index: %ld\n",
-							 transPtr->index);
+						transPtr->index);
 				}
-				b3PrintF(B3LOG_NORMAL, "delay time:  %ld/100 s\n",VAL2(transPtr->delay));
+				b3PrintF(B3LOG_NORMAL, "delay time:  %ld/100 s\n", VAL2(transPtr->delay));
 				data += (transPtr->size + 3);
 				break;
 
 			case 0xfe :
 				b3PrintF(B3LOG_NORMAL, "*** Comment Extension:\n");
 				data += 2;
-				while ((diff = data[0]) != 0)
+				while((diff = data[0]) != 0)
 				{
-					for (i=1;i <= diff;i++) b3PrintF(B3LOG_NORMAL, "%c",data[i]);
+					for(i = 1; i <= diff; i++)
+					{
+						b3PrintF(B3LOG_NORMAL, "%c", data[i]);
+					}
 					data += (diff + 1);
 				}
 				b3PrintF(B3LOG_NORMAL, "\n");
@@ -113,10 +119,16 @@ static void InfoGIF(char *name)
 			case 0xff :
 				b3PrintF(B3LOG_NORMAL, "*** Application Extension:\n");
 				data += (data[2] + 3);
-				while ((diff = data[0]) != 0) data += (diff + 1);
+				while((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
 				break;
 			}
-			while (data[0] != 0) data++;
+			while(data[0] != 0)
+			{
+				data++;
+			}
 			data++;
 			break;
 
@@ -128,21 +140,27 @@ static void InfoGIF(char *name)
 			descrPtr = (struct Descriptor *)data;
 			planes   = (descrPtr->flags & 0x07) + 1;
 			b3PrintF(B3LOG_NORMAL, "*** Image descriptor:\n");
-			b3PrintF(B3LOG_NORMAL, "xPos:   %4ld\n",VAL2(descrPtr->xPos));
-			b3PrintF(B3LOG_NORMAL, "yPos:   %4ld\n",VAL2(descrPtr->yPos));
-			b3PrintF(B3LOG_NORMAL, "xSize:  %4ld\n",VAL2(descrPtr->xSize));
-			b3PrintF(B3LOG_NORMAL, "ySize:  %4ld\n",VAL2(descrPtr->ySize));
-			b3PrintF(B3LOG_NORMAL, "planes: %4ld\n",planes);
-			b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n",descrPtr->flags);
+			b3PrintF(B3LOG_NORMAL, "xPos:   %4ld\n", VAL2(descrPtr->xPos));
+			b3PrintF(B3LOG_NORMAL, "yPos:   %4ld\n", VAL2(descrPtr->yPos));
+			b3PrintF(B3LOG_NORMAL, "xSize:  %4ld\n", VAL2(descrPtr->xSize));
+			b3PrintF(B3LOG_NORMAL, "ySize:  %4ld\n", VAL2(descrPtr->ySize));
+			b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", planes);
+			b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n", descrPtr->flags);
 			b3PrintF(B3LOG_NORMAL, "local color table: %s\n",
-					 descrPtr->flags & 0x80 ? "yes" : "no");
+				descrPtr->flags & 0x80 ? "yes" : "no");
 			b3PrintF(B3LOG_NORMAL, "interlace: %s\n",
-					 descrPtr->flags & 0x40 ? "yes" : "no");
+				descrPtr->flags & 0x40 ? "yes" : "no");
 			data   += sizeof(struct Descriptor);
-			if (descrPtr->flags & 0x80) data += ((1 << planes) * 3);
+			if(descrPtr->flags & 0x80)
+			{
+				data += ((1 << planes) * 3);
+			}
 			data++;
 
-			while ((diff = data[0]) != 0) data += (diff + 1);
+			while((diff = data[0]) != 0)
+			{
+				data += (diff + 1);
+			}
 			data++;
 			break;
 
@@ -153,38 +171,38 @@ static void InfoGIF(char *name)
 			break;
 
 		default :
-			b3PrintF(B3LOG_NORMAL, "*** $%02lx:%02lx\n",(long)data[0],(long)data[1]);
+			b3PrintF(B3LOG_NORMAL, "*** $%02lx:%02lx\n", (long)data[0], (long)data[1]);
 			loop = false;
 			break;
 		}
 	}
-	while (loop);
+	while(loop);
 }
 
-static void b3Banner(const char *command)
+static void b3Banner(const char * command)
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III GIF info viewer\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001-2007\n");
-	b3PrintF(B3LOG_NORMAL,"\n");
-	if (command != null)
+	b3PrintF(B3LOG_NORMAL, "Blizzard III GIF info viewer\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
+	b3PrintF(B3LOG_NORMAL, "\n");
+	if(command != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s {GIF-Files}\n",command);
-		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
+		b3PrintF(B3LOG_NORMAL, "%s {GIF-Files}\n", command);
+		b3PrintF(B3LOG_NORMAL, "\n");
 	}
-	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
+	b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	if (argc > 1)
+	if(argc > 1)
 	{
 		int i;
 
-		for (i = 1; i < argc; i++)
+		for(i = 1; i < argc; i++)
 		{
-			InfoGIF (argv[i]);
+			InfoGIF(argv[i]);
 		}
 	}
 	else

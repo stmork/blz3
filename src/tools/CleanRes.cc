@@ -32,7 +32,7 @@
 
 static struct b3DefineType
 {
-	const char *m_Type;
+	const char * m_Type;
 	int         m_Prio;
 	int         m_Start;
 	int         m_Last;
@@ -69,7 +69,7 @@ enum b3DefineMode
 
 class b3Define : public b3Link<b3Define>
 {
-	FILE         *m_File;
+	FILE     *    m_File;
 	char          m_Define[1024];
 	int           m_Value;
 	int           m_Type;
@@ -82,20 +82,20 @@ public:
 		m_File = stdout;
 	}
 
-	b3Define(const char *define,const int value) : b3Link<b3Define>(sizeof(b3Define))
+	b3Define(const char * define, const int value) : b3Link<b3Define>(sizeof(b3Define))
 	{
-		strlcpy (m_Define,define,sizeof(m_Define));
+		strlcpy(m_Define, define, sizeof(m_Define));
 		m_Value = value;
 		m_File  = stdout;
 		m_Type  = b3FindDefineType();
 		m_Mode  = DM_DEFINE;
-		if ((m_Type < TYPE_MAX) && (define_types[m_Type].m_Start == 0))
+		if((m_Type < TYPE_MAX) && (define_types[m_Type].m_Start == 0))
 		{
 			m_Mode = DM_NOP;
 		}
 	}
 
-	static const int b3GetDefineTypesLastValue(const char *define)
+	static const int b3GetDefineTypesLastValue(const char * define)
 	{
 		int type = b3FindDefineType(define);
 
@@ -104,30 +104,30 @@ public:
 
 	void b3Print() const
 	{
-		switch (m_Mode)
+		switch(m_Mode)
 		{
 		case DM_START:
-			fprintf(m_File,"//{{NO_DEPENDENCIES}}\r\n");
-			fprintf(m_File,"// Microsoft Developer Studio generated include file.\r\n");
-			fprintf(m_File,"// Used by AppLines.rc\r\n");
-			fprintf(m_File,"//\r\n");
+			fprintf(m_File, "//{{NO_DEPENDENCIES}}\r\n");
+			fprintf(m_File, "// Microsoft Developer Studio generated include file.\r\n");
+			fprintf(m_File, "// Used by AppLines.rc\r\n");
+			fprintf(m_File, "//\r\n");
 			break;
 		case DM_DEFINE:
-			fprintf(m_File,"#define %-31s %d\r\n",m_Define,m_Value);
+			fprintf(m_File, "#define %-31s %d\r\n", m_Define, m_Value);
 			break;
 		case DM_END:
-			fprintf(m_File,"\r\n");
-			fprintf(m_File,"// Next default values for new objects\r\n");
-			fprintf(m_File,"// \r\n");
-			fprintf(m_File,"#ifdef APSTUDIO_INVOKED\r\n");
-			fprintf(m_File,"#ifndef APSTUDIO_READONLY_SYMBOLS\r\n");
-			fprintf(m_File,"#define _APS_3D_CONTROLS                     1\r\n");
-			fprintf(m_File,"#define _APS_NEXT_RESOURCE_VALUE        %d\r\n",b3GetDefineTypesLastValue("IDR_"));
-			fprintf(m_File,"#define _APS_NEXT_COMMAND_VALUE         %d\r\n",b3GetDefineTypesLastValue("ID_"));
-			fprintf(m_File,"#define _APS_NEXT_CONTROL_VALUE         %d\r\n",b3GetDefineTypesLastValue("IDC_"));
-			fprintf(m_File,"#define _APS_NEXT_SYMED_VALUE           %d\r\n",b3GetDefineTypesLastValue("IDS_"));
-			fprintf(m_File,"#endif\r\n");
-			fprintf(m_File,"#endif\r\n");
+			fprintf(m_File, "\r\n");
+			fprintf(m_File, "// Next default values for new objects\r\n");
+			fprintf(m_File, "// \r\n");
+			fprintf(m_File, "#ifdef APSTUDIO_INVOKED\r\n");
+			fprintf(m_File, "#ifndef APSTUDIO_READONLY_SYMBOLS\r\n");
+			fprintf(m_File, "#define _APS_3D_CONTROLS                     1\r\n");
+			fprintf(m_File, "#define _APS_NEXT_RESOURCE_VALUE        %d\r\n", b3GetDefineTypesLastValue("IDR_"));
+			fprintf(m_File, "#define _APS_NEXT_COMMAND_VALUE         %d\r\n", b3GetDefineTypesLastValue("ID_"));
+			fprintf(m_File, "#define _APS_NEXT_CONTROL_VALUE         %d\r\n", b3GetDefineTypesLastValue("IDC_"));
+			fprintf(m_File, "#define _APS_NEXT_SYMED_VALUE           %d\r\n", b3GetDefineTypesLastValue("IDS_"));
+			fprintf(m_File, "#endif\r\n");
+			fprintf(m_File, "#endif\r\n");
 			break;
 
 		default:
@@ -135,24 +135,24 @@ public:
 		}
 	}
 
-	void b3Renumber(int &last)
+	void b3Renumber(int & last)
 	{
-		if (m_Mode == DM_DEFINE)
+		if(m_Mode == DM_DEFINE)
 		{
-			if (Prev->m_Mode != DM_DEFINE)
+			if(Prev->m_Mode != DM_DEFINE)
 			{
 				last = define_types[m_Type].m_Start;
 			}
 			else
 			{
-				if (Prev->m_Type != m_Type)
+				if(Prev->m_Type != m_Type)
 				{
 					last = define_types[m_Type].m_Start;
 				}
 			}
 			m_Value = last;
 			last++;
-			if (m_Type < TYPE_MAX)
+			if(m_Type < TYPE_MAX)
 			{
 				define_types[m_Type].m_Last = last;
 			}
@@ -164,14 +164,14 @@ public:
 		return b3FindDefineType(m_Define);
 	}
 
-	static int b3FindDefineType(const char *define)
+	static int b3FindDefineType(const char * define)
 	{
-		int i,len;
+		int i, len;
 
-		for (i = 0;i < TYPE_MAX;i++)
+		for(i = 0; i < TYPE_MAX; i++)
 		{
 			len = strlen(define_types[i].m_Type);
-			if (strncmp(define,define_types[i].m_Type,len) == 0)
+			if(strncmp(define, define_types[i].m_Type, len) == 0)
 			{
 				return i;
 			}
@@ -179,55 +179,55 @@ public:
 		return i;
 	}
 
-	static const int b3SortFunc(const b3Define *a, const b3Define *b, const void *ptr)
+	static const int b3SortFunc(const b3Define * a, const b3Define * b, const void * ptr)
 	{
 		int a_type = a->m_Type;
 		int b_type = b->m_Type;
 		int diff;
 
-		if ((a->m_Mode != DM_DEFINE) || (b->m_Mode != DM_DEFINE))
+		if((a->m_Mode != DM_DEFINE) || (b->m_Mode != DM_DEFINE))
 		{
 			return a->m_Mode - b->m_Mode;
 		}
 
-		if ((a_type < TYPE_MAX) && (b_type < TYPE_MAX))
+		if((a_type < TYPE_MAX) && (b_type < TYPE_MAX))
 		{
 			diff = define_types[a_type].m_Prio - define_types[b_type].m_Prio;
-			if (diff == 0)
+			if(diff == 0)
 			{
 				diff = strcmp(
-						   &a->m_Define[strlen(define_types[a_type].m_Type)],
-						   &b->m_Define[strlen(define_types[b_type].m_Type)]);
+						&a->m_Define[strlen(define_types[a_type].m_Type)],
+						&b->m_Define[strlen(define_types[b_type].m_Type)]);
 			}
 		}
 		else
 		{
 			diff = a_type - b_type;
-			if (diff == 0)
+			if(diff == 0)
 			{
-				diff = strcmp(a->m_Define,b->m_Define);
+				diff = strcmp(a->m_Define, b->m_Define);
 			}
 		}
 		return diff;
 	}
 };
 
-static b3_bool b3ReadResource(const char *filename,b3Base<b3Define> &defines)
+static b3_bool b3ReadResource(const char * filename, b3Base<b3Define> & defines)
 {
-	FILE *in;
+	FILE * in;
 	char  line[2048];
 	char  define[1024];
 	int   value;
 
-	in = fopen(filename,B3_TREAD);
-	if (in != null)
+	in = fopen(filename, B3_TREAD);
+	if(in != null)
 	{
 		defines.b3Append(new b3Define(true));
-		while (fgets(line,sizeof(line),in) != null)
+		while(fgets(line, sizeof(line), in) != null)
 		{
-			if (sscanf(line,"#define %s %d\n",define,&value) == 2)
+			if(sscanf(line, "#define %s %d\n", define, &value) == 2)
 			{
-				defines.b3Append(new b3Define(define,value));
+				defines.b3Append(new b3Define(define, value));
 			}
 		}
 		defines.b3Append(new b3Define(false));
@@ -237,21 +237,21 @@ static b3_bool b3ReadResource(const char *filename,b3Base<b3Define> &defines)
 	return in != null;
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
 	b3Base<b3Define>  defines;
-	b3Define         *define;
+	b3Define     *    define;
 	int               last;
 
-	for (int i = 1;i < argc;i++)
+	for(int i = 1; i < argc; i++)
 	{
-		for (int k = 0;k < TYPE_MAX;k++)
+		for(int k = 0; k < TYPE_MAX; k++)
 		{
 			define_types[k].m_Last = 0;
 		}
-		b3ReadResource(argv[i],defines);
+		b3ReadResource(argv[i], defines);
 		defines.b3Sort(&b3Define::b3SortFunc);
-		B3_FOR_BASE(&defines,define)
+		B3_FOR_BASE(&defines, define)
 		{
 			define->b3Renumber(last);
 			define->b3Print();

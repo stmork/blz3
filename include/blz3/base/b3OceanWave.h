@@ -51,8 +51,8 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3Complex64             m_Cycle;       // e^j*omega*t
 	b3Fourier               m_FFT;
 	b3Rand48<b3_f64>        m_Random;
-	b3Complex64            *m_Phillips;
-	b3_vector              *m_Normals;
+	b3Complex64      *      m_Phillips;
+	b3_vector       *       m_Normals;
 	b3_bool                 m_Modified;
 
 public:
@@ -80,7 +80,7 @@ public:
 	 * @param pos The position of the height value to be computed.
 	 * @return The computed height value.
 	 */
-	b3_f64 b3ComputeOceanWave(const b3_vector *pos);
+	b3_f64 b3ComputeOceanWave(const b3_vector * pos);
 
 	/**
 	 * This method computes the slope values for the given position.
@@ -88,7 +88,7 @@ public:
 	 * @param pos The position of the slope values to be computed.
 	 * @param n The computed slope values.
 	 */
-	void   b3ComputeOceanWaveDeriv(const b3_vector *pos, b3_vector *n);
+	void   b3ComputeOceanWaveDeriv(const b3_vector * pos, b3_vector * n);
 
 	/**
 	 * This returns the FFT forward buffer as texture.
@@ -96,7 +96,7 @@ public:
 	 * @param tx The image to put the buffer in.
 	 * @param scale Scales all values by this factor.
 	 */
-	inline void b3GetBuffer    (b3Tx *tx, b3_f64 scale)
+	inline void b3GetBuffer(b3Tx * tx, b3_f64 scale)
 	{
 		m_FFT.b3GetBuffer(tx, scale);
 	}
@@ -107,7 +107,7 @@ public:
 	 * @param tx The image to put the spectrum in.
 	 * @param scale A global scaling factor.
 	 */
-	inline void b3GetSpectrum(b3Tx *tx, b3_f64 scale)
+	inline void b3GetSpectrum(b3Tx * tx, b3_f64 scale)
 	{
 		m_FFT.b3GetSpectrum(tx, scale);
 	}
@@ -117,7 +117,7 @@ public:
 	 *
 	 * @return The height field.
 	 */
-	inline b3Complex64 *b3GetBuffer()
+	inline b3Complex64 * b3GetBuffer()
 	{
 		return m_FFT.b3GetBuffer();
 	}
@@ -128,7 +128,7 @@ public:
 	 *
 	 * @param modified A flag which indicates a modifiaction of computation values.
 	 */
-	void b3Modified(b3_bool modified=true);
+	void b3Modified(b3_bool modified = true);
 
 	/**
 	 * This method dumps the actual computed Phillips spectrum as height field and
@@ -141,7 +141,7 @@ public:
 	 *
 	 * @param tx The retrieving image.
 	 */
-	void b3CopyHeightField(b3Tx *tx);
+	void b3CopyHeightField(b3Tx * tx);
 
 private:
 	void              b3ComputePhillipsSpectrum();
@@ -150,13 +150,13 @@ private:
 		const b3_f64        fx,
 		const b3_f64        fy,
 		const b3_index      index,
-		b3FilterInfo *filter_info);
+		b3FilterInfo * filter_info);
 
 	static void       b3SampleHeight(
 		const b3_f64        fx,
 		const b3_f64        fy,
 		const b3_index      index,
-		b3FilterInfo *filter_info);
+		b3FilterInfo * filter_info);
 
 	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index);
 	void              b3PrepareNormals();
@@ -172,7 +172,7 @@ private:
 
 	inline b3_f64     b3GetHeight(const b3_index x, const b3_index y)
 	{
-		b3Complex64 *buffer = b3GetBuffer();
+		b3Complex64 * buffer = b3GetBuffer();
 
 		return buffer[b3GetIndex(x, y)].b3Real();
 	}

@@ -37,10 +37,10 @@ using namespace std;
 **                                                                      **
 *************************************************************************/
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
-	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n",__DATE__,__TIME__);
-	b3PrintF(B3LOG_NORMAL, "%s\n",b3Runtime::b3GetCompiler());
+	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
+	b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
 
 #ifdef BLZ3_USE_SSE
 	b3PrintF(B3LOG_NORMAL, "Using SSE intrinsics.\n");
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef SSE_ALIGNED
-	b3PrintF(B3LOG_NORMAL,"Memory alignment SSE compatible.\n");
+	b3PrintF(B3LOG_NORMAL, "Memory alignment SSE compatible.\n");
 #endif
 
 #ifdef B3_SSE
@@ -74,13 +74,13 @@ int main(int argc, char *argv[])
 	ofstream xml("test-results.xml");
 
 	CppUnit::TextUi::TestRunner   runner;
-	CppUnit::TestFactoryRegistry &registry  = CppUnit::TestFactoryRegistry::getRegistry();
-	CppUnit::XmlOutputter        *outputter = new CppUnit::XmlOutputter( &runner.result(), xml);
+	CppUnit::TestFactoryRegistry & registry  = CppUnit::TestFactoryRegistry::getRegistry();
+	CppUnit::XmlOutputter    *    outputter = new CppUnit::XmlOutputter(&runner.result(), xml);
 
 	b3Log::b3SetLevel(B3LOG_NONE);
-	if ((argc >= 2) && (argv[1][0] == '-'))
+	if((argc >= 2) && (argv[1][0] == '-'))
 	{
-		switch (argv[1][1])
+		switch(argv[1][1])
 		{
 		case 'f':
 			b3Log::b3SetLevel(B3LOG_FULL);
@@ -97,9 +97,9 @@ int main(int argc, char *argv[])
 		}
 	}
 	runner.setOutputter(outputter);
-	runner.addTest( registry.makeTest());
+	runner.addTest(registry.makeTest());
 
-	int result = runner.run ("", false) ? EXIT_SUCCESS : EXIT_FAILURE;
+	int result = runner.run("", false) ? EXIT_SUCCESS : EXIT_FAILURE;
 	xml.close();
 
 	return result;

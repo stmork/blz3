@@ -30,7 +30,7 @@ using namespace std;
 class b3ComplexTest : public CppUnit::TestFixture
 {
 	b3Complex<b3_f64> a, b, e;
-	b3Complex<b3_f64> *c , *d;
+	b3Complex<b3_f64> * c, *d;
 	b3Complex64       ca, cb, cc, cd, ce;
 
 	CPPUNIT_TEST_SUITE(b3ComplexTest);

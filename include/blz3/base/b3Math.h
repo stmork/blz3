@@ -63,11 +63,11 @@ public:
 	 * \param mu
 	 * \return The fresnel computed value.
 	 */
-	static inline b3_f64 b3GetFresnel(b3_f64 phi,const b3_f64 mu)
+	static inline b3_f64 b3GetFresnel(b3_f64 phi, const b3_f64 mu)
 	{
-		b3_f64 theta,a,b,c,d;
+		b3_f64 theta, a, b, c, d;
 
-		if (phi < epsilon)
+		if(phi < epsilon)
 		{
 			phi = epsilon;
 		}
@@ -89,11 +89,11 @@ public:
 	 */
 	static inline b3_f64 b3Limit(const b3_f64 value)
 	{
-		if (value < 0)
+		if(value < 0)
 		{
 			return 0;
 		}
-		else if (value > 1)
+		else if(value > 1)
 		{
 			return 1;
 		}
@@ -114,11 +114,11 @@ public:
 		const b3_f64 min,
 		const b3_f64 max)
 	{
-		if (value < min)
+		if(value < min)
 		{
 			return min;
 		}
-		else if (value > max)
+		else if(value > max)
 		{
 			return max;
 		}
@@ -139,11 +139,11 @@ public:
 		const b3_s32 min,
 		const b3_s32 max)
 	{
-		if (value < min)
+		if(value < min)
 		{
 			return min;
 		}
-		else if (value > max)
+		else if(value > max)
 		{
 			return max;
 		}
@@ -157,7 +157,7 @@ public:
 	 * \param rnd The precision.
 	 * \return The rounded value.
 	 */
-	static inline b3_f32 b3Round(const b3_f32 x,const b3_f32 rnd)
+	static inline b3_f32 b3Round(const b3_f32 x, const b3_f32 rnd)
 	{
 		b3_f32 mul    = floorf(0.5 / rnd + 0.5);
 		b3_f32 result = floorf(x * mul + 0.5) / mul;
@@ -172,7 +172,7 @@ public:
 	 * \param rnd The precision.
 	 * \return The rounded value.
 	 */
-	static inline b3_f64 b3Round(const b3_f64 x,const b3_f64 rnd)
+	static inline b3_f64 b3Round(const b3_f64 x, const b3_f64 rnd)
 	{
 		b3_f64 mul    = floor(0.5 / rnd + 0.5);
 		b3_f64 result = floor(x * mul + 0.5) / mul;
@@ -188,12 +188,12 @@ public:
 	 * \param b The divisor.
 	 * \return The fractional part.
 	 */
-	static inline b3_f64 b3Frac(b3_f64 a,b3_f64 b)
+	static inline b3_f64 b3Frac(b3_f64 a, b3_f64 b)
 	{
 #if 0
 		b3_f64 n;
 
-		if (a < 0)
+		if(a < 0)
 		{
 			a = -a;
 			n = floor(a / b);
@@ -205,7 +205,7 @@ public:
 			return a - n * b;
 		}
 #else
-		b3_f64 remainder = fmod(a,b);
+		b3_f64 remainder = fmod(a, b);
 
 		return remainder < 0 ? remainder + b : remainder;
 #endif
@@ -232,7 +232,7 @@ public:
 	 * \param x The mixer in range [0..1].
 	 * \return The mixed value.
 	 */
-	static inline b3_f64 b3Mix(const b3_f64 a,const b3_f64 b,const b3_f64 x)
+	static inline b3_f64 b3Mix(const b3_f64 a, const b3_f64 b, const b3_f64 x)
 	{
 		B3_ASSERT(x >= 0);
 		B3_ASSERT(x <= 1);
@@ -246,7 +246,7 @@ public:
 	 * \param b Another value.
 	 * \return The lower value of both given values.
 	 */
-	static inline b3_f64 b3Min(const b3_f64 a,const b3_f64 b)
+	static inline b3_f64 b3Min(const b3_f64 a, const b3_f64 b)
 	{
 		return a < b ? a : b;
 	}
@@ -258,7 +258,7 @@ public:
 	 * \param b Another value.
 	 * \return The greater value of both given values.
 	 */
-	static inline b3_f64 b3Max(const b3_f64 a,const b3_f64 b)
+	static inline b3_f64 b3Max(const b3_f64 a, const b3_f64 b)
 	{
 		return a > b ? a : b;
 	}
@@ -291,11 +291,11 @@ public:
 		const b3_f64 e,
 		const b3_f64 x)
 	{
-		if (x < s)
+		if(x < s)
 		{
 			return 0;
 		}
-		else if (x > e)
+		else if(x > e)
 		{
 			return 1;
 		}
@@ -314,11 +314,11 @@ public:
 	 */
 	static inline b3_f64 b3Smoothstep(const b3_f64 t)
 	{
-		if (t < 0)
+		if(t < 0)
 		{
 			return 0;
 		}
-		else if (t > 1)
+		else if(t > 1)
 		{
 			return 1;
 		}
@@ -333,7 +333,7 @@ public:
 		const b3_f64 e3,
 		const b3_f64 x)
 	{
-		return b3Smoothstep(e0,e1,x) - b3Smoothstep(e2,e3,x);
+		return b3Smoothstep(e0, e1, x) - b3Smoothstep(e2, e3, x);
 	}
 
 	static inline b3_f64 b3SmoothPulseTrain(
@@ -344,7 +344,7 @@ public:
 		const b3_f64 x,
 		const b3_f64 period)
 	{
-		return b3SmoothPulse(e0,e1,e2,e3,b3Math::b3Frac(x,period));
+		return b3SmoothPulse(e0, e1, e2, e3, b3Math::b3Frac(x, period));
 	}
 
 	/**
@@ -364,14 +364,14 @@ public:
 	 * \param exponent The exponent.
 	 * \return The power of x with integer exponent exponent.
 	 */
-	static inline b3_f64 b3FastPow(const b3_f64 x,b3_u32 exponent)
+	static inline b3_f64 b3FastPow(const b3_f64 x, b3_u32 exponent)
 	{
 		b3_f64 result = 1;
 		b3_f64 factor = x;
 
-		while (exponent != 0)
+		while(exponent != 0)
 		{
-			if (exponent & 1)
+			if(exponent & 1)
 			{
 				result *= factor;
 			}
@@ -389,11 +389,11 @@ public:
 	 */
 	static inline b3_f64 b3Asin(const b3_f64 x)
 	{
-		if (x <= -1)
+		if(x <= -1)
 		{
 			return -M_PI * 0.5;
 		}
-		else if (x >= 1)
+		else if(x >= 1)
 		{
 			return M_PI * 0.5;
 		}
@@ -408,11 +408,11 @@ public:
 	 */
 	static inline b3_f64 b3Acos(const b3_f64 x)
 	{
-		if (x <= -1)
+		if(x <= -1)
 		{
 			return M_PI;
 		}
-		else if (x >= 1)
+		else if(x >= 1)
 		{
 			return 0;
 		}
@@ -421,12 +421,12 @@ public:
 
 	static inline b3_f64 b3ArcAngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
-		return atan2(v,u) + (v < 0 ? (M_PI * 2.0) : 0);
+		return atan2(v, u) + (v < 0 ? (M_PI * 2.0) : 0);
 	}
 
 	static inline b3_f64 b3RelAngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
-		return atan2(v,u) * 0.5 / M_PI + (v < 0 ?   1.0 : 0);
+		return atan2(v, u) * 0.5 / M_PI + (v < 0 ?   1.0 : 0);
 	}
 
 	static inline b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
@@ -445,18 +445,24 @@ public:
 #ifdef  CBRT_SLOW
 	static inline b3_f64 b3Cbrt(const b3_f64 x)
 	{
-		if (x > 0) return ( exp(log( x) / 3));
-		if (x < 0) return (-exp(log(-x) / 3));
+		if(x > 0)
+		{
+			return (exp(log(x) / 3));
+		}
+		if(x < 0)
+		{
+			return (-exp(log(-x) / 3));
+		}
 		return 0;
 	}
 #else
 	static inline b3_f64 b3Cbrt(b3_f64 x)
 	{
-		b3_f64   xx,y;
+		b3_f64   xx, y;
 		b3_count Negative;
-		int      expon,n;
+		int      expon, n;
 
-		if (x <= 0)
+		if(x <= 0)
 		{
 			x = -x;
 			Negative = true;
@@ -466,34 +472,46 @@ public:
 			Negative = false;
 		}
 
-		xx = frexp (x,&expon);
+		xx = frexp(x, &expon);
 		n = expon % 3;
 		y = ((((((((((((((
-							 m_CbrtCoeffs[14]) * xx +
-						 m_CbrtCoeffs[13]) * xx +
+								m_CbrtCoeffs[14]) * xx +
+							m_CbrtCoeffs[13]) * xx +
 						m_CbrtCoeffs[12]) * xx +
-					   m_CbrtCoeffs[11]) * xx +
-					  m_CbrtCoeffs[10]) * xx +
-					 m_CbrtCoeffs[ 9]) * xx +
-					m_CbrtCoeffs[ 8]) * xx +
-				   m_CbrtCoeffs[ 7]) * xx +
-				  m_CbrtCoeffs[ 6]) * xx +
-				 m_CbrtCoeffs[ 5]) * xx +
-				m_CbrtCoeffs[ 4]) * xx +
-			   m_CbrtCoeffs[ 3]) * xx +
-			  m_CbrtCoeffs[ 2]) * xx +
-			 m_CbrtCoeffs[ 1]) * xx +
+					m_CbrtCoeffs[11]) * xx +
+				m_CbrtCoeffs[10]) * xx +
+												m_CbrtCoeffs[ 9]) * xx +
+											m_CbrtCoeffs[ 8]) * xx +
+										m_CbrtCoeffs[ 7]) * xx +
+									m_CbrtCoeffs[ 6]) * xx +
+								m_CbrtCoeffs[ 5]) * xx +
+							m_CbrtCoeffs[ 4]) * xx +
+						m_CbrtCoeffs[ 3]) * xx +
+					m_CbrtCoeffs[ 2]) * xx +
+				m_CbrtCoeffs[ 1]) * xx +
 			m_CbrtCoeffs[ 0];
-		y *= (4.0 / 3 - y * y * y * xx * (1.0/3));
+		y *= (4.0 / 3 - y * y * y * xx * (1.0 / 3));
 		y *= (y * xx);
-		if (n < 0) n += 3;
-		if (n == 1)    y *= 1.25992104989;	/* 2 ^ (1/3) */
-		else if (n==2) y *= 1.58740105196;	/* 4 ^ (1/3) */
+		if(n < 0)
+		{
+			n += 3;
+		}
+		if(n == 1)
+		{
+			y *= 1.25992104989;    /* 2 ^ (1/3) */
+		}
+		else if(n == 2)
+		{
+			y *= 1.58740105196;    /* 4 ^ (1/3) */
+		}
 
-		if ((n=expon) < 0) n -= 2;
+		if((n = expon) < 0)
+		{
+			n -= 2;
+		}
 		n /= 3;
 
-		b3_f64 result = ldexp(y,n);
+		b3_f64 result = ldexp(y, n);
 
 		return Negative ? -result : result;
 	}

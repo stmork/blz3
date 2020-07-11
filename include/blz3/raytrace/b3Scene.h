@@ -110,17 +110,17 @@ class B3_PLUGIN b3Scene : public b3Item
 	b3_vector             m_ViewAxis;
 	b3_f64                m_ViewAxisLen;
 	b3Path                m_SceneName;
-	b3Shader             *m_Shader;
+	b3Shader       *      m_Shader;
 	b3Path                m_Filename;
 	b3Mutex               m_PoolMutex;
 	b3Mutex               m_TrashMutex;
 	b3Mutex               m_SamplingMutex;
-	b3Distribute         *m_Distributed;
-	b3Nebular            *m_Nebular;
-	b3SuperSample        *m_SuperSample;
-	b3LensFlare          *m_LensFlare;
-	b3CameraPart         *m_ActualCamera;
-	b3Clouds             *m_Clouds;
+	b3Distribute     *    m_Distributed;
+	b3Nebular      *      m_Nebular;
+	b3SuperSample    *    m_SuperSample;
+	b3LensFlare     *     m_LensFlare;
+	b3CameraPart     *    m_ActualCamera;
+	b3Clouds       *      m_Clouds;
 	b3Color               m_AvrgColor;
 	b3Color               m_DiffColor;
 	b3_vector64           m_xHalfDir;
@@ -134,13 +134,13 @@ public:
 	b3_vector        m_ViewPoint;           //!< Actual view point.
 	b3_vector        m_Width;               //!< Horizontal projection plane vector.
 	b3_vector        m_Height;              //!< Vertical projection plane vector.
-	b3_res           m_xSize,m_ySize;       //!< Image resolution.
-	b3_f32           m_xAngle,m_yAngle;     //!< Horizontal and vertical view angle.
+	b3_res           m_xSize, m_ySize;      //!< Image resolution.
+	b3_f32           m_xAngle, m_yAngle;    //!< Horizontal and vertical view angle.
 
 	// Background
 	b3Color          m_TopColor;            //!< Top background color.
 	b3Color          m_BottomColor;         //!< Bottom background color.
-	b3Tx            *m_BackTexture;         //!< The background texture.
+	b3Tx      *      m_BackTexture;         //!< The background texture.
 	b3_bg_type       m_BackgroundType;      //!< The background type.
 
 	b3_count         m_TraceDepth;          //!< The ray trace depth.
@@ -178,7 +178,7 @@ public:
 	 * @param ySize Image height.
 	 * @return True on success.
 	 */
-	b3_bool          b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
+	b3_bool          b3GetDisplaySize(b3_res & xSize, b3_res & ySize);
 
 	//////////////////////////
 	////////// Render handling
@@ -190,7 +190,7 @@ public:
 	 * @param context The render context to use.
 	 * @see b3RenderObject::b3SetupVertexMemory().
 	 */
-	void             b3SetupVertexMemory(b3RenderContext *context);
+	void             b3SetupVertexMemory(b3RenderContext * context);
 
 	/**
 	 * This method iterates through all objects and shapes to free
@@ -207,7 +207,7 @@ public:
 	 * @param context The render context to use.
 	 * @see b3RenderObject::b3Draw().
 	 */
-	void             b3Draw(b3RenderContext *context);
+	void             b3Draw(b3RenderContext * context);
 
 	/**
 	 * This method iterates through all objects and shapes to update
@@ -245,28 +245,28 @@ public:
 	 *
 	 * @return The scene name.
 	 */
-	char            *b3GetName();
+	char      *      b3GetName();
 
 	/**
 	 * This method returns the file name of this scene.
 	 *
 	 * @return The used file name of this scene.
 	 */
-	char            *b3GetFilename();
+	char      *      b3GetFilename();
 
 	/**
 	 * This method sets a new file name of the scene.
 	 *
 	 * @param filename The new file name.
 	 */
-	void             b3SetFilename(const char *filename);
+	void             b3SetFilename(const char * filename);
 
 	/**
 	 * This method sets a new background image file name.
 	 *
 	 * @param name The new file name of the background image.
 	 */
-	void             b3SetTexture(const char *name);
+	void             b3SetTexture(const char * name);
 
 	/////////////////////////
 	////////// Scene handling
@@ -280,7 +280,7 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
+	b3_bool          b3PrepareScene(b3_res xSize, b3_res ySize);
 
 	/**
 	 * This method returns info for using with all sub b3Items for initialisation
@@ -288,7 +288,7 @@ public:
 	 *
 	 * \return The scene's preparation info.
 	 */
-	inline b3_scene_preparation *b3GetPrepareInfo()
+	inline b3_scene_preparation * b3GetPrepareInfo()
 	{
 		m_ScenePrepInfo.m_Scene = this;
 		m_ScenePrepInfo.m_t     = b3GetTimePoint();
@@ -302,7 +302,7 @@ public:
 	 * @param multi_threaded A flag which signals using all available CPU cores
 	 *                       for raytracing. Otherwise only one thread will be used.
 	 */
-	void             b3Raytrace(b3Display *display, b3_bool multi_threaded = true);
+	void             b3Raytrace(b3Display * display, b3_bool multi_threaded = true);
 
 	/**
 	 * This method aborts an active raytrace process.
@@ -318,10 +318,10 @@ public:
 	 * @param max The maximum length of the ray to test.
 	 * @return True when any intersection point was found.
 	 */
-	inline b3_bool   b3Intersect(b3_ray *ray,b3_bool checkVisibility,b3_f64 max = DBL_MAX)
+	inline b3_bool   b3Intersect(b3_ray * ray, b3_bool checkVisibility, b3_f64 max = DBL_MAX)
 	{
 		ray->Q     = max;
-		ray->shape = b3Intersect(b3GetFirstBBox(),ray,checkVisibility);
+		ray->shape = b3Intersect(b3GetFirstBBox(), ray, checkVisibility);
 
 		return ray->shape != null;
 	}
@@ -334,10 +334,10 @@ public:
 	 * @param max The maximum length of the ray to test.
 	 * @return True when any intersection point was found.
 	 */
-	b3_bool          b3IsObscured(b3_ray *ray,b3_f64 max = DBL_MAX)
+	b3_bool          b3IsObscured(b3_ray * ray, b3_f64 max = DBL_MAX)
 	{
 		ray->Q     = max;
-		ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
+		ray->shape = b3IsObscured(b3GetFirstBBox(), ray);
 		return ray->shape != null;
 	}
 
@@ -349,7 +349,7 @@ public:
 	 *
 	 * @return The configured shader instance.
 	 */
-	inline b3Shader *b3GetShader()
+	inline b3Shader * b3GetShader()
 	{
 		return m_Shader;
 	}
@@ -370,7 +370,7 @@ public:
 	 * @param fx The relative x coordinate of the result image in the range [-1..1].
 	 * @param fy The relative y coordinate of the result image in the range [-1..1].
 	 */
-	void             b3GetBackgroundColor(b3_ray *ray,b3_f64 fx,b3_f64 fy);
+	void             b3GetBackgroundColor(b3_ray * ray, b3_f64 fx, b3_f64 fy);
 
 	/**
 	 * This method mixes additional lens flares into the result color if
@@ -379,7 +379,7 @@ public:
 	 * @param ray The shooting ray
 	 * @see b3_ray
 	 */
-	void             b3MixLensFlare(b3_ray *ray);
+	void             b3MixLensFlare(b3_ray * ray);
 
 	/**
 	 * This method computes the infinite color in case the ray depth is not
@@ -389,14 +389,14 @@ public:
 	 * @param ray The infinite ray.
 	 * @see b3GetBackgroundColor().
 	 */
-	void             b3GetInfiniteColor(b3_ray *ray);
+	void             b3GetInfiniteColor(b3_ray * ray);
 
 	/**
 	 * This method returns the list base of the top level objects.
 	 *
 	 * @return The list base of the top level objects.
 	 */
-	inline b3Base<b3Item> *b3GetBBoxHead()
+	inline b3Base<b3Item> * b3GetBBoxHead()
 	{
 		return &m_Heads[0];
 	}
@@ -406,7 +406,7 @@ public:
 	 *
 	 * @return The first object in the scene.
 	 */
-	inline b3BBox  *b3GetFirstBBox()
+	inline b3BBox * b3GetFirstBBox()
 	{
 		return (b3BBox *)b3GetBBoxHead()->First;
 	}
@@ -445,7 +445,7 @@ public:
 	 * @param upper The resulting upper corner of the scene bounding box.
 	 * @return True on success.
 	 */
-	b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+	b3_bool         b3ComputeBounds(b3_vector * lower, b3_vector * upper);
 
 	/**
 	 * This method invalidates all objects beginning at the given object
@@ -456,7 +456,7 @@ public:
 	 * @see b3RenderObject::b3Recompute()
 	 * @warning This method may be slow. It is ment for GUI purposes only.
 	 */
-	b3_bool         b3BacktraceRecompute(b3BBox *search);
+	b3_bool         b3BacktraceRecompute(b3BBox * search);
 
 	/**
 	 * This method searches recursively in the object hierarchy the list base
@@ -467,7 +467,7 @@ public:
 	 * @warning This method may be slow. It is ment for GUI purposes only.
 	 */
 
-	b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
+	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox);
 	/**
 	 * this method searches in the object hierarchy the hosting object of the
 	 * given shape.
@@ -476,7 +476,7 @@ public:
 	 * @return The belonging object.
 	 * @warning This method may be slow. It is ment for GUI purposes only.
 	 */
-	b3BBox         *b3FindParentBBox(b3Shape *shape);
+	b3BBox     *    b3FindParentBBox(b3Shape * shape);
 
 	/**
 	 * This method collects all objects which tangents the given ray.
@@ -485,7 +485,7 @@ public:
 	 * @param array The array which gets the object pointers.
 	 * @param max The maximum distance of the ray direction.
 	 */
-	void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
+	void            b3CollectBBoxes(b3_line64 * line, b3Array<b3BBox *> * array, b3_f64 max = DBL_MAX);
 
 	/**
 	 * This method collects all objects in the given bounding box.
@@ -494,7 +494,7 @@ public:
 	 * @param upper The upper corner of the bounding box.
 	 * @param array  The array which gets the object pointers.
 	 */
-	void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
+	void            b3CollectBBoxes(b3_vector * lower, b3_vector * upper, b3Array<b3BBox *> * array);
 
 	/**
 	 * This method collects all objects which are in the given activation state.
@@ -502,14 +502,14 @@ public:
 	 * @param array The array which gets the object pointers.
 	 * @param activation The activation state.
 	 */
-	void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
+	void            b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation);
 
 	/**
 	 * This method sets the hole hierarchy into the given state.
 	 *
 	 * @param activate The activation state.
 	 */
-	void            b3Activate(b3_bool activate=true);
+	void            b3Activate(b3_bool activate = true);
 
 	/**
 	 * This method transforms objects in the hierarchy depending on the given states.
@@ -519,7 +519,7 @@ public:
 	 * normals can be transformed, too. Otherwise the normals must be recomputed.
 	 * @param forceAction Force transformation and ignore activation state of object.
 	 */
-	void            b3Transform(b3_matrix *transformation,b3_bool isAffine = true,b3_bool forceAction = false);
+	void            b3Transform(b3_matrix * transformation, b3_bool isAffine = true, b3_bool forceAction = false);
 
 	/**
 	 * This method recomputes for all objects the visibility in conjunction with
@@ -538,7 +538,7 @@ public:
 	 * @param mustActive Force first camera to be active.
 	 * @return The first camera.
 	 */
-	b3CameraPart   *b3GetFirstCamera(b3_bool mustActive = false);
+	b3CameraPart  * b3GetFirstCamera(b3_bool mustActive = false);
 
 	/**
 	 * This method returns the actually selected camera.
@@ -546,7 +546,7 @@ public:
 	 * @return The actually selected camera.
 	 * @see b3SetCamera().
 	 */
-	b3CameraPart   *b3GetActualCamera();
+	b3CameraPart  * b3GetActualCamera();
 
 	/**
 	 * This method returns the first camera which matches
@@ -555,7 +555,7 @@ public:
 	 * @param cameraName The camera name to search for.
 	 * @return The found camera if any.
 	 */
-	b3CameraPart   *b3GetCameraByName(const char *cameraName);
+	b3CameraPart  * b3GetCameraByName(const char * cameraName);
 
 	/**
 	 * This method returns the next camera outgoing from the given camera.
@@ -563,13 +563,13 @@ public:
 	 * @param act The camera position to search from.
 	 * @return The next camera.
 	 */
-	b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
+	b3CameraPart  * b3GetNextCamera(b3CameraPart * act);
 
 	/**
 	 * This method copies the values from the actual set camera
 	 * into the scene copies.
 	 */
-	b3CameraPart   *b3UpdateCamera();
+	b3CameraPart  * b3UpdateCamera();
 
 	/**
 	 * This method returns the actual camera title. If the actual camera
@@ -581,7 +581,7 @@ public:
 	 * @param size The buffer size of the retrieving camera name.
 	 * @return True if the result name has a length greater than zero.
 	 */
-	b3_bool         b3GetTitle(char *title,size_t size);
+	b3_bool         b3GetTitle(char * title, size_t size);
 
 	/**
 	 * This method sets a new actual camera. An additional flag signals if
@@ -592,7 +592,7 @@ public:
 	 * @param reorder A flag which signals if the camera should be put in front
 	 * of all other cameras.
 	 */
-	void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
+	void            b3SetCamera(b3CameraPart * camera, b3_bool reorder = false);
 
 	////////////////////////
 	////////// Light methods
@@ -602,7 +602,7 @@ public:
 	 *
 	 * @return The list base of the light sources.
 	 */
-	inline b3Base<b3Item> *b3GetLightHead()
+	inline b3Base<b3Item> * b3GetLightHead()
 	{
 		return &m_Heads[1];
 	}
@@ -615,7 +615,7 @@ public:
 	 * @param mustActive Force first light source to be active.
 	 * @return The first light source.
 	 */
-	b3Light        *b3GetLight(b3_bool mustActive = false);
+	b3Light    *    b3GetLight(b3_bool mustActive = false);
 
 	/**
 	 * This method returns the first light source which matches
@@ -624,7 +624,7 @@ public:
 	 * @param lightName The light name to search for.
 	 * @return The found light source if any.
 	 */
-	b3Light        *b3GetLightByName(const char *lightName);
+	b3Light    *    b3GetLightByName(const char * lightName);
 
 	/**
 	 * This method returns the light source count.
@@ -641,7 +641,7 @@ public:
 	 *
 	 * @return The list base of special effects.
 	 */
-	inline b3Base<b3Item> *b3GetSpecialHead()
+	inline b3Base<b3Item> * b3GetSpecialHead()
 	{
 		return &m_Heads[2];
 	}
@@ -656,7 +656,7 @@ public:
 	 * @return The animation definition.
 	 * @see b3AnimElement.
 	 */
-	b3Animation       *b3GetAnimation(b3_bool force = false);
+	b3Animation    *   b3GetAnimation(b3_bool force = false);
 
 	/**
 	 * This method returns a modeller helper class instance. If no instance
@@ -664,7 +664,7 @@ public:
 	 *
 	 * @return The modeller helper information instance.
 	 */
-	b3ModellerInfo    *b3GetModellerInfo();
+	b3ModellerInfo  *  b3GetModellerInfo();
 
 	/**
 	 * This method returns the distributed raytracing special effect definition.
@@ -674,7 +674,7 @@ public:
 	 * @param force If a distributed raytracing instance is forced.
 	 * @return The distributed raytracing definition.
 	 */
-	b3Distribute      *b3GetDistributed(b3_bool force = true);
+	b3Distribute   *   b3GetDistributed(b3_bool force = true);
 
 	/**
 	 * This method returns the nebular special effect definition.
@@ -684,7 +684,7 @@ public:
 	 * @param force If a nebular instance is forced.
 	 * @return The nebular definition.
 	 */
-	b3Nebular         *b3GetNebular    (b3_bool force = true);
+	b3Nebular     *    b3GetNebular(b3_bool force = true);
 
 	/**
 	 * This method returns the super sampling definition.
@@ -694,7 +694,7 @@ public:
 	 * @param force If a super sampling instance is forced.
 	 * @return The super sampling definition.
 	 */
-	b3SuperSample     *b3GetSuperSample(b3_bool force = true);
+	b3SuperSample   *  b3GetSuperSample(b3_bool force = true);
 
 	/**
 	 * This method returns the lens flare special effect definition.
@@ -704,7 +704,7 @@ public:
 	 * @param force If a lens flare instance is forced.
 	 * @return The lens flare definition.
 	 */
-	b3LensFlare       *b3GetLensFlare  (b3_bool force = false);
+	b3LensFlare    *   b3GetLensFlare(b3_bool force = false);
 
 	/**
 	 * This method returns the cloud background special effect definition.
@@ -714,7 +714,7 @@ public:
 	 * @param force If an cloud background instance is forced.
 	 * @return The cloud background definition.
 	 */
-	b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
+	b3CloudBackground * b3GetCloudBackground(b3_bool force = false);
 
 	////////////////////
 	////////// Animation
@@ -724,7 +724,7 @@ public:
 	 *
 	 * @param t The new animation time point to move to.
 	 */
-	void            b3SetAnimation (b3_f64 t);
+	void            b3SetAnimation(b3_f64 t);
 
 	/**
 	 * This method returns the actual animation time point.
@@ -751,7 +751,7 @@ public:
 	 * @param filename The file name of the TGF file.
 	 * @return The converted Blizzard III scene.
 	 */
-	static  b3Scene        *b3ReadTGF(const char *filename);
+	static  b3Scene    *    b3ReadTGF(const char * filename);
 
 	/**
 	 * This method checks the given image file name for existance in the
@@ -763,7 +763,7 @@ public:
 	 * @param name The image name to search for.
 	 * @return True on success.
 	 */
-	static  b3_bool         b3CheckTexture(b3Tx **tx,const char *name);
+	static  b3_bool         b3CheckTexture(b3Tx ** tx, const char * name);
 
 	/**
 	 * This method shortens the given full qualified file name to a short
@@ -774,7 +774,7 @@ public:
 	 * @return True on success.
 	 * @see b3ImagePool::b3CutName().
 	 */
-	static  b3_bool         b3CutTextureName(const char *fullname,char *shortname);
+	static  b3_bool         b3CutTextureName(const char * fullname, char * shortname);
 
 	/**
 	 * This is a multi threading call back function which simply prepares
@@ -784,19 +784,19 @@ public:
 	 * @param ptr An additional custom information pointer.
 	 * @return The result of the b3BBox::b3Prepare() method.
 	 */
-	static  b3_u32          b3PrepareBBoxThread(b3BBox *bbox,void *ptr);
+	static  b3_u32          b3PrepareBBoxThread(b3BBox * bbox, void * ptr);
 
 private:
-	b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
+	b3_bool         b3FindObscurer(b3_ray * ray, b3_f64 max = DBL_MAX);
 	void            b3ReallocateShader();
-	void            b3DoRaytrace(b3Display *display,b3_count CPUs);
-	void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
-	static  b3_u32          b3RaytraceThread(void *ptr);
-	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
-	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
-	static  b3_u32          b3RecomputeMaterialThread(b3BBox *bbox,void *ptr);
-	b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray,b3_bool check_visibility);
-	b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
+	void            b3DoRaytrace(b3Display * display, b3_count CPUs);
+	void            b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs);
+	static  b3_u32          b3RaytraceThread(void * ptr);
+	static  b3_u32          b3RaytraceMotionBlurThread(void * ptr);
+	static  b3_u32          b3UpdateThread(b3BBox * bbox, void * ptr);
+	static  b3_u32          b3RecomputeMaterialThread(b3BBox * bbox, void * ptr);
+	b3Shape    *    b3Intersect(b3BBox * bbox, b3_ray * ray, b3_bool check_visibility);
+	b3Shape    *    b3IsObscured(b3BBox * bbox, b3_ray * ray);
 
 	friend class b3Shader;
 	friend class b3RayRow;
@@ -816,11 +816,11 @@ class B3_PLUGIN b3RayRow : public b3Row
 protected:
 	const b3_res       m_ySize;        //!< The resulting image height.
 
-	b3Display   *m_Display;      //!< The used b3Display.
-	b3Scene     *m_Scene;        //!< The used b3Scene.
-	b3Shader    *m_Shader;       //!< The used b3Shader.
-	b3Color     *m_LastResult;   //!< The position of the previous color in row.
-	b3Color     *m_ThisResult;   //!< The position of the actual color.
+	b3Display  * m_Display;      //!< The used b3Display.
+	b3Scene   *  m_Scene;        //!< The used b3Scene.
+	b3Shader  *  m_Shader;       //!< The used b3Shader.
+	b3Color   *  m_LastResult;   //!< The position of the previous color in row.
+	b3Color   *  m_ThisResult;   //!< The position of the actual color.
 	b3_vector64  m_preDir;
 	b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
 	b3_f64       m_fy;           //!<
@@ -837,8 +837,8 @@ public:
 	 * @param ySize The image height.
 	 */
 	b3RayRow(
-		b3Scene   *scene,
-		b3Display *display,
+		b3Scene  * scene,
+		b3Display * display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);
@@ -862,7 +862,7 @@ protected:
 	 * @param fy The projection plane y coordinate.
 	 * @return The raytraced color.
 	 */
-	b3Color &b3Shade(b3_ray *ray, const b3_f64 fx, const b3_f64 fy);
+	b3Color & b3Shade(b3_ray * ray, const b3_f64 fx, const b3_f64 fy);
 };
 
 /**
@@ -885,8 +885,8 @@ enum b3_row_state
  */
 class B3_PLUGIN b3SupersamplingRayRow : public b3RayRow
 {
-	b3SupersamplingRayRow *m_PrevRow;
-	b3SupersamplingRayRow *m_SuccRow;
+	b3SupersamplingRayRow * m_PrevRow;
+	b3SupersamplingRayRow * m_SuccRow;
 	b3Color                m_Limit;
 	b3_row_state           m_RowState;
 	b3_bool                m_Debug;
@@ -903,12 +903,12 @@ public:
 	 * @param previous The super sampling row directly above this one.
 	 */
 	b3SupersamplingRayRow(
-		b3Scene               *scene,
-		b3Display             *display,
+		b3Scene        *       scene,
+		b3Display       *      display,
 		const b3_coord               y,
 		const b3_res                 xSize,
 		const b3_res                 ySize,
-		b3SupersamplingRayRow *previous);
+		b3SupersamplingRayRow * previous);
 
 	/**
 	 * This destructor deinitializes this row instance.
@@ -929,12 +929,12 @@ private:
 class B3_PLUGIN b3DistributedRayRow : public b3RayRow
 {
 protected:
-	b3Distribute *m_Distr;     //!< The class which describes distributed raytracing.
+	b3Distribute * m_Distr;    //!< The class which describes distributed raytracing.
 	b3_count      m_SPP;       //!< Samples per pixel.
 	b3_count      m_SPF;       //!< Samples per frame.
-	b3_vector64  *m_xHalfDir;  //!< The half width of a pixel in world coordinates.
-	b3_vector64  *m_yHalfDir;  //!< The half height of a pixel in world coordinates.
-	b3_f32       *m_Samples;   //!< The sampling offsets provided by the b3Distribute::m_Samples member.
+	b3_vector64 * m_xHalfDir;  //!< The half width of a pixel in world coordinates.
+	b3_vector64 * m_yHalfDir;  //!< The half height of a pixel in world coordinates.
+	b3_f32    *   m_Samples;   //!< The sampling offsets provided by the b3Distribute::m_Samples member.
 
 public:
 	/**
@@ -947,8 +947,8 @@ public:
 	 * @param ySize The image height.
 	 */
 	b3DistributedRayRow(
-		b3Scene   *scene,
-		b3Display *display,
+		b3Scene  * scene,
+		b3Display * display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);
@@ -966,11 +966,11 @@ public:
  */
 class B3_PLUGIN b3MotionBlurRayRow : public b3DistributedRayRow
 {
-	b3_index       *m_TimeIndex;
+	b3_index    *   m_TimeIndex;
 	b3_index        m_Index;
 	b3_index        m_Modulo;
 	b3_index        m_Start;
-	b3Color        *m_Color;
+	b3Color    *    m_Color;
 	b3_vector64     m_BackupDir;
 
 public:
@@ -985,8 +985,8 @@ public:
 	 * @throws b3WorldException
 	 */
 	b3MotionBlurRayRow(
-		b3Scene   *scene,
-		b3Display *display,
+		b3Scene  * scene,
+		b3Display * display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);

@@ -31,13 +31,13 @@ class b3Sampler;
  */
 struct b3SampleInfo
 {
-	b3Sampler    *m_Sampler;       //!< The hosting sampler.
+	b3Sampler  *  m_Sampler;       //!< The hosting sampler.
 	b3_res        m_yStart;        //!< The vertical strip start coordinate.
 	b3_res        m_yEnd;          //!< The vertical strip end coordinate.
 	b3_res        m_xMax;          //!< The strip width.
 	b3_res        m_yMax;          //!< The overall sampling height.
-	void         *m_Data;          //!< The resulting strip data.
-	void         *m_Ptr;           //!< A pointer to custom information.
+	void     *    m_Data;          //!< The resulting strip data.
+	void     *    m_Ptr;           //!< A pointer to custom information.
 };
 
 /**
@@ -48,7 +48,7 @@ class b3Sampler
 protected:
 	b3_res        m_xMax;  //!< The sample width.
 	b3_res        m_yMax;  //!< The sample height.
-	void         *m_Data;  //!< The resulting sampling data.
+	void     *    m_Data;  //!< The resulting sampling data.
 
 public:
 	/**
@@ -73,10 +73,10 @@ protected:
 	 *
 	 * @param info The threads sample information structure.
 	 */
-	virtual void           b3SampleTask(const b3SampleInfo *info) = 0;
+	virtual void           b3SampleTask(const b3SampleInfo * info) = 0;
 
 private:
-	static b3_u32 b3SampleThread(void *ptr);
+	static b3_u32 b3SampleThread(void * ptr);
 };
 
 class b3Tx;
@@ -92,11 +92,11 @@ public:
 	 *
 	 * @param tx The image to resample.
 	 */
-	b3ImageSampler(b3Tx *tx);
+	b3ImageSampler(b3Tx * tx);
 
 protected:
-	b3SampleInfo *b3SampleInit(const b3_count CPUs);
-	void          b3SampleTask(const b3SampleInfo *info);
+	b3SampleInfo * b3SampleInit(const b3_count CPUs);
+	void          b3SampleTask(const b3SampleInfo * info);
 
 	/**
 	 * This method returns a pixel color at a given coordinate.

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ShowImage.h $  
+**	$Filename:	b3ShowImage.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -36,18 +36,18 @@ protected:
 	b3_res        m_xSize;
 	b3_res        m_ySize;
 public:
-	     CB3ShowImage();
-	b3_bool b3Load(const char *name);
+	CB3ShowImage();
+	b3_bool b3Load(const char * name);
 
-	void    b3Aspect(b3Tx *srcTx,
-		b3_coord &xPos, b3_coord &yPos,
-		b3_res   &xSize,b3_res   &ySize,
-		b3_bool keep_aspect=true);
+	void    b3Aspect(b3Tx * srcTx,
+		b3_coord & xPos, b3_coord & yPos,
+		b3_res  & xSize, b3_res  & ySize,
+		b3_bool keep_aspect = true);
 
-	b3_bool b3Update(b3_bool filtered,b3_bool keep_aspect=true);
-	void    b3Copy(b3Tx *original);
+	b3_bool b3Update(b3_bool filtered, b3_bool keep_aspect = true);
+	void    b3Copy(b3Tx * original);
 
-	        operator b3Tx *();
+	operator b3Tx * ();
 
 	// Generated message map functions
 protected:

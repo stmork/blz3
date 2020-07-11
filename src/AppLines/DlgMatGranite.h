@@ -35,36 +35,36 @@
 
 class CDlgMatGranite : public CB3SimplePropertyPreviewDialog
 {
-	b3Scene           *m_MatScene;
-	b3Base<b3Item>    *m_MatHead;
-	b3MatGranite      *m_Material;
+	b3Scene      *     m_MatScene;
+	b3Base<b3Item>  *  m_MatHead;
+	b3MatGranite   *   m_Material;
 
 	CPageMaterial      m_PageDark;
 	CPageMaterial      m_PageLight;
 	CPageScaling       m_PageScaling;
 
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgMatGranite(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgMatGranite(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgMatGranite();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgMatGranite)
 	enum { IDD = IDD_MAT_GRANITE };
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgMatGranite)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

@@ -42,7 +42,7 @@ public:
 	 *
 	 * @param new_name The new file name.
 	 */
-	b3FileEntry(const char *new_name);
+	b3FileEntry(const char * new_name);
 
 	/**
 	 * This method implements the comparison method for the b3FileList::b3Sort
@@ -51,14 +51,14 @@ public:
 	 * @param compare The file entry to compare with.
 	 * @return The position indicator.
 	 */
-	const int    b3Cmp(const b3FileEntry *compare) const;
+	const int    b3Cmp(const b3FileEntry * compare) const;
 
 	/**
 	 * This method returns the file name of this entry.
 	 *
 	 * @return File name.
 	 */
-	const char  *b3Name() const;
+	const char * b3Name() const;
 };
 
 /**
@@ -80,7 +80,7 @@ public:
 	 *
 	 * @param dir_name The path.
 	 */
-	b3FileList(const char *dir_name);
+	b3FileList(const char * dir_name);
 
 	/**
 	 * This destructor deinitializes this instance.
@@ -95,7 +95,7 @@ public:
 	 *
 	 * @param dir_name The path.
 	 */
-	void           b3CreateList(const char *dir_name);
+	void           b3CreateList(const char * dir_name);
 
 	/**
 	 * This method deletes the file list.
@@ -107,12 +107,12 @@ public:
 	 *
 	 * @return The first file list entry.
 	 */
-	b3FileEntry   *b3First() const;
+	b3FileEntry  * b3First() const;
 
 	/**
 	 * This element adds a file list entry.
 	 */
-	const b3_bool  b3Add(const char *file_name);
+	const b3_bool  b3Add(const char * file_name);
 
 	/**
 	 * This method sorts the file entries alphabetically.
@@ -124,7 +124,7 @@ public:
 	 *
 	 * @param dir_name The path.
 	 */
-	void           b3RecCreateList(const char *dir_name);
+	void           b3RecCreateList(const char * dir_name);
 
 	/**
 	 * Thie method returns the amount of file entries.

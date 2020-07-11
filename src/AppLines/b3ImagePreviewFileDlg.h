@@ -40,9 +40,9 @@ public:
 		LPCTSTR lpszFileName = NULL,
 		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 		LPCTSTR lpszFilter = NULL,
-		CWnd* pParentWnd = NULL);
+		CWnd * pParentWnd = NULL);
 
-// Attributes
+	// Attributes
 public:
 	BOOL         m_bPreview;
 	b3_bool      m_Filtered;
@@ -50,10 +50,10 @@ public:
 
 	CB3ShowImage m_PreviewCtrl;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ImagePreviewFileDlg)
-	protected:
+protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_VIRTUAL
 
@@ -61,14 +61,14 @@ protected:
 	//{{AFX_MSG(CB3ImagePreviewFileDlg)
 	afx_msg void OnPreview();
 	afx_msg BOOL OnQueryNewPalette();
-	afx_msg void OnPaletteChanged(CWnd* pFocusWnd);
-	afx_msg void OnSetFocus(CWnd* pOldWnd);
+	afx_msg void OnPaletteChanged(CWnd * pFocusWnd);
+	afx_msg void OnSetFocus(CWnd * pOldWnd);
 	//}}AFX_MSG
 	virtual void OnFileNameChange();
 	virtual void OnFolderChange();
-	virtual void b3LoadImage(const char *image_name);
+	virtual void b3LoadImage(const char * image_name);
 
-// Implementation
+	// Implementation
 	DECLARE_MESSAGE_MAP()
 };
 
@@ -83,19 +83,19 @@ public:
 		LPCTSTR lpszFileName = NULL,
 		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 		LPCTSTR lpszFilter = NULL,
-		CWnd* pParentWnd = NULL);
-// Overrides
+		CWnd * pParentWnd = NULL);
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ObjectPreviewFileDlg)
 	//}}AFX_VIRTUAL
 protected:
-	virtual void b3LoadImage(const char *image_name);
+	virtual void b3LoadImage(const char * image_name);
 
 protected:
 	//{{AFX_MSG(CB3ObjectPreviewFileDlg)
 	//}}AFX_MSG
 
-// Implementation
+	// Implementation
 	DECLARE_MESSAGE_MAP()
 };
 

@@ -68,7 +68,7 @@ public:
 	 * @param y The y coordinate.
 	 * @return The native color value.
 	 */
-	virtual b3_pkd_color b3ARGBtoPixel(b3_color ARGB,b3_coord x,b3_coord y) = 0;
+	virtual b3_pkd_color b3ARGBtoPixel(b3_color ARGB, b3_coord x, b3_coord y) = 0;
 };
 
 /**
@@ -78,15 +78,15 @@ public:
  */
 class b3DisplayView : public b3Display
 {
-	b3_res          m_xs,m_ys; // This is the max. visible size
-	const char     *m_Title;
-	b3DisplayPixel *m_Pixel;
+	b3_res          m_xs, m_ys; // This is the max. visible size
+	const char   *  m_Title;
+	b3DisplayPixel * m_Pixel;
 
 	// Some X values
 	b3_bool         m_Opened;
 	b3_bool         m_Closed;
 #ifdef HAVE_LIBX11
-	Display        *m_Display;
+	Display    *    m_Display;
 	int             m_Screen;
 	Window          m_Window;
 	Colormap        m_Colormap;
@@ -100,7 +100,7 @@ public:
 	 *
 	 * @param title The window title.
 	 */
-	b3DisplayView(const char *title = null);
+	b3DisplayView(const char * title = null);
 
 	/**
 	 * This constructor opens a window with the given resolution and the given window
@@ -110,16 +110,16 @@ public:
 	 * @param ySize The window height.
 	 * @param title The window title.
 	 */
-	b3DisplayView(const b3_res xSize, const b3_res ySize, const char *title = null);
+	b3DisplayView(const b3_res xSize, const b3_res ySize, const char * title = null);
 
 	/**
 	 * This destructor closes the window.
 	 */
 	~b3DisplayView();
 
-	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &pixel);
-	void                b3PutRow(const b3Row *row);
-	void                b3PutTx(b3Tx *tx);
+	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel);
+	void                b3PutRow(const b3Row * row);
+	void                b3PutTx(b3Tx * tx);
 	b3_bool             b3IsCancelled(const b3_coord x, const b3_coord y);
 	void                b3Wait();
 
@@ -130,7 +130,7 @@ private:
 	void         b3Open(const b3_res xSize, const b3_res ySize);
 	b3_bool      b3CreateColormap();
 	void         b3FreeColormap();
-	static Bool         b3SetPredicate(Display *display,XEvent *event,char *buffer);
+	static Bool         b3SetPredicate(Display * display, XEvent * event, char * buffer);
 	void         b3FirstDrawing();
 	void         b3RefreshAll();
 #endif

@@ -37,7 +37,7 @@ public:
 	 *
 	 * @param extensions The OpenGL extension string.
 	 */
-	static        void    b3Init(const char *extensions);
+	static        void    b3Init(const char * extensions);
 
 	/**
 	 * This method enables or disables multi sampling.

@@ -74,11 +74,11 @@ public:
 	 * @param a The new alpha channel.
 	 * @return The ::b3_color instance pointer.
 	 */
-	inline static b3_color *b3Init(b3_color *color,
-								   b3_f32 r = 0,
-								   b3_f32 g = 0,
-								   b3_f32 b = 0,
-								   b3_f32 a = 0)
+	inline static b3_color * b3Init(b3_color * color,
+		b3_f32 r = 0,
+		b3_f32 g = 0,
+		b3_f32 b = 0,
+		b3_f32 a = 0)
 	{
 		color->r = r;
 		color->g = g;

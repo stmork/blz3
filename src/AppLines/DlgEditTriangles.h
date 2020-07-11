@@ -33,26 +33,26 @@
 
 class CDlgEditTriangles : public CB3ShapeDialog
 {
-// Construction
+	// Construction
 public:
-	CDlgEditTriangles(CWnd* pParent = NULL);   // standard constructor
+	CDlgEditTriangles(CWnd * pParent = NULL);  // standard constructor
 
 	virtual void b3PostProcess();
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgEditTriangles)
 	enum { IDD = IDD_EDIT_TRIANGLES };
 	BOOL	m_Phong;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgEditTriangles)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 

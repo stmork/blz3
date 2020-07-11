@@ -51,7 +51,7 @@ void b3FFTTest::testFFT()
 {
 	b3Tx tx;
 
-	for (b3_loop size = 1; size <= 2048; size += size)
+	for(b3_loop size = 1; size <= 2048; size += size)
 	{
 		CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(size));
 		CPPUNIT_ASSERT_NO_THROW(fft.b3SelfTest());
@@ -104,10 +104,10 @@ b3_f64 b3FFTTest::b3Count()
 {
 	b3_f64       count = 0;
 	b3_loop      i, max = dim * dim;
-	b3Complex64 *buffer = fft.b3GetBuffer();
+	b3Complex64 * buffer = fft.b3GetBuffer();
 
 	CPPUNIT_ASSERT(buffer != null);
-	for (i = 0; i < max; i++)
+	for(i = 0; i < max; i++)
 	{
 		count += fabs(buffer[i].b3Real());
 		count += fabs(buffer[i].b3Imag());
@@ -119,9 +119,9 @@ void b3FFTTest::clear(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	b3FilterInfo *filter_info)
+	b3FilterInfo * filter_info)
 {
-	b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
+	b3Complex64 * buffer = filter_info->m_Fourier->b3GetBuffer();
 
 	buffer[index] = 0;
 }
@@ -130,9 +130,9 @@ void b3FFTTest::setbuffer(
 	const b3_f64        fx,
 	const b3_f64        fy,
 	const b3_index      index,
-	b3FilterInfo *filter_info)
+	b3FilterInfo * filter_info)
 {
-	b3Complex64 *buffer = filter_info->m_Fourier->b3GetBuffer();
+	b3Complex64 * buffer = filter_info->m_Fourier->b3GetBuffer();
 
 	buffer[index] = b3Complex64(TEST_RE, TEST_IM);
 }

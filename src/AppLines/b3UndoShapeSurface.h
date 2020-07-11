@@ -32,14 +32,14 @@
 class b3OpShapeSurfaceList : public b3OpShape
 {
 protected:
-	b3Shape        *m_Shape;     // This is the properties' shape
-	b3Base<b3Item> *m_Base;      // The material base to edit
+	b3Shape    *    m_Shape;     // This is the properties' shape
+	b3Base<b3Item> * m_Base;     // The material base to edit
 	b3Base<b3Item>  m_OrigBase;  // The the original properties' base
 	b3Base<b3Item>  m_CloneBase; // The the cloned properties' base
 	BOOL            m_Modified;
 
 protected:
-	b3OpShapeSurfaceList(b3BBox *root, CAppObjectDoc *pDoc,CDlgHierarchy *hierarchy);
+	b3OpShapeSurfaceList(b3BBox * root, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	virtual void b3Undo();
@@ -51,7 +51,7 @@ class b3OpShapeMaterialEditList : public b3OpShapeSurfaceList
 {
 
 public:
-	b3OpShapeMaterialEditList(b3BBox *root, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeMaterialEditList(b3BBox * root, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -66,7 +66,7 @@ protected:
 class b3OpShapeBumpEditList : public b3OpShapeSurfaceList
 {
 public:
-	b3OpShapeBumpEditList(b3BBox *root, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeBumpEditList(b3BBox * root, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	inline int  b3GetId()
@@ -78,7 +78,7 @@ protected:
 class b3OpShapeConditionEditList : public b3OpShapeSurfaceList
 {
 public:
-	b3OpShapeConditionEditList(b3BBox *root, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeConditionEditList(b3BBox * root, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -99,14 +99,14 @@ protected:
 class b3OpShapeSurfaceItem : public b3OpShape
 {
 protected:
-	b3Shape        *m_Shape;       // This is the materials' shape
-	b3Base<b3Item> *m_Base;        // The material base to edit
-	b3Item         *m_Original;    // The original item
-	b3Item         *m_Clone;       // The cloned itemd
-	b3Item         *m_InsertAfter; // item for reinsertion
+	b3Shape    *    m_Shape;       // This is the materials' shape
+	b3Base<b3Item> * m_Base;       // The material base to edit
+	b3Item     *    m_Original;    // The original item
+	b3Item     *    m_Clone;       // The cloned itemd
+	b3Item     *    m_InsertAfter; // item for reinsertion
 
 protected:
-	b3OpShapeSurfaceItem(b3BBox *root, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeSurfaceItem(b3BBox * root, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	virtual void b3Undo();
@@ -117,7 +117,7 @@ protected:
 class b3OpShapeMaterialEdit : public b3OpShapeSurfaceItem
 {
 public:
-	b3OpShapeMaterialEdit(b3BBox *root, b3Shape *shape, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeMaterialEdit(b3BBox * root, b3Shape * shape, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -132,7 +132,7 @@ protected:
 class b3OpShapeBumpEdit : public b3OpShapeSurfaceItem
 {
 public:
-	b3OpShapeBumpEdit(b3BBox *root, b3Shape *shape, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeBumpEdit(b3BBox * root, b3Shape * shape, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	inline int  b3GetId()
@@ -144,7 +144,7 @@ protected:
 class b3OpShapeConditionEdit : public b3OpShapeSurfaceItem
 {
 public:
-	b3OpShapeConditionEdit(b3BBox *root, b3Shape *shape, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeConditionEdit(b3BBox * root, b3Shape * shape, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	void b3Undo();
@@ -158,11 +158,11 @@ protected:
 
 class b3OpShapeCopySurface : public b3OpShape
 {
-	b3Shape            *m_Shape;       // This is the materials' shape
+	b3Shape      *      m_Shape;       // This is the materials' shape
 	b3CopyPropertyInfo  m_CopyInfo;
 
 public:
-	b3OpShapeCopySurface(b3BBox *root, CAppObjectDoc *pDoc, CDlgHierarchy *hierarchy);
+	b3OpShapeCopySurface(b3BBox * root, CAppObjectDoc * pDoc, CDlgHierarchy * hierarchy);
 
 protected:
 	virtual void b3Undo();

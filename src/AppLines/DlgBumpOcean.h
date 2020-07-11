@@ -36,9 +36,9 @@
 
 class CDlgBumpOcean : public CB3SimplePropertyPreviewDialog
 {
-	b3BumpOcean       *m_Bump;
-	b3BBox            *m_BBox;
-	b3BumpSampler     *m_BumpSampler;
+	b3BumpOcean    *   m_Bump;
+	b3BBox      *      m_BBox;
+	b3BumpSampler   *  m_BumpSampler;
 
 	CPageBump          m_PageBump;
 	CPageOcean         m_PageOcean;
@@ -46,27 +46,27 @@ class CDlgBumpOcean : public CB3SimplePropertyPreviewDialog
 
 	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgBumpOcean(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpOcean(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgBumpOcean();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgBumpOcean)
 	enum { IDD = IDD_BUMP_OCEAN };
 	CB3ShowSample	m_PreviewBumpCtrl;
-		// NOTE: the ClassWizard will add data members here
+	// NOTE: the ClassWizard will add data members here
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgBumpOcean)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

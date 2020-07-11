@@ -23,11 +23,11 @@
 
 struct CB3PixelFormatDescriptor
 {
-	 PIXELFORMATDESCRIPTOR desc;
-	 b3_index              index;
+	PIXELFORMATDESCRIPTOR desc;
+	b3_index              index;
 };
 
-typedef int (*b3PixelFormatSortFunc)(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
+typedef int (*b3PixelFormatSortFunc)(CB3PixelFormatDescriptor * a, CB3PixelFormatDescriptor * b);
 
 class CB3PixelFormat
 {
@@ -42,13 +42,13 @@ protected:
 	HGLRC           m_glGC;
 
 protected:
-	       void  b3ListPixelFormats(HDC dc,const char *title = "");
-	       HGLRC b3CreateContext(HDC dc,b3PixelFormatSortFunc func, b3_bool &double_buffered);
-	static void  b3FlagsString(CString &desc,int flags);
-	static int   b3ComputePixelFormatMode(const PIXELFORMATDESCRIPTOR *input,const PIXELFORMATDESCRIPTOR *templ);
-	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat);
-	static int   b3WindowPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
-	static int   b3PrinterPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
+	void  b3ListPixelFormats(HDC dc, const char * title = "");
+	HGLRC b3CreateContext(HDC dc, b3PixelFormatSortFunc func, b3_bool & double_buffered);
+	static void  b3FlagsString(CString & desc, int flags);
+	static int   b3ComputePixelFormatMode(const PIXELFORMATDESCRIPTOR * input, const PIXELFORMATDESCRIPTOR * templ);
+	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR * a, PIXELFORMATDESCRIPTOR * b, const PIXELFORMATDESCRIPTOR * templFormat);
+	static int   b3WindowPixelFormatSorter(CB3PixelFormatDescriptor * a, CB3PixelFormatDescriptor * b);
+	static int   b3PrinterPixelFormatSorter(CB3PixelFormatDescriptor * a, CB3PixelFormatDescriptor * b);
 };
 
 #endif

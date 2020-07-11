@@ -37,7 +37,7 @@
 *************************************************************************/
 
 #ifdef HAVE_NEW_OVERLOADING
-void *operator new(size_t size)
+void * operator new(size_t size)
 {
 	return memalign(16, size);
 }
@@ -47,19 +47,19 @@ b3Runtime b3Runtime::m_Runtime;
 char      b3Runtime::m_Compiler[256];
 b3Runtime::b3Runtime()
 {
-	const char *vu;
+	const char * vu;
 	b3_count    bits = b3GetCPUBits();
 #if defined(B3_SSE2)
-	const char *math = "SSE2";
+	const char * math = "SSE2";
 #elif defined(B3_SSE)
-	const char *math = "SSE";
+	const char * math = "SSE";
 #else
-	const char *math = "FPU";
+	const char * math = "FPU";
 #endif
-	char *locale;
+	char * locale;
 
 	locale = setlocale(LC_ALL, "");
-	if (locale == null)
+	if(locale == null)
 	{
 		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
 	}
@@ -70,7 +70,7 @@ b3Runtime::b3Runtime()
 #endif
 	}
 
-	switch (b3GetVectorUnit())
+	switch(b3GetVectorUnit())
 	{
 	case B3_VU_FPU:
 		vu = "FPU";
@@ -96,25 +96,25 @@ b3Runtime::b3Runtime()
 	}
 
 #ifdef __ICC
-	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit) vector unit: %s math mode: %s",
-			 __ICC / 100,(__ICC / 10) % 10,bits,vu,math);
+	snprintf(m_Compiler, sizeof(m_Compiler), "Intel CC V%d.%d (%ld bit) vector unit: %s math mode: %s",
+		__ICC / 100, (__ICC / 10) % 10, bits, vu, math);
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit) vector unit: %s math mode: %s",
-			 __GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,vu,math);
+	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d.%d (%ld bit) vector unit: %s math mode: %s",
+		__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__, bits, vu, math);
 #	else
-	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",
-			 __GNUC__,__GNUC_MINOR__,bits,vu,math);
+	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",
+		__GNUC__, __GNUC_MINOR__, bits, vu, math);
 #	endif
 #else
-	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler vector unit: %s math mode: %s",
-			 vu, math);
+	snprintf(m_Compiler, sizeof(m_Compiler), "Unknown compiler vector unit: %s math mode: %s",
+		vu, math);
 #endif
 }
 
 void b3Runtime::b3PSwap(
-	b3_u32 *uPtr1,
-	b3_u32 *uPtr2)
+	b3_u32 * uPtr1,
+	b3_u32 * uPtr2)
 {
 	b3_u32 aux;
 
@@ -125,41 +125,41 @@ void b3Runtime::b3PSwap(
 
 void b3Runtime::b3Beep()
 {
-	putchar (7);
-	fflush (stdout);
+	putchar(7);
+	fflush(stdout);
 }
 
-b3_bool b3Runtime::b3Hostname(char *hostname,const b3_size buffer_size)
+b3_bool b3Runtime::b3Hostname(char * hostname, const b3_size buffer_size)
 {
-	return gethostname (hostname, buffer_size) == 0;
+	return gethostname(hostname, buffer_size) == 0;
 }
 
-b3_s32 b3Runtime::b3Execute(const char *command, const b3_bool async)
+b3_s32 b3Runtime::b3Execute(const char * command, const b3_bool async)
 {
 	char        set[1024];
-	const char *fmt;
+	const char * fmt;
 	b3_s32      result = 127;
 	b3_size     offset = sizeof(set) - (async ? 2 : 0);
 
-	if (strlen(command) < offset)
+	if(strlen(command) < offset)
 	{
 		fmt = async ? "%s &" : "%s";
-		snprintf(set,sizeof(set),fmt,command);
+		snprintf(set, sizeof(set), fmt, command);
 		result = system(set);
 	}
 
 	return result;
 }
 
-char *b3Runtime::b3GetCompiler()
+char * b3Runtime::b3GetCompiler()
 {
 	return m_Compiler;
 }
 
-void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
+void * b3Runtime::b3GetOpenGLExtension(const char * procedure_name)
 {
 #if defined(BLZ3_USE_OPENGL) && defined(RTLD_NEXT)
-	return dlsym(RTLD_NEXT,procedure_name);
+	return dlsym(RTLD_NEXT, procedure_name);
 #else
 	return null;
 #endif
@@ -167,21 +167,21 @@ void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
 
 int b3Runtime::b3ParseOption(
 	int     argc,
-	char   *argv[],
+	char  * argv[],
 	int     i,
-	char   *option,
+	char  * option,
 	size_t  size)
 {
-	if (strlen(argv[i]) > 2)
+	if(strlen(argv[i]) > 2)
 	{
-		strncpy(option,&argv[i][2],size);
+		strncpy(option, &argv[i][2], size);
 	}
 	else
 	{
 		i++;
-		if (i < argc)
+		if(i < argc)
 		{
-			strncpy (option,argv[i],size);
+			strncpy(option, argv[i], size);
 		}
 		else
 		{

@@ -51,13 +51,13 @@ private:
 		const b3_f64        fx,
 		const b3_f64        fy,
 		const b3_index      index,
-		      b3FilterInfo *filter_info);
+		b3FilterInfo * filter_info);
 
 	static void setbuffer(
 		const b3_f64        fx,
 		const b3_f64        fy,
 		const b3_index      index,
-		      b3FilterInfo *filter_info);
+		b3FilterInfo * filter_info);
 
 	b3_f64 b3Count();
 };

@@ -31,29 +31,29 @@
 
 class CB3SplinePreview : public CStatic
 {
-	b3Spline *m_Spline;
-	b3_vector m_Lower,m_Upper;
+	b3Spline * m_Spline;
+	b3_vector m_Lower, m_Upper;
 	b3_f64    m_xOffset;
-	b3_f64    m_yOffset,m_Ratio;
+	b3_f64    m_yOffset, m_Ratio;
 	CRect     m_Rect;
-// Construction
+	// Construction
 public:
 	CB3SplinePreview();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3SplinePreview)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
-	void b3Update(b3Spline *spline);
+	void b3Update(b3Spline * spline);
 	virtual ~CB3SplinePreview();
 
 	// Generated message map functions
@@ -64,7 +64,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 private:
-	void b3ComputePoint(b3_vector *point,b3_coord &x,b3_coord &y);
+	void b3ComputePoint(b3_vector * point, b3_coord & x, b3_coord & y);
 };
 
 /////////////////////////////////////////////////////////////////////////////

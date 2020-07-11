@@ -26,37 +26,37 @@
 
 class CSplashWnd : public CWnd
 {
-// Construction
+	// Construction
 protected:
 	CSplashWnd();
 
-// Attributes:
+	// Attributes:
 public:
 	CBitmap m_bitmap;
 
-// Operations
+	// Operations
 public:
 	static void EnableSplashScreen(BOOL bEnable = TRUE);
-	static void ShowSplashScreen(CWnd* pParentWnd = NULL);
-	static BOOL PreTranslateAppMessage(MSG* pMsg);
+	static void ShowSplashScreen(CWnd * pParentWnd = NULL);
+	static BOOL PreTranslateAppMessage(MSG * pMsg);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSplashWnd)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	~CSplashWnd();
 	virtual void PostNcDestroy();
 
 protected:
-	BOOL Create(CWnd* pParentWnd = NULL);
+	BOOL Create(CWnd * pParentWnd = NULL);
 	void HideSplashScreen();
 	static BOOL c_bShowSplashWnd;
-	static CSplashWnd* c_pSplashWnd;
+	static CSplashWnd * c_pSplashWnd;
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CSplashWnd)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

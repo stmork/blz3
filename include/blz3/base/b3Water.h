@@ -60,7 +60,7 @@ public:
 	 * @param point The position in space.
 	 * @return The water height.
 	 */
-	b3_f64 b3ComputeWater(const b3_vector *point);
+	b3_f64 b3ComputeWater(const b3_vector * point);
 };
 
 #endif

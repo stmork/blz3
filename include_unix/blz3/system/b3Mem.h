@@ -44,17 +44,17 @@ public:
 	 * @param size The size of the new memory block.
 	 * @return The new memory block or null if there is no memory available.
 	 */
-	static inline void *b3Alloc(b3_size size)
+	static inline void * b3Alloc(b3_size size)
 	{
 #ifdef HAVE_MEMALIGN
-		void *ptr = memalign(16,size);
-		if (ptr != null)
+		void * ptr = memalign(16, size);
+		if(ptr != null)
 		{
-			memset (ptr, 0, size);
+			memset(ptr, 0, size);
 		}
 		return ptr;
 #else
-		return calloc(size,1);
+		return calloc(size, 1);
 #endif
 	}
 
@@ -63,7 +63,7 @@ public:
 	 *
 	 * @param ptr The pointer to the memory block.
 	 */
-	static inline void b3Free(const void *ptr)
+	static inline void b3Free(const void * ptr)
 	{
 #ifdef REALLY_FREE
 		free((void *)ptr);

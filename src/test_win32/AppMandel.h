@@ -9,7 +9,7 @@
 #endif // _MSC_VER > 1000
 
 #ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
+#error include 'stdafx.h' before including this file for PCH
 #endif
 
 #include "Resource.h"       // main symbols
@@ -25,14 +25,14 @@ class CAppMandelApp : public CWinApp
 public:
 	CAppMandelApp();
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppMandelApp)
-	public:
+public:
 	virtual BOOL InitInstance();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 	//{{AFX_MSG(CAppMandelApp)
 	afx_msg void OnAppAbout();
 	//}}AFX_MSG

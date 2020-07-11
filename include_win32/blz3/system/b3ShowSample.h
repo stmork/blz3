@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ShowSample.h $  
+**	$Filename:	b3ShowSample.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -29,9 +29,9 @@ class B3_PLUGIN CB3ShowSample : public CB3ShowImage
 	DECLARE_DYNAMIC(CB3ShowSample)
 
 public:
-	     CB3ShowSample();
+	CB3ShowSample();
 	void b3Init();
-	void b3Update(b3Sampler *sampler);
+	void b3Update(b3Sampler * sampler);
 
 	// Implementation
 protected:

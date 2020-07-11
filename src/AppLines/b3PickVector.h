@@ -25,12 +25,12 @@
 
 class b3PickPoint : public b3Pick
 {
-	b3ModellerInfo *m_Info;
-	b3_vector      *m_Pos;
-	const char     *m_Text;
+	b3ModellerInfo * m_Info;
+	b3_vector   *   m_Pos;
+	const char   *  m_Text;
 
 protected:
-	b3RenderView   *m_RenderView;
+	b3RenderView  * m_RenderView;
 	b3_vector       m_StartVector;
 
 public:
@@ -38,33 +38,33 @@ public:
 
 public:
 	b3PickPoint(
-		b3RenderView   *renderview,
-		b3_vector      *pos,
-		const char     *text = null,
-		b3ModellerInfo *info = null);
+		b3RenderView  * renderview,
+		b3_vector   *   pos,
+		const char   *  text = null,
+		b3ModellerInfo * info = null);
 
-	        void             b3Draw(b3DrawContext *dc);
-	        b3_bool          b3Moved(b3_coord x,b3_coord y);
-	virtual b3UndoOperation *b3GetOperation(b3RenderObject *object);
+	void             b3Draw(b3DrawContext * dc);
+	b3_bool          b3Moved(b3_coord x, b3_coord y);
+	virtual b3UndoOperation * b3GetOperation(b3RenderObject * object);
 };
 
 class b3PickDir : public b3PickPoint
 {
-	b3_vector *m_OrigPos;
-	b3_vector *m_OrigDir;
+	b3_vector * m_OrigPos;
+	b3_vector * m_OrigDir;
 	b3_vector  m_AuxPos;
 
 public:
 	b3PickDir(
-		b3RenderView   *renderview,
-		b3_vector      *pos,
-		b3_vector      *dir,
-		const char     *text = null,
-		b3ModellerInfo *info = null);
+		b3RenderView  * renderview,
+		b3_vector   *   pos,
+		b3_vector   *   dir,
+		const char   *  text = null,
+		b3ModellerInfo * info = null);
 
-	        void             b3Draw(b3DrawContext *dc);
-	        b3_bool          b3Moved(b3_coord x,b3_coord y);
-	virtual b3UndoOperation *b3GetOperation(b3RenderObject *object);
+	void             b3Draw(b3DrawContext * dc);
+	b3_bool          b3Moved(b3_coord x, b3_coord y);
+	virtual b3UndoOperation * b3GetOperation(b3RenderObject * object);
 };
 
 #endif

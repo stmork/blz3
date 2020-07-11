@@ -110,7 +110,7 @@ enum b3_file_error
 	B3_FILE_NOT_OPEN      //!< Could not open file.
 };
 
-typedef b3Exception<b3_file_error,0x46494c> b3FileException;
+typedef b3Exception<b3_file_error, 0x46494c> b3FileException;
 
 /*************************************************************************
 **                                                                      **
@@ -131,7 +131,7 @@ public:
 	 * @param mode     The access mode.
 	 * @return         True if the file could successfully opened.
 	 */
-	virtual b3_bool  b3Open      (const char *filename,const b3_access_mode mode) = 0;
+	virtual b3_bool  b3Open(const char * filename, const b3_access_mode mode) = 0;
 
 	/**
 	 * This method reads a specified amount of bytes into a specified buffer. It returns
@@ -142,7 +142,7 @@ public:
 	 * @param size        The number of bytes to read.
 	 * @return The really number of read bytes.
 	 */
-	virtual b3_size  b3Read      (void *read_buffer,const b3_size size) = 0;
+	virtual b3_size  b3Read(void * read_buffer, const b3_size size) = 0;
 
 	/**
 	 * This method writes the specified amount of bytes from a buffer. It returns
@@ -153,14 +153,14 @@ public:
 	 * @param size The number of bytes to write.
 	 * @return The really written number of bytes.
 	 */
-	virtual b3_size  b3Write     (const void * write_buffer,const b3_size size) = 0;
+	virtual b3_size  b3Write(const void * write_buffer, const b3_size size) = 0;
 
 	/**
 	 * This method flushes the write cache.
 	 *
 	 * @see b3Buffer.
 	 */
-	virtual b3_bool  b3Flush     () = 0;
+	virtual b3_bool  b3Flush() = 0;
 
 	/**
 	 * This method moves the byte position inside the file. The position can be moved
@@ -171,14 +171,14 @@ public:
 	 * @return The old file position from start.
 	 * @see b3_seek_type
 	 */
-	virtual b3_size  b3Seek      (const b3_offset offset,const b3_seek_type type) = 0;
+	virtual b3_size  b3Seek(const b3_offset offset, const b3_seek_type type) = 0;
 
 	/**
 	 * This method returns the actual file size.
 	 *
 	 * @return The actual file size.
 	 */
-	virtual b3_size  b3Size      () = 0;
+	virtual b3_size  b3Size() = 0;
 
 	/**
 	 * This method resizes the file cache. It calls b3Flush() to write old
@@ -187,12 +187,12 @@ public:
 	 * @param new_cache_size The new cache size.
 	 * @return Success if the cache was resized.
 	 */
-	virtual b3_bool  b3Buffer    (const b3_size new_cache_size) = 0;
+	virtual b3_bool  b3Buffer(const b3_size new_cache_size) = 0;
 
 	/**
 	 * This method closes the file.
 	 */
-	virtual void     b3Close     () = 0;
+	virtual void     b3Close() = 0;
 };
 
 #endif

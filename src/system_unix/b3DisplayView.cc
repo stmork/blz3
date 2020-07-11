@@ -58,7 +58,7 @@ protected:
 		return value > 1 ? 255 : b3_pkd_color(value * 255);
 	}
 
-	inline static b3_bool b3Dither (
+	inline static b3_bool b3Dither(
 		b3_pkd_color Byte,
 		b3_count     shift,
 		b3_coord     x,
@@ -68,35 +68,50 @@ protected:
 
 		Byte &= 0xff;
 		mask  = dithermask[shift];
-		if ((Byte & mask) >= mask) return false;
+		if((Byte & mask) >= mask)
+		{
+			return false;
+		}
 		return (((Byte >> (shift - 4)) & 15) >= (dithermatrix[x & 3][y & 3]));
 	}
 
-	inline static b3_bool b3Dither2 (b3_pkd_color Byte,b3_coord x,b3_coord y)
+	inline static b3_bool b3Dither2(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if ((Byte & MASK2) >= MASK2) return false;
+		if((Byte & MASK2) >= MASK2)
+		{
+			return false;
+		}
 		return (((Byte << 2) & 15) >= (dithermatrix[x & 3][y & 3]));
 	}
 
-	inline static b3_bool b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y)
+	inline static b3_bool b3Dither3(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if ((Byte & MASK3) >= MASK3) return false;
+		if((Byte & MASK3) >= MASK3)
+		{
+			return false;
+		}
 		return (((Byte << 1) & 15) >= (dithermatrix[x & 3][y & 3]));
 	}
 
-	inline static b3_bool b3Dither5(b3_pkd_color Byte,b3_coord x,b3_coord y)
+	inline static b3_bool b3Dither5(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if ((Byte & MASK5) >= MASK5) return false;
+		if((Byte & MASK5) >= MASK5)
+		{
+			return false;
+		}
 		return (((Byte >> 1) & 15) >= (dithermatrix[x & 3][y & 3]));
 	}
 
-	inline static b3_bool b3Dither6(b3_pkd_color Byte,b3_coord x,b3_coord y)
+	inline static b3_bool b3Dither6(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if ((Byte & MASK6) >= MASK6) return false;
+		if((Byte & MASK6) >= MASK6)
+		{
+			return false;
+		}
 		return (((Byte >> 2) & 15) >= (dithermatrix[x & 3][y & 3]));
 	}
 };
@@ -104,33 +119,42 @@ protected:
 b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
 {
 	{  0, 8, 1, 9 },
-	{ 12, 4,13, 5 },
-	{  3,11, 2,10 },
-	{ 15, 7,14, 6 }
+	{ 12, 4, 13, 5 },
+	{  3, 11, 2, 10 },
+	{ 15, 7, 14, 6 }
 };
 
 b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
 {
-	MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
+	MASK0, MASK1, MASK2, MASK3, MASK4, MASK5, MASK6, MASK7
 };
 
 class b3DisplayPixel08 : public b3DisplayPixelImpl
 {
 public:
-	b3_pkd_color b3ARGBtoPixel (
+	b3_pkd_color b3ARGBtoPixel(
 		b3_color     ARGB,
 		b3_coord     x,
 		b3_coord     y)
 	{
-		b3_pkd_color r,g,b;
+		b3_pkd_color r, g, b;
 
 		r = b3Convert(ARGB.r);
 		g = b3Convert(ARGB.g);
 		b = b3Convert(ARGB.b);
 
-		if (b3Dither5(r, x, y)) r += 0x20;
-		if (b3Dither5(g, x, y)) g += 0x20;
-		if (b3Dither6(b, x, y)) b += 0x40;
+		if(b3Dither5(r, x, y))
+		{
+			r += 0x20;
+		}
+		if(b3Dither5(g, x, y))
+		{
+			g += 0x20;
+		}
+		if(b3Dither6(b, x, y))
+		{
+			b += 0x40;
+		}
 
 		return (r | (g >> 3) | (b >>  6));
 	}
@@ -139,20 +163,29 @@ public:
 class b3DisplayPixel15 : public b3DisplayPixelImpl
 {
 public:
-	b3_pkd_color b3ARGBtoPixel (
+	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x,
 		b3_coord y)
 	{
-		b3_pkd_color r,g,b;
+		b3_pkd_color r, g, b;
 
 		r = b3Convert(ARGB.r);
 		g = b3Convert(ARGB.g);
 		b = b3Convert(ARGB.b);
 
-		if (b3Dither3(r, x, y)) r += 0x08;
-		if (b3Dither3(g, x, y)) g += 0x08;
-		if (b3Dither3(b, x, y)) b += 0x08;
+		if(b3Dither3(r, x, y))
+		{
+			r += 0x08;
+		}
+		if(b3Dither3(g, x, y))
+		{
+			g += 0x08;
+		}
+		if(b3Dither3(b, x, y))
+		{
+			b += 0x08;
+		}
 
 		return (r << 7) | (g << 2) | (b >>  3);
 	}
@@ -161,20 +194,29 @@ public:
 class b3DisplayPixel16 : public b3DisplayPixelImpl
 {
 public:
-	b3_pkd_color b3ARGBtoPixel (
+	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x,
 		b3_coord y)
 	{
-		b3_pkd_color r,g,b;
+		b3_pkd_color r, g, b;
 
 		r = b3Convert(ARGB.r);
 		g = b3Convert(ARGB.g);
 		b = b3Convert(ARGB.b);
 
-		if (b3Dither3(r, x, y)) r += 0x08;
-		if (b3Dither2(g, x, y)) g += 0x04;
-		if (b3Dither3(b, x, y)) b += 0x08;
+		if(b3Dither3(r, x, y))
+		{
+			r += 0x08;
+		}
+		if(b3Dither2(g, x, y))
+		{
+			g += 0x04;
+		}
+		if(b3Dither3(b, x, y))
+		{
+			b += 0x08;
+		}
 
 		return ((r << 8) | (g << 3) | (b >>  3));
 	}
@@ -188,7 +230,7 @@ public:
 		b3_coord x,
 		b3_coord y)
 	{
-		b3_pkd_color r,g,b;
+		b3_pkd_color r, g, b;
 
 		r = b3Convert(ARGB.r);
 		g = b3Convert(ARGB.g);
@@ -206,7 +248,7 @@ public:
 		b3_coord x,
 		b3_coord y)
 	{
-		b3_pkd_color r,g,b;
+		b3_pkd_color r, g, b;
 
 		r = b3Convert(ARGB.r);
 		g = b3Convert(ARGB.g);
@@ -229,58 +271,58 @@ static Colormap cmap;
 static b3_count cmap_count;
 static long     count = READY;
 
-b3DisplayView::b3DisplayView(const char *title) : b3Display(title)
+b3DisplayView::b3DisplayView(const char * title) : b3Display(title)
 {
 	m_Title = (char *)title;
 #ifdef HAVE_LIBX11
-	b3Open(m_xMax,m_yMax);
+	b3Open(m_xMax, m_yMax);
 #endif
-	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
-			  m_Title,
-			  m_xs,m_ys);
+	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %lu,%lu (default)\n",
+		m_Title,
+		m_xs, m_ys);
 }
 
 b3DisplayView::b3DisplayView(
 	const b3_res      xSize,
 	const b3_res      ySize,
-	const char       *title) : b3Display(xSize,ySize,title)
+	const char    *   title) : b3Display(xSize, ySize, title)
 {
 	m_Title = (char *)title;
 #ifdef HAVE_LIBX11
-	b3Open(xSize,ySize);
+	b3Open(xSize, ySize);
 #endif
-	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
-			  m_Title,
-			  m_xs,m_ys);
+	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %lu,%lu\n",
+		m_Title,
+		m_xs, m_ys);
 }
 
 b3DisplayView::~b3DisplayView()
 {
-	if (m_Pixel != null)
+	if(m_Pixel != null)
 	{
 		delete m_Pixel;
 	}
 #ifdef HAVE_LIBX11
 	b3FreeColormap();
-	XFreeGC       (m_Display,m_GC);
-	XFreePixmap   (m_Display,m_Image);
-	XDestroyWindow(m_Display,m_Window);
-	XCloseDisplay (m_Display);
+	XFreeGC(m_Display, m_GC);
+	XFreePixmap(m_Display, m_Image);
+	XDestroyWindow(m_Display, m_Window);
+	XCloseDisplay(m_Display);
 #endif
 }
 
-void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color &Color)
+void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & Color)
 {
 #ifdef HAVE_LIBX11
-	b3Display::b3PutPixel(x,y,Color);
+	b3Display::b3PutPixel(x, y, Color);
 
-	if (m_Opened)
+	if(m_Opened)
 	{
 		b3CriticalSection lock(m_Mutex);
 
-		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel (Color,x,y));
-		XDrawPoint     (m_Display,m_Window,m_GC,x,y);
-		XDrawPoint     (m_Display,m_Image, m_GC,x,y);
+		XSetForeground(m_Display, m_GC, m_Pixel->b3ARGBtoPixel(Color, x, y));
+		XDrawPoint(m_Display, m_Window, m_GC, x, y);
+		XDrawPoint(m_Display, m_Image, m_GC, x, y);
 	}
 #endif
 }
@@ -288,14 +330,14 @@ void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_colo
 b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 {
 #ifdef HAVE_LIBX11
-	b3_bool	 loop = true,result=false,really_ask;
+	b3_bool	 loop = true, result = false, really_ask;
 	XEvent	 report;
 
 	// CRITICAL SECTION
 	{
 		b3CriticalSection lock(display_mutex);
 
-		if (--count > 0)
+		if(--count > 0)
 		{
 			really_ask = false;
 		}
@@ -306,7 +348,7 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 		}
 	}
 
-	if (!really_ask)
+	if(!really_ask)
 	{
 		return false;
 	}
@@ -317,20 +359,20 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 		{
 			b3CriticalSection lock(m_Mutex);
 
-			if (XPending  (m_Display) <= 0)
+			if(XPending(m_Display) <= 0)
 			{
 				return result;
 			}
-			XCheckIfEvent (m_Display,&report,&b3SetPredicate,0);
+			XCheckIfEvent(m_Display, &report, &b3SetPredicate, 0);
 		}
 
-		switch (report.type)
+		switch(report.type)
 		{
 		case Expose :
-			if (report.xexpose.window == m_Window)
+			if(report.xexpose.window == m_Window)
 			{
-				b3FirstDrawing ();
-				b3RefreshAll   ();
+				b3FirstDrawing();
+				b3RefreshAll();
 			}
 			break;
 
@@ -341,13 +383,13 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 		case KeyPress :
 			result   = true;
 			m_Closed = true;
-			// Walk through!
+		// Walk through!
 		default :
 			loop   = false;
 			break;
 		}
 	}
-	while (loop);
+	while(loop);
 
 	return result;
 #else
@@ -361,7 +403,7 @@ void b3DisplayView::b3Wait()
 	b3_bool	 loop = true;
 	XEvent	 report;
 
-	if (m_Closed)
+	if(m_Closed)
 	{
 		// If already marked as closed.
 		return;
@@ -369,14 +411,14 @@ void b3DisplayView::b3Wait()
 
 	do
 	{
-		XNextEvent (m_Display,&report);
-		switch (report.type)
+		XNextEvent(m_Display, &report);
+		switch(report.type)
 		{
 		case Expose :
-			if (report.xexpose.window == m_Window)
+			if(report.xexpose.window == m_Window)
 			{
-				b3FirstDrawing ();
-				b3RefreshAll   ();
+				b3FirstDrawing();
+				b3RefreshAll();
 			}
 			break;
 
@@ -387,7 +429,7 @@ void b3DisplayView::b3Wait()
 			break;
 		}
 	}
-	while (loop);
+	while(loop);
 #endif
 }
 
@@ -401,28 +443,28 @@ void b3DisplayView::b3Open(
 	XEvent         report;
 	b3_bool        Loop = true;
 	XTextProperty  CInfoName;
-	b3_res         xScr,yScr;
+	b3_res         xScr, yScr;
 
-	if (m_Title == null)
+	if(m_Title == null)
 	{
 		m_Title = "Raytracen ist gut, Blizzard III ist noch besser...";
 	}
 
 	m_Display = XOpenDisplay(NULL);
-	if (m_Display == 0)
+	if(m_Display == 0)
 	{
-		B3_THROW(b3DisplayException,B3_DISPLAY_OPEN);
+		B3_THROW(b3DisplayException, B3_DISPLAY_OPEN);
 	}
-	m_Screen  = DefaultScreen (m_Display);
-	m_depth   = DefaultDepth  (m_Display,m_Screen);
+	m_Screen  = DefaultScreen(m_Display);
+	m_depth   = DefaultDepth(m_Display, m_Screen);
 
 	m_xMax    = xSize;
 	m_yMax    = ySize;
-	xScr      = DisplayWidth  (m_Display,m_Screen) - 20;
-	yScr      = DisplayHeight (m_Display,m_Screen) - 15;
+	xScr      = DisplayWidth(m_Display, m_Screen) - 20;
+	yScr      = DisplayHeight(m_Display, m_Screen) - 15;
 
-	m_xs      = B3_MIN(m_xMax,xScr);
-	m_ys      = B3_MIN(m_yMax,yScr);
+	m_xs      = B3_MIN(m_xMax, xScr);
+	m_ys      = B3_MIN(m_yMax, yScr);
 	m_Opened  = false;
 	m_Closed  = false;
 
@@ -430,61 +472,61 @@ void b3DisplayView::b3Open(
 	Values.function      = GXcopy;
 
 #ifdef _DEBUG
-	b3PrintF (B3LOG_NORMAL,"xMax:   %4ld\n",m_xMax);
-	b3PrintF (B3LOG_NORMAL,"yMax:   %4ld\n",m_yMax);
-	b3PrintF (B3LOG_NORMAL,"dep:    %4ld\n",m_depth);
-	b3PrintF (B3LOG_NORMAL,"planes: %4ld\n",DisplayPlanes (m_Display,m_Screen));
+	b3PrintF(B3LOG_NORMAL, "xMax:   %4ld\n", m_xMax);
+	b3PrintF(B3LOG_NORMAL, "yMax:   %4ld\n", m_yMax);
+	b3PrintF(B3LOG_NORMAL, "dep:    %4ld\n", m_depth);
+	b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", DisplayPlanes(m_Display, m_Screen));
 #endif
 
-	m_Window = XCreateSimpleWindow (
-				   m_Display,RootWindow (m_Display,m_Screen),
-				   0,0,m_xs,m_ys,0,
-				   WhitePixel (m_Display,m_Screen),
-				   BlackPixel (m_Display,m_Screen));
+	m_Window = XCreateSimpleWindow(
+			m_Display, RootWindow(m_Display, m_Screen),
+			0, 0, m_xs, m_ys, 0,
+			WhitePixel(m_Display, m_Screen),
+			BlackPixel(m_Display, m_Screen));
 
-	XStringListToTextProperty((char **)&m_Title,1,&CInfoName);
-	XSetWMName(m_Display,m_Window,&CInfoName);
+	XStringListToTextProperty((char **)&m_Title, 1, &CInfoName);
+	XSetWMName(m_Display, m_Window, &CInfoName);
 
 
-	m_Image = XCreatePixmap (m_Display,m_Window,m_xs,m_ys,m_depth);
-	if (m_Image == null)
-	{
-		b3Free (m_Buffer);
-		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
-		b3PrintF (B3LOG_NORMAL,"no memory for image buffer!\n");
-		B3_THROW(b3DisplayException,B3_DISPLAY_MEMORY);
-	}
-
-	if (!b3CreateColormap())
+	m_Image = XCreatePixmap(m_Display, m_Window, m_xs, m_ys, m_depth);
+	if(m_Image == null)
 	{
 		b3Free(m_Buffer);
-		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
-		b3PrintF (B3LOG_NORMAL,"no colormap available!\n");
-		XFreePixmap (m_Display,m_Image);
-
-		B3_THROW(b3DisplayException,B3_DISPLAY_NO_COLORMAP);
+		b3PrintF(B3LOG_NORMAL, "Blizzard III ERROR:\n");
+		b3PrintF(B3LOG_NORMAL, "no memory for image buffer!\n");
+		B3_THROW(b3DisplayException, B3_DISPLAY_MEMORY);
 	}
 
-	m_GC = XCreateGC (m_Display,m_Window,GCPlaneMask|GCFunction,&Values);
+	if(!b3CreateColormap())
+	{
+		b3Free(m_Buffer);
+		b3PrintF(B3LOG_NORMAL, "Blizzard III ERROR:\n");
+		b3PrintF(B3LOG_NORMAL, "no colormap available!\n");
+		XFreePixmap(m_Display, m_Image);
 
-	XMapWindow          (m_Display,m_Window);
-	XSetWindowColormap  (m_Display,m_Window,m_Colormap);
-	XSelectInput        (m_Display,m_Window,
-						 ExposureMask|
-						 ButtonPressMask|
-						 KeyPressMask);
+		B3_THROW(b3DisplayException, B3_DISPLAY_NO_COLORMAP);
+	}
+
+	m_GC = XCreateGC(m_Display, m_Window, GCPlaneMask | GCFunction, &Values);
+
+	XMapWindow(m_Display, m_Window);
+	XSetWindowColormap(m_Display, m_Window, m_Colormap);
+	XSelectInput(m_Display, m_Window,
+		ExposureMask |
+		ButtonPressMask |
+		KeyPressMask);
 
 	// wait for window */
-	XSetForeground(m_Display,m_GC,0);
-	XFillRectangle(m_Display,m_Image, m_GC,0,0,m_xs,m_ys);
+	XSetForeground(m_Display, m_GC, 0);
+	XFillRectangle(m_Display, m_Image, m_GC, 0, 0, m_xs, m_ys);
 
 	do
 	{
-		XNextEvent (m_Display,&report);
-		switch (report.type)
+		XNextEvent(m_Display, &report);
+		switch(report.type)
 		{
 		case Expose :
-			if (report.xexpose.window == m_Window)
+			if(report.xexpose.window == m_Window)
 			{
 				m_Opened = true;
 				Loop     = false;
@@ -492,27 +534,27 @@ void b3DisplayView::b3Open(
 			break;
 		}
 	}
-	while (Loop);
+	while(Loop);
 #endif
 }
 
-b3_bool b3DisplayView::b3CreateColormap ()
+b3_bool b3DisplayView::b3CreateColormap()
 {
 #ifdef HAVE_LIBX11
-	XVisualInfo *info;
+	XVisualInfo * info;
 	XVisualInfo  temp;
 	b3_bool      result = false;
-	int          count,i;
+	int          count, i;
 
 	// use existing color map
 	m_Colormap = null;
 	m_Pixel    = null;
-	switch (m_depth)
+	switch(m_depth)
 	{
 	case  8:
 		m_Pixel = new b3DisplayPixel08();
 		break;
-		// No return since we have to create a colormap!
+	// No return since we have to create a colormap!
 
 	case 15:
 		m_Pixel = new b3DisplayPixel15();
@@ -524,34 +566,34 @@ b3_bool b3DisplayView::b3CreateColormap ()
 
 	case 24:
 	case 32:
-		memset(&temp,0,sizeof(temp));
-		temp.visual   = DefaultVisual(m_Display,m_Screen);
+		memset(&temp, 0, sizeof(temp));
+		temp.visual   = DefaultVisual(m_Display, m_Screen);
 		temp.visualid = XVisualIDFromVisual(temp.visual);
 		temp.screen   = m_Screen;
 		temp.depth    = m_depth;
-		info = XGetVisualInfo(m_Display,VisualIDMask | VisualScreenMask | VisualDepthMask,&temp,&count);
-		b3PrintF(B3LOG_FULL,"%d visuals (%p) found - depth: %d.\n",count,info,m_depth);
-		for (i = 0;i < count;i++)
+		info = XGetVisualInfo(m_Display, VisualIDMask | VisualScreenMask | VisualDepthMask, &temp, &count);
+		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %d.\n", count, info, m_depth);
+		for(i = 0; i < count; i++)
 		{
-			b3PrintF(B3LOG_FULL,"%2d: %08x %08x %08x # %4d %4d # %08x\n",i,
-					 info[i].red_mask,
-					 info[i].green_mask,
-					 info[i].blue_mask,
-					 info[i].colormap_size,
-					 info[i].bits_per_rgb,
-					 info[i].c_class);
+			b3PrintF(B3LOG_FULL, "%2d: %08x %08x %08x # %4d %4d # %08x\n", i,
+				info[i].red_mask,
+				info[i].green_mask,
+				info[i].blue_mask,
+				info[i].colormap_size,
+				info[i].bits_per_rgb,
+				info[i].c_class);
 		}
 
-		if (info != null)
+		if(info != null)
 		{
-			if ((info->red_mask  == 0x0000ff) &&
-					(info->blue_mask == 0xff0000))
+			if((info->red_mask  == 0x0000ff) &&
+				(info->blue_mask == 0xff0000))
 			{
 				// BGR format (e.g. Sun Ultra 10)
 				m_Pixel = new b3DisplayPixel24Inv();
 			}
-			if ((info->red_mask  == 0xff0000) &&
-					(info->blue_mask == 0x0000ff))
+			if((info->red_mask  == 0xff0000) &&
+				(info->blue_mask == 0x0000ff))
 			{
 				// RGB format (Blizzard III native)
 				m_Pixel = new b3DisplayPixel24();
@@ -562,13 +604,13 @@ b3_bool b3DisplayView::b3CreateColormap ()
 		return m_Pixel != null;
 
 	default:
-		b3PrintF(B3LOG_NORMAL,"Unsupported color depth!\n");
+		b3PrintF(B3LOG_NORMAL, "Unsupported color depth!\n");
 		return false;
 	}
 
 	b3CriticalSection lock(display_mutex);
 
-	if (cmap != null)
+	if(cmap != null)
 	{
 		cmap_count++;
 		m_Colormap = cmap;
@@ -576,31 +618,31 @@ b3_bool b3DisplayView::b3CreateColormap ()
 	}
 	else
 	{
-		b3_loop i,iMax;
+		b3_loop i, iMax;
 		XColor  NewColors[256];
 
 		// create color map
 		cmap = XCreateColormap(
-				   m_Display,
-				   m_Window,
-				   DefaultVisual (m_Display,m_Screen),
-				   AllocAll);
-		if (cmap != null)
+				m_Display,
+				m_Window,
+				DefaultVisual(m_Display, m_Screen),
+				AllocAll);
+		if(cmap != null)
 		{
 			// compute colors
 			iMax = sizeof(NewColors) / sizeof(XColor);
-			for (i = 0;i < iMax;i++)
+			for(i = 0; i < iMax; i++)
 			{
 				NewColors[i].pixel =  i;
 				NewColors[i].red   = (i & 0xe0) <<  8;
 				NewColors[i].green = (i & 0x1c) << 11;
 				NewColors[i].blue  = (i & 0x03) << 14;
-				NewColors[i].flags = DoRed|DoGreen|DoBlue;
+				NewColors[i].flags = DoRed | DoGreen | DoBlue;
 				NewColors[i].pad   = 0;
 			}
 
 			// init color map
-			XStoreColors (m_Display,cmap,NewColors,iMax);
+			XStoreColors(m_Display, cmap, NewColors, iMax);
 			cmap_count++;
 			m_Colormap = cmap;
 			result     = true;
@@ -614,52 +656,52 @@ void b3DisplayView::b3FreeColormap()
 {
 	b3CriticalSection lock(display_mutex);
 
-	if (--cmap_count <= 0)
+	if(--cmap_count <= 0)
 	{
-		if (m_depth == 8)
+		if(m_depth == 8)
 		{
-			XFreeColormap (m_Display,m_Colormap);
+			XFreeColormap(m_Display, m_Colormap);
 			cmap = null;
 		}
 	}
 }
 
-inline void b3DisplayView::b3FirstDrawing ()
+inline void b3DisplayView::b3FirstDrawing()
 {
 	m_Opened = true;
 }
 
-inline void b3DisplayView::b3RefreshAll ()
+inline void b3DisplayView::b3RefreshAll()
 {
-	if (m_Opened)
+	if(m_Opened)
 	{
 		b3CriticalSection lock(m_Mutex);
 
-		XCopyArea (m_Display,
-				   m_Image,m_Window,
-				   m_GC,0,0,
-				   m_xs,m_ys,0,0);
+		XCopyArea(m_Display,
+			m_Image, m_Window,
+			m_GC, 0, 0,
+			m_xs, m_ys, 0, 0);
 	}
 }
 #endif
 
-void b3DisplayView::b3PutRow(const b3Row *row)
+void b3DisplayView::b3PutRow(const b3Row * row)
 {
 #ifdef HAVE_LIBX11
 	b3_coord y = row->m_y;
 
 	b3Display::b3PutRow(row);
-	if (m_Opened && (y < m_ys))
+	if(m_Opened && (y < m_ys))
 	{
 		b3CriticalSection lock(m_Mutex);
 
 		b3RefreshRow(y);
-		XCopyArea (m_Display,m_Image,m_Window,m_GC,0,y,m_xs,1,0,y);
+		XCopyArea(m_Display, m_Image, m_Window, m_GC, 0, y, m_xs, 1, 0, y);
 	}
 #endif
 }
 
-void b3DisplayView::b3PutTx(b3Tx *tx)
+void b3DisplayView::b3PutTx(b3Tx * tx)
 {
 #ifdef HAVE_LIBX11
 	b3_coord y;
@@ -667,28 +709,28 @@ void b3DisplayView::b3PutTx(b3Tx *tx)
 	b3Display::b3PutTx(tx);
 	b3CriticalSection lock(m_Mutex);
 
-	for (y = 0;y < m_ys;y++)
+	for(y = 0; y < m_ys; y++)
 	{
 		b3RefreshRow(y);
 	}
-	XCopyArea (m_Display,m_Image,m_Window,m_GC,0,0,m_xs,m_ys,0,0);
+	XCopyArea(m_Display, m_Image, m_Window, m_GC, 0, 0, m_xs, m_ys, 0, 0);
 #endif
 }
 
 #ifdef HAVE_LIBX11
 inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 {
-	b3_color *ptr = &m_Buffer[y * m_xMax];
+	b3_color * ptr = &m_Buffer[y * m_xMax];
 	b3_coord  x;
 
-	for (x = 0;x < m_xs;x++)
+	for(x = 0; x < m_xs; x++)
 	{
-		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel(*ptr++,x,y));
-		XDrawPoint     (m_Display,m_Image,m_GC,x,y);
+		XSetForeground(m_Display, m_GC, m_Pixel->b3ARGBtoPixel(*ptr++, x, y));
+		XDrawPoint(m_Display, m_Image, m_GC, x, y);
 	}
 }
 
-Bool b3DisplayView::b3SetPredicate (Display *display,XEvent *event, char *buffer)
+Bool b3DisplayView::b3SetPredicate(Display * display, XEvent * event, char * buffer)
 {
 	return True;
 }

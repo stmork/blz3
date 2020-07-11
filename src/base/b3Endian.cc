@@ -46,11 +46,11 @@ class b3EndianChanger
 	b3_change_buffer m_Changer;
 
 public:
-	b3EndianChanger(void *ptr,b3_size size)
+	b3EndianChanger(void * ptr, b3_size size)
 	{
-		b3_u08 *cPtr = (b3_u08 *)ptr;
+		b3_u08 * cPtr = (b3_u08 *)ptr;
 
-		for (b3_size i = 0;i < size;i++)
+		for(b3_size i = 0; i < size; i++)
 		{
 			m_Changer.m_iBuffer[i] = *cPtr++;
 		}
@@ -58,21 +58,21 @@ public:
 
 	inline void b3Change16()
 	{
-		B3_SWAP(m_Changer.m_iBuffer[0],m_Changer.m_iBuffer[1]);
+		B3_SWAP(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[1]);
 	}
 
 	inline void b3Change32()
 	{
-		B3_SWAP(m_Changer.m_iBuffer[0],m_Changer.m_iBuffer[3]);
-		B3_SWAP(m_Changer.m_iBuffer[1],m_Changer.m_iBuffer[2]);
+		B3_SWAP(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[3]);
+		B3_SWAP(m_Changer.m_iBuffer[1], m_Changer.m_iBuffer[2]);
 	}
 
 	inline void b3Change64()
 	{
-		B3_SWAP(m_Changer.m_iBuffer[0],m_Changer.m_iBuffer[3]);
-		B3_SWAP(m_Changer.m_iBuffer[1],m_Changer.m_iBuffer[2]);
-		B3_SWAP(m_Changer.m_iBuffer[4],m_Changer.m_iBuffer[7]);
-		B3_SWAP(m_Changer.m_iBuffer[5],m_Changer.m_iBuffer[6]);
+		B3_SWAP(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[3]);
+		B3_SWAP(m_Changer.m_iBuffer[1], m_Changer.m_iBuffer[2]);
+		B3_SWAP(m_Changer.m_iBuffer[4], m_Changer.m_iBuffer[7]);
+		B3_SWAP(m_Changer.m_iBuffer[5], m_Changer.m_iBuffer[6]);
 	}
 
 	inline const b3_bool b3IsIntel()
@@ -132,39 +132,39 @@ public:
 **                                                                      **
 *************************************************************************/
 
-const b3_u16 b3Endian::b3Get16(void *Ptr)
+const b3_u16 b3Endian::b3Get16(void * Ptr)
 {
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = (b3_u08 *)Ptr;
 	b3_u16  Value;
 
-	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+	if(b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 	{
-		Value =                (long)Pointer[1];
+		Value = (long)Pointer[1];
 		Value = (Value << 8) | (long)Pointer[0];
 	}
 	else
 	{
-		Value =                (long)Pointer[0];
+		Value = (long)Pointer[0];
 		Value = (Value << 8) | (long)Pointer[1];
 	}
 	return Value;
 }
 
-const b3_u32 b3Endian::b3Get32 (void *Ptr)
+const b3_u32 b3Endian::b3Get32(void * Ptr)
 {
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = (b3_u08 *)Ptr;
 	b3_u32  Value;
 
-	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+	if(b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 	{
-		Value =                (b3_u32)Pointer[3];
+		Value = (b3_u32)Pointer[3];
 		Value = (Value << 8) | (b3_u32)Pointer[2];
 		Value = (Value << 8) | (b3_u32)Pointer[1];
 		Value = (Value << 8) | (b3_u32)Pointer[0];
 	}
 	else
 	{
-		Value =                (b3_u32)Pointer[0];
+		Value = (b3_u32)Pointer[0];
 		Value = (Value << 8) | (b3_u32)Pointer[1];
 		Value = (Value << 8) | (b3_u32)Pointer[2];
 		Value = (Value << 8) | (b3_u32)Pointer[3];
@@ -178,44 +178,44 @@ const b3_u32 b3Endian::b3Get32 (void *Ptr)
 **                                                                      **
 *************************************************************************/
 
-const b3_u16 b3Endian::b3GetMot16(void *ptr)
+const b3_u16 b3Endian::b3GetMot16(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_u16));
+	b3EndianChanger changer(ptr, sizeof(b3_u16));
 
-	if (changer.b3IsIntel())
+	if(changer.b3IsIntel())
 	{
 		changer.b3Change16();
 	}
 	return changer.b3GetU16();
 }
 
-const b3_u32 b3Endian::b3GetMot32 (void *ptr)
+const b3_u32 b3Endian::b3GetMot32(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_u32));
+	b3EndianChanger changer(ptr, sizeof(b3_u32));
 
-	if (changer.b3IsIntel())
+	if(changer.b3IsIntel())
 	{
 		changer.b3Change32();
 	}
 	return changer.b3GetU32();
 }
 
-const b3_f32 b3Endian::b3GetMotFloat(void *ptr)
+const b3_f32 b3Endian::b3GetMotFloat(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_f32));
+	b3EndianChanger changer(ptr, sizeof(b3_f32));
 
-	if (changer.b3IsIntel())
+	if(changer.b3IsIntel())
 	{
 		changer.b3Change32();
 	}
 	return changer.b3GetF32();
 }
 
-const b3_f64 b3Endian::b3GetMotDouble (void *ptr)
+const b3_f64 b3Endian::b3GetMotDouble(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_f64));
+	b3EndianChanger changer(ptr, sizeof(b3_f64));
 
-	if (changer.b3IsIntel())
+	if(changer.b3IsIntel())
 	{
 		changer.b3Change64();
 	}
@@ -228,44 +228,44 @@ const b3_f64 b3Endian::b3GetMotDouble (void *ptr)
 **                                                                      **
 *************************************************************************/
 
-const b3_u16 b3Endian::b3GetIntel16(void *ptr)
+const b3_u16 b3Endian::b3GetIntel16(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_u16));
+	b3EndianChanger changer(ptr, sizeof(b3_u16));
 
-	if (changer.b3IsMotorola())
+	if(changer.b3IsMotorola())
 	{
 		changer.b3Change16();
 	}
 	return changer.b3GetU16();
 }
 
-const b3_u32 b3Endian::b3GetIntel32 (void *ptr)
+const b3_u32 b3Endian::b3GetIntel32(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_u32));
+	b3EndianChanger changer(ptr, sizeof(b3_u32));
 
-	if (changer.b3IsMotorola())
+	if(changer.b3IsMotorola())
 	{
 		changer.b3Change32();
 	}
 	return changer.b3GetU32();
 }
 
-const b3_f32 b3Endian::b3GetIntelFloat(void *ptr)
+const b3_f32 b3Endian::b3GetIntelFloat(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_f32));
+	b3EndianChanger changer(ptr, sizeof(b3_f32));
 
-	if (changer.b3IsMotorola())
+	if(changer.b3IsMotorola())
 	{
 		changer.b3Change32();
 	}
 	return changer.b3GetF32();
 }
 
-const b3_f64 b3Endian::b3GetIntelDouble (void *ptr)
+const b3_f64 b3Endian::b3GetIntelDouble(void * ptr)
 {
-	b3EndianChanger changer(ptr,sizeof(b3_f64));
+	b3EndianChanger changer(ptr, sizeof(b3_f64));
 
-	if (changer.b3IsMotorola())
+	if(changer.b3IsMotorola())
 	{
 		changer.b3Change64();
 	}
@@ -278,26 +278,26 @@ const b3_f64 b3Endian::b3GetIntelDouble (void *ptr)
 **                                                                      **
 *************************************************************************/
 
-const b3_size b3Endian::b3ChangeEndian16 (void *Ptr)
+const b3_size b3Endian::b3ChangeEndian16(void * Ptr)
 {
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = (b3_u08 *)Ptr;
 
-	B3_SWAP(Pointer[0],Pointer[1]);
+	B3_SWAP(Pointer[0], Pointer[1]);
 	return 2;
 }
 
-const b3_size b3Endian::b3ChangeEndian32 (void *Ptr)
+const b3_size b3Endian::b3ChangeEndian32(void * Ptr)
 {
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = (b3_u08 *)Ptr;
 
-	B3_SWAP(Pointer[0],Pointer[3]);
-	B3_SWAP(Pointer[1],Pointer[2]);
+	B3_SWAP(Pointer[0], Pointer[3]);
+	B3_SWAP(Pointer[1], Pointer[2]);
 	return 4;
 }
 
-const b3_size b3Endian::b3ChangeEndian64 (void *Ptr)
+const b3_size b3Endian::b3ChangeEndian64(void * Ptr)
 {
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = (b3_u08 *)Ptr;
 
 	b3ChangeEndian32(&Pointer[0]);
 	b3ChangeEndian32(&Pointer[4]);

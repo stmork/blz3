@@ -54,7 +54,7 @@ public:
 	 * @return The loaded image.
 	 * @see b3SearchPath
 	 */
-	b3Tx         *b3LoadTexture(const char *name);
+	b3Tx     *    b3LoadTexture(const char * name);
 
 	/**
 	 * This method tries to find the given image. If this filename is
@@ -65,14 +65,14 @@ public:
 	 * @param name The image name to process.
 	 * @return The loaded image.
 	 */
-	b3Tx         *b3FindTexture(const char *name);
+	b3Tx     *    b3FindTexture(const char * name);
 
 	/**
 	 * This method returns the base of the image list.
 	 *
 	 * @return The base of the image list.
 	 */
-	b3Base<b3Tx> *b3GetTxHead();
+	b3Base<b3Tx> * b3GetTxHead();
 
 	/**
 	 * This method dumps the collected images for debugging purposes.
@@ -85,8 +85,8 @@ public:
 	void b3Free();
 
 private:
-	b3_bool       b3ReloadTexture(b3Tx *texture,const char *name=null);
-	b3Tx         *b3FindTextureUnsafe(const char *name);
+	b3_bool       b3ReloadTexture(b3Tx * texture, const char * name = null);
+	b3Tx     *    b3FindTextureUnsafe(const char * name);
 };
 
 #endif

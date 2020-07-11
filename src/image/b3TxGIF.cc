@@ -38,7 +38,7 @@ class b3GifDecoder
 	static const long m_GifMask[13];
 
 public:
-	b3_size bitsleft,availbytes,currbyte;
+	b3_size bitsleft, availbytes, currbyte;
 
 public:
 	b3GifDecoder()
@@ -48,13 +48,13 @@ public:
 		currbyte   = 0;
 	}
 
-	b3_u32 b3GetNextGifCode (b3_u08 **Data,b3_size currsize)
+	b3_u32 b3GetNextGifCode(b3_u08 ** Data, b3_size currsize)
 	{
 		long code;
 
-		if (bitsleft == 0)
+		if(bitsleft == 0)
 		{
-			if (availbytes <= 0)
+			if(availbytes <= 0)
 			{
 				availbytes = **Data;
 				*Data += 1;
@@ -67,9 +67,9 @@ public:
 		}
 
 		code = (long)(currbyte >> (8 - bitsleft));
-		while (currsize > bitsleft)
+		while(currsize > bitsleft)
 		{
-			if (availbytes <= 0)
+			if(availbytes <= 0)
 			{
 				availbytes = **Data;
 				*Data     += 1;
@@ -91,12 +91,12 @@ public:
 
 const long b3GifDecoder::m_GifFirstRow[4] =
 {
-	4,2,1,0
+	4, 2, 1, 0
 };
 
 const long b3GifDecoder::m_GifNextRow[4]  =
 {
-	8,8,4,2
+	8, 8, 4, 2
 };
 
 const long b3GifDecoder::m_GifMask[13]    =
@@ -106,41 +106,41 @@ const long b3GifDecoder::m_GifMask[13]    =
 	0x3FF, 0x7FF, 0xFFF
 };
 
-b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
+b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 {
 	b3_index       i;
 	b3_count       Colors;
 	b3_size        currsize;
 	b3_u32         c;
 	b3_pkd_color   t;
-	b3_u08        *pPtr = buffer;
-	b3_u08        *out;
-	b3_u08        *sp;
+	b3_u08    *    pPtr = buffer;
+	b3_u08    *    out;
+	b3_u08    *    sp;
 	b3_u08         suffix[4096];
 	b3_u08         charstack[4096];
 	b3_u08         fc;
 	b3_u32         prefix[4096];
-	b3_coord       xk,yk;
-	b3_res         xNewSize,yNewSize,NewDepth;
-	b3_u32         status,code, oldcode,clearcode;
-	b3_u32         endcode,newcodes,maxcode,codecnt,size;
+	b3_coord       xk, yk;
+	b3_res         xNewSize, yNewSize, NewDepth;
+	b3_u32         status, code, oldcode, clearcode;
+	b3_u32         endcode, newcodes, maxcode, codecnt, size;
 	b3_bool        interlaced;
 	b3GifDecoder   decoder;
 
-	b3PrintF(B3LOG_FULL,"IMG GIF  # b3ParseGIF(%s)\n",
-			 (const char *)image_name);
+	b3PrintF(B3LOG_FULL, "IMG GIF  # b3ParseGIF(%s)\n",
+		(const char *)image_name);
 
 	NewDepth = (pPtr[10] & 0x07) + 1;
 	Colors   = (1 << NewDepth);
 	buffer  += (13 + (Colors * 3));
 
 	// Wait for image separator
-	while (buffer[0] != ',') switch (*buffer++)
+	while(buffer[0] != ',') switch(*buffer++)
 		{
 		case '!':
 			// Overread extension block
 			buffer++;
-			while ((t = *buffer++) != 0)
+			while((t = *buffer++) != 0)
 			{
 				buffer += t;
 			}
@@ -149,29 +149,29 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 		default :
 			// Error or end of GIF dataset */
 			b3FreeTx();
-			b3PrintF(B3LOG_NORMAL,"IMG GIF  # Parsing error:\n");
-			B3_THROW(b3TxException,B3_TX_ERR_HEADER);
+			b3PrintF(B3LOG_NORMAL, "IMG GIF  # Parsing error:\n");
+			B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 		}
 
 	// Compute image resolution
 	xk = xNewSize  = b3Endian::b3GetIntel16(&buffer[5]) - b3Endian::b3GetIntel16(&buffer[1]);
 	yNewSize  = b3Endian::b3GetIntel16(&buffer[7]) - b3Endian::b3GetIntel16(&buffer[3]);
-	if (!b3AllocTx(xNewSize,yNewSize,8))
+	if(!b3AllocTx(xNewSize, yNewSize, 8))
 	{
 		b3FreeTx();
-		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Error allocating memory:\n");
-		B3_THROW(b3TxException,B3_TX_MEMORY);
+		b3PrintF(B3LOG_NORMAL, "IMG GIF  # Error allocating memory:\n");
+		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	out = (b3_u08 *)data;
 
 	// Pointer to global color map
 	pPtr     += 13;
-	for (i = 0;i < Colors; i++)
+	for(i = 0; i < Colors; i++)
 	{
 
-		t  = ((b3_pkd_color) *pPtr++ << 16);
-		t += ((b3_pkd_color) *pPtr++ <<  8);
-		t +=  (b3_pkd_color) *pPtr++;
+		t  = ((b3_pkd_color) * pPtr++ << 16);
+		t += ((b3_pkd_color) * pPtr++ <<  8);
+		t += (b3_pkd_color) * pPtr++;
 		palette[i] = t;
 	}
 
@@ -181,16 +181,16 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	status = 0;
 
 	/* auf Local-Color-Map testen*/
-	if (buffer[9] & 0x80)
+	if(buffer[9] & 0x80)
 	{
 		depth   = (buffer[9] & 0x07) + 1;
 		Colors  = (1 << depth);
 		buffer += 10;
-		for (i = 0;i < Colors; i++)
+		for(i = 0; i < Colors; i++)
 		{
-			t  = ((unsigned long) *buffer++ << 16);
-			t += ((unsigned long) *buffer++ <<  8);
-			t +=  (unsigned long) *buffer++;
+			t  = ((unsigned long) * buffer++ << 16);
+			t += ((unsigned long) * buffer++ <<  8);
+			t += (unsigned long) * buffer++;
 			palette[i] = t;
 		}
 	}
@@ -201,12 +201,12 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 
 	/* Speicher für temporären Stack und Tabellen anfordern */
 	size = *buffer++; // get code size
-	if ((size<2) || (9<size))
+	if((size < 2) || (9 < size))
 	{
-		b3Free (charstack);
+		b3Free(charstack);
 		b3FreeTx();
-		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Decompression format error:\n");
-		B3_THROW(b3TxException,B3_TX_ERR_HEADER);
+		b3PrintF(B3LOG_NORMAL, "IMG GIF  # Decompression format error:\n");
+		B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 	}
 
 	currsize    = size + 1;
@@ -219,22 +219,26 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	decoder.bitsleft =
 		decoder.availbytes = yk = 0;
 
-	while ((c = decoder.b3GetNextGifCode(&buffer,currsize)) != endcode)
+	while((c = decoder.b3GetNextGifCode(&buffer, currsize)) != endcode)
 	{
 		/* auf clearcode testen */
-		if (c == clearcode)
+		if(c == clearcode)
 		{
 			currsize = size + 1;
 			codecnt = newcodes;
 			maxcode = 1 << currsize;
 
-			while ((c = decoder.b3GetNextGifCode(&buffer,currsize)) == clearcode);
+			while((c = decoder.b3GetNextGifCode(&buffer, currsize)) == clearcode);
 
-			if (c == endcode)
+			if(c == endcode)
+			{
 				break;
+			}
 
-			if (c >= codecnt)
+			if(c >= codecnt)
+			{
 				c = 0;
+			}
 
 			fc      = (b3_u08)c;
 			oldcode = c;
@@ -246,14 +250,14 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 			code = c;
 
 			/* falls code 'out of Range', einfach den letzten nehmen ... */
-			if (code >= codecnt)
+			if(code >= codecnt)
 			{
 				code = oldcode;
 				*sp++ = fc;
 			}
 
 			/* Pixelkette aus Code ermitteln */
-			while (code >= newcodes)
+			while(code >= newcodes)
 			{
 				*sp++ = suffix[code];		/* Pixel auf Stack legen */
 				code = prefix[code];		/* Vorgänger */
@@ -261,7 +265,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 			*sp++ = (unsigned char) code;	/* erstes Pixel der Kette */
 
 			/* logisch nächste Pixelkette in Tabelle eintragen */
-			if (codecnt < maxcode)
+			if(codecnt < maxcode)
 			{
 				fc = code;
 				suffix[codecnt] = fc;
@@ -270,9 +274,9 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 			}
 
 			/* Codelänge ggf. um ein Bit verlängern */
-			if (codecnt >= maxcode)
+			if(codecnt >= maxcode)
 			{
-				if (currsize < 12)
+				if(currsize < 12)
 				{
 					maxcode <<= 1;
 					currsize++;
@@ -280,31 +284,31 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 			}
 		}
 
-		if (interlaced)
+		if(interlaced)
 		{
-			while (sp > charstack)			/* Stack auslesen */
+			while(sp > charstack)			/* Stack auslesen */
 			{
 				*out++ = *(--sp);
-				if (--xk==0)
+				if(--xk == 0)
 				{
 					xk = xSize;
 
-					if ((yk += b3GifDecoder::m_GifNextRow[status]) >= ySize)
+					if((yk += b3GifDecoder::m_GifNextRow[status]) >= ySize)
 					{
 						yk  = b3GifDecoder::m_GifFirstRow[status];
 						out = (unsigned char *)(data +
-												b3GifDecoder::m_GifFirstRow[status++] * xSize);
+								b3GifDecoder::m_GifFirstRow[status++] * xSize);
 					}
 					else
 					{
-						out += (b3GifDecoder::m_GifNextRow[status]-1) * xSize;
+						out += (b3GifDecoder::m_GifNextRow[status] - 1) * xSize;
 					}
 				}
 			}
 		}
 		else
 		{
-			while (sp > charstack)
+			while(sp > charstack)
 			{
 				*out++ = *(--sp); /* Stack auslesen */
 			}

@@ -33,33 +33,33 @@ class CDlgCSGMode : public CPropertyPage
 {
 	DECLARE_DYNCREATE(CDlgCSGMode)
 
-// Construction
+	// Construction
 public:
-	b3CSGShape *m_Shape;
+	b3CSGShape * m_Shape;
 	b3_bool     m_Creation;
-	const char *m_Section;
+	const char * m_Section;
 
 public:
-	      CDlgCSGMode();
-	     ~CDlgCSGMode();
+	CDlgCSGMode();
+	~CDlgCSGMode();
 	void  b3PostProcess();
 	void  b3Init();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCSGMode)
 	enum { IDD = IDD_CSGMODE };
 	int     m_CSGMode;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCSGMode)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCSGMode)

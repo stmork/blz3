@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	AppLinesInclude.h $ 
+**	$Filename:	AppLinesInclude.h $
 **	$Release:	Dortmund 2006 $
 **	$Revision$
 **	$Date$

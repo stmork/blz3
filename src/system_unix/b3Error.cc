@@ -36,9 +36,9 @@ b3Error::b3Error()
 {
 	m_ErrorCode = errno;
 #ifdef HAVE_STRERROR
-	strerror_r(m_ErrorCode,m_ErrorText,sizeof(m_ErrorText));
+	strerror_r(m_ErrorCode, m_ErrorText, sizeof(m_ErrorText));
 #else
-	snprintf(m_ErrorText,sizeof(m_ErrorText),"errno.: %d\n",m_ErrorCode);
+	snprintf(m_ErrorText, sizeof(m_ErrorText), "errno.: %d\n", m_ErrorCode);
 #endif
 }
 
@@ -48,7 +48,7 @@ int b3Error::b3GetError()
 	return m_ErrorCode;
 }
 
-char *b3Error::b3GetErrorText()
+char * b3Error::b3GetErrorText()
 {
 	return m_ErrorText;
 }
@@ -57,8 +57,8 @@ void b3Error::b3RetrieveError()
 {
 	m_ErrorCode = errno;
 #ifdef HAVE_STRERROR
-	strerror_r(m_ErrorCode,m_ErrorText,sizeof(m_ErrorText));
+	strerror_r(m_ErrorCode, m_ErrorText, sizeof(m_ErrorText));
 #else
-	snprintf(m_ErrorText,sizeof(m_ErrorText),"errno.: %d\n",m_ErrorCode);
+	snprintf(m_ErrorText, sizeof(m_ErrorText), "errno.: %d\n", m_ErrorCode);
 #endif
 }

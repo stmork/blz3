@@ -41,7 +41,7 @@ class b3WoodSampler : public b3ImageSampler, public b3Wood
 	b3Color  m_Light;
 
 public:
-	b3WoodSampler(b3Tx *tx) : b3ImageSampler(tx)
+	b3WoodSampler(b3Tx * tx) : b3ImageSampler(tx)
 	{
 		b3_vector scale;
 		b3_f64    scalar = 200.0 / WOOD_RES;
@@ -51,7 +51,7 @@ public:
 		m_Light     = B3_WHITE;
 
 		b3InitWood();
-		b3Vector::b3Init(&scale,scalar,scalar,scalar);
+		b3Vector::b3Init(&scale, scalar, scalar, scalar);
 		b3PrepareWood(&scale);
 	}
 
@@ -66,10 +66,10 @@ protected:
 		sample.z = m_Translate - x * 0.02;
 
 		b3_f64 mix = b3ComputeWood(&sample, 1.0);
-		result = b3Color::b3Mix(m_Dark,m_Light,mix);
+		result = b3Color::b3Mix(m_Dark, m_Light, mix);
 		b3PrintF(B3LOG_FULL,
-				 "%3d %3d: %06lx - %1.4f %2.3f %2.3f %2.3f\n",
-				 x,y,b3_pkd_color(result),mix,sample.x,sample.y,sample.z);
+			"%3d %3d: %06lx - %1.4f %2.3f %2.3f %2.3f\n",
+			x, y, b3_pkd_color(result), mix, sample.x, sample.y, sample.z);
 		return result;
 	}
 };
@@ -87,7 +87,7 @@ class b3PlankSampler : public b3ImageSampler, public b3OakPlank
 	b3Color  m_Light;
 
 public:
-	b3PlankSampler(b3Tx *tx) : b3ImageSampler(tx)
+	b3PlankSampler(b3Tx * tx) : b3ImageSampler(tx)
 	{
 		b3_vector scale;
 		b3_f64    scalar = 10;
@@ -101,7 +101,7 @@ public:
 		m_xOffset = 0.52;
 		m_RingFrequency *= 0.1;
 #endif
-		b3Vector::b3Init(&scale,scalar,scalar,scalar);
+		b3Vector::b3Init(&scale, scalar, scalar, scalar);
 		b3PrepareOakPlank(&scale);
 	}
 
@@ -117,27 +117,27 @@ protected:
 		sample.z = 0;
 
 		b3_f64 mix = b3ComputeOakPlank(&sample, 1.0, index);
-		result = b3Color::b3Mix(m_Dark,m_Light,mix);
+		result = b3Color::b3Mix(m_Dark, m_Light, mix);
 		b3PrintF(B3LOG_NORMAL,
-				 "%3d %3d: %06lx - %1.4f / %2d - %2.3f %2.3f %2.3f\n",
-				 x,y,b3_pkd_color(result),mix,index,sample.x,sample.y,sample.z);
+			"%3d %3d: %06lx - %1.4f / %2d - %2.3f %2.3f %2.3f\n",
+			x, y, b3_pkd_color(result), mix, index, sample.x, sample.y, sample.z);
 		return result;
 	}
 };
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
-	b3Display   *display;
+	b3Display  * display;
 
 	b3RaytracingItems::b3Register();
 	try
 	{
 		b3Tx   tx;
-		b3_res xMax,yMax;
+		b3_res xMax, yMax;
 
 		// Create display
-		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
-		display->b3GetRes(xMax,yMax);
+		display = new b3DisplayView(WOOD_RES, WOOD_RES, "Wood");
+		display->b3GetRes(xMax, yMax);
 
 		tx.b3AllocTx(xMax, yMax, 128);
 
@@ -151,24 +151,24 @@ int main(int argc,char *argv[])
 		sampler.b3Sample();
 		b3_f64 used = b3Time() - span;
 
-		b3PrintF(B3LOG_NORMAL,"Time used: %1.3fs = %1.5fms/px\n",used,used * 1000.0 / (tx.xSize * tx.ySize));
+		b3PrintF(B3LOG_NORMAL, "Time used: %1.3fs = %1.5fms/px\n", used, used * 1000.0 / (tx.xSize * tx.ySize));
 		// We want to see the computed picture until we make input
 		// into the display window.
 		display->b3PutTx(&tx);
 		display->b3Wait();
 
-		if (argc > 1)
+		if(argc > 1)
 		{
 #ifdef CREATE_ICON
-			if (argc > 3)
+			if(argc > 3)
 			{
-				b3Tx small,big;
+				b3Tx small, big;
 
-				small.b3AllocTx(32,32,24);
+				small.b3AllocTx(32, 32, 24);
 				small.b3ScaleToGrey(&tx);
 				small.b3SaveTGA(argv[2]);
 
-				big.b3AllocTx(48,48,24);
+				big.b3AllocTx(48, 48, 24);
 				big.b3ScaleToGrey(&tx);
 				big.b3SaveTGA(argv[3]);
 			}
@@ -181,9 +181,9 @@ int main(int argc,char *argv[])
 		// Delete Display
 		delete display;
 	}
-	catch (b3DisplayException &e)
+	catch(b3DisplayException & e)
 	{
-		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
+		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}
 
 	return EXIT_SUCCESS;

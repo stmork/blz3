@@ -35,14 +35,14 @@ class b3ConditionControl
 	static b3_f64 m_Accels[3];
 	static int    m_Digits[3];
 
-	CB3FloatSpinButtonCtrl *m_Ctrl;
-	CString                *m_Legend;
+	CB3FloatSpinButtonCtrl * m_Ctrl;
+	CString        *        m_Legend;
 	b3_condition_ctrl       m_Mode;
-	b3_stencil_bound_info  *m_Info;
+	b3_stencil_bound_info * m_Info;
 
 public:
-	void   b3Init(CB3FloatSpinButtonCtrl *ctrl,CString *legend,b3_stencil_bound_info *info,b3_condition_ctrl mode);
-	void   b3SetPos(b3_bool absolute,b3_f64 pos);
+	void   b3Init(CB3FloatSpinButtonCtrl * ctrl, CString * legend, b3_stencil_bound_info * info, b3_condition_ctrl mode);
+	void   b3SetPos(b3_bool absolute, b3_f64 pos);
 	b3_f64 b3GetPos(b3_bool absolute);
 };
 

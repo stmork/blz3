@@ -46,9 +46,9 @@ public:
 	inline const b3_pkd_color  operator()() const
 	{
 		return (
-			((b3_pkd_color)r << 16) |
-			((b3_pkd_color)g <<  8) |
-			(b3_pkd_color)b);
+				((b3_pkd_color)r << 16) |
+				((b3_pkd_color)g <<  8) |
+				(b3_pkd_color)b);
 	}
 
 	/**
@@ -59,9 +59,9 @@ public:
 	inline operator b3_pkd_color() const
 	{
 		return (
-				   ((b3_pkd_color)r << 16) |
-				   ((b3_pkd_color)g <<  8) |
-				   (b3_pkd_color)b);
+				((b3_pkd_color)r << 16) |
+				((b3_pkd_color)g <<  8) |
+				(b3_pkd_color)b);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public:
 	 *
 	 * \param color The given color representation.
 	 */
-	inline 	void          operator=(const b3_pkd_color &color)
+	inline 	void          operator=(const b3_pkd_color & color)
 	{
 		r = (b3_u08)((color & 0xff0000) >> 16);
 		g = (b3_u08)((color & 0x00ff00) >>  8);
@@ -83,7 +83,7 @@ public:
 	 *
 	 * \param color The given color representation.
 	 */
-	inline  void          operator=(const b3_color &color)
+	inline  void          operator=(const b3_color & color)
 	{
 		r = (color.r > 1.0 ? 255 : (b3_u08)(color.r * 255));
 		g = (color.g > 1.0 ? 255 : (b3_u08)(color.g * 255));
@@ -115,12 +115,12 @@ public:
 	/**
 	 * The smaller edge coordinate.
 	 */
-	b3_coord x1,y1;
+	b3_coord x1, y1;
 
 	/**
 	 * The higher edge coordinate.
 	 */
-	b3_coord x2,y2;
+	b3_coord x2, y2;
 
 public:
 	/**
@@ -151,7 +151,7 @@ public:
 	 * @param rect The rectangle for adjusting.
 	 * @return True if any adjustment occured.
 	 */
-	b3_bool b3UpdateBound(b3Rect *rect);
+	b3_bool b3UpdateBound(b3Rect * rect);
 
 	/**
 	 * This method adjusts the rectangle of this bound so that the
@@ -161,7 +161,7 @@ public:
 	 * @param rect The rectangle for adjusting.
 	 * @return True if any adjustment occured.
 	 */
-	b3_bool b3CheckBound(b3Rect *rect);
+	b3_bool b3CheckBound(b3Rect * rect);
 };
 
 /**
@@ -181,7 +181,7 @@ public:
 	 * @param x The new x coordinate.
 	 * @param y The new y coordinate.
 	 */
-	inline b3Point(b3_f64 x = 0,b3_f64 y = 0)
+	inline b3Point(b3_f64 x = 0, b3_f64 y = 0)
 	{
 		this->x = x;
 		this->y = y;

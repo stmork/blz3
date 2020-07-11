@@ -59,9 +59,9 @@ public:
 	 *
 	 * @param complex The complex number we have to copy.
 	 */
-	inline b3Complex<T>(const b3Complex<T> &complex)
+	inline b3Complex<T>(const b3Complex<T> & complex)
 	{
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] = complex.v[i];
 		}
@@ -74,13 +74,13 @@ public:
 	 * @param re Real part of complex number.
 	 * @param im Imaginary part of the complex number.
 	 */
-	inline b3Complex<T>(const T re,const T im = 0)
+	inline b3Complex<T>(const T re, const T im = 0)
 	{
 		v[Re] = re;
 		v[Im] = im;
 	}
 
-	inline const bool operator==(const b3Complex<T> &a) const
+	inline const bool operator==(const b3Complex<T> & a) const
 	{
 		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
 	}
@@ -92,9 +92,9 @@ public:
 	 * @param a The complex number to add.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator+=(const b3Complex<T> &a)
+	inline b3Complex<T> operator+=(const b3Complex<T> & a)
 	{
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -109,9 +109,9 @@ public:
 	 * @param a The complex number to subtract.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator-=(const b3Complex<T> &a)
+	inline b3Complex<T> & operator-=(const b3Complex<T> & a)
 	{
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -126,14 +126,14 @@ public:
 	 * @param a The complex number to multiply.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator*=(const b3Complex<T> &a)
+	inline b3Complex<T> & operator*=(const b3Complex<T> & a)
 	{
 		T B3_ALIGN_16 val[2];
 
 		val[Re] = v[Re] * a.v[Re] - v[Im] * a.v[Im];
 		val[Im] = v[Im] * a.v[Re] + v[Re] * a.v[Im];
 
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] = val[i];
 		}
@@ -148,14 +148,14 @@ public:
 	 * @param a The complex number to divide.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator/=(const b3Complex<T> &a)
+	inline b3Complex<T> & operator/=(const b3Complex<T> & a)
 	{
 		T B3_ALIGN_16 val[2];
 		T B3_ALIGN_16 den[2];
 		T B3_ALIGN_16 nom[2];
 		T             denom;
 
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			nom[i] =   v[i] * a.v[i];
 			den[i] = a.v[i] * a.v[i];
@@ -164,7 +164,7 @@ public:
 		denom   = den[Re] + den[Im];
 		val[Re] = nom[Re] + nom[Im];
 
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] = val[i] / denom;
 		}
@@ -179,7 +179,7 @@ public:
 	 * @param a The scalar to add to the real part.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator+=(const T a)
+	inline b3Complex<T> & operator+=(const T a)
 	{
 		v[Re] += a;
 
@@ -193,7 +193,7 @@ public:
 	 * @param a The scalar to subtract from the real part.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator-=(const T a)
+	inline b3Complex<T> & operator-=(const T a)
 	{
 		v[Re] -= a;
 
@@ -207,9 +207,9 @@ public:
 	 * @param a The scalar to scale this complex number.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator*=(const T a)
+	inline b3Complex<T> & operator*=(const T a)
 	{
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] *= a;
 		}
@@ -226,7 +226,7 @@ public:
 	 */
 	inline b3Complex<T> operator/=(const T a)
 	{
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] /= a;
 		}
@@ -241,7 +241,7 @@ public:
 	 * @param a The complex number to add.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator+(const b3Complex<T> &a) const
+	inline const b3Complex<T> operator+(const b3Complex<T> & a) const
 	{
 		return b3Complex<T>(*this) += a;
 	}
@@ -253,7 +253,7 @@ public:
 	 * @param a The complex number.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator-(const b3Complex<T> &a) const
+	inline const b3Complex<T> operator-(const b3Complex<T> & a) const
 	{
 		return b3Complex<T>(*this) -= a;
 	}
@@ -265,11 +265,11 @@ public:
 	 * @param a The complex number to multiply.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator*(const b3Complex<T> &a) const
+	inline const b3Complex<T> operator*(const b3Complex<T> & a) const
 	{
 		return b3Complex<T>(
-				   v[Re] * a.v[Re] - v[Im] * a.v[Im],
-				   v[Im] * a.v[Re] + v[Re] * a.v[Im]);
+				v[Re] * a.v[Re] - v[Im] * a.v[Im],
+				v[Im] * a.v[Re] + v[Re] * a.v[Im]);
 	}
 
 	/**
@@ -279,7 +279,7 @@ public:
 	 * @param a The complex number to divide.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator/(const b3Complex<T> &a) const
+	inline const b3Complex<T> operator/(const b3Complex<T> & a) const
 	{
 		return b3Complex<T>(*this) /= a;
 	}
@@ -301,11 +301,11 @@ public:
 	{
 		T old_len = b3Length();
 
-		if (old_len != 0)
+		if(old_len != 0)
 		{
 			T new_len = len / old_len;
 
-			for (b3_loop i = 0;i < 2;i++)
+			for(b3_loop i = 0; i < 2; i++)
 			{
 				v[i] *= new_len;
 			}
@@ -326,7 +326,7 @@ public:
 	{
 		T B3_ALIGN_16 val[2];
 
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			val[i] = v[i] * v[i];
 		}
@@ -341,7 +341,7 @@ public:
 	 */
 	inline const T b3Phase() const
 	{
-		return atan2 (v[Im], v[Re]);
+		return atan2(v[Im], v[Re]);
 	}
 
 	/**
@@ -352,7 +352,7 @@ public:
 	{
 		T B3_ALIGN_16 re[2];
 
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			re[i] = v[i] * v[i];
 		}
@@ -371,30 +371,30 @@ public:
 		return v[Im];
 	}
 
-	inline static b3Complex<T> b3Sqrt(const b3Complex<T> &a)
+	inline static b3Complex<T> b3Sqrt(const b3Complex<T> & a)
 	{
 		b3Complex<T> result;
 
-		if ((a.v[0] < 0) || (a.v[1] < 0))
+		if((a.v[0] < 0) || (a.v[1] < 0))
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			result.v[i] = sqrt(a.v[i]);
 		}
 		return result;
 	}
 
-	inline void b3Scale(const b3Complex<T> &a)
+	inline void b3Scale(const b3Complex<T> & a)
 	{
-		for (b3_loop i = 0;i < 2;i++)
+		for(b3_loop i = 0; i < 2; i++)
 		{
 			v[i] *= a.v[i];
 		}
 	}
 
-	inline static void b3Swap(b3Complex<T> &a, b3Complex &b)
+	inline static void b3Swap(b3Complex<T> & a, b3Complex & b)
 	{
 		b3Complex<T> aux;
 
@@ -407,11 +407,11 @@ public:
 	 * This method dumps the contents.
 	 *
 	 */
-	inline void b3Dump(const char *variable, const b3_log_level level = B3LOG_NORMAL) const
+	inline void b3Dump(const char * variable, const b3_log_level level = B3LOG_NORMAL) const
 	{
-		b3PrintF(level,"%s.re=%2.5f %s.im=%2.5f\n",
-				 variable,v[Re],
-				 variable,v[Im]);
+		b3PrintF(level, "%s.re=%2.5f %s.im=%2.5f\n",
+			variable, v[Re],
+			variable, v[Im]);
 	}
 };
 

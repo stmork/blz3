@@ -36,15 +36,15 @@
 
 class CDlgLDC : public CB3Dialog
 {
-// Construction
+	// Construction
 	b3_u32     m_ShadingClassType;
-	b3Scene   *m_LightScene;
+	b3Scene  * m_LightScene;
 
 public:
-	b3Light   *m_Light;
-	CDlgLDC(b3_u32 class_type,CWnd* pParent = NULL);   // standard constructor
+	b3Light  * m_Light;
+	CDlgLDC(b3_u32 class_type, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgLDC)
 	enum { IDD = IDD_LDC };
 	CB3ControlLDC	m_CtrlLDC;
@@ -53,15 +53,15 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgLDC)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT * pResult);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

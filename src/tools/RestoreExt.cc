@@ -30,9 +30,9 @@
 **                                                                      **
 *************************************************************************/
 
-static const char *b3GetClassExt(b3_u32 world_class)
+static const char * b3GetClassExt(b3_u32 world_class)
 {
-	switch (world_class)
+	switch(world_class)
 	{
 	case CLASS_GLOBAL:
 		return "bwd";
@@ -48,61 +48,61 @@ static const char *b3GetClassExt(b3_u32 world_class)
 	return null;
 }
 
-static void b3TestFile(const char *filename)
+static void b3TestFile(const char * filename)
 {
-	const char *ext = null;
+	const char * ext = null;
 	b3Path      new_filename;
 
 	try
 	{
 		b3World  world;
-		b3Item  *first;
+		b3Item * first;
 
 		world.b3Read(filename);
 		first = world.b3GetFirst();
-		b3PrintF(B3LOG_DEBUG,"%s -> %08x\n",
-				 filename,first->b3GetClassType());
+		b3PrintF(B3LOG_DEBUG, "%s -> %08x\n",
+			filename, first->b3GetClassType());
 		ext = b3GetClassExt(first->b3GetClass());
 	}
-	catch (b3WorldException &w)
+	catch(b3WorldException & w)
 	{
 		b3Tx image;
 
-		if (image.b3LoadImage(filename) == B3_OK)
+		if(image.b3LoadImage(filename) == B3_OK)
 		{
 			ext = image.b3GetExt();
 		}
 	}
-	catch (...)
+	catch(...)
 	{
-		b3PrintF(B3LOG_NORMAL,"Unknown error with file %s\n",
-				 filename);
+		b3PrintF(B3LOG_NORMAL, "Unknown error with file %s\n",
+			filename);
 		return;
 	}
 
-	if (ext != null)
+	if(ext != null)
 	{
 		new_filename.b3RemoveExt(filename);
 		new_filename.b3Append(".");
 		new_filename.b3Append(ext);
-		if (strcmp(filename,new_filename) != null)
+		if(strcmp(filename, new_filename) != null)
 		{
 #if 1
-			rename(filename,new_filename);
+			rename(filename, new_filename);
 #else
-			b3PrintF(B3LOG_NORMAL,"rename(%s,%s)\n",
-					 filename,(const char *)new_filename);
+			b3PrintF(B3LOG_NORMAL, "rename(%s,%s)\n",
+				filename, (const char *)new_filename);
 #endif
 		}
 	}
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
 	int i;
 
-//	b3Log::b3SetLevel(B3LOG_FULL);
-	for (i = 1;i < argc;i++)
+	//	b3Log::b3SetLevel(B3LOG_FULL);
+	for(i = 1; i < argc; i++)
 	{
 		b3TestFile(argv[i]);
 	}

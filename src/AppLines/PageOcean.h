@@ -35,11 +35,11 @@
 
 class CPageOcean : public CB3PropertyPage
 {
-// Construction
+	// Construction
 public:
-	b3BumpOcean  *m_Ocean;
+	b3BumpOcean * m_Ocean;
 	CPageOcean();   // standard constructor
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPageOcean)
 	enum { IDD = IDD_PAGE_OCEAN };
 	CB3FloatEdit           m_A;
@@ -52,14 +52,14 @@ public:
 	CB3OceanWaveCtrl       m_OceanWaveCtrl;
 	//}}AFX_DATA
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CPageOcean)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageOcean)

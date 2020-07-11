@@ -39,18 +39,18 @@ class b3BBox;
 
 class CAppRenderDoc : public CB3LinesDocument
 {
-	b3LinesUndoBuffer    *m_UndoBuffer;
+	b3LinesUndoBuffer  *  m_UndoBuffer;
 
 protected:
-	CDlgHierarchy        *m_DlgHierarchy;
-	CAppRaytraceDoc      *m_RaytraceDoc;
-	b3Thread             *m_Raytracer;
-	b3Display            *m_Display;
+	CDlgHierarchy    *    m_DlgHierarchy;
+	CAppRaytraceDoc   *   m_RaytraceDoc;
+	b3Thread       *      m_Raytracer;
+	b3Display      *      m_Display;
 
 public:
 	LPARAM                m_FirstVisible;
 	LPARAM                m_Selected;
-	b3ModellerInfo       *m_Info;
+	b3ModellerInfo    *   m_Info;
 	b3ShapeRenderContext  m_Context;
 	b3Fulcrum             m_Fulcrum;
 	b3_vector             m_Lower;
@@ -58,71 +58,71 @@ public:
 
 	static b3Color        m_BgColor;
 
-// Operations
+	// Operations
 protected: // create from serialization only
 	CAppRenderDoc();
 	DECLARE_DYNAMIC(CAppRenderDoc)
 
 public:
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppRenderDoc)
-	public:
-	virtual void Serialize(CArchive& ar);
+public:
+	virtual void Serialize(CArchive & ar);
 	virtual void OnCloseDocument();
 	//}}AFX_VIRTUAL
 
-// Implementation
-	        b3_vector *b3GetFulcrum();
-	        b3_vector *b3GetStepMove();
-	        b3_vector *b3GetStepRotate();
+	// Implementation
+	b3_vector * b3GetFulcrum();
+	b3_vector * b3GetStepMove();
+	b3_vector * b3GetStepRotate();
 
-	        void       b3DrawFulcrum();
-	        void       b3ToggleRaytrace();
-	        b3_bool    b3IsRaytracing();
-	        void       b3ClearRaytraceDoc();
+	void       b3DrawFulcrum();
+	void       b3ToggleRaytrace();
+	b3_bool    b3IsRaytracing();
+	void       b3ClearRaytraceDoc();
 	virtual void       b3StartRaytrace();
 	virtual void       b3StopRaytrace();
 
 	virtual void       b3Prepare(
 		b3_bool geometry_changed,
 		b3_bool structure_changed,
-		b3_bool reorg=false,
-		b3_bool material_changed=false);
+		b3_bool reorg = false,
+		b3_bool material_changed = false);
 	virtual void       b3ComputeBounds();
 	virtual void       b3InitTree();
-	virtual void       b3SelectItem(b3Item *item);
-	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	virtual void       b3SelectItem(b3Item * item);
+	virtual void       b3DropBBox(b3BBox * dragBBox, b3BBox * dropBBox);
 	virtual void       b3ContextMenu(HTREEITEM item);
 	virtual void       b3HierarchySelectionChanged();
 	virtual b3_bool    b3Edit() = 0;
 
-	virtual void       b3AddUndoAction(CB3Action *action);
-	        void       b3AddOp(b3UndoOperation *op);
-			void       b3ClearOp();
-			void       b3UndoList(CRect *rect = null);
-			void       b3RedoList(CRect *rect = null);
+	virtual void       b3AddUndoAction(CB3Action * action);
+	void       b3AddOp(b3UndoOperation * op);
+	void       b3ClearOp();
+	void       b3UndoList(CRect * rect = null);
+	void       b3RedoList(CRect * rect = null);
 
 	// Drag & drop operations
 	virtual void       b3DragBegin();
-	virtual HTREEITEM  b3Dragging(HTREEITEM dragitem,HTREEITEM dropitem);
-	virtual void       b3Drop    (HTREEITEM dragitem,HTREEITEM dropitem);
+	virtual HTREEITEM  b3Dragging(HTREEITEM dragitem, HTREEITEM dropitem);
+	virtual void       b3Drop(HTREEITEM dragitem, HTREEITEM dropitem);
 
 	virtual   ~CAppRenderDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext & dc) const;
 #endif
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppRenderDoc)
 	afx_msg void OnRename();
-	afx_msg void OnUpdateRename(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateRename(CCmdUI * pCmdUI);
 	afx_msg void OnEditUndo();
 	afx_msg void OnEditRedo();
-	afx_msg void OnUpdateEditUndo(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateEditRedo(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEditUndo(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateEditRedo(CCmdUI * pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

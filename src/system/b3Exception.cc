@@ -42,71 +42,83 @@ b3ExceptionBase::b3ExceptionBase(
 	const b3_errno  ErrNo,
 	const b3_excno  ExcNo,
 	const b3_count  lineno,
-	const char     *filename)
+	const char   *  filename)
 {
 	m_ErrorCode     = ErrNo;
 	m_ExceptionType = ExcNo;
 	m_LineNo        = lineno;
 	m_FileName      = filename;
 
-	if (m_Logger == null)     b3SetLogger(null);
-	if (m_GetMessage == null) b3SetMsgFunc(null);
+	if(m_Logger == null)
+	{
+		b3SetLogger(null);
+	}
+	if(m_GetMessage == null)
+	{
+		b3SetMsgFunc(null);
+	}
 
 	m_Logger(this);
 }
 
-b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase &exc)
+b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase & exc)
 {
 	m_ErrorCode     = exc.m_ErrorCode;
 	m_ExceptionType = exc.m_ExceptionType;
 	m_LineNo        = exc.m_LineNo;
 	m_FileName      = exc.m_FileName;
 
-	if (m_Logger == null)     b3SetLogger(null);
-	if (m_GetMessage == null) b3SetMsgFunc(null);
+	if(m_Logger == null)
+	{
+		b3SetLogger(null);
+	}
+	if(m_GetMessage == null)
+	{
+		b3SetMsgFunc(null);
+	}
 
 	m_Logger(this);
 }
 
-void b3ExceptionBase::b3Log(const b3ExceptionBase *exception)
+void b3ExceptionBase::b3Log(const b3ExceptionBase * exception)
 {
-	b3PrintF(B3LOG_NORMAL,"EXCEPTION: %s\n",m_GetMessage(exception->m_ErrorCode));
+	b3PrintF(B3LOG_NORMAL, "EXCEPTION: %s\n", m_GetMessage(exception->m_ErrorCode));
 	b3PrintF(B3LOG_FULL,  "     file: %s\n", exception->m_FileName);
-	b3PrintF(B3LOG_FULL,  "     line: %5d\n",exception->m_LineNo);
+	b3PrintF(B3LOG_FULL,  "     line: %5d\n", exception->m_LineNo);
 }
 
 void b3ExceptionBase::b3SetLogger(b3ExceptionLogger logger)
 {
-	if (logger == null)
+	if(logger == null)
 	{
 		logger = &b3Log;
 	}
 	m_Logger = logger;
 }
 
-const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
+const char * b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 {
-	char a,b,c;
+	char a, b, c;
 
 	a = (ErrNo >> 24) & 0xff;
 	b = (ErrNo >> 16) & 0xff;
 	c = (ErrNo >>  8) & 0xff;
 
-	snprintf(m_LocalMessageBuffer,sizeof(m_LocalMessageBuffer),
-			 "errno: %c%c%c:%02x",
-			 isprint(a) ? a : '_',
-			 isprint(b) ? b : '_',
-			 isprint(c) ? c : '_',
-			 ErrNo        & 0xff);
+	snprintf(m_LocalMessageBuffer, sizeof(m_LocalMessageBuffer),
+		"errno: %c%c%c:%02x",
+		isprint(a) ? a : '_',
+		isprint(b) ? b : '_',
+		isprint(c) ? c : '_',
+		ErrNo        & 0xff);
 	return m_LocalMessageBuffer;
 }
 
-const char *b3ExceptionBase::what() const noexcept
+const char * b3ExceptionBase::what() const noexcept
 {
 	char buffer[128];
 
 	b3GetErrorMsg();
-	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d",m_FileName, static_cast<int>(m_LineNo));
+	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d", m_FileName, static_cast<int>(m_LineNo));
 	strncat(m_LocalMessageBuffer, buffer, sizeof(m_LocalMessageBuffer) - strlen(m_LocalMessageBuffer));
 
 	return m_LocalMessageBuffer;
@@ -114,7 +126,7 @@ const char *b3ExceptionBase::what() const noexcept
 
 void b3ExceptionBase::b3SetMsgFunc(b3ExceptionMsgFunc converter)
 {
-	if (converter == null)
+	if(converter == null)
 	{
 		converter = &b3GetMessage;
 	}

@@ -66,8 +66,8 @@ enum b3_link_state
 template <class T> class B3_PLUGIN b3Link
 {
 public:
-	T         *Succ; //!< The next list element or null if this is the last one.
-	T         *Prev; //!< The previous list element or null if this is the first one.
+	T     *    Succ; //!< The next list element or null if this is the last one.
+	T     *    Prev; //!< The previous list element or null if this is the first one.
 
 protected:
 	b3_u32     ClassType; //!< The class and type of thie element instance.
@@ -81,7 +81,7 @@ public:
 	 * @param new_size The class instance size.
 	 * @param new_class The class type for this list item.
 	 */
-	b3Link(const b3_size new_size,const b3_u32 new_class = 0)
+	b3Link(const b3_size new_size, const b3_u32 new_class = 0)
 	{
 		Succ      = null;
 		Prev      = null;
@@ -164,8 +164,8 @@ protected:
 	b3_u32  Class; //!< The class specifier.
 
 public:
-	T      *First; //!< The first list element.
-	T      *Last;  //!< The last list element.
+	T   *   First; //!< The first list element.
+	T   *   Last;  //!< The last list element.
 
 public:
 	/**
@@ -176,7 +176,7 @@ public:
 		b3InitBase(new_class);
 	}
 
-	~b3Base    ()
+	~b3Base()
 	{
 	}
 
@@ -219,17 +219,17 @@ public:
 	 * @param from The source list where all list elements are removed
 	 *             and appended to this list.
 	 */
-	inline void b3Move(b3Base<T> *from)
+	inline void b3Move(b3Base<T> * from)
 	{
 #ifndef B3_NO_CLASS_CHECK
-		if (from->b3GetClass() != Class)
+		if(from->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
-		if (!from->b3IsEmpty())
+		if(!from->b3IsEmpty())
 		{
-			if (b3IsEmpty())
+			if(b3IsEmpty())
 			{
 				// Simple move
 				First = from->First;
@@ -251,9 +251,9 @@ public:
 	 */
 	inline void b3Free()
 	{
-		T *node,*succ;
+		T * node, *succ;
 
-		for (node = First;node != null;node = succ)
+		for(node = First; node != null; node = succ)
 		{
 			succ = node->Succ;
 			delete node;
@@ -267,13 +267,13 @@ public:
 	 */
 	inline void b3RemoveAll()
 	{
-		T *node = First,*succ;
+		T * node = First, *succ;
 
 		// Empty base
 		First = null;
 		Last  = null;
 
-		while (node != null)
+		while(node != null)
 		{
 			// unlink every node
 			succ = node->Succ;
@@ -290,10 +290,10 @@ public:
 	 */
 	inline const b3_count b3GetCount() const
 	{
-		T        *node;
+		T    *    node;
 		b3_count  count = 0;
 
-		for (node  = First;node != null;node  = node->Succ)
+		for(node  = First; node != null; node  = node->Succ)
 		{
 			count++;
 		}
@@ -305,24 +305,24 @@ public:
 	 *
 	 * \param *ptr The list element to append.
 	 */
-	inline void b3Append(T *ptr)
+	inline void b3Append(T * ptr)
 	{
 		B3_ASSERT(ptr->Succ == null);
 		B3_ASSERT(ptr->Prev == null);
 		B3_ASSERT(ptr != First);
 		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
-		if (ptr->b3GetClass() != Class)
+		if(ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
-		if (First == null)
+		if(First == null)
 		{
 			First = ptr;
 		}
-		if (Last != null)
+		if(Last != null)
 		{
 			Last->Succ = ptr;
 		}
@@ -336,24 +336,24 @@ public:
 	 *
 	 * \param *ptr The list element to prepend.
 	 */
-	inline void b3First(T *ptr)
+	inline void b3First(T * ptr)
 	{
 		B3_ASSERT(ptr->Succ == null);
 		B3_ASSERT(ptr->Prev == null);
 		B3_ASSERT(ptr != First);
 		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
-		if (ptr->b3GetClass() != Class)
+		if(ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
-		if (Last == null)
+		if(Last == null)
 		{
 			Last = ptr;
 		}
-		if (First != null)
+		if(First != null)
 		{
 			First->Prev = ptr;
 		}
@@ -367,17 +367,17 @@ public:
 	 *
 	 * \param *ptr The element to remove.
 	 */
-	inline void b3Remove(T *ptr)
+	inline void b3Remove(T * ptr)
 	{
 #ifndef B3_NO_CLASS_CHECK
-		if (ptr->b3GetClass() != Class)
+		if(ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
 		// Relink backward link
-		if (ptr->Prev == null)
+		if(ptr->Prev == null)
 		{
 			First = ptr->Succ;
 		}
@@ -387,7 +387,7 @@ public:
 		}
 
 		// Relink forward link
-		if (ptr->Succ == null)
+		if(ptr->Succ == null)
 		{
 			Last = ptr->Prev;
 		}
@@ -406,11 +406,11 @@ public:
 	 *
 	 * \return The removed first element.
 	 */
-	inline T *b3RemoveFirst()
+	inline T * b3RemoveFirst()
 	{
-		T *removed = First;
+		T * removed = First;
 
-		if (removed != null)
+		if(removed != null)
 		{
 			b3Remove(removed);
 		}
@@ -422,11 +422,11 @@ public:
 	 *
 	 * \return The removed last element.
 	 */
-	inline T *b3RemoveLast()
+	inline T * b3RemoveLast()
 	{
-		T *removed = Last;
+		T * removed = Last;
 
-		if (removed != null)
+		if(removed != null)
 		{
 			b3Remove(removed);
 		}
@@ -439,24 +439,24 @@ public:
 	 * \param *pre The element after that the element is inserted.
 	 * \param *ptr The element to insert.
 	 */
-	inline void b3Insert(T *pre, T *ptr)
+	inline void b3Insert(T * pre, T * ptr)
 	{
-		T *succ;
+		T * succ;
 
 		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null));
 #ifndef B3_NO_CLASS_CHECK
-		if (ptr->b3GetClass() != Class)
+		if(ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
 		ptr->Prev = pre;
-		if (pre == null)
+		if(pre == null)
 		{
 			// Like b3First(node)
 			ptr->Succ = First;
-			if (ptr->Succ == null)
+			if(ptr->Succ == null)
 			{
 				// First element in list
 				Last = ptr;
@@ -472,7 +472,7 @@ public:
 		{
 			succ = pre->Succ;
 			ptr->Succ = pre->Succ;
-			if (ptr->Succ == null)
+			if(ptr->Succ == null)
 			{
 				// Found "pre" as last element in list
 				// so correct Last
@@ -495,14 +495,14 @@ public:
 	 * \param *ptr The element from which reselecting is based on.
 	 * \return The reselected element.
 	 */
-	inline T *b3Reselect(T *ptr)
+	inline T * b3Reselect(T * ptr)
 	{
-		T *select = null;
+		T * select = null;
 
-		if (ptr != null)
+		if(ptr != null)
 		{
 			select = ptr->Prev;
-			if (select == null)
+			if(select == null)
 			{
 				select = ptr->Succ;
 			}
@@ -516,25 +516,49 @@ public:
 	 * \param *ptr The element
 	 * \return The state of the element.
 	 */
-	inline const b3_link_state b3State(const T *ptr) const
+	inline const b3_link_state b3State(const T * ptr) const
 	{
 		int flags;
 
-		if (ptr == null)
+		if(ptr == null)
 		{
 			flags = B3_NODE_NULL;
 		}
 		else
 		{
 			flags = B3_NODE_NOT_NULL;
-			if (ptr == First) flags |= B3_NODE_FIRST;
-			else              flags |= B3_NODE_NOT_FIRST;
-			if (ptr == Last)  flags |= B3_NODE_LAST;
-			else              flags |= B3_NODE_NOT_LAST;
-			if (ptr->Prev)    flags |= B3_NODE_PREV;
-			else              flags |= B3_NODE_NOT_PREV;
-			if (ptr->Succ)    flags |= B3_NODE_SUCC;
-			else              flags |= B3_NODE_NOT_SUCC;
+			if(ptr == First)
+			{
+				flags |= B3_NODE_FIRST;
+			}
+			else
+			{
+				flags |= B3_NODE_NOT_FIRST;
+			}
+			if(ptr == Last)
+			{
+				flags |= B3_NODE_LAST;
+			}
+			else
+			{
+				flags |= B3_NODE_NOT_LAST;
+			}
+			if(ptr->Prev)
+			{
+				flags |= B3_NODE_PREV;
+			}
+			else
+			{
+				flags |= B3_NODE_NOT_PREV;
+			}
+			if(ptr->Succ)
+			{
+				flags |= B3_NODE_SUCC;
+			}
+			else
+			{
+				flags |= B3_NODE_NOT_SUCC;
+			}
 		}
 
 		return static_cast<b3_link_state>(flags);
@@ -548,14 +572,14 @@ public:
 	 * \param *func The sorting method.
 	 * \param *Ptr A pointer to custom information.
 	 */
-	inline void b3Sort(const int (*func)(const T *, const T *, const void *),const void *Ptr = null)
+	inline void b3Sort(const int (*func)(const T *, const T *, const void *), const void * Ptr = null)
 	{
 		b3Base    Right;
-		T        *start,*end;
+		T    *    start, *end;
 		b3_count  i = 0;
 
 		// We don't need to sort one or zero element.
-		if (First == Last)
+		if(First == Last)
 		{
 			return;
 		}
@@ -569,9 +593,9 @@ public:
 		// because it is O(n).
 		start = First;
 		end   = Last;
-		while (start->Succ != end)
+		while(start->Succ != end)
 		{
-			if (i & 1)
+			if(i & 1)
 			{
 				// One backwards
 				end   = end->Prev;
@@ -598,24 +622,24 @@ public:
 
 		// & CONQUER
 		// This gives the algorithm the factor O(log n)
-		b3Sort(func,Ptr);
-		Right.b3Sort(func,Ptr);
+		b3Sort(func, Ptr);
+		Right.b3Sort(func, Ptr);
 
 		// Now we have to merge two sorted list into
 		// one sorted list.
 		start = First;
 		end   = Right.First;
-		while ((start != null) && (end != null))
+		while((start != null) && (end != null))
 		{
 			// Here is the comparison function. If the node
 			// of the first list is lower we leave the node
 			// at its place and use the following node.
 			// Else we remove the node from the second list
 			// an insert it before the node of the first list.
-			if (func((T *)start,(T *)end,Ptr) > 0)
+			if(func((T *)start, (T *)end, Ptr) > 0)
 			{
-				Right.b3Remove (end);
-				b3Insert (start->Prev,end);
+				Right.b3Remove(end);
+				b3Insert(start->Prev, end);
 				end   = Right.First;
 			}
 			else
@@ -628,11 +652,11 @@ public:
 		// to at the end of the first list.
 		// NOTE:
 		// This is even more efficient: O(1)
-		if (end) /* append right list to left list */
+		if(end)  /* append right list to left list */
 		{
 			start = Last;
 			end->Prev = start;
-			if (start)
+			if(start)
 			{
 				start->Succ = end;
 			}
@@ -650,7 +674,7 @@ public:
 	 *
 	 * \param *src The source list where the elements moved from into this list.
 	 */
-	inline void b3MoveFrom(b3Base<T> *src)
+	inline void b3MoveFrom(b3Base<T> * src)
 	{
 		B3_ASSERT(b3IsEmpty());
 

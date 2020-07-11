@@ -40,7 +40,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3Display::b3Display(b3Tx *tx)
+b3Display::b3Display(b3Tx * tx)
 {
 	m_xMax   = tx->xSize;
 	m_yMax   = tx->ySize;
@@ -62,10 +62,10 @@ b3Display::b3Display()
 	xSize = 768;
 	ySize = 576;
 #endif
-	b3Init(xSize,ySize,"");
+	b3Init(xSize, ySize, "");
 }
 
-b3Display::b3Display(const char *title)
+b3Display::b3Display(const char * title)
 {
 	b3_coord xSize;
 	b3_coord ySize;
@@ -77,63 +77,63 @@ b3Display::b3Display(const char *title)
 	xSize = 768;
 	ySize = 576;
 #endif
-	b3Init(xSize,ySize,title);
+	b3Init(xSize, ySize, title);
 }
 
-b3Display::b3Display(const b3_res xSize, const b3_res ySize, const char *title)
+b3Display::b3Display(const b3_res xSize, const b3_res ySize, const char * title)
 {
-	b3Init(xSize,ySize,title);
+	b3Init(xSize, ySize, title);
 }
 
-void b3Display::b3Init(const b3_res xSize, const b3_res ySize,const char *title)
+void b3Display::b3Init(const b3_res xSize, const b3_res ySize, const char * title)
 {
-	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
-			  title,
-			  xSize,ySize);
+	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %lu,%lu\n",
+		title,
+		xSize, ySize);
 	m_OwnTx = true;
 	m_xMax  = xSize;
 	m_yMax  = ySize;
 	m_depth = 128;
 	m_Tx    = new b3Tx();
-	m_Tx->b3AllocTx(xSize,ySize,m_depth);
+	m_Tx->b3AllocTx(xSize, ySize, m_depth);
 	m_Buffer = m_Tx->b3GetHdrData();
 }
 
 b3Display::~b3Display()
 {
-	b3PrintF(B3LOG_FULL,"Closing display...\n");
-	if ((m_OwnTx) && (m_Tx != null))
+	b3PrintF(B3LOG_FULL, "Closing display...\n");
+	if((m_OwnTx) && (m_Tx != null))
 	{
 		delete m_Tx;
 	}
 }
 
 
-void b3Display::b3PutRow(const b3Row *row)
+void b3Display::b3PutRow(const b3Row * row)
 {
 	b3_coord  y = row->m_y;
-	b3_color *src,*dst;
+	b3_color * src, *dst;
 
 	B3_ASSERT(m_Buffer != null);
 	src = row->m_buffer;
 	dst = &m_Buffer[y * m_xMax];
-	if (src != dst)
+	if(src != dst)
 	{
-		b3ColorMemCopy(dst,src,m_xMax);
+		b3ColorMemCopy(dst, src, m_xMax);
 	}
 }
 
-void b3Display::b3PutTx(b3Tx *tx)
+void b3Display::b3PutTx(b3Tx * tx)
 {
 	b3_coord y;
 
-	for (y = 0;y < m_yMax;y++)
+	for(y = 0; y < m_yMax; y++)
 	{
-		tx->b3GetRow(&m_Buffer[y * m_xMax],y);
+		tx->b3GetRow(&m_Buffer[y * m_xMax], y);
 	}
 }
 
-b3_bool b3Display::b3SaveImage(const char *filename)
+b3_bool b3Display::b3SaveImage(const char * filename)
 {
 	return m_Tx->b3SaveImage(filename) == B3_OK;
 }

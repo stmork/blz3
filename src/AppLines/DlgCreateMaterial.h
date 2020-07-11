@@ -35,26 +35,26 @@
 
 class CDlgCreateMaterial : public CPropertyPage
 {
-	b3MatNormal    *m_MatNormal;
-	b3MatTexture   *m_MatTexture;
-	b3Scene        *m_MatScene;
-	b3Base<b3Item> *m_MatHead;
+	b3MatNormal  *  m_MatNormal;
+	b3MatTexture  * m_MatTexture;
+	b3Scene    *    m_MatScene;
+	b3Base<b3Item> * m_MatHead;
 	b3_f64          m_Ior;
 	b3_f64          m_Reflection;
 	b3_f64          m_Refraction;
 	b3_f64          m_SpecularExp;
 
-// Construction
+	// Construction
 public:
-	b3Material   *m_Material;
+	b3Material  * m_Material;
 
 public:
-	              CDlgCreateMaterial(b3_u32 shading_class_type);
-	             ~CDlgCreateMaterial();
+	CDlgCreateMaterial(b3_u32 shading_class_type);
+	~CDlgCreateMaterial();
 	void          b3Init();
-	void          b3PostProcess(b3CondRectangle *stencil = null);
+	void          b3PostProcess(b3CondRectangle * stencil = null);
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCreateMaterial)
 	enum { IDD = IDD_CREATE_MATERIAL };
 	CB3ColorFieldSelector	m_SpecCtrl;
@@ -71,14 +71,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCreateMaterial)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateMaterial)
@@ -89,7 +89,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnUseTexture();
 	afx_msg void OnSurfaceEdit();
-	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnSurfaceSpin(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

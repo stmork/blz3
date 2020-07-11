@@ -36,9 +36,9 @@
 
 void b3Wood::b3InitWood()
 {
-//	b3Vector::b3Init(&m_Scale,40,40,40);
-	m_yRot                   = (b3_f32)(  0.5 * M_PI );
-	m_zRot                   = (b3_f32)( -0.5 * M_PI );
+	//	b3Vector::b3Init(&m_Scale,40,40,40);
+	m_yRot                   = (b3_f32)(0.5 * M_PI);
+	m_zRot                   = (b3_f32)(-0.5 * M_PI);
 	m_Ringy                  =   1;
 	m_Grainy                 =   1;
 	m_GrainFrequency         =  25;
@@ -53,15 +53,15 @@ void b3Wood::b3InitWood()
 	m_AngularWobbleFrequency =   0.9f;
 }
 
-void b3Wood::b3PrepareWood(b3_vector *scale)
+void b3Wood::b3PrepareWood(b3_vector * scale)
 {
-	b3Matrix::b3Move   (null,   &m_Warp,-0.5,-0.5,-0.5);
-	b3Matrix::b3Scale  (&m_Warp,&m_Warp,null,scale->x * M_PI,scale->y * M_PI,scale->z * M_PI);
-	b3Matrix::b3RotateZ(&m_Warp,&m_Warp,null,m_zRot);
-	b3Matrix::b3RotateY(&m_Warp,&m_Warp,null,m_yRot);
+	b3Matrix::b3Move(null,   &m_Warp, -0.5, -0.5, -0.5);
+	b3Matrix::b3Scale(&m_Warp, &m_Warp, null, scale->x * M_PI, scale->y * M_PI, scale->z * M_PI);
+	b3Matrix::b3RotateZ(&m_Warp, &m_Warp, null, m_zRot);
+	b3Matrix::b3RotateY(&m_Warp, &m_Warp, null, m_yRot);
 }
 
-b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
+b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, b3_f64 dist)
 {
 	b3_vector d;
 	b3_vector offset;
@@ -74,10 +74,10 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 	b3_f64    amp = 1;
 	b3_loop   i;
 
-	b3Matrix::b3VMul(&m_Warp,polar,&d,true);
-	b3Noise::b3FractionalBrownianMotion(&d,2,4,0.5,&offset);
+	b3Matrix::b3VMul(&m_Warp, polar, &d, true);
+	b3Noise::b3FractionalBrownianMotion(&d, 2, 4, 0.5, &offset);
 
-	b3Noise::b3NoiseVector(0,0,d.z * m_TrunkWobbleFrequency,&aux);
+	b3Noise::b3NoiseVector(0, 0, d.z * m_TrunkWobbleFrequency, &aux);
 	Pring.x = d.x + m_RingNoise * offset.x + m_TrunkWobble * (aux.x * 2 - 1);
 	Pring.y = d.y + m_RingNoise * offset.y + m_TrunkWobble * (aux.y * 2 - 1);
 	Pring.z = d.z + m_RingNoise * offset.z;
@@ -87,10 +87,10 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 	b3_f64 r  = sqrt(r2) * m_RingFrequency;
 
 	// For unround rings...
-	r += m_AngularWobble * b3Math::b3Smoothstep(0,5,r) * b3Noise::b3SignedNoiseVector(
-			 Pring.x * m_AngularWobbleFrequency,
-			 Pring.y * m_AngularWobbleFrequency,
-			 Pring.z * m_AngularWobbleFrequency * 0.1);
+	r += m_AngularWobble * b3Math::b3Smoothstep(0, 5, r) * b3Noise::b3SignedNoiseVector(
+			Pring.x * m_AngularWobbleFrequency,
+			Pring.y * m_AngularWobbleFrequency,
+			Pring.z * m_AngularWobbleFrequency * 0.1);
 
 	// Ensure unequally spaced rings
 	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseScalar(r);
@@ -102,22 +102,22 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 	Pgrain.z = d.z * m_GrainFrequency * 0.05;
 	dPgrain  = dist / 100;
 
-	for (i = 0;i < 2;i++)
+	for(i = 0; i < 2; i++)
 	{
-		b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2,0.6,dPgrain);
-		if (grain1valid > 0)
+		b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2, 0.6, dPgrain);
+		if(grain1valid > 0)
 		{
-			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x,Pgrain.y,Pgrain.z);
+			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x, Pgrain.y, Pgrain.z);
 
 			g *= (0.3 + 0.7 * inring);
 			g  = b3Math::b3Limit(0.8 - g);
 			g *= g;
-			g  = m_Grainy * b3Math::b3Smoothstep(0.5,1,g);
-			if (i == 0)
+			g  = m_Grainy * b3Math::b3Smoothstep(0.5, 1, g);
+			if(i == 0)
 			{
 				inring *= (1 - 0.4 * grain1valid);
 			}
-			grain = B3_MAX(grain,g);
+			grain = B3_MAX(grain, g);
 		}
 		Pgrain.x += Pgrain.x;
 		Pgrain.y += Pgrain.y;
@@ -129,10 +129,10 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 	return inring * m_Ringy * (1 - grain) + grain;
 }
 
-void b3Wood::b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy)
+void b3Wood::b3CopyWobbled(b3Wood * wood, b3_f64 wobble, b3_f64 fx, b3_f64 fy)
 {
-	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx,0,0) * wobble * 7;
-	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0,fy,0) * wobble * 5;
+	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx, 0, 0) * wobble * 7;
+	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0, fy, 0) * wobble * 5;
 	m_Ringy                  = wood->m_Ringy;
 	m_Grainy                 = wood->m_Grainy;
 	m_GrainFrequency         = wood->m_GrainFrequency;
@@ -160,7 +160,7 @@ b3OakPlank::b3OakPlank()
 
 b3OakPlank::~b3OakPlank()
 {
-	if (m_Planks != null)
+	if(m_Planks != null)
 	{
 		delete [] m_Planks;
 	}
@@ -179,13 +179,13 @@ void b3OakPlank::b3InitOakPlank()
 	m_Wobble  = 0.1f;
 }
 
-void b3OakPlank::b3PrepareOakPlank(b3_vector *scale)
+void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 {
-	b3_count x,y;
+	b3_count x, y;
 	b3_index index;
 
 	b3PrepareWood(scale);
-	if (m_Planks != null)
+	if(m_Planks != null)
 	{
 		delete [] m_Planks;
 	}
@@ -196,27 +196,27 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector *scale)
 	m_rxTimes    = 1.0 / m_xTimes;
 	m_ryTimes    = 1.0 / m_yTimes;
 
-	for (y = 0;y < m_yTimes;y++)
+	for(y = 0; y < m_yTimes; y++)
 	{
-		for (x = 0;x < m_xTimes;x++)
+		for(x = 0; x < m_xTimes; x++)
 		{
 			index = y * m_xTimes + x;
-			m_Planks[index].b3CopyWobbled(this,m_Wobble,(b3_f64)x * m_rxTimes,(b3_f64)y * m_ryTimes);
+			m_Planks[index].b3CopyWobbled(this, m_Wobble, (b3_f64)x * m_rxTimes, (b3_f64)y * m_ryTimes);
 			m_Planks[index].b3PrepareWood(scale);
 		}
 	}
 }
 
-b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar, b3_f64 distance, b3_index &index)
+b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index)
 {
 	b3_vector surface;
-	b3_index  ix,iy;
-	b3_f64    fx,fy;
+	b3_index  ix, iy;
+	b3_f64    fx, fy;
 
 	fy = polar->y * m_ryScale;
 	fx = polar->x * m_rxScale + m_xOffset * floor(fy);
-	surface.x = b3Math::b3Frac(fx,(b3_f64)m_xTimes);
-	surface.y = b3Math::b3Frac(fy,(b3_f64)m_yTimes);
+	surface.x = b3Math::b3Frac(fx, (b3_f64)m_xTimes);
+	surface.y = b3Math::b3Frac(fy, (b3_f64)m_yTimes);
 	surface.z = 0;
 
 	ix  = (b3_index)surface.x;

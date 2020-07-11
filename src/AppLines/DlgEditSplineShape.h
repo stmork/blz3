@@ -40,26 +40,26 @@ class CDlgEditSplineShape : public CB3ShapeDialog
 	b3_s32         m_yControls;
 	b3_f64         m_ySize;
 
-// Construction
+	// Construction
 public:
-	CDlgEditSplineShape(CWnd* pParent = NULL);
+	CDlgEditSplineShape(CWnd * pParent = NULL);
 	~CDlgEditSplineShape();
 
 	virtual void b3PostProcess();
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgEditSplineShape)
 	enum { IDD = IDD_EDIT_SPLINESHAPE };
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CDlgEditSplineShape)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 

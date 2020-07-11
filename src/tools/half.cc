@@ -42,26 +42,35 @@ enum op
 	LEFT
 };
 
-int main (int argc,char *argv[])
+int main(int argc, char * argv[])
 {
 	int i;
 	op  operation = NOP;
 
-	for (i = 1;i < argc;i++)
+	for(i = 1; i < argc; i++)
 	{
-		b3Tx   image,half;
-		b3_res xSize,ySize;
+		b3Tx   image, half;
+		b3_res xSize, ySize;
 
-		if (strcmp(argv[i],"-r") == 0) operation = RIGHT;
-		else if (strcmp(argv[i],"-t") == 0) operation = TURN;
-		else if (strcmp(argv[i],"-l") == 0) operation = LEFT;
+		if(strcmp(argv[i], "-r") == 0)
+		{
+			operation = RIGHT;
+		}
+		else if(strcmp(argv[i], "-t") == 0)
+		{
+			operation = TURN;
+		}
+		else if(strcmp(argv[i], "-l") == 0)
+		{
+			operation = LEFT;
+		}
 		else
 		{
 			try
 			{
-				if (image.b3LoadImage(argv[i]) == B3_OK)
+				if(image.b3LoadImage(argv[i]) == B3_OK)
 				{
-					switch (operation)
+					switch(operation)
 					{
 					case RIGHT:
 						image.b3TurnRight();
@@ -78,7 +87,7 @@ int main (int argc,char *argv[])
 
 					xSize = (image.xSize >> 1);
 					ySize = (image.ySize >> 1);
-					if (half.b3AllocTx(xSize, ySize, 24))
+					if(half.b3AllocTx(xSize, ySize, 24))
 					{
 						half.b3ScaleToGrey(&image);
 #ifdef HAVE_LIBJPEG
@@ -89,10 +98,10 @@ int main (int argc,char *argv[])
 					}
 				}
 			}
-			catch (b3TxException &t)
+			catch(b3TxException & t)
 			{
-				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
-				b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
+				b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
+				b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
 			}
 			operation = NOP;
 		}

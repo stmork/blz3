@@ -28,14 +28,14 @@ struct b3_class_name
 
 class b3StaticPluginInfoInit
 {
-	static b3HashMap<b3_u32,b3_class_name> m_ClassNames;
+	static b3HashMap<b3_u32, b3_class_name> m_ClassNames;
 
 public:
 	static void        b3Init();
-	static const char *b3GetClassName(b3_u32 class_type);
+	static const char * b3GetClassName(b3_u32 class_type);
 
 private:
-	static void b3AddClass    (b3_u32 class_id,  int DescID);
+	static void b3AddClass(b3_u32 class_id,  int DescID);
 };
 
 #endif

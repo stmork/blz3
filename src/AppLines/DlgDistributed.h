@@ -32,12 +32,12 @@
 
 class CDlgDistributed : public CPropertyPage
 {
-// Construction
+	// Construction
 public:
 	b3Distribute * m_Distributed;
-	CDlgDistributed(CWnd* pParent = NULL);   // standard constructor
+	CDlgDistributed(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgDistributed)
 	enum { IDD = IDD_DISTRIBUTED };
 	CB3IntSpinButtonCtrl	m_CtrlSPP;
@@ -50,16 +50,16 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgDistributed)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

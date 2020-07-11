@@ -51,7 +51,7 @@ public:
 	 *
 	 * @param extension The OpenGL extension string.
 	 */
-	static        void    b3Init(const char *extension);
+	static        void    b3Init(const char * extension);
 
 	/**
 	 * This method returns true if VBOs are available.

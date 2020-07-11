@@ -24,26 +24,26 @@
 
 #include "b3ShapeDialog.h"
 
-class CB3SpanningShapeDialog : public CB3ShapeDialog  
+class CB3SpanningShapeDialog : public CB3ShapeDialog
 {
 public:
-	              CB3SpanningShapeDialog(UINT IDD,CWnd* pParent = NULL);
+	CB3SpanningShapeDialog(UINT IDD, CWnd * pParent = NULL);
 	virtual void  b3PostProcess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CB3SpanningShapeDialog)
 	int		m_DirMode;
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3SpanningShapeDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void  b3Init();
 	virtual void  b3SetDirMode(int dirmode) = 0;

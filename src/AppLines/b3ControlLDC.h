@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ControlLDC.h $  
+**	$Filename:	b3ControlLDC.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -41,25 +41,25 @@ enum CB3LDCMode
 class CB3ControlLDC : public CStatic, protected b3Mem
 {
 	b3Spline * m_LDC;
-// Construction
+	// Construction
 public:
 	CB3ControlLDC();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ControlLDC)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	void b3SetMode(CB3LDCMode mode);
-	void b3Init(b3Light *light);
+	void b3Init(b3Light * light);
 	void b3Update(b3_bool refresh = true);
 	virtual ~CB3ControlLDC();
 
@@ -78,7 +78,7 @@ private:
 	CBitmap     m_Bitmap;
 	CB3LDCMode  m_Mode;
 	b3PickBase  m_PickBase;
-	b3_vector  *m_Curve;
+	b3_vector * m_Curve;
 	b3_res      m_xMax;
 	b3_res      m_yMax;
 	b3_bool     m_Init;

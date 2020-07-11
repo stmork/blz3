@@ -35,12 +35,12 @@
 class CDlgModellerInfo : public CDialog
 {
 	CB3PosGroup     m_CenterCtrl;
-// Construction
+	// Construction
 public:
-	b3ModellerInfo *m_ModellerInfo;
-	CDlgModellerInfo(CWnd* pParent = NULL);   // standard constructor
+	b3ModellerInfo * m_ModellerInfo;
+	CDlgModellerInfo(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgModellerInfo)
 	enum { IDD = IDD_MODELLER_INFO };
 	CB3FloatEdit	m_SnapToGridCtrl;
@@ -58,14 +58,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgModellerInfo)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

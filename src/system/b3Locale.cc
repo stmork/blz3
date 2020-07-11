@@ -32,9 +32,9 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Locale::b3IsoToLocale(const char *src, char *dst, b3_size len)
+void b3Locale::b3IsoToLocale(const char * src, char * dst, b3_size len)
 {
-	if (setlocale(LC_CTYPE,"de_DE.ISO8859-1") != null)
+	if(setlocale(LC_CTYPE, "de_DE.ISO8859-1") != null)
 	{
 		wchar_t result[1024];
 		size_t  max;
@@ -44,7 +44,7 @@ void b3Locale::b3IsoToLocale(const char *src, char *dst, b3_size len)
 
 		mbstowcs(result, src, max);
 
-		setlocale(LC_CTYPE,"");
+		setlocale(LC_CTYPE, "");
 		wcstombs(dst, result, len);
 	}
 	else
@@ -53,7 +53,7 @@ void b3Locale::b3IsoToLocale(const char *src, char *dst, b3_size len)
 	}
 }
 
-void b3Locale::b3LocaleToIso(const char *src, char *dst, b3_size len)
+void b3Locale::b3LocaleToIso(const char * src, char * dst, b3_size len)
 {
 	wchar_t result[1024];
 	size_t  max;
@@ -61,10 +61,10 @@ void b3Locale::b3LocaleToIso(const char *src, char *dst, b3_size len)
 	max = sizeof(result) / sizeof(wchar_t);
 	B3_ASSERT(len < max);
 
-	setlocale(LC_CTYPE,"");
+	setlocale(LC_CTYPE, "");
 	mbstowcs(result, src, max);
 
-	if (setlocale(LC_CTYPE,"de_DE.ISO8859-1") != null)
+	if(setlocale(LC_CTYPE, "de_DE.ISO8859-1") != null)
 	{
 		wcstombs(dst, result, len);
 	}
@@ -72,5 +72,5 @@ void b3Locale::b3LocaleToIso(const char *src, char *dst, b3_size len)
 	{
 		memcpy(dst, src, len);
 	}
-	setlocale(LC_CTYPE,"");
+	setlocale(LC_CTYPE, "");
 }

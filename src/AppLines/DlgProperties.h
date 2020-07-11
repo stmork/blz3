@@ -33,7 +33,7 @@
 
 class CDlgProperties : public CB3Dialog
 {
-	CAppLinesApp *m_App;
+	CAppLinesApp * m_App;
 	b3Color       m_ColorBg;
 	b3Color       m_ColorUnit;
 	b3Color       m_ColorMove;
@@ -44,11 +44,11 @@ class CDlgProperties : public CB3Dialog
 	b3Color       m_ColorSelected;
 	b3Color       m_ColorGrid;
 	b3Color       m_ColorPick;
-// Construction
+	// Construction
 public:
-	CDlgProperties(CWnd* pParent = NULL);   // standard constructor
+	CDlgProperties(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgProperties)
 	enum { IDD = IDD_PROPERTIES };
 	CSliderCtrl	m_PickSizeCtrl;
@@ -68,14 +68,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgProperties)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

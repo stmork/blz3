@@ -81,21 +81,21 @@
 
 GLfloat ambient[] =
 {
-	1.0,1.0,1.0,1.0
+	1.0, 1.0, 1.0, 1.0
 };
 
 GLfloat diffuse[] =
 {
-	1.0,1.0,0.95,1.0
+	1.0, 1.0, 0.95, 1.0
 };
 
 GLfloat light0[] =
 {
-	10.0,15.0,20.0,1.0
+	10.0, 15.0, 20.0, 1.0
 };
 
-GLfloat  *vPtr = null;
-GLuint   *iPtr = null;
+GLfloat * vPtr = null;
+GLuint  * iPtr = null;
 b3_size   vSize, iSize;
 GLuint    size;
 b3Time    timepoint;
@@ -118,7 +118,7 @@ b3_bool has_vbo;
 void init_vertices()
 {
 	b3_f64 factor;
-	GLuint i,k;
+	GLuint i, k;
 
 	size = 1 << ocean.m_Dim;
 	halfgrid = ocean.m_GridSize * 0.5;
@@ -126,22 +126,22 @@ void init_vertices()
 	vSize = size * size * sizeof(GLfloat) * 3;
 	iSize = 2 * size * (size - 1) * sizeof(GLint) * 2;
 
-	if (has_vbo)
+	if(has_vbo)
 	{
 		printf("Vertex buffer objects available.\n");
-		glGenBuffersARB(2,vbo);
+		glGenBuffersARB(2, vbo);
 	}
 	else
 	{
 		printf("No vertex buffer objects available.\n");
 	}
 
-	if (vPtr == null)
+	if(vPtr == null)
 	{
-		GLfloat *ptr;
+		GLfloat * ptr;
 
 		printf("Setup vertices...\n");
-		if (has_vbo)
+		if(has_vbo)
 		{
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 			glBufferDataARB(GL_ARRAY_BUFFER_ARB, vSize, null, GL_DYNAMIC_DRAW_ARB);
@@ -153,9 +153,9 @@ void init_vertices()
 		}
 		ptr = vPtr;
 
-		for (k = 0;k < size;k++)
+		for(k = 0; k < size; k++)
 		{
-			for (i = 0;i < size;i += OW_SKIP)
+			for(i = 0; i < size; i += OW_SKIP)
 			{
 				*ptr++ = i * factor;
 				*ptr++ = k * factor;
@@ -163,19 +163,19 @@ void init_vertices()
 			}
 		}
 
-		if (has_vbo)
+		if(has_vbo)
 		{
 			glVertexPointer(3, GL_FLOAT, 0, 0);
 		}
 	}
 
-	if (iPtr == null)
+	if(iPtr == null)
 	{
-		GLuint *ptr;
+		GLuint * ptr;
 		GLuint  index;
 
 		printf("Setup indices...\n");
-		if (has_vbo)
+		if(has_vbo)
 		{
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize, null, GL_DYNAMIC_DRAW_ARB);
@@ -188,9 +188,9 @@ void init_vertices()
 		ptr = iPtr;
 
 		index = 0;
-		for (k = 0;k < size;k++)
+		for(k = 0; k < size; k++)
 		{
-			for (i = OW_SKIP;i < size;i+=OW_SKIP)
+			for(i = OW_SKIP; i < size; i += OW_SKIP)
 			{
 				*ptr++ = index++;
 				*ptr++ = index;
@@ -198,10 +198,10 @@ void init_vertices()
 			index++;
 		}
 
-		for (i = 0;i < size;i+=OW_SKIP)
+		for(i = 0; i < size; i += OW_SKIP)
 		{
 			index = i / OW_SKIP;
-			for (k = 1;k < size;k++)
+			for(k = 1; k < size; k++)
 			{
 				*ptr++ = index;
 				index += (size / OW_SKIP);
@@ -209,7 +209,7 @@ void init_vertices()
 			}
 		}
 
-		if (has_vbo)
+		if(has_vbo)
 		{
 			glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
 			iPtr = null;
@@ -223,8 +223,8 @@ void init_vertices()
 
 void init_vbo()
 {
-	char *extensions = (char *)glGetString(GL_EXTENSIONS);
-	if (strstr(extensions,"ARB_vertex_buffer_object") != 0)
+	char * extensions = (char *)glGetString(GL_EXTENSIONS);
+	if(strstr(extensions, "ARB_vertex_buffer_object") != 0)
 	{
 		glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
 		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
@@ -234,19 +234,19 @@ void init_vbo()
 		glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 		has_vbo =
-			false&&
+			false &&
 			(glGenBuffersARB != null) &&
 			(glBindBufferARB != null) &&
 			(glBufferDataARB != null) &&
 			(glMapBufferARB  != null) &&
 			(glUnmapBufferARB != null);
-		if (!has_vbo)
+		if(!has_vbo)
 		{
-			printf("glGenBuffersARB  = %p\n",glGenBuffersARB);
-			printf("glBindBufferARB  = %p\n",glBindBufferARB);
-			printf("glBufferDataARB  = %p\n",glBufferDataARB);
-			printf("glMapBufferARB   = %p\n",glMapBufferARB);
-			printf("glUnmapBufferARB = %p\n",glUnmapBufferARB);
+			printf("glGenBuffersARB  = %p\n", glGenBuffersARB);
+			printf("glBindBufferARB  = %p\n", glBindBufferARB);
+			printf("glBufferDataARB  = %p\n", glBufferDataARB);
+			printf("glMapBufferARB   = %p\n", glMapBufferARB);
+			printf("glUnmapBufferARB = %p\n", glUnmapBufferARB);
 		}
 	}
 	else
@@ -258,12 +258,12 @@ void init_vbo()
 
 void RenderScene()
 {
-	b3Complex64  *src;
-	GLfloat      *dst;
-	GLuint        i,k;
+	b3Complex64 * src;
+	GLfloat   *   dst;
+	GLuint        i, k;
 	b3_f64        t, now = timepoint.b3Now();
 
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	t = now - start;
 	printf("t = %1.3fs d = %1.3fs %1.3ff/s\n", t, now - last, 1.0 / (now - last));
@@ -272,9 +272,9 @@ void RenderScene()
 
 	src = ocean.b3GetBuffer();
 	dst = &vPtr[2];
-	for (k = 0; k < size; k++)
+	for(k = 0; k < size; k++)
 	{
-		for (i = 0; i < size; i+=OW_SKIP)
+		for(i = 0; i < size; i += OW_SKIP)
 		{
 			*dst = src->b3Real() * 0.001;
 			src += OW_SKIP;
@@ -287,17 +287,17 @@ void RenderScene()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glColor3f(1.0f,1.0f,1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 
-	if (has_vbo)
+	if(has_vbo)
 	{
-		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,vbo[1]);
-		glDrawElements(GL_LINES,4 * size * (size - 1) / OW_SKIP,GL_UNSIGNED_INT,0);
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
+		glDrawElements(GL_LINES, 4 * size * (size - 1) / OW_SKIP, GL_UNSIGNED_INT, 0);
 	}
 	else
 	{
 		glVertexPointer(3, GL_FLOAT, 0, vPtr);
-		glDrawElements(GL_LINES,4 * size * (size - 1) / OW_SKIP,GL_UNSIGNED_INT, iPtr);
+		glDrawElements(GL_LINES, 4 * size * (size - 1) / OW_SKIP, GL_UNSIGNED_INT, iPtr);
 	}
 
 	glPopMatrix();
@@ -306,11 +306,11 @@ void RenderScene()
 	glutPostRedisplay();
 }
 
-void ChangeSize(GLsizei xSize,GLsizei ySize)
+void ChangeSize(GLsizei xSize, GLsizei ySize)
 {
 	GLfloat aspect = (GLfloat)xSize / (GLfloat)ySize;
 
-	glViewport(0,0,xSize,ySize);
+	glViewport(0, 0, xSize, ySize);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 #if 0
@@ -323,10 +323,10 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 	0.0f, 1.0f, 0.0f);
 	glTranslated(0.0,0.0,2.0);
 	*/
-	gluPerspective (60.0f, aspect, 0.1f,size);
+	gluPerspective(60.0f, aspect, 0.1f, size);
 	glTranslated(-halfgrid, -10.0, -2.0);
-	glRotatef(-00.0f,0.0f,1.0f,0.0f);
-	glRotatef(-70.0f,1.0f,0.0f,0.0f);
+	glRotatef(-00.0f, 0.0f, 1.0f, 0.0f);
+	glRotatef(-70.0f, 1.0f, 0.0f, 0.0f);
 #endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -334,25 +334,25 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 
 void SetupRC()
 {
-	glClearColor(0.7f,0.7f,1.0f,1.0f);
+	glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
-//	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient);
-	glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
-	glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse);
-	glLightfv(GL_LIGHT0,GL_POSITION,light0);
+	//	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_POSITION, light0);
 
 	init_vbo();
 	init_vertices();
 }
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
 
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutCreateWindow("Ozeanwellen");
 	glutDisplayFunc(RenderScene);
 	glutReshapeFunc(ChangeSize);
@@ -367,10 +367,10 @@ int main(int argc,char *argv[])
 
 #include <stdio.h>
 
-int main(int argc,char *argv[])
+int main(int argc, char * argv[])
 {
 
-	fprintf(stderr,"This platform has got no OpenGL support!\n");
+	fprintf(stderr, "This platform has got no OpenGL support!\n");
 
 	return EXIT_SUCCESS;
 }

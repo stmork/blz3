@@ -34,18 +34,18 @@ void b3Sampler::b3Sample()
 {
 	const b3_count    CPUs = b3Runtime::b3GetNumCPUs();
 	b3_loop           i;
-	b3SampleInfo     *info;
+	b3SampleInfo   *  info;
 
 	info = b3SampleInit(CPUs);
-	if (CPUs > 1)
+	if(CPUs > 1)
 	{
-		b3Thread *threads = new b3Thread[CPUs];
+		b3Thread * threads = new b3Thread[CPUs];
 
-		for (i = 0;i < CPUs;i++)
+		for(i = 0; i < CPUs; i++)
 		{
-			threads[i].b3Start(b3SampleThread,&info[i]);
+			threads[i].b3Start(b3SampleThread, &info[i]);
 		}
-		for (i = 0;i < CPUs;i++)
+		for(i = 0; i < CPUs; i++)
 		{
 			threads[i].b3Wait();
 		}
@@ -60,10 +60,10 @@ void b3Sampler::b3Sample()
 	delete [] info;
 }
 
-b3_u32 b3Sampler::b3SampleThread(void *ptr)
+b3_u32 b3Sampler::b3SampleThread(void * ptr)
 {
-	b3SampleInfo *info    = (b3SampleInfo *)ptr;
-	b3Sampler    *sampler = info->m_Sampler;
+	b3SampleInfo * info    = (b3SampleInfo *)ptr;
+	b3Sampler  *  sampler = info->m_Sampler;
 
 	sampler->b3SampleTask(info);
 	return 0;
@@ -75,7 +75,7 @@ b3_u32 b3Sampler::b3SampleThread(void *ptr)
 **                                                                      **
 *************************************************************************/
 
-b3ImageSampler::b3ImageSampler(b3Tx *tx)
+b3ImageSampler::b3ImageSampler(b3Tx * tx)
 {
 	// Init texture
 	B3_ASSERT(tx->b3IsHDR());
@@ -85,15 +85,15 @@ b3ImageSampler::b3ImageSampler(b3Tx *tx)
 	m_Data  = tx->b3GetHdrData();
 }
 
-b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
+b3SampleInfo * b3ImageSampler::b3SampleInit(const b3_count CPUs)
 {
-	b3SampleInfo *info = new b3SampleInfo[CPUs];
+	b3SampleInfo * info = new b3SampleInfo[CPUs];
 	b3_loop       i;
-	b3_res        yStart,yEnd;
-	b3_color     *data = (b3_color *)m_Data;
+	b3_res        yStart, yEnd;
+	b3_color   *  data = (b3_color *)m_Data;
 
 	yStart = 0;
-	for (i = 0;i < CPUs;i++)
+	for(i = 0; i < CPUs; i++)
 	{
 		yEnd = m_yMax * (i + 1) / CPUs;
 		info[i].m_Sampler = this;
@@ -108,16 +108,16 @@ b3SampleInfo *b3ImageSampler::b3SampleInit(const b3_count CPUs)
 	return info;
 }
 
-void b3ImageSampler::b3SampleTask(const b3SampleInfo *info)
+void b3ImageSampler::b3SampleTask(const b3SampleInfo * info)
 {
-	b3_coord  x,y;
-	b3_color *data = (b3_color *)info->m_Data;
+	b3_coord  x, y;
+	b3_color * data = (b3_color *)info->m_Data;
 
-	for (y = info->m_yStart;y < info->m_yEnd;y++)
+	for(y = info->m_yStart; y < info->m_yEnd; y++)
 	{
-		for (x = 0;x < info->m_xMax;x++)
+		for(x = 0; x < info->m_xMax; x++)
 		{
-			*data++ = b3SamplePixel(x,y);
+			*data++ = b3SamplePixel(x, y);
 		}
 	}
 }

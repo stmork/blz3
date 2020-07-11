@@ -99,7 +99,7 @@ enum b3_stencil_unit
  */
 struct b3_stencil_limit
 {
-	b3_f64 x1,y1,x2,y2;
+	b3_f64 x1, y1, x2, y2;
 };
 
 /**
@@ -140,7 +140,7 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void    b3Register();
-	virtual b3_bool b3Prepare(b3_preparation_info *prep_info) override;
+	virtual b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method compute the bounding box of this stencil condition
@@ -148,7 +148,7 @@ public:
 	 *
 	 * @param limit The info structure to fill.
 	 */
-	virtual void    b3ComputeBound(b3_stencil_limit *limit);
+	virtual void    b3ComputeBound(b3_stencil_limit * limit);
 
 	/**
 	 * This method checks wether the given polar coordinates matches into the
@@ -157,7 +157,7 @@ public:
 	 * @param polar The polar coordinates to check.
 	 * @return True if the polar coordinates matches the stencil condition.
 	 */
-	virtual b3_bool b3CheckStencil(b3_polar *polar);
+	virtual b3_bool b3CheckStencil(b3_polar * polar);
 
 	/**
 	 * This Method computes a Boolean expression depending of the
@@ -167,7 +167,7 @@ public:
 	 * @param operation The actual result from this condition.
 	 * @return The result of the Boolean term specified with this condition.
 	 */
-	b3_bool b3Conditionate(b3_bool input,b3_bool operation);
+	b3_bool b3Conditionate(b3_bool input, b3_bool operation);
 
 protected:
 	/**
@@ -178,7 +178,7 @@ protected:
 	 * @param limit The bound to adjust.
 	 * @param object The object bound.
 	 */
-	static  void    b3CheckInnerBound(b3_stencil_limit *limit,b3_stencil_limit *object);
+	static  void    b3CheckInnerBound(b3_stencil_limit * limit, b3_stencil_limit * object);
 
 	/**
 	 * This method checks a given limit against the object limit. The object
@@ -188,7 +188,7 @@ protected:
 	 * @param limit The bound to adjust.
 	 * @param object The object bound.
 	 */
-	static  void    b3CheckOuterBound(b3_stencil_limit *limit,b3_stencil_limit *object);
+	static  void    b3CheckOuterBound(b3_stencil_limit * limit, b3_stencil_limit * object);
 };
 
 /**
@@ -197,7 +197,7 @@ protected:
 class B3_PLUGIN b3CondRectangle : public b3Condition
 {
 public:
-	b3_f32  m_xStart,m_yStart;    //!< Polar start coordinates.
+	b3_f32  m_xStart, m_yStart;   //!< Polar start coordinates.
 	b3_f32  m_xEnd,  m_yEnd;      //!< Polar end coordinates.
 	b3_s32  m_Flags;              //!< Some flags.
 
@@ -206,8 +206,8 @@ public:
 	B3_ITEM_LOAD(b3CondRectangle); //!< This constructor handles deserialization.
 
 	void    b3Write();
-	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	void    b3ComputeBound(b3_stencil_limit * limit);
+	b3_bool b3CheckStencil(b3_polar * polar);
 };
 
 #define RCB_ACTIVE  0
@@ -224,8 +224,8 @@ protected:
 
 public:
 	b3_f32  m_xPos, m_yPos;       //!< Base of triangle/ parallelogramme.
-	b3_f32  m_xDir1,m_yDir1;      //!< First direction vector.
-	b3_f32  m_xDir2,m_yDir2;      //!< Second direction vector.
+	b3_f32  m_xDir1, m_yDir1;     //!< First direction vector.
+	b3_f32  m_xDir2, m_yDir2;     //!< Second direction vector.
 
 protected:
 	B3_ITEM_BASE(b3Cond2); //!< This is a base class deserialization constructor.
@@ -235,8 +235,8 @@ public:
 	B3_ITEM_LOAD(b3Cond2); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	void    b3ComputeBound(b3_stencil_limit *limit) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
 };
 
 /**
@@ -248,7 +248,7 @@ public:
 	B3_ITEM_INIT(b3CondPara); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondPara); //!< This constructor handles deserialization.
 
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 /**
@@ -260,7 +260,7 @@ public:
 	B3_ITEM_INIT(b3CondTria); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondTria); //!< This constructor handles deserialization.
 
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 /**
@@ -278,8 +278,8 @@ public:
 	B3_ITEM_LOAD(b3CondCircle); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit *limit) override;
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 /**
@@ -290,15 +290,15 @@ class B3_PLUGIN b3CondSegment : public b3Condition
 protected:
 	b3_f32  m_xCenter,   m_yCenter;  //!< Center.
 	b3_f32  m_RadStart,  m_RadEnd;   //!< Radius bounds.
-	b3_f32  m_AngleStart,m_AngleEnd; //!< Angular bounds.
+	b3_f32  m_AngleStart, m_AngleEnd; //!< Angular bounds.
 
 public:
 	B3_ITEM_INIT(b3CondSegment); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondSegment); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit *limit) override;
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 /**
@@ -310,15 +310,15 @@ protected:
 	b3_f32  m_xCenter,   m_yCenter;  //!< Center.
 	b3_f32  m_xRadius,   m_yRadius;  //!< The horizontal and vertical radius.
 	b3_f32  m_RadStart,  m_RadEnd;   //!< Radius bounds.
-	b3_f32  m_AngleStart,m_AngleEnd; //!< Anglular bounds.
+	b3_f32  m_AngleStart, m_AngleEnd; //!< Anglular bounds.
 
 public:
 	B3_ITEM_INIT(b3CondEllipse); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondEllipse); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit *limit) override;
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 /**
@@ -329,21 +329,21 @@ public:
 class B3_PLUGIN b3CondTexture : public b3Condition
 {
 protected:
-	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start.
-	b3_f32            m_xScale,m_yScale;    //!< Texture scale.
-	b3_s32            m_xTimes,m_yTimes;    //!< Repeatition in x- y-direction.
+	b3_f32            m_xStart, m_yStart;   //!< Surface coordinate start.
+	b3_f32            m_xScale, m_yScale;   //!< Texture scale.
+	b3_s32            m_xTimes, m_yTimes;   //!< Repeatition in x- y-direction.
 	b3_s32            m_Flags;              //!< Unused.
 	b3Path            m_Name;               //!< The texture file name.
-	b3Tx             *m_Texture;            //!< The selected texture.
+	b3Tx       *      m_Texture;            //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3CondTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondTexture); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	void    b3ComputeBound(b3_stencil_limit *limit) override;
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 /**
@@ -353,20 +353,20 @@ public:
 class B3_PLUGIN b3CondWrapTexture : public b3Condition
 {
 protected:
-	b3_f32            m_xStart,m_yStart;    //!< Surface coordinate start
-	b3_f32            m_xEnd,m_yEnd;        //!< Surface coordinate end
+	b3_f32            m_xStart, m_yStart;   //!< Surface coordinate start
+	b3_f32            m_xEnd, m_yEnd;       //!< Surface coordinate end
 	b3_s32            m_Flags;              //!< Unused.
 	b3Path            m_Name;               //!< The texture file name.
-	b3Tx             *m_Texture;            //!< The selected texture.
+	b3Tx       *      m_Texture;            //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3CondWrapTexture); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondWrapTexture); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info *prep_info) override;
-	void    b3ComputeBound(b3_stencil_limit *limit) override;
-	b3_bool b3CheckStencil(b3_polar *polar) override;
+	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 #endif

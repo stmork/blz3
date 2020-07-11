@@ -35,15 +35,15 @@
 
 class CDlgLight : public CDialog
 {
-// Construction
+	// Construction
 	b3_u32     m_ShadingClassType;
-	b3Scene   *m_LightScene;
+	b3Scene  * m_LightScene;
 public:
-	b3Base<b3Item> *m_LightBase;
-	b3Light        *m_Light;
-	CDlgLight(b3_u32 class_type, CWnd* pParent = NULL);   // standard constructor
+	b3Base<b3Item> * m_LightBase;
+	b3Light    *    m_Light;
+	CDlgLight(b3_u32 class_type, CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgLight)
 	enum { IDD = IDD_LIGHT };
 	CB3ControlLDC	m_CtrlLDC;
@@ -67,17 +67,17 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgLight)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT * pResult);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -91,7 +91,7 @@ protected:
 	afx_msg void OnKillfocusLight();
 	virtual void OnOK();
 	afx_msg void OnDestroy();
-	afx_msg void OnReleasedCaptureLightDistr(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnReleasedCaptureLightDistr(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

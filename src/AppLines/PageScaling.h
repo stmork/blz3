@@ -35,14 +35,14 @@ class CPageScaling : public CB3PropertyPage
 {
 	CB3PosGroup        m_ScaleCtrl;
 
-// Construction
+	// Construction
 public:
 	CPageScaling();
 	~CPageScaling();
 
-	b3Scaling *m_Scaling;
+	b3Scaling * m_Scaling;
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPageScaling)
 	enum { IDD = IDD_PAGE_SCALING };
 	CB3FloatEdit	m_xScaleCtrl;
@@ -52,14 +52,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPageScaling)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageScaling)

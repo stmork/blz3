@@ -26,7 +26,7 @@
 class CB3OceanWaveCtrl :
 	public CStatic
 {
-	b3OceanWave *m_Ocean;
+	b3OceanWave * m_Ocean;
 	b3_f64       m_Factor;
 	b3_bool      m_MouseCapture;
 	b3Tx         m_Tx;
@@ -57,11 +57,11 @@ public:
 	afx_msg void OnPaint();
 
 public:
-	void b3SetOcean(b3OceanWave *ocean);
+	void b3SetOcean(b3OceanWave * ocean);
 	void b3Update();
 
 private:
-	void b3UpdateUI(CPoint *point = null);
+	void b3UpdateUI(CPoint * point = null);
 	void b3Refresh();
 };
 

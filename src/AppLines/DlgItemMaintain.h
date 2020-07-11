@@ -32,18 +32,18 @@
 
 class CDlgItemMaintain : public CDialog
 {
-// Construction
-	b3Base<b3Item>        *m_Head;
-	b3HashMap<b3_u32,int>  m_ClassTypesToImg;
-	b3Loader              *m_Plugins;
+	// Construction
+	b3Base<b3Item>    *    m_Head;
+	b3HashMap<b3_u32, int>  m_ClassTypesToImg;
+	b3Loader       *       m_Plugins;
 	b3_bool                m_Changed;
 	CImageList             m_ImageList;
-	CAppRenderDoc         *m_pDoc;
+	CAppRenderDoc     *    m_pDoc;
 
 public:
-	CDlgItemMaintain(CAppRenderDoc *pDoc,b3Base<b3Item> *head,CWnd* pParent = NULL);   // standard constructor
+	CDlgItemMaintain(CAppRenderDoc * pDoc, b3Base<b3Item> * head, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgItemMaintain)
 	enum { IDD = IDD_ITEM_MAINTAIN };
 	CListCtrl	m_ItemListCtrl;
@@ -52,16 +52,16 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgItemMaintain)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+public:
+	virtual BOOL PreTranslateMessage(MSG * pMsg);
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -75,18 +75,18 @@ protected:
 	afx_msg void OnItemDown();
 	afx_msg void OnItemLast();
 	virtual void OnOK();
-	afx_msg void OnDoItemList(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnClickItemList(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnDoClassList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDoItemList(NMHDR * pNMHDR, LRESULT * pResult);
+	afx_msg void OnClickItemList(NMHDR * pNMHDR, LRESULT * pResult);
+	afx_msg void OnDoClassList(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
-	b3Item *b3GetSelectedItem();
+	b3Item * b3GetSelectedItem();
 	void    b3UpdateUI();
-	void    b3UpdateList(b3Item *select = null,b3_bool set_focus = false);
+	void    b3UpdateList(b3Item * select = null, b3_bool set_focus = false);
 	void    b3InitItemList();
-	
-	static void b3Store(b3Item *item);
+
+	static void b3Store(b3Item * item);
 };
 
 //{{AFX_INSERT_LOCATION}}

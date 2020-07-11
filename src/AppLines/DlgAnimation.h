@@ -32,15 +32,15 @@
 
 class CDlgAnimation : public CDialog
 {
-	b3Animation *m_Animation;
+	b3Animation * m_Animation;
 
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void    b3Register();
-	CDlgAnimation(b3Item *item, CWnd* pParent = NULL);   // standard constructor
+	CDlgAnimation(b3Item * item, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgAnimation)
 	enum { IDD = IDD_ANIMATION };
 	BOOL	m_Enable;
@@ -48,14 +48,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgAnimation)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

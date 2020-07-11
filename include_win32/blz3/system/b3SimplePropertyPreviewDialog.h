@@ -35,24 +35,24 @@ class B3_PLUGIN CB3SimplePropertyPreviewDialog : public CB3SimplePreviewDialog
 {
 protected:
 	CPropertySheet     m_PropertySheet;
-// Construction
+	// Construction
 public:
 	DECLARE_DYNAMIC(CB3SimplePropertyPreviewDialog)
-	CB3SimplePropertyPreviewDialog(b3Item *item,int dlgId,CWnd* pParent = NULL);   // standard constructor
+	CB3SimplePropertyPreviewDialog(b3Item * item, int dlgId, CWnd * pParent = NULL); // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CB3SimplePropertyPreviewDialog)
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3SimplePropertyPreviewDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

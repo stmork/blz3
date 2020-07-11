@@ -17,37 +17,37 @@ protected: // create from serialization only
 	CAppMandelView();
 	DECLARE_DYNCREATE(CAppMandelView)
 
-// Attributes
+	// Attributes
 public:
-	CAppMandelDoc* GetDocument();
+	CAppMandelDoc * GetDocument();
 
-// Operations
+	// Operations
 public:
 	void b3BestFit();
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppMandelView)
-	public:
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	protected:
+public:
+	virtual void OnDraw(CDC * pDC); // overridden to draw this view
+	virtual BOOL PreCreateWindow(CREATESTRUCT & cs);
+protected:
 	virtual void OnInitialUpdate(); // called first time after construct
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CAppMandelView();
-	virtual b3Document *b3GetDocument();
+	virtual b3Document * b3GetDocument();
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext & dc) const;
 #endif
 
 protected:
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppMandelView)
 	afx_msg void OnUnfiltered();
@@ -59,17 +59,17 @@ protected:
 	afx_msg void OnMore();
 	afx_msg void OnLess();
 	afx_msg void OnMagnify();
-	afx_msg void OnUpdateUnfiltered(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateFiltered(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateOriginal(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateWidth(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateHeight(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateFull(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateMore(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateUnfiltered(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateFiltered(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateOriginal(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateWidth(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateHeight(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateFull(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateMore(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateLess(CCmdUI * pCmdUI);
+	afx_msg void OnUpdateMagnify(CCmdUI * pCmdUI);
 	afx_msg void OnCompute();
-	afx_msg void OnUpdateCompute(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCompute(CCmdUI * pCmdUI);
 	afx_msg void OnReset();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -79,14 +79,16 @@ protected:
 	b3_f64    m_rEnd;
 	b3_f64    m_iStart;
 	b3_f64    m_iEnd;
-	b3Thread *m_MandelThread;
+	b3Thread * m_MandelThread;
 
-	static b3_u32 b3ComputingThread(void *ptr);
+	static b3_u32 b3ComputingThread(void * ptr);
 };
 
 #ifndef _DEBUG  // debug version in AppMandelView.cpp
-inline CAppMandelDoc* CAppMandelView::GetDocument()
-   { return (CAppMandelDoc*)m_pDocument; }
+inline CAppMandelDoc * CAppMandelView::GetDocument()
+{
+	return (CAppMandelDoc *)m_pDocument;
+}
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

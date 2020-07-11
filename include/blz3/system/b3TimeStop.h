@@ -26,11 +26,11 @@ class B3_PLUGIN b3TimeStop : protected b3Time
 {
 	b3_f64        m_Start;
 	const b3_log_level  m_Level;
-	const char         *m_Title;
+	const char     *    m_Title;
 
 public:
-	inline b3TimeStop(const char *title, const b3_log_level level = B3LOG_FULL)
-			: m_Level(level)
+	inline b3TimeStop(const char * title, const b3_log_level level = B3LOG_FULL)
+		: m_Level(level)
 	{
 		B3_ASSERT(title != null);
 
@@ -40,16 +40,16 @@ public:
 		b3PrintF(m_Level, "TIME START <%s>-----\n", m_Title);
 	}
 
-	inline void b3TimePos(const char *text = null)
+	inline void b3TimePos(const char * text = null)
 	{
 		b3PrintF(m_Level, "TIME CONT  <%s>      duration %2.6f\n",
-				 m_Title, b3Now() - m_Start);
+			m_Title, b3Now() - m_Start);
 	}
 
 	virtual ~b3TimeStop()
 	{
 		b3PrintF(m_Level, "TIME STOP  <%s>----- duration %2.6f\n",
-				 m_Title, b3Now() - m_Start);
+			m_Title, b3Now() - m_Start);
 	}
 };
 

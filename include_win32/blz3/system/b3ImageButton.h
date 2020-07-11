@@ -34,28 +34,28 @@ class CB3ImageButton : public CButton
 	unsigned long  m_RepeatCount;
 	unsigned long  m_FirstRepeatMillies;
 	unsigned long  m_FurtherRepeatMillies;
-	CWnd          *m_MainFrame;
+	CWnd     *     m_MainFrame;
 
 public:
 	HICON         m_hIcon;
-// Construction
+	// Construction
 public:
 	CB3ImageButton();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ImageButton)
-	public:
+public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CB3ImageButton();
 
@@ -65,7 +65,7 @@ protected:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnTimer(UINT nIDEvent);
-	afx_msg void OnCaptureChanged(CWnd *pWnd);
+	afx_msg void OnCaptureChanged(CWnd * pWnd);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

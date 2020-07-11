@@ -27,10 +27,10 @@ class B3_PLUGIN CB3TextEdit : public CEdit
 public:
 	CB3TextEdit(void);
 	~CB3TextEdit(void);
-	void    b3DDX(CDataExchange *pDX, char *value, int size);
-	void    b3DDX(CDataExchange *pDX, CString &value, int size);
+	void    b3DDX(CDataExchange * pDX, char * value, int size);
+	void    b3DDX(CDataExchange * pDX, CString & value, int size);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3TextEdit)
 	//}}AFX_VIRTUAL

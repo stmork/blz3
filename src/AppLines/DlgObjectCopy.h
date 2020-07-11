@@ -32,14 +32,14 @@
 
 class CDlgObjectCopy : public CDialog
 {
-// Construction
+	// Construction
 public:
-	b3_vector *m_Center;
+	b3_vector * m_Center;
 	b3_matrix  m_Transformation;
-	b3BBox    *m_OrigBBox;
-	CDlgObjectCopy(CWnd* pParent = NULL);   // standard constructor
+	b3BBox  *  m_OrigBBox;
+	CDlgObjectCopy(CWnd * pParent = NULL);  // standard constructor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgObjectCopy)
 	enum { IDD = IDD_OBJECT_COPY };
 	CSpinButtonCtrl	m_CtrlNumCopies;
@@ -63,14 +63,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgObjectCopy)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -93,7 +93,7 @@ private:
 	b3_vector  m_Rotate;
 
 	void b3UpdateUI();
-	void b3WriteProfileFloat(const char *keyword,b3_f64 value);
+	void b3WriteProfileFloat(const char * keyword, b3_f64 value);
 };
 
 //{{AFX_INSERT_LOCATION}}

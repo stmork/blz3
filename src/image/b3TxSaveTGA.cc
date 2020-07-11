@@ -33,48 +33,48 @@
 
 class b3InfoTGA : protected b3TxSaveInfo
 {
-	b3_u08       *m_SaveData;
-	b3_index      m_SaveAs,m_SaveIndex;
+	b3_u08    *   m_SaveData;
+	b3_index      m_SaveAs, m_SaveIndex;
 
 public:
-	b3InfoTGA(b3Tx *tx,const char *filename);
+	b3InfoTGA(b3Tx * tx, const char * filename);
 	~b3InfoTGA();
 	void  b3Write();
 };
 
-b3InfoTGA::b3InfoTGA(b3Tx *tx,const char *filename) :
-		b3TxSaveInfo(tx,filename)
+b3InfoTGA::b3InfoTGA(b3Tx * tx, const char * filename) :
+	b3TxSaveInfo(tx, filename)
 {
 	m_SaveData = (b3_u08 *)b3Alloc(BUFFERSIZE + 16);
-	if (m_SaveData == null)
+	if(m_SaveData == null)
 	{
 		m_File.b3Close();
 		b3Free();
-		b3PrintF (B3LOG_NORMAL,"Save Targa 24: not enough memory!\n");
-		B3_THROW(b3TxException,B3_TX_MEMORY);
+		b3PrintF(B3LOG_NORMAL, "Save Targa 24: not enough memory!\n");
+		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
-	m_File.b3Write (m_SaveData,m_SaveIndex = 18);
+	m_File.b3Write(m_SaveData, m_SaveIndex = 18);
 }
 
 void b3InfoTGA::b3Write()
 {
 	b3_pkd_color a;
-	b3_coord     t,u,y;
+	b3_coord     t, u, y;
 	b3_count     i;
 
-	for (y = 0;y < m_Tx->ySize;y++)
+	for(y = 0; y < m_Tx->ySize; y++)
 	{
-		m_Tx->b3GetRow(m_ThisRow,y);
+		m_Tx->b3GetRow(m_ThisRow, y);
 		t = 0;
-		while (t < m_Tx->xSize)
+		while(t < m_Tx->xSize)
 		{
 			a = m_ThisRow[t];
-			if (a == m_ThisRow[t+1])
+			if(a == m_ThisRow[t + 1])
 			{
 				i = 0;
 				t++;
-				while ((a == m_ThisRow[t]) && (t < m_Tx->xSize) && (i < 127))
+				while((a == m_ThisRow[t]) && (t < m_Tx->xSize) && (i < 127))
 				{
 					t++;
 					i++;
@@ -84,27 +84,27 @@ void b3InfoTGA::b3Write()
 				m_SaveData[1] =  a        & 0xff;
 				m_SaveData[2] = (a >>  8) & 0xff;
 				m_SaveData[3] = (a >> 16) & 0xff;
-				m_File.b3Write(m_SaveData,4);
+				m_File.b3Write(m_SaveData, 4);
 			}
 			else
 			{
 				i = 1;
-				u = t+i;
+				u = t + i;
 				m_SaveIndex = 0;
-				while ((m_ThisRow[u] != m_ThisRow[u+1]) && (u < m_Tx->xSize) && (i < 127))
+				while((m_ThisRow[u] != m_ThisRow[u + 1]) && (u < m_Tx->xSize) && (i < 127))
 				{
 					i++;
 					u++;
 				}
-				m_SaveData[0] = (i-1);
-				m_File.b3Write(m_SaveData,1);
-				while (i!=0)
+				m_SaveData[0] = (i - 1);
+				m_File.b3Write(m_SaveData, 1);
+				while(i != 0)
 				{
 					a = m_ThisRow[t++];
 					m_SaveData[1] =  a        & 0xff;
 					m_SaveData[2] = (a >>  8) & 0xff;
 					m_SaveData[3] = (a >> 16) & 0xff;
-					m_File.b3Write (m_SaveData,3);
+					m_File.b3Write(m_SaveData, 3);
 					i--;
 				}
 			}
@@ -136,15 +136,15 @@ b3InfoTGA::~b3InfoTGA()
 	m_SaveData[16] = 24;								/* 24 Bit */
 	m_SaveData[17] = 0x20;							/* von oben nach unten */
 
-	m_File.b3Seek (0,B3_SEEK_START);
-	m_File.b3Write(m_SaveData,18);
+	m_File.b3Seek(0, B3_SEEK_START);
+	m_File.b3Write(m_SaveData, 18);
 }
 
-const b3_result b3Tx::b3SaveTGA(const char *filename)
+const b3_result b3Tx::b3SaveTGA(const char * filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving TGA: %s\n", filename);
 
-	b3InfoTGA info(this,filename);
+	b3InfoTGA info(this, filename);
 	info.b3Write();
 	return B3_OK;
 }

@@ -26,14 +26,14 @@ class CB3DocManager : public CDocManager
 
 public:
 	virtual BOOL DoPromptFileName(
-		CString      &fileName,
+		CString   &   fileName,
 		UINT          nIDSTitle,
 		DWORD         lFlags,
 		BOOL          bOpenFileDialog,
-		CDocTemplate *pTemplate)
+		CDocTemplate * pTemplate)
 	{
 #if 0
-		return CDocManager::DoPromptFileName(fileName,nIDSTitle,lFlags,bOpenFileDialog,pTemplate);
+		return CDocManager::DoPromptFileName(fileName, nIDSTitle, lFlags, bOpenFileDialog, pTemplate);
 #else
 		CString title;
 		CString strFilter;
@@ -44,28 +44,28 @@ public:
 
 		VERIFY(title.LoadString(nIDSTitle));
 
-		if (pTemplate != NULL)
+		if(pTemplate != NULL)
 		{
-			CString filterName,filterExt;
+			CString filterName, filterExt;
 
 			ASSERT_VALID(pTemplate);
-			pTemplate->GetDocString(filterName,CDocTemplate::filterName);
-			pTemplate->GetDocString(filterExt,CDocTemplate::filterExt);
+			pTemplate->GetDocString(filterName, CDocTemplate::filterName);
+			pTemplate->GetDocString(filterExt, CDocTemplate::filterExt);
 			strFilter += (filterName + "|*" + filterExt + "|");
 		}
 		else
 		{
 			// do for all doc template
 			POSITION pos = m_templateList.GetHeadPosition();
-			CString filterName,filterExt;
+			CString filterName, filterExt;
 
-			while (pos != NULL)
+			while(pos != NULL)
 			{
-				CDocTemplate* pTemplate = (CDocTemplate*)m_templateList.GetNext(pos);
+				CDocTemplate * pTemplate = (CDocTemplate *)m_templateList.GetNext(pos);
 
 				ASSERT_VALID(pTemplate);
-				pTemplate->GetDocString(filterName,CDocTemplate::filterName);
-				pTemplate->GetDocString(filterExt,CDocTemplate::filterExt);
+				pTemplate->GetDocString(filterName, CDocTemplate::filterName);
+				pTemplate->GetDocString(filterExt, CDocTemplate::filterExt);
 				strFilter += (filterName + "|*" + filterExt + "|");
 			}
 		}
@@ -74,11 +74,11 @@ public:
 		allFilter.LoadString(AFX_IDS_ALLFILTER);
 		strFilter += (allFilter + "|*.*||");
 
-		CB3FileDialog dlgFile(bOpenFileDialog,"",suggest,OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | lFlags,strFilter);
+		CB3FileDialog dlgFile(bOpenFileDialog, "", suggest, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | lFlags, strFilter);
 		dlgFile.m_ofn.lpstrTitle = title;
 
 		result = dlgFile.DoModal() == IDOK;
-		if (result)
+		if(result)
 		{
 			fileName = dlgFile.GetPathName();
 		}

@@ -47,12 +47,12 @@ PFNGLMAPBUFFERARBPROC     b3VectorBufferObjects::glMapBufferARB;
 PFNGLUNMAPBUFFERARBPROC   b3VectorBufferObjects::glUnmapBufferARB;
 #endif
 
-void b3VectorBufferObjects::b3Init(const char *extensions)
+void b3VectorBufferObjects::b3Init(const char * extensions)
 {
 #ifdef BLZ3_USE_OPENGL
-	const char *vendor = (const char *)glGetString(GL_VENDOR);
+	const char * vendor = (const char *)glGetString(GL_VENDOR);
 
-	if (extensions == null)
+	if(extensions == null)
 	{
 		extensions = (const char *)glGetString(GL_EXTENSIONS);
 	}
@@ -66,8 +66,8 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 #ifdef USE_VBOS
-	b3_bool is_not_ati = strncmp(vendor,"ATI",3) != 0;
-	b3_bool driver_has_vbo = strstr(extensions,"ARB_vertex_buffer_object") != 0;
+	b3_bool is_not_ati = strncmp(vendor, "ATI", 3) != 0;
+	b3_bool driver_has_vbo = strstr(extensions, "ARB_vertex_buffer_object") != 0;
 	b3_bool methods_not_null =
 		(glGenBuffersARB != null) &&
 		(glDeleteBuffersARB != null) &&

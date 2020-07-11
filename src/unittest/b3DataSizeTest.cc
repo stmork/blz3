@@ -40,7 +40,7 @@ void b3DataSizeTest::setUp()
 	b3_loop i;
 	b3_u08  v;
 
-	for (i = 0;i < MEM_MIN;i++)
+	for(i = 0; i < MEM_MIN; i++)
 	{
 #if 0
 		v         = B3_IRAN(256);
@@ -57,24 +57,24 @@ void b3DataSizeTest::tearDown()
 {
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
-	if (ptr1 == null)
+	if(ptr1 == null)
 	{
 		return;
 	}
-	for (b3_loop i = 0; i < MEM_MIN;i++)
+	for(b3_loop i = 0; i < MEM_MIN; i++)
 	{
-		if ((i & 7) == 0)
+		if((i & 7) == 0)
 		{
-			b3PrintF(B3LOG_NORMAL,"\n%04x: ",i);
+			b3PrintF(B3LOG_NORMAL, "\n%04x: ", i);
 		}
-		b3PrintF(B3LOG_NORMAL," %02x-%02x",buffer[i],((b3_u08 *)ptr1)[i]);
+		b3PrintF(B3LOG_NORMAL, " %02x-%02x", buffer[i], ((b3_u08 *)ptr1)[i]);
 	}
-	b3PrintF(B3LOG_NORMAL,"\n");
+	b3PrintF(B3LOG_NORMAL, "\n");
 }
 
 void b3DataSizeTest::testDataSize()
 {
-	void *ptr = null;
+	void * ptr = null;
 
 	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), sizeof(b3_u08));
 	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), sizeof(b3_u16));
@@ -97,13 +97,13 @@ void b3DataSizeTest::testDataSize()
 void b3DataSizeTest::testMemory()
 {
 	b3_loop  i;
-	b3_u08  *ptr;
+	b3_u08 * ptr;
 	b3_u08   mask = 0;
 
-	ptr1 = mem.b3Alloc (MEM_MIN);
+	ptr1 = mem.b3Alloc(MEM_MIN);
 	CPPUNIT_ASSERT(ptr1 != null);
 
-	ptr2 = mem.b3Alloc (MEM_MIN);
+	ptr2 = mem.b3Alloc(MEM_MIN);
 	CPPUNIT_ASSERT(ptr2 != null);
 
 	CPPUNIT_ASSERT(mem.b3Free(ptr1));
@@ -119,13 +119,13 @@ void b3DataSizeTest::testMemory()
 	CPPUNIT_ASSERT_EQUAL(ptr1, ptr2);
 	CPPUNIT_ASSERT(ptr2 != null);
 
-	ptr1 = mem.b3Realloc(ptr2,MEM_MIN * MEM_HIGH_MULT);
+	ptr1 = mem.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
 	CPPUNIT_ASSERT(ptr1 != null);
-	CPPUNIT_ASSERT(memcmp(buffer,ptr1,MEM_MIN)  == 0);
+	CPPUNIT_ASSERT(memcmp(buffer, ptr1, MEM_MIN)  == 0);
 
 	ptr = static_cast<b3_u08 *>(ptr1);
-	for (i = MEM_MIN;i < (MEM_MIN * MEM_HIGH_MULT);i++)
+	for(i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
 	{
 		mask |= ptr[i];
 	}
@@ -139,17 +139,17 @@ void b3DataSizeTest::testMemory()
 
 void b3DataSizeTest::testSwap()
 {
-	b3_u32    v1,v2;
+	b3_u32    v1, v2;
 
 	v1 = 1;
 	v2 = 2;
-	B3_SWAP (v1,v2);
+	B3_SWAP(v1, v2);
 	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
 	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));
 
 	v1 = 1;
 	v2 = 2;
-	B3_PSWAP (&v1,&v2);
+	B3_PSWAP(&v1, &v2);
 	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
 	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));
 }

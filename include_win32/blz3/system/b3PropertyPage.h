@@ -31,43 +31,43 @@
 
 class CB3PropertyPage : public CPropertyPage
 {
-	CPropertySheet *m_PropertySheet;
+	CPropertySheet * m_PropertySheet;
 	CString         m_Caption;
 
-// Construction
+	// Construction
 public:
 	DECLARE_DYNAMIC(CB3PropertyPage)
 	CB3PropertyPage(UINT nIDTemplate);
 	~CB3PropertyPage();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CB3PropertyPage)
-		// NOTE - ClassWizard will add data members here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
+	// NOTE - ClassWizard will add data members here.
+	//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CB3PropertyPage)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CB3PropertyPage)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnEdit();
-	afx_msg void OnSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnSpin(NMHDR * pNMHDR, LRESULT * pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 public:
-	static  void   b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet, int id);
-	        void   b3AddToSheet(CPropertySheet *sheet);
-	        void   b3SetCaption(int id);
+	static  void   b3InitPropertySheet(CDialog * dlg, CPropertySheet & sheet, int id);
+	void   b3AddToSheet(CPropertySheet * sheet);
+	void   b3SetCaption(int id);
 
 protected:
 	virtual void   b3PreInitDialog() = 0;

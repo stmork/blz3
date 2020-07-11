@@ -29,7 +29,7 @@
 #include "blz3/system/b3ControlUnits.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CB3FloatSliderCtrl 
+// CB3FloatSliderCtrl
 
 #define B3_FSC_DEFAULT_INCREMENT 1.0
 #define B3_FSC_DEFAULT_ACCEL     5.0
@@ -49,14 +49,14 @@ class CB3FloatSliderCtrl : public CSliderCtrl, public b3ControlUnits
 	int    m_TicFrequence;
 
 public:
-	         CB3FloatSliderCtrl();
+	CB3FloatSliderCtrl();
 	virtual ~CB3FloatSliderCtrl();
-	
-	void     b3DDX(CDataExchange *pDX,b3_f32 &pos);
-	void     b3DDX(CDataExchange *pDX,b3_f64 &pos);
+
+	void     b3DDX(CDataExchange * pDX, b3_f32 & pos);
+	void     b3DDX(CDataExchange * pDX, b3_f64 & pos);
 	b3_f64   b3SetPos(b3_f64 pos);
-	b3_f64   b3SetRange(b3_f64 min,b3_f64 max);
-	void     b3SetTicks(b3_f64 page,b3_f64 ticks);
+	b3_f64   b3SetRange(b3_f64 min, b3_f64 max);
+	void     b3SetTicks(b3_f64 page, b3_f64 ticks);
 	b3_f64   b3GetPos();
 
 	// Generated message map functions

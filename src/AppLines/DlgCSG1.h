@@ -32,19 +32,19 @@
 
 class CDlgCSG1 : public CB3SpanningShapeDialog
 {
-// Construction
+	// Construction
 protected:
 	CB3PosGroup m_Base;
 	CB3DirGroup m_Dir1;
 
 public:
-	CDlgCSG1(CWnd* pParent = NULL);   // standard constructor
-	CDlgCSG1(UINT id,CWnd* pParent = NULL);
+	CDlgCSG1(CWnd * pParent = NULL);  // standard constructor
+	CDlgCSG1(UINT id, CWnd * pParent = NULL);
 
-	static  int  b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3_u32 shading_class_type, b3Item * item, b3_bool create = true);
 	virtual void b3PostProcess();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgCSG1)
 	enum { IDD = IDD_SHAPE1 };
 	CB3FloatEdit	m_xBaseCtrl;
@@ -57,14 +57,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgCSG1)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	virtual void        b3Init();
 	virtual void        b3SetDirMode(int dirmode);

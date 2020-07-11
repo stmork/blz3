@@ -35,18 +35,18 @@
 
 class CDlgMatNormal : public CB3SimplePreviewDialog
 {
-	b3Scene           *m_MatScene;
-	b3Base<b3Item>    *m_MatHead;
-	b3MatNormal       *m_Material;
+	b3Scene      *     m_MatScene;
+	b3Base<b3Item>  *  m_MatHead;
+	b3MatNormal    *   m_Material;
 
-// Construction
+	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item,void *ptr);
+	static b3_bool b3Edit(b3Item * item, void * ptr);
 	static void b3Register();
-	CDlgMatNormal(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
+	CDlgMatNormal(b3Item * item, CAppObjectDoc * pDoc, CWnd * pParent = NULL); // standard constructor
 	~CDlgMatNormal();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CDlgMatNormal)
 	enum { IDD = IDD_MAT_NORMAL };
 	CB3ColorFieldSelector	m_AmbientCtrl;
@@ -60,14 +60,14 @@ public:
 	//}}AFX_DATA
 
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgMatNormal)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange * pDX);   // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

@@ -61,10 +61,10 @@ public:
 		b = a;
 		CPPUNIT_ASSERT(b.b3InitCurve(3, 10, false));
 
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>( 10), a.b3GetSegmentCount());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(  7), b.b3GetSegmentCount());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>( 10), a.b3GetSegmentKnotCount());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(  8), b.b3GetSegmentKnotCount());
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(10), a.b3GetSegmentCount());
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(7), b.b3GetSegmentCount());
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(10), a.b3GetSegmentKnotCount());
+		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(8), b.b3GetSegmentKnotCount());
 	}
 
 	void testClosed()
@@ -85,7 +85,7 @@ public:
 	{
 		b = a;
 		CPPUNIT_ASSERT(b.b3InitCurve(3, 10, false));
-        
+
 		CPPUNIT_ASSERT(b.b3ThroughEndControl());
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
 

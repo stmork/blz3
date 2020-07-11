@@ -38,8 +38,8 @@ class B3_PLUGIN b3Mutex : public b3MutexAbstract
 {
 	CRITICAL_SECTION cs;
 public:
-	         b3Mutex();
-		    ~b3Mutex();
+	b3Mutex();
+	~b3Mutex();
 	b3_bool  b3Lock();
 	b3_bool  b3Unlock();
 };
@@ -59,29 +59,29 @@ class B3_PLUGIN b3Thread : public b3ThreadAbstract
 	static b3IPCMutex  m_ThreadMutex;
 
 	b3TimeSpan         m_Span;
-	const char        *m_Name;
+	const char    *    m_Name;
 	b3_u32             m_Result;
 
 protected:
-	CWinThread        *m_Thread;
+	CWinThread    *    m_Thread;
 	b3ThreadProc       m_CallProc;
-	void              *m_CallArg;
+	void       *       m_CallArg;
 	b3_bool            m_IsRunning;
 
 public:
-	              b3Thread(const char *task_name=null);
-	             ~b3Thread();
-	void          b3Name(const char *task_name=null);
-	b3_bool       b3Start(b3ThreadProc,void *custom_ptr,b3_s32 pri=0);
+	b3Thread(const char * task_name = null);
+	~b3Thread();
+	void          b3Name(const char * task_name = null);
+	b3_bool       b3Start(b3ThreadProc, void * custom_ptr, b3_s32 pri = 0);
 	b3_bool       b3IsRunning();
 	b3_bool       b3Stop();
 	b3_u32        b3Wait();
-	void          b3AddTimeSpan(b3TimeSpan *span);
+	void          b3AddTimeSpan(b3TimeSpan * span);
 
 private:
-	       void   b3Inc();
-		   void   b3Dec(b3_bool incl_delete = false);
-	static b3_u32 b3Trampoline(void *custom_ptr);
+	void   b3Inc();
+	void   b3Dec(b3_bool incl_delete = false);
+	static b3_u32 b3Trampoline(void * custom_ptr);
 
 	friend class b3CPU;
 };
@@ -89,7 +89,7 @@ private:
 class B3_PLUGIN b3CPU : public b3CPUBase
 {
 public:
-	                b3CPU();
+	b3CPU();
 	static b3_count b3GetNumThreads();
 };
 

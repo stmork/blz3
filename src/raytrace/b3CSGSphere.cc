@@ -33,10 +33,10 @@
 b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGSphere), class_type)
 {
 	b3Vector::b3Init(&m_Base);
-	b3Vector::b3Init(&m_Dir,50);
+	b3Vector::b3Init(&m_Dir, 50);
 }
 
-b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3CSGShape(src)
+b3CSGSphere::b3CSGSphere(b3_u32 * src) : b3CSGShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);
@@ -58,18 +58,18 @@ void b3CSGSphere::b3StoreShape()
 }
 
 void b3CSGSphere::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
+	b3RenderContext * ctx,
+	b3_count    &    vertCount,
+	b3_count    &    gridCount,
+	b3_count    &    polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = ((SinCosSteps >> 1) + 1) * (SinCosSteps + 1);
-	b3GetEllipsoidIndexCount(gridCount,polyCount);
+	b3GetEllipsoidIndexCount(gridCount, polyCount);
 }
 
-void b3CSGSphere::b3GetStencilBoundInfo(b3_stencil_bound *info)
+void b3CSGSphere::b3GetStencilBoundInfo(b3_stencil_bound * info)
 {
 	info->xInfo.min    =  0;
 	info->xInfo.max    =  1;
@@ -83,7 +83,7 @@ void b3CSGSphere::b3GetStencilBoundInfo(b3_stencil_bound *info)
 
 void b3CSGSphere::b3ComputeVertices()
 {
-	b3ComputeSphereVertices(m_Base,m_Dir);
+	b3ComputeSphereVertices(m_Base, m_Dir);
 }
 
 void b3CSGSphere::b3ComputeIndices()
@@ -93,29 +93,29 @@ void b3CSGSphere::b3ComputeIndices()
 
 void b3CSGSphere::b3ComputeNormals(b3_bool normalize)
 {
-	b3ComputeSphereNormals(m_Base,normalize);
+	b3ComputeSphereNormals(m_Base, normalize);
 }
 
-void b3CSGSphere::b3Transform(b3_matrix *transformation,b3_bool is_affine)
+void b3CSGSphere::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 {
-	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
-	b3Matrix::b3VMul (transformation,&m_Dir, &m_Dir, false);
-	b3TransformVertices(transformation,is_affine);
+	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
+	b3Matrix::b3VMul(transformation, &m_Dir, &m_Dir, false);
+	b3TransformVertices(transformation, is_affine);
 }
 
-void b3CSGSphere::b3SetupPicking(b3PickInfo *info)
+void b3CSGSphere::b3SetupPicking(b3PickInfo * info)
 {
-	info->b3AddPickPoint(&m_Base,"b");
-	info->b3AddPickDir(  &m_Base,&m_Dir,"r");
+	info->b3AddPickPoint(&m_Base, "b");
+	info->b3AddPickDir(&m_Base, &m_Dir, "r");
 }
 
-b3_bool b3CSGSphere::b3Prepare(b3_preparation_info *prep_info)
+b3_bool b3CSGSphere::b3Prepare(b3_preparation_info * prep_info)
 {
 	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
 	return b3Shape::b3Prepare(prep_info);
 }
 
-void b3CSGSphere::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+void b3CSGSphere::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 {
 }
 

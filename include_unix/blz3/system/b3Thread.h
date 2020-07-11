@@ -66,10 +66,10 @@ public:
 	inline static b3_bool b3CheckResult(int error_code)
 	{
 #ifdef _DEBUG
-		if (error_code != 0)
+		if(error_code != 0)
 		{
-			b3PrintF(B3LOG_NORMAL,"### CLASS: b3PLog # errno: %d (%s)!\n",
-					 error_code,strerror(error_code));
+			b3PrintF(B3LOG_NORMAL, "### CLASS: b3PLog # errno: %d (%s)!\n",
+				error_code, strerror(error_code));
 		}
 #endif
 		return error_code == 0;
@@ -93,7 +93,7 @@ public:
 	 */
 	b3Mutex()
 	{
-		b3PThread::b3CheckResult(pthread_mutex_init(&mutex,NULL));
+		b3PThread::b3CheckResult(pthread_mutex_init(&mutex, NULL));
 	}
 
 	/**
@@ -161,7 +161,7 @@ public:
  */
 class b3Thread : public b3ThreadAbstract
 {
-	const char   *m_Name;
+	const char  * m_Name;
 	b3TimeSpan    m_Span;
 	int           m_Prio;
 
@@ -169,7 +169,7 @@ class b3Thread : public b3ThreadAbstract
 	volatile b3_bool       m_IsRunning;
 	volatile b3_u32        m_Result;
 	volatile b3ThreadProc  m_CallProc;
-	volatile void         *m_CallArg;
+	volatile void     *    m_CallArg;
 
 	static   b3IPCMutex    m_ThreadMutex;
 	static   b3_count      m_ThreadCount;
@@ -180,22 +180,22 @@ public:
 	 *
 	 * @param taskname The new thread name.
 	 */
-	b3Thread(const char *taskname = null);
+	b3Thread(const char * taskname = null);
 
 	/**
 	 * This destructor terminates a running thread and deinitializes this instance.
 	 */
 	virtual ~b3Thread();
 
-	void     b3Name(const char *taskname = null);
-	b3_bool  b3Start(b3ThreadProc thread, void *ptr, b3_s32 priority=0);
+	void     b3Name(const char * taskname = null);
+	b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0);
 	b3_bool  b3IsRunning();
 	b3_bool  b3Stop();
 	b3_u32   b3Wait();
-	void     b3AddTimeSpan(b3TimeSpan *span);
+	void     b3AddTimeSpan(b3TimeSpan * span);
 
 private:
-	static void *b3Trampoline(void *thread);
+	static void * b3Trampoline(void * thread);
 	void  b3Inc();
 	void  b3Dec();
 
