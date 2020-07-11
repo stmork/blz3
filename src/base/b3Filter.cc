@@ -33,7 +33,7 @@
 
 b3Filter * b3Filter::b3New(b3_filter filter)
 {
-	switch(filter)
+	switch (filter)
 	{
 	case B3_FILTER_BOX:
 		return new b3BoxFilter();
@@ -51,9 +51,9 @@ b3_f64 b3Filter::b3InvIntegral(b3_f64 val, b3_bool throw_exception)
 {
 	b3_f64 y, xLower, xMid, xUpper, diff;
 
-	if(fabs(val) > 1)
+	if (fabs(val) > 1)
 	{
-		if(throw_exception)
+		if (throw_exception)
 		{
 			B3_THROW(b3FilterException, B3_FILTER_OUT_OF_RANGE);
 		}
@@ -68,7 +68,7 @@ b3_f64 b3Filter::b3InvIntegral(b3_f64 val, b3_bool throw_exception)
 	{
 		xMid = (xLower + xUpper) * 0.5;
 
-		if(b3Integral(xMid) < y)
+		if (b3Integral(xMid) < y)
 		{
 			xLower = xMid;
 		}
@@ -78,7 +78,7 @@ b3_f64 b3Filter::b3InvIntegral(b3_f64 val, b3_bool throw_exception)
 		}
 		diff = xUpper - xLower;
 	}
-	while(diff > 0.001);
+	while (diff > 0.001);
 
 	return xMid;
 }
@@ -101,13 +101,13 @@ b3_f64          b3GaussFilter::m_Area;
 
 b3GaussFilter::b3GaussFilter()
 {
-	if(m_GaussNDTable.b3GetCount() == 0)
+	if (m_GaussNDTable.b3GetCount() == 0)
 	{
 		b3_f64 x;
 
 		b3PrintF(B3LOG_FULL, "Init b3GaussFilter...\n");
 		m_Area = 0;
-		for(x = -GAUSS_ND_MAX; x <= (GAUSS_ND_MAX + GAUSS_ND_STEP * 0.5); x += GAUSS_ND_STEP)
+		for (x = -GAUSS_ND_MAX; x <= (GAUSS_ND_MAX + GAUSS_ND_STEP * 0.5); x += GAUSS_ND_STEP)
 		{
 			m_GaussNDTable.b3Add(m_Area);
 			m_Area += b3Func(x) * GAUSS_ND_STEP;
@@ -126,11 +126,11 @@ b3_f64 b3GaussFilter::b3Integral(b3_f64 val)
 	b3_f64   lower, result;
 	b3_index index;
 
-	if(val <=  -GAUSS_ND_MAX)
+	if (val <=  -GAUSS_ND_MAX)
 	{
 		return 0;
 	}
-	if(val >=   GAUSS_ND_MAX)
+	if (val >=   GAUSS_ND_MAX)
 	{
 		return 1;
 	}
@@ -138,7 +138,7 @@ b3_f64 b3GaussFilter::b3Integral(b3_f64 val)
 	lower = GAUSS_ND_INDEX(val);
 	index = (b3_index)floor(lower);
 
-	if(lower == index)
+	if (lower == index)
 	{
 		result = m_GaussNDTable[index];
 	}
@@ -172,11 +172,11 @@ b3_f64 b3ShutterFilter::b3Func(b3_f64 x)
 {
 	b3_f64 ax = fabs(x);
 
-	if(ax > 1)
+	if (ax > 1)
 	{
 		return 0;
 	}
-	if(ax < m_uMax)
+	if (ax < m_uMax)
 	{
 		return 1;
 	}
@@ -187,23 +187,23 @@ b3_f64 b3ShutterFilter::b3Integral(b3_f64 x)
 {
 	b3_f64 result;
 
-	if(x < -1)
+	if (x < -1)
 	{
 		return 0;
 	}
-	if(x >  1)
+	if (x >  1)
 	{
 		return 1;
 	}
 
-	if(x < m_lMax)
+	if (x < m_lMax)
 	{
 		// Rising edge
 		b3_f64 y = (x + 1) / m_Max;
 
 		result = (x + 1) * y * 0.5;
 	}
-	else if(x > m_uMax)
+	else if (x > m_uMax)
 	{
 		// Falling edge
 		b3_f64 y = (1 - x) / m_Max;

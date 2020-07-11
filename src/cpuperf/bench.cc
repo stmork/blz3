@@ -78,7 +78,7 @@ public:
 
 	inline void init(TYPE value)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] = value;
 		}
@@ -86,7 +86,7 @@ public:
 
 	inline void add(vector<TYPE, COUNT> & src, TYPE value)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] += value;
 		}
@@ -94,7 +94,7 @@ public:
 
 	inline void sub(vector<TYPE, COUNT> & src, TYPE value)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] -= value;
 		}
@@ -102,7 +102,7 @@ public:
 
 	inline void add(vector<TYPE, COUNT> & src)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] += src.f[i];
 		}
@@ -110,7 +110,7 @@ public:
 
 	inline void sub(vector<TYPE, COUNT> & src)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] -= src.f[i];
 		}
@@ -118,7 +118,7 @@ public:
 
 	inline void mult(vector<TYPE, COUNT> & src)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] *= src.f[i];
 		}
@@ -126,7 +126,7 @@ public:
 
 	inline void comb1(vector<TYPE, COUNT> & a, vector<TYPE, COUNT> & b)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] = (f[i] + a.f[i]) * b.f[i];
 		}
@@ -134,7 +134,7 @@ public:
 
 	inline void comb2(vector<TYPE, COUNT> & a, vector<TYPE, COUNT> & b)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] = ((f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i];
 		}
@@ -142,7 +142,7 @@ public:
 
 	inline void comb4(vector<TYPE, COUNT> & a, vector<TYPE, COUNT> & b)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] = ((((f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i];
 		}
@@ -150,7 +150,7 @@ public:
 
 	inline void comb8(vector<TYPE, COUNT> & a, vector<TYPE, COUNT> & b)
 	{
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			f[i] = ((((((((f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i] + a.f[i]) * b.f[i];
 		}
@@ -160,11 +160,11 @@ public:
 	{
 		int k;
 
-		for(int i = 0; i < COUNT; i++)
+		for (int i = 0; i < COUNT; i++)
 		{
 			TYPE val = f[i], aVal = a.f[i], bVal = b.f[i];
 
-			for(k = 0; k < max; k++)
+			for (k = 0; k < max; k++)
 			{
 				val = (val + aVal) * bVal;
 			}
@@ -198,12 +198,12 @@ public:
 		vector<FTYPE, DIM>  a, b, c;
 		b3_count           max = test->m_Max;
 
-		for(int k = 0; k < max; k++)
+		for (int k = 0; k < max; k++)
 		{
 			a.init(0.1);
 			b.init(0.0005);
 			c.init(1.00005);
-			for(int i = 0; i < MAX; i++)
+			for (int i = 0; i < MAX; i++)
 			{
 				a.add(b);
 				a.mult(c);
@@ -220,7 +220,7 @@ public:
 		vector<FTYPE, DIM>  a, b, c;
 		b3_count           max = test->m_Max;
 
-		for(int k = 0; k < max; k++)
+		for (int k = 0; k < max; k++)
 		{
 			a.init(0.1);
 			b.init(0.0005);
@@ -239,12 +239,12 @@ public:
 		vector<FTYPE, DIM>  a, b, c;
 		b3_count           max = test->m_Max;
 
-		for(int k = 0; k < max; k++)
+		for (int k = 0; k < max; k++)
 		{
 			a.init(0.1);
 			b.init(0.0005);
 			c.init(1.00005);
-			for(int i = 0; i < (MAX / 8); i++)
+			for (int i = 0; i < (MAX / 8); i++)
 			{
 				a.comb8(b, c);
 			}
@@ -260,12 +260,12 @@ public:
 		vector<b3_f64, DIM>  a, b, c;
 		b3_count            max = test->m_Max;
 
-		for(int k = 0; k < max; k++)
+		for (int k = 0; k < max; k++)
 		{
 			a.init(0.1);
 			b.init(0.0005);
 			c.init(1.00005);
-			for(int i = 0; i < (MAX / 8); i++)
+			for (int i = 0; i < (MAX / 8); i++)
 			{
 				a.comb8(b, c);
 			}
@@ -299,18 +299,18 @@ public:
 		threads = new b3Thread[CPUs];
 		test    = new b3Test[CPUs];
 
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			test[i].b3Init(m_Max);
 		}
 
 		span.b3Start();
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			threads[i].b3Start(func, &test[i]);
 		}
 
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			threads[i].b3Wait();
 			threads[i].b3AddTimeSpan(&span);
@@ -319,7 +319,7 @@ public:
 		//		span.b3Print();
 
 		used = span.m_uTime / CPUs;
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			mflops += test[i].m_MFlop / used;
 		}
@@ -332,7 +332,7 @@ public:
 
 int main(int argc, char * argv[])
 {
-	if(argc > 1)
+	if (argc > 1)
 	{
 		b3_count max = 1;
 

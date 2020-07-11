@@ -40,7 +40,7 @@ b3_size WriteGIF(
 	b3_size size;
 
 	size = data - &buffer[index];
-	if(size <= 0)
+	if (size <= 0)
 	{
 		return index;
 	}

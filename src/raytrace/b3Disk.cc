@@ -69,7 +69,7 @@ void b3Disk::b3ComputeVertices()
 	ySize = 1;
 
 	// This is a ring formed disk
-	if((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		//compute front fractional disk ring
 		a  = m_Limit.x1 * M_PI * 2;
@@ -94,7 +94,7 @@ void b3Disk::b3ComputeVertices()
 		xSize++;
 	}
 
-	for(; i <= iMax; i++)
+	for (; i <= iMax; i++)
 	{
 		b3_f64 pos = (double)i / SinCosSteps;
 		b3_f64 s   = pos / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
@@ -122,7 +122,7 @@ void b3Disk::b3ComputeVertices()
 		xSize++;
 	}
 
-	if((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		// compute rest fractional ring disk
 		a  = m_Limit.x2 * M_PI * 2;
@@ -161,7 +161,7 @@ void b3Disk::b3ComputeIndices()
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead(0.0, 0.0);
-	if(Overhead < 0)
+	if (Overhead < 0)
 	{
 		EndLines = true;
 		Overhead = -Overhead;
@@ -170,7 +170,7 @@ void b3Disk::b3ComputeIndices()
 	gPtr = *glGridElements;
 	pPtr = *glPolygonElements;
 
-	for(i = pos = 0; i < Overhead; i++)
+	for (i = pos = 0; i < Overhead; i++)
 	{
 		B3_GL_LINIT(gPtr, pos,  pos + 2);
 		B3_GL_LINIT(gPtr, pos + 1, pos + 3);
@@ -183,7 +183,7 @@ void b3Disk::b3ComputeIndices()
 		pos += 2;
 	}
 
-	if(EndLines)
+	if (EndLines)
 	{
 		B3_GL_LINIT(gPtr, 0, 1);
 		B3_GL_LINIT(gPtr, Overhead + Overhead, Overhead + Overhead + 1);

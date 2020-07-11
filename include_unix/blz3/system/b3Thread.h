@@ -66,7 +66,7 @@ public:
 	inline static b3_bool b3CheckResult(int error_code)
 	{
 #ifdef _DEBUG
-		if(error_code != 0)
+		if (error_code != 0)
 		{
 			b3PrintF(B3LOG_NORMAL, "### CLASS: b3PLog # errno: %d (%s)!\n",
 				error_code, strerror(error_code));

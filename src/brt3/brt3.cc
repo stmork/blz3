@@ -53,7 +53,7 @@ static b3_bool b3SaveRaytracedImage(
 	b3Path filename;
 
 	filename.b3RemoveExt(camera_name);
-	if(picture_home != null)
+	if (picture_home != null)
 	{
 		imagename.b3LinkFileName(picture_home, filename);
 		imagename.b3Append(BLZ3_EXTENSION);
@@ -77,11 +77,11 @@ static b3Display * b3AllocDisplay(
 	// Show a small display in every case
 	display = new b3DisplayView(200, 150);
 #else
-	if(size > 0)
+	if (size > 0)
 	{
-		if(scene->b3GetDisplaySize(xSize, ySize))
+		if (scene->b3GetDisplaySize(xSize, ySize))
 		{
-			if(xSize > ySize)
+			if (xSize > ySize)
 			{
 				ySize = size * ySize / xSize;
 				xSize = size;
@@ -97,7 +97,7 @@ static b3Display * b3AllocDisplay(
 			xSize = size;
 			ySize = size * 3 / 4;
 		}
-		if((scene->m_Flags & TP_NO_GFX) || force_no_display)
+		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
 		{
 			display = new b3Display(xSize, ySize);
 		}
@@ -106,9 +106,9 @@ static b3Display * b3AllocDisplay(
 			display = new b3DisplayView(xSize, ySize);
 		}
 	}
-	else if(scene->b3GetDisplaySize(xSize, ySize))
+	else if (scene->b3GetDisplaySize(xSize, ySize))
 	{
-		if((scene->m_Flags & TP_NO_GFX) || force_no_display)
+		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
 		{
 			display = new b3Display(xSize, ySize);
 		}
@@ -119,7 +119,7 @@ static b3Display * b3AllocDisplay(
 	}
 	else
 	{
-		if((scene->m_Flags & TP_NO_GFX) || force_no_display)
+		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
 		{
 			display = new b3Display();
 		}
@@ -137,7 +137,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III Raytracer\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(command != null)
+	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p]%s {Blizzard World Data files}\n",
@@ -209,10 +209,10 @@ int main(int argc, char * argv[])
 
 	context.b3UseGL(false);
 
-	if(argc > 1)
+	if (argc > 1)
 	{
 		world = new b3World();
-		if(HOME != null)
+		if (HOME != null)
 		{
 			b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 			b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
@@ -231,7 +231,7 @@ int main(int argc, char * argv[])
 		loader.b3AddPath(BLZ3_PLUGINS);
 		loader.b3Load();
 
-		if(BLZ3_RENDER_PRIO != null)
+		if (BLZ3_RENDER_PRIO != null)
 		{
 			b3Scene::m_RenderPriority = b3Math::b3Limit(atoi(BLZ3_RENDER_PRIO), -2, 2);
 		}
@@ -249,13 +249,13 @@ int main(int argc, char * argv[])
 		b3PrintF(B3LOG_DEBUG, "BLZ3_BIN=%s\n",         BLZ3_BIN);
 		b3PrintF(B3LOG_DEBUG, "BLZ3_RENDER_PRIO=%s\n", BLZ3_RENDER_PRIO);
 
-		for(i = 1; i < argc; i++)
+		for (i = 1; i < argc; i++)
 		{
 			char    number[1024];
 
-			if(argv[i][0] == '-')
+			if (argv[i][0] == '-')
 			{
-				switch(argv[i][1])
+				switch (argv[i][1])
 				{
 				case 'd' :
 					b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -318,7 +318,7 @@ int main(int argc, char * argv[])
 				try
 				{
 					world->b3Read(argv[i]);
-					for(item  = world->b3GetFirst();
+					for (item  = world->b3GetFirst();
 						item != null;
 						item  = scene->Succ)
 					{
@@ -327,9 +327,9 @@ int main(int argc, char * argv[])
 						scene->b3SetupVertexMemory(&context);
 						scene->b3SetFilename(argv[i]);
 						animation = scene->b3GetAnimation();
-						if(animation != null)
+						if (animation != null)
 						{
-							if((!animation->b3IsActive()) || (force_no_anim))
+							if ((!animation->b3IsActive()) || (force_no_anim))
 							{
 								b3PrintF(B3LOG_NORMAL, "Animation deactivated...\n");
 								animation = null;
@@ -341,17 +341,17 @@ int main(int argc, char * argv[])
 						}
 
 						display = b3AllocDisplay(scene, force_no_display, size);
-						if((camera = scene->b3GetFirstCamera(false)) != null)
+						if ((camera = scene->b3GetFirstCamera(false)) != null)
 						{
 							do
 							{
-								if(camera->m_Flags & CAMERA_ACTIVE)
+								if (camera->m_Flags & CAMERA_ACTIVE)
 								{
 									scene->b3SetCamera(camera);
 									b3PrintF(B3LOG_NORMAL, "Rendering \"%s\"...\n",
 										camera->m_CameraName);
 
-									if(animation != null)
+									if (animation != null)
 									{
 										b3_f64   t;
 										b3_index iEnd, frame;
@@ -361,7 +361,7 @@ int main(int argc, char * argv[])
 										b3PrintF(B3LOG_NORMAL, "Animating!!!\n\n");
 										scene->b3ResetAnimation();
 										iEnd = animation->b3AnimFrameIndex(animation->m_End);
-										for(frame = 0; frame <= iEnd; frame++)
+										for (frame = 0; frame <= iEnd; frame++)
 										{
 											t = animation->b3AnimTimeCode(frame);
 											b3PrintF(B3LOG_NORMAL, "Rendering frame t=%1.2f\n", t);
@@ -389,7 +389,7 @@ int main(int argc, char * argv[])
 								}
 								camera = scene->b3GetNextCamera(camera);
 							}
-							while(camera != null);
+							while (camera != null);
 						}
 						else
 						{
@@ -398,7 +398,7 @@ int main(int argc, char * argv[])
 							b3PrintF(B3LOG_NORMAL, "Rendering default camera...\n");
 							scene->b3ComputeBounds(&lower, &upper);
 							scene->b3Raytrace(display, multi_threaded);
-							if(!b3SaveRaytracedImage(
+							if (!b3SaveRaytracedImage(
 									display,
 									BLZ3_PICTURES, scene->b3GetName()))
 							{
@@ -406,32 +406,32 @@ int main(int argc, char * argv[])
 							}
 						}
 
-						if(!force_no_wait)
+						if (!force_no_wait)
 						{
 							display->b3Wait();
 						}
 						delete display;
 					}
 				}
-				catch(b3WorldException & w)
+				catch (b3WorldException & w)
 				{
 					b3PrintF(B3LOG_NORMAL, "Error parsing %s\n", argv[i]);
 					b3PrintF(B3LOG_NORMAL, "Error code: %d\n", w.b3GetError());
 					b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", w.b3GetErrorMsg());
 				}
-				catch(b3FileException & f)
+				catch (b3FileException & f)
 				{
 					b3PrintF(B3LOG_NORMAL, "File IO error using %s\n", argv[i]);
 					b3PrintF(B3LOG_NORMAL, "Error code: %d\n", f.b3GetError());
 					b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", f.b3GetErrorMsg());
 				}
-				catch(b3TxException & t)
+				catch (b3TxException & t)
 				{
 					b3PrintF(B3LOG_NORMAL, "Image error using %s\n", argv[i]);
 					b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
 					b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
 				}
-				catch(...)
+				catch (...)
 				{
 					b3PrintF(B3LOG_NORMAL, "Unknown error occured loading %s\n", argv[i]);
 				}

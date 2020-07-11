@@ -48,7 +48,7 @@ static void b3Dump(b3HashMap<int, char *> & map, const char * title)
 	b3PrintF(B3LOG_NORMAL, "******************** %s\n", title);
 	b3PrintF(B3LOG_NORMAL, "hash size:   %d\n", map.b3GetCount());
 
-	if((indices != null) && (args != null))
+	if ((indices != null) && (args != null))
 	{
 		b3PrintF(B3LOG_NORMAL, "key size:    %d\n", indices->b3GetCount());
 		b3PrintF(B3LOG_NORMAL, "object size: %d\n", args->b3GetCount());
@@ -56,7 +56,7 @@ static void b3Dump(b3HashMap<int, char *> & map, const char * title)
 		// If we would sort here the reference to the object array
 		// would get lost:-(
 		b3PrintF(B3LOG_NORMAL, "Dump by both arrays...\n");
-		for(i = 0; i < indices->b3GetCount(); i++)
+		for (i = 0; i < indices->b3GetCount(); i++)
 		{
 			b3PrintF(B3LOG_NORMAL, "%3d: %d -> %s\n", i,
 				(*indices)[i], (*args)[i]);
@@ -65,7 +65,7 @@ static void b3Dump(b3HashMap<int, char *> & map, const char * title)
 		// Sort here to hold reference from key to object right
 		indices->b3Sort(&b3ArraySorter);
 		b3PrintF(B3LOG_NORMAL, "Dump by array/find...\n");
-		for(i = 0; i < indices->b3GetCount(); i++)
+		for (i = 0; i < indices->b3GetCount(); i++)
 		{
 			int key = (*indices)[i];
 
@@ -83,7 +83,7 @@ int main(int argc, char * argv[])
 	b3_index               i;
 
 	hash.b3SetHashFunc(&b3HashFunc);
-	for(i = 0; i < argc; i++)
+	for (i = 0; i < argc; i++)
 	{
 		hash.b3Add(i, argv[i]);
 	}
@@ -102,7 +102,7 @@ int main(int argc, char * argv[])
 	{
 		hash.b3Add(0, "Exception");
 	}
-	catch(b3HashException & e)
+	catch (b3HashException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "Exception caught correctly.\n");
 	}
@@ -113,7 +113,7 @@ int main(int argc, char * argv[])
 
 	b3HashContainer<int, char *> * container = new b3HashContainer<int, char *>[argc];
 
-	for(i = 0; i < argc; i++)
+	for (i = 0; i < argc; i++)
 	{
 		container[i].m_Key    = i;
 		container[i].m_Object = argv[i];

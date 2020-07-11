@@ -46,7 +46,7 @@ int main(int argc, char * argv[])
 		"Box f(x),Box Int(x),Box Kern(x),"
 		"Gauss f(x),Gauss Int(x),Gauss Kern(x),"
 		"Shutter f(x),Shutter Int(x),Shutter Kern(x)\n");
-	for(x = TEST_MIN; x <= TEST_MAX; x += TEST_STEP)
+	for (x = TEST_MIN; x <= TEST_MAX; x += TEST_STEP)
 	{
 		b3PrintF(B3LOG_NORMAL, "%1.2lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", x,
 			box.b3Func(x),    box.b3Integral(x),    box.b3InvIntegral(x),

@@ -167,7 +167,7 @@ b3Scene * b3Factory::b3CreateBBox(b3BBox * original_bbox, b3_u32 class_type, b3C
 	light->m_Distance   = 40.0 * rad;
 
 	b3Consolidate(scene);
-	if(original_camera != null)
+	if (original_camera != null)
 	{
 		b3_f64    xAngle, yAngle;
 

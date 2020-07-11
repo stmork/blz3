@@ -46,14 +46,14 @@ static void MovieGIF(char * name)
 	b3PrintF(B3LOG_NORMAL, "FILE: %s\n", name);
 
 	buffer = in.b3ReadBuffer(name, size);
-	if(buffer == null)
+	if (buffer == null)
 	{
 		b3PrintF(B3LOG_NORMAL, "buffer not allocated\n");
 		return;
 	}
 	data = buffer;
 
-	if(strncmp((const char *)buffer, "GIF8", 4) != 0)
+	if (strncmp((const char *)buffer, "GIF8", 4) != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "not a GIF image!\n");
 		return;
@@ -61,9 +61,9 @@ static void MovieGIF(char * name)
 	in.b3Close();
 
 #ifdef DEBUG
-	if(!out.b3Open("test.gif", B_WRITE))
+	if (!out.b3Open("test.gif", B_WRITE))
 #else
-	if(!out.b3Open(name, B_WRITE))
+	if (!out.b3Open(name, B_WRITE))
 #endif
 	{
 		b3PrintF(B3LOG_NORMAL, "cannot open file for writing!\n");
@@ -88,28 +88,28 @@ static void MovieGIF(char * name)
 
 	do
 	{
-		switch(data[0])
+		switch (data[0])
 		{
 		case 0x21 :
-			switch(data[1])
+			switch (data[1])
 			{
 			case 0x01 :
 				data += (data[2] + 3);
-				while((diff = data[0]) != 0)
+				while ((diff = data[0]) != 0)
 				{
 					data += (diff + 1);
 				}
 				break;
 
 			case 0xf9 :
-				if(!visited)
+				if (!visited)
 				{
 					index = WriteGIF(out, buffer, data, index);
 					out.b3Write(&repeat, sizeof(struct Repeator));
 					visited = true;
 				}
 				transPtr = (struct Extension *)data;
-				if(VAL2(transPtr->delay) == 0)
+				if (VAL2(transPtr->delay) == 0)
 				{
 					transPtr->delay[0] = 1;
 				}
@@ -119,7 +119,7 @@ static void MovieGIF(char * name)
 
 			case 0xfe :
 				data += 2;
-				while((diff = data[0]) != 0)
+				while ((diff = data[0]) != 0)
 				{
 					data += (diff + 1);
 				}
@@ -127,14 +127,14 @@ static void MovieGIF(char * name)
 
 			case 0xff :
 				data += (data[2] + 3);
-				while((diff = data[0]) != 0)
+				while ((diff = data[0]) != 0)
 				{
 					data += (diff + 1);
 				}
 				visited = true;
 				break;
 			}
-			while(data[0] != 0)
+			while (data[0] != 0)
 			{
 				data++;
 			}
@@ -148,13 +148,13 @@ static void MovieGIF(char * name)
 			descrPtr  = (struct Descriptor *)data;
 			data     += sizeof(struct Descriptor);
 			planes    = (descrPtr->flags & 0x07) + 1;
-			if(descrPtr->flags & 0x80)
+			if (descrPtr->flags & 0x80)
 			{
 				data += ((1 << planes) * 3);
 			}
 			data++;
 
-			while((diff = data[0]) != 0)
+			while ((diff = data[0]) != 0)
 			{
 				data += (diff + 1);
 			}
@@ -172,7 +172,7 @@ static void MovieGIF(char * name)
 			break;
 		}
 	}
-	while(loop);
+	while (loop);
 
 	WriteGIF(out, buffer, data, index);
 	out.b3Close();
@@ -183,7 +183,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III GIF movie maker\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(command != null)
+	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s {GIF-Files}\n", command);
@@ -195,11 +195,11 @@ static void b3Banner(const char * command)
 
 int main(int argc, char * argv[])
 {
-	if(argc > 1)
+	if (argc > 1)
 	{
 		int i;
 
-		for(i = 1; i < argc; i++)
+		for (i = 1; i < argc; i++)
 		{
 			MovieGIF(argv[i]);
 		}

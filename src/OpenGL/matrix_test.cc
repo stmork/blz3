@@ -64,9 +64,9 @@ static void b3PrintMatrix(b3_f32 * values)
 {
 	b3_index i, k;
 
-	for(i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)
 	{
-		for(k = 0; k < 4; k++)
+		for (k = 0; k < 4; k++)
 		{
 			b3PrintF(B3LOG_NORMAL, " %3.3f", *values++);
 		}

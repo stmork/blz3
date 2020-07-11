@@ -54,20 +54,20 @@ b3Light::b3Light(b3_u32 * src) : b3Item(src)
 	m_Distance = b3InitFloat();
 	m_Flags    = b3InitInt();
 
-	if((b3GetClassType() >= AREA_LIGHT) && B3_PARSE_INDEX_VALID)
+	if ((b3GetClassType() >= AREA_LIGHT) && B3_PARSE_INDEX_VALID)
 	{
 		m_Size       = b3InitFloat();
 		m_JitterEdge = b3InitInt();
-		if(b3GetClassType() >= SPOT_LIGHT && B3_PARSE_INDEX_VALID)
+		if (b3GetClassType() >= SPOT_LIGHT && B3_PARSE_INDEX_VALID)
 		{
 			b3InitVector(&m_Direction);
 
 			b3InitSpline(&m_Spline, m_Controls, m_Knots);
-			for(i = 0; i < B3_MAX_KNOTS; i++)
+			for (i = 0; i < B3_MAX_KNOTS; i++)
 			{
 				m_Knots[i] = b3InitFloat();
 			}
-			for(i = 0; i < B3_MAX_CONTROLS; i++)
+			for (i = 0; i < B3_MAX_CONTROLS; i++)
 			{
 				b3InitVector(&m_Controls[i]);
 			}
@@ -86,7 +86,7 @@ b3Light::b3Light(b3_u32 * src) : b3Item(src)
 	}
 	m_LightActive = ((m_Flags & LIGHT_OFF) == 0);
 
-	if(m_ItemOffset > 0)
+	if (m_ItemOffset > 0)
 	{
 		b3InitString(m_Name, m_ItemSize - (m_ParseIndex << 2));
 	}
@@ -95,14 +95,14 @@ b3Light::b3Light(b3_u32 * src) : b3Item(src)
 		m_Name[0] = 0;
 	}
 
-	if(m_LightActive)
+	if (m_LightActive)
 	{
 		b3PrintF(B3LOG_DEBUG, "  Light \"%s\" is active", m_Name);
-		if(m_SoftShadow)
+		if (m_SoftShadow)
 		{
 			b3PrintF(B3LOG_DEBUG, " and uses soft shadows");
 		}
-		if(m_SpotActive)
+		if (m_SpotActive)
 		{
 			b3PrintF(B3LOG_DEBUG, " and uses light distribution curve");
 		}
@@ -116,15 +116,15 @@ void b3Light::b3Write()
 
 	m_Flags = 0;
 	ClassType = SPOT_LIGHT;
-	if(!m_LightActive)
+	if (!m_LightActive)
 	{
 		m_Flags |= LIGHT_OFF;
 	}
-	if(m_SoftShadow)
+	if (m_SoftShadow)
 	{
 		m_Flags |= LIGHT_PENUMBRA;
 	}
-	if(!m_SpotActive)
+	if (!m_SpotActive)
 	{
 		m_Flags |= LIGHT_SPOT_OFF;
 	}
@@ -138,11 +138,11 @@ void b3Light::b3Write()
 	b3StoreVector(&m_Direction);
 
 	b3StoreSpline(&m_Spline);
-	for(i = 0; i < B3_MAX_KNOTS; i++)
+	for (i = 0; i < B3_MAX_KNOTS; i++)
 	{
 		b3StoreFloat(m_Knots[i]);
 	}
-	for(i = 0; i < B3_MAX_CONTROLS; i++)
+	for (i = 0; i < B3_MAX_CONTROLS; i++)
 	{
 		b3StoreVector(&m_Controls[i]);
 	}
@@ -175,7 +175,7 @@ void b3Light::b3InitValues()
 	m_Spline.m_ControlMax = sizeof(m_Controls) / sizeof(m_Controls[0]);
 	m_Spline.m_KnotMax    = sizeof(m_Knots)    / sizeof(m_Knots[0]);
 	m_Spline.b3InitCurve(INIT_DEGREE, INIT_CONTROL_MAX, false);
-	for(i = 0; i < INIT_CONTROL_MAX; i++)
+	for (i = 0; i < INIT_CONTROL_MAX; i++)
 	{
 		m_Controls[i].x = (b3_f64)i / (INIT_CONTROL_MAX - 1);
 		m_Controls[i].y = 1.0;
@@ -183,7 +183,7 @@ void b3Light::b3InitValues()
 	}
 	m_Controls[INIT_CONTROL_MAX - 1].y = 0.5;
 
-	for(i = INIT_DEGREE; i <= INIT_CONTROL_MAX; i++)
+	for (i = INIT_DEGREE; i <= INIT_CONTROL_MAX; i++)
 	{
 		m_Knots[i] =
 			(b3_f64)(i - INIT_DEGREE) /
@@ -200,11 +200,11 @@ void b3Light::b3InitValues()
 
 b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info)
 {
-	if(m_LightActive)
+	if (m_LightActive)
 	{
-		if(m_SoftShadow)
+		if (m_SoftShadow)
 		{
-			if(m_JitterEdge > 1)
+			if (m_JitterEdge > 1)
 			{
 				m_HalfJitter = 0.5 / (b3_f64)(m_JitterEdge - 1);
 				m_FullJitter = 1.0 / (b3_f64)(m_JitterEdge * m_JitterEdge);
@@ -214,7 +214,7 @@ b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info)
 				m_SoftShadow = false;
 			}
 		}
-		if(m_SpotActive)
+		if (m_SpotActive)
 		{
 			m_SpotDir = m_Direction;
 			m_SpotActive = b3Vector::b3Normalize(&m_SpotDir) != 0;
@@ -271,10 +271,10 @@ inline b3_bool b3Light::b3PointIllumination(
 
 	// Compute relative brightness via LDC
 	// (= light distribution curve)
-	if(m_SpotActive)
+	if (m_SpotActive)
 	{
 		SpotAngle = -b3Vector::b3SMul(&Jit.dir, &m_SpotDir);
-		if(SpotAngle <= 0)
+		if (SpotAngle <= 0)
 		{
 			q = 1.0 - b3Scene::epsilon;
 		}
@@ -331,10 +331,10 @@ inline b3_bool b3Light::b3AreaIllumination(
 	denomLightDist = 1.0 / (Jit.m_LightDist = sqrt(denomLightDist));
 	b3Vector::b3Scale(&Jit.m_LightView, denomLightDist);
 
-	if(m_SpotActive)
+	if (m_SpotActive)
 	{
 		Factor = -b3Vector::b3SMul(&Jit.m_LightView, &m_SpotDir);
-		if(Factor <= 0)
+		if (Factor <= 0)
 		{
 			q = 1.0 - b3Scene::epsilon;
 		}
@@ -372,13 +372,13 @@ inline b3_bool b3Light::b3AreaIllumination(
 	equal = true;
 	Distr = Jit.m_Distr - 1;
 	xs    = 1;
-	for(x = xs; x <= Distr; x += 2)
+	for (x = xs; x <= Distr; x += 2)
 	{
 		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, x, 0) != null;
 		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - x) != null;
 
 		equal   &= (Edge1 == Edge2);
-		if((x != xs) && (!first))
+		if ((x != xs) && (!first))
 		{
 			equal &= (Edge1 == LastEdge);
 		}
@@ -386,7 +386,7 @@ inline b3_bool b3Light::b3AreaIllumination(
 		first = false;
 	}
 
-	for(y = 2 - xs; y < Distr; y += 2)
+	for (y = 2 - xs; y < Distr; y += 2)
 	{
 		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, 0, y) != null;
 		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - y) != null;
@@ -397,23 +397,23 @@ inline b3_bool b3Light::b3AreaIllumination(
 
 
 	// This part computes the untested points in the light raster.
-	if(equal)
+	if (equal)
 	{
 		Factor = m_HalfJitter;
 	}
 	else
 	{
 		// fill top and bottom outline
-		for(x = 1 - xs; x <= Distr; x += 2)
+		for (x = 1 - xs; x <= Distr; x += 2)
 		{
 			b3CheckSinglePoint(shader, surface, &Jit, x, 0);
 			b3CheckSinglePoint(shader, surface, &Jit, x, Distr);
 		}
 
-		for(y = 1; y < Distr; y++)
+		for (y = 1; y < Distr; y++)
 		{
 			max = Distr + ((Jit.m_Distr + xs) & 1);
-			for(x = xs; x < max; x++)
+			for (x = xs; x < max; x++)
 			{
 				b3CheckSinglePoint(shader, surface, &Jit, x, y);
 			}
@@ -457,7 +457,7 @@ b3_f64 b3Light::b3ComputeSpotExponent()
 	b3_f64   p     = 0, angle;
 	b3_bool  loop  = true;
 
-	if(m_SpotActive)
+	if (m_SpotActive)
 	{
 		i = 0;
 
@@ -466,7 +466,7 @@ b3_f64 b3Light::b3ComputeSpotExponent()
 			angle = (double)i++ / (double)max;
 			loop  = b3GetSpotFactor(angle) > 0.25;
 		}
-		while((i < max) && loop);
+		while ((i < max) && loop);
 		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
 		b3PrintF(B3LOG_FULL, "b3Light::b3ComputeSpotExponent(%s) = %3.2f lambda=%3.2f\n",
 			b3GetName(), p, angle);

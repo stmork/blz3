@@ -44,7 +44,7 @@ public:
 
 		VERIFY(title.LoadString(nIDSTitle));
 
-		if(pTemplate != NULL)
+		if (pTemplate != NULL)
 		{
 			CString filterName, filterExt;
 
@@ -59,7 +59,7 @@ public:
 			POSITION pos = m_templateList.GetHeadPosition();
 			CString filterName, filterExt;
 
-			while(pos != NULL)
+			while (pos != NULL)
 			{
 				CDocTemplate * pTemplate = (CDocTemplate *)m_templateList.GetNext(pos);
 
@@ -78,7 +78,7 @@ public:
 		dlgFile.m_ofn.lpstrTitle = title;
 
 		result = dlgFile.DoModal() == IDOK;
-		if(result)
+		if (result)
 		{
 			fileName = dlgFile.GetPathName();
 		}

@@ -56,9 +56,9 @@ b3World::b3World(const char * world_name)
 
 b3World::~b3World()
 {
-	if(m_Start != null)
+	if (m_Start != null)
 	{
-		if(!m_AutoDelete)
+		if (!m_AutoDelete)
 		{
 			m_Start->b3GetHead()->b3RemoveAll();
 		}
@@ -68,7 +68,7 @@ b3World::~b3World()
 
 void b3World::b3Free()
 {
-	if(m_Start != null)
+	if (m_Start != null)
 	{
 		m_Start->b3GetHead()->b3RemoveAll();
 		delete m_Start;
@@ -89,10 +89,10 @@ b3_world_error b3World::b3EndianSwapWorld()
 
 	i        = 0;
 	max_file = m_BufferSize >> 2;
-	while(i < max_file)
+	while (i < max_file)
 	{
 		// Convert node itself
-		for(k = 0; k < 5; k++)
+		for (k = 0; k < 5; k++)
 		{
 			b3Endian::b3ChangeEndian32(&m_Buffer[i + k]);
 		}
@@ -100,19 +100,19 @@ b3_world_error b3World::b3EndianSwapWorld()
 		// Extract size information
 		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
 		max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
-		if(max_offset == 0)
+		if (max_offset == 0)
 		{
 			max_offset = max_node;
 		}
 
 		// Make some consistence checking
-		if(max_node < B3_NODE_IDX_MIN)
+		if (max_node < B3_NODE_IDX_MIN)
 		{
 			return B3_WORLD_PARSE;
 		}
 
 		// Convert header an custom area without appending strings
-		for(k = 5; k < max_offset; k++)
+		for (k = 5; k < max_offset; k++)
 		{
 			b3Endian::b3ChangeEndian32(&m_Buffer[i + k]);
 		}
@@ -127,13 +127,13 @@ b3Item * b3World::b3AllocNode(b3_u32 class_value, const b3_bool throw_exception)
 	b3ItemRegisterEntry * entry;
 
 	entry = b3ItemRegister::b3Find(class_value);
-	if(entry != null)
+	if (entry != null)
 	{
 		return entry->b3Init();
 	}
 	else
 	{
-		if(throw_exception)
+		if (throw_exception)
 		{
 			B3_THROW(b3WorldException, B3_WORLD_NOT_REGISTERED);
 		}
@@ -148,13 +148,13 @@ b3Item * b3World::b3AllocNode(b3_u32 * buffer, const b3_bool throw_exception)
 	b3_u32               class_type = buffer[B3_NODE_IDX_CLASSTYPE];
 
 	entry = b3ItemRegister::b3Find(class_type);
-	if(entry != null)
+	if (entry != null)
 	{
 		item = entry->b3Load(buffer);
 	}
 	else
 	{
-		if(throw_exception)
+		if (throw_exception)
 		{
 			B3_THROW(b3WorldException, B3_WORLD_NOT_REGISTERED);
 		}
@@ -184,7 +184,7 @@ b3_world_error b3Item::b3ParseLinkuage(
 	b3Space(level);
 	b3PrintF(B3LOG_FULL, "---- %08lx %08lx Start\n", b3GetClass(), my_class_limit);
 #endif
-	for(i = 0; i < m_HeadCount; i++)
+	for (i = 0; i < m_HeadCount; i++)
 	{
 		cmp_class = m_Heads[i].b3GetClass();
 #ifdef VERBOSE
@@ -192,7 +192,7 @@ b3_world_error b3Item::b3ParseLinkuage(
 		b3PrintF(B3LOG_FULL, "       %08lx\n", cmp_class);
 #endif
 		pos = 1;
-		while((pos < node_count) && ((act_class = array[pos]->b3GetClass()) < my_class_limit))
+		while ((pos < node_count) && ((act_class = array[pos]->b3GetClass()) < my_class_limit))
 		{
 #ifdef VERBOSE
 			b3Space(level);
@@ -201,7 +201,7 @@ b3_world_error b3Item::b3ParseLinkuage(
 				cmp_class,
 				array[pos]);
 #endif
-			if(act_class == cmp_class)
+			if (act_class == cmp_class)
 			{
 				m_Heads[i].b3Append(array[pos]);
 #ifdef VERBOSE
@@ -235,12 +235,12 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 	b3Array<b3Item *>  array;
 
 	result = (m_NeedEndianChange ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
-	if(result != B3_WORLD_OK)
+	if (result != B3_WORLD_OK)
 	{
 		return result;
 	}
 
-	if(b3ItemRegister::b3Find(B3_CLASS_MAX) == null)
+	if (b3ItemRegister::b3Find(B3_CLASS_MAX) == null)
 	{
 		b3PrintF(B3LOG_NORMAL, "Item registry not initialized!\n");
 		return B3_WORLD_PARSE;
@@ -253,21 +253,21 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 
 	i        = 0;
 	max_file = m_BufferSize >> 2;
-	while(i < max_file)
+	while (i < max_file)
 	{
 		// Extract size information
 		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
 		max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
-		if(max_offset == 0)
+		if (max_offset == 0)
 		{
 			max_offset = max_node;
 		}
 
 		// Make some consistence checking
-		if(max_node < B3_NODE_IDX_MIN)
+		if (max_node < B3_NODE_IDX_MIN)
 		{
 			// On error - no chance to proceed
-			for(k = 0; k < array.b3GetCount(); k++)
+			for (k = 0; k < array.b3GetCount(); k++)
 			{
 				delete array[k];
 			}
@@ -278,10 +278,10 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 		try
 		{
 			node = b3AllocNode(&m_Buffer[i], throw_exception);
-			if(node == null)
+			if (node == null)
 			{
 				// On error - no chance to proceed
-				for(k = 0; k < array.b3GetCount(); k++)
+				for (k = 0; k < array.b3GetCount(); k++)
 				{
 					delete array[k];
 				}
@@ -289,7 +289,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 			}
 			array.b3Add(node);
 		}
-		catch(b3WorldException & we)
+		catch (b3WorldException & we)
 		{
 			m_Missed++;
 			b3PrintF(B3LOG_DEBUG, "%s\n", we.b3GetErrorMsg());
@@ -298,9 +298,9 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 		i += max_node;
 	}
 
-	if(m_Missed > 0)
+	if (m_Missed > 0)
 	{
-		for(k = 0; k < array.b3GetCount(); k++)
+		for (k = 0; k < array.b3GetCount(); k++)
 		{
 			delete array[k];
 		}
@@ -308,10 +308,10 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 	}
 
 #ifdef VERBOSE
-	if(b3CheckLevel(B3LOG_FULL))
+	if (b3CheckLevel(B3LOG_FULL))
 	{
 		b3PrintF(B3LOG_FULL, "Counted %d nodes.\n", node_count);
-		for(k = 0; k < array.b3GetCount(), k++)
+		for (k = 0; k < array.b3GetCount(), k++)
 		{
 			array[k]->b3DumpSimple();
 		}
@@ -331,7 +331,7 @@ b3_bool b3World::b3Read(const char * name, const b3_bool throw_exception)
 	b3Path         world_name;
 	b3_world_error error;
 
-	if(!b3IsValid(name, world_name))
+	if (!b3IsValid(name, world_name))
 	{
 		error = B3_WORLD_OPEN;
 	}
@@ -339,7 +339,7 @@ b3_bool b3World::b3Read(const char * name, const b3_bool throw_exception)
 	{
 		b3File file;
 
-		if(file.b3Open(world_name, B_READ))
+		if (file.b3Open(world_name, B_READ))
 		{
 			error = b3Read(&file, throw_exception);
 			file.b3Close();
@@ -351,7 +351,7 @@ b3_bool b3World::b3Read(const char * name, const b3_bool throw_exception)
 	}
 
 	// Cleanup any occured error
-	if(error != B3_WORLD_OK)
+	if (error != B3_WORLD_OK)
 	{
 		m_BufferSize = 0;
 		B3_THROW(b3WorldException, error);
@@ -371,9 +371,9 @@ b3_world_error b3World::b3Read(b3FileAbstract * file, const b3_bool throw_except
 	b3Free();
 
 	// Read specified file into buffer
-	if(file->b3Read(header, sizeof(header)) == sizeof(header))
+	if (file->b3Read(header, sizeof(header)) == sizeof(header))
 	{
-		switch(header[0])
+		switch (header[0])
 		{
 		case B3_BLiZ:
 			m_NeedEndianChange = false;
@@ -390,13 +390,13 @@ b3_world_error b3World::b3Read(b3FileAbstract * file, const b3_bool throw_except
 			break;
 		}
 
-		if(error != B3_WORLD_PARSE)
+		if (error != B3_WORLD_PARSE)
 		{
 			m_BufferSize = header[1];
 			m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
-			if(m_Buffer != null)
+			if (m_Buffer != null)
 			{
-				if(file->b3Read(m_Buffer, m_BufferSize) == m_BufferSize)
+				if (file->b3Read(m_Buffer, m_BufferSize) == m_BufferSize)
 				{
 					error = b3Parse(throw_exception);
 				}
@@ -428,26 +428,26 @@ b3_bool b3World::b3ReadDump(const char * world_name)
 	b3_size        i, max_file;
 	b3_index       max_node, max_offset;
 
-	if(file.b3Open(world_name, B_READ))
+	if (file.b3Open(world_name, B_READ))
 	{
 		error = b3Read(&file);
-		if(error == B3_WORLD_OK)
+		if (error == B3_WORLD_OK)
 		{
 			error = (m_NeedEndianChange ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
 		}
 		file.b3Close();
 
 		// Cleanup any occured error
-		if(error == B3_WORLD_OK)
+		if (error == B3_WORLD_OK)
 		{
 			i        = 0;
 			max_file = m_BufferSize >> 2;
-			while(i < max_file)
+			while (i < max_file)
 			{
 				// Extract size information
 				max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
 				max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
-				if(max_offset == 0)
+				if (max_offset == 0)
 				{
 					max_offset = max_node;
 				}
@@ -460,7 +460,7 @@ b3_bool b3World::b3ReadDump(const char * world_name)
 					m_Buffer[i + B3_NODE_IDX_OFFSET]);
 
 				// Print heads
-				for(int k = B3_NODE_IDX_MIN; m_Buffer[i + k] != null; k += 3)
+				for (int k = B3_NODE_IDX_MIN; m_Buffer[i + k] != null; k += 3)
 				{
 					b3PrintF(B3LOG_NORMAL, "%08lx ", m_Buffer[i + k]);
 				}
@@ -480,7 +480,7 @@ b3_bool b3World::b3ReadDump(const char * world_name)
 	b3Mem::b3Free(m_Buffer);
 	m_Buffer     = null;
 	m_BufferSize = 0;
-	if(error != B3_WORLD_OK)
+	if (error != B3_WORLD_OK)
 	{
 		B3_THROW(b3WorldException, error);
 	}
@@ -499,13 +499,13 @@ void b3World::b3CloneBase(
 	B3_FOR_BASE(srcBase, srcItem)
 	{
 		entry = b3ItemRegister::b3Find(srcItem->b3GetClassType());
-		if(entry != null)
+		if (entry != null)
 		{
 			dstItem = entry->b3Load(srcItem->m_StoreBuffer);
 		}
 		else
 		{
-			if(throw_exception)
+			if (throw_exception)
 			{
 				B3_THROW(b3WorldException, B3_WORLD_CLASSTYPE_UNKNOWN);
 			}
@@ -516,7 +516,7 @@ void b3World::b3CloneBase(
 		}
 
 		dstBase->b3Append(dstItem);
-		for(i = 0; i < srcItem->m_HeadCount; i++)
+		for (i = 0; i < srcItem->m_HeadCount; i++)
 		{
 			b3CloneBase(&srcItem->m_Heads[i], &dstItem->m_Heads[i], throw_exception);
 		}
@@ -534,13 +534,13 @@ b3Item * b3World::b3Clone(b3Item * original, const b3_bool throw_exception)
 
 	original->b3Store();
 	entry = b3ItemRegister::b3Find(original->b3GetClassType());
-	if(entry != null)
+	if (entry != null)
 	{
 		item = entry->b3Load(original->m_StoreBuffer);
 	}
 	else
 	{
-		if(throw_exception)
+		if (throw_exception)
 		{
 			B3_THROW(b3WorldException, B3_WORLD_CLASSTYPE_UNKNOWN);
 		}
@@ -550,7 +550,7 @@ b3Item * b3World::b3Clone(b3Item * original, const b3_bool throw_exception)
 		}
 	}
 
-	for(i = 0; i < original->m_HeadCount; i++)
+	for (i = 0; i < original->m_HeadCount; i++)
 	{
 		b3CloneBase(&original->m_Heads[i], &item->m_Heads[i], throw_exception);
 	}
@@ -568,7 +568,7 @@ b3_bool b3World::b3Write(
 	b3File          file;
 	b3_world_error  error;
 
-	if(file.b3Open(filename, B_WRITE))
+	if (file.b3Open(filename, B_WRITE))
 	{
 		error = b3Write(&file, throw_exception);
 		file.b3Close();
@@ -578,7 +578,7 @@ b3_bool b3World::b3Write(
 		error = B3_WORLD_WRITE;
 	}
 
-	if(error != B3_WORLD_OK)
+	if (error != B3_WORLD_OK)
 	{
 		B3_THROW(b3WorldException, error);
 	}
@@ -596,10 +596,10 @@ b3_world_error b3World::b3Write(b3FileAbstract * file, const b3_bool throw_excep
 	header[1] = 0;
 
 	// Prepare each item's buffer
-	for(item = m_Start; item != null; item = item->Succ)
+	for (item = m_Start; item != null; item = item->Succ)
 	{
 		size = item->b3Store();
-		if(size == 0)
+		if (size == 0)
 		{
 			error = B3_WORLD_MEMORY;
 			break;
@@ -608,13 +608,13 @@ b3_world_error b3World::b3Write(b3FileAbstract * file, const b3_bool throw_excep
 	}
 
 	// Write buffers to file
-	if((error == B3_WORLD_OK) &&
+	if ((error == B3_WORLD_OK) &&
 		(file->b3Write(header, sizeof(header)) == sizeof(header)))
 	{
-		for(item = m_Start; item != null; item = item->Succ)
+		for (item = m_Start; item != null; item = item->Succ)
 		{
 			error = item->b3StoreFile(file);
-			if(error != B3_WORLD_OK)
+			if (error != B3_WORLD_OK)
 			{
 				break;
 			}
@@ -629,7 +629,7 @@ b3_world_error b3World::b3Write(b3FileAbstract * file, const b3_bool throw_excep
 
 void b3World::b3Dump()
 {
-	if(m_Start != null)
+	if (m_Start != null)
 	{
 		b3PrintF(B3LOG_FULL, "--- World dump:\n");
 		m_Start->b3Dump(0);
@@ -649,7 +649,7 @@ b3Item * b3World::b3GetFirst()
 
 void b3World::b3SetFirst(b3Item * item)
 {
-	if(m_Start == null)
+	if (m_Start == null)
 	{
 		m_Start = new b3FirstItem(B3_CLASS_MAX);
 		m_Start->b3GetHead()->b3InitBase(item->b3GetClass());
@@ -661,10 +661,10 @@ b3Base<b3Item> * b3World::b3GetHead(b3_u32 class_value)
 {
 	b3Base<b3Item> * base = null;
 
-	if(m_Start != null)
+	if (m_Start != null)
 	{
 		base = m_Start->b3GetHead();
-		if((class_value != 0) && (base->b3GetClass() != class_value))
+		if ((class_value != 0) && (base->b3GetClass() != class_value))
 		{
 			base = null;
 		}

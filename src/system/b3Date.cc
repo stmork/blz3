@@ -56,7 +56,7 @@ b3Date::b3Date(
 	unsigned short newMonth,
 	unsigned long  newYear)
 {
-	if(!b3SetDate(newDay, newMonth, newYear))
+	if (!b3SetDate(newDay, newMonth, newYear))
 	{
 		B3_THROW(b3DateException, B3_DATE_ILLEGAL);
 	}
@@ -71,7 +71,7 @@ void b3Date::b3Now()
 
 void b3Date::b3SetMode(long new_mode)
 {
-	switch(new_mode)
+	switch (new_mode)
 	{
 	case B3_DT_GM :
 		b3GMTime();
@@ -94,7 +94,7 @@ long b3Date::b3GetMode()
 
 struct tm * b3Date::b3TM(struct tm * time_tm)
 {
-	if(time_tm != null)
+	if (time_tm != null)
 	{
 		time_tm->tm_year  = year  - 1900;
 		time_tm->tm_mon   = month - 1;
@@ -138,13 +138,13 @@ void b3Date::b3GMTime()
 	do
 	{
 		now = gmtime(&time_code);
-		if(now == null)
+		if (now == null)
 		{
 			time_code &= (mask ^ bit);
 			bit = bit >> 1;
 		}
 	}
-	while(now == null);
+	while (now == null);
 
 	mode      = B3_DT_GM;
 
@@ -199,7 +199,7 @@ long b3Date::b3Check(
 
 	// If we are in summer time we have one hour later.
 	// So do it so!
-	if(t_dls)
+	if (t_dls)
 	{
 		t_hour++;
 	}
@@ -243,7 +243,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_000000_09091999 - diff;
 	b3LocalTime();
 	code = b3Check(0, 0, 0, 9, 9, 1999, B3_THURSDAY, true);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -261,7 +261,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_000000_10091999 - diff;
 	b3LocalTime();
 	code = b3Check(0, 0, 0, 10, 9, 1999, B3_FRIDAY, true);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -279,7 +279,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_000000_31121999 - diff;
 	b3LocalTime();
 	code = b3Check(0, 0, 0, 31, 12, 1999, B3_FRIDAY, false);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -297,7 +297,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_000000_01012000 - diff;
 	b3LocalTime();
 	code = b3Check(0, 0, 0, 1, 1, 2000, B3_SATURDAY, false);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -315,7 +315,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_000000_29022000 - diff;
 	b3LocalTime();
 	code = b3Check(0, 0, 0, 29, 2, 2000, B3_TUESDAY, false);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -333,7 +333,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_120000_01042001 - diff;
 	b3LocalTime();
 	code = b3Check(12, 0, 0, 1, 4, 2001, B3_SUNDAY, true);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -351,7 +351,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_code = DATE_120000_08042001 - diff;
 	b3LocalTime();
 	code = b3Check(12, 0, 0, 8, 4, 2001, B3_SUNDAY, true);
-	if(code != 0)
+	if (code != 0)
 	{
 		success = false;
 	}
@@ -378,7 +378,7 @@ bool b3Date::b3Y2K_Selftest()
 	b3SetMode(mode);
 
 	// Display error message
-	if(!success)
+	if (!success)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Date !!! WARNING: This OS is not \"Year 2000\" safe !!!\n\n");
 	}
@@ -392,7 +392,7 @@ bool b3Date::b3Y2K_Selftest()
 
 void b3Date::operator-=(const b3Date & diff)
 {
-	if(time_code < diff.time_code)
+	if (time_code < diff.time_code)
 	{
 		time_code  = diff.time_code - time_code;
 	}
@@ -406,7 +406,7 @@ void b3Date::operator-=(const b3Date & diff)
 
 void b3Date::operator+=(const b3Date & diff)
 {
-	if((diff.mode != B3_DT_DIFF) && (mode != B3_DT_DIFF))
+	if ((diff.mode != B3_DT_DIFF) && (mode != B3_DT_DIFF))
 	{
 		// It doen's make sense to add a date to another
 		// date. But it make sense to add a difference
@@ -458,7 +458,7 @@ bool b3Date::b3SetTime(
 	struct tm date;
 	bool      result;
 
-	if((newHour < 24) && (newMin < 60) && (newSec < 60))
+	if ((newHour < 24) && (newMin < 60) && (newSec < 60))
 	{
 		hour     = newHour;
 		min      = newMin;

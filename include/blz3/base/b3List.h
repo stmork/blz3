@@ -222,14 +222,14 @@ public:
 	inline void b3Move(b3Base<T> * from)
 	{
 #ifndef B3_NO_CLASS_CHECK
-		if(from->b3GetClass() != Class)
+		if (from->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
-		if(!from->b3IsEmpty())
+		if (!from->b3IsEmpty())
 		{
-			if(b3IsEmpty())
+			if (b3IsEmpty())
 			{
 				// Simple move
 				First = from->First;
@@ -253,7 +253,7 @@ public:
 	{
 		T * node, *succ;
 
-		for(node = First; node != null; node = succ)
+		for (node = First; node != null; node = succ)
 		{
 			succ = node->Succ;
 			delete node;
@@ -273,7 +273,7 @@ public:
 		First = null;
 		Last  = null;
 
-		while(node != null)
+		while (node != null)
 		{
 			// unlink every node
 			succ = node->Succ;
@@ -293,7 +293,7 @@ public:
 		T    *    node;
 		b3_count  count = 0;
 
-		for(node  = First; node != null; node  = node->Succ)
+		for (node  = First; node != null; node  = node->Succ)
 		{
 			count++;
 		}
@@ -312,17 +312,17 @@ public:
 		B3_ASSERT(ptr != First);
 		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
-		if(ptr->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
-		if(First == null)
+		if (First == null)
 		{
 			First = ptr;
 		}
-		if(Last != null)
+		if (Last != null)
 		{
 			Last->Succ = ptr;
 		}
@@ -343,17 +343,17 @@ public:
 		B3_ASSERT(ptr != First);
 		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
-		if(ptr->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
-		if(Last == null)
+		if (Last == null)
 		{
 			Last = ptr;
 		}
-		if(First != null)
+		if (First != null)
 		{
 			First->Prev = ptr;
 		}
@@ -370,14 +370,14 @@ public:
 	inline void b3Remove(T * ptr)
 	{
 #ifndef B3_NO_CLASS_CHECK
-		if(ptr->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
 		// Relink backward link
-		if(ptr->Prev == null)
+		if (ptr->Prev == null)
 		{
 			First = ptr->Succ;
 		}
@@ -387,7 +387,7 @@ public:
 		}
 
 		// Relink forward link
-		if(ptr->Succ == null)
+		if (ptr->Succ == null)
 		{
 			Last = ptr->Prev;
 		}
@@ -410,7 +410,7 @@ public:
 	{
 		T * removed = First;
 
-		if(removed != null)
+		if (removed != null)
 		{
 			b3Remove(removed);
 		}
@@ -426,7 +426,7 @@ public:
 	{
 		T * removed = Last;
 
-		if(removed != null)
+		if (removed != null)
 		{
 			b3Remove(removed);
 		}
@@ -445,18 +445,18 @@ public:
 
 		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null));
 #ifndef B3_NO_CLASS_CHECK
-		if(ptr->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
 		ptr->Prev = pre;
-		if(pre == null)
+		if (pre == null)
 		{
 			// Like b3First(node)
 			ptr->Succ = First;
-			if(ptr->Succ == null)
+			if (ptr->Succ == null)
 			{
 				// First element in list
 				Last = ptr;
@@ -472,7 +472,7 @@ public:
 		{
 			succ = pre->Succ;
 			ptr->Succ = pre->Succ;
-			if(ptr->Succ == null)
+			if (ptr->Succ == null)
 			{
 				// Found "pre" as last element in list
 				// so correct Last
@@ -499,10 +499,10 @@ public:
 	{
 		T * select = null;
 
-		if(ptr != null)
+		if (ptr != null)
 		{
 			select = ptr->Prev;
-			if(select == null)
+			if (select == null)
 			{
 				select = ptr->Succ;
 			}
@@ -520,14 +520,14 @@ public:
 	{
 		int flags;
 
-		if(ptr == null)
+		if (ptr == null)
 		{
 			flags = B3_NODE_NULL;
 		}
 		else
 		{
 			flags = B3_NODE_NOT_NULL;
-			if(ptr == First)
+			if (ptr == First)
 			{
 				flags |= B3_NODE_FIRST;
 			}
@@ -535,7 +535,7 @@ public:
 			{
 				flags |= B3_NODE_NOT_FIRST;
 			}
-			if(ptr == Last)
+			if (ptr == Last)
 			{
 				flags |= B3_NODE_LAST;
 			}
@@ -543,7 +543,7 @@ public:
 			{
 				flags |= B3_NODE_NOT_LAST;
 			}
-			if(ptr->Prev)
+			if (ptr->Prev)
 			{
 				flags |= B3_NODE_PREV;
 			}
@@ -551,7 +551,7 @@ public:
 			{
 				flags |= B3_NODE_NOT_PREV;
 			}
-			if(ptr->Succ)
+			if (ptr->Succ)
 			{
 				flags |= B3_NODE_SUCC;
 			}
@@ -579,7 +579,7 @@ public:
 		b3_count  i = 0;
 
 		// We don't need to sort one or zero element.
-		if(First == Last)
+		if (First == Last)
 		{
 			return;
 		}
@@ -593,9 +593,9 @@ public:
 		// because it is O(n).
 		start = First;
 		end   = Last;
-		while(start->Succ != end)
+		while (start->Succ != end)
 		{
-			if(i & 1)
+			if (i & 1)
 			{
 				// One backwards
 				end   = end->Prev;
@@ -629,14 +629,14 @@ public:
 		// one sorted list.
 		start = First;
 		end   = Right.First;
-		while((start != null) && (end != null))
+		while ((start != null) && (end != null))
 		{
 			// Here is the comparison function. If the node
 			// of the first list is lower we leave the node
 			// at its place and use the following node.
 			// Else we remove the node from the second list
 			// an insert it before the node of the first list.
-			if(func((T *)start, (T *)end, Ptr) > 0)
+			if (func((T *)start, (T *)end, Ptr) > 0)
 			{
 				Right.b3Remove(end);
 				b3Insert(start->Prev, end);
@@ -652,11 +652,11 @@ public:
 		// to at the end of the first list.
 		// NOTE:
 		// This is even more efficient: O(1)
-		if(end)  /* append right list to left list */
+		if (end) /* append right list to left list */
 		{
 			start = Last;
 			end->Prev = start;
-			if(start)
+			if (start)
 			{
 				start->Succ = end;
 			}

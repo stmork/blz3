@@ -45,7 +45,7 @@ b3UndoBuffer::~b3UndoBuffer()
 
 void b3UndoBuffer::b3Delete(b3UndoOperation * op)
 {
-	if(op->b3IsInitialized())
+	if (op->b3IsInitialized())
 	{
 		op->b3Delete();
 	}
@@ -56,7 +56,7 @@ void b3UndoBuffer::b3Delete(b3Base<b3UndoOperation> * buffer)
 {
 	b3UndoOperation * op;
 
-	while((op = buffer->b3RemoveFirst()) != null)
+	while ((op = buffer->b3RemoveFirst()) != null)
 	{
 		b3Delete(op);
 	}
@@ -72,7 +72,7 @@ b3_bool b3UndoBuffer::b3Do(b3UndoOperation * op)
 {
 	b3_bool result = op->b3IsInitialized();
 
-	if(result)
+	if (result)
 	{
 		op->b3Do();
 		op->b3Done(true);
@@ -91,7 +91,7 @@ void b3UndoBuffer::b3Undo()
 {
 	b3UndoOperation * op = m_UndoBuffer.b3RemoveLast();
 
-	if(op != null)
+	if (op != null)
 	{
 		op->b3Undo();
 		op->b3Done(false);
@@ -104,7 +104,7 @@ void b3UndoBuffer::b3Redo()
 {
 	b3UndoOperation * op = m_RedoBuffer.b3RemoveFirst();
 
-	if(op != null)
+	if (op != null)
 	{
 		op->b3Redo();
 		op->b3Done(true);

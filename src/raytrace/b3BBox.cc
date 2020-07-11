@@ -92,7 +92,7 @@ b3BBox::b3BBox(b3_u32 * src) : b3Item(src)
 	b3InitMatrix(&m_Matrix);
 
 	diff = m_ItemSize - (b3_size)(m_ParseIndex << 2);
-	if(diff < B3_BOXSTRINGLEN)
+	if (diff < B3_BOXSTRINGLEN)
 	{
 		b3InitString(m_BoxName, diff);
 		m_BoxURL[0] = 0;
@@ -132,7 +132,7 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 	B3_FOR_BASE(b3GetShapeHead(), item)
 	{
 		shape = (b3Shape *)item;
-		if(!shape->b3Prepare(scene_prep))
+		if (!shape->b3Prepare(scene_prep))
 		{
 			b3PrintF(B3LOG_NORMAL,
 				"Shape not initialized [%s].\n",
@@ -144,14 +144,14 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 	}
 
 	m_CSGIntersectionCount = 0;
-	if(b3GetShapeHead()->b3GetClass() == CLASS_CSG)
+	if (b3GetShapeHead()->b3GetClass() == CLASS_CSG)
 	{
 		B3_FOR_BASE(b3GetShapeHead(), item)
 		{
 			csgShape = (b3CSGShape *)item;
 			m_CSGIntersectionCount += csgShape->b3GetMaxIntersections();
 		}
-		if((m_CSGIntersectionCount >= B3_MAX_CSG_INTERSECTIONS_PER_BBOX) ||
+		if ((m_CSGIntersectionCount >= B3_MAX_CSG_INTERSECTIONS_PER_BBOX) ||
 			(m_ShapeCount >= B3_MAX_CSG_SHAPES_PER_BBOX))
 		{
 			b3PrintF(B3LOG_NORMAL,
@@ -164,12 +164,12 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 		}
 	}
 
-	if(recursive)
+	if (recursive)
 	{
 		B3_FOR_BASE(b3GetBBoxHead(), item)
 		{
 			bbox = (b3BBox *)item;
-			if(!bbox->b3PrepareBBox(scene_prep, recursive))
+			if (!bbox->b3PrepareBBox(scene_prep, recursive))
 			{
 				return false;
 			}
@@ -201,7 +201,7 @@ void b3BBox::b3GetCount(
 
 void b3BBox::b3AllocVertexMemory(b3RenderContext * context)
 {
-	if(b3VectorBufferObjects::b3AllowVBO())
+	if (b3VectorBufferObjects::b3AllowVBO())
 	{
 		b3RenderObject::b3AllocVertexMemory(context);
 	}
@@ -326,9 +326,9 @@ b3_bool b3BBox::b3Inverse(b3_matrix * original)
 #endif
 
 	success = b3Matrix::b3Inverse(&m_Matrix, &inverse) != null;
-	if(success)
+	if (success)
 	{
-		if(original != null)
+		if (original != null)
 		{
 			*original = m_Matrix;
 		}
@@ -352,7 +352,7 @@ b3_bool b3BBox::b3Reverse(b3_matrix * original)
 	b3_bool   success;
 
 	success = b3Matrix::b3Inverse(original, &m_Inverse) != null;
-	if(success)
+	if (success)
 	{
 		b3Transform(original, true, true);
 	}
@@ -380,7 +380,7 @@ b3_bool b3BBox::b3IsActive()
 
 void b3BBox::b3Expand(b3_bool expand)
 {
-	if(expand)
+	if (expand)
 	{
 		m_Type |=   BBF_EXPANDED;
 	}
@@ -437,11 +437,11 @@ b3_bool b3BBox::b3FindBBox(b3Base<b3Item> * base, b3BBox * search)
 	B3_FOR_BASE(base, item)
 	{
 		bbox = (b3BBox *)item;
-		if(bbox == search)
+		if (bbox == search)
 		{
 			return true;
 		}
-		if(b3FindBBox(bbox->b3GetBBoxHead(), search))
+		if (b3FindBBox(bbox->b3GetBBoxHead(), search))
 		{
 			return true;
 		}

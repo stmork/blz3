@@ -37,7 +37,7 @@
 *************************************************************************/
 
 #ifdef HAVE_NEW_OVERLOADING
-void * operator new(size_t size)
+void * operator new (size_t size)
 {
 	return memalign(16, size);
 }
@@ -59,7 +59,7 @@ b3Runtime::b3Runtime()
 	char * locale;
 
 	locale = setlocale(LC_ALL, "");
-	if(locale == null)
+	if (locale == null)
 	{
 		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
 	}
@@ -70,7 +70,7 @@ b3Runtime::b3Runtime()
 #endif
 	}
 
-	switch(b3GetVectorUnit())
+	switch (b3GetVectorUnit())
 	{
 	case B3_VU_FPU:
 		vu = "FPU";
@@ -141,7 +141,7 @@ b3_s32 b3Runtime::b3Execute(const char * command, const b3_bool async)
 	b3_s32      result = 127;
 	b3_size     offset = sizeof(set) - (async ? 2 : 0);
 
-	if(strlen(command) < offset)
+	if (strlen(command) < offset)
 	{
 		fmt = async ? "%s &" : "%s";
 		snprintf(set, sizeof(set), fmt, command);
@@ -172,14 +172,14 @@ int b3Runtime::b3ParseOption(
 	char  * option,
 	size_t  size)
 {
-	if(strlen(argv[i]) > 2)
+	if (strlen(argv[i]) > 2)
 	{
 		strncpy(option, &argv[i][2], size);
 	}
 	else
 	{
 		i++;
-		if(i < argc)
+		if (i < argc)
 		{
 			strncpy(option, argv[i], size);
 		}

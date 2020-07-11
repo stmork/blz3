@@ -111,7 +111,7 @@ protected:
 		BOOL lookup = m_mapIDtoImage.Lookup(nID, val);
 		int result;
 
-		if(lookup)
+		if (lookup)
 		{
 			long long liVal = (long long)val;
 

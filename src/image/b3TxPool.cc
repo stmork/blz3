@@ -56,7 +56,7 @@ b3_bool b3TxPool::b3ReloadTexture(b3Tx * tx, const char * Name)
 	result = b3IsValid(Name, FullName);
 
 	// Check result of texture load
-	if(result)
+	if (result)
 	{
 		result = (tx->b3LoadImage(FullName) == B3_OK);
 		b3PrintF(B3LOG_DEBUG, "IMG POOL # Image \"%s\" %sloaded.\n",
@@ -96,7 +96,7 @@ b3Tx * b3TxPool::b3FindTextureUnsafe(const char * ParamName)
 		txLen   = strlen(txName);
 		nameLen = strlen(Name);
 		diff    = (b3_offset)txLen - (b3_offset)nameLen;
-		if(strcmp(&txName[diff >= 0 ? diff : 0], Name) == 0)
+		if (strcmp(&txName[diff >= 0 ? diff : 0], Name) == 0)
 		{
 			return tx;
 		}
@@ -114,7 +114,7 @@ b3Tx * b3TxPool::b3LoadTexture(const char * Name)
 	b3CriticalSection lock(m_Mutex);
 
 	tx = b3FindTextureUnsafe(Name);
-	if(tx == null)
+	if (tx == null)
 	{
 		// OK, create new texture
 		tx = new b3Tx();

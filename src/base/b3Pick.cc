@@ -63,7 +63,7 @@ const b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
 
 	B3_FOR_BASE(this, pick)
 	{
-		if(pick->b3Hit(x, y))
+		if (pick->b3Hit(x, y))
 		{
 			m_Selected = pick;
 			return true;
@@ -74,7 +74,7 @@ const b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
 
 const b3_bool b3PickBase::b3Move(const b3_coord x, const b3_coord y)
 {
-	if(m_Selected != null)
+	if (m_Selected != null)
 	{
 		return m_Selected->b3Moved(x, y);
 	}
@@ -144,7 +144,7 @@ const b3_bool b3Pick::b3Moved(const b3_coord x, const b3_coord y)
 	b3_bool result;
 
 	result = (x != m_x) || (y != m_y);
-	if(result)
+	if (result)
 	{
 		m_x = x;
 		m_y = y;

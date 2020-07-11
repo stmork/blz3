@@ -74,14 +74,14 @@ void b3Log::b3LogFunction(
 {
 	va_list  argptr;
 
-	if(b3CheckLevel(level))
+	if (b3CheckLevel(level))
 	{
 		b3CriticalSection lock(m_LogMutex);
 
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this
 		// piece of code.
-		if(b3OpenLogFile())
+		if (b3OpenLogFile())
 		{
 			va_start(argptr, format);
 			vfprintf(m_Out,  format, argptr);

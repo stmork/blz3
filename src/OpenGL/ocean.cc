@@ -126,7 +126,7 @@ void init_vertices()
 	vSize = size * size * sizeof(GLfloat) * 3;
 	iSize = 2 * size * (size - 1) * sizeof(GLint) * 2;
 
-	if(has_vbo)
+	if (has_vbo)
 	{
 		printf("Vertex buffer objects available.\n");
 		glGenBuffersARB(2, vbo);
@@ -136,12 +136,12 @@ void init_vertices()
 		printf("No vertex buffer objects available.\n");
 	}
 
-	if(vPtr == null)
+	if (vPtr == null)
 	{
 		GLfloat * ptr;
 
 		printf("Setup vertices...\n");
-		if(has_vbo)
+		if (has_vbo)
 		{
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 			glBufferDataARB(GL_ARRAY_BUFFER_ARB, vSize, null, GL_DYNAMIC_DRAW_ARB);
@@ -153,9 +153,9 @@ void init_vertices()
 		}
 		ptr = vPtr;
 
-		for(k = 0; k < size; k++)
+		for (k = 0; k < size; k++)
 		{
-			for(i = 0; i < size; i += OW_SKIP)
+			for (i = 0; i < size; i += OW_SKIP)
 			{
 				*ptr++ = i * factor;
 				*ptr++ = k * factor;
@@ -163,19 +163,19 @@ void init_vertices()
 			}
 		}
 
-		if(has_vbo)
+		if (has_vbo)
 		{
 			glVertexPointer(3, GL_FLOAT, 0, 0);
 		}
 	}
 
-	if(iPtr == null)
+	if (iPtr == null)
 	{
 		GLuint * ptr;
 		GLuint  index;
 
 		printf("Setup indices...\n");
-		if(has_vbo)
+		if (has_vbo)
 		{
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize, null, GL_DYNAMIC_DRAW_ARB);
@@ -188,9 +188,9 @@ void init_vertices()
 		ptr = iPtr;
 
 		index = 0;
-		for(k = 0; k < size; k++)
+		for (k = 0; k < size; k++)
 		{
-			for(i = OW_SKIP; i < size; i += OW_SKIP)
+			for (i = OW_SKIP; i < size; i += OW_SKIP)
 			{
 				*ptr++ = index++;
 				*ptr++ = index;
@@ -198,10 +198,10 @@ void init_vertices()
 			index++;
 		}
 
-		for(i = 0; i < size; i += OW_SKIP)
+		for (i = 0; i < size; i += OW_SKIP)
 		{
 			index = i / OW_SKIP;
-			for(k = 1; k < size; k++)
+			for (k = 1; k < size; k++)
 			{
 				*ptr++ = index;
 				index += (size / OW_SKIP);
@@ -209,7 +209,7 @@ void init_vertices()
 			}
 		}
 
-		if(has_vbo)
+		if (has_vbo)
 		{
 			glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
 			iPtr = null;
@@ -224,7 +224,7 @@ void init_vertices()
 void init_vbo()
 {
 	char * extensions = (char *)glGetString(GL_EXTENSIONS);
-	if(strstr(extensions, "ARB_vertex_buffer_object") != 0)
+	if (strstr(extensions, "ARB_vertex_buffer_object") != 0)
 	{
 		glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
 		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
@@ -240,7 +240,7 @@ void init_vbo()
 			(glBufferDataARB != null) &&
 			(glMapBufferARB  != null) &&
 			(glUnmapBufferARB != null);
-		if(!has_vbo)
+		if (!has_vbo)
 		{
 			printf("glGenBuffersARB  = %p\n", glGenBuffersARB);
 			printf("glBindBufferARB  = %p\n", glBindBufferARB);
@@ -272,9 +272,9 @@ void RenderScene()
 
 	src = ocean.b3GetBuffer();
 	dst = &vPtr[2];
-	for(k = 0; k < size; k++)
+	for (k = 0; k < size; k++)
 	{
-		for(i = 0; i < size; i += OW_SKIP)
+		for (i = 0; i < size; i += OW_SKIP)
 		{
 			*dst = src->b3Real() * 0.001;
 			src += OW_SKIP;
@@ -289,7 +289,7 @@ void RenderScene()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glColor3f(1.0f, 1.0f, 1.0f);
 
-	if(has_vbo)
+	if (has_vbo)
 	{
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 		glDrawElements(GL_LINES, 4 * size * (size - 1) / OW_SKIP, GL_UNSIGNED_INT, 0);

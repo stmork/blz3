@@ -67,7 +67,7 @@ public:
 	{
 		b3_f64 theta, a, b, c, d;
 
-		if(phi < epsilon)
+		if (phi < epsilon)
 		{
 			phi = epsilon;
 		}
@@ -89,11 +89,11 @@ public:
 	 */
 	static inline b3_f64 b3Limit(const b3_f64 value)
 	{
-		if(value < 0)
+		if (value < 0)
 		{
 			return 0;
 		}
-		else if(value > 1)
+		else if (value > 1)
 		{
 			return 1;
 		}
@@ -114,11 +114,11 @@ public:
 		const b3_f64 min,
 		const b3_f64 max)
 	{
-		if(value < min)
+		if (value < min)
 		{
 			return min;
 		}
-		else if(value > max)
+		else if (value > max)
 		{
 			return max;
 		}
@@ -139,11 +139,11 @@ public:
 		const b3_s32 min,
 		const b3_s32 max)
 	{
-		if(value < min)
+		if (value < min)
 		{
 			return min;
 		}
-		else if(value > max)
+		else if (value > max)
 		{
 			return max;
 		}
@@ -193,7 +193,7 @@ public:
 #if 0
 		b3_f64 n;
 
-		if(a < 0)
+		if (a < 0)
 		{
 			a = -a;
 			n = floor(a / b);
@@ -291,11 +291,11 @@ public:
 		const b3_f64 e,
 		const b3_f64 x)
 	{
-		if(x < s)
+		if (x < s)
 		{
 			return 0;
 		}
-		else if(x > e)
+		else if (x > e)
 		{
 			return 1;
 		}
@@ -314,11 +314,11 @@ public:
 	 */
 	static inline b3_f64 b3Smoothstep(const b3_f64 t)
 	{
-		if(t < 0)
+		if (t < 0)
 		{
 			return 0;
 		}
-		else if(t > 1)
+		else if (t > 1)
 		{
 			return 1;
 		}
@@ -369,9 +369,9 @@ public:
 		b3_f64 result = 1;
 		b3_f64 factor = x;
 
-		while(exponent != 0)
+		while (exponent != 0)
 		{
-			if(exponent & 1)
+			if (exponent & 1)
 			{
 				result *= factor;
 			}
@@ -389,11 +389,11 @@ public:
 	 */
 	static inline b3_f64 b3Asin(const b3_f64 x)
 	{
-		if(x <= -1)
+		if (x <= -1)
 		{
 			return -M_PI * 0.5;
 		}
-		else if(x >= 1)
+		else if (x >= 1)
 		{
 			return M_PI * 0.5;
 		}
@@ -408,11 +408,11 @@ public:
 	 */
 	static inline b3_f64 b3Acos(const b3_f64 x)
 	{
-		if(x <= -1)
+		if (x <= -1)
 		{
 			return M_PI;
 		}
-		else if(x >= 1)
+		else if (x >= 1)
 		{
 			return 0;
 		}
@@ -445,11 +445,11 @@ public:
 #ifdef  CBRT_SLOW
 	static inline b3_f64 b3Cbrt(const b3_f64 x)
 	{
-		if(x > 0)
+		if (x > 0)
 		{
 			return (exp(log(x) / 3));
 		}
-		if(x < 0)
+		if (x < 0)
 		{
 			return (-exp(log(-x) / 3));
 		}
@@ -462,7 +462,7 @@ public:
 		b3_count Negative;
 		int      expon, n;
 
-		if(x <= 0)
+		if (x <= 0)
 		{
 			x = -x;
 			Negative = true;
@@ -492,20 +492,20 @@ public:
 			m_CbrtCoeffs[ 0];
 		y *= (4.0 / 3 - y * y * y * xx * (1.0 / 3));
 		y *= (y * xx);
-		if(n < 0)
+		if (n < 0)
 		{
 			n += 3;
 		}
-		if(n == 1)
+		if (n == 1)
 		{
 			y *= 1.25992104989;    /* 2 ^ (1/3) */
 		}
-		else if(n == 2)
+		else if (n == 2)
 		{
 			y *= 1.58740105196;    /* 4 ^ (1/3) */
 		}
 
-		if((n = expon) < 0)
+		if ((n = expon) < 0)
 		{
 			n -= 2;
 		}

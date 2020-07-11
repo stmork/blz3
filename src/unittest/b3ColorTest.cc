@@ -70,7 +70,7 @@ void b3ColorTest::test()
 	color[b3Color::B] = 3;
 
 	printf("this: %p\n", this);
-	for(int q = 0; q < 4; q++)
+	for (int q = 0; q < 4; q++)
 	{
 		printf("%d: %f %p\n", q, fPtr[q], &fPtr[q]);
 	}

@@ -84,7 +84,7 @@ b3BumpNoise::b3BumpNoise(b3_u32 * src) : b3Bump(src)
 	m_Scale.y   = b3InitFloat() * 1024.0;
 	m_Scale.z   = b3InitFloat() * 1024.0;
 	m_Amplitude = b3InitFloat();
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	}
@@ -136,7 +136,7 @@ b3BumpMarble::b3BumpMarble(b3_u32 * src) : b3Bump(src)
 	m_Scale.y   = b3InitFloat() * M_PI;
 	m_Scale.z   = b3InitFloat() * M_PI;
 	m_Amplitude = b3InitFloat();
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	}
@@ -239,7 +239,7 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	b3_f32    p1, p2, p3;
 	b3_coord  x, y;
 
-	if(!m_Texture->b3IsLoaded())
+	if (!m_Texture->b3IsLoaded())
 	{
 		return false;
 	}
@@ -247,7 +247,7 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	lx = (lx - m_xStart) / m_xScale;
 	ly = (ly - m_yStart) / m_yScale;
 
-	if((ly < 0) || (ly >= m_yTimes) || (lx < 0) || (lx >= m_xTimes))
+	if ((ly < 0) || (ly >= m_yTimes) || (lx < 0) || (lx >= m_xTimes))
 	{
 		return false;
 	}
@@ -272,7 +272,7 @@ void b3BumpTexture::b3BumpNormal(b3_ray * ray)
 	b3_vector    Deriv;
 	b3_f64       x, y;
 
-	if(b3GetNormalDeriv(
+	if (b3GetNormalDeriv(
 			ray->polar.m_Polar.x,
 			ray->polar.m_Polar.y, &Deriv))
 	{
@@ -303,21 +303,21 @@ b3BumpWater::b3BumpWater(b3_u32 * src) : b3Bump(src)
 {
 	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	m_Amplitude  = b3InitFloat();
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Scale.x   = m_Amplitude;
 		m_Scale.y   = b3InitFloat();
 		m_Scale.z   = b3InitFloat();
 		m_Amplitude = b3InitFloat();
 		m_ScaleTime = b3InitFloat();
-		if(B3_PARSE_INDEX_VALID)
+		if (B3_PARSE_INDEX_VALID)
 		{
 			m_Km       = b3InitFloat();
 			m_Octaves  = b3InitCount();
 			m_WindAmp  = b3InitFloat();
 			m_WindFreq = b3InitFloat();
 			m_MinWind  = b3InitFloat();
-			if(B3_PARSE_INDEX_VALID)
+			if (B3_PARSE_INDEX_VALID)
 			{
 				b3InitVector(&m_Anim);
 			}
@@ -555,7 +555,7 @@ void b3BumpGlossy::b3BumpNormal(b3_ray * ray)
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
 		ray->normal.z * ray->normal.z;
-	if(Denom > 0)
+	if (Denom > 0)
 	{
 		Denom = 1 / sqrt(Denom);
 
@@ -781,10 +781,10 @@ b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info * info)
 	m_dY = 1.0 / BUMP_dY;
 
 	m_Amplitudes.b3Clear();
-	for(y = 0; y < m_yTimes; y++)
+	for (y = 0; y < m_yTimes; y++)
 	{
 		fy = (b3_f64)y / m_yTimes;
-		for(x = 0; x < m_xTimes; x++)
+		for (x = 0; x < m_xTimes; x++)
 		{
 			fx = (b3_f64)x / m_xTimes;
 

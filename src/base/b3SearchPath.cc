@@ -49,7 +49,7 @@ b3PathEntry::b3PathEntry(const char * new_path) : b3Link<b3PathEntry>(sizeof(b3P
 
 void b3SearchPath::b3AddPath(const char * path)
 {
-	if(b3Dir::b3Exists(path) == B3_TYPE_DIR)
+	if (b3Dir::b3Exists(path) == B3_TYPE_DIR)
 	{
 		b3PathEntry * path_item = new b3PathEntry(path);
 
@@ -83,10 +83,10 @@ b3_bool b3SearchPath::b3IsValid(const char * Name, char * FullName)
 {
 	b3PathEntry * path;
 
-	if((Name != null) && (strlen(Name) > 0))
+	if ((Name != null) && (strlen(Name) > 0))
 	{
 		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", (char *)Name);
-		if(b3Dir::b3Exists(Name) == B3_TYPE_FILE)
+		if (b3Dir::b3Exists(Name) == B3_TYPE_FILE)
 		{
 			strcpy(FullName, Name);
 			return true;
@@ -99,7 +99,7 @@ b3_bool b3SearchPath::b3IsValid(const char * Name, char * FullName)
 					(char *)FullName,
 					(const char *)*path, Name);
 				b3PrintF(B3LOG_FULL, "Trying \"%s\"...", (const char *)FullName);
-				if(b3Dir::b3Exists(FullName) == B3_TYPE_FILE)
+				if (b3Dir::b3Exists(FullName) == B3_TYPE_FILE)
 				{
 					b3PrintF(B3LOG_FULL, " OK!\n");
 					return true;
@@ -123,9 +123,9 @@ b3_bool b3SearchPath::b3CutName(const char * fullname, char * result)
 	B3_FOR_BASE(&m_SearchPath, path)
 	{
 		shortLen = strlen(*path);
-		if(strncmp(fullname, *path, shortLen) == 0)
+		if (strncmp(fullname, *path, shortLen) == 0)
 		{
-			while(((fullname[shortLen] == '/') ||
+			while (((fullname[shortLen] == '/') ||
 					(fullname[shortLen] == '\\')) &&
 				(fullname[shortLen] != 0))
 			{

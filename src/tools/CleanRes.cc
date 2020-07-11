@@ -89,7 +89,7 @@ public:
 		m_File  = stdout;
 		m_Type  = b3FindDefineType();
 		m_Mode  = DM_DEFINE;
-		if((m_Type < TYPE_MAX) && (define_types[m_Type].m_Start == 0))
+		if ((m_Type < TYPE_MAX) && (define_types[m_Type].m_Start == 0))
 		{
 			m_Mode = DM_NOP;
 		}
@@ -104,7 +104,7 @@ public:
 
 	void b3Print() const
 	{
-		switch(m_Mode)
+		switch (m_Mode)
 		{
 		case DM_START:
 			fprintf(m_File, "//{{NO_DEPENDENCIES}}\r\n");
@@ -137,22 +137,22 @@ public:
 
 	void b3Renumber(int & last)
 	{
-		if(m_Mode == DM_DEFINE)
+		if (m_Mode == DM_DEFINE)
 		{
-			if(Prev->m_Mode != DM_DEFINE)
+			if (Prev->m_Mode != DM_DEFINE)
 			{
 				last = define_types[m_Type].m_Start;
 			}
 			else
 			{
-				if(Prev->m_Type != m_Type)
+				if (Prev->m_Type != m_Type)
 				{
 					last = define_types[m_Type].m_Start;
 				}
 			}
 			m_Value = last;
 			last++;
-			if(m_Type < TYPE_MAX)
+			if (m_Type < TYPE_MAX)
 			{
 				define_types[m_Type].m_Last = last;
 			}
@@ -168,10 +168,10 @@ public:
 	{
 		int i, len;
 
-		for(i = 0; i < TYPE_MAX; i++)
+		for (i = 0; i < TYPE_MAX; i++)
 		{
 			len = strlen(define_types[i].m_Type);
-			if(strncmp(define, define_types[i].m_Type, len) == 0)
+			if (strncmp(define, define_types[i].m_Type, len) == 0)
 			{
 				return i;
 			}
@@ -185,15 +185,15 @@ public:
 		int b_type = b->m_Type;
 		int diff;
 
-		if((a->m_Mode != DM_DEFINE) || (b->m_Mode != DM_DEFINE))
+		if ((a->m_Mode != DM_DEFINE) || (b->m_Mode != DM_DEFINE))
 		{
 			return a->m_Mode - b->m_Mode;
 		}
 
-		if((a_type < TYPE_MAX) && (b_type < TYPE_MAX))
+		if ((a_type < TYPE_MAX) && (b_type < TYPE_MAX))
 		{
 			diff = define_types[a_type].m_Prio - define_types[b_type].m_Prio;
-			if(diff == 0)
+			if (diff == 0)
 			{
 				diff = strcmp(
 						&a->m_Define[strlen(define_types[a_type].m_Type)],
@@ -203,7 +203,7 @@ public:
 		else
 		{
 			diff = a_type - b_type;
-			if(diff == 0)
+			if (diff == 0)
 			{
 				diff = strcmp(a->m_Define, b->m_Define);
 			}
@@ -220,12 +220,12 @@ static b3_bool b3ReadResource(const char * filename, b3Base<b3Define> & defines)
 	int   value;
 
 	in = fopen(filename, B3_TREAD);
-	if(in != null)
+	if (in != null)
 	{
 		defines.b3Append(new b3Define(true));
-		while(fgets(line, sizeof(line), in) != null)
+		while (fgets(line, sizeof(line), in) != null)
 		{
-			if(sscanf(line, "#define %s %d\n", define, &value) == 2)
+			if (sscanf(line, "#define %s %d\n", define, &value) == 2)
 			{
 				defines.b3Append(new b3Define(define, value));
 			}
@@ -243,9 +243,9 @@ int main(int argc, char * argv[])
 	b3Define     *    define;
 	int               last;
 
-	for(int i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
-		for(int k = 0; k < TYPE_MAX; k++)
+		for (int k = 0; k < TYPE_MAX; k++)
 		{
 			define_types[k].m_Last = 0;
 		}

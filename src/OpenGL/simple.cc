@@ -214,7 +214,7 @@ b3_bool has_vbo;
 void init_vbo()
 {
 	char * extensions = (char *)glGetString(GL_EXTENSIONS);
-	if(strstr(extensions, "ARB_vertex_buffer_object") != 0)
+	if (strstr(extensions, "ARB_vertex_buffer_object") != 0)
 	{
 		glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
 		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
@@ -229,7 +229,7 @@ void init_vbo()
 			(glBufferDataARB != null) &&
 			(glMapBufferARB  != null) &&
 			(glUnmapBufferARB != null);
-		if(!has_vbo)
+		if (!has_vbo)
 		{
 			printf("glGenBuffersARB  = %p\n", glGenBuffersARB);
 			printf("glBindBufferARB  = %p\n", glBindBufferARB);
@@ -271,7 +271,7 @@ void RenderScene()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glColor3f(1.0f, 1.0f, 1.0f);
 
-	if(has_vbo)
+	if (has_vbo)
 	{
 		printf("drawing vertex buffer objects...\n");
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
@@ -332,7 +332,7 @@ void SetupRC()
 	glLightfv(GL_LIGHT0, GL_POSITION, light0);
 
 	init_vbo();
-	if(has_vbo)
+	if (has_vbo)
 	{
 		void * ptr;
 

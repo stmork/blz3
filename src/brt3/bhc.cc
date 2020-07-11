@@ -50,7 +50,7 @@ b3BHDParser::b3BHDParser(const char * filename)
 	m_LineNo = 0;
 	m_BHD   = fopen(filename, B3_TREAD);
 	m_Scale = 1;
-	if(m_BHD == null)
+	if (m_BHD == null)
 	{
 		throw b3ParseException("File not found");
 	}
@@ -68,23 +68,23 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 	b3_size  max = sizeof(m_TokenNames) / sizeof(const char *);
 	b3_size  i, len;
 
-	while(!feof(m_BHD))
+	while (!feof(m_BHD))
 	{
 		m_Line[0] = 0;
 		m_Pos     = 0;
-		if(fgets(m_Line, sizeof(m_Line), m_BHD) != null)
+		if (fgets(m_Line, sizeof(m_Line), m_BHD) != null)
 		{
 			len = strlen(m_Line);
-			while(isspace(m_Line[m_Pos]) && (m_Pos < len))
+			while (isspace(m_Line[m_Pos]) && (m_Pos < len))
 			{
 				m_Pos++;
 			}
 			m_LineNo++;
-			if((m_Pos < len) && (m_Line[m_Pos] != '#'))
+			if ((m_Pos < len) && (m_Line[m_Pos] != '#'))
 			{
-				for(i = 0; i < max; i++)
+				for (i = 0; i < max; i++)
 				{
-					if(strncmp(&m_Line[m_Pos], m_TokenNames[i], strlen(m_TokenNames[i])) == 0)
+					if (strncmp(&m_Line[m_Pos], m_TokenNames[i], strlen(m_TokenNames[i])) == 0)
 					{
 						return (b3_bhd_token)i;
 					}
@@ -102,7 +102,7 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 
 void b3BHDParser::b3CheckToken(b3_bhd_token token)
 {
-	if(b3ReadLine() != token)
+	if (b3ReadLine() != token)
 	{
 		throw b3ParseException("Unexpected token", m_LineNo);
 	}
@@ -121,7 +121,7 @@ void b3BHDParser::b3ParseHouse()
 	b3CheckToken(TKN_HOUSE);
 
 	m_Scene = new b3Scene(TRACEPHOTO_MORK);
-	if(sscanf(&m_Line[m_Pos], "%*s %s %lf\n", (char *)name, &m_Scale) < 1)
+	if (sscanf(&m_Line[m_Pos], "%*s %s %lf\n", (char *)name, &m_Scale) < 1)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -141,7 +141,7 @@ void b3BHDParser::b3ParseHouse()
 	do
 	{
 		token = b3ReadLine();
-		switch(token)
+		switch (token)
 		{
 		case TKN_LEVEL:
 			b3ParseLevel(m_Scale);
@@ -156,7 +156,7 @@ void b3BHDParser::b3ParseHouse()
 			throw b3ParseException("Unexpected token parsing house", m_LineNo);
 		}
 	}
-	while(token != TKN_END);
+	while (token != TKN_END);
 }
 
 void b3BHDParser::b3ParseLevel(b3_f64 scale)
@@ -165,7 +165,7 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 	b3BBox    *   level = new b3BBox(BBOX);
 	b3_f64        base, height;
 
-	if(sscanf(&m_Line[m_Pos], "%*s %s %lf %lf %lf\n", level->m_BoxName, &base, &height, &scale) < 3)
+	if (sscanf(&m_Line[m_Pos], "%*s %s %lf %lf %lf\n", level->m_BoxName, &base, &height, &scale) < 3)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -177,7 +177,7 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 	do
 	{
 		token = b3ReadLine();
-		switch(token)
+		switch (token)
 		{
 		case TKN_ROOM:
 			b3ParseRoom(level, base, height, scale);
@@ -200,14 +200,14 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 			throw b3ParseException("Unexptected token parsing area", m_LineNo);
 		}
 	}
-	while(token != TKN_END);
+	while (token != TKN_END);
 }
 
 void b3BHDParser::b3ParsePoint(b3_f64 scale)
 {
 	b3Point point;
 
-	if(sscanf(&m_Line[m_Pos], "%*s %lf %lf\n", &point.x, &point.y) != 2)
+	if (sscanf(&m_Line[m_Pos], "%*s %lf %lf\n", &point.x, &point.y) != 2)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -234,7 +234,7 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 			&index[ 0], &index[ 1], &index[ 2], &index[ 3], &index[ 4],
 			&index[ 5], &index[ 6], &index[ 7], &index[ 8], &index[ 9],
 			&index[10], &index[11], &index[12], &index[13], &index[14]);
-	if(args < 4)
+	if (args < 4)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -243,38 +243,38 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 	level->b3GetBBoxHead()->b3Append(room);
 
 	index[--args] = index[0];
-	for(i = 0; i < args; i++)
+	for (i = 0; i < args; i++)
 	{
-		if((index[i] >= m_Points.b3GetCount()) || (index[i] < 0))
+		if ((index[i] >= m_Points.b3GetCount()) || (index[i] < 0))
 		{
 			throw b3ParseException("Invalid point index", m_LineNo);
 		}
 	}
 	xMin = xMax = m_Points[index[0]].x;
 	yMin = yMax = m_Points[index[0]].y;
-	for(i = 1; i < args; i++)
+	for (i = 1; i < args; i++)
 	{
 		x = m_Points[index[i]].x;
 		y = m_Points[index[i]].y;
-		if(x < xMin)
+		if (x < xMin)
 		{
 			xMin = x;
 		}
-		if(x > xMax)
+		if (x > xMax)
 		{
 			xMax = x;
 		}
-		if(y < yMin)
+		if (y < yMin)
 		{
 			yMin = y;
 		}
-		if(y > yMax)
+		if (y > yMax)
 		{
 			yMax = y;
 		}
 	}
 
-	for(i = 0; i < args; i++)
+	for (i = 0; i < args; i++)
 	{
 		area = new b3Area(AREA);
 		area->m_Base.x = m_Points[index[i]].x;
@@ -304,7 +304,7 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 	}
 
 	area = (b3Area *)room->b3GetShapeHead()->First;
-	for(i = 0; i < args; i++)
+	for (i = 0; i < args; i++)
 	{
 		b3CheckOpenings(room, area, index[i], index[i + 1]);
 		area = (b3Area *)area->Succ;
@@ -381,16 +381,16 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 
 	width  = b3Vector::b3Length(&area->m_Dir1);
 	height = b3Vector::b3Length(&area->m_Dir2);
-	for(i = 0; i < m_Openings.b3GetCount(); i++)
+	for (i = 0; i < m_Openings.b3GetCount(); i++)
 	{
-		if((m_Openings[i].a == a) && (m_Openings[i].b == b))
+		if ((m_Openings[i].a == a) && (m_Openings[i].b == b))
 		{
 			cond = new b3CondRectangle(COND_NRECTANGLE);
 			cond->m_xStart =  m_Openings[i].pos   / width;
 			cond->m_yStart =  m_Openings[i].base  / height;
 			cond->m_xEnd   = (m_Openings[i].pos  + m_Openings[i].width)   / width;
 			cond->m_yEnd   = (m_Openings[i].base + m_Openings[i].height)  / height;
-			if((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
+			if ((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
 				(cond->m_yStart < 0) || (cond->m_yEnd > 1))
 			{
 				char message[1024];
@@ -434,7 +434,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 			top->m_Dir1.z = 0;
 			room->b3GetShapeHead()->b3Append(top);
 
-			if(m_Openings[i].type == b3_door::BHC_WINDOW)
+			if (m_Openings[i].type == b3_door::BHC_WINDOW)
 			{
 				bottom = new b3Area(AREA);
 				bottom->m_Base = top->m_Base;
@@ -461,14 +461,14 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 			b3PrintF(B3LOG_DEBUG, "       Added door/window of line %d\n", m_Openings[i].line);
 		}
 
-		if((m_Openings[i].a == b) && (m_Openings[i].b == a))
+		if ((m_Openings[i].a == b) && (m_Openings[i].b == a))
 		{
 			cond = new b3CondRectangle(COND_NRECTANGLE);
 			cond->m_xStart =   m_Openings[i].pos   / width;
 			cond->m_yStart =   m_Openings[i].base  / height;
 			cond->m_xEnd   = (m_Openings[i].pos  + m_Openings[i].width)   / width;
 			cond->m_yEnd   = (m_Openings[i].base + m_Openings[i].height)  / height;
-			if((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
+			if ((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
 				(cond->m_yStart < 0) || (cond->m_yEnd > 1))
 			{
 				char message[1024];
@@ -489,7 +489,7 @@ void b3BHDParser::b3ParseWindow(b3_f64 scale)
 	b3_door window;
 
 	b3PrintF(B3LOG_DEBUG, "    creating window...\n");
-	if(sscanf(&m_Line[m_Pos], "%*s %ld %ld %lf %lf %lf %lf\n",
+	if (sscanf(&m_Line[m_Pos], "%*s %ld %ld %lf %lf %lf %lf\n",
 			&window.a, &window.b,
 			&window.pos, &window.base,
 			&window.width, &window.height) != 6)
@@ -508,7 +508,7 @@ void b3BHDParser::b3ParseDoor(b3_f64 scale)
 	b3_door  door;
 
 	b3PrintF(B3LOG_DEBUG, "    creating door...\n");
-	if(sscanf(&m_Line[m_Pos], "%*s %ld %ld %lf %lf\n",
+	if (sscanf(&m_Line[m_Pos], "%*s %ld %ld %lf %lf\n",
 			&door.a, &door.b,
 			&door.pos, &door.width) != 4)
 	{
@@ -537,17 +537,17 @@ b3Scene * b3BHDParser::b3Parse(const char * filename)
 		world.b3SetFirst(scene);
 		world.b3Write(scene->b3GetFilename());
 	}
-	catch(b3WorldException & we)
+	catch (b3WorldException & we)
 	{
 		b3PrintF(B3LOG_NORMAL, "ERROR:\n");
 		b3PrintF(B3LOG_NORMAL, "Write error: %s\n", we.b3GetErrorMsg());
 	}
-	catch(b3ParseException & pe)
+	catch (b3ParseException & pe)
 	{
 		b3PrintF(B3LOG_NORMAL, "ERROR:\n");
 		b3PrintF(B3LOG_NORMAL, "%s\n", pe.m_Message);
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL, "ERROR:\n");
 		b3PrintF(B3LOG_NORMAL, "Unknown source:\n");
@@ -559,11 +559,11 @@ int main(int argc, char * argv[])
 {
 	int i;
 
-	if(argc > 1)
+	if (argc > 1)
 	{
 		b3Log::b3SetLevel(B3LOG_FULL);
 		b3RaytracingItems::b3Register();
-		for(i = 1; i < argc; i++)
+		for (i = 1; i < argc; i++)
 		{
 			b3BHDParser::b3Parse(argv[i]);
 		}

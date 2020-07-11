@@ -62,7 +62,7 @@ public:
 		b3_loop i;
 		T       element;
 
-		for(i = 0; i < count; i++)
+		for (i = 0; i < count; i++)
 		{
 			element = i;
 			CPPUNIT_ASSERT_NO_THROW(array.b3Add(element));

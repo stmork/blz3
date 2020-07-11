@@ -118,17 +118,17 @@ b3Noise::b3Noise()
 	b3Rand48<b3_noisetype> random_noise;
 	b3Rand48<b3_f64>       random_wave;
 
-	if(m_NoiseTable == null)
+	if (m_NoiseTable == null)
 	{
 		b3_count i, max = NOISEDIM * NOISESIZE;
 
 		m_NoiseTable = (b3_noisetype *)b3MemAccess::b3Alloc(max * sizeof(b3_noisetype));
-		if(m_NoiseTable == null)
+		if (m_NoiseTable == null)
 		{
 			B3_THROW(b3NoiseException, B3_NOISE_MEMORY);
 		}
 
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			m_NoiseTable[i] = random_noise.b3Rand();
 		}
@@ -158,7 +158,7 @@ b3Noise::b3Noise()
 		m_WaveSpline.m_Knots       = m_WaveKnots;
 		m_WaveSpline.m_Controls    = m_WaveControls;
 		m_WaveSpline.b3InitCurve(3, m_WaveSpline.m_ControlMax, true);
-		for(i = 0; i < m_WaveSpline.m_ControlMax; i++)
+		for (i = 0; i < m_WaveSpline.m_ControlMax; i++)
 		{
 			m_WaveControls[i].x = cos(M_PI * 2.0 * i / m_WaveSpline.m_ControlMax);
 			m_WaveControls[i].y = sin(M_PI * 2.0 * i / m_WaveSpline.m_ControlMax);
@@ -169,7 +169,7 @@ b3Noise::b3Noise()
 
 b3Noise::~b3Noise()
 {
-	if(m_NoiseTable != null)
+	if (m_NoiseTable != null)
 	{
 		b3MemAccess::b3Free(m_NoiseTable);
 		m_NoiseTable = null;
@@ -440,7 +440,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 	a[3] = NoiseTable[INDEX3D(ix, iy + 1, iz + 1)];
 	b[3] = NoiseTable[INDEX3D(ix + 1, iy + 1, iz + 1)];
 
-	for(i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)
 	{
 		c[i] = a[i] + fx * (b[i] - a[i]);
 	}
@@ -450,7 +450,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 	a[1] = c[2];
 	b[1] = c[3];
 
-	for(i = 0; i < 2; i++)
+	for (i = 0; i < 2; i++)
 	{
 		c[i] = a[i] + fy * (b[i] - a[i]);
 	}
@@ -498,7 +498,7 @@ inline b3_f64 b3Noise::b3GradNoise(
 	a[3] = b3GetDiff(ix, iy, iz, i, 3);
 	b[3] = b3GetDiff(ix, iy, iz, i, 7);
 
-	for(l = 0; l < 4; l++)
+	for (l = 0; l < 4; l++)
 	{
 		c[l] = a[l] + fx * (b[l] - a[l]);
 	}
@@ -508,7 +508,7 @@ inline b3_f64 b3Noise::b3GradNoise(
 	a[1] = c[2];
 	b[1] = c[3];
 
-	for(l = 0; l < 2; l++)
+	for (l = 0; l < 2; l++)
 	{
 		c[l] = a[l] + fy * (b[l] - a[l]);
 	}
@@ -582,7 +582,7 @@ void b3Noise::b3OldMarble(const b3_vector * P, b3Color & Color)
 	Dir.z = P->z * 0.08;
 
 	t = b3Turbulence(&Dir);
-	if(t > 1)
+	if (t > 1)
 	{
 		t = 1;
 	}
@@ -632,7 +632,7 @@ void b3Noise::b3Hell(const b3_vector * P, b3Color & Color)
 	b3Vector::b3Scale(P, &Dir, 0.08f);
 
 	t = b3Turbulence(&Dir);
-	if(t >= 1)
+	if (t >= 1)
 	{
 		t = 0.99;
 	}
@@ -670,7 +670,7 @@ b3_f64 b3Noise::b3Granite(const b3_vector * point, const b3_count octaves)
 	x = point->x * 4;
 	y = point->y * 4;
 	z = point->z * 4;
-	for(i = 0; i < octaves; i++)
+	for (i = 0; i < octaves; i++)
 	{
 		sum  += b3Noise::b3ImprovedNoise(x, y, z) / freq;
 		x    += x;

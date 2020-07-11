@@ -91,43 +91,43 @@ void b3RenderContext::b3Init(b3_bool double_buffered)
 	b3PrintF(B3LOG_NORMAL, "OpenGL version:    %s\n", glGetString(GL_VERSION));
 	b3PrintF(B3LOG_DEBUG, "OpenGL extensions: %s\n", extensions);
 
-	if(strstr(extensions, "GL_ARB_vertex_program") != null)
+	if (strstr(extensions, "GL_ARB_vertex_program") != null)
 	{
 		b3PrintF(B3LOG_DEBUG, "Vertex shader low level support.\n");
 	}
 
-	if(strstr(extensions, "GL_ARB_fragment_program") != null)
+	if (strstr(extensions, "GL_ARB_fragment_program") != null)
 	{
 		b3PrintF(B3LOG_DEBUG, "Pixel shader low level support.\n");
 	}
 
-	if(strstr(extensions, "GL_ARB_vertex_shader") != null)
+	if (strstr(extensions, "GL_ARB_vertex_shader") != null)
 	{
 		b3PrintF(B3LOG_DEBUG, "Vertex shader language support (nice).\n");
 	}
 
-	if(strstr(extensions, "GL_ARB_fragment_shader") != null)
+	if (strstr(extensions, "GL_ARB_fragment_shader") != null)
 	{
 		b3PrintF(B3LOG_NORMAL, "Pixel shader language support (very fine).\n");
 	}
 
-	if(strstr(extensions, "GL_ARB_shading_language_100") != null)
+	if (strstr(extensions, "GL_ARB_shading_language_100") != null)
 	{
 		b3PrintF(B3LOG_DEBUG, "Support for OpenGL shading language V1.00.\n");
 	}
 
 	b3VectorBufferObjects::b3Init(extensions);
-	if(b3VectorBufferObjects::b3HasVBO())
+	if (b3VectorBufferObjects::b3HasVBO())
 	{
 		b3PrintF(B3LOG_DEBUG, "Having vertex buffer objects.\n");
 	}
-	if(b3VectorBufferObjects::b3AllowVBO())
+	if (b3VectorBufferObjects::b3AllowVBO())
 	{
 		b3PrintF(B3LOG_DEBUG, "Allowing vertex buffer objects.\n");
 	}
 
 	b3MultiSample::b3Init(extensions);
-	if(b3MultiSample::b3HasMS())
+	if (b3MultiSample::b3HasMS())
 	{
 		b3PrintF(B3LOG_DEBUG, "Having multisampling.\n");
 		b3PrintF(B3LOG_NORMAL, "Multisampling: %s\n", b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
@@ -168,7 +168,7 @@ void b3RenderContext::b3StartDrawing()
 void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
 {
 #ifdef BLZ3_USE_OPENGL
-	if(enable)
+	if (enable)
 	{
 		glEnable(GL_LINE_SMOOTH);
 		glEnable(GL_BLEND);
@@ -197,7 +197,7 @@ void b3RenderContext::b3ViewSet(const b3_render_view_info * info)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	if(info->perspective)
+	if (info->perspective)
 	{
 		glFrustum(
 			-info->width,   info->width,
@@ -267,7 +267,7 @@ void b3RenderContext::b3LightReset(b3_pkd_color ambient)
 
 	// Disable all other lights
 	b3SetAmbient(ambient);
-	for(b3_size i = 0; i < (sizeof(glLightNum) / sizeof(GLint)); i++)
+	for (b3_size i = 0; i < (sizeof(glLightNum) / sizeof(GLint)); i++)
 	{
 		glDisable(glLightNum[i]);
 	}
@@ -310,7 +310,7 @@ void b3RenderContext::b3LightNum(b3_index num)
 	//	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightNum(%d)\n",num);
 
 #ifdef BLZ3_USE_OPENGL
-	if(VALIDATE_LIGHT_NUM(num))
+	if (VALIDATE_LIGHT_NUM(num))
 	{
 		glLightCount = num;
 	}
@@ -322,7 +322,7 @@ b3_bool b3RenderContext::b3LightAdd(const b3_render_light_info * info)
 	b3_bool result = false;
 
 #ifdef BLZ3_USE_OPENGL
-	if(VALIDATE_LIGHT_NUM(glLightCount))
+	if (VALIDATE_LIGHT_NUM(glLightCount))
 	{
 		b3LightSet(glLightCount++, info);
 		result = true;
@@ -390,7 +390,7 @@ b3_bool b3RenderContext::b3GetMatrix(
 	b3_bool result = false;
 	GLfloat values[16];
 
-	switch(mode)
+	switch (mode)
 	{
 	case B3_MATRIX_OBJECT:
 		glGetFloatv(GL_MODELVIEW_MATRIX, values);
@@ -406,7 +406,7 @@ b3_bool b3RenderContext::b3GetMatrix(
 		result = false;
 		break;
 	}
-	if(result)
+	if (result)
 	{
 		matrix->m11 = values[ 0];
 		matrix->m12 = values[ 4];
@@ -462,7 +462,7 @@ b3_bool b3RenderContext::b3PutMatrix(
 	values[14] = matrix->m34;
 	values[15] = matrix->m44;
 
-	switch(mode)
+	switch (mode)
 	{
 	case B3_MATRIX_OBJECT:
 		glMatrixMode(GL_MODELVIEW);

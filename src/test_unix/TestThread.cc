@@ -58,7 +58,7 @@ public:
 	{
 		int i;
 
-		for(i = 0; i < TEST_NUM_THREADS; i++)
+		for (i = 0; i < TEST_NUM_THREADS; i++)
 		{
 			info[i].thisClass = this;
 			info[i].counter   = single_counter;
@@ -73,9 +73,9 @@ public:
 		int i;
 
 		// Starting...
-		for(i = 0; i < TEST_NUM_THREADS; i++)
+		for (i = 0; i < TEST_NUM_THREADS; i++)
 		{
-			if(!thread[i].b3Start(proc, &info[i]))
+			if (!thread[i].b3Start(proc, &info[i]))
 			{
 				return false;
 			}
@@ -89,7 +89,7 @@ public:
 		int    i;
 
 		// Waiting...
-		for(i = 0; i < TEST_NUM_THREADS; i++)
+		for (i = 0; i < TEST_NUM_THREADS; i++)
 		{
 			thread[i].b3Wait();
 			safe_count += single_counter[i];
@@ -105,7 +105,7 @@ public:
 
 		num = info->num;
 		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
-		for(i = 0; i < TEST_LOOP; i++)
+		for (i = 0; i < TEST_LOOP; i++)
 		{
 			thisClass->counter++;
 			info->counter[num]++;
@@ -122,7 +122,7 @@ public:
 
 		num = info->num;
 		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
-		for(i = 0; i < TEST_LOOP; i++)
+		for (i = 0; i < TEST_LOOP; i++)
 		{
 			b3CriticalSection lock(thisClass->tMutex);
 
@@ -141,7 +141,7 @@ public:
 
 		num = info->num;
 		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
-		for(i = 0; i < TEST_LOOP; i++)
+		for (i = 0; i < TEST_LOOP; i++)
 		{
 			b3CriticalSection lock(thisClass->iMutex);
 
@@ -156,7 +156,7 @@ public:
 	{
 		b3_u32 safe_count;
 
-		if(TestStart(task_unsafe))
+		if (TestStart(task_unsafe))
 		{
 			safe_count = TestWait();
 
@@ -171,7 +171,7 @@ public:
 	{
 		b3_u32 safe_count;
 
-		if(TestStart(task_thread))
+		if (TestStart(task_thread))
 		{
 			safe_count = TestWait();
 
@@ -186,7 +186,7 @@ public:
 	{
 		b3_u32 safe_count;
 
-		if(TestStart(task_ipc))
+		if (TestStart(task_ipc))
 		{
 			safe_count = TestWait();
 
@@ -226,12 +226,12 @@ static void b3TestThreadStart1()
 	int       result = 0;
 
 	b3PrintF(B3LOG_NORMAL, "Threads using original POSIX calls...\n");
-	for(i = 0; i < MAX_TEST_THREAD_COUNT; i++)
+	for (i = 0; i < MAX_TEST_THREAD_COUNT; i++)
 	{
 		thread = 0;
 		result = 0;
 		error_code = pthread_create(&thread, NULL, &b3Counter, &counter);
-		if(error_code == 0)
+		if (error_code == 0)
 		{
 			pthread_join(thread, (void **)&result);
 		}
@@ -254,9 +254,9 @@ static void b3TestThreadStart2()
 	b3_index i;
 
 	b3PrintF(B3LOG_NORMAL, "Threads using Blizzard III semantics...\n");
-	for(i = 0; i < MAX_TEST_THREAD_COUNT; i++)
+	for (i = 0; i < MAX_TEST_THREAD_COUNT; i++)
 	{
-		if(!thread.b3Start(&b3CounterThread, &counter))
+		if (!thread.b3Start(&b3CounterThread, &counter))
 		{
 			b3PrintF(B3LOG_NORMAL, "Thread not started!\n");
 			b3PrintF(B3LOG_NORMAL, "  attempt: %d\n", i);

@@ -166,7 +166,7 @@ public:
 		short_max = max &  LOOP_MASK;
 
 		// Long copy
-		for(i = 0; i < long_max; i++)
+		for (i = 0; i < long_max; i++)
 		{
 			*data++ = value;
 			*data++ = value;
@@ -187,7 +187,7 @@ public:
 		}
 
 		// Copy rest
-		for(i = 0; i < short_max; i++)
+		for (i = 0; i < short_max; i++)
 		{
 			*data++ = value;
 		}
@@ -210,7 +210,7 @@ public:
 	{
 		b3_index i;
 
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			*dst++ = *src++;
 		}
@@ -239,7 +239,7 @@ public:
 		short_max = max &  LOOP_MASK;
 
 		// Long copy
-		for(i = 0; i < long_max; i++)
+		for (i = 0; i < long_max; i++)
 		{
 			*dst++ = *src++;
 			*dst++ = *src++;
@@ -260,7 +260,7 @@ public:
 		}
 
 		// Copy rest
-		for(i = 0; i < short_max; i++)
+		for (i = 0; i < short_max; i++)
 		{
 			*dst++ = *src++;
 		}
@@ -271,9 +271,9 @@ private:
 	{
 		b3_index i;
 
-		for(i = 0; i < m_SlotMax; i++)
+		for (i = 0; i < m_SlotMax; i++)
 		{
-			if(m_SlotPtr[i].m_Ptr == ptr)
+			if (m_SlotPtr[i].m_Ptr == ptr)
 			{
 				return i;
 			}

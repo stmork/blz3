@@ -45,37 +45,37 @@ void b3Tx::b3Blit(
 	b3_coord      y, dstMod, DstOff;
 
 	// We support only true color yet
-	if(type != B3_TX_RGB8)
+	if (type != B3_TX_RGB8)
 	{
 		return;
 	}
 
 	// Clip against bounds (source)
-	if((xSrcOff + xMax) > srcTx->xSize)
+	if ((xSrcOff + xMax) > srcTx->xSize)
 	{
 		xMax = srcTx->xSize - xSrcOff;
 	}
-	if((ySrcOff + yMax) > srcTx->ySize)
+	if ((ySrcOff + yMax) > srcTx->ySize)
 	{
 		yMax = srcTx->ySize - ySrcOff;
 	}
 
 	// Clip against bounds (destination)
-	if((xDstOff + xMax) > xSize)
+	if ((xDstOff + xMax) > xSize)
 	{
 		xMax = xSize        - xDstOff;
 	}
-	if((yDstOff + yMax) > ySize)
+	if ((yDstOff + yMax) > ySize)
 	{
 		yMax = ySize        - yDstOff;
 	}
 
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Blit(): size: %ldx%ld (%ld,%ld) -> (%ld,%ld)\n",
 		xMax, yMax, xSrcOff, ySrcOff, xDstOff, yDstOff);
-	switch(srcTx->type)
+	switch (srcTx->type)
 	{
 	case B3_TX_ILBM:
-		if(srcTx->depth != 1)
+		if (srcTx->depth != 1)
 		{
 			return;
 		}
@@ -93,19 +93,19 @@ void b3Tx::b3Blit(
 		// compute line skip value
 		srcMod = TX_BWA(srcTx->xSize);
 		dstMod = xSize - xMax;
-		for(y = 0; y < yMax; y++)
+		for (y = 0; y < yMax; y++)
 		{
 			b3_pkd_color bit;
 			b3_index     ind;
 
 			bit = (128 >> xSrcOff) & 7;
 			ind = xSrcOff >> 3;
-			for(x = 0; x < xMax; x++)
+			for (x = 0; x < xMax; x++)
 			{
 
 				*lDst++ = pal[cSrc[ind] & bit ? 1 : 0];
 				bit     = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					ind++;
 					bit = 128;
@@ -130,9 +130,9 @@ void b3Tx::b3Blit(
 		// compute line skip value
 		srcMod  = srcTx->xSize - xMax;
 		dstMod  =        xSize - xMax;
-		for(y = 0; y < yMax; y++)
+		for (y = 0; y < yMax; y++)
 		{
-			for(x = 0; x < xMax; x++)
+			for (x = 0; x < xMax; x++)
 			{
 				*lDst++ = pal[*cSrc++];
 			}
@@ -154,11 +154,11 @@ void b3Tx::b3Blit(
 		// compute line skip value
 		srcMod = srcTx->xSize - xMax;
 		dstMod =        xSize - xMax;
-		for(y = 0; y < yMax; y++)
+		for (y = 0; y < yMax; y++)
 		{
 			b3_u16 col;
 
-			for(x = 0; x < xMax; x++)
+			for (x = 0; x < xMax; x++)
 			{
 				col     = *sSrc++;
 				*lDst++ = TX_RGB4_TO_RGB8(col);
@@ -181,9 +181,9 @@ void b3Tx::b3Blit(
 		// compute line skip value
 		srcMod = srcTx->xSize - xMax;
 		dstMod =        xSize - xMax;
-		for(y = 0; y < yMax; y++)
+		for (y = 0; y < yMax; y++)
 		{
-			for(x = 0; x < xMax; x++)
+			for (x = 0; x < xMax; x++)
 			{
 				*lDst++ = *lSrc++;
 			}
@@ -208,14 +208,14 @@ void b3Tx::b3GetColorMask(
 	b3_index      xBytes, pos;
 	b3_u08        cache;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM:
 		bPtr   = (b3_u08 *)data;
 		xBytes = TX_BWA(xSize);
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
-			for(x = 0; x < xBytes; x++)
+			for (x = 0; x < xBytes; x++)
 			{
 				mask[x] = bPtr[x];
 			}
@@ -226,19 +226,19 @@ void b3Tx::b3GetColorMask(
 
 	case B3_TX_VGA:
 		bPtr = (b3_u08 *)data;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			pos   =   0;
 			bit   = 128;
 			cache =   0;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
-				if(palette[bPtr[x]] == colorMask)
+				if (palette[bPtr[x]] == colorMask)
 				{
 					cache |= bit;
 				}
 				bit = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					mask[pos++] = cache;
 					bit   = 128;
@@ -253,19 +253,19 @@ void b3Tx::b3GetColorMask(
 
 	case B3_TX_RGB8:
 		lPtr = (b3_pkd_color *)data;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			pos   =   0;
 			bit   = 128;
 			cache =   0;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
-				if(lPtr[x] == colorMask)
+				if (lPtr[x] == colorMask)
 				{
 					cache |= bit;
 				}
 				bit = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					mask[pos++] = cache;
 					bit   = 128;

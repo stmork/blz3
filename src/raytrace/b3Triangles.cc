@@ -55,7 +55,7 @@ b3Triangles::b3Triangles(b3_u32 * src) : b3TriangleShape(src)
 	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
 	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
 
-	for(i = 0; i < m_VertexCount; i++)
+	for (i = 0; i < m_VertexCount; i++)
 	{
 		m_Vertices[i].Point.x  = b3InitFloat();
 		m_Vertices[i].Point.y  = b3InitFloat();
@@ -65,7 +65,7 @@ b3Triangles::b3Triangles(b3_u32 * src) : b3TriangleShape(src)
 		m_Vertices[i].Normal.z = b3InitFloat();
 	}
 
-	for(i = 0; i < m_TriaCount; i++)
+	for (i = 0; i < m_TriaCount; i++)
 	{
 		m_Triangles[i].P1       = b3InitInt();
 		m_Triangles[i].P2       = b3InitInt();
@@ -94,7 +94,7 @@ void b3Triangles::b3StoreShape()
 	b3StoreNOP(); // This is aValue
 	b3StoreNOP(); // This is bValue
 
-	for(i = 0; i < m_VertexCount; i++)
+	for (i = 0; i < m_VertexCount; i++)
 	{
 		b3StoreFloat(m_Vertices[i].Point.x);
 		b3StoreFloat(m_Vertices[i].Point.y);
@@ -104,7 +104,7 @@ void b3Triangles::b3StoreShape()
 		b3StoreFloat(m_Vertices[i].Normal.z);
 	}
 
-	for(i = 0; i < m_TriaCount; i++)
+	for (i = 0; i < m_TriaCount; i++)
 	{
 		b3StoreIndex(m_Triangles[i].P1);
 		b3StoreIndex(m_Triangles[i].P2);
@@ -135,10 +135,10 @@ void b3Triangles::b3ComputeVertices()
 	Vertex = m_Vertices;
 	Vector = *glVertexElements;
 
-	if(m_Flags & B3_PHONG)
+	if (m_Flags & B3_PHONG)
 	{
 		// Copy positions
-		for(i = 0; i < m_VertexCount; i++)
+		for (i = 0; i < m_VertexCount; i++)
 		{
 			Vector->v.x = Vertex->Point.x;
 			Vector->v.y = Vertex->Point.y;
@@ -148,7 +148,7 @@ void b3Triangles::b3ComputeVertices()
 		}
 
 		// Copy texture coordinates if usable
-		if((m_xSize > 0) && (m_ySize > 0) && (((m_xSize + 1) * (m_ySize + 1)) == m_VertexCount))
+		if ((m_xSize > 0) && (m_ySize > 0) && (((m_xSize + 1) * (m_ySize + 1)) == m_VertexCount))
 		{
 			b3_index x, y;
 			b3_f64   fx, fxStep;
@@ -158,10 +158,10 @@ void b3Triangles::b3ComputeVertices()
 			fy     = 0;
 			fxStep = 1.0 / m_xSize;
 			fyStep = 1.0 / m_ySize;
-			for(y = 0; y <= m_ySize; y++)
+			for (y = 0; y <= m_ySize; y++)
 			{
 				fx = 0;
-				for(x = 0; x <= m_xSize; x++)
+				for (x = 0; x <= m_xSize; x++)
 				{
 					Vector->t.s = fx;
 					Vector->t.t = fy;
@@ -175,7 +175,7 @@ void b3Triangles::b3ComputeVertices()
 	else
 	{
 		// Copy position
-		for(i = 0; i < m_TriaCount; i++)
+		for (i = 0; i < m_TriaCount; i++)
 		{
 			Vertex = &m_Vertices[m_Triangles[i].P1];
 			Vector->v.x = Vertex->Point.x;
@@ -197,7 +197,7 @@ void b3Triangles::b3ComputeVertices()
 		}
 
 		// Copy texture coordinates if usable
-		if((m_xSize > 0) && (m_ySize > 0) && ((m_xSize * m_ySize * 2) == m_TriaCount))
+		if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize * m_ySize * 2) == m_TriaCount))
 		{
 			b3_index x, y;
 			b3_f64   fx, fxStep;
@@ -207,10 +207,10 @@ void b3Triangles::b3ComputeVertices()
 			fy     = 0;
 			fxStep = 1.0 / m_xSize;
 			fyStep = 1.0 / m_ySize;
-			for(y = 0; y < m_ySize; y++)
+			for (y = 0; y < m_ySize; y++)
 			{
 				fx = 0;
-				for(x = 0; x < m_xSize; x++)
+				for (x = 0; x < m_xSize; x++)
 				{
 					// First quad triangle
 					Vector->t.s = fx;
@@ -263,9 +263,9 @@ void b3Triangles::b3ComputeIndices()
 	gPtr     = *glGridElements;
 	pPtr     = *glPolygonElements;
 
-	if(m_Flags & B3_PHONG)
+	if (m_Flags & B3_PHONG)
 	{
-		for(i = 0; i < m_TriaCount; i++)
+		for (i = 0; i < m_TriaCount; i++)
 		{
 			p1 = (b3_u32)Triangle->P1;
 			p2 = (b3_u32)Triangle->P2;
@@ -284,7 +284,7 @@ void b3Triangles::b3ComputeIndices()
 		p1 = 0;
 		p2 = 1;
 		p3 = 2;
-		for(i = 0; i < m_TriaCount; i++)
+		for (i = 0; i < m_TriaCount; i++)
 		{
 			B3_GL_LINIT(gPtr, p1, p2);
 			B3_GL_LINIT(gPtr, p2, p3);
@@ -300,7 +300,7 @@ void b3Triangles::b3ComputeIndices()
 
 void b3Triangles::b3SetupPicking(b3PickInfo * info)
 {
-	for(int i = 0; i < m_VertexCount; i++)
+	for (int i = 0; i < m_VertexCount; i++)
 	{
 		info->b3AddPickPoint(&m_Vertices[i].Point);
 	}

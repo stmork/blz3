@@ -63,7 +63,7 @@ b3Torus::b3Torus(b3_u32 * src) : b3SimpleShape(src)
 
 void b3Torus::b3StoreShape()
 {
-	for(b3_loop i = 0; i < 3; i++)
+	for (b3_loop i = 0; i < 3; i++)
 	{
 		b3_vector normal;
 
@@ -102,7 +102,7 @@ b3_bool b3Torus::b3Prepare(b3_preparation_info * prep_info)
 	m_aQuad = m_aRad * m_aRad;
 	m_bQuad = m_bRad * m_bRad;
 
-	if(b3BaseTransformation::b3Prepare())
+	if (b3BaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare(prep_info);
 	}
@@ -130,7 +130,7 @@ void b3Torus::b3ComputeNormals(b3_bool normalize)
 {
 	// b3ComputeVertices() does already compute the normals
 	// So only normalize if needed
-	if(normalize)
+	if (normalize)
 	{
 		b3ComputeTorusNormals();
 	}

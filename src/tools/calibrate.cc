@@ -56,15 +56,15 @@ public:
 		b3_count error[source.xSize];
 		b3_bool  result = false;
 
-		for(x = 0; x < source.xSize; x++)
+		for (x = 0; x < source.xSize; x++)
 		{
 			error[x] = 0;
 		}
 
 		avrg.b3Init();
-		for(y = 20; y < source.ySize; y++)
+		for (y = 20; y < source.ySize; y++)
 		{
-			for(x = 0; x < source.xSize; x++)
+			for (x = 0; x < source.xSize; x++)
 			{
 				avrg += source.b3GetHdrValue(x, y);
 			}
@@ -73,10 +73,10 @@ public:
 		grey  = 0.35 * avrg[b3Color::R] + 0.54 * avrg[b3Color::G] + 0.11 * avrg[b3Color::B];
 
 		white.b3Init(grey, grey, grey);
-		for(y = 0; y < source.ySize; y++)
+		for (y = 0; y < source.ySize; y++)
 		{
 			avrg.b3Init();
-			for(x = 0; x < source.xSize; x++)
+			for (x = 0; x < source.xSize; x++)
 			{
 				avrg += source.b3GetHdrValue(x, y);
 			}
@@ -97,21 +97,21 @@ public:
 				avrg[b3Color::R], avrg[b3Color::G], avrg[b3Color::B]);
 #endif
 
-			for(x = 0; x < source.xSize; x++)
+			for (x = 0; x < source.xSize; x++)
 			{
 				diff = source.b3GetHdrValue(x, y) - avrg;
 				dist = sqrt(
 						diff[b3Color::R] * diff[b3Color::R] +
 						diff[b3Color::B] * diff[b3Color::B] +
 						diff[b3Color::G] * diff[b3Color::G]);
-				if(dist > 0.145)
+				if (dist > 0.145)
 				{
 					error[x]++;
 				}
 			}
 		}
 
-		for(x = 0; x < source.xSize; x++)
+		for (x = 0; x < source.xSize; x++)
 		{
 			m_Error.b3Add(result);
 			b3PrintF(B3LOG_NORMAL, "%s", result ? "#" : ".");
@@ -140,11 +140,11 @@ public:
 		b3_coord      x, y;
 		b3Color       result, scale(B3_WHITE), offset(B3_BLACK);
 
-		for(y = 0; y < image.ySize; y++)
+		for (y = 0; y < image.ySize; y++)
 		{
 			offset = m_RowAvrg[y];
 			scale  = m_WhiteScale[y];
-			for(x = 0; x < image.xSize; x++)
+			for (x = 0; x < image.xSize; x++)
 			{
 				b3Color pixel(ptr[x]);
 
@@ -156,9 +156,9 @@ public:
 					result[b3Color::R], result[b3Color::G], result[b3Color::B]);
 #endif
 			}
-			for(x = 1; x < (image.xSize - 1); x++)
+			for (x = 1; x < (image.xSize - 1); x++)
 			{
-				if(m_Error[x])
+				if (m_Error[x])
 				{
 					ptr[x] = b3Color(ptr[x - 1]) * 0.5 + b3Color(ptr[x + 1]) * 0.5;
 				}
@@ -187,7 +187,7 @@ int main(int argc, char * argv[])
 	list.b3CreateList(source);
 	list.b3Sort();
 
-	for(entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != null; entry = entry->Succ)
 	{
 		image.b3LoadImage(entry->b3Name());
 		calibrate->b3Adjust(image);

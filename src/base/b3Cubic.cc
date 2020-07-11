@@ -44,12 +44,12 @@ b3_count b3Cubic::b3SolveOrd2(b3_f64 * Coeffs, b3_f64 * x)
 	q = Coeffs[0];
 
 	D = p * p - q;
-	if(b3IsZero(D))
+	if (b3IsZero(D))
 	{
 		x[0] = -p;
 		return 1;
 	}
-	else if(D > 0)
+	else if (D > 0)
 	{
 		q = sqrt(D);
 		x[0] = -q - p;
@@ -80,9 +80,9 @@ b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
 	cb_P = p * p * p;
 	D    = q * q + cb_P;
 
-	if(b3IsZero(D))
+	if (b3IsZero(D))
 	{
-		if(b3IsZero(q))
+		if (b3IsZero(q))
 		{
 			NumOfX = 0;
 		}
@@ -94,7 +94,7 @@ b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
 			NumOfX = 2;
 		}
 	}
-	else if(D < 0)
+	else if (D < 0)
 	{
 		Sub = 1.0 / 3 * acos(-q / sqrt(-cb_P));
 		C = 2 * sqrt(-p);
@@ -112,7 +112,7 @@ b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
 	}
 
 	Sub = 1.0 / 3 * A;
-	for(i = 0; i < NumOfX; ++i)
+	for (i = 0; i < NumOfX; ++i)
 	{
 		x[i] -= Sub;
 	}
@@ -139,7 +139,7 @@ b3_count b3Cubic::b3SolveOrd4(b3_f64 * c, b3_f64 * x)
 	q    =  0.125   * sq_A *    A - 0.5    *    A * B + C;
 	r    = -3.0 / 256 * sq_A * sq_A + 0.0625 * sq_A * B - 0.25 * A * C + D;
 
-	if(b3IsZero(r))
+	if (b3IsZero(r))
 	{
 		Coeffs[0] = q;
 		Coeffs[1] = p;
@@ -159,11 +159,11 @@ b3_count b3Cubic::b3SolveOrd4(b3_f64 * c, b3_f64 * x)
 		C = B * B - r;
 		D = 2 * B - p;
 
-		if(b3IsZero(C))
+		if (b3IsZero(C))
 		{
 			C = 0;
 		}
-		else if(C > 0)
+		else if (C > 0)
 		{
 			C = sqrt(C);
 		}
@@ -172,11 +172,11 @@ b3_count b3Cubic::b3SolveOrd4(b3_f64 * c, b3_f64 * x)
 			return 0;
 		}
 
-		if(b3IsZero(D))
+		if (b3IsZero(D))
 		{
 			D = 0;
 		}
-		else if(D > 0)
+		else if (D > 0)
 		{
 			D = sqrt(D);
 		}
@@ -196,7 +196,7 @@ b3_count b3Cubic::b3SolveOrd4(b3_f64 * c, b3_f64 * x)
 	}
 
 	Sub = 0.25 * A;
-	for(i = 0; i < NumOfX; ++i)
+	for (i = 0; i < NumOfX; ++i)
 	{
 		x[i] -= Sub;
 	}

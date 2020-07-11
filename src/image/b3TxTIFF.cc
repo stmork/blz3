@@ -36,7 +36,7 @@
 
 const char * b3TIFF::b3GetModeString(long mode)
 {
-	switch(mode)
+	switch (mode)
 	{
 	case MODE_BYTE     :
 		return "byte ";
@@ -54,7 +54,7 @@ const char * b3TIFF::b3GetModeString(long mode)
 
 long b3TIFF::b3GetTIFFTypeSize(struct TagTIFF * DataTag)
 {
-	switch(DataTag->Type)
+	switch (DataTag->Type)
 	{
 	case MODE_BYTE     :
 		return (sizeof(char));
@@ -74,7 +74,7 @@ long b3TIFF::b3GetTIFFSize(struct TagTIFF * DataTag)
 	long size;
 
 	size = b3GetTIFFTypeSize(DataTag);
-	if(size != 0)
+	if (size != 0)
 	{
 		return 4 / size;
 	}
@@ -94,22 +94,22 @@ void b3TIFF::b3ChangeTag(
 	b3Endian::b3ChangeEndian16(&DataTag->Type);
 	b3Endian::b3ChangeEndian32(&DataTag->Data[0]);
 	TagSize = b3Endian::b3Get32(&DataTag->Data[0]);
-	switch(DataTag->Type)
+	switch (DataTag->Type)
 	{
 	case MODE_BYTE :					/* Char */
-		if(TagSize > b3GetTIFFSize(DataTag))
+		if (TagSize > b3GetTIFFSize(DataTag))
 		{
 			b3Endian::b3ChangeEndian32(&DataTag->Data[1]);
 		}
 		break;
 
 	case MODE_SHORT :					/* Short */
-		if(TagSize > b3GetTIFFSize(DataTag))
+		if (TagSize > b3GetTIFFSize(DataTag))
 		{
 			b3Endian::b3ChangeEndian32(&DataTag->Data[1]);
 			TIFF += DataTag->Data[1];
 			Short = (short *)TIFF;
-			for(i = 0L; i < TagSize; i++)
+			for (i = 0L; i < TagSize; i++)
 			{
 				b3Endian::b3ChangeEndian16(Short);
 				Short++;
@@ -125,11 +125,11 @@ void b3TIFF::b3ChangeTag(
 
 	case MODE_LONG :					/* Long */
 		b3Endian::b3ChangeEndian32(&DataTag->Data[1]);
-		if(TagSize > b3GetTIFFSize(DataTag))
+		if (TagSize > b3GetTIFFSize(DataTag))
 		{
 			TIFF += DataTag->Data[1];
 			Long = (long *)TIFF;
-			for(i = 0; i < TagSize; i++)
+			for (i = 0; i < TagSize; i++)
 			{
 				b3Endian::b3ChangeEndian32(Long);
 				(long *)Long++;
@@ -154,7 +154,7 @@ void b3TIFF::b3ChangeTIFF(struct HeaderTIFF * TIFF)
 	b3Endian::b3ChangeEndian16(&TIFF->VersionTIFF);
 	b3Endian::b3ChangeEndian32(&TIFF->FirstTag);
 	offset = TIFF->FirstTag;
-	while(offset != 0)
+	while (offset != 0)
 	{
 		Data   = (b3_u08 *)TIFF;
 		Data  += offset;
@@ -162,7 +162,7 @@ void b3TIFF::b3ChangeTIFF(struct HeaderTIFF * TIFF)
 		Shorts = (b3_u16 *)Data;
 		Tags   = b3Endian::b3Get16(Shorts);
 		Data  += 2;
-		for(i = 0; i < Tags; i++)
+		for (i = 0; i < Tags; i++)
 		{
 			b3ChangeTag(TIFF, (struct TagTIFF *)Data);
 			Data += sizeof(struct TagTIFF);
@@ -183,11 +183,11 @@ long b3TIFF::b3GetTIFFValue(
 	b3_u16 * Short;
 	b3_u32 * Long, value;
 
-	switch(DataTag->Type)
+	switch (DataTag->Type)
 	{
 	case MODE_BYTE :					/* char, ASCII */
 	case MODE_ASCII :
-		if((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > b3GetTIFFSize(DataTag))
+		if ((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > b3GetTIFFSize(DataTag))
 		{
 			TIFF += b3Endian::b3Get32(&DataTag->Data[1]);
 			Char  = TIFF;
@@ -199,7 +199,7 @@ long b3TIFF::b3GetTIFFValue(
 		Char += Index;
 		return (Char[0]);
 	case MODE_SHORT :					/* short */
-		if((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > b3GetTIFFSize(DataTag))
+		if ((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > b3GetTIFFSize(DataTag))
 		{
 			TIFF += b3Endian::b3Get32(&DataTag->Data[1]);
 			Short = (b3_u16 *)TIFF;
@@ -211,7 +211,7 @@ long b3TIFF::b3GetTIFFValue(
 		Short += Index;
 		return (b3Endian::b3Get16(Short));
 	case MODE_LONG :					/* long */
-		if((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > b3GetTIFFSize(DataTag))
+		if ((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > b3GetTIFFSize(DataTag))
 		{
 			TIFF += b3Endian::b3Get32(&DataTag->Data[1]);
 			Long  = (b3_u32 *)TIFF;
@@ -258,7 +258,7 @@ long b3TIFF::b3TAFwriteGap(
 	long i, toWrite;
 
 	toWrite = (4 - offset) & 0x3;
-	for(i = 0; i < toWrite; i++)
+	for (i = 0; i < toWrite; i++)
 	{
 		gap[i] = 0;
 	}
@@ -292,7 +292,7 @@ void b3TIFF::b3LogTIFF(const char * format, ...)
 	va_end(list);
 	b3PrintF(B3LOG_FULL, message);
 
-	if(b3LogFuncTIFF != null)
+	if (b3LogFuncTIFF != null)
 	{
 		b3LogFuncTIFF(message, b3LogFuncPtr);
 	}
@@ -322,7 +322,7 @@ b3TIFF_Dir::b3TIFF_Dir(
 
 	// For each tag do...
 	b3TIFF::b3LogTIFF("code type data[0]  data[1]\n");
-	for(i = 0; i < Tags; i++)
+	for (i = 0; i < Tags; i++)
 	{
 		// Set real tag
 		// Allocate structure class (b3TIFF_Entry)
@@ -330,11 +330,11 @@ b3TIFF_Dir::b3TIFF_Dir(
 		{
 			tagTIFF = new b3TIFF_Entry(this, ThisTag, TIFF);
 		}
-		catch(...)
+		catch (...)
 		{
 			tagTIFF = null;
 		}
-		if(tagTIFF == null)
+		if (tagTIFF == null)
 		{
 			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
@@ -349,13 +349,13 @@ b3TIFF_Dir::~b3TIFF_Dir()
 {
 	b3TIFF_Entry * tTIFF;
 
-	while((tTIFF = tags.First) != null)
+	while ((tTIFF = tags.First) != null)
 	{
 		tags.b3Remove(tTIFF);
 		delete tTIFF;
 	}
 
-	if(stripArray)
+	if (stripArray)
 	{
 		delete[] stripArray;
 	}
@@ -412,7 +412,7 @@ void b3TIFF_Dir::b3Traverse(
 	b3TIFF_Strip * sTIFF, *snTIFF;
 
 	func(head, (b3Link<class T> *)this, ptr);
-	for(tTIFF  = tags.First;
+	for (tTIFF  = tags.First;
 		tTIFF != null;
 		tTIFF  = tnTIFF)
 	{
@@ -420,7 +420,7 @@ void b3TIFF_Dir::b3Traverse(
 		tTIFF->b3Traverse((b3Base<class T> *)&tags, func, ptr);
 	}
 
-	for(sTIFF  = strips.First;
+	for (sTIFF  = strips.First;
 		sTIFF != null;
 		sTIFF  = snTIFF)
 	{
@@ -433,7 +433,7 @@ void b3TIFF_Dir::b3TravRemoveIFW()
 {
 	b3TIFF_Entry * tTIFF, *succ;
 
-	for(tTIFF = tags.First; tTIFF != null; tTIFF = succ)
+	for (tTIFF = tags.First; tTIFF != null; tTIFF = succ)
 	{
 		succ = tTIFF->Succ;
 		tTIFF->b3RemoveIFW(&tags);
@@ -446,7 +446,7 @@ long b3TIFF_Dir::b3OrgTags(long act_offset)
 
 	offset = act_offset;
 	num    = 0;
-	for(son = tags.First; son != null; son = son->Succ)
+	for (son = tags.First; son != null; son = son->Succ)
 	{
 		num++;
 	}
@@ -462,7 +462,7 @@ void b3TIFF_Dir::b3OrgStrips()
 {
 	b3TIFF_Dir * nTIFF;
 
-	if((nTIFF = (b3TIFF_Dir *)Succ) != null)
+	if ((nTIFF = (b3TIFF_Dir *)Succ) != null)
 	{
 		next = nTIFF->b3Offset();
 	}
@@ -484,7 +484,7 @@ long b3TIFF_Dir::b3WriteTags(b3FileAbstract * out, long act_offset)
 	act_offset += sizeof(short);
 
 	// For each tag
-	for(tTIFF  = (b3TIFF_Entry *)tags.First;
+	for (tTIFF  = (b3TIFF_Entry *)tags.First;
 		tTIFF != null;
 		tTIFF  = (b3TIFF_Entry *)tTIFF->Succ)
 	{
@@ -524,12 +524,12 @@ b3TIFF_Entry::b3TIFF_Entry(
 		tag.Data[0],
 		tag.Data[1]);
 
-	if(tag_size > 0)
+	if (tag_size > 0)
 	{
 		long tag_num  = b3Endian::b3Get32(&tag.Data[0]);
 		long tag_size = b3TIFF::b3GetTIFFSize(&tag);
 
-		if(tag_num > tag_size)
+		if (tag_num > tag_size)
 		{
 			buffer = b3Endian::b3Get32(&ThisTag->Data[1]) + TIFF;
 			//			b3LogTIFF ("### %ld - %ld (%lx)###\n",TIFF,buffer,(long)buffer - (long)TIFF);
@@ -537,11 +537,11 @@ b3TIFF_Entry::b3TIFF_Entry(
 	}
 
 	// getting strip offsets
-	if(ThisTag->Code == TIFF_STRIPS)
+	if (ThisTag->Code == TIFF_STRIPS)
 	{
 		num = b3Endian::b3Get32(&ThisTag->Data[0]);
 		tag.Type = MODE_LONG;
-		if(num > 1)
+		if (num > 1)
 		{
 			buffer = (long *)b3Alloc(num * sizeof(long));
 			ptr    = (long *)buffer;
@@ -555,15 +555,15 @@ b3TIFF_Entry::b3TIFF_Entry(
 		{
 			strips = new b3TIFF_Strip[num];
 		}
-		catch(...)
+		catch (...)
 		{
 			strips = null;
 		}
 
-		if(strips)
+		if (strips)
 		{
 			dirTIFF->b3SetStrips(strips);
-			for(s = 0; s < num; s++)
+			for (s = 0; s < num; s++)
 			{
 				long offset = b3TIFF::b3GetTIFFValue(TIFF, ThisTag, s);
 
@@ -580,13 +580,13 @@ b3TIFF_Entry::b3TIFF_Entry(
 	}
 
 	// getting strip length
-	if(ThisTag->Code == TIFF_STRIPBYTES)
+	if (ThisTag->Code == TIFF_STRIPBYTES)
 	{
 		num      = b3Endian::b3Get32(&ThisTag->Data[0]);
 		tag.Type = MODE_LONG;
 
 		// Get strips itself
-		if(num > 1)
+		if (num > 1)
 		{
 			buffer = (char *)b3Alloc(num * sizeof(long));
 			ptr    = (long *)buffer;
@@ -598,7 +598,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 
 		// Get strip length
 		s = 0;
-		for(strips  = (b3TIFF_Strip *)dirTIFF->b3FirstStrip();
+		for (strips  = (b3TIFF_Strip *)dirTIFF->b3FirstStrip();
 			strips != null;
 			strips  = (b3TIFF_Strip *)strips->Succ)
 		{
@@ -625,7 +625,7 @@ void b3TIFF_Entry::b3Traverse(
 
 void b3TIFF_Entry::b3RemoveIFW(b3Base<b3TIFF_Entry> * head)
 {
-	switch(tag.Code)
+	switch (tag.Code)
 	{
 	case TIFF_IFW1 :
 	case TIFF_IFW2 :
@@ -650,7 +650,7 @@ long b3TIFF_Entry::b3OrgTags(long act_offset)
 
 long b3TIFF_Entry::b3OrgStrips(long act_offset)
 {
-	if(buffer)
+	if (buffer)
 	{
 		act        = b3TIFF::b3TAFcorrectOffset(act_offset);
 		act_offset = act + size;
@@ -672,19 +672,19 @@ long b3TIFF_Entry::b3WriteTag(
 	b3TIFF_Strip * sTIFF;
 
 	// insert buffer new reference
-	if(buffer)
+	if (buffer)
 	{
 		tag.Data[1] = act;
 	}
 
 	// if we have the strips here compute
 	// new offsets but do not write them.
-	if(tag.Code == TIFF_STRIPS)
+	if (tag.Code == TIFF_STRIPS)
 	{
 		long s;
 
 		sTIFF = strips->First;
-		for(s = 0; s < stripNum; s++)
+		for (s = 0; s < stripNum; s++)
 		{
 			ptr[s] = sTIFF->b3Offset();
 			sTIFF  = sTIFF->Succ;
@@ -701,7 +701,7 @@ long b3TIFF_Entry::b3WriteTag(
 
 long b3TIFF_Entry::b3WriteData(b3FileAbstract * out, long act_offset)
 {
-	if(buffer)
+	if (buffer)
 	{
 		act_offset = b3TIFF::b3TAFwriteGap(out, act_offset);
 		out->b3Write(buffer, size);
@@ -756,7 +756,7 @@ long b3TIFF_Strip::b3OrgTags(long act_offset)
 
 long b3TIFF_Strip::b3OrgStrips(long act_offset)
 {
-	if(buffer)
+	if (buffer)
 	{
 		offset     = b3TIFF::b3TAFcorrectOffset(act_offset);
 		act_offset = offset + size;
@@ -804,12 +804,12 @@ b3TIFF::b3TIFF(struct HeaderTIFF * TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_
 
 	// convert TIFF saved on other CPU type
 #if THISPROCESSOR == INTEL
-	if(TIFF->TypeCPU == TIFF_MOTOROLA)
+	if (TIFF->TypeCPU == TIFF_MOTOROLA)
 	{
 		b3ChangeTIFF(TIFF);
 	}
 #else
-	if(TIFF->TypeCPU == TIFF_INTEL)
+	if (TIFF->TypeCPU == TIFF_INTEL)
 	{
 		b3ChangeTIFF(TIFF);
 	}
@@ -819,7 +819,7 @@ b3TIFF::b3TIFF(struct HeaderTIFF * TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_
 	head   = *TIFF;
 
 	offset = TIFF->FirstTag;
-	while(offset != 0)
+	while (offset != 0)
 	{
 		Data   = (b3_u08 *)TIFF;
 		Data  += offset;
@@ -833,11 +833,11 @@ b3TIFF::b3TIFF(struct HeaderTIFF * TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_
 		{
 			dirTIFF  = new b3TIFF_Dir((char *)TIFF, (struct TagTIFF *)Data, Tags);
 		}
-		catch(...)
+		catch (...)
 		{
 			dirTIFF = null;
 		}
-		if(dirTIFF == null)
+		if (dirTIFF == null)
 		{
 			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
@@ -852,7 +852,7 @@ b3TIFF::~b3TIFF()
 {
 	b3TIFF_Dir * dirTIFF;
 
-	while((dirTIFF = dirs.First) != null)
+	while ((dirTIFF = dirs.First) != null)
 	{
 		dirs.b3Remove(dirTIFF);
 		delete dirTIFF;
@@ -867,7 +867,7 @@ void b3TIFF::b3Traverse(
 	b3TIFF_Dir * dTIFF, *dnTIFF;
 
 	func(head, (b3Link<class T> *)this, ptr);
-	for(dTIFF  = dirs.First;
+	for (dTIFF  = dirs.First;
 		dTIFF != null;
 		dTIFF  = dnTIFF)
 	{
@@ -896,7 +896,7 @@ void b3TIFF::b3OrgStrips()
 	b3TIFF_Dir * dTIFF;
 
 	dTIFF = dirs.First;
-	if(dTIFF)
+	if (dTIFF)
 	{
 		head.FirstTag = dTIFF->b3Offset();
 	}
@@ -907,7 +907,7 @@ long b3TIFF::b3DirCount()
 	b3TIFF_Dir * node;
 	long          count = 0;
 
-	for(node = dirs.First; node != null; node = node->Succ)
+	for (node = dirs.First; node != null; node = node->Succ)
 	{
 		count++;
 	}
@@ -919,7 +919,7 @@ void b3TIFF::b3Append(b3TIFF * tiff)
 	b3TIFF_Dir * dTIFF;
 
 	// Copy tiff's pages into this instance
-	while((dTIFF = tiff->dirs.First) != null)
+	while ((dTIFF = tiff->dirs.First) != null)
 	{
 		tiff->dirs.b3Remove(dTIFF);
 		dirs.b3Append(dTIFF);
@@ -933,7 +933,7 @@ void b3TIFF::b3Remove(b3TIFF * tiff)
 	// Copy first page of this instance
 	// into tiff's range
 	dTIFF = dirs.First;
-	if(dTIFF)
+	if (dTIFF)
 	{
 		dirs.b3Remove(dTIFF);
 		tiff->dirs.b3Append(dTIFF);
@@ -967,32 +967,32 @@ static b3_bool GetIFW(
 		index += 8;
 		b3LogTIFF("%8ld %8ld: ", type, len);
 
-		switch(type)
+		switch (type)
 		{
 		case 2 :
 		case 6 :
 			// this is name block header
 			strncpy(text, &Char[index], 8);
 			text[8] = 0;
-			if(value == 0)
+			if (value == 0)
 			{
 				len += 4;
 			}
 
 			// now name block data starts here
 			b3LogTIFF("named block: %-8.8s", text);
-			if(strcmp(text, "OiAnoDat") == 0)
+			if (strcmp(text, "OiAnoDat") == 0)
 			{
 				long n, pos;
 
-				if(!image)
+				if (!image)
 				{
 					pos = (value == 0 ? 4 : 8) + index + len;
 					n   = (value == 0 ?
 							GetIntelShort(&Char[index + len + 2]) :
 							GetIntelLong(&Char[index + len + 4]));
 					b3LogTIFF(" %ld pts.", n);
-					for(i = 0; i < n; i++)
+					for (i = 0; i < n; i++)
 					{
 						b3LogTIFF(" (%ld,%ld)",
 							(long)GetIntelLong(&Char[pos]),
@@ -1001,24 +1001,24 @@ static b3_bool GetIFW(
 					}
 				}
 			}
-			if(strcmp(text, "OiFilNam") == 0)
+			if (strcmp(text, "OiFilNam") == 0)
 			{
 				b3LogTIFF(" %s", &Char[index + len]);
 			}
-			if(strcmp(text, "OiDIB")    == 0)
+			if (strcmp(text, "OiDIB")    == 0)
 			{
 			}
-			if(strcmp(text, "OiIndex")  == 0)
+			if (strcmp(text, "OiIndex")  == 0)
 			{
 				strncpy(text, &Char[index + len], 10);
 				text[10] = 0;
 				b3LogTIFF(" %s", text);
 			}
-			if(strcmp(text, "OiGroup")  == 0)
+			if (strcmp(text, "OiGroup")  == 0)
 			{
 				b3LogTIFF(" %s", &Char[index + len]);
 			}
-			if(strcmp(text, "OiAnText") == 0)
+			if (strcmp(text, "OiAnText") == 0)
 			{
 				offset = (value + 1) << 3;
 				b3LogTIFF(" %s", &Char[index + len + offset]);
@@ -1032,7 +1032,7 @@ static b3_bool GetIFW(
 			subtype = (value == 0 ?
 					GetIntelShort(&Char[index]) :
 					GetIntelLong(&Char[index]));
-			switch(subtype)
+			switch (subtype)
 			{
 			case  1 :
 				b3LogTIFF("image embedded  ");
@@ -1085,7 +1085,7 @@ static b3_bool GetIFW(
 		}
 		index += len;
 	}
-	while(index < size);
+	while (index < size);
 	return true;
 }
 #endif
@@ -1101,7 +1101,7 @@ static long WriteIFW(
 
 	count = out->b3Write(tag, sizeof(struct TagTIFF));
 	size  = b3Endian::b3Get32(&tag->Data[0]);
-	if(size > GetTIFFSize(tag))
+	if (size > GetTIFFSize(tag))
 	{
 		data  += tag->Data[1];
 		count += out->b3Write(data, size);
@@ -1115,11 +1115,11 @@ const int b3TIFF_Entry::b3SortTags(
 	const b3TIFF_Entry * b,
 	const void     *    ptr)
 {
-	if(a->tag.Code < b->tag.Code)
+	if (a->tag.Code < b->tag.Code)
 	{
 		return -1;
 	}
-	if(a->tag.Code > b->tag.Code)
+	if (a->tag.Code > b->tag.Code)
 	{
 		return  1;
 	}
@@ -1133,7 +1133,7 @@ void b3TIFF::b3TravRemIFW(
 {
 	b3TIFF_Entry * tag;
 
-	switch(Node->b3GetClassType())
+	switch (Node->b3GetClassType())
 	{
 	case CLASS_TIFF_TAG :
 		tag = (b3TIFF_Entry *)Node;
@@ -1158,7 +1158,7 @@ void b3TIFF::b3TravTIFF(
 	b3TIFF_Strip * sTIFF;
 	long      *     offset = (long *)ptr;
 
-	switch(Node->b3GetClassType())
+	switch (Node->b3GetClassType())
 	{
 	// put correct CPU type into header
 	case CLASS_TIFF_HEAD :
@@ -1195,7 +1195,7 @@ void b3TIFF::b3TravOffset(
 	b3TIFF_Strip * sTIFF;
 	long      *      offset = (long *)ptr;
 
-	switch(Node->b3GetClassType())
+	switch (Node->b3GetClassType())
 	{
 	case CLASS_TIFF_HEAD :
 		hTIFF = (b3TIFF *)Node;
@@ -1247,7 +1247,7 @@ void b3TIFF::b3Write(char * name)
 	act_offset += sizeof(struct HeaderTIFF);
 
 	// writing dir and tag structure
-	for(dTIFF  = dirs.First;
+	for (dTIFF  = dirs.First;
 		dTIFF != null;
 		dTIFF  = dTIFF->Succ)
 	{
@@ -1255,12 +1255,12 @@ void b3TIFF::b3Write(char * name)
 	}
 
 	// writing tag data
-	for(dTIFF  = dirs.First;
+	for (dTIFF  = dirs.First;
 		dTIFF != null;
 		dTIFF  = dTIFF->Succ)
 	{
 		// writing tag buffers
-		for(tTIFF  = dTIFF->b3FirstEntry();
+		for (tTIFF  = dTIFF->b3FirstEntry();
 			tTIFF != null;
 			tTIFF  = tTIFF->Succ)
 		{
@@ -1268,7 +1268,7 @@ void b3TIFF::b3Write(char * name)
 		}
 
 		// writing strips
-		for(sTIFF  = dTIFF->b3FirstStrip();
+		for (sTIFF  = dTIFF->b3FirstStrip();
 			sTIFF != null;
 			sTIFF  = sTIFF->Succ)
 		{
@@ -1304,7 +1304,7 @@ long b3Write(
 
 	// get TIFF data structure (tags, stripes, etc. )
 	newTIFF = new b3TIFF((struct HeaderTIFF *)buffer_tiff);
-	if(newTIFF)
+	if (newTIFF)
 	{
 		// firt remove containing TAF tags
 		root.b3InitHead(CLASS_TIFF_HEAD);
@@ -1315,10 +1315,10 @@ long b3Write(
 #ifdef USE_TAF
 		len = TAF_MAGIC_LEN(buffer_taf) + sizeof(long);
 		buffer_taf += len;
-		while((code = b3Endian::b3Get32(buffer_taf)) != TAF_END)
+		while ((code = b3Endian::b3Get32(buffer_taf)) != TAF_END)
 		{
 			// select new dir entry?
-			if(code == TAF_SEPARATOR)
+			if (code == TAF_SEPARATOR)
 			{
 				dirTIFF = (dirTIFF == null ?
 						(struct DirTIFF *)newTIFF->dirs.First :
@@ -1330,7 +1330,7 @@ long b3Write(
 			// in Blizzard III data structure
 			tag     = (struct TagTIFF *)buffer_taf;
 			tagTIFF = new b3TIFF_Entry;
-			if(tagTIFF)
+			if (tagTIFF)
 			{
 				tagTIFF->node.ClassType = CLASS_TIFF_TAG;
 				tagTIFF->node.Size      = sizeof(struct EntryTIFF);
@@ -1339,7 +1339,7 @@ long b3Write(
 				buffer_taf      += sizeof(struct TagTIFF);
 				tagTIFF->buffer  = buffer_taf;
 				tagTIFF->size    = size;
-				if(size > GetTIFFSize(&tagTIFF->tag))
+				if (size > GetTIFFSize(&tagTIFF->tag))
 				{
 					buffer_taf += size;
 				}
@@ -1367,28 +1367,28 @@ static b3_bool CreateGrayTIFFPalette(
 	unsigned long * Palette, Color, i, Step, Colors, Value;
 
 	Value = GetTIFFValue(TIFF, DataTag, 0);
-	if(Value >= 2)
+	if (Value >= 2)
 	{
 		return true;
 	}
 
 	Colors = 1 << Texture->Planes;
-	if(Colors > 256)
+	if (Colors > 256)
 	{
 		Texture->FileType = FT_ERR_HEADER;
 		return (false);
 	}
 	Palette = (unsigned long *)AllocTextureMem(Texture, Colors * sizeof(long));
-	if(Palette == null)
+	if (Palette == null)
 	{
 		Texture->FileType = FT_ERR_MEM;
 		return (false);
 	}
 	Texture->Palette = Palette;
 
-	if(Value == 0L)
+	if (Value == 0L)
 	{
-		if(Colors == 2L)						/* white black*/
+		if (Colors == 2L)						/* white black*/
 		{
 			Palette[0] = 0x00ffffff;
 			Palette[1] = 0x00000000;
@@ -1399,7 +1399,7 @@ static b3_bool CreateGrayTIFFPalette(
 	}
 	else
 	{
-		if(Colors == 2L)						/* black white */
+		if (Colors == 2L)						/* black white */
 		{
 			Palette[0] = 0x00000000;
 			Palette[1] = 0x00ffffff;
@@ -1409,7 +1409,7 @@ static b3_bool CreateGrayTIFFPalette(
 		Step	=  0x01010100L >> Texture->Planes;
 	}
 
-	for(i = 0; i < Colors; i++)					/* gray palette */
+	for (i = 0; i < Colors; i++)					/* gray palette */
 	{
 		Palette[i] = Color;
 		Color += Step;
@@ -1427,21 +1427,21 @@ static b3_bool GetTIFFPalette(
 
 	Colors  = b3Endian::b3Get32(&ColorTag->Data[0]) / 3;
 	Palette = Texture->Palette = (unsigned long *)AllocTextureMem(Texture, Colors * 4);
-	if(Palette == null)
+	if (Palette == null)
 	{
 		Texture->FileType = FT_ERR_MEM;
 		return (false);
 	}
 
-	for(i = 0; i < Colors; i++)		/* red */
+	for (i = 0; i < Colors; i++)		/* red */
 	{
 		Palette[i]  = (GetTIFFValue(TIFF, ColorTag, Index++) & 0xff00L) << 8 ;
 	}
-	for(i = 0; i < Colors; i++)		/* green */
+	for (i = 0; i < Colors; i++)		/* green */
 	{
 		Palette[i] |= (GetTIFFValue(TIFF, ColorTag, Index++) & 0xff00L);
 	}
-	for(i = 0; i < Colors; i++)		/* blue */
+	for (i = 0; i < Colors; i++)		/* blue */
 	{
 		Palette[i] |= ((GetTIFFValue(TIFF, ColorTag, Index++) & 0xff00L) >> 8);
 	}
@@ -1461,7 +1461,7 @@ static long UnCodeTIFF(
 	b3_u08     *    StripPtr;
 	unsigned long   Bytes, Strip, Size, i, Value, OffsetSize;
 
-	switch(Texture->Planes)
+	switch (Texture->Planes)
 	{
 	case  1 :
 		Size = Texture->xSize + 7L & 0x7ffffff8;
@@ -1478,17 +1478,17 @@ static long UnCodeTIFF(
 		break;
 	}
 	Size *= Texture->ySize;
-	if(PixelSamples == 3L)
+	if (PixelSamples == 3L)
 	{
 		Size *= 4L;
 	}
-	else if(PixelSamples != 1L)
+	else if (PixelSamples != 1L)
 	{
 		Texture->FileType = FT_ERR_UNSUPP;
 		return (0L);
 	}
 	Data = AllocTextureMem(Texture, Size);
-	if(Data == null)
+	if (Data == null)
 	{
 		Texture->FileType = FT_ERR_MEM;
 		return (0L);
@@ -1496,19 +1496,19 @@ static long UnCodeTIFF(
 	Texture->Data = Data;
 	OffsetSize    = b3Endian::b3Get32(&OffsetTag->Data[0]);
 
-	switch(PixelSamples)
+	switch (PixelSamples)
 	{
 	case 1:
-		switch(Texture->Planes)
+		switch (Texture->Planes)
 		{
 		case 1 :
-			for(Strip = 0; Strip < OffsetSize; Strip++)
+			for (Strip = 0; Strip < OffsetSize; Strip++)
 			{
 				Value     = GetTIFFValue(TIFF, OffsetTag, Strip);
 				Bytes     = GetTIFFValue(TIFF, SizeTag,  Strip);
 				StripPtr  = TIFF;
 				StripPtr += Value;
-				for(i = 0; i < Bytes; i++)
+				for (i = 0; i < Bytes; i++)
 				{
 					Data[0] = StripPtr[0];
 					Data++;
@@ -1518,13 +1518,13 @@ static long UnCodeTIFF(
 			return (ILBM);
 
 		case 2 :
-			for(Strip = 0; Strip < OffsetSize; Strip++)
+			for (Strip = 0; Strip < OffsetSize; Strip++)
 			{
 				Value     = GetTIFFValue(TIFF, OffsetTag, Strip);
 				Bytes     = GetTIFFValue(TIFF, SizeTag,  Strip);
 				StripPtr  = TIFF;
 				StripPtr += Value;
-				for(i = 0; i < Bytes; i++)
+				for (i = 0; i < Bytes; i++)
 				{
 					*Data++ = (StripPtr[0] & 0xc0 >> 3);
 					*Data++ = (StripPtr[0] & 0x30 >> 2);
@@ -1536,13 +1536,13 @@ static long UnCodeTIFF(
 			return (PCX8);
 
 		case 4 :
-			for(Strip = 0; Strip < OffsetSize; Strip++)
+			for (Strip = 0; Strip < OffsetSize; Strip++)
 			{
 				Value     = GetTIFFValue(TIFF, OffsetTag, Strip);
 				Bytes     = GetTIFFValue(TIFF, SizeTag,  Strip);
 				StripPtr  = TIFF;
 				StripPtr += Value;
-				for(i = 0; i < Bytes; i++)
+				for (i = 0; i < Bytes; i++)
 				{
 					*Data++ = (StripPtr[0] & 0xf0 >> 4);
 					*Data++ = (StripPtr[0] & 0x0f);
@@ -1552,13 +1552,13 @@ static long UnCodeTIFF(
 			return (PCX8);
 
 		case 8 :
-			for(Strip = 0; Strip < OffsetSize; Strip++)
+			for (Strip = 0; Strip < OffsetSize; Strip++)
 			{
 				Value     = GetTIFFValue(TIFF, OffsetTag, Strip);
 				Bytes     = GetTIFFValue(TIFF, SizeTag,  Strip);
 				StripPtr  = TIFF;
 				StripPtr += Value;
-				for(i = 0; i < Bytes; i++)
+				for (i = 0; i < Bytes; i++)
 				{
 					Data[0] = StripPtr[0];
 					Data++;
@@ -1571,19 +1571,19 @@ static long UnCodeTIFF(
 		return (0L);
 
 	case 3:
-		if((Texture->Planes / PixelSamples) != 8)
+		if ((Texture->Planes / PixelSamples) != 8)
 		{
 			Texture->FileType = FT_ERR_UNSUPP;
 			return (0L);
 		}
 		LongData = (unsigned long *)Data;
-		for(Strip = 0; Strip < OffsetSize; Strip++)
+		for (Strip = 0; Strip < OffsetSize; Strip++)
 		{
 			Value     = GetTIFFValue(TIFF, OffsetTag, Strip);
 			Bytes     = GetTIFFValue(TIFF, SizeTag,  Strip);
 			StripPtr  = TIFF;
 			StripPtr += Value;
-			for(i = 0; i < Bytes; i += 3)
+			for (i = 0; i < Bytes; i += 3)
 			{
 				Value  = (unsigned long) * StripPtr++ << 16;
 				Value |= (unsigned long) * StripPtr++ <<  8;
@@ -1612,7 +1612,7 @@ long ParseTIFF(
 
 	offset = TIFF->FirstTag;
 
-	while(offset != 0)
+	while (offset != 0)
 	{
 		out->b3Write(&sep, sizeof(sep));
 		b3LogTIFF("new IFD at offset $%08lx\n", offset);
@@ -1624,12 +1624,12 @@ long ParseTIFF(
 		Data  += 2;
 
 		b3LogTIFF("%ld Tags at $%lx\n", Tags, Shorts);
-		if(Tags > 0)
+		if (Tags > 0)
 		{
 			b3LogTIFF(" i type mode  data[0]  data[1] - mode string\n");
 		}
 
-		for(i = 0; i < Tags; i++)
+		for (i = 0; i < Tags; i++)
 		{
 			ThisTag = (struct TagTIFF *)Data;
 			b3LogTIFF("%2ld %4x %4x %08lx %08lx - %s\n", i + 1,
@@ -1638,7 +1638,7 @@ long ParseTIFF(
 				ThisTag->Data[0], ThisTag->Data[1],
 				GetModeString(ThisTag->Type & 0xffffL));
 
-			switch(ThisTag->Code)
+			switch (ThisTag->Code)
 			{
 			case TIFF_IFW1 :
 				GetIFW(TIFF, ThisTag);

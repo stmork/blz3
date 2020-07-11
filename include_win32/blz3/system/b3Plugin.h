@@ -99,7 +99,7 @@ public:
 public:
 	static inline void b3InitPluginInfo(b3_plugin_info * info, b3_bool clear = true)
 	{
-		if(clear)
+		if (clear)
 		{
 			memset(info, 0, sizeof(b3_plugin_info));
 		}
@@ -113,7 +113,7 @@ public:
 		b3_u08  * ptr = (b3_u08 *)info;
 		b3_size   i;
 
-		for(i = 0; i < info->m_Size; i++)
+		for (i = 0; i < info->m_Size; i++)
 		{
 			checksum += *ptr++;
 		}

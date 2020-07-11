@@ -64,7 +64,7 @@ b3_f64 b3Clouds::b3ComputeClouds(
 {
 	b3_f64 sight;
 
-	if(ray->dir.z > 0)
+	if (ray->dir.z > 0)
 	{
 		b3_vector Dir;
 		b3_f64    p, D, len;
@@ -80,7 +80,7 @@ b3_f64 b3Clouds::b3ComputeClouds(
 
 		t = b3Noise::b3Turbulence(&Dir);
 		r = 1.0 - pow(t, -m_Sharpness);
-		if(r < 0)
+		if (r < 0)
 		{
 			r = 0;
 		}

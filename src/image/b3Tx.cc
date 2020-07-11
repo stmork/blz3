@@ -91,7 +91,7 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 	yDPI        = 1;
 
 	// set TIFF error und warning handler
-	if(!m_ErrorHandlerInstalled)
+	if (!m_ErrorHandlerInstalled)
 	{
 #ifdef HAVE_LIBTIFF
 		TIFFSetErrorHandler(b3TIFFErrorHandler);
@@ -133,7 +133,7 @@ b3_bool b3Tx::b3AllocTx(
 {
 	void * new_ptr;
 
-	if((d == 0) || (x == 0) || (y == 0))
+	if ((d == 0) || (x == 0) || (y == 0))
 	{
 		// This meens, we need an empty image, so
 		// free memory and nothing is OK!
@@ -143,36 +143,36 @@ b3_bool b3Tx::b3AllocTx(
 
 	b3EndHist();
 
-	if(d == 1)
+	if (d == 1)
 	{
 		dSize = TX_BWA(x) * y;
 		pSize = 2;
 		type  = B3_TX_ILBM;
 	}
-	if((d > 1) && (d <= 8))
+	if ((d > 1) && (d <= 8))
 	{
 		dSize =  x * y;
 		pSize = 1 << d;
 		type  = B3_TX_VGA;
 	}
-	if((d == 12) || (d == 16))
+	if ((d == 12) || (d == 16))
 	{
 		dSize = (x * y) * sizeof(b3_u16);
 		type  = B3_TX_RGB4;
 	}
-	if((d == 24) || (d == 32))
+	if ((d == 24) || (d == 32))
 	{
 		dSize = (x * y) * sizeof(b3_pkd_color);
 		type  = B3_TX_RGB8;
 	}
-	if((d == 48) || (d == 96) || (d == 128))
+	if ((d == 48) || (d == 96) || (d == 128))
 	{
 		dSize = (x * y) * sizeof(b3_color);
 		d     = sizeof(b3_color) << 3;
 		type  = B3_TX_FLOAT;
 	}
 
-	if(type == B3_TX_UNDEFINED)
+	if (type == B3_TX_UNDEFINED)
 	{
 		b3FreeTx();
 		return false;
@@ -181,17 +181,17 @@ b3_bool b3Tx::b3AllocTx(
 	B3_ASSERT(dSize > 0);
 
 	new_ptr = b3Realloc(data, dSize);
-	if(new_ptr == null)
+	if (new_ptr == null)
 	{
 		b3FreeTx();
 		return false;
 	}
 	data = reinterpret_cast<unsigned char *>(new_ptr);
 
-	if(pSize > 0)
+	if (pSize > 0)
 	{
 		new_ptr = b3Realloc(palette, pSize * sizeof(b3_pkd_color));
-		if(new_ptr == null)
+		if (new_ptr == null)
 		{
 			b3FreeTx();
 			return false;
@@ -205,18 +205,18 @@ b3_bool b3Tx::b3AllocTx(
 	depth  = d;
 
 	// initializing default palettes
-	if(depth == 1)
+	if (depth == 1)
 	{
 		palette[0] = 0x00ffffff;
 		palette[1] = 0x00000000;
 	}
 
 	// Initialize grey ramp
-	if(depth == 8)
+	if (depth == 8)
 	{
 		b3_loop i;
 
-		for(i = 0; i < 256; i++)
+		for (i = 0; i < 256; i++)
 		{
 			palette[i] = 0x010101 * i;
 		}
@@ -229,19 +229,19 @@ b3_bool b3Tx::b3AllocTx(
 
 void b3Tx::b3FreeTx()
 {
-	if(data != null)
+	if (data != null)
 	{
 		b3Free(data);
 		data  = null;
 		dSize = 0;
 	}
-	if(palette != null)
+	if (palette != null)
 	{
 		try
 		{
 			b3Free((void *)palette);
 		}
-		catch(...)
+		catch (...)
 		{
 			b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx   # b3Tx() Oops?\n");
 			b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx   # b3Tx() %s %d\n", __FILE__, __LINE__);
@@ -263,21 +263,21 @@ const b3_bool b3Tx::b3IsGreyPalette() const
 	b3_loop      i, max;
 	b3_pkd_color mul, step;
 
-	if(type != B3_TX_VGA)
+	if (type != B3_TX_VGA)
 	{
 		return false;
 	}
 
-	if(depth > 8)
+	if (depth > 8)
 	{
 		return false;
 	}
 
 	max  =   1 << depth;
 	step = 256 >> depth;
-	for(i = 0, mul = 0; i < max; i++, mul += step)
+	for (i = 0, mul = 0; i < max; i++, mul += step)
 	{
-		if((0x010101 * mul) != palette[i])
+		if ((0x010101 * mul) != palette[i])
 		{
 			return false;
 		}
@@ -295,56 +295,56 @@ inline void b3Tx::b3CopyILBMtoVGA(
 	b3_count  xBytes, xRest, index, BytesPerLine;
 
 	BytesPerLine = TX_BWA(xSize);
-	if((palette != null) && (depth < 8))
+	if ((palette != null) && (depth < 8))
 	{
 		xBytes = xSize >> 3;
 		xRest  = xSize  & 7;
 		Data = &data[y * BytesPerLine * depth];
-		for(d = 0; d < depth; d++)
+		for (d = 0; d < depth; d++)
 		{
 			index = 0;
 
 			// Check complete source bytes
-			for(x = 0; x < xBytes; x++)
+			for (x = 0; x < xBytes; x++)
 			{
-				if(Data[x] != 0)
+				if (Data[x] != 0)
 				{
-					if(Data[x] & 0x80)
+					if (Data[x] & 0x80)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x40)
+					if (Data[x] & 0x40)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x20)
+					if (Data[x] & 0x20)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x10)
+					if (Data[x] & 0x10)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x08)
+					if (Data[x] & 0x08)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x04)
+					if (Data[x] & 0x04)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x02)
+					if (Data[x] & 0x02)
 					{
 						row[index] |= dstBit;
 					}
 					index++;
-					if(Data[x] & 0x01)
+					if (Data[x] & 0x01)
 					{
 						row[index] |= dstBit;
 					}
@@ -357,10 +357,10 @@ inline void b3Tx::b3CopyILBMtoVGA(
 			}
 
 			// Compute rest bits of last byte
-			for(x = 0; x < xRest; x++)
+			for (x = 0; x < xRest; x++)
 			{
 				Bit = 128;
-				if(Data[xBytes] & Bit)
+				if (Data[xBytes] & Bit)
 				{
 					row[index] |= dstBit;
 				}
@@ -386,18 +386,18 @@ inline void b3Tx::b3CopyILBMtoRGB8(
 	b3_pkd_color  Color, Bit;
 
 	BytesPerLine = TX_BWA(xSize);
-	if(palette == null)
+	if (palette == null)
 	{
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			Data   = data;
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
 			Color  = 0;
 			Bit    = 128 >> (x & 7);
-			for(d = 0; d < depth; d++)
+			for (d = 0; d < depth; d++)
 			{
 				Color *= 2;
-				if(Data[0] & Bit)
+				if (Data[0] & Bit)
 				{
 					Color |= 1;
 				}
@@ -420,18 +420,18 @@ inline void b3Tx::b3CopyILBMtoFloat(
 	b3_pkd_color  Color, Bit;
 
 	BytesPerLine = TX_BWA(xSize);
-	if(palette == null)
+	if (palette == null)
 	{
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			Data   = data;
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
 			Color  = 0;
 			Bit    = 128 >> (x & 7);
-			for(d = 0; d < depth; d++)
+			for (d = 0; d < depth; d++)
 			{
 				Color *= 2;
-				if(Data[0] & Bit)
+				if (Data[0] & Bit)
 				{
 					Color |= 1;
 				}
@@ -448,29 +448,29 @@ inline void b3Tx::b3CopyILBMtoFloat(
 void b3Tx::b3Copy(b3Tx * srcTx)
 {
 	type = B3_TX_UNDEFINED;
-	if(!srcTx->b3IsLoaded())
+	if (!srcTx->b3IsLoaded())
 	{
 		b3FreeTx();
 		return;
 	}
 
-	if(b3AllocTx(srcTx->xSize, srcTx->ySize, srcTx->depth))
+	if (b3AllocTx(srcTx->xSize, srcTx->ySize, srcTx->depth))
 	{
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Copy(): ");
-		if(data != null)
+		if (data != null)
 		{
-			if(srcTx->type == B3_TX_ILBM)
+			if (srcTx->type == B3_TX_ILBM)
 			{
 				b3_u08    *   bPtr;
 				b3_pkd_color * lPtr;
 				b3_color   *  cPtr;
 				b3_coord      y;
 
-				switch(type)
+				switch (type)
 				{
 				case B3_TX_VGA:
 					bPtr = (b3_u08 *)data;
-					for(y = 0; y < ySize; y++)
+					for (y = 0; y < ySize; y++)
 					{
 						srcTx->b3CopyILBMtoVGA(bPtr, y);
 						bPtr += xSize;
@@ -479,7 +479,7 @@ void b3Tx::b3Copy(b3Tx * srcTx)
 
 				case B3_TX_RGB8:
 					lPtr = (b3_pkd_color *)data;;
-					for(y = 0; y < ySize; y++)
+					for (y = 0; y < ySize; y++)
 					{
 						srcTx->b3CopyILBMtoRGB8(lPtr, y);
 						lPtr += xSize;
@@ -488,7 +488,7 @@ void b3Tx::b3Copy(b3Tx * srcTx)
 
 				case B3_TX_FLOAT:
 					cPtr = (b3_color *)data;;
-					for(y = 0; y < ySize; y++)
+					for (y = 0; y < ySize; y++)
 					{
 						srcTx->b3CopyILBMtoFloat(cPtr, y);
 						cPtr += xSize;
@@ -511,7 +511,7 @@ void b3Tx::b3Copy(b3Tx * srcTx)
 			}
 			b3PrintF(B3LOG_FULL, " [data - %ld]", dSize);
 		}
-		if(palette != null)
+		if (palette != null)
 		{
 			memcpy(palette, srcTx->b3GetPalette(), B3_MIN(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
 			b3PrintF(B3LOG_FULL, " [palette - %ld]", pSize);
@@ -559,7 +559,7 @@ void b3Tx::b3SetPalette(
 	b3_count      NumColors)
 {
 	// compute bit depth
-	for(depth = 0; NumColors > 1; depth++)
+	for (depth = 0; NumColors > 1; depth++)
 	{
 		NumColors = NumColors >> 1;
 	}
@@ -597,7 +597,7 @@ const b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 	b3_pkd_color * lPtr;
 	b3_color   *  cPtr;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM:
 	case B3_TX_RGB4:
@@ -627,7 +627,7 @@ const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 	b3_pkd_color * lPtr;
 	b3_color   *  cPtr;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM:
 	case B3_TX_RGB4:
@@ -659,7 +659,7 @@ const b3_pkd_color b3Tx::b3GetValue(
 	b3_pkd_color * lPtr;
 	b3_color   *  cPtr;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM:
 		return b3ILBMValue(x, y);
@@ -702,21 +702,21 @@ inline const b3_pkd_color b3Tx::b3ILBMValue(
 	Address     += (y * BytesPerLine * depth + (x >> 3));
 	//	Bit          = m_Bits[x & 7];
 	Bit          = 128 >> (x & 7);
-	for(i = 0; i < depth; i++)
+	for (i = 0; i < depth; i++)
 	{
-		if(Address[0] & Bit)
+		if (Address[0] & Bit)
 		{
 			PlaneValue |= pattern;
 		}
 		Address += BytesPerLine;
 		pattern += pattern;
 	}
-	if(palette != null)
+	if (palette != null)
 	{
 		return palette[PlaneValue];
 	}
 
-	if(depth >= 24)
+	if (depth >= 24)
 	{
 		i = PlaneValue;
 		PlaneValue  = (i & 0xff0000) >> 16;
@@ -783,17 +783,17 @@ const b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 	b3_color   *  cPtr;
 	b3_count      i, xBytes;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM :
 		xBytes = TX_BWA(xSize);
 		bPtr   = (b3_u08 *)data;
 		bPtr  += ((y + 1) * xBytes * depth + (x >> 3));
 		bit    = m_Bits[x & 7];
-		for(i = 0; i < depth; i++)
+		for (i = 0; i < depth; i++)
 		{
 			bPtr   -= xBytes;
-			if(*bPtr & bit)
+			if (*bPtr & bit)
 			{
 				return true;
 			}
@@ -846,19 +846,19 @@ inline void b3Tx::b3GetILBM(
 	b3_pkd_color  Color, Bit;
 
 	BytesPerLine = TX_BWA(xSize);
-	if(palette != null)
+	if (palette != null)
 	{
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			Data   = (b3_u08 *)data;
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3));
 			Color  = 0;
 			Bit    = m_Bits[x & 7];
-			for(d = 0; d < depth; d++)
+			for (d = 0; d < depth; d++)
 			{
 				Data   -= BytesPerLine;
 				Color <<= 1;
-				if(Data[0] & Bit)
+				if (Data[0] & Bit)
 				{
 					Color |= 1;
 				}
@@ -869,17 +869,17 @@ inline void b3Tx::b3GetILBM(
 	}
 	else
 	{
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			Data   = data;
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3));
 			Color  = 0;
 			Bit    = m_Bits[x & 7];
-			for(d = 0; d < depth; d++)
+			for (d = 0; d < depth; d++)
 			{
 				Data   -= BytesPerLine;
 				Color <<= 1;
-				if(Data[0] & Bit)
+				if (Data[0] & Bit)
 				{
 					Color |= 1;
 				}
@@ -910,7 +910,7 @@ inline void b3Tx::b3GetRGB8(
 
 	xOuterMax = xSize >> 3;
 	xInnerMax = xSize & 0x7;
-	for(x = 0; x < xOuterMax; x++)
+	for (x = 0; x < xOuterMax; x++)
 	{
 		*dst++ = *src++;
 		*dst++ = *src++;
@@ -921,7 +921,7 @@ inline void b3Tx::b3GetRGB8(
 		*dst++ = *src++;
 		*dst++ = *src++;
 	}
-	for(x = 0; x < xInnerMax; x++)
+	for (x = 0; x < xInnerMax; x++)
 	{
 		*dst++ = *src++;
 	}
@@ -938,7 +938,7 @@ inline void b3Tx::b3GetRGB4(
 
 	Data  = (b3_u16 *)data;
 	Data += (xSize * y);
-	for(x = 0; x < xSize; x++)
+	for (x = 0; x < xSize; x++)
 	{
 		Color  = ((long)Data[0] & 0x0f00) << 12;
 		Color |= ((long)Data[0] & 0x00f0) <<  8;
@@ -958,7 +958,7 @@ inline void b3Tx::b3GetVGA(
 
 	Data    = (b3_u08 *)data;
 	Data   += (xSize * y);
-	for(x = 0; x < xSize; x++)
+	for (x = 0; x < xSize; x++)
 	{
 		ColorLine[0] = palette[Data[0]];
 		ColorLine++;
@@ -974,7 +974,7 @@ inline void b3Tx::b3GetFloat(
 	b3_coord  x;
 
 	cPtr += (xSize * y);
-	for(x = 0; x < xSize; x++)
+	for (x = 0; x < xSize; x++)
 	{
 		*ColorLine++ = b3Color(*cPtr++);
 	}
@@ -990,10 +990,10 @@ void b3Tx::b3GetRow(
 	b3_color   *  cPtr;
 	b3_coord      x;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM:
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			*Line++ = b3Color(b3ILBMValue(x, y));
 		}
@@ -1002,7 +1002,7 @@ void b3Tx::b3GetRow(
 	case B3_TX_VGA:
 		bPtr = data;
 		bPtr += (xSize * y);
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			*Line++ = b3Color(palette != null ? palette[*bPtr] : B3_BLACK);
 			bPtr++;
@@ -1012,7 +1012,7 @@ void b3Tx::b3GetRow(
 	case B3_TX_RGB4:
 		sPtr = (b3_u16 *)data;
 		sPtr += (xSize * y);
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			*Line++ = b3Color(*sPtr++);
 		}
@@ -1021,7 +1021,7 @@ void b3Tx::b3GetRow(
 	case B3_TX_RGB8:
 		lPtr = (b3_pkd_color *)data;
 		lPtr += (xSize * y);
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			*Line++ = b3Color(*lPtr++);
 		}
@@ -1030,7 +1030,7 @@ void b3Tx::b3GetRow(
 	case B3_TX_FLOAT:
 		cPtr = (b3_color *)data;
 		cPtr += (xSize * y);
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			*Line++ = *cPtr++;
 		}
@@ -1045,7 +1045,7 @@ void b3Tx::b3GetRow(
 	b3_pkd_color * Line,
 	const b3_coord      y) const
 {
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM :
 		b3GetILBM(Line, y);

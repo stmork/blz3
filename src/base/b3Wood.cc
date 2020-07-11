@@ -102,10 +102,10 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, b3_f64 dist)
 	Pgrain.z = d.z * m_GrainFrequency * 0.05;
 	dPgrain  = dist / 100;
 
-	for(i = 0; i < 2; i++)
+	for (i = 0; i < 2; i++)
 	{
 		b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2, 0.6, dPgrain);
-		if(grain1valid > 0)
+		if (grain1valid > 0)
 		{
 			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x, Pgrain.y, Pgrain.z);
 
@@ -113,7 +113,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, b3_f64 dist)
 			g  = b3Math::b3Limit(0.8 - g);
 			g *= g;
 			g  = m_Grainy * b3Math::b3Smoothstep(0.5, 1, g);
-			if(i == 0)
+			if (i == 0)
 			{
 				inring *= (1 - 0.4 * grain1valid);
 			}
@@ -160,7 +160,7 @@ b3OakPlank::b3OakPlank()
 
 b3OakPlank::~b3OakPlank()
 {
-	if(m_Planks != null)
+	if (m_Planks != null)
 	{
 		delete [] m_Planks;
 	}
@@ -185,7 +185,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	b3_index index;
 
 	b3PrepareWood(scale);
-	if(m_Planks != null)
+	if (m_Planks != null)
 	{
 		delete [] m_Planks;
 	}
@@ -196,9 +196,9 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	m_rxTimes    = 1.0 / m_xTimes;
 	m_ryTimes    = 1.0 / m_yTimes;
 
-	for(y = 0; y < m_yTimes; y++)
+	for (y = 0; y < m_yTimes; y++)
 	{
-		for(x = 0; x < m_xTimes; x++)
+		for (x = 0; x < m_xTimes; x++)
 		{
 			index = y * m_xTimes + x;
 			m_Planks[index].b3CopyWobbled(this, m_Wobble, (b3_f64)x * m_rxTimes, (b3_f64)y * m_ryTimes);

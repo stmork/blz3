@@ -100,12 +100,12 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	b3_f64         aux;
 
 	m_SubDiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
-	if(m_SubDiv < 8)
+	if (m_SubDiv < 8)
 	{
 		m_SubDiv = 8;
 	}
 
-	for(i = 0; i <= m_SubDiv; i++)
+	for (i = 0; i <= m_SubDiv; i++)
 	{
 		aux    = i * M_PI * 2 / m_SubDiv;
 		m_Sin[i] = sin(aux);
@@ -121,12 +121,12 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
 	m_CylinderPolygons = (b3_gl_polygon *)b3Alloc
 		((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
-	if((m_CylinderIndices != null) && (m_CylinderPolygons != null))
+	if ((m_CylinderIndices != null) && (m_CylinderPolygons != null))
 	{
 		gPtr = m_CylinderIndices;
 		pPtr = m_CylinderPolygons;
 		a = 0;
-		for(i = 0; i <= m_SubDiv; i++)
+		for (i = 0; i <= m_SubDiv; i++)
 		{
 			// Concatinate vertices in this ascending order:
 			//
@@ -158,11 +158,11 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
 	m_ConePolygons = (b3_gl_polygon *)b3Alloc
 		((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
-	if((m_ConeIndices != null) && (m_ConePolygons != null))
+	if ((m_ConeIndices != null) && (m_ConePolygons != null))
 	{
 		gPtr = m_ConeIndices;
 		pPtr = m_ConePolygons;
-		for(i = 0; i <= m_SubDiv; i++)
+		for (i = 0; i <= m_SubDiv; i++)
 		{
 			B3_GL_LINIT(gPtr, 0,  i + 1);
 			B3_GL_LINIT(gPtr, i + 1, i + 2);
@@ -241,7 +241,7 @@ void b3Shape::b3GetDiffuseColor(b3Color & color)
 	B3_FOR_BASE(b3GetMaterialHead(), item)
 	{
 		material = (b3Material *)item;
-		if(material->b3GetSurfaceValues(&surface))
+		if (material->b3GetSurfaceValues(&surface))
 		{
 			color = surface.m_Diffuse;
 			return;
@@ -272,7 +272,7 @@ b3_f64 b3Shape::b3GetColors(
 	B3_FOR_BASE(b3GetMaterialHead(), item)
 	{
 		material = (b3Material *)item;
-		if(material->b3GetSurfaceValues(&surface))
+		if (material->b3GetSurfaceValues(&surface))
 		{
 			ambient  = surface.m_Ambient;
 			diffuse  = surface.m_Diffuse;
@@ -294,10 +294,10 @@ b3_bool b3Shape::b3GetChess(
 	b3_bool  result = false;
 
 	item   = b3GetMaterialHead()->First;
-	if(item != null)
+	if (item != null)
 	{
 		result = item->b3GetClassType() == CHESS;
-		if(result)
+		if (result)
 		{
 			b3MatChess * chess = (b3MatChess *)item;
 			black   = chess->m_Material[0].m_Diffuse;
@@ -319,7 +319,7 @@ b3Tx * b3Shape::b3GetTexture(
 	b3Tx  * tx = null;
 
 	item = b3GetMaterialHead()->First;
-	if((item != null) && (item->b3GetClassType() == TEXTURE) && (item->Succ == null))
+	if ((item != null) && (item->b3GetClassType() == TEXTURE) && (item->Succ == null))
 	{
 		b3MatTexture   *  mat = (b3MatTexture *)item;
 		b3_stencil_limit  limit;
@@ -370,7 +370,7 @@ private:
 		b3_pkd_color * data = (b3_pkd_color *)m_Data;
 
 		yStart = 0;
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			yEnd = m_yMax * (i + 1) / CPUs;
 			info[i].m_Sampler = this;
@@ -416,7 +416,7 @@ private:
 				ray.polar.m_Polar.z =
 					ray.polar.m_BBoxOriginal.z =
 						ray.ipoint.z = 0;
-		for(y = info->m_yStart; y < info->m_yEnd; y++)
+		for (y = info->m_yStart; y < info->m_yEnd; y++)
 		{
 			ray.polar.m_BoxPolar.y =
 				ray.polar.m_ObjectPolar.y =
@@ -425,7 +425,7 @@ private:
 							ray.ipoint.y = fy;
 
 			fx = limit.x1 + b3Scene::epsilon;
-			for(x = 0; x < info->m_xMax; x++)
+			for (x = 0; x < info->m_xMax; x++)
 			{
 				ray.polar.m_BoxPolar.x =
 					ray.polar.m_ObjectPolar.x =
@@ -435,11 +435,11 @@ private:
 
 				color = B3_BLACK;
 				loop  = true;
-				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
+				for (material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
 					(material != null) && loop;
 					material  = (b3Material *)material->Succ)
 				{
-					if(material->b3GetSurfaceValues(&surface))
+					if (material->b3GetSurfaceValues(&surface))
 					{
 						surface.m_Diffuse.b3SetAlpha(m_Shape->b3CheckStencil(&ray.polar) ? 0 : 1);
 						color     = surface.m_Diffuse;
@@ -460,7 +460,7 @@ b3_bool b3Shape::b3GetImage(b3Tx * image)
 	b3_bool       result = false;
 	b3_u32        type;
 
-	for(item  = b3GetMaterialHead()->First;
+	for (item  = b3GetMaterialHead()->First;
 		(item != null) && (!result);
 		item  = item->Succ)
 	{
@@ -468,7 +468,7 @@ b3_bool b3Shape::b3GetImage(b3Tx * image)
 		result = ((type != MAT_NORMAL) && (type != CHESS));
 	}
 
-	if(result)
+	if (result)
 	{
 		b3PrintT(">b3GetImage()");
 		b3RenderImageSampler sampler(this, image);
@@ -499,11 +499,11 @@ b3_count b3Shape::b3GetIndexOverhead(
 	b3_index xs, xe;
 	b3_f64   x1, x2;
 
-	if(m_Limit.x1 < xLeft)
+	if (m_Limit.x1 < xLeft)
 	{
 		m_Limit.x1 = xLeft;
 	}
-	if(m_Limit.y1 < yLeft)
+	if (m_Limit.y1 < yLeft)
 	{
 		m_Limit.y1 = yLeft;
 	}
@@ -512,11 +512,11 @@ b3_count b3Shape::b3GetIndexOverhead(
 	xs = (b3_index)ceil(x1);
 	xe = (b3_index)floor(x2);
 	Overhead = xe - xs;
-	if((xs - x1) > b3Scene::epsilon)
+	if ((xs - x1) > b3Scene::epsilon)
 	{
 		Overhead++;
 	}
-	if((x2 - xe) > b3Scene::epsilon)
+	if ((x2 - xe) > b3Scene::epsilon)
 	{
 		Overhead++;
 	}
@@ -531,9 +531,9 @@ b3_index b3Shape::b3FindVertex(b3_index index)
 #ifdef USE_FIND_VERTEX
 	b3_vector * point = &glVertex[index].v;
 
-	for(b3_index i = 0; i < glVertexCount; i++)
+	for (b3_index i = 0; i < glVertexCount; i++)
 	{
-		if(b3Vector::b3Distance(point, &glVertex[i].v) < epsilon)
+		if (b3Vector::b3Distance(point, &glVertex[i].v) < epsilon)
 		{
 			return i;
 		}
@@ -553,12 +553,12 @@ void b3Shape::b3ComputeQuadricNormals(b3_bool normalize)
 
 	// Clear normals
 	b3GetVertexRange(start, end);
-	for(i = start; i < end; i++)
+	for (i = start; i < end; i++)
 	{
 		b3Vector::b3Init(&glVertex[i].n);
 	}
 
-	for(i = k = 0; i < glPolyCount; i++)
+	for (i = k = 0; i < glPolyCount; i++)
 	{
 		n1 = b3FindVertex(v1 = glPolygons[k++]);
 		n2 = b3FindVertex(v2 = glPolygons[k++]);
@@ -567,21 +567,21 @@ void b3Shape::b3ComputeQuadricNormals(b3_bool normalize)
 		b3Vector::b3Sub(&glVertex[n2].v, &glVertex[n1].v, &xDir);
 		b3Vector::b3Sub(&glVertex[n3].v, &glVertex[n1].v, &yDir);
 		b3Vector::b3CrossProduct(&xDir, &yDir, &normal);
-		if(b3Vector::b3Normalize(&normal) > epsilon)
+		if (b3Vector::b3Normalize(&normal) > epsilon)
 		{
 			b3Vector::b3Add(&normal, &glVertex[v1].n);
 			b3Vector::b3Add(&normal, &glVertex[v2].n);
 			b3Vector::b3Add(&normal, &glVertex[v3].n);
 
-			if(n1 != v1)
+			if (n1 != v1)
 			{
 				b3Vector::b3Add(&normal, &glVertex[n1].n);
 			}
-			if(n2 != v2)
+			if (n2 != v2)
 			{
 				b3Vector::b3Add(&normal, &glVertex[n2].n);
 			}
-			if(n3 != v3)
+			if (n3 != v3)
 			{
 				b3Vector::b3Add(&normal, &glVertex[n3].n);
 			}
@@ -589,9 +589,9 @@ void b3Shape::b3ComputeQuadricNormals(b3_bool normalize)
 	}
 
 	// Normalize
-	if(normalize)
+	if (normalize)
 	{
-		for(i = 0; i < glVertexCount; i++)
+		for (i = 0; i < glVertexCount; i++)
 		{
 			b3Vector::b3Normalize(&glVertex[i].n);
 		}
@@ -636,17 +636,17 @@ void b3Shape::b3ComputeSphereVertices(
 	ySize  = Circles;
 
 	a = 2.0 / SinCosSteps;
-	for(j = 0 ; j < Circles; j++)
+	for (j = 0 ; j < Circles; j++)
 	{
 		LocalCos[j] = Rad = -cos(j * a * M_PI);
 		LocalSin[j] = sqrt(1.0 - Rad * Rad);
 	}
 
-	for(i = 0; i <= SinCosSteps; i++)
+	for (i = 0; i <= SinCosSteps; i++)
 	{
 		cx = b3ShapeRenderContext::m_Cos[i];
 		sx = b3ShapeRenderContext::m_Sin[i];
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			cy = LocalCos[j];
 			sy = LocalSin[j];
@@ -666,9 +666,9 @@ void b3Shape::b3ComputeSphereNormals(b3_vector & base, b3_bool normalize)
 	b3_gl_vertex * glVertex = *glVertexElements;
 	b3_index i;
 
-	for(i = 0; i < glVertexElements->b3GetCount(); i++)
+	for (i = 0; i < glVertexElements->b3GetCount(); i++)
 	{
-		if(normalize)
+		if (normalize)
 		{
 			b3_f64 x, y, z, r;
 
@@ -722,7 +722,7 @@ void b3Shape::b3ComputeCylinderVertices(
 	xSize    = 0;
 	ySize    = 2;
 
-	if((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		b  = m_Limit.x1 * M_PI * 2;
 		sx = cos(b);
@@ -746,7 +746,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		xSize++;
 	}
 
-	for(; i <= iMax; i++)
+	for (; i <= iMax; i++)
 	{
 		b3_f64 s = ((double)i / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 
@@ -771,7 +771,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		xSize++;
 	}
 
-	if((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		b = m_Limit.x2 * M_PI * 2;
 		sx = cos(b);
@@ -805,7 +805,7 @@ void b3Shape::b3ComputeCylinderIndices()
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead(0.0, 0.0);
-	if(Overhead < 0)
+	if (Overhead < 0)
 	{
 		glGridCount = 1;
 		Overhead = -Overhead;
@@ -853,10 +853,10 @@ void b3Shape::b3ComputeConeVertices(
 	xSize  = 0;
 	ySize  = 1;
 
-	if(m_Limit.y2 < 1)
+	if (m_Limit.y2 < 1)
 	{
 		ySize++;
-		if((i - start) > b3Scene::epsilon)
+		if ((i - start) > b3Scene::epsilon)
 		{
 			a = m_Limit.x1 * M_PI * 2;
 			sx = (1 - b) * cos(a);
@@ -881,7 +881,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		for(; i <= iMax; i++)
+		for (; i <= iMax; i++)
 		{
 			b3_f64 s = ((double)i / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 
@@ -907,7 +907,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if((end - iMax) > b3Scene::epsilon)
+		if ((end - iMax) > b3Scene::epsilon)
 		{
 			a  = m_Limit.x2 * M_PI * 2;
 
@@ -942,7 +942,7 @@ void b3Shape::b3ComputeConeVertices(
 		Vector++;
 		glVertexCount++;
 
-		if((i - start) > b3Scene::epsilon)
+		if ((i - start) > b3Scene::epsilon)
 		{
 			a  = m_Limit.x1 * M_PI * 2;
 			sx = (1 - b) * cos(a);
@@ -959,7 +959,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		for(; i <= iMax; i++)
+		for (; i <= iMax; i++)
 		{
 			sx = (1 - b) * b3ShapeRenderContext::m_Cos[i % SinCosSteps];
 			sy = (1 - b) * b3ShapeRenderContext::m_Sin[i % SinCosSteps];
@@ -975,7 +975,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if((end - iMax) > b3Scene::epsilon)
+		if ((end - iMax) > b3Scene::epsilon)
 		{
 			a  = m_Limit.x2 * M_PI * 2;
 			sx = (1 - b) * cos(a);
@@ -1002,7 +1002,7 @@ void b3Shape::b3ComputeConeIndices()
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead(0.0, 0.0);
-	if(Overhead < 0)
+	if (Overhead < 0)
 	{
 		glGridCount = 1;
 		Overhead  = -Overhead;
@@ -1011,7 +1011,7 @@ void b3Shape::b3ComputeConeIndices()
 	{
 		glGridCount = 0;
 	}
-	if(m_Limit.y2 < 1)
+	if (m_Limit.y2 < 1)
 	{
 		glGridElements->b3SetGrids(GridsCyl);
 		glPolygonElements->b3SetPolygons(PolysCyl);
@@ -1055,24 +1055,24 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	end    = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if((i - start) > b3Scene::epsilon)	/* underflow */
+	if ((i - start) > b3Scene::epsilon)	/* underflow */
 	{
 		LocalSin[Circles] = m_Limit.y1;
 		Circles++;
 	}
 	a = 4.0 / SinCosSteps;
-	for(j = i; j <= iMax; j++)		/* integers */
+	for (j = i; j <= iMax; j++)		/* integers */
 	{
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if((end - iMax) > b3Scene::epsilon)	/* Overflow */
+	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
 	{
 		LocalSin[Circles] = m_Limit.y2;
 		Circles++;
 	}
 
-	for(j = 0; j < Circles; j++)		/* Calculate Values */
+	for (j = 0; j < Circles; j++)		/* Calculate Values */
 	{
 		LocalSin[j] = a = sin(LocalSin[j] * M_PI * 0.5);
 		LocalCos[j] = sqrt(1.0 - a * a);
@@ -1085,13 +1085,13 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	xSize = 0;
 	ySize = Circles;
 
-	if((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		a  = m_Limit.x1 * M_PI * 2;
 		sx = cos(a);
 		sy = sin(a);
 
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
@@ -1107,12 +1107,12 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		xSize++;
 	}
 
-	for(; i <= iMax; i++)
+	for (; i <= iMax; i++)
 	{
 		sx = b3ShapeRenderContext::m_Cos[i];
 		sy = b3ShapeRenderContext::m_Sin[i];
 
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
@@ -1128,13 +1128,13 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		xSize++;
 	}
 
-	if((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		a  = m_Limit.x2 * M_PI * 2;
 		sx = cos(a);
 		sy = sin(a);
 
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
@@ -1161,7 +1161,7 @@ void b3Shape::b3GetEllipsoidIndexCount(b3_count & gridCount, b3_count & polyCoun
 
 	b3ComputeBound(&m_Limit);
 	m_Overhead = b3GetIndexOverhead(0.0, -1.0);
-	if(m_Overhead < 0)
+	if (m_Overhead < 0)
 	{
 		m_EndLine  = true;
 		m_Overhead = -m_Overhead;
@@ -1176,39 +1176,39 @@ void b3Shape::b3GetEllipsoidIndexCount(b3_count & gridCount, b3_count & polyCoun
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	m_Heights = ye - ys;
-	if((ys - y1) > b3Scene::epsilon)
+	if ((ys - y1) > b3Scene::epsilon)
 	{
 		m_Heights++;
 	}
-	if((y2 - ye) > b3Scene::epsilon)
+	if ((y2 - ye) > b3Scene::epsilon)
 	{
 		m_Heights++;
 	}
 
 	m_Widths = m_Heights - 1;
-	if((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
 	{
 		m_Widths++;
 	}
-	if(y1  > b3Scene::epsilon)
+	if (y1  > b3Scene::epsilon)
 	{
 		m_Widths++;
 	}
 
 	gridCount = m_Heights * 2;
 	polyCount = m_Heights * 2;
-	if(y1 <= b3Scene::epsilon)
+	if (y1 <= b3Scene::epsilon)
 	{
 		polyCount--;
 		gridCount--;
 	}
-	if((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
 	{
 		gridCount++;
 	}
 	gridCount *= m_Overhead;
 	polyCount *= m_Overhead;
-	if(m_EndLine)
+	if (m_EndLine)
 	{
 		gridCount += m_Heights;
 	}
@@ -1226,16 +1226,16 @@ void b3Shape::b3ComputeEllipsoidIndices()
 	y1 = (m_Limit.y1 + 1) * SinCosSteps * 0.25;
 	y2 = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
 
-	for(i = 0; i < m_Overhead; i++)
+	for (i = 0; i < m_Overhead; i++)
 	{
-		for(j = 0; j < m_Heights; j++)
+		for (j = 0; j < m_Heights; j++)
 		{
 			// This marks a longitude
 			B3_GL_LINIT(gPtr, s + j, s + j + 1);
 		}
 
 		// North pole
-		if(y1 <= b3Scene::epsilon)
+		if (y1 <= b3Scene::epsilon)
 		{
 			// NOTE: j = 0 substitution
 			B3_GL_PINIT(pPtr, s + m_Heights + 2, s + m_Heights + 1, s + 1);
@@ -1246,7 +1246,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 			j = 0;
 		}
 
-		while(j < m_Heights)
+		while (j < m_Heights)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + m_Heights + 1);
 
@@ -1255,7 +1255,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 			j++;
 		}
 
-		if((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+		if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + m_Heights + 1);
 
@@ -1264,9 +1264,9 @@ void b3Shape::b3ComputeEllipsoidIndices()
 		s += (m_Heights + 1);
 	}
 
-	if(m_EndLine)
+	if (m_EndLine)
 	{
-		for(j = 0; j < m_Heights; j++)
+		for (j = 0; j < m_Heights; j++)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + 1);
 		}
@@ -1340,7 +1340,7 @@ void b3Shape::b3ComputeBoxVertices(
 
 	xSize = ySize = 1;
 
-	for(i = 0; i < 8; i++)
+	for (i = 0; i < 8; i++)
 	{
 		glVertex[i +  8] =
 			glVertex[i + 16] = glVertex[i];
@@ -1383,20 +1383,20 @@ void b3Shape::b3ComputeTorusVertices(
 	end    = m_Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if((i - start) > b3Scene::epsilon)	/* underflow */
+	if ((i - start) > b3Scene::epsilon)	/* underflow */
 	{
 		relTex[Circles]   = 0;
 		LocalSin[Circles] = m_Limit.y1;
 		Circles++;
 	}
 	a = 1.0 / SinCosSteps;
-	for(j = i; j <= iMax; j++)		/* integers */
+	for (j = i; j <= iMax; j++)		/* integers */
 	{
 		relTex[Circles]   = ((double)j / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if((end - iMax) > b3Scene::epsilon)	/* Overflow */
+	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
 	{
 		relTex[Circles]   = 1;
 		LocalSin[Circles] = m_Limit.y2;
@@ -1405,7 +1405,7 @@ void b3Shape::b3ComputeTorusVertices(
 	xSize = 0;
 	ySize = Circles;
 
-	for(j = 0; j < Circles; j++)		/* Calculate Values */
+	for (j = 0; j < Circles; j++)		/* Calculate Values */
 	{
 		LocalCos[j] = cos(LocalSin[j] * M_PI * 2) * bRad;
 		LocalSin[j] = sin(LocalSin[j] * M_PI * 2) * bRad;
@@ -1416,7 +1416,7 @@ void b3Shape::b3ComputeTorusVertices(
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 
-	if((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		a     = m_Limit.x1 * M_PI * 2;
 		sx    = cos(a);
@@ -1425,7 +1425,7 @@ void b3Shape::b3ComputeTorusVertices(
 		Aux.y = Base.y + sx * aRad * Dir1.y + sy * aRad * Dir2.y;
 		Aux.z = Base.z + sx * aRad * Dir1.z + sy * aRad * Dir2.z;
 
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
@@ -1441,7 +1441,7 @@ void b3Shape::b3ComputeTorusVertices(
 		xSize++;
 	}
 
-	for(; i <= iMax; i++)
+	for (; i <= iMax; i++)
 	{
 		sx    = b3ShapeRenderContext::m_Cos[i];
 		sy    = b3ShapeRenderContext::m_Sin[i];
@@ -1449,7 +1449,7 @@ void b3Shape::b3ComputeTorusVertices(
 		Aux.y = Base.y + sx * aRad * Dir1.y + sy * aRad * Dir2.y;
 		Aux.z = Base.z + sx * aRad * Dir1.z + sy * aRad * Dir2.z;
 
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
@@ -1465,7 +1465,7 @@ void b3Shape::b3ComputeTorusVertices(
 		xSize++;
 	}
 
-	if((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		a     = m_Limit.x2 * M_PI * 2;
 		sx    = cos(a);
@@ -1474,7 +1474,7 @@ void b3Shape::b3ComputeTorusVertices(
 		Aux.y = Base.y + sx * aRad * Dir1.y + sy * aRad * Dir2.y;
 		Aux.z = Base.z + sx * aRad * Dir1.z + sy * aRad * Dir2.z;
 
-		for(j = 0; j < Circles; j++)
+		for (j = 0; j < Circles; j++)
 		{
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
@@ -1497,7 +1497,7 @@ void b3Shape::b3ComputeTorusNormals()
 {
 	b3_gl_vertex * glVertex = *glVertexElements;
 
-	for(int i = 0; i < glVertexElements->b3GetCount(); i++)
+	for (int i = 0; i < glVertexElements->b3GetCount(); i++)
 	{
 		b3Vector::b3Normalize(&glVertex[i].n);
 	}
@@ -1512,7 +1512,7 @@ void b3Shape::b3GetTorusIndexCount(b3_count & gridCount, b3_count & polyCount)
 
 	b3ComputeBound(&m_Limit);
 	m_Overhead = b3GetIndexOverhead(0.0, 0.0);
-	if(m_Overhead < 0)
+	if (m_Overhead < 0)
 	{
 		m_EndLine  =  true;
 		m_Overhead = -m_Overhead;
@@ -1527,27 +1527,27 @@ void b3Shape::b3GetTorusIndexCount(b3_count & gridCount, b3_count & polyCount)
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	m_Heights = ye - ys;
-	if((ys - y1) > b3Scene::epsilon)
+	if ((ys - y1) > b3Scene::epsilon)
 	{
 		m_Heights++;
 	}
-	if((y2 - ye) > b3Scene::epsilon)
+	if ((y2 - ye) > b3Scene::epsilon)
 	{
 		m_Heights++;
 	}
-	if((ys > 0) || (ye < SinCosSteps))
+	if ((ys > 0) || (ye < SinCosSteps))
 	{
 		EndCol = true;
 	}
 
 	m_Widths = m_Heights;
-	if(EndCol)
+	if (EndCol)
 	{
 		m_Widths++;
 	}
 
 	gridCount = (m_Widths + m_Heights) * m_Overhead;
-	if(m_EndLine)
+	if (m_EndLine)
 	{
 		gridCount += m_Heights;
 	}
@@ -1561,9 +1561,9 @@ void b3Shape::b3ComputeTorusIndices()
 	b3_gl_polygon * pPtr = *glPolygonElements;
 
 	s = 0;
-	for(i = 0; i < m_Overhead; i++)
+	for (i = 0; i < m_Overhead; i++)
 	{
-		for(j = 0; j < m_Heights; j++)
+		for (j = 0; j < m_Heights; j++)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + 1);
 
@@ -1572,16 +1572,16 @@ void b3Shape::b3ComputeTorusIndices()
 
 		}
 
-		for(j = 0; j < m_Widths; j++)
+		for (j = 0; j < m_Widths; j++)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + m_Heights + 1);
 		}
 		s += (m_Heights + 1);
 	}
 
-	if(m_EndLine)
+	if (m_EndLine)
 	{
-		for(j = 0; j < m_Heights; j++)
+		for (j = 0; j < m_Heights; j++)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + 1);
 		}

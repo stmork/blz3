@@ -58,7 +58,7 @@ b3File::b3File(
 	m_File        = -1;
 	m_Cache       =  null;
 
-	if(!b3Open(Name, AccessMode))
+	if (!b3Open(Name, AccessMode))
 	{
 		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
 	}
@@ -66,7 +66,7 @@ b3File::b3File(
 
 b3File::~b3File()
 {
-	if(m_File != -1)
+	if (m_File != -1)
 	{
 		b3Close();
 	}
@@ -79,12 +79,12 @@ b3_bool b3File::b3Open(
 {
 	char error_msg[1024];
 
-	switch(AccessMode)
+	switch (AccessMode)
 	{
 	case B_READ :
 	case T_READ :
 		m_File = open(Name, O_RDONLY);
-		if(m_File != -1)
+		if (m_File != -1)
 		{
 			b3CriticalSection lock(m_FilesOpenedMutex);
 
@@ -93,7 +93,7 @@ b3_bool b3File::b3Open(
 		}
 		else
 		{
-			if(strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
+			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
 			{
 				b3PrintF(B3LOG_NORMAL, "File read error\n  filename: %s\n  error msg: %s\n",
 					Name, error_msg);
@@ -105,7 +105,7 @@ b3_bool b3File::b3Open(
 	case T_WRITE :
 		remove(Name);
 		m_File = open(Name, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-		if(m_File != -1)
+		if (m_File != -1)
 		{
 			b3CriticalSection lock(m_FilesOpenedMutex);
 
@@ -115,7 +115,7 @@ b3_bool b3File::b3Open(
 		}
 		else
 		{
-			if(strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
+			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
 			{
 				b3PrintF(B3LOG_NORMAL, "File write error\n  filename: %s\n  error msg: %s\n",
 					Name, error_msg);
@@ -126,7 +126,7 @@ b3_bool b3File::b3Open(
 	case B_APPEND :
 	case T_APPEND :
 		m_File = open(Name, O_WRONLY | O_APPEND, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-		if(m_File != -1)
+		if (m_File != -1)
 		{
 			b3CriticalSection lock(m_FilesOpenedMutex);
 
@@ -136,7 +136,7 @@ b3_bool b3File::b3Open(
 		}
 		else
 		{
-			if(strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
+			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
 			{
 				b3PrintF(B3LOG_NORMAL, "File append error\n  filename: %s\n  error msg: %s\n",
 					Name, error_msg);
@@ -174,7 +174,7 @@ b3_size b3File::b3Write(
 	b3_size  written;
 
 	// write buffer is cachable
-	if(buffer_size <= (m_BufferSize - m_Index))
+	if (buffer_size <= (m_BufferSize - m_Index))
 	{
 		// OK! Cache it!
 		memcpy(&m_Cache[m_Index], buffer, buffer_size);
@@ -183,16 +183,16 @@ b3_size b3File::b3Write(
 	}
 
 	// Other case: We must flush cache buffer first
-	if(m_Index > 0)
+	if (m_Index > 0)
 	{
 		written = write(m_File, m_Cache, m_Index);
-		if(written < (b3_size)m_Index)
+		if (written < (b3_size)m_Index)
 		{
 			b3_index i;
 			b3_size  num;
 
 			// Overwrite written bytes
-			for(i = written; i < m_Index; i++)
+			for (i = written; i < m_Index; i++)
 			{
 				m_Cache[i - written] = m_Cache[i];
 			}
@@ -203,13 +203,13 @@ b3_size b3File::b3Write(
 			// First compute the rest space of the cache. Then
 			// check if buffer_size is lower than rest space.
 			num = m_BufferSize - written;
-			if(buffer_size < num)
+			if (buffer_size < num)
 			{
 				num = buffer_size;
 			}
 
 			// Copy as much as possible
-			for(i = 0; i < 0; i++)
+			for (i = 0; i < 0; i++)
 			{
 				m_Cache[m_Index++] = buffer[i];
 			}
@@ -220,7 +220,7 @@ b3_size b3File::b3Write(
 	}
 
 	// Write buffer is cachable but cache buffer is too full
-	if(buffer_size < m_BufferSize)
+	if (buffer_size < m_BufferSize)
 	{
 		memcpy(m_Cache, buffer, buffer_size);
 		m_Index = buffer_size;
@@ -237,30 +237,30 @@ b3_bool b3File::b3Flush()
 	b3_size written, i, k, size;
 
 	// Check file handle
-	if(m_File == -1)
+	if (m_File == -1)
 	{
 		return false;
 	}
 
 	// Buffer is empty
-	if(m_Index == 0)
+	if (m_Index == 0)
 	{
 		return true;
 	}
 
 	// Write buffer contents
-	if(m_Index > 0)
+	if (m_Index > 0)
 	{
 		written = write(m_File, m_Cache, m_Index);
 
 		// Handle case that not the whole buffer was written
-		if(written < (b3_size)m_Index)
+		if (written < (b3_size)m_Index)
 		{
 			k     = written;
 			size  = m_Index - written;
 
 			// Copy data to front of buffer
-			for(i = 0; i < size; i++)
+			for (i = 0; i < size; i++)
 			{
 				m_Cache[i] = m_Cache[k++];
 			}
@@ -282,9 +282,9 @@ b3_size b3File::b3Seek(
 	b3_size OldPos;
 
 	OldPos = lseek(m_File, 0L, SEEK_CUR);
-	if(b3Flush())
+	if (b3Flush())
 	{
-		switch(SeekMode)
+		switch (SeekMode)
 		{
 		case B3_SEEK_START :
 			lseek(m_File, offset, SEEK_SET);
@@ -324,7 +324,7 @@ b3_size b3File::b3Size()
 b3_bool b3File::b3Buffer(b3_size size)
 {
 	// Flush old buffer
-	if(!b3Flush())
+	if (!b3Flush())
 	{
 		return false;
 	}
@@ -335,10 +335,10 @@ b3_bool b3File::b3Buffer(b3_size size)
 	m_BufferSize = 0;
 
 	// Allocate new buffer
-	if(size > 32)
+	if (size > 32)
 	{
 		m_Cache = (b3_u08 *)b3Alloc(size);
-		if(m_Cache != null)
+		if (m_Cache != null)
 		{
 			m_BufferSize =  size - 32;
 		}
@@ -350,7 +350,7 @@ void b3File::b3Close()
 {
 	// Close file;
 	b3Buffer(0);
-	if(m_File != -1)
+	if (m_File != -1)
 	{
 		b3CriticalSection lock(m_FilesOpenedMutex);
 
@@ -368,13 +368,13 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 	b3_u08    *    file_buffer = null;
 	b3_file_error  error;
 
-	if(b3Open(filename, B_READ))
+	if (b3Open(filename, B_READ))
 	{
 		file_size = b3Size();
 		file_buffer = (b3_u08 *)b3Alloc(file_size);
-		if(file_buffer != null)
+		if (file_buffer != null)
 		{
-			if(b3Read(file_buffer, file_size) == file_size)
+			if (b3Read(file_buffer, file_size) == file_size)
 			{
 				error = B3_FILE_OK;
 			}
@@ -396,9 +396,9 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 	file_size   = b3Size();
 	b3Close();
 
-	if(error != B3_FILE_OK)
+	if (error != B3_FILE_OK)
 	{
-		if(file_buffer != null)
+		if (file_buffer != null)
 		{
 			// We don't need the read buffer any more.
 			b3Free(file_buffer);

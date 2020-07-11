@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
 	b3Display  * display;
 
 	b3Log::b3SetLevel(B3LOG_FULL);
-	if(argc != 6)
+	if (argc != 6)
 	{
 		printf("USAGE:\n");
 		printf("%s xMin xMax yMin yMax iterations\n", argv[0]);
@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
 			// Delete Display
 			delete display;
 		}
-		catch(b3DisplayException & e)
+		catch (b3DisplayException & e)
 		{
 			b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 		}

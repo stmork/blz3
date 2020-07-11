@@ -40,7 +40,7 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 	b3_bool           new_is_class) :
 	b3Link<b3ItemRegisterEntry>(sizeof(b3ItemRegisterEntry))
 {
-	if(new_is_class)
+	if (new_is_class)
 	{
 		new_class_type &= 0xffff0000;
 	}
@@ -59,7 +59,7 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 
 b3_bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check)
 {
-	if(is_class)
+	if (is_class)
 	{
 		return (class_type_to_check & 0xffff0000) == class_type;
 	}

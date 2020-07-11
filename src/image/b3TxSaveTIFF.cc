@@ -40,10 +40,10 @@ void b3Tx::b3GetSampleValues(
 	long & bpp,
 	long & spp)
 {
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM :
-		if(depth > 8)	// true color
+		if (depth > 8)	// true color
 		{
 			bpp = 8;
 			spp = 3;
@@ -97,7 +97,7 @@ const b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 
 	// setting palette
 	max = 1 << depth;
-	for(y = 0; y < max; y++)
+	for (y = 0; y < max; y++)
 	{
 		r[y] = (b3_u16)((palette[y] & 0xff0000) >> 8);
 		g[y] = (b3_u16)(palette[y] & 0x00ff00);
@@ -107,10 +107,10 @@ const b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 
 	// OK, writing image data...
 	cPtr = (b3_u08 *)data;
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		pPtr = cPtr;	// to be changed for every bit depth...
-		if(!TIFFWriteScanline(tiff, pPtr, y, 0))
+		if (!TIFFWriteScanline(tiff, pPtr, y, 0))
 		{
 			y      = ySize;
 			result = B3_TX_NOT_SAVED;
@@ -118,7 +118,7 @@ const b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 		cPtr += xSize;
 	}
 
-	if(result != B3_TX_OK)
+	if (result != B3_TX_OK)
 	{
 		B3_THROW(b3TxException, result);
 	}
@@ -153,9 +153,9 @@ const b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	xBytes = TX_BWA(xSize);
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
-		if(!TIFFWriteScanline(tiff, cPtr, y, 0))
+		if (!TIFFWriteScanline(tiff, cPtr, y, 0))
 		{
 			y      = ySize;
 			result = B3_TX_NOT_SAVED;
@@ -163,7 +163,7 @@ const b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
 		cPtr += xBytes;
 	}
 
-	if(result != B3_TX_OK)
+	if (result != B3_TX_OK)
 	{
 		B3_THROW(b3TxException, result);
 	}
@@ -199,7 +199,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 
 	// alloc memory for three channels of one row
 	row = (b3_u08 *)b3Alloc(xSize * 3 * sizeof(b3_u08));
-	if(row == null)
+	if (row == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
@@ -210,10 +210,10 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 	rPtr =  row;
 	gPtr = &row[xSize];
 	bPtr = &row[xSize + xSize];
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		// resample row
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			rPtr[x]  = (b3_u08)((lPtr[x] & 0xff0000) >> 16);
 			gPtr[x]  = (b3_u08)((lPtr[x] & 0x00ff00) >>  8);
@@ -221,7 +221,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 		}
 
 		// try to save red channel
-		if(TIFFWriteScanline(tiff, rPtr, y, 0) != 1)
+		if (TIFFWriteScanline(tiff, rPtr, y, 0) != 1)
 		{
 			y      = ySize;
 			result = B3_TX_NOT_SAVED;
@@ -229,7 +229,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 		else
 		{
 			// try to save green channel
-			if(TIFFWriteScanline(tiff, gPtr, y, 1) != 1)
+			if (TIFFWriteScanline(tiff, gPtr, y, 1) != 1)
 			{
 				y = ySize;
 				result = B3_TX_NOT_SAVED;
@@ -237,7 +237,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 			else
 			{
 				// try to save blue channel
-				if(TIFFWriteScanline(tiff, bPtr, y, 2) != 1)
+				if (TIFFWriteScanline(tiff, bPtr, y, 2) != 1)
 				{
 					y = ySize;
 					result = B3_TX_NOT_SAVED;
@@ -251,7 +251,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 	b3Free(row);
 
 
-	if(result != B3_TX_OK)
+	if (result != B3_TX_OK)
 	{
 		B3_THROW(b3TxException, result);
 	}
@@ -287,7 +287,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 
 	// alloc memory for three channels of one row
 	row = (b3_u16 *)b3Alloc(xSize * 3 * sizeof(b3_u16));
-	if(row == null)
+	if (row == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
@@ -298,10 +298,10 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	rPtr =  row;
 	gPtr = &row[xSize];
 	bPtr = &row[xSize + xSize];
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		// resample row
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			b3Color color = lPtr[x];
 
@@ -312,7 +312,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 		}
 
 		// try to save red channel
-		if(TIFFWriteScanline(tiff, rPtr, y, 0) != 1)
+		if (TIFFWriteScanline(tiff, rPtr, y, 0) != 1)
 		{
 			y      = ySize;
 			result = B3_TX_NOT_SAVED;
@@ -320,7 +320,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 		else
 		{
 			// try to save green channel
-			if(TIFFWriteScanline(tiff, gPtr, y, 1) != 1)
+			if (TIFFWriteScanline(tiff, gPtr, y, 1) != 1)
 			{
 				y = ySize;
 				result = B3_TX_NOT_SAVED;
@@ -328,7 +328,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 			else
 			{
 				// try to save blue channel
-				if(TIFFWriteScanline(tiff, bPtr, y, 2) != 1)
+				if (TIFFWriteScanline(tiff, bPtr, y, 2) != 1)
 				{
 					y = ySize;
 					result = B3_TX_NOT_SAVED;
@@ -342,7 +342,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	b3Free(row);
 
 
-	if(result != B3_TX_OK)
+	if (result != B3_TX_OK)
 	{
 		B3_THROW(b3TxException, result);
 	}
@@ -356,14 +356,14 @@ const b3_result b3Tx::b3SaveTIFF(const char * nameTx)
 
 	b3PrintF(B3LOG_FULL, "Saving TIFF: %s\n", nameTx);
 
-	if((xSize == 0) || (ySize == 0))
+	if ((xSize == 0) || (ySize == 0))
 	{
 		B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 	}
 
-	if(nameTx == null)
+	if (nameTx == null)
 	{
-		if(strlen(image_name) == 0)
+		if (strlen(image_name) == 0)
 		{
 			B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 		}
@@ -374,18 +374,18 @@ const b3_result b3Tx::b3SaveTIFF(const char * nameTx)
 	}
 
 	tiff = TIFFOpen(image_name, "w");
-	if(tiff)
+	if (tiff)
 	{
 		b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx:  # saving TIFF (%s)\n",
 			(char *)image_name);
 		// Now select the saving version we need.
-		if(depth == 1)
+		if (depth == 1)
 		{
 			b3SaveTIFFFax(tiff);
 		}
 		else
 		{
-			switch(type)
+			switch (type)
 			{
 			case B3_TX_RGB4:
 			case B3_TX_RGB8:
@@ -409,7 +409,7 @@ const b3_result b3Tx::b3SaveTIFF(const char * nameTx)
 		result = B3_TX_NOT_SAVED;
 	}
 
-	if(result != B3_TX_OK)
+	if (result != B3_TX_OK)
 	{
 		B3_THROW(b3TxException, result);
 	}

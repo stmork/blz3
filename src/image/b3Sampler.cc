@@ -37,15 +37,15 @@ void b3Sampler::b3Sample()
 	b3SampleInfo   *  info;
 
 	info = b3SampleInit(CPUs);
-	if(CPUs > 1)
+	if (CPUs > 1)
 	{
 		b3Thread * threads = new b3Thread[CPUs];
 
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			threads[i].b3Start(b3SampleThread, &info[i]);
 		}
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			threads[i].b3Wait();
 		}
@@ -93,7 +93,7 @@ b3SampleInfo * b3ImageSampler::b3SampleInit(const b3_count CPUs)
 	b3_color   *  data = (b3_color *)m_Data;
 
 	yStart = 0;
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		yEnd = m_yMax * (i + 1) / CPUs;
 		info[i].m_Sampler = this;
@@ -113,9 +113,9 @@ void b3ImageSampler::b3SampleTask(const b3SampleInfo * info)
 	b3_coord  x, y;
 	b3_color * data = (b3_color *)info->m_Data;
 
-	for(y = info->m_yStart; y < info->m_yEnd; y++)
+	for (y = info->m_yStart; y < info->m_yEnd; y++)
 	{
-		for(x = 0; x < info->m_xMax; x++)
+		for (x = 0; x < info->m_xMax; x++)
 		{
 			*data++ = b3SamplePixel(x, y);
 		}

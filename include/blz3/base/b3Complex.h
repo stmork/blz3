@@ -61,7 +61,7 @@ public:
 	 */
 	inline b3Complex<T>(const b3Complex<T> & complex)
 	{
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] = complex.v[i];
 		}
@@ -94,7 +94,7 @@ public:
 	 */
 	inline b3Complex<T> operator+=(const b3Complex<T> & a)
 	{
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -111,7 +111,7 @@ public:
 	 */
 	inline b3Complex<T> & operator-=(const b3Complex<T> & a)
 	{
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -133,7 +133,7 @@ public:
 		val[Re] = v[Re] * a.v[Re] - v[Im] * a.v[Im];
 		val[Im] = v[Im] * a.v[Re] + v[Re] * a.v[Im];
 
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] = val[i];
 		}
@@ -155,7 +155,7 @@ public:
 		T B3_ALIGN_16 nom[2];
 		T             denom;
 
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			nom[i] =   v[i] * a.v[i];
 			den[i] = a.v[i] * a.v[i];
@@ -164,7 +164,7 @@ public:
 		denom   = den[Re] + den[Im];
 		val[Re] = nom[Re] + nom[Im];
 
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] = val[i] / denom;
 		}
@@ -209,7 +209,7 @@ public:
 	 */
 	inline b3Complex<T> & operator*=(const T a)
 	{
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] *= a;
 		}
@@ -226,7 +226,7 @@ public:
 	 */
 	inline b3Complex<T> operator/=(const T a)
 	{
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] /= a;
 		}
@@ -301,11 +301,11 @@ public:
 	{
 		T old_len = b3Length();
 
-		if(old_len != 0)
+		if (old_len != 0)
 		{
 			T new_len = len / old_len;
 
-			for(b3_loop i = 0; i < 2; i++)
+			for (b3_loop i = 0; i < 2; i++)
 			{
 				v[i] *= new_len;
 			}
@@ -326,7 +326,7 @@ public:
 	{
 		T B3_ALIGN_16 val[2];
 
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			val[i] = v[i] * v[i];
 		}
@@ -352,7 +352,7 @@ public:
 	{
 		T B3_ALIGN_16 re[2];
 
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			re[i] = v[i] * v[i];
 		}
@@ -375,11 +375,11 @@ public:
 	{
 		b3Complex<T> result;
 
-		if((a.v[0] < 0) || (a.v[1] < 0))
+		if ((a.v[0] < 0) || (a.v[1] < 0))
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			result.v[i] = sqrt(a.v[i]);
 		}
@@ -388,7 +388,7 @@ public:
 
 	inline void b3Scale(const b3Complex<T> & a)
 	{
-		for(b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < 2; i++)
 		{
 			v[i] *= a.v[i];
 		}

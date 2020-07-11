@@ -62,7 +62,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext * context)
 	b3PrintF(B3LOG_FULL, ">b3RenderLight::b3SetupLight() # %d\n", m_LightMode);
 #endif
 
-	switch(m_LightMode)
+	switch (m_LightMode)
 	{
 	case B3_LIGHT_SIMPLE:
 	default:
@@ -83,7 +83,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext * context)
 		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
 		{
 			light = (b3Light *)item;
-			if(light->b3IsActive())
+			if (light->b3IsActive())
 			{
 				b3_render_light_info info;
 
@@ -95,7 +95,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext * context)
 				// Geometry
 				b3RenderContext::b3VectorToGL(&light->m_Position, info.gl_position);
 
-				if((m_LightMode == B3_LIGHT_SCENE_SPOT) && (light->m_SpotActive))
+				if ((m_LightMode == B3_LIGHT_SCENE_SPOT) && (light->m_SpotActive))
 				{
 					b3RenderContext::b3VectorToGL(&light->m_Direction, info.gl_direction);
 					info.gl_spot_cutoff = 90;

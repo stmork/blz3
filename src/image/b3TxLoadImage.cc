@@ -54,15 +54,15 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 	// Check for small buffer
 	LongData = (b3_pkd_color *)buffer;
-	if(buffer_size < 4)
+	if (buffer_size < 4)
 	{
 		B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 	}
 
 	// Check for IFF
-	if(b3Endian::b3GetMot32(LongData) == IFF_FORM)
+	if (b3Endian::b3GetMot32(LongData) == IFF_FORM)
 	{
-		switch(b3Endian::b3GetMot32(&LongData[2]))
+		switch (b3Endian::b3GetMot32(&LongData[2]))
 		{
 		case IFF_ILBM :
 			return b3ParseIFF_ILBM(buffer, buffer_size);
@@ -79,9 +79,9 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 
 	// JPEG
-	for(i = 0; i < (b3_index)B3_MIN(256, buffer_size - 2); i++)
+	for (i = 0; i < (b3_index)B3_MIN(256, buffer_size - 2); i++)
 	{
-		if((buffer[i] == 0xff) && (buffer[i + 1] == 0xd8) && (buffer[i + 2] == 0xff))
+		if ((buffer[i] == 0xff) && (buffer[i + 1] == 0xd8) && (buffer[i + 2] == 0xff))
 		{
 			return b3ParseJPEG(&buffer[i], buffer_size - i);
 		}
@@ -89,7 +89,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 
 	// GIF
-	if(strncmp((const char *)buffer, "GIF", 3) == 0)
+	if (strncmp((const char *)buffer, "GIF", 3) == 0)
 	{
 		return b3ParseGIF(buffer);
 	}
@@ -97,14 +97,14 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 #ifdef HAVE_LIBTIFF
 	// TIFF
 	TIFF = (HeaderTIFF *)buffer;
-	if((TIFF->TypeCPU == B3_BIG_ENDIAN) || (TIFF->TypeCPU == B3_LITTLE_ENDIAN))
+	if ((TIFF->TypeCPU == B3_BIG_ENDIAN) || (TIFF->TypeCPU == B3_LITTLE_ENDIAN))
 	{
 #ifndef USE_TIFFLIB_LOAD
-		if(TIFF->VersionTIFF == 0x2a00)
+		if (TIFF->VersionTIFF == 0x2a00)
 		{
 			ChangeTIFF(TIFF);
 		}
-		if(TIFF->VersionTIFF == 0x002a)
+		if (TIFF->VersionTIFF == 0x002a)
 		{
 			return b3ParseTIFF(TIFF, buffer_size);
 		}
@@ -121,12 +121,12 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	ppm_type = 0;
 	i   = sscanf((const char *)buffer, "P%d %ld %ld %*d%ln", &ppm_type, &x, &y, &pos);
 	b3PrintF(B3LOG_FULL, "PxM (%ld): (%ld,%ld - %ld) %d\n", ppm_type, x, y, i, pos);
-	if(i >= 2)
+	if (i >= 2)
 	{
-		switch(ppm_type)
+		switch (ppm_type)
 		{
 		case 4 :
-			if((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
+			if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
 			{
 				pos = (b3_offset)buffer_size - ((x + 7) >> 3) * y;
 				FileType = FT_PBM;
@@ -135,7 +135,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 			break;
 
 		case 5 :
-			if((b3_size)(x * y + pos) <= buffer_size)
+			if ((b3_size)(x * y + pos) <= buffer_size)
 			{
 				pos = (b3_offset)buffer_size - x * y;
 				FileType = FT_PGM;
@@ -144,7 +144,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 			break;
 
 		case 6 :
-			if((b3_size)(x * y * 3 + pos) <= buffer_size)
+			if ((b3_size)(x * y * 3 + pos) <= buffer_size)
 			{
 				pos = (b3_offset)buffer_size - 3 * x * y;
 				FileType = FT_PPM;
@@ -162,14 +162,14 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 #ifdef BLZ3_USE_OPENEXR
 	// OpenEXR
-	if(Imf::isImfMagic((const char *)buffer))
+	if (Imf::isImfMagic((const char *)buffer))
 	{
 		return b3ParseOpenEXR(buffer, buffer_size);
 	}
 #endif
 
 	// BMP
-	if((buffer[0] == 'B') &&
+	if ((buffer[0] == 'B') &&
 		(buffer[1] == 'M') &&
 		(b3Endian::b3GetIntel32(&buffer[2]) == buffer_size))
 	{
@@ -178,12 +178,12 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 
 	// MTV
-	if(sscanf((const char *)buffer, "%ld %ld", &x, &y) == 2)
+	if (sscanf((const char *)buffer, "%ld %ld", &x, &y) == 2)
 	{
-		for(pos = 0; (pos < 100) && (buffer[pos] != 10); pos++);
-		if(buffer[pos++] == 10)
+		for (pos = 0; (pos < 100) && (buffer[pos] != 10); pos++);
+		if (buffer[pos++] == 10)
 		{
-			if((b3_size)(x * y * 3 + pos) == buffer_size)
+			if ((b3_size)(x * y * 3 + pos) == buffer_size)
 			{
 				FileType = FT_MTV;
 				return b3ParseRAW(&buffer[pos], x, y, 6);
@@ -195,7 +195,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	// BMF
 	x = b3Endian::b3GetIntel16(&buffer[2]);
 	y = b3Endian::b3GetIntel16(&buffer[4]);
-	switch(buffer[6])
+	switch (buffer[6])
 	{
 	case 2 :
 		i = 1;
@@ -207,26 +207,26 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 		i = 0;
 		break;
 	}
-	if((b3_size)(x * y * i + 16) == buffer_size)
+	if ((b3_size)(x * y * i + 16) == buffer_size)
 	{
 		return b3ParseBMF(buffer, buffer_size);
 	}
 
 	// SGI RLE
 	HeaderSGI = (struct HeaderSGI *)buffer;
-	if((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
+	if ((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
 	{
 		return b3ParseSGI(buffer);
 	}
 
 
 	// Targa
-	if((buffer[2] == 2) || (buffer[2] == 10))
+	if ((buffer[2] == 2) || (buffer[2] == 10))
 	{
-		if((b3Endian::b3Get32(&buffer[4]) == 0) &&
+		if ((b3Endian::b3Get32(&buffer[4]) == 0) &&
 			(b3Endian::b3Get32(&buffer[8]) == 0))
 		{
-			if((buffer[16] == 32) || (buffer[16] == 24))
+			if ((buffer[16] == 32) || (buffer[16] == 24))
 			{
 				return b3ParseTGA(buffer);
 			}
@@ -235,9 +235,9 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 
 	// PCX
-	if((buffer[2] == 1) && (buffer[0] == 0x0a))
+	if ((buffer[2] == 1) && (buffer[0] == 0x0a))
 	{
-		switch(buffer[3])			/* Bits pro Pixel */
+		switch (buffer[3])			/* Bits pro Pixel */
 		{
 		case 8  :
 			return b3ParsePCX8(buffer);
@@ -265,34 +265,34 @@ b3_result b3Tx::b3LoadImage(const char * name, b3_bool throw_exception)
 		b3Name(name);
 		buffer     = file.b3ReadBuffer(name, size);
 		error_code = b3LoadImage(buffer, size);
-		if(error_code != B3_OK)
+		if (error_code != B3_OK)
 		{
 			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
 		b3Name(name);
 	}
-	catch(b3FileException & e)
+	catch (b3FileException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "Error loading %s (%s)\n",
 			name, e.b3GetErrorMsg());
-		if(throw_exception)
+		if (throw_exception)
 		{
 			throw;
 		}
 	}
-	catch(b3TxException & e)
+	catch (b3TxException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "Error parsing %s (%s)\n",
 			name, e.b3GetErrorMsg());
-		if(throw_exception)
+		if (throw_exception)
 		{
 			throw;
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL, "Unknown error parsing %s\n", name);
-		if(throw_exception)
+		if (throw_exception)
 		{
 			throw;
 		}
@@ -303,75 +303,75 @@ b3_result b3Tx::b3LoadImage(const char * name, b3_bool throw_exception)
 
 b3_tx_filetype b3Tx::b3GetFileType(const char * ext)
 {
-	if(stricmp(ext, "tif")  == 0)
+	if (stricmp(ext, "tif")  == 0)
 	{
 		return FT_TIFF;
 	}
-	if(stricmp(ext, "tiff") == 0)
+	if (stricmp(ext, "tiff") == 0)
 	{
 		return FT_TIFF;
 	}
-	if(stricmp(ext, "tga")  == 0)
+	if (stricmp(ext, "tga")  == 0)
 	{
 		return FT_TGA;
 	}
-	if(stricmp(ext, "jpg")  == 0)
+	if (stricmp(ext, "jpg")  == 0)
 	{
 		return FT_JPEG;
 	}
-	if(stricmp(ext, "jpeg") == 0)
+	if (stricmp(ext, "jpeg") == 0)
 	{
 		return FT_JPEG;
 	}
-	if(stricmp(ext, "gif")  == 0)
+	if (stricmp(ext, "gif")  == 0)
 	{
 		return FT_GIF;
 	}
-	if(stricmp(ext, "rgb8") == 0)
+	if (stricmp(ext, "rgb8") == 0)
 	{
 		return FT_RGB8;
 	}
-	if(stricmp(ext, "rgb4") == 0)
+	if (stricmp(ext, "rgb4") == 0)
 	{
 		return FT_RGB4;
 	}
-	if(stricmp(ext, "rgbn") == 0)
+	if (stricmp(ext, "rgbn") == 0)
 	{
 		return FT_RGB4;
 	}
-	if(stricmp(ext, "pcx")  == 0)
+	if (stricmp(ext, "pcx")  == 0)
 	{
 		return FT_PCX8;
 	}
-	if(stricmp(ext, "lbm")  == 0)
+	if (stricmp(ext, "lbm")  == 0)
 	{
 		return FT_ILBM;
 	}
-	if(stricmp(ext, "iff")  == 0)
+	if (stricmp(ext, "iff")  == 0)
 	{
 		return FT_ILBM;
 	}
-	if(stricmp(ext, "ilbm") == 0)
+	if (stricmp(ext, "ilbm") == 0)
 	{
 		return FT_ILBM;
 	}
-	if(stricmp(ext, "yuv")  == 0)
+	if (stricmp(ext, "yuv")  == 0)
 	{
 		return FT_YUV;
 	}
-	if(stricmp(ext, "img")  == 0)
+	if (stricmp(ext, "img")  == 0)
 	{
 		return FT_SGI_RLE;
 	}
-	if(stricmp(ext, "ps")   == 0)
+	if (stricmp(ext, "ps")   == 0)
 	{
 		return FT_PS;
 	}
-	if(stricmp(ext, "bmp")  == 0)
+	if (stricmp(ext, "bmp")  == 0)
 	{
 		return FT_BMP;
 	}
-	if(stricmp(ext, "exr")  == 0)
+	if (stricmp(ext, "exr")  == 0)
 	{
 		return FT_EXR;
 	}
@@ -386,7 +386,7 @@ const char * b3Tx::b3GetExt()
 
 const char * b3Tx::b3GetExt(b3_tx_filetype type)
 {
-	switch(type)
+	switch (type)
 	{
 	case FT_PCX4:
 	case FT_PCX8:
@@ -456,12 +456,12 @@ b3_result b3Tx::b3SaveImage(const char * filename)
 	b3Path         ext;
 	b3_tx_filetype filetype;
 
-	if(b3IsLoaded())
+	if (b3IsLoaded())
 	{
 		ext.b3ExtractExt(filename);
 		filetype = b3GetFileType(ext);
 
-		switch(filetype)
+		switch (filetype)
 		{
 #ifdef HAVE_LIBJPEG
 		case FT_JPEG:

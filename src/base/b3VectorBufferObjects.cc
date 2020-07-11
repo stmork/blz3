@@ -52,7 +52,7 @@ void b3VectorBufferObjects::b3Init(const char * extensions)
 #ifdef BLZ3_USE_OPENGL
 	const char * vendor = (const char *)glGetString(GL_VENDOR);
 
-	if(extensions == null)
+	if (extensions == null)
 	{
 		extensions = (const char *)glGetString(GL_EXTENSIONS);
 	}

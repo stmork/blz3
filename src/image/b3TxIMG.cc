@@ -42,14 +42,14 @@ inline void b3Tx::b3UnpackSGI(
 	b3_u08 * bBuffer;
 	b3_u16   pixel;
 
-	switch(bytes)
+	switch (bytes)
 	{
 	case 1 :
-		if(count != 0)
+		if (count != 0)
 		{
 			bBuffer  = (b3_u08 *)inPtr;
 			bBuffer += (512 / sizeof(unsigned char) + offset);
-			while(count-- > 0)
+			while (count-- > 0)
 			{
 				*buffer++ = *bBuffer++;
 			}
@@ -62,13 +62,13 @@ inline void b3Tx::b3UnpackSGI(
 			{
 				pixel = *bBuffer++;
 				count = (pixel & 0x7f);
-				if(count == 0)
+				if (count == 0)
 				{
 					return;
 				}
-				if(pixel & 0x80)
+				if (pixel & 0x80)
 				{
-					while(count--)
+					while (count--)
 					{
 						*buffer++ = *bBuffer++;
 					}
@@ -76,22 +76,22 @@ inline void b3Tx::b3UnpackSGI(
 				else
 				{
 					pixel = *bBuffer++;
-					while(count--)
+					while (count--)
 					{
 						*buffer++ = pixel;
 					}
 				}
 			}
-			while(true);
+			while (true);
 		}
 		break;
 
 	case 2 :
-		if(count != 0)
+		if (count != 0)
 		{
 			bBuffer  = (b3_u08 *)inPtr;
 			bBuffer += (512 / sizeof(unsigned short) + offset);
-			while(count-- > 0)
+			while (count-- > 0)
 			{
 				*buffer++ = *bBuffer++;
 			}
@@ -104,13 +104,13 @@ inline void b3Tx::b3UnpackSGI(
 			{
 				pixel = *sBuffer++;
 				count = (pixel & 0x7f);
-				if(count == 0)
+				if (count == 0)
 				{
 					return;
 				}
-				if(pixel & 0x80)
+				if (pixel & 0x80)
 				{
-					while(count--)
+					while (count--)
 					{
 						*buffer++ = *sBuffer++;
 					}
@@ -118,13 +118,13 @@ inline void b3Tx::b3UnpackSGI(
 				else
 				{
 					pixel = *sBuffer++;
-					while(count--)
+					while (count--)
 					{
 						*buffer++ = pixel;
 					}
 				}
 			}
-			while(true);
+			while (true);
 		}
 		break;
 	}
@@ -136,10 +136,10 @@ inline void b3Tx::b3ConvertSGILine(
 	b3_size    size,
 	b3_count   bytes)
 {
-	if(bytes == 2)
+	if (bytes == 2)
 	{
 		buffer += offset;
-		while(size-- > 0)
+		while (size-- > 0)
 		{
 			b3Endian::b3ChangeEndian16(buffer++);
 		}
@@ -164,7 +164,7 @@ void b3Tx::b3ParseSGI3(
 
 	/* line buffer */
 	line = (b3_u08 *)b3Alloc(xSize * zSize * bytes);
-	if(line == null)
+	if (line == null)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG SGI  # Error allocating memory:\n");
@@ -175,11 +175,11 @@ void b3Tx::b3ParseSGI3(
 	/* convert line offsets */
 	lineTable = (b3_pkd_color *)&buffer[512];
 	lineSizes = (b3_pkd_color *)&lineTable[zSize * ySize];
-	if(HeaderSGI->imagic == IMAGIC2)  /* check for converting endian */
+	if (HeaderSGI->imagic == IMAGIC2) /* check for converting endian */
 	{
-		if(rle <= 0)  /* RLE data */
+		if (rle <= 0) /* RLE data */
 		{
-			for(y = 0; y < ySize; y++) for(z = 0; z < zSize; z++)
+			for (y = 0; y < ySize; y++) for (z = 0; z < zSize; z++)
 				{
 					b3Endian::b3ChangeEndian32(&lineTable[y + z * ySize]);
 					b3Endian::b3ChangeEndian32(&lineSizes[y + z * ySize]);
@@ -190,7 +190,7 @@ void b3Tx::b3ParseSGI3(
 		}
 		else /* raw (VERBATIM) data */
 		{
-			for(y = 0; y < ySize; y++) for(z = 0; z < zSize; z++)
+			for (y = 0; y < ySize; y++) for (z = 0; z < zSize; z++)
 				{
 					b3ConvertSGILine((b3_u16 *)buffer,
 						256 + y * xSize * zSize + z * xSize, xSize, bytes);
@@ -198,14 +198,14 @@ void b3Tx::b3ParseSGI3(
 		}
 	}
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_RGB8 :
 		lPtr  = (b3_pkd_color *)data;
 		block = xSize * ySize;
-		for(y = ySize - 1; y >= 0; y--)
+		for (y = ySize - 1; y >= 0; y--)
 		{
-			if(rle > 0)  /* read raw data */
+			if (rle > 0) /* read raw data */
 			{
 				b3UnpackSGI(&line[0],          buffer, rle, bytes, y * xSize);
 				b3UnpackSGI(&line[xSize],      buffer, rle, bytes, y * xSize + block);
@@ -217,7 +217,7 @@ void b3Tx::b3ParseSGI3(
 				b3UnpackSGI(&line[xSize],      buffer, rle, bytes, lineTable[y + ySize]);
 				b3UnpackSGI(&line[xSize + xSize], buffer, rle, bytes, lineTable[y + ySize + ySize]);
 			}
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				value   = line[x];
 				value   = (value << 8) | line[x + xSize];
@@ -228,9 +228,9 @@ void b3Tx::b3ParseSGI3(
 
 	case B3_TX_VGA :
 		cPtr = data;
-		for(y = ySize - 1; y >= 0; y--)
+		for (y = ySize - 1; y >= 0; y--)
 		{
-			if(rle > 0)
+			if (rle > 0)
 			{
 				b3UnpackSGI(cPtr, buffer, rle, bytes, y * xSize);
 			}
@@ -261,7 +261,7 @@ b3_result b3Tx::b3ParseSGI(b3_u08 * buffer)
 		(const char *)image_name);
 
 	HeaderSGI = (struct HeaderSGI *)buffer;
-	if(HeaderSGI->imagic == IMAGIC2)
+	if (HeaderSGI->imagic == IMAGIC2)
 	{
 		b3Endian::b3ChangeEndian16(&HeaderSGI->type);
 		b3Endian::b3ChangeEndian16(&HeaderSGI->dim);
@@ -280,10 +280,10 @@ b3_result b3Tx::b3ParseSGI(b3_u08 * buffer)
 
 
 	// get texture type
-	switch(HeaderSGI->colormap)
+	switch (HeaderSGI->colormap)
 	{
 	case 0 :
-		switch(HeaderSGI->zsize)
+		switch (HeaderSGI->zsize)
 		{
 		case 1 :
 			success = b3AllocTx(xNewSize, yNewSize, 8);
@@ -302,9 +302,9 @@ b3_result b3Tx::b3ParseSGI(b3_u08 * buffer)
 
 	case 3 :
 		success = b3AllocTx(xNewSize, yNewSize, 8);
-		if(success)
+		if (success)
 		{
-			for(c = 0; c < 256; c++)
+			for (c = 0; c < 256; c++)
 			{
 				palette[c] =
 					((c & 0xe0) << 16) |
@@ -320,10 +320,10 @@ b3_result b3Tx::b3ParseSGI(b3_u08 * buffer)
 		B3_THROW(b3TxException, B3_TX_UNSUPP);
 		break;
 	}
-	if(success)
+	if (success)
 	{
 		/* how are rows saved? */
-		switch(HeaderSGI->dim)
+		switch (HeaderSGI->dim)
 		{
 		case 3 :
 			b3ParseSGI3(HeaderSGI, buffer);
@@ -338,7 +338,7 @@ b3_result b3Tx::b3ParseSGI(b3_u08 * buffer)
 		}
 
 		// Success
-		if(type != B3_TX_UNDEFINED)
+		if (type != B3_TX_UNDEFINED)
 		{
 			FileType = FT_SGI_RLE;
 		}

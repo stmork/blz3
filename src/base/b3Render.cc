@@ -67,15 +67,15 @@ b3RenderObject::b3RenderObject()
 
 b3RenderObject::~b3RenderObject()
 {
-	if(glVertexElements != null)
+	if (glVertexElements != null)
 	{
 		delete glVertexElements;
 	}
-	if(glGridElements != null)
+	if (glGridElements != null)
 	{
 		delete glGridElements;
 	}
-	if(glPolygonElements != null)
+	if (glPolygonElements != null)
 	{
 		delete glPolygonElements;
 	}
@@ -86,7 +86,7 @@ b3RenderObject::~b3RenderObject()
 void b3RenderObject::b3DeleteDisplayList()
 {
 #ifdef B3_DISPLAY_LIST
-	if(glDisplayList != 0)
+	if (glDisplayList != 0)
 	{
 		glDeleteLists(glDisplayList, B3_DISPLAY_LIST_COUNT);
 		glDisplayList = 0;
@@ -122,7 +122,7 @@ void b3RenderObject::b3PrintMapping(const char * text, b3_vbo_mapping map_mode)
 {
 	const char * mapping_text;
 
-	switch(map_mode)
+	switch (map_mode)
 	{
 	case B3_MAP_VBO_R:
 		mapping_text = "B3_MAP_VBO_R";
@@ -182,7 +182,7 @@ void b3RenderObject::b3UnmapVertices()
 
 void b3RenderObject::b3Recompute()
 {
-	if(glVertexElements != null)
+	if (glVertexElements != null)
 	{
 		glVertexElements->b3Recompute();
 	}
@@ -190,11 +190,11 @@ void b3RenderObject::b3Recompute()
 
 void b3RenderObject::b3RecomputeIndices()
 {
-	if(glGridElements != null)
+	if (glGridElements != null)
 	{
 		glGridElements->b3Recompute();
 	}
-	if(glPolygonElements != null)
+	if (glPolygonElements != null)
 	{
 		glPolygonElements->b3Recompute();
 	}
@@ -236,11 +236,11 @@ void b3RenderObject::b3SetupVertexMemory(b3RenderContext * context)
 
 void b3RenderObject::b3PreAlloc()
 {
-	if(!glInit)
+	if (!glInit)
 	{
-		if(b3RenderContext::b3IsGL())
+		if (b3RenderContext::b3IsGL())
 		{
-			if(b3VectorBufferObjects::b3AllowVBO())
+			if (b3VectorBufferObjects::b3AllowVBO())
 			{
 #if 0
 				glVertexElements  = new b3VboVertexElements();
@@ -313,16 +313,16 @@ void b3RenderObject::b3Update()
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "##### >b3RenderObject::b3Update() this = %p\n", this);
 #endif
-	if((!glGridElements->b3IsComputed()) || (!glPolygonElements->b3IsComputed()))
+	if ((!glGridElements->b3IsComputed()) || (!glPolygonElements->b3IsComputed()))
 	{
 		mode |= B3_UPDATE_INDICES;
 	}
-	if(!glVertexElements->b3IsComputed())
+	if (!glVertexElements->b3IsComputed())
 	{
 		mode |= B3_UPDATE_VERTICES;
 	}
 
-	switch(mode)
+	switch (mode)
 	{
 	case B3_UPDATE_INDICES:
 		b3MapIndices(B3_MAP_VBO_W);
@@ -339,7 +339,7 @@ void b3RenderObject::b3Update()
 		break;
 	}
 
-	if(mode & B3_UPDATE_INDICES)
+	if (mode & B3_UPDATE_INDICES)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "      >b3RenderObject::b3UpdateIndices()\n");
@@ -365,7 +365,7 @@ void b3RenderObject::b3Update()
 #endif
 	}
 
-	if(mode & B3_UPDATE_VERTICES)
+	if (mode & B3_UPDATE_VERTICES)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "      >b3RenderObject::b3UpdateVertices()\n");
@@ -386,7 +386,7 @@ void b3RenderObject::b3Update()
 #endif
 	}
 
-	switch(mode)
+	switch (mode)
 	{
 	case B3_UPDATE_VERTICES | B3_UPDATE_INDICES:
 	case B3_UPDATE_VERTICES:
@@ -441,7 +441,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 
 	// Clear normals
 	b3GetVertexRange(start, end);
-	for(i = start; i < end; i++)
+	for (i = start; i < end; i++)
 	{
 		glVertex[i].n.x =
 			glVertex[i].n.y =
@@ -449,14 +449,14 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	}
 
 	// Collect normals
-	for(i = 0; i < glPolyCount; i++)
+	for (i = 0; i < glPolyCount; i++)
 	{
 		v1 = glPolygons[i].a;
 		v2 = glPolygons[i].b;
 		v3 = glPolygons[i].c;
 
 		// Do some semantic checks
-		if((v1 < start) || (v1 >= end) ||
+		if ((v1 < start) || (v1 >= end) ||
 			(v2 < start) || (v2 >= end) ||
 			(v3 < start) || (v3 >= end))
 		{
@@ -468,7 +468,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 			b3Vector::b3Sub(&glVertex[v2].v, &glVertex[v1].v, &xDir);
 			b3Vector::b3Sub(&glVertex[v3].v, &glVertex[v1].v, &yDir);
 			b3Vector::b3CrossProduct(&xDir, &yDir, &normal);
-			if(b3Vector::b3Normalize(&normal) > 1e-5)
+			if (b3Vector::b3Normalize(&normal) > 1e-5)
 			{
 				b3Vector::b3Add(&normal, &glVertex[v1].n);
 				b3Vector::b3Add(&normal, &glVertex[v2].n);
@@ -478,9 +478,9 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	}
 
 	// Normalize
-	if(normalize)
+	if (normalize)
 	{
-		for(i = 0; i < glVertexCount; i++)
+		for (i = 0; i < glVertexCount; i++)
 		{
 			b3Vector::b3Normalize(&glVertex[i].n);
 		}
@@ -506,10 +506,10 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 	b3_bool       result = false;
 	b3_index      i, start, end;
 
-	if(glVertexElements->b3IsComputed() && (glVertex != null) && (glVertexElements->b3GetCount() > 0))
+	if (glVertexElements->b3IsComputed() && (glVertex != null) && (glVertexElements->b3GetCount() > 0))
 	{
 		b3GetVertexRange(start, end);
-		for(i = start; i < end; i++)
+		for (i = start; i < end; i++)
 		{
 			b3Vector::b3AdjustBound(&glVertex[i].v, lower, upper);
 		}
@@ -524,7 +524,7 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix * transformation,
 	b3_bool    is_affine)
 {
-	if(glVertexElements != null)
+	if (glVertexElements != null)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "        >b3RenderObject::b3TransformVertices(...)\n");
@@ -542,12 +542,12 @@ void b3RenderObject::b3TransformVertices(
 			glVertexElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
-		if(glVertex != null)
+		if (glVertex != null)
 		{
 			glVertexElements->b3Recompute();
-			if(is_affine)
+			if (is_affine)
 			{
-				for(i = 0; i < glVertexCount; i++)
+				for (i = 0; i < glVertexCount; i++)
 				{
 					b3Vector::b3MatrixMul4D(transformation, (b3_vector *)&glVertex[i].v);
 					b3Vector::b3MatrixMul3D(transformation, (b3_vector *)&glVertex[i].n);
@@ -555,7 +555,7 @@ void b3RenderObject::b3TransformVertices(
 			}
 			else
 			{
-				for(i = 0; i < glVertexCount; i++)
+				for (i = 0; i < glVertexCount; i++)
 				{
 					b3Vector::b3MatrixMul4D(transformation, (b3_vector *)&glVertex[i].v);
 				}
@@ -651,7 +651,7 @@ void b3RenderObject::b3DefineTexture()
 void b3RenderObject::b3UpdateMaterial()
 {
 #ifdef BLZ3_USE_OPENGL
-	if(!glMaterialComputed)
+	if (!glMaterialComputed)
 	{
 		b3Tx  *  tx;
 		b3Color  black, white;
@@ -663,7 +663,7 @@ void b3RenderObject::b3UpdateMaterial()
 		glShininess = b3GetColors(ambient, diffuse, specular);
 		glTextureTransX = 0;
 		glTextureTransY = 0;
-		if(b3GetChess(black, white, xRep, yRep))
+		if (b3GetChess(black, white, xRep, yRep))
 		{
 			glTextureScaleX = 0.5 * xRep;
 			glTextureScaleY = 0.5 * yRep;
@@ -675,7 +675,7 @@ void b3RenderObject::b3UpdateMaterial()
 			b3_f64 yScale = 1;
 
 			tx = b3GetTexture(glTextureTransX, glTextureTransY, xScale, yScale);
-			if((tx != null) && (tx->b3IsLoaded()))
+			if ((tx != null) && (tx->b3IsLoaded()))
 			{
 				glTextureScaleX = 1.0 / xScale;
 				glTextureScaleY = 1.0 / yScale;
@@ -690,7 +690,7 @@ void b3RenderObject::b3UpdateMaterial()
 				{
 					b3CriticalSection lock(glTextureMutex);
 
-					if(!glTextureBuffer.b3IsLoaded())
+					if (!glTextureBuffer.b3IsLoaded())
 					{
 						b3_res max  = B3_MAX_TX_SIZE;
 
@@ -702,7 +702,7 @@ void b3RenderObject::b3UpdateMaterial()
 				{
 					b3CriticalSection lock(glTextureMutex);
 
-					if(b3GetImage(&glTextureBuffer))
+					if (b3GetImage(&glTextureBuffer))
 					{
 						b3CreateImage(null, &glTextureBuffer);
 					}
@@ -715,7 +715,7 @@ void b3RenderObject::b3UpdateMaterial()
 			}
 		}
 
-		if(glTextureSize > 0)
+		if (glTextureSize > 0)
 		{
 			glBindTexture(GL_TEXTURE_2D, glTextureId);
 			b3DefineTexture();
@@ -751,7 +751,7 @@ void b3RenderObject::b3CreateTexture(
 #ifdef BLZ3_USE_OPENGL
 	b3_res size;
 
-	if(ySize == 0)
+	if (ySize == 0)
 	{
 		ySize = xSize;
 	}
@@ -759,23 +759,23 @@ void b3RenderObject::b3CreateTexture(
 
 	try
 	{
-		if(size != glTextureSize)
+		if (size != glTextureSize)
 		{
 			glGetError();
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL, "b3RenderObject::b3CreateTexture(...,%4d,%4d) # %5d previous: %5d\n",
 				xSize, ySize, size, glTextureSize);
 #endif
-			if(size != 0)
+			if (size != 0)
 			{
 				void  * ptr = b3MemAccess::b3Alloc(size * 4);
 				GLenum  error;
 
-				if(ptr == null)
+				if (ptr == null)
 				{
 					B3_THROW(b3TxException, B3_TX_MEMORY);
 				}
-				if(glTextureData != null)
+				if (glTextureData != null)
 				{
 					b3MemAccess::b3Free(glTextureData);
 				}
@@ -787,12 +787,12 @@ void b3RenderObject::b3CreateTexture(
 				b3PrintF(B3LOG_FULL, "   Allocated texture memory of %d pixel\n", size);
 #endif
 
-				if(glTextureId == 0)
+				if (glTextureId == 0)
 				{
 					glGenTextures(1, &glTextureId);
 					error = glGetError();
 
-					if(error != GL_NO_ERROR)
+					if (error != GL_NO_ERROR)
 					{
 						b3PrintF(B3LOG_NORMAL, "  glGetError() = %d\n", error);
 						B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -807,7 +807,7 @@ void b3RenderObject::b3CreateTexture(
 			}
 			else
 			{
-				if(glTextureId != 0)
+				if (glTextureId != 0)
 				{
 #ifdef VERBOSE
 					b3PrintF(B3LOG_FULL, "   Freeing texture id %d\n", glTextureId);
@@ -818,7 +818,7 @@ void b3RenderObject::b3CreateTexture(
 #ifdef VERBOSE
 				b3PrintF(B3LOG_FULL, "   Freeing texture data\n");
 #endif
-				if(glTextureData != null)
+				if (glTextureData != null)
 				{
 					b3MemAccess::b3Free(glTextureData);
 				}
@@ -834,14 +834,14 @@ void b3RenderObject::b3CreateTexture(
 				((glTextureSize == 0) && (glTextureId == 0)));
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		// Restore to defined and unallocated state
-		if(glTextureData != null)
+		if (glTextureData != null)
 		{
 			b3MemAccess::b3Free(glTextureData);
 		}
-		if(glTextureId != 0)
+		if (glTextureId != 0)
 		{
 			glDeleteTextures(1, &glTextureId);
 		}
@@ -884,11 +884,11 @@ void b3RenderObject::b3CopyTexture(
 
 	// Limit size
 	B3_ASSERT(input != null);
-	while(xMax > input->xSize)
+	while (xMax > input->xSize)
 	{
 		xMax /= 2;
 	}
-	while(yMax > input->ySize)
+	while (yMax > input->ySize)
 	{
 		yMax /= 2;
 	}
@@ -902,7 +902,7 @@ void b3RenderObject::b3CopyTexture(
 
 	lPtr = scale.b3GetTrueColorData();
 	size = xMax * yMax;
-	for(i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 	{
 		b3RenderContext::b3PkdColorToGL(*lPtr++, &glTextureData[i << 2]);
 	}
@@ -923,7 +923,7 @@ void b3RenderObject::b3CreateImage(
 	b3PrintF(B3LOG_FULL, "b3RenderObject::b3CreateImage(...) # size: %4d\n", size);
 #endif
 	b3CreateTexture(context, input->xSize, input->ySize);
-	for(i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 	{
 		b3RenderContext::b3PkdColorToGL(*lPtr++, &glTextureData[i << 2]);
 	}
@@ -948,7 +948,7 @@ void b3RenderObject::b3Draw(b3RenderContext * context)
 #endif
 
 	b3Update();
-	if((!glMaterialComputed) || (glDisplayList == 0))
+	if ((!glMaterialComputed) || (glDisplayList == 0))
 	{
 		b3UpdateMaterial();
 		glDisplayList = glGenLists(B3_DISPLAY_LIST_COUNT);
@@ -962,10 +962,10 @@ void b3RenderObject::b3Draw(b3RenderContext * context)
 	b3CheckGeometry(context, render_mode);
 #endif
 
-	switch(render_mode)
+	switch (render_mode)
 	{
 	case B3_RENDER_LINE:
-		if(glGridElements->b3GetCount() > 0)
+		if (glGridElements->b3GetCount() > 0)
 		{
 			b3SelectMaterialForLineDrawing(context);
 			b3DrawLinedGeometry(context);
@@ -973,7 +973,7 @@ void b3RenderObject::b3Draw(b3RenderContext * context)
 		break;
 
 	case B3_RENDER_FILLED:
-		if(glPolygonElements->b3GetCount() > 0)
+		if (glPolygonElements->b3GetCount() > 0)
 		{
 			glCallList(glDisplayList);
 			b3DrawFilledGeometry(context);
@@ -1002,7 +1002,7 @@ void b3RenderObject::b3Draw(b3RenderContext * context)
 
 	b3Update();
 
-	if(!glMaterialComputed)
+	if (!glMaterialComputed)
 	{
 		b3UpdateMaterial();
 	}
@@ -1062,9 +1062,9 @@ void b3RenderObject::b3CheckGeometry(
 		glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
-	if(glVertex != null)
+	if (glVertex != null)
 	{
-		switch(render_mode)
+		switch (render_mode)
 		{
 		case B3_RENDER_LINE:
 #ifdef _DEBUG
@@ -1073,7 +1073,7 @@ void b3RenderObject::b3CheckGeometry(
 			// makes it possible to catch to faulty
 			// index data. The access simply compute
 			// the length of the lines to be drawn.
-			for(i = 0; i < glGridElements->b3GetCount(); i++)
+			for (i = 0; i < glGridElements->b3GetCount(); i++)
 			{
 				b3_vector aPoint, bPoint;
 				b3_index  a, b;
@@ -1093,7 +1093,7 @@ void b3RenderObject::b3CheckGeometry(
 
 		case B3_RENDER_FILLED:
 #ifdef _DEBUG
-			for(i = 0; i < glPolygonElements->b3GetCount(); i++)
+			for (i = 0; i < glPolygonElements->b3GetCount(); i++)
 			{
 				b3_vector aPoint, bPoint, cPoint;
 				b3_index  a, b, c;
@@ -1133,10 +1133,10 @@ void b3RenderObject::b3DrawGeometry(
 	b3RenderContext * context,
 	const b3_render_mode   render_mode)
 {
-	switch(render_mode)
+	switch (render_mode)
 	{
 	case B3_RENDER_LINE:
-		if(glGridElements->b3GetCount() > 0)
+		if (glGridElements->b3GetCount() > 0)
 		{
 			b3SelectMaterialForLineDrawing(context);
 			b3DrawLinedGeometry(context);
@@ -1144,7 +1144,7 @@ void b3RenderObject::b3DrawGeometry(
 		break;
 
 	case B3_RENDER_FILLED:
-		if(glPolygonElements->b3GetCount() > 0)
+		if (glPolygonElements->b3GetCount() > 0)
 		{
 			b3SelectMaterialForFilledDrawing(context);
 			b3DrawFilledGeometry(context);
@@ -1165,7 +1165,7 @@ void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext * context)
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
-	if(context->b3GetSelected() == this)
+	if (context->b3GetSelected() == this)
 	{
 		b3GetSelectedColor(diffuse);
 	}
@@ -1181,9 +1181,9 @@ void b3RenderObject::b3SelectMaterialForFilledDrawing(const b3RenderContext * co
 {
 #ifdef BLZ3_USE_OPENGL
 	glEnable(GL_LIGHTING);
-	if(glTextureSize > 0)
+	if (glTextureSize > 0)
 	{
-		if(context->glDrawCachedTextures)
+		if (context->glDrawCachedTextures)
 		{
 			B3_ASSERT(glIsTexture(glTextureId));
 			glBindTexture(GL_TEXTURE_2D, glTextureId);
@@ -1243,7 +1243,7 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context)
 	GLenum error = glGetError();
 	glVertexElements->b3Draw();
 	error = glGetError();
-	if(error == GL_NO_ERROR)
+	if (error == GL_NO_ERROR)
 	{
 		glGridElements->b3Draw();
 		error = glGetError();
@@ -1264,7 +1264,7 @@ void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext * context)
 	glVertexElements->b3Draw();
 
 	error = glGetError();
-	if(error == GL_NO_ERROR)
+	if (error == GL_NO_ERROR)
 	{
 		glPolygonElements->b3Draw();
 		error = glGetError();

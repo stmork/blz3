@@ -57,13 +57,13 @@ class b3_tx_fill_bits
 		b3_pkd_color  bit;
 		b3_u08        set, clr;
 
-		for(x = 0; x < 256; x++)
+		for (x = 0; x < 256; x++)
 		{
 			set = 0;
 			clr = 0;
-			for(bit = 128; bit != 0; bit = bit >> 1)
+			for (bit = 128; bit != 0; bit = bit >> 1)
 			{
-				if(x & bit)
+				if (x & bit)
 				{
 					set++;
 				}
@@ -104,18 +104,18 @@ b3_bool b3Tx::b3StartHist()
 	b3_index i;
 
 	// allocate memory for histogramme
-	if(histogramme == null)
+	if (histogramme == null)
 	{
 		histogramme = (b3_count *)b3Alloc(
 				B3_TX_MAX_HISTGRM * sizeof(b3_count));
-		if(histogramme == null)
+		if (histogramme == null)
 		{
 			return false;
 		}
 	}
 
 	// clear histogramme
-	for(i = 0; i < B3_TX_MAX_HISTGRM; i++)
+	for (i = 0; i < B3_TX_MAX_HISTGRM; i++)
 	{
 		histogramme[i] = 0;
 	}
@@ -124,7 +124,7 @@ b3_bool b3Tx::b3StartHist()
 
 void b3Tx::b3EndHist()
 {
-	if(histogramme != null)
+	if (histogramme != null)
 	{
 		b3Free(histogramme);
 	}
@@ -134,7 +134,7 @@ void b3Tx::b3EndHist()
 // All what we need is: "Schwarze Weizen Frühstückskorn"!
 b3_bool b3Tx::b3Histogramme()
 {
-	if(!b3StartHist())
+	if (!b3StartHist())
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -150,7 +150,7 @@ b3_bool b3Tx::b3AddHist(
 	b3_u08 * cPtr;
 
 	// if Tx is type of direct palette entries
-	if(type == B3_TX_VGA)
+	if (type == B3_TX_VGA)
 	{
 		b3_coord      x, y;
 		b3_index      index;
@@ -159,12 +159,12 @@ b3_bool b3Tx::b3AddHist(
 
 		xStop += xStart;
 		yStop += yStart;
-		if(b3IsGreyPalette())
+		if (b3IsGreyPalette())
 		{
 			cPtr = &data[yStart * xSize];
-			for(y = yStart; y < yStop; y++)
+			for (y = yStart; y < yStop; y++)
 			{
-				for(x = xStart; x < xStop; x++)
+				for (x = xStart; x < xStop; x++)
 				{
 					index = cPtr[x] ;
 					histogramme[index]++;
@@ -175,9 +175,9 @@ b3_bool b3Tx::b3AddHist(
 		else
 		{
 			cPtr = &data[yStart * xSize];
-			for(y = yStart; y < yStop; y++)
+			for (y = yStart; y < yStop; y++)
 			{
-				for(x = xStart; x < xStop; x++)
+				for (x = xStart; x < xStop; x++)
 				{
 					color = palette[cPtr[x]];
 					r     = ((color & 0xff0000) >> 16) * 0.35;
@@ -185,7 +185,7 @@ b3_bool b3Tx::b3AddHist(
 					b     = ((color & 0x0000ff))       * 0.14;
 
 					grey = (b3_pkd_color)(r + g + b);
-					if(grey >= B3_TX_MAX_HISTGRM)
+					if (grey >= B3_TX_MAX_HISTGRM)
 					{
 						grey = B3_TX_MAX_HISTGRM - 1;
 					}
@@ -201,7 +201,7 @@ b3_bool b3Tx::b3AddHist(
 
 	// if Tx is type of interleaved
 	// only b/w is supported yet
-	if((type == B3_TX_ILBM) && (depth == 1))
+	if ((type == B3_TX_ILBM) && (depth == 1))
 	{
 		b3_coord x, y;
 		b3_count xBytes;
@@ -209,10 +209,10 @@ b3_bool b3Tx::b3AddHist(
 		xStop += xStart;
 		yStop += yStart;
 		xBytes = TX_BWA(xSize);
-		for(y = yStart; y < yStop; y++)
+		for (y = yStart; y < yStop; y++)
 		{
 			cPtr = &data[y * xBytes];
-			for(x = 0; x < xBytes; x++)
+			for (x = 0; x < xBytes; x++)
 			{
 				histogramme[0] += b3_tx_fill_bits::m_FillBits.bwBitsClr[cPtr[x]];
 				histogramme[1] += b3_tx_fill_bits::m_FillBits.bwBitsSet[cPtr[x]];
@@ -221,7 +221,7 @@ b3_bool b3Tx::b3AddHist(
 		return true;
 	}
 
-	if(type == B3_TX_RGB8)
+	if (type == B3_TX_RGB8)
 	{
 		b3_coord       x, y;
 		b3_index       index;
@@ -230,9 +230,9 @@ b3_bool b3Tx::b3AddHist(
 
 		lPtr  = (b3_pkd_color *)data;
 		index = yStart * xSize;
-		for(y = yStart; y < yStop; y++)
+		for (y = yStart; y < yStop; y++)
 		{
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				color = lPtr[index++];
 				r     = ((color & 0xff0000) >> 16) * 0.35;
@@ -240,7 +240,7 @@ b3_bool b3Tx::b3AddHist(
 				b     = ((color & 0x0000ff))       * 0.14;
 
 				grey = (b3_pkd_color)(r + g + b);
-				if(grey >= B3_TX_MAX_HISTGRM)
+				if (grey >= B3_TX_MAX_HISTGRM)
 				{
 					grey = B3_TX_MAX_HISTGRM - 1;
 				}
@@ -251,7 +251,7 @@ b3_bool b3Tx::b3AddHist(
 		return true;
 	}
 
-	if(type == B3_TX_FLOAT)
+	if (type == B3_TX_FLOAT)
 	{
 		b3_coord      x, y;
 		b3_index      index;
@@ -261,9 +261,9 @@ b3_bool b3Tx::b3AddHist(
 
 		cPtr  = (b3_color *)data;
 		index = yStart * xSize;
-		for(y = yStart; y < yStop; y++)
+		for (y = yStart; y < yStop; y++)
 		{
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				r = cPtr[index].r *  89.25;
 				g = cPtr[index].g * 130.05;
@@ -271,7 +271,7 @@ b3_bool b3Tx::b3AddHist(
 				index++;
 
 				grey = (b3_pkd_color)(r + g + b);
-				if(grey >= B3_TX_MAX_HISTGRM)
+				if (grey >= B3_TX_MAX_HISTGRM)
 				{
 					grey = B3_TX_MAX_HISTGRM - 1;
 				}
@@ -294,40 +294,40 @@ b3_bool b3Tx::b3IsWhite()
 	b3_f64   ratio;
 	b3_bool  IsWhite;
 
-	if(histogramme == null)
+	if (histogramme == null)
 	{
 		return false;
 	}
-	if(depth > B3_TX_MAX_HISTGRM_DEPTH)
+	if (depth > B3_TX_MAX_HISTGRM_DEPTH)
 	{
 		return false;
 	}
 
-	if(depth == 1)
+	if (depth == 1)
 	{
 		white = histogramme[0];
 		black = histogramme[1];
 	}
-	if(depth == 2)
+	if (depth == 2)
 	{
 		black  = histogramme[0];
 		white  = histogramme[3];
 		middle = histogramme[1] + histogramme[2];
 	}
-	if(depth > 2)
+	if (depth > 2)
 	{
 		s3 = 1 << depth; // number of colors
 		s1 = s3 >> 2;    // a quarter of s3
 		s2 = s3 - s1;    // three quarters of s3
-		for(i =  0; i < s1; i++)
+		for (i =  0; i < s1; i++)
 		{
 			black  += histogramme[i];
 		}
-		for(i = s1; i < s2; i++)
+		for (i = s1; i < s2; i++)
 		{
 			middle += histogramme[i];
 		}
-		for(i = s2; i < s3; i++)
+		for (i = s2; i < s3; i++)
 		{
 			white  += histogramme[i];
 		}
@@ -336,10 +336,10 @@ b3_bool b3Tx::b3IsWhite()
 	// Compute ratio
 	together = black + white + middle;
 	IsWhite = ((black == 0) || (white == 0));
-	if(!IsWhite)
+	if (!IsWhite)
 	{
 		ratio = (b3_f64)(black + middle) / (b3_f64)together;
-		if(ratio >= 1.0)
+		if (ratio >= 1.0)
 		{
 			ratio = 1.0 / ratio;
 		}
@@ -360,11 +360,11 @@ b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries)
 	b3_index i;
 
 	entries = 0;
-	if(histogramme != null)
+	if (histogramme != null)
 	{
 		// Copy entries
 		entries = 1 << (depth <= B3_TX_MAX_HISTGRM_DEPTH ? depth : B3_TX_MAX_HISTGRM_DEPTH);
-		for(i = 0; i < entries; i++)
+		for (i = 0; i < entries; i++)
 		{
 			buffer[i] = histogramme[i];
 		}
@@ -390,10 +390,10 @@ b3_bool b3Tx::b3TransToBW(b3_f64 ratio, b3_tx_threshold mode)
 	b3_bool  result;
 
 	result = b3Histogramme();
-	if(result)
+	if (result)
 	{
 		threshold = b3ComputeThreshold(ratio, mode);
-		if(threshold >= 0)
+		if (threshold >= 0)
 		{
 			result = b3TransToBW(threshold);
 		}
@@ -411,7 +411,7 @@ b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode)
 	b3_index i, threshold = 0;
 	b3_bool  compute_threshold = true;
 
-	if(histogramme == null)
+	if (histogramme == null)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3ComputeThreshold() failed.\n");
 		threshold = -1;
@@ -420,7 +420,7 @@ b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode)
 	{
 		// Compute threshold;
 		max = 1 << (depth <= B3_TX_MAX_HISTGRM_DEPTH ? depth : B3_TX_MAX_HISTGRM_DEPTH);
-		switch(mode)
+		switch (mode)
 		{
 		case B3_THRESHOLD_WHITE_RATIO:
 			ratio = whiteRatio;
@@ -438,10 +438,10 @@ b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode)
 		}
 
 		// Search inside histogramme for a threshold
-		if(compute_threshold)
+		if (compute_threshold)
 		{
 			limit = (b3_count)(xSize * ySize * ratio);
-			for(i = 0; (i < max) && (count < limit); i++)
+			for (i = 0; (i < max) && (count < limit); i++)
 			{
 				count += histogramme[i];
 			}
@@ -475,7 +475,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	b3_bool        result = false;
 
 	// Check if nothing is to do...
-	if(depth == 1)
+	if (depth == 1)
 	{
 		return result;
 	}
@@ -484,7 +484,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	xBytes  = TX_BWA(xSize);
 	newSize = xBytes * ySize;
 	dPtr    = (b3_u08 *)b3Alloc(newSize);
-	if(dPtr == null)
+	if (dPtr == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TransToBW(): Not enogh memory for new image buffer!\n");
@@ -493,7 +493,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 
 	// alloc new palette
 	pPtr = (b3_pkd_color *)b3Alloc(2 * sizeof(b3_pkd_color));
-	if(pPtr == null)
+	if (pPtr == null)
 	{
 		b3Free(dPtr);
 		b3PrintF(B3LOG_NORMAL,
@@ -508,19 +508,19 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	}
 
 	grey_palette = b3IsGreyPalette();
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_VGA:
 		bPtr = (b3_u08 *)data;
 		ptr  = dPtr;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			byte =   0;
 			bit  = 128;
 			i    =   0;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
-				if(grey_palette)
+				if (grey_palette)
 				{
 					grey = *bPtr++;
 				}
@@ -535,14 +535,14 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 				}
 
 				// Set bit if over threshold
-				if(grey < threshold)
+				if (grey < threshold)
 				{
 					byte |= bit;
 				}
 
 				// Shift bit
 				bit = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					ptr[i] = byte;
 					bit    = 128;
@@ -552,7 +552,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			}
 
 			// Put cached byte into memory
-			if(i < xBytes)
+			if (i < xBytes)
 			{
 				ptr[i] = byte;
 			}
@@ -564,12 +564,12 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	case B3_TX_RGB4:
 		sPtr = (b3_u16 *)data;
 		ptr  = dPtr;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			byte =   0;
 			bit  = 128;
 			i    =   0;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				color = *sPtr++;
 				r = ((color & 0xf00) >> 4) * 0.35;
@@ -577,14 +577,14 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 				b = ((color & 0x00f) << 4) * 0.14;
 
 				// Set bit if over threshold
-				if((r + g + b) < threshold)
+				if ((r + g + b) < threshold)
 				{
 					byte |= bit;
 				}
 
 				// Shift bit
 				bit = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					ptr[i] = byte;
 					bit    = 128;
@@ -594,7 +594,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			}
 
 			// Put cached byte into memory
-			if(i < xBytes)
+			if (i < xBytes)
 			{
 				ptr[i] = byte;
 			}
@@ -606,12 +606,12 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	case B3_TX_RGB8:
 		lPtr = (b3_pkd_color *)data;
 		ptr  = dPtr;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			byte =   0;
 			bit  = 128;
 			i    =   0;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				color = *lPtr++;
 				r = ((color & 0xff0000) >> 16) * 0.35;
@@ -619,14 +619,14 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 				b = ((color & 0x0000ff))       * 0.14;
 
 				// Set bit if over threshold
-				if((r + g + b) < threshold)
+				if ((r + g + b) < threshold)
 				{
 					byte |= bit;
 				}
 
 				// Shift bit
 				bit = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					ptr[i] = byte;
 					bit    = 128;
@@ -636,7 +636,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			}
 
 			// Put cached byte into memory
-			if(i < xBytes)
+			if (i < xBytes)
 			{
 				ptr[i] = byte;
 			}
@@ -648,26 +648,26 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	case B3_TX_FLOAT:
 		cPtr = (b3_color *)data;
 		ptr  = dPtr;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			byte =   0;
 			bit  = 128;
 			i    =   0;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				r = cPtr[x].r *  89.25;
 				g = cPtr[x].g * 130.05;
 				b = cPtr[x].b *  35.7;
 
 				// Set bit if over threshold
-				if((r + g + b) < threshold)
+				if ((r + g + b) < threshold)
 				{
 					byte |= bit;
 				}
 
 				// Shift bit
 				bit = bit >> 1;
-				if(bit == 0)
+				if (bit == 0)
 				{
 					ptr[i] = byte;
 					bit    = 128;
@@ -677,7 +677,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			}
 
 			// Put cached byte into memory
-			if(i < xBytes)
+			if (i < xBytes)
 			{
 				ptr[i] = byte;
 			}
@@ -697,7 +697,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		b3Free(data);
 		b3Free(palette);
 	}
-	catch(b3MemException & e)
+	catch (b3MemException & e)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
@@ -706,7 +706,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   #               error msg:  %s\n", e.b3GetErrorMsg());
 	}
-	catch(...)
+	catch (...)
 	{
 		result = false;
 	}

@@ -292,11 +292,11 @@ public:
 		factor[2] = amplification;
 		factor[3] = amplification;
 
-		for(i = 0; i < octaves; i++)
+		for (i = 0; i < octaves; i++)
 		{
 			n = b3FilteredNoiseVector(v[1], v[2], v[3]);
 			sum  += (v[0] * n);
-			for(k = 0; k < 4; k++)
+			for (k = 0; k < 4; k++)
 			{
 				v[k] *= factor[k];
 			}
@@ -340,16 +340,16 @@ public:
 		factor[2] = amplification;
 		factor[3] = amplification;
 
-		for(k = 0; k < 4; k++)
+		for (k = 0; k < 4; k++)
 		{
 			aux[k] = 0;
 			sum[k] = 0;
 		}
-		for(i = 0; i < octaves; i++)
+		for (i = 0; i < octaves; i++)
 		{
 			b3NoiseDeriv(v[1], v[2], v[3], (b3_vector *)&sum[0]);
 
-			for(k = 0; k < 4; k++)
+			for (k = 0; k < 4; k++)
 			{
 				sum[k] += aux[k] * v[0];
 				v[k]   *= factor[k];

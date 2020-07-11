@@ -91,7 +91,7 @@ b3_bool b3Event::b3Wait()
 	b3_bool success = true;
 
 	success &= b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
-	if(!pulse)
+	if (!pulse)
 	{
 		success &= b3PThread::b3CheckResult(pthread_cond_wait(&event, &mutex));
 	}
@@ -130,7 +130,7 @@ void b3Thread::b3Inc()
 {
 	b3CriticalSection lock(m_ThreadMutex);
 
-	if(!m_IsRunning)
+	if (!m_IsRunning)
 	{
 		m_Span.b3Start();
 		m_IsRunning = true;
@@ -142,7 +142,7 @@ void b3Thread::b3Dec()
 {
 	b3CriticalSection lock(m_ThreadMutex);
 
-	if(m_IsRunning)
+	if (m_IsRunning)
 	{
 		m_ThreadCount--;
 		m_IsRunning = false;
@@ -173,7 +173,7 @@ b3_bool b3Thread::b3Start(
 	m_Prio     = -priority * 5;
 
 	success = b3PThread::b3CheckResult(error_code = pthread_create(&m_Thread, NULL, &b3Trampoline, this));
-	if(success)
+	if (success)
 	{
 		threadSuccess++;
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # started thread %02lX (%s).\n",
@@ -199,7 +199,7 @@ void * b3Thread::b3Trampoline(void * ptr)
 {
 	b3Thread * threadClass = (b3Thread *)ptr;
 
-	if(nice(threadClass->m_Prio) == -1)
+	if (nice(threadClass->m_Prio) == -1)
 	{
 		b3PrintF(B3LOG_NORMAL, "   Nicing error!\n");
 	}
@@ -219,12 +219,12 @@ b3_bool b3Thread::b3Stop()
 {
 	b3_bool was_running;
 
-	if(b3IsRunning())
+	if (b3IsRunning())
 	{
 		pthread_cancel(m_Thread);
 	}
 	was_running = m_IsRunning;
-	if(m_IsRunning)
+	if (m_IsRunning)
 	{
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # terminated thread %02lX (%s).\n",
 			m_Thread,
@@ -251,7 +251,7 @@ b3_u32 b3Thread::b3Wait()
 void b3Thread::b3AddTimeSpan(b3TimeSpan * span)
 {
 #ifdef __linux__
-	if(!b3CPU::b3HasCorrectRUsage())
+	if (!b3CPU::b3HasCorrectRUsage())
 	{
 		span->m_uTime += m_Span.m_uTime;
 		span->m_sTime += m_Span.m_sTime;

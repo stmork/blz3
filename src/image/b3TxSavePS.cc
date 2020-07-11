@@ -93,10 +93,10 @@ void b3InfoPS::b3Write()
 #ifdef GREY_PS
 	b3_pkd_color r, g, b;
 
-	for(y = 0; y < m_Tx->ySize; y++)
+	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		m_Tx->b3GetRow(m_ThisRow, y);
-		for(x = 0; x < m_Tx->xSize; x++)
+		for (x = 0; x < m_Tx->xSize; x++)
 		{
 			r = (m_ThisRow[x] & 0xff0000) >> 16;
 			g = (m_ThisRow[x] & 0x00f000) >>  8;
@@ -112,13 +112,13 @@ void b3InfoPS::b3Write()
 	b3_coord shift;
 	b3_pkd_color r;
 
-	for(y = 0; y < m_Tx->ySize; y++)
+	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		m_Tx->b3GetRow(m_ThisRow, y);
-		for(c = 0; c < 3; c++)
+		for (c = 0; c < 3; c++)
 		{
 			shift = (2 - c) << 3;
-			for(x = 0; x < m_Tx->xSize; x++)
+			for (x = 0; x < m_Tx->xSize; x++)
 			{
 				r = (m_ThisRow[x] & (0xff << shift)) >> shift;
 

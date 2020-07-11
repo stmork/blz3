@@ -386,7 +386,7 @@ void CCoolControlsManager::CCMControl::SetState(int nFlagRemove, int nFlagAdd, B
 {
 	m_nState &= ~nFlagRemove;
 	m_nState |= nFlagAdd;
-	if(bRedraw)
+	if (bRedraw)
 	{
 		DrawBorder();
 	}

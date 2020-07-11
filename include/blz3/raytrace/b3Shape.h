@@ -965,13 +965,13 @@ private:
 
 	inline void b3AddTriangleToGrid(b3_index grid, b3_index triangle)
 	{
-		if((grid >= 0) && (grid < m_GridCount))
+		if ((grid >= 0) && (grid < m_GridCount))
 		{
 			b3_count max = m_GridList[grid].b3GetCount();
 
-			if(max > 0)
+			if (max > 0)
 			{
-				if(m_GridList[grid][max - 1] == triangle)
+				if (m_GridList[grid][max - 1] == triangle)
 				{
 					return;
 				}

@@ -61,9 +61,9 @@ b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
 {
 	b3_size i;
 
-	for(i = 0; i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation)); i++)
+	for (i = 0; i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation)); i++)
 	{
-		if(m_CSGMode[i] == mode)
+		if (m_CSGMode[i] == mode)
 		{
 			return i;
 		}
@@ -91,10 +91,10 @@ void b3CSGShape::b3Operate(
 	PointB = local->m_x;
 
 	// while both intervals are not empty.
-	while((aCount != 0) || (bCount != 0))
+	while ((aCount != 0) || (bCount != 0))
 	{
 		// if A is empty read B
-		if(aCount == 0)
+		if (aCount == 0)
 		{
 			Point = PointB++;
 			bCount--;
@@ -103,7 +103,7 @@ void b3CSGShape::b3Operate(
 		else
 		{
 			// if B is empty, read point from A.
-			if(bCount == 0)
+			if (bCount == 0)
 			{
 				Point = PointA++;
 				aCount--;
@@ -112,7 +112,7 @@ void b3CSGShape::b3Operate(
 			else
 			{
 				// else read smallest point
-				if(PointA->m_Q < PointB->m_Q)
+				if (PointA->m_Q < PointB->m_Q)
 				{
 					Point = PointA++;
 					aCount--;
@@ -128,7 +128,7 @@ void b3CSGShape::b3Operate(
 		}
 
 		// Do compute boolean operation!
-		switch(m_Operation)
+		switch (m_Operation)
 		{
 		case B3_CSG_UNION:
 			stat = (aStat || bStat);
@@ -143,7 +143,7 @@ void b3CSGShape::b3Operate(
 
 		// Store only points which state (inside/outside)
 		// are changed.
-		if(stat != cStat)
+		if (stat != cStat)
 		{
 			// insert result
 			result->m_x[result->m_Count++] = *Point;
@@ -209,7 +209,7 @@ b3CSGShape3::b3CSGShape3(b3_u32 * src) : b3CSGShape(src)
 
 void b3CSGShape3::b3StoreShape()
 {
-	for(b3_loop i = 0; i < 3; i++)
+	for (b3_loop i = 0; i < 3; i++)
 	{
 		b3_vector normal;
 
@@ -258,7 +258,7 @@ b3_bool b3CSGShape3::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_bool result = false;
 
-	if(b3ShapeBaseTransformation::b3Prepare())
+	if (b3ShapeBaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare(prep_info);
 	}

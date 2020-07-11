@@ -74,19 +74,19 @@ void b3CSGBox::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 
 	x = BTLine->pos.x + Q * BTLine->dir.x;
 	y = BTLine->pos.y + Q * BTLine->dir.y;
-	if(x < 0)
+	if (x < 0)
 	{
 		x = 0;
 	}
-	else if(x >= 0.9999999)
+	else if (x >= 0.9999999)
 	{
 		x = 0.9999999;
 	}
-	if(y < 0)
+	if (y < 0)
 	{
 		y = 0;
 	}
-	else if(y >= 0.9999999)
+	else if (y >= 0.9999999)
 	{
 		y = 0.9999999;
 	}

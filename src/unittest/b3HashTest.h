@@ -49,12 +49,12 @@ public:
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
-		if(keys != null)
+		if (keys != null)
 		{
 			delete keys;
 		}
 
-		if(objects != null)
+		if (objects != null)
 		{
 			delete objects;
 		}

@@ -59,7 +59,7 @@ public:
 	 */
 	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
 	{
-		if(increment <= 0)
+		if (increment <= 0)
 		{
 			B3_THROW(b3ArrayException, B3_ARRAY_INVALID_INCREMENT);
 		}
@@ -74,7 +74,7 @@ public:
 	 */
 	virtual ~b3Array()
 	{
-		if(m_Buffer != m_Start)
+		if (m_Buffer != m_Start)
 		{
 			delete [] m_Buffer;
 		}
@@ -91,17 +91,17 @@ public:
 		T    *    buffer;
 		b3_count  max = m_Max + m_Increment;
 
-		if(m_Index >= m_Max)
+		if (m_Index >= m_Max)
 		{
 			buffer = new T[max];
-			if(buffer != null)
+			if (buffer != null)
 			{
 				// Copy old memory (should be done by realloc later!
-				if(m_Index > 0)
+				if (m_Index > 0)
 				{
 					B3_ASSERT(m_Buffer != null);
 					memcpy(buffer, m_Buffer, m_Index * sizeof(T));
-					if(m_Buffer != m_Start)
+					if (m_Buffer != m_Start)
 					{
 						delete [] m_Buffer;
 					}
@@ -129,9 +129,9 @@ public:
 	inline void b3Clear(const b3_bool really_free = false)
 	{
 		m_Index = 0;
-		if(really_free)
+		if (really_free)
 		{
-			if(m_Buffer != m_Start)
+			if (m_Buffer != m_Start)
 			{
 				delete [] m_Buffer;
 			}
@@ -179,7 +179,7 @@ public:
 	inline T & operator [](const b3_index index)
 	{
 #ifdef _DEBUG
-		if((index < 0) || (index >= m_Index))
+		if ((index < 0) || (index >= m_Index))
 		{
 			B3_THROW(b3ArrayException, B3_ARRAY_OUT_OF_BOUNDS);
 		}

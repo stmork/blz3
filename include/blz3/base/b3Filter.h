@@ -100,11 +100,11 @@ public:
 
 	inline b3_f64 b3Integral(b3_f64 x) override
 	{
-		if(x < -1)
+		if (x < -1)
 		{
 			return 0;
 		}
-		else if(x >  1)
+		else if (x >  1)
 		{
 			return 1;
 		}
@@ -116,7 +116,7 @@ public:
 
 	inline b3_f64 b3InvIntegral(b3_f64 val, b3_bool throw_exception = false) override
 	{
-		if((fabs(val) > 1) && throw_exception)
+		if ((fabs(val) > 1) && throw_exception)
 		{
 			B3_THROW(b3FilterException, B3_FILTER_OUT_OF_RANGE);
 		}

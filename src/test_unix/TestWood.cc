@@ -157,10 +157,10 @@ int main(int argc, char * argv[])
 		display->b3PutTx(&tx);
 		display->b3Wait();
 
-		if(argc > 1)
+		if (argc > 1)
 		{
 #ifdef CREATE_ICON
-			if(argc > 3)
+			if (argc > 3)
 			{
 				b3Tx small, big;
 
@@ -181,7 +181,7 @@ int main(int argc, char * argv[])
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException & e)
+	catch (b3DisplayException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}

@@ -39,7 +39,7 @@ b3_bool b3Shape::b3NormalDeriv(b3_ray * ray)
 
 b3_bool b3Sphere::b3NormalDeriv(b3_ray * ray)
 {
-	if((ray->normal.x == 0) && (ray->normal.y == 0))
+	if ((ray->normal.x == 0) && (ray->normal.y == 0))
 	{
 		// Gimble lock
 		return b3Shape::b3NormalDeriv(ray);
@@ -60,7 +60,7 @@ b3_bool b3ShapeBaseTransformation::b3NormalDeriv(b3_ray * ray)
 
 	b3Vector::b3CrossProduct(&m_Dir1, &m_Dir2, &EquaNormal);
 	b3Vector::b3CrossProduct(&EquaNormal, &ray->normal, &ray->xDeriv);
-	if(b3Vector::b3SMul(&EquaNormal, &m_Dir3) < 0)
+	if (b3Vector::b3SMul(&EquaNormal, &m_Dir3) < 0)
 	{
 		b3Vector::b3CrossProduct(&ray->xDeriv, &EquaNormal, &ray->yDeriv);
 	}

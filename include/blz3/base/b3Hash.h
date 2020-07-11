@@ -160,7 +160,7 @@ public:
 	 */
 	inline void b3Init(b3HashContainer<Key, Object> * container, b3_count num)
 	{
-		for(b3_count i = 0; i < num; i++)
+		for (b3_count i = 0; i < num; i++)
 		{
 			b3Add(container[i].m_Key, container[i].m_Object);
 		}
@@ -180,7 +180,7 @@ public:
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
-			if(pair->m_Key == key)
+			if (pair->m_Key == key)
 			{
 				B3_THROW(b3HashException, B3_HASH_DUPLICATE_KEY);
 			}
@@ -203,7 +203,7 @@ public:
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
-			if(pair->m_Key == key)
+			if (pair->m_Key == key)
 			{
 				pair->b3SetObject(object);
 				return true;
@@ -221,9 +221,9 @@ public:
 	 */
 	inline const b3_bool b3IsEmpty() const
 	{
-		for(b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
+		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
-			if(m_HashMap[i].First != null)
+			if (m_HashMap[i].First != null)
 			{
 				return false;
 			}
@@ -240,7 +240,7 @@ public:
 	{
 		b3_count count = 0;
 
-		for(b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
+		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
 			count += m_HashMap[i].b3GetCount();
 		}
@@ -261,7 +261,7 @@ public:
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
-			if(pair->m_Key == key)
+			if (pair->m_Key == key)
 			{
 				return &pair->m_Object;
 			}
@@ -282,7 +282,7 @@ public:
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
-			if(pair->m_Key == key)
+			if (pair->m_Key == key)
 			{
 				return true;
 			}
@@ -303,7 +303,7 @@ public:
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
-			if(pair->m_Key == key)
+			if (pair->m_Key == key)
 			{
 				m_HashMap[idx].b3Remove(pair);
 				delete pair;
@@ -320,9 +320,9 @@ public:
 	{
 		b3HashPair<Key, Object> * pair;
 
-		for(b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
+		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
-			while((pair = m_HashMap[i].b3RemoveFirst()) != null)
+			while ((pair = m_HashMap[i].b3RemoveFirst()) != null)
 			{
 				delete pair;
 			}
@@ -339,7 +339,7 @@ public:
 		b3Array<Key>      *     keys = new b3Array<Key>;
 		b3HashPair<Key, Object> * pair;
 
-		for(b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
+		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
 			B3_FOR_BASE(&m_HashMap[i], pair)
 			{
@@ -360,7 +360,7 @@ public:
 		b3Array<Object>    *    objects = new b3Array<Object>;
 		b3HashPair<Key, Object> * pair;
 
-		for(b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
+		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
 			B3_FOR_BASE(&m_HashMap[i], pair)
 			{
@@ -375,7 +375,7 @@ private:
 	{
 		b3_hash hash = m_HashFunc(key);
 
-		if(hash >= B3_MAX_HASH_INDEX)
+		if (hash >= B3_MAX_HASH_INDEX)
 		{
 			B3_THROW(b3HashException, B3_HASH_INVALID);
 		}
@@ -388,7 +388,7 @@ private:
 		b3_size  size = sizeof(Key), i;
 		b3_hash  hash = 0;
 
-		for(i = 0; i < size; i++)
+		for (i = 0; i < size; i++)
 		{
 			hash += ptr[i];
 		}

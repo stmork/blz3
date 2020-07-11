@@ -92,7 +92,7 @@ void b3FileList::b3RecCreateList(const char * startDir)
 	{
 		type = dir.b3DirNext(name);
 
-		switch(type)
+		switch (type)
 		{
 		case B3_TYPE_FILE:
 			b3Path::b3LinkFileName(subdir, startDir, name);
@@ -110,7 +110,7 @@ void b3FileList::b3RecCreateList(const char * startDir)
 			break;
 		}
 	}
-	while(loop);
+	while (loop);
 	dir.b3CloseDir();
 }
 
@@ -128,7 +128,7 @@ const b3_bool b3FileList::b3Add(const char * name)
 		entry = new b3FileEntry(name);
 		list.b3Append(entry);
 	}
-	catch(...)
+	catch (...)
 	{
 		entry = null;
 	}

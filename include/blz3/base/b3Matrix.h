@@ -117,7 +117,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * s = &src->x;
 		b3_f32 B3_ALIGN_16 * d = &vec->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			d[i] = (b3_f32)s[i];
 		}
@@ -138,7 +138,7 @@ public:
 		const b3_f32 B3_ALIGN_16 * s = &src->x;
 		b3_f64 B3_ALIGN_16 * d = &vec->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			d[i] = s[i];
 		}
@@ -244,7 +244,7 @@ public:
 #ifdef B3_SSE1
 		b3_f32 B3_ALIGN_16 * n = &negate->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			n[i] = -n[i];
 		}
@@ -267,7 +267,7 @@ public:
 #ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 * n = &negate->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			n[i] = -n[i];
 		}
@@ -319,14 +319,14 @@ public:
 		b3_f64              denom  = 0;
 		b3_f64              result;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			denom += v[i] * v[i];
 		}
 
 		result = sqrt(denom);
 		denom  = length / result;
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			v[i] *= denom;
 		}
@@ -425,7 +425,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
 		b3_f64              result = 0;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			result += a[i] * b[i];
 		}
@@ -471,7 +471,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] += a[i];
 		}
@@ -539,7 +539,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] + b[i];
 		}
@@ -604,7 +604,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] -= a[i];
 		}
@@ -654,7 +654,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -719,7 +719,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] *= a[i];
 		}
@@ -787,7 +787,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] * b[i];
 		}
@@ -883,7 +883,7 @@ public:
 		a[Y] = c[X] = aVec->z;
 		b[X] = d[Y] = bVec->z;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] * b[i] - c[i] * d[i];
 		}
@@ -969,7 +969,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * v = &vector->x;
 		b3_f64              result = 0;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			result += v[i] * v[i];
 		}
@@ -1074,7 +1074,7 @@ public:
 #ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 * v = &vector->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			v[i] *= factor;
 		}
@@ -1104,7 +1104,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * v = &vector->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = v[i] * factor;
 		}
@@ -1133,16 +1133,16 @@ public:
 		b3_f32 B3_ALIGN_16  aux[4];
 		b3_f32              result;
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			aux[o] = v[o];
 		}
 		aux[3] = 0;
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			result = 0;
-			for(b3_loop i = 0; i < 4; i++)
+			for (b3_loop i = 0; i < 4; i++)
 			{
 				result += m[i] * aux[i];
 			}
@@ -1179,16 +1179,16 @@ public:
 		b3_f32 B3_ALIGN_16  aux[4];
 		b3_f32              result;
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			aux[o] = v[o];
 		}
 		aux[3] = 1;
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			result = 0;
-			for(b3_loop i = 0; i < 4; i++)
+			for (b3_loop i = 0; i < 4; i++)
 			{
 				result += m[i] * aux[i];
 			}
@@ -1344,7 +1344,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] + factor * b[i];
 		}
@@ -1452,7 +1452,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * c = &cVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = x * b[i] + y * c[i];
 		}
@@ -1517,7 +1517,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * c = &cVec->x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] + x * b[i] + y * c[i];
 		}
@@ -1656,7 +1656,7 @@ public:
 		const b3_f64 B3_ALIGN_16 * d = &line->dir.x;
 		b3_f64 B3_ALIGN_16 * r = &result->x;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = p[i] + l * d[i];
 		}
@@ -1704,21 +1704,21 @@ public:
 	{
 		b3_f32 aux;
 
-		if(lower->x > upper->x)
+		if (lower->x > upper->x)
 		{
 			aux = lower->x;
 			lower->x = upper->x;
 			upper->x = aux;
 		}
 
-		if(lower->y > upper->y)
+		if (lower->y > upper->y)
 		{
 			aux = lower->y;
 			lower->y = upper->y;
 			upper->y = aux;
 		}
 
-		if(lower->z > upper->z)
+		if (lower->z > upper->z)
 		{
 			aux = lower->z;
 			lower->z = upper->z;
@@ -1740,9 +1740,9 @@ public:
 		b3_f64 B3_ALIGN_16 * u = &upper->x;
 		b3_f64              aux;
 
-		for(b3_loop i = 0; i < 3; i++)
+		for (b3_loop i = 0; i < 3; i++)
 		{
-			if(l[i] > u[i])
+			if (l[i] > u[i])
 			{
 				aux = l[i];
 				l[i] = u[i];
@@ -1752,21 +1752,21 @@ public:
 #else
 		b3_f64 aux;
 
-		if(lower->x > upper->x)
+		if (lower->x > upper->x)
 		{
 			aux = lower->x;
 			lower->x = upper->x;
 			upper->x = aux;
 		}
 
-		if(lower->y > upper->y)
+		if (lower->y > upper->y)
 		{
 			aux = lower->y;
 			lower->y = upper->y;
 			upper->y = aux;
 		}
 
-		if(lower->z > upper->z)
+		if (lower->z > upper->z)
 		{
 			aux = lower->z;
 			lower->z = upper->z;
@@ -1806,15 +1806,15 @@ public:
 	{
 		b3_f32 m = (b3_f32)min;
 
-		if(vector->x < m)
+		if (vector->x < m)
 		{
 			vector->x = m;
 		}
-		if(vector->y < m)
+		if (vector->y < m)
 		{
 			vector->y = m;
 		}
-		if(vector->z < m)
+		if (vector->z < m)
 		{
 			vector->z = m;
 		}
@@ -1833,15 +1833,15 @@ public:
 		b3_vector * lower,
 		const b3_vector * point)
 	{
-		if(point->x < lower->x)
+		if (point->x < lower->x)
 		{
 			lower->x = point->x;
 		}
-		if(point->y < lower->y)
+		if (point->y < lower->y)
 		{
 			lower->y = point->y;
 		}
-		if(point->z < lower->z)
+		if (point->z < lower->z)
 		{
 			lower->z = point->z;
 		}
@@ -1861,15 +1861,15 @@ public:
 	{
 		b3_f32 m = (b3_f32)max;
 
-		if(vector->x > m)
+		if (vector->x > m)
 		{
 			vector->x = m;
 		}
-		if(vector->y > m)
+		if (vector->y > m)
 		{
 			vector->y = m;
 		}
-		if(vector->z > m)
+		if (vector->z > m)
 		{
 			vector->z = m;
 		}
@@ -1888,15 +1888,15 @@ public:
 		b3_vector * upper,
 		const b3_vector * point)
 	{
-		if(point->x > upper->x)
+		if (point->x > upper->x)
 		{
 			upper->x = point->x;
 		}
-		if(point->y > upper->y)
+		if (point->y > upper->y)
 		{
 			upper->y = point->y;
 		}
-		if(point->z > upper->z)
+		if (point->z > upper->z)
 		{
 			upper->z = point->z;
 		}
@@ -2231,9 +2231,9 @@ public:
 		b3_f32 B3_ALIGN_16 * ptr1 = &A->m11;
 		b3_f32 B3_ALIGN_16 * ptr2 = &m_UnitMatrix.m11;
 
-		for(int i = 0; i < 16; i++)
+		for (int i = 0; i < 16; i++)
 		{
-			if(fabs(*ptr1++ - *ptr2++) > 0.001f)
+			if (fabs(*ptr1++ - *ptr2++) > 0.001f)
 			{
 				return false;
 			}
@@ -2328,23 +2328,23 @@ public:
 		b3_f32 B3_ALIGN_16 * d = &Dst->x;
 		b3_f32 B3_ALIGN_16  aux[4];
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			aux[o] = s[o];
 		}
 		aux[3] = Use4D ? 1 : 0;
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			b3_f32 B3_ALIGN_16 prod[4];
 
-			for(b3_loop i = 0; i < 4; i++)
+			for (b3_loop i = 0; i < 4; i++)
 			{
 				prod[i] = m[i] * aux[i];
 			}
 
 			d[o] = 0;
-			for(b3_loop i = 0; i < 4; i++)
+			for (b3_loop i = 0; i < 4; i++)
 			{
 				d[o] += prod[i];
 			}
@@ -2356,7 +2356,7 @@ public:
 		x = Src->x;
 		y = Src->y;
 		z = Src->z;
-		if(Use4D)
+		if (Use4D)
 		{
 			Dst->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
 			Dst->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
@@ -2390,16 +2390,16 @@ public:
 		b3_f64 B3_ALIGN_16 * d = &Dst->x;
 		b3_f64 B3_ALIGN_16  aux[4];
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			aux[o] = s[o];
 		}
 		aux[3] = Use4D ? 1 : 0;
 
-		for(b3_loop o = 0; o < 3; o++)
+		for (b3_loop o = 0; o < 3; o++)
 		{
 			d[o] = 0;
-			for(b3_loop i = 0; i < 4; i++)
+			for (b3_loop i = 0; i < 4; i++)
 			{
 				d[o] += m[i] * aux[i];
 			}
@@ -2411,7 +2411,7 @@ public:
 		x = Src->x;
 		y = Src->y;
 		z = Src->z;
-		if(Use4D)
+		if (Use4D)
 		{
 			Dst->x = (b3_f64)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
 			Dst->y = (b3_f64)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);

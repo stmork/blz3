@@ -97,7 +97,7 @@ b3_bool b3JPEG::b3Init(b3_u08 * buffer, b3_size buffer_size)
 	m_Decompress.err                     = jpeg_std_error(&m_Error.m_ErrorMgr);
 	m_Error.m_ErrorMgr.error_exit = b3ErrorHandler;
 
-	if(setjmp(m_Error.m_SetjmpBuffer) != 0)
+	if (setjmp(m_Error.m_SetjmpBuffer) != 0)
 	{
 		return false;
 	}
@@ -124,23 +124,23 @@ b3_bool b3JPEG::b3Decompress(b3Tx * tx)
 {
 	b3_u08 * line;
 
-	if(m_Decompress.out_color_space != JCS_GRAYSCALE)
+	if (m_Decompress.out_color_space != JCS_GRAYSCALE)
 	{
 		b3_pkd_color * out;
 
-		if(!tx->b3AllocTx(m_Decompress.output_width, m_Decompress.output_height, 24))
+		if (!tx->b3AllocTx(m_Decompress.output_width, m_Decompress.output_height, 24))
 		{
 			return false;
 		}
 		out = tx->b3GetTrueColorData();
 
-		while(m_Decompress.output_scanline < m_Decompress.output_height)
+		while (m_Decompress.output_scanline < m_Decompress.output_height)
 		{
 			b3_coord x;
 
 			jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
 			line = (b3_u08 *)m_SampleArray[0];
-			for(x = 0; x < (b3_coord)m_Decompress.output_width; x++)
+			for (x = 0; x < (b3_coord)m_Decompress.output_width; x++)
 			{
 				*out++ =
 					((b3_pkd_color)line[0] << 16) |
@@ -152,13 +152,13 @@ b3_bool b3JPEG::b3Decompress(b3Tx * tx)
 	}
 	else
 	{
-		if(!tx->b3AllocTx(m_Decompress.output_width, m_Decompress.output_height, 8))
+		if (!tx->b3AllocTx(m_Decompress.output_width, m_Decompress.output_height, 8))
 		{
 			return false;
 		}
 
 		line = tx->b3GetIndexData();
-		while(m_Decompress.output_scanline < m_Decompress.output_height)
+		while (m_Decompress.output_scanline < m_Decompress.output_height)
 		{
 			jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
 			memcpy(line, m_SampleArray[0], m_Decompress.output_width);
@@ -219,14 +219,14 @@ b3_result b3Tx::b3ParseJPEG(b3_u08 * buffer, b3_size buffer_size)
 		(const char *)image_name);
 
 	// NOTE: this is only dummy because the data is completly loaded.
-	if(!jpeg.b3Init(buffer, buffer_size))
+	if (!jpeg.b3Init(buffer, buffer_size))
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG JPEG # Error configuring JPEG decoder:\n");
 		return B3_ERROR;
 	}
 
-	if(!jpeg.b3Decompress(this))
+	if (!jpeg.b3Decompress(this))
 	{
 		jpeg.b3Deinit();
 		b3FreeTx();

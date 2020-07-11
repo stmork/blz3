@@ -157,7 +157,7 @@ private:
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
 	{
-		if(m_SpotActive)
+		if (m_SpotActive)
 		{
 			b3_vector point;
 

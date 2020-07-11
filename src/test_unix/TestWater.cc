@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
 
 		b3WaterSampler sampler(&tx);
 
-		if(argc > 1)
+		if (argc > 1)
 		{
 			sampler.b3Sample();
 
@@ -101,7 +101,7 @@ int main(int argc, char * argv[])
 			display->b3PutTx(&tx);
 			display->b3Wait();
 #ifdef CREATE_ICON
-			if(argc > 3)
+			if (argc > 3)
 			{
 				b3Tx small, big;
 
@@ -132,13 +132,13 @@ int main(int argc, char * argv[])
 				display->b3PutTx(&tx);
 			}
 			//			while(true);
-			while(!display->b3IsCancelled(xMax, yMax));
+			while (!display->b3IsCancelled(xMax, yMax));
 		}
 
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException & e)
+	catch (b3DisplayException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}

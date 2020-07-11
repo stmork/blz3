@@ -66,12 +66,12 @@ int main(int argc, char * argv[])
 			wave.b3GetBuffer(&tx, 0.001);
 			display->b3PutTx(&tx);
 		}
-		while(!display->b3IsCancelled(xMax, yMax));
+		while (!display->b3IsCancelled(xMax, yMax));
 
 		// Delete Display
 		delete display;
 	}
-	catch(b3DisplayException & e)
+	catch (b3DisplayException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}

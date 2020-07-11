@@ -83,7 +83,7 @@ b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
 
 	B3_FOR_BASE(&m_Register, entry)
 	{
-		if(entry->b3IsClassType(class_type))
+		if (entry->b3IsClassType(class_type))
 		{
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL, "%08lx found,\n", class_type);

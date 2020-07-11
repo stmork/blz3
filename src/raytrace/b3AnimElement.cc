@@ -51,11 +51,11 @@ b3AnimControl::b3AnimControl(b3_u32 * src) : b3Item(src)
 	m_Max       = b3InitInt();
 
 	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
-	if(m_Controls == null)
+	if (m_Controls == null)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
-	for(i = 0; i < m_Max; i++)
+	for (i = 0; i < m_Max; i++)
 	{
 		m_Controls[i].x = b3InitFloat();
 		m_Controls[i].y = b3InitFloat();
@@ -76,7 +76,7 @@ void b3AnimControl::b3Write()
 	b3StoreCount(m_Used);
 	b3StoreCount(m_Max);
 
-	for(i = 0; i < m_Max; i++)
+	for (i = 0; i < m_Max; i++)
 	{
 		b3StoreVector4D(&m_Controls[i]);
 	}
@@ -84,7 +84,7 @@ void b3AnimControl::b3Write()
 
 void b3AnimControl::b3InitNurbs(b3Nurbs & nurbs)
 {
-	if(nurbs.m_Controls == null)
+	if (nurbs.m_Controls == null)
 	{
 		nurbs.m_ControlMax = m_Max;
 		nurbs.m_Controls   = m_Controls;
@@ -111,7 +111,7 @@ b3AnimElement::b3AnimElement(b3_u32 * src) : b3Item(src)
 	m_Heads[0].b3InitBase(CLASS_VERTEX);
 
 	b3InitNOP();
-	if(m_ItemSize > 0x1ec)
+	if (m_ItemSize > 0x1ec)
 	{
 		b3InitVector(&m_Center);
 		b3InitMatrix(&m_Actual);
@@ -133,7 +133,7 @@ b3AnimElement::b3AnimElement(b3_u32 * src) : b3Item(src)
 
 	// Init nurbs
 	b3InitNurbs(&m_Param, null, m_Knots);
-	for(b3_index i = 0; i < m_Param.m_KnotMax; i++)
+	for (b3_index i = 0; i < m_Param.m_KnotMax; i++)
 	{
 		m_Knots[i] = b3InitFloat();
 	}
@@ -158,7 +158,7 @@ void b3AnimElement::b3Write()
 
 	// Init nurbs
 	b3StoreNurbs(&m_Param);
-	for(b3_index i = 0; i < m_Param.m_KnotMax; i++)
+	for (b3_index i = 0; i < m_Param.m_KnotMax; i++)
 	{
 		b3StoreFloat(m_Knots[i]);
 	}
@@ -187,7 +187,7 @@ void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 	b3_index       pos;
 	b3_f64         coeffs[B3_MAX_DEGREE + 1];
 
-	if(ctrl != null)
+	if (ctrl != null)
 	{
 		// Init controls
 		ctrl->b3InitNurbs(m_Param);
@@ -254,7 +254,7 @@ void b3AnimElement::b3AnimateRotate(
 
 	t1 = b3Math::b3Round(b3Math::b3Limit(t - ANIM_STEP, m_Start, m_End), epsilon);
 	t2 = b3Math::b3Round(b3Math::b3Limit(t + ANIM_STEP, m_Start, m_End), epsilon);
-	if(t1 != t2)
+	if (t1 != t2)
 	{
 		// Compute present orientation
 		b3GetPosition(&lookTo, t);
@@ -319,7 +319,7 @@ void b3AnimElement::b3ComputeTransformationMatrix(
 	b3_matrix  * transform,
 	b3_f64       t)
 {
-	switch(b3GetClassType())
+	switch (b3GetClassType())
 	{
 	case ANIM_MOVE :
 		b3AnimateMove(AnimRoot, transform, t);
@@ -347,7 +347,7 @@ void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, b3_bool recurse
 		shape->b3Animate(animate);
 	}
 
-	if(recurse)
+	if (recurse)
 	{
 		B3_FOR_BASE(b3GetBBoxHead(), item)
 		{
@@ -371,9 +371,9 @@ void b3Scene::b3Animate(b3Activation::b3_anim_activation animate)
 
 void b3AnimElement::b3SelectObjects(b3BBox * bbox)
 {
-	while(bbox != null)
+	while (bbox != null)
 	{
-		if(stricmp(bbox->b3GetName(), m_Object) == 0)
+		if (stricmp(bbox->b3GetName(), m_Object) == 0)
 		{
 			bbox->b3Animate(b3Activation::B3_ANIM_ACTIVE, (m_Flags & ANIMFLAGF_RECURSIVE) != 0);
 		}
@@ -391,7 +391,7 @@ void b3AnimElement::b3SelectObjects(b3BBox * bbox)
 b3_bool b3AnimElement::b3SelectAnimElement(b3Scene * scene)
 {
 	scene->b3Animate(b3Activation::B3_ANIM_DEACTIVE);
-	if(m_Flags & ANIMFLAGF_OBJECT)
+	if (m_Flags & ANIMFLAGF_OBJECT)
 	{
 		b3SelectObjects(scene->b3GetFirstBBox());
 	}
@@ -419,15 +419,15 @@ void b3Animation::b3ApplyTransformation(
 	b3_f64        twirl, width, height, focal;
 	b3_vector     diff;
 
-	if(Anim->m_Flags & ANIMFLAGF_LIGHT)
+	if (Anim->m_Flags & ANIMFLAGF_LIGHT)
 	{
 		Light = Global->b3GetLightByName(Anim->m_Object);
-		if(Light != null)
+		if (Light != null)
 		{
 			b3PrintF(B3LOG_FULL, "  ANIM light %s\n", Anim->m_Object);
 			Anim->b3GetPosition(&Light->m_Position,
 				b3Math::b3Limit(t, Anim->m_Start, Anim->m_End));
-			if((Light->m_SpotActive) &&
+			if ((Light->m_SpotActive) &&
 				(Anim->b3GetClassType() == ANIM_ROTATE))
 			{
 				Light->m_Direction.x = Anim->m_Center.x - Light->m_Position.x;
@@ -437,10 +437,10 @@ void b3Animation::b3ApplyTransformation(
 		}
 	}
 
-	if(Anim->m_Flags & ANIMFLAGF_CAMERA)
+	if (Anim->m_Flags & ANIMFLAGF_CAMERA)
 	{
 		Camera = Global->b3GetCameraByName(Anim->m_Object);
-		if((Camera != null) && (t >= Anim->m_Start))
+		if ((Camera != null) && (t >= Anim->m_Start))
 		{
 			twirl  = Camera->b3GetTwirl();
 			focal  = Camera->b3GetFocalLength();
@@ -450,14 +450,14 @@ void b3Animation::b3ApplyTransformation(
 			Anim->b3GetPosition(&Camera->m_EyePoint,
 				b3Math::b3Limit(t, Anim->m_Start, Anim->m_End));
 
-			if(Anim->b3GetClassType() == ANIM_ROTATE)
+			if (Anim->b3GetClassType() == ANIM_ROTATE)
 			{
 				b3PrintF(B3LOG_FULL, "  ANIM camera %s (rotate)\n", Anim->m_Object);
 				Camera->b3Orientate(&Camera->m_EyePoint, &Anim->m_Center, focal, width, height);
 				Camera->b3SetTwirl(twirl);
 			}
 
-			if(Anim->b3GetClassType() == ANIM_MOVE)
+			if (Anim->b3GetClassType() == ANIM_MOVE)
 			{
 				b3PrintF(B3LOG_FULL, "  ANIM camera %s (move)\n", Anim->m_Object);
 				Camera->m_ViewPoint.x += (diff.x - Camera->m_EyePoint.x);
@@ -467,7 +467,7 @@ void b3Animation::b3ApplyTransformation(
 		}
 	}
 
-	if(Anim->m_Flags & ANIMFLAGF_OBJECT)
+	if (Anim->m_Flags & ANIMFLAGF_OBJECT)
 	{
 		Anim->b3SelectAnimElement(Global);
 

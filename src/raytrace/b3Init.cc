@@ -49,19 +49,19 @@ b3_bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
 	b3_size     txLen, nameLen;
 	b3_offset   diff;
 
-	if(*tx != null)
+	if (*tx != null)
 	{
 		txName  = (*tx)->b3Name();
 		txLen   = strlen(txName);
 		nameLen = strlen(name);
 		diff    = (b3_offset)txLen - (b3_offset)nameLen;
-		if(strcmp(&txName[diff >= 0 ? diff : 0], name) != 0)
+		if (strcmp(&txName[diff >= 0 ? diff : 0], name) != 0)
 		{
 			*tx = m_TexturePool.b3FindTexture(name);
 		}
 	}
 
-	if(*tx == null)
+	if (*tx == null)
 	{
 		*tx = m_TexturePool.b3LoadTexture(name);
 	}

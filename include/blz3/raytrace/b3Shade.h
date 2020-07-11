@@ -165,7 +165,7 @@ protected:
 		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
 		{
 			light = (b3Light *)item;
-			if(light->b3IsActive())
+			if (light->b3IsActive())
 			{
 				light->b3Illuminate(this, surface);
 			}

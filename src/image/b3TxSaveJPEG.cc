@@ -94,7 +94,7 @@ boolean b3InfoJPEG::b3EmptyOutputBuffer(j_compress_ptr cinfo)
 {
 	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
 
-	if(dest->outfile->b3Write(dest->buffer, OUTPUT_BUF_SIZE) !=
+	if (dest->outfile->b3Write(dest->buffer, OUTPUT_BUF_SIZE) !=
 		(size_t) OUTPUT_BUF_SIZE)
 	{
 		ERREXIT(cinfo, JERR_FILE_WRITE);
@@ -112,9 +112,9 @@ void b3InfoJPEG::b3TermDestination(j_compress_ptr cinfo)
 	size_t datacount = OUTPUT_BUF_SIZE - dest->pub.free_in_buffer;
 
 	/* Write any data remaining in the buffer */
-	if(datacount > 0)
+	if (datacount > 0)
 	{
-		if(dest->outfile->b3Write(dest->buffer, datacount) != datacount)
+		if (dest->outfile->b3Write(dest->buffer, datacount) != datacount)
 		{
 			ERREXIT(cinfo, JERR_FILE_WRITE);
 		}
@@ -126,7 +126,7 @@ void b3InfoJPEG::b3JpegStdioDestPrivate(j_compress_ptr  cinfo)
 {
 	my_dest_ptr dest;
 
-	if(cinfo->dest == null)
+	if (cinfo->dest == null)
 	{
 		/* first time for this JPEG object? */
 		cinfo->dest = (struct jpeg_destination_mgr *)
@@ -151,14 +151,14 @@ b3InfoJPEG::b3InfoJPEG(b3Tx * tx, const char * filename, b3_u32 quality) :
 	JPEGwritten    = 0;
 
 	JPEGrow        = (b3_u08 *)b3Alloc(JPEGrow_stride * JPEG_ROWS);
-	if(JPEGrow == null)
+	if (JPEGrow == null)
 	{
 		m_File.b3Close();
 		b3Free();
 		b3PrintF(B3LOG_NORMAL, "Save JPEG: no row mem!\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
-	for(i = 0; i < JPEG_ROWS; i++)
+	for (i = 0; i < JPEG_ROWS; i++)
 	{
 		JPEGrow_pointer[i] = (JSAMPROW)&JPEGrow[i * JPEGrow_stride];
 	}
@@ -182,23 +182,23 @@ void b3InfoJPEG::b3Write()
 	b3_u08    *   line;
 	b3_coord      x, y, xMax;
 
-	for(y = 0; y < m_Tx->ySize; y++)
+	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		line = (b3_u08 *)JPEGrow_pointer[JPEGline++];
-		if(JPEGline >= JPEG_ROWS)
+		if (JPEGline >= JPEG_ROWS)
 		{
 			JPEGline = 0;
 		}
 
 		xMax = m_Tx->xSize;
 		m_Tx->b3GetRow(m_ThisRow, y);
-		for(x = 0; x < xMax; x++)
+		for (x = 0; x < xMax; x++)
 		{
 			*line++ = (m_ThisRow[x] & 0xff0000) >> 16;
 			*line++ = (m_ThisRow[x] & 0x00ff00) >>  8;
 			*line++ = (m_ThisRow[x] & 0x0000ff);
 		}
-		if(JPEGline == 0)
+		if (JPEGline == 0)
 		{
 			jpeg_write_scanlines(&JPEGcinfo, JPEGrow_pointer, JPEG_ROWS);
 			JPEGwritten += JPEG_ROWS;
@@ -211,22 +211,22 @@ b3InfoJPEG::~b3InfoJPEG()
 	b3_u08  * line;
 	b3_coord  x, y;
 
-	if(JPEGline != 0)
+	if (JPEGline != 0)
 	{
 		jpeg_write_scanlines(&JPEGcinfo, JPEGrow_pointer, JPEGline);
 		JPEGwritten += JPEGline;
 	}
 
-	if(JPEGwritten < (JDIMENSION)m_Tx->ySize)
+	if (JPEGwritten < (JDIMENSION)m_Tx->ySize)
 	{
 		line = (b3_u08 *)JPEGrow_pointer[0];
-		for(x = 0; x < m_Tx->xSize; x++)
+		for (x = 0; x < m_Tx->xSize; x++)
 		{
 			*line++ = 0;
 			*line++ = 0;
 			*line++ = 0;
 		}
-		for(y = JPEGwritten; y < m_Tx->ySize; y++)
+		for (y = JPEGwritten; y < m_Tx->ySize; y++)
 		{
 			jpeg_write_scanlines(&JPEGcinfo, JPEGrow_pointer, 1);
 		}

@@ -293,21 +293,21 @@ b3_bool b3MatTexture::b3GetSurfaceValues(b3_surface * surface)
 	b3_f64       fx, fy;
 
 	fx = (surface->m_Incoming->polar.m_Polar.x - m_xStart) / m_xScale;
-	if(m_Flags & MAT_XINVERT)
+	if (m_Flags & MAT_XINVERT)
 	{
 		fx = 1.0 - fx;
 	}
-	if((fx < 0) || (fx >= m_xTimes))
+	if ((fx < 0) || (fx >= m_xTimes))
 	{
 		return false;
 	}
 
 	fy = (surface->m_Incoming->polar.m_Polar.y - m_yStart) / m_yScale;
-	if(m_Flags & MAT_YINVERT)
+	if (m_Flags & MAT_YINVERT)
 	{
 		fy = 1.0 - fy;
 	}
-	if((fy < 0) || (fy >= m_yTimes))
+	if ((fy < 0) || (fy >= m_yTimes))
 	{
 		return false;
 	}
@@ -398,36 +398,36 @@ b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface * surface)
 	b3_coord     x, y;
 	b3_f64       fx, fy, xEnd, xPolar;
 
-	if((surface->m_Incoming->polar.m_Polar.y >= m_yStart) && (surface->m_Incoming->polar.m_Polar.y <= m_yEnd))
+	if ((surface->m_Incoming->polar.m_Polar.y >= m_yStart) && (surface->m_Incoming->polar.m_Polar.y <= m_yEnd))
 	{
 		xEnd	= m_xEnd;
 		xPolar	= surface->m_Incoming->polar.m_Polar.x;
 		fy = (surface->m_Incoming->polar.m_Polar.y - m_yStart) /
 			(m_yEnd - m_yStart);
-		if(m_Flags & MAT_YINVERT)
+		if (m_Flags & MAT_YINVERT)
 		{
 			fy = 1.0 - fy;
 		}
-		if((fy < 0) || (fy > 1))
+		if ((fy < 0) || (fy > 1))
 		{
 			return false;
 		}
 		y = (long)(fy * m_Texture->ySize);
-		if(m_xStart > xEnd)
+		if (m_xStart > xEnd)
 		{
-			if((xPolar >= m_xStart) || (xPolar <= xEnd))
+			if ((xPolar >= m_xStart) || (xPolar <= xEnd))
 			{
-				if(xPolar < 0)
+				if (xPolar < 0)
 				{
 					return false;
 				}
-				if(xPolar < m_xStart)
+				if (xPolar < m_xStart)
 				{
 					xPolar++;
 				}
 				xEnd++;
 				fx = (xPolar - m_xStart) / (xEnd - m_xStart);
-				if(m_Flags & MAT_XINVERT)
+				if (m_Flags & MAT_XINVERT)
 				{
 					fx = 1.0 - fx;
 				}
@@ -440,12 +440,12 @@ b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface * surface)
 		}
 		else
 		{
-			if((xPolar <= m_xStart) || (xPolar >= xEnd))
+			if ((xPolar <= m_xStart) || (xPolar >= xEnd))
 			{
 				return false;
 			}
 			fx = (xPolar - m_xStart) / (xEnd  - m_xStart);
-			if(m_Flags & MAT_XINVERT)
+			if (m_Flags & MAT_XINVERT)
 			{
 				fx = 1.0 - fx;
 			}
@@ -511,7 +511,7 @@ b3MatSlide::b3MatSlide(b3_u32 * src) : b3Material(src)
 	m_Material[0].m_SpecularExp = b3InitFloat();
 	m_ModeFlag    = b3InitInt();
 
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Material[1].m_Reflection  = b3InitFloat();
 		m_Material[1].m_Refraction  = b3InitFloat();
@@ -552,40 +552,40 @@ b3_bool b3MatSlide::b3GetSurfaceValues(b3_surface * surface)
 {
 	b3_f64 Factor;
 
-	switch(m_ModeFlag)
+	switch (m_ModeFlag)
 	{
 	case XSLIDE :
 		Factor = (surface->m_Incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
-		if(Factor < 0)
+		if (Factor < 0)
 		{
 			Factor = 0;
 		}
-		if(Factor > 1)
+		if (Factor > 1)
 		{
 			Factor = 1;
 		}
 		break;
 	case YSLIDE :
 		Factor = (surface->m_Incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
-		if(Factor < 0)
+		if (Factor < 0)
 		{
 			Factor = 0;
 		}
-		if(Factor > 1)
+		if (Factor > 1)
 		{
 			Factor = 1;
 		}
 		break;
 	case XSLIDE_CUT :
 		Factor = (surface->m_Incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
-		if((Factor < 0) || (Factor > 1))
+		if ((Factor < 0) || (Factor > 1))
 		{
 			return false;
 		}
 		break;
 	case YSLIDE_CUT :
 		Factor = (surface->m_Incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
-		if((Factor < 0) || (Factor > 1))
+		if ((Factor < 0) || (Factor > 1))
 		{
 			return false;
 		}
@@ -648,7 +648,7 @@ b3MatMarble::b3MatMarble(b3_u32 * src) : b3Material(src)
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		b3InitColor(m_DarkMaterial.m_Diffuse);
 		b3InitColor(m_DarkMaterial.m_Ambient);
@@ -779,7 +779,7 @@ b3MatWood::b3MatWood(b3_u32 * src) : b3MaterialWooden(src)
 	m_LightMaterial = m_DarkMaterial;
 
 	// Load extensions if available
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_yRot                   = b3InitFloat();
 		m_zRot                   = b3InitFloat();
@@ -796,7 +796,7 @@ b3MatWood::b3MatWood(b3_u32 * src) : b3MaterialWooden(src)
 		m_Ringy                  = b3InitFloat();
 		b3InitColor(m_LightMaterial.m_Diffuse);
 		b3InitColor(m_DarkMaterial.m_Diffuse);
-		if(B3_PARSE_INDEX_VALID)
+		if (B3_PARSE_INDEX_VALID)
 		{
 			b3InitColor(m_LightMaterial.m_Ambient);
 			b3InitColor(m_DarkMaterial.m_Ambient);
@@ -949,7 +949,7 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
 	m_Ringy                  = b3InitFloat();
 
 	// Light
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		b3InitColor(m_LightMaterial.m_Ambient);
 		b3InitColor(m_LightMaterial.m_Specular);
@@ -965,12 +965,12 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
 
 b3MatOakPlank::~b3MatOakPlank()
 {
-	if(m_DarkMaterials != null)
+	if (m_DarkMaterials != null)
 	{
 		delete [] m_DarkMaterials;
 	}
 
-	if(m_LightMaterials != null)
+	if (m_LightMaterials != null)
 	{
 		delete [] m_LightMaterials;
 	}
@@ -1041,12 +1041,12 @@ b3_bool b3MatOakPlank::b3Prepare(b3_preparation_info * prep_info)
 	b3PrepareOakPlank(&m_Scale);
 	b3PrepareScaling();
 
-	if(m_DarkMaterials != null)
+	if (m_DarkMaterials != null)
 	{
 		delete [] m_DarkMaterials;
 	}
 
-	if(m_LightMaterials != null)
+	if (m_LightMaterials != null)
 	{
 		delete [] m_LightMaterials;
 	}
@@ -1054,10 +1054,10 @@ b3_bool b3MatOakPlank::b3Prepare(b3_preparation_info * prep_info)
 	m_DarkMaterials  = new b3_material[m_PlankCount];
 	m_LightMaterials = new b3_material[m_PlankCount];
 
-	for(y = 0; y < m_yTimes; y++)
+	for (y = 0; y < m_yTimes; y++)
 	{
 		fy = (b3_f64)y / m_yTimes;
-		for(x = 0; x < m_xTimes; x++)
+		for (x = 0; x < m_xTimes; x++)
 		{
 			fx = (b3_f64)x / m_xTimes;
 
@@ -1184,7 +1184,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * ji
 #if 1
 	b3Color Rf;
 
-	if(jit->shape == null)
+	if (jit->shape == null)
 	{
 		b3_vector64 H;
 
@@ -1201,11 +1201,11 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * ji
 		b3_f64 Gs = 2 * nh * nl / vh;
 
 		b3_f64 G = 1;
-		if(Gm < G)
+		if (Gm < G)
 		{
 			G = Gm;
 		}
-		if(Gs < G)
+		if (Gs < G)
 		{
 			G = Gs;
 		}
@@ -1217,7 +1217,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * ji
 		b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
 
 		b3_f64 phi = b3Math::b3Asin(nl);
-		for(b3_loop i = b3Color::R; i <= b3Color::B; i++)
+		for (b3_loop i = b3Color::R; i <= b3Color::B; i++)
 		{
 			b3Color::b3_color_index l = (b3Color::b3_color_index)i;
 
@@ -1286,7 +1286,7 @@ b3MatGranite::b3MatGranite(b3_u32 * src) : b3Material(src)
 
 	m_LightMaterial = m_DarkMaterial;
 	m_LightMaterial.m_Diffuse = light_diffuse;
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		b3InitColor(m_LightMaterial.m_Ambient);
 		b3InitColor(m_LightMaterial.m_Specular);
@@ -1386,7 +1386,7 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 * src) : b3Material(src)
 
 	m_Flags       = b3InitInt();
 
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_MetallicScale = b3InitFloat();
 	}
@@ -1430,7 +1430,7 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface * surface)
 	b3_ray   *   ray = surface->m_Incoming;
 	b3_f64       ni;
 
-	if(m_Flags & B3_MAT_CP_METALLIC)
+	if (m_Flags & B3_MAT_CP_METALLIC)
 	{
 		b3_vector64  normal;
 
@@ -1450,7 +1450,7 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface * surface)
 b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit)
 {
 	jit->m_AmbientSum += surface->m_Ambient;
-	if(jit->shape == null)
+	if (jit->shape == null)
 	{
 		b3_ray   *   ray = surface->m_Incoming;
 		b3_vector64  L;
@@ -1465,7 +1465,7 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit)
 
 		nl = b3Vector::b3SMul(&ray->normal, &L);
 
-		if(m_Flags & B3_MAT_CP_METALLIC)
+		if (m_Flags & B3_MAT_CP_METALLIC)
 		{
 			b3Randomize(&surface->m_ReflRay.dir, &refl_dir, m_MetallicScale, m_MetallicScaleHalf);
 
@@ -1594,7 +1594,7 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface * surface)
 	quotient      = 4000.0 * M_PI * m_Thickness * (1.5 + 0.5 * wobble) * cos_theta;
 
 	// compute interferences
-	for(int i = b3Color::R; i <= b3Color::B; i++)
+	for (int i = b3Color::R; i <= b3Color::B; i++)
 	{
 		factor[i] = (1 - cos(quotient / m_WaveLength[i])) * 0.5;
 	}

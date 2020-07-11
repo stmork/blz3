@@ -57,9 +57,9 @@ static void create(b3Tx & img)
 	b3_pkd_color * data = lPtr;
 	b3_pkd_color value, color;
 
-	for(c = 0; c < 8; c++)
+	for (c = 0; c < 8; c++)
 	{
-		for(x = 0; x < xOct; x++)
+		for (x = 0; x < xOct; x++)
 		{
 			value = x * 255 / xOct;
 			color = ebu[c] * value;
@@ -68,9 +68,9 @@ static void create(b3Tx & img)
 	}
 
 	lPtr = data;
-	for(y = 0; y < yQuart; y++)
+	for (y = 0; y < yQuart; y++)
 	{
-		for(x = 0; x < bars.b3GetCount(); x++)
+		for (x = 0; x < bars.b3GetCount(); x++)
 		{
 			lPtr[x] = bars[x];
 		}
@@ -79,23 +79,23 @@ static void create(b3Tx & img)
 
 	max = img.ySize - yQuart;
 #if 0
-	for(y = 0; y < max; y++)
+	for (y = 0; y < max; y++)
 	{
 		b3_f64 f = freq(2 + (y + 1) * 48.0 / max);
 
-		for(x = 0; x < img.xSize; x++)
+		for (x = 0; x < img.xSize; x++)
 		{
 			lPtr[x] = 0x010101 * (b3_pkd_color)(127.5 * sin((b3_f64)x * f) + 127.5);
 		}
 		lPtr += img.xSize;
 	}
 #else
-	for(c = 0; c < 50; c += 2)
+	for (c = 0; c < 50; c += 2)
 	{
 		b3_f64 f = freq(c + 1);
-		for(y = c * max / 25; y < ((c + 1) * max / 25); y++)
+		for (y = c * max / 25; y < ((c + 1) * max / 25); y++)
 		{
-			for(x = 0; x < img.xSize; x++)
+			for (x = 0; x < img.xSize; x++)
 			{
 				lPtr[x] = 0x010101 * (b3_pkd_color)(127.5 * sin((b3_f64)x * f) + 127.5);
 			}
@@ -111,9 +111,9 @@ int main(int argc, char * argv[])
 	b3_res xSize = 2048, ySize = xSize * 4 / 3;
 	char * imgname = null;
 
-	for(int i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
-		switch(i)
+		switch (i)
 		{
 		case 1:
 			sscanf(argv[i], "%ld", &xSize);
@@ -129,7 +129,7 @@ int main(int argc, char * argv[])
 
 	img.b3AllocTx(xSize, ySize, 24);
 	create(img);
-	if(imgname != null)
+	if (imgname != null)
 	{
 #ifdef HAVE_LIBJPEG
 		img.b3SaveJPEG(imgname);

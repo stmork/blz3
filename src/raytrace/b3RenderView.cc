@@ -84,7 +84,7 @@ b3RenderView::~b3RenderView()
 {
 	b3_index i;
 
-	for(i = 1; i < B3_VIEW_MAX; i++)
+	for (i = 1; i < B3_VIEW_MAX; i++)
 	{
 		m_ViewStack[i].b3Free();
 	}
@@ -97,7 +97,7 @@ b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
 	b3RenderViewItem * item;
 
 	item = m_Depot.First;
-	if(item != null)
+	if (item != null)
 	{
 		// Recycle item
 		m_Depot.b3Remove(item);
@@ -108,7 +108,7 @@ b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
 		item = new b3RenderViewItem();
 	}
 
-	if(last != null)
+	if (last != null)
 	{
 		// Use dimension of last item
 		item->m_Mid  = last->m_Mid;
@@ -127,7 +127,7 @@ b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
 void b3RenderView::b3SetViewMode(b3_view_mode mode)
 {
 	m_ViewMode = mode;
-	if(m_ViewStack[m_ViewMode].Last == null)
+	if (m_ViewStack[m_ViewMode].Last == null)
 	{
 		b3Original();
 	}
@@ -160,11 +160,11 @@ b3_bool b3RenderView::b3SetBounds(b3Scene * scene)
 	b3_bool result;
 
 	result = scene->b3ComputeBounds(&m_Lower, &m_Upper);
-	if(result)
+	if (result)
 	{
 		b3_index i;
 
-		for(i = 1; i < B3_VIEW_MAX; i++)
+		for (i = 1; i < B3_VIEW_MAX; i++)
 		{
 			m_ViewStack[i].b3Append(b3NewRenderViewItem());
 		}
@@ -176,7 +176,7 @@ b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize)
 {
 	b3_bool success = true;
 
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 		xSize = 2.0 * b3Vector::b3Length(&m_Width);
@@ -213,7 +213,7 @@ b3_bool b3RenderView::b3ViewStackNotEmpty()
 {
 	b3_bool result = false;
 
-	if(m_ViewMode != B3_VIEW_3D)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
 		result =
 			m_ViewStack[m_ViewMode].First != m_ViewStack[m_ViewMode].Last;
@@ -225,11 +225,11 @@ void b3RenderView::b3PopView()
 {
 	b3RenderViewItem * item;
 
-	if(m_ViewMode != B3_VIEW_3D)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
 		item = m_ViewStack[m_ViewMode].Last;
 		B3_ASSERT(item != null);
-		if(item != m_ViewStack[m_ViewMode].First)
+		if (item != m_ViewStack[m_ViewMode].First)
 		{
 			m_ViewStack[m_ViewMode].b3Remove(item);
 			m_Depot.b3Append(item);
@@ -242,14 +242,14 @@ void b3RenderView::b3Original()
 {
 	b3RenderViewItem * item;
 
-	if(m_ViewMode != B3_VIEW_3D)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
 		// Empty stack
 		m_Depot.b3Move(&m_ViewStack[m_ViewMode]);
 
 		// Allocate new top item
 		item = b3NewRenderViewItem();
-		if(item != null)
+		if (item != null)
 		{
 			m_ViewStack[m_ViewMode].b3Append(item);
 			m_Actual = item;
@@ -263,7 +263,7 @@ void b3RenderView::b3Original()
 
 void b3RenderView::b3Scale(b3_f64 scale)
 {
-	if(m_ViewMode != B3_VIEW_3D)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
 		B3_ASSERT(m_Actual != null);
 		m_Actual->m_Size.x *= scale;
@@ -274,13 +274,13 @@ void b3RenderView::b3Scale(b3_f64 scale)
 
 void b3RenderView::b3Move(b3_f64 xDir, b3_f64 yDir)
 {
-	if(m_ViewMode != B3_VIEW_3D)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
 		B3_ASSERT(m_Actual != null);
 
 		xDir /= m_Actual->m_xRelation;
 		yDir *= m_Actual->m_yRelation;
-		switch(m_ViewMode)
+		switch (m_ViewMode)
 		{
 		case B3_VIEW_TOP:
 			m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
@@ -315,7 +315,7 @@ void b3RenderView::b3GetProjectionBase(b3_vector * eye)
 
 void b3RenderView::b3GetViewDirection(b3_vector * dir)
 {
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_TOP:
 		dir->x =  0;
@@ -351,7 +351,7 @@ b3_f64 b3RenderView::b3GetPositionAngle(b3_vector * center, b3_vector * position
 {
 	b3_f64 result = 0;
 
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 	// Walk through!!
@@ -382,10 +382,10 @@ void b3RenderView::b3SetTranslationStepper(
 	b3_action_mode  mode)
 {
 	b3Vector::b3Init(mover);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_TOP:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->x =  steps->x;
@@ -405,7 +405,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_FRONT:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->x =  steps->x;
@@ -425,7 +425,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_RIGHT:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->y =  steps->y;
@@ -445,7 +445,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_BACK:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->x = -steps->x;
@@ -465,7 +465,7 @@ void b3RenderView::b3SetTranslationStepper(
 		}
 		break;
 	case B3_VIEW_LEFT:
-		switch(mode)
+		switch (mode)
 		{
 		case B3_ACTION_MOVE_RIGHT:
 			mover->y = -steps->y;
@@ -499,7 +499,7 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 
 	// Prepare rotation axis
 	b3Vector::b3Init(axis);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 	case B3_VIEW_TOP:
@@ -528,7 +528,7 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 	}
 
 	// Define rotation angle
-	switch(mode)
+	switch (mode)
 	{
 	case B3_ACTION_ROT_LEFT:
 		return  angle;
@@ -597,10 +597,10 @@ void b3RenderView::b3Select(
 	b3_f64            xDiff, yDiff;
 	b3_f64            xMove, yMove;
 
-	if(m_ViewMode != B3_VIEW_3D)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
 		item = b3NewRenderViewItem(m_ViewStack[m_ViewMode].Last);
-		if(item != null)
+		if (item != null)
 		{
 			// Push view item
 			m_ViewStack[m_ViewMode].b3Append(item);
@@ -618,7 +618,7 @@ void b3RenderView::b3Select(
 			xMove = (xStart + xEnd) * 0.5 - 0.5;
 			yMove = (yStart + yEnd) * 0.5 - 0.5;
 
-			switch(m_ViewMode)
+			switch (m_ViewMode)
 			{
 			case B3_VIEW_TOP:
 				m_Actual->m_Mid.x  += (m_Actual->m_Size.x * xMove);
@@ -674,56 +674,56 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 
 	b3Vector::b3Sub(&m_Lower, &m_EyePoint, &edge);
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.x = m_Upper.x - m_EyePoint.x;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.y = m_Upper.y - m_EyePoint.y;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.x = m_Lower.x - m_EyePoint.x;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.z = m_Upper.z - m_EyePoint.z;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.x = m_Upper.x - m_EyePoint.x;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.y = m_Lower.y - m_EyePoint.y;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
 
 	edge.x = m_Lower.x - m_EyePoint.x;
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
-	if(l > farCP)
+	if (l > farCP)
 	{
 		farCP = l;
 	}
@@ -755,7 +755,7 @@ void b3RenderView::b3SetupView(
 	B3_ASSERT((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
 	glViewport(0, 0, xSize, ySize);
 	b3Vector::b3Init(&m_ViewInfo.up);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
 	default:
@@ -873,13 +873,13 @@ void b3RenderView::b3SetupView(
 	}
 
 	// Maintain aspect ratio
-	if(m_AspectRatio)
+	if (m_AspectRatio)
 	{
 		aspectCamera = (GLfloat)(m_ViewInfo.width / m_ViewInfo.height);
 		relation     = aspectCamera / aspectWindow;
-		if(relation > 1)
+		if (relation > 1)
 		{
-			if(m_ViewMode != B3_VIEW_3D)
+			if (m_ViewMode != B3_VIEW_3D)
 			{
 				m_Actual->m_xRelation = 1;
 				m_Actual->m_yRelation = relation;
@@ -888,7 +888,7 @@ void b3RenderView::b3SetupView(
 		}
 		else
 		{
-			if(m_ViewMode != B3_VIEW_3D)
+			if (m_ViewMode != B3_VIEW_3D)
 			{
 				m_Actual->m_xRelation = relation;
 				m_Actual->m_yRelation = 1;
@@ -925,14 +925,14 @@ void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color)
 	b3_count  x, y, xCount, yCount;
 	b3_f64 aux = B3_RASTER_FLOOR(m_ViewInfo.look.x, grid);
 
-	if(m_Actual == null)
+	if (m_Actual == null)
 	{
 		return;
 	}
 
 	b3Vector::b3Init(&xDisp);
 	b3Vector::b3Init(&yDisp);
-	switch(m_ViewMode)
+	switch (m_ViewMode)
 	{
 	case B3_VIEW_TOP:
 		xDisp.x = grid;
@@ -1030,19 +1030,19 @@ void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color)
 
 	xCount  = B3_RASTER_COUNT(xStart, xEnd, grid);
 	yCount  = B3_RASTER_COUNT(yStart, yEnd, grid);
-	if((xCount == 0 ? true : (m_xRes / xCount) >= B3_RASTER_MINDIST) &&
+	if ((xCount == 0 ? true : (m_xRes / xCount) >= B3_RASTER_MINDIST) &&
 		(yCount == 0 ? true : (m_yRes / yCount) >= B3_RASTER_MINDIST))
 	{
 		glBegin(GL_LINES);
 		glColor3f(color[b3Color::R], color[b3Color::G], color[b3Color::B]);
-		for(x = 0; x < xCount; x++)
+		for (x = 0; x < xCount; x++)
 		{
 			glVertex3f(a.x, a.y, a.z);
 			glVertex3f(b.x, b.y, b.z);
 			b3Vector::b3Add(&xDisp, &a);
 			b3Vector::b3Add(&xDisp, &b);
 		}
-		for(y = 0; y < yCount; y++)
+		for (y = 0; y < yCount; y++)
 		{
 			glVertex3f(c.x, c.y, c.z);
 			glVertex3f(d.x, d.y, d.z);

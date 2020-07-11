@@ -44,16 +44,16 @@ b3_result b3Tx::b3ParseRAW(
 	b3PrintF(B3LOG_FULL, "IMG RAW  # b3ParseRAW(%s)\n",
 		(const char *)image_name);
 
-	switch(ppm_type)
+	switch (ppm_type)
 	{
 	case 4 : /* bitmap */
-		if(b3AllocTx(x, y, 1))
+		if (b3AllocTx(x, y, 1))
 		{
 			b3_count xSrcBytes = TX_BBA(x);
 			b3_count xDstBytes = TX_BWA(x);
 
 			newCData = data;
-			for(y = 0; y < ySize; y++)
+			for (y = 0; y < ySize; y++)
 			{
 				memcpy(newCData, buffer, xSrcBytes);
 				buffer   += xSrcBytes;
@@ -71,7 +71,7 @@ b3_result b3Tx::b3ParseRAW(
 		break;
 
 	case 5 : /* grey */
-		if(b3AllocTx(x, y, 8))
+		if (b3AllocTx(x, y, 8))
 		{
 			memcpy(data, buffer, x * y);
 		}
@@ -84,12 +84,12 @@ b3_result b3Tx::b3ParseRAW(
 		break;
 
 	case 6 : /* 24 Bit */
-		if(b3AllocTx(x, y, 24))
+		if (b3AllocTx(x, y, 24))
 		{
 			b3_pkd_color * newLData = (b3_u32 *)data;
 
 			Max      = x * y;
-			for(i = 0; i < Max; i++)
+			for (i = 0; i < Max; i++)
 			{
 				value       =                 *buffer++;
 				value       = (value << 8) | (*buffer++);
@@ -130,7 +130,7 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 	b3PrintF(B3LOG_FULL, "IMG BMP  # b3ParseBMP(%s)\n",
 		(const char *)image_name);
 
-	if(b3Endian::b3GetIntel32(&buffer[30]) != 0)
+	if (b3Endian::b3GetIntel32(&buffer[30]) != 0)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG BMP  # Unsupported packing:\n");
@@ -140,12 +140,12 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 	yNewSize  = b3Endian::b3GetIntel16(&buffer[22]);
 	numColors = b3Endian::b3GetIntel32(&buffer[46]);
 	numPlanes = b3Endian::b3GetIntel32(&buffer[28]);
-	if(numColors == 0)
+	if (numColors == 0)
 	{
 		numColors = (b3Endian::b3GetIntel32(&buffer[10]) - 54) >> 2;
 	}
 
-	if(!b3AllocTx(xNewSize, yNewSize, numPlanes))
+	if (!b3AllocTx(xNewSize, yNewSize, numPlanes))
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG BMP  # Unsupported color format:\n");
@@ -153,11 +153,11 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 	}
 	FileType = FT_BMP;
 
-	if(numPlanes <= 8)
+	if (numPlanes <= 8)
 	{
-		if(numColors > 0)
+		if (numColors > 0)
 		{
-			for(i = 0; i < numColors; i++)
+			for (i = 0; i < numColors; i++)
 			{
 				palette[i] =
 					((b3_pkd_color)buffer[(i << 2) + 56] << 16) |
@@ -169,7 +169,7 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 		{
 			numColors = 1 << numPlanes;
 			value     = 8  - numPlanes;
-			for(i = 0; i < numColors; i++)
+			for (i = 0; i < numColors; i++)
 			{
 				palette[i] = 0x00010101 * (i << value);
 			}
@@ -180,15 +180,15 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 
 	/* checking bits per pixel */
 	buffer += b3Endian::b3GetIntel32(&buffer[10]);
-	switch(numPlanes)
+	switch (numPlanes)
 	{
 	case  1 :
 		offset = TX_BBA(xSize);
 		cPtr   = data + dSize;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			cPtr -= offset;
-			for(x = 0; x < xSize; x += 8)
+			for (x = 0; x < xSize; x += 8)
 			{
 				*cPtr++ = *buffer++;
 			}
@@ -200,51 +200,51 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 		offset = (xSize + 7) >> 3;
 		cPtr   = data;
 		cPtr  += dSize;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			cPtr -= (offset << 2);
-			for(x = 0; x < xSize; x += 2)
+			for (x = 0; x < xSize; x += 2)
 			{
 				value = 128 >> (x & 7);
 				i     = (x >> 3) + offset + offset + offset;
-				if(buffer[0] & 0x80)
+				if (buffer[0] & 0x80)
 				{
 					cPtr[i] |= value;
 				}
 				i -= offset;
-				if(buffer[0] & 0x40)
+				if (buffer[0] & 0x40)
 				{
 					cPtr[i] |= value;
 				}
 				i -= offset;
-				if(buffer[0] & 0x20)
+				if (buffer[0] & 0x20)
 				{
 					cPtr[i] |= value;
 				}
 				i -= offset;
-				if(buffer[0] & 0x10)
+				if (buffer[0] & 0x10)
 				{
 					cPtr[i] |= value;
 				}
 
 				value = value >> 1;
 				i     = (x >> 3) + offset + offset + offset;
-				if(buffer[0] & 0x08)
+				if (buffer[0] & 0x08)
 				{
 					cPtr[i] |= value;
 				}
 				i -= offset;
-				if(buffer[0] & 0x04)
+				if (buffer[0] & 0x04)
 				{
 					cPtr[i] |= value;
 				}
 				i -= offset;
-				if(buffer[0] & 0x02)
+				if (buffer[0] & 0x02)
 				{
 					cPtr[i] |= value;
 				}
 				i -= offset;
-				if(buffer[0] & 0x01)
+				if (buffer[0] & 0x01)
 				{
 					cPtr[i] |= value;
 				}
@@ -255,7 +255,7 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 
 	case  8 :
 		cPtr = data + dSize;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			cPtr   -= xSize;
 			memcpy(cPtr, buffer, xSize);
@@ -267,10 +267,10 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 		offset = xSize & 3;
 		Long   = (b3_pkd_color *)data;
 		Long  += (xSize * ySize);
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			Long -= xSize;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				value   =                buffer[2];
 				value   = (value << 8) | buffer[1];
@@ -310,14 +310,14 @@ b3_result b3Tx::b3ParseBMF(b3_u08 * buffer, b3_size buffer_size)
 	xNewSize = b3Endian::b3GetIntel16(&buffer[2]);
 	yNewSize = b3Endian::b3GetIntel16(&buffer[4]);
 
-	switch(buffer[6])
+	switch (buffer[6])
 	{
 	case 2 :
-		if(b3AllocTx(xNewSize, yNewSize, 8))
+		if (b3AllocTx(xNewSize, yNewSize, 8))
 		{
 			buffer += buffer_size;
 			gray    = data;
-			for(y = 0; y < ySize; y++)
+			for (y = 0; y < ySize; y++)
 			{
 				buffer -= xSize;
 				memcpy(gray, buffer, xSize);
@@ -333,17 +333,17 @@ b3_result b3Tx::b3ParseBMF(b3_u08 * buffer, b3_size buffer_size)
 		break;
 
 	case 4 :
-		if(b3AllocTx(xNewSize, yNewSize, 24))
+		if (b3AllocTx(xNewSize, yNewSize, 24))
 		{
 			b3_pkd_color * pixel;
 
 			pixel   = (b3_pkd_color *)data;
 			buffer += buffer_size;
 			lSize   = xSize + xSize + xSize;
-			for(y = 0; y < xSize; y++)
+			for (y = 0; y < xSize; y++)
 			{
 				buffer -= lSize;
-				for(x = 0; x < xSize; x++)
+				for (x = 0; x < xSize; x++)
 				{
 					*pixel++ =
 						(buffer[x]                 <<  0) |

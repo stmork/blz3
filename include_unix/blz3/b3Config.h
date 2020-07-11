@@ -92,7 +92,7 @@ typedef unsigned long b3DrawContext;
 #ifndef HAVE_STRLCPY
 static inline size_t strlcpy(char * dst, const char * src, size_t size)
 {
-	if(size > 0)
+	if (size > 0)
 	{
 		strncpy(dst, src, size);
 		dst[size - 1] = 0;
@@ -113,13 +113,13 @@ static inline int stricmp(const char * a, const char * b)
 	do
 	{
 		diff = tolower(a[i]) - tolower(b[i]);
-		if((a[i] == 0) || (b[i] == 0))
+		if ((a[i] == 0) || (b[i] == 0))
 		{
 			return diff;
 		}
 		i++;
 	}
-	while(diff == 0);
+	while (diff == 0);
 
 	return diff;
 }

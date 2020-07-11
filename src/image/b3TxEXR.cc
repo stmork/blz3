@@ -59,7 +59,7 @@ public:
 	{
 		b3_size max = m_Index + n;
 
-		if(max > m_Size)
+		if (max > m_Size)
 		{
 			n = m_Size - m_Index;
 		}
@@ -77,7 +77,7 @@ public:
 
 	virtual void seekg(Int64 pos)
 	{
-		if(pos >= m_Size)
+		if (pos >= m_Size)
 		{
 			throw Iex::InputExc("New file position greater than file size.");
 		}
@@ -105,7 +105,7 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 * buffer, b3_size size)
 		b3_res           width  = dw.max.x - dw.min.x + 1;
 		b3_res           height = dw.max.y - dw.min.y + 1;
 
-		if(b3AllocTx(width, height, 128))
+		if (b3AllocTx(width, height, 128))
 		{
 			b3_color  *  ptr = b3GetHdrData();
 			FrameBuffer  fb;
@@ -119,7 +119,7 @@ b3_result b3Tx::b3ParseOpenEXR(b3_u08 * buffer, b3_size size)
 			result = B3_OK;
 		}
 	}
-	catch(std::exception & exc)
+	catch (std::exception & exc)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG EXR  # Error reading file:\n");

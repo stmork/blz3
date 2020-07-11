@@ -52,11 +52,11 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 	b3InitSpline(&m_Spline[1], null, m_Knots[1]);
 
 	// Copy knots
-	for(i = 0; i < B3_MAX_KNOTS; i++)
+	for (i = 0; i < B3_MAX_KNOTS; i++)
 	{
 		m_Knots[0][i] = b3InitFloat();
 	}
-	for(i = 0; i < B3_MAX_KNOTS; i++)
+	for (i = 0; i < B3_MAX_KNOTS; i++)
 	{
 		m_Knots[1][i] = b3InitFloat();
 	}
@@ -66,7 +66,7 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 	m_Controls    = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
 	m_Spline[0].m_Controls =
 		m_Spline[1].m_Controls = m_Controls;
-	for(i = 0; i < control_count; i++)
+	for (i = 0; i < control_count; i++)
 	{
 		b3InitVector(&m_Controls[i]);
 	}
@@ -84,18 +84,18 @@ void b3SplineShape::b3StoreShape()
 	b3StoreSpline(&m_Spline[1]);
 
 	// Store knots
-	for(i = 0; i < B3_MAX_KNOTS; i++)
+	for (i = 0; i < B3_MAX_KNOTS; i++)
 	{
 		b3StoreFloat(m_Knots[0][i]);
 	}
-	for(i = 0; i < B3_MAX_KNOTS; i++)
+	for (i = 0; i < B3_MAX_KNOTS; i++)
 	{
 		b3StoreFloat(m_Knots[1][i]);
 	}
 
 	// Store control points
 	control_count = m_Spline[0].m_ControlMax * m_Spline[1].m_ControlMax;
-	for(i = 0; i < control_count; i++)
+	for (i = 0; i < control_count; i++)
 	{
 		b3StoreVector(&m_Controls[i]);
 	}
@@ -139,11 +139,11 @@ void b3SplineShape::b3GetCount(
 	m_xSubDiv = m_Spline[0].m_SubDiv;
 	m_ySubDiv = m_Spline[1].m_SubDiv;
 
-	if(!m_Spline[0].m_Closed)
+	if (!m_Spline[0].m_Closed)
 	{
 		m_xSubDiv++;
 	}
-	if(!m_Spline[1].m_Closed)
+	if (!m_Spline[1].m_Closed)
 	{
 		m_ySubDiv++;
 	}
@@ -183,13 +183,13 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: horizontal\n");
 	m_Spline[0].b3Dump();
 #endif
-	for(y = 0; y < CurveNum; y++)
+	for (y = 0; y < CurveNum; y++)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     y: %d\n", y);
 #endif
 		Points = MySpline.b3DeBoor(SplVector, y);
-		for(t = 0; t < Points; t++)
+		for (t = 0; t < Points; t++)
 		{
 			Vector->v.x = SplVector[t].x;
 			Vector->v.y = SplVector[t].y;
@@ -213,13 +213,13 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: vertical\n");
 	m_Spline[1].b3Dump();
 #endif
-	for(x = 0; x < CurveNum; x++)
+	for (x = 0; x < CurveNum; x++)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     x: %d\n", x);
 #endif
 		Points = MySpline.b3DeBoor(SplVector, x);
-		for(t = 0; t < Points; t++)
+		for (t = 0; t < Points; t++)
 		{
 			Vector->v.x = SplVector[t].x;
 			Vector->v.y = SplVector[t].y;
@@ -248,7 +248,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	// Building horizontal BSplines
 	Aux    = Between;
 	SubDiv = m_Spline[0].m_SubDiv + 1;
-	for(x = 0; x < SubDiv; x++)
+	for (x = 0; x < SubDiv; x++)
 	{
 		Aux += m_Spline[1].b3DeBoor(Aux, x * m_Spline[0].m_Offset);
 	}
@@ -262,14 +262,14 @@ void b3SplineShape::b3ComputeSolidVertices()
 	index  = 0;
 	fy     = 0;
 	fyStep = 1.0 / (b3_f64)m_ySubDiv;
-	for(y = 0; y < m_ySubDiv; y++)
+	for (y = 0; y < m_ySubDiv; y++)
 	{
 		count   = MySpline.b3DeBoor(SplVector, y);
 		index  += count;
 
 		fx = 0;
 		fxStep = 1.0 / (b3_f64)count;
-		for(x = 0; x < count; x++)
+		for (x = 0; x < count; x++)
 		{
 			Vector->t.s = fx;
 			Vector->t.t = fy;
@@ -286,11 +286,11 @@ void b3SplineShape::b3ComputeSolidVertices()
 
 void b3SplineShape::b3ComputeVertices()
 {
-	if(m_GridVertexCount  > 0)
+	if (m_GridVertexCount  > 0)
 	{
 		b3ComputeGridVertices();
 	}
-	if(m_SolidVertexCount > 0)
+	if (m_SolidVertexCount > 0)
 	{
 		b3ComputeSolidVertices();
 	}
@@ -304,9 +304,9 @@ void b3SplineShape::b3ComputeGridIndices()
 
 	// horizontal splines
 	max = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]);
-	for(y = 0; y < max; y++)
+	for (y = 0; y < max; y++)
 	{
-		for(x = 1; x < m_Spline[0].m_SubDiv; x++)
+		for (x = 1; x < m_Spline[0].m_SubDiv; x++)
 		{
 			B3_GL_LINIT(gPtr, i + x - 1, i + x);
 		}
@@ -318,9 +318,9 @@ void b3SplineShape::b3ComputeGridIndices()
 
 	// vertical splines
 	max = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[0]);
-	for(x = 0; x < max; x++)
+	for (x = 0; x < max; x++)
 	{
-		for(y = 1; y < m_Spline[1].m_SubDiv; y++)
+		for (y = 1; y < m_Spline[1].m_SubDiv; y++)
 		{
 			B3_GL_LINIT(gPtr, i + y - 1, i + y);
 		}
@@ -342,9 +342,9 @@ void b3SplineShape::b3ComputeSolidIndices()
 	xModulo = m_Spline[0].m_Closed ? xSubDiv : xSubDiv + 1;
 	yModulo = m_Spline[1].m_Closed ? ySubDiv : ySubDiv + 1;
 	xOffset = m_Spline[0].m_SubDiv + 1;
-	for(y = 0; y < ySubDiv; y++)
+	for (y = 0; y < ySubDiv; y++)
 	{
-		for(x = 0; x < xSubDiv; x++)
+		for (x = 0; x < xSubDiv; x++)
 		{
 			B3_GL_PINIT(pPtr,
 				m_GridVertexCount +  x              + xOffset *   y,
@@ -362,11 +362,11 @@ void b3SplineShape::b3ComputeSolidIndices()
 
 void b3SplineShape::b3ComputeIndices()
 {
-	if(glGridElements->b3GetCount() > 0)
+	if (glGridElements->b3GetCount() > 0)
 	{
 		b3ComputeGridIndices();
 	}
-	if(glPolygonElements->b3GetCount() > 0)
+	if (glPolygonElements->b3GetCount() > 0)
 	{
 		b3ComputeSolidIndices();
 	}
@@ -384,7 +384,7 @@ void b3SplineShape::b3Draw()
 	// This doesn't work due to the fact that Linux GLU
 	// doesn't support NURBS rendering. This doesn't matter
 	// because the GLU NURBS support isn't very fast...
-	if(!glSolid)
+	if (!glSolid)
 	{
 		b3RenderObject::b3Draw();
 	}
@@ -422,10 +422,10 @@ void b3SplineShape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
 	offset  = m_Spline[0].m_Offset;
 
 	// Transform control points
-	for(y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
 		control  = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
-		for(x = 0; x < m_Spline[0].m_ControlNum; x++)
+		for (x = 0; x < m_Spline[0].m_ControlNum; x++)
 		{
 			b3Vector::b3MatrixMul4D(transformation, control);
 			control += offset;
@@ -444,10 +444,10 @@ void b3SplineShape::b3SetupPicking(b3PickInfo * info)
 	offset  = m_Spline[0].m_Offset;
 
 	// Transform control points
-	for(y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
 		control  = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
-		for(x = 0; x < m_Spline[0].m_ControlNum; x++)
+		for (x = 0; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddPickPoint(control);
 			control += offset;
@@ -465,26 +465,26 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 	offset  = m_Spline[0].m_Offset;
 
 	// Transform control points
-	for(y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
 		control  = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
-		for(x = 0; x < m_Spline[0].m_ControlNum; x++)
+		for (x = 0; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddVertex(control);
 			control += offset;
 		}
 	}
 	// Compute horizontal grid lines
-	for(y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
 		start = y * m_Spline[0].m_ControlNum;
-		for(x = 1; x < m_Spline[0].m_ControlNum; x++)
+		for (x = 1; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddLine(
 				start + x - 1,
 				start + x);
 		}
-		if(m_Spline[0].m_Closed)
+		if (m_Spline[0].m_Closed)
 		{
 			info->b3AddLine(start, start + m_Spline[0].m_ControlNum - 1);
 		}
@@ -492,15 +492,15 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 
 	// Compute vertical grid lines
 	offset = m_Spline[0].m_ControlNum;
-	for(x = 0; x < m_Spline[0].m_ControlNum; x++)
+	for (x = 0; x < m_Spline[0].m_ControlNum; x++)
 	{
-		for(y = 1; y < m_Spline[1].m_ControlNum; y++)
+		for (y = 1; y < m_Spline[1].m_ControlNum; y++)
 		{
 			info->b3AddLine(
 				x + (y - 1) * offset,
 				x +  y      * offset);
 		}
-		if(m_Spline[1].m_Closed)
+		if (m_Spline[1].m_Closed)
 		{
 			info->b3AddLine(x, x + (m_Spline[1].m_ControlNum - 1) * offset);
 		}
@@ -520,7 +520,7 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 
 	Between = (b3_vector *)b3Item::b3Alloc(sizeof(b3_vector) *
 			(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
-	if(Between == null)
+	if (Between == null)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
@@ -529,18 +529,18 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 	ySize       = m_Spline[1].m_SubDiv;
 	TriaCount = xSize * ySize * 2;
 
-	if(!m_Spline[0].m_Closed)
+	if (!m_Spline[0].m_Closed)
 	{
 		xSize++;
 	}
-	if(!m_Spline[1].m_Closed)
+	if (!m_Spline[1].m_Closed)
 	{
 		ySize++;
 	}
 	VertexCount = xSize * ySize;
 
 	// Reallocating new tria shape
-	if(!b3TriangleShape::b3Init(VertexCount, TriaCount, m_Spline[0].m_SubDiv, m_Spline[1].m_SubDiv))
+	if (!b3TriangleShape::b3Init(VertexCount, TriaCount, m_Spline[0].m_SubDiv, m_Spline[1].m_SubDiv))
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
@@ -548,7 +548,7 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 	// building horizontal splines
 	Vector = Between;
 	SubDiv = m_Spline[0].m_SubDiv + 1;
-	for(x = 0; x < SubDiv; x++)
+	for (x = 0; x < SubDiv; x++)
 	{
 		Vector += m_Spline[1].b3DeBoor(Vector, x * m_Spline[0].m_Offset);
 	}
@@ -558,10 +558,10 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 	MySpline.m_Controls = Between;
 
 	Vertex = m_Vertices;
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		MySpline.b3DeBoor(VertexField, y);
-		for(x = 0; x < xSize; x++)
+		for (x = 0; x < xSize; x++)
 		{
 			Vertex->Point.x = VertexField[x].x;
 			Vertex->Point.y = VertexField[x].y;
@@ -571,9 +571,9 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 	}
 
 	Triangle = m_Triangles;
-	for(y = 0; y < m_Spline[1].m_SubDiv; y++)
+	for (y = 0; y < m_Spline[1].m_SubDiv; y++)
 	{
-		for(x = 0; x < m_Spline[0].m_SubDiv; x++)
+		for (x = 0; x < m_Spline[0].m_SubDiv; x++)
 		{
 			Triangle->P1  =  x            + xSize *  y;
 			Triangle->P2  = (x + 1) % xSize + xSize *  y;

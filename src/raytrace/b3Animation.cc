@@ -85,9 +85,9 @@ b3AnimElement * b3Animation::b3FindSameTrack(b3AnimElement * Anim)
 {
 	b3AnimElement * prev = Anim;
 
-	while((prev = (b3AnimElement *)prev->Prev) != null)
+	while ((prev = (b3AnimElement *)prev->Prev) != null)
 	{
-		if((prev->b3GetClassType() == Anim->b3GetClassType()) &&
+		if ((prev->b3GetClassType() == Anim->b3GetClassType()) &&
 			(prev->m_CurveUse       == Anim->m_CurveUse) &&
 			(prev->m_End            <= Anim->m_Start) &&
 			(strcmp(prev->m_Object, Anim->m_Object) == 0))
@@ -114,13 +114,13 @@ void b3Animation::b3RecomputeCenter(
 		Anim = (b3AnimElement *)item;
 
 		// the element to reset
-		if(Anim == Element)
+		if (Anim == Element)
 		{
 			return;
 		}
 
 		// compute rotation center if necessary
-		if((Anim->m_Flags & flagmask) == flagmask)
+		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
 			tClipped = b3Math::b3Limit(t, Anim->m_Start, Anim->m_End);
 			Anim->b3GetPosition(center, tClipped);
@@ -146,7 +146,7 @@ void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 		// the element to reset
 		Anim = (b3AnimElement *)item;
 		Anim->m_Center = m_AnimCenter;
-		if(Anim == Element)
+		if (Anim == Element)
 		{
 			t = b3Math::b3Limit(m_Neutral, Anim->m_Start, Anim->m_End);
 			b3Matrix::b3Unit(&Anim->m_NeutralInverse);
@@ -156,7 +156,7 @@ void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 		}
 
 		// compute rotation center if necessary
-		if((Anim->m_Flags & flagmask) == flagmask)
+		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
 			t = b3Math::b3Limit(m_Neutral, Anim->m_Start, Anim->m_End);
 			Anim->b3GetPosition(&m_AnimCenter, t);
@@ -182,13 +182,13 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 	m_Frames = 0;
 	Anim  = (b3AnimElement *)b3GetAnimElementHead()->First;
 	m_Start = m_End = (Anim != null ? Anim->m_Start : 0);
-	while(Anim != null)
+	while (Anim != null)
 	{
 		m_End     = B3_MAX(Anim->m_End,  m_End);
 		m_Start   = B3_MIN(Anim->m_Start, m_Start);
 		b3RecomputeNeutralInverse(Anim);
 		prev = b3FindSameTrack(Anim);
-		if(prev != null)
+		if (prev != null)
 		{
 			Anim->m_TrackIndex  = prev->m_TrackIndex;
 		}
@@ -213,7 +213,7 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 	m_Frames =
 		(b3_index)ceil(m_End   * m_FramesPerSecond) -
 		(b3_index)floor(m_Start * m_FramesPerSecond);
-	if(m_Frames < 1)
+	if (m_Frames < 1)
 	{
 		m_Frames = 1;
 	}
@@ -225,7 +225,7 @@ void b3Scene::b3ResetAnimation()
 {
 	b3Animation * animation = b3GetAnimation();
 
-	if(animation != null)
+	if (animation != null)
 	{
 		b3PrintF(B3LOG_DEBUG, "Resetting animation...\n");
 		b3Update();
@@ -259,9 +259,9 @@ void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 	B3_FOR_BASE_BACK(b3GetAnimElementHead(), item)
 	{
 		Anim = (b3AnimElement *)item;
-		if(Anim->m_Flags & ANIMFLAGF_ACTIVE)
+		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{
-			if(b3Matrix::b3Inverse(&Anim->m_Actual, &resetMatrix))
+			if (b3Matrix::b3Inverse(&Anim->m_Actual, &resetMatrix))
 			{
 				b3ApplyTransformation(Global, Anim, &resetMatrix, m_Neutral);
 			}
@@ -274,14 +274,14 @@ void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 	{
 		Anim = (b3AnimElement *)item;
 		Anim->m_Center = m_AnimCenter;
-		if(Anim->m_Flags & ANIMFLAGF_ACTIVE)
+		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{
 			tClipped = b3Math::b3Limit(t, Anim->m_Start, Anim->m_End);
 			Anim->b3ComputeTransformationMatrix(this, &Anim->m_Actual, tClipped);
 			b3ApplyTransformation(Global, Anim, &Anim->m_Actual, t);
 
 			// set center position
-			if(Anim->m_Flags & ANIMFLAGF_CENTER)
+			if (Anim->m_Flags & ANIMFLAGF_CENTER)
 			{
 				Anim->b3GetPosition(&m_AnimCenter, tClipped);
 			}
@@ -295,7 +295,7 @@ void b3Scene::b3SetAnimation(b3_f64 t)
 {
 	b3Animation * animation = b3GetAnimation();
 
-	if(animation != null)
+	if (animation != null)
 	{
 		animation->b3SetAnimation(this, t);
 		b3UpdateCamera();
@@ -318,7 +318,7 @@ b3_bool b3Animation::b3ActivateAnimation(
 	// move to neutral time point, set activation flag
 	b3SetAnimation(Global, m_Neutral);
 	m_Flags &=  ~ANIMF_ON;
-	if(activation)
+	if (activation)
 	{
 		m_Flags |= ANIMF_ON;
 		b3SetAnimation(Global, oldTime);

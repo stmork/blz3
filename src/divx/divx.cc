@@ -51,7 +51,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker (DivX)\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(command != null)
+	if (command != null)
 	{
 #ifdef BLZ3_USE_DIVX4LINUX
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
@@ -88,17 +88,17 @@ int main(int argc, char * argv[])
 	b3_res        ySize = 0;
 	avi_t    *    out;
 
-	if(argc <= 1)
+	if (argc <= 1)
 	{
 		b3Banner(argv[0]);
 		exit(EXIT_SUCCESS);
 	}
 
-	for(int i = 2; i < argc; i++)
+	for (int i = 2; i < argc; i++)
 	{
-		if(argv[i][0] == '-')
+		if (argv[i][0] == '-')
 		{
-			switch(argv[i][1])
+			switch (argv[i][1])
 			{
 			case 'd' :
 				b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -111,7 +111,7 @@ int main(int argc, char * argv[])
 		}
 		else
 		{
-			switch(b3Dir::b3Exists(argv[i]))
+			switch (b3Dir::b3Exists(argv[i]))
 			{
 			case B3_TYPE_DIR:
 				list.b3RecCreateList(argv[i]);
@@ -131,7 +131,7 @@ int main(int argc, char * argv[])
 	}
 
 	out = AVI_open_output_file(argv[1]);
-	if(out == NULL)
+	if (out == NULL)
 	{
 		fprintf(stderr, "Cannot write %s\n", argv[1]);
 		exit(EXIT_FAILURE);
@@ -143,7 +143,7 @@ int main(int argc, char * argv[])
 #endif
 
 	list.b3Sort();
-	for(entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != null; entry = entry->Succ)
 	{
 		b3Tx    img;
 		b3_bool isFirst = false;
@@ -153,37 +153,37 @@ int main(int argc, char * argv[])
 		{
 			img.b3LoadImage(entry->b3Name());
 			isFirst = true;
-			if(size == 0)
+			if (size == 0)
 			{
 				xSize = (img.xSize + 15) & 0xfff0;
 				ySize = (img.ySize +  7) & 0xfff8;
 				size  = xSize * ySize;
 			}
 		}
-		catch(b3TxException & t)
+		catch (b3TxException & t)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n");
 			b3PrintF(B3LOG_NORMAL, "Image error when processing image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
 			b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
 		}
-		catch(b3ExceptionBase & e)
+		catch (b3ExceptionBase & e)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n");
 			b3PrintF(B3LOG_NORMAL, "General Blizzard III error on image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL, "Error code: %d\n", e.b3GetError());
 			b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", e.b3GetErrorMsg());
 		}
-		catch(...)
+		catch (...)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n");
 			b3PrintF(B3LOG_NORMAL, "Unknown error occured on image %s!\n", entry->b3Name());
 		}
 
-		if(isFirst)
+		if (isFirst)
 		{
 #ifdef BLZ3_USE_DIVX4LINUX
-			if(encoding.handle == 0)
+			if (encoding.handle == 0)
 			{
 				encoding.x_dim     = xSize;
 				encoding.y_dim     = ySize;
@@ -195,7 +195,7 @@ int main(int argc, char * argv[])
 				bitstream          = new char[size * 6];
 
 				error = encore(0, ENC_OPT_INIT, &encoding, 0);
-				if((error != ENC_OK) || (encoding.handle == 0))
+				if ((error != ENC_OK) || (encoding.handle == 0))
 				{
 					fprintf(stderr, "ERROR CODE: %d (starting encoding)\nexiting...\n", error);
 				}
@@ -209,15 +209,15 @@ int main(int argc, char * argv[])
 
 			srcPtr = img.b3GetTrueColorData();
 			memset(buffer, 0, size * 3);
-			if(srcPtr != null)
+			if (srcPtr != null)
 			{
 				// Recode image
 				dstPtr  = &buffer[size * 3];
-				for(b3_res y = 0; y < img.ySize; y++)
+				for (b3_res y = 0; y < img.ySize; y++)
 				{
 					dstPtr -= (xSize * 3);
 					b3_u08 * pixel  = dstPtr;
-					for(b3_res x = 0; x < img.xSize; x++)
+					for (b3_res x = 0; x < img.xSize; x++)
 					{
 						color    = srcPtr[x];
 						*pixel++ =  color & 0x0000ff;
@@ -236,7 +236,7 @@ int main(int argc, char * argv[])
 				frame.colorspace = ENC_CSP_RGB24;
 
 				error = encore(encoding.handle, ENC_OPT_ENCODE, &frame, &result);
-				if(error != ENC_OK)
+				if (error != ENC_OK)
 				{
 					fprintf(stderr, "\nERROR CODE: %d (encoding frame %d)\nexiting...\n", error, ino);
 				}
@@ -258,7 +258,7 @@ int main(int argc, char * argv[])
 
 #ifdef BLZ3_USE_DIVX4LINUX
 	error = encore(encoding.handle, ENC_OPT_RELEASE, 0, 0);
-	if(error != ENC_OK)
+	if (error != ENC_OK)
 	{
 		fprintf(stderr, "\nERROR CODE: %d (finishing encoding)\nexiting...\n", error);
 	}
@@ -267,12 +267,12 @@ int main(int argc, char * argv[])
 		b3PrintF(B3LOG_NORMAL, "\nDone.\n");
 	}
 
-	if(bitstream != null)
+	if (bitstream != null)
 	{
 		delete [] bitstream;
 	}
 #endif
-	if(buffer != null)
+	if (buffer != null)
 	{
 		delete [] buffer;
 	}

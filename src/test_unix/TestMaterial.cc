@@ -122,7 +122,7 @@ public:
 
 		big->b3GetMaterialHead()->b3Append(material);
 
-		if(dim != null)
+		if (dim != null)
 		{
 			b3ComputeBBoxScale(bbox, dim);
 		}
@@ -135,7 +135,7 @@ static void b3SaveCookTorrance(b3Color & color, int y)
 {
 	int i;
 
-	for(i = 0; i <= 7; i++)
+	for (i = 0; i <= 7; i++)
 	{
 		b3MatCookTorrance * material = new b3MatCookTorrance(COOK_TORRANCE);
 		b3Scene      *     scene    = b3TestMaterial::b3CreateMaterial(material);

@@ -73,7 +73,7 @@ public:
 		FILE    *    file;
 		b3_bool      row;
 
-		for(entry = m_List.b3First(); entry != null; entry = entry->Succ)
+		for (entry = m_List.b3First(); entry != null; entry = entry->Succ)
 		{
 			b3LoadImage(entry);
 		}
@@ -81,7 +81,7 @@ public:
 		b3Path::b3LinkFileName(index, m_Dest, "index.html");
 
 		file = fopen(index, "wt");
-		if(file != null)
+		if (file != null)
 		{
 			b3PrintF(B3LOG_NORMAL, "Writing %s\n", (const char *)index);
 			fprintf(file,
@@ -107,13 +107,13 @@ public:
 				"<h1>%s</h1>\n"
 				"</center>\n", m_Title);
 			fprintf(file, "<table>\n");
-			for(int i = 0; i < m_Num; i++)
+			for (int i = 0; i < m_Num; i++)
 			{
 				row = (i % ROW_SIZE) == 0;
 				b3ImgName(name, i);
-				if(row)
+				if (row)
 				{
-					if(i > 0)
+					if (i > 0)
 					{
 						fprintf(file, "</tr>\n");
 					}
@@ -154,14 +154,14 @@ private:
 		b3Path  ext;
 
 		ext.b3ExtractExt(source);
-		if(b3Tx::b3GetFileType(ext) == FT_JPEG)
+		if (b3Tx::b3GetFileType(ext) == FT_JPEG)
 		{
 			b3File  src;
 			b3_u08 * buffer;
 			b3_size size;
 
 			buffer = src.b3ReadBuffer(source, size);
-			if(buffer != null)
+			if (buffer != null)
 			{
 				b3File  dst(full_normal, B_WRITE);
 
@@ -176,7 +176,7 @@ private:
 		else
 		{
 #ifdef HAVE_LIBJPEG
-			if(image->b3SaveJPEG(full_normal) != B3_OK)
+			if (image->b3SaveJPEG(full_normal) != B3_OK)
 			{
 				return false;
 			}
@@ -199,12 +199,12 @@ private:
 
 		source.b3LinkFileName(entry->b3Name(), null);
 		b3PrintF(B3LOG_NORMAL, "F: %s\n", (const char *)source);
-		if(normal.b3LoadImage(source) == B3_OK)
+		if (normal.b3LoadImage(source) == B3_OK)
 		{
 			b3ImgName(name, m_Num);
 			b3Path::b3LinkFileName(full_normal, m_Normal, name);
 
-			if(b3CopyImage(&normal, full_normal))
+			if (b3CopyImage(&normal, full_normal))
 			{
 				b3Path::b3LinkFileName(full_small, m_Small, name);
 				scale = DEST_IMG_SIZE / (normal.xSize < normal.ySize ?
@@ -214,7 +214,7 @@ private:
 				ySize = (b3_res)(scale * normal.ySize);
 
 				b3PrintF(B3LOG_NORMAL, "   %s - %dx%d - %3.3f\n", (const char *)full_small, xSize, ySize, scale);
-				if(small.b3AllocTx(xSize, ySize, 24))
+				if (small.b3AllocTx(xSize, ySize, 24))
 				{
 					try
 					{
@@ -225,7 +225,7 @@ private:
 						result = false;
 #endif
 					}
-					catch(b3TxException & t)
+					catch (b3TxException & t)
 					{
 						b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
 						b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
@@ -246,7 +246,7 @@ private:
 			b3PrintF(B3LOG_NORMAL, "Cannot load image!\n");
 		}
 
-		if(result)
+		if (result)
 		{
 			m_Num++;
 		}
@@ -264,7 +264,7 @@ int main(int argc, char * argv[])
 	b3Path      dir;
 	const char * title = TITLE;
 
-	switch(argc)
+	switch (argc)
 	{
 	default:
 	case 3:

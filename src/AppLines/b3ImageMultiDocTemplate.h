@@ -42,12 +42,12 @@ public:
 		Confidence result;
 
 		result = CMultiDocTemplate::MatchDocType(lpszPathName, rpDocMatch);
-		if(result == yesAttemptForeign)
+		if (result == yesAttemptForeign)
 		{
 			b3Path ext;
 
 			ext.b3ExtractExt(lpszPathName);
-			if(b3Tx::b3GetFileType(ext) != FT_UNKNOWN)
+			if (b3Tx::b3GetFileType(ext) != FT_UNKNOWN)
 			{
 				result = yesAttemptNative;
 			}

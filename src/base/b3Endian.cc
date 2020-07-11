@@ -50,7 +50,7 @@ public:
 	{
 		b3_u08 * cPtr = (b3_u08 *)ptr;
 
-		for(b3_size i = 0; i < size; i++)
+		for (b3_size i = 0; i < size; i++)
 		{
 			m_Changer.m_iBuffer[i] = *cPtr++;
 		}
@@ -137,7 +137,7 @@ const b3_u16 b3Endian::b3Get16(void * Ptr)
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 	b3_u16  Value;
 
-	if(b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 	{
 		Value = (long)Pointer[1];
 		Value = (Value << 8) | (long)Pointer[0];
@@ -155,7 +155,7 @@ const b3_u32 b3Endian::b3Get32(void * Ptr)
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 	b3_u32  Value;
 
-	if(b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 	{
 		Value = (b3_u32)Pointer[3];
 		Value = (Value << 8) | (b3_u32)Pointer[2];
@@ -182,7 +182,7 @@ const b3_u16 b3Endian::b3GetMot16(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u16));
 
-	if(changer.b3IsIntel())
+	if (changer.b3IsIntel())
 	{
 		changer.b3Change16();
 	}
@@ -193,7 +193,7 @@ const b3_u32 b3Endian::b3GetMot32(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u32));
 
-	if(changer.b3IsIntel())
+	if (changer.b3IsIntel())
 	{
 		changer.b3Change32();
 	}
@@ -204,7 +204,7 @@ const b3_f32 b3Endian::b3GetMotFloat(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f32));
 
-	if(changer.b3IsIntel())
+	if (changer.b3IsIntel())
 	{
 		changer.b3Change32();
 	}
@@ -215,7 +215,7 @@ const b3_f64 b3Endian::b3GetMotDouble(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f64));
 
-	if(changer.b3IsIntel())
+	if (changer.b3IsIntel())
 	{
 		changer.b3Change64();
 	}
@@ -232,7 +232,7 @@ const b3_u16 b3Endian::b3GetIntel16(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u16));
 
-	if(changer.b3IsMotorola())
+	if (changer.b3IsMotorola())
 	{
 		changer.b3Change16();
 	}
@@ -243,7 +243,7 @@ const b3_u32 b3Endian::b3GetIntel32(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u32));
 
-	if(changer.b3IsMotorola())
+	if (changer.b3IsMotorola())
 	{
 		changer.b3Change32();
 	}
@@ -254,7 +254,7 @@ const b3_f32 b3Endian::b3GetIntelFloat(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f32));
 
-	if(changer.b3IsMotorola())
+	if (changer.b3IsMotorola())
 	{
 		changer.b3Change32();
 	}
@@ -265,7 +265,7 @@ const b3_f64 b3Endian::b3GetIntelDouble(void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f64));
 
-	if(changer.b3IsMotorola())
+	if (changer.b3IsMotorola())
 	{
 		changer.b3Change64();
 	}

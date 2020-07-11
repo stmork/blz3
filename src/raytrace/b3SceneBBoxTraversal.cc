@@ -41,7 +41,7 @@ void b3Scene::b3Reorg()
 	base  =  b3GetBBoxHead();
 	depot = *base;
 	base->b3InitBase(CLASS_BBOX);
-	if((first = depot.First) != null)
+	if ((first = depot.First) != null)
 	{
 		level = first->b3GetType();
 		b3BBox::b3Reorg(&depot, base, level, 1);
@@ -60,14 +60,14 @@ void b3BBox::b3Reorg(
 	b3BBox     *    bbox;
 	b3Base<b3Item> * sub_base = null;
 
-	while((bbox = (b3BBox *)depot->First) != null)
+	while ((bbox = (b3BBox *)depot->First) != null)
 	{
 		new_level = bbox->b3GetType();
-		if(new_level < level)
+		if (new_level < level)
 		{
 			return;
 		}
-		if(new_level == level)
+		if (new_level == level)
 		{
 			depot->b3Remove(bbox);
 			insert_after != null ? base->b3Insert(insert_after, bbox) : base->b3Append(bbox);
@@ -271,7 +271,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tol
 		result |= shape->b3ComputeBounds(&subLower, &subUpper);
 	}
 
-	if(result)
+	if (result)
 	{
 		// Use fresh data
 		b3Vector::b3Scale(b3Vector::b3Sub(&subUpper, &subLower, &m_DimSize), tolerance * 0.5);
@@ -293,7 +293,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tol
 	b3Vector::b3CheckUpperBound(upper, &subUpper);
 
 	// Compute bounds of this BBox
-	if(result)
+	if (result)
 	{
 		b3Vector::b3Sub(&subUpper, &subLower, &m_DimSize);
 		m_DimBase   = subLower;
@@ -428,7 +428,7 @@ void b3Scene::b3Transform(
 	b3_bool    is_affine,
 	b3_bool    force_action)
 {
-	if(!b3Matrix::b3IsUnitMatrix(transformation))
+	if (!b3Matrix::b3IsUnitMatrix(transformation))
 	{
 		b3Item * item;
 		b3BBox * bbox;
@@ -454,7 +454,7 @@ b3_bool b3BBox::b3Transform(
 	B3_FOR_BASE(b3GetShapeHead(), item)
 	{
 		shape = (b3Shape *)item;
-		if(force_action || shape->b3IsActive())
+		if (force_action || shape->b3IsActive())
 		{
 			shape->b3Transform(transformation, is_affine);
 			transformed = true;
@@ -464,13 +464,13 @@ b3_bool b3BBox::b3Transform(
 	B3_FOR_BASE(b3GetBBoxHead(), item)
 	{
 		bbox = (b3BBox *)item;
-		if(bbox->b3Transform(transformation, is_affine, force_action))
+		if (bbox->b3Transform(transformation, is_affine, force_action))
 		{
 			transformed = true;
 		}
 	}
 
-	if(force_action || b3IsActive())
+	if (force_action || b3IsActive())
 	{
 		b3Matrix::b3MMul(&m_Matrix, transformation, &m_Matrix);
 		transformed = true;
@@ -503,7 +503,7 @@ void b3BBox::b3Activate(b3_bool activate, b3_bool recurse)
 	b3Shape * shape;
 	b3BBox * bbox;
 
-	if(activate)
+	if (activate)
 	{
 		m_Type |=   BBF_ACTIVE;
 	}
@@ -518,7 +518,7 @@ void b3BBox::b3Activate(b3_bool activate, b3_bool recurse)
 		shape->b3Activate(activate);
 	}
 
-	if(recurse)
+	if (recurse)
 	{
 		B3_FOR_BASE(b3GetBBoxHead(), item)
 		{
@@ -543,14 +543,14 @@ b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox)
 	base = b3GetBBoxHead();
 	B3_FOR_BASE(base, item)
 	{
-		if(item == bbox)
+		if (item == bbox)
 		{
 			return base;
 		}
 
 		inc_bbox = (b3BBox *)item;
 		result   = inc_bbox->b3FindBBoxHead(bbox);
-		if(result != null)
+		if (result != null)
 		{
 			return result;
 		}
@@ -567,14 +567,14 @@ b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
 	base = b3GetBBoxHead();
 	B3_FOR_BASE(base, item)
 	{
-		if(item == bbox)
+		if (item == bbox)
 		{
 			return base;
 		}
 
 		inc_bbox = (b3BBox *)item;
 		result   = inc_bbox->b3FindBBoxHead(bbox);
-		if(result != null)
+		if (result != null)
 		{
 			return result;
 		}
@@ -610,7 +610,7 @@ void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation
 	b3BBox     *    bbox;
 	b3Base<b3Item> * base;
 
-	if(b3IsActive() == activation)
+	if (b3IsActive() == activation)
 	{
 		array->b3Add(this);
 	}
@@ -638,7 +638,7 @@ b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape)
 	{
 		bbox   = (b3BBox *)item;
 		result = bbox->b3FindParentBBox(shape);
-		if(result != null)
+		if (result != null)
 		{
 			return result;
 		}
@@ -655,7 +655,7 @@ b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
 	base = b3GetShapeHead();
 	B3_FOR_BASE(base, item)
 	{
-		if(item == shape)
+		if (item == shape)
 		{
 			return this;
 		}
@@ -666,7 +666,7 @@ b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
 	{
 		bbox   = (b3BBox *)item;
 		result = bbox->b3FindParentBBox(shape);
-		if(result != null)
+		if (result != null)
 		{
 			return result;
 		}
@@ -690,13 +690,13 @@ b3_bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 	B3_FOR_BASE(b3GetBBoxHead(), item)
 	{
 		bbox = (b3BBox *)item;
-		if(bbox == search)
+		if (bbox == search)
 		{
 			bbox->b3Recompute();
 			return true;
 		}
 
-		if((result = bbox->b3BacktraceRecompute(search)) != null)
+		if ((result = bbox->b3BacktraceRecompute(search)) != null)
 		{
 			bbox->b3Recompute();
 			return result;
@@ -712,7 +712,7 @@ b3_bool b3BBox::b3BacktraceRecompute(b3BBox * search)
 	b3_bool  result;
 
 	// Found?
-	if(search == this)
+	if (search == this)
 	{
 		b3Recompute();
 		return true;
@@ -723,7 +723,7 @@ b3_bool b3BBox::b3BacktraceRecompute(b3BBox * search)
 	{
 		bbox   = (b3BBox *)item;
 		result = bbox->b3BacktraceRecompute(search);
-		if(result)
+		if (result)
 		{
 			bbox->b3Recompute();
 			return result;
@@ -751,7 +751,7 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 	b3_loop       i, visible_count = 0, invisible_count = 0;
 	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP | CLIP_BACK;
 
-	for(i = 0; i < 8; i++)
+	for (i = 0; i < 8; i++)
 	{
 		b3_vector in, out;
 		b3_u32    mask = 0;
@@ -762,47 +762,47 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 
 		projection->b3Project(&in, &out);
 
-		if(out.z <  0)
+		if (out.z <  0)
 		{
 			mask |= CLIP_BACK;
-			if(out.x < -0)
+			if (out.x < -0)
 			{
 				mask |= CLIP_RIGHT;
 			}
-			else if(out.x >= 0)
+			else if (out.x >= 0)
 			{
 				mask |= CLIP_LEFT;
 			}
-			if(out.y <  0)
+			if (out.y <  0)
 			{
 				mask |= CLIP_TOP;
 			}
-			else if(out.y >= 0)
+			else if (out.y >= 0)
 			{
 				mask |= CLIP_BOTTOM;
 			}
 		}
 		else
 		{
-			if(out.x < -1)
+			if (out.x < -1)
 			{
 				mask |= CLIP_LEFT;
 			}
-			else if(out.x >  1)
+			else if (out.x >  1)
 			{
 				mask |= CLIP_RIGHT;
 			}
-			if(out.y < -1)
+			if (out.y < -1)
 			{
 				mask |= CLIP_BOTTOM;
 			}
-			else if(out.y >  1)
+			else if (out.y >  1)
 			{
 				mask |= CLIP_TOP;
 			}
 		}
 
-		if(mask == 0)
+		if (mask == 0)
 		{
 			visible_count++;
 		}
@@ -810,12 +810,12 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 		flag &= mask;
 	}
 
-	if(visible_count == 8)
+	if (visible_count == 8)
 	{
 		m_Visibility = B3_BBOX_VISIBLE;
 		m_Visible++;
 	}
-	else if((flag == 0) || (invisible_count > 0))
+	else if ((flag == 0) || (invisible_count > 0))
 	{
 		m_Visibility = B3_BBOX_PARTIALLY_VISIBLE;
 		m_PartiallyVisible++;
@@ -826,7 +826,7 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 		m_Invisible++;
 	}
 
-	if(m_Visibility != B3_BBOX_INVISIBLE)
+	if (m_Visibility != B3_BBOX_INVISIBLE)
 	{
 		b3Item * item;
 		b3BBox * bbox;

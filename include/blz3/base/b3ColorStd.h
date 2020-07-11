@@ -77,7 +77,7 @@ public:
 	 */
 	inline b3Color(const b3Color & color)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = color.v[i];
 		}
@@ -114,18 +114,18 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_loop            i;
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			c[3 - i] = color & 0xf;
 			color  = color >> 4;
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			v[i] *= m_Limit_d015[i];
 		}
@@ -142,18 +142,18 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_loop            i;
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			c[3 - i] = color & 0xff;
 			color  = color >> 8;
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			v[i] *= m_Limit_d255[i];
 		}
@@ -166,7 +166,7 @@ public:
 	 */
 	inline void b3Init()
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = 0;
 		}
@@ -180,7 +180,7 @@ public:
 	 */
 	inline void b3InitFactor(const b3_f32 value)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = value;
 		}
@@ -196,7 +196,7 @@ public:
 	{
 		b3_f32 value = (b3_f32)dvalue;
 
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = value;
 		}
@@ -309,7 +309,7 @@ public:
 		b3Color mixer;
 
 		mixer.b3InitFactor(mix);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
 		}
@@ -334,7 +334,7 @@ public:
 		b3Color mixer;
 
 		mixer.b3InitFactor(mix);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
 		}
@@ -357,7 +357,7 @@ public:
 	{
 		b3Color result;
 
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
 		}
@@ -372,7 +372,7 @@ public:
 	 */
 	inline b3Color & operator+=(const b3Color & a)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -389,7 +389,7 @@ public:
 	{
 		b3Color result;
 
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] + a.v[i];
 		}
@@ -404,7 +404,7 @@ public:
 	 */
 	inline b3Color & operator-=(const b3Color & a)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -421,7 +421,7 @@ public:
 	{
 		b3Color result;
 
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] - a.v[i];
 		}
@@ -436,7 +436,7 @@ public:
 	 */
 	inline b3Color & operator*=(const b3Color & a)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] *= a.v[i];
 		}
@@ -453,7 +453,7 @@ public:
 	{
 		b3Color result;
 
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] * a.v[i];
 		}
@@ -471,7 +471,7 @@ public:
 		b3Color prod;
 
 		prod.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -489,7 +489,7 @@ public:
 		b3Color prod;
 
 		prod.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -507,7 +507,7 @@ public:
 		b3Color result, multiplicator;
 
 		multiplicator.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] * multiplicator.v[i];
 		}
@@ -525,7 +525,7 @@ public:
 		b3Color result, multiplicator;
 
 		multiplicator.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] * multiplicator.v[i];
 		}
@@ -544,7 +544,7 @@ public:
 
 		B3_ASSERT(value != 0);
 		prod.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= prod.v[i];
 		}
@@ -563,7 +563,7 @@ public:
 
 		B3_ASSERT(value != 0);
 		prod.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= prod.v[i];
 		}
@@ -582,7 +582,7 @@ public:
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor((b3_f32)value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= divisor.v[i];
 		}
@@ -601,7 +601,7 @@ public:
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -620,7 +620,7 @@ public:
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor(value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -639,7 +639,7 @@ public:
 
 		B3_ASSERT(value != 0);
 		divisor.b3InitFactor((b3_f32)value);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -658,7 +658,7 @@ public:
 		b3Color result, exponent;
 
 		exponent.b3Init(exp);
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result.v[i] = pow(v[i], exponent.v[i]);
 		}
@@ -685,7 +685,7 @@ public:
 	 */
 	inline void b3Abs()
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = fabs(v[i]);
 		}
@@ -703,26 +703,26 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_f32 B3_ALIGN_16 sat[4];
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			sat[i] = v[i];
-			if(sat[i] < m_Limit_m000[i])
+			if (sat[i] < m_Limit_m000[i])
 			{
 				sat[i] = m_Limit_m000[i];
 			}
-			if(sat[i] > m_Limit_m001[i])
+			if (sat[i] > m_Limit_m001[i])
 			{
 				sat[i] = m_Limit_m001[i];
 			}
 			sat[i] *= m_Limit_m255[i];
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			c[i] = (b3_s32)sat[i];
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			result = (result << 8) | c[i];
 		}
@@ -750,9 +750,9 @@ public:
 	 */
 	inline void b3Sat()
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
-			if(v[i] > m_Limit_m001[i])
+			if (v[i] > m_Limit_m001[i])
 			{
 				v[i] = m_Limit_m001[i];
 			}
@@ -766,9 +766,9 @@ public:
 	 */
 	inline void b3Sat(const b3_f32 sat)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
-			if(v[i] > sat)
+			if (v[i] > sat)
 			{
 				v[i] = sat;
 			}
@@ -780,9 +780,9 @@ public:
 	 */
 	inline void b3Min()
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
-			if(v[i] < m_Limit_m000[i])
+			if (v[i] < m_Limit_m000[i])
 			{
 				v[i] = m_Limit_m000[i];
 			}
@@ -796,9 +796,9 @@ public:
 	 */
 	inline void b3Min(const b3_f32 min)
 	{
-		for(b3_loop i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
-			if(v[i] < min)
+			if (v[i] < min)
 			{
 				v[i] = min;
 			}

@@ -59,7 +59,7 @@ b3_size b3TGFReader::b3StrCpy(
 {
 	b3_size len;
 
-	if(dst_size < src_size)
+	if (dst_size < src_size)
 	{
 		len = dst_size - 1;
 	}
@@ -133,7 +133,7 @@ b3_bool b3TGFReader::b3ParseLight(char * ptr)
 		b3Endian::b3GetIntelFloat(&ptr[8]));
 	ptr += 12;
 
-	switch(type)
+	switch (type)
 	{
 	case 0:
 	case 1:
@@ -156,9 +156,9 @@ b3_bool b3TGFReader::b3ProcessMaterial(b3Shape * shape, b3_index index)
 	b3_count max = m_Materials.b3GetCount();
 	b3_index i;
 
-	for(i = 0; i < max; i++)
+	for (i = 0; i < max; i++)
 	{
-		if(m_Materials[i].m_Index == index)
+		if (m_Materials[i].m_Index == index)
 		{
 			b3MatNormal * material = new b3MatNormal(MATERIAL);
 
@@ -183,15 +183,15 @@ b3Triangles * b3TGFReader::b3ProcessOneShape(
 	// Count faces, compute vertex range
 	min = vertices.b3GetCount();
 	max = 0;
-	for(k = facStart; k < facEnd; k++)
+	for (k = facStart; k < facEnd; k++)
 	{
 		start = facettes[k].m_Start;
 		end   = facettes[k].m_End;
-		if(start < min)
+		if (start < min)
 		{
 			min = start;
 		}
-		if(end   > max)
+		if (end   > max)
 		{
 			max = end;
 		}
@@ -209,13 +209,13 @@ b3Triangles * b3TGFReader::b3ProcessOneShape(
 	memcpy(shape->m_Vertices, &vertices[min], (max - min) * sizeof(b3_vertex));
 
 	// Copy triangles
-	for(k = facStart; k < facEnd; k++)
+	for (k = facStart; k < facEnd; k++)
 	{
 		start  = facettes[k].m_Start - min;
 		end    = facettes[k].m_End   - min;
 		diff   = end - start;
 
-		for(b3_index f = 2; f < diff; f++)
+		for (b3_index f = 2; f < diff; f++)
 		{
 			shape->m_Triangles[face].P1 = start;
 			shape->m_Triangles[face].P2 = start + f - 1;
@@ -239,11 +239,11 @@ b3_bool b3TGFReader::b3ParseShapes(
 
 	facStart = 0;
 	numFac  = facettes.b3GetCount();
-	for(i = 0; i < numFac; i += count)
+	for (i = 0; i < numFac; i += count)
 	{
 		matIndex = facettes[i].m_MatIndex;
 		facStart = i;
-		for(
+		for (
 			facEnd = i + 1;
 			(facEnd < numFac) && (facettes[facEnd].m_MatIndex == matIndex);
 			facEnd++)
@@ -278,7 +278,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 	numFac  = b3Endian::b3GetIntel32(&ptr[ 8]);
 	numDef  = b3Endian::b3GetIntel32(&ptr[12]);
 	type    = (b3_tgf_vertex)b3Endian::b3GetIntel16(&ptr[16]);
-	switch(type)
+	switch (type)
 	{
 	case TGF_VERTEX_POINT:
 		size = 3;
@@ -297,12 +297,12 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 
 	vPtr  = (b3_f64 *)ptr;
 	skip  = numVert * sizeof(b3_f64) * size;
-	for(i = 0; i < numVert; i++)
+	for (i = 0; i < numVert; i++)
 	{
 		vertex.Point.x = b3Endian::b3GetIntelDouble(&vPtr[0]) / 1000000.0;
 		vertex.Point.y = b3Endian::b3GetIntelDouble(&vPtr[1]) / 1000000.0;
 		vertex.Point.z = b3Endian::b3GetIntelDouble(&vPtr[2]) / 1000000.0;
-		if(size > 3)
+		if (size > 3)
 		{
 			vertex.Normal.x = b3Endian::b3GetIntelDouble(&vPtr[3]) / 1000000.0;
 			vertex.Normal.y = b3Endian::b3GetIntelDouble(&vPtr[4]) / 1000000.0;
@@ -320,7 +320,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 
 	sPtr  = (b3_u16 *)ptr;
 	skip  = numAttr * sizeof(b3_u16) * 3;
-	for(i = 0; i < numAttr; i++)
+	for (i = 0; i < numAttr; i++)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "%5u %5u - %5u\n",
@@ -335,7 +335,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 
 	lPtr  = (b3_u32 *)ptr;
 	skip  = numFac  * sizeof(b3_u32) * 3;
-	for(i = 0; i < numFac; i++)
+	for (i = 0; i < numFac; i++)
 	{
 		facette.m_Start    = b3Endian::b3GetIntel32(&lPtr[0]);
 		facette.m_End      = b3Endian::b3GetIntel32(&lPtr[1]);
@@ -348,7 +348,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 
 	lPtr  = (b3_u32 *)ptr;
 	skip  = numDef  * sizeof(b3_u32) * 6;
-	for(i = 0; i < numDef; i++)
+	for (i = 0; i < numDef; i++)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "%5u %5u %5u # %5u %5u %5u\n",
@@ -393,7 +393,7 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 	b3_u32      tagSize;
 	b3_bool     error = false;
 
-	while((pos < size) && (!error))
+	while ((pos < size) && (!error))
 	{
 		tag     = (b3_tgf_tag)b3Endian::b3GetIntel16(&ptr[0]);
 		tagSize = b3Endian::b3GetIntel32(&ptr[2]);
@@ -403,11 +403,11 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "Tag: %4d size: %9d\n", tag, tagSize);
 #endif
-		switch(tag)
+		switch (tag)
 		{
 		case TGF_HEADER_TAG:
 			error = strcmp(ptr, "GAMMA TGF") != 0;
-			if(!error)
+			if (!error)
 			{
 				b3PrintF(B3LOG_NORMAL, "GAMMA TGF Version %1.2f\n",
 					(double)b3Endian::b3GetIntel16(&ptr[10]) / 100);
@@ -477,7 +477,7 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 		pos += tagSize;
 	}
 
-	if(!error)
+	if (!error)
 	{
 		b3Path name;
 
@@ -505,15 +505,15 @@ b3Scene * b3TGFReader::b3ReadTGFScene(const char * tgffile)
 
 	b3PrintF(B3LOG_NORMAL, "Reading TGF %s\n", tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile, size);
-	if(buffer != null)
+	if (buffer != null)
 	{
 		bbox = reader.b3Parse(buffer, size, tgffile);
-		if(bbox != null)
+		if (bbox != null)
 		{
 			b3ModellerInfo * info;
 
 			// Setup at least one camera
-			if(reader.m_CameraBase.b3IsEmpty())
+			if (reader.m_CameraBase.b3IsEmpty())
 			{
 				b3CameraPart * camera = new b3CameraPart(CAMERA);
 
@@ -546,7 +546,7 @@ b3BBox * b3TGFReader::b3ReadTGFBBox(const char * tgffile)
 
 	b3PrintF(B3LOG_NORMAL, "Reading TGF %s\n", tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile, size);
-	if(buffer != null)
+	if (buffer != null)
 	{
 		bbox = reader.b3Parse(buffer, size, tgffile);
 	}

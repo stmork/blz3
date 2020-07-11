@@ -41,7 +41,7 @@ b3LogBase::b3LogBase()
 
 b3_bool b3LogBase::b3OpenLogFile()
 {
-	if(m_Out == null)
+	if (m_Out == null)
 	{
 		// Delete old file
 		remove(m_LogFile);
@@ -58,7 +58,7 @@ b3_bool b3LogBase::b3OpenLogFile()
 
 		// Do output
 		m_Out = fopen(m_LogFile, B3_TAPPEND);
-		if(m_Out != null)
+		if (m_Out != null)
 		{
 			fputs(m_Message, m_Out);
 			fflush(m_Out);

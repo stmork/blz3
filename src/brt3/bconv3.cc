@@ -35,19 +35,19 @@ static void convert_tiff(
 {
 	b3_res newDepth;
 
-	if(tx->b3IsLoaded() && (strlen(out) > 0))
+	if (tx->b3IsLoaded() && (strlen(out) > 0))
 	{
 		b3Tx scaled;
 
-		if((xNewSize == tx->xSize) && (yNewSize == tx->ySize))
+		if ((xNewSize == tx->xSize) && (yNewSize == tx->ySize))
 		{
 			// Resolution not defined -> use scale
-			if((scale > 0) && (scale != 1))
+			if ((scale > 0) && (scale != 1))
 			{
 				// Scale is "usable"
 				xNewSize = (b3_res)floor(tx->xSize * scale + 0.5);
 				yNewSize = (b3_res)floor(tx->ySize * scale + 0.5);
-				if(tx->depth == 1)
+				if (tx->depth == 1)
 				{
 					newDepth = 8;
 				}
@@ -68,7 +68,7 @@ static void convert_tiff(
 			scaled.b3AllocTx(xNewSize, yNewSize, tx->depth);
 		}
 
-		if(filtered)
+		if (filtered)
 		{
 			scaled.b3ScaleToGrey(tx);
 		}
@@ -92,14 +92,14 @@ static void convert_jpeg(
 	b3_res      yNewSize,
 	b3_f64      scale)
 {
-	if(tx->b3IsLoaded() && (strlen(out) > 0))
+	if (tx->b3IsLoaded() && (strlen(out) > 0))
 	{
 		b3Tx scaled;
 
-		if((xNewSize == tx->xSize) && (yNewSize == tx->ySize))
+		if ((xNewSize == tx->xSize) && (yNewSize == tx->ySize))
 		{
 			// Resolution not defined -> use scale
-			if((scale > 0) && (scale != 1))
+			if ((scale > 0) && (scale != 1))
 			{
 				// Scale is "usable"
 				xNewSize = (b3_res)floor(tx->xSize * scale + 0.5);
@@ -118,7 +118,7 @@ static void convert_jpeg(
 		}
 
 		// As opposed to TIFF new image is true color annyway
-		if(filtered)
+		if (filtered)
 		{
 			scaled.b3ScaleToGrey(tx);
 		}
@@ -138,7 +138,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III Image converter\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(command != null)
+	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"%s -i input-img [-f][-u][g][-r thresh][-s scale]\n"
@@ -175,17 +175,17 @@ int main(int argc, char * argv[])
 	b3_res  xNewSize = 640;
 	b3_res  yNewSize = 480;
 
-	if(argc <= 1)
+	if (argc <= 1)
 	{
 		b3Banner(argv[0]);
 		return EXIT_SUCCESS;
 	}
 
-	for(i = 1; i < argc; i++)
+	for (i = 1; i < argc; i++)
 	{
-		if(argv[i][0] == '-')
+		if (argv[i][0] == '-')
 		{
-			switch(argv[i][1])
+			switch (argv[i][1])
 			{
 			case 'i':
 				i = b3Runtime::b3ParseOption(argc, argv, i, in_filename, B3_FILESTRINGLEN);
@@ -218,7 +218,7 @@ int main(int argc, char * argv[])
 			case 'g':
 				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				grey = atof(number);
-				if(tx.b3IsLoaded())
+				if (tx.b3IsLoaded())
 				{
 					tx.b3TransToBW(grey, B3_THRESHOLD_WHITE_RATIO);
 				}
@@ -226,7 +226,7 @@ int main(int argc, char * argv[])
 			case 'r':
 				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				ratio = atof(number);
-				if(tx.b3IsLoaded())
+				if (tx.b3IsLoaded())
 				{
 					tx.b3TransToBW(ratio, B3_THRESHOLD_USE);
 				}

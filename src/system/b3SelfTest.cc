@@ -46,7 +46,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 
 	b3PrintF(B3LOG_NORMAL, "%d-Bit-CPU\n", b3Runtime::b3GetCPUBits());
 
-	switch(b3Runtime::b3GetCPUType())
+	switch (b3Runtime::b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
 		b3PrintF(B3LOG_NORMAL, "Big endian (MC 680x0)\n");
@@ -94,7 +94,7 @@ b3_bool b3SelfTest::b3TestMemory()
 
 	// Put some stuff into realloc buffer
 	b3PrintF(B3LOG_NORMAL, "\ntesting memory handling...\n");
-	for(i = 0; i < MEM_MIN; i++)
+	for (i = 0; i < MEM_MIN; i++)
 	{
 #if 1
 		v         = B3_IRAN(256);
@@ -129,7 +129,7 @@ b3_bool b3SelfTest::b3TestMemory()
 
 	ptr1 = mem.b3Realloc(null,  MEM_MIN * 2);
 	mem.b3Dump();
-	for(i = 0; i < MEM_MIN; i++)
+	for (i = 0; i < MEM_MIN; i++)
 	{
 		((b3_u08 *)ptr1)[i] = buffer[i];
 	}
@@ -156,12 +156,12 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF(B3LOG_NORMAL, "   Memory buffer is %s\n",
 		equal ? "preserved (OK)" : "corrupted (wrong)");
 
-	if(!equal)
+	if (!equal)
 	{
 		result = false;
-		for(i = 0; i < MEM_MIN; i++)
+		for (i = 0; i < MEM_MIN; i++)
 		{
-			if((i & 7) == 0)
+			if ((i & 7) == 0)
 			{
 				b3PrintF(B3LOG_NORMAL, "\n%04x: ", i);
 			}
@@ -170,7 +170,7 @@ b3_bool b3SelfTest::b3TestMemory()
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 
-	for(i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
+	for (i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
 	{
 		count += ((char *)ptr1)[i];
 	}
@@ -218,9 +218,9 @@ b3_bool b3SelfTest::b3TestDir()
 
 	dir.b3OpenDir(".");
 	name.b3Empty();
-	while((code = dir.b3DirNext(name)) != B3_NOT_EXISTANT)
+	while ((code = dir.b3DirNext(name)) != B3_NOT_EXISTANT)
 	{
-		switch(code)
+		switch (code)
 		{
 		case B3_TYPE_FILE :
 			b3PrintF(B3LOG_NORMAL, "f: %s\n", (const char *)name);
@@ -258,10 +258,10 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract & file)
 	success = file.b3Size() == 5120;
 	file.b3Close();
 
-	if(file.b3Open("Config.tst", B_READ))
+	if (file.b3Open("Config.tst", B_READ))
 	{
 		b3PrintF(B3LOG_NORMAL, "File 'Config.tst' opened...\n");
-		if(file.b3Read(array, 128) < 128)
+		if (file.b3Read(array, 128) < 128)
 		{
 			b3PrintF(B3LOG_NORMAL, "128 not read...\n");
 			success = false;
@@ -279,7 +279,7 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract & file)
 	}
 
 	code = b3Dir::b3Exists("Config.tst");
-	switch(code)
+	switch (code)
 	{
 	case B3_NOT_EXISTANT :
 		b3PrintF(B3LOG_NORMAL, "Config.tst is not existant...\n");
@@ -309,7 +309,7 @@ b3_bool b3SelfTest::b3TestIO()
 
 	b3PrintF(B3LOG_NORMAL, "\ntesting basic i/o handling...\n");
 	b3PrintF(B3LOG_NORMAL, "Disk file: --------------------\n");
-	if(file.b3Open("Config.tst", B_WRITE))
+	if (file.b3Open("Config.tst", B_WRITE))
 	{
 		success &= b3TestFile(file);
 	}
@@ -319,7 +319,7 @@ b3_bool b3SelfTest::b3TestIO()
 	}
 
 	b3PrintF(B3LOG_NORMAL, "Memory file: ------------------\n");
-	if(filemem.b3Open(B_WRITE))
+	if (filemem.b3Open(B_WRITE))
 	{
 		success &= b3TestFile(filemem);
 	}
@@ -329,7 +329,7 @@ b3_bool b3SelfTest::b3TestIO()
 	}
 
 	b3PrintF(B3LOG_NORMAL, "file operations: --------------\n");
-	if(remove("Config.tst") == 0)
+	if (remove("Config.tst") == 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "File 'Config.tst' removed...\n");
 	}
@@ -340,7 +340,7 @@ b3_bool b3SelfTest::b3TestIO()
 	}
 
 	code = b3Dir::b3Exists("Config.tst");
-	switch(code)
+	switch (code)
 	{
 	case B3_NOT_EXISTANT :
 		b3PrintF(B3LOG_NORMAL, "Config.tst is not existant... (all right)\n");

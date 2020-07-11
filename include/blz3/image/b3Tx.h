@@ -200,7 +200,7 @@ class b3TxQuad
 	{
 		b3_loop i;
 
-		for(i = 0; i < 256; i++)
+		for (i = 0; i < 256; i++)
 		{
 			quad256[256 - i] =
 				quad256[256 + i] = i * i;
@@ -346,11 +346,11 @@ public:
 	 */
 	inline b3_u08 * b3GetIndexData() const
 	{
-		if(data == null)
+		if (data == null)
 		{
 			return null;
 		}
-		if((!b3IsPalette()) || (depth > 8))
+		if ((!b3IsPalette()) || (depth > 8))
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
@@ -364,11 +364,11 @@ public:
 	 */
 	inline b3_u16 * b3GetHighColorData() const
 	{
-		if(data == null)
+		if (data == null)
 		{
 			return null;
 		}
-		if(!b3IsHighColor())
+		if (!b3IsHighColor())
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
@@ -382,11 +382,11 @@ public:
 	 */
 	inline b3_pkd_color * b3GetTrueColorData() const
 	{
-		if(data == null)
+		if (data == null)
 		{
 			return null;
 		}
-		if(!b3IsTrueColor())
+		if (!b3IsTrueColor())
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
@@ -400,11 +400,11 @@ public:
 	 */
 	inline b3_color * b3GetHdrData() const
 	{
-		if(data == null)
+		if (data == null)
 		{
 			return null;
 		}
-		if(!b3IsHdr())
+		if (!b3IsHdr())
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}

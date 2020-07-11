@@ -51,22 +51,22 @@ int main(int argc, char * argv[])
 			b3SelfTest::b3TestMemory() &&
 			b3SelfTest::b3TestIO();
 	}
-	catch(b3MemException & m)
+	catch (b3MemException & m)
 	{
 		b3PrintF(B3LOG_NORMAL, "Memory Error - %s\n", m.b3GetErrorMsg());
 	}
-	catch(b3FileException & f)
+	catch (b3FileException & f)
 	{
 		b3PrintF(B3LOG_NORMAL, "I/O Error - %s\n", f.b3GetErrorMsg());
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL, "Unknown exception occured.\n");
 	}
 
 	b3PrintF(B3LOG_NORMAL, "Tests %s.\n", success ? "successful" : "errornous");
 
-	for(i = 1; i < argc; i++)
+	for (i = 1; i < argc; i++)
 	{
 		b3PrintF(B3LOG_NORMAL, "Checking >%s<\n", argv[i]);
 		try
@@ -76,7 +76,7 @@ int main(int argc, char * argv[])
 #else
 			world.b3Read("M:\\Blizzard\\Data\\AllShapes");
 #endif
-			for(item  = world.b3GetFirst();
+			for (item  = world.b3GetFirst();
 				item != null;
 				item  = scene->Succ)
 			{
@@ -87,12 +87,12 @@ int main(int argc, char * argv[])
 			world.b3Write("/tmp/test.bwd");
 			b3PrintF(B3LOG_NORMAL, "  File OK!\n");
 		}
-		catch(b3WorldException & e)
+		catch (b3WorldException & e)
 		{
 			b3PrintF(B3LOG_NORMAL, "Error catched loading %s\n", argv[i]);
 			b3PrintF(B3LOG_NORMAL, "  Error code: %d\n", e.b3GetError());
 			b3PrintF(B3LOG_NORMAL, "  Error msg:  %s\n", e.b3GetErrorMsg());
-			switch(e.b3GetError())
+			switch (e.b3GetError())
 			{
 			case B3_WORLD_OPEN:
 				b3PrintF(B3LOG_NORMAL, "  Cannot open file.\n");

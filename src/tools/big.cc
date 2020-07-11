@@ -26,7 +26,7 @@
 int main(int argc, char * argv[])
 {
 	b3_size size = atoi(argv[1]);
-	for(int i = 2; i < argc; i++)
+	for (int i = 2; i < argc; i++)
 	{
 		b3Tx tx;
 

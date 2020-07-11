@@ -53,24 +53,24 @@ void b3InfoRGB8::b3Write()
 {
 	b3_coord x, y;
 
-	for(y = 0; y < m_Tx->ySize; y++)
+	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		m_Tx->b3GetRow(m_ThisRow, y);
-		for(x = 0; x < m_Tx->xSize; x++)
+		for (x = 0; x < m_Tx->xSize; x++)
 		{
-			if(OldAmount == 0)
+			if (OldAmount == 0)
 			{
 				OldValue  = m_ThisRow[x];
 				OldAmount = 1;
 			}							/* Schreibfall */
-			else if((OldValue != m_ThisRow[x]) || (OldAmount >= 127))
+			else if ((OldValue != m_ThisRow[x]) || (OldAmount >= 127))
 			{
 				m_SaveBuffer[0] = (OldValue & 0xff0000) >> 16;
 				m_SaveBuffer[1] = (OldValue & 0x00ff00) >>  8;
 				m_SaveBuffer[2] =  OldValue & 0x0000ff;
 				m_SaveBuffer[3] =  OldAmount;
 
-				if(m_File.b3Write(m_SaveBuffer, 4) < 4)
+				if (m_File.b3Write(m_SaveBuffer, 4) < 4)
 				{
 					B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 				}

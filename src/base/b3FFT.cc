@@ -62,12 +62,12 @@ const b3_loop b3Fourier::b3PowOf2(const b3_loop value)
 	b3_loop result = 1;
 
 	// Prevent busy loop
-	if((value & 0x80000000) != 0)
+	if ((value & 0x80000000) != 0)
 	{
 		return 0x80000000;
 	}
 
-	while(value > result)
+	while (value > result)
 	{
 		result = result << 1;
 	}
@@ -78,7 +78,7 @@ const b3_count b3Fourier::b3Log2(b3_u32 value)
 {
 	b3_count count = -1;
 
-	while(value > 0)
+	while (value > 0)
 	{
 		value = value >> 1;
 		count++;
@@ -89,17 +89,17 @@ const b3_count b3Fourier::b3Log2(b3_u32 value)
 void b3Fourier::b3FreeBuffer()
 {
 	b3Free();
-	if(m_Buffer != null)
+	if (m_Buffer != null)
 	{
 		delete [] m_Buffer;
 		m_Buffer = null;
 	}
-	if(m_Lines != null)
+	if (m_Lines != null)
 	{
 		delete [] m_Lines;
 		m_Lines = null;
 	}
-	if(m_Aux != null)
+	if (m_Aux != null)
 	{
 		delete [] m_Aux;
 		m_Aux = null;
@@ -116,7 +116,7 @@ const b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 	m_xStart = (size - m_xOrig) >> 1;
 	m_yStart = (size - m_yOrig) >> 1;
 
-	if((m_xSize == size) && (m_ySize == size))
+	if ((m_xSize == size) && (m_ySize == size))
 	{
 		// New buffer has same size.
 		b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%d) [unchanged]\n", size);
@@ -126,7 +126,7 @@ const b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 
 	m_xSize  =
 		m_ySize  = size;
-	if(!b3ReallocBuffer())
+	if (!b3ReallocBuffer())
 	{
 		b3FreeBuffer();
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
@@ -141,7 +141,7 @@ const b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 	b3_u08    *   cPtr;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
-	if(!tx->b3IsLoaded())
+	if (!tx->b3IsLoaded())
 	{
 		B3_THROW(b3FFTException, B3_FFT_SRC_TX_EMPTY);
 	}
@@ -158,21 +158,21 @@ const b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 	m_yStart = (m_ySize - m_yOrig) >> 1;
 	index    = m_yStart * m_xSize + m_xStart;
 
-	if(!tx->b3IsPalette())
+	if (!tx->b3IsPalette())
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_PALETTE);
 	}
 
 	b3PrintF(B3LOG_FULL, "  Grey (%dx%d)\n", m_xSize, m_ySize);
-	if(!b3ReallocBuffer())
+	if (!b3ReallocBuffer())
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
 
 	cPtr = tx->b3GetIndexData();
-	for(y = 0; y < m_yOrig; y++)
+	for (y = 0; y < m_yOrig; y++)
 	{
-		for(x = 0; x < m_xOrig; x++)
+		for (x = 0; x < m_xOrig; x++)
 		{
 			m_Lines[y + m_yStart][x + m_xStart] = (b3_f64) * cPtr++ / 127.5 - 1.0;
 		}
@@ -194,12 +194,12 @@ const b3_bool b3Fourier::b3ReallocBuffer()
 	m_Lines  = new b3Complex64 *[m_ySize];
 	m_Aux    = new b3Complex64[m_ySize * m_CPUs];
 
-	if((m_Buffer == null) || (m_Lines == null) || (m_Aux == null))
+	if ((m_Buffer == null) || (m_Lines == null) || (m_Aux == null))
 	{
 		return false;
 	}
 
-	for(b3_loop y = 0; y < m_ySize; y++)
+	for (b3_loop y = 0; y < m_ySize; y++)
 	{
 		m_Lines[y] = &m_Buffer[y * m_xSize];
 	}
@@ -219,11 +219,11 @@ void b3Fourier::b3Sample(b3FilterInfo * info, b3SampleFunc sample_func)
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3Sample(...)\n");
 	info->m_Fourier = this;
 	index = 0;
-	for(y = -yHalf; y < yHalf; y++)
+	for (y = -yHalf; y < yHalf; y++)
 	{
 		fy = fyHalf * y;
 		index = (y & yMask) << m_xDim;
-		for(x = -xHalf; x < xHalf; x++)
+		for (x = -xHalf; x < xHalf; x++)
 		{
 			fx = fxHalf * x;
 			pos = index + (x & xMask);
@@ -267,7 +267,7 @@ const b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line
 
 	/* Calculate the number of points */
 	nn = 1;
-	for(i = 0; i < m; i++)
+	for (i = 0; i < m; i++)
 	{
 		nn *= 2;
 	}
@@ -275,14 +275,14 @@ const b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line
 	/* Do the bit reversal */
 	i2 = nn >> 1;
 	j = 0;
-	for(i = 0; i < nn - 1; i++)
+	for (i = 0; i < nn - 1; i++)
 	{
-		if(i < j)
+		if (i < j)
 		{
 			b3Complex64::b3Swap(line[i], line[j]);
 		}
 		k = i2;
-		while(k <= j)
+		while (k <= j)
 		{
 			j -= k;
 			k >>= 1;
@@ -293,14 +293,14 @@ const b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line
 	/* Compute the FFT */
 	c  = -1.0;
 	l2 = 1;
-	for(l = 0; l < m; l++)
+	for (l = 0; l < m; l++)
 	{
 		u    = 1;
 		l1   = l2;
 		l2 <<= 1;
-		for(j = 0; j < l1; j++)
+		for (j = 0; j < l1; j++)
 		{
-			for(i = j; i < nn; i += l2)
+			for (i = j; i < nn; i += l2)
 			{
 				i1 = i + l1;
 
@@ -321,11 +321,11 @@ const b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line
 	}
 
 	/* Scaling for forward transform */
-	if(dir == 1)
+	if (dir == 1)
 	{
 		b3Complex64 denom(1.0 / nn, 1.0 / nn);
 
-		for(i = 0; i < nn; i++)
+		for (i = 0; i < nn; i++)
 		{
 			line[i].b3Scale(denom);
 		}
@@ -354,7 +354,7 @@ const b3_bool b3Fourier::b3FFT2D(const int dir)
 	b3_fft_info info[B3_FFT_MAX_THREADS];
 	b3_loop     i;
 
-	for(i = 0; i < m_CPUs; i++)
+	for (i = 0; i < m_CPUs; i++)
 	{
 		info[i].m_Lines = m_Lines;
 		info[i].m_Aux   = &m_Aux[m_ySize * i];
@@ -363,9 +363,9 @@ const b3_bool b3Fourier::b3FFT2D(const int dir)
 		info[i].m_Dir   = dir;
 	}
 
-	if(m_CPUs > 1)
+	if (m_CPUs > 1)
 	{
-		for(i = 0; i < m_CPUs; i++)
+		for (i = 0; i < m_CPUs; i++)
 		{
 			info[i].m_xMin = 0;
 			info[i].m_xMax = m_xSize;
@@ -375,14 +375,14 @@ const b3_bool b3Fourier::b3FFT2D(const int dir)
 			threads[i].b3Start(b3RowFFT, &info[i]);
 		}
 
-		for(i = 0; i < m_CPUs; i++)
+		for (i = 0; i < m_CPUs; i++)
 		{
 			threads[i].b3Wait();
 		}
 
 		stop.b3TimePos();
 
-		for(i = 0; i < m_CPUs; i++)
+		for (i = 0; i < m_CPUs; i++)
 		{
 			info[i].m_xMin = m_xSize *   i      / m_CPUs;
 			info[i].m_xMax = m_xSize * (i + 1) / m_CPUs;
@@ -392,7 +392,7 @@ const b3_bool b3Fourier::b3FFT2D(const int dir)
 			threads[i].b3Start(b3ColumnFFT, &info[i]);
 		}
 
-		for(i = 0; i < m_CPUs; i++)
+		for (i = 0; i < m_CPUs; i++)
 		{
 			threads[i].b3Wait();
 		}
@@ -417,7 +417,7 @@ b3_u32 b3Fourier::b3RowFFT(void * ptr)
 	b3_loop       j;
 
 	/* Transform the rows */
-	for(j = info->m_yMin; j < info->m_yMax; j++)
+	for (j = info->m_yMin; j < info->m_yMax; j++)
 	{
 		b3FFT(info->m_Dir, info->m_xDim, lines[j]);
 	}
@@ -432,9 +432,9 @@ b3_u32 b3Fourier::b3ColumnFFT(void * ptr)
 	b3_loop       i, j;
 
 	/* Transform the columns */
-	for(i = info->m_xMin; i < info->m_xMax; i++)
+	for (i = info->m_xMin; i < info->m_xMax; i++)
 	{
-		for(j = info->m_yMin; j < info->m_yMax; j++)
+		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
 #ifdef BLZ3_USE_SSE
 			_mm_prefetch(reinterpret_cast<const char *>(&lines[j + 2][i]), _MM_HINT_NTA);
@@ -444,7 +444,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void * ptr)
 
 		b3FFT(info->m_Dir, info->m_yDim, aux);
 
-		for(j = info->m_yMin; j < info->m_yMax; j++)
+		for (j = info->m_yMin; j < info->m_yMax; j++)
 		{
 #ifdef BLZ3_USE_SSE2
 			b3Complex64::b3CopyUncached(lines[j][i], aux[j]);
@@ -464,22 +464,22 @@ const b3_bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp)
 	b3_f64        cMin = 0, c, cMax = 0;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3GetBuffer(..., %1.3f)\n", amp);
-	if(!tx->b3AllocTx(m_xOrig, m_yOrig, 8))
+	if (!tx->b3AllocTx(m_xOrig, m_yOrig, 8))
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
 
 	cPtr = tx->b3GetIndexData();
-	for(y = 0; y < m_yOrig; y++)
+	for (y = 0; y < m_yOrig; y++)
 	{
-		for(x = 0; x < m_xOrig; x++)
+		for (x = 0; x < m_xOrig; x++)
 		{
 			c = m_Lines[y + m_yStart][x + m_xStart].b3Real() * amp;
-			if(c < cMin)
+			if (c < cMin)
 			{
 				cMin = c;
 			}
-			if(c > cMax)
+			if (c > cMax)
 			{
 				cMax = c;
 			}
@@ -501,23 +501,23 @@ const b3_bool b3Fourier::b3GetSpectrum(b3Tx * tx, b3_f64 amp)
 	b3_index       index;
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3GetSpectrum(..., %1.3f)\n", amp);
-	if(!tx->b3AllocTx(m_xSize, m_ySize, 8))
+	if (!tx->b3AllocTx(m_xSize, m_ySize, 8))
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
 	cPtr = tx->b3GetIndexData();
-	for(y = -yHalf; y < yHalf; y++)
+	for (y = -yHalf; y < yHalf; y++)
 	{
 		index = (y & yMask) << m_xDim;
-		for(x = -xHalf; x < xHalf; x++)
+		for (x = -xHalf; x < xHalf; x++)
 		{
 			result  = m_Buffer[index + (x & xMask)].b3Length() * amp * 127;
-			if(result > cMax)
+			if (result > cMax)
 			{
 				cMax = result;
 			}
 
-			if(result > 255)
+			if (result > 255)
 			{
 				result = 255;
 			}
@@ -537,27 +537,27 @@ const b3_bool b3Fourier::b3SelfTest()
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest() %dx%d\n", m_xSize, m_ySize);
 
 	random.b3SetSeed();
-	for(y = 0; y < m_ySize; y++)
+	for (y = 0; y < m_ySize; y++)
 	{
-		for(x = 0; x < m_xSize; x++)
+		for (x = 0; x < m_xSize; x++)
 		{
 			m_Lines[y][x].b3Real() = random.b3Rand();
 		}
 	}
 
-	if(!b3FFT2D())
+	if (!b3FFT2D())
 	{
 		return false;
 	}
-	if(!b3IFFT2D())
+	if (!b3IFFT2D())
 	{
 		return false;
 	}
 
 	random.b3SetSeed();
-	for(y = 0; y < m_ySize; y++)
+	for (y = 0; y < m_ySize; y++)
 	{
-		for(x = 0; x < m_xSize; x++)
+		for (x = 0; x < m_xSize; x++)
 		{
 			e   = fabs(random.b3Rand() - m_Lines[y][x].b3Real());
 			err = B3_MAX(err, fabs(e));

@@ -62,7 +62,7 @@ b3_u32 b3Scene::b3RaytraceThread(void * ptr)
 		}
 		// Leave critical section
 
-		if(row != null)
+		if (row != null)
 		{
 			// We can handle the row for its own!
 			row->b3Raytrace();
@@ -71,7 +71,7 @@ b3_u32 b3Scene::b3RaytraceThread(void * ptr)
 			scene->m_TrashPool.b3Append(row);
 		}
 	}
-	while(row != null);
+	while (row != null);
 
 	// Reach this if the row list ran empty.
 	b3PrintF(B3LOG_FULL, "  Raytracing thread %d terminates...\n", info->m_Num);
@@ -100,7 +100,7 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 			}
 			// Leave critical section
 
-			if(row != null)
+			if (row != null)
 			{
 				// We can handle the row for its own!
 				row->b3Raytrace();
@@ -110,12 +110,12 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 				scene->m_TrashPool.b3Append(row);
 			}
 		}
-		while(row != null);
+		while (row != null);
 
 		b3PrintF(B3LOG_FULL, "  Signalling main thread done job of thread %d.\n", info->m_Num);
 		info->m_WaitForCompletion.b3Pulse();
 	}
-	while(info->m_Loop);
+	while (info->m_Loop);
 
 	b3PrintF(B3LOG_FULL, "  Raytracing thread %d for motion blur terminates...\n", info->m_Num);
 	return 0;
@@ -134,14 +134,14 @@ void b3Scene::b3DoRaytrace(b3Display * display, b3_count CPUs)
 
 	b3PrintF(B3LOG_NORMAL, "Starting threads...\n");
 	span.b3Start();
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		infos[i].m_Display = display;
 		infos[i].m_Scene   = this;
 		infos[i].m_Loop    = false;
 		infos[i].m_Num     = i;
 
-		if(!threads[i].b3Start(b3RaytraceThread, &infos[i], m_RenderPriority))
+		if (!threads[i].b3Start(b3RaytraceThread, &infos[i], m_RenderPriority))
 		{
 			delete [] threads;
 			delete [] infos;
@@ -151,7 +151,7 @@ void b3Scene::b3DoRaytrace(b3Display * display, b3_count CPUs)
 
 	// Wait for completion
 	b3PrintF(B3LOG_NORMAL, "Waiting for threads...\n");
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		threads[i].b3Wait();
 		threads[i].b3AddTimeSpan(&span);
@@ -181,14 +181,14 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 	b3PrintF(B3LOG_NORMAL, "Starting threads...\n");
 	b3PrintF(B3LOG_FULL,  "  Reference time point: %3.3lf FPS: %d\n",
 		base, anim->m_FramesPerSecond);
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		infos[i].m_Display = display;
 		infos[i].m_Scene   = this;
 		infos[i].m_Loop    = true;
 		infos[i].m_Num     = i;
 
-		if(!threads[i].b3Start(b3RaytraceMotionBlurThread, &infos[i], m_RenderPriority))
+		if (!threads[i].b3Start(b3RaytraceMotionBlurThread, &infos[i], m_RenderPriority))
 		{
 			delete [] threads;
 			delete [] infos;
@@ -197,7 +197,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 	}
 
 	span.b3Start();
-	for(k = 0; k < m_Distributed->m_SamplesPerFrame; k++)
+	for (k = 0; k < m_Distributed->m_SamplesPerFrame; k++)
 	{
 		// Animate!
 		t = base + m_Distributed->m_MotionBlur[k];
@@ -211,14 +211,14 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 
 		// Start raytracing at this time point
 		b3PrintF(B3LOG_FULL, "  Activating threads at index %d, time point %3.3lf...\n", k, t);
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			infos[i].m_WaitForAnimation.b3Pulse();
 		}
 
 		// Ensure that nobody is raytracing
 		b3PrintF(B3LOG_FULL, "  Waiting for thread completion...\n", k, t);
-		for(i = 0; i < CPUs; i++)
+		for (i = 0; i < CPUs; i++)
 		{
 			infos[i].m_WaitForCompletion.b3Wait();
 		}
@@ -232,7 +232,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 	m_TrashPool.b3Move(&m_RowPool);
 
 	b3PrintF(B3LOG_FULL, "  Signalling threads to terminate...\n");
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		infos[i].m_Loop = false;
 		infos[i].m_WaitForAnimation.b3Pulse();
@@ -244,7 +244,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 
 	// Wait for completion
 	b3PrintF(B3LOG_NORMAL, "Waiting for threads...\n");
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		threads[i].b3Wait();
 		threads[i].b3AddTimeSpan(&span);
@@ -289,7 +289,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	b3PrintF(B3LOG_FULL, "  preparing special items...\n");
 	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
-		if(!item->b3Prepare(info))
+		if (!item->b3Prepare(info))
 		{
 			B3_THROW(b3PrepareException, B3_PREPARE_ERROR);
 		}
@@ -297,7 +297,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 
 	xDenom = b3Vector::b3Length(&m_Width);
 	yDenom = b3Vector::b3Length(&m_Height);
-	if((xDenom < epsilon) || (yDenom < epsilon))
+	if ((xDenom < epsilon) || (yDenom < epsilon))
 	{
 		b3PrintF(B3LOG_NORMAL, "Camera has got zero extend...\n");
 		return false;
@@ -315,9 +315,9 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 
 	b3PrintF(B3LOG_FULL, "  preparing lensflare...\n");
 	m_LensFlare = b3GetLensFlare();
-	if(m_LensFlare != null)
+	if (m_LensFlare != null)
 	{
-		if(!m_LensFlare->b3IsActive())
+		if (!m_LensFlare->b3IsActive())
 		{
 			m_LensFlare = null;
 		}
@@ -325,7 +325,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 
 	b3PrintF(B3LOG_FULL, "  preparing nebular...\n");
 	nebular = b3GetNebular();
-	if(nebular->b3IsActive())
+	if (nebular->b3IsActive())
 	{
 		m_Nebular = nebular;
 		b3PrintF(B3LOG_DEBUG, "Using nebular with %3.2f units distance to half value.\n",
@@ -336,7 +336,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 		m_Nebular = null;
 	}
 
-	if(m_BackgroundType == TP_SKY_N_HELL)
+	if (m_BackgroundType == TP_SKY_N_HELL)
 	{
 		b3PrintF(B3LOG_FULL, "  preparing clouds...\n");
 		m_Clouds = b3GetCloudBackground(true);
@@ -349,7 +349,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 
 	b3PrintF(B3LOG_FULL, "  preparing distributed raytracing...\n");
 	distributed = b3GetDistributed();
-	if(distributed->b3IsActive())
+	if (distributed->b3IsActive())
 	{
 		b3Animation * animation = b3GetAnimation();
 
@@ -362,7 +362,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 		m_Distributed = null;
 		b3PrintF(B3LOG_FULL, "  preparing super sampling...\n");
 		supersample = b3GetSuperSample();
-		if(supersample->b3IsActive())
+		if (supersample->b3IsActive())
 		{
 			m_SuperSample = supersample;
 			b3PrintF(B3LOG_NORMAL, "Using one-level adaptive super sampling.\n");
@@ -373,7 +373,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 			b3PrintF(B3LOG_NORMAL, "Using simple sampling.\n");
 		}
 	}
-	if((m_Distributed != null) || (m_SuperSample != null))
+	if ((m_Distributed != null) || (m_SuperSample != null))
 	{
 		// Init half steps for super sampling
 		m_xHalfDir.x = m_Width.x  / (b3_f64)xSize;
@@ -398,14 +398,14 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	// Init lights
 	b3PrintF(B3LOG_FULL, "  preparing lights...\n");
 	m_LightCount = 0;
-	for(light = b3GetLight(); light != null; light = (b3Light *)light->Succ)
+	for (light = b3GetLight(); light != null; light = (b3Light *)light->Succ)
 	{
-		if(!light->b3Prepare(info))
+		if (!light->b3Prepare(info))
 		{
 			b3PrintF(B3LOG_NORMAL, "Lights doesn't initialize itself...\n");
 			return false;
 		}
-		if(light->m_LightActive)
+		if (light->m_LightActive)
 		{
 			m_LightCount++;
 		}
@@ -414,7 +414,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	// Init geometry
 	b3PrintF(B3LOG_FULL, "  preparing geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if(!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info))
+	if (!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info))
 	{
 		b3PrintF(B3LOG_NORMAL, "Geometry preparation didn't succeed!\n");
 		return false;
@@ -447,7 +447,7 @@ void b3Scene::b3Raytrace(b3Display * display, b3_bool multi_threaded)
 
 		// What resolution to use
 		display->b3GetRes(xSize, ySize);
-		if(!b3PrepareScene(xSize, ySize))
+		if (!b3PrepareScene(xSize, ySize))
 		{
 			b3PrintF(B3LOG_NORMAL, "Cannot initialize raytracing!\n");
 			return;
@@ -461,10 +461,10 @@ void b3Scene::b3Raytrace(b3Display * display, b3_bool multi_threaded)
 		// add rows to list
 		fy     = 1.0;
 		fyStep = 2.0 / (b3_f64)ySize;
-		for(i = 0; i < ySize; i++)
+		for (i = 0; i < ySize; i++)
 		{
 			row = null;
-			if(m_Distributed != null)
+			if (m_Distributed != null)
 			{
 				isMotionBlur = m_Distributed->b3IsMotionBlur();
 
@@ -472,14 +472,14 @@ void b3Scene::b3Raytrace(b3Display * display, b3_bool multi_threaded)
 					new b3MotionBlurRayRow(this, display, i, xSize, ySize) :
 					new b3DistributedRayRow(this, display, i, xSize, ySize);
 			}
-			if(m_SuperSample != null)
+			if (m_SuperSample != null)
 			{
 				row = new b3SupersamplingRayRow(this, display, i, xSize, ySize,
 					(b3SupersamplingRayRow *)m_RowPool.Last);
 			}
 
 			// Add default row
-			if(row == null)
+			if (row == null)
 			{
 				row = new b3RayRow(this, display, i, xSize, ySize);
 			}
@@ -487,7 +487,7 @@ void b3Scene::b3Raytrace(b3Display * display, b3_bool multi_threaded)
 			fy -= fyStep;
 		}
 
-		if(isMotionBlur)
+		if (isMotionBlur)
 		{
 			b3DoRaytraceMotionBlur(display, CPUs);
 		}
@@ -496,11 +496,11 @@ void b3Scene::b3Raytrace(b3Display * display, b3_bool multi_threaded)
 			b3DoRaytrace(display, CPUs);
 		}
 	}
-	catch(b3PrepareException & p)
+	catch (b3PrepareException & p)
 	{
 		b3PrintF(B3LOG_NORMAL, "### Problems preparing scene: %s\n", p.b3GetErrorMsg());
 	}
-	catch(b3DisplayException & e)
+	catch (b3DisplayException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "### Error occured: %s\n", e.b3GetErrorMsg());
 	}
@@ -535,7 +535,7 @@ void b3Scene::b3AbortRaytrace()
 		}
 		// Leave critical section
 
-		if(row != null)
+		if (row != null)
 		{
 			// We can handle the row for its own!
 			b3CriticalSection lock(m_TrashMutex);
@@ -543,5 +543,5 @@ void b3Scene::b3AbortRaytrace()
 			m_TrashPool.b3Append(row);
 		}
 	}
-	while(row != null);
+	while (row != null);
 }

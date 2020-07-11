@@ -36,21 +36,21 @@ int main(int argc, char * argv[])
 	b3Tx          img;
 	b3_index      index = 4;
 
-	if(argc < 4)
+	if (argc < 4)
 	{
 		return EXIT_FAILURE;
 	}
 
 	xMax = atoi(argv[2]);
 	yMax = atoi(argv[3]);
-	if(argc < (xMax * yMax + 4))
+	if (argc < (xMax * yMax + 4))
 	{
 		return EXIT_FAILURE;
 	}
 	img.b3AllocTx(256 * xMax, 256 * yMax, 24);
-	for(int y = 0; y < yMax; y++)
+	for (int y = 0; y < yMax; y++)
 	{
-		for(int x = 0; x < xMax; x++)
+		for (int x = 0; x < xMax; x++)
 		{
 			b3_res xSize, ySize;
 			b3Tx patch;

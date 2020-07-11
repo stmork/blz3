@@ -384,7 +384,7 @@ public:
 	static void     *     b3GetOpenGLExtension(const char * procedure_name);
 	static inline char  * b3StrLCpy(char * dst, const char * src, size_t size)
 	{
-		if(size > 0)
+		if (size > 0)
 		{
 			strncpy(dst, src, size);
 			dst[size - 1] = 0;

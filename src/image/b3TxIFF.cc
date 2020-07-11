@@ -51,7 +51,7 @@ class b3_tx_yuv_table
 		long				 i;
 		double				 Rad;
 
-		for(i = 0; i < 256; i++)
+		for (i = 0; i < 256; i++)
 		{
 			Rad = (i - 128.0) * 0.8588;
 			MultRV[i] = 256 + (long)(Rad *  1.587);  /*  = 156 / 112 *  1.14  */
@@ -64,13 +64,13 @@ class b3_tx_yuv_table
 			MultG[i + 256] = (b3_u32)(Rad * 1.1644) <<  8; /*  = 255 / (235 - 16) */
 			MultB[i + 256] = (b3_u32)(Rad * 1.1644);     /*  = 255 / (235 - 16) */
 
-			if(i <  16)
+			if (i <  16)
 			{
 				MultR[i + 256] =   0;
 				MultG[i + 256] =   0;
 				MultB[i + 256] =   0;
 			}
-			if(i > 235)
+			if (i > 235)
 			{
 				MultR[i + 256] = 0xff0000;
 				MultG[i + 256] = 0x00ff00;
@@ -114,11 +114,11 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 		(const char *)image_name);
 
 	palette	 = null;
-	while(Pos < (b3_index)buffer_size)
+	while (Pos < (b3_index)buffer_size)
 	{
 		srcPtr = (b3_u32 *)&buffer[Pos];
 		cPtr   = (b3_u08 *)srcPtr;
-		switch(b3Endian::b3GetMot32(srcPtr))
+		switch (b3Endian::b3GetMot32(srcPtr))
 		{
 		case IFF_BMHD :
 			xSize	= b3Endian::b3GetMot16(&cPtr[ 8]);
@@ -127,7 +127,7 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 			break;
 
 		case IFF_BODY :
-			if(!b3AllocTx(xSize, ySize, 24))
+			if (!b3AllocTx(xSize, ySize, 24))
 			{
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -137,7 +137,7 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 			dstPtr = (b3_pkd_color *)data;
 
 			cPtr += 8;
-			while(i < Max)
+			while (i < Max)
 			{
 				Color =
 					((b3_pkd_color)cPtr[0] << 16) |
@@ -145,22 +145,22 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 					(b3_pkd_color)cPtr[2];
 				cPtr += 3;
 				Amount  = cPtr[0] & 0x7f;
-				if((cPtr[0] & 0x80) == 0)
+				if ((cPtr[0] & 0x80) == 0)
 				{
 					Color |= 0xff000000;
 				}
 				cPtr++;
 
-				if(Amount == 0)
+				if (Amount == 0)
 				{
 					Amount = *cPtr++;
-					if(Amount == 0)
+					if (Amount == 0)
 					{
 						Amount = b3Endian::b3GetMot16(cPtr);
 						cPtr += 2;
 					}
 				}
-				for(k = 0; k < Amount; k++)
+				for (k = 0; k < Amount; k++)
 				{
 					*dstPtr++ = Color;
 				}
@@ -169,7 +169,7 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 			break;
 		}
 		Pos += (b3Endian::b3GetMot32(&srcPtr[1]) + 8);
-		if(Pos & 1)
+		if (Pos & 1)
 		{
 			Pos++;
 		}
@@ -192,11 +192,11 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 
 	palette  = null;
 	FileType = FT_RGB4;
-	while(Pos < buffer_size)
+	while (Pos < buffer_size)
 	{
 		LongData = (b3_u32 *)&buffer[Pos];
 		CharData = (b3_u08 *)LongData;
-		switch(b3Endian::b3GetMot32(LongData))
+		switch (b3Endian::b3GetMot32(LongData))
 		{
 		case IFF_BMHD :
 			xSize	= b3Endian::b3GetMot16(&CharData[ 8]);
@@ -206,7 +206,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 		case IFF_BODY :
 			Max = xSize * ySize;
 			data = (b3_u08 *)b3Alloc(Max * 2);
-			if(data == null)
+			if (data == null)
 			{
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -215,7 +215,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 			dstPtr = (b3_u16 *)data;
 
 			CharData += 8;
-			while(i < Max)
+			while (i < Max)
 			{
 				Color  = (b3_u16)CharData[0] << 8;
 				CharData++;
@@ -223,21 +223,21 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 				CharData++;
 				Color |= (b3_u16)Amount;
 				Color  = Color >> 4;
-				if((Amount & 0x8) == 0)
+				if ((Amount & 0x8) == 0)
 				{
 					Color |= 0xf000;
 				}
 				Amount &= 7;
-				if(Amount == 0)
+				if (Amount == 0)
 				{
 					Amount = *CharData++;
-					if(Amount == 0)
+					if (Amount == 0)
 					{
 						Amount = b3Endian::b3GetMot16(CharData);
 						CharData += 2;
 					}
 				}
-				for(k = 0; k < Amount; k++)
+				for (k = 0; k < Amount; k++)
 				{
 					*dstPtr++ = Color;
 				}
@@ -246,7 +246,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 			break;
 		}
 		Pos += (b3Endian::b3GetMot32(&LongData[1]) + 8);
-		if(Pos & 1)
+		if (Pos & 1)
 		{
 			Pos++;
 		}
@@ -269,21 +269,21 @@ void b3Tx::b3EHBPalette()
 	FileType = FT_ILBM_EHB;
 	pSize    = 64;
 	NewPalette = (b3_u32 *)b3Alloc(pSize * sizeof(b3_u32));
-	if(NewPalette == null)
+	if (NewPalette == null)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	OldPalette = palette;
-	for(i = 0; i < 32; i++)
+	for (i = 0; i < 32; i++)
 	{
 		NewPalette[i]		= (Color = OldPalette[i]);
-		if(Color & 0x00100000)
+		if (Color & 0x00100000)
 		{
 			Color |= 0x00010000;
 		}
-		if(Color & 0x00001000)
+		if (Color & 0x00001000)
 		{
 			Color |= 0x00000100;
 		}
@@ -305,20 +305,20 @@ void b3Tx::b3ConvertILBMLine(
 
 	Width  = ((xMax + 15) & 0x7ffffff0) >> 3;
 	offset = Planes * Width;
-	for(x = 0; x < xMax; x++)
+	for (x = 0; x < xMax; x++)
 	{
 		Color = 0;
 		Interleave += offset;
-		for(p = 0; p < Planes; p++)
+		for (p = 0; p < Planes; p++)
 		{
 			Interleave -= Width;
 			Color      += Color;
-			if(b3_tx_yuv_table::m_ConvertBits[x & 7] & Interleave[0])
+			if (b3_tx_yuv_table::m_ConvertBits[x & 7] & Interleave[0])
 			{
 				Color |= 1;
 			}
 		}
-		if((x & 7) == 7)
+		if ((x & 7) == 7)
 		{
 			Interleave++;
 		}
@@ -338,7 +338,7 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 	b3_offset  offset;
 	b3_coord   x, y, Nibble;
 
-	if(HAM8)
+	if (HAM8)
 	{
 		FileType = FT_ILBM_HAM8;
 		NewData = (b3_u16 *)b3Alloc(xSize * ySize * sizeof(b3_u32));
@@ -348,14 +348,14 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 		FileType = FT_ILBM_HAM;
 		NewData = (b3_u16 *)b3Alloc(xSize * ySize * sizeof(b3_u16));
 	}
-	if(NewData == null)
+	if (NewData == null)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	Line    = (b3_u08 *)b3Alloc(xSize);
-	if(Line == null)
+	if (Line == null)
 	{
 		b3Free(NewData);
 		b3FreeTx();
@@ -365,17 +365,17 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 	OldData = data;
 	sData   = NewData;
 	offset  = (((xSize + 15) & 0x7fffff0) >> 3) * depth;
-	if(HAM8)
+	if (HAM8)
 	{
 		LData  = (b3_u32 *)NewData;
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			b3ConvertILBMLine(Line, OldData, xSize, depth);
 			Color  = palette[0];
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				Nibble = Line[x] & 0x3f;
-				switch(Line[x] & 0xc0)
+				switch (Line[x] & 0xc0)
 				{
 				case 0x00 : /* mode */
 					Color  = palette[Nibble];
@@ -399,16 +399,16 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 	}
 	else
 	{
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			b3ConvertILBMLine(Line, OldData, xSize, depth);
 			Color  = (palette[0] & 0xf00000) >> 12;
 			Color |= (palette[0] & 0x00f000) >>  8;
 			Color |= (palette[0] & 0x0000f0) >>  4;
-			for(x = 0; x < xSize; x++)
+			for (x = 0; x < xSize; x++)
 			{
 				Nibble = (long)Line[x] & 0x0f;
-				switch(Line[x] & 0x30)
+				switch (Line[x] & 0x30)
 				{
 				case 0x00 : /* mode */
 					Color  = (palette[Nibble] & 0xf00000) >> 12;
@@ -456,21 +456,21 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 
 	palette	 = null;
 	FileType = FT_ILBM;
-	while(Pos < buffer_size)
+	while (Pos < buffer_size)
 	{
 		LongData  = (b3_u32 *)&buffer[Pos];
 		CharData  = (b3_u08 *)LongData;
-		switch(b3Endian::b3GetMot32(LongData))
+		switch (b3Endian::b3GetMot32(LongData))
 		{
 		case IFF_BMHD :
 			xSize	= b3Endian::b3GetMot16(&CharData[ 8]);
 			ySize	= b3Endian::b3GetMot16(&CharData[10]);
 			depth	= CharData[16];
-			if(depth >= 24)
+			if (depth >= 24)
 			{
 				FileType = FT_ILBM_24;
 			}
-			switch(CharData[18])
+			switch (CharData[18])
 			{
 			case 0 :
 				Compressed = false;
@@ -488,7 +488,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			Max = b3Endian::b3GetMot32(&LongData[1]) / 3;
 			palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
 			pSize = Max;
-			if(palette == null)
+			if (palette == null)
 			{
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -497,7 +497,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			}
 			Set = (b3_u32 *)palette;
 			CharData += 8;
-			for(k = 0; k < Max; k++)
+			for (k = 0; k < Max; k++)
 			{
 				Color  = ((b3_u32)CharData[0] << 16);
 				CharData++;
@@ -509,17 +509,17 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			}
 			break;
 		case IFF_CAMG :
-			if(b3Endian::b3GetMot32(&LongData[2]) & HAM)
+			if (b3Endian::b3GetMot32(&LongData[2]) & HAM)
 			{
 				Ham = true;
-				if(b3Endian::b3GetMot32(&LongData[2]) & HIRES)
+				if (b3Endian::b3GetMot32(&LongData[2]) & HIRES)
 				{
 					Ham8 = true;
 				}
 			}
 			else
 			{
-				if(b3Endian::b3GetMot32(&LongData[2]) & EXTRA_HALFBRITE)
+				if (b3Endian::b3GetMot32(&LongData[2]) & EXTRA_HALFBRITE)
 				{
 					EHB = true;
 				}
@@ -527,12 +527,12 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			break;
 
 		case IFF_BODY :
-			if(Compressed)
+			if (Compressed)
 			{
 				Max  = ((xSize + 15) & 0x7ffffff0) >> 3;
 				Max *= (ySize * depth);
 				data = (b3_u08 *)b3Alloc(Max + ySize + Max);
-				if(data == null)
+				if (data == null)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -542,14 +542,14 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 				Copy = (b3_u08 *)data;
 				CharData += 8;
 				k = 0;
-				while(k < Max)
+				while (k < Max)
 				{
 					Code = (b3_u32)CharData[0];
 					CharData++;
-					if(Code & 0x80)
+					if (Code & 0x80)
 					{
 						Code = (256 - Code) & 0xff;
-						for(i = 0; i <= Code; i++)
+						for (i = 0; i <= Code; i++)
 						{
 							Copy[0] = CharData[0];
 							Copy += 1;
@@ -558,7 +558,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 					}
 					else
 					{
-						for(i = 0; i <= Code; i++)
+						for (i = 0; i <= Code; i++)
 						{
 							Copy[0] = CharData[0];
 							CharData++;
@@ -572,7 +572,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			{
 				Max = b3Endian::b3GetMot32(&LongData[1]);
 				data = (b3_u08 *)b3Alloc(Max);
-				if(data == null)
+				if (data == null)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -586,16 +586,16 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 		}
 		LongData++;
 		Pos += (b3Endian::b3GetMot32(LongData) + 8);
-		if(Pos & 1)
+		if (Pos & 1)
 		{
 			Pos++;
 		}
 	}
-	if(EHB)
+	if (EHB)
 	{
 		b3EHBPalette();
 	}
-	if(Ham)
+	if (Ham)
 	{
 		b3HamPalette(Ham8);
 	}
@@ -613,7 +613,7 @@ inline b3_u32 b3Tx::b3ShiftCount(b3_count Count)
 {
 	b3_u32 Shift = 0;
 
-	while(Count > 1)
+	while (Count > 1)
 	{
 		Shift++;
 		Count = Count >> 1;
@@ -639,16 +639,16 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 	LongData = (b3_u32 *)&buffer[Pos];
 	CharData = (b3_u08 *)LongData;
 
-	while(Pos < buffer_size)
+	while (Pos < buffer_size)
 	{
 		LongData = (b3_u32 *)CharData;
-		switch(b3Endian::b3GetMot32(LongData))
+		switch (b3Endian::b3GetMot32(LongData))
 		{
 		case IFF_YCHD :
 			xSize	= b3Endian::b3GetMot16(&CharData[ 8]);
 			ySize	= b3Endian::b3GetMot16(&CharData[10]);
 			depth	= 24;
-			switch(CharData[22])
+			switch (CharData[22])
 			{
 			case 0 :
 				break;
@@ -659,7 +659,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 
 				B3_THROW(b3TxException, B3_TX_ERR_PACKING);
 			}
-			switch(CharData[24])
+			switch (CharData[24])
 			{
 			case YCHD_MODE_200 :
 			case YCHD_MODE_400 :
@@ -674,7 +674,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 			case YCHD_MODE_422 :
 			case YCHD_MODE_211 :
 				Count = 2;
-				if(xSize & 1)
+				if (xSize & 1)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Wrong resolution:\n");
@@ -684,7 +684,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 
 			case YCHD_MODE_411 :
 				Count = 4;
-				if(xSize & 3)
+				if (xSize & 3)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Wrong resolution:\n");
@@ -714,15 +714,15 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 	}
 	Max = xSize * ySize;
 
-	if(Count == 0)		/* schwarz weiss  */
+	if (Count == 0)		/* schwarz weiss  */
 	{
-		if(Y == null)
+		if (Y == null)
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 			B3_THROW(b3TxException, B3_TX_MEMORY);
 		}
-		if(!b3AllocTx(xSize, ySize, 8))
+		if (!b3AllocTx(xSize, ySize, 8))
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -732,13 +732,13 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 	}
 	else					/* bunt */
 	{
-		if((Y == null) || (U == null) || (V == null))
+		if ((Y == null) || (U == null) || (V == null))
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 			B3_THROW(b3TxException, B3_TX_ERR_HEADER);
 		}
-		if(!b3AllocTx(xSize, ySize, 24))
+		if (!b3AllocTx(xSize, ySize, 24))
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -749,13 +749,13 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 		Uprev = U[0];
 		Vprev = V[0];
 		Shift = b3ShiftCount(Count);
-		for(k = 0; k < Max; k += Count)
+		for (k = 0; k < Max; k += Count)
 		{
 			b3_u16 Uprop, Vprop;
 
 			Uprop = (b3_u16)Uprev << Shift;
 			Vprop = (b3_u16)Vprev << Shift;
-			for(i = 0; i < Count; i++)
+			for (i = 0; i < Count; i++)
 			{
 				y = Y[0];
 				u = Uprop >> Shift;

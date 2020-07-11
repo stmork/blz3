@@ -51,7 +51,7 @@ void b3FFTTest::testFFT()
 {
 	b3Tx tx;
 
-	for(b3_loop size = 1; size <= 2048; size += size)
+	for (b3_loop size = 1; size <= 2048; size += size)
 	{
 		CPPUNIT_ASSERT_NO_THROW(fft.b3AllocBuffer(size));
 		CPPUNIT_ASSERT_NO_THROW(fft.b3SelfTest());
@@ -107,7 +107,7 @@ b3_f64 b3FFTTest::b3Count()
 	b3Complex64 * buffer = fft.b3GetBuffer();
 
 	CPPUNIT_ASSERT(buffer != null);
-	for(i = 0; i < max; i++)
+	for (i = 0; i < max; i++)
 	{
 		count += fabs(buffer[i].b3Real());
 		count += fabs(buffer[i].b3Imag());

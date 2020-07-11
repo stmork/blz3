@@ -100,7 +100,7 @@ void b3SuperSample::b3Write()
 
 	// This looks a little bit ugly but is for compatibility reasons.
 	// This instantiation uses an easy way to determine activation.
-	if(m_Active)
+	if (m_Active)
 	{
 		limit.a =  fabs(m_Limit[b3Color::A]);
 		limit.r =  fabs(m_Limit[b3Color::R]);
@@ -172,7 +172,7 @@ b3_bool b3CameraPart::b3IsActive()
 
 void b3CameraPart::b3Activate(b3_bool activate)
 {
-	if(activate)
+	if (activate)
 	{
 		m_Flags |= CAMERA_ACTIVE;
 	}
@@ -214,7 +214,7 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3Sub(view, eye, &dir);
 	b3Vector::b3Normalize(&dir, focal_length);
 	b3Vector::b3Add(eye, &dir, &m_ViewPoint);
-	if((dir.x == 0) && (dir.y == 0))
+	if ((dir.x == 0) && (dir.y == 0))
 	{
 		b3Vector::b3Init(&up, 1, 0, 0);
 	}
@@ -298,7 +298,7 @@ b3_f64 b3CameraPart::b3GetTwirl()
 	ViewDir.y = m_ViewPoint.y - m_EyePoint.y;
 	ViewDir.z = m_ViewPoint.z - m_EyePoint.z;
 
-	if((ViewDir.x == 0) && (ViewDir.y == 0))
+	if ((ViewDir.x == 0) && (ViewDir.y == 0))
 	{
 		return 0;
 	}
@@ -338,7 +338,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	m_ViewPoint.y = m_EyePoint.y + factor * RotLine.dir.y;
 	m_ViewPoint.z = m_EyePoint.z + factor * RotLine.dir.z;
 
-	if((RotLine.dir.x == 0) && (RotLine.dir.y == 0))
+	if ((RotLine.dir.x == 0) && (RotLine.dir.y == 0))
 	{
 		m_Width.x =  1;
 		m_Width.y =  0;
@@ -358,7 +358,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	b3Vector::b3Normalize(&m_Height, height);
 
 	// set to the old twirl
-	if(twirl != 0)
+	if (twirl != 0)
 	{
 		b3Matrix::b3RotateVector(null, &RotMatrix, &RotLine, -twirl);
 		b3Matrix::b3VMul(&RotMatrix, &m_Width, &m_Width, false);
@@ -436,11 +436,11 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 * src) :
 		m_StepRotate.y =
 			m_StepRotate.z = 15;
 	m_Flags        = 0;
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Flags    = b3InitInt();
 		b3InitFloat();
-		if(B3_PARSE_INDEX_VALID)
+		if (B3_PARSE_INDEX_VALID)
 		{
 			b3InitVector(&m_StepMove);
 			b3InitVector(&m_StepRotate);
@@ -454,7 +454,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 * src) :
 	m_CustomMeasure  = (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
 	m_UseSceneLights = (m_Flags & B3_USE_SCENE_LIGHTS) != 0;
 
-	if(m_CustomMeasure == 0)
+	if (m_CustomMeasure == 0)
 	{
 		m_CustomMeasure = 100;
 		m_Measure       = B3_MEASURE_100;
@@ -467,7 +467,7 @@ void b3ModellerInfo::b3Write()
 		(m_Unit << B3_UNIT_SHIFT) |
 		(m_Measure << B3_MEASURE_SHIFT) |
 		(m_CustomMeasure << B3_CUSTOM_MEASURE_SHIFT);
-	if(m_UseSceneLights)
+	if (m_UseSceneLights)
 	{
 		m_Flags |= B3_USE_SCENE_LIGHTS;
 	}
@@ -491,7 +491,7 @@ void b3ModellerInfo::b3Write()
 
 void b3ModellerInfo::b3SnapToGrid(b3_vector * vector)
 {
-	if(m_GridActive)
+	if (m_GridActive)
 	{
 		vector->x = floor(vector->x / m_GridMove + 0.5) * m_GridMove;
 		vector->y = floor(vector->y / m_GridMove + 0.5) * m_GridMove;
@@ -511,7 +511,7 @@ void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 & angle)
 
 void b3ModellerInfo::b3Snap(b3_f64 & angle, b3_bool activation)
 {
-	if(activation)
+	if (activation)
 	{
 		// Convert to radians
 		b3_f64 GridStep = m_GridRot * M_PI / 180.0;
@@ -575,7 +575,7 @@ void b3Nebular::b3Write()
 
 b3_bool b3Nebular::b3Prepare(b3_preparation_info * prep_info)
 {
-	if(m_NebularVal > 0)
+	if (m_NebularVal > 0)
 	{
 		m_NebularDenom = log(2.0) / m_NebularVal;
 	}
@@ -643,7 +643,7 @@ b3_bool b3LensFlare::b3IsActive()
 
 void b3LensFlare::b3Activate(b3_bool flag)
 {
-	if(flag)
+	if (flag)
 	{
 		m_Flags |=   LENSFLARE_ACTIVE;
 	}
@@ -679,7 +679,7 @@ b3Distribute::b3Distribute(b3_u32 * src) :
 	m_Type            = b3InitInt();
 	m_SamplesPerPixel = b3InitInt();
 	m_SamplesPerFrame = b3InitInt();
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		m_DepthOfField    = b3InitFloat();
 		m_PixelAperture   = (b3_filter)b3InitInt();
@@ -697,12 +697,12 @@ b3Distribute::b3Distribute(b3_u32 * src) :
 
 b3Distribute::~b3Distribute()
 {
-	if(m_FilterPixel != null)
+	if (m_FilterPixel != null)
 	{
 		delete m_FilterPixel;
 	}
 
-	if(m_FilterFrame != null)
+	if (m_FilterFrame != null)
 	{
 		delete m_FilterFrame;
 	}
@@ -736,13 +736,13 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	b3_coord      spp;
 	b3_sample     type;
 
-	if(m_FilterPixel != null)
+	if (m_FilterPixel != null)
 	{
 		delete m_FilterPixel;
 	}
 	m_FilterPixel = b3Filter::b3New(m_PixelAperture);
 
-	if(m_FilterFrame != null)
+	if (m_FilterFrame != null)
 	{
 		delete m_FilterFrame;
 	}
@@ -753,7 +753,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	m_SPP   = type == SAMPLE_SEPARATED ? spp : spp * spp;
 
 	m_Samples  = (b3_f32 *)b3Alloc(xSize * m_SPP * sizeof(b3_f32) * 2);
-	if(m_Samples == null)
+	if (m_Samples == null)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
@@ -761,15 +761,15 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	samples = m_Samples;
 	start   = 1.0;
 	step    = 2.0 / spp;
-	for(i = 0; i < xSize; i++)
+	for (i = 0; i < xSize; i++)
 	{
-		switch(type)
+		switch (type)
 		{
 		case SAMPLE_REGULAR:
 			start = 1.0 - step * 0.5;
-			for(sy = 0; sy < spp; sy++)
+			for (sy = 0; sy < spp; sy++)
 			{
-				for(sx = 0; sx < spp; sx++)
+				for (sx = 0; sx < spp; sx++)
 				{
 					*samples++ = m_FilterPixel->b3InvIntegral(sx * step - start);
 					*samples++ = m_FilterPixel->b3InvIntegral(sy * step - start);
@@ -778,9 +778,9 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 			break;
 
 		case SAMPLE_RANDOM:
-			for(sy = 0; sy < spp; sy++)
+			for (sy = 0; sy < spp; sy++)
 			{
-				for(sx = 0; sx < spp; sx++)
+				for (sx = 0; sx < spp; sx++)
 				{
 					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - 1.0);
 					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - 1.0);
@@ -789,9 +789,9 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 			break;
 
 		case SAMPLE_JITTER:
-			for(sy = 0; sy < spp; sy++)
+			for (sy = 0; sy < spp; sy++)
 			{
-				for(sx = 0; sx < spp; sx++)
+				for (sx = 0; sx < spp; sx++)
 				{
 					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step) - sx * step - start);
 					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step) - sy * step - start);
@@ -801,9 +801,9 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 
 		case SAMPLE_SEMI_JITTER:
 			start = 1.0 - step * 0.25;
-			for(sy = 0; sy < spp; sy++)
+			for (sy = 0; sy < spp; sy++)
 			{
-				for(sx = 0; sx < spp; sx++)
+				for (sx = 0; sx < spp; sx++)
 				{
 					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step * 0.5) - sx * step - start);
 					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step * 0.5) - sy * step - start);
@@ -812,7 +812,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 			break;
 
 		case SAMPLE_SEPARATED:
-			for(sx = 0; sx < spp; sx++)
+			for (sx = 0; sx < spp; sx++)
 			{
 				*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - B3_IRAN(spp) * step - start);
 				*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - B3_IRAN(spp) * step - start);
@@ -823,22 +823,22 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 
 	m_MotionBlur.b3Clear();
 	m_TimeIndex.b3Clear();
-	if(animation != null)
+	if (animation != null)
 	{
-		if(animation->b3IsActive() && b3IsMotionBlur())
+		if (animation->b3IsActive() && b3IsMotionBlur())
 		{
 			b3_index i, max;
 			b3_f64   t, factor;
 
 			factor = 0.5 / animation->m_FramesPerSecond;
-			for(i = 0; i <= m_SamplesPerFrame; i++)
+			for (i = 0; i <= m_SamplesPerFrame; i++)
 			{
 				t = (b3_f64)i * 2.0 / m_SamplesPerFrame - 1.0;
 				m_MotionBlur.b3Add((m_FilterFrame->b3InvIntegral(t) + 1.0) * factor);
 			}
 
 			max = m_SPP * xSize;
-			for(i = 0; i < max; i++)
+			for (i = 0; i < max; i++)
 			{
 				m_TimeIndex.b3Add((b3_index)B3_IRAN(m_SamplesPerFrame));
 			}
@@ -873,7 +873,7 @@ b3Animation::b3Animation(b3_u32 * src) :
 	m_FramesPerSecond = b3InitCount();
 	m_Flags           = b3InitInt();;
 
-	if(B3_PARSE_INDEX_VALID)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		// OK, the following values are only for "Lines"
 		m_Frames     = b3InitCount();
@@ -882,7 +882,7 @@ b3Animation::b3Animation(b3_u32 * src) :
 		m_FrameIndex = b3InitIndex();
 		m_WTracks    = b3InitCount();
 		m_WFrames    = b3InitCount();
-		if(B3_PARSE_INDEX_VALID)
+		if (B3_PARSE_INDEX_VALID)
 		{
 			m_Element    = (b3AnimElement *)b3InitNull();
 		}
@@ -916,7 +916,7 @@ b3_bool b3Animation::b3IsActive()
 
 void b3Animation::b3Activate(b3_bool activate)
 {
-	if(activate)
+	if (activate)
 	{
 		m_Flags |= ANIMF_ON;
 	}

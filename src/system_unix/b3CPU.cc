@@ -50,7 +50,7 @@ b3_bool b3CPU::m_CorrectRUsage = true;
 
 b3CPU::b3CPU()
 {
-	if(cpu_count == 0)
+	if (cpu_count == 0)
 	{
 		long    result;
 
@@ -65,7 +65,7 @@ b3CPU::b3CPU()
 #else
 		result = 1;
 #endif
-		if((result < 1) || (errno == EINVAL))
+		if ((result < 1) || (errno == EINVAL))
 		{
 			cpu_count = 1;
 		}
@@ -78,18 +78,18 @@ b3CPU::b3CPU()
 		struct utsname uinfo;
 		int            a, b, c;
 
-		if(uname(&uinfo) == 0)
+		if (uname(&uinfo) == 0)
 		{
-			if(sscanf(uinfo.release, "%d.%d.%d", &a, &b, &c) == 3)
+			if (sscanf(uinfo.release, "%d.%d.%d", &a, &b, &c) == 3)
 			{
-				if((a * 100000 + b * 1000 + c) < 206009)
+				if ((a * 100000 + b * 1000 + c) < 206009)
 				{
 					m_CorrectRUsage = false;
 				}
 			}
 		}
 
-		if(!m_CorrectRUsage)
+		if (!m_CorrectRUsage)
 		{
 			b3PrintF(B3LOG_NORMAL, "Found Linux kernel %d.%d.%d with wrong resource usage measurement.\n",
 				a, b, c);
@@ -103,7 +103,7 @@ b3_count b3CPU::b3GetNumThreads()
 	b3_count          resuming;
 	b3CriticalSection lock(b3Thread::m_ThreadMutex);
 
-	if(cpu_count > b3Thread::m_ThreadCount)
+	if (cpu_count > b3Thread::m_ThreadCount)
 	{
 		resuming = cpu_count - b3Thread::m_ThreadCount;
 	}

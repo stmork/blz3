@@ -68,7 +68,7 @@ protected:
 
 		Byte &= 0xff;
 		mask  = dithermask[shift];
-		if((Byte & mask) >= mask)
+		if ((Byte & mask) >= mask)
 		{
 			return false;
 		}
@@ -78,7 +78,7 @@ protected:
 	inline static b3_bool b3Dither2(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if((Byte & MASK2) >= MASK2)
+		if ((Byte & MASK2) >= MASK2)
 		{
 			return false;
 		}
@@ -88,7 +88,7 @@ protected:
 	inline static b3_bool b3Dither3(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if((Byte & MASK3) >= MASK3)
+		if ((Byte & MASK3) >= MASK3)
 		{
 			return false;
 		}
@@ -98,7 +98,7 @@ protected:
 	inline static b3_bool b3Dither5(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if((Byte & MASK5) >= MASK5)
+		if ((Byte & MASK5) >= MASK5)
 		{
 			return false;
 		}
@@ -108,7 +108,7 @@ protected:
 	inline static b3_bool b3Dither6(b3_pkd_color Byte, b3_coord x, b3_coord y)
 	{
 		Byte &= 0xff;
-		if((Byte & MASK6) >= MASK6)
+		if ((Byte & MASK6) >= MASK6)
 		{
 			return false;
 		}
@@ -143,15 +143,15 @@ public:
 		g = b3Convert(ARGB.g);
 		b = b3Convert(ARGB.b);
 
-		if(b3Dither5(r, x, y))
+		if (b3Dither5(r, x, y))
 		{
 			r += 0x20;
 		}
-		if(b3Dither5(g, x, y))
+		if (b3Dither5(g, x, y))
 		{
 			g += 0x20;
 		}
-		if(b3Dither6(b, x, y))
+		if (b3Dither6(b, x, y))
 		{
 			b += 0x40;
 		}
@@ -174,15 +174,15 @@ public:
 		g = b3Convert(ARGB.g);
 		b = b3Convert(ARGB.b);
 
-		if(b3Dither3(r, x, y))
+		if (b3Dither3(r, x, y))
 		{
 			r += 0x08;
 		}
-		if(b3Dither3(g, x, y))
+		if (b3Dither3(g, x, y))
 		{
 			g += 0x08;
 		}
-		if(b3Dither3(b, x, y))
+		if (b3Dither3(b, x, y))
 		{
 			b += 0x08;
 		}
@@ -205,15 +205,15 @@ public:
 		g = b3Convert(ARGB.g);
 		b = b3Convert(ARGB.b);
 
-		if(b3Dither3(r, x, y))
+		if (b3Dither3(r, x, y))
 		{
 			r += 0x08;
 		}
-		if(b3Dither2(g, x, y))
+		if (b3Dither2(g, x, y))
 		{
 			g += 0x04;
 		}
-		if(b3Dither3(b, x, y))
+		if (b3Dither3(b, x, y))
 		{
 			b += 0x08;
 		}
@@ -298,7 +298,7 @@ b3DisplayView::b3DisplayView(
 
 b3DisplayView::~b3DisplayView()
 {
-	if(m_Pixel != null)
+	if (m_Pixel != null)
 	{
 		delete m_Pixel;
 	}
@@ -316,7 +316,7 @@ void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_colo
 #ifdef HAVE_LIBX11
 	b3Display::b3PutPixel(x, y, Color);
 
-	if(m_Opened)
+	if (m_Opened)
 	{
 		b3CriticalSection lock(m_Mutex);
 
@@ -337,7 +337,7 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 	{
 		b3CriticalSection lock(display_mutex);
 
-		if(--count > 0)
+		if (--count > 0)
 		{
 			really_ask = false;
 		}
@@ -348,7 +348,7 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 		}
 	}
 
-	if(!really_ask)
+	if (!really_ask)
 	{
 		return false;
 	}
@@ -359,17 +359,17 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 		{
 			b3CriticalSection lock(m_Mutex);
 
-			if(XPending(m_Display) <= 0)
+			if (XPending(m_Display) <= 0)
 			{
 				return result;
 			}
 			XCheckIfEvent(m_Display, &report, &b3SetPredicate, 0);
 		}
 
-		switch(report.type)
+		switch (report.type)
 		{
 		case Expose :
-			if(report.xexpose.window == m_Window)
+			if (report.xexpose.window == m_Window)
 			{
 				b3FirstDrawing();
 				b3RefreshAll();
@@ -389,7 +389,7 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 			break;
 		}
 	}
-	while(loop);
+	while (loop);
 
 	return result;
 #else
@@ -403,7 +403,7 @@ void b3DisplayView::b3Wait()
 	b3_bool	 loop = true;
 	XEvent	 report;
 
-	if(m_Closed)
+	if (m_Closed)
 	{
 		// If already marked as closed.
 		return;
@@ -412,10 +412,10 @@ void b3DisplayView::b3Wait()
 	do
 	{
 		XNextEvent(m_Display, &report);
-		switch(report.type)
+		switch (report.type)
 		{
 		case Expose :
-			if(report.xexpose.window == m_Window)
+			if (report.xexpose.window == m_Window)
 			{
 				b3FirstDrawing();
 				b3RefreshAll();
@@ -429,7 +429,7 @@ void b3DisplayView::b3Wait()
 			break;
 		}
 	}
-	while(loop);
+	while (loop);
 #endif
 }
 
@@ -445,13 +445,13 @@ void b3DisplayView::b3Open(
 	XTextProperty  CInfoName;
 	b3_res         xScr, yScr;
 
-	if(m_Title == null)
+	if (m_Title == null)
 	{
 		m_Title = "Raytracen ist gut, Blizzard III ist noch besser...";
 	}
 
 	m_Display = XOpenDisplay(NULL);
-	if(m_Display == 0)
+	if (m_Display == 0)
 	{
 		B3_THROW(b3DisplayException, B3_DISPLAY_OPEN);
 	}
@@ -489,7 +489,7 @@ void b3DisplayView::b3Open(
 
 
 	m_Image = XCreatePixmap(m_Display, m_Window, m_xs, m_ys, m_depth);
-	if(m_Image == null)
+	if (m_Image == null)
 	{
 		b3Free(m_Buffer);
 		b3PrintF(B3LOG_NORMAL, "Blizzard III ERROR:\n");
@@ -497,7 +497,7 @@ void b3DisplayView::b3Open(
 		B3_THROW(b3DisplayException, B3_DISPLAY_MEMORY);
 	}
 
-	if(!b3CreateColormap())
+	if (!b3CreateColormap())
 	{
 		b3Free(m_Buffer);
 		b3PrintF(B3LOG_NORMAL, "Blizzard III ERROR:\n");
@@ -523,10 +523,10 @@ void b3DisplayView::b3Open(
 	do
 	{
 		XNextEvent(m_Display, &report);
-		switch(report.type)
+		switch (report.type)
 		{
 		case Expose :
-			if(report.xexpose.window == m_Window)
+			if (report.xexpose.window == m_Window)
 			{
 				m_Opened = true;
 				Loop     = false;
@@ -534,7 +534,7 @@ void b3DisplayView::b3Open(
 			break;
 		}
 	}
-	while(Loop);
+	while (Loop);
 #endif
 }
 
@@ -549,7 +549,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 	// use existing color map
 	m_Colormap = null;
 	m_Pixel    = null;
-	switch(m_depth)
+	switch (m_depth)
 	{
 	case  8:
 		m_Pixel = new b3DisplayPixel08();
@@ -573,7 +573,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 		temp.depth    = m_depth;
 		info = XGetVisualInfo(m_Display, VisualIDMask | VisualScreenMask | VisualDepthMask, &temp, &count);
 		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %d.\n", count, info, m_depth);
-		for(i = 0; i < count; i++)
+		for (i = 0; i < count; i++)
 		{
 			b3PrintF(B3LOG_FULL, "%2d: %08x %08x %08x # %4d %4d # %08x\n", i,
 				info[i].red_mask,
@@ -584,15 +584,15 @@ b3_bool b3DisplayView::b3CreateColormap()
 				info[i].c_class);
 		}
 
-		if(info != null)
+		if (info != null)
 		{
-			if((info->red_mask  == 0x0000ff) &&
+			if ((info->red_mask  == 0x0000ff) &&
 				(info->blue_mask == 0xff0000))
 			{
 				// BGR format (e.g. Sun Ultra 10)
 				m_Pixel = new b3DisplayPixel24Inv();
 			}
-			if((info->red_mask  == 0xff0000) &&
+			if ((info->red_mask  == 0xff0000) &&
 				(info->blue_mask == 0x0000ff))
 			{
 				// RGB format (Blizzard III native)
@@ -610,7 +610,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 
 	b3CriticalSection lock(display_mutex);
 
-	if(cmap != null)
+	if (cmap != null)
 	{
 		cmap_count++;
 		m_Colormap = cmap;
@@ -627,11 +627,11 @@ b3_bool b3DisplayView::b3CreateColormap()
 				m_Window,
 				DefaultVisual(m_Display, m_Screen),
 				AllocAll);
-		if(cmap != null)
+		if (cmap != null)
 		{
 			// compute colors
 			iMax = sizeof(NewColors) / sizeof(XColor);
-			for(i = 0; i < iMax; i++)
+			for (i = 0; i < iMax; i++)
 			{
 				NewColors[i].pixel =  i;
 				NewColors[i].red   = (i & 0xe0) <<  8;
@@ -656,9 +656,9 @@ void b3DisplayView::b3FreeColormap()
 {
 	b3CriticalSection lock(display_mutex);
 
-	if(--cmap_count <= 0)
+	if (--cmap_count <= 0)
 	{
-		if(m_depth == 8)
+		if (m_depth == 8)
 		{
 			XFreeColormap(m_Display, m_Colormap);
 			cmap = null;
@@ -673,7 +673,7 @@ inline void b3DisplayView::b3FirstDrawing()
 
 inline void b3DisplayView::b3RefreshAll()
 {
-	if(m_Opened)
+	if (m_Opened)
 	{
 		b3CriticalSection lock(m_Mutex);
 
@@ -691,7 +691,7 @@ void b3DisplayView::b3PutRow(const b3Row * row)
 	b3_coord y = row->m_y;
 
 	b3Display::b3PutRow(row);
-	if(m_Opened && (y < m_ys))
+	if (m_Opened && (y < m_ys))
 	{
 		b3CriticalSection lock(m_Mutex);
 
@@ -709,7 +709,7 @@ void b3DisplayView::b3PutTx(b3Tx * tx)
 	b3Display::b3PutTx(tx);
 	b3CriticalSection lock(m_Mutex);
 
-	for(y = 0; y < m_ys; y++)
+	for (y = 0; y < m_ys; y++)
 	{
 		b3RefreshRow(y);
 	}
@@ -723,7 +723,7 @@ inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 	b3_color * ptr = &m_Buffer[y * m_xMax];
 	b3_coord  x;
 
-	for(x = 0; x < m_xs; x++)
+	for (x = 0; x < m_xs; x++)
 	{
 		XSetForeground(m_Display, m_GC, m_Pixel->b3ARGBtoPixel(*ptr++, x, y));
 		XDrawPoint(m_Display, m_Image, m_GC, x, y);

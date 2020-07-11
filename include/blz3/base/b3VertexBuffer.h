@@ -194,7 +194,7 @@ public:
 	 */
 	inline void b3Recomputed()
 	{
-		if(!glComputed)
+		if (!glComputed)
 		{
 			b3CustomData();
 		}

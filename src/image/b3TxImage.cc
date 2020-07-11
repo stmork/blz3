@@ -54,11 +54,11 @@ b3_count b3Tx::b3BuildRLE(
 	// So: We start with black block!
 	count = 0;
 	num   = 0;
-	for(x = 0; x < xSize; x++)
+	for (x = 0; x < xSize; x++)
 	{
 		// get RLE code, starting with black code
 		act = (cPtr[i] & bit) != 0;
-		if(act != last)
+		if (act != last)
 		{
 			// Here an equal block ends and we have
 			// to toggle the state...
@@ -74,14 +74,14 @@ b3_count b3Tx::b3BuildRLE(
 
 		// shifting bit
 		bit = bit >> 1;
-		if(bit == 0)
+		if (bit == 0)
 		{
 			bit = 128;
 			i++;
 		}
 	}
 
-	if(count > 0)
+	if (count > 0)
 	{
 		line[num++] = count;
 	}
@@ -108,21 +108,21 @@ void b3Tx::b3BuildRow(
 	count =   0;
 
 	// Clear line
-	for(x = 0; x < xBytes; x++)
+	for (x = 0; x < xBytes; x++)
 	{
 		cPtr[x] = 0;
 	}
 
-	for(k = 0; k < num; k += 2)
+	for (k = 0; k < num; k += 2)
 	{
 		i      = count >> 3;
 		bit    = m_Bits[count & 7];
 		byte   = 0;
-		for(b = 0; b < line[k]; b++)
+		for (b = 0; b < line[k]; b++)
 		{
 			byte |= bit;
 			bit   = bit >> 1;
-			if(bit == 0)
+			if (bit == 0)
 			{
 				cPtr[i++] |= byte;
 				byte       = 0;
@@ -160,37 +160,37 @@ void b3Tx::b3RemoveBlackBorder()
 	b3_count  xBytes, num;
 	b3_coord  y;
 
-	if(!b3IsBW())
+	if (!b3IsBW())
 	{
 		return;
 	}
 	line = (b3_count *)b3Alloc(ySize * sizeof(b3_count));
-	if(line == null)
+	if (line == null)
 	{
 		throw b3TxException(B3_TX_MEMORY);
 	}
 
 	cPtr   = (b3_u08 *)data;
 	xBytes = TX_BWA(xSize);
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		num = b3BuildRLE(line, cPtr);
 
 		// Now! Start removing left black block
-		if(num == 1)
+		if (num == 1)
 		{
 			num = 2;
 			line[1] = line[0];
 			line[0] = 0;
 		}
-		if(num > 1)
+		if (num > 1)
 		{
 			line[1] += line[0];
 			line[0]  = 0;
 		}
-		if(num > 2)
+		if (num > 2)
 		{
-			if(num & 1)
+			if (num & 1)
 			{
 				num--;
 				line[num - 1] += line[num];
@@ -241,13 +241,13 @@ class b3_tx_border
 		b3_loop x, b;
 		b3_u08  byte;
 
-		for(x = 0; x < 256; x++)
+		for (x = 0; x < 256; x++)
 		{
 			// compute left mask
 			byte = (b3_u08)x;
-			for(b = 128; b != 0; b = b >> 1)
+			for (b = 128; b != 0; b = b >> 1)
 			{
-				if(x & b)
+				if (x & b)
 				{
 					byte -= b;
 				}
@@ -260,9 +260,9 @@ class b3_tx_border
 
 			// compute right mask
 			byte = (b3_u08)x;
-			for(b = 1; b != 0; b = b << 1)
+			for (b = 1; b != 0; b = b << 1)
 			{
-				if(x & b)
+				if (x & b)
 				{
 					byte -= b;
 				}
@@ -351,11 +351,11 @@ void b3Tx::b3RemoveBlackBorder()
 	b3_bool   loop;
 
 	// Do nothing if image has no width.
-	if(!b3IsBW())
+	if (!b3IsBW())
 	{
 		return;
 	}
-	if(xSize == 0)
+	if (xSize == 0)
 	{
 		return;
 	}
@@ -367,9 +367,9 @@ void b3Tx::b3RemoveBlackBorder()
 	// Mask right border (set bits outside the image to black)
 	cPtr = (b3_u08 *)data;
 	x    = xSize & 3;
-	if(x != 0)
+	if (x != 0)
 	{
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			cPtr[xEnd] |= m_RightBorder[x];
 			cPtr       += xBytes;
@@ -382,7 +382,7 @@ void b3Tx::b3RemoveBlackBorder()
 
 	// Do Black Border Removal!
 	cPtr   = (b3_u08 *)data;
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		// remove left black border
 		loop = true;
@@ -392,12 +392,12 @@ void b3Tx::b3RemoveBlackBorder()
 			loop    = cPtr[x] == 255;
 			cPtr[x] = b3_tx_border::TxBorder.lRemoval[cPtr[x]];
 			x++;
-			if(x >= xBytes)
+			if (x >= xBytes)
 			{
 				loop = false;
 			}
 		}
-		while(loop);
+		while (loop);
 
 		// remove right border
 		loop    = true;
@@ -407,12 +407,12 @@ void b3Tx::b3RemoveBlackBorder()
 			loop    = cPtr[x] == 255;
 			cPtr[x] = b3_tx_border::TxBorder.rRemoval[cPtr[x]];
 			x--;
-			if(x >= xBytes)
+			if (x >= xBytes)
 			{
 				loop = false;
 			}
 		}
-		while(loop);
+		while (loop);
 
 		cPtr += xBytes;
 	}
@@ -428,33 +428,33 @@ void b3Tx::b3Shrink(b3_count shrink)
 	b3_u08  * cPtr;
 	b3_count * line;
 
-	if(!b3IsBW())
+	if (!b3IsBW())
 	{
 		return;
 	}
 	line = (b3_count *)b3Alloc(xSize * sizeof(b3_count));
-	if(line == null)
+	if (line == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
 	cPtr   = (b3_u08 *)data;
 	xBytes = TX_BWA(xSize);
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		num = b3BuildRLE(line, cPtr);
 
 		// correcting RLE
-		for(k = 0; k < num; k += 2)
+		for (k = 0; k < num; k += 2)
 		{
-			if(line[k] > (b3_count)shrink)
+			if (line[k] > (b3_count)shrink)
 			{
 				line[k]   -= shrink;
 				line[k + 1] += shrink;
 			}
 			else
 			{
-				if(line[k] != 0)
+				if (line[k] != 0)
 				{
 					b3_count diff;
 
@@ -494,24 +494,24 @@ void b3Tx::b3Negate()
 	b3_u08        bVal;
 
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Negate()\n");
-	if(b3IsBW())
+	if (b3IsBW())
 	{
 		bPtr   = (b3_u08 *)data;
 		xBytes = TX_BWA(xSize);
 		max    = xBytes * ySize;
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			bVal    = *bPtr;
 			*bPtr++ = (b3_u08)(bVal ^ 0xff);
 		}
 	}
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_VGA:
 		lPtr = palette;
 		max  = 1 << depth;
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			*lPtr = *lPtr ^ 0xffffff;
 			lPtr++;
@@ -521,7 +521,7 @@ void b3Tx::b3Negate()
 	case B3_TX_RGB4:
 		sPtr = (b3_u16 *)data;
 		max  = xSize * ySize;
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			*sPtr = (b3_u16)(*sPtr ^ 0xfff);
 			sPtr++;
@@ -531,7 +531,7 @@ void b3Tx::b3Negate()
 	case B3_TX_RGB8:
 		lPtr = (b3_pkd_color *)data;
 		max  = xSize * ySize;
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			*lPtr = *lPtr ^ 0xffffff;
 			lPtr++;
@@ -541,7 +541,7 @@ void b3Tx::b3Negate()
 	case B3_TX_FLOAT:
 		cPtr = (b3_color *)data;
 		max  = xSize * ySize;
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			cPtr->r = 1.0 - cPtr->r;
 			cPtr->g = 1.0 - cPtr->g;
@@ -592,7 +592,7 @@ void b3Tx::b3TurnRightILBM()
 	xNewBytes = TX_BWA(xNewSize);
 	dSize     = xNewBytes * yNewSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
@@ -612,17 +612,17 @@ void b3Tx::b3TurnRightILBM()
 	// generating mask.
 	srcBit    = 128;
 	srcPos    =   0;
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		dstBit   = 128;
 		dstPos   =   0;
 		dstByte  =   0;
 		srcStart = xBytes * (ySize - 1);
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			// copy bit from horizontal position into vertical
 			// (The new horizontal line)
-			if(oldData[srcPos + srcStart] & srcBit)
+			if (oldData[srcPos + srcStart] & srcBit)
 			{
 				dstByte |= dstBit;
 			}
@@ -632,7 +632,7 @@ void b3Tx::b3TurnRightILBM()
 			dstBit    = dstBit >> 1;
 
 			// handle destination bit underflow
-			if(dstBit == 0)
+			if (dstBit == 0)
 			{
 				newData[dstPos++] = dstByte;
 				dstBit  = 128;
@@ -644,7 +644,7 @@ void b3Tx::b3TurnRightILBM()
 		srcBit = srcBit >> 1;
 
 		// handle source bit underflow
-		if(srcBit == 0)
+		if (srcBit == 0)
 		{
 			srcBit = 128;
 			srcPos++;
@@ -674,7 +674,7 @@ void b3Tx::b3TurnRightILBM()
 	xNewBytes = TX_BWA(xNewSize);
 	dSize     = xNewBytes * yNewSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
@@ -687,15 +687,15 @@ void b3Tx::b3TurnRightILBM()
 	data      = newData;
 
 	xNewBlock = xNewBytes << 3;
-	for(y = ySize - 1; (long)y >= 0; y--)
+	for (y = ySize - 1; (long)y >= 0; y--)
 	{
 		// set start position
 		dstPos = (b3_coord)(y >> 3);
 		dstBit = m_Bits[y &  7];
-		for(x = 0; x < xBytes; x++)
+		for (x = 0; x < xBytes; x++)
 		{
 			srcByte = oldData[x];
-			switch(srcByte)
+			switch (srcByte)
 			{
 			case   0 :
 				// Special case
@@ -726,9 +726,9 @@ void b3Tx::b3TurnRightILBM()
 
 			default :
 				// copy usual bit pattern
-				for(srcBit = 128; srcBit != 0; srcBit = srcBit >> 1)
+				for (srcBit = 128; srcBit != 0; srcBit = srcBit >> 1)
 				{
-					if(srcByte & srcBit)
+					if (srcByte & srcBit)
 					{
 						newData[dstPos] |= dstBit;
 					}
@@ -755,7 +755,7 @@ void b3Tx::b3TurnRightVGA()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -766,10 +766,10 @@ void b3Tx::b3TurnRightVGA()
 
 	srcPos    = 0;
 	srcInit   = xSize * (ySize - 1);
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcInit + srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++ = oldData[srcStart];
 			srcStart -= xSize;
@@ -791,7 +791,7 @@ void b3Tx::b3TurnRightRGB4()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u16 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -802,10 +802,10 @@ void b3Tx::b3TurnRightRGB4()
 
 	srcPos    = 0;
 	srcInit   = xSize * (ySize - 1);
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcInit + srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++ = oldData[srcStart];
 			srcStart -= xSize;
@@ -827,7 +827,7 @@ void b3Tx::b3TurnRightRGB8()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_pkd_color *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -838,10 +838,10 @@ void b3Tx::b3TurnRightRGB8()
 
 	srcPos    = 0;
 	srcInit   = xSize * (ySize - 1);
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcInit + srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++ = oldData[srcStart];
 			srcStart -= xSize;
@@ -863,7 +863,7 @@ void b3Tx::b3TurnRightFloat()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_color *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -874,10 +874,10 @@ void b3Tx::b3TurnRightFloat()
 
 	srcPos    = 0;
 	srcInit   = xSize * (ySize - 1);
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcInit + srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++ = oldData[srcStart];
 			srcStart -= xSize;
@@ -892,7 +892,7 @@ void b3Tx::b3TurnRightFloat()
 void b3Tx::b3TurnRight()
 {
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Right()\n");
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM :
 		b3TurnRightILBM();
@@ -938,7 +938,7 @@ void b3Tx::b3TurnLeftILBM()
 	xNewBytes = TX_BWA(xNewSize);
 	dSize     = xNewBytes * yNewSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnLeftILBM() NOT ENOUGH MEMORY!\n");
@@ -954,12 +954,12 @@ void b3Tx::b3TurnLeftILBM()
 	// byte to be converted into new image
 	// to prevent memory underflow.
 	maskPos = xSize & 0xf;
-	if((maskPos != 0) && (xBytes >= 2))
+	if ((maskPos != 0) && (xBytes >= 2))
 	{
 		b3_u08 * ptr;
 
 		ptr = &oldData[xBytes - 2];
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
 			ptr[0] &= m_RightMaskLeftByte[maskPos];
 			ptr[1] &= m_RightMaskRightByte[maskPos];
@@ -969,15 +969,15 @@ void b3Tx::b3TurnLeftILBM()
 
 	dstStart  = (yNewSize - 1) * xNewBytes;
 	xNewBlock = xNewBytes << 3;
-	for(y = 0; y < ySize; y++)
+	for (y = 0; y < ySize; y++)
 	{
 		// set start position
 		dstPos = dstStart + (b3_coord)(y >> 3);
 		dstBit = m_Bits[y &  7];
-		for(x = 0; x < xBytes; x++)
+		for (x = 0; x < xBytes; x++)
 		{
 			srcByte = oldData[x];
-			switch(srcByte)
+			switch (srcByte)
 			{
 			case   0 :
 				// Special case
@@ -1008,9 +1008,9 @@ void b3Tx::b3TurnLeftILBM()
 
 			default :
 				// copy usual bit pattern
-				for(srcBit = 128; srcBit != 0; srcBit = srcBit >> 1)
+				for (srcBit = 128; srcBit != 0; srcBit = srcBit >> 1)
 				{
-					if(srcByte & srcBit)
+					if (srcByte & srcBit)
 					{
 						newData[dstPos] |= dstBit;
 					}
@@ -1036,7 +1036,7 @@ void b3Tx::b3TurnLeftVGA()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -1046,10 +1046,10 @@ void b3Tx::b3TurnLeftVGA()
 	data      = (b3_u08 *)newData;
 
 	srcPos    = xSize - 1;
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++  = oldData[srcStart];
 			srcStart   += xSize;
@@ -1071,7 +1071,7 @@ void b3Tx::b3TurnLeftRGB4()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u16 *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -1081,10 +1081,10 @@ void b3Tx::b3TurnLeftRGB4()
 	data      = (b3_u08 *)newData;
 
 	srcPos    = xSize - 1;
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++  = oldData[srcStart];
 			srcStart   += xSize;
@@ -1106,7 +1106,7 @@ void b3Tx::b3TurnLeftRGB8()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_pkd_color *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -1116,10 +1116,10 @@ void b3Tx::b3TurnLeftRGB8()
 	data      = (b3_u08 *)newData;
 
 	srcPos    = xSize - 1;
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++  = oldData[srcStart];
 			srcStart   += xSize;
@@ -1141,7 +1141,7 @@ void b3Tx::b3TurnLeftFloat()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_color *)b3Alloc(dSize);
-	if(newData == null)
+	if (newData == null)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -1151,10 +1151,10 @@ void b3Tx::b3TurnLeftFloat()
 	data      = (b3_u08 *)newData;
 
 	srcPos    = xSize - 1;
-	for(y = 0; y < yNewSize; y++)
+	for (y = 0; y < yNewSize; y++)
 	{
 		srcStart = srcPos;
-		for(x = 0; x < xNewSize; x++)
+		for (x = 0; x < xNewSize; x++)
 		{
 			*newData++  = oldData[srcStart];
 			srcStart   += xSize;
@@ -1169,7 +1169,7 @@ void b3Tx::b3TurnLeftFloat()
 void b3Tx::b3TurnLeft()
 {
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Left()\n");
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM :
 		b3TurnLeftILBM();
@@ -1207,11 +1207,11 @@ class b3_tx_turn
 		b3_coord bit, byte, turn;
 		b3_loop  i;
 
-		for(i = 0; i < 256; i++)
+		for (i = 0; i < 256; i++)
 		{
 			byte = (b3_u08)i;
 			turn = 0;
-			for(bit = 0; bit < 8; bit++)
+			for (bit = 0; bit < 8; bit++)
 			{
 				turn  = turn << 1;
 				turn |= byte &  1;
@@ -1240,7 +1240,7 @@ void b3Tx::b3Turn()
 	size = xSize * ySize;
 	max  = size >> 1;
 
-	switch(type)
+	switch (type)
 	{
 	case B3_TX_ILBM :
 		xSize = (xSize + 15) & 0xfffffff0;
@@ -1248,9 +1248,9 @@ void b3Tx::b3Turn()
 		max  = size  >> 1;
 		bPtr = data;
 		// First: Turn horizontal
-		for(y = 0; y < ySize; y++)
+		for (y = 0; y < ySize; y++)
 		{
-			for(d = 0; d < depth; d++)
+			for (d = 0; d < depth; d++)
 			{
 				b3_coord x;
 
@@ -1263,7 +1263,7 @@ void b3Tx::b3Turn()
 				// inside these bytes using a lookup table.
 				bfPtr = (b3_u08 *)bPtr;
 				bbPtr = (b3_u08 *)(bfPtr + size);
-				for(x = 0; x < max; x++)
+				for (x = 0; x < max; x++)
 				{
 					bbPtr--;
 					bBack  = b3_tx_turn::TxTurn.Turnbytes[*bbPtr];
@@ -1279,16 +1279,16 @@ void b3Tx::b3Turn()
 		max   = ySize >> 1;
 		bfPtr = (b3_u08 *)data;
 		bPtr  = (b3_u08 *)(data + size * ySize * depth);
-		for(y = 0; y < max; y++)
+		for (y = 0; y < max; y++)
 		{
 			bPtr -= (depth * size);
-			for(d = 0; d < depth; d++)
+			for (d = 0; d < depth; d++)
 			{
 				b3_coord x;
 
 				// Now exchange the two lines. Do it! Do it!
 				bbPtr = (b3_u08 *)bPtr;
-				for(x = 0; x < size; x++)
+				for (x = 0; x < size; x++)
 				{
 					bBack  = *bbPtr;
 					*bbPtr = *bfPtr;
@@ -1305,7 +1305,7 @@ void b3Tx::b3Turn()
 	case B3_TX_VGA :
 		bfPtr = (b3_u08 *)data;
 		bbPtr = (b3_u08 *)(bfPtr + size);
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			bbPtr--;
 			bBack  = *bbPtr;
@@ -1318,7 +1318,7 @@ void b3Tx::b3Turn()
 	case B3_TX_RGB4 :
 		sfPtr = (b3_u16 *)data;
 		sbPtr = (b3_u16 *)(sfPtr + size);
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			sbPtr--;
 			sBack  = *sbPtr;
@@ -1331,7 +1331,7 @@ void b3Tx::b3Turn()
 	case B3_TX_RGB8 :
 		lfPtr = (b3_pkd_color *)data;
 		lbPtr = (b3_pkd_color *)(lfPtr + size);
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			lbPtr--;
 			lBack  = *lbPtr;
@@ -1344,7 +1344,7 @@ void b3Tx::b3Turn()
 	case B3_TX_FLOAT :
 		cfPtr = (b3_color *)data;
 		cbPtr = (b3_color *)(cfPtr + size);
-		for(i = 0; i < max; i++)
+		for (i = 0; i < max; i++)
 		{
 			cbPtr--;
 			cBack  = *cbPtr;
@@ -1376,12 +1376,12 @@ const b3_bool b3Tx::b3TxGauss(
 	b3_f64        radius, xDiff, yDiff;
 	b3_f64        value, level, denom;
 
-	if(!b3IsTrueColor())
+	if (!b3IsTrueColor())
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx # b3TxGauss(): source image is no true color image!\n");
 		return false;
 	}
-	if(src == null)
+	if (src == null)
 	{
 		src = this;
 	}
@@ -1392,9 +1392,9 @@ const b3_bool b3Tx::b3TxGauss(
 	yHalf = ySize >> 1;
 	srcPtr = src->b3GetTrueColorData();
 	dstPtr = b3GetTrueColorData();
-	for(y = 0; y < (long)ySize; y++)
+	for (y = 0; y < (long)ySize; y++)
 	{
-		for(x = 0; x < (long)xSize; x++)
+		for (x = 0; x < (long)xSize; x++)
 		{
 			srcColor  = *srcPtr++;
 
@@ -1419,29 +1419,29 @@ const b3_bool b3Tx::b3TxGauss(
 			b     += sub;
 
 			// Upper clip
-			if(r <   0)
+			if (r <   0)
 			{
 				r =   0;
 			}
-			if(g <   0)
+			if (g <   0)
 			{
 				g =   0;
 			}
-			if(b <   0)
+			if (b <   0)
 			{
 				b =   0;
 			}
 
 			// Upper clip
-			if(r > 255)
+			if (r > 255)
 			{
 				r = 255;
 			}
-			if(g > 255)
+			if (g > 255)
 			{
 				g = 255;
 			}
-			if(b > 255)
+			if (b > 255)
 			{
 				b = 255;
 			}
@@ -1465,18 +1465,18 @@ const b3_bool b3Tx::b3TxTransformTable(
 	b3_index      num    = 0, i;
 	b3_pkd_color  r, g, b, srcColor;
 
-	if(srcTx == null)
+	if (srcTx == null)
 	{
 		srcTx = this;
 	}
 
-	if(b3IsPalette())
+	if (b3IsPalette())
 	{
 		srcPtr = srcTx->b3GetPalette();
 		dstPtr = palette;
 		num    = 1 << depth;
 
-		if(srcTx != this)
+		if (srcTx != this)
 		{
 			// We have to copy the data, too.
 			// But only if srcTx and dstTx are different.
@@ -1484,7 +1484,7 @@ const b3_bool b3Tx::b3TxTransformTable(
 		}
 	}
 
-	if(b3IsTrueColor())
+	if (b3IsTrueColor())
 	{
 
 		srcPtr = srcTx->b3GetTrueColorData();
@@ -1493,7 +1493,7 @@ const b3_bool b3Tx::b3TxTransformTable(
 	}
 
 	// Do the loop!
-	for(i = 0; i < num; i++)
+	for (i = 0; i < num; i++)
 	{
 		srcColor = *srcPtr++;
 
@@ -1521,7 +1521,7 @@ const b3_bool b3Tx::b3TxColorFilter(
 	b3_pkd_color filter_b[256];
 	b3_index     i;
 
-	for(i = 0; i < 256; i++)
+	for (i = 0; i < 256; i++)
 	{
 		filter_r[i] = (b3_pkd_color)floor(i * fr + 0.5);
 		filter_g[i] = (b3_pkd_color)floor(i * fg + 0.5);
@@ -1541,16 +1541,16 @@ const b3_f64 b3Tx::b3Gamma(b3_f64 h, b3_f64 s, b3_f64 gamma, b3_f64 value, b3_f6
 	b3_f64 result;
 
 	value /= scale;
-	if(diff <= 0.0)
+	if (diff <= 0.0)
 	{
 		return value < s ? 0.0 : scale;
 	}
 
-	if(value <= s)
+	if (value <= s)
 	{
 		return 0.0;
 	}
-	if(value >= h)
+	if (value >= h)
 	{
 		return scale;
 	}
@@ -1569,7 +1569,7 @@ const b3_bool b3Tx::b3TxContrast(
 	b3_index     i;
 
 	// Build correction table
-	for(i = 0; i < 256; i++)
+	for (i = 0; i < 256; i++)
 	{
 		correction_table[i] =
 			(b3_pkd_color)floor(b3Gamma(h, s, gamma, i, 255.0) + 0.5);
@@ -1587,32 +1587,32 @@ const b3_bool b3Tx::b3TxReduce(b3Tx * src)
 	b3_pkd_color * srcPtr = src->b3GetTrueColorData(), color;
 	b3_u08    *   dstPtr = b3GetIndexData();
 
-	if(!src->b3IsTrueColor())
+	if (!src->b3IsTrueColor())
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx # b3TxReduce(): source image is no true color image!\n");
 		return false;
 	}
 
-	if(!b3IsPalette())
+	if (!b3IsPalette())
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx # b3TxReduce(): destination image has no palette!\n");
 		return false;
 	}
 
-	if((src->xSize != xSize) || (src->ySize != ySize))
+	if ((src->xSize != xSize) || (src->ySize != ySize))
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx # b3TxReduce(): Both images have different resolution!\n");
 		return false;
 	}
 
 	count = xSize * ySize;
-	for(i = 0; i < count; i++)
+	for (i = 0; i < count; i++)
 	{
 		b3_f32 dist_min = FLT_MAX;
 
 		color = *srcPtr++;
 		index = pSize;
-		for(p = 0; p < pSize; p++)
+		for (p = 0; p < pSize; p++)
 		{
 			b3Color srcColor(color);
 			b3Color palColor(palette[p]);
@@ -1621,7 +1621,7 @@ const b3_bool b3Tx::b3TxReduce(b3Tx * src)
 			diff *= diff;
 
 			b3_f32 dist = sqrt(diff[b3Color::R] + diff[b3Color::G] + diff[b3Color::B]);
-			if(dist < dist_min)
+			if (dist < dist_min)
 			{
 				dist_min = dist;
 				index = p;

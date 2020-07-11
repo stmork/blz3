@@ -57,7 +57,7 @@ void b3CSGCylinder::b3ComputeVertices()
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index      i, offset    = SinCosSteps * 2;
 
-	for(i = 0; i < SinCosSteps; i++)
+	for (i = 0; i < SinCosSteps; i++)
 	{
 		b3Vector::b3LinearCombine(&m_Base, &m_Dir1, &m_Dir2,
 			b3ShapeRenderContext::m_Cos[i],
@@ -71,7 +71,7 @@ void b3CSGCylinder::b3ComputeVertices()
 
 	// Create copy
 	Vector = *glVertexElements;
-	for(i = 0; i < offset; i++)
+	for (i = 0; i < offset; i++)
 	{
 		Vector[i + offset] = Vector[i];
 	}
@@ -91,7 +91,7 @@ void b3CSGCylinder::b3ComputeIndices()
 	b3_index       mid    = b3ShapeRenderContext::m_SubDiv * 4;
 	b3_index       i;
 
-	for(i = 0; i < offset; i += 2)
+	for (i = 0; i < offset; i += 2)
 	{
 		B3_GL_LINIT(gPtr, i, (i + 2) % offset);
 		B3_GL_LINIT(gPtr, i, i + 1);

@@ -52,9 +52,9 @@ public:
 	{
 		long code;
 
-		if(bitsleft == 0)
+		if (bitsleft == 0)
 		{
-			if(availbytes <= 0)
+			if (availbytes <= 0)
 			{
 				availbytes = **Data;
 				*Data += 1;
@@ -67,9 +67,9 @@ public:
 		}
 
 		code = (long)(currbyte >> (8 - bitsleft));
-		while(currsize > bitsleft)
+		while (currsize > bitsleft)
 		{
-			if(availbytes <= 0)
+			if (availbytes <= 0)
 			{
 				availbytes = **Data;
 				*Data     += 1;
@@ -135,12 +135,12 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 	buffer  += (13 + (Colors * 3));
 
 	// Wait for image separator
-	while(buffer[0] != ',') switch(*buffer++)
+	while (buffer[0] != ',') switch (*buffer++)
 		{
 		case '!':
 			// Overread extension block
 			buffer++;
-			while((t = *buffer++) != 0)
+			while ((t = *buffer++) != 0)
 			{
 				buffer += t;
 			}
@@ -156,7 +156,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 	// Compute image resolution
 	xk = xNewSize  = b3Endian::b3GetIntel16(&buffer[5]) - b3Endian::b3GetIntel16(&buffer[1]);
 	yNewSize  = b3Endian::b3GetIntel16(&buffer[7]) - b3Endian::b3GetIntel16(&buffer[3]);
-	if(!b3AllocTx(xNewSize, yNewSize, 8))
+	if (!b3AllocTx(xNewSize, yNewSize, 8))
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG GIF  # Error allocating memory:\n");
@@ -166,7 +166,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 
 	// Pointer to global color map
 	pPtr     += 13;
-	for(i = 0; i < Colors; i++)
+	for (i = 0; i < Colors; i++)
 	{
 
 		t  = ((b3_pkd_color) * pPtr++ << 16);
@@ -181,12 +181,12 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 	status = 0;
 
 	/* auf Local-Color-Map testen*/
-	if(buffer[9] & 0x80)
+	if (buffer[9] & 0x80)
 	{
 		depth   = (buffer[9] & 0x07) + 1;
 		Colors  = (1 << depth);
 		buffer += 10;
-		for(i = 0; i < Colors; i++)
+		for (i = 0; i < Colors; i++)
 		{
 			t  = ((unsigned long) * buffer++ << 16);
 			t += ((unsigned long) * buffer++ <<  8);
@@ -201,7 +201,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 
 	/* Speicher für temporären Stack und Tabellen anfordern */
 	size = *buffer++; // get code size
-	if((size < 2) || (9 < size))
+	if ((size < 2) || (9 < size))
 	{
 		b3Free(charstack);
 		b3FreeTx();
@@ -219,23 +219,23 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 	decoder.bitsleft =
 		decoder.availbytes = yk = 0;
 
-	while((c = decoder.b3GetNextGifCode(&buffer, currsize)) != endcode)
+	while ((c = decoder.b3GetNextGifCode(&buffer, currsize)) != endcode)
 	{
 		/* auf clearcode testen */
-		if(c == clearcode)
+		if (c == clearcode)
 		{
 			currsize = size + 1;
 			codecnt = newcodes;
 			maxcode = 1 << currsize;
 
-			while((c = decoder.b3GetNextGifCode(&buffer, currsize)) == clearcode);
+			while ((c = decoder.b3GetNextGifCode(&buffer, currsize)) == clearcode);
 
-			if(c == endcode)
+			if (c == endcode)
 			{
 				break;
 			}
 
-			if(c >= codecnt)
+			if (c >= codecnt)
 			{
 				c = 0;
 			}
@@ -250,14 +250,14 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 			code = c;
 
 			/* falls code 'out of Range', einfach den letzten nehmen ... */
-			if(code >= codecnt)
+			if (code >= codecnt)
 			{
 				code = oldcode;
 				*sp++ = fc;
 			}
 
 			/* Pixelkette aus Code ermitteln */
-			while(code >= newcodes)
+			while (code >= newcodes)
 			{
 				*sp++ = suffix[code];		/* Pixel auf Stack legen */
 				code = prefix[code];		/* Vorgänger */
@@ -265,7 +265,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 			*sp++ = (unsigned char) code;	/* erstes Pixel der Kette */
 
 			/* logisch nächste Pixelkette in Tabelle eintragen */
-			if(codecnt < maxcode)
+			if (codecnt < maxcode)
 			{
 				fc = code;
 				suffix[codecnt] = fc;
@@ -274,9 +274,9 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 			}
 
 			/* Codelänge ggf. um ein Bit verlängern */
-			if(codecnt >= maxcode)
+			if (codecnt >= maxcode)
 			{
-				if(currsize < 12)
+				if (currsize < 12)
 				{
 					maxcode <<= 1;
 					currsize++;
@@ -284,16 +284,16 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 			}
 		}
 
-		if(interlaced)
+		if (interlaced)
 		{
-			while(sp > charstack)			/* Stack auslesen */
+			while (sp > charstack)			/* Stack auslesen */
 			{
 				*out++ = *(--sp);
-				if(--xk == 0)
+				if (--xk == 0)
 				{
 					xk = xSize;
 
-					if((yk += b3GifDecoder::m_GifNextRow[status]) >= ySize)
+					if ((yk += b3GifDecoder::m_GifNextRow[status]) >= ySize)
 					{
 						yk  = b3GifDecoder::m_GifFirstRow[status];
 						out = (unsigned char *)(data +
@@ -308,7 +308,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 		}
 		else
 		{
-			while(sp > charstack)
+			while (sp > charstack)
 			{
 				*out++ = *(--sp); /* Stack auslesen */
 			}

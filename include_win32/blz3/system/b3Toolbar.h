@@ -46,7 +46,7 @@ public:
 
 	inline void b3FreeText()
 	{
-		if(btnText != null)
+		if (btnText != null)
 		{
 			delete [] btnText;
 			btnText = null;

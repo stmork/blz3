@@ -40,7 +40,7 @@ void b3DataSizeTest::setUp()
 	b3_loop i;
 	b3_u08  v;
 
-	for(i = 0; i < MEM_MIN; i++)
+	for (i = 0; i < MEM_MIN; i++)
 	{
 #if 0
 		v         = B3_IRAN(256);
@@ -57,13 +57,13 @@ void b3DataSizeTest::tearDown()
 {
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
-	if(ptr1 == null)
+	if (ptr1 == null)
 	{
 		return;
 	}
-	for(b3_loop i = 0; i < MEM_MIN; i++)
+	for (b3_loop i = 0; i < MEM_MIN; i++)
 	{
-		if((i & 7) == 0)
+		if ((i & 7) == 0)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n%04x: ", i);
 		}
@@ -125,7 +125,7 @@ void b3DataSizeTest::testMemory()
 	CPPUNIT_ASSERT(memcmp(buffer, ptr1, MEM_MIN)  == 0);
 
 	ptr = static_cast<b3_u08 *>(ptr1);
-	for(i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
+	for (i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
 	{
 		mask |= ptr[i];
 	}

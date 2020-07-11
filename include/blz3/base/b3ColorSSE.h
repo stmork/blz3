@@ -123,13 +123,13 @@ public:
 		b3_f32 B3_ALIGN_16 d[4];
 		b3_loop            i;
 
-		for(i = 3; i >= 0; i--)
+		for (i = 3; i >= 0; i--)
 		{
 			c[i]  = color & 0xf;
 			color = color >> 4;
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			d[i] = (b3_f32)c[i];
 		}
@@ -159,7 +159,7 @@ public:
 		b3_s32 B3_ALIGN_16 c[4];
 		__m128i            ci;
 
-		for(i = 3; i >= 0; i--)
+		for (i = 3; i >= 0; i--)
 		{
 			c[i]  = color & 0xff;
 			color = color >> 8;
@@ -172,7 +172,7 @@ public:
 #else
 		b3_f32 B3_ALIGN_16 c[4];
 
-		for(i = 3; i >= 0; i--)
+		for (i = 3; i >= 0; i--)
 		{
 			c[i]  = b3_f32(color & 0xff);
 			color = color >> 8;
@@ -709,12 +709,12 @@ public:
 					_mm_max_ps(SSE_PS_LOAD(v), _mm_set_ps1(0))),
 				_mm_set_ps1(255)));
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			c[i] = (b3_s32)sat[i];
 		}
 
-		for(i = 0; i < 4; i++)
+		for (i = 0; i < 4; i++)
 		{
 			result = (result << 8) | c[i];
 		}

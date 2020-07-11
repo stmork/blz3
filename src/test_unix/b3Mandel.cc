@@ -92,7 +92,7 @@ public:
 		b3Cmplx  a = 0;
 		b3Cmplx  f = b3Cmplx(fx, fy);
 
-		for(x = 0; x < m_xSize; x++)
+		for (x = 0; x < m_xSize; x++)
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
@@ -106,7 +106,7 @@ public:
 				a -= f;
 				count++;
 			}
-			while((count <= iter) && (a.b3SquareLength() < 4));
+			while ((count <= iter) && (a.b3SquareLength() < 4));
 			// Snap! --!>
 
 			// Fill in color
@@ -121,10 +121,10 @@ public:
 	{
 		b3_pkd_color color;
 
-		for(b3_loop i = 0; i < 64; i++)
+		for (b3_loop i = 0; i < 64; i++)
 		{
 			// Compute pixel color from number of iterations
-			switch(i & 0x30)
+			switch (i & 0x30)
 			{
 			case 0x00 : /* blue */
 				color = (i & 0x0f) <<  4;
@@ -166,14 +166,14 @@ public:
 			{
 				b3CriticalSection lock(row_mutex);
 
-				if((row = (b3MandelRow *)rows.First) != null)
+				if ((row = (b3MandelRow *)rows.First) != null)
 				{
 					rows.b3Remove(row);
 				}
 			}
 			// Leave critical section
 
-			if(row != null)
+			if (row != null)
 			{
 				// We can handle the row for its own!
 				row->compute();
@@ -186,7 +186,7 @@ public:
 				delete row;
 			}
 		}
-		while(row != null);
+		while (row != null);
 
 		// Reach this if the row list ran empty.
 		return 0;
@@ -248,7 +248,7 @@ void b3Mandel::b3Compute(
 	fy    = yMin;
 	xStep = (xMax - xMin) / (double)xSize;
 	yStep = (yMax - yMin) / (double)ySize;
-	for(i = 0; i < ySize; i++)
+	for (i = 0; i < ySize; i++)
 	{
 		row = new b3MandelRow(i, xSize, xMin, xStep, fy, iter);
 		b3MandelRow::b3Append(row);
@@ -259,7 +259,7 @@ void b3Mandel::b3Compute(
 	tStart = timepoint;
 	b3MandelRow::b3InitColor();
 	b3MandelRow::b3Init();
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		infos[i].xSize   = xSize;
 		infos[i].iter    = iter;
@@ -270,7 +270,7 @@ void b3Mandel::b3Compute(
 
 	// Wait for completion
 	b3PrintF(B3LOG_NORMAL, "Waiting for threads...\n");
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		threads[i].b3Wait();
 	}

@@ -62,7 +62,7 @@ b3SampleInfo * b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 	B3_ASSERT(m_Material != null);
 	m_Material->b3Prepare(this);
 	yStart = 0;
-	for(i = 0; i < CPUs; i++)
+	for (i = 0; i < CPUs; i++)
 	{
 		yEnd = m_yMax * (i + 1) / CPUs;
 		info[i].m_Sampler = this;
@@ -91,10 +91,10 @@ void b3MaterialSampler::b3SampleTask(const b3SampleInfo * info)
 	ray.Q              = 1;
 	surface.m_Incoming = &ray;
 
-	for(y = info->m_yStart; y < info->m_yEnd; y++)
+	for (y = info->m_yStart; y < info->m_yEnd; y++)
 	{
 		fy = (b3_f64)y / info->m_yMax;
-		for(x = 0; x < info->m_xMax; x++)
+		for (x = 0; x < info->m_xMax; x++)
 		{
 			int ix = (m_Tiles * x) / info->m_xMax;
 

@@ -73,7 +73,7 @@ public:
 	 */
 	inline b3VectorTemplate<F, dim>(const b3VectorTemplate<F, dim> & src)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = src.v[i];
 		}
@@ -179,7 +179,7 @@ public:
 	inline void b3Zero()
 	{
 		b3PrintF(B3LOG_FULL, "--zero %p %p\n", this, v);
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = 0;
 		}
@@ -192,7 +192,7 @@ public:
 	 */
 	inline void b3Value(const b3_f32 value = 0)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = (F)value;
 		}
@@ -205,7 +205,7 @@ public:
 	 */
 	inline void b3Value(const b3_f64 value = 0)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = (F)value;
 		}
@@ -233,7 +233,7 @@ public:
 		param[2] = z;
 		param[3] = w;
 
-		for(b3_loop i = 0; i < max; i++)
+		for (b3_loop i = 0; i < max; i++)
 		{
 			v[i] = static_cast<F>(param[i]);
 		}
@@ -297,7 +297,7 @@ public:
 	inline const F & operator [](const b3_vector_index index) const
 	{
 #ifdef _DEBUG
-		if((index < 0) || (index >= dim))
+		if ((index < 0) || (index >= dim))
 		{
 			B3_THROW(b3VectorException, B3_VECTOR_OUT_OF_BOUNDS);
 		}
@@ -315,7 +315,7 @@ public:
 	inline F & operator [](const b3_vector_index index)
 	{
 #ifdef _DEBUG
-		if((index < 0) || (index >= dim))
+		if ((index < 0) || (index >= dim))
 		{
 			B3_THROW(b3VectorException, B3_VECTOR_OUT_OF_BOUNDS);
 		}
@@ -327,7 +327,7 @@ public:
 	{
 		bool result = true;
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			result &= (v[i] == a.v[i]);
 		}
@@ -338,7 +338,7 @@ public:
 	{
 		bool result = false;
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			result |= (v[i] != a.v[i]);
 		}
@@ -353,7 +353,7 @@ public:
 	 */
 	inline b3VectorTemplate<F, dim> & operator+=(const b3VectorTemplate<F, dim> & a)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -379,7 +379,7 @@ public:
 	 */
 	inline b3VectorTemplate<F, dim> & operator-=(const b3VectorTemplate<F, dim> & a)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -415,7 +415,7 @@ public:
 	 */
 	inline b3VectorTemplate<F, dim> & operator*=(const b3VectorTemplate<F, dim> & a)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] *= a.v[i];
 		}
@@ -443,7 +443,7 @@ public:
 	{
 		b3VectorTemplate<F, dim> prod(value);
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -469,7 +469,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F, dim> & operator/=(const b3_f64 value)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] /= value;
 		}
@@ -493,7 +493,7 @@ public:
 	 */
 	inline const b3VectorTemplate<F, dim> & b3Negate()
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = -v[i];
 		}
@@ -525,12 +525,12 @@ public:
 		F             result = 0;
 		b3_loop       i;
 
-		for(i = 0; i < dim; i++)
+		for (i = 0; i < dim; i++)
 		{
 			r[i] = a.v[i] * b.v[i];
 		}
 
-		for(i = 0; i < dim; i++)
+		for (i = 0; i < dim; i++)
 		{
 			result += r[i];
 		}
@@ -548,7 +548,7 @@ public:
 	{
 		F result = 0;
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			result += (a.v[i] * v[i]);
 		}
@@ -596,7 +596,7 @@ public:
 	{
 		F result = 0;
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			result += (v[i] * v[i]);
 		}
@@ -630,7 +630,7 @@ public:
 	{
 		F old = b3Length();
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			v[i] = v[i] * len / old;
 		}
@@ -659,9 +659,9 @@ public:
 	 */
 	inline void b3SetMinimum(const F min)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
-			if(v[i] < min)
+			if (v[i] < min)
 			{
 				v[i] = min;
 			}
@@ -676,9 +676,9 @@ public:
 	 */
 	inline void b3CheckLowerBound(const b3VectorTemplate<F, dim> & lower)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
-			if(v[i] > lower.v[i])
+			if (v[i] > lower.v[i])
 			{
 				v[i] = lower.v[i];
 			}
@@ -692,9 +692,9 @@ public:
 	 */
 	inline void b3SetMaximum(const F max)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
-			if(v[i] > max)
+			if (v[i] > max)
 			{
 				v[i] = max;
 			}
@@ -709,9 +709,9 @@ public:
 	 */
 	inline void b3CheckUpperBound(const b3VectorTemplate<F, dim> & upper)
 	{
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
-			if(v[i] < upper.v[i])
+			if (v[i] < upper.v[i])
 			{
 				v[i] = upper.v[i];
 			}
@@ -731,9 +731,9 @@ public:
 	{
 		F aux;
 
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
-			if(lower.v[i] > upper.v[i])
+			if (lower.v[i] > upper.v[i])
 			{
 				aux = lower.v[i];
 				lower.v[i] = upper.v[i];
@@ -755,7 +755,7 @@ public:
 	{
 		F Denom;
 
-		if((Denom = Vector1.b3Length() * Vector2.b3Length()) != 0)
+		if ((Denom = Vector1.b3Length() * Vector2.b3Length()) != 0)
 		{
 			return b3SMul(Vector1, Vector2) / Denom;
 
@@ -788,7 +788,7 @@ public:
 	{
 		F x = v[X], y = v[Y], z = v[Z];
 
-		if(Use4D)
+		if (Use4D)
 		{
 			v[X] = (F)(x * Mat->m11 + y * Mat->m12 + z * Mat->m13 + Mat->m14);
 			v[Y] = (F)(x * Mat->m21 + y * Mat->m22 + z * Mat->m23 + Mat->m24);
@@ -810,11 +810,11 @@ public:
 	 */
 	inline void b3Print(const char * comment) const
 	{
-		if(comment != 0)
+		if (comment != 0)
 		{
 			b3PrintF(B3LOG_NORMAL, comment);
 		}
-		for(b3_loop i = 0; i < dim; i++)
+		for (b3_loop i = 0; i < dim; i++)
 		{
 			b3PrintF(B3LOG_NORMAL, "%3.5f ", v[i]);
 		}

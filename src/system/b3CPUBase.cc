@@ -36,7 +36,7 @@ b3_count    b3CPUBase::cpu_bits  = 0;
 
 b3CPUBase::b3CPUBase()
 {
-	if(cpu_type == B3_UNKNOWN_ENDIAN)
+	if (cpu_type == B3_UNKNOWN_ENDIAN)
 	{
 		volatile b3_u32  value = (((b3_u32)B3_BIG_ENDIAN) << 16) | B3_LITTLE_ENDIAN;
 		volatile b3_u16 * ptr   = (b3_u16 *)&value;

@@ -41,7 +41,7 @@ b3_bool                   b3MultiSample::glHasMS;
 void b3MultiSample::b3Init(const char * extensions)
 {
 #ifdef HAS_MULTISAMPLE
-	if(extensions == null)
+	if (extensions == null)
 	{
 		extensions = (const char *)glGetString(GL_EXTENSIONS);
 	}
@@ -54,10 +54,10 @@ void b3MultiSample::b3Init(const char * extensions)
 
 void b3MultiSample::b3Enable(b3_bool enable)
 {
-	if(b3HasMS())
+	if (b3HasMS())
 	{
 #ifdef BLZ3_USE_OPENGL
-		if(enable)
+		if (enable)
 		{
 			glEnable((GLenum)GL_MULTISAMPLE_ARB);
 			glEnable((GLenum)GL_SAMPLE_BUFFERS_ARB);
@@ -78,7 +78,7 @@ b3_bool b3MultiSample::b3IsEnabled()
 	b3_bool enabled = false;
 
 #ifdef BLZ3_USE_OPENGL
-	if(b3HasMS())
+	if (b3HasMS())
 	{
 		GLint     sample_buffers = 0;
 		GLboolean multisample;

@@ -50,7 +50,7 @@ static void display(b3Tx * tx)
 {
 	b3Display  * display;
 
-	if(tx->b3IsLoaded())
+	if (tx->b3IsLoaded())
 	{
 		b3PrintF(B3LOG_NORMAL, "%s: %dx%d\n",
 			tx->b3Name(), tx->xSize, tx->ySize);
@@ -73,11 +73,11 @@ static void load(const char * name)
 		texture_pool.b3LoadTexture(name);
 		b3PrintF(B3LOG_NORMAL, ".");
 	}
-	catch(b3TxException & txe)
+	catch (b3TxException & txe)
 	{
 		b3PrintF(B3LOG_NORMAL, "\nImage Exception of file %s!\n", name);
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL, "\nError of file %s!\n", name);
 	}
@@ -95,9 +95,9 @@ int main(int argc, char * argv[])
 	b3Tx    *    tx;
 	int          i;
 
-	if(argc > 1)
+	if (argc > 1)
 	{
-		if(HOME != null)
+		if (HOME != null)
 		{
 			b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 			b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
@@ -108,11 +108,11 @@ int main(int argc, char * argv[])
 			texture_pool.b3AddPath(BLZ3_PICTURES);
 		}
 
-		for(i = 1; i < argc; i++)
+		for (i = 1; i < argc; i++)
 		{
-			if(argv[i][0] == '-')
+			if (argv[i][0] == '-')
 			{
-				switch(argv[i][1])
+				switch (argv[i][1])
 				{
 				case 'd' :
 					b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -124,11 +124,11 @@ int main(int argc, char * argv[])
 			}
 			else
 			{
-				switch(b3Dir::b3Exists(argv[i]))
+				switch (b3Dir::b3Exists(argv[i]))
 				{
 				case B3_TYPE_DIR:
 					list.b3CreateList(argv[i]);
-					for(entry = list.b3First(); entry != null; entry = entry->Succ)
+					for (entry = list.b3First(); entry != null; entry = entry->Succ)
 					{
 						load(entry->b3Name());
 					}

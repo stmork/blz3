@@ -65,7 +65,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface * surface)
 	surface->m_Transparent    = false;
 
 	// Use only sharp angles
-	if(cos_a >= 0)
+	if (cos_a >= 0)
 	{
 		Normal->x = -Normal->x;
 		Normal->y = -Normal->y;
@@ -76,15 +76,15 @@ void b3Shader::b3ComputeOutputRays(b3_surface * surface)
 
 	surface->m_IorComputed = ior = surface->m_Incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
 
-	if(surface->m_Refraction > 0)
+	if (surface->m_Refraction > 0)
 	{
-		if(fabs(cos_a) < 1)
+		if (fabs(cos_a) < 1)
 		{
 			ior_sqr = ior * ior;
 			Factor = 1 - ior_sqr + ior_sqr * cos_a * cos_a;
 
 			// Test total reflection
-			if(Factor >= 0)
+			if (Factor >= 0)
 			{
 				b3Vector::b3LinearCombine(incoming_dir, Normal, ior, -sqrt(Factor) - ior * cos_a, refr_dir);
 				b3Vector::b3Normalize(refr_dir);
@@ -134,7 +134,7 @@ b3_bool b3Shader::b3Shade(
 	// Normalize incoming ray
 	b3Vector::b3Normalize(&ray->dir);
 
-	if((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, (b3_bool)(depth_count == 0)))
+	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, (b3_bool)(depth_count == 0)))
 	{
 		bbox  = ray->bbox;
 		shape = ray->shape;
@@ -159,7 +159,7 @@ b3_bool b3Shader::b3Shade(
 		b3ShadeSurface(&surface, depth_count + 1);
 
 		// Post process nebular
-		if(m_Nebular != null)
+		if (m_Nebular != null)
 		{
 			m_Nebular->b3ComputeNebular(ray->color, ray->color, ray->Q);
 		}
@@ -168,12 +168,12 @@ b3_bool b3Shader::b3Shade(
 	else
 	{
 		// Post process nebular
-		if(m_Nebular != null)
+		if (m_Nebular != null)
 		{
 			m_Nebular->b3GetNebularColor(ray->color);
 			finite = true;
 		}
-		else if(depth_count > 0)
+		else if (depth_count > 0)
 		{
 			m_Scene->b3GetInfiniteColor(ray);
 			finite = true;
@@ -191,7 +191,7 @@ void b3Shader::b3Shade(b3Light * light, b3_light_info * jit, b3_surface * surfac
 {
 	b3Material * material = surface->m_Incoming->material;
 
-	if(!((material != null) && material->b3Illuminate(surface, jit)))
+	if (!((material != null) && material->b3Illuminate(surface, jit)))
 	{
 		b3ShadeLight(light, jit, surface);
 	}

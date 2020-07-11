@@ -68,7 +68,7 @@ b3Activation::b3Activation()
 
 b3_bool b3Activation::b3IsActive()
 {
-	switch(m_AnimActive)
+	switch (m_AnimActive)
 	{
 	case B3_ANIM_DISABLED:
 		return m_Active;
@@ -162,7 +162,7 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 	B3_FOR_BASE(b3GetConditionHead(), item)
 	{
 		cond = (b3Condition *)item;
-		if(!cond->b3Prepare(prep_info))
+		if (!cond->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -171,7 +171,7 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 	B3_FOR_BASE(b3GetBumpHead(), item)
 	{
 		bump = (b3Bump *)item;
-		if(!bump->b3Prepare(prep_info))
+		if (!bump->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -180,7 +180,7 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 	B3_FOR_BASE(b3GetMaterialHead(), item)
 	{
 		material = (b3Material *)item;
-		if(!material->b3Prepare(prep_info))
+		if (!material->b3Prepare(prep_info))
 		{
 			return false;
 		}
@@ -201,14 +201,14 @@ void b3Shape::b3BumpNormal(b3_ray * ray)
 	B3_FOR_BASE(b3GetBumpHead(), item)
 	{
 		bump = (b3Bump *)item;
-		if(bump->b3NeedDeriv())
+		if (bump->b3NeedDeriv())
 		{
-			if(!deriv_computed)
+			if (!deriv_computed)
 			{
 				deriv_ok       = b3NormalDeriv(ray);
 				deriv_computed = true;
 			}
-			if(deriv_ok)
+			if (deriv_ok)
 			{
 				bump->b3BumpNormal(ray);
 			}
@@ -245,7 +245,7 @@ b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
 	B3_FOR_BASE(b3GetMaterialHead(), item)
 	{
 		material = (b3Material *)item;
-		if(material->b3GetSurfaceValues(surface))
+		if (material->b3GetSurfaceValues(surface))
 		{
 			return material;
 		}
@@ -418,7 +418,7 @@ b3Shape3::b3Shape3(b3_u32 * src) : b3SimpleShape(src)
 
 void b3Shape3::b3StoreShape()
 {
-	for(b3_loop i = 0; i < 3; i++)
+	for (b3_loop i = 0; i < 3; i++)
 	{
 		b3_vector normal;
 
@@ -440,7 +440,7 @@ b3_bool b3Shape3::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_bool result = false;
 
-	if(b3BaseTransformation::b3Prepare())
+	if (b3BaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare(prep_info);
 	}

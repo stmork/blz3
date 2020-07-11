@@ -46,7 +46,7 @@ b3InfoTGA::b3InfoTGA(b3Tx * tx, const char * filename) :
 	b3TxSaveInfo(tx, filename)
 {
 	m_SaveData = (b3_u08 *)b3Alloc(BUFFERSIZE + 16);
-	if(m_SaveData == null)
+	if (m_SaveData == null)
 	{
 		m_File.b3Close();
 		b3Free();
@@ -63,18 +63,18 @@ void b3InfoTGA::b3Write()
 	b3_coord     t, u, y;
 	b3_count     i;
 
-	for(y = 0; y < m_Tx->ySize; y++)
+	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		m_Tx->b3GetRow(m_ThisRow, y);
 		t = 0;
-		while(t < m_Tx->xSize)
+		while (t < m_Tx->xSize)
 		{
 			a = m_ThisRow[t];
-			if(a == m_ThisRow[t + 1])
+			if (a == m_ThisRow[t + 1])
 			{
 				i = 0;
 				t++;
-				while((a == m_ThisRow[t]) && (t < m_Tx->xSize) && (i < 127))
+				while ((a == m_ThisRow[t]) && (t < m_Tx->xSize) && (i < 127))
 				{
 					t++;
 					i++;
@@ -91,14 +91,14 @@ void b3InfoTGA::b3Write()
 				i = 1;
 				u = t + i;
 				m_SaveIndex = 0;
-				while((m_ThisRow[u] != m_ThisRow[u + 1]) && (u < m_Tx->xSize) && (i < 127))
+				while ((m_ThisRow[u] != m_ThisRow[u + 1]) && (u < m_Tx->xSize) && (i < 127))
 				{
 					i++;
 					u++;
 				}
 				m_SaveData[0] = (i - 1);
 				m_File.b3Write(m_SaveData, 1);
-				while(i != 0)
+				while (i != 0)
 				{
 					a = m_ThisRow[t++];
 					m_SaveData[1] =  a        & 0xff;

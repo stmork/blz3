@@ -41,6 +41,10 @@ dist:	configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 	cp blz3.spec /tmp/
 
+astyle:
+	find . -name "*.h" | xargs astyle
+	find . -name "*.cc" | xargs astyle
+
 documentation:	Doxyfile
 	doxygen Doxyfile
 

@@ -50,7 +50,7 @@ b3FileMem::b3FileMem(const b3_access_mode access_mode)
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;
 	m_BufferInc  = 0;
-	if(!b3Open(access_mode))
+	if (!b3Open(access_mode))
 	{
 		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
 	}
@@ -64,7 +64,7 @@ b3FileMem::b3FileMem(const char * file_name, const b3_access_mode access_mode)
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;
 	m_BufferInc  = 0;
-	if(!b3Open(file_name, access_mode))
+	if (!b3Open(file_name, access_mode))
 	{
 		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
 	}
@@ -79,7 +79,7 @@ b3_bool b3FileMem::b3Open(const b3_access_mode access_mode)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
-	switch(access_mode)
+	switch (access_mode)
 	{
 	case B_WRITE :
 	case T_WRITE :
@@ -87,9 +87,9 @@ b3_bool b3FileMem::b3Open(const b3_access_mode access_mode)
 	// Walk through!
 	case B_READ :
 	case T_READ :
-		if(b3Buffer(16000))
+		if (b3Buffer(16000))
 		{
-			if(b3EnsureBufferSize(0))
+			if (b3EnsureBufferSize(0))
 			{
 				b3Seek(0, B3_SEEK_START);
 				return true;
@@ -109,13 +109,13 @@ b3_bool b3FileMem::b3Open(const char * file_name, const b3_access_mode access_mo
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
-	switch(access_mode)
+	switch (access_mode)
 	{
 	case B_READ :
 	case T_READ :
-		if(b3Buffer(16000))
+		if (b3Buffer(16000))
 		{
-			if(b3ReadBuffer(file_name))
+			if (b3ReadBuffer(file_name))
 			{
 				b3Seek(0, B3_SEEK_START);
 				return true;
@@ -129,9 +129,9 @@ b3_bool b3FileMem::b3Open(const char * file_name, const b3_access_mode access_mo
 
 	case B_APPEND:
 	case T_APPEND:
-		if(b3Buffer(16000))
+		if (b3Buffer(16000))
 		{
-			if(b3ReadBuffer(file_name))
+			if (b3ReadBuffer(file_name))
 			{
 				b3Seek(0, B3_SEEK_END);
 				return true;
@@ -167,7 +167,7 @@ b3_size b3FileMem::b3Write(
 
 	memcpy(&m_Buffer[m_BufferPos], ptr, written_size);
 	m_BufferPos += written_size;
-	if(m_BufferPos > m_BufferSize)
+	if (m_BufferPos > m_BufferSize)
 	{
 		m_BufferSize = m_BufferPos;
 	}
@@ -188,7 +188,7 @@ b3_size b3FileMem::b3Seek(
 	b3_offset new_pos;
 
 	old_pos = m_BufferPos;
-	switch(SeekMode)
+	switch (SeekMode)
 	{
 	case B3_SEEK_START :
 		new_pos = offset;
@@ -207,12 +207,12 @@ b3_size b3FileMem::b3Seek(
 		break;
 	}
 
-	if(new_pos < 0)
+	if (new_pos < 0)
 	{
 		new_pos = 0;
 	}
 	b3EnsureBufferSize(m_BufferPos = new_pos);
-	if(m_BufferPos > m_BufferSize)
+	if (m_BufferPos > m_BufferSize)
 	{
 		m_BufferSize = m_BufferPos;
 	}
@@ -232,7 +232,7 @@ b3_bool b3FileMem::b3Buffer(b3_size Size)
 
 void b3FileMem::b3Close()
 {
-	if(m_Buffer != null)
+	if (m_Buffer != null)
 	{
 		b3Free();
 	}
@@ -249,9 +249,9 @@ b3_bool b3FileMem::b3ReadBuffer(const char * filename)
 	b3_size  file_size;
 
 	file_buffer = file.b3ReadBuffer(filename, file_size);
-	if(file_buffer != null)
+	if (file_buffer != null)
 	{
-		if(b3EnsureBufferSize(file_size))
+		if (b3EnsureBufferSize(file_size))
 		{
 			memcpy(m_Buffer, file_buffer, file_size);
 			m_BufferSize = file_size;
@@ -266,12 +266,12 @@ b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 {
 	b3_u08 * new_buffer;
 
-	if(new_size > m_BufferMax)
+	if (new_size > m_BufferMax)
 	{
 		new_size += m_BufferInc;
 
 		new_buffer = (b3_u08 *)b3Alloc(new_size);
-		if(new_buffer == null)
+		if (new_buffer == null)
 		{
 			B3_THROW(b3FileException, B3_FILE_MEMORY);
 		}

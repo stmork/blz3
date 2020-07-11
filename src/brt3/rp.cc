@@ -56,21 +56,21 @@ public:
 
 		m_BBox = null;
 		patchfile = fopen(filename, B3_TREAD);
-		if(patchfile != null)
+		if (patchfile != null)
 		{
 			b3PrintF(B3LOG_NORMAL, "Reading %s...\n", filename);
-			if(b3ReadLine(line, sizeof(line), patchfile))
+			if (b3ReadLine(line, sizeof(line), patchfile))
 			{
 				count = 0;
 				sscanf(line, " %ld", &count);
 				b3PrintF(B3LOG_NORMAL, "Trying to read %d patches...\n", count);
-				for(i = 0; i < count; i++)
+				for (i = 0; i < count; i++)
 				{
-					if(b3ReadLine(line, sizeof(line), patchfile))
+					if (b3ReadLine(line, sizeof(line), patchfile))
 					{
 						b3_patch patch;
 
-						if(sscanf(line, "%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld",
+						if (sscanf(line, "%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld",
 								&patch.m_Indices[ 0],
 								&patch.m_Indices[ 1],
 								&patch.m_Indices[ 2],
@@ -102,18 +102,18 @@ public:
 				b3PrintF(B3LOG_NORMAL, "Cannot parse count line:\n %s\n", line);
 			}
 
-			if(b3ReadLine(line, sizeof(line), patchfile))
+			if (b3ReadLine(line, sizeof(line), patchfile))
 			{
 				count = 0;
 				sscanf(line, " %ld", &count);
 				b3PrintF(B3LOG_NORMAL, "Trying to read %d vertices...\n", count);
-				for(i = 0; i < count; i++)
+				for (i = 0; i < count; i++)
 				{
-					if(b3ReadLine(line, sizeof(line), patchfile))
+					if (b3ReadLine(line, sizeof(line), patchfile))
 					{
 						b3_vector vertex;
 
-						if(sscanf(line, "%f,%f,%f",
+						if (sscanf(line, "%f,%f,%f",
 								&vertex.x, &vertex.y, &vertex.z) == 3)
 						{
 							b3_f64 factor = 20;
@@ -139,7 +139,7 @@ public:
 
 	~b3Patch()
 	{
-		if(m_BBox != null)
+		if (m_BBox != null)
 		{
 			delete m_BBox;
 		}
@@ -150,7 +150,7 @@ public:
 		b3PrintF(B3LOG_NORMAL, "Creating Blizzard objects...\n");
 
 #if 1
-		if((m_Patches.b3GetCount() == 32) && (m_Vertices.b3GetCount() == 306))
+		if ((m_Patches.b3GetCount() == 32) && (m_Vertices.b3GetCount() == 306))
 		{
 			b3CreateTeapot();
 		}
@@ -168,7 +168,7 @@ public:
 		b3Dir::b3SplitFileName(filename, null, m_BBox->m_BoxName);
 		b3Dir::b3RemoveExt(m_BBox->m_BoxName);
 
-		if(m_BBox != null)
+		if (m_BBox != null)
 		{
 			b3World world;
 			b3File  file(filename, B_WRITE);
@@ -232,29 +232,29 @@ private:
 		b3_count xp, xo, xi, x, i;
 		b3_index pos;
 
-		for(i = 0; i < shape->m_Spline[0].m_KnotNum; i++)
+		for (i = 0; i < shape->m_Spline[0].m_KnotNum; i++)
 		{
 			shape->m_Spline[0].m_Knots[i] = i / shape->m_Spline[0].m_Degree;
 		}
 
-		for(i = 0; i < shape->m_Spline[1].m_KnotNum; i++)
+		for (i = 0; i < shape->m_Spline[1].m_KnotNum; i++)
 		{
 			shape->m_Spline[1].m_Knots[i] = (i - 1) / shape->m_Spline[1].m_Degree;
 		}
 		shape->m_Spline[1].m_Knots[i - 1] = shape->m_Spline[1].m_Knots[i - 2];
 
 		index *= shape->m_Spline[1].m_Offset;
-		for(i = start; i < end; i += step)
+		for (i = start; i < end; i += step)
 		{
-			for(xp = 0; xp < 4; xp++)
+			for (xp = 0; xp < 4; xp++)
 			{
 				x = 0;
-				for(xo = 0; xo < 4; xo++)
+				for (xo = 0; xo < 4; xo++)
 				{
-					for(xi = 1; xi < 4; xi++)
+					for (xi = 1; xi < 4; xi++)
 					{
 						pos = xp * 4 + xi;
-						if(invert)
+						if (invert)
 						{
 							shape->m_Controls[x + index] = m_Vertices[m_Patches[i - xo + 3].m_Indices[15 - pos] - 1];
 						}
@@ -280,7 +280,7 @@ private:
 		m_BBox = new b3BBox(BBOX);
 
 		b3PrintF(B3LOG_NORMAL, "Creating object...\n");
-		for(i = 0; i < m_Patches.b3GetCount(); i++)
+		for (i = 0; i < m_Patches.b3GetCount(); i++)
 		{
 			shape = new b3SplineShape(SPLINES_AREA);
 			shape->b3Init(3, 3, 4, 4);
@@ -290,9 +290,9 @@ private:
 
 			index = 0;
 			pos   = 0;
-			for(y = 0; y < shape->m_Spline[1].m_ControlNum; y++)
+			for (y = 0; y < shape->m_Spline[1].m_ControlNum; y++)
 			{
-				for(x = 0; x < shape->m_Spline[0].m_ControlNum; x += shape->m_Spline[0].m_Offset)
+				for (x = 0; x < shape->m_Spline[0].m_ControlNum; x += shape->m_Spline[0].m_Offset)
 				{
 					shape->m_Controls[x + index] = m_Vertices[m_Patches[i].m_Indices[pos++] - 1];
 				}
@@ -304,7 +304,7 @@ private:
 
 int main(int argc, char * argv[])
 {
-	if(argc == 3)
+	if (argc == 3)
 	{
 		b3Patch patch = argv[1];
 

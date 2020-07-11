@@ -57,7 +57,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker (h.264)\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-20013\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(command != null)
+	if (command != null)
 	{
 #ifdef BLZ3_USE_X264
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
@@ -87,9 +87,9 @@ static void b3RecodeRGB2YUV(b3Tx & img, x264_picture_t & pic_in, b3_res ySize)
 	memset(uPtr, 128, ySize * pic_in.img.i_stride[1] >> 1);
 	memset(vPtr, 128, ySize * pic_in.img.i_stride[2] >> 1);
 
-	for(b3_res iy = 0; iy < img.ySize; iy++)
+	for (b3_res iy = 0; iy < img.ySize; iy++)
 	{
-		for(b3_res ix = 0; ix < img.xSize; ix++)
+		for (b3_res ix = 0; ix < img.xSize; ix++)
 		{
 			pixel = line[ix];
 			r = (pixel & 0xff0000) >> 16;
@@ -98,7 +98,7 @@ static void b3RecodeRGB2YUV(b3Tx & img, x264_picture_t & pic_in, b3_res ySize)
 
 			yPtr[ix] =  0.257 * r + 0.504 * g + 0.098 * b;
 
-			if((ix & 1) && (iy & 1))
+			if ((ix & 1) && (iy & 1))
 			{
 				uPtr[ix >> 1] = -0.148 * r - 0.291 * g + 0.439 * b + 128;
 				vPtr[ix >> 1] =  0.439 * r - 0.368 * g - 0.071 * b + 128;
@@ -106,7 +106,7 @@ static void b3RecodeRGB2YUV(b3Tx & img, x264_picture_t & pic_in, b3_res ySize)
 		}
 		line += img.xSize;
 		yPtr += pic_in.img.i_stride[0];
-		if(iy & 1)
+		if (iy & 1)
 		{
 			uPtr += pic_in.img.i_stride[1];
 			vPtr += pic_in.img.i_stride[2];
@@ -121,7 +121,7 @@ static void b3Encode(x264_t * x264, x264_picture_t * pic_in, b3File & file)
 	int             i_nals;
 
 	x264_encoder_encode(x264, &nals, &i_nals, pic_in, &pic_out);
-	for(int i = 0; i < i_nals; i++)
+	for (int i = 0; i < i_nals; i++)
 	{
 		file.b3Write(nals[i].p_payload, nals[i].i_payload);
 	}
@@ -142,7 +142,7 @@ int main(int argc, char * argv[])
 	b3_res          ySize = 0;
 	b3_bool         isFirst = true;
 
-	if(argc <= 1)
+	if (argc <= 1)
 	{
 		b3Banner(argv[0]);
 		exit(EXIT_SUCCESS);
@@ -156,11 +156,11 @@ int main(int argc, char * argv[])
 	param.i_log_level      = X264_LOG_NONE;
 #endif
 
-	for(int i = 2; i < argc; i++)
+	for (int i = 2; i < argc; i++)
 	{
-		if(argv[i][0] == '-')
+		if (argv[i][0] == '-')
 		{
-			switch(argv[i][1])
+			switch (argv[i][1])
 			{
 			case 'd' :
 				b3Log::b3SetLevel(B3LOG_DEBUG);
@@ -179,7 +179,7 @@ int main(int argc, char * argv[])
 		}
 		else
 		{
-			switch(b3Dir::b3Exists(argv[i]))
+			switch (b3Dir::b3Exists(argv[i]))
 			{
 			case B3_TYPE_DIR:
 				list.b3RecCreateList(argv[i]);
@@ -226,7 +226,7 @@ int main(int argc, char * argv[])
 
 
 	list.b3Sort();
-	for(entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != null; entry = entry->Succ)
 	{
 		b3Tx    img;
 		int     ino = 1;
@@ -234,7 +234,7 @@ int main(int argc, char * argv[])
 		try
 		{
 			img.b3LoadImage(entry->b3Name());
-			if(isFirst)
+			if (isFirst)
 			{
 				xSize          = (img.xSize + 15) & 0xfff0;
 				ySize          = (img.ySize +  7) & 0xfff8;
@@ -249,14 +249,14 @@ int main(int argc, char * argv[])
 				x264 = x264_encoder_open(&param);
 				x264_encoder_parameters(x264, &param);
 
-				if(!param.b_repeat_headers)
+				if (!param.b_repeat_headers)
 				{
 					x264_nal_t * headers;
 					int         i_nals = 0;
 
 					b3PrintF(B3LOG_DEBUG, "Writing header...\n");
 					x264_encoder_headers(x264, &headers, &i_nals);
-					for(int i = 0; i < i_nals; i++)
+					for (int i = 0; i < i_nals; i++)
 					{
 						file.b3Write(headers[i].p_payload, headers[i].i_payload);
 					}
@@ -269,21 +269,21 @@ int main(int argc, char * argv[])
 				isFirst = false;
 			}
 		}
-		catch(b3TxException & t)
+		catch (b3TxException & t)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n");
 			b3PrintF(B3LOG_NORMAL, "Image error when processing image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
 			b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
 		}
-		catch(b3ExceptionBase & e)
+		catch (b3ExceptionBase & e)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n");
 			b3PrintF(B3LOG_NORMAL, "General Blizzard III error on image %s!\n", entry->b3Name());
 			b3PrintF(B3LOG_NORMAL, "Error code: %d\n", e.b3GetError());
 			b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", e.b3GetErrorMsg());
 		}
-		catch(...)
+		catch (...)
 		{
 			b3PrintF(B3LOG_NORMAL, "\n");
 			b3PrintF(B3LOG_NORMAL, "Unknown error occured on image %s!\n", entry->b3Name());
@@ -299,13 +299,13 @@ int main(int argc, char * argv[])
 
 #ifdef BLZ3_USE_X264
 #ifdef HAVE_X264_DELAYED_FRAMES
-	for(int delayed = x264_encoder_delayed_frames(x264); delayed > 0; delayed--)
+	for (int delayed = x264_encoder_delayed_frames(x264); delayed > 0; delayed--)
 	{
 		b3Encode(x264, &pic_in, file);
 	}
 #endif
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(!isFirst)
+	if (!isFirst)
 	{
 		x264_picture_clean(&pic_in);
 	}

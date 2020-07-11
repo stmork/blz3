@@ -57,7 +57,7 @@ void b3CSGCone::b3ComputeVertices()
 	b3_gl_vertex * Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
-	for(i = 0; i < SinCosSteps; i++)
+	for (i = 0; i < SinCosSteps; i++)
 	{
 		b3Vector::b3LinearCombine(&m_Base, &m_Dir1, &m_Dir2,
 			b3ShapeRenderContext::m_Cos[i],
@@ -79,7 +79,7 @@ void b3CSGCone::b3ComputeIndices()
 	b3_index       offset = SinCosSteps << 1;
 	b3_index       i;
 
-	for(i = 0; i < SinCosSteps; i++)
+	for (i = 0; i < SinCosSteps; i++)
 	{
 		B3_GL_LINIT(gPtr, i, (i + 1) % SinCosSteps);
 		B3_GL_LINIT(gPtr, i, offset);

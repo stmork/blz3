@@ -49,7 +49,7 @@ static b3_res                xWinSize, yWinSize;
 static void b3SetLights()
 {
 	context.b3LightReset();
-	if(all_lights)
+	if (all_lights)
 	{
 		b3PrintF(B3LOG_DEBUG, "Using multiple lights with%s spots...\n",
 			spot_light ? "" : "out");
@@ -92,11 +92,11 @@ static void b3PlayAnimation()
 
 	scene = (b3Scene *)world->b3GetFirst();
 	animation = scene->b3GetAnimation();
-	if(animation == null)
+	if (animation == null)
 	{
 		return;
 	}
-	if(animation->m_Flags & ANIMF_ON)
+	if (animation->m_Flags & ANIMF_ON)
 	{
 		b3Time    start, now, last;
 		b3_vector lower, upper;
@@ -118,13 +118,13 @@ static void b3PlayAnimation()
 			view.b3SetCamera(scene);
 			b3ReshapeFunc(xWinSize, yWinSize);
 			scene->b3Draw(&context);
-			if(double_buffered)
+			if (double_buffered)
 			{
 				glutSwapBuffers();
 			}
 			count++;
 		}
-		while(t < animation->m_End);
+		while (t < animation->m_End);
 
 		span = now - start;
 		b3PrintF(B3LOG_NORMAL, "Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
@@ -137,15 +137,15 @@ static void b3NextCamera(b3Scene * scene)
 	b3CameraPart * camera, *act;
 
 	act = scene->b3GetActualCamera();
-	if(act != null)
+	if (act != null)
 	{
 		camera = scene->b3GetNextCamera(act);
-		if(camera == null)
+		if (camera == null)
 		{
 			// Take first camera
 			camera = scene->b3GetFirstCamera(false);
 		}
-		if(camera != null)
+		if (camera != null)
 		{
 			b3PrintF(B3LOG_NORMAL, "Using camera %s\n", camera->b3GetName());
 			scene->b3SetCamera(camera);
@@ -167,7 +167,7 @@ static void b3KeyboardFunc(unsigned char key, int x, int y)
 	b3_bool   refresh = false;
 
 	scene = (b3Scene *)world->b3GetFirst();
-	switch(key)
+	switch (key)
 	{
 	case 'l':
 		all_lights = !all_lights;
@@ -229,7 +229,7 @@ static void b3KeyboardFunc(unsigned char key, int x, int y)
 		exit(EXIT_SUCCESS);
 	}
 
-	if(refresh)
+	if (refresh)
 	{
 		b3ReshapeFunc(xWinSize, yWinSize);
 		glutPostRedisplay();
@@ -270,7 +270,7 @@ static void b3Prepare(b3Scene * scene)
 	scene->b3SetCamera(scene->b3GetFirstCamera(false));
 
 	info = scene->b3GetModellerInfo();
-	if(info != null)
+	if (info != null)
 	{
 		all_lights = info->m_UseSceneLights;
 	}
@@ -284,7 +284,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III OpenGL scene viewer\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if(command != null)
+	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s [-d][-f][-v][-s] BWD-file\n", command);
@@ -314,16 +314,16 @@ int main(int argc, char * argv[])
 	b3_index        i;
 
 
-	if(argc <= 1)
+	if (argc <= 1)
 	{
 		b3Banner(argv[0]);
 		exit(EXIT_SUCCESS);
 	}
 	glutInit(&argc, argv);
 
-	for(i = 1; (i < argc) && (argv[i][0] == '-'); i++)
+	for (i = 1; (i < argc) && (argv[i][0] == '-'); i++)
 	{
-		switch(argv[i][1])
+		switch (argv[i][1])
 		{
 		case 'v' :
 			b3VectorBufferObjects::glAllowVBO = false;
@@ -340,7 +340,7 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	if(i >= argc)
+	if (i >= argc)
 	{
 		b3PrintF(B3LOG_NORMAL, "No filename given!\n");
 		exit(EXIT_FAILURE);
@@ -361,18 +361,18 @@ int main(int argc, char * argv[])
 		world->b3AddPath(data);
 
 		b3RaytracingItems::b3Register();
-		if(BLZ3_BIN != null)
+		if (BLZ3_BIN != null)
 		{
 			loader.b3AddPath(BLZ3_BIN);
 		}
-		if(BLZ3_PLUGINS != null)
+		if (BLZ3_PLUGINS != null)
 		{
 			loader.b3AddPath(BLZ3_PLUGINS);
 		}
 		loader.b3Load();
 
 		world->b3Read(filename);
-		for(item  = world->b3GetFirst();
+		for (item  = world->b3GetFirst();
 			item != null;
 			item  = scene->Succ)
 		{
@@ -393,13 +393,13 @@ int main(int argc, char * argv[])
 		}
 		delete world;
 	}
-	catch(b3ExceptionBase & e)
+	catch (b3ExceptionBase & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "Error parsing %s\n", argv[1]);
 		b3PrintF(B3LOG_NORMAL, "Error code: %d\n", e.b3GetError());
 		b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", e.b3GetErrorMsg());
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL, "Unknown error occured processing %s\n", argv[1]);
 	}

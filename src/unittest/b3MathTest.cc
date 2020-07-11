@@ -69,15 +69,15 @@ void b3MathTest::test()
 	CPPUNIT_ASSERT_EQUAL(2.5,   b3Math::b3Limit(2.5, 1.0, 4.0));
 	CPPUNIT_ASSERT_EQUAL(4.0,   b3Math::b3Limit(4.5, 1.0, 4.0));
 
-	for(base = 0; base < 13; base++)
+	for (base = 0; base < 13; base++)
 	{
-		for(exp = 0; exp < 16; exp++)
+		for (exp = 0; exp < 16; exp++)
 		{
 			CPPUNIT_ASSERT_EQUAL(pow(base, static_cast<double>(exp)), b3Math::b3FastPow(base, exp));
 		}
 	}
 
-	for(base = -27; base <= 27; base += 0.125);
+	for (base = -27; base <= 27; base += 0.125);
 	{
 		CPPUNIT_ASSERT_EQUAL(round(pow(base, 1.0 / 3) * 10000000), round(b3Math::b3Cbrt(base) * 10000000));
 	}

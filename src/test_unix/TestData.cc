@@ -47,12 +47,12 @@ static void b3TestFile(const char * filename)
 		world.b3Read("/tmp/test.bwd");
 		stage++;
 	}
-	catch(b3WorldException & e)
+	catch (b3WorldException & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "Error catched processing %s (stage: %d)\n", filename, stage);
 		b3PrintF(B3LOG_NORMAL, "  Error code: %d\n", e.b3GetError());
 		b3PrintF(B3LOG_NORMAL, "  Error msg:  %s\n", e.b3GetErrorMsg());
-		switch(e.b3GetError())
+		switch (e.b3GetError())
 		{
 		case B3_WORLD_OPEN:
 			b3PrintF(B3LOG_NORMAL, "  Cannot open file.\n");
@@ -81,7 +81,7 @@ static void b3TestFile(const char * filename)
 		}
 		b3PrintF(B3LOG_NORMAL, "-----------------------------------------\n");
 	}
-	catch(...)
+	catch (...)
 	{
 		b3PrintF(B3LOG_NORMAL, "Another unknown error occured...\n");
 		b3PrintF(B3LOG_NORMAL, "Filename: %s\n", filename);
@@ -93,14 +93,14 @@ int main(int argc, char * argv[])
 {
 	b3_index i;
 
-	for(i = 1; i < argc; i++)
+	for (i = 1; i < argc; i++)
 	{
-		if(b3Dir::b3Exists(argv[i]) == B3_TYPE_DIR)
+		if (b3Dir::b3Exists(argv[i]) == B3_TYPE_DIR)
 		{
 			b3FileList   list(argv[i]);
 			b3FileEntry * entry;
 
-			for(entry = list.b3First(); entry != null; entry = entry->Succ)
+			for (entry = list.b3First(); entry != null; entry = entry->Succ)
 			{
 				b3TestFile(entry->b3Name());
 			}

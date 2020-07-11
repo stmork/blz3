@@ -49,11 +49,11 @@ b3ExceptionBase::b3ExceptionBase(
 	m_LineNo        = lineno;
 	m_FileName      = filename;
 
-	if(m_Logger == null)
+	if (m_Logger == null)
 	{
 		b3SetLogger(null);
 	}
-	if(m_GetMessage == null)
+	if (m_GetMessage == null)
 	{
 		b3SetMsgFunc(null);
 	}
@@ -68,11 +68,11 @@ b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase & exc)
 	m_LineNo        = exc.m_LineNo;
 	m_FileName      = exc.m_FileName;
 
-	if(m_Logger == null)
+	if (m_Logger == null)
 	{
 		b3SetLogger(null);
 	}
-	if(m_GetMessage == null)
+	if (m_GetMessage == null)
 	{
 		b3SetMsgFunc(null);
 	}
@@ -89,7 +89,7 @@ void b3ExceptionBase::b3Log(const b3ExceptionBase * exception)
 
 void b3ExceptionBase::b3SetLogger(b3ExceptionLogger logger)
 {
-	if(logger == null)
+	if (logger == null)
 	{
 		logger = &b3Log;
 	}
@@ -126,7 +126,7 @@ const char * b3ExceptionBase::what() const noexcept
 
 void b3ExceptionBase::b3SetMsgFunc(b3ExceptionMsgFunc converter)
 {
-	if(converter == null)
+	if (converter == null)
 	{
 		converter = &b3GetMessage;
 	}

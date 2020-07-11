@@ -69,7 +69,7 @@ b3_bool b3COBReader::b3COB_AllocObject(
 	b3COBInfo * cobInfo;
 
 	cobInfo = new b3COBInfo(node, id, parent, type);
-	if(cobInfo)
+	if (cobInfo)
 	{
 		cobInfos.b3Append(cobInfo);
 	}
@@ -87,7 +87,7 @@ b3COBInfo * b3COBReader::b3COB_FindInfo(b3_cob_id id)
 
 	B3_FOR_BASE(&cobDone, cobInfo)
 	{
-		if(cobInfo->refID == id)
+		if (cobInfo->refID == id)
 		{
 			return cobInfo;
 		}
@@ -113,20 +113,20 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 
 	/* First find root object in object list. */
 	/* Follow error messages for exceptions! */
-	for(cobInfo  = cobInfos.First;
+	for (cobInfo  = cobInfos.First;
 		cobInfo != null;
 		cobInfo  = next)
 	{
 		next = cobInfo->Succ;
-		if(cobInfo->refParent == 0)
+		if (cobInfo->refParent == 0)
 		{
-			if(cobInfo->refType != COB_GROU)
+			if (cobInfo->refType != COB_GROU)
 			{
 				b3PrintF(B3LOG_NORMAL, " ERROR: root object not of required group type!\n");
 				return null;
 			}
 
-			if(root != null)
+			if (root != null)
 			{
 				b3PrintF(B3LOG_NORMAL, " ERROR: more than one root object found!\n");
 				return null;
@@ -139,7 +139,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 		}
 	}
 
-	if(root == null)
+	if (root == null)
 	{
 		b3PrintF(B3LOG_NORMAL, " ERROR: no root object found!\n");
 		return null;
@@ -154,20 +154,20 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 	/* polygons  to groups */
 	/* materials to polygons */
 
-	while((cobInfo = cobInfos.First) != null)
+	while ((cobInfo = cobInfos.First) != null)
 	{
 		next = b3COB_FindInfo(cobInfo->refParent);
-		if(next == null)
+		if (next == null)
 		{
 			b3PrintF(B3LOG_NORMAL, " ERROR: object with parent ID %ld not found!\n",
 				cobInfo->refParent);
 			return null;
 		}
 
-		switch(cobInfo->refType)
+		switch (cobInfo->refType)
 		{
 		case COB_GROU :
-			switch(next->refType)
+			switch (next->refType)
 			{
 			case COB_GROU :
 #ifndef ONE_BBOX
@@ -183,7 +183,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			break;
 
 		case COB_POLH :
-			switch(next->refType)
+			switch (next->refType)
 			{
 			case COB_GROU :
 #ifndef ONE_BBOX
@@ -201,7 +201,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			break;
 
 		case COB_MAT1 :
-			switch(next->refType)
+			switch (next->refType)
 			{
 			case COB_POLH :
 				Shape = (b3TriangleShape *)next->refNode;
@@ -237,9 +237,9 @@ void b3COBReader::b3COB_ComputeAvrgColor(
 	color.b3Init();
 	xMax = texture->xSize;
 	yMax = texture->ySize;
-	for(y = 0; y < yMax; y++)
+	for (y = 0; y < yMax; y++)
 	{
-		for(x = 0; x < xMax; x++)
+		for (x = 0; x < xMax; x++)
 		{
 			color = texture->b3GetHdrValue(x, y);
 		}
@@ -270,14 +270,14 @@ b3_size b3COBReader::b3COB_GetLine(
 {
 	b3_size i;
 
-	for(i = 0; i < maxLine; i++)
+	for (i = 0; i < maxLine; i++)
 	{
-		switch(*buffer)
+		switch (*buffer)
 		{
 		case 10 :
 		case 13 :
 			*line = 0;
-			if(buffer[1] == 13)
+			if (buffer[1] == 13)
 			{
 				i++;
 			}
@@ -296,35 +296,35 @@ b3_size b3COBReader::b3COB_GetLine(
 
 b3_cob_type b3COBReader::b3COB_GetToken(const char * buffer)
 {
-	if(strncmp(buffer, "Grou", 4) == 0)
+	if (strncmp(buffer, "Grou", 4) == 0)
 	{
 		return COB_GROU;
 	}
-	if(strncmp(buffer, "PolH", 4) == 0)
+	if (strncmp(buffer, "PolH", 4) == 0)
 	{
 		return COB_POLH;
 	}
-	if(strncmp(buffer, "Mat1", 4) == 0)
+	if (strncmp(buffer, "Mat1", 4) == 0)
 	{
 		return COB_MAT1;
 	}
-	if(strncmp(buffer, "END ", 4) == 0)
+	if (strncmp(buffer, "END ", 4) == 0)
 	{
 		return COB_END;
 	}
-	if(strncmp(buffer, "Unit", 4) == 0)
+	if (strncmp(buffer, "Unit", 4) == 0)
 	{
 		return COB_UNIT;
 	}
-	if(strncmp(buffer, "DefP", 4) == 0)
+	if (strncmp(buffer, "DefP", 4) == 0)
 	{
 		return COB_DEFP;
 	}
-	if(strncmp(buffer, "Chan", 4) == 0)
+	if (strncmp(buffer, "Chan", 4) == 0)
 	{
 		return COB_CHAN;
 	}
-	if(strncmp(buffer, "DDiv", 4) == 0)
+	if (strncmp(buffer, "DDiv", 4) == 0)
 	{
 		return COB_DDIV;
 	}
@@ -355,7 +355,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 		&ver, &rev, &id, &parent, &size);
 
 	b3COB_GetLine(line, &buffer[len + 1], sizeof(line));
-	if(sscanf(line, "Name %32s", boxName) != 1)
+	if (sscanf(line, "Name %32s", boxName) != 1)
 	{
 		strlcpy(boxName, "bbox", sizeof(boxName));
 	}
@@ -366,10 +366,10 @@ b3_size b3COBReader::b3COB_ParseGrou(
 #endif
 
 	BBox = new b3BBox(BBOX);
-	if(BBox != null)
+	if (BBox != null)
 	{
 		strlcpy(BBox->m_BoxName, boxName, sizeof(BBox->m_BoxName));
-		if(!b3COB_AllocObject(BBox, id, parent, COB_GROU))
+		if (!b3COB_AllocObject(BBox, id, parent, COB_GROU))
 		{
 			delete BBox;
 		}
@@ -410,13 +410,13 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	sscanf(line, "PolH V%ld.%ld Id %d Parent %d Size %08ld",
 		&ver, &rev, &id, &parent, &size);
 
-	if(parent == 0)
+	if (parent == 0)
 	{
 		BBox = new b3BBox(BBOX);
-		if(BBox != null)
+		if (BBox != null)
 		{
 			strlcpy(BBox->m_BoxName, name, sizeof(BBox->m_BoxName));
-			if(!b3COB_AllocObject(BBox, 1, parent, COB_GROU))
+			if (!b3COB_AllocObject(BBox, 1, parent, COB_GROU))
 			{
 				delete BBox;
 			}
@@ -438,21 +438,21 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 	size += len;
 	b3Matrix::b3Unit(&transform);
-	for(i = len + 1; i < size; i += (len + 1))
+	for (i = len + 1; i < size; i += (len + 1))
 	{
 		len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 
 		/* read number of polygons, number of triangles */
-		if(sscanf(line, "Faces %ld", &polygons) == 1)
+		if (sscanf(line, "Faces %ld", &polygons) == 1)
 		{
 			fPos  = i + len + 1;
 			faces = 0;
-			for(ver = 0; ver < polygons; ver++)
+			for (ver = 0; ver < polygons; ver++)
 			{
 				i += (len + 1);
 				len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 				rev = 2;
-				if(sscanf(line, "Face verts %ld", &rev) == 1)
+				if (sscanf(line, "Face verts %ld", &rev) == 1)
 				{
 					faces += (rev - 2);
 				}
@@ -463,13 +463,13 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		}
 
 		/* read number of vertices */
-		if(sscanf(line, "World Vertices %ld", &vertices) == 1)
+		if (sscanf(line, "World Vertices %ld", &vertices) == 1)
 		{
 			vPos  = i + len + 1;
 		}
 
 		/* read transformation matrix */
-		if(strcmp(line, "Transform") == 0)
+		if (strcmp(line, "Transform") == 0)
 		{
 			i += (len + 1);
 			len = b3COB_GetLine(line, &buffer[i], sizeof(line));
@@ -497,10 +497,10 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #endif
 
 	TriaShape = new b3Triangles(TRIANGLES);
-	if(TriaShape != null)
+	if (TriaShape != null)
 	{
 		TriaShape->b3Init(vertices, faces, 1, 1);
-		if(!b3COB_AllocObject(TriaShape, id, parent, COB_POLH))
+		if (!b3COB_AllocObject(TriaShape, id, parent, COB_POLH))
 		{
 			delete TriaShape;
 		}
@@ -511,7 +511,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 			/* read vertices */
 			i = vPos;
-			for(count = 0; count < vertices; count++)
+			for (count = 0; count < vertices; count++)
 			{
 				len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 				sscanf(line, "%f %f %f", &pos.x, &pos.y, &pos.z);
@@ -521,11 +521,11 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 			/* loop for reading triangle indices */
 			i = fPos; /* outer polygon loop */
-			for(count = 0; count < polygons; count++)
+			for (count = 0; count < polygons; count++)
 			{
 				len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 				rev = 0;
-				if(sscanf(line, "Face verts %ld", &rev) == 1)
+				if (sscanf(line, "Face verts %ld", &rev) == 1)
 				{
 					rev -= 2;
 				}
@@ -540,7 +540,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 				/* first, scan indices */
 				rev += 2;
-				for(k = 0, len = 0; k < rev; k++)
+				for (k = 0, len = 0; k < rev; k++)
 				{
 					sscanf(&line[len], "<%ld,%*d> %ln", &read, &index);
 					IDs.b3Add(read);
@@ -549,13 +549,13 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 				l = 1;
 				u = rev;
-				for(k = 2; k < rev; k++)
+				for (k = 2; k < rev; k++)
 				{
 					b3_index P1, P2, P3;
 
 					P1 = u % rev;
 					P2 = l;
-					if(k & 1)
+					if (k & 1)
 					{
 						u--;
 						P3 = u % rev;
@@ -581,7 +581,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				sscanf(line, "<%ld,%*d> <%ld,%*d> %n", &id1, &id2, &index);
 
 				len = index;
-				for(k = 0; k < rev; k++) /* inner triangulation loop */
+				for (k = 0; k < rev; k++) /* inner triangulation loop */
 				{
 					tria->P1 = id1;
 					tria->P2 = id2;
@@ -643,16 +643,16 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 	size += len;
 
 	Mat = new b3MatNormal(MATERIAL);
-	if(Mat != null)
+	if (Mat != null)
 	{
 		name[0] = 0;
-		if(!b3COB_AllocObject(Mat, id, parent, COB_MAT1))
+		if (!b3COB_AllocObject(Mat, id, parent, COB_MAT1))
 		{
 			delete Mat;
 			return size;
 		}
 
-		for(i = len + 1; i < size; i += (len + 1))
+		for (i = len + 1; i < size; i += (len + 1))
 		{
 			b3_f32 exp, ior;
 
@@ -669,7 +669,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 			sscanf(line, "texture: %s", name);
 			Mat->m_Diffuse.b3Init(r, g, b);
 		}
-		if((Mat->m_Ior == 0) || (Mat->m_Ior == 1))
+		if ((Mat->m_Ior == 0) || (Mat->m_Ior == 1))
 		{
 			Mat->m_Refraction = 0;
 		}
@@ -678,20 +678,20 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 			Mat->m_Refraction = 0.5;
 		}
 		Mat->m_SpecularExp  *= 100000;
-		if(Mat->m_SpecularExp <     20)
+		if (Mat->m_SpecularExp <     20)
 		{
 			Mat->m_SpecularExp =     20;
 		}
-		if(Mat->m_SpecularExp > 100000)
+		if (Mat->m_SpecularExp > 100000)
 		{
 			Mat->m_SpecularExp = 100000;
 		}
-		if(strlen(name) > 0)
+		if (strlen(name) > 0)
 		{
 			b3Tx * texture;
 
 			texture = b3Scene::m_TexturePool.b3LoadTexture(name);
-			if(texture != null)
+			if (texture != null)
 			{
 				b3COB_ComputeAvrgColor(texture, Mat->m_Diffuse);
 			}
@@ -748,7 +748,7 @@ b3Item * b3COBReader::b3COB_Parse(
 	b3_cob_type token;
 
 	len = b3COB_GetLine(line, buffer, sizeof(line));
-	if(strcmp(line, "Caligari V00.01ALH             ") != 0)
+	if (strcmp(line, "Caligari V00.01ALH             ") != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, " This file is not an Caligari ASCII file!!\n");
 		return null;
@@ -756,10 +756,10 @@ b3Item * b3COBReader::b3COB_Parse(
 
 	buffer += (++len);
 	pos = len;
-	while(pos < size)
+	while (pos < size)
 	{
 		token = b3COB_GetToken(buffer);
-		switch(token)
+		switch (token)
 		{
 		case COB_GROU :
 			len =  b3COB_ParseGrou(buffer, name);
@@ -810,7 +810,7 @@ b3BBox * b3COBReader::b3ReadCOB(const char * cobfile)
 
 	b3PrintF(B3LOG_NORMAL, "Reading COB %s\n", cobfile);
 	buffer = (const char *)file.b3ReadBuffer(cobfile, size);
-	if(buffer != null)
+	if (buffer != null)
 	{
 		bbox = (b3BBox *)reader.b3COB_Parse(buffer, cobfile, size);
 	}

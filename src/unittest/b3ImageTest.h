@@ -64,7 +64,7 @@ public:
 		m_TxTrueColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,  32); // True color, 8 bit per color
 		m_TxRealColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, 128); // Real color, 32 bit per color (floating point)
 
-		for(b3_res x = 0; x < TEST_IMG_XMAX; x++)
+		for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
 		{
 			b3_f32 r, g, b, value;
 			b3_index idx = x / width;
@@ -78,9 +78,9 @@ public:
 
 		tRow = m_TxTrueColor.b3GetTrueColorData();
 		rRow = m_TxRealColor.b3GetHdrData();
-		for(b3_res y = 0; y < TEST_IMG_YMAX; y++)
+		for (b3_res y = 0; y < TEST_IMG_YMAX; y++)
 		{
-			for(b3_res x = 0; x < TEST_IMG_XMAX; x++)
+			for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
 			{
 				*tRow++ = row[x];
 				*rRow++ = row[x];
