@@ -438,7 +438,7 @@ void b3DisplayView::b3Open(
 	const b3_res xSize,
 	const b3_res ySize)
 {
-#ifdef HAVE_X11
+#ifdef HAVE_LIBX11
 	XGCValues      Values;
 	XEvent         report;
 	b3_bool        Loop = true;
