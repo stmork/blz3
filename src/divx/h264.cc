@@ -292,7 +292,16 @@ int main(int argc, char * argv[])
 #ifdef BLZ3_USE_X264
 		pic_in.i_pts = ino;
 		b3RecodeRGB2YUV(img, pic_in, ySize);
+
+#if 0
+		x264_encoder_encode(x264, &nals, &i_nals, pic_in, &pic_out);
+		for (int i = 0; i < i_nals; i++)
+		{
+			file.b3Write(nals[i].p_payload, nals[i].i_payload);
+		}
+#else
 		b3Encode(x264, &pic_in, file);
+#endif
 #endif
 		ino++;
 	}

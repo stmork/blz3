@@ -49,16 +49,16 @@ enum b3_link_state
  *
  * We are using a doubly linked list in the following manner:
 \verbatim
-                                                                    +------------+
-   b3Base                 b3Link       b3Link       b3Link ...      |            |
- +---------+                                                        v            |
- |         |              +----+       +----+       +----+       +----+          |
- |  First  |------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> null  |
- |         |              |    |       |    |       |    |       |    |          |
- |  Last   |--+   null <--|Prev|<------|Prev|<------|Prev|<------|Prev|          |
- |         |  |           +----+       +----+       +----+       +----+          |
- +---------+  |                                                                  |
-              +------------------------------------------------------------------+
+                                                                      +--------------+
+   b3Base                 b3Link       b3Link       b3Link ...        |              |
+ +---------+                                                          v              |
+ |         |                +----+       +----+       +----+       +----+            |
+ |  First  |--------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> nullptr |
+ |         |                |    |       |    |       |    |       |    |            |
+ |  Last   |--+  nullptr <--|Prev|<------|Prev|<------|Prev|<------|Prev|            |
+ |         |  |             +----+       +----+       +----+       +----+            |
+ +---------+  |                                                                      |
+              +----------------------------------------------------------------------+
 \endverbatim
  *
  * @see b3Base
@@ -66,8 +66,8 @@ enum b3_link_state
 template <class T> class B3_PLUGIN b3Link
 {
 public:
-	T     *    Succ; //!< The next list element or null if this is the last one.
-	T     *    Prev; //!< The previous list element or null if this is the first one.
+	T     *    Succ; //!< The next list element or nullptr if this is the last one.
+	T     *    Prev; //!< The previous list element or nullptr if this is the first one.
 
 protected:
 	b3_u32     ClassType; //!< The class and type of thie element instance.
@@ -83,8 +83,8 @@ public:
 	 */
 	b3Link(const b3_size new_size, const b3_u32 new_class = 0)
 	{
-		Succ      = null;
-		Prev      = null;
+		Succ      = nullptr;
+		Prev      = nullptr;
 		Size      = new_size;
 		Offset    = 0;
 		ClassType = new_class;
@@ -135,8 +135,8 @@ public:
 	}
 };
 
-#define B3_FOR_BASE(b,n)    for((n) = (b)->First;(n)!= null;(n) = (n)->Succ)
-#define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= null;(n) = (n)->Prev)
+#define B3_FOR_BASE(b,n)    for((n) = (b)->First;(n)!= nullptr;(n) = (n)->Succ)
+#define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= nullptr;(n) = (n)->Prev)
 #define B3_DELETE_BASE(b,n) ((b)->b3Free())
 
 /**
@@ -144,16 +144,16 @@ public:
  * elements in the list have got the same class specifier.
  *
 \verbatim
-                                                                    +------------+
-   b3Base                 b3Link       b3Link       b3Link ...      |            |
- +---------+                                                        v            |
- |         |              +----+       +----+       +----+       +----+          |
- |  First  |------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> null  |
- |         |              |    |       |    |       |    |       |    |          |
- |  Last   |--+   null <--|Prev|<------|Prev|<------|Prev|<------|Prev|          |
- |         |  |           +----+       +----+       +----+       +----+          |
- +---------+  |                                                                  |
-              +------------------------------------------------------------------+
+                                                                      +--------------+
+   b3Base                 b3Link       b3Link       b3Link ...        |              |
+ +---------+                                                          v              |
+ |         |                +----+       +----+       +----+       +----+            |
+ |  First  |--------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> nullptr |
+ |         |                |    |       |    |       |    |       |    |            |
+ |  Last   |--+  nullptr <--|Prev|<------|Prev|<------|Prev|<------|Prev|            |
+ |         |  |             +----+       +----+       +----+       +----+            |
+ +---------+  |                                                                      |
+              +----------------------------------------------------------------------+
 \endverbatim
  *
  * @see b3Link
@@ -187,8 +187,8 @@ public:
 	 */
 	inline void b3InitBase(const b3_u32 new_class = 0)
 	{
-		First = null;
-		Last  = null;
+		First = nullptr;
+		Last  = nullptr;
 		Class = new_class;
 	}
 
@@ -209,7 +209,7 @@ public:
 	 */
 	inline const b3_bool b3IsEmpty() const
 	{
-		return (First == null) && (Last == null);
+		return (First == nullptr) && (Last == nullptr);
 	}
 
 	/**
@@ -253,13 +253,13 @@ public:
 	{
 		T * node, *succ;
 
-		for (node = First; node != null; node = succ)
+		for (node = First; node != nullptr; node = succ)
 		{
 			succ = node->Succ;
 			delete node;
 		}
-		First = null;
-		Last  = null;
+		First = nullptr;
+		Last  = nullptr;
 	}
 
 	/**
@@ -270,15 +270,15 @@ public:
 		T * node = First, *succ;
 
 		// Empty base
-		First = null;
-		Last  = null;
+		First = nullptr;
+		Last  = nullptr;
 
-		while (node != null)
+		while (node != nullptr)
 		{
 			// unlink every node
 			succ = node->Succ;
-			node->Succ = null;
-			node->Prev = null;
+			node->Succ = nullptr;
+			node->Prev = nullptr;
 			node = succ;
 		}
 	}
@@ -293,7 +293,7 @@ public:
 		T    *    node;
 		b3_count  count = 0;
 
-		for (node  = First; node != null; node  = node->Succ)
+		for (node  = First; node != nullptr; node  = node->Succ)
 		{
 			count++;
 		}
@@ -307,8 +307,8 @@ public:
 	 */
 	inline void b3Append(T * ptr)
 	{
-		B3_ASSERT(ptr->Succ == null);
-		B3_ASSERT(ptr->Prev == null);
+		B3_ASSERT(ptr->Succ == nullptr);
+		B3_ASSERT(ptr->Prev == nullptr);
 		B3_ASSERT(ptr != First);
 		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
@@ -318,16 +318,16 @@ public:
 		}
 #endif
 
-		if (First == null)
+		if (First == nullptr)
 		{
 			First = ptr;
 		}
-		if (Last != null)
+		if (Last != nullptr)
 		{
 			Last->Succ = ptr;
 		}
 		ptr->Prev = Last;
-		ptr->Succ = null;
+		ptr->Succ = nullptr;
 		Last      = ptr;
 	}
 
@@ -338,8 +338,8 @@ public:
 	 */
 	inline void b3First(T * ptr)
 	{
-		B3_ASSERT(ptr->Succ == null);
-		B3_ASSERT(ptr->Prev == null);
+		B3_ASSERT(ptr->Succ == nullptr);
+		B3_ASSERT(ptr->Prev == nullptr);
 		B3_ASSERT(ptr != First);
 		B3_ASSERT(ptr != Last);
 #ifndef B3_NO_CLASS_CHECK
@@ -349,15 +349,15 @@ public:
 		}
 #endif
 
-		if (Last == null)
+		if (Last == nullptr)
 		{
 			Last = ptr;
 		}
-		if (First != null)
+		if (First != nullptr)
 		{
 			First->Prev = ptr;
 		}
-		ptr->Prev = null;
+		ptr->Prev = nullptr;
 		ptr->Succ = First;
 		First     = ptr;
 	}
@@ -377,7 +377,7 @@ public:
 #endif
 
 		// Relink backward link
-		if (ptr->Prev == null)
+		if (ptr->Prev == nullptr)
 		{
 			First = ptr->Succ;
 		}
@@ -387,7 +387,7 @@ public:
 		}
 
 		// Relink forward link
-		if (ptr->Succ == null)
+		if (ptr->Succ == nullptr)
 		{
 			Last = ptr->Prev;
 		}
@@ -397,8 +397,8 @@ public:
 		}
 
 		// Delete link itself
-		ptr->Succ = null;
-		ptr->Prev = null;
+		ptr->Succ = nullptr;
+		ptr->Prev = nullptr;
 	}
 
 	/**
@@ -410,7 +410,7 @@ public:
 	{
 		T * removed = First;
 
-		if (removed != null)
+		if (removed != nullptr)
 		{
 			b3Remove(removed);
 		}
@@ -426,7 +426,7 @@ public:
 	{
 		T * removed = Last;
 
-		if (removed != null)
+		if (removed != nullptr)
 		{
 			b3Remove(removed);
 		}
@@ -443,7 +443,7 @@ public:
 	{
 		T * succ;
 
-		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null));
+		B3_ASSERT((ptr->Succ == nullptr) && (ptr->Prev == nullptr));
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
 		{
@@ -452,18 +452,18 @@ public:
 #endif
 
 		ptr->Prev = pre;
-		if (pre == null)
+		if (pre == nullptr)
 		{
 			// Like b3First(node)
 			ptr->Succ = First;
-			if (ptr->Succ == null)
+			if (ptr->Succ == nullptr)
 			{
 				// First element in list
 				Last = ptr;
 			}
 			else
 			{
-				// First is != null!
+				// First is != nullptr!
 				First->Prev = ptr;
 			}
 			First = ptr;
@@ -472,7 +472,7 @@ public:
 		{
 			succ = pre->Succ;
 			ptr->Succ = pre->Succ;
-			if (ptr->Succ == null)
+			if (ptr->Succ == nullptr)
 			{
 				// Found "pre" as last element in list
 				// so correct Last
@@ -497,12 +497,12 @@ public:
 	 */
 	inline T * b3Reselect(T * ptr)
 	{
-		T * select = null;
+		T * select = nullptr;
 
-		if (ptr != null)
+		if (ptr != nullptr)
 		{
 			select = ptr->Prev;
-			if (select == null)
+			if (select == nullptr)
 			{
 				select = ptr->Succ;
 			}
@@ -520,7 +520,7 @@ public:
 	{
 		int flags;
 
-		if (ptr == null)
+		if (ptr == nullptr)
 		{
 			flags = B3_NODE_NULL;
 		}
@@ -572,7 +572,7 @@ public:
 	 * \param *func The sorting method.
 	 * \param *Ptr A pointer to custom information.
 	 */
-	inline void b3Sort(const int (*func)(const T *, const T *, const void *), const void * Ptr = null)
+	inline void b3Sort(const int (*func)(const T *, const T *, const void *), const void * Ptr = nullptr)
 	{
 		b3Base    Right;
 		T    *    start, *end;
@@ -616,8 +616,8 @@ public:
 		Right.First = end;
 		Right.Last  = Last;
 		Last        = start;
-		end->Prev   = null;
-		start->Succ = null;
+		end->Prev   = nullptr;
+		start->Succ = nullptr;
 
 
 		// & CONQUER
@@ -629,7 +629,7 @@ public:
 		// one sorted list.
 		start = First;
 		end   = Right.First;
-		while ((start != null) && (end != null))
+		while ((start != nullptr) && (end != nullptr))
 		{
 			// Here is the comparison function. If the node
 			// of the first list is lower we leave the node
@@ -680,8 +680,8 @@ public:
 
 		First = src->First;
 		Last  = src->Last;
-		src->First = null;
-		src->Last  = null;
+		src->First = nullptr;
+		src->Last  = nullptr;
 	}
 };
 
