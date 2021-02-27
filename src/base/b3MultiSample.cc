@@ -41,12 +41,12 @@ b3_bool                   b3MultiSample::glHasMS;
 void b3MultiSample::b3Init(const char * extensions)
 {
 #ifdef HAS_MULTISAMPLE
-	if (extensions == null)
+	if (extensions == nullptr)
 	{
 		extensions = (const char *)glGetString(GL_EXTENSIONS);
 	}
 
-	glHasMS = strstr(extensions, "ARB_multisample") !=  null;
+	glHasMS = strstr(extensions, "ARB_multisample") !=  nullptr;
 #else
 	glHasMS = false;
 #endif

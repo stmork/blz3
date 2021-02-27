@@ -477,7 +477,7 @@ public:
 	 *
 	 * @return The computed checksum.
 	 */
-	const b3_u32    b3Checksum();
+	b3_u32    b3Checksum();
 
 	/**
 	 * This method returns true if the specified class type is in the same class
@@ -487,7 +487,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type is in the given class.
 	 */
-	static const b3_bool  b3IsClass(const b3_u32 classtype, const b3_u32 classid);
+	static b3_bool  b3IsClass(const b3_u32 classtype, const b3_u32 classid);
 
 	/**
 	 * This method returns true if the class type of this instance is in the same class
@@ -496,7 +496,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type of this instance  is in the given class.
 	 */
-	const b3_bool b3IsClass(const b3_u32 classid) const;
+	b3_bool b3IsClass(const b3_u32 classid) const;
 
 protected:
 	////////////////////////////////////////////// Parsing routines
@@ -545,7 +545,7 @@ protected:
 	 *
 	 * @param vec The vector buffer as pointer.
 	 */
-	void     b3InitVector(b3_vector  * vec = null);
+	void     b3InitVector(b3_vector  * vec = nullptr);
 
 	/**
 	 * This method reads a three component vector into the given vector reference.
@@ -559,7 +559,7 @@ protected:
 	 *
 	 * @param vec The vector buffer as pointer.
 	 */
-	void     b3InitVector4D(b3_vector4D * vec = null);
+	void     b3InitVector4D(b3_vector4D * vec = nullptr);
 
 	/**
 	 * This method reads a four component vector into the given vector reference.
@@ -596,7 +596,7 @@ protected:
 	 * @param controls The pointer to the spline control pointer.
 	 * @param knots The knot vector of the spline.
 	 */
-	void     b3InitSpline(b3Spline  * spline, b3_vector  * controls = null, b3_f32 * knots = null);
+	void     b3InitSpline(b3Spline  * spline, b3_vector  * controls = nullptr, b3_f32 * knots = nullptr);
 
 	/**
 	 * This method reads back a NURBS instance.
@@ -605,7 +605,7 @@ protected:
 	 * @param controls The pointer to the NURBS control pointer.
 	 * @param knots The knot vector of the NURBS.
 	 */
-	void     b3InitNurbs(b3Nurbs * nurbs, b3_vector4D * controls = null, b3_f32 * knots = null);
+	void     b3InitNurbs(b3Nurbs * nurbs, b3_vector4D * controls = nullptr, b3_f32 * knots = nullptr);
 
 	/**
 	 * This method reads back a string of the given size and corrects the read index.
@@ -692,7 +692,7 @@ protected:
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector(const b3_vector  * vec = null);
+	void     b3StoreVector(const b3_vector  * vec = nullptr);
 
 	/**
 	 * This method stores a three component vector.
@@ -706,7 +706,7 @@ protected:
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector4D(const b3_vector4D * vec = null);
+	void     b3StoreVector4D(const b3_vector4D * vec = nullptr);
 
 	/**
 	 * This method stores a four component vector.

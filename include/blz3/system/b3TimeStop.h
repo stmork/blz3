@@ -40,7 +40,7 @@ public:
 		b3PrintF(m_Level, "TIME START <%s>-----\n", m_Title);
 	}
 
-	inline void b3TimePos(const char * text = null)
+	inline void b3TimePos(const char * text B3_UNUSED = nullptr)
 	{
 		b3PrintF(m_Level, "TIME CONT  <%s>      duration %2.6f\n",
 			m_Title, b3Now() - m_Start);

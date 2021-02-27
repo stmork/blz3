@@ -1952,7 +1952,7 @@ class B3_PLUGIN b3Matrix
 
 	static b3_bool    b3NormalizeCol(b3_matrix * Dst, b3_index col_num);
 	static b3_bool    b3NormalizeRow(b3_matrix * Dst, b3_index row_num);
-	static b3_f64     b3Det4(b3_matrix * Matrix);
+	static b3_f64     b3Det4(const b3_matrix * Matrix);
 
 public:
 	/**
@@ -1970,7 +1970,7 @@ public:
 	 * @param Dst The inverted destination matrix.
 	 * @return The result (= Dst).
 	 */
-	static b3_matrix * b3Inverse(b3_matrix * Src, b3_matrix * Dst);
+	static b3_matrix * b3Inverse(const b3_matrix * Src, b3_matrix * Dst);
 
 	/**
 	 * This method copies the content of one matrix to another.
@@ -1979,7 +1979,7 @@ public:
 	 * @param Dst The destination matrix.
 	 * @return The result (= Dst).
 	 */
-	static b3_matrix * b3Transport(b3_matrix * Src, b3_matrix * Dst);
+	static b3_matrix * b3Transport(const b3_matrix * Src, b3_matrix * Dst);
 
 	/**
 	 * This method creates a translation transformation, multiplies it with an input matrix and stores the
@@ -2218,7 +2218,7 @@ public:
 	 * @param title An additional comment.
 	 * @return The input matrix.
 	 */
-	static b3_matrix * b3Dump(b3_matrix * mtx, const char * title = null);
+	static b3_matrix * b3Dump(b3_matrix * mtx, const char * title = nullptr);
 
 	/**
 	 * This method tests if the given transformation matrix is a unit matrix.

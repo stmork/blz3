@@ -55,31 +55,31 @@ b3RenderObject::b3RenderObject()
 #ifdef BLZ3_USE_OPENGL
 	glDisplayList     = 0;
 	glTextureId       = 0;
-	glTextureData     = null;
+	glTextureData     = nullptr;
 	glTextureSize     = 0;
 	glTextureSizeX    = 0;
 	glTextureSizeY    = 0;
-	glVertexElements  = null;
-	glGridElements    = null;
-	glPolygonElements = null;
+	glVertexElements  = nullptr;
+	glGridElements    = nullptr;
+	glPolygonElements = nullptr;
 #endif
 }
 
 b3RenderObject::~b3RenderObject()
 {
-	if (glVertexElements != null)
+	if (glVertexElements != nullptr)
 	{
 		delete glVertexElements;
 	}
-	if (glGridElements != null)
+	if (glGridElements != nullptr)
 	{
 		delete glGridElements;
 	}
-	if (glPolygonElements != null)
+	if (glPolygonElements != nullptr)
 	{
 		delete glPolygonElements;
 	}
-	b3CreateTexture(null, 0);
+	b3CreateTexture(nullptr, 0);
 	b3DeleteDisplayList();
 }
 
@@ -95,10 +95,10 @@ void b3RenderObject::b3DeleteDisplayList()
 }
 
 void b3RenderObject::b3GetCount(
-	b3RenderContext * context,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count    &     vertCount,
+	b3_count    &     gridCount,
+	b3_count    &     polyCount)
 {
 	vertCount = 0;
 	gridCount = 0;
@@ -182,7 +182,7 @@ void b3RenderObject::b3UnmapVertices()
 
 void b3RenderObject::b3Recompute()
 {
-	if (glVertexElements != null)
+	if (glVertexElements != nullptr)
 	{
 		glVertexElements->b3Recompute();
 	}
@@ -190,11 +190,11 @@ void b3RenderObject::b3Recompute()
 
 void b3RenderObject::b3RecomputeIndices()
 {
-	if (glGridElements != null)
+	if (glGridElements != nullptr)
 	{
 		glGridElements->b3Recompute();
 	}
-	if (glPolygonElements != null)
+	if (glPolygonElements != nullptr)
 	{
 		glPolygonElements->b3Recompute();
 	}
@@ -506,7 +506,9 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 	b3_bool       result = false;
 	b3_index      i, start, end;
 
-	if (glVertexElements->b3IsComputed() && (glVertex != null) && (glVertexElements->b3GetCount() > 0))
+	if (glVertexElements->b3IsComputed() &&
+		(glVertex != nullptr) &&
+		(glVertexElements->b3GetCount() > 0))
 	{
 		b3GetVertexRange(start, end);
 		for (i = start; i < end; i++)
@@ -524,7 +526,7 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix * transformation,
 	b3_bool    is_affine)
 {
-	if (glVertexElements != null)
+	if (glVertexElements != nullptr)
 	{
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "        >b3RenderObject::b3TransformVertices(...)\n");
@@ -542,7 +544,7 @@ void b3RenderObject::b3TransformVertices(
 			glVertexElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
-		if (glVertex != null)
+		if (glVertex != nullptr)
 		{
 			glVertexElements->b3Recompute();
 			if (is_affine)
@@ -610,20 +612,24 @@ b3_f64 b3RenderObject::b3GetColors(
 }
 
 b3_bool b3RenderObject::b3GetChess(
-	b3Color & bColor,
-	b3Color & wColor,
-	b3_res & xRepeat,
-	b3_res & yRepeat)
+	B3_UNUSED b3Color & bColor,
+	B3_UNUSED b3Color & wColor,
+	B3_UNUSED b3_res & xRepeat,
+	B3_UNUSED b3_res & yRepeat)
 {
 	return false;
 }
 
-b3Tx * b3RenderObject::b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale)
+b3Tx * b3RenderObject::b3GetTexture(
+		B3_UNUSED b3_f64 & xTrans,
+		B3_UNUSED b3_f64 & yTrans,
+		B3_UNUSED b3_f64 & xScale,
+		B3_UNUSED b3_f64 & yScale)
 {
-	return null;
+	return nullptr;
 }
 
-b3_bool b3RenderObject::b3GetImage(b3Tx * image)
+b3_bool b3RenderObject::b3GetImage(B3_UNUSED b3Tx * image)
 {
 	return false;
 }
@@ -667,7 +673,7 @@ void b3RenderObject::b3UpdateMaterial()
 		{
 			glTextureScaleX = 0.5 * xRep;
 			glTextureScaleY = 0.5 * yRep;
-			b3CreateChess(null, black, white);
+			b3CreateChess(nullptr, black, white);
 		}
 		else
 		{
@@ -675,11 +681,11 @@ void b3RenderObject::b3UpdateMaterial()
 			b3_f64 yScale = 1;
 
 			tx = b3GetTexture(glTextureTransX, glTextureTransY, xScale, yScale);
-			if ((tx != null) && (tx->b3IsLoaded()))
+			if ((tx != nullptr) && (tx->b3IsLoaded()))
 			{
 				glTextureScaleX = 1.0 / xScale;
 				glTextureScaleY = 1.0 / yScale;
-				b3CopyTexture(null, tx);
+				b3CopyTexture(nullptr, tx);
 			}
 			else
 			{
@@ -704,12 +710,12 @@ void b3RenderObject::b3UpdateMaterial()
 
 					if (b3GetImage(&glTextureBuffer))
 					{
-						b3CreateImage(null, &glTextureBuffer);
+						b3CreateImage(nullptr, &glTextureBuffer);
 					}
 					else
 					{
 						// Free memory
-						b3CreateTexture(null, 0);
+						b3CreateTexture(nullptr, 0);
 					}
 				}
 			}
@@ -744,9 +750,9 @@ void b3RenderObject::b3UpdateMaterial()
 }
 
 void b3RenderObject::b3CreateTexture(
-	b3RenderContext * context,
-	b3_res           xSize,
-	b3_res           ySize)
+	b3RenderContext * context B3_UNUSED,
+	b3_res            xSize,
+	b3_res            ySize)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_res size;
@@ -771,11 +777,11 @@ void b3RenderObject::b3CreateTexture(
 				void  * ptr = b3MemAccess::b3Alloc(size * 4);
 				GLenum  error;
 
-				if (ptr == null)
+				if (ptr == nullptr)
 				{
 					B3_THROW(b3TxException, B3_TX_MEMORY);
 				}
-				if (glTextureData != null)
+				if (glTextureData != nullptr)
 				{
 					b3MemAccess::b3Free(glTextureData);
 				}
@@ -818,11 +824,11 @@ void b3RenderObject::b3CreateTexture(
 #ifdef VERBOSE
 				b3PrintF(B3LOG_FULL, "   Freeing texture data\n");
 #endif
-				if (glTextureData != null)
+				if (glTextureData != nullptr)
 				{
 					b3MemAccess::b3Free(glTextureData);
 				}
-				glTextureData  = null;
+				glTextureData  = nullptr;
 				glTextureSize  = 0;
 				glTextureSizeX = 0;
 				glTextureSizeY = 0;
@@ -837,7 +843,7 @@ void b3RenderObject::b3CreateTexture(
 	catch (...)
 	{
 		// Restore to defined and unallocated state
-		if (glTextureData != null)
+		if (glTextureData != nullptr)
 		{
 			b3MemAccess::b3Free(glTextureData);
 		}
@@ -845,7 +851,7 @@ void b3RenderObject::b3CreateTexture(
 		{
 			glDeleteTextures(1, &glTextureId);
 		}
-		glTextureData  = null;
+		glTextureData  = nullptr;
 		glTextureId    = 0;
 		glTextureSize  = 0;
 		glTextureSizeX = 0;
@@ -856,12 +862,12 @@ void b3RenderObject::b3CreateTexture(
 }
 
 void b3RenderObject::b3CreateChess(
-	b3RenderContext * context,
-	b3Color     &    bColor,
-	b3Color     &    wColor)
+	b3RenderContext * context B3_UNUSED,
+	b3Color     &     bColor,
+	b3Color     &     wColor)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3CreateTexture(null, 2);
+	b3CreateTexture(nullptr, 2);
 
 	b3RenderContext::b3ColorToGL(wColor, &glTextureData[ 0]);
 	b3RenderContext::b3ColorToGL(bColor, &glTextureData[ 4]);
@@ -1033,8 +1039,8 @@ void b3RenderObject::b3Draw(b3RenderContext * context)
 #endif
 
 void b3RenderObject::b3CheckGeometry(
-	const b3RenderContext * context,
-	const b3_render_mode   render_mode)
+	B3_UNUSED const b3RenderContext * context,
+			  const b3_render_mode    render_mode)
 {
 	B3_ASSERT(glVertexElements->b3IsComputed());
 	B3_ASSERT(glGridElements->b3IsComputed());
@@ -1062,7 +1068,7 @@ void b3RenderObject::b3CheckGeometry(
 		glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
-	if (glVertex != null)
+	if (glVertex != nullptr)
 	{
 		switch (render_mode)
 		{
@@ -1217,13 +1223,13 @@ void b3RenderObject::b3SelectMaterialForFilledDrawing(const b3RenderContext * co
 
 #ifndef _DEBUG
 
-void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context)
+void b3RenderObject::b3DrawLinedGeometry(B3_UNUSED const b3RenderContext * context)
 {
 	glVertexElements->b3Draw();
 	glGridElements->b3Draw();
 }
 
-void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext * context)
+void b3RenderObject::b3DrawFilledGeometry(B3_UNUSED const b3RenderContext * context)
 {
 	glVertexElements->b3Draw();
 	glPolygonElements->b3Draw();

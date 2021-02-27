@@ -46,9 +46,9 @@ b3Fourier::b3Fourier()
 	m_xDim   =
 		m_yDim   = 0;
 
-	m_Buffer = null;
-	m_Lines  = null;
-	m_Aux    = null;
+	m_Buffer = nullptr;
+	m_Lines  = nullptr;
+	m_Aux    = nullptr;
 	m_CPUs   = B3_MIN(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs());
 }
 
@@ -57,7 +57,7 @@ b3Fourier::~b3Fourier()
 	b3FreeBuffer();
 }
 
-const b3_loop b3Fourier::b3PowOf2(const b3_loop value)
+b3_loop b3Fourier::b3PowOf2(const b3_loop value)
 {
 	b3_loop result = 1;
 
@@ -74,7 +74,7 @@ const b3_loop b3Fourier::b3PowOf2(const b3_loop value)
 	return result;
 }
 
-const b3_count b3Fourier::b3Log2(b3_u32 value)
+b3_count b3Fourier::b3Log2(b3_u32 value)
 {
 	b3_count count = -1;
 
@@ -89,24 +89,24 @@ const b3_count b3Fourier::b3Log2(b3_u32 value)
 void b3Fourier::b3FreeBuffer()
 {
 	b3Free();
-	if (m_Buffer != null)
+	if (m_Buffer != nullptr)
 	{
 		delete [] m_Buffer;
-		m_Buffer = null;
+		m_Buffer = nullptr;
 	}
-	if (m_Lines != null)
+	if (m_Lines != nullptr)
 	{
 		delete [] m_Lines;
-		m_Lines = null;
+		m_Lines = nullptr;
 	}
-	if (m_Aux != null)
+	if (m_Aux != nullptr)
 	{
 		delete [] m_Aux;
-		m_Aux = null;
+		m_Aux = nullptr;
 	}
 }
 
-const b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
+b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 {
 	b3_res size = b3PowOf2(new_size);
 
@@ -135,7 +135,7 @@ const b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 	return true;
 }
 
-const b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
+b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 {
 	b3_loop       x, y, index, max;
 	b3_u08    *   cPtr;
@@ -183,7 +183,7 @@ const b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 	return true;
 }
 
-const b3_bool b3Fourier::b3ReallocBuffer()
+b3_bool b3Fourier::b3ReallocBuffer()
 {
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3ReallocBuffer()\n");
 
@@ -194,7 +194,7 @@ const b3_bool b3Fourier::b3ReallocBuffer()
 	m_Lines  = new b3Complex64 *[m_ySize];
 	m_Aux    = new b3Complex64[m_ySize * m_CPUs];
 
-	if ((m_Buffer == null) || (m_Lines == null) || (m_Aux == null))
+	if ((m_Buffer == nullptr) || (m_Lines == nullptr) || (m_Aux == nullptr))
 	{
 		return false;
 	}
@@ -257,7 +257,7 @@ void b3Fourier::b3Sample(b3FilterInfo * info, b3SampleFunc sample_func)
                   ---
                   k=0
 */
-const b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line)
+b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line)
 {
 	b3Complex64 one   = b3Complex64(1.0, 1.0);
 	b3Complex64 half  = b3Complex64(0.5, 0.5);
@@ -344,7 +344,7 @@ const b3_bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line
  * @param dir 1 for forward FFT, -1 for inverse FFT.
  * @return True on success.
  */
-const b3_bool b3Fourier::b3FFT2D(const int dir)
+b3_bool b3Fourier::b3FFT2D(const int dir)
 {
 	b3TimeStop stop("2D FFT");
 
@@ -457,7 +457,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void * ptr)
 	return 0;
 }
 
-const b3_bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp)
+b3_bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp)
 {
 	b3_u08    *   cPtr;
 	b3_loop       x, y;
@@ -491,7 +491,7 @@ const b3_bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp)
 	return true;
 }
 
-const b3_bool b3Fourier::b3GetSpectrum(b3Tx * tx, b3_f64 amp)
+b3_bool b3Fourier::b3GetSpectrum(b3Tx * tx, b3_f64 amp)
 {
 	b3_u08    *    cPtr;
 	b3_f64         result;
@@ -528,7 +528,7 @@ const b3_bool b3Fourier::b3GetSpectrum(b3Tx * tx, b3_f64 amp)
 	return true;
 }
 
-const b3_bool b3Fourier::b3SelfTest()
+b3_bool b3Fourier::b3SelfTest()
 {
 	b3Rand48<b3_f64> random;
 	b3_loop          x, y;

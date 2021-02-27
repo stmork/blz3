@@ -32,7 +32,7 @@ b3_log_level  b3LogBase::m_LogLevel = B3LOG_FULL;	// debug version
 
 b3LogBase  *  b3LogBase::m_Logger;
 b3Mutex       b3LogBase::m_LogMutex;
-FILE     *    b3LogBase::m_Out = null;
+FILE     *    b3LogBase::m_Out = nullptr;
 char          b3LogBase::m_Message[B3_MAX_LOGSIZE];
 
 b3LogBase::b3LogBase()
@@ -41,7 +41,7 @@ b3LogBase::b3LogBase()
 
 b3_bool b3LogBase::b3OpenLogFile()
 {
-	if (m_Out == null)
+	if (m_Out == nullptr)
 	{
 		// Delete old file
 		remove(m_LogFile);
@@ -58,7 +58,7 @@ b3_bool b3LogBase::b3OpenLogFile()
 
 		// Do output
 		m_Out = fopen(m_LogFile, B3_TAPPEND);
-		if (m_Out != null)
+		if (m_Out != nullptr)
 		{
 			fputs(m_Message, m_Out);
 			fflush(m_Out);
@@ -75,7 +75,7 @@ b3_bool b3LogBase::b3OpenLogFile()
 			fflush(stderr);
 		}
 	}
-	return m_Out != null;
+	return m_Out != nullptr;
 }
 
 void b3LogBase::b3GetLogFile(char * DebugFile)
@@ -87,5 +87,5 @@ b3_bool b3LogBase::b3SetLogFile(const char * DebugFile)
 {
 	strlcpy(m_LogFile, DebugFile, sizeof(m_LogFile));
 
-	return m_Out == null;
+	return m_Out == nullptr;
 }

@@ -102,7 +102,7 @@ void b3Display::b3Init(const b3_res xSize, const b3_res ySize, const char * titl
 b3Display::~b3Display()
 {
 	b3PrintF(B3LOG_FULL, "Closing display...\n");
-	if ((m_OwnTx) && (m_Tx != null))
+	if ((m_OwnTx) && (m_Tx != nullptr))
 	{
 		delete m_Tx;
 	}

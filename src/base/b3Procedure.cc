@@ -109,21 +109,21 @@ const b3_u08 b3Noise::m_OM[4][8][3] =
 **                                                                      **
 *************************************************************************/
 
-b3Noise       b3Noise::m_Noise;
-b3_noisetype * b3Noise::m_NoiseTable = null;
-b3_f64        b3Noise::epsilon      = FLT_EPSILON;
+b3Noise        b3Noise::m_Noise;
+b3_noisetype * b3Noise::m_NoiseTable = nullptr;
+b3_f64         b3Noise::epsilon      = FLT_EPSILON;
 
 b3Noise::b3Noise()
 {
 	b3Rand48<b3_noisetype> random_noise;
 	b3Rand48<b3_f64>       random_wave;
 
-	if (m_NoiseTable == null)
+	if (m_NoiseTable == nullptr)
 	{
 		b3_count i, max = NOISEDIM * NOISESIZE;
 
 		m_NoiseTable = (b3_noisetype *)b3MemAccess::b3Alloc(max * sizeof(b3_noisetype));
-		if (m_NoiseTable == null)
+		if (m_NoiseTable == nullptr)
 		{
 			B3_THROW(b3NoiseException, B3_NOISE_MEMORY);
 		}
@@ -169,10 +169,10 @@ b3Noise::b3Noise()
 
 b3Noise::~b3Noise()
 {
-	if (m_NoiseTable != null)
+	if (m_NoiseTable != nullptr)
 	{
 		b3MemAccess::b3Free(m_NoiseTable);
-		m_NoiseTable = null;
+		m_NoiseTable = nullptr;
 	}
 }
 

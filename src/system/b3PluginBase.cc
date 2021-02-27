@@ -48,7 +48,7 @@ void b3LoaderBase::b3Load()
 	{
 		list.b3CreateList(*entry);
 
-		for (file = list.b3First(); file != null; file = file->Succ)
+		for (file = list.b3First(); file != nullptr; file = file->Succ)
 		{
 			strlcpy(name, file->b3Name(), B3_FILESTRINGLEN);
 			if (b3IsPlugin(name))

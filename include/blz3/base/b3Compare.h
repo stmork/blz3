@@ -48,7 +48,7 @@ public:
 	 * @param dummy A pointer to provide additional information into the
 	 *              comparing process.
 	 */
-	static const int b3Sort(const T * a, const T * b, const void * dummy)
+	static int b3Sort(const T * a, const T * b, const void * dummy B3_UNUSED)
 	{
 		return a->b3Cmp(b);
 	}
@@ -63,7 +63,7 @@ public:
 	 * @param compare The external instance to compare to.
 	 * @return The comparison value as documented above.
 	 */
-	virtual const int b3Cmp(const T * compare) const = 0;
+	virtual int b3Cmp(const T * compare) const = 0;
 };
 
 /**

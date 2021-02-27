@@ -180,14 +180,14 @@ public:
 	 *
 	 * @param taskname The new thread name.
 	 */
-	b3Thread(const char * taskname = null);
+	b3Thread(const char * taskname = nullptr);
 
 	/**
 	 * This destructor terminates a running thread and deinitializes this instance.
 	 */
 	virtual ~b3Thread();
 
-	void     b3Name(const char * taskname = null);
+	void     b3Name(const char * taskname = nullptr);
 	b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0);
 	b3_bool  b3IsRunning();
 	b3_bool  b3Stop();

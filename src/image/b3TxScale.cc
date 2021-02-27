@@ -68,7 +68,7 @@ b3ColorIndices::b3ColorIndices()
 
 	num     = 0;
 	indices = (b3_index *)b3Alloc(size * sizeof(b3_index));
-	max     = (indices != null ? size : 0);
+	max     = (indices != nullptr ? size : 0);
 	if (max == 0)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -83,7 +83,7 @@ void b3ColorIndices::b3AddColorIndex(b3_index index)
 	}
 }
 
-const b3_index b3ColorIndices::b3ColorIndex(
+b3_index b3ColorIndices::b3ColorIndex(
 	b3_pkd_color * palette,
 	b3_pkd_color  color) const
 {
@@ -458,14 +458,14 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 
 	// Alloc some memory
 	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCounter == null)
+	if (TxRowCounter == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3ScaleBW2Grey(): "
 			"Not enough memory for row counter\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCells == null)
+	if (TxRowCells == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3MakeItGrey(): "
 			"Not enough memory for row cell sizes\n");
@@ -695,7 +695,7 @@ void b3Tx::b3ScaleFilteredFromBW(
 
 	// compute new palette
 	tx_pal = Tx->b3GetPalette();
-	new_palette = (palette != null ? palette : true_color_palette);
+	new_palette = (palette != nullptr ? palette : true_color_palette);
 
 	color  = tx_pal[0];
 	r0 = (color & 0xff0000) >> 16;
@@ -868,14 +868,14 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 
 	// Alloc some memory
 	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count) * 3);
-	if (TxRowCounter == null)
+	if (TxRowCounter == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
 			"Not enough memory for row counter\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCells == null)
+	if (TxRowCells == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
 			"Not enough memory for row cell sizes\n");
@@ -1293,14 +1293,14 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 
 	// Alloc some memory
 	TxRowCounter = (b3_color *)malloc(xDstSize * sizeof(b3_color));
-	if (TxRowCounter == null)
+	if (TxRowCounter == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
 			"Not enough memory for row counter\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCells == null)
+	if (TxRowCells == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
 			"Not enough memory for row cell sizes\n");
@@ -1573,7 +1573,7 @@ void b3Tx::b3ColorGrid()
 
 	// Allocate grid
 	grid = new b3ColorIndices[B3_MAX_GRID];
-	if (grid == null)
+	if (grid == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -1588,7 +1588,7 @@ void b3Tx::b3ColorGrid()
 
 b3_index b3Tx::b3ColorIndex(b3_pkd_color color)
 {
-	if (grid != null)
+	if (grid != nullptr)
 	{
 		b3_index index;
 
@@ -1680,7 +1680,7 @@ void b3Tx::b3VGAScaleToVGA(
 	if (grid)
 	{
 		delete [] grid;
-		grid = null;
+		grid = nullptr;
 	}
 }
 
@@ -1748,10 +1748,10 @@ void b3Tx::b3VGAScaleToRGB8(
 		}
 	}
 	// Free grid
-	if (grid)
+	if (grid != nullptr)
 	{
 		delete [] grid;
-		grid = null;
+		grid = nullptr;
 	}
 }
 
@@ -1797,7 +1797,7 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 	}
 	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
 	cIndex = (b3_count *)b3Alloc((ySize + 1) * sizeof(b3_count));
-	if ((rIndex == null) || (cIndex == null))
+	if ((rIndex == nullptr) || (cIndex == nullptr))
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -1852,12 +1852,12 @@ unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
 	b3_count   *  rIndex;
 	b3_count   *  cIndex;
 	b3_u08    *   src, *dst;
-	b3_coord     x, y, rx;
-	b3_res       yMin, yMax, xSize;
-	b3_u32       dstBit, srcBit;
-	b3_u08       dstByte;
-	b3_count     dstBytes, srcBytes, num;
-	b3_index     index;
+	b3_coord      x, y, rx;
+	b3_res        yMin, yMax, xSize;
+	b3_u32        dstBit, srcBit;
+	b3_u08        dstByte;
+	b3_count      dstBytes, srcBytes, num;
+	b3_index      index;
 
 	RectInfo = (b3_rect_info *)ptr;
 
@@ -2140,7 +2140,7 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 #ifndef _DEBUG
 inline
 #endif
-const b3_index b3Tx::b3ILBMPlaneValue(
+b3_index b3Tx::b3ILBMPlaneValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -2227,7 +2227,7 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 	}
 	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
 	cIndex = (b3_count *)b3Alloc((ySize + 1) * sizeof(b3_count));
-	if ((rIndex == null) || (cIndex == null))
+	if ((rIndex == nullptr) || (cIndex == nullptr))
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -2293,7 +2293,7 @@ void b3Tx::b3TransToGrey()
 	// First allocate new buffer;
 	newSize = xSize * ySize;
 	cPtr = (b3_u08 *)b3Alloc(newSize);
-	if (cPtr == null)
+	if (cPtr == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new image buffer!\n");
@@ -2302,7 +2302,7 @@ void b3Tx::b3TransToGrey()
 
 	// alloc new palette
 	pPtr = (b3_pkd_color *)b3Alloc(256 * sizeof(b3_pkd_color));
-	if (pPtr == null)
+	if (pPtr == nullptr)
 	{
 		b3Free(cPtr);
 		b3PrintF(B3LOG_NORMAL,

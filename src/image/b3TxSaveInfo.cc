@@ -36,15 +36,15 @@ b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_
 	memset(m_SaveBuffer, 0, sizeof(m_SaveBuffer));
 
 	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
-	if (m_ThisRow == null)
+	if (m_ThisRow == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "Save Image: not enough memory!\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
-	if (write_mode == null)
+	if (write_mode == nullptr)
 	{
-		m_FileHandle = null;
+		m_FileHandle = nullptr;
 		if (!m_File.b3Open(filename, B_WRITE))
 		{
 			b3Free();
@@ -55,7 +55,7 @@ b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_
 	else
 	{
 		m_FileHandle = fopen(filename, write_mode);
-		if (m_FileHandle == null)
+		if (m_FileHandle == nullptr)
 		{
 			b3Free();
 			b3PrintF(B3LOG_NORMAL, "Save Image: file \"%s\" not created!\n", filename);
@@ -66,7 +66,7 @@ b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_
 
 b3TxSaveInfo::~b3TxSaveInfo()
 {
-	if (m_FileHandle != null)
+	if (m_FileHandle != nullptr)
 	{
 		fclose(m_FileHandle);
 	}

@@ -115,14 +115,14 @@ public:
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(b3_f64 * vector)
+	static inline void b3Homogenize(B3_UNUSED b3_f64 * vector)
 	{
 	}
 
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(b3_vector * vector)
+	static inline void b3Homogenize(B3_UNUSED b3_vector * vector)
 	{
 	}
 
@@ -360,8 +360,8 @@ public:
 		m_ControlNum = 0;
 		m_KnotNum    = 0;
 		m_Offset     = 1;
-		m_Controls   = null;
-		m_Knots      = null;
+		m_Controls   = nullptr;
+		m_Knots      = nullptr;
 		m_SubDiv     = B3_MAX_SUBDIV;
 		m_Closed     = false;
 	}
@@ -450,7 +450,7 @@ public:
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		if (m_Knots == null)
+		if (m_Knots == nullptr)
 		{
 			bspline_errno = B3_BSPLINE_MISSING_KNOTS;
 			return false;

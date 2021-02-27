@@ -323,7 +323,7 @@ public:
 		return v[index];
 	}
 
-	inline const bool operator==(const b3VectorTemplate<F, dim> & a) const
+	inline bool operator==(const b3VectorTemplate<F, dim> & a) const
 	{
 		bool result = true;
 
@@ -334,7 +334,7 @@ public:
 		return result;
 	}
 
-	inline const bool operator!=(const b3VectorTemplate<F, dim> & a) const
+	inline bool operator!=(const b3VectorTemplate<F, dim> & a) const
 	{
 		bool result = false;
 

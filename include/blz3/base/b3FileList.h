@@ -51,7 +51,7 @@ public:
 	 * @param compare The file entry to compare with.
 	 * @return The position indicator.
 	 */
-	const int    b3Cmp(const b3FileEntry * compare) const;
+	int    b3Cmp(const b3FileEntry * compare) const;
 
 	/**
 	 * This method returns the file name of this entry.
@@ -112,7 +112,7 @@ public:
 	/**
 	 * This element adds a file list entry.
 	 */
-	const b3_bool  b3Add(const char * file_name);
+	b3_bool        b3Add(const char * file_name);
 
 	/**
 	 * This method sorts the file entries alphabetically.
@@ -129,7 +129,7 @@ public:
 	/**
 	 * Thie method returns the amount of file entries.
 	 */
-	inline const b3_count b3GetCount() const
+	inline b3_count b3GetCount() const
 	{
 		return list.b3GetCount();
 	}

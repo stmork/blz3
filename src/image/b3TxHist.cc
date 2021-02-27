@@ -104,11 +104,11 @@ b3_bool b3Tx::b3StartHist()
 	b3_index i;
 
 	// allocate memory for histogramme
-	if (histogramme == null)
+	if (histogramme == nullptr)
 	{
 		histogramme = (b3_count *)b3Alloc(
 				B3_TX_MAX_HISTGRM * sizeof(b3_count));
-		if (histogramme == null)
+		if (histogramme == nullptr)
 		{
 			return false;
 		}
@@ -124,14 +124,14 @@ b3_bool b3Tx::b3StartHist()
 
 void b3Tx::b3EndHist()
 {
-	if (histogramme != null)
+	if (histogramme != nullptr)
 	{
 		b3Free(histogramme);
 	}
-	histogramme = null;
+	histogramme = nullptr;
 }
 
-// All what we need is: "Schwarze Weizen Frühstückskorn"!
+// All what we need is: "Schwarze Weizen FrÃ¼hstÃ¼ckskorn"!
 b3_bool b3Tx::b3Histogramme()
 {
 	if (!b3StartHist())
@@ -294,7 +294,7 @@ b3_bool b3Tx::b3IsWhite()
 	b3_f64   ratio;
 	b3_bool  IsWhite;
 
-	if (histogramme == null)
+	if (histogramme == nullptr)
 	{
 		return false;
 	}
@@ -360,7 +360,7 @@ b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries)
 	b3_index i;
 
 	entries = 0;
-	if (histogramme != null)
+	if (histogramme != nullptr)
 	{
 		// Copy entries
 		entries = 1 << (depth <= B3_TX_MAX_HISTGRM_DEPTH ? depth : B3_TX_MAX_HISTGRM_DEPTH);
@@ -369,7 +369,7 @@ b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries)
 			buffer[i] = histogramme[i];
 		}
 	}
-	return histogramme != null;
+	return histogramme != nullptr;
 }
 
 /*************************************************************************
@@ -411,7 +411,7 @@ b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode)
 	b3_index i, threshold = 0;
 	b3_bool  compute_threshold = true;
 
-	if (histogramme == null)
+	if (histogramme == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3ComputeThreshold() failed.\n");
 		threshold = -1;
@@ -484,7 +484,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	xBytes  = TX_BWA(xSize);
 	newSize = xBytes * ySize;
 	dPtr    = (b3_u08 *)b3Alloc(newSize);
-	if (dPtr == null)
+	if (dPtr == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TransToBW(): Not enogh memory for new image buffer!\n");
@@ -493,7 +493,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 
 	// alloc new palette
 	pPtr = (b3_pkd_color *)b3Alloc(2 * sizeof(b3_pkd_color));
-	if (pPtr == null)
+	if (pPtr == nullptr)
 	{
 		b3Free(dPtr);
 		b3PrintF(B3LOG_NORMAL,

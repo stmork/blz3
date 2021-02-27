@@ -101,7 +101,7 @@ public:
 	b3Display(
 		const b3_res  xSize,
 		const b3_res  ySize,
-		const char  * title = null);
+		const char  * title = nullptr);
 	/**
 	 * This destructor deinitializes the display.
 	 */
@@ -161,7 +161,9 @@ public:
 	 * \param y The y coordinate to print.
 	 * \return True if an cancel event occured.
 	 */
-	virtual b3_bool b3IsCancelled(const b3_coord x, const b3_coord y)
+	virtual b3_bool b3IsCancelled(
+		const b3_coord x B3_UNUSED,
+		const b3_coord y B3_UNUSED)
 	{
 		return false;
 	}

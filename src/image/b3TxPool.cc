@@ -114,7 +114,7 @@ b3Tx * b3TxPool::b3LoadTexture(const char * Name)
 	b3CriticalSection lock(m_Mutex);
 
 	tx = b3FindTextureUnsafe(Name);
-	if (tx == null)
+	if (tx == nullptr)
 	{
 		// OK, create new texture
 		tx = new b3Tx();

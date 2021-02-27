@@ -111,7 +111,7 @@ public:
 };
 #endif
 
-const b3_result b3Tx::b3SaveEXR(const char * filename)
+b3_result b3Tx::b3SaveEXR(const char * filename)
 {
 #ifdef BLZ3_USE_OPENEXR
 	b3PrintF(B3LOG_FULL, "Saving EXR: %s\n", filename);

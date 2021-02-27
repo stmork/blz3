@@ -94,7 +94,7 @@ long b3Date::b3GetMode()
 
 struct tm * b3Date::b3TM(struct tm * time_tm)
 {
-	if (time_tm != null)
+	if (time_tm != nullptr)
 	{
 		time_tm->tm_year  = year  - 1900;
 		time_tm->tm_mon   = month - 1;
@@ -138,13 +138,13 @@ void b3Date::b3GMTime()
 	do
 	{
 		now = gmtime(&time_code);
-		if (now == null)
+		if (now == nullptr)
 		{
 			time_code &= (mask ^ bit);
 			bit = bit >> 1;
 		}
 	}
-	while (now == null);
+	while (now == nullptr);
 
 	mode      = B3_DT_GM;
 

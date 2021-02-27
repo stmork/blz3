@@ -33,7 +33,7 @@ protected:
 	b3_u08        m_SaveBuffer[128];
 
 public:
-	b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_mode = null);
+	b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_mode = nullptr);
 	virtual ~b3TxSaveInfo();
 };
 

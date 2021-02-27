@@ -99,7 +99,7 @@ public:
 	 *
 	 * @return The class part of the class type.
 	 */
-	inline const b3_u32 b3GetClass() const
+	inline b3_u32 b3GetClass() const
 	{
 		return ClassType & B3_CLASS_MASK;
 	}
@@ -119,7 +119,7 @@ public:
 	 *
 	 * @return The class type of this list element.
 	 */
-	inline const b3_u32 b3GetClassType() const
+	inline b3_u32 b3GetClassType() const
 	{
 		return ClassType;
 	}
@@ -129,7 +129,7 @@ public:
 	 *
 	 * @return The class instance size.
 	 */
-	inline const b3_size b3GetSize() const
+	inline b3_size b3GetSize() const
 	{
 		return Size;
 	}
@@ -197,7 +197,7 @@ public:
 	 *
 	 * @return The class specifier.
 	 */
-	inline const b3_u32 b3GetClass() const
+	inline b3_u32 b3GetClass() const
 	{
 		return Class;
 	}
@@ -207,7 +207,7 @@ public:
 	 *
 	 * \return True if list is empty.
 	 */
-	inline const b3_bool b3IsEmpty() const
+	inline b3_bool b3IsEmpty() const
 	{
 		return (First == nullptr) && (Last == nullptr);
 	}
@@ -288,7 +288,7 @@ public:
 	 *
 	 * \return The amount of listed elements.
 	 */
-	inline const b3_count b3GetCount() const
+	inline b3_count b3GetCount() const
 	{
 		T    *    node;
 		b3_count  count = 0;
@@ -516,7 +516,7 @@ public:
 	 * \param *ptr The element
 	 * \return The state of the element.
 	 */
-	inline const b3_link_state b3State(const T * ptr) const
+	inline b3_link_state b3State(const T * ptr) const
 	{
 		int flags;
 
@@ -572,7 +572,7 @@ public:
 	 * \param *func The sorting method.
 	 * \param *Ptr A pointer to custom information.
 	 */
-	inline void b3Sort(const int (*func)(const T *, const T *, const void *), const void * Ptr = nullptr)
+	inline void b3Sort(int (*func)(const T *, const T *, const void *), const void * Ptr = nullptr)
 	{
 		b3Base    Right;
 		T    *    start, *end;

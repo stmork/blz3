@@ -59,7 +59,7 @@ b3Runtime::b3Runtime()
 	char * locale;
 
 	locale = setlocale(LC_ALL, "");
-	if (locale == null)
+	if (locale == nullptr)
 	{
 		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
 	}

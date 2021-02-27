@@ -164,7 +164,7 @@ void b3Tx::b3ParseSGI3(
 
 	/* line buffer */
 	line = (b3_u08 *)b3Alloc(xSize * zSize * bytes);
-	if (line == null)
+	if (line == nullptr)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG SGI  # Error allocating memory:\n");

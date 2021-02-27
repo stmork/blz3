@@ -108,14 +108,14 @@ public:
 	 *
 	 * \param logger The new exception logger.
 	 */
-	static void        b3SetLogger(b3ExceptionLogger logger = null);
+	static void        b3SetLogger(b3ExceptionLogger logger = nullptr);
 
 	/**
 	 * This method sets a procedure for logging the exception.
 	 *
 	 * \param converter The Message converter.
 	 */
-	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
+	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = nullptr);
 
 	const char * what() const noexcept override;
 };

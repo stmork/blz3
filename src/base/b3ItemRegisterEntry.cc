@@ -75,8 +75,8 @@ b3Item * b3ItemRegisterEntry::b3Init()
 {
 	b3Item * item = init_func(class_type);
 
-	item->Succ = null;
-	item->Prev = null;
+	item->Succ = nullptr;
+	item->Prev = nullptr;
 
 	return item;
 }
@@ -85,8 +85,8 @@ b3Item * b3ItemRegisterEntry::b3Load(b3_u32 * buffer)
 {
 	b3Item * item = load_func(buffer);
 
-	item->Succ = null;
-	item->Prev = null;
+	item->Succ = nullptr;
+	item->Prev = nullptr;
 
 	return item;
 }

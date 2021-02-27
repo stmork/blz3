@@ -94,12 +94,12 @@ public:
 		if (m_Index >= m_Max)
 		{
 			buffer = new T[max];
-			if (buffer != null)
+			if (buffer != nullptr)
 			{
 				// Copy old memory (should be done by realloc later!
 				if (m_Index > 0)
 				{
-					B3_ASSERT(m_Buffer != null);
+					B3_ASSERT(m_Buffer != nullptr);
 					memcpy(buffer, m_Buffer, m_Index * sizeof(T));
 					if (m_Buffer != m_Start)
 					{
@@ -135,7 +135,7 @@ public:
 			{
 				delete [] m_Buffer;
 			}
-			m_Buffer = null;
+			m_Buffer = nullptr;
 			m_Max    = 0;
 		}
 	}
@@ -145,7 +145,7 @@ public:
 	 *
 	 * @return The allocated amount of elements.
 	 */
-	inline const b3_count b3GetCount() const
+	inline b3_count b3GetCount() const
 	{
 		return m_Index;
 	}
@@ -218,7 +218,7 @@ public:
 	 *            procedure.
 	 * @see b3Comparator
 	 */
-	inline void b3Sort(b3Comparator<T> & comparator, const void * ptr = null)
+	inline void b3Sort(b3Comparator<T> & comparator, const void * ptr = nullptr)
 	{
 		qsort(m_Buffer, b3GetCount(), sizeof(T), comparator.b3Sort, ptr);
 	}

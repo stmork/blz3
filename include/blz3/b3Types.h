@@ -24,6 +24,7 @@
 
 #include <sys/types.h>
 #include <math.h>
+#include <cstdint>
 
 #include "blz3/b3PluginDef.h"
 
@@ -51,6 +52,7 @@
 #	define B3_ALIGN_64
 #endif
 
+#define B3_UNUSED [[maybe_unused]]
 
 // Some error codes
 /**
@@ -63,26 +65,16 @@ enum b3_result
 };
 
 // Unsigned integer
-typedef unsigned char       b3_u08;  //!< Granted unsigned integer with 8 bits.
-typedef unsigned short      b3_u16;  //!< Granted unsigned integer with 16 bits.
-typedef unsigned int        b3_u32;  //!< Granted unsigned integer with 32 bits.
-
-#ifdef _WIN32
-typedef unsigned __int64    b3_u64;  //!< Granted unsigned integer with 64 bits.
-#else
-typedef unsigned long long  b3_u64;  //!< Granted unsigned integer with 64 bits.
-#endif
+typedef uint8_t             b3_u08;  //!< Granted unsigned integer with 8 bits.
+typedef uint16_t            b3_u16;  //!< Granted unsigned integer with 16 bits.
+typedef uint32_t            b3_u32;  //!< Granted unsigned integer with 32 bits.
+typedef uint64_t            b3_u64;  //!< Granted unsigned integer with 64 bits.
 
 // Signed integer
-typedef   signed char       b3_s08;  //!< Granted signed integer with 8 bits.
-typedef   signed short      b3_s16;  //!< Granted signed integer with 16 bits.
-typedef   signed int        b3_s32;  //!< Granted signed integer with 32 bits.
-
-#ifdef _WIN32
-typedef   signed __int64    b3_s64;  //!< Granted signed integer with 64 bits.
-#else
-typedef   signed long long  b3_s64;  //!< Granted signed integer with 64 bits.
-#endif
+typedef int8_t              b3_s08;  //!< Granted signed integer with 8 bits.
+typedef int16_t             b3_s16;  //!< Granted signed integer with 16 bits.
+typedef int32_t             b3_s32;  //!< Granted signed integer with 32 bits.
+typedef int64_t             b3_s64;  //!< Granted signed integer with 64 bits.
 
 // Boolean
 typedef b3_u32              b3_bool; //!< Granted boolean value with 32 bits.
@@ -95,11 +87,11 @@ typedef long double         b3_f96;  //!< Granted extended precision floating po
 // Some other types
 typedef size_t              b3_size;       //!< A size specifier (like size_t).
 typedef off_t               b3_offset;     //!< An offset specifier (like off_t).
-typedef long                b3_index;      //!< A signed index specifier.
-typedef long                b3_count;      //!< A signed counter.
-typedef long                b3_res;        //!< A signed resolution specifier.
+typedef ssize_t             b3_index;      //!< A signed index specifier.
+typedef ssize_t             b3_count;      //!< A signed counter.
+typedef ssize_t             b3_res;        //!< A signed resolution specifier.
 typedef b3_u32              b3_pkd_color;  //!< An unsigned color specifier using AARRGGBB as nibbles.
-typedef long                b3_coord;      //!< A signed coordinate specifier.
+typedef ssize_t             b3_coord;      //!< A signed coordinate specifier.
 typedef int                 b3_loop;       //!< A signed integer for small loops (max. 32 bits, but can be more).
 
 #ifdef _WIN32
@@ -257,18 +249,6 @@ struct b3_gl_vector
 };
 
 // Some definitions
-#ifndef null
-#define null 0
-#endif
-
-#ifndef false
-#define false 0
-#endif
-
-#ifndef true
-#define true  1
-#endif
-
 #ifndef M_PI
 #define M_PI 3.14159265
 #endif

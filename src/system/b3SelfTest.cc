@@ -106,12 +106,12 @@ b3_bool b3SelfTest::b3TestMemory()
 	mem.b3Dump();
 
 	ptr1 = mem.b3Alloc(MEM_MIN);
-	result &= (ptr1 != null);
+	result &= (ptr1 != nullptr);
 	b3PrintF(B3LOG_NORMAL, "ptr1: %p\n", ptr1);
 	mem.b3Dump();
 
 	ptr2 = mem.b3Alloc(MEM_MIN);
-	result &= (ptr2 != null);
+	result &= (ptr2 != nullptr);
 	b3PrintF(B3LOG_NORMAL, "ptr2: %p\n", ptr2);
 	mem.b3Dump();
 
@@ -127,7 +127,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF(B3LOG_NORMAL, "whole node freed...\n");
 	mem.b3Dump();
 
-	ptr1 = mem.b3Realloc(null,  MEM_MIN * 2);
+	ptr1 = mem.b3Realloc(nullptr,  MEM_MIN * 2);
 	mem.b3Dump();
 	for (i = 0; i < MEM_MIN; i++)
 	{
@@ -135,22 +135,22 @@ b3_bool b3SelfTest::b3TestMemory()
 	}
 	b3PrintF(B3LOG_NORMAL, "ptr1 = %p after b3Realloc() (%s)\n",
 		ptr1,
-		ptr1 != null ? "OK" : "wrong");
-	result &= (ptr1 != null);
+		ptr1 != nullptr ? "OK" : "wrong");
+	result &= (ptr1 != nullptr);
 
 	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
 	mem.b3Dump();
 	b3PrintF(B3LOG_NORMAL, "ptr2 = %p, ptr1 = %p after b3Realloc() with size reduction (%s)\n",
 		ptr2, ptr1,
-		(ptr1 == ptr2) && (ptr2 != null) ? "OK" : "wrong");
-	result &= ((ptr1 == ptr2) && (ptr2 != null));
+		(ptr1 == ptr2) && (ptr2 != nullptr) ? "OK" : "wrong");
+	result &= ((ptr1 == ptr2) && (ptr2 != nullptr));
 
 	ptr1 = mem.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
 	mem.b3Dump();
 	b3PrintF(B3LOG_NORMAL, "ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1, ptr2,
-		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
-	result &= ((ptr1 != ptr2) && (ptr1 != null));
+		(ptr1 != ptr2) && (ptr1 != nullptr) ? "OK" : "wrong");
+	result &= ((ptr1 != ptr2) && (ptr1 != nullptr));
 
 	equal = memcmp(buffer, ptr1, MEM_MIN) == 0;
 	b3PrintF(B3LOG_NORMAL, "   Memory buffer is %s\n",
@@ -181,8 +181,8 @@ b3_bool b3SelfTest::b3TestMemory()
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	b3PrintF(B3LOG_NORMAL, "ptr2 = %p, ptr1 = %p after b3Realloc() with zero size allocation (%s)\n",
 		ptr2, ptr1,
-		(ptr1 != ptr2) && (ptr2 == null) ? "OK" : "wrong");
-	result &= ((ptr1 != ptr2) && (ptr2 == null));
+		(ptr1 != ptr2) && (ptr2 == nullptr) ? "OK" : "wrong");
+	result &= ((ptr1 != ptr2) && (ptr2 == nullptr));
 
 	b3PrintF(B3LOG_NORMAL, "\n");
 	v1 = 1;

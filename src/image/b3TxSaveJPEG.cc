@@ -126,7 +126,7 @@ void b3InfoJPEG::b3JpegStdioDestPrivate(j_compress_ptr  cinfo)
 {
 	my_dest_ptr dest;
 
-	if (cinfo->dest == null)
+	if (cinfo->dest == nullptr)
 	{
 		/* first time for this JPEG object? */
 		cinfo->dest = (struct jpeg_destination_mgr *)
@@ -151,7 +151,7 @@ b3InfoJPEG::b3InfoJPEG(b3Tx * tx, const char * filename, b3_u32 quality) :
 	JPEGwritten    = 0;
 
 	JPEGrow        = (b3_u08 *)b3Alloc(JPEGrow_stride * JPEG_ROWS);
-	if (JPEGrow == null)
+	if (JPEGrow == nullptr)
 	{
 		m_File.b3Close();
 		b3Free();
@@ -236,7 +236,7 @@ b3InfoJPEG::~b3InfoJPEG()
 	jpeg_destroy_compress(&JPEGcinfo);
 }
 
-const b3_result b3Tx::b3SaveJPEG(const char * filename, b3_u32 quality)
+b3_result b3Tx::b3SaveJPEG(const char * filename, b3_u32 quality)
 {
 	b3PrintF(B3LOG_FULL, "Saving JPEG: %s, quality %u\n", filename, quality);
 

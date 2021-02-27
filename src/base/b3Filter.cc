@@ -44,7 +44,7 @@ b3Filter * b3Filter::b3New(b3_filter filter)
 	case B3_FILTER_SHUTTER:
 		return new b3ShutterFilter();
 	}
-	return null;
+	return nullptr;
 }
 
 b3_f64 b3Filter::b3InvIntegral(b3_f64 val, b3_bool throw_exception)

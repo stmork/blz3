@@ -446,9 +446,9 @@ const char * b3Tx::b3GetExt(b3_tx_filetype type)
 		return "exr";
 
 	default:
-		return null;
+		return nullptr;
 	}
-	return null;
+	return nullptr;
 }
 
 b3_result b3Tx::b3SaveImage(const char * filename)

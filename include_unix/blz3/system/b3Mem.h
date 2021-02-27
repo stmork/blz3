@@ -48,7 +48,7 @@ public:
 	{
 #ifdef HAVE_MEMALIGN
 		void * ptr = memalign(16, size);
-		if (ptr != null)
+		if (ptr != nullptr)
 		{
 			memset(ptr, 0, size);
 		}

@@ -48,7 +48,7 @@ void * b3Mem::b3Alloc(const b3_size size)
 	b3_index           i;
 	b3CriticalSection  lock(*this);
 
-	i = b3FindIndex(null);
+	i = b3FindIndex(nullptr);
 	if (i >= 0)
 	{
 		// Found empty slot
@@ -70,7 +70,7 @@ void * b3Mem::b3Alloc(const b3_size size)
 			b3_count     max   = m_SlotCount + B3_MEM_ADDITIONAL_SLOTS;
 			b3_mem_info * slots = (b3_mem_info *)b3MemAccess::b3Alloc(max * sizeof(b3_mem_info));
 
-			if (slots != null)
+			if (slots != nullptr)
 			{
 				memcpy(slots, m_SlotPtr, m_SlotMax * sizeof(b3_mem_info));
 				if (m_SlotPtr != m_Slots)
@@ -90,11 +90,11 @@ void * b3Mem::b3Alloc(const b3_size size)
 			{
 				// If there is no memory for new slots we should better
 				// check really requested memory chunk.
-				if (ptr != null)
+				if (ptr != nullptr)
 				{
 					b3MemAccess::b3Free(ptr);
 				}
-				ptr = null;
+				ptr = nullptr;
 			}
 		}
 	}
@@ -104,10 +104,10 @@ void * b3Mem::b3Alloc(const b3_size size)
 
 void * b3Mem::b3Realloc(const void * old_ptr, const b3_size new_size)
 {
-	void   *   new_ptr  = null;
+	void   *   new_ptr  = nullptr;
 
-	B3_ASSERT((old_ptr != null) || (new_size > 0));
-	if (old_ptr == null)
+	B3_ASSERT((old_ptr != nullptr) || (new_size > 0));
+	if (old_ptr == nullptr)
 	{
 		new_ptr = b3Alloc(new_size);
 	}
@@ -128,7 +128,7 @@ void * b3Mem::b3Realloc(const void * old_ptr, const b3_size new_size)
 				else
 				{
 					new_ptr = b3MemAccess::b3Alloc(new_size);
-					if (new_ptr != null)
+					if (new_ptr != nullptr)
 					{
 						memcpy(new_ptr, m_SlotPtr[i].m_Ptr, m_SlotPtr[i].m_Size);
 						b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
@@ -159,7 +159,7 @@ b3_bool b3Mem::b3Free(const void * ptr)
 	b3_index i;
 	b3_bool  found = false;
 
-	if (ptr != null)
+	if (ptr != nullptr)
 	{
 		// Critical Section
 		{
@@ -168,7 +168,7 @@ b3_bool b3Mem::b3Free(const void * ptr)
 			i = b3FindIndex(ptr);
 			if (i >= 0)
 			{
-				m_SlotPtr[i].m_Ptr  = null;
+				m_SlotPtr[i].m_Ptr  = nullptr;
 				m_SlotPtr[i].m_Size = 0;
 				found = true;
 			}
@@ -190,10 +190,10 @@ b3_bool b3Mem::b3Free()
 
 	for (i = 0; i < m_SlotMax; i++)
 	{
-		if (m_SlotPtr[i].m_Ptr != null)
+		if (m_SlotPtr[i].m_Ptr != nullptr)
 		{
 			b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
-			m_SlotPtr[i].m_Ptr  = null;
+			m_SlotPtr[i].m_Ptr  = nullptr;
 			m_SlotPtr[i].m_Size = 0;
 		}
 	}

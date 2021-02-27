@@ -216,7 +216,7 @@ public:
 	 */
 	inline b3VertexElements()
 	{
-		glVertex = null;
+		glVertex = nullptr;
 	}
 
 	virtual ~b3VertexElements() = default;
@@ -254,7 +254,7 @@ public:
 	 */
 	inline b3GridElements()
 	{
-		glGrids = null;
+		glGrids = nullptr;
 	}
 
 	virtual ~b3GridElements() = default;
@@ -292,7 +292,7 @@ public:
 	 */
 	inline b3PolygonElements()
 	{
-		glPolygons = null;
+		glPolygons = nullptr;
 	}
 
 	virtual ~b3PolygonElements() = default;

@@ -80,7 +80,7 @@ public:
 		v[Im] = im;
 	}
 
-	inline const bool operator==(const b3Complex<T> & a) const
+	inline bool operator==(const b3Complex<T> & a) const
 	{
 		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
 	}
@@ -297,7 +297,7 @@ public:
 	/**
 	 * This method normalizes this complex number.
 	 */
-	inline const b3_bool b3Normalize(const T len = 1)
+	inline b3_bool b3Normalize(const T len = 1)
 	{
 		T old_len = b3Length();
 

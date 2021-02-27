@@ -95,7 +95,7 @@ b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
 		}
 	}
 	b3PrintF(B3LOG_DEBUG, "b3ItemRegister::b3Find(%08lx) not found.\n", class_type);
-	return null;
+	return nullptr;
 }
 
 void b3ItemRegister::b3Dump()

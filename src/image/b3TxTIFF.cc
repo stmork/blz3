@@ -250,8 +250,8 @@ long b3TIFF::b3TAFcorrectOffset(long offset)
 }
 
 long b3TIFF::b3TAFwriteGap(
-	b3FileAbstract * out,
-	long            offset)
+	b3FileAbstract * out B3_UNUSED,
+	long             offset)
 {
 #ifdef FILL_GAP
 	char gap[8];
@@ -273,8 +273,8 @@ long b3TIFF::b3TAFwriteGap(
 **                                                                      **
 *************************************************************************/
 
-void     *     b3TIFF::b3LogFuncPtr  = null;
-b3LogTiffFunc  b3TIFF::b3LogFuncTIFF = null;
+void     *     b3TIFF::b3LogFuncPtr  = nullptr;
+b3LogTiffFunc  b3TIFF::b3LogFuncTIFF = nullptr;
 
 void b3TIFF::b3SetLogTiffFunc(b3LogTiffFunc log_func, void * ptr)
 {
@@ -292,7 +292,7 @@ void b3TIFF::b3LogTIFF(const char * format, ...)
 	va_end(list);
 	b3PrintF(B3LOG_FULL, message);
 
-	if (b3LogFuncTIFF != null)
+	if (b3LogFuncTIFF != nullptr)
 	{
 		b3LogFuncTIFF(message, b3LogFuncPtr);
 	}
@@ -318,7 +318,7 @@ b3TIFF_Dir::b3TIFF_Dir(
 	stripNum   = 0;
 	offset     = 0;
 	next       = 0;
-	stripArray = null;
+	stripArray = nullptr;
 
 	// For each tag do...
 	b3TIFF::b3LogTIFF("code type data[0]  data[1]\n");
@@ -332,9 +332,9 @@ b3TIFF_Dir::b3TIFF_Dir(
 		}
 		catch (...)
 		{
-			tagTIFF = null;
+			tagTIFF = nullptr;
 		}
-		if (tagTIFF == null)
+		if (tagTIFF == nullptr)
 		{
 			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
@@ -349,7 +349,7 @@ b3TIFF_Dir::~b3TIFF_Dir()
 {
 	b3TIFF_Entry * tTIFF;
 
-	while ((tTIFF = tags.First) != null)
+	while ((tTIFF = tags.First) != nullptr)
 	{
 		tags.b3Remove(tTIFF);
 		delete tTIFF;
@@ -413,7 +413,7 @@ void b3TIFF_Dir::b3Traverse(
 
 	func(head, (b3Link<class T> *)this, ptr);
 	for (tTIFF  = tags.First;
-		tTIFF != null;
+		tTIFF != nullptr;
 		tTIFF  = tnTIFF)
 	{
 		tnTIFF = tTIFF->Succ;
@@ -421,7 +421,7 @@ void b3TIFF_Dir::b3Traverse(
 	}
 
 	for (sTIFF  = strips.First;
-		sTIFF != null;
+		sTIFF != nullptr;
 		sTIFF  = snTIFF)
 	{
 		snTIFF = sTIFF->Succ;
@@ -433,7 +433,7 @@ void b3TIFF_Dir::b3TravRemoveIFW()
 {
 	b3TIFF_Entry * tTIFF, *succ;
 
-	for (tTIFF = tags.First; tTIFF != null; tTIFF = succ)
+	for (tTIFF = tags.First; tTIFF != nullptr; tTIFF = succ)
 	{
 		succ = tTIFF->Succ;
 		tTIFF->b3RemoveIFW(&tags);
@@ -446,12 +446,12 @@ long b3TIFF_Dir::b3OrgTags(long act_offset)
 
 	offset = act_offset;
 	num    = 0;
-	for (son = tags.First; son != null; son = son->Succ)
+	for (son = tags.First; son != nullptr; son = son->Succ)
 	{
 		num++;
 	}
 
-	tags.b3Sort(b3TIFF_Entry::b3SortTags, null);
+	tags.b3Sort(b3TIFF_Entry::b3SortTags, nullptr);
 	act_offset += (sizeof(short) + sizeof(long));
 	b3TIFF::b3LogTIFF("  Dir:   %6ld # %ld tags, %ld strips\n",
 		offset, num, stripNum);
@@ -462,13 +462,13 @@ void b3TIFF_Dir::b3OrgStrips()
 {
 	b3TIFF_Dir * nTIFF;
 
-	if ((nTIFF = (b3TIFF_Dir *)Succ) != null)
+	if ((nTIFF = (b3TIFF_Dir *)Succ) != nullptr)
 	{
 		next = nTIFF->b3Offset();
 	}
 	else
 	{
-		next = null;
+		next = 0;
 	}
 }
 
@@ -485,7 +485,7 @@ long b3TIFF_Dir::b3WriteTags(b3FileAbstract * out, long act_offset)
 
 	// For each tag
 	for (tTIFF  = (b3TIFF_Entry *)tags.First;
-		tTIFF != null;
+		tTIFF != nullptr;
 		tTIFF  = (b3TIFF_Entry *)tTIFF->Succ)
 	{
 		act_offset = tTIFF->b3WriteTag(out, &strips, act_offset, stripNum);
@@ -508,13 +508,13 @@ b3TIFF_Entry::b3TIFF_Entry(
 	struct TagTIFF * ThisTag,
 	char      *     ptrTIFF) : b3Link<b3TIFF_Entry>(sizeof(b3TIFF_Entry), CLASS_TIFF_TAG)
 {
-	b3TIFF_Strip * strips = null;
+	b3TIFF_Strip * strips = nullptr;
 	long            tag_size, num, s;
 
 	tag_size = b3TIFF::b3GetTIFFTypeSize(ThisTag);
 	TIFF     = (char *)ptrTIFF;
-	buffer   = null;
-	ptr      = null;
+	buffer   = nullptr;
+	ptr      = nullptr;
 
 	tag  = *ThisTag;
 	size = b3Endian::b3Get32(&ThisTag->Data[0]) * tag_size;
@@ -557,7 +557,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 		}
 		catch (...)
 		{
-			strips = null;
+			strips = nullptr;
 		}
 
 		if (strips)
@@ -599,7 +599,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 		// Get strip length
 		s = 0;
 		for (strips  = (b3TIFF_Strip *)dirTIFF->b3FirstStrip();
-			strips != null;
+			strips != nullptr;
 			strips  = (b3TIFF_Strip *)strips->Succ)
 		{
 			ptr[s] = strips->b3Size(b3TIFF::b3GetTIFFValue(TIFF, ThisTag, s));
@@ -835,9 +835,9 @@ b3TIFF::b3TIFF(struct HeaderTIFF * TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_
 		}
 		catch (...)
 		{
-			dirTIFF = null;
+			dirTIFF = nullptr;
 		}
-		if (dirTIFF == null)
+		if (dirTIFF == nullptr)
 		{
 			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
@@ -852,7 +852,7 @@ b3TIFF::~b3TIFF()
 {
 	b3TIFF_Dir * dirTIFF;
 
-	while ((dirTIFF = dirs.First) != null)
+	while ((dirTIFF = dirs.First) != nullptr)
 	{
 		dirs.b3Remove(dirTIFF);
 		delete dirTIFF;
@@ -868,8 +868,8 @@ void b3TIFF::b3Traverse(
 
 	func(head, (b3Link<class T> *)this, ptr);
 	for (dTIFF  = dirs.First;
-		dTIFF != null;
-		dTIFF  = dnTIFF)
+		 dTIFF != nullptr;
+		 dTIFF  = dnTIFF)
 	{
 		dnTIFF = dTIFF->Succ;
 		dTIFF->b3Traverse((b3Base<class T> *)&dirs, func, ptr);
@@ -907,7 +907,7 @@ long b3TIFF::b3DirCount()
 	b3TIFF_Dir * node;
 	long          count = 0;
 
-	for (node = dirs.First; node != null; node = node->Succ)
+	for (node = dirs.First; node != nullptr; node = node->Succ)
 	{
 		count++;
 	}
@@ -919,7 +919,7 @@ void b3TIFF::b3Append(b3TIFF * tiff)
 	b3TIFF_Dir * dTIFF;
 
 	// Copy tiff's pages into this instance
-	while ((dTIFF = tiff->dirs.First) != null)
+	while ((dTIFF = tiff->dirs.First) != nullptr)
 	{
 		tiff->dirs.b3Remove(dTIFF);
 		dirs.b3Append(dTIFF);
@@ -1110,10 +1110,10 @@ static long WriteIFW(
 }
 #endif
 
-const int b3TIFF_Entry::b3SortTags(
+int b3TIFF_Entry::b3SortTags(
 	const b3TIFF_Entry * a,
 	const b3TIFF_Entry * b,
-	const void     *    ptr)
+	const void     *     ptr B3_UNUSED)
 {
 	if (a->tag.Code < b->tag.Code)
 	{
@@ -1129,7 +1129,7 @@ const int b3TIFF_Entry::b3SortTags(
 void b3TIFF::b3TravRemIFW(
 	b3Base<class T> * Head,
 	b3Link<class T> * Node,
-	void      *      ptr)
+	void      *      ptr B3_UNUSED)
 {
 	b3TIFF_Entry * tag;
 
@@ -1144,19 +1144,19 @@ void b3TIFF::b3TravRemIFW(
 
 void b3TIFF::b3TravRemoveIFW()
 {
-	b3Traverse((b3Base<class T> *)&dirs, b3TravRemIFW, null);
+	b3Traverse((b3Base<class T> *)&dirs, b3TravRemIFW, nullptr);
 }
 
 void b3TIFF::b3TravTIFF(
-	b3Base<class T> * Head,
+	b3Base<class T> * Head B3_UNUSED,
 	b3Link<class T> * Node,
-	void       *       ptr)
+	void       *      ptr)
 {
-	b3TIFF    *   hTIFF;
-	b3TIFF_Dir  * dTIFF;
+	b3TIFF    *    hTIFF;
+	b3TIFF_Dir  *  dTIFF;
 	b3TIFF_Entry * tTIFF;
 	b3TIFF_Strip * sTIFF;
-	long      *     offset = (long *)ptr;
+	long      *    offset = (long *)ptr;
 
 	switch (Node->b3GetClassType())
 	{
@@ -1185,9 +1185,9 @@ void b3TIFF::b3TravTIFF(
 }
 
 void b3TIFF::b3TravOffset(
-	b3Base<class T> * Head,
+	b3Base<class T> * Head B3_UNUSED,
 	b3Link<class T> * Node,
-	void      *      ptr)
+	void      *       ptr)
 {
 	b3TIFF    *    hTIFF;
 	b3TIFF_Dir  *  dTIFF;
@@ -1248,20 +1248,20 @@ void b3TIFF::b3Write(char * name)
 
 	// writing dir and tag structure
 	for (dTIFF  = dirs.First;
-		dTIFF != null;
-		dTIFF  = dTIFF->Succ)
+		 dTIFF != nullptr;
+		 dTIFF  = dTIFF->Succ)
 	{
 		act_offset = dTIFF->b3WriteTags(&out, act_offset);
 	}
 
 	// writing tag data
 	for (dTIFF  = dirs.First;
-		dTIFF != null;
-		dTIFF  = dTIFF->Succ)
+		 dTIFF != nullptr;
+		 dTIFF  = dTIFF->Succ)
 	{
 		// writing tag buffers
 		for (tTIFF  = dTIFF->b3FirstEntry();
-			tTIFF != null;
+			tTIFF != nullptr;
 			tTIFF  = tTIFF->Succ)
 		{
 			act_offset = tTIFF->b3WriteData(&out, act_offset);
@@ -1269,7 +1269,7 @@ void b3TIFF::b3Write(char * name)
 
 		// writing strips
 		for (sTIFF  = dTIFF->b3FirstStrip();
-			sTIFF != null;
+			sTIFF != nullptr;
 			sTIFF  = sTIFF->Succ)
 		{
 			act_offset = sTIFF->b3WriteData(&out, act_offset);

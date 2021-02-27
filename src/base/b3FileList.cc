@@ -38,7 +38,7 @@ b3FileEntry::b3FileEntry(const char * new_name) :
 	name.b3Format("%s", new_name);
 }
 
-const int b3FileEntry::b3Cmp(const b3FileEntry * compare) const
+int b3FileEntry::b3Cmp(const b3FileEntry * compare) const
 {
 	return strcoll(b3Name(), compare->b3Name());
 }
@@ -119,7 +119,7 @@ b3FileEntry * b3FileList::b3First() const
 	return list.First;
 }
 
-const b3_bool b3FileList::b3Add(const char * name)
+b3_bool b3FileList::b3Add(const char * name)
 {
 	b3FileEntry * entry;
 
@@ -130,10 +130,10 @@ const b3_bool b3FileList::b3Add(const char * name)
 	}
 	catch (...)
 	{
-		entry = null;
+		entry = nullptr;
 	}
 
-	return entry != null;
+	return entry != nullptr;
 }
 
 void b3FileList::b3Sort()

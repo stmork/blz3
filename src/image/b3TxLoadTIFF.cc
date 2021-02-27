@@ -129,7 +129,7 @@ toff_t b3Tx::b3SeekProc(thandle_t fd, toff_t off, int whence)
 	return offset;
 }
 
-int b3Tx::b3CloseProc(thandle_t fd)
+int b3Tx::b3CloseProc(B3_UNUSED thandle_t fd)
 {
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcClos:\n");
@@ -157,7 +157,10 @@ int b3Tx::b3MMapProc(thandle_t fd, tdata_t * pbase, toff_t * psize)
 	return 1;
 }
 
-void b3Tx::b3UnmapProc(thandle_t fd, tdata_t base, toff_t size)
+void b3Tx::b3UnmapProc(
+		B3_UNUSED thandle_t fd,
+		B3_UNUSED tdata_t base,
+		B3_UNUSED toff_t size)
 {
 }
 
@@ -170,7 +173,7 @@ void b3Tx::b3UnmapProc(thandle_t fd, tdata_t base, toff_t size)
 // These methods load a TIFF image into this instance.
 // Look at the TIFF programming manual for understanding this. Be happy
 // with this piece of code.
-const long b3Tx::b3TIFFPalette(
+long b3Tx::b3TIFFPalette(
 	TIFF * tiff,
 	short  PaletteMode)
 {
@@ -247,7 +250,7 @@ const long b3Tx::b3TIFFPalette(
 	return type;
 }
 
-const long b3Tx::b3TIFFDecode(
+long b3Tx::b3TIFFDecode(
 	TIFF * tiff,
 	short  PlanarConfig)
 {
@@ -289,7 +292,7 @@ const long b3Tx::b3TIFFDecode(
 		{
 		case PLANARCONFIG_CONTIG :
 			lPtr = (b3_u08 *)b3Alloc(max);
-			if (lPtr != null)
+			if (lPtr != nullptr)
 			{
 				cPtr = (b3_u08 *)data;
 				for (y = 0; y < ySize; y++)
@@ -379,7 +382,7 @@ const long b3Tx::b3TIFFDecode(
 		b3_color * fPtr = b3GetHdrData();
 		uint16  * rPtr = (uint16 *)b3Alloc(xSize * sizeof(uint16) * 3);
 
-		if (rPtr != null)
+		if (rPtr != nullptr)
 		{
 			uint16 * gPtr = rPtr + xSize;
 			uint16 * bPtr = gPtr + xSize;
@@ -413,7 +416,7 @@ const long b3Tx::b3TIFFDecode(
 	return type;
 }
 
-const b3_result b3Tx::b3LoadTIFF(const char * tiff_name)
+b3_result b3Tx::b3LoadTIFF(const char * tiff_name)
 {
 	b3File     tiff_file;
 	b3_u08  *  buffer;
@@ -435,7 +438,7 @@ const b3_result b3Tx::b3LoadTIFF(const char * tiff_name)
 	return error_code;
 }
 
-const b3_result b3Tx::b3LoadTIFF(
+b3_result b3Tx::b3LoadTIFF(
 	const char  *  tiff_name,
 	const b3_u08 * tiff_buffer,
 	const b3_size  tiff_size)
@@ -443,9 +446,9 @@ const b3_result b3Tx::b3LoadTIFF(
 	TIFF  *  tiff;
 	b3_u16   bps = 1, spp = 1, pm = PHOTOMETRIC_MINISWHITE, pc = 0;
 	b3_u16   compression = 0, fillorder = 0;
-	char  *  my_hostname = null;
-	char  *  my_username = null;
-	char  *  my_software = null;
+	char  *  my_hostname = nullptr;
+	char  *  my_username = nullptr;
+	char  *  my_software = nullptr;
 	b3_f32   xDoubleDPI  = 200;
 	b3_f32   yDoubleDPI  = 200;
 
@@ -464,7 +467,7 @@ const b3_result b3Tx::b3LoadTIFF(
 #else
 	tiff = TIFFOpen(tiff_name, "r");
 #endif
-	if (tiff == null)
+	if (tiff == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_NOT_FOUND);
 	}

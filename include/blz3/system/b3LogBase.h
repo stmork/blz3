@@ -75,7 +75,7 @@ public:
 	 * @param loglevel The new log level.
 	 * @return The old log level.
 	 */
-	static inline const b3_log_level b3SetLevel(const b3_log_level loglevel)
+	static inline b3_log_level b3SetLevel(const b3_log_level loglevel)
 	{
 		b3_log_level oldLevel = m_LogLevel;
 
@@ -90,7 +90,7 @@ public:
 	 * @param loglevel The log level to check.
 	 * @return True if logging is permitted.
 	 */
-	static inline const b3_bool b3CheckLevel(const b3_log_level loglevel)
+	static inline b3_bool b3CheckLevel(const b3_log_level loglevel)
 	{
 		return (m_LogLevel >= 0) && (m_LogLevel >= loglevel);
 	}
@@ -100,9 +100,9 @@ public:
 	 *
 	 * @return The logging instance.
 	 */
-	static  inline b3LogBase * b3GetLogger()
+	static inline b3LogBase * b3GetLogger()
 	{
-		assert(m_Logger != null);
+		assert(m_Logger != nullptr);
 		return m_Logger;
 	}
 

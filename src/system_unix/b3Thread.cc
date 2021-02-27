@@ -178,7 +178,7 @@ b3_bool b3Thread::b3Start(
 		threadSuccess++;
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # started thread %02lX (%s).\n",
 			m_Thread,
-			m_Name != null ? m_Name : "no name");
+			m_Name != nullptr ? m_Name : "no name");
 	}
 	else
 	{
@@ -207,7 +207,7 @@ void * b3Thread::b3Trampoline(void * ptr)
 	threadClass->m_Result = threadClass->m_CallProc((void *)threadClass->m_CallArg);
 	threadClass->b3Dec();
 
-	return null;
+	return nullptr;
 }
 
 b3_bool b3Thread::b3IsRunning()
@@ -228,11 +228,11 @@ b3_bool b3Thread::b3Stop()
 	{
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # terminated thread %02lX (%s).\n",
 			m_Thread,
-			m_Name != null ? m_Name : "no name");
+			m_Name != nullptr ? m_Name : "no name");
 	}
 
 	b3Dec();
-	m_CallProc  = null;
+	m_CallProc  = nullptr;
 	m_CallArg   = 0;
 	m_Thread    = 0;
 

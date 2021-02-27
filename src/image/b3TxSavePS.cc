@@ -145,7 +145,7 @@ b3InfoPS::~b3InfoPS()
 #endif
 }
 
-const b3_result b3Tx::b3SavePS(const char * filename)
+b3_result b3Tx::b3SavePS(const char * filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving PS: %s\n", filename);
 

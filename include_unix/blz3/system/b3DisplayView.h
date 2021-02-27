@@ -100,7 +100,7 @@ public:
 	 *
 	 * @param title The window title.
 	 */
-	b3DisplayView(const char * title = null);
+	b3DisplayView(const char * title = nullptr);
 
 	/**
 	 * This constructor opens a window with the given resolution and the given window
@@ -110,7 +110,7 @@ public:
 	 * @param ySize The window height.
 	 * @param title The window title.
 	 */
-	b3DisplayView(const b3_res xSize, const b3_res ySize, const char * title = null);
+	b3DisplayView(const b3_res xSize, const b3_res ySize, const char * title = nullptr);
 
 	/**
 	 * This destructor closes the window.
