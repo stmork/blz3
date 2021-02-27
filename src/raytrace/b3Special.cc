@@ -275,7 +275,7 @@ void b3CameraPart::b3SetName(const char * name)
 	b3Mem::b3SetString(m_CameraName, sizeof(m_CameraName), name);
 }
 
-b3_bool b3CameraPart::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3CameraPart::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrintF(B3LOG_DEBUG, "Camera %s, %sactive\n", b3GetName(), b3IsActive() ? "" : "not ");
 	b3PrintF(B3LOG_DEBUG, " W: %3.5f\n", b3Vector::b3Length(&m_Width));
@@ -360,8 +360,8 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	// set to the old twirl
 	if (twirl != 0)
 	{
-		b3Matrix::b3RotateVector(null, &RotMatrix, &RotLine, -twirl);
-		b3Matrix::b3VMul(&RotMatrix, &m_Width, &m_Width, false);
+		b3Matrix::b3RotateVector(nullptr, &RotMatrix, &RotLine, -twirl);
+		b3Matrix::b3VMul(&RotMatrix, &m_Width,  &m_Width, false);
 		b3Matrix::b3VMul(&RotMatrix, &m_Height, &m_Height, false);
 	}
 }
@@ -573,7 +573,7 @@ void b3Nebular::b3Write()
 	b3StoreFloat(m_NebularVal);
 }
 
-b3_bool b3Nebular::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Nebular::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	if (m_NebularVal > 0)
 	{
@@ -669,8 +669,8 @@ b3Distribute::b3Distribute(b3_u32 class_type) :
 	m_SamplesPerPixel =  5;
 	m_SamplesPerFrame = 64;
 	m_DepthOfField    =  0;
-	m_FilterPixel     = null;
-	m_FilterFrame     = null;
+	m_FilterPixel     = nullptr;
+	m_FilterFrame     = nullptr;
 }
 
 b3Distribute::b3Distribute(b3_u32 * src) :
@@ -691,18 +691,18 @@ b3Distribute::b3Distribute(b3_u32 * src) :
 		m_PixelAperture = B3_FILTER_BOX;
 		m_FrameAperture = B3_FILTER_GAUSS;
 	}
-	m_FilterPixel     = null;
-	m_FilterFrame     = null;
+	m_FilterPixel     = nullptr;
+	m_FilterFrame     = nullptr;
 }
 
 b3Distribute::~b3Distribute()
 {
-	if (m_FilterPixel != null)
+	if (m_FilterPixel != nullptr)
 	{
 		delete m_FilterPixel;
 	}
 
-	if (m_FilterFrame != null)
+	if (m_FilterFrame != nullptr)
 	{
 		delete m_FilterFrame;
 	}
@@ -736,13 +736,13 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	b3_coord      spp;
 	b3_sample     type;
 
-	if (m_FilterPixel != null)
+	if (m_FilterPixel != nullptr)
 	{
 		delete m_FilterPixel;
 	}
 	m_FilterPixel = b3Filter::b3New(m_PixelAperture);
 
-	if (m_FilterFrame != null)
+	if (m_FilterFrame != nullptr)
 	{
 		delete m_FilterFrame;
 	}
@@ -753,7 +753,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	m_SPP   = type == SAMPLE_SEPARATED ? spp : spp * spp;
 
 	m_Samples  = (b3_f32 *)b3Alloc(xSize * m_SPP * sizeof(b3_f32) * 2);
-	if (m_Samples == null)
+	if (m_Samples == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
@@ -823,7 +823,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 
 	m_MotionBlur.b3Clear();
 	m_TimeIndex.b3Clear();
-	if (animation != null)
+	if (animation != nullptr)
 	{
 		if (animation->b3IsActive() && b3IsMotionBlur())
 		{
@@ -891,7 +891,7 @@ b3Animation::b3Animation(b3_u32 * src) :
 
 void b3Animation::b3Write()
 {
-	b3StorePtr(null);
+	b3StorePtr(nullptr);
 	b3StoreFloat(m_Start);
 	b3StoreFloat(m_End);
 	b3StoreFloat(m_Time);
@@ -986,7 +986,7 @@ void b3CloudBackground::b3Write()
 	b3StoreFloat(m_Sharpness);
 }
 
-b3_bool b3CloudBackground::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3CloudBackground::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrepareClouds();
 	return true;

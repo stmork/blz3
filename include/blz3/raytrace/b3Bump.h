@@ -86,7 +86,7 @@ public:
 	 */
 	static         void    b3Register();
 
-	virtual        b3_bool b3Prepare(b3_preparation_info * info)
+	virtual        b3_bool b3Prepare(b3_preparation_info * info B3_UNUSED)
 	{
 		return true;
 	}
@@ -97,7 +97,7 @@ public:
 	 *
 	 * @param ray The b3_ray structure containing the intersection point.
 	 */
-	virtual void    b3BumpNormal(b3_ray * ray)
+	virtual void    b3BumpNormal(b3_ray * ray B3_UNUSED)
 	{
 	}
 

@@ -481,14 +481,14 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 	{
 		b3Path name;
 
-		b3Path::b3SplitFileName(filename, null, name);
+		b3Path::b3SplitFileName(filename, nullptr, name);
 		name.b3RemoveExt();
 		strlcpy(bbox->m_BoxName, name, sizeof(bbox->m_BoxName));
 	}
 	else
 	{
 		delete bbox;
-		bbox = null;
+		bbox = nullptr;
 		B3_THROW(b3WorldException, B3_WORLD_IMPORT);
 	}
 	return bbox;
@@ -505,10 +505,10 @@ b3Scene * b3TGFReader::b3ReadTGFScene(const char * tgffile)
 
 	b3PrintF(B3LOG_NORMAL, "Reading TGF %s\n", tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile, size);
-	if (buffer != null)
+	if (buffer != nullptr)
 	{
 		bbox = reader.b3Parse(buffer, size, tgffile);
-		if (bbox != null)
+		if (bbox != nullptr)
 		{
 			b3ModellerInfo * info;
 
@@ -539,14 +539,14 @@ b3Scene * b3TGFReader::b3ReadTGFScene(const char * tgffile)
 b3BBox * b3TGFReader::b3ReadTGFBBox(const char * tgffile)
 {
 	b3TGFReader  reader;
-	b3BBox   *   bbox = null;
+	b3BBox   *   bbox = nullptr;
 	b3File       file;
 	char    *    buffer;
 	b3_size      size;
 
 	b3PrintF(B3LOG_NORMAL, "Reading TGF %s\n", tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile, size);
-	if (buffer != null)
+	if (buffer != nullptr)
 	{
 		bbox = reader.b3Parse(buffer, size, tgffile);
 	}

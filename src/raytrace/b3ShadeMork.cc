@@ -52,7 +52,7 @@ void b3ShaderMork::b3ShadeLight(
 	Jit->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
 
 	// No shadow => surface in light
-	if (Jit->shape == null) // This shape is the obscurer not the intersection point shape!!!
+	if (Jit->shape == nullptr) // This shape is the obscurer not the intersection point shape!!!
 	{
 		// specular high light
 		if ((ShapeAngle =

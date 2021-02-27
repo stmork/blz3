@@ -229,11 +229,11 @@ void b3Shape::b3BumpNormal(b3_ray * ray)
 	ray->normal.z *= denom;
 }
 
-void b3Shape::b3SetupPicking(b3PickInfo * info)
+void b3Shape::b3SetupPicking(b3PickInfo * info B3_UNUSED)
 {
 }
 
-void b3Shape::b3SetupGrid(b3PickInfo * info)
+void b3Shape::b3SetupGrid(b3PickInfo * info B3_UNUSED)
 {
 }
 
@@ -259,10 +259,10 @@ b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
 	surface->m_Ior         =      1.0f;
 	surface->m_SpecularExp = 100000.0f;
 
-	return null;
+	return nullptr;
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar * polar)
+b3_bool b3Shape::b3CheckStencil(b3_polar * polar B3_UNUSED)
 {
 	return true;
 }
@@ -279,7 +279,9 @@ void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info)
 	info->yInfo.factor = 1;
 }
 
-void b3Shape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3Shape::b3Transform(
+		b3_matrix * transformation B3_UNUSED,
+		b3_bool     is_affine B3_UNUSED)
 {
 	b3PrintF(B3LOG_NORMAL, "b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);

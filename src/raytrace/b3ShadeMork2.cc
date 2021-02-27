@@ -50,7 +50,7 @@ void b3ShaderMork2::b3ShadeLight(
 	illumination.b3InitFactor(m_ShadowFactor);
 
 	// No shadow => surface in light
-	if (Jit->shape == null)
+	if (Jit->shape == nullptr)
 	{
 		b3_f64 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
 		b3_f32 factor;

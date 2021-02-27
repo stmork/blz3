@@ -198,7 +198,7 @@ void b3Light::b3InitValues()
 	m_SpotActive  = false;
 }
 
-b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	if (m_LightActive)
 	{
@@ -374,8 +374,8 @@ inline b3_bool b3Light::b3AreaIllumination(
 	xs    = 1;
 	for (x = xs; x <= Distr; x += 2)
 	{
-		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, x, 0) != null;
-		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - x) != null;
+		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, x, 0) != nullptr;
+		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - x) != nullptr;
 
 		equal   &= (Edge1 == Edge2);
 		if ((x != xs) && (!first))
@@ -388,8 +388,8 @@ inline b3_bool b3Light::b3AreaIllumination(
 
 	for (y = 2 - xs; y < Distr; y += 2)
 	{
-		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, 0, y) != null;
-		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - y) != null;
+		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, 0, y) != nullptr;
+		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - y) != nullptr;
 
 		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
 		LastEdge = Edge1;

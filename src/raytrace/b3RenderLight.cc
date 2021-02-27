@@ -38,7 +38,7 @@ b3_vector b3RenderLight::m_LightDirection =
 b3RenderLight::b3RenderLight()
 {
 	m_LightMode = B3_LIGHT_SIMPLE;
-	m_Scene     = null;
+	m_Scene     = nullptr;
 }
 
 void b3RenderLight::b3SetLightMode(b3_light_mode mode)

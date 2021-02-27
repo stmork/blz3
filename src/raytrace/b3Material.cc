@@ -239,7 +239,7 @@ b3MatTexture::b3MatTexture(b3_u32 class_type) : b3Material(sizeof(b3MatTexture),
 
 	// Init texture
 	m_Name.b3Empty();
-	m_Texture = null;
+	m_Texture = nullptr;
 	m_Flags   = 0;
 }
 
@@ -277,7 +277,7 @@ void b3MatTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3MatTexture::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatTexture::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
@@ -349,7 +349,7 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 class_type) :
 
 	// Init texture
 	m_Name.b3Empty();
-	m_Texture = null;
+	m_Texture = nullptr;
 	m_Flags   = 0;
 }
 
@@ -383,7 +383,7 @@ void b3MatWrapTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3MatWrapTexture::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatWrapTexture::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
@@ -691,7 +691,7 @@ void b3MatMarble::b3Write()
 	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatMarble::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatMarble::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrepareScaling();
 	return true;
@@ -869,7 +869,7 @@ void b3MatWood::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatWood::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatWood::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrepareWood(&m_Scale);
 	b3PrepareScaling();
@@ -881,7 +881,7 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_surface * surface)
 	b3_vector point;
 	b3_f64    mix;
 
-	b3Scale(surface->m_Incoming, null, &point);
+	b3Scale(surface->m_Incoming, nullptr, &point);
 	mix = b3ComputeWood(&point, surface->m_Incoming->Q);
 
 	b3Mix(surface, &m_DarkMaterial, &m_LightMaterial, mix);
@@ -900,8 +900,8 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
 	b3OakPlank()
 {
 	b3Init();
-	m_DarkMaterials  = null;
-	m_LightMaterials = null;
+	m_DarkMaterials  = nullptr;
+	m_LightMaterials = nullptr;
 }
 
 b3MatOakPlank::b3MatOakPlank(b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
@@ -959,18 +959,18 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
 		m_LightMaterial.m_SpecularExp = b3InitFloat();
 	}
 
-	m_DarkMaterials  = null;
-	m_LightMaterials = null;
+	m_DarkMaterials  = nullptr;
+	m_LightMaterials = nullptr;
 }
 
 b3MatOakPlank::~b3MatOakPlank()
 {
-	if (m_DarkMaterials != null)
+	if (m_DarkMaterials != nullptr)
 	{
 		delete [] m_DarkMaterials;
 	}
 
-	if (m_LightMaterials != null)
+	if (m_LightMaterials != nullptr)
 	{
 		delete [] m_LightMaterials;
 	}
@@ -1033,7 +1033,7 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatOakPlank::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatOakPlank::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3_index x, y, index = 0;
 	b3_f64   fx, fy;
@@ -1041,12 +1041,12 @@ b3_bool b3MatOakPlank::b3Prepare(b3_preparation_info * prep_info)
 	b3PrepareOakPlank(&m_Scale);
 	b3PrepareScaling();
 
-	if (m_DarkMaterials != null)
+	if (m_DarkMaterials != nullptr)
 	{
 		delete [] m_DarkMaterials;
 	}
 
-	if (m_LightMaterials != null)
+	if (m_LightMaterials != nullptr)
 	{
 		delete [] m_LightMaterials;
 	}
@@ -1094,7 +1094,7 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_surface * surface)
 	b3_vector point;
 	b3_f64    mix;
 
-	b3Scale(surface->m_Incoming, null, &point);
+	b3Scale(surface->m_Incoming, nullptr, &point);
 	mix = b3ComputeOakPlank(&point, surface->m_Incoming->Q, index);
 
 	b3Mix(surface, &m_DarkMaterials[index], &m_LightMaterials[index], mix);
@@ -1147,7 +1147,7 @@ void b3MatCookTorrance::b3Write()
 	b3StoreFloat(m_m);
 }
 
-b3_bool b3MatCookTorrance::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatCookTorrance::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	m_Ra   = m_Ambient * m_ka;
 	m_Rd   = m_Diffuse * m_kd;
@@ -1184,7 +1184,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * ji
 #if 1
 	b3Color Rf;
 
-	if (jit->shape == null)
+	if (jit->shape == nullptr)
 	{
 		b3_vector64 H;
 
@@ -1324,7 +1324,7 @@ void b3MatGranite::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
-b3_bool b3MatGranite::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatGranite::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrepareScaling();
 	return true;
@@ -1419,7 +1419,7 @@ void b3MatCarPaint::b3Write()
 	b3StoreFloat(m_MetallicScale);
 }
 
-b3_bool b3MatCarPaint::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3MatCarPaint::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	m_MetallicScaleHalf = m_MetallicScale * 0.5;
 	return true;
@@ -1450,7 +1450,7 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface * surface)
 b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit)
 {
 	jit->m_AmbientSum += surface->m_Ambient;
-	if (jit->shape == null)
+	if (jit->shape == nullptr)
 	{
 		b3_ray   *   ray = surface->m_Incoming;
 		b3_vector64  L;

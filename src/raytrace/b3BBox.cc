@@ -191,10 +191,10 @@ char * b3BBox::b3GetName()
 *************************************************************************/
 
 void b3BBox::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count    &     vertCount,
+	b3_count    &     gridCount B3_UNUSED,
+	b3_count    &     polyCount B3_UNUSED)
 {
 	vertCount = 8;
 }
@@ -213,7 +213,7 @@ void b3BBox::b3AllocVertexMemory(b3RenderContext * context)
 	glGridElements->b3SetGrids((b3_gl_line *)m_BBoxIndices);
 	glGridElements->b3SetCount(12);
 
-	glPolygonElements->b3SetPolygons(null);
+	glPolygonElements->b3SetPolygons(nullptr);
 	glPolygonElements->b3SetCount(0);
 }
 
@@ -275,7 +275,7 @@ void b3BBox::b3ComputeVertices()
 	glVertexElements->b3SetCount(8);
 }
 
-void b3BBox::b3ComputeNormals(b3_bool normalize)
+void b3BBox::b3ComputeNormals(b3_bool normalize B3_UNUSED)
 {
 	// compute no normals!
 }
@@ -325,10 +325,10 @@ b3_bool b3BBox::b3Inverse(b3_matrix * original)
 	b3Matrix::b3Dump(&m_Matrix, "original");
 #endif
 
-	success = b3Matrix::b3Inverse(&m_Matrix, &inverse) != null;
+	success = b3Matrix::b3Inverse(&m_Matrix, &inverse) != nullptr;
 	if (success)
 	{
-		if (original != null)
+		if (original != nullptr)
 		{
 			*original = m_Matrix;
 		}
@@ -351,7 +351,7 @@ b3_bool b3BBox::b3Reverse(b3_matrix * original)
 {
 	b3_bool   success;
 
-	success = b3Matrix::b3Inverse(original, &m_Inverse) != null;
+	success = b3Matrix::b3Inverse(original, &m_Inverse) != nullptr;
 	if (success)
 	{
 		b3Transform(original, true, true);

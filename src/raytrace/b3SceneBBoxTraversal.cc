@@ -41,7 +41,7 @@ void b3Scene::b3Reorg()
 	base  =  b3GetBBoxHead();
 	depot = *base;
 	base->b3InitBase(CLASS_BBOX);
-	if ((first = depot.First) != null)
+	if ((first = depot.First) != nullptr)
 	{
 		level = first->b3GetType();
 		b3BBox::b3Reorg(&depot, base, level, 1);
@@ -52,15 +52,15 @@ void b3Scene::b3Reorg()
 void b3BBox::b3Reorg(
 	b3Base<b3Item> * depot,
 	b3Base<b3Item> * base,
-	b3_count        level,
-	b3_count        rec,
-	b3Item     *    insert_after)
+	b3_count         level,
+	b3_count         rec,
+	b3Item     *     insert_after)
 {
-	b3_count        new_level;
-	b3BBox     *    bbox;
-	b3Base<b3Item> * sub_base = null;
+	b3_count         new_level;
+	b3BBox     *     bbox;
+	b3Base<b3Item> * sub_base = nullptr;
 
-	while ((bbox = (b3BBox *)depot->First) != null)
+	while ((bbox = (b3BBox *)depot->First) != nullptr)
 	{
 		new_level = bbox->b3GetType();
 		if (new_level < level)
@@ -70,12 +70,12 @@ void b3BBox::b3Reorg(
 		if (new_level == level)
 		{
 			depot->b3Remove(bbox);
-			insert_after != null ? base->b3Insert(insert_after, bbox) : base->b3Append(bbox);
+			insert_after != nullptr ? base->b3Insert(insert_after, bbox) : base->b3Append(bbox);
 			sub_base = bbox->b3GetBBoxHead();
 		}
 		else
 		{
-			B3_ASSERT(sub_base != null);
+			B3_ASSERT(sub_base != nullptr);
 			b3Reorg(depot, sub_base, new_level, rec + 1);
 		}
 	}
@@ -197,10 +197,10 @@ void b3Scene::b3Update()
 {
 	b3PrintF(B3LOG_FULL, "    Updating geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	m_PrepareInfo.b3Prepare(b3UpdateThread, null, false);
+	m_PrepareInfo.b3Prepare(b3UpdateThread, nullptr, false);
 }
 
-b3_bool b3Scene::b3UpdateThread(b3BBox * bbox, void * ptr)
+b3_bool b3Scene::b3UpdateThread(b3BBox * bbox, void * ptr B3_UNUSED)
 {
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "      Updating object <%s>\n", bbox->b3GetName());
@@ -359,7 +359,7 @@ void b3Scene::b3RecomputeMaterial()
 	m_PrepareInfo.b3Prepare(b3RecomputeMaterialThread);
 }
 
-b3_bool b3Scene::b3RecomputeMaterialThread(b3BBox * bbox, void * ptr)
+b3_bool b3Scene::b3RecomputeMaterialThread(b3BBox * bbox, void * ptr B3_UNUSED)
 {
 	b3Item * item;
 	b3Shape * shape;
@@ -536,8 +536,8 @@ void b3BBox::b3Activate(b3_bool activate, b3_bool recurse)
 
 b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox)
 {
-	b3Item     *    item;
-	b3BBox     *    inc_bbox;
+	b3Item     *     item;
+	b3BBox     *     inc_bbox;
 	b3Base<b3Item> * base, *result;
 
 	base = b3GetBBoxHead();
@@ -550,12 +550,12 @@ b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox)
 
 		inc_bbox = (b3BBox *)item;
 		result   = inc_bbox->b3FindBBoxHead(bbox);
-		if (result != null)
+		if (result != nullptr)
 		{
 			return result;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
@@ -574,12 +574,12 @@ b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
 
 		inc_bbox = (b3BBox *)item;
 		result   = inc_bbox->b3FindBBoxHead(bbox);
-		if (result != null)
+		if (result != nullptr)
 		{
 			return result;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 /*************************************************************************
@@ -638,12 +638,12 @@ b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape)
 	{
 		bbox   = (b3BBox *)item;
 		result = bbox->b3FindParentBBox(shape);
-		if (result != null)
+		if (result != nullptr)
 		{
 			return result;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
@@ -666,12 +666,12 @@ b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
 	{
 		bbox   = (b3BBox *)item;
 		result = bbox->b3FindParentBBox(shape);
-		if (result != null)
+		if (result != nullptr)
 		{
 			return result;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 /*************************************************************************
@@ -696,7 +696,7 @@ b3_bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 			return true;
 		}
 
-		if ((result = bbox->b3BacktraceRecompute(search)) != null)
+		if ((result = bbox->b3BacktraceRecompute(search)) != 0)
 		{
 			bbox->b3Recompute();
 			return result;

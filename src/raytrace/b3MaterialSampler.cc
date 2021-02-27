@@ -39,8 +39,8 @@ b3MaterialSampler::b3MaterialSampler(b3Tx * tx, const b3_vector * bbox_size, con
 	B3_ASSERT(tx->b3IsHDR());
 
 	m_t        = 0;
-	m_Scene    = null;
-	m_Material = null;
+	m_Scene    = nullptr;
+	m_Material = nullptr;
 	m_Tx       = tx;
 	m_xMax     = m_Tx->xSize;
 	m_yMax     = m_Tx->ySize;

@@ -119,7 +119,7 @@ public:
 	 */
 	static  void    b3Register();
 
-	virtual b3_bool b3Prepare(b3_preparation_info * prep_info) override
+	virtual b3_bool b3Prepare(b3_preparation_info * prep_info B3_UNUSED) override
 	{
 		return true;
 	}
@@ -155,7 +155,9 @@ public:
 	 * @param lit The lighting values.
 	 * @return True on material computation, false on shader computation.
 	 */
-	virtual b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit)
+	virtual b3_bool b3Illuminate(
+			b3_surface *    surface B3_UNUSED,
+			b3_light_info * lit     B3_UNUSED)
 	{
 		return false;
 	}
@@ -173,7 +175,7 @@ public:
 	{
 		b3Material * material = surface->m_Incoming->material;
 
-		return material != null ? material->b3ShadeComponents(surface, reflection, refraction) : false;
+		return material != nullptr ? material->b3ShadeComponents(surface, reflection, refraction) : false;
 	}
 
 protected:
@@ -185,7 +187,10 @@ protected:
 	 * @param refraction The refractance.
 	 * @return True on component mixing, false on shader intelligence.
 	 */
-	virtual b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
+	virtual b3_bool b3ShadeComponents(
+			b3_surface * surface B3_UNUSED,
+			b3_f64       reflection B3_UNUSED,
+			b3_f64       refraction B3_UNUSED)
 	{
 		return false;
 	}

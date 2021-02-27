@@ -33,12 +33,12 @@
 b3SplineShape::b3SplineShape(b3_size class_size, b3_u32 class_type) :
 	b3TriangleShape(class_size, class_type)
 {
-	m_Controls = null;
+	m_Controls = nullptr;
 }
 
 b3SplineShape::b3SplineShape(b3_u32 class_type) : b3TriangleShape(sizeof(b3SplineShape), class_type)
 {
-	m_Controls = null;
+	m_Controls = nullptr;
 }
 
 b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
@@ -48,8 +48,8 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 
 	b3InitVector();
 	b3InitVector();
-	b3InitSpline(&m_Spline[0], null, m_Knots[0]);
-	b3InitSpline(&m_Spline[1], null, m_Knots[1]);
+	b3InitSpline(&m_Spline[0], nullptr, m_Knots[0]);
+	b3InitSpline(&m_Spline[1], nullptr, m_Knots[1]);
 
 	// Copy knots
 	for (i = 0; i < B3_MAX_KNOTS; i++)
@@ -126,10 +126,10 @@ void b3SplineShape::b3Init(
 }
 
 void b3SplineShape::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count    &     vertCount,
+	b3_count    &     gridCount,
+	b3_count    &     polyCount)
 {
 	// Compute number of grid vertices
 	m_GridVertexCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);
@@ -520,7 +520,7 @@ b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 
 	Between = (b3_vector *)b3Item::b3Alloc(sizeof(b3_vector) *
 			(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
-	if (Between == null)
+	if (Between == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}

@@ -44,7 +44,7 @@ void b3ShaderPhong::b3ShadeLight(
 	b3_surface  *  surface)
 {
 	// No shadow => surface in light
-	if (Jit->shape == null)
+	if (Jit->shape == nullptr)
 	{
 		b3_f32 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
 

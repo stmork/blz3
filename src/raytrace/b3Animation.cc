@@ -85,7 +85,7 @@ b3AnimElement * b3Animation::b3FindSameTrack(b3AnimElement * Anim)
 {
 	b3AnimElement * prev = Anim;
 
-	while ((prev = (b3AnimElement *)prev->Prev) != null)
+	while ((prev = (b3AnimElement *)prev->Prev) != nullptr)
 	{
 		if ((prev->b3GetClassType() == Anim->b3GetClassType()) &&
 			(prev->m_CurveUse       == Anim->m_CurveUse) &&
@@ -174,21 +174,21 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 {
 	b3AnimElement * Anim;
 	b3AnimElement * prev;
-	b3Item    *    item;
-	b3_matrix      resetMatrix;
+	b3Item    *     item;
+	b3_matrix       resetMatrix;
 
 	// reset animation, compute time range and number of tracks
 	m_Tracks = 0;
 	m_Frames = 0;
 	Anim  = (b3AnimElement *)b3GetAnimElementHead()->First;
-	m_Start = m_End = (Anim != null ? Anim->m_Start : 0);
-	while (Anim != null)
+	m_Start = m_End = (Anim != nullptr ? Anim->m_Start : 0);
+	while (Anim != nullptr)
 	{
 		m_End     = B3_MAX(Anim->m_End,  m_End);
 		m_Start   = B3_MIN(Anim->m_Start, m_Start);
 		b3RecomputeNeutralInverse(Anim);
 		prev = b3FindSameTrack(Anim);
-		if (prev != null)
+		if (prev != nullptr)
 		{
 			Anim->m_TrackIndex  = prev->m_TrackIndex;
 		}
@@ -225,7 +225,7 @@ void b3Scene::b3ResetAnimation()
 {
 	b3Animation * animation = b3GetAnimation();
 
-	if (animation != null)
+	if (animation != nullptr)
 	{
 		b3PrintF(B3LOG_DEBUG, "Resetting animation...\n");
 		b3Update();
@@ -295,7 +295,7 @@ void b3Scene::b3SetAnimation(b3_f64 t)
 {
 	b3Animation * animation = b3GetAnimation();
 
-	if (animation != null)
+	if (animation != nullptr)
 	{
 		animation->b3SetAnimation(this, t);
 		b3UpdateCamera();

@@ -60,7 +60,7 @@ inline b3Color & b3RayRow::b3Shade(b3_ray * ray, const b3_f64 fx, const b3_f64 f
 		m_Scene->b3GetBackgroundColor(ray, fx, fy);
 	}
 
-	if (m_Scene->m_LensFlare != null)
+	if (m_Scene->m_LensFlare != nullptr)
 	{
 		m_Scene->b3MixLensFlare(ray);
 	}
@@ -120,15 +120,15 @@ b3SupersamplingRayRow::b3SupersamplingRayRow(
 	m_RowState   = B3_STATE_NOT_STARTED;
 
 	m_PrevRow = last;
-	m_SuccRow = null;
-	if (m_PrevRow != null)
+	m_SuccRow = nullptr;
+	if (m_PrevRow != nullptr)
 	{
 		m_LastResult = m_PrevRow->m_ThisResult;
 		m_PrevRow->m_SuccRow = this;
 	}
 	else
 	{
-		m_LastResult = null;
+		m_LastResult = nullptr;
 	}
 #ifndef DEBUG_SS4
 	m_Debug = true;
@@ -176,12 +176,12 @@ void b3SupersamplingRayRow::b3Raytrace()
 		b3CriticalSection lock(m_Scene->m_SamplingMutex);
 		m_RowState = B3_STATE_CHECK;
 
-		if (m_PrevRow == null)
+		if (m_PrevRow == nullptr)
 		{
 			// This is the first row...
 			do_convert = true;
 			m_RowState = B3_STATE_READY;
-			if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+			if ((m_SuccRow != nullptr) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
 			{
 				do_refine_succ = true;
 				m_SuccRow->m_RowState = B3_STATE_REFINING;
@@ -325,7 +325,7 @@ inline void b3SupersamplingRayRow::b3Refine(const b3_bool this_row)
 		b3CriticalSection lock(m_Scene->m_SamplingMutex);
 
 		m_RowState = B3_STATE_READY;
-		if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+		if ((m_SuccRow != nullptr) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
 		{
 			do_refine_succ = true;
 			m_SuccRow->m_RowState = B3_STATE_REFINING;
@@ -418,8 +418,8 @@ void b3DistributedRayRow::b3Raytrace()
 *************************************************************************/
 
 b3MotionBlurRayRow::b3MotionBlurRayRow(
-	b3Scene  * scene,
-	b3Display * display,
+	b3Scene  *       scene,
+	b3Display *      display,
 	const b3_coord   y,
 	const b3_res     xSize,
 	const b3_res     ySize) :
@@ -432,7 +432,7 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 	{
 		m_Color[x].b3Init();
 	}
-	if (m_Color == null)
+	if (m_Color == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}

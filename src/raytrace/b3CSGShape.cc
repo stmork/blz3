@@ -152,7 +152,9 @@ void b3CSGShape::b3Operate(
 	}
 }
 
-void b3CSGShape::b3InverseMap(b3_ray * ray, b3_csg_point * point)
+void b3CSGShape::b3InverseMap(
+		b3_ray *       ray B3_UNUSED,
+		b3_csg_point * point B3_UNUSED)
 {
 }
 

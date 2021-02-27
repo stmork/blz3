@@ -56,9 +56,9 @@ b3TriangleShape::~b3TriangleShape()
 void b3TriangleShape::b3Clear()
 {
 	m_GridComputed = false;
-	m_Vertices     = null;
-	m_Triangles    = null;
-	m_GridList     = null;
+	m_Vertices     = nullptr;
+	m_Triangles    = nullptr;
+	m_GridList     = nullptr;
 	m_GridCount    = 0;
 	m_GridSize     = 0;
 	m_VertexCount  = 0;
@@ -90,7 +90,7 @@ b3_bool b3TriangleShape::b3Init(
 	m_xSize = xSize;
 	m_ySize = ySize;
 
-	return (m_Vertices != null) && (m_Triangles != null);
+	return (m_Vertices != nullptr) && (m_Triangles != nullptr);
 }
 
 void b3TriangleShape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
@@ -251,10 +251,10 @@ void b3TriangleShape::b3PrepareGridList()
 
 void b3TriangleShape::b3FreeTriaRefs()
 {
-	if (m_GridList != null)
+	if (m_GridList != nullptr)
 	{
 		delete [] m_GridList;
-		m_GridList  = null;
+		m_GridList  = nullptr;
 		m_GridCount = 0;
 	}
 }
@@ -357,7 +357,7 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 		{
 			b3FreeTriaRefs();
 		}
-		if (m_GridList == null)
+		if (m_GridList == nullptr)
 		{
 			m_GridList  = new b3Array<b3_index>[max];
 			m_GridCount = max;

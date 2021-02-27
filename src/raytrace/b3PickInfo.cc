@@ -36,7 +36,7 @@ b3Color b3PickInfo::m_GridColor(0.7f, 0.7f, 0.7f);
 
 b3PickInfo::b3PickInfo()
 {
-	m_Shape = null;
+	m_Shape = nullptr;
 }
 
 b3PickInfo::~b3PickInfo()
@@ -54,7 +54,7 @@ b3_bool b3PickInfo::b3SetShape(b3Shape * shape)
 		m_Vertices.b3Clear();
 		m_Grid.b3Clear();
 		m_Shape = shape;
-		if (m_Shape != null)
+		if (m_Shape != nullptr)
 		{
 			m_Shape->b3SetupPicking(this);
 			m_Shape->b3SetupGrid(this);
@@ -69,7 +69,7 @@ void b3PickInfo::b3Modified()
 {
 	m_Vertices.b3Clear();
 	m_Grid.b3Clear();
-	if (m_Shape != null)
+	if (m_Shape != nullptr)
 	{
 		m_Shape->b3SetupGrid(this);
 		m_Shape->b3Recompute();

@@ -323,7 +323,7 @@ public:
 		ray->Q     = max;
 		ray->shape = b3Intersect(b3GetFirstBBox(), ray, checkVisibility);
 
-		return ray->shape != null;
+		return ray->shape != nullptr;
 	}
 	/**
 	 * This method checks whether any intersection point is available on the
@@ -338,7 +338,7 @@ public:
 	{
 		ray->Q     = max;
 		ray->shape = b3IsObscured(b3GetFirstBBox(), ray);
-		return ray->shape != null;
+		return ray->shape != nullptr;
 	}
 
 	//////////////////

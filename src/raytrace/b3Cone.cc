@@ -39,10 +39,10 @@ b3Cone::b3Cone(b3_u32 * src) : b3Shape3(src)
 }
 
 void b3Cone::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count    &     vertCount,
+	b3_count    &     gridCount B3_UNUSED,
+	b3_count    &     polyCount B3_UNUSED)
 {
 	vertCount = (b3ShapeRenderContext::m_SubDiv << 1) + 6;
 }

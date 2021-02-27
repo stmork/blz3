@@ -46,8 +46,8 @@ b3BumpSampler::b3BumpSampler(b3Tx * tx, const b3_vector * bbox_size, const b3_co
 	B3_ASSERT(tx->b3IsHDR());
 
 	m_t     = 0;
-	m_Scene = null;
-	m_Bump  = null;
+	m_Scene = nullptr;
+	m_Bump  = nullptr;
 	m_Tx    = tx;
 	m_xMax  = m_Tx->xSize;
 	m_yMax  = m_Tx->ySize;

@@ -69,7 +69,7 @@ b3Condition::b3Condition(b3_u32 * src) : b3Item(src)
 {
 }
 
-b3_bool b3Condition::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Condition::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return true;
 }
@@ -95,11 +95,11 @@ b3_bool b3Condition::b3Conditionate(
 	return input;
 }
 
-void b3Condition::b3ComputeBound(b3_stencil_limit * Limit)
+void b3Condition::b3ComputeBound(b3_stencil_limit * Limit B3_UNUSED)
 {
 }
 
-b3_bool b3Condition::b3CheckStencil(b3_polar * polar)
+b3_bool b3Condition::b3CheckStencil(b3_polar * polar B3_UNUSED)
 {
 	return true;
 }
@@ -468,7 +468,7 @@ void b3Cond2::b3Write()
 	b3StoreFloat(m_Denom);
 }
 
-b3_bool b3Cond2::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Cond2::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	m_Denom = m_xDir1 * m_yDir2 - m_yDir1 * m_xDir2;
 	return true;
@@ -616,7 +616,7 @@ void b3CondTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3CondTexture::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3CondTexture::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
@@ -702,7 +702,7 @@ void b3CondWrapTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3CondWrapTexture::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3CondWrapTexture::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }

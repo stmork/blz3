@@ -396,7 +396,7 @@ public:
 	}
 
 private:
-	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = null);
+	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = nullptr);
 	b3_f64            b3ComputeFarClippingPlane();
 	void              b3UnprojectInternal(const b3_f64 xRel, const b3_f64 yRel, const b3_f64 z, b3_vector * point);
 };

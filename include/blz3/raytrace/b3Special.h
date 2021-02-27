@@ -655,7 +655,7 @@ public:
 	 * @param animation The animation for motion blur if any.
 	 * @throws b3WorldException
 	 */
-	void     b3PrepareAnimation(b3_res xSize, b3Animation * animation = null);
+	void     b3PrepareAnimation(b3_res xSize, b3Animation * animation = nullptr);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0

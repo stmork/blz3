@@ -77,7 +77,7 @@ b3RenderView::b3RenderView()
 	m_AspectRatio = true;
 	m_xRes        = 0;
 	m_yRes        = 0;
-	m_Actual      = null;
+	m_Actual      = nullptr;
 }
 
 b3RenderView::~b3RenderView()
@@ -97,7 +97,7 @@ b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
 	b3RenderViewItem * item;
 
 	item = m_Depot.First;
-	if (item != null)
+	if (item != nullptr)
 	{
 		// Recycle item
 		m_Depot.b3Remove(item);
@@ -108,7 +108,7 @@ b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
 		item = new b3RenderViewItem();
 	}
 
-	if (last != null)
+	if (last != nullptr)
 	{
 		// Use dimension of last item
 		item->m_Mid  = last->m_Mid;
@@ -127,7 +127,7 @@ b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
 void b3RenderView::b3SetViewMode(b3_view_mode mode)
 {
 	m_ViewMode = mode;
-	if (m_ViewStack[m_ViewMode].Last == null)
+	if (m_ViewStack[m_ViewMode].Last == nullptr)
 	{
 		b3Original();
 	}
@@ -249,7 +249,7 @@ void b3RenderView::b3Original()
 
 		// Allocate new top item
 		item = b3NewRenderViewItem();
-		if (item != null)
+		if (item != nullptr)
 		{
 			m_ViewStack[m_ViewMode].b3Append(item);
 			m_Actual = item;
@@ -600,7 +600,7 @@ void b3RenderView::b3Select(
 	if (m_ViewMode != B3_VIEW_3D)
 	{
 		item = b3NewRenderViewItem(m_ViewStack[m_ViewMode].Last);
-		if (item != null)
+		if (item != nullptr)
 		{
 			// Push view item
 			m_ViewStack[m_ViewMode].b3Append(item);
@@ -925,7 +925,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color)
 	b3_count  x, y, xCount, yCount;
 	b3_f64 aux = B3_RASTER_FLOOR(m_ViewInfo.look.x, grid);
 
-	if (m_Actual == null)
+	if (m_Actual == nullptr)
 	{
 		return;
 	}

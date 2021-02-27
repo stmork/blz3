@@ -84,11 +84,11 @@ b3_f64   b3ShapeRenderContext::m_Cos[B3_MAX_RENDER_SUBDIV + 1];
 
 b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
 {
-	m_CylinderIndices  = null;
-	m_CylinderPolygons = null;
-	m_ConeIndices      = null;
-	m_ConePolygons     = null;
-	m_Between          = null;
+	m_CylinderIndices  = nullptr;
+	m_CylinderPolygons = nullptr;
+	m_ConeIndices      = nullptr;
+	m_ConePolygons     = nullptr;
+	m_Between          = nullptr;
 	b3InitSubdiv(new_subdiv);
 }
 
@@ -121,7 +121,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
 	m_CylinderPolygons = (b3_gl_polygon *)b3Alloc
 		((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
-	if ((m_CylinderIndices != null) && (m_CylinderPolygons != null))
+	if ((m_CylinderIndices != nullptr) && (m_CylinderPolygons != nullptr))
 	{
 		gPtr = m_CylinderIndices;
 		pPtr = m_CylinderPolygons;
@@ -158,7 +158,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
 	m_ConePolygons = (b3_gl_polygon *)b3Alloc
 		((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
-	if ((m_ConeIndices != null) && (m_ConePolygons != null))
+	if ((m_ConeIndices != nullptr) && (m_ConePolygons != nullptr))
 	{
 		gPtr = m_ConeIndices;
 		pPtr = m_ConePolygons;
@@ -294,7 +294,7 @@ b3_bool b3Shape::b3GetChess(
 	b3_bool  result = false;
 
 	item   = b3GetMaterialHead()->First;
-	if (item != null)
+	if (item != nullptr)
 	{
 		result = item->b3GetClassType() == CHESS;
 		if (result)
@@ -316,10 +316,10 @@ b3Tx * b3Shape::b3GetTexture(
 	b3_f64 & yScale)
 {
 	b3Item * item;
-	b3Tx  * tx = null;
+	b3Tx  *  tx = nullptr;
 
 	item = b3GetMaterialHead()->First;
-	if ((item != null) && (item->b3GetClassType() == TEXTURE) && (item->Succ == null))
+	if ((item != nullptr) && (item->b3GetClassType() == TEXTURE) && (item->Succ == nullptr))
 	{
 		b3MatTexture   *  mat = (b3MatTexture *)item;
 		b3_stencil_limit  limit;
@@ -407,7 +407,7 @@ private:
 		surface.m_Incoming->Q = 1;
 		ray.bbox  = &bbox;
 		ray.shape = m_Shape;
-		bbox.b3Prepare(null);
+		bbox.b3Prepare(nullptr);
 
 		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
 		ray.polar.m_NormalIndex = 0;
@@ -436,7 +436,7 @@ private:
 				color = B3_BLACK;
 				loop  = true;
 				for (material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
-					(material != null) && loop;
+					(material != nullptr) && loop;
 					material  = (b3Material *)material->Succ)
 				{
 					if (material->b3GetSurfaceValues(&surface))
@@ -461,7 +461,7 @@ b3_bool b3Shape::b3GetImage(b3Tx * image)
 	b3_u32        type;
 
 	for (item  = b3GetMaterialHead()->First;
-		(item != null) && (!result);
+		(item != nullptr) && (!result);
 		item  = item->Succ)
 	{
 		type   = item->b3GetClassType();

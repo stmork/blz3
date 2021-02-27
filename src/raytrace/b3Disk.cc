@@ -39,10 +39,10 @@ b3Disk::b3Disk(b3_u32 * src) : b3Shape2(src)
 }
 
 void b3Disk::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count    &     vertCount,
+	b3_count    &     gridCount,
+	b3_count    &     polyCount)
 {
 	vertCount = b3ShapeRenderContext::m_SubDiv * 2 + 6;
 	gridCount = b3ShapeRenderContext::m_SubDiv * 2 + 6;

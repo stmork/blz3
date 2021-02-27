@@ -102,10 +102,10 @@ void b3CSGTorus::b3StoreShape()
 }
 
 void b3CSGTorus::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count    &     vertCount,
+	b3_count    &     gridCount,
+	b3_count    &     polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 

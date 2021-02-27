@@ -1076,17 +1076,17 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 *************************************************************************/
 
 b3_bool b3CSGShape::b3Intersect(
-	b3_ray       *      ray,
-	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_ray       *       ray      B3_UNUSED,
+	b3_shape_intervals * interval B3_UNUSED,
+	b3_line64     *      BTLine   B3_UNUSED)
 {
 	return false;
 }
 
 b3_bool b3CSGSphere::b3Intersect(
-	b3_ray       *      ray,
+	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_line64     *      BTLine B3_UNUSED)
 {
 	b3_f64 Discriminant, p;
 	b3_f64 xDiff, yDiff, zDiff;
@@ -1615,7 +1615,7 @@ b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 		}
 		point++;
 	}
-	return null;
+	return nullptr;
 }
 
 b3Shape * b3Scene::b3Intersect(
@@ -1625,13 +1625,13 @@ b3Shape * b3Scene::b3Intersect(
 {
 	b3Base<b3Item> * Shapes;
 	b3Base<b3Item> * BBoxes;
-	b3SimpleShape * Shape;
-	b3Shape    *    ResultShape = null, *aux;
-	b3Item     *    item;
-	b3_polar        polar;
-	b3_f64          Result;
+	b3SimpleShape *  Shape;
+	b3Shape    *     ResultShape = nullptr, *aux;
+	b3Item     *     item;
+	b3_polar         polar;
+	b3_f64           Result;
 
-	while (BBox != null)
+	while (BBox != nullptr)
 	{
 		if (BBox->b3Intersect(ray, check_visibility))
 		{
@@ -1640,7 +1640,7 @@ b3Shape * b3Scene::b3Intersect(
 			if (BBoxes->First)
 			{
 				aux = b3Intersect((b3BBox *)BBoxes->First, ray, check_visibility);
-				if (aux != null)
+				if (aux != nullptr)
 				{
 					ResultShape = aux;
 				}
@@ -1669,7 +1669,7 @@ b3Shape * b3Scene::b3Intersect(
 
 			case CLASS_CSG:
 				aux = BBox->b3IntersectCSG(ray);
-				if (aux != null)
+				if (aux != nullptr)
 				{
 					ResultShape = aux;
 					ray->bbox   = BBox;
@@ -1698,7 +1698,7 @@ b3Shape * b3Scene::b3IsObscured(
 	b3_polar        polar;
 	b3_f64          Result;
 
-	while (BBox != null)
+	while (BBox != nullptr)
 	{
 		if (BBox->b3Intersect(ray, false))
 		{
@@ -1719,7 +1719,7 @@ b3Shape * b3Scene::b3IsObscured(
 
 			case CLASS_CSG:
 				ResultShape = BBox->b3IntersectCSG(ray);
-				if (ResultShape != null)
+				if (ResultShape != nullptr)
 				{
 					ray->shape = ResultShape;
 					ray->bbox  = BBox;
@@ -1734,10 +1734,10 @@ b3Shape * b3Scene::b3IsObscured(
 
 			// Check recursively
 			BBoxes = BBox->b3GetBBoxHead();
-			if (BBoxes->First != null)
+			if (BBoxes->First != nullptr)
 			{
 				ResultShape = b3IsObscured((b3BBox *)BBoxes->First, ray);
-				if (ResultShape != null)
+				if (ResultShape != nullptr)
 				{
 					return ResultShape;
 				}
@@ -1746,7 +1746,7 @@ b3Shape * b3Scene::b3IsObscured(
 		}
 		BBox = (b3BBox *)BBox->Succ;
 	}
-	return null;
+	return nullptr;
 }
 
 /*************************************************************************
@@ -1784,7 +1784,7 @@ void b3BBox::b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array)
 			break;
 
 		case CLASS_CSG:
-			if (b3IntersectCSG(ray) != null)
+			if (b3IntersectCSG(ray) != nullptr)
 			{
 				array->b3Add(this);
 			}
@@ -1844,7 +1844,7 @@ void b3BBox::b3CollectBBoxes(
 	if ((lower->x <= lLower.x) && (lUpper.x <= upper->x) &&
 		(lower->y <= lLower.y) && (lUpper.y <= upper->y) &&
 		(lower->z <= lLower.z) && (lUpper.z <= upper->z) &&
-		(b3GetShapeHead()->First != null))
+		(b3GetShapeHead()->First != nullptr))
 	{
 		// Yes!
 		array->b3Add(this);

@@ -122,7 +122,7 @@ public:
 	{
 		b3_vector64 * polar = m_ScaleMethod(ray);
 
-		if (scale == null)
+		if (scale == nullptr)
 		{
 			point->x = polar->x;
 			point->y = polar->y;

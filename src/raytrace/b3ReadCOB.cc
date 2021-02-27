@@ -73,7 +73,7 @@ b3_bool b3COBReader::b3COB_AllocObject(
 	{
 		cobInfos.b3Append(cobInfo);
 	}
-	return cobInfo != null;
+	return cobInfo != nullptr;
 }
 
 /* This routine tries to find an cobInfo in the cobDone list identified by */
@@ -92,7 +92,7 @@ b3COBInfo * b3COBReader::b3COB_FindInfo(b3_cob_id id)
 			return cobInfo;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 /* This routine reconstructs the hierarchy of Caligari objects to the */
@@ -106,15 +106,15 @@ b3COBInfo * b3COBReader::b3COB_FindInfo(b3_cob_id id)
 
 b3Item * b3COBReader::b3COB_Reconstruct()
 {
-	b3COBInfo    *   cobInfo, *next;
-	b3BBox     *     root = null, *BBox;
+	b3COBInfo    *    cobInfo, *next;
+	b3BBox     *      root = nullptr, *BBox;
 	b3TriangleShape * Shape;
 
 
 	/* First find root object in object list. */
 	/* Follow error messages for exceptions! */
 	for (cobInfo  = cobInfos.First;
-		cobInfo != null;
+		cobInfo != nullptr;
 		cobInfo  = next)
 	{
 		next = cobInfo->Succ;
@@ -123,13 +123,13 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			if (cobInfo->refType != COB_GROU)
 			{
 				b3PrintF(B3LOG_NORMAL, " ERROR: root object not of required group type!\n");
-				return null;
+				return nullptr;
 			}
 
-			if (root != null)
+			if (root != nullptr)
 			{
 				b3PrintF(B3LOG_NORMAL, " ERROR: more than one root object found!\n");
-				return null;
+				return nullptr;
 			}
 
 			root = (b3BBox *)cobInfo->refNode;
@@ -139,10 +139,10 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 		}
 	}
 
-	if (root == null)
+	if (root == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, " ERROR: no root object found!\n");
-		return null;
+		return nullptr;
 	}
 
 
@@ -154,14 +154,14 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 	/* polygons  to groups */
 	/* materials to polygons */
 
-	while ((cobInfo = cobInfos.First) != null)
+	while ((cobInfo = cobInfos.First) != nullptr)
 	{
 		next = b3COB_FindInfo(cobInfo->refParent);
-		if (next == null)
+		if (next == nullptr)
 		{
 			b3PrintF(B3LOG_NORMAL, " ERROR: object with parent ID %ld not found!\n",
 				cobInfo->refParent);
-			return null;
+			return nullptr;
 		}
 
 		switch (cobInfo->refType)
@@ -178,7 +178,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 
 			default :
 				b3PrintF(B3LOG_NORMAL, " ERROR: Cannot insert BBox into this kind of object!\n");
-				return null;
+				return nullptr;
 			}
 			break;
 
@@ -196,7 +196,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 
 			default :
 				b3PrintF(B3LOG_NORMAL, " ERROR: Cannot insert polygons into this kind of object!\n");
-				return null;
+				return nullptr;
 			}
 			break;
 
@@ -210,7 +210,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 
 			default :
 				b3PrintF(B3LOG_NORMAL, " ERROR: Cannot insert material into this kind of object!\n");
-				return null;
+				return nullptr;
 			}
 			break;
 
@@ -340,7 +340,7 @@ b3_cob_type b3COBReader::b3COB_GetToken(const char * buffer)
 
 b3_size b3COBReader::b3COB_ParseGrou(
 	const char * buffer,
-	const char * name)
+	const char * name B3_UNUSED)
 {
 	b3BBox  *  BBox;
 	char       line[MAX_LINE];
@@ -366,7 +366,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 #endif
 
 	BBox = new b3BBox(BBOX);
-	if (BBox != null)
+	if (BBox != nullptr)
 	{
 		strlcpy(BBox->m_BoxName, boxName, sizeof(BBox->m_BoxName));
 		if (!b3COB_AllocObject(BBox, id, parent, COB_GROU))
@@ -413,7 +413,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	if (parent == 0)
 	{
 		BBox = new b3BBox(BBOX);
-		if (BBox != null)
+		if (BBox != nullptr)
 		{
 			strlcpy(BBox->m_BoxName, name, sizeof(BBox->m_BoxName));
 			if (!b3COB_AllocObject(BBox, 1, parent, COB_GROU))
@@ -497,7 +497,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #endif
 
 	TriaShape = new b3Triangles(TRIANGLES);
-	if (TriaShape != null)
+	if (TriaShape != nullptr)
 	{
 		TriaShape->b3Init(vertices, faces, 1, 1);
 		if (!b3COB_AllocObject(TriaShape, id, parent, COB_POLH))
@@ -643,7 +643,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 	size += len;
 
 	Mat = new b3MatNormal(MATERIAL);
-	if (Mat != null)
+	if (Mat != nullptr)
 	{
 		name[0] = 0;
 		if (!b3COB_AllocObject(Mat, id, parent, COB_MAT1))
@@ -691,7 +691,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 			b3Tx * texture;
 
 			texture = b3Scene::m_TexturePool.b3LoadTexture(name);
-			if (texture != null)
+			if (texture != nullptr)
 			{
 				b3COB_ComputeAvrgColor(texture, Mat->m_Diffuse);
 			}
@@ -751,7 +751,7 @@ b3Item * b3COBReader::b3COB_Parse(
 	if (strcmp(line, "Caligari V00.01ALH             ") != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, " This file is not an Caligari ASCII file!!\n");
-		return null;
+		return nullptr;
 	}
 
 	buffer += (++len);
@@ -803,14 +803,14 @@ b3Item * b3COBReader::b3COB_Parse(
 b3BBox * b3COBReader::b3ReadCOB(const char * cobfile)
 {
 	b3COBReader  reader;
-	b3BBox   *   bbox = null;
+	b3BBox   *   bbox = nullptr;
 	b3File       file;
 	const char * buffer;
 	b3_size      size;
 
 	b3PrintF(B3LOG_NORMAL, "Reading COB %s\n", cobfile);
 	buffer = (const char *)file.b3ReadBuffer(cobfile, size);
-	if (buffer != null)
+	if (buffer != nullptr)
 	{
 		bbox = (b3BBox *)reader.b3COB_Parse(buffer, cobfile, size);
 	}

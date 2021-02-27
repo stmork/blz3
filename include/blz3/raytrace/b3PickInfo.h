@@ -88,7 +88,9 @@ public:
 	 * @param point The position of the point.
 	 * @param title The title to display.
 	 */
-	virtual void     b3AddPickPoint(b3_vector * point, const char * title = null) = 0;
+	virtual void     b3AddPickPoint(
+			b3_vector * point,
+			const char * title = nullptr) = 0;
 
 	/**
 	 * This method adds a direction pick to this instance with a given title.
@@ -97,7 +99,10 @@ public:
 	 * @param dir The direction vector which results in the pick point.
 	 * @param title The title to display.
 	 */
-	virtual void     b3AddPickDir(b3_vector * point, b3_vector * dir, const char * title = null) = 0;
+	virtual void     b3AddPickDir(
+			b3_vector * point,
+			b3_vector * dir,
+			const char * title = nullptr) = 0;
 
 	/**
 	 * This method adds a vertex for drawing a line between two pick points.

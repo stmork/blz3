@@ -42,7 +42,7 @@ public:
 	/**
 	 * This contructor initializes the bounding box reference.
 	 */
-	b3BBoxReference(b3BBox * bbox = null) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
+	b3BBoxReference(b3BBox * bbox = nullptr) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
 	{
 		m_BBox = bbox;
 	}
@@ -115,7 +115,7 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3Prepare(b3PrepareProc prepareFunc, void * ptr = null, b3_bool threaded = true);
+	b3_bool          b3Prepare(b3PrepareProc prepareFunc, void * ptr = nullptr, b3_bool threaded = true);
 
 private:
 	b3BBoxReference * b3GetBBoxReference();
