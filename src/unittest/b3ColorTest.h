@@ -29,9 +29,9 @@ using namespace std;
 
 class b3ColorTest : public CppUnit::TestFixture
 {
-	b3Color B3_ALIGN_16 color;
-	b3Color B3_ALIGN_16 ac;
-	b3Color B3_ALIGN_16 bc;
+	b3Color color;
+	b3Color ac;
+	b3Color bc;
 
 	CPPUNIT_TEST_SUITE(b3ColorTest);
 	CPPUNIT_TEST(test);

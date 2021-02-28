@@ -41,20 +41,20 @@ public:
 	void setUp()
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
-		keys = null;
-		objects = null;
+		keys    = nullptr;
+		objects = nullptr;
 	}
 
 	void tearDown()
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
-		if (keys != null)
+		if (keys != nullptr)
 		{
 			delete keys;
 		}
 
-		if (objects != null)
+		if (objects != nullptr)
 		{
 			delete objects;
 		}
@@ -84,11 +84,11 @@ public:
 		CPPUNIT_ASSERT(hash.b3HasKey(key2));
 
 		keys = hash.b3GetKeys();
-		CPPUNIT_ASSERT(keys != null);
+		CPPUNIT_ASSERT(keys != nullptr);
 		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(1), keys->b3GetCount());
 
 		objects = hash.b3GetObjects();
-		CPPUNIT_ASSERT(objects != null);
+		CPPUNIT_ASSERT(objects != nullptr);
 		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(1), objects->b3GetCount());
 
 		CPPUNIT_ASSERT_NO_THROW(hash.b3Clear());

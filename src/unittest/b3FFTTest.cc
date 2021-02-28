@@ -102,11 +102,11 @@ void b3FFTTest::testSample()
 
 b3_f64 b3FFTTest::b3Count()
 {
-	b3_f64       count = 0;
-	b3_loop      i, max = dim * dim;
+	b3_f64        count = 0;
+	b3_loop       i, max = dim * dim;
 	b3Complex64 * buffer = fft.b3GetBuffer();
 
-	CPPUNIT_ASSERT(buffer != null);
+	CPPUNIT_ASSERT(buffer != nullptr);
 	for (i = 0; i < max; i++)
 	{
 		count += fabs(buffer[i].b3Real());
@@ -116,10 +116,10 @@ b3_f64 b3FFTTest::b3Count()
 }
 
 void b3FFTTest::clear(
-	const b3_f64        fx,
-	const b3_f64        fy,
-	const b3_index      index,
-	b3FilterInfo * filter_info)
+	const b3_f64     fx B3_UNUSED,
+	const b3_f64     fy B3_UNUSED,
+	const b3_index   index,
+	b3FilterInfo *   filter_info)
 {
 	b3Complex64 * buffer = filter_info->m_Fourier->b3GetBuffer();
 
@@ -127,10 +127,10 @@ void b3FFTTest::clear(
 }
 
 void b3FFTTest::setbuffer(
-	const b3_f64        fx,
-	const b3_f64        fy,
-	const b3_index      index,
-	b3FilterInfo * filter_info)
+	const b3_f64     fx B3_UNUSED,
+	const b3_f64     fy B3_UNUSED,
+	const b3_index   index,
+	b3FilterInfo *   filter_info)
 {
 	b3Complex64 * buffer = filter_info->m_Fourier->b3GetBuffer();
 

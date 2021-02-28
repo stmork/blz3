@@ -49,15 +49,15 @@ void b3DataSizeTest::setUp()
 #endif
 		buffer[i] = (b3_u08)(v & 0xff);
 	}
-	ptr1 = null;
-	ptr2 = null;
+	ptr1 = nullptr;
+	ptr2 = nullptr;
 }
 
 void b3DataSizeTest::tearDown()
 {
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 
-	if (ptr1 == null)
+	if (ptr1 == nullptr)
 	{
 		return;
 	}
@@ -74,7 +74,7 @@ void b3DataSizeTest::tearDown()
 
 void b3DataSizeTest::testDataSize()
 {
-	void * ptr = null;
+	void * ptr = nullptr;
 
 	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), sizeof(b3_u08));
 	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), sizeof(b3_u16));
@@ -101,27 +101,27 @@ void b3DataSizeTest::testMemory()
 	b3_u08   mask = 0;
 
 	ptr1 = mem.b3Alloc(MEM_MIN);
-	CPPUNIT_ASSERT(ptr1 != null);
+	CPPUNIT_ASSERT(ptr1 != nullptr);
 
 	ptr2 = mem.b3Alloc(MEM_MIN);
-	CPPUNIT_ASSERT(ptr2 != null);
+	CPPUNIT_ASSERT(ptr2 != nullptr);
 
 	CPPUNIT_ASSERT(mem.b3Free(ptr1));
-	CPPUNIT_ASSERT(!mem.b3Free(null));
+	CPPUNIT_ASSERT(!mem.b3Free(nullptr));
 	CPPUNIT_ASSERT(mem.b3Free());
 
-	ptr1 = mem.b3Realloc(null,  MEM_MIN * 2);
-	CPPUNIT_ASSERT(ptr1 != null);
+	ptr1 = mem.b3Realloc(nullptr,  MEM_MIN * 2);
+	CPPUNIT_ASSERT(ptr1 != nullptr);
 
 	memcpy(ptr1, buffer, MEM_MIN);
 
 	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
 	CPPUNIT_ASSERT_EQUAL(ptr1, ptr2);
-	CPPUNIT_ASSERT(ptr2 != null);
+	CPPUNIT_ASSERT(ptr2 != nullptr);
 
 	ptr1 = mem.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
-	CPPUNIT_ASSERT(ptr1 != null);
+	CPPUNIT_ASSERT(ptr1 != nullptr);
 	CPPUNIT_ASSERT(memcmp(buffer, ptr1, MEM_MIN)  == 0);
 
 	ptr = static_cast<b3_u08 *>(ptr1);
@@ -133,8 +133,8 @@ void b3DataSizeTest::testMemory()
 
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
-	CPPUNIT_ASSERT_EQUAL(ptr2, static_cast<void *>(null));
-	ptr1 = null;
+	CPPUNIT_ASSERT_EQUAL(ptr2, static_cast<void *>(nullptr));
+	ptr1 = nullptr;
 }
 
 void b3DataSizeTest::testSwap()

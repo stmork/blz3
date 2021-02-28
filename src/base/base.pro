@@ -6,8 +6,8 @@ BLZ3_HOME = ../..
 include(../common.pri)
 
 target.path = $$BLZ3_LIB
-TARGET       = b3Base
-INSTALLS  += target
+TARGET      = b3Base
+INSTALLS   += target
 
 message("*** Blizzard III basic algorithm library $$VERSION ***")
 

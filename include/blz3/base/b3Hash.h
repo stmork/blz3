@@ -223,7 +223,7 @@ public:
 	{
 		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
-			if (m_HashMap[i].First != null)
+			if (m_HashMap[i].First != nullptr)
 			{
 				return false;
 			}
@@ -257,7 +257,7 @@ public:
 	inline const Object * b3Find(const Key & key) const
 	{
 		b3HashPair<Key, Object> * pair;
-		b3_hash                 idx = b3Hash(key);
+		b3_hash                   idx = b3Hash(key);
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
@@ -266,7 +266,7 @@ public:
 				return &pair->m_Object;
 			}
 		}
-		return null;
+		return nullptr;
 	}
 
 	/**
@@ -278,7 +278,7 @@ public:
 	inline const b3_bool b3HasKey(const Key & key) const
 	{
 		b3HashPair<Key, Object> * pair;
-		b3_hash                 idx = b3Hash(key);
+		b3_hash                   idx = b3Hash(key);
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
@@ -299,7 +299,7 @@ public:
 	inline b3_bool b3Remove(const Key & key)
 	{
 		b3HashPair<Key, Object> * pair;
-		b3_hash                 idx = b3Hash(key);
+		b3_hash                   idx = b3Hash(key);
 
 		B3_FOR_BASE(&m_HashMap[idx], pair)
 		{
@@ -322,7 +322,7 @@ public:
 
 		for (b3_loop i = 0; i < B3_MAX_HASH_INDEX; i++)
 		{
-			while ((pair = m_HashMap[i].b3RemoveFirst()) != null)
+			while ((pair = m_HashMap[i].b3RemoveFirst()) != nullptr)
 			{
 				delete pair;
 			}

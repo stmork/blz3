@@ -158,7 +158,7 @@ b3_matrix * b3Matrix::b3Unit(b3_matrix * Matrix)
 
 b3_matrix * b3Matrix::b3Transport(
 	const b3_matrix * From,
-	b3_matrix * To)
+	b3_matrix *       To)
 {
 	memcpy(To, From, sizeof(b3_matrix));
 
@@ -237,7 +237,7 @@ b3_matrix * b3Matrix::b3MMul(
 	const b3_matrix	* A,
 	b3_matrix    *    C)
 {
-	b3_matrix	 Result;
+	b3_matrix Result;
 
 	Result.m11 = A->m11 * B->m11 + A->m12 * B->m21 + A->m13 * B->m31 + A->m14 * B->m41;
 	Result.m12 = A->m11 * B->m12 + A->m12 * B->m22 + A->m13 * B->m32 + A->m14 * B->m42;
@@ -281,7 +281,7 @@ b3_matrix * b3Matrix::b3MAdd(
 }
 
 b3_matrix * b3Matrix::b3Move(
-	const b3_matrix * Src, b3_matrix    *    Dst,
+	const b3_matrix * Src, b3_matrix * Dst,
 	const b3_f64      x,
 	const b3_f64      y,
 	const b3_f64      z)

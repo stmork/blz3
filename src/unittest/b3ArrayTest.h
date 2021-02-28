@@ -47,7 +47,7 @@ public:
 
 	void test()
 	{
-		CPPUNIT_ASSERT(array.b3GetBuffer() != null);
+		CPPUNIT_ASSERT(array.b3GetBuffer() != nullptr);
 		b3AddElements(4,  4);
 		b3AddElements(4,  8);
 		array.b3SetIncrement(1);

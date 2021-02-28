@@ -2224,11 +2224,11 @@ public:
 	 * @return The resulting matrix.
 	 */
 	static b3_matrix * b3Dress(
-		const b3_matrix * Src, b3_matrix * Dst,
-		const b3_vector * Center,
-		const b3_vector * Dir1,
-		const b3_vector * Dir2,
-		const b3_bool future);
+			const b3_matrix * Src, b3_matrix * Dst,
+			const b3_vector * Center,
+			const b3_vector * Dir1,
+			const b3_vector * Dir2,
+			const b3_bool future);
 
 	/**
 	 * This method multiplies matrix A and B and stores the result. The result pointer may be equal to
