@@ -1,22 +1,16 @@
 # Blizzard III Unix System abstraction library
 
-CONFIG   += c++14
 TEMPLATE = lib
 BLZ3_HOME = ../..
-BLZ3_INCLUDE = $$BLZ3_HOME/include
-BLZ3_LIB     = $$BLZ3_HOME/lib
 
-unix
-{
-	INCLUDEPATH += $$BLZ3_HOME/include_unix
-}
-
-INCLUDEPATH += $$BLZ3_INCLUDE
-TARGET       = b3SystemUnix
+include(../common.pri)
 
 target.path = $$BLZ3_LIB
 
-INSTALLS  += target
+TARGET      = b3SystemUnix
+INSTALLS   += target
+
+message("*** Blizzard III system abstraction library $$VERSION ***")
 
 SOURCES += \
 	b3CPU.cc \

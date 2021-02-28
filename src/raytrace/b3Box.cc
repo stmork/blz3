@@ -44,10 +44,10 @@ void b3BBox::b3SetName(const char * name)
 }
 
 void b3Box::b3GetCount(
-		b3RenderContext * context B3_UNUSED,
-		b3_count &        vertCount,
-		b3_count &        gridCount B3_UNUSED,
-		b3_count &        polyCount B3_UNUSED)
+	b3RenderContext * context B3_UNUSED,
+	b3_count     &    vertCount,
+	b3_count     &    gridCount B3_UNUSED,
+	b3_count     &    polyCount B3_UNUSED)
 {
 	vertCount = 24;
 }

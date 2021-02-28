@@ -418,8 +418,8 @@ void b3DistributedRayRow::b3Raytrace()
 *************************************************************************/
 
 b3MotionBlurRayRow::b3MotionBlurRayRow(
-	b3Scene  *       scene,
-	b3Display *      display,
+	b3Scene     *    scene,
+	b3Display    *   display,
 	const b3_coord   y,
 	const b3_res     xSize,
 	const b3_res     ySize) :

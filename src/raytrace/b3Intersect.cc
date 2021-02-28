@@ -1078,7 +1078,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 b3_bool b3CSGShape::b3Intersect(
 	b3_ray       *       ray      B3_UNUSED,
 	b3_shape_intervals * interval B3_UNUSED,
-	b3_line64     *      BTLine   B3_UNUSED)
+	b3_line64      *     BTLine   B3_UNUSED)
 {
 	return false;
 }
@@ -1086,7 +1086,7 @@ b3_bool b3CSGShape::b3Intersect(
 b3_bool b3CSGSphere::b3Intersect(
 	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *      BTLine B3_UNUSED)
+	b3_line64      *     BTLine B3_UNUSED)
 {
 	b3_f64 Discriminant, p;
 	b3_f64 xDiff, yDiff, zDiff;
@@ -1625,8 +1625,8 @@ b3Shape * b3Scene::b3Intersect(
 {
 	b3Base<b3Item> * Shapes;
 	b3Base<b3Item> * BBoxes;
-	b3SimpleShape *  Shape;
-	b3Shape    *     ResultShape = nullptr, *aux;
+	b3SimpleShape  * Shape;
+	b3Shape     *    ResultShape = nullptr, *aux;
 	b3Item     *     item;
 	b3_polar         polar;
 	b3_f64           Result;

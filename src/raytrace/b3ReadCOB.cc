@@ -107,7 +107,7 @@ b3COBInfo * b3COBReader::b3COB_FindInfo(b3_cob_id id)
 b3Item * b3COBReader::b3COB_Reconstruct()
 {
 	b3COBInfo    *    cobInfo, *next;
-	b3BBox     *      root = nullptr, *BBox;
+	b3BBox      *     root = nullptr, *BBox;
 	b3TriangleShape * Shape;
 
 
@@ -790,6 +790,7 @@ b3Item * b3COBReader::b3COB_Parse(
 				buffer[1],
 				buffer[2],
 				buffer[3]);
+			B3_FALLTHROUGH;
 		case COB_END  :
 			pos = size;
 			break;

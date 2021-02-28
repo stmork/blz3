@@ -586,8 +586,8 @@ b3_bool b3World::b3Write(
 }
 
 b3_world_error b3World::b3Write(
-		b3FileAbstract * file,
-		const b3_bool    throw_exception B3_UNUSED)
+	b3FileAbstract * file,
+	const b3_bool    throw_exception B3_UNUSED)
 {
 	b3Item     *    item;
 	b3_u32          size;

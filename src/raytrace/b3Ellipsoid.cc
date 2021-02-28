@@ -40,9 +40,9 @@ b3Ellipsoid::b3Ellipsoid(b3_u32 * src) : b3Shape3(src)
 
 void b3Ellipsoid::b3GetCount(
 	b3RenderContext * ctx B3_UNUSED,
-	b3_count    &     vertCount,
-	b3_count    &     gridCount,
-	b3_count    &     polyCount)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 

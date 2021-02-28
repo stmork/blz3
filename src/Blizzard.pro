@@ -2,6 +2,10 @@ TEMPLATE = subdirs
 SUBDIRS  = system_unix system base image raytrace
 CONFIG   = ordered
 
+include(common.pri)
+
+message("*** Blizzard III Qt version $$VERSION ***")
+
 system_unix.file = system_unix/system_unix.pro
 system.file      = system/system.pro
 base.file        = base/base.pro

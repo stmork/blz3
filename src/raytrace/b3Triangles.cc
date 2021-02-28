@@ -117,9 +117,9 @@ void b3Triangles::b3StoreShape()
 
 void b3Triangles::b3GetCount(
 	b3RenderContext * context B3_UNUSED,
-	b3_count    &     vertCount,
-	b3_count    &     gridCount,
-	b3_count    &     polyCount)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	vertCount = m_Flags & B3_PHONG ? m_VertexCount : (m_TriaCount * 3);
 	gridCount = m_TriaCount * 3;

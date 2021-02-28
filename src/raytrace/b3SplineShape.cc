@@ -127,9 +127,9 @@ void b3SplineShape::b3Init(
 
 void b3SplineShape::b3GetCount(
 	b3RenderContext * ctx B3_UNUSED,
-	b3_count    &     vertCount,
-	b3_count    &     gridCount,
-	b3_count    &     polyCount)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	// Compute number of grid vertices
 	m_GridVertexCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);

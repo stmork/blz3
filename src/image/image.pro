@@ -1,19 +1,18 @@
-# Blizzard III Base library
+# Blizzard III Image processing library
 
-CONFIG   += c++14 link_pkgconfig
+CONFIG   += link_pkgconfig
 TEMPLATE  = lib
 
 BLZ3_HOME = ../..
-BLZ3_INCLUDE = $$BLZ3_HOME/include
-BLZ3_LIB     = $$BLZ3_HOME/lib
+include(../common.pri)
 
-unix
-{
-	INCLUDEPATH += $$BLZ3_HOME/include_unix
-}
+target.path = $$BLZ3_LIB
 
-INCLUDEPATH += $$BLZ3_INCLUDE
-TARGET       = b3Image
+TARGET      = b3Image
+PKGCONFIG   = OpenEXR
+INSTALLS   += target
+
+message("*** Blizzard III image processing library $$VERSION ***")
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/image/b3Sampler.h \
@@ -55,8 +54,3 @@ SOURCES += \
 	b3TxScale.cc \
 	b3TxTGA.cc \
 	b3TxTIFF.cc
-
-target.path = $$BLZ3_LIB
-
-PKGCONFIG  = OpenEXR
-INSTALLS  += target

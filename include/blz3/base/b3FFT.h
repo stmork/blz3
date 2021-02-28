@@ -51,7 +51,7 @@ struct b3_fft_info
 	b3_loop        m_xMin, m_xMax;
 	b3_loop        m_yMin, m_yMax;
 	b3Complex64 ** m_Lines;
-	b3Complex64 *  m_Aux;
+	b3Complex64  * m_Aux;
 	b3_res         m_xDim;
 	b3_res         m_yDim;
 	int            m_Dir;

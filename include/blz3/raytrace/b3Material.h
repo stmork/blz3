@@ -156,8 +156,8 @@ public:
 	 * @return True on material computation, false on shader computation.
 	 */
 	virtual b3_bool b3Illuminate(
-			b3_surface *    surface B3_UNUSED,
-			b3_light_info * lit     B3_UNUSED)
+		b3_surface   *  surface B3_UNUSED,
+		b3_light_info * lit     B3_UNUSED)
 	{
 		return false;
 	}
@@ -188,9 +188,9 @@ protected:
 	 * @return True on component mixing, false on shader intelligence.
 	 */
 	virtual b3_bool b3ShadeComponents(
-			b3_surface * surface B3_UNUSED,
-			b3_f64       reflection B3_UNUSED,
-			b3_f64       refraction B3_UNUSED)
+		b3_surface * surface B3_UNUSED,
+		b3_f64       reflection B3_UNUSED,
+		b3_f64       refraction B3_UNUSED)
 	{
 		return false;
 	}

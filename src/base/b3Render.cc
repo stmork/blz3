@@ -96,9 +96,9 @@ void b3RenderObject::b3DeleteDisplayList()
 
 void b3RenderObject::b3GetCount(
 	b3RenderContext * context B3_UNUSED,
-	b3_count    &     vertCount,
-	b3_count    &     gridCount,
-	b3_count    &     polyCount)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	vertCount = 0;
 	gridCount = 0;
@@ -391,7 +391,7 @@ void b3RenderObject::b3Update()
 	case B3_UPDATE_VERTICES | B3_UPDATE_INDICES:
 	case B3_UPDATE_VERTICES:
 		b3UnmapVertices();
-	// Walk Through !!
+		B3_FALLTHROUGH;
 	case B3_UPDATE_INDICES:
 		b3UnmapIndices();
 		break;
@@ -621,10 +621,10 @@ b3_bool b3RenderObject::b3GetChess(
 }
 
 b3Tx * b3RenderObject::b3GetTexture(
-		B3_UNUSED b3_f64 & xTrans,
-		B3_UNUSED b3_f64 & yTrans,
-		B3_UNUSED b3_f64 & xScale,
-		B3_UNUSED b3_f64 & yScale)
+	B3_UNUSED b3_f64 & xTrans,
+	B3_UNUSED b3_f64 & yTrans,
+	B3_UNUSED b3_f64 & xScale,
+	B3_UNUSED b3_f64 & yScale)
 {
 	return nullptr;
 }
@@ -1040,7 +1040,7 @@ void b3RenderObject::b3Draw(b3RenderContext * context)
 
 void b3RenderObject::b3CheckGeometry(
 	B3_UNUSED const b3RenderContext * context,
-			  const b3_render_mode    render_mode)
+	const b3_render_mode    render_mode)
 {
 	B3_ASSERT(glVertexElements->b3IsComputed());
 	B3_ASSERT(glGridElements->b3IsComputed());

@@ -139,7 +139,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector * pos)
 	b3_f64                 dy;
 	b3_index               max    = m_fftDiff * m_fftDiff;
 	b3_index               index, xs, xe, y;
-	b3_f64    B3_ALIGN_16  a[2], b[2], c[2], dx[2];
+	alignas(16) b3_f64     a[2], b[2], c[2], dx[2];
 
 	xs = (b3_index)fx;
 	y  = (b3_index)fy;
@@ -318,7 +318,7 @@ void b3OceanWave::b3SampleHeight(
 	const b3_f64     fx B3_UNUSED,
 	const b3_f64     fy B3_UNUSED,
 	const b3_index   index,
-	b3FilterInfo   * filter_info)
+	b3FilterInfo  *  filter_info)
 {
 	b3OceanWave * ocean  = (b3OceanWave *)filter_info;
 	b3Complex64 * buffer = ocean->b3GetBuffer();

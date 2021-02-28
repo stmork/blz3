@@ -868,8 +868,8 @@ void b3TIFF::b3Traverse(
 
 	func(head, (b3Link<class T> *)this, ptr);
 	for (dTIFF  = dirs.First;
-		 dTIFF != nullptr;
-		 dTIFF  = dnTIFF)
+		dTIFF != nullptr;
+		dTIFF  = dnTIFF)
 	{
 		dnTIFF = dTIFF->Succ;
 		dTIFF->b3Traverse((b3Base<class T> *)&dirs, func, ptr);
@@ -1156,7 +1156,7 @@ void b3TIFF::b3TravTIFF(
 	b3TIFF_Dir  *  dTIFF;
 	b3TIFF_Entry * tTIFF;
 	b3TIFF_Strip * sTIFF;
-	long      *    offset = (long *)ptr;
+	long     *     offset = (long *)ptr;
 
 	switch (Node->b3GetClassType())
 	{
@@ -1187,7 +1187,7 @@ void b3TIFF::b3TravTIFF(
 void b3TIFF::b3TravOffset(
 	b3Base<class T> * Head B3_UNUSED,
 	b3Link<class T> * Node,
-	void      *       ptr)
+	void       *      ptr)
 {
 	b3TIFF    *    hTIFF;
 	b3TIFF_Dir  *  dTIFF;
@@ -1248,16 +1248,16 @@ void b3TIFF::b3Write(char * name)
 
 	// writing dir and tag structure
 	for (dTIFF  = dirs.First;
-		 dTIFF != nullptr;
-		 dTIFF  = dTIFF->Succ)
+		dTIFF != nullptr;
+		dTIFF  = dTIFF->Succ)
 	{
 		act_offset = dTIFF->b3WriteTags(&out, act_offset);
 	}
 
 	// writing tag data
 	for (dTIFF  = dirs.First;
-		 dTIFF != nullptr;
-		 dTIFF  = dTIFF->Succ)
+		dTIFF != nullptr;
+		dTIFF  = dTIFF->Succ)
 	{
 		// writing tag buffers
 		for (tTIFF  = dTIFF->b3FirstEntry();

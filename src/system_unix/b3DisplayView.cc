@@ -328,8 +328,8 @@ void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_colo
 }
 
 b3_bool b3DisplayView::b3IsCancelled(
-		const b3_coord x B3_UNUSED,
-		const b3_coord y B3_UNUSED)
+	const b3_coord x B3_UNUSED,
+	const b3_coord y B3_UNUSED)
 {
 #ifdef HAVE_LIBX11
 	b3_bool	 loop = true, result = false, really_ask;
@@ -385,7 +385,7 @@ b3_bool b3DisplayView::b3IsCancelled(
 		case KeyPress :
 			result   = true;
 			m_Closed = true;
-		// Walk through!
+			B3_FALLTHROUGH;
 		default :
 			loop   = false;
 			break;
@@ -733,9 +733,9 @@ inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 }
 
 Bool b3DisplayView::b3SetPredicate(
-		Display * display B3_UNUSED,
-		XEvent *  event   B3_UNUSED,
-		char *    buffer  B3_UNUSED)
+	Display * display B3_UNUSED,
+	XEvent  * event   B3_UNUSED,
+	char   *  buffer  B3_UNUSED)
 {
 	return True;
 }

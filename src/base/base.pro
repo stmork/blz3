@@ -1,19 +1,15 @@
-# Blizzard III Base library
+# Blizzard III Basic algorithm library
 
-CONFIG   += c++14
 TEMPLATE  = lib
 
 BLZ3_HOME = ../..
-BLZ3_INCLUDE = $$BLZ3_HOME/include
-BLZ3_LIB     = $$BLZ3_HOME/lib
+include(../common.pri)
 
-unix
-{
-	INCLUDEPATH += $$BLZ3_HOME/include_unix
-}
-
-INCLUDEPATH += $$BLZ3_INCLUDE
+target.path = $$BLZ3_LIB
 TARGET       = b3Base
+INSTALLS  += target
+
+message("*** Blizzard III basic algorithm library $$VERSION ***")
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Array.h \
@@ -83,7 +79,3 @@ SOURCES += \
 	b3Water.cc \
 	b3Wood.cc \
 	b3World.cc
-
-target.path = $$BLZ3_LIB
-
-INSTALLS  += target

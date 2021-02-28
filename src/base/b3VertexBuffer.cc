@@ -64,8 +64,8 @@ b3SimpleVertexElements::~b3SimpleVertexElements()
 }
 
 void b3SimpleVertexElements::b3AllocVertexMemory(
-		b3RenderContext * context B3_UNUSED,
-		b3_count          new_amount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count          new_amount)
 {
 	if (glElementCount != new_amount)
 	{
@@ -102,8 +102,8 @@ b3SimpleGridElements::~b3SimpleGridElements()
 }
 
 void b3SimpleGridElements::b3AllocVertexMemory(
-		b3RenderContext * context B3_UNUSED,
-		b3_count          new_amount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count          new_amount)
 {
 	if (glElementCount != new_amount)
 	{
@@ -140,8 +140,8 @@ b3SimplePolygonElements::~b3SimplePolygonElements()
 }
 
 void b3SimplePolygonElements::b3AllocVertexMemory(
-		b3RenderContext * context B3_UNUSED,
-		b3_count          new_amount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count          new_amount)
 {
 	if (glElementCount != new_amount)
 	{
@@ -262,8 +262,8 @@ b3VboVertexElements::b3VboVertexElements()
 }
 
 void b3VboVertexElements::b3AllocVertexMemory(
-		b3RenderContext * context B3_UNUSED,
-		b3_count          new_amount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count          new_amount)
 {
 	if (glElementCount != new_amount)
 	{
@@ -361,8 +361,8 @@ b3VboGridElements::b3VboGridElements()
 }
 
 void b3VboGridElements::b3AllocVertexMemory(
-		b3RenderContext * context B3_UNUSED,
-		b3_count          new_amount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count          new_amount)
 {
 	if (glElementCount != new_amount)
 	{
@@ -460,8 +460,8 @@ b3VboPolygonElements::b3VboPolygonElements()
 }
 
 void b3VboPolygonElements::b3AllocVertexMemory(
-		b3RenderContext * context B3_UNUSED,
-		b3_count          new_amount)
+	b3RenderContext * context B3_UNUSED,
+	b3_count          new_amount)
 {
 	if (glElementCount != new_amount)
 	{

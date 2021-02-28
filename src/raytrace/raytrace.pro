@@ -1,23 +1,16 @@
 # Blizzard III Base library
 
-CONFIG   += c++14
 TEMPLATE  = lib
 
 BLZ3_HOME = ../..
-BLZ3_INCLUDE = $$BLZ3_HOME/include
-BLZ3_LIB     = $$BLZ3_HOME/lib
-
-unix
-{
-	INCLUDEPATH += $$BLZ3_HOME/include_unix
-}
-
-INCLUDEPATH += $$BLZ3_INCLUDE
-TARGET       = b3Raytrace
+include(../common.pri)
 
 target.path = $$BLZ3_LIB
 
-INSTALLS  += target
+TARGET      = b3Raytrace
+INSTALLS   += target
+
+message("*** Blizzard III central raytracing library $$VERSION ***")
 
 HEADERS += \
 	../../include/blz3/raytrace/b3Activation.h \

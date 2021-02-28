@@ -158,9 +158,9 @@ int b3Tx::b3MMapProc(thandle_t fd, tdata_t * pbase, toff_t * psize)
 }
 
 void b3Tx::b3UnmapProc(
-		B3_UNUSED thandle_t fd,
-		B3_UNUSED tdata_t base,
-		B3_UNUSED toff_t size)
+	B3_UNUSED thandle_t fd,
+	B3_UNUSED tdata_t base,
+	B3_UNUSED toff_t size)
 {
 }
 

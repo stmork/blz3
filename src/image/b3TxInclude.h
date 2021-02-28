@@ -1,20 +1,18 @@
 /*
 **
 **	$Filename:	b3TxInclude.h $
-**	$Release:	Dortmund 2006 $
-**	$Revision$
-**	$Date$
-**	$Author$
-**	$Developer:	Steffen A. Mork $
+**	$Release:	Dortmund 2021 $
 **
 **	Blizzard III - Precompiled header file for image package
 **
-**	(C) Copyright 2006  Steffen A. Mork
+**	(C) Copyright 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
 **
 */
+
+#pragma once
 
 #ifndef B3_IMAGE_TXINCLUDE_H
 #define B3_IMAGE_TXINCLUDE_H

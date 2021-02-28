@@ -84,7 +84,7 @@ b3_bool b3FileMem::b3Open(const b3_access_mode access_mode)
 	case B_WRITE :
 	case T_WRITE :
 		b3Close();
-	// Walk through!
+		B3_FALLTHROUGH;
 	case B_READ :
 	case T_READ :
 		if (b3Buffer(16000))

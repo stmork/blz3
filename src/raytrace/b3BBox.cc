@@ -192,9 +192,9 @@ char * b3BBox::b3GetName()
 
 void b3BBox::b3GetCount(
 	b3RenderContext * ctx B3_UNUSED,
-	b3_count    &     vertCount,
-	b3_count    &     gridCount B3_UNUSED,
-	b3_count    &     polyCount B3_UNUSED)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount B3_UNUSED,
+	b3_count     &    polyCount B3_UNUSED)
 {
 	vertCount = 8;
 }

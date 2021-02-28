@@ -280,8 +280,8 @@ void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info)
 }
 
 void b3Shape::b3Transform(
-		b3_matrix * transformation B3_UNUSED,
-		b3_bool     is_affine B3_UNUSED)
+	b3_matrix * transformation B3_UNUSED,
+	b3_bool     is_affine B3_UNUSED)
 {
 	b3PrintF(B3LOG_NORMAL, "b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);

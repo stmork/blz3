@@ -61,10 +61,10 @@ b3Area::b3Area(b3_u32 * src) : b3Shape2(src)
 }
 
 void b3Area::b3GetCount(
-		b3RenderContext * context B3_UNUSED,
-		b3_count &        verts,
-		b3_count &        grids B3_UNUSED,
-		b3_count &        polys B3_UNUSED)
+	b3RenderContext * context B3_UNUSED,
+	b3_count     &    verts,
+	b3_count     &    grids B3_UNUSED,
+	b3_count     &    polys B3_UNUSED)
 {
 	verts = 4;
 }

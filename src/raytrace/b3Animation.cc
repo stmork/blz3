@@ -174,7 +174,7 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 {
 	b3AnimElement * Anim;
 	b3AnimElement * prev;
-	b3Item    *     item;
+	b3Item     *    item;
 	b3_matrix       resetMatrix;
 
 	// reset animation, compute time range and number of tracks

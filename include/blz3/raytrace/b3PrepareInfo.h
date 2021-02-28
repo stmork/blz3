@@ -96,14 +96,14 @@ public:
 	 *
 	 * @param scene The scene which contains the bounding box.
 	 */
-	void             b3CollectBBoxes(b3Scene * scene);
+	void              b3CollectBBoxes(b3Scene * scene);
 
 	/**
 	 * This method collects all sub bounding boxes of the given bounding box.
 	 *
 	 * @param firstBBox The first bounding box to collect.
 	 */
-	void             b3CollectBBoxes(b3BBox * firstBBox);
+	void              b3CollectBBoxes(b3BBox * firstBBox);
 
 	/**
 	 * This method prepares all collected bounding boxes in multi threaded manner.
@@ -115,12 +115,12 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool          b3Prepare(b3PrepareProc prepareFunc, void * ptr = nullptr, b3_bool threaded = true);
+	b3_bool           b3Prepare(b3PrepareProc prepareFunc, void * ptr = nullptr, b3_bool threaded = true);
 
 private:
 	b3BBoxReference * b3GetBBoxReference();
-	void             b3RebuildListFromArray();
-	static b3_u32    b3PrepareThread(void * ptr);
+	void              b3RebuildListFromArray();
+	static b3_u32     b3PrepareThread(void * ptr);
 };
 
 #endif

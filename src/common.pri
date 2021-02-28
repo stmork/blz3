@@ -1,0 +1,12 @@
+CONFIG  += c++14
+VERSION  = 3.1.0
+
+BLZ3_INCLUDE = $$BLZ3_HOME/include
+BLZ3_LIB     = $$BLZ3_HOME/lib
+
+unix
+{
+	INCLUDEPATH += $$BLZ3_HOME/include_unix
+}
+
+INCLUDEPATH += $$BLZ3_INCLUDE

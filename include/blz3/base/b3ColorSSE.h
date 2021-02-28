@@ -29,17 +29,17 @@
  * like SSE if the compiler can generate this and the underlying cpu
  * architecture supports it.
  */
-class B3_PLUGIN b3Color : public b3ColorBase
+class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 {
 #ifdef SSE_ALIGNED
 	__m128 v;                   //!< These are the color channels of a b3Color instance.
 #else
-	b3_f32 B3_ALIGN_16  v[4];
+	alignas(16) b3_f32       v[4];
 #endif
 
-	static const b3_u32 B3_ALIGN_16 m_AbsMask[4];
-	static const b3_f32 B3_ALIGN_16 m_Limit_d015[4];
-	static const b3_f32 B3_ALIGN_16 m_Limit_d255[4];
+	static const b3_u32 m_AbsMask[4];
+	static const b3_f32 m_Limit_d015[4];
+	static const b3_f32 m_Limit_d255[4];
 
 public:
 	/////////////////////////////////////////////////--------  constructors
@@ -119,8 +119,8 @@ public:
 	inline b3Color(const b3_u16 input)
 	{
 		b3_u16             color = input;
-		b3_s32 B3_ALIGN_16 c[4];
-		b3_f32 B3_ALIGN_16 d[4];
+		alignas(16) b3_s32 c[4];
+		alignas(16) b3_f32 d[4];
 		b3_loop            i;
 
 		for (i = 3; i >= 0; i--)
@@ -156,8 +156,8 @@ public:
 		b3_loop            i;
 
 #ifdef BLZ3_USE_SSE2
-		b3_s32 B3_ALIGN_16 c[4];
-		__m128i            ci;
+		alignas(16) b3_s32  c[4];
+		__m128i             ci;
 
 		for (i = 3; i >= 0; i--)
 		{
@@ -652,7 +652,7 @@ public:
 	 */
 	inline const b3Color b3Pow(const b3_f32 exp) const
 	{
-		b3_f32 B3_ALIGN_16 b[4];
+		alignas(16) b3_f32 b[4];
 		b3Color            result;
 
 		_mm_store_ps(b, SSE_PS_LOAD(v));
@@ -696,8 +696,8 @@ public:
 	 */
 	inline operator b3_pkd_color() const
 	{
-		b3_s32 B3_ALIGN_16 c[4];
-		b3_f32 B3_ALIGN_16 sat[4];
+		alignas(16) b3_s32 c[4];
+		alignas(16) b3_f32 sat[4];
 		b3_pkd_color       result = 0;
 		b3_loop            i;
 
@@ -728,7 +728,7 @@ public:
 	 */
 	inline operator b3_color() const
 	{
-		b3_f32 B3_ALIGN_16  a[4];
+		alignas(16) b3_f32  a[4];
 		b3_color            result;
 
 		_mm_store_ps(a, SSE_PS_LOAD(v));
@@ -784,7 +784,7 @@ public:
 
 	inline void b3Dump() const
 	{
-		b3_f32 B3_ALIGN_16  a[4];
+		alignas(16) b3_f32 a[4];
 
 		_mm_store_ps(a, SSE_PS_LOAD(v));
 		b3PrintF(B3LOG_NORMAL, "r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",

@@ -427,9 +427,9 @@ inline b3_f64 b3Noise::b3Interpolate(
 	const b3_f32   fz,
 	const b3_index d)
 {
-	b3_noisetype * NoiseTable = &m_NoiseTable[d * NOISESIZE];
-	b3_f32        B3_ALIGN_16 a[4], b[4], c[4];
-	b3_loop       i;
+	b3_noisetype    *    NoiseTable = &m_NoiseTable[d * NOISESIZE];
+	alignas(16) b3_f32   a[4], b[4], c[4];
+	b3_loop              i;
 
 	a[0] = NoiseTable[INDEX3D(ix, iy, iz)];
 	b[0] = NoiseTable[INDEX3D(ix + 1, iy, iz)];
@@ -480,7 +480,7 @@ inline b3_f64 b3Noise::b3GradNoise(
 	const b3_f32    z,
 	b3_index  i)
 {
-	b3_f32  B3_ALIGN_16 a[4], b[4], c[4];
+	b3_f32   a[4], b[4], c[4];
 	b3_index ix = (b3_index)floor(x);
 	b3_index iy = (b3_index)floor(y);
 	b3_index iz = (b3_index)floor(z);

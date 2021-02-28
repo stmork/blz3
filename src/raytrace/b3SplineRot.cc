@@ -240,9 +240,9 @@ void b3SplineRotShape::b3SetupGrid(b3PickInfo * info)
 
 void b3SplineRotShape::b3GetCount(
 	b3RenderContext * ctx B3_UNUSED,
-	b3_count    &     vertCount,
-	b3_count    &     gridCount,
-	b3_count    &     polyCount)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	m_ySubDiv   = m_Spline.m_SubDiv;
 	m_xSubDiv   = m_rSubDiv;

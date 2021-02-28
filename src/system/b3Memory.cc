@@ -67,7 +67,7 @@ void * b3Mem::b3Alloc(const b3_size size)
 		else
 		{
 			// We need more slots...
-			b3_count     max   = m_SlotCount + B3_MEM_ADDITIONAL_SLOTS;
+			b3_count      max   = m_SlotCount + B3_MEM_ADDITIONAL_SLOTS;
 			b3_mem_info * slots = (b3_mem_info *)b3MemAccess::b3Alloc(max * sizeof(b3_mem_info));
 
 			if (slots != nullptr)

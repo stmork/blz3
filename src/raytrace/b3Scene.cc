@@ -165,7 +165,7 @@ void b3Scene::b3ReallocateShader()
 	case TRACEPHOTO_ALBRECHT:
 	case GLOBAL_ILLUM:
 		b3PrintF(B3LOG_NORMAL, "Warning: Scene type %08lx not implemented yet...\n", b3GetClassType());
-	// Walk through!!!
+		B3_FALLTHROUGH;
 	case TRACEPHOTO_MORK:
 	case TRACEANGLE_MORK:
 		m_Shader = new b3ShaderMork(this);

@@ -154,43 +154,11 @@ public:
 	 * @param value The unsigned 32 bit integer itself.
 	 */
 	inline static void b3LongMemSet(
-		b3_u32  * data,
+		b3_u32     *    data,
 		const b3_count  max,
 		const b3_u32    value)
 	{
-		b3_index  i;
-		b3_count  long_max, short_max;
-
-		// Compute loop sizes
-		long_max  = max >> LOOP_B;
-		short_max = max &  LOOP_MASK;
-
-		// Long copy
-		for (i = 0; i < long_max; i++)
-		{
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-			*data++ = value;
-		}
-
-		// Copy rest
-		for (i = 0; i < short_max; i++)
-		{
-			*data++ = value;
-		}
+		std::fill(data, data + max, value);
 	}
 
 	/**
@@ -204,16 +172,11 @@ public:
 	 * @param max  The number of color quadrupel values to copy.
 	 */
 	inline static void b3ColorMemCopy(
-		b3_color * dst,
+		b3_color    *    dst,
 		const b3_color * src,
-		const b3_count  max)
+		const b3_count   max)
 	{
-		b3_index i;
-
-		for (i = 0; i < max; i++)
-		{
-			*dst++ = *src++;
-		}
+		std::copy(src, src + max, dst);
 	}
 
 	/**
@@ -227,43 +190,11 @@ public:
 	 * @param max  The number of unsigned 32 bit values to copy.
 	 */
 	inline static void b3LongMemCopy(
-		b3_u32  * dst,
+		b3_u32     *    dst,
 		const b3_u32  * src,
 		const b3_count  max)
 	{
-		b3_index  i;
-		b3_count  long_max, short_max;
-
-		// Compute loop sizes
-		long_max  = max >> LOOP_B;
-		short_max = max &  LOOP_MASK;
-
-		// Long copy
-		for (i = 0; i < long_max; i++)
-		{
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-			*dst++ = *src++;
-		}
-
-		// Copy rest
-		for (i = 0; i < short_max; i++)
-		{
-			*dst++ = *src++;
-		}
+		std::copy(src, src + max, dst);
 	}
 
 private:

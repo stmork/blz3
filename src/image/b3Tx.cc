@@ -981,7 +981,7 @@ inline void b3Tx::b3GetFloat(
 }
 
 void b3Tx::b3GetRow(
-	b3_color *      Line,
+	b3_color    *   Line,
 	const b3_coord  y) const
 {
 	b3_u08    *    bPtr;
