@@ -13,7 +13,6 @@ HEADERS += \
 	b3DataSizeTest.h \
 	b3FFTTest.h \
 	b3FileTest.h \
-	b3HashTest.h \
 	b3ImageTest.h \
 	b3ListTest.h \
 	b3MathTest.h \
@@ -31,7 +30,6 @@ SOURCES += \
 	b3DataSizeTest.cc \
 	b3FFTTest.cc \
 	b3FileTest.cc \
-	b3HashTest.cc \
 	b3ImageTest.cc \
 	b3ListTest.cc \
 	b3MathTest.cc \

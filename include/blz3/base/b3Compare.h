@@ -48,7 +48,7 @@ public:
 	 * @param dummy A pointer to provide additional information into the
 	 *              comparing process.
 	 */
-	static int b3Sort(const T * a, const T * b, const void * dummy B3_UNUSED)
+	static int b3Sort(const T * a, const T * b, const void * dummy B3_UNUSED = nullptr)
 	{
 		return a->b3Cmp(b);
 	}
