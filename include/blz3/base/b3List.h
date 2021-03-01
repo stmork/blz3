@@ -635,7 +635,7 @@ public:
 			// at its place and use the following node.
 			// Else we remove the node from the second list
 			// an insert it before the node of the first list.
-			if (func((T *)start, (T *)end) > 0)
+			if (func(start, end) > 0)
 			{
 				Right.b3Remove(end);
 				b3Insert(start->Prev, end);

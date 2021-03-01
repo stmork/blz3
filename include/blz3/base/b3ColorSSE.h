@@ -58,7 +58,7 @@ public:
 	 *
 	 * @param color The color vector in SSE representation.
 	 */
-	inline b3Color(const __m128 color)
+	explicit inline b3Color(const __m128 color)
 	{
 		SSE_PS_STORE(v, color);
 	}

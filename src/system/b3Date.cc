@@ -56,6 +56,7 @@ b3Date::b3Date(
 	unsigned short newMonth,
 	unsigned long  newYear)
 {
+	b3Now();
 	if (!b3SetDate(newDay, newMonth, newYear))
 	{
 		B3_THROW(b3DateException, B3_DATE_ILLEGAL);

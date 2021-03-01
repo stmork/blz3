@@ -24,31 +24,40 @@
 #include "blz3/system/b3Exception.h"
 
 // week days
-#define B3_MONDAY     1
-#define B3_TUESDAY    2
-#define B3_WEDNESDAY  3
-#define B3_THURSDAY   4
-#define B3_FRIDAY	  5
-#define B3_SATURDAY   6
-#define B3_SUNDAY     0
+enum b3_week_day
+{
+	B3_MONDAY = 1,
+	B3_TUESDAY,
+	B3_WEDNESDAY,
+	B3_THURSDAY,
+	B3_FRIDAY,
+	B3_SATURDAY,
+	B3_SUNDAY
+};
 
 // months
-#define B3_JANUARY    1
-#define B3_FEBRUARY   2
-#define B3_MARCH      3
-#define B3_APRIL      4
-#define B3_MAY        5
-#define B3_JUNE       6
-#define B3_JULY       7
-#define B3_AUGUST     8
-#define B3_SEPTEMBER  9
-#define B3_OCTOBER   10
-#define B3_NOVEMBER  11
-#define B3_DECEMBER  12
+enum b3_month
+{
+	B3_JANUARY = 1,
+	B3_FEBRUARY,
+	B3_MARCH,
+	B3_APRIL,
+	B3_MAY,
+	B3_JUNE,
+	B3_JULY,
+	B3_AUGUST,
+	B3_SEPTEMBER,
+	B3_OCTOBER,
+	B3_NOVEMBER,
+	B3_DECEMBER
+};
 
-#define B3_DT_GM      0
-#define B3_DT_LOCAL   1
-#define B3_DT_DIFF    2
+enum b3_daytime
+{
+	B3_DT_GM = 0,
+	B3_DT_LOCAL,
+	B3_DT_DIFF
+};
 
 /**
  * This enumeration lists error codes for date handling.
@@ -69,8 +78,8 @@ typedef b3Exception<b3_date_error, 0x444154> b3DateException;
  */
 class B3_PLUGIN b3Date
 {
-	time_t         time_code;
-	long           mode;
+	time_t         time_code = 0;
+	long           mode      = 0;
 
 public:
 	// date
