@@ -228,42 +228,42 @@ public:
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator<(const b3Date & date);
+	bool operator <(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is smaller or equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator<=(const b3Date & date);
+	bool operator<=(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator==(const b3Date & date);
+	bool operator ==(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is not equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator!=(const b3Date & date);
+	bool operator!=(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is greater or equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator>=(const b3Date & date);
+	bool operator >=(const b3Date & date);
 
 	/**
 	 * This operator returns a non zero value if this instance is greater than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	int      operator>(const b3Date & date);
+	bool operator>(const b3Date & date);
 
 	/////////////////////////////// Special case...
 	/**

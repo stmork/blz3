@@ -63,21 +63,7 @@ b3ExceptionBase::b3ExceptionBase(
 
 b3ExceptionBase::b3ExceptionBase(const b3ExceptionBase & exc)
 {
-	m_ErrorCode     = exc.m_ErrorCode;
-	m_ExceptionType = exc.m_ExceptionType;
-	m_LineNo        = exc.m_LineNo;
-	m_FileName      = exc.m_FileName;
-
-	if (m_Logger == nullptr)
-	{
-		b3SetLogger(nullptr);
-	}
-	if (m_GetMessage == nullptr)
-	{
-		b3SetMsgFunc(nullptr);
-	}
-
-	m_Logger(this);
+	operator=(exc);
 }
 
 void b3ExceptionBase::b3Log(const b3ExceptionBase * exception)
@@ -111,6 +97,27 @@ const char * b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 		isprint(c) ? c : '_',
 		ErrNo        & 0xff);
 	return m_LocalMessageBuffer;
+}
+
+b3ExceptionBase & b3ExceptionBase::operator=(const b3ExceptionBase & exc)
+{
+	m_ErrorCode     = exc.m_ErrorCode;
+	m_ExceptionType = exc.m_ExceptionType;
+	m_LineNo        = exc.m_LineNo;
+	m_FileName      = exc.m_FileName;
+
+	if (m_Logger == nullptr)
+	{
+		b3SetLogger(nullptr);
+	}
+	if (m_GetMessage == nullptr)
+	{
+		b3SetMsgFunc(nullptr);
+	}
+
+	m_Logger(this);
+
+	return *this;
 }
 
 const char * b3ExceptionBase::what() const noexcept

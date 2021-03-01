@@ -83,6 +83,8 @@ protected:
 	static const char * b3GetMessage(const b3_errno ErrNo);
 
 public:
+	b3ExceptionBase & operator=(const b3ExceptionBase & other);
+
 	/**
 	 * This method returns the exceptions error code.
 	 *
@@ -136,9 +138,9 @@ public:
 	 * \param LineNo The line number in the module.
 	 */
 	explicit b3Exception(
-		const T     error,
+		const T      error,
 		const char * FileName,
-		const int   LineNo) : b3ExceptionBase(
+		const int    LineNo) : b3ExceptionBase(
 				B3_MK_ERRNO(error, C),
 				C,
 				LineNo,

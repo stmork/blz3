@@ -512,32 +512,32 @@ b3Date b3Date::operator-(const b3Date & b)
 }
 
 // Comparisons
-int b3Date::operator<(const b3Date & comp)
+bool b3Date::operator<(const b3Date & comp)
 {
 	return time_code < comp.time_code;
 }
 
-int b3Date::operator<=(const b3Date & comp)
+bool b3Date::operator <=(const b3Date & comp)
 {
 	return time_code <= comp.time_code;
 }
 
-int b3Date::operator==(const b3Date & comp)
+bool b3Date::operator==(const b3Date & comp)
 {
 	return time_code == comp.time_code;
 }
 
-int b3Date::operator!=(const b3Date & comp)
+bool b3Date::operator !=(const b3Date & comp)
 {
 	return time_code != comp.time_code;
 }
 
-int b3Date::operator>=(const b3Date & comp)
+bool b3Date::operator>=(const b3Date & comp)
 {
 	return time_code >= comp.time_code;
 }
 
-int b3Date::operator>(const b3Date & comp)
+bool b3Date::operator >(const b3Date & comp)
 {
 	return time_code > comp.time_code;
 }
