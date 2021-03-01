@@ -24,10 +24,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#ifdef HAVE_MEMALIGN
-#include <string.h>
-#include <malloc.h>
-#endif
 
 #include "blz3/b3Types.h"
 
@@ -44,18 +40,17 @@ public:
 	 * @param size The size of the new memory block.
 	 * @return The new memory block or null if there is no memory available.
 	 */
-	static inline void * b3Alloc(b3_size size)
+	static inline void * b3Alloc(const b3_size size)
 	{
-#ifdef HAVE_MEMALIGN
-		void * ptr = memalign(16, size);
-		if (ptr != nullptr)
-		{
-			memset(ptr, 0, size);
-		}
+		void * ptr = aligned_alloc(16, size);
+
+		bzero(ptr, size);
 		return ptr;
-#else
-		return calloc(size, 1);
-#endif
+	}
+
+	template<class T> static inline T * b3AllocTyped(const b3_size elements)
+	{
+		return b3Alloc(elements * sizeof(T));
 	}
 
 	/**
