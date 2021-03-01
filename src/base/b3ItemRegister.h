@@ -61,7 +61,7 @@ public:
 
 	inline void           b3Append(b3ItemRegisterEntry * new_entry)
 	{
-		b3Append(new_entry);
+		b3Base::b3Append(new_entry);
 	}
 
 	inline b3_bool        b3IsEmpty()
