@@ -163,13 +163,13 @@ class b3Thread : public b3ThreadAbstract
 {
 	const char  * m_Name;
 	b3TimeSpan    m_Span;
-	int           m_Prio;
+	int           m_Prio = 0;
 
-	pthread_t     m_Thread;
-	volatile b3_bool       m_IsRunning;
-	volatile b3_u32        m_Result;
-	volatile b3ThreadProc  m_CallProc;
-	volatile void     *    m_CallArg;
+	pthread_t              m_Thread    = 0;
+	volatile b3_bool       m_IsRunning = false;
+	volatile b3_u32        m_Result    = 0;
+	volatile b3ThreadProc  m_CallProc  = nullptr;
+	volatile void     *    m_CallArg   = nullptr;
 
 	static   b3IPCMutex    m_ThreadMutex;
 	static   b3_count      m_ThreadCount;
@@ -180,7 +180,7 @@ public:
 	 *
 	 * @param taskname The new thread name.
 	 */
-	b3Thread(const char * taskname = nullptr);
+	explicit b3Thread(const char * taskname = nullptr);
 
 	/**
 	 * This destructor terminates a running thread and deinitializes this instance.

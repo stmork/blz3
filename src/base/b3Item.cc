@@ -47,7 +47,7 @@ void b3Item::b3Register(
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
-	b3ItemRegister::b3Append(entry);
+	b3ItemRegister::b3Instance().b3Append(entry);
 }
 
 b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))

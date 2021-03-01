@@ -47,7 +47,7 @@ public:
 	 *
 	 * @param library The plugin file.
 	 */
-	b3Plugin(b3Path & library);
+	explicit b3Plugin(b3Path & library);
 
 	/**
 	 * This destructor deinitializes the plugin.

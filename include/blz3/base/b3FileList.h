@@ -42,7 +42,7 @@ public:
 	 *
 	 * @param new_name The new file name.
 	 */
-	b3FileEntry(const char * new_name);
+	explicit b3FileEntry(const char * new_name);
 
 	/**
 	 * This method implements the comparison method for the b3FileList::b3Sort
@@ -80,7 +80,7 @@ public:
 	 *
 	 * @param dir_name The path.
 	 */
-	b3FileList(const char * dir_name);
+	explicit b3FileList(const char * dir_name);
 
 	/**
 	 * This destructor deinitializes this instance.

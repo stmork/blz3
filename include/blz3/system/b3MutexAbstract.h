@@ -56,7 +56,7 @@ public:
 	 *
 	 * @param mutex The mutex to use for automatical locking/unlocking.
 	 */
-	inline b3CriticalSection(b3MutexAbstract & mutex) : m_Mutex(mutex)
+	inline explicit b3CriticalSection(b3MutexAbstract & mutex) : m_Mutex(mutex)
 	{
 #ifdef _DEBUG
 		b3_bool locked = m_Mutex.b3Lock();

@@ -81,7 +81,7 @@ public:
 	 * @param new_size The class instance size.
 	 * @param new_class The class type for this list item.
 	 */
-	b3Link(const b3_size new_size, const b3_u32 new_class = 0)
+	explicit b3Link(const b3_size new_size, const b3_u32 new_class = 0)
 	{
 		Succ      = nullptr;
 		Prev      = nullptr;
@@ -135,9 +135,9 @@ public:
 	}
 };
 
-#define B3_FOR_BASE(b,n)    for((n) = (b)->First;(n)!= nullptr;(n) = (n)->Succ)
-#define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= nullptr;(n) = (n)->Prev)
-#define B3_DELETE_BASE(b,n) ((b)->b3Free())
+#define B3_FOR_BASE(b,n)       for((n) = (b)->First;(n) != nullptr;(n) = (n)->Succ)
+#define B3_FOR_BASE_BACK(b,n)  for((n) = (b)->Last;(n)  != nullptr;(n) = (n)->Prev)
+#define B3_DELETE_BASE(b,n)    ((b)->b3Free())
 
 /**
  * This class is the base container for a doubly linked list. All
@@ -171,7 +171,7 @@ public:
 	/**
 	 * This constructor initializes the list with the specified class.
 	 */
-	b3Base(const b3_u32 new_class = 0)
+	explicit b3Base(const b3_u32 new_class = 0)
 	{
 		b3InitBase(new_class);
 	}
@@ -441,8 +441,6 @@ public:
 	 */
 	inline void b3Insert(T * pre, T * ptr)
 	{
-		T * succ;
-
 		B3_ASSERT((ptr->Succ == nullptr) && (ptr->Prev == nullptr));
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
@@ -470,7 +468,8 @@ public:
 		}
 		else
 		{
-			succ = pre->Succ;
+			T * succ = pre->Succ;
+
 			ptr->Succ = pre->Succ;
 			if (ptr->Succ == nullptr)
 			{

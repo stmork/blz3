@@ -44,23 +44,29 @@ public:
 
 class B3_PLUGIN b3ItemRegister : b3Base<b3ItemRegisterEntry>
 {
-	static b3ItemRegister       m_Register;
-
 	b3ItemRegister();
 
 public:
 	~b3ItemRegister();
-	static b3ItemRegisterEntry * b3Find(b3_u32 class_type);
-	static void                 b3Dump();
 
-	static inline void          b3Append(b3ItemRegisterEntry * new_entry)
+	inline static b3ItemRegister & b3Instance()
 	{
-		m_Register.b3Base<b3ItemRegisterEntry>::b3Append(new_entry);
+		static b3ItemRegister instance;
+
+		return instance;
 	}
 
-	static inline b3_bool       b3IsEmpty()
+	b3ItemRegisterEntry * b3Find(b3_u32 class_type);
+	void                  b3Dump();
+
+	inline void           b3Append(b3ItemRegisterEntry * new_entry)
 	{
-		return m_Register.b3Base<b3ItemRegisterEntry>::b3IsEmpty();
+		b3Append(new_entry);
+	}
+
+	inline b3_bool        b3IsEmpty()
+	{
+		return b3IsEmpty();
 	}
 };
 

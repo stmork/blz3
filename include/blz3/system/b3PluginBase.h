@@ -82,7 +82,7 @@ public:
 	 *
 	 * \param &library The file name of the plugin.
 	 */
-	b3PluginBase(b3Path & library);
+	explicit b3PluginBase(b3Path & library);
 };
 
 #endif

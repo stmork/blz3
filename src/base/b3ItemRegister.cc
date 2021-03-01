@@ -61,9 +61,6 @@ b3Base<b3Item> * b3FirstItem::b3GetHead() const
 **                                                                      **
 *************************************************************************/
 
-// b3Base<b3ItemRegisterEntry> b3ItemRegister::m_Classes;
-b3ItemRegister b3ItemRegister::m_Register;
-
 b3ItemRegister::b3ItemRegister()
 {
 	b3ItemRegisterEntry * entry = new b3ItemRegisterEntry(
@@ -81,7 +78,7 @@ b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
 {
 	b3ItemRegisterEntry * entry;
 
-	B3_FOR_BASE(&m_Register, entry)
+	B3_FOR_BASE(this, entry)
 	{
 		if (entry->b3IsClassType(class_type))
 		{
@@ -89,8 +86,8 @@ b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
 			b3PrintF(B3LOG_FULL, "%08lx found,\n", class_type);
 #endif
 			// Some kind of LRU
-			m_Register.b3Remove(entry);
-			m_Register.b3First(entry);
+			b3Remove(entry);
+			b3First(entry);
 			return entry;
 		}
 	}
@@ -103,7 +100,7 @@ void b3ItemRegister::b3Dump()
 	b3ItemRegisterEntry * entry;
 
 	b3PrintF(B3LOG_FULL, "Item register contains following classes:\n");
-	B3_FOR_BASE(&m_Register, entry)
+	B3_FOR_BASE(this, entry)
 	{
 		entry->b3Dump();
 	}

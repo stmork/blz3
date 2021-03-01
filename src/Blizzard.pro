@@ -2,6 +2,7 @@ TEMPLATE = subdirs
 SUBDIRS  = system_unix system base image raytrace unittest brt3 render
 CONFIG   = ordered
 
+BLZ3_HOME = ..
 include(common.pri)
 
 message("*** Blizzard III Qt version $$VERSION ***")
@@ -22,3 +23,20 @@ raytrace.depends = system base image
 unittest.depends = system base image
 brt3.depends     = raytrace
 render.depends   = raytrace
+
+QMAKE_EXTRA_TARGETS += cppcheck
+
+cppcheck.commands = cppcheck\
+	--enable=style,warning,performance,portability\
+	--inline-suppr\
+	--suppress=unusedStructMember\
+	--suppress=useStlAlgorithm\
+	--suppress=noCopyConstructor\
+	--suppress=noOperatorEq\
+	-I$$[QT_INSTALL_HEADERS]\
+	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\
+	--language=c++ --std=c++14\
+	--xml-version=2 --force -q -j 3\
+	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc 2>cppcheck.xml
+
+QMAKE_CLEAN += cppcheck.xml test-results*.xml *.wav *.dot *.mp4 *.deb *.qch

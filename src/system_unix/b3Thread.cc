@@ -116,9 +116,6 @@ static b3_count   threadError;
 b3Thread::b3Thread(const char * task_name)
 {
 	m_Name      = task_name;
-	m_IsRunning = false;
-	m_Result    = 0;
-	m_Thread    = 0;
 }
 
 b3Thread::~b3Thread()
@@ -197,7 +194,7 @@ b3_bool b3Thread::b3Start(
 
 void * b3Thread::b3Trampoline(void * ptr)
 {
-	b3Thread * threadClass = (b3Thread *)ptr;
+	b3Thread * threadClass = static_cast<b3Thread *>(ptr);
 
 	if (nice(threadClass->m_Prio) == -1)
 	{

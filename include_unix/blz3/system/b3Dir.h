@@ -51,7 +51,7 @@ public:
 	 *
 	 * @param path The filename for initializing.
 	 */
-	inline      b3Path(const char * path) : b3PathAbstract(path)
+	inline explicit b3Path(const char * path) : b3PathAbstract(path)
 	{
 	}
 
@@ -181,7 +181,7 @@ public:
 	 *
 	 * @param dirname The directory name to list.
 	 */
-	b3Dir(const char * dirname);
+	explicit b3Dir(const char * dirname);
 
 	/**
 	 * This destructor deinitializes this class by calling

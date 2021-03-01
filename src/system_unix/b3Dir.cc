@@ -110,7 +110,6 @@ b3_bool b3Dir::b3OpenDir(const char * open_path)
 
 b3_path_type b3Dir::b3DirNext(char * name)
 {
-	struct dirent * entry;
 	b3_path_type   type;
 	char           filename[B3_FILESTRINGLEN];
 	b3_bool        loop;
@@ -118,6 +117,8 @@ b3_path_type b3Dir::b3DirNext(char * name)
 	name[0] = 0;
 	do
 	{
+		struct dirent * entry;
+
 		loop = false;
 		type = B3_NOT_EXISTANT;
 		if ((entry = readdir(dir)) != nullptr)

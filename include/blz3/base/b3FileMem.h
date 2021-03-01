@@ -55,7 +55,7 @@ public:
 	 * @param mode The access mode.
 	 * @throws b3FileException
 	 */
-	b3FileMem(const b3_access_mode mode);
+	explicit b3FileMem(const b3_access_mode mode);
 
 	/**
 	 * This constructor opens an existing file for reading or appending. It reads the
@@ -66,7 +66,7 @@ public:
 	 * @param mode     The access mode.
 	 * @throws b3FileException
 	 */
-	b3FileMem(const char * filename, const b3_access_mode mode);
+	explicit b3FileMem(const char * filename, const b3_access_mode mode);
 
 	/**
 	 * This destructor cleans up the instance. It calls b3Close().

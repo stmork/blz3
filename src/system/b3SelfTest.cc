@@ -90,12 +90,12 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3_u08    buffer[MEM_MIN];
 	b3_bool   equal;
 	b3_bool   result = true;
-	int       i, v;
 
 	// Put some stuff into realloc buffer
 	b3PrintF(B3LOG_NORMAL, "\ntesting memory handling...\n");
-	for (i = 0; i < MEM_MIN; i++)
+	for (int i = 0; i < MEM_MIN; i++)
 	{
+		int v;
 #if 1
 		v         = B3_IRAN(256);
 #else
@@ -129,7 +129,7 @@ b3_bool b3SelfTest::b3TestMemory()
 
 	ptr1 = mem.b3Realloc(nullptr,  MEM_MIN * 2);
 	mem.b3Dump();
-	for (i = 0; i < MEM_MIN; i++)
+	for (int i = 0; i < MEM_MIN; i++)
 	{
 		((b3_u08 *)ptr1)[i] = buffer[i];
 	}
@@ -159,7 +159,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	if (!equal)
 	{
 		result = false;
-		for (i = 0; i < MEM_MIN; i++)
+		for (int i = 0; i < MEM_MIN; i++)
 		{
 			if ((i & 7) == 0)
 			{
@@ -170,7 +170,7 @@ b3_bool b3SelfTest::b3TestMemory()
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 
-	for (i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
+	for (int i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
 	{
 		count += ((char *)ptr1)[i];
 	}

@@ -72,11 +72,10 @@ void b3Log::b3LogFunction(
 	const b3_log_level  level,
 	const char     *    format, ...)
 {
-	va_list  argptr;
-
 	if (b3CheckLevel(level))
 	{
 		b3CriticalSection lock(m_LogMutex);
+		va_list           argptr;
 
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this
