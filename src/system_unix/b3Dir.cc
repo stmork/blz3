@@ -37,7 +37,7 @@ b3_path_type b3Dir::b3Exists(const char * Name)
 {
 	struct stat status;
 
-	if (stat(Name, &status) != 0)
+	if ((Name == nullptr) || (stat(Name, &status) != 0))
 	{
 		return B3_NOT_EXISTANT;
 	}
