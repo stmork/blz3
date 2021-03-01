@@ -572,7 +572,7 @@ public:
 	 * \param *func The sorting method.
 	 * \param *Ptr A pointer to custom information.
 	 */
-	inline void b3Sort(int (*func)(const T *, const T *, const void *), const void * Ptr = nullptr)
+	inline void b3Sort(int (*func)(const T *, const T *))
 	{
 		b3Base    Right;
 		T    *    start, *end;
@@ -622,8 +622,8 @@ public:
 
 		// & CONQUER
 		// This gives the algorithm the factor O(log n)
-		b3Sort(func, Ptr);
-		Right.b3Sort(func, Ptr);
+		b3Sort(func);
+		Right.b3Sort(func);
 
 		// Now we have to merge two sorted list into
 		// one sorted list.
@@ -636,7 +636,7 @@ public:
 			// at its place and use the following node.
 			// Else we remove the node from the second list
 			// an insert it before the node of the first list.
-			if (func((T *)start, (T *)end, Ptr) > 0)
+			if (func((T *)start, (T *)end) > 0)
 			{
 				Right.b3Remove(end);
 				b3Insert(start->Prev, end);

@@ -451,7 +451,7 @@ long b3TIFF_Dir::b3OrgTags(long act_offset)
 		num++;
 	}
 
-	tags.b3Sort(b3TIFF_Entry::b3SortTags, nullptr);
+	tags.b3Sort(b3TIFF_Entry::b3SortTags);
 	act_offset += (sizeof(short) + sizeof(long));
 	b3TIFF::b3LogTIFF("  Dir:   %6ld # %ld tags, %ld strips\n",
 		offset, num, stripNum);
@@ -1112,8 +1112,7 @@ static long WriteIFW(
 
 int b3TIFF_Entry::b3SortTags(
 	const b3TIFF_Entry * a,
-	const b3TIFF_Entry * b,
-	const void     *     ptr B3_UNUSED)
+	const b3TIFF_Entry * b)
 {
 	if (a->tag.Code < b->tag.Code)
 	{

@@ -46,7 +46,7 @@ public:
 		this->element = value;
 	}
 
-	inline const int b3GetElement() const
+	inline int b3GetElement() const
 	{
 		return this->element;
 	}
@@ -191,7 +191,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(&c,                        src.First);
 		CPPUNIT_ASSERT_EQUAL(&b,                        src.Last);
 
-		CPPUNIT_ASSERT_NO_THROW(src.b3Sort(sorter, nullptr));
+		CPPUNIT_ASSERT_NO_THROW(src.b3Sort(sorter));
 		CPPUNIT_ASSERT_EQUAL(&b, src.First);
 		CPPUNIT_ASSERT_EQUAL(&d, src.Last);
 		CPPUNIT_ASSERT_EQUAL(c.Prev, src.First);
@@ -199,7 +199,7 @@ public:
 	}
 
 private:
-	static int sorter(const T * aPtr, const T * bPtr, const void * ptr)
+	static int sorter(const T * aPtr, const T * bPtr)
 	{
 		return aPtr->b3GetElement() - bPtr->b3GetElement();
 	}
