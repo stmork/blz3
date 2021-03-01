@@ -252,7 +252,7 @@ b3_bool b3TGFReader::b3ParseShapes(
 		count = facEnd - facStart;
 		shape = b3ProcessOneShape(vertices, facettes, facStart, facEnd);
 		b3ProcessMaterial(shape, matIndex);
-		bbox->b3GetShapeHead()->b3Append(shape);
+		bbox->b3GetShapeHead().b3Append(shape);
 	}
 	return true;
 }

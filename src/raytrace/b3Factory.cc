@@ -58,7 +58,7 @@ b3Scene * b3Factory::b3CreateNew(const char * filename, b3_u32 class_type)
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
 	scene->b3SetFilename(filename);
-	bbox->b3GetShapeHead()->b3Append(area);
+	bbox->b3GetShapeHead().b3Append(area);
 
 	// Init camera
 	b3Vector::b3Init(&eye, 0, -350, 75);
@@ -90,9 +90,9 @@ b3Scene * b3Factory::b3CreateGlobal(b3_u32 class_type)
 	scene->b3GetBBoxHead()->b3Append(bbox2);
 	scene->b3GetLightHead()->b3Append(light);
 	scene->b3GetSpecialHead()->b3Append(camera);
-	bbox1->b3GetShapeHead()->b3Append(area);
-	bbox2->b3GetShapeHead()->b3Append(big);
-	bbox2->b3GetShapeHead()->b3Append(medium);
+	bbox1->b3GetShapeHead().b3Append(area);
+	bbox2->b3GetShapeHead().b3Append(big);
+	bbox2->b3GetShapeHead().b3Append(medium);
 
 	// Init camera
 	b3Vector::b3Init(&eye, 0, -350, 75);
@@ -198,8 +198,8 @@ b3Scene * b3Factory::b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, b3_u32 class
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
 
-	bbox->b3GetShapeHead()->b3Append(area);
-	bbox->b3GetShapeHead()->b3Append(big);
+	bbox->b3GetShapeHead().b3Append(area);
+	bbox->b3GetShapeHead().b3Append(big);
 
 	area->b3GetMaterialHead()->b3Append(chess);
 
@@ -237,8 +237,8 @@ b3Scene * b3Factory::b3CreateBump(b3Base<b3Item> ** ptrBumpHead, b3_u32 class_ty
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
 
-	bbox->b3GetShapeHead()->b3Append(area);
-	bbox->b3GetShapeHead()->b3Append(big);
+	bbox->b3GetShapeHead().b3Append(area);
+	bbox->b3GetShapeHead().b3Append(big);
 
 	big->b3GetMaterialHead()->b3Append(chess);
 

@@ -1594,7 +1594,7 @@ b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 
 	intervals[0].m_Count = 0;
 	intervals[1].m_Count = 0;
-	B3_FOR_BASE(b3GetShapeHead(), item)
+	B3_FOR_BASE(&b3GetShapeHead(), item)
 	{
 		result    = &intervals[index];
 		index    ^= 1;
@@ -1623,8 +1623,6 @@ b3Shape * b3Scene::b3Intersect(
 	b3_ray * ray,
 	b3_bool  check_visibility)
 {
-	b3Base<b3Item> * Shapes;
-	b3Base<b3Item> * BBoxes;
 	b3SimpleShape  * Shape;
 	b3Shape     *    ResultShape = nullptr, *aux;
 	b3_polar         polar;
@@ -1635,10 +1633,10 @@ b3Shape * b3Scene::b3Intersect(
 		if (BBox->b3Intersect(ray, check_visibility))
 		{
 			//Check recursively
-			BBoxes = BBox->b3GetBBoxHead();
-			if (BBoxes->First != nullptr)
+			b3Base<b3Item> & BBoxes = BBox->b3GetBBoxHead();
+			if (BBoxes.First != nullptr)
 			{
-				aux = b3Intersect((b3BBox *)BBoxes->First, ray, check_visibility);
+				aux = b3Intersect((b3BBox *)BBoxes.First, ray, check_visibility);
 				if (aux != nullptr)
 				{
 					ResultShape = aux;
@@ -1646,11 +1644,11 @@ b3Shape * b3Scene::b3Intersect(
 			}
 
 			// Check shapes inside this object
-			Shapes = BBox->b3GetShapeHead();
-			switch (Shapes->b3GetClass())
+			b3Base<b3Item> & Shapes = BBox->b3GetShapeHead();
+			switch (Shapes.b3GetClass())
 			{
 			case CLASS_SHAPE:
-				for (b3Item & item : *Shapes)
+				for (b3Item & item : Shapes)
 				{
 					Shape  = (b3SimpleShape *)&item;
 					Result = Shape->b3Intersect(ray, &polar);
@@ -1689,25 +1687,23 @@ b3Shape * b3Scene::b3IsObscured(
 	b3BBox * BBox,
 	b3_ray * ray)
 {
-	b3Base<b3Item> * Shapes;
 	b3Base<b3Item> * BBoxes;
-	b3SimpleShape * Shape;
-	b3Shape    *    ResultShape;
-	b3Item     *    item;
-	b3_polar        polar;
-	b3_f64          Result;
+	b3Shape    *     ResultShape;
+	b3_polar         polar;
+	b3_f64           Result;
 
 	while (BBox != nullptr)
 	{
 		if (BBox->b3Intersect(ray, false))
 		{
-			Shapes = BBox->b3GetShapeHead();
-			switch (Shapes->b3GetClass())
+			b3Base<b3Item> & Shapes = BBox->b3GetShapeHead();
+			switch (Shapes.b3GetClass())
 			{
 			case CLASS_SHAPE:
-				B3_FOR_BASE(Shapes, item)
+				for (b3Item & item : Shapes)
 				{
-					Shape  = (b3SimpleShape *)item;
+					b3SimpleShape * Shape  = (b3SimpleShape *)&item;
+
 					Result = Shape->b3Intersect(ray, &polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{
@@ -1732,7 +1728,7 @@ b3Shape * b3Scene::b3IsObscured(
 			}
 
 			// Check recursively
-			BBoxes = BBox->b3GetBBoxHead();
+			BBoxes = &BBox->b3GetBBoxHead();
 			if (BBoxes->First != nullptr)
 			{
 				ResultShape = b3IsObscured((b3BBox *)BBoxes->First, ray);
@@ -1765,7 +1761,7 @@ void b3BBox::b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array)
 	if (b3Intersect(ray, false))
 	{
 		// Is any shape hit?
-		Shapes = b3GetShapeHead();
+		Shapes = &b3GetShapeHead();
 		switch (Shapes->b3GetClass())
 		{
 		case CLASS_SHAPE:
@@ -1791,7 +1787,7 @@ void b3BBox::b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array)
 		}
 
 		// Collect sub bboxes
-		B3_FOR_BASE(b3GetBBoxHead(), item)
+		B3_FOR_BASE(&b3GetBBoxHead(), item)
 		{
 			bbox = (b3BBox *)item;
 			bbox->b3CollectBBoxes(ray, array);
@@ -1843,14 +1839,14 @@ void b3BBox::b3CollectBBoxes(
 	if ((lower->x <= lLower.x) && (lUpper.x <= upper->x) &&
 		(lower->y <= lLower.y) && (lUpper.y <= upper->y) &&
 		(lower->z <= lLower.z) && (lUpper.z <= upper->z) &&
-		(b3GetShapeHead()->First != nullptr))
+		(b3GetShapeHead().First != nullptr))
 	{
 		// Yes!
 		array->b3Add(this);
 	}
 
 	// Search for sub bboxes
-	B3_FOR_BASE(b3GetBBoxHead(), item)
+	B3_FOR_BASE(&b3GetBBoxHead(), item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3CollectBBoxes(lower, upper, array);

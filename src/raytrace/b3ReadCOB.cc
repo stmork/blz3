@@ -172,7 +172,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			case COB_GROU :
 #ifndef ONE_BBOX
 				BBox = (b3BBox *)next->refNode;
-				BBox->b3GetBBoxHead()->b3Append(cobInfo->refNode);
+				BBox->b3GetBBoxHead().b3Append(cobInfo->refNode);
 #endif
 				break;
 
@@ -191,7 +191,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 #else
 				BBox = root;
 #endif
-				BBox->b3GetShapeHead()->b3Append(cobInfo->refNode);
+				BBox->b3GetShapeHead().b3Append(cobInfo->refNode);
 				break;
 
 			default :
