@@ -77,9 +77,12 @@ void b3MathTest::test()
 		}
 	}
 
-	for (base = -27; base <= 27; base += 0.125);
+	for (base = -27; base <= 27; base += 0.125)
 	{
-		CPPUNIT_ASSERT_EQUAL(round(pow(base, 1.0 / 3) * 10000000), round(b3Math::b3Cbrt(base) * 10000000));
+		const double expected = round(cbrt(base) * 10000000);
+		const double actual   = round(b3Math::b3Cbrt(base) * 10000000);
+
+		CPPUNIT_ASSERT_EQUAL(expected, actual);
 	}
 }
 

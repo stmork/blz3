@@ -324,7 +324,7 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 		}
 
 #ifndef ONE_GRID
-		m_GridSize = (b3_count)b3Math::b3Cbrt(m_TriaCount);
+		m_GridSize = (b3_count)cbrt(m_TriaCount);
 		if (m_GridSize < 1)
 		{
 			m_GridSize = 1;

@@ -648,14 +648,10 @@ BLZ3_HOME
 SSE_ALIGNED
 HAVE_X264_PARAMETER_DEFINITION
 HAVE_X264_DELAYED_FRAMES
-HAVE_STRLCPY
-HAVE_STRICMP
-HAVE_STRCASECMP
 HAVE_SSE3
 HAVE_SSE2
 HAVE_SSE
 HAVE_NEW_OVERLOADING
-HAVE_MEMALIGN
 HAVE_LIBCPPUNIT
 BLZ3_USE_X264
 BLZ3_USE_SSE3
@@ -4723,10 +4719,6 @@ fi
 
 
 
-
-
-
-
 BLZ3_HOME="$PWD"
 
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"
@@ -5446,87 +5438,6 @@ _ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
 
 $as_echo "#define BLZ3_IS_LINUX /**/" >>confdefs.h
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for stricmp" >&5
-$as_echo_n "checking for stricmp... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <strings.h>
-int
-main ()
-{
-
-stricmp("small","BIG");
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-
-$as_echo "#define HAVE_STRICMP /**/" >>confdefs.h
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for strcasecmp" >&5
-$as_echo_n "checking for strcasecmp... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <strings.h>
-int
-main ()
-{
-
-strcasecmp("small","BIG");
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-
-$as_echo "#define HAVE_STRCASECMP /**/" >>confdefs.h
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for strlcpy" >&5
-$as_echo_n "checking for strlcpy... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <string.h>
-int
-main ()
-{
-
-char example[16];strlcpy(example,"Example",sizeof(example));
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-
-$as_echo "#define HAVE_STRLCPY /**/" >>confdefs.h
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else
@@ -7617,7 +7528,7 @@ if test "x$OPENEXR" = "x"; then
 fi
 
 save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -I$OPENEXR"
+CPPFLAGS="$CPPFLAGS -std=gnu++1z -I$OPENEXR"
 ac_fn_cxx_check_header_mongrel "$LINENO" "ImfRgbaFile.h" "ac_cv_header_ImfRgbaFile_h" "$ac_includes_default"
 if test "x$ac_cv_header_ImfRgbaFile_h" = xyes; then :
 

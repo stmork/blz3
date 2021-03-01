@@ -31,14 +31,10 @@ AC_SUBST(BLZ3_USE_SSE2)
 AC_SUBST(BLZ3_USE_SSE3)
 AC_SUBST(BLZ3_USE_X264)
 AC_SUBST(HAVE_LIBCPPUNIT)
-AC_SUBST(HAVE_MEMALIGN)
 AC_SUBST(HAVE_NEW_OVERLOADING)
 AC_SUBST(HAVE_SSE)
 AC_SUBST(HAVE_SSE2)
 AC_SUBST(HAVE_SSE3)
-AC_SUBST(HAVE_STRCASECMP)
-AC_SUBST(HAVE_STRICMP)
-AC_SUBST(HAVE_STRLCPY)
 AC_SUBST(HAVE_X264_DELAYED_FRAMES)
 AC_SUBST(HAVE_X264_PARAMETER_DEFINITION)
 AC_SUBST(SSE_ALIGNED)
@@ -64,21 +60,6 @@ AC_TRY_LINK([#include <stdio.h>],[
 #error "This is not Linux!"
 #endif
 ],[AC_DEFINE([BLZ3_IS_LINUX], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING([for stricmp])
-AC_TRY_LINK([#include <strings.h>],[
-stricmp("small","BIG");
-],[AC_DEFINE([HAVE_STRICMP], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING([for strcasecmp])
-AC_TRY_LINK([#include <strings.h>],[
-strcasecmp("small","BIG");
-],[AC_DEFINE([HAVE_STRCASECMP], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING([for strlcpy])
-AC_TRY_LINK([#include <string.h>],[
-char example[16];strlcpy(example,"Example",sizeof(example));
-],[AC_DEFINE([HAVE_STRLCPY], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_MSG_CHECKING([for strerror])
 AC_TRY_LINK([#include <string.h>],[
@@ -268,7 +249,7 @@ if test "x$OPENEXR" = "x"; then
 fi
 
 save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -I$OPENEXR"
+CPPFLAGS="$CPPFLAGS -std=gnu++1z -I$OPENEXR"
 AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR], [], [Description])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
 # END OpenEXR
 

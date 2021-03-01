@@ -24,3 +24,6 @@ Version 2.99.2.21
 Since 2020/05/22
 * Migration from SourceForge SVN to github.
 * Moved to at least C++11.
+
+Version 3.1, since 2021/02/27
+* Migration to Qt.

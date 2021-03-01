@@ -1,4 +1,4 @@
-CONFIG  += c++14
+CONFIG  += c++17
 VERSION  = 3.1.0
 
 BLZ3_INCLUDE = $$BLZ3_HOME/include
