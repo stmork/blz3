@@ -103,6 +103,14 @@ public:
 	b3Date();
 
 	/**
+	 * The copy constructor copies the contents of another
+	 * instance.
+	 *
+	 * @param other The the other instance to copy from.
+	 */
+	b3Date(const b3Date & other);
+
+	/**
 	 * This constructor initializes this instance with a date by
 	 * calling the b3SetDate() method.
 	 *
@@ -182,14 +190,14 @@ public:
 	 *
 	 * @param date The date to assign.
 	 */
-	void     operator=(const b3Date & date);
+	b3Date & operator=(const b3Date & date);
 
 	/**
 	 * This operator assigns a given date as <code>time_t</code> to this instance.
 	 *
 	 * @param time_point The time value to assign.
 	 */
-	void     operator=(const time_t & time_point);
+	b3Date & operator =(const time_t & time_point);
 
 	/**
 	 * This operator adds a given Date to this instance and results in a new date.

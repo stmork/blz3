@@ -51,6 +51,11 @@ b3Date::b3Date()
 	b3Now();
 }
 
+b3Date::b3Date(const b3Date & other)
+{
+	*this = other;
+}
+
 b3Date::b3Date(
 	unsigned short newDay,
 	unsigned short newMonth,
@@ -249,15 +254,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 09.09.1999: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = DATE_000000_10091999 - diff;
 	b3LocalTime();
@@ -267,15 +272,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 10.09.1999: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = DATE_000000_31121999 - diff;
 	b3LocalTime();
@@ -285,15 +290,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 31.12.1999: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = DATE_000000_01012000 - diff;
 	b3LocalTime();
@@ -303,15 +308,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 01.01.2000: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = DATE_000000_29022000 - diff;
 	b3LocalTime();
@@ -321,15 +326,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 29.02.2000: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = DATE_120000_01042001 - diff;
 	b3LocalTime();
@@ -339,15 +344,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 01.04.2001: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = DATE_120000_08042001 - diff;
 	b3LocalTime();
@@ -357,15 +362,15 @@ bool b3Date::b3Y2K_Selftest()
 		success = false;
 	}
 	b3PrintF(B3LOG_DEBUG, "### Y2K - 08.04.2001: %c%c%c %c%c%c %c%c (%s)\n",
-		code &   1 ? '*' : '-',
-		code &   2 ? '*' : '-',
-		code &   4 ? '*' : '-',
-		code &   8 ? '*' : '-',
-		code &  16 ? '*' : '-',
-		code &  32 ? '*' : '-',
-		code &  64 ? '*' : '-',
-		code & 128 ? '*' : '-',
-		code ==  0 ? "OK" : "ERROR");
+		(code &   1) ? '*' : '-',
+		(code &   2) ? '*' : '-',
+		(code &   4) ? '*' : '-',
+		(code &   8) ? '*' : '-',
+		(code &  16) ? '*' : '-',
+		(code &  32) ? '*' : '-',
+		(code &  64) ? '*' : '-',
+		(code & 128) ? '*' : '-',
+		(code ==  0) ? "OK" : "ERROR");
 
 	time_code = -1 ^ ((time_t)1 << (sizeof(time_t) * 8 - 1));
 	b3GMTime();
@@ -423,16 +428,20 @@ void b3Date::operator+=(const b3Date & diff)
 	b3SetMode(mode);
 }
 
-void b3Date::operator=(const b3Date & eq)
+b3Date & b3Date::operator =(const b3Date & eq)
 {
 	time_code = eq.time_code;
 	b3SetMode(eq.mode);
+
+	return *this;
 }
 
-void b3Date::operator=(const time_t & eq)
+b3Date & b3Date::operator=(const time_t & eq)
 {
 	time_code = eq;
 	b3SetMode(B3_DT_LOCAL);
+
+	return *this;
 }
 
 bool b3Date::b3SetDate(
