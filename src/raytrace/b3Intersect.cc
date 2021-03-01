@@ -1627,7 +1627,6 @@ b3Shape * b3Scene::b3Intersect(
 	b3Base<b3Item> * BBoxes;
 	b3SimpleShape  * Shape;
 	b3Shape     *    ResultShape = nullptr, *aux;
-	b3Item     *     item;
 	b3_polar         polar;
 	b3_f64           Result;
 
@@ -1637,7 +1636,7 @@ b3Shape * b3Scene::b3Intersect(
 		{
 			//Check recursively
 			BBoxes = BBox->b3GetBBoxHead();
-			if (BBoxes->First)
+			if (BBoxes->First != nullptr)
 			{
 				aux = b3Intersect((b3BBox *)BBoxes->First, ray, check_visibility);
 				if (aux != nullptr)
@@ -1651,9 +1650,9 @@ b3Shape * b3Scene::b3Intersect(
 			switch (Shapes->b3GetClass())
 			{
 			case CLASS_SHAPE:
-				B3_FOR_BASE(Shapes, item)
+				for (b3Item & item : *Shapes)
 				{
-					Shape  = (b3SimpleShape *)item;
+					Shape  = (b3SimpleShape *)&item;
 					Result = Shape->b3Intersect(ray, &polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{
@@ -1859,8 +1858,8 @@ void b3BBox::b3CollectBBoxes(
 }
 
 void b3Scene::b3CollectBBoxes(
-	b3_vector     *    lower,
-	b3_vector     *    upper,
+	b3_vector     *     lower,
+	b3_vector     *     upper,
 	b3Array<b3BBox *> * array)
 {
 	b3Item * item;
