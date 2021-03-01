@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS  = system_unix system base image raytrace unittest
+SUBDIRS  = system_unix system base image raytrace unittest brt3 render
 CONFIG   = ordered
 
 include(common.pri)
@@ -12,9 +12,13 @@ base.file        = base/base.pro
 image.file       = image/image.pro
 raytrace.file    = raytrace/raytrace.pro
 unittest.file    = unittest/unittest.pro
+brt3.file        = brt3/brt3.pro
+render.file      = OpenGL/render.pro
 
 system.depends   = system_unix
 image.depends    = system
 base.depends     = system image
 raytrace.depends = system base image
 unittest.depends = system base image
+brt3.depends     = raytrace
+render.depends   = raytrace

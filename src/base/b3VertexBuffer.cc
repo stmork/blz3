@@ -301,7 +301,7 @@ void b3VboVertexElements::b3Map(b3_vbo_mapping map_mode)
 				(GLenum)GL_ARRAY_BUFFER_ARB,
 				(GLenum)map_mode);
 
-		B3_ASSERT(glVertex != null);
+		B3_ASSERT(glVertex != nullptr);
 	}
 #endif
 

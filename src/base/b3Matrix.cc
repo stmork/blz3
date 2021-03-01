@@ -158,7 +158,7 @@ b3_matrix * b3Matrix::b3Unit(b3_matrix * Matrix)
 
 b3_matrix * b3Matrix::b3Transport(
 	const b3_matrix * From,
-	b3_matrix *       To)
+	b3_matrix    *    To)
 {
 	memcpy(To, From, sizeof(b3_matrix));
 

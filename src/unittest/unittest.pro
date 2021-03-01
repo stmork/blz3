@@ -1,4 +1,4 @@
-# Blizzard III System library
+# Blizzard III basic unittests.
 
 TEMPLATE = app
 BLZ3_HOME = ../..

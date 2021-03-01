@@ -77,23 +77,24 @@ struct b3_render_light_info
 class b3RenderContext : protected b3Mem
 {
 	b3_index             glLightCount;
-	b3RenderObject   *   glSelectedObject;
+	b3RenderObject   *   glSelectedObject = nullptr;
 
-	static b3_vector            glSimpleLightPosition;
-	static b3_vector            glSimpleLightDirection;
-	static b3_bool              glUse;
+	static b3_vector     glSimpleLightPosition;
+	static b3_vector     glSimpleLightDirection;
+	static b3_bool       glUse;
 
 #ifdef BLZ3_USE_OPENGL
-	static GLenum               glLightNum[];
+	static GLenum        glLightNum[];
 #endif
 
 public:
-	b3_count                    glVertexCount; //!< The overall vertex count
-	b3_count                    glPolyCount;   //!< The overall triangle count.
-	b3_count                    glGridCount;   //!< The overall line count.
-	b3_count                    glTextureSize; //!< The maximal texture resolution.
-	b3_bool                     glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
-	b3Color                     glBgColor;     //!< The background color.
+	b3_count             glVertexCount; //!< The overall vertex count
+	b3_count             glPolyCount;   //!< The overall triangle count.
+	b3_count             glGridCount;   //!< The overall line count.
+	b3_count             glTextureSize; //!< The maximal texture resolution.
+	b3_bool              glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
+	b3Color              glBgColor;     //!< The background color.
+
 public:
 	/**
 	 * The constructor initializes this instance and initializes the OpenGL background color.
@@ -378,29 +379,29 @@ class B3_PLUGIN b3RenderObject
 	b3_bool            glInit;
 
 protected:
-	b3VertexElements * glVertexElements;   //!< The vertex data.
-	b3GridElements  *  glGridElements;     //!< The line index data.
-	b3PolygonElements * glPolygonElements; //!< The triangle index data.
+	b3VertexElements  * glVertexElements  = nullptr;  //!< The vertex data.
+	b3GridElements   *  glGridElements    = nullptr;  //!< The line index data.
+	b3PolygonElements * glPolygonElements = nullptr;  //!< The triangle index data.
 
 #ifdef BLZ3_USE_OPENGL
-	GLuint             glDisplayList;      //!< The display list for defining material properties.
+	GLuint             glDisplayList;            //!< The display list for defining material properties.
 
 	// Some material values
-	GLfloat            glAmbient[4];       //!< The ambient material color.
-	GLfloat            glDiffuse[4];       //!< The diffuse material color.
-	GLfloat            glSpecular[4];      //!< The specular material color.
-	GLfloat            glShininess;        //!< The specular exponent.
+	GLfloat            glAmbient[4];             //!< The ambient material color.
+	GLfloat            glDiffuse[4];             //!< The diffuse material color.
+	GLfloat            glSpecular[4];            //!< The specular material color.
+	GLfloat            glShininess;              //!< The specular exponent.
 
 	// Some texture values
-	GLuint             glTextureId;        //!< The OpenGL texture id.
-	GLubyte      *     glTextureData;      //!< The bitmap data of the texture.
-	b3_res             glTextureSize;      //!< The bitmap buffer size.
-	b3_res             glTextureSizeX;     //!< The x resolution of the texture.
-	b3_res             glTextureSizeY;     //!< The y resolution of the texture.
-	b3_f64             glTextureTransX;    //!< The texture x translation.
-	b3_f64             glTextureTransY;    //!< The texture y translation.
-	b3_f64             glTextureScaleX;    //!< The x scaling factor of the texture.
-	b3_f64             glTextureScaleY;    //!< The y scaling factor of the texture.
+	GLuint             glTextureId;              //!< The OpenGL texture id.
+	GLubyte      *     glTextureData = nullptr;  //!< The bitmap data of the texture.
+	b3_res             glTextureSize;            //!< The bitmap buffer size.
+	b3_res             glTextureSizeX;           //!< The x resolution of the texture.
+	b3_res             glTextureSizeY;           //!< The y resolution of the texture.
+	b3_f64             glTextureTransX;          //!< The texture x translation.
+	b3_f64             glTextureTransY;          //!< The texture y translation.
+	b3_f64             glTextureScaleX;          //!< The x scaling factor of the texture.
+	b3_f64             glTextureScaleY;          //!< The y scaling factor of the texture.
 #endif
 
 public:
@@ -514,7 +515,7 @@ protected:
 	 * @param gridCount The computed line indexing count.
 	 * @param polyCount The computed polygon indexing count.
 	 */
-	virtual void            b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
+	virtual void     b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
 
 	/**
 	 * This method returns the used vertex range. The default implementation
@@ -523,7 +524,7 @@ protected:
 	 * @param start The start index including.
 	 * @param end The end index excluding.
 	 */
-	virtual void            b3GetVertexRange(b3_index & start, b3_index & end);
+	virtual void     b3GetVertexRange(b3_index & start, b3_index & end);
 
 	/**
 	 * This method sets up the b3VectorBuffer object implementation as needed.
@@ -539,7 +540,7 @@ protected:
 	 * @see b3VectorBufferObjects
 	 * @see b3VertexBuffer
 	 */
-	virtual void            b3AllocVertexMemory(b3RenderContext * context);
+	virtual void      b3AllocVertexMemory(b3RenderContext * context);
 
 	/**
 	 * The implementation of this method computes the vertices. The vertex buffer is
@@ -685,7 +686,7 @@ private:
 	void            b3MapVertices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	void            b3UnmapIndices();
 	void            b3UnmapVertices();
-	static  void            b3PrintMapping(const char * text, b3_vbo_mapping map_mode);
+	static  void    b3PrintMapping(const char * text, b3_vbo_mapping map_mode);
 };
 
 #endif

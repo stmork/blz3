@@ -119,7 +119,7 @@ void b3FFTTest::clear(
 	const b3_f64     fx B3_UNUSED,
 	const b3_f64     fy B3_UNUSED,
 	const b3_index   index,
-	b3FilterInfo *   filter_info)
+	b3FilterInfo  *  filter_info)
 {
 	b3Complex64 * buffer = filter_info->m_Fourier->b3GetBuffer();
 
@@ -130,7 +130,7 @@ void b3FFTTest::setbuffer(
 	const b3_f64     fx B3_UNUSED,
 	const b3_f64     fy B3_UNUSED,
 	const b3_index   index,
-	b3FilterInfo *   filter_info)
+	b3FilterInfo  *  filter_info)
 {
 	b3Complex64 * buffer = filter_info->m_Fourier->b3GetBuffer();
 

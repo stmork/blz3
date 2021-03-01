@@ -344,20 +344,20 @@ struct b3_preparation_info
 class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
-	b3_u32          m_ItemSize;    //!< The stored size of this item in bytes.
-	b3_s32          m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
+	b3_u32           m_ItemSize;    //!< The stored size of this item in bytes.
+	b3_s32           m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
 	b3Base<b3Item> * m_Heads;      //!< The list heads.
-	b3_u32          m_HeadCount;   //!< The number of list heads.
+	b3_u32           m_HeadCount;   //!< The number of list heads.
 
 	// Attributes for parsing
-	b3_u32     *    m_Buffer;      //!< This is a memory buffer of an archived b3Item.
-	b3_u32          m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
+	b3_u32     *     m_Buffer;      //!< This is a memory buffer of an archived b3Item.
+	b3_u32           m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
 
 	// Attributes for writing
-	b3_u32          m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
-	b3_s32          m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
-	b3_u32          m_StoreSize;   //!< The number of 32 bit unsigned integers.
-	b3_u32     *    m_StoreBuffer; //!< A temporary store buffer.
+	b3_u32           m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
+	b3_s32           m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
+	b3_u32           m_StoreSize;   //!< The number of 32 bit unsigned integers.
+	b3_u32     *     m_StoreBuffer; //!< A temporary store buffer.
 
 public:
 	/**
@@ -458,7 +458,7 @@ public:
 	 * @throws b3WorldException
 	 * @return The overall size in bytes written yet.
 	 */
-	b3_u32          b3Store();
+	b3_u32  b3Store();
 
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
