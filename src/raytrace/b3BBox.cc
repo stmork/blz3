@@ -32,7 +32,7 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_gl_line b3BBox::m_BBoxIndices[12 * 2] =
+const b3_gl_line b3BBox::m_BBoxIndices[12 * 2]
 {
 	{ 0, 1 }
 	,
@@ -49,7 +49,7 @@ const b3_gl_line b3BBox::m_BBoxIndices[12 * 2] =
 	{ 3, 7 }
 };
 
-b3Color  b3BBox::m_GridColor(0.4f, 0.4f, 0.4f, 0.0f);
+b3Color  b3BBox::m_GridColor{ 0.4f, 0.4f, 0.4f, 0.0f };
 b3_bool  b3BBox::m_GridVisible = true;
 
 b3_count b3BBox::m_Visible;
@@ -72,7 +72,7 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox), class_type)
 	b3Matrix::b3Unit(&m_Inverse);
 	m_Type       = 0;
 	b3Vector::b3Init(&m_DimBase, -1.0, -1.0, -1.0);
-	b3Vector::b3Init(&m_DimSize, 2.0, 2.0, 2.0);
+	b3Vector::b3Init(&m_DimSize,  2.0,  2.0,  2.0);
 	m_BoxName[0] = 0;
 	m_BoxURL[0]  = 0;
 
@@ -117,7 +117,7 @@ void b3BBox::b3Write()
 	b3StoreMatrix(&m_Matrix);
 
 	b3StoreString(m_BoxName, B3_BOXSTRINGLEN);
-	b3StoreString(m_BoxURL, B3_BOXSTRINGLEN);
+	b3StoreString(m_BoxURL,  B3_BOXSTRINGLEN);
 }
 
 b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursive)
@@ -209,9 +209,11 @@ void b3BBox::b3AllocVertexMemory(b3RenderContext * context)
 	{
 		glVertexElements->b3SetVertices(m_BBoxVertex);
 		glVertexElements->b3SetCount(8);
+		glVertexElements->b3SetCustom(true);
 	}
 	glGridElements->b3SetGrids((b3_gl_line *)m_BBoxIndices);
 	glGridElements->b3SetCount(12);
+	glGridElements->b3SetCustom(true);
 
 	glPolygonElements->b3SetPolygons(nullptr);
 	glPolygonElements->b3SetCount(0);
