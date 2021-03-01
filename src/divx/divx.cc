@@ -51,7 +51,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker (DivX)\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (command != null)
+	if (command != nullptr)
 	{
 #ifdef BLZ3_USE_DIVX4LINUX
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
@@ -77,10 +77,10 @@ int main(int argc, char * argv[])
 	ENC_PARAM     encoding;
 	ENC_FRAME     frame;
 	ENC_RESULT    result;
-	char     *    bitstream = null;
+	char     *    bitstream = nullptr;
 	int           error;
 #endif
-	b3_u08    *   buffer = null;
+	b3_u08    *   buffer = nullptr;
 	b3_u08    *   dstPtr;
 	b3_pkd_color * srcPtr, color;
 	b3_size       size  = 0;
@@ -143,7 +143,7 @@ int main(int argc, char * argv[])
 #endif
 
 	list.b3Sort();
-	for (entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 	{
 		b3Tx    img;
 		b3_bool isFirst = false;
@@ -209,7 +209,7 @@ int main(int argc, char * argv[])
 
 			srcPtr = img.b3GetTrueColorData();
 			memset(buffer, 0, size * 3);
-			if (srcPtr != null)
+			if (srcPtr != nullptr)
 			{
 				// Recode image
 				dstPtr  = &buffer[size * 3];
@@ -267,12 +267,12 @@ int main(int argc, char * argv[])
 		b3PrintF(B3LOG_NORMAL, "\nDone.\n");
 	}
 
-	if (bitstream != null)
+	if (bitstream != nullptr)
 	{
 		delete [] bitstream;
 	}
 #endif
-	if (buffer != null)
+	if (buffer != nullptr)
 	{
 		delete [] buffer;
 	}

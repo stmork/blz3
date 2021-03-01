@@ -46,11 +46,11 @@ const char * b3BHDParser::m_TokenNames[] =
 b3BHDParser::b3BHDParser(const char * filename)
 {
 	b3PrintF(B3LOG_DEBUG, "Parsing file %s\n", filename);
-	m_Scene = null;
+	m_Scene = nullptr;
 	m_LineNo = 0;
 	m_BHD   = fopen(filename, B3_TREAD);
 	m_Scale = 1;
-	if (m_BHD == null)
+	if (m_BHD == nullptr)
 	{
 		throw b3ParseException("File not found");
 	}
@@ -72,7 +72,7 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 	{
 		m_Line[0] = 0;
 		m_Pos     = 0;
-		if (fgets(m_Line, sizeof(m_Line), m_BHD) != null)
+		if (fgets(m_Line, sizeof(m_Line), m_BHD) != nullptr)
 		{
 			len = strlen(m_Line);
 			while (isspace(m_Line[m_Pos]) && (m_Pos < len))
@@ -525,7 +525,7 @@ void b3BHDParser::b3ParseDoor(b3_f64 scale)
 
 b3Scene * b3BHDParser::b3Parse(const char * filename)
 {
-	b3Scene * scene = null;
+	b3Scene * scene = nullptr;
 
 	try
 	{

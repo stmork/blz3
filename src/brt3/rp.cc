@@ -54,9 +54,9 @@ public:
 		char  line[1024];
 		b3_count count, i;
 
-		m_BBox = null;
+		m_BBox = nullptr;
 		patchfile = fopen(filename, B3_TREAD);
-		if (patchfile != null)
+		if (patchfile != nullptr)
 		{
 			b3PrintF(B3LOG_NORMAL, "Reading %s...\n", filename);
 			if (b3ReadLine(line, sizeof(line), patchfile))
@@ -139,7 +139,7 @@ public:
 
 	~b3Patch()
 	{
-		if (m_BBox != null)
+		if (m_BBox != nullptr)
 		{
 			delete m_BBox;
 		}
@@ -165,10 +165,10 @@ public:
 	{
 		b3PrintF(B3LOG_NORMAL, "Saving Blizzard object %s...\n", filename);
 
-		b3Dir::b3SplitFileName(filename, null, m_BBox->m_BoxName);
+		b3Dir::b3SplitFileName(filename, nullptr, m_BBox->m_BoxName);
 		b3Dir::b3RemoveExt(m_BBox->m_BoxName);
 
-		if (m_BBox != null)
+		if (m_BBox != nullptr)
 		{
 			b3World world;
 			b3File  file(filename, B_WRITE);
@@ -176,7 +176,7 @@ public:
 			world.b3SetFirst(m_BBox);
 			b3BBox::b3Recount(world.b3GetHead());
 			world.b3Write(&file);
-			m_BBox = null;
+			m_BBox = nullptr;
 		}
 	}
 
@@ -184,7 +184,7 @@ private:
 	static b3_bool b3ReadLine(char * line, size_t size, FILE * in)
 	{
 		line[0] = 0;
-		return fgets(line, size, in) != null;
+		return fgets(line, size, in) != nullptr;
 	}
 
 	void b3CreateTeapot()

@@ -46,7 +46,7 @@ static void InfoGIF(char * name)
 	b3PrintF(B3LOG_NORMAL, "FILE: %s\n", name);
 
 	buffer = in.b3ReadBuffer(name, size);
-	if (buffer == null)
+	if (buffer == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "no memory available.\n");
 		return;
@@ -184,7 +184,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III GIF info viewer\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (command != null)
+	if (command != nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s {GIF-Files}\n", command);

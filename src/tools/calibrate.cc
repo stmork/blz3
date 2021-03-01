@@ -187,7 +187,7 @@ int main(int argc, char * argv[])
 	list.b3CreateList(source);
 	list.b3Sort();
 
-	for (entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 	{
 		image.b3LoadImage(entry->b3Name());
 		calibrate->b3Adjust(image);

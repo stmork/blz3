@@ -19,70 +19,13 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**      $Log$
-**      Revision 1.11  2004/11/29 09:58:00  smork
-**      - Changed exit states to correct defines.
-**      - Added switch for disabling VBO in OpenGL renderer.
-**      - Added switches for logging level in OpenGL renderer as in brt3.
-**
-**      Revision 1.10  2004/11/21 14:56:57  sm
-**      - Merged VBO development into main trunk.
-**
-**      Revision 1.9.2.1  2004/11/21 10:17:32  sm
-**      - We have to map the object before getting the pointer. Then the
-**        bounding boxes can be computed correctly to setup the far and
-**        near clipping plane correctly. When mapping correctly the
-**        transformation can occur correctly which plays the ananimation
-**        in a way we expect ;-)
-**        ** That's it **
-**
-**      Revision 1.9  2004/09/24 11:42:13  sm
-**      - First VBO run under Linux.
-**
-**      Revision 1.8  2004/09/23 15:47:04  sm
-**      - Splitted b3RenderContext into own file.
-**      - Added vertex buffer object support which does not
-**        run yet.
-**
-**      Revision 1.7  2004/09/23 09:31:33  sm
-**      - Changed b3Runtime into a real singleton.
-**      - Added functions for OpenGL extension.
-**      - Removed b3PrintF()s from singletons.
-**
-**      Revision 1.6  2004/09/22 18:56:22  sm
-**      - More fail safe procedure relocation.
-**
-**      Revision 1.5  2004/09/22 15:02:59  sm
-**      - Experimenting with OpenGL extensions. Especially the VBOs
-**        are interesting to avoid a data copy everytime when
-**        drawing is needed.
-**
-**      Revision 1.4  2004/08/26 07:08:10  sm
-**      - Higher bitrate in DivX encoder.
-**      - Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
-**
-**      Revision 1.3  2001/08/14 15:37:50  sm
-**      - Made some cleanups when OpenGL isn't available.
-**
-**      Revision 1.2  2001/08/02 15:37:17  sm
-**      - Now we are able to draw Blizzard Scenes with OpenGL.
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Some static data                              **
 **                                                                      **
 *************************************************************************/
 
 #if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
-GLfloat points[] =
+GLfloat points[]
 {
 	-1., -1., -1., // front
 		-1., -1.,  1.,
@@ -115,7 +58,7 @@ GLfloat points[] =
 		1.,  1., -1
 	};
 
-GLfloat normals[] =
+GLfloat normals[]
 {
 	0.0, -1.0,  0.0, // top
 	0.0, -1.0,  0.0,
@@ -148,7 +91,7 @@ GLfloat normals[] =
 	0.0,  0.0, -1.0
 };
 
-GLubyte indices[] =
+GLubyte indices[]
 {
 	0, 1, 2, 3,
 	4, 5, 6, 7,
@@ -158,7 +101,7 @@ GLubyte indices[] =
 	20, 21, 22, 23
 };
 
-GLfloat boxVertices[8 * 3] =
+GLfloat boxVertices[8 * 3]
 {
 	-1.0, -1.0, -1.0,
 		-1.0, -1.0, 1.0,
@@ -170,7 +113,7 @@ GLfloat boxVertices[8 * 3] =
 		1.0, 1.0, -1.0
 	};
 
-GLubyte boxIndices[12 * 2] =
+GLubyte boxIndices[12 * 2]
 {
 	0, 1,
 	1, 2,
@@ -186,17 +129,17 @@ GLubyte boxIndices[12 * 2] =
 	3, 7
 };
 
-GLfloat ambient[] =
+GLfloat ambient[]
 {
 	1.0, 1.0, 1.0, 1.0
 };
 
-GLfloat diffuse[] =
+GLfloat diffuse[]
 {
 	1.0, 1.0, 0.95, 1.0
 };
 
-GLfloat light0[] =
+GLfloat light0[]
 {
 	10.0, 15.0, 20.0, 1.0
 };
@@ -224,11 +167,11 @@ void init_vbo()
 		glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 		has_vbo =
-			(glGenBuffersARB != null) &&
-			(glBindBufferARB != null) &&
-			(glBufferDataARB != null) &&
-			(glMapBufferARB  != null) &&
-			(glUnmapBufferARB != null);
+			(glGenBuffersARB  != nullptr) &&
+			(glBindBufferARB  != nullptr) &&
+			(glBufferDataARB  != nullptr) &&
+			(glMapBufferARB   != nullptr) &&
+			(glUnmapBufferARB != nullptr);
 		if (!has_vbo)
 		{
 			printf("glGenBuffersARB  = %p\n", glGenBuffersARB);

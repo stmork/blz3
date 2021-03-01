@@ -57,7 +57,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker (h.264)\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-20013\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (command != null)
+	if (command != nullptr)
 	{
 #ifdef BLZ3_USE_X264
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
@@ -226,7 +226,7 @@ int main(int argc, char * argv[])
 
 
 	list.b3Sort();
-	for (entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 	{
 		b3Tx    img;
 		int     ino = 1;

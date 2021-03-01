@@ -109,7 +109,7 @@ int main(int argc, char * argv[])
 {
 	b3Tx img;
 	b3_res xSize = 2048, ySize = xSize * 4 / 3;
-	char * imgname = null;
+	char * imgname = nullptr;
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -129,7 +129,7 @@ int main(int argc, char * argv[])
 
 	img.b3AllocTx(xSize, ySize, 24);
 	create(img);
-	if (imgname != null)
+	if (imgname != nullptr)
 	{
 #ifdef HAVE_LIBJPEG
 		img.b3SaveJPEG(imgname);

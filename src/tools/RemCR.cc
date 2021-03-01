@@ -39,7 +39,7 @@ static b3_bool DoRemCR(const char * filename)
 	b3_size  i;
 
 	buffer = (char *)in.b3ReadBuffer(filename, size_in);
-	if (buffer != null)
+	if (buffer != nullptr)
 	{
 		// Remove 0x0d
 		for (i = 0; i < size_in; i++)
@@ -72,7 +72,7 @@ static b3_bool DoRemCR(const char * filename)
 		fprintf(stderr, "Cannot allocate buffer for %s.\n", filename);
 	}
 
-	return (buffer != null);
+	return (buffer != nullptr);
 }
 
 int main(int argc, char * argv[])
