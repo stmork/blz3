@@ -77,7 +77,7 @@ void b3MathTest::test()
 		}
 	}
 
-	for (base = -27; base <= 27; base += 0.125)
+	for (base = -81; base <= 81; base += 0.125)
 	{
 		const double expected = round(cbrt(base) * 10000000);
 		const double actual   = round(b3Math::b3Cbrt(base) * 10000000);
