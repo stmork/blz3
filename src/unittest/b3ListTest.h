@@ -191,6 +191,55 @@ public:
 		CPPUNIT_ASSERT_EQUAL(&c,                        src.First);
 		CPPUNIT_ASSERT_EQUAL(&b,                        src.Last);
 
+		b3_count items = 0;
+		for (const T & item : src)
+		{
+			b3PrintF(B3LOG_NORMAL, "%p\n", &item);
+
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      item.b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       item.b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, item.b3GetClassType());
+
+			items++;
+		}
+		CPPUNIT_ASSERT_EQUAL(src.b3GetCount(), items);
+
+		items = 0;
+		for (auto it = src.begin(); it != src.end(); ++it)
+		{
+			CPPUNIT_ASSERT(it);
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      it->b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       it->b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, it->b3GetClassType());
+
+			items++;
+		}
+		CPPUNIT_ASSERT_EQUAL(src.b3GetCount(), items);
+
+		items = 0;
+		for (auto it = src.rbegin(); it != src.rend(); ++it)
+		{
+			CPPUNIT_ASSERT(it);
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      it->b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       it->b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, it->b3GetClassType());
+
+			items++;
+		}
+		CPPUNIT_ASSERT_EQUAL(src.b3GetCount(), items);
+
+		CPPUNIT_ASSERT(src.begin() != src.end());
+		CPPUNIT_ASSERT(src.rbegin() != src.rend());
+
+		b3Base<b3TestElement>::iterator         first = src.begin();
+		b3Base<b3TestElement>::reverse_iterator last  = src.rbegin();
+
+		b3TestElement * f = first;
+		b3TestElement * l = last;
+
+		CPPUNIT_ASSERT_EQUAL(f, src.First);
+		CPPUNIT_ASSERT_EQUAL(l, src.Last);
+
 		CPPUNIT_ASSERT_NO_THROW(src.b3Sort(sorter));
 		CPPUNIT_ASSERT_EQUAL(&b, src.First);
 		CPPUNIT_ASSERT_EQUAL(&d, src.Last);

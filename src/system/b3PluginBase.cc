@@ -38,11 +38,11 @@ b3LoaderBase::~b3LoaderBase()
 
 void b3LoaderBase::b3Load()
 {
-	b3PathEntry * entry;
-	b3FileList    list;
-	b3FileEntry * file;
+	b3PathEntry *  entry;
+	b3FileList     list;
+	b3FileEntry *  file;
 	b3PluginBase * plugin;
-	b3Path        name;
+	b3Path         name;
 
 	B3_FOR_BASE(&m_SearchPath, entry)
 	{

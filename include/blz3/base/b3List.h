@@ -22,6 +22,8 @@
 
 #define B3_NO_CLASS_CHECK
 
+#include <iterator>
+
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Compare.h"
 
@@ -109,7 +111,7 @@ public:
 	 *
 	 * \return The type part of the class type.
 	 */
-	inline b3_u32 b3GetType()
+	inline b3_u32 b3GetType() const
 	{
 		return ClassType & B3_TYPE_MASK;
 	}
@@ -137,6 +139,7 @@ public:
 
 #define B3_FOR_BASE(b,n)       for((n) = (b)->First;(n) != nullptr;(n) = (n)->Succ)
 #define B3_FOR_BASE_BACK(b,n)  for((n) = (b)->Last;(n)  != nullptr;(n) = (n)->Prev)
+
 #define B3_DELETE_BASE(b,n)    ((b)->b3Free())
 
 /**
@@ -168,6 +171,139 @@ public:
 	T   *   Last;  //!< The last list element.
 
 public:
+	template<class I> struct b3Iterator
+	{
+		using iterator_category = std::bidirectional_iterator_tag;
+		using difference_type   = std::ptrdiff_t;
+		using value_type        = T;
+		using pointer           = T *;
+		using reference         = T &;
+
+		inline b3Iterator(T * item = nullptr) : m_Item(item)
+		{
+		}
+
+		inline operator pointer() const
+		{
+			return m_Item;
+		}
+
+		inline reference operator*() const
+		{
+			return *m_Item;
+		}
+
+		inline pointer operator->() const
+		{
+			return m_Item;
+		}
+
+		inline I operator++(int)
+		{
+			I tmp = *this;
+
+			++(*this);
+			return tmp;
+		}
+
+		inline I operator--(int)
+		{
+			I tmp = *this;
+
+			--(*this);
+			return tmp;
+		}
+
+		inline bool operator==(const I & other) const
+		{
+			return m_Item == other.m_Item;
+		}
+
+		inline bool operator!=(const I & other) const
+		{
+			return m_Item != other.m_Item;
+		}
+
+		inline operator bool() const
+		{
+			return m_Item != nullptr;
+		}
+
+	protected:
+			T *  m_Item    = nullptr;
+	};
+
+	struct b3ForwardIterator : b3Iterator<b3ForwardIterator>
+	{
+		using b3Iterator<b3ForwardIterator>::m_Item;
+
+		inline b3ForwardIterator(T * ptr = nullptr) :
+			b3Iterator<b3ForwardIterator>(ptr)
+		{
+		}
+
+		inline b3ForwardIterator & operator++()
+		{
+			m_Item = m_Item->Succ;
+
+			return *this;
+		}
+
+		inline b3ForwardIterator & operator--()
+		{
+			m_Item = m_Item->Prev;
+
+			return *this;
+		}
+	};
+
+	struct b3BackwardIterator : b3Iterator<b3BackwardIterator>
+	{
+		using b3Iterator<b3BackwardIterator>::m_Item;
+
+		inline b3BackwardIterator(T * ptr = nullptr) :
+			b3Iterator<b3BackwardIterator>(ptr)
+		{
+		}
+
+		inline b3BackwardIterator & operator++()
+		{
+			m_Item = m_Item->Prev;
+
+			return *this;
+		}
+
+		inline b3BackwardIterator & operator--()
+		{
+			m_Item = m_Item->Succ;
+
+			return *this;
+		}
+	};
+
+	inline b3ForwardIterator begin() const
+	{
+		return b3ForwardIterator(First);
+	}
+
+	inline b3ForwardIterator end() const
+	{
+		return b3ForwardIterator();
+	}
+
+	inline b3BackwardIterator rbegin() const
+	{
+		return b3BackwardIterator(Last);
+	}
+
+	inline b3BackwardIterator rend() const
+	{
+		return b3BackwardIterator();
+	}
+
+	using iterator         = b3Iterator<b3ForwardIterator>;
+	using reverse_iterator = b3Iterator<b3BackwardIterator>;
+
 	/**
 	 * This constructor initializes the list with the specified class.
 	 */

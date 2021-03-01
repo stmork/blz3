@@ -69,6 +69,7 @@ public:
 class b3FileList
 {
 	b3Base<b3FileEntry> list;
+
 public:
 	/**
 	 * This constructor initializes this instance.
