@@ -57,9 +57,7 @@ public:
 	/**
 	 * This constructor does simply nothing.
 	 */
-	inline b3PathAbstract()
-	{
-	}
+	inline b3PathAbstract() = default;
 
 	/**
 	 * This constructor initializes the path with the given filename.
@@ -68,8 +66,15 @@ public:
 	 */
 	inline b3PathAbstract(const char * path)
 	{
+		operator=(path);
+	}
+
+	inline b3PathAbstract & operator=(const char * path)
+	{
 		strncpy(m_Path, path, sizeof(m_Path));
 		m_Path[sizeof(m_Path) - 1] = 0;
+
+		return *this;
 	}
 
 	/**

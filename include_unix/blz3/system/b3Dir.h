@@ -55,6 +55,14 @@ public:
 	{
 	}
 
+	/**
+	 * This copy operator copies a C style string into this instance.
+	 *
+	 * @param path The path to copy from.
+	 * @return This instance as reference.
+	 */
+	b3Path & operator=(const char * path);
+
 	void b3Empty();
 	void b3LinkFileName(const char * path, const char * name);
 	void b3SplitFileName(char * path, char * name);

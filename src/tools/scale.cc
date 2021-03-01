@@ -261,7 +261,7 @@ private:
 
 int main(int argc, char * argv[])
 {
-	b3Path      dir;
+	b3Path       dir;
 	const char * title = TITLE;
 
 	switch (argc)

@@ -160,6 +160,14 @@ void b3Dir::b3CloseDir()
 **                                                                      **
 *************************************************************************/
 
+b3Path & b3Path::operator=(const char * path)
+{
+	strncpy(m_Path, path, sizeof(m_Path));
+	m_Path[sizeof(m_Path) - 1] = 0;
+
+	return *this;
+}
+
 void b3Path::b3Empty()
 {
 	m_Path[0] = 0;

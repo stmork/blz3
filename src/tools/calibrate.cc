@@ -173,8 +173,8 @@ int main(int argc, char * argv[])
 {
 	b3Tx         reference, image;
 	b3Calibrate * calibrate;
-	b3Path       source = "/tmp/maui";
-	b3Path       dest   = "/usr/local/maui/postproc2/data";
+	b3Path       source("/tmp/maui");
+	b3Path       dest("/usr/local/maui/postproc2/data");
 	b3Path       file;
 	char         name[32];
 	b3FileList   list;
