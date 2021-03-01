@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <strings.h>
 
 #include "blz3/b3Types.h"
 
