@@ -1,10 +1,10 @@
 # Blizzard III  OpenGL rendering of scenes.
 
 TEMPLATE  = app
-BLZ3_HOME = ../..
+
 include(../common.pri)
 
-target.path = $$BLZ3_LIB
+target.path = $$BLZ3_BIN
 LIBS       += -L$$BLZ3_LIB
 INSTALLS   += target
 

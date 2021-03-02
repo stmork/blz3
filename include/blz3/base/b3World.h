@@ -346,7 +346,7 @@ class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 protected:
 	b3_u32           m_ItemSize;    //!< The stored size of this item in bytes.
 	b3_s32           m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
-	b3Base<b3Item> * m_Heads;      //!< The list heads.
+	b3Base<b3Item> * m_Heads;       //!< The list heads.
 	b3_u32           m_HeadCount;   //!< The number of list heads.
 
 	// Attributes for parsing

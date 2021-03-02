@@ -1,7 +1,6 @@
 # Blizzard III Unix System abstraction library
 
 TEMPLATE = lib
-BLZ3_HOME = ../..
 
 include(../common.pri)
 

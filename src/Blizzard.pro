@@ -2,7 +2,6 @@ TEMPLATE = subdirs
 SUBDIRS  = system_unix system base image raytrace unittest brt3 render
 CONFIG   = ordered
 
-BLZ3_HOME = ..
 include(common.pri)
 
 message("*** Blizzard III Qt version $$VERSION ***")

@@ -1,7 +1,7 @@
 # Blizzard III basic unittests.
 
 TEMPLATE = app
-BLZ3_HOME = ../..
+
 include(../common.pri)
 
 LIBS += -L$$BLZ3_LIB

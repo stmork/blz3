@@ -2,7 +2,6 @@
 
 TEMPLATE  = lib
 
-BLZ3_HOME = ../..
 include(../common.pri)
 
 target.path = $$BLZ3_LIB
