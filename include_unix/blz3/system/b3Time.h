@@ -56,6 +56,7 @@ public:
 	b3Time(const b3Time & orig);
 	b3_f64  b3Now() override;
 	b3_f64  b3GetTime() const override;
+	std::chrono::microseconds  b3GetStdTime() const override;
 
 	/**
 	 * This assignment operator copies the time from another instance.

@@ -10,6 +10,7 @@ TARGET      = b3Base
 INSTALLS   += target
 
 message("*** Blizzard III basic algorithm library $$VERSION ***")
+message("$$BLZ3_LIB")
 
 PRECOMPILED_HEADER = b3BaseInclude.h
 

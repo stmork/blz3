@@ -97,6 +97,14 @@ b3_f64 b3Time::b3GetTime() const
 	return m_TimePoint.tv_sec + (double)m_TimePoint.tv_usec / 1000000.0;
 }
 
+std::chrono::microseconds b3Time::b3GetStdTime() const
+{
+	std::chrono::seconds      s(m_TimePoint.tv_sec);
+	std::chrono::microseconds ms(m_TimePoint.tv_usec);
+
+	return s + ms;
+}
+
 b3Time & b3Time::operator=(const b3Time & orig)
 {
 	m_TimePoint = orig.m_TimePoint;

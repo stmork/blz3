@@ -121,11 +121,30 @@ public:
 	 * This cast operator returns a time point in seconds since 1. January 1970 in seconds. The
 	 * value has mirco second accuracy.
 	 *
+	 * @return The micro seconds since 1. January 1970.
+	 */
+	virtual std::chrono::microseconds  b3GetStdTime() const = 0;
+
+	/**
+	 * This cast operator returns a time point in seconds since 1. January 1970
+	 * in seconds. The value has mirco second accuracy.
+	 *
 	 * @return The seconds since 1. January 1970.
 	 */
 	operator b3_f64() const
 	{
 		return b3GetTime();
+	}
+
+	/**
+	 * This cast operator returns a time point in seconds since 1. January 1970
+	 * in micro seconds.
+	 *
+	 * @return The micro seconds since 1. January 1970.
+	 */
+	operator std::chrono::microseconds() const
+	{
+		return b3GetStdTime();
 	}
 };
 

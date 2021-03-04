@@ -20,6 +20,7 @@ HEADERS += \
 	b3RandomTest.h \
 	b3SkeletonTest.h \
 	b3SplineTest.h \
+	b3TimeTest.h \
 	b3VectorTest.h \
 	b3WorldTest.h
 
@@ -37,6 +38,7 @@ SOURCES += \
 	b3RandomTest.cc \
 	b3SkeletonTest.cc \
 	b3SplineTest.cc \
+	b3TimeTest.cc \
 	b3VectorTest.cc \
 	b3WorldTest.cc \
 	basetest.cc
