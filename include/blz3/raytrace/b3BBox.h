@@ -177,10 +177,10 @@ protected:
 	}
 
 	void    b3GetCount(
-			b3RenderContext * context,
-			b3_count &        vertCount,
-			b3_count &        gridCount,
-			b3_count &        polyCount) override;
+		b3RenderContext * context,
+		b3_count     &    vertCount,
+		b3_count     &    gridCount,
+		b3_count     &    polyCount) override;
 	void    b3AllocVertexMemory(b3RenderContext * context) override;
 	void    b3ComputeVertices() override;
 	void    b3ComputeNormals(b3_bool normalize = true) override;

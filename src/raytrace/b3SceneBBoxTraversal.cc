@@ -327,9 +327,9 @@ void b3Scene::b3UpdateMaterial()
 
 void b3BBox::b3UpdateMaterial()
 {
-	b3Item *  item;
+	b3Item  * item;
 	b3Shape * shape;
-	b3BBox *  bbox;
+	b3BBox  * bbox;
 
 	b3RenderObject::b3UpdateMaterial();
 
@@ -569,7 +569,7 @@ b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
 			return &base;
 		}
 
-		b3BBox *         inc_bbox = (b3BBox *)&item;
+		b3BBox     *     inc_bbox = (b3BBox *)&item;
 		b3Base<b3Item> * result   = inc_bbox->b3FindBBoxHead(bbox);
 		if (result != nullptr)
 		{

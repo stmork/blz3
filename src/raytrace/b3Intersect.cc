@@ -1688,7 +1688,7 @@ b3Shape * b3Scene::b3IsObscured(
 	b3_ray * ray)
 {
 	b3Base<b3Item> * BBoxes;
-	b3Shape    *     ResultShape;
+	b3Shape     *    ResultShape;
 	b3_polar         polar;
 	b3_f64           Result;
 

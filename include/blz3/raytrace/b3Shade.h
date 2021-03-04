@@ -193,9 +193,9 @@ public:
 protected:
 	void    b3ShadeSurface(b3_surface * surface, b3_count depth) override;
 	void    b3ShadeLight(
-			b3Light *       light,
-			b3_light_info * jit,
-			b3_surface *    surface) override;
+		b3Light    *    light,
+		b3_light_info * jit,
+		b3_surface   *  surface) override;
 };
 
 //////////////
@@ -222,9 +222,9 @@ public:
 protected:
 	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
 	void     b3ShadeLight(
-			b3Light *       light,
-			b3_light_info * jit,
-			b3_surface *    surface) override;
+		b3Light    *    light,
+		b3_light_info * jit,
+		b3_surface   *  surface) override;
 };
 
 ///////////////////////
@@ -253,9 +253,9 @@ public:
 protected:
 	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
 	void     b3ShadeLight(
-			b3Light *       light,
-			b3_light_info * jit,
-			b3_surface *    surface) override;
+		b3Light    *    light,
+		b3_light_info * jit,
+		b3_surface   *  surface) override;
 
 private:
 	void     b3ComputeFresnelCoeffs(b3_surface * surface, b3_f32 & refl, b3_f32 & refr);

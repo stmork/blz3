@@ -230,7 +230,7 @@ public:
 		}
 
 	protected:
-			T *  m_Item    = nullptr;
+		T  * m_Item    = nullptr;
 	};
 
 	struct b3ForwardIterator : b3Iterator<b3ForwardIterator>

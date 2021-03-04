@@ -630,10 +630,10 @@ public:
 
 protected:
 	void   b3GetCount(
-			b3RenderContext * context,
-			b3_count &        vertCount,
-			b3_count &        gridCount,
-			b3_count &        polyCount) override;
+		b3RenderContext * context,
+		b3_count     &    vertCount,
+		b3_count     &    gridCount,
+		b3_count     &    polyCount) override;
 	void   b3ComputeVertices() override;
 	void   b3ComputeIndices() override;
 };

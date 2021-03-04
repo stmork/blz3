@@ -226,7 +226,7 @@ void b3BBox::b3FreeVertexMemory()
 		shape->b3FreeVertexMemory();
 	}
 
-	for(b3Item & item : b3GetBBoxHead())
+	for (b3Item & item : b3GetBBoxHead())
 	{
 		b3BBox * bbox = (b3BBox *)&item;
 
@@ -283,7 +283,7 @@ void b3BBox::b3Update()
 	b3UpdateBBox();
 
 	// Update subsequent BBoxes
-	for(b3Item & item : b3GetBBoxHead())
+	for (b3Item & item : b3GetBBoxHead())
 	{
 		b3BBox * bbox = (b3BBox *)&item;
 
@@ -403,7 +403,7 @@ void b3BBox::b3Dump(b3_count level)
 	b3DumpSpace(level);
 	b3PrintF(B3LOG_NORMAL, "Object %s (level %d)\n", m_BoxName, level);
 
-	for(b3Item & bbox : b3GetBBoxHead())
+	for (b3Item & bbox : b3GetBBoxHead())
 	{
 		bbox.b3Dump(level);
 	}
@@ -424,7 +424,7 @@ void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> & array)
 
 b3_bool b3BBox::b3FindBBox(b3Base<b3Item> * base, b3BBox * search)
 {
-	for(b3Item & item : *base)
+	for (b3Item & item : *base)
 	{
 		b3BBox * bbox = (b3BBox *)&item;
 
