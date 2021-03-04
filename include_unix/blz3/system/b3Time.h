@@ -33,8 +33,8 @@ class b3TimeSpan : public b3TimeSpanAbstract
 	struct timeb  m_RealTime;
 
 public:
-	void    b3Start();
-	void    b3Stop();
+	void    b3Start() override;
+	void    b3Stop() override;
 };
 
 /**

@@ -89,9 +89,9 @@ public:
 	void             b3Write() override;
 	void             b3Dump(b3_count level);
 	void             b3SetName(const char * name);
-	void             b3SetupVertexMemory(b3RenderContext * context);
-	void             b3FreeVertexMemory();
-	void             b3Draw(b3RenderContext * context);
+	void             b3SetupVertexMemory(b3RenderContext * context) override;
+	void             b3FreeVertexMemory() override;
+	void             b3Draw(b3RenderContext * context) override;
 	b3_bool          b3Transform(b3_matrix * transformation, b3_bool is_affine, b3_bool force_action = false);
 	b3_bool          b3Inverse(b3_matrix *);
 	b3_bool          b3Reverse(b3_matrix *);
@@ -166,20 +166,24 @@ public:
 	}
 
 protected:
-	inline void b3GetGridColor(b3Color & color)
+	inline void b3GetGridColor(b3Color & color) override
 	{
 		color = m_GridColor;
 	}
 
-	inline b3_render_mode  b3GetRenderMode()
+	inline b3_render_mode  b3GetRenderMode() override
 	{
 		return m_GridVisible ? B3_RENDER_LINE : B3_RENDER_NOTHING;
 	}
 
-	void    b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
-	void    b3AllocVertexMemory(b3RenderContext * context);
-	void    b3ComputeVertices();
-	void    b3ComputeNormals(b3_bool normalize = true);
+	void    b3GetCount(
+			b3RenderContext * context,
+			b3_count &        vertCount,
+			b3_count &        gridCount,
+			b3_count &        polyCount) override;
+	void    b3AllocVertexMemory(b3RenderContext * context) override;
+	void    b3ComputeVertices() override;
+	void    b3ComputeNormals(b3_bool normalize = true) override;
 };
 
 #define BBB_HTML         0

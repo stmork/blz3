@@ -134,8 +134,8 @@ public:
 	 * Method for registering the shapes into the item registry.
 	 */
 	static  void        b3Register();
-	void        b3Write();
-	virtual b3_bool     b3Prepare(b3_preparation_info * prep_info);
+	void                b3Write() override;
+	virtual b3_bool     b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method stores the basic shape values.
@@ -283,12 +283,12 @@ protected:
 	 * @return The needed faces in horizontal direction.
 	 */
 	b3_count        b3GetIndexOverhead(b3_f64 xl, b3_f64 yl);
-	void            b3GetDiffuseColor(b3Color & diffuse);
-	b3_f64          b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular);
-	b3_bool         b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat);
-	b3Tx      *     b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale);
-	b3_bool         b3GetImage(b3Tx * image);
-	b3_render_mode  b3GetRenderMode();
+	void            b3GetDiffuseColor(b3Color & diffuse) override;
+	b3_f64          b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular) override;
+	b3_bool         b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) override;
+	b3Tx      *     b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale) override;
+	b3_bool         b3GetImage(b3Tx * image) override;
+	b3_render_mode  b3GetRenderMode() override;
 
 	/**
 	 * This method computes the quadratic normals of the shape.
@@ -461,7 +461,7 @@ protected:
 	 * @param polar The polar coordinates to check against the stencil list.
 	 * @return True if the polar coordinates are valid.
 	 */
-	b3_bool             b3CheckStencil(b3_polar * polar);
+	b3_bool             b3CheckStencil(b3_polar * polar) override;
 
 protected:
 	B3_ITEM_BASE(b3SimpleShape); //!< This is a base class deserialization constructor.
@@ -625,13 +625,17 @@ public:
 	B3_ITEM_INIT(b3Disk); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3Disk); //!< This constructor handles deserialization.
 
-	virtual void   b3GetStencilBoundInfo(b3_stencil_bound * info);
-	b3_f64 b3Intersect(b3_ray * ray, b3_polar * polar);
+	virtual void   b3GetStencilBoundInfo(b3_stencil_bound * info) override;
+	b3_f64 b3Intersect(b3_ray * ray, b3_polar * polar) override;
 
 protected:
-	void   b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
+	void   b3GetCount(
+			b3RenderContext * context,
+			b3_count &        vertCount,
+			b3_count &        gridCount,
+			b3_count &        polyCount) override;
+	void   b3ComputeVertices() override;
+	void   b3ComputeIndices() override;
 };
 
 /*************************************************************************

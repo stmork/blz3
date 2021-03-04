@@ -92,8 +92,8 @@ public:
 	 * @return True if the file open was successful.
 	 * @throws b3FileException
 	 */
-	b3_bool  b3Open(const char * filename, const b3_access_mode mode);
-	b3_size  b3Read(void * read_buffer, const b3_size size);
+	b3_bool  b3Open(const char * filename, const b3_access_mode mode) override;
+	b3_size  b3Read(void * read_buffer, const b3_size size) override;
 
 	/**
 	 * This method reads the complete content of the specified file into the
@@ -103,12 +103,12 @@ public:
 	 * @return True if the operation was successful.
 	 */
 	b3_bool  b3ReadBuffer(const char * filename);
-	b3_size  b3Write(const void * write_buffer, const b3_size size);
-	b3_bool  b3Flush();
-	b3_size  b3Seek(const b3_offset offset, const b3_seek_type type);
-	b3_size  b3Size();
-	b3_bool  b3Buffer(const b3_size new_cache_size);
-	void     b3Close();
+	b3_size  b3Write(const void * write_buffer, const b3_size size) override;
+	b3_bool  b3Flush() override;
+	b3_size  b3Seek(const b3_offset offset, const b3_seek_type type) override;
+	b3_size  b3Size() override;
+	b3_bool  b3Buffer(const b3_size new_cache_size) override;
+	void     b3Close() override;
 
 private:
 	b3_bool  b3EnsureBufferSize(b3_size new_size);

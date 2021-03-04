@@ -51,7 +51,7 @@ public:
 	 * @param compare The file entry to compare with.
 	 * @return The position indicator.
 	 */
-	int    b3Cmp(const b3FileEntry * compare) const;
+	int    b3Cmp(const b3FileEntry * compare) const override;
 
 	/**
 	 * This method returns the file name of this entry.

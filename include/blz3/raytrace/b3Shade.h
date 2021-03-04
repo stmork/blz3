@@ -191,8 +191,11 @@ public:
 	b3ShaderPhong(b3Scene * scene);
 
 protected:
-	void    b3ShadeSurface(b3_surface * surface, b3_count depth);
-	void    b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void    b3ShadeSurface(b3_surface * surface, b3_count depth) override;
+	void    b3ShadeLight(
+			b3Light *       light,
+			b3_light_info * jit,
+			b3_surface *    surface) override;
 };
 
 //////////////
@@ -214,11 +217,14 @@ public:
 	 */
 	b3ShaderMork(b3Scene * scene);
 
-	void     b3Prepare(b3_preparation_info * prep_info);
+	void     b3Prepare(b3_preparation_info * prep_info) override;
 
 protected:
-	void     b3ShadeSurface(b3_surface * surface, b3_count depth);
-	void     b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
+	void     b3ShadeLight(
+			b3Light *       light,
+			b3_light_info * jit,
+			b3_surface *    surface) override;
 };
 
 ///////////////////////
@@ -242,11 +248,14 @@ public:
 	 */
 	b3ShaderMork2(b3Scene * scene);
 
-	void     b3Prepare(b3_preparation_info * prep_info);
+	void     b3Prepare(b3_preparation_info * prep_info) override;
 
 protected:
-	void     b3ShadeSurface(b3_surface * surface, b3_count depth);
-	void     b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
+	void     b3ShadeLight(
+			b3Light *       light,
+			b3_light_info * jit,
+			b3_surface *    surface) override;
 
 private:
 	void     b3ComputeFresnelCoeffs(b3_surface * surface, b3_f32 & refl, b3_f32 & refr);

@@ -135,7 +135,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color     ARGB,
 		b3_coord     x,
-		b3_coord     y)
+		b3_coord     y) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -166,7 +166,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x,
-		b3_coord y)
+		b3_coord y) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -197,7 +197,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x,
-		b3_coord y)
+		b3_coord y) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -228,7 +228,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x B3_UNUSED,
-		b3_coord y B3_UNUSED)
+		b3_coord y B3_UNUSED) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -246,7 +246,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x B3_UNUSED,
-		b3_coord y B3_UNUSED)
+		b3_coord y B3_UNUSED) override
 	{
 		b3_pkd_color r, g, b;
 

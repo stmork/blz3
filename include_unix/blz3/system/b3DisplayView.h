@@ -117,11 +117,11 @@ public:
 	 */
 	~b3DisplayView();
 
-	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel);
-	void                b3PutRow(const b3Row * row);
-	void                b3PutTx(b3Tx * tx);
-	b3_bool             b3IsCancelled(const b3_coord x, const b3_coord y);
-	void                b3Wait();
+	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel) override;
+	void                b3PutRow(const b3Row * row) override;
+	void                b3PutTx(b3Tx * tx) override;
+	b3_bool             b3IsCancelled(const b3_coord x, const b3_coord y) override;
+	void                b3Wait() override;
 
 private:
 #ifdef HAVE_LIBX11

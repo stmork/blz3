@@ -35,7 +35,7 @@ public:
 	 * This constructor initializes the error code interpreter.
 	 */
 	b3Error();
-	char * b3GetErrorText();
+	char * b3GetErrorText() override;
 
 	/**
 	 * This method returns the error code.
@@ -48,7 +48,7 @@ protected:
 	/**
 	 * This method computes the error message from an error code.
 	 */
-	void  b3RetrieveError();
+	void  b3RetrieveError() override;
 };
 
 #endif

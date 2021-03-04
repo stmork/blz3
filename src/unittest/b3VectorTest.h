@@ -40,12 +40,12 @@ template<typename T, b3_loop dim> class b3VectorTest : public CppUnit::TestFixtu
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s<%d, %d>\n", __FILE__, sizeof(T), dim);
 	}
 
-	void tearDown()
+	void tearDown() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}

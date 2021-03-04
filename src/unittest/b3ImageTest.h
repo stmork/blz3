@@ -50,7 +50,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		b3Color       row[TEST_IMG_XMAX];
 		b3_pkd_color * tRow;
@@ -86,7 +86,7 @@ public:
 		}
 	}
 
-	void tearDown()
+	void tearDown() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}

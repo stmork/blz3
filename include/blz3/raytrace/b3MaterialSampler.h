@@ -65,8 +65,8 @@ public:
 	}
 
 protected:
-	b3SampleInfo * b3SampleInit(const b3_count CPUs);
-	void          b3SampleTask(const b3SampleInfo * info);
+	b3SampleInfo * b3SampleInit(const b3_count CPUs) override;
+	void          b3SampleTask(const b3SampleInfo * info) override;
 };
 
 #endif

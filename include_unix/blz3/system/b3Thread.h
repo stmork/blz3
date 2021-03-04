@@ -104,12 +104,12 @@ public:
 		b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
 	}
 
-	inline b3_bool  b3Lock()
+	inline b3_bool  b3Lock() override
 	{
 		return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 	}
 
-	inline b3_bool  b3Unlock()
+	inline b3_bool  b3Unlock() override
 	{
 		return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
 	}
@@ -128,8 +128,8 @@ class b3IPCMutex : public b3MutexAbstract
 public:
 	b3IPCMutex();
 	virtual ~b3IPCMutex();
-	b3_bool  b3Lock();
-	b3_bool  b3Unlock();
+	b3_bool  b3Lock() override;
+	b3_bool  b3Unlock() override;
 };
 
 /**
@@ -152,8 +152,8 @@ public:
 	 */
 	virtual ~b3Event();
 
-	void     b3Pulse();
-	b3_bool  b3Wait();
+	void     b3Pulse() override;
+	b3_bool  b3Wait() override;
 };
 
 /**
@@ -187,12 +187,12 @@ public:
 	 */
 	virtual ~b3Thread();
 
-	void     b3Name(const char * taskname = nullptr);
-	b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0);
-	b3_bool  b3IsRunning();
-	b3_bool  b3Stop();
-	b3_u32   b3Wait();
-	void     b3AddTimeSpan(b3TimeSpan * span);
+	void     b3Name(const char * taskname = nullptr) override;
+	b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0) override;
+	b3_bool  b3IsRunning() override;
+	b3_bool  b3Stop() override;
+	b3_u32   b3Wait() override;
+	void     b3AddTimeSpan(b3TimeSpan * span) override;
 
 private:
 	static void * b3Trampoline(void * thread);

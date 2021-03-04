@@ -63,19 +63,19 @@ public:
 	 */
 	b3Path & operator=(const char * path);
 
-	void b3Empty();
-	void b3LinkFileName(const char * path, const char * name);
-	void b3SplitFileName(char * path, char * name);
-	void b3RemoveExt(const char * filename);
-	void b3RemoveExt();
-	void b3ParentName(const char * filename);
-	void b3ParentName();
-	void b3ExtractExt(const char * filename);
-	void b3ExtractExt();
-	void b3Correct(const char * path);
-	void b3Correct();
-	void b3Format(const char * format, ...);
-	void b3Append(const char * ext);
+	void b3Empty() override;
+	void b3LinkFileName(const char * path, const char * name) override;
+	void b3SplitFileName(char * path, char * name) override;
+	void b3RemoveExt(const char * filename) override;
+	void b3RemoveExt() override;
+	void b3ParentName(const char * filename) override;
+	void b3ParentName() override;
+	void b3ExtractExt(const char * filename) override;
+	void b3ExtractExt() override;
+	void b3Correct(const char * path) override;
+	void b3Correct() override;
+	void b3Format(const char * format, ...) override;
+	void b3Append(const char * ext) override;
 
 	/**
 	 * This method concatenates a directory name and a filename and puts
@@ -197,9 +197,9 @@ public:
 	 */
 	~b3Dir();
 
-	b3_bool       b3OpenDir(const char * dirname);
-	b3_path_type  b3DirNext(char * direntry);
-	void          b3CloseDir();
+	b3_bool       b3OpenDir(const char * dirname) override;
+	b3_path_type  b3DirNext(char * direntry) override;
+	void          b3CloseDir() override;
 
 	/**
 	 * This method changes the current working directory to the specified one.

@@ -362,7 +362,7 @@ public:
 	}
 
 private:
-	b3SampleInfo * b3SampleInit(const b3_count CPUs)
+	b3SampleInfo * b3SampleInit(const b3_count CPUs) override
 	{
 		b3SampleInfo * info = new b3SampleInfo[CPUs];
 		b3_loop       i;
@@ -385,7 +385,7 @@ private:
 		return info;
 	}
 
-	void b3SampleTask(const b3SampleInfo * info)
+	void b3SampleTask(const b3SampleInfo * info) override
 	{
 		b3Material    *   material;
 		b3_ray            ray;

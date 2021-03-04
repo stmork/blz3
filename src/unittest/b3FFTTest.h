@@ -40,8 +40,8 @@ class b3FFTTest : public CppUnit::TestFixture, protected b3FilterInfo
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp();
-	void tearDown();
+	void setUp() override;
+	void tearDown() override;
 	void testFFT();
 	void testSample();
 	void testOceanWave();

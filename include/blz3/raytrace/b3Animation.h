@@ -95,7 +95,7 @@ public:
 	B3_ITEM_INIT(b3AnimControl); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3AnimControl); //!< This constructor handles deserialization.
 
-	void b3Write();
+	void b3Write() override;
 
 	/**
 	 * This method initializes a nurbs class for animation.
@@ -135,7 +135,7 @@ public:
 	B3_ITEM_INIT(b3AnimElement); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3AnimElement); //!< This constructor handles deserialization.
 
-	void b3Write();
+	void b3Write() override;
 
 public:
 	char      *     b3GetName();

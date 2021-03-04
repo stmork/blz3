@@ -205,9 +205,9 @@ public:
 	B3_ITEM_INIT(b3CondRectangle); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondRectangle); //!< This constructor handles deserialization.
 
-	void    b3Write();
-	void    b3ComputeBound(b3_stencil_limit * limit);
-	b3_bool b3CheckStencil(b3_polar * polar);
+	void    b3Write() override;
+	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	b3_bool b3CheckStencil(b3_polar * polar) override;
 };
 
 #define RCB_ACTIVE  0

@@ -86,7 +86,7 @@ public:
 	 */
 	static         void    b3Register();
 
-	virtual        b3_bool b3Prepare(b3_preparation_info * info B3_UNUSED)
+	virtual        b3_bool b3Prepare(b3_preparation_info * info B3_UNUSED) override
 	{
 		return true;
 	}

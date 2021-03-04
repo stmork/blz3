@@ -813,7 +813,7 @@ public:
 	/**
 	 * This method write recursively the content of this instance.
 	 */
-	void    b3Write();
+	void    b3Write() override;
 
 protected:
 	/**
