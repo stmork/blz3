@@ -1,6 +1,7 @@
 # Blizzard III Basic algorithm library
 
 TEMPLATE  = lib
+CONFIG   += precompile_header
 
 include(../common.pri)
 
@@ -9,6 +10,8 @@ TARGET      = b3Base
 INSTALLS   += target
 
 message("*** Blizzard III basic algorithm library $$VERSION ***")
+
+PRECOMPILED_HEADER = b3BaseInclude.h
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Array.h \
@@ -26,7 +29,6 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3FileList.h \
 	$$BLZ3_INCLUDE/blz3/base/b3FileMem.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Filter.h \
-	$$BLZ3_INCLUDE/blz3/base/b3Hash.h \
 	$$BLZ3_INCLUDE/blz3/base/b3List.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Math.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Matrix.h \
@@ -46,12 +48,10 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Water.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Wood.h \
 	$$BLZ3_INCLUDE/blz3/base/b3World.h \
-	b3BaseInclude.h \
 	b3ItemRegister.h
 
 SOURCES += \
 	b3Aux.cc \
-	b3BaseInclude.cc \
 	b3Clouds.cc \
 	b3Color.cc \
 	b3Cubic.cc \

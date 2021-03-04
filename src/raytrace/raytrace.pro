@@ -1,6 +1,7 @@
 # Blizzard III Base library
 
 TEMPLATE  = lib
+CONFIG   += precompile_header
 
 include(../common.pri)
 
@@ -11,32 +12,33 @@ INSTALLS   += target
 
 message("*** Blizzard III central raytracing library $$VERSION ***")
 
+PRECOMPILED_HEADER = b3RaytraceInclude.h
+
 HEADERS += \
-	../../include/blz3/raytrace/b3Activation.h \
-	../../include/blz3/raytrace/b3Animation.h \
-	../../include/blz3/raytrace/b3BBox.h \
-	../../include/blz3/raytrace/b3Base.h \
-	../../include/blz3/raytrace/b3BaseTrans.h \
-	../../include/blz3/raytrace/b3Bump.h \
-	../../include/blz3/raytrace/b3BumpSampler.h \
-	../../include/blz3/raytrace/b3CameraProjection.h \
-	../../include/blz3/raytrace/b3Condition.h \
-	../../include/blz3/raytrace/b3Factory.h \
-	../../include/blz3/raytrace/b3Light.h \
-	../../include/blz3/raytrace/b3Material.h \
-	../../include/blz3/raytrace/b3MaterialSampler.h \
-	../../include/blz3/raytrace/b3PickInfo.h \
-	../../include/blz3/raytrace/b3PrepareInfo.h \
-	../../include/blz3/raytrace/b3Raytrace.h \
-	../../include/blz3/raytrace/b3RenderLight.h \
-	../../include/blz3/raytrace/b3RenderView.h \
-	../../include/blz3/raytrace/b3Scaling.h \
-	../../include/blz3/raytrace/b3Scene.h \
-	../../include/blz3/raytrace/b3Shade.h \
-	../../include/blz3/raytrace/b3Shape.h \
-	../../include/blz3/raytrace/b3ShapeRenderContext.h \
-	../../include/blz3/raytrace/b3Special.h \
-	b3RaytraceInclude.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Activation.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Animation.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3BBox.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Base.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3BaseTrans.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Bump.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3BumpSampler.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3CameraProjection.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Condition.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Factory.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Light.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Material.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3MaterialSampler.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3PickInfo.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3PrepareInfo.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Raytrace.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3RenderLight.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3RenderView.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Scaling.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Scene.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Shade.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Shape.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3ShapeRenderContext.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3Special.h \
 	b3ReadCOB.h \
 	b3ReadTGF.h
 
@@ -74,7 +76,6 @@ SOURCES += \
 	b3PrepareInfo.cc \
 	b3RayRow.cc \
 	b3Raytrace.cc \
-	b3RaytraceInclude.cc \
 	b3ReadCOB.cc \
 	b3ReadTGF.cc \
 	b3RenderLight.cc \

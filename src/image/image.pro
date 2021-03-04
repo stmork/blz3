@@ -1,7 +1,8 @@
 # Blizzard III Image processing library
 
-CONFIG   += link_pkgconfig
 TEMPLATE  = lib
+CONFIG   += link_pkgconfig
+CONFIG   += precompile_header
 
 include(../common.pri)
 
@@ -13,13 +14,14 @@ INSTALLS   += target
 
 message("*** Blizzard III image processing library $$VERSION ***")
 
+PRECOMPILED_HEADER = b3TxInclude.h
+
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/image/b3Sampler.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Tx.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxMeasure.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxPool.h \
 	b3TxIFF.h \
-	b3TxInclude.h \
 	b3TxSaveInfo.h \
 	b3TxTIFF.h
 
@@ -36,7 +38,6 @@ SOURCES += \
 	b3TxIFF.cc \
 	b3TxIMG.cc \
 	b3TxImage.cc \
-	b3TxInclude.cc \
 	b3TxJPG.cc \
 	b3TxLoadImage.cc \
 	b3TxLoadTIFF.cc \
