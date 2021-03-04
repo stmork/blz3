@@ -81,7 +81,7 @@ b3Time::b3Time()
 	b3Now();
 }
 
-b3Time::b3Time(b3Time & orig)
+b3Time::b3Time(const b3Time & orig)
 {
 	m_TimePoint = orig.m_TimePoint;
 }
@@ -89,12 +89,18 @@ b3Time::b3Time(b3Time & orig)
 b3_f64 b3Time::b3Now()
 {
 	gettimeofday(&m_TimePoint, 0);
-	return b3GetTime();
+	return *this;
 }
 
-b3_f64 b3Time::b3GetTime()
+b3_f64 b3Time::b3GetTime() const
 {
 	return m_TimePoint.tv_sec + (double)m_TimePoint.tv_usec / 1000000.0;
+}
+
+b3Time & b3Time::operator=(const b3Time & orig)
+{
+	m_TimePoint = orig.m_TimePoint;
+	return *this;
 }
 
 b3Time & b3Time::operator=(b3Time & orig)

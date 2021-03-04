@@ -87,10 +87,10 @@ static void b3DisplayFunc()
 
 static void b3PlayAnimation()
 {
-	b3Scene   *  scene;
+	b3Scene   *   scene;
 	b3Animation * animation;
 
-	scene = (b3Scene *)world->b3GetFirst();
+	scene     = (b3Scene *)world->b3GetFirst();
 	animation = scene->b3GetAnimation();
 	if (animation == nullptr)
 	{
@@ -348,10 +348,9 @@ int main(int argc, char * argv[])
 
 	try
 	{
-		b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
+		b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
 		b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
-		b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
 
 		b3Scene::m_TexturePool.b3AddPath(textures);
 		b3Scene::m_TexturePool.b3AddPath(pictures);

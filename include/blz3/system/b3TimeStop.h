@@ -24,18 +24,17 @@
 
 class B3_PLUGIN b3TimeStop : protected b3Time
 {
-	b3_f64        m_Start;
+	const b3_f64        m_Start;
 	const b3_log_level  m_Level;
 	const char     *    m_Title;
 
 public:
 	inline b3TimeStop(const char * title, const b3_log_level level = B3LOG_FULL)
-		: m_Level(level)
+		: m_Start(b3Now()), m_Level(level)
 	{
 		B3_ASSERT(title != null);
 
 		m_Title = title;
-		m_Start = b3Now();
 
 		b3PrintF(m_Level, "TIME START <%s>-----\n", m_Title);
 	}

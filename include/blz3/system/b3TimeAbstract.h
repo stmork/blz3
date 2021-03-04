@@ -20,6 +20,8 @@
 #ifndef B3_SYSTEM_TIMEABSTRACT_H
 #define B3_SYSTEM_TIMEABSTRACT_H
 
+#include <chrono>
+
 #include "blz3/system/b3Log.h"
 
 #define B3_MAX_TIME_SLICE 100
@@ -113,7 +115,7 @@ public:
 	 *
 	 * @return The seconds since 1. January 1970.
 	 */
-	virtual b3_f64  b3GetTime() = 0;
+	virtual b3_f64  b3GetTime() const = 0;
 
 	/**
 	 * This cast operator returns a time point in seconds since 1. January 1970 in seconds. The
@@ -121,7 +123,7 @@ public:
 	 *
 	 * @return The seconds since 1. January 1970.
 	 */
-	operator b3_f64()
+	operator b3_f64() const
 	{
 		return b3GetTime();
 	}

@@ -53,9 +53,14 @@ public:
 	/**
 	 * This copy constructor copies the time from another instance.
 	 */
-	b3Time(b3Time & orig);
-	b3_f64  b3Now();
-	b3_f64  b3GetTime();
+	b3Time(const b3Time & orig);
+	b3_f64  b3Now() override;
+	b3_f64  b3GetTime() const override;
+
+	/**
+	 * This assignment operator copies the time from another instance.
+	 */
+	b3Time & operator=(const b3Time & orig);
 
 	/**
 	 * This assignment operator copies the time from another instance.
