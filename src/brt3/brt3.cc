@@ -1,15 +1,11 @@
 /*
 **
 **	$Filename:	brt3.cc $
-**	$Release:	Dortmund 2001, 2002, 2003 $
-**	$Revision$
-**	$Date$
-**	$Author$
-**	$Developer:	Steffen A. Mork $
+**	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
+**      (C) Copyright 2001 - 2021  Steffen A. Mork
 **          All Rights Reserved
 **
 **

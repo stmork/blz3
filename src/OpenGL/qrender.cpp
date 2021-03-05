@@ -1,0 +1,32 @@
+/*
+**
+**	$Filename:	brt3.cc $
+**	$Release:	Dortmund 2001 - 2021 $
+**
+**	Blizzard III - The new Blizzard III raytracer
+**
+**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
+#include "mainwindow.h"
+
+#include <QApplication>
+
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
+
+int main(int argc, char *argv[])
+{
+	QApplication app(argc, argv);
+	MainWindow   w;
+
+	w.show();
+	return app.exec();
+}

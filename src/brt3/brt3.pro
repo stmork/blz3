@@ -12,4 +12,4 @@ message("*** Blizzard III console raytracer $$VERSION ***")
 
 SOURCES += brt3.cc
 
-LIBS += -lb3System -lb3SystemUnix -lb3Image -lb3Base -lb3Raytrace -lcppunit -ljpeg -ltiff -lGLU
+LIBS += -lb3System -lb3SystemUnix -lb3Image -lb3Base -lb3Raytrace -ljpeg -ltiff -lGLU

@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
-SUBDIRS  = system_unix system base image raytrace unittest brt3 render
+SUBDIRS  = system_unix system base image raytrace unittest brt3 render qrender
 CONFIG   = ordered
 
 include(common.pri)
@@ -14,6 +14,7 @@ raytrace.file    = raytrace/raytrace.pro
 unittest.file    = unittest/unittest.pro
 brt3.file        = brt3/brt3.pro
 render.file      = OpenGL/render.pro
+qrender.file     = OpenGL/qrender.pro
 
 system.depends   = system_unix
 image.depends    = system
@@ -22,6 +23,7 @@ raytrace.depends = system base image
 unittest.depends = system base image
 brt3.depends     = raytrace
 render.depends   = raytrace
+qrender.depends  = raytrace
 
 QMAKE_EXTRA_TARGETS += cppcheck
 
