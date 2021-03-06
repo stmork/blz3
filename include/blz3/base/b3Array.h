@@ -43,7 +43,7 @@ typedef b3Exception<b3_array_error, 0x415252> b3ArrayException;
 template <class T> class B3_PLUGIN b3Array
 {
 	static const b3_count B3_ARRAY_DEFAULT_INCREMENT = 128;
-	static const b3_count B3_ARRAY_INITIAL           =  10;
+	static const b3_count B3_ARRAY_INITIAL           =  16;
 
 	std::vector<T> elements;
 

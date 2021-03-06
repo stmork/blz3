@@ -12,8 +12,9 @@ BLZ3_INCLUDE = $$BLZ3_HOME/include
 BLZ3_LIB     = $$BLZ3_HOME/lib
 BLZ3_BIN     = $$BLZ3_HOME/bin
 
-
-QMAKE_CXXFLAGS += -Wsuggest-override
+QMAKE_CXXFLAGS_DEBUG   += -Wsuggest-override
+QMAKE_CXXFLAGS_RELEASE  = $$replace(QMAKE_CXXFLAGS_RELEASE,"-O2","-O3")
+QMAKE_CXXFLAGS_RELEASE += -Ofast
 
 unix
 {

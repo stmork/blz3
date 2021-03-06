@@ -1,6 +1,6 @@
 # Blizzard III Unix System abstraction library
 
-TEMPLATE = lib
+TEMPLATE    = lib
 
 include(../common.pri)
 

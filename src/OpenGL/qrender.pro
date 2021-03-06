@@ -1,4 +1,4 @@
-QT       += core gui widgets
+QT         += core gui widgets
 
 include(../common.pri)
 
@@ -18,4 +18,4 @@ HEADERS += \
 FORMS += \
 	mainwindow.ui
 
-LIBS    += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace -ljpeg -ltiff -lGLU
+LIBS  += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace -ljpeg -ltiff -lGLU

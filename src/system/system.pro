@@ -1,6 +1,6 @@
 # Blizzard III System library
 
-TEMPLATE  = lib
+TEMPLATE    = lib
 
 include(../common.pri)
 
