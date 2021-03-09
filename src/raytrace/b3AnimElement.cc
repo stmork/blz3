@@ -338,21 +338,15 @@ void b3AnimElement::b3ComputeTransformationMatrix(
 
 void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, b3_bool recurse)
 {
-	b3BBox * bbox;
-	b3Shape * shape;
-	b3Item * item;
-
-	B3_FOR_BASE(b3GetShapeHead(), item)
+	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
-		shape = (b3Shape *)item;
 		shape->b3Animate(animate);
 	}
 
 	if (recurse)
 	{
-		B3_FOR_BASE(b3GetBBoxHead(), item)
+		B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 		{
-			bbox = (b3BBox *)item;
 			bbox->b3Animate(animate, recurse);
 		}
 	}
@@ -360,12 +354,8 @@ void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, b3_bool recurse
 
 void b3Scene::b3Animate(b3Activation::b3_anim_activation animate)
 {
-	b3BBox * bbox;
-	b3Item * item;
-
-	B3_FOR_BASE(b3GetBBoxHead(), item)
+	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
-		bbox = (b3BBox *)item;
 		bbox->b3Animate(animate, true);
 	}
 }

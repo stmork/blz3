@@ -154,32 +154,24 @@ void b3Shape::b3StoreShape()
 
 b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3Item   *   item;
-	b3Condition * cond;
-	b3Bump   *   bump;
-	b3Material * material;
-
-	B3_FOR_BASE(b3GetConditionHead(), item)
+	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
-		cond = (b3Condition *)item;
 		if (!cond->b3Prepare(prep_info))
 		{
 			return false;
 		}
 	}
 
-	B3_FOR_BASE(b3GetBumpHead(), item)
+	B3_FOR_TYPED_BASE(b3Bump, b3GetBumpHead(), bump)
 	{
-		bump = (b3Bump *)item;
 		if (!bump->b3Prepare(prep_info))
 		{
 			return false;
 		}
 	}
 
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (!material->b3Prepare(prep_info))
 		{
 			return false;
@@ -191,16 +183,13 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 
 void b3Shape::b3BumpNormal(b3_ray * ray)
 {
-	b3Item * item;
-	b3Bump * bump;
 	b3_f64   denom;
 	b3_bool  deriv_computed = false;
 	b3_bool  deriv_ok       = false;
 
 	b3Normal(ray);
-	B3_FOR_BASE(b3GetBumpHead(), item)
+	B3_FOR_TYPED_BASE(b3Bump, b3GetBumpHead(), bump)
 	{
-		bump = (b3Bump *)item;
 		if (bump->b3NeedDeriv())
 		{
 			if (!deriv_computed)
@@ -239,12 +228,8 @@ void b3Shape::b3SetupGrid(b3PickInfo * info B3_UNUSED)
 
 b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
 {
-	b3Item   *  item;
-	b3Material * material;
-
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (material->b3GetSurfaceValues(surface))
 		{
 			return material;
@@ -307,15 +292,11 @@ b3SimpleShape::b3SimpleShape(b3_u32 * src) : b3Shape(src)
 
 b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar)
 {
-	b3Item   *   item;
-	b3Condition * cond;
 	b3_bool      result = true;
 
-	B3_FOR_BASE(b3GetConditionHead(), item)
+	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
-		cond   = (b3Condition *)item;
-		result = cond->b3Conditionate(
-				result, cond->b3CheckStencil(polar));
+		result = cond->b3Conditionate(result, cond->b3CheckStencil(polar));
 	}
 	return result;
 }

@@ -1583,8 +1583,6 @@ b3_bool b3BBox::b3Intersect(b3_ray * ray, b3_bool check_visibility)
 
 b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 {
-	b3Item       *      item;
-	b3CSGShape     *    shape;
 	b3_line64           lines[B3_MAX_CSG_SHAPES_PER_BBOX]; // This is a hack! To be fixed!
 	b3_shape_intervals  local;
 	b3_bbox_intervals   intervals[2];
@@ -1594,11 +1592,10 @@ b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 
 	intervals[0].m_Count = 0;
 	intervals[1].m_Count = 0;
-	B3_FOR_BASE(b3GetShapeHead(), item)
+	B3_FOR_TYPED_BASE(b3CSGShape, b3GetShapeHead(), shape)
 	{
 		result    = &intervals[index];
 		index    ^= 1;
-		shape     = (b3CSGShape *)item;
 		shape->b3Intersect(ray, &local, &lines[t++]);
 		shape->b3Operate(&local, &intervals[index], result);
 	}
@@ -1608,8 +1605,9 @@ b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 	{
 		if ((point->m_Q >= b3Scene::epsilon) && (point->m_Q <= ray->Q))
 		{
+			b3CSGShape * shape  = point->m_Shape;
+
 			ray->Q = point->m_Q;
-			shape  = point->m_Shape;
 			shape->b3InverseMap(ray, point);
 			return shape;
 		}
@@ -1793,17 +1791,14 @@ void b3Scene::b3CollectBBoxes(
 	b3Array<b3BBox *> * array,
 	b3_f64             max)
 {
-	b3Item * item;
-	b3BBox * bbox;
 	b3_ray  ray;
 
 	array->b3Clear();
 	ray.pos = line->pos;
 	ray.dir = line->dir;
 	ray.Q   = max;
-	B3_FOR_BASE(b3GetBBoxHead(), item)
+	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
-		bbox = (b3BBox *)item;
 		bbox->b3CollectBBoxes(&ray, array);
 	}
 }
@@ -1848,13 +1843,9 @@ void b3Scene::b3CollectBBoxes(
 	b3_vector     *     upper,
 	b3Array<b3BBox *> * array)
 {
-	b3Item * item;
-	b3BBox * bbox;
-
 	array->b3Clear();
-	B3_FOR_BASE(b3GetBBoxHead(), item)
+	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
-		bbox = (b3BBox *)item;
 		bbox->b3CollectBBoxes(lower, upper, array);
 	}
 }

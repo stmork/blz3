@@ -204,8 +204,6 @@ b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons()
 
 void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
 {
-	b3Item      *     item;
-	b3Condition   *   cond;
 	b3_stencil_bound  info;
 
 	// Get outer limits
@@ -216,9 +214,8 @@ void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
 	limit->y2 = info.yInfo.max;
 
 	// Do any stencil make the limits closer?
-	B3_FOR_BASE(b3GetConditionHead(), item)
+	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
-		cond = (b3Condition *)item;
 		cond->b3ComputeBound(limit);
 	}
 }
@@ -231,16 +228,13 @@ void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
 
 void b3Shape::b3GetDiffuseColor(b3Color & color)
 {
-	b3Item   *   item;
-	b3Material * material;
 	b3_ray       ray;
 	b3_surface   surface;
 
 	color.b3Init(0.1f, 0.5f, 1.0f, 0.0f);
 	surface.m_Incoming = &ray;
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (material->b3GetSurfaceValues(&surface))
 		{
 			color = surface.m_Diffuse;
@@ -254,8 +248,6 @@ b3_f64 b3Shape::b3GetColors(
 	b3Color & diffuse,
 	b3Color & specular)
 {
-	b3Item   *   item;
-	b3Material * material;
 	b3_ray       ray;
 	b3_surface   surface;
 
@@ -269,9 +261,8 @@ b3_f64 b3Shape::b3GetColors(
 	surface.m_Incoming = &ray;
 	ray.Q = 1;
 	b3Vector::b3Init(&surface.m_Incoming->normal, 0, 0, 1);
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (material->b3GetSurfaceValues(&surface))
 		{
 			ambient  = surface.m_Ambient;

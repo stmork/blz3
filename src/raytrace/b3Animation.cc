@@ -100,19 +100,15 @@ b3AnimElement * b3Animation::b3FindSameTrack(b3AnimElement * Anim)
 
 void b3Animation::b3RecomputeCenter(
 	b3AnimElement * Element,
-	b3_vector   *  center,
-	b3_f64         t)
+	b3_vector   *   center,
+	b3_f64          t)
 {
-	b3AnimElement * Anim;
-	b3Item    *    item;
-	b3_u32         flagmask = ANIMFLAGF_ACTIVE | ANIMFLAGF_CENTER;
-	b3_f64         tClipped;
+	b3_u32  flagmask = ANIMFLAGF_ACTIVE | ANIMFLAGF_CENTER;
+	b3_f64  tClipped;
 
 	b3Vector::b3Init(center);
-	B3_FOR_BASE(b3GetAnimElementHead(), item)
+	B3_FOR_TYPED_BASE(b3AnimElement, b3GetAnimElementHead(), Anim)
 	{
-		Anim = (b3AnimElement *)item;
-
 		// the element to reset
 		if (Anim == Element)
 		{
@@ -130,8 +126,6 @@ void b3Animation::b3RecomputeCenter(
 
 void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 {
-	b3AnimElement * Anim;
-	b3Item    *    item;
 	b3_u32         flagmask = ANIMFLAGF_ACTIVE | ANIMFLAGF_CENTER;
 	b3_f64         t;
 	b3_matrix      resetMatrix;
@@ -140,11 +134,9 @@ void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 	m_AnimCenter.y = 0;
 	m_AnimCenter.z = 0;
 
-	B3_FOR_BASE(b3GetAnimElementHead(), item)
-
+	B3_FOR_TYPED_BASE(b3AnimElement, b3GetAnimElementHead(), Anim)
 	{
 		// the element to reset
-		Anim = (b3AnimElement *)item;
 		Anim->m_Center = m_AnimCenter;
 		if (Anim == Element)
 		{
@@ -270,9 +262,8 @@ void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 	}
 
 	// now: Animate the elements
-	B3_FOR_BASE(b3GetAnimElementHead(), item)
+	B3_FOR_TYPED_BASE(b3AnimElement, b3GetAnimElementHead(), Anim)
 	{
-		Anim = (b3AnimElement *)item;
 		Anim->m_Center = m_AnimCenter;
 		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{

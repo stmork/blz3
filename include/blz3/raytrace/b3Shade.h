@@ -159,12 +159,8 @@ protected:
 	 */
 	inline void b3Illuminate(b3_surface * surface)
 	{
-		b3Item   *   item;
-		b3Light   *  light;
-
-		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
+		B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
 		{
-			light = (b3Light *)item;
 			if (light->b3IsActive())
 			{
 				light->b3Illuminate(this, surface);

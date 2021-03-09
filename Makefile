@@ -35,6 +35,7 @@ config:	configure
 	./configure BLZ3_DOC=$(PWD)/doc --prefix=$(PWD)
 
 distclean:	clean
+	+make -C src $@
 	bin/clobber.sh $(PWD)
 
 dist:	configure

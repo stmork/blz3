@@ -823,6 +823,39 @@ public:
 		src->First = nullptr;
 		src->Last  = nullptr;
 	}
+
+	/**
+	 * This template function finds the first element in the doubly linked
+	 * list matching the given class type. The found element is casted to
+	 * the given template parameter.
+	 *
+	 * @param class_type The class type to compare to.
+	 * @return The found element or \c nullptr if no one was found.
+	 */
+	inline T * b3Find(const b3_u32 class_type)
+	{
+		for (T * item = First; item != nullptr ; item = item->Succ)
+		{
+			if (item->b3GetClassType() == class_type)
+			{
+				return item;
+			}
+		}
+		return nullptr;
+	}
+
+	/**
+	 * This template function finds the first element in the doubly linked
+	 * list matching the given class type. The found element is casted to
+	 * the given template parameter.
+	 *
+	 * @param class_type The class type to compare to.
+	 * @return The found element or \c nullptr if no one was found.
+	 */
+	template<class SUB> inline SUB * b3FindTyped(const b3_u32 class_type)
+	{
+		return static_cast<SUB *>(b3Find(class_type));
+	}
 };
 
 #endif

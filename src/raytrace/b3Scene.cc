@@ -230,25 +230,12 @@ void b3Scene::b3SetTexture(const char * name)
 
 b3Animation * b3Scene::b3GetAnimation(b3_bool force)
 {
-	b3Animation * animation;
-	b3Item   *   item;
+	b3Animation * animation = b3GetSpecialHead()->b3FindTyped<b3Animation>(ANIMATION);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == ANIMATION)
-		{
-			return (b3Animation *)item;
-		}
-	}
-
-	if (force)
+	if (force && (animation == nullptr))
 	{
 		animation = new b3Animation(ANIMATION);
 		b3GetSpecialHead()->b3Append(animation);
-	}
-	else
-	{
-		animation = nullptr;
 	}
 	return animation;
 }
@@ -262,146 +249,73 @@ b3_f64 b3Scene::b3GetTimePoint()
 
 b3ModellerInfo * b3Scene::b3GetModellerInfo()
 {
-	b3ModellerInfo * info;
-	b3Item     *    item;
+	b3ModellerInfo * info = b3GetSpecialHead()->b3FindTyped<b3ModellerInfo>(LINES_INFO);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
+	if (info == nullptr)
 	{
-		if (item->b3GetClassType() == LINES_INFO)
-		{
-			return (b3ModellerInfo *)item;
-		}
+		info = new b3ModellerInfo(LINES_INFO);
+		b3GetSpecialHead()->b3Append(info);
 	}
-
-	info = new b3ModellerInfo(LINES_INFO);
-	b3GetSpecialHead()->b3Append(info);
 	return info;
 }
 
 b3Distribute * b3Scene::b3GetDistributed(b3_bool force)
 {
-	b3Distribute * distributed;
-	b3Item    *   item;
+	b3Distribute * distributed = b3GetSpecialHead()->b3FindTyped<b3Distribute>(DISTRIBUTE);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == DISTRIBUTE)
-		{
-			return (b3Distribute *)item;
-		}
-	}
-
-	if (force)
+	if (force && (distributed == nullptr))
 	{
 		distributed = new b3Distribute(DISTRIBUTE);
 		b3GetSpecialHead()->b3Append(distributed);
-	}
-	else
-	{
-		distributed = nullptr;
 	}
 	return distributed;
 }
 
 b3Nebular * b3Scene::b3GetNebular(b3_bool force)
 {
-	b3Nebular * nebular;
-	b3Item  *  item;
+	b3Nebular * nebular = b3GetSpecialHead()->b3FindTyped<b3Nebular>(NEBULAR);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == NEBULAR)
-		{
-			return (b3Nebular *)item;
-		}
-	}
-
-	if (force)
+	if (force && (nebular == nullptr))
 	{
 		nebular = new b3Nebular(NEBULAR);
 		b3GetSpecialHead()->b3Append(nebular);
-	}
-	else
-	{
-		nebular = nullptr;
 	}
 	return nebular;
 }
 
 b3SuperSample * b3Scene::b3GetSuperSample(b3_bool force)
 {
-	b3SuperSample * supersample;
-	b3Item    *    item;
+	b3SuperSample * supersample = b3GetSpecialHead()->b3FindTyped<b3SuperSample>(SUPERSAMPLE4);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == SUPERSAMPLE4)
-		{
-			return (b3SuperSample *)item;
-		}
-	}
-
-	if (force)
+	if (force && (supersample == nullptr))
 	{
 		supersample = new b3SuperSample(SUPERSAMPLE4);
 		b3GetSpecialHead()->b3Append(supersample);
-	}
-	else
-	{
-		supersample = nullptr;
 	}
 	return supersample;
 }
 
 b3LensFlare * b3Scene::b3GetLensFlare(b3_bool force)
 {
-	b3LensFlare * lensflare;
-	b3Item   *   item;
+	b3LensFlare * lensflare = b3GetSpecialHead()->b3FindTyped<b3LensFlare>(LENSFLARE);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == LENSFLARE)
-		{
-			return (b3LensFlare *)item;
-		}
-	}
-
-	if (force)
+	if (force && (lensflare == nullptr))
 	{
 		lensflare = new b3LensFlare(LENSFLARE);
 		b3GetSpecialHead()->b3Append(lensflare);
 	}
-	else
-	{
-		lensflare = nullptr;
-	}
-
 	return lensflare;
 }
 
 b3CloudBackground * b3Scene::b3GetCloudBackground(b3_bool force)
 {
-	b3CloudBackground * clouds;
-	b3Item      *      item;
+	b3CloudBackground * clouds = b3GetSpecialHead()->b3FindTyped<b3CloudBackground>(CLOUDS);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == CLOUDS)
-		{
-			return (b3CloudBackground *)item;
-		}
-	}
-
-	if (force)
+	if (force && (clouds == nullptr))
 	{
 		clouds = new b3CloudBackground(CLOUDS);
 		b3GetSpecialHead()->b3Append(clouds);
 	}
-	else
-	{
-		clouds = nullptr;
-	}
-
 	return clouds;
 }
 
@@ -550,12 +464,8 @@ b3_bool b3Scene::b3GetTitle(char * title, size_t size)
 
 b3Light * b3Scene::b3GetLightByName(const char * light_name)
 {
-	b3Light * light;
-	b3Item * item;
-
-	B3_FOR_BASE(b3GetLightHead(), item)
+	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		light = (b3Light *)item;
 		if (stricmp(light->b3GetName(), light_name) == 0)
 		{
 			return light;
@@ -571,18 +481,15 @@ b3_count b3Scene::b3GetLightCount()
 
 b3Light * b3Scene::b3GetLight(b3_bool must_active)
 {
-	b3Light * light;
-	b3Item * item;
-
-	B3_FOR_BASE(b3GetLightHead(), item)
+	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		light = (b3Light *)item;
 		if ((!must_active) || ((light->m_Flags & LIGHT_OFF) == 0))
 		{
 			return light;
 		}
 	}
 
+	b3Light * light;
 	if ((light = (b3Light *)b3GetLightHead()->First) == nullptr)
 	{
 		light = new b3Light(SPOT_LIGHT);
@@ -610,34 +517,30 @@ b3Scene * b3Scene::b3ReadTGF(const char * filename)
 **                                                                      **
 *************************************************************************/
 
-const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP]
 {
 	0.55, 0.0, 0.0, 0.25, 0.45, 0.55
 };
 
-const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP]
 {
 	0.9, 0.95, 0.95, 0.6, 0.6, 0.6
 };
 
-const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP]
 {
 	2.4, 1.5, 1.5, 2.0, 7.0, 4.0
 };
 
 void b3Scene::b3MixLensFlare(b3_ray * ray)
 {
-	b3Item  *  item;
-	b3Light  * light;
 	b3_vector  central, toLight, nLight;
 	b3Color    result;
 	b3_f64     distance, weight = 0.6;
 	b3_count   i;
 
-	B3_FOR_BASE(b3GetLightHead(), item)
+	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		light = (b3Light *)item;
-
 		toLight.x = light->m_Position.x - m_ViewPoint.x;
 		toLight.y = light->m_Position.y - m_ViewPoint.y;
 		toLight.z = light->m_Position.z - m_ViewPoint.z;

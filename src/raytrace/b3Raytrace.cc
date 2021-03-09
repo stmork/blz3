@@ -170,7 +170,6 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 	b3Animation * anim = b3GetAnimation();
 	b3TimeSpan   span;
 	b3Thread  *  threads;
-	b3Row    *   row;
 	b3_count     i, k;
 	b3_f64       t, base = anim->m_Time;
 
@@ -204,9 +203,9 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 		b3SetAnimation(t);
 
 		// We have to update the actual time point
-		B3_FOR_BASE(&m_RowPool, row)
+		B3_FOR_TYPED_BASE(b3MotionBlurRayRow, &m_RowPool, row)
 		{
-			((b3MotionBlurRayRow *)row)->b3SetTimePoint(t);
+			row->b3SetTimePoint(t);
 		}
 
 		// Start raytracing at this time point
