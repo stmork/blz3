@@ -195,7 +195,7 @@ void b3BBox::b3UpdateBBox()
 	b3PrintF(B3LOG_FULL, "      Updating object <%s>", b3GetName());
 #endif
 	b3RenderObject::b3Update();
-	B3_FOR_TYPED_BASE(b3Shape, b3GetBBoxHead(), shape)
+	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, ".");
@@ -236,7 +236,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tol
 	b3_bool    result = false;
 
 	b3Vector::b3InitBound(&subLower, &subUpper);
-	B3_FOR_TYPED_BASE(b3Shape, b3GetBBoxHead(), shape)
+	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
 		result |= shape->b3ComputeBounds(&subLower, &subUpper);
 	}
@@ -350,7 +350,7 @@ void b3BBox::b3Draw(b3RenderContext * context)
 	b3RenderObject::b3Draw(context);
 
 	// Draw our shapes
-	B3_FOR_TYPED_BASE(b3Shape, b3GetBBoxHead(), shape)
+	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
 		shape->b3Draw(context);
 	}
@@ -440,7 +440,7 @@ void b3BBox::b3Activate(b3_bool activate, b3_bool recurse)
 		m_Type &= (~BBF_ACTIVE);
 	}
 
-	B3_FOR_TYPED_BASE(b3Shape, b3GetBBoxHead(), shape)
+	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
 		shape->b3Activate(activate);
 	}
