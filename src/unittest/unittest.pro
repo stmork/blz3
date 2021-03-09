@@ -7,6 +7,7 @@ include(../common.pri)
 LIBS += -L$$BLZ3_LIB
 
 HEADERS += \
+	b3AlignTest.h \
 	b3ArrayTest.h \
 	b3ColorTest.h \
 	b3ComplexTest.h \
@@ -25,6 +26,7 @@ HEADERS += \
 	b3WorldTest.h
 
 SOURCES += \
+	b3AlignTest.cc \
 	b3ArrayTest.cc \
 	b3ColorTest.cc \
 	b3ComplexTest.cc \

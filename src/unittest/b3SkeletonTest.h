@@ -24,8 +24,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 class b3SkeletonTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3SkeletonTest);
