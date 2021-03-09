@@ -27,12 +27,12 @@
 
 #include <stdexcept>
 
-class B3_PLUGIN b3Complex64
+class B3_PLUGIN alignas(16) b3Complex64
 {
 #ifdef SSE_ALIGNED
-	__m128d            v;
+	__m128d     v;
 #else
-	alignas(16) b3_f64 v[2];
+	b3_f64      v[2];
 #endif
 
 	inline b3Complex64(const __m128d in)

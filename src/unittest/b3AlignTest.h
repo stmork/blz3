@@ -19,6 +19,8 @@
 #define B3_ALIGN_TEST_H
 
 #include <blz3/b3Config.h>
+#include <blz3/base/b3Complex.h>
+#include <blz3/base/b3Complex64.h>
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
@@ -34,6 +36,7 @@ class b3AlignTest : public CppUnit::TestFixture
 	b3_vector4D  * ptr_vector_4d = nullptr;
 	b3_matrix    * ptr_matrix_32 = nullptr;
 	b3_matrix64  * ptr_matrix_64 = nullptr;
+	b3Complex64  * ptr_complex_64 = nullptr;
 	b3_color     * ptr_color = nullptr;
 
 public:
