@@ -130,9 +130,9 @@ public:
 	 *
 	 * @return List of bounding box shapes.
 	 */
-	inline b3Base<b3Item> & b3GetShapeHead()
+	inline b3Base<b3Item> * b3GetShapeHead()
 	{
-		return m_Heads[0];
+		return &m_Heads[0];
 	}
 
 	/**
@@ -140,9 +140,9 @@ public:
 	 *
 	 * @return List of sub bounding boxes.
 	 */
-	inline b3Base<b3Item> & b3GetBBoxHead()
+	inline b3Base<b3Item> * b3GetBBoxHead()
 	{
-		return m_Heads[1];
+		return &m_Heads[1];
 	}
 
 	/**

@@ -342,7 +342,7 @@ void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, b3_bool recurse
 	b3Shape * shape;
 	b3Item * item;
 
-	B3_FOR_BASE(&b3GetShapeHead(), item)
+	B3_FOR_BASE(b3GetShapeHead(), item)
 	{
 		shape = (b3Shape *)item;
 		shape->b3Animate(animate);
@@ -350,7 +350,7 @@ void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, b3_bool recurse
 
 	if (recurse)
 	{
-		B3_FOR_BASE(&b3GetBBoxHead(), item)
+		B3_FOR_BASE(b3GetBBoxHead(), item)
 		{
 			bbox = (b3BBox *)item;
 			bbox->b3Animate(animate, recurse);
@@ -378,7 +378,7 @@ void b3AnimElement::b3SelectObjects(b3BBox * bbox)
 		{
 			bbox->b3Animate(b3Activation::B3_ANIM_ACTIVE, (m_Flags & ANIMFLAGF_RECURSIVE) != 0);
 		}
-		b3SelectObjects((b3BBox *)bbox->b3GetBBoxHead().First);
+		b3SelectObjects((b3BBox *)bbox->b3GetBBoxHead()->First);
 		bbox = (b3BBox *)bbox->Succ;
 	}
 }
