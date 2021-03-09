@@ -32,12 +32,12 @@ class b3AlignTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(test);
 	CPPUNIT_TEST_SUITE_END();
 
-	b3_vector    * ptr_vector_3d = nullptr;
+	b3_vector   *  ptr_vector_3d = nullptr;
 	b3_vector4D  * ptr_vector_4d = nullptr;
-	b3_matrix    * ptr_matrix_32 = nullptr;
+	b3_matrix   *  ptr_matrix_32 = nullptr;
 	b3_matrix64  * ptr_matrix_64 = nullptr;
 	b3Complex64  * ptr_complex_64 = nullptr;
-	b3_color     * ptr_color = nullptr;
+	b3_color   *   ptr_color = nullptr;
 
 public:
 	void setUp() override;
