@@ -124,10 +124,8 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 	b3Matrix::b3Inverse(&m_Matrix, &m_Inverse);
 	m_ShapeCount = 0;
 
-	for (b3Item & item : b3GetShapeHead())
+	B3_FOR_TYPED_BASE(b3Shape, &b3GetShapeHead(), shape)
 	{
-		b3Shape * shape = (b3Shape *)&item;
-
 		if (!shape->b3Prepare(scene_prep))
 		{
 			b3PrintF(B3LOG_NORMAL,
@@ -142,9 +140,8 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 	m_CSGIntersectionCount = 0;
 	if (b3GetShapeHead().b3GetClass() == CLASS_CSG)
 	{
-		for (b3Item & item : b3GetShapeHead())
+		B3_FOR_TYPED_BASE(b3CSGShape, &b3GetShapeHead(), csgShape)
 		{
-			b3CSGShape * csgShape = (b3CSGShape *)&item;
 			m_CSGIntersectionCount += csgShape->b3GetMaxIntersections();
 		}
 		if ((m_CSGIntersectionCount >= B3_MAX_CSG_INTERSECTIONS_PER_BBOX) ||
@@ -163,10 +160,8 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 
 	if (recursive)
 	{
-		for (b3Item & item : b3GetShapeHead())
+		B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 		{
-			b3BBox * bbox = (b3BBox *)&item;
-
 			if (!bbox->b3PrepareBBox(scene_prep, recursive))
 			{
 				return false;
@@ -219,17 +214,13 @@ void b3BBox::b3AllocVertexMemory(b3RenderContext * context)
 
 void b3BBox::b3FreeVertexMemory()
 {
-	for (b3Item & item : b3GetShapeHead())
+	B3_FOR_TYPED_BASE(b3Shape, &b3GetShapeHead(), shape)
 	{
-		b3Shape * shape = (b3Shape *)&item;
-
 		shape->b3FreeVertexMemory();
 	}
 
-	for (b3Item & item : b3GetBBoxHead())
+	B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 	{
-		b3BBox * bbox = (b3BBox *)&item;
-
 		bbox->b3FreeVertexMemory();
 	}
 }
@@ -283,10 +274,8 @@ void b3BBox::b3Update()
 	b3UpdateBBox();
 
 	// Update subsequent BBoxes
-	for (b3Item & item : b3GetBBoxHead())
+	B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 	{
-		b3BBox * bbox = (b3BBox *)&item;
-
 		bbox->b3Update();
 	}
 }
@@ -403,9 +392,9 @@ void b3BBox::b3Dump(b3_count level)
 	b3DumpSpace(level);
 	b3PrintF(B3LOG_NORMAL, "Object %s (level %d)\n", m_BoxName, level);
 
-	for (b3Item & bbox : b3GetBBoxHead())
+	B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 	{
-		bbox.b3Dump(level);
+		bbox->b3Dump(level);
 	}
 }
 
@@ -414,20 +403,16 @@ void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> & array)
 	b3BBoxReference  reference(this);
 
 	array.b3Add(reference);
-	for (b3Item & item : b3GetBBoxHead())
+	B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 	{
-		b3BBox * bbox = (b3BBox *)&item;
-
 		bbox->b3CollectBBoxes(array);
 	}
 }
 
 b3_bool b3BBox::b3FindBBox(b3Base<b3Item> * base, b3BBox * search)
 {
-	for (b3Item & item : *base)
+	B3_FOR_TYPED_BASE(b3BBox, base, bbox)
 	{
-		b3BBox * bbox = (b3BBox *)&item;
-
 		if (bbox == search)
 		{
 			return true;

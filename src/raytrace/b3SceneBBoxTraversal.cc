@@ -560,13 +560,13 @@ b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox)
 
 b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
 {
-	b3Base<b3Item> & base = b3GetBBoxHead();
+	b3Base<b3Item> * base = &b3GetBBoxHead();
 
-	for (b3Item & item : base)
+	B3_FOR_TYPED_BASE(b3BBox, base, item)
 	{
-		if (&item == bbox)
+		if (item == bbox)
 		{
-			return &base;
+			return base;
 		}
 
 		b3BBox     *     inc_bbox = (b3BBox *)&item;
@@ -608,10 +608,8 @@ void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation
 		array->b3Add(this);
 	}
 
-	for (b3Item & item : b3GetBBoxHead())
+	B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 	{
-		b3BBox * bbox = (b3BBox *)&item;
-
 		bbox->b3CollectActiveBBoxes(array, activation);
 	}
 }
@@ -624,12 +622,10 @@ void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation
 
 b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape)
 {
-	b3Item     *    item;
-	b3BBox     *    bbox, *result;
+	b3BBox * result;
 
-	B3_FOR_BASE(b3GetBBoxHead(), item)
+	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
-		bbox   = (b3BBox *)item;
 		result = bbox->b3FindParentBBox(shape);
 		if (result != nullptr)
 		{
@@ -641,17 +637,16 @@ b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape)
 
 b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
 {
-	for (b3Item & item : b3GetShapeHead())
+	B3_FOR_TYPED_BASE(b3Shape, &b3GetShapeHead(), item)
 	{
-		if (&item == shape)
+		if (item == shape)
 		{
 			return this;
 		}
 	}
 
-	for (b3Item & item : b3GetBBoxHead())
+	B3_FOR_TYPED_BASE(b3BBox, &b3GetBBoxHead(), bbox)
 	{
-		b3BBox * bbox   = (b3BBox *)&item;
 		b3BBox * result = bbox->b3FindParentBBox(shape);
 
 		if (result != nullptr)

@@ -192,13 +192,13 @@ public:
 		CPPUNIT_ASSERT_EQUAL(&b,                        src.Last);
 
 		b3_count items = 0;
-		for (const T & item : src)
+		B3_FOR_TYPED_BASE(T, &src, item)
 		{
-			b3PrintF(B3LOG_NORMAL, "%p\n", &item);
+			b3PrintF(B3LOG_NORMAL, "%p\n", item);
 
-			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      item.b3GetClass());
-			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       item.b3GetType());
-			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, item.b3GetClassType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      item->b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       item->b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, item->b3GetClassType());
 
 			items++;
 		}

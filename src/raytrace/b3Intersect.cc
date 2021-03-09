@@ -1623,7 +1623,6 @@ b3Shape * b3Scene::b3Intersect(
 	b3_ray * ray,
 	b3_bool  check_visibility)
 {
-	b3SimpleShape  * Shape;
 	b3Shape     *    ResultShape = nullptr, *aux;
 	b3_polar         polar;
 	b3_f64           Result;
@@ -1648,9 +1647,8 @@ b3Shape * b3Scene::b3Intersect(
 			switch (Shapes.b3GetClass())
 			{
 			case CLASS_SHAPE:
-				for (b3Item & item : Shapes)
+				B3_FOR_TYPED_BASE(b3SimpleShape, &Shapes, Shape)
 				{
-					Shape  = (b3SimpleShape *)&item;
 					Result = Shape->b3Intersect(ray, &polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{
@@ -1700,10 +1698,8 @@ b3Shape * b3Scene::b3IsObscured(
 			switch (Shapes.b3GetClass())
 			{
 			case CLASS_SHAPE:
-				for (b3Item & item : Shapes)
+				B3_FOR_TYPED_BASE(b3SimpleShape, &Shapes, Shape)
 				{
-					b3SimpleShape * Shape  = (b3SimpleShape *)&item;
-
 					Result = Shape->b3Intersect(ray, &polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{

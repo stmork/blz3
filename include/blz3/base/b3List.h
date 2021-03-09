@@ -65,7 +65,7 @@ enum b3_link_state
  *
  * @see b3Base
  */
-template <class T> class B3_PLUGIN b3Link
+template <class T> class B3_PLUGIN alignas(16) b3Link
 {
 public:
 	T     *    Succ; //!< The next list element or nullptr if this is the last one.
@@ -140,6 +140,11 @@ public:
 #define B3_FOR_BASE(b,n)       for((n) = (b)->First;(n) != nullptr;(n) = (n)->Succ)
 #define B3_FOR_BASE_BACK(b,n)  for((n) = (b)->Last;(n)  != nullptr;(n) = (n)->Prev)
 
+#define B3_FOR_TYPED_BASE(t,b,n)\
+	for(t * (n) = static_cast<t *>((b)->First);\
+	(n) != nullptr;\
+	(n) = static_cast<t *>((n)->Succ))
+
 #define B3_DELETE_BASE(b,n)    ((b)->b3Free())
 
 /**
@@ -161,7 +166,7 @@ public:
  *
  * @see b3Link
  */
-template <class T> class B3_PLUGIN b3Base
+template <class T> class B3_PLUGIN alignas(16) b3Base
 {
 protected:
 	b3_u32  Class; //!< The class specifier.
