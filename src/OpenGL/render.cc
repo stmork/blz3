@@ -262,7 +262,7 @@ static void b3Update(b3Scene * scene)
 static void b3Prepare(b3Scene * scene)
 {
 	const b3ModellerInfo * info = scene->b3GetModellerInfo();
-	b3_res          xSize, ySize;
+	b3_res                 xSize, ySize;
 
 	scene->b3Reorg();
 	scene->b3GetDisplaySize(xSize, ySize);
@@ -278,7 +278,7 @@ static void b3Prepare(b3Scene * scene)
 static void b3Banner(const char * command)
 {
 	b3PrintF(B3LOG_NORMAL, "Blizzard III OpenGL scene viewer\n");
-	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2021\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
 	if (command != nullptr)
 	{

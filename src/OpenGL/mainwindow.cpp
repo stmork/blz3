@@ -73,10 +73,32 @@ MainWindow::MainWindow(QWidget *parent) :
 	world.b3AddPath(data);
 	world.b3Read("FlippAmiga.bwd");
 	ui->glView->b3Prepare(world.b3GetFirst());
+
+	b3Animation * animation = *ui->glView;
+	if (animation != nullptr)
+	{
+		const b3_count fps = animation->m_FramesPerSecond;
+
+		ui->animationSlider->setEnabled(true);
+		ui->animationSlider->setTickInterval(fps);
+		ui->animationSlider->setPageStep(fps * 5);
+		ui->animationSlider->setMinimum(0);
+		ui->animationSlider->setMaximum(fps * (animation->m_End - animation->m_Start));
+
+		connect(
+					ui->animationSlider, &QSlider::valueChanged,
+					ui->glView, &QB3OpenGLWidget::animate);
+	}
+	else
+	{
+		ui->animationSlider->setDisabled(true);
+	}
 }
 
 MainWindow::~MainWindow()
 {
+	world.b3Free();
+
 	delete ui;
 }
 

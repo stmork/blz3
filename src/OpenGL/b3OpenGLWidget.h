@@ -20,8 +20,7 @@
 #include <blz3/raytrace/b3ShapeRenderContext.h>
 #include <blz3/raytrace/b3RenderLight.h>
 #include <blz3/raytrace/b3RenderView.h>
-
-class b3Scene;
+#include <blz3/raytrace/b3Scene.h>
 
 class QB3OpenGLWidget : public QOpenGLWidget
 {
@@ -31,6 +30,19 @@ public:
 	explicit QB3OpenGLWidget(QWidget * parent = nullptr);
 
 	void b3Prepare(b3Item * first);
+
+	inline operator b3Scene * () const
+	{
+		return m_Scene;
+	}
+
+	inline operator b3Animation * () const
+	{
+		return m_Scene->b3GetAnimation(false);
+	}
+
+public slots:
+	void animate(int frame);
 
 protected:
 	void initializeGL() override;

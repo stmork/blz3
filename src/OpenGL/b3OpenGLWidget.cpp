@@ -40,6 +40,24 @@ void QB3OpenGLWidget::b3Prepare(b3Item * first)
 	b3SetLights();
 }
 
+void QB3OpenGLWidget::animate(int frame)
+{
+	const b3Animation * animation = *this;
+
+	if (animation != nullptr)
+	{
+		const b3_count fps = animation->m_FramesPerSecond;
+		const double   t   = animation->m_Start + (double)frame / fps;
+		b3_vector      lower, upper;
+
+		m_Scene->b3SetAnimation(t);
+		m_Scene->b3ComputeBounds(&lower, &upper);
+		m_View.b3SetBounds(&lower, &upper);
+		m_View.b3SetCamera(m_Scene);
+		update();
+	}
+}
+
 void QB3OpenGLWidget::initializeGL()
 {
 	m_Context.glBgColor.b3Init(0.7f, 0.7f, 1.0f);
