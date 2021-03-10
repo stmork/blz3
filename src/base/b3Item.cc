@@ -190,12 +190,12 @@ void b3Item::b3Dump(b3_count level) const
 	b3_u32  i;
 
 	b3DumpSpace(level);
-	b3PrintF(B3LOG_NORMAL, "%08lx %7d\n", ClassType, Size);
+	b3PrintF(B3LOG_NORMAL, "%08x %7zd\n", ClassType, Size);
 
 	for (i = 0; i < m_HeadCount; i++)
 	{
 		b3DumpSpace(level);
-		b3PrintF(B3LOG_NORMAL, "%08lx -------------\n", m_Heads[i].b3GetClass());
+		b3PrintF(B3LOG_NORMAL, "%08x -------------\n", m_Heads[i].b3GetClass());
 		B3_FOR_BASE(&m_Heads[i], node)
 		{
 			node->b3Dump(level + 1);
@@ -208,17 +208,18 @@ void b3Item::b3DumpSimple(b3_count level, b3_log_level log_level) const
 	b3_u32  i, max = (b3_count)(m_ItemSize >> 2);
 
 	b3DumpSpace(level, log_level);
-	b3PrintF(log_level, "%08lx %7d # %7d %7d # %7d", ClassType, Size, m_ItemSize, m_ItemOffset, m_ParseIndex);
+	b3PrintF(log_level, "%08x %7zd # %7u %7u # %7u",
+			 ClassType, Size, m_ItemSize, m_ItemOffset, m_ParseIndex);
 
 	for (i = 0; i < m_HeadCount; i++)
 	{
-		b3PrintF(log_level, "  %08lx", m_Heads[i].b3GetClass());
+		b3PrintF(log_level, "  %08x", m_Heads[i].b3GetClass());
 	}
 	b3PrintF(log_level, " #");
 
 	for (i = 0; i < max; i++)
 	{
-		b3PrintF(log_level, "  %08lx", m_Buffer[i]);
+		b3PrintF(log_level, "  %08x", m_Buffer[i]);
 	}
 	b3PrintF(log_level, "\n");
 }

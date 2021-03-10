@@ -232,7 +232,7 @@ int main(int argc, char * argv[])
 			b3Scene::m_RenderPriority = b3Math::b3Limit(atoi(BLZ3_RENDER_PRIO), -2, 2);
 		}
 
-		b3PrintF(B3LOG_NORMAL, "\nFound %d CPU core%s.\n",
+		b3PrintF(B3LOG_NORMAL, "\nFound %zd CPU core%s.\n",
 			CPUs,
 			CPUs > 1 ? "s" : "");
 

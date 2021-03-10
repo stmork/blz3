@@ -238,7 +238,7 @@ void b3RenderContext::b3SetAmbient(const b3_pkd_color ambient)
 {
 	GLfloat gl_ambient[4];
 
-	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08lx)\n",
+	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08x)\n",
 		ambient);
 
 	b3PkdColorToGL(ambient, gl_ambient);
@@ -249,7 +249,7 @@ void b3RenderContext::b3SetAmbient(b3Color & ambient)
 {
 	GLfloat gl_ambient[4];
 
-	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08lx)\n",
+	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08x)\n",
 		(b3_pkd_color)ambient);
 
 	b3ColorToGL(ambient, gl_ambient);

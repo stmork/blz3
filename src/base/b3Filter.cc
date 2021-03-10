@@ -112,7 +112,7 @@ b3GaussFilter::b3GaussFilter()
 			m_GaussNDTable.b3Add(m_Area);
 			m_Area += b3Func(x) * GAUSS_ND_STEP;
 		}
-		b3PrintF(B3LOG_FULL, "  area: %3.8f %d entries\n", m_Area, m_GaussNDTable.b3GetCount());
+		b3PrintF(B3LOG_FULL, "  area: %3.8f %zd entries\n", m_Area, m_GaussNDTable.b3GetCount());
 	}
 }
 

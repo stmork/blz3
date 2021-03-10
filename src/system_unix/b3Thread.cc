@@ -182,7 +182,7 @@ b3_bool b3Thread::b3Start(
 		b3CriticalSection lock(m_ThreadMutex);
 
 		threadError++;
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Thrd # Thread (%x) not started!\n",
+		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Thrd # Thread (%lx) not started!\n",
 			m_Thread);
 		b3PrintF(B3LOG_NORMAL, "    OK/error count: %zd/%zd\n",
 			threadSuccess, threadError);

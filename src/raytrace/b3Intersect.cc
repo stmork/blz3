@@ -631,7 +631,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 	default:
 		// Shouldn't be!
-		b3PrintF(B3LOG_FULL, "Index = %d\n", Index);
+		b3PrintF(B3LOG_FULL, "Index = %zd\n", Index);
 		B3_ASSERT(false);
 		return -1;
 	}

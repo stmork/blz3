@@ -53,7 +53,7 @@ public:
 
 	void test()
 	{
-		T       count = 0;
+		int     count = 0;
 		b3_loop i;
 		b3_f64  err;
 

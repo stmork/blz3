@@ -211,6 +211,6 @@ void b3Mem::b3Dump()
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slots: %p   initial slots: %p\n", m_SlotPtr, m_Slots);
 	for (i = 0; i < m_SlotMax; i++)
 	{
-		b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # %3d: %p\n", i, m_SlotPtr[i]);
+		b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # %3zd: %p\n", i, &m_SlotPtr[i]);
 	}
 }

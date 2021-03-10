@@ -447,7 +447,7 @@ b3_bool b3World::b3ReadDump(const char * world_name)
 				}
 
 				// Print node class/type
-				b3PrintF(B3LOG_NORMAL, "%04lx:%04lx s:%6lu o:%6lu # ",
+				b3PrintF(B3LOG_NORMAL, "%04x:%04x s:%6u o:%6u # ",
 					m_Buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
 					m_Buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
 					m_Buffer[i + B3_NODE_IDX_SIZE],
@@ -456,7 +456,7 @@ b3_bool b3World::b3ReadDump(const char * world_name)
 				// Print heads
 				for (int k = B3_NODE_IDX_MIN; m_Buffer[i + k] != 0; k += 3)
 				{
-					b3PrintF(B3LOG_NORMAL, "%08lx ", m_Buffer[i + k]);
+					b3PrintF(B3LOG_NORMAL, "%08x ", m_Buffer[i + k]);
 				}
 				b3PrintF(B3LOG_NORMAL, "\n");
 

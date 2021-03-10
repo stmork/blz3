@@ -290,7 +290,7 @@ void b3TIFF::b3LogTIFF(const char * format, ...)
 	va_start(list, format);
 	vsnprintf(message, sizeof(message), format, list);
 	va_end(list);
-	b3PrintF(B3LOG_FULL, message);
+	b3PrintF(B3LOG_FULL, "%s", message);
 
 	if (b3LogFuncTIFF != nullptr)
 	{

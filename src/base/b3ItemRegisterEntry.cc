@@ -93,6 +93,6 @@ b3Item * b3ItemRegisterEntry::b3Load(b3_u32 * buffer)
 
 void b3ItemRegisterEntry::b3Dump()
 {
-	b3PrintF(B3LOG_FULL, "  class %04lx:%04lx%s.\n",
+	b3PrintF(B3LOG_FULL, "  class %04x:%04x%s.\n",
 		class_type >> 16, class_type & 0xffff, is_class ? " (class)" : "");
 }

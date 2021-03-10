@@ -110,7 +110,7 @@ b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 {
 	b3_res size = b3PowOf2(new_size);
 
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%d)\n", size);
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%zd)\n", size);
 	m_xOrig  =
 		m_yOrig  = new_size;
 	m_xStart = (size - m_xOrig) >> 1;
@@ -119,7 +119,7 @@ b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 	if ((m_xSize == size) && (m_ySize == size))
 	{
 		// New buffer has same size.
-		b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%d) [unchanged]\n", size);
+		b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%zd) [unchanged]\n", size);
 		return true;
 	}
 	b3FreeBuffer();
@@ -131,7 +131,7 @@ b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 		b3FreeBuffer();
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 	}
-	b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%d)\n", size);
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%zd)\n", size);
 	return true;
 }
 
@@ -140,7 +140,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 	b3_loop       x, y, index, max;
 	b3_u08    *   cPtr;
 
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%zdx%zd, ...)\n", tx->xSize, tx->ySize);
 	if (!tx->b3IsLoaded())
 	{
 		B3_THROW(b3FFTException, B3_FFT_SRC_TX_EMPTY);
@@ -163,7 +163,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 		B3_THROW(b3FFTException, B3_FFT_NO_PALETTE);
 	}
 
-	b3PrintF(B3LOG_FULL, "  Grey (%dx%d)\n", m_xSize, m_ySize);
+	b3PrintF(B3LOG_FULL, "  Grey (%zdx%zd)\n", m_xSize, m_ySize);
 	if (!b3ReallocBuffer())
 	{
 		B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
@@ -178,7 +178,7 @@ b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 		}
 		index += m_xSize;
 	}
-	b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%dx%d, ...)\n", tx->xSize, tx->ySize);
+	b3PrintF(B3LOG_FULL, "<b3Fourier::b3AllocBuffer(%zdx%zd, ...)\n", tx->xSize, tx->ySize);
 
 	return true;
 }
@@ -534,7 +534,7 @@ b3_bool b3Fourier::b3SelfTest()
 	b3_loop          x, y;
 	b3_f64           err = 0, e;
 
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest() %dx%d\n", m_xSize, m_ySize);
+	b3PrintF(B3LOG_FULL, ">b3Fourier::b3SelfTest() %zdx%zd\n", m_xSize, m_ySize);
 
 	random.b3SetSeed();
 	for (y = 0; y < m_ySize; y++)

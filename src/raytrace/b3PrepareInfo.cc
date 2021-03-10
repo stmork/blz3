@@ -120,7 +120,7 @@ b3_bool b3PrepareInfo::b3Prepare(
 		int i;
 
 		b3RebuildListFromArray();
-		b3PrintF(B3LOG_FULL, "    Starting %d prepare threads\n", m_CPUs);
+		b3PrintF(B3LOG_FULL, "    Starting %zd prepare threads\n", m_CPUs);
 		for (i = 0; i < m_CPUs; i++)
 		{
 			if (!m_Threads[i].b3Start(b3PrepareThread, this))

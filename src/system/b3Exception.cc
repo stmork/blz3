@@ -70,7 +70,7 @@ void b3ExceptionBase::b3Log(const b3ExceptionBase * exception)
 {
 	b3PrintF(B3LOG_NORMAL, "EXCEPTION: %s\n", m_GetMessage(exception->m_ErrorCode));
 	b3PrintF(B3LOG_FULL,  "     file: %s\n", exception->m_FileName);
-	b3PrintF(B3LOG_FULL,  "     line: %5d\n", exception->m_LineNo);
+	b3PrintF(B3LOG_FULL,  "     line: %5zd\n", exception->m_LineNo);
 }
 
 void b3ExceptionBase::b3SetLogger(b3ExceptionLogger logger)

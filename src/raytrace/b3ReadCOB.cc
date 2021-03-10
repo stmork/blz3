@@ -159,7 +159,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 		next = b3COB_FindInfo(cobInfo->refParent);
 		if (next == nullptr)
 		{
-			b3PrintF(B3LOG_NORMAL, " ERROR: object with parent ID %ld not found!\n",
+			b3PrintF(B3LOG_NORMAL, " ERROR: object with parent ID %d not found!\n",
 				cobInfo->refParent);
 			return nullptr;
 		}

@@ -42,7 +42,7 @@ template<typename T, b3_loop dim> class b3VectorTest : public CppUnit::TestFixtu
 public:
 	void setUp() override
 	{
-		b3PrintF(B3LOG_DEBUG, "Setup: %s<%d, %d>\n", __FILE__, sizeof(T), dim);
+		b3PrintF(B3LOG_DEBUG, "Setup: %s<%zd, %u>\n", __FILE__, sizeof(T), dim);
 	}
 
 	void tearDown() override

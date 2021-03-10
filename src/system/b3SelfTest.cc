@@ -44,7 +44,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 {
 	b3_bool     *    ptr;
 
-	b3PrintF(B3LOG_NORMAL, "%d-Bit-CPU\n", b3Runtime::b3GetCPUBits());
+	b3PrintF(B3LOG_NORMAL, "%zd-Bit-CPU\n", b3Runtime::b3GetCPUBits());
 
 	switch (b3Runtime::b3GetCPUType())
 	{
@@ -64,18 +64,18 @@ b3_bool b3SelfTest::b3TestDataSize()
 	b3PrintF(B3LOG_NORMAL, "size of some basic data types:\n");
 	b3PrintF(B3LOG_NORMAL, "        uns. sgn.\n");
 	b3PrintF(B3LOG_NORMAL, "Integer:\n");
-	b3PrintF(B3LOG_NORMAL, " 8 bit: %3d  %3d (should be 1)\n", sizeof(b3_u08), sizeof(b3_s08));
-	b3PrintF(B3LOG_NORMAL, "16 bit: %3d  %3d (should be 2)\n", sizeof(b3_u16), sizeof(b3_s16));
-	b3PrintF(B3LOG_NORMAL, "32 bit: %3d  %3d (should be 4)\n", sizeof(b3_u32), sizeof(b3_s32));
-	b3PrintF(B3LOG_NORMAL, "64 bit: %3d  %3d (should be 8)\n", sizeof(b3_u64), sizeof(b3_s64));
-	b3PrintF(B3LOG_NORMAL, "bool:   %3d      (should be 4)\n", sizeof(b3_bool));
+	b3PrintF(B3LOG_NORMAL, " 8 bit: %3zd  %3zd (should be 1)\n", sizeof(b3_u08), sizeof(b3_s08));
+	b3PrintF(B3LOG_NORMAL, "16 bit: %3zd  %3zd (should be 2)\n", sizeof(b3_u16), sizeof(b3_s16));
+	b3PrintF(B3LOG_NORMAL, "32 bit: %3zd  %3zd (should be 4)\n", sizeof(b3_u32), sizeof(b3_s32));
+	b3PrintF(B3LOG_NORMAL, "64 bit: %3zd  %3zd (should be 8)\n", sizeof(b3_u64), sizeof(b3_s64));
+	b3PrintF(B3LOG_NORMAL, "bool:   %3zd      (should be 4)\n", sizeof(b3_bool));
 	b3PrintF(B3LOG_NORMAL, "Float:\n");
-	b3PrintF(B3LOG_NORMAL, "32 bit: %3d      (should be  4)\n",       sizeof(b3_f32));
-	b3PrintF(B3LOG_NORMAL, "64 bit: %3d      (should be  8)\n",       sizeof(b3_f64));
-	b3PrintF(B3LOG_NORMAL, "96 bit: %3d      (should be 12 or 16)\n", sizeof(b3_f96));
+	b3PrintF(B3LOG_NORMAL, "32 bit: %3zd      (should be  4)\n",       sizeof(b3_f32));
+	b3PrintF(B3LOG_NORMAL, "64 bit: %3zd      (should be  8)\n",       sizeof(b3_f64));
+	b3PrintF(B3LOG_NORMAL, "96 bit: %3zd      (should be 12 or 16)\n", sizeof(b3_f96));
 	b3PrintF(B3LOG_NORMAL, "\n");
-	b3PrintF(B3LOG_NORMAL, "Pointer size:                     %d bytes.\n", sizeof(ptr));
-	b3PrintF(B3LOG_NORMAL, "Int size for pointer arithmetics: %d bytes (%s).\n",
+	b3PrintF(B3LOG_NORMAL, "Pointer size:                     %zd bytes.\n", sizeof(ptr));
+	b3PrintF(B3LOG_NORMAL, "Int size for pointer arithmetics: %zd bytes (%s).\n",
 		sizeof(b3_ptr), sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
 
 	return true;
@@ -187,16 +187,16 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF(B3LOG_NORMAL, "\n");
 	v1 = 1;
 	v2 = 2;
-	b3PrintF(B3LOG_NORMAL, "SWAP:  i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "SWAP:  i=%u k=%u\n", v1, v2);
 	B3_SWAP(v1, v2);
-	b3PrintF(B3LOG_NORMAL, "       i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "       i=%u k=%u\n", v1, v2);
 	result &= ((v1 == 2) && (v2 == 1));
 
 	v1 = 1;
 	v2 = 2;
-	b3PrintF(B3LOG_NORMAL, "PSWAP: i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "PSWAP: i=%u k=%u\n", v1, v2);
 	B3_PSWAP(&v1, &v2);
-	b3PrintF(B3LOG_NORMAL, "       i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "       i=%u k=%u\n", v1, v2);
 	result &= ((v1 == 2) && (v2 == 1));
 
 	return result;
@@ -292,7 +292,7 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract & file)
 		break;
 
 	default :
-		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %ld)\n", code);
+		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %d)\n", code);
 		success = false;
 		break;
 	}
@@ -353,7 +353,7 @@ b3_bool b3SelfTest::b3TestIO()
 		break;
 
 	default :
-		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %ld)\n", code);
+		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %d)\n", code);
 		success = false;
 		break;
 	}

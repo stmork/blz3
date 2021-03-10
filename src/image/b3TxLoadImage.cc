@@ -120,7 +120,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	y        = 0;
 	ppm_type = 0;
 	i   = sscanf((const char *)buffer, "P%d %ld %ld %*d%ln", &ppm_type, &x, &y, &pos);
-	b3PrintF(B3LOG_FULL, "PxM (%ld): (%ld,%ld - %ld) %d\n", ppm_type, x, y, i, pos);
+	b3PrintF(B3LOG_FULL, "PxM (%d): (%zd,%zd - %zd) %zd\n", ppm_type, x, y, i, pos);
 	if (i >= 2)
 	{
 		switch (ppm_type)

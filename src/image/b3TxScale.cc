@@ -1948,7 +1948,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	b      = (color & 0x0000ff);
 	pal[1] = (b3_pkd_color)(r * 0.35 + g * 0.51 + b * 0.14);
 	bytes  = TX_BWA(Tx->xSize);
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # palette %06lx %06lx\n", pal[0], pal[1]);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # palette %06x %06x\n", pal[0], pal[1]);
 
 	if (type == B3_TX_VGA)
 	{
