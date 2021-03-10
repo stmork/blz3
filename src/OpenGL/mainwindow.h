@@ -39,6 +39,9 @@ public:
 	MainWindow(QWidget * parent = nullptr);
 	~MainWindow();
 
+private slots:
+	void relabel(int frame);
+
 private:
 	Ui::MainWindow * ui;
 

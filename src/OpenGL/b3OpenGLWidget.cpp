@@ -40,6 +40,28 @@ void QB3OpenGLWidget::b3Prepare(b3Item * first)
 	b3SetLights();
 }
 
+QString QB3OpenGLWidget::timecode(const int frame) const
+{
+	const b3Animation * animation = *this;
+
+	if (animation != nullptr)
+	{
+		const b3_count fps    = animation->m_FramesPerSecond;
+		const double   t      = animation->m_Start + (double)frame / fps;
+		const int      hour   = t / 3600;
+		const unsigned minute = abs(int(t) / 60) % 60;
+		const unsigned second = abs(int(t)) % 60;
+		const unsigned sub    = abs(int(t * fps)) % fps;
+
+		return QString::asprintf("%02d:%02u:%02u.%02u  %3d",
+								 hour, minute, second, sub, frame);
+	}
+	else
+	{
+		return "";
+	}
+}
+
 void QB3OpenGLWidget::animate(int frame)
 {
 	const b3Animation * animation = *this;
@@ -51,7 +73,6 @@ void QB3OpenGLWidget::animate(int frame)
 
 		b3PrintF(B3LOG_DEBUG, "t=%1.3fs\n", t);
 		m_Scene->b3SetAnimation(t);
-		m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 		update();
 	}
 }
@@ -73,6 +94,7 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 void QB3OpenGLWidget::paintGL()
 {
 	b3PrintF(B3LOG_FULL, ">paintGL()\n");
+	m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 	m_Context.b3StartDrawing();
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
 	m_View.b3SetCamera(m_Scene);

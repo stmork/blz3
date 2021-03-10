@@ -41,6 +41,8 @@ public:
 		return m_Scene->b3GetAnimation(false);
 	}
 
+	QString timecode(const int frame) const;
+
 public slots:
 	void animate(int frame);
 

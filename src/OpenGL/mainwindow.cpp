@@ -84,15 +84,19 @@ MainWindow::MainWindow(QWidget *parent) :
 		ui->animationSlider->setPageStep(fps * 5);
 		ui->animationSlider->setMinimum(0);
 		ui->animationSlider->setMaximum(fps * (animation->m_End - animation->m_Start));
-
-		connect(
-					ui->animationSlider, &QSlider::valueChanged,
-					ui->glView, &QB3OpenGLWidget::animate);
+		ui->animationSlider->setValue(0);
 	}
 	else
 	{
 		ui->animationSlider->setDisabled(true);
 	}
+
+	connect(
+				ui->animationSlider, &QSlider::valueChanged,
+				ui->glView, &QB3OpenGLWidget::animate);
+	connect(
+				ui->animationSlider, &QSlider::valueChanged,
+				this, &MainWindow::relabel);
 }
 
 MainWindow::~MainWindow()
@@ -100,4 +104,9 @@ MainWindow::~MainWindow()
 	world.b3Free();
 
 	delete ui;
+}
+
+void MainWindow::relabel(int frame)
+{
+	ui->animationLabel->setText(ui->glView->timecode(frame));
 }
