@@ -41,6 +41,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	QSurfaceFormat format;
+	format.setDepthBufferSize(24);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+
+	// must be called before the widget or its parent window gets shown
+	ui->glView->setFormat(format);
+
 	const char * BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
 	const char * BLZ3_BIN     = getenv("BLZ3_BIN");
 	const char * HOME         = getenv("HOME");
@@ -65,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	world.b3AddPath(data);
 	world.b3Read("FlippAmiga.bwd");
+	ui->glView->b3Prepare(world.b3GetFirst());
 }
 
 MainWindow::~MainWindow()

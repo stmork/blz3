@@ -244,9 +244,9 @@ static void b3Update(b3Scene * scene)
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower, &upper);
 
-	b3PrintF(B3LOG_NORMAL, "%d vertices\n", context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL, "%d vertices\n",  context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL, "%d triangles\n", context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL, "%d grids\n",    context.glGridCount);
+	b3PrintF(B3LOG_NORMAL, "%d grids\n",     context.glGridCount);
 
 	// Setup view
 	view.b3SetBounds(&lower, &upper);

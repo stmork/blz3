@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_gl_line b3Shape::m_BoxGrids[] =
+const b3_gl_line b3Shape::m_BoxGrids[]
 {
 	{ 0, 1 }
 	,
@@ -48,7 +48,7 @@ const b3_gl_line b3Shape::m_BoxGrids[] =
 	{ 3, 4 }
 };
 
-const b3_gl_polygon b3Shape::m_BoxPolygons[] =
+const b3_gl_polygon b3Shape::m_BoxPolygons[]
 {
 	{  6, 7, 5 }
 	, // top
@@ -65,7 +65,7 @@ const b3_gl_polygon b3Shape::m_BoxPolygons[] =
 	{ 22, 21, 17 }
 };
 
-const b3_f32 b3Shape::m_BoxTexcoord[] =
+const b3_f32 b3Shape::m_BoxTexcoord[]
 {
 	0, 0,  1, 0,  1, 1,  0, 1,  0, 1, 1, 1,  1, 0,  0, 0,
 	0, 0,  1, 0,  1, 1,  0, 1,  0, 1, 1, 1,  1, 0,  0, 0,
@@ -82,22 +82,17 @@ b3_count b3ShapeRenderContext::m_SubDiv = 16;
 b3_f64   b3ShapeRenderContext::m_Sin[B3_MAX_RENDER_SUBDIV + 1];
 b3_f64   b3ShapeRenderContext::m_Cos[B3_MAX_RENDER_SUBDIV + 1];
 
-b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
+b3ShapeRenderContext::b3ShapeRenderContext(const b3_count new_subdiv)
 {
-	m_CylinderIndices  = nullptr;
-	m_CylinderPolygons = nullptr;
-	m_ConeIndices      = nullptr;
-	m_ConePolygons     = nullptr;
-	m_Between          = nullptr;
 	b3InitSubdiv(new_subdiv);
 }
 
-void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
+void b3ShapeRenderContext::b3InitSubdiv(const b3_count new_subdiv)
 {
-	b3_gl_line  *  gPtr;
+	b3_gl_line   *  gPtr;
 	b3_gl_polygon * pPtr;
-	b3_index       a, i;
-	b3_f64         aux;
+	b3_index        a, i;
+	b3_f64          aux;
 
 	m_SubDiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
 	if (m_SubDiv < 8)
@@ -176,22 +171,22 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 }
 
-b3_gl_line * b3ShapeRenderContext::b3GetCylinderIndices()
+b3_gl_line * b3ShapeRenderContext::b3GetCylinderIndices() const
 {
 	return m_CylinderIndices;
 }
 
-b3_gl_polygon * b3ShapeRenderContext::b3GetCylinderPolygons()
+b3_gl_polygon * b3ShapeRenderContext::b3GetCylinderPolygons() const
 {
 	return m_CylinderPolygons;
 }
 
-b3_gl_line * b3ShapeRenderContext::b3GetConeIndices()
+b3_gl_line * b3ShapeRenderContext::b3GetConeIndices() const
 {
 	return m_ConeIndices;
 }
 
-b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons()
+b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons() const
 {
 	return m_ConePolygons;
 }

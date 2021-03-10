@@ -17,12 +17,38 @@
 
 #include <QOpenGLWidget>
 
+#include <blz3/raytrace/b3ShapeRenderContext.h>
+#include <blz3/raytrace/b3RenderLight.h>
+#include <blz3/raytrace/b3RenderView.h>
+
+class b3Scene;
+
 class QB3OpenGLWidget : public QOpenGLWidget
 {
 	Q_OBJECT
 
 public:
-	explicit QB3OpenGLWidget(QWidget* parent = nullptr);
+	explicit QB3OpenGLWidget(QWidget * parent = nullptr);
+
+	void b3Prepare(b3Item * first);
+
+protected:
+	void initializeGL() override;
+	void resizeGL(int width, int height) override;
+	void paintGL() override;
+
+private:
+	void b3SetLights();
+	void b3Update();
+
+	b3Scene       *       m_Scene = nullptr;
+	b3ShapeRenderContext  m_Context;
+	b3RenderLight         m_Lights;
+	b3RenderView          m_View;
+	b3_bool               m_AllLights = true;
+	b3_bool               m_SpotLight = true;
+	b3_bool               m_DoubleBuffered = true;
+	b3_res                xWinSize, yWinSize;
 };
 
 #endif // QB3OPENGLWIDGET_H

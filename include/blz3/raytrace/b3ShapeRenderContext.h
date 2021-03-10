@@ -28,11 +28,11 @@
  */
 class B3_PLUGIN b3ShapeRenderContext : public b3RenderContext
 {
-	b3_vector    *   m_Between;
-	b3_gl_line   *   m_CylinderIndices;
-	b3_gl_polygon  * m_CylinderPolygons;
-	b3_gl_line   *   m_ConeIndices;
-	b3_gl_polygon  * m_ConePolygons;
+	b3_vector    *   m_Between          = nullptr;
+	b3_gl_line   *   m_CylinderIndices  = nullptr;
+	b3_gl_polygon  * m_CylinderPolygons = nullptr;
+	b3_gl_line   *   m_ConeIndices      = nullptr;
+	b3_gl_polygon  * m_ConePolygons     = nullptr;
 
 public:
 	static b3_f64    m_Sin[B3_MAX_RENDER_SUBDIV + 1]; //!< This is a list of precomputed sine values.
@@ -45,7 +45,7 @@ public:
 	 *
 	 * @param subdiv The new sub division value.
 	 */
-	b3ShapeRenderContext(b3_count subdiv = 16);
+	b3ShapeRenderContext(const b3_count subdiv = 16);
 
 	/**
 	 * This method initializes the sub division for render object indices.
@@ -54,35 +54,35 @@ public:
 	 * @param subdiv The new sub division value.
 	 * @throws b3WorldException
 	 */
-	void             b3InitSubdiv(b3_count subdiv);
+	void             b3InitSubdiv(const b3_count subdiv);
 
 	/**
 	 * This method returns precomputed line indices for cylinder shapes.
 	 *
 	 * @return The precomputed cylinder line indices.
 	 */
-	b3_gl_line   *   b3GetCylinderIndices();
+	b3_gl_line   *   b3GetCylinderIndices() const;
 
 	/**
 	 * This method returns precomputed triangle indices for cylinder shapes.
 	 *
 	 * @return The precomputed cylinder triangle indices.
 	 */
-	b3_gl_polygon  * b3GetCylinderPolygons();
+	b3_gl_polygon  * b3GetCylinderPolygons() const;
 
 	/**
 	 * This method returns precomputed line indices for cone shapes.
 	 *
 	 * @return The precomputed cone line indices.
 	 */
-	b3_gl_line   *   b3GetConeIndices();
+	b3_gl_line   *   b3GetConeIndices() const;
 
 	/**
 	 * This method returns precomputed triangle indices for cone shapes.
 	 *
 	 * @return The precomputed cone triangle indices.
 	 */
-	b3_gl_polygon  * b3GetConePolygons();
+	b3_gl_polygon  * b3GetConePolygons() const;
 };
 
 #endif

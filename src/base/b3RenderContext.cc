@@ -37,12 +37,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3_vector b3RenderContext::glSimpleLightPosition =
+b3_vector b3RenderContext::glSimpleLightPosition
 {
 	1000.0f, -2500.0f, 2000.0f
 };
 
-b3_vector b3RenderContext::glSimpleLightDirection =
+b3_vector b3RenderContext::glSimpleLightDirection
 {
 	0, 0, -1
 };
@@ -55,7 +55,7 @@ b3_bool b3RenderContext::glUse = false;
 
 #ifdef BLZ3_USE_OPENGL
 
-GLenum b3RenderContext::glLightNum[] =
+GLenum b3RenderContext::glLightNum[]
 {
 	GL_LIGHT0,
 	GL_LIGHT1,
@@ -85,6 +85,10 @@ void b3RenderContext::b3Init(b3_bool double_buffered)
 #ifdef BLZ3_USE_OPENGL
 	const char * extensions = (const char *)glGetString(GL_EXTENSIONS);
 
+	if (extensions == nullptr)
+	{
+		extensions = "";
+	}
 	b3PrintF(B3LOG_FULL,  " b3RenderContext::b3Init()\n");
 	b3PrintF(B3LOG_NORMAL, "OpenGL vendor:     %s\n", glGetString(GL_VENDOR));
 	b3PrintF(B3LOG_NORMAL, "OpenGL renderer:   %s\n", glGetString(GL_RENDERER));
