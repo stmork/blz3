@@ -2,7 +2,6 @@
 
 TEMPLATE  = lib
 CONFIG   += link_pkgconfig
-CONFIG   += precompile_header
 
 include(../common.pri)
 
@@ -13,8 +12,6 @@ PKGCONFIG   = OpenEXR
 INSTALLS   += target
 
 message("*** Blizzard III image processing library $$VERSION ***")
-
-PRECOMPILED_HEADER = b3TxInclude.h
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/image/b3Sampler.h \

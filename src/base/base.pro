@@ -1,7 +1,6 @@
 # Blizzard III Basic algorithm library
 
 TEMPLATE  = lib
-CONFIG   += precompile_header
 
 include(../common.pri)
 
@@ -11,8 +10,6 @@ INSTALLS   += target
 
 message("*** Blizzard III basic algorithm library $$VERSION ***")
 message("$$BLZ3_LIB")
-
-PRECOMPILED_HEADER = b3BaseInclude.h
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Array.h \

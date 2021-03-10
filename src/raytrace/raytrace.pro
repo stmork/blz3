@@ -1,7 +1,6 @@
 # Blizzard III Base library
 
 TEMPLATE  = lib
-CONFIG   += precompile_header
 
 include(../common.pri)
 
@@ -11,8 +10,6 @@ TARGET      = b3Raytrace
 INSTALLS   += target
 
 message("*** Blizzard III central raytracing library $$VERSION ***")
-
-PRECOMPILED_HEADER = b3RaytraceInclude.h
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3Activation.h \
