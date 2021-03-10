@@ -48,12 +48,10 @@ void QB3OpenGLWidget::animate(int frame)
 	{
 		const b3_count fps = animation->m_FramesPerSecond;
 		const double   t   = animation->m_Start + (double)frame / fps;
-		b3_vector      lower, upper;
 
+		b3PrintF(B3LOG_DEBUG, "t=%1.3fs\n", t);
 		m_Scene->b3SetAnimation(t);
-		m_Scene->b3ComputeBounds(&lower, &upper);
-		m_View.b3SetBounds(&lower, &upper);
-		m_View.b3SetCamera(m_Scene);
+		m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 		update();
 	}
 }
@@ -76,6 +74,9 @@ void QB3OpenGLWidget::paintGL()
 {
 	b3PrintF(B3LOG_FULL, ">paintGL()\n");
 	m_Context.b3StartDrawing();
+	m_View.b3SetBounds(&m_Lower, &m_Upper);
+	m_View.b3SetCamera(m_Scene);
+	m_View.b3SetupView(xWinSize, yWinSize);
 	m_Scene->b3Draw(&m_Context);
 	b3PrintF(B3LOG_FULL, "<paintGL()\n");
 }
@@ -100,18 +101,16 @@ void QB3OpenGLWidget::b3SetLights()
 
 void QB3OpenGLWidget::b3Update()
 {
-	b3_vector       lower, upper;
-
 	m_Scene->b3SetupVertexMemory(&m_Context);
 	m_Scene->b3ResetAnimation();
-	m_Scene->b3ComputeBounds(&lower, &upper);
+	m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 
-	b3PrintF(B3LOG_NORMAL, "%d vertices\n",  m_Context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL, "%d triangles\n", m_Context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL, "%d grids\n",     m_Context.glGridCount);
+	b3PrintF(B3LOG_NORMAL, "%7d vertices\n",  m_Context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL, "%7d triangles\n", m_Context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL, "%7d grids\n",     m_Context.glGridCount);
 
 	// Setup view
-	m_View.b3SetBounds(&lower, &upper);
+	m_View.b3SetBounds(&m_Lower, &m_Upper);
 	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetViewMode(B3_VIEW_3D);
 }

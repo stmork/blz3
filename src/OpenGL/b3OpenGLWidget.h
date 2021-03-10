@@ -61,6 +61,7 @@ private:
 	b3_bool               m_SpotLight = true;
 	b3_bool               m_DoubleBuffered = true;
 	b3_res                xWinSize, yWinSize;
+	b3_vector             m_Lower, m_Upper;
 };
 
 #endif // QB3OPENGLWIDGET_H
