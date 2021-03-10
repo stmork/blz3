@@ -19,6 +19,10 @@
 
 #include <QMainWindow>
 
+#include <blz3/system/b3Dir.h>
+#include <blz3/system/b3Plugin.h>
+#include <blz3/base/b3World.h>
+
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -36,5 +40,11 @@ public:
 
 private:
 	Ui::MainWindow * ui;
+
+	b3Path          textures;
+	b3Path          pictures;
+	b3Path          data;
+	b3Loader        loader;
+	b3World         world;
 };
 #endif // MAINWINDOW_H

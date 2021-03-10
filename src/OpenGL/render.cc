@@ -261,7 +261,7 @@ static void b3Update(b3Scene * scene)
 
 static void b3Prepare(b3Scene * scene)
 {
-	b3ModellerInfo * info;
+	const b3ModellerInfo * info = scene->b3GetModellerInfo();
 	b3_res          xSize, ySize;
 
 	scene->b3Reorg();
@@ -269,11 +269,7 @@ static void b3Prepare(b3Scene * scene)
 	scene->b3PrepareScene(xSize, ySize);
 	scene->b3SetCamera(scene->b3GetFirstCamera(false));
 
-	info = scene->b3GetModellerInfo();
-	if (info != nullptr)
-	{
-		all_lights = info->m_UseSceneLights;
-	}
+	all_lights = info->m_UseSceneLights;
 
 	xWinSize = xSize;
 	yWinSize = ySize;
@@ -312,7 +308,6 @@ int main(int argc, char * argv[])
 	b3Path          data;
 	b3Loader        loader;
 	b3_index        i;
-
 
 	if (argc <= 1)
 	{

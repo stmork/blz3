@@ -56,7 +56,7 @@ void b3Log::b3LogTime(const char * comment)
 	struct timeval stamp;
 
 	gettimeofday(&stamp, 0);
-	b3LogFunction(B3LOG_FULL, "                      timecode %ld - %3hd (%s)\n",
+	b3LogFunction(B3LOG_FULL, "                      timecode %ld - %3ld (%s)\n",
 		stamp.tv_sec, stamp.tv_usec / 1000, comment ? comment : "-");
 }
 

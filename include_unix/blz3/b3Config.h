@@ -40,22 +40,18 @@
 #include "blz3/system/b3Assert.h"
 
 #ifdef BLZ3_USE_OPENGL
-#define __glext_h_
-#include "GL/glu.h"
+#	include "GL/glu.h"
+#	include "blz3_glext.h"
 
-#undef __glext_h_
-#include "blz3_glext.h"
+#	ifdef BLZ3_USE_GLUT
+#		include <GL/glut.h>
+#		define no_GLU_NURBS
+#	endif
 
-#ifdef BLZ3_USE_GLUT
-#include <GL/glut.h>
-
-#define no_GLU_NURBS
-#endif
-
-#ifdef BLZ3_USE_CG
-#include <Cg/cg.h>
-#include <Cg/cgGL.h>
-#endif
+#	ifdef BLZ3_USE_CG
+#		include <Cg/cg.h>
+#		include <Cg/cgGL.h>
+#	endif
 #endif
 
 #ifdef HAVE_SSE

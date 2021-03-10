@@ -9,10 +9,12 @@ INSTALLS   += target
 message("*** Blizzard III Qt OpenGL renderer $$VERSION ***")
 
 SOURCES += \
+	b3OpenGLWidget.cpp \
 	qrender.cpp \
 	mainwindow.cpp
 
 HEADERS += \
+	b3OpenGLWidget.h \
 	mainwindow.h
 
 FORMS += \
