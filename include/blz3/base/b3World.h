@@ -123,11 +123,11 @@ class b3FirstItem;
  */
 class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 {
-	b3_u32     *    m_Buffer;
-	b3_u32          m_BufferSize;
+	b3_u32     *    m_Buffer = nullptr;
+	b3_u32          m_BufferSize = 0;
 	b3_bool         m_NeedEndianChange;
-	b3FirstItem  *  m_Start;
-	b3_count        m_Missed;
+	b3FirstItem  *  m_Start = nullptr;
+	b3_count        m_Missed = 0;
 
 public:
 	/**
@@ -135,7 +135,7 @@ public:
 	 * wanted if the hierarchy should survive the life time of this instance.
 	 * So you can disable auto deletion.
 	 */
-	b3_bool         m_AutoDelete;
+	b3_bool         m_AutoDelete = true;
 
 public:
 	/**
@@ -243,7 +243,7 @@ public:
 	/**
 	 * This method dumps the b3Item hierarchy for debugging purposes.
 	 */
-	void            b3Dump();
+	void            b3Dump() const;
 
 	/**
 	 * This method removes the first b3Item from the internal b3FirstItem class
@@ -259,7 +259,7 @@ public:
 	 *
 	 * @return The first b3Item.
 	 */
-	b3Item     *    b3GetFirst();
+	b3Item     *    b3GetFirst() const;
 
 	/**
 	 * This method sets the given b3Item as the first b3Item.
@@ -276,7 +276,7 @@ public:
 	 * @param classid The matching class id.
 	 * @return The base of the first b3Item.
 	 */
-	b3Base<b3Item> * b3GetHead(b3_u32 classid = 0);
+	b3Base<b3Item> * b3GetHead(b3_u32 classid = 0) const;
 
 	/**
 	 * This method clones the given b3Item. First b3Store is called to serialize

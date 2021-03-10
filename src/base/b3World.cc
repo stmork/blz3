@@ -41,16 +41,10 @@
 
 b3World::b3World()
 {
-	m_Buffer     = nullptr;
-	m_BufferSize = 0;
-	m_Start      = nullptr;
-	m_AutoDelete = true;
-	m_Missed     = 0;
 }
 
 b3World::b3World(const char * world_name)
 {
-	m_AutoDelete = true;
 	b3Read(world_name);
 }
 
@@ -629,7 +623,7 @@ b3_world_error b3World::b3Write(
 	return error;
 }
 
-void b3World::b3Dump()
+void b3World::b3Dump() const
 {
 	if (m_Start != nullptr)
 	{
@@ -644,7 +638,7 @@ b3Item * b3World::b3RemoveFirst()
 	return m_Start != nullptr ? m_Start->b3GetHead()->b3RemoveFirst() : nullptr;
 }
 
-b3Item * b3World::b3GetFirst()
+b3Item * b3World::b3GetFirst() const
 {
 	return m_Start != nullptr ? m_Start->b3GetHead()->First : nullptr;
 }
@@ -659,7 +653,7 @@ void b3World::b3SetFirst(b3Item * item)
 	m_Start->b3GetHead()->b3First(item);
 }
 
-b3Base<b3Item> * b3World::b3GetHead(b3_u32 class_value)
+b3Base<b3Item> * b3World::b3GetHead(b3_u32 class_value) const
 {
 	b3Base<b3Item> * base = nullptr;
 
