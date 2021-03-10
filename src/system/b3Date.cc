@@ -376,7 +376,7 @@ bool b3Date::b3Y2K_Selftest()
 	b3GMTime();
 	b3PrintF(B3LOG_DEBUG, "### Y2K\n");
 	b3PrintF(B3LOG_DEBUG, "### Y2K - The last possible time code is at:\n");
-	b3PrintF(B3LOG_DEBUG, "### Y2K - %02ld:%02ld:%02ld - %02ld.%02ld.%ld GMT\n",
+	b3PrintF(B3LOG_DEBUG, "### Y2K - %02d:%02d:%02d - %02d.%02d.%ld GMT\n",
 		hour, min, sec, day, month, year);
 
 	// Set previous mode;

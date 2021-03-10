@@ -207,7 +207,7 @@ void b3Mem::b3Dump()
 	b3CriticalSection lock(*this);
 	b3_index          i;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slot max: %d  slot count: %d\n", m_SlotMax, m_SlotCount);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slot max: %ld  slot count: %ld\n", m_SlotMax, m_SlotCount);
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slots: %p   initial slots: %p\n", m_SlotPtr, m_Slots);
 	for (i = 0; i < m_SlotMax; i++)
 	{

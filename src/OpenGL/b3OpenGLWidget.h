@@ -53,7 +53,6 @@ protected:
 
 private:
 	void b3SetLights();
-	void b3Update();
 
 	b3Scene       *       m_Scene = nullptr;
 	b3ShapeRenderContext  m_Context;

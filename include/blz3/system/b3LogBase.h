@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <chrono>
 
 #include "blz3/b3Types.h"
 #include "blz3/b3PluginDef.h"
@@ -136,8 +137,53 @@ public:
 	 * \param *format     The format string.
 	 * \param ...         The arguments used by the format string.
 	 */
-	virtual void    b3LogFunction(const b3_log_level  debug_level, const char * format, ...) = 0;
+	virtual void    b3LogFunction(const b3_log_level  debug_level, const char * format, ...) __attribute__((format(printf, 3, 4))) = 0;
 };
+
+/**
+ * This class provides profiling of a single method. It logs the method
+ * name on entering (instantiating this class e.g. with \c B3_METHOD) with a
+ * leading \c ">" and on leaving a scope with a leading \c "<" and a duration
+ * time spent inside the scope.
+ *
+ * @note When nesting \c B3_METHOD the compiler may print shadowing warnings.
+ */
+class b3MethodLogger
+{
+	const char *                          m_Method;
+	std::chrono::system_clock::time_point m_Start;
+	const b3_log_level                    m_LogLevel = B3LOG_DEBUG;
+
+public:
+	/**
+	 * The constructor prints the method name with a leading \c ">".
+	 *
+	 * @param method The method name.
+	 */
+	explicit inline b3MethodLogger(const char * method) :
+		m_Method(method), m_Start(std::chrono::system_clock::now())
+	{
+		b3LogBase::b3GetLogger()->b3LogFunction(
+					m_LogLevel, ">%s()\n", m_Method);
+	}
+
+	/**
+	 * The constructor prints the method name with a leading \c "<" and the
+	 * time spent inside the scope.
+	 */
+	virtual inline ~b3MethodLogger()
+	{
+		using namespace std::chrono;
+
+		auto elapsed = system_clock::now() - m_Start;
+		int duration = duration_cast<milliseconds>(elapsed).count();
+
+		b3LogBase::b3GetLogger()->b3LogFunction(
+					m_LogLevel, "<%s() took %dms\n", m_Method, duration);
+	}
+};
+
+#define B3_METHOD b3MethodLogger __method__(__FUNCTION__)
 
 #define b3PrintT b3LogBase::b3GetLogger()->b3LogTime
 #define b3PrintF b3LogBase::b3GetLogger()->b3LogFunction

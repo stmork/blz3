@@ -184,9 +184,9 @@ b3_bool b3Thread::b3Start(
 		threadError++;
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Thrd # Thread (%x) not started!\n",
 			m_Thread);
-		b3PrintF(B3LOG_NORMAL, "    OK/error count: %d/%d\n",
+		b3PrintF(B3LOG_NORMAL, "    OK/error count: %zd/%zd\n",
 			threadSuccess, threadError);
-		b3PrintF(B3LOG_NORMAL, "    thread count:   %d\n",
+		b3PrintF(B3LOG_NORMAL, "    thread count:   %zd\n",
 			m_ThreadCount);
 	}
 	return success;

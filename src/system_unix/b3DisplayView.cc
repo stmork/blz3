@@ -574,10 +574,10 @@ b3_bool b3DisplayView::b3CreateColormap()
 		temp.screen   = m_Screen;
 		temp.depth    = m_depth;
 		info = XGetVisualInfo(m_Display, VisualIDMask | VisualScreenMask | VisualDepthMask, &temp, &count);
-		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %d.\n", count, info, m_depth);
+		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %ld.\n", count, info, m_depth);
 		for (i = 0; i < count; i++)
 		{
-			b3PrintF(B3LOG_FULL, "%2d: %08x %08x %08x # %4d %4d # %08x\n", i,
+			b3PrintF(B3LOG_FULL, "%2d: %08lx %08lx %08lx # %4d %4d # %08x\n", i,
 				info[i].red_mask,
 				info[i].green_mask,
 				info[i].blue_mask,
