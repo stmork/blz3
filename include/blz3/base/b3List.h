@@ -184,7 +184,7 @@ public:
 		using pointer           = T *;
 		using reference         = T &;
 
-		inline b3Iterator(T * item = nullptr) : m_Item(item)
+		explicit inline b3Iterator(T * item = nullptr) : m_Item(item)
 		{
 		}
 
@@ -242,7 +242,7 @@ public:
 	{
 		using b3Iterator<b3ForwardIterator>::m_Item;
 
-		inline b3ForwardIterator(T * ptr = nullptr) :
+		explicit inline b3ForwardIterator(T * ptr = nullptr) :
 			b3Iterator<b3ForwardIterator>(ptr)
 		{
 		}
@@ -266,7 +266,7 @@ public:
 	{
 		using b3Iterator<b3BackwardIterator>::m_Item;
 
-		inline b3BackwardIterator(T * ptr = nullptr) :
+		explicit inline b3BackwardIterator(T * ptr = nullptr) :
 			b3Iterator<b3BackwardIterator>(ptr)
 		{
 		}
