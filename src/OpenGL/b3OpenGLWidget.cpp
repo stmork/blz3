@@ -19,11 +19,12 @@
 QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
 	QOpenGLWidget(parent)
 {
-
 }
 
 void QB3OpenGLWidget::b3Prepare(b3Scene * first)
 {
+	B3_METHOD;
+
 	b3_res xSize, ySize;
 
 	m_Scene = first;

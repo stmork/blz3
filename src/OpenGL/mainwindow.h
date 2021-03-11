@@ -51,7 +51,7 @@ private:
 	b3Path          pictures;
 	b3Path          data;
 	b3Loader        loader;
-	b3World         world;
+	b3World         m_World;
 	b3Scene *       m_Scene     = nullptr;
 	b3Animation *   m_Animation = nullptr;
 };

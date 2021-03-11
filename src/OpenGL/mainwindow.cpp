@@ -70,9 +70,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 	loader.b3Load();
 
-	world.b3AddPath(data);
-	world.b3Read("FlippAmiga.bwd");
-	m_Scene     = static_cast<b3Scene *>(world.b3GetFirst());
+	m_World.b3AddPath(data);
+	m_World.b3Read("FlippAmiga.bwd");
+	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
 	m_Animation = m_Scene->b3GetAnimation();
 	ui->glView->b3Prepare(m_Scene);
 
@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		const b3_count fps = m_Animation->m_FramesPerSecond;
 
+		m_Scene->b3SetAnimation(m_Animation->m_Start);
 		ui->animationSlider->setEnabled(true);
 		ui->animationSlider->setTickInterval(fps);
 		ui->animationSlider->setPageStep(fps * 5);
@@ -98,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-	world.b3Free();
+	m_World.b3Free();
 
 	delete ui;
 }
