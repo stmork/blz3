@@ -68,7 +68,7 @@ void QB3OpenGLWidget::initializeGL()
 	B3_METHOD;
 
 	m_Context.glBgColor.b3Init(0.7f, 0.7f, 1.0f);
-	m_Context.b3Init(m_DoubleBuffered);
+	m_Context.b3Init(true);
 }
 
 void QB3OpenGLWidget::resizeGL(int xSize, int ySize)

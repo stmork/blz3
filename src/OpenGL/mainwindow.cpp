@@ -39,14 +39,14 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent), ui(new Ui::MainWindow)
 {
-	ui->setupUi(this);
-
 	QSurfaceFormat format;
-	format.setDepthBufferSize(24);
 	format.setProfile(QSurfaceFormat::CoreProfile);
+	format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
 
 	// must be called before the widget or its parent window gets shown
-	ui->glView->setFormat(format);
+	QSurfaceFormat::setDefaultFormat(format);
+
+	ui->setupUi(this);
 
 	const char * BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
 	const char * BLZ3_BIN     = getenv("BLZ3_BIN");
