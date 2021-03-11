@@ -99,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+//	m_Scene->b3FreeVertices();
 	m_World.b3Free();
 
 	delete ui;
