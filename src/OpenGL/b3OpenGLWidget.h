@@ -29,22 +29,7 @@ class QB3OpenGLWidget : public QOpenGLWidget
 public:
 	explicit QB3OpenGLWidget(QWidget * parent = nullptr);
 
-	void b3Prepare(b3Item * first);
-
-	inline operator b3Scene * () const
-	{
-		return m_Scene;
-	}
-
-	inline operator b3Animation * () const
-	{
-		return m_Scene->b3GetAnimation(false);
-	}
-
-	QString timecode(const int frame) const;
-
-public slots:
-	void animate(int frame);
+	void b3Prepare(b3Scene * first);
 
 protected:
 	void initializeGL() override;

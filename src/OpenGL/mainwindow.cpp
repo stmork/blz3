@@ -72,31 +72,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	world.b3AddPath(data);
 	world.b3Read("FlippAmiga.bwd");
-	ui->glView->b3Prepare(world.b3GetFirst());
+	m_Scene     = static_cast<b3Scene *>(world.b3GetFirst());
+	m_Animation = m_Scene->b3GetAnimation();
+	ui->glView->b3Prepare(m_Scene);
 
-	b3Animation * animation = *ui->glView;
-	if (animation != nullptr)
+	if (m_Animation != nullptr)
 	{
-		const b3_count fps = animation->m_FramesPerSecond;
+		const b3_count fps = m_Animation->m_FramesPerSecond;
 
 		ui->animationSlider->setEnabled(true);
 		ui->animationSlider->setTickInterval(fps);
 		ui->animationSlider->setPageStep(fps * 5);
 		ui->animationSlider->setMinimum(0);
-		ui->animationSlider->setMaximum(fps * (animation->m_End - animation->m_Start));
+		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
 		ui->animationSlider->setValue(0);
 	}
 	else
 	{
 		ui->animationSlider->setDisabled(true);
 	}
-
 	connect(
 				ui->animationSlider, &QSlider::valueChanged,
-				ui->glView, &QB3OpenGLWidget::animate);
-	connect(
-				ui->animationSlider, &QSlider::valueChanged,
-				this, &MainWindow::relabel);
+				this, &MainWindow::animate);
 }
 
 MainWindow::~MainWindow()
@@ -106,7 +103,38 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::relabel(int frame)
+void MainWindow::animate(int frame)
 {
-	ui->animationLabel->setText(ui->glView->timecode(frame));
+	if (m_Animation != nullptr)
+	{
+		const b3_count fps = m_Animation->m_FramesPerSecond;
+		const double   t   = m_Animation->m_Start + (double)frame / fps;
+
+		b3PrintF(B3LOG_DEBUG, "t=%1.3fs\n", t);
+		m_Scene->b3SetAnimation(t);
+		update();
+	}
+
+	ui->animationLabel->setText(timecode(frame));
+	ui->glView->update();
+}
+
+QString MainWindow::timecode(const int frame) const
+{
+	if (m_Animation != nullptr)
+	{
+		const b3_count fps    = m_Animation->m_FramesPerSecond;
+		const double   t      = m_Animation->m_Start + (double)frame / fps;
+		const int      hour   = t / 3600;
+		const unsigned minute = abs(int(t) / 60) % 60;
+		const unsigned second = abs(int(t)) % 60;
+		const unsigned sub    = abs(int(t * fps)) % fps;
+
+		return QString::asprintf("%02d:%02u:%02u.%02u  %3d",
+								 hour, minute, second, sub, frame);
+	}
+	else
+	{
+		return "";
+	}
 }

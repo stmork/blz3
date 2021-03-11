@@ -40,9 +40,11 @@ public:
 	~MainWindow();
 
 private slots:
-	void relabel(int frame);
+	void animate(int frame);
 
 private:
+	QString timecode(const int frame) const;
+
 	Ui::MainWindow * ui;
 
 	b3Path          textures;
@@ -50,5 +52,8 @@ private:
 	b3Path          data;
 	b3Loader        loader;
 	b3World         world;
+	b3Scene *       m_Scene     = nullptr;
+	b3Animation *   m_Animation = nullptr;
 };
+
 #endif // MAINWINDOW_H

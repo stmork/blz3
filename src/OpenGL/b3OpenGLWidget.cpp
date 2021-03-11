@@ -22,11 +22,11 @@ QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
 
 }
 
-void QB3OpenGLWidget::b3Prepare(b3Item * first)
+void QB3OpenGLWidget::b3Prepare(b3Scene * first)
 {
-	b3_res          xSize, ySize;
+	b3_res xSize, ySize;
 
-	m_Scene = static_cast<b3Scene *>(first);
+	m_Scene = first;
 	m_Scene->b3Reorg();
 	m_Scene->b3GetDisplaySize(xSize, ySize);
 	m_Scene->b3PrepareScene(xSize, ySize);
@@ -43,44 +43,23 @@ void QB3OpenGLWidget::b3Prepare(b3Item * first)
 	b3PrintF(B3LOG_NORMAL, "%7zd vertices\n",  m_Context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL, "%7zd triangles\n", m_Context.glPolyCount);
 	b3PrintF(B3LOG_NORMAL, "%7zd grids\n",     m_Context.glGridCount);
-	update();
 }
 
-QString QB3OpenGLWidget::timecode(const int frame) const
+void QB3OpenGLWidget::b3SetLights()
 {
-	const b3Animation * animation = *this;
-
-	if (animation != nullptr)
+	m_Context.b3LightReset();
+	if (m_AllLights)
 	{
-		const b3_count fps    = animation->m_FramesPerSecond;
-		const double   t      = animation->m_Start + (double)frame / fps;
-		const int      hour   = t / 3600;
-		const unsigned minute = abs(int(t) / 60) % 60;
-		const unsigned second = abs(int(t)) % 60;
-		const unsigned sub    = abs(int(t * fps)) % fps;
+		b3PrintF(B3LOG_DEBUG, "Using multiple lights with%s spots...\n",
+			m_SpotLight ? "" : "out");
 
-		return QString::asprintf("%02d:%02u:%02u.%02u  %3d",
-								 hour, minute, second, sub, frame);
+		m_Lights.b3SetScene(m_Scene);
+		m_Lights.b3SetLightMode(m_SpotLight ? B3_LIGHT_SCENE_SPOT : B3_LIGHT_SCENE);
 	}
 	else
 	{
-		return "";
-	}
-}
-
-void QB3OpenGLWidget::animate(int frame)
-{
-	const b3Animation * animation = *this;
-
-	if (animation != nullptr)
-	{
-		const b3_count fps = animation->m_FramesPerSecond;
-		const double   t   = animation->m_Start + (double)frame / fps;
-
-		b3PrintF(B3LOG_DEBUG, "t=%1.3fs\n", t);
-		m_Scene->b3SetAnimation(t);
-		m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
-		update();
+		b3PrintF(B3LOG_DEBUG, "Using one light...\n");
+		m_Lights.b3SetLightMode(B3_LIGHT_SIMPLE);
 	}
 }
 
@@ -105,27 +84,10 @@ void QB3OpenGLWidget::paintGL()
 {
 	B3_METHOD;
 
+	m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 	m_Context.b3StartDrawing();
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
 	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetupView(xWinSize, yWinSize);
 	m_Scene->b3Draw(&m_Context);
-}
-
-void QB3OpenGLWidget::b3SetLights()
-{
-	m_Context.b3LightReset();
-	if (m_AllLights)
-	{
-		b3PrintF(B3LOG_DEBUG, "Using multiple lights with%s spots...\n",
-			m_SpotLight ? "" : "out");
-
-		m_Lights.b3SetScene(m_Scene);
-		m_Lights.b3SetLightMode(m_SpotLight ? B3_LIGHT_SCENE_SPOT : B3_LIGHT_SCENE);
-	}
-	else
-	{
-		b3PrintF(B3LOG_DEBUG, "Using one light...\n");
-		m_Lights.b3SetLightMode(B3_LIGHT_SIMPLE);
-	}
 }
