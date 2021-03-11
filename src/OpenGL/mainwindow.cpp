@@ -80,13 +80,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		const b3_count fps = m_Animation->m_FramesPerSecond;
 
-		m_Scene->b3SetAnimation(m_Animation->m_Start);
 		ui->animationSlider->setEnabled(true);
 		ui->animationSlider->setTickInterval(fps);
 		ui->animationSlider->setPageStep(fps * 5);
 		ui->animationSlider->setMinimum(0);
 		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
 		ui->animationSlider->setValue(0);
+		animate(0);
 	}
 	else
 	{

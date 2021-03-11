@@ -137,7 +137,10 @@ public:
 	 * \param *format     The format string.
 	 * \param ...         The arguments used by the format string.
 	 */
-	virtual void    b3LogFunction(const b3_log_level  debug_level, const char * format, ...) __attribute__((format(printf, 3, 4))) = 0;
+	virtual void    b3LogFunction(
+		const b3_log_level  debug_level,
+		const char     *    format, ...)
+	__attribute__((format(printf, 3, 4))) = 0;
 };
 
 /**
@@ -150,7 +153,7 @@ public:
  */
 class b3MethodLogger
 {
-	const char *                          m_Method;
+	const char              *             m_Method;
 	std::chrono::system_clock::time_point m_Start;
 	const b3_log_level                    m_LogLevel = B3LOG_DEBUG;
 
@@ -164,7 +167,7 @@ public:
 		m_Method(method), m_Start(std::chrono::system_clock::now())
 	{
 		b3LogBase::b3GetLogger()->b3LogFunction(
-					m_LogLevel, ">%s()\n", m_Method);
+			m_LogLevel, ">%s()\n", m_Method);
 	}
 
 	/**
@@ -179,7 +182,7 @@ public:
 		int duration = duration_cast<milliseconds>(elapsed).count();
 
 		b3LogBase::b3GetLogger()->b3LogFunction(
-					m_LogLevel, "<%s() took %dms\n", m_Method, duration);
+			m_LogLevel, "<%s() took %dms\n", m_Method, duration);
 	}
 };
 

@@ -89,52 +89,53 @@ void b3RenderContext::b3Init(b3_bool double_buffered)
 	{
 		extensions = "";
 	}
-	b3PrintF(B3LOG_FULL,  " b3RenderContext::b3Init()\n");
-	b3PrintF(B3LOG_NORMAL, "OpenGL vendor:     %s\n", glGetString(GL_VENDOR));
-	b3PrintF(B3LOG_NORMAL, "OpenGL renderer:   %s\n", glGetString(GL_RENDERER));
-	b3PrintF(B3LOG_NORMAL, "OpenGL version:    %s\n", glGetString(GL_VERSION));
-	b3PrintF(B3LOG_DEBUG, "OpenGL extensions: %s\n", extensions);
+	b3PrintF(B3LOG_FULL,   " b3RenderContext::b3Init()\n");
+	b3PrintF(B3LOG_FULL,   "   OpenGL extensions: %s\n", extensions);
+	b3PrintF(B3LOG_NORMAL, "   OpenGL vendor:     %s\n", glGetString(GL_VENDOR));
+	b3PrintF(B3LOG_NORMAL, "   OpenGL renderer:   %s\n", glGetString(GL_RENDERER));
+	b3PrintF(B3LOG_NORMAL, "   OpenGL version:    %s\n", glGetString(GL_VERSION));
 
 	if (strstr(extensions, "GL_ARB_vertex_program") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Vertex shader low level support.\n");
+		b3PrintF(B3LOG_DEBUG, "   Vertex shader low level support.\n");
 	}
 
 	if (strstr(extensions, "GL_ARB_fragment_program") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Pixel shader low level support.\n");
+		b3PrintF(B3LOG_DEBUG, "   Pixel shader low level support.\n");
 	}
 
 	if (strstr(extensions, "GL_ARB_vertex_shader") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Vertex shader language support (nice).\n");
+		b3PrintF(B3LOG_DEBUG, "   Vertex shader language support (nice).\n");
 	}
 
 	if (strstr(extensions, "GL_ARB_fragment_shader") != nullptr)
 	{
-		b3PrintF(B3LOG_NORMAL, "Pixel shader language support (very fine).\n");
+		b3PrintF(B3LOG_NORMAL, "   Pixel shader language support (very fine).\n");
 	}
 
 	if (strstr(extensions, "GL_ARB_shading_language_100") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Support for OpenGL shading language V1.00.\n");
+		b3PrintF(B3LOG_DEBUG, "   Support for OpenGL shading language V1.00.\n");
 	}
 
 	b3VectorBufferObjects::b3Init(extensions);
 	if (b3VectorBufferObjects::b3HasVBO())
 	{
-		b3PrintF(B3LOG_DEBUG, "Having vertex buffer objects.\n");
+		b3PrintF(B3LOG_DEBUG, "   Having vertex buffer objects.\n");
 	}
 	if (b3VectorBufferObjects::b3AllowVBO())
 	{
-		b3PrintF(B3LOG_DEBUG, "Allowing vertex buffer objects.\n");
+		b3PrintF(B3LOG_DEBUG, "   Allowing vertex buffer objects.\n");
 	}
 
 	b3MultiSample::b3Init(extensions);
 	if (b3MultiSample::b3HasMS())
 	{
-		b3PrintF(B3LOG_DEBUG, "Having multisampling.\n");
-		b3PrintF(B3LOG_NORMAL, "Multisampling: %s\n", b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
+		b3PrintF(B3LOG_DEBUG, "   Having multisampling.\n");
+		b3PrintF(B3LOG_NORMAL, "   Multisampling: %s\n",
+			b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
 		b3MultiSample::b3Enable(true);
 	}
 

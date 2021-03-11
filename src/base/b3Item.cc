@@ -209,7 +209,7 @@ void b3Item::b3DumpSimple(b3_count level, b3_log_level log_level) const
 
 	b3DumpSpace(level, log_level);
 	b3PrintF(log_level, "%08x %7zd # %7u %7u # %7u",
-			 ClassType, Size, m_ItemSize, m_ItemOffset, m_ParseIndex);
+		ClassType, Size, m_ItemSize, m_ItemOffset, m_ParseIndex);
 
 	for (i = 0; i < m_HeadCount; i++)
 	{

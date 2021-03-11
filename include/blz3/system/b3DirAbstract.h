@@ -166,7 +166,8 @@ public:
 	 * @param format The format string.
 	 * @param ... The arguments.
 	 */
-	virtual void b3Format(const char * format, ...) = 0;
+	virtual void b3Format(const char * format, ...)
+	__attribute__((format(printf, 2, 3))) = 0;
 
 	/**
 	 * This method appends a string to the filename of this instance in a safe way

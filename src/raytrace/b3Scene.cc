@@ -411,7 +411,7 @@ b3CameraPart * b3Scene::b3UpdateCamera()
 {
 	if (m_ActualCamera != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Using camera %s\n", m_ActualCamera->b3GetName());
+		b3PrintF(B3LOG_FULL, "Using camera %s\n", m_ActualCamera->b3GetName());
 		m_EyePoint 	= m_ActualCamera->m_EyePoint;
 		m_ViewPoint = m_ActualCamera->m_ViewPoint;
 		m_Width     = m_ActualCamera->m_Width;

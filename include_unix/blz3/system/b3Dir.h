@@ -74,7 +74,8 @@ public:
 	void b3ExtractExt() override;
 	void b3Correct(const char * path) override;
 	void b3Correct() override;
-	void b3Format(const char * format, ...) override;
+	void b3Format(const char * format, ...) override
+	__attribute__((format(printf, 2, 3)));
 	void b3Append(const char * ext) override;
 
 	/**
