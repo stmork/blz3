@@ -56,7 +56,6 @@ public:
 	 */
 	inline b3Array(b3_count increment B3_UNUSED = B3_ARRAY_DEFAULT_INCREMENT)
 	{
-		elements.reserve(B3_ARRAY_INITIAL);
 	}
 
 	/**
@@ -64,6 +63,7 @@ public:
 	 */
 	virtual ~b3Array()
 	{
+		elements.clear();
 	}
 
 	/**
