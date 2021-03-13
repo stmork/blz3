@@ -111,10 +111,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::free()
 {
-//	m_Scene->b3FreeVertexMemory();
-	m_World.b3Free();
 	camera_model->clear();
 	light_model->clear();
+	m_World.b3Free();
 
 	m_Scene     = nullptr;
 	m_Animation = nullptr;
