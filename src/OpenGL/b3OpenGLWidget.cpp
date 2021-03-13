@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	qrender.cpp $
+**	$Filename:	b3OpenGLWidget.cpp $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer

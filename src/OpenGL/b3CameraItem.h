@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	qrender.cpp $
+**	$Filename:	b3CameraItem.h $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -25,6 +25,13 @@ class QB3CameraItem : public QStandardItem
 {
 public:
 	explicit QB3CameraItem(b3CameraPart * camera);
+
+	inline operator b3CameraPart *() const
+	{
+		return m_Camera;
+	}
+
+	bool check();
 
 private:
 	b3CameraPart * m_Camera = nullptr;

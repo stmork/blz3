@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	brt3.cc $
+**	$Filename:	mainwindow.cc $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -14,6 +14,8 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include <QFileDialog>
 
 #include "b3CameraItem.h"
 #include "b3LightItem.h"
@@ -74,57 +76,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	loader.b3Load();
 
 	m_World.b3AddPath(data);
-	m_World.b3Read("FlippAmiga.bwd");
-	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
-	m_Animation = m_Scene->b3GetAnimation();
-	ui->glView->b3Prepare(m_Scene);
 
-	enableView(B3_VIEW_3D);
-	enableAllLights(ui->glView->b3IsAllLights());
-	enableAnimation();
-
-	QStandardItemModel * camera_model = new QStandardItemModel(ui->cameraListView);
+	camera_model = new QStandardItemModel(ui->cameraListView);
 	ui->cameraListView->setModel(camera_model);
 
-	for(b3CameraPart * camera = m_Scene->b3GetFirstCamera();
-		camera != nullptr;
-		camera  = m_Scene->b3GetNextCamera(camera))
-	{
-		QB3CameraItem * item = new QB3CameraItem(camera);
-
-		camera_model->appendRow(item);
-	}
-
-	QStandardItemModel * light_model = new QStandardItemModel(ui->lightListView);
+	light_model = new QStandardItemModel(ui->lightListView);
 	ui->lightListView->setModel(light_model);
-
-	B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
-	{
-		QB3LightItem * item = new QB3LightItem(light);
-
-		light_model->appendRow(item);
-	}
-
-	if (m_Animation != nullptr)
-	{
-		const b3_count fps = m_Animation->m_FramesPerSecond;
-
-		ui->animationSlider->setEnabled(true);
-		ui->animationSlider->setTickInterval(fps);
-		ui->animationSlider->setPageStep(fps * 5);
-		ui->animationSlider->setMinimum(0);
-		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
-		ui->animationSlider->setValue(0);
-
-		animation.setStartValue(0);
-		animation.setEndValue(ui->animationSlider->maximum());
-		animation.setDuration((m_Animation->m_End - m_Animation->m_Start) * 1000);
-		animate(0);
-	}
-	else
-	{
-		ui->animationSlider->setDisabled(true);
-	}
 
 	animation.setTargetObject(ui->animationSlider);
 	animation.setPropertyName("value");
@@ -132,13 +89,24 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(
 				ui->animationSlider, &QSlider::valueChanged,
 				this, &MainWindow::animate);
+	connect(
+				camera_model,  &QStandardItemModel::itemChanged,
+				this, &MainWindow::selectCamera);
+	connect(
+				light_model,  &QStandardItemModel::itemChanged,
+				this, &MainWindow::selectLight);
+
+	m_World.b3Read("FlippAmiga.bwd");
+	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
+	m_Animation = m_Scene->b3GetAnimation();
+	ui->glView->b3Prepare(m_Scene);
+	prepareUI();
 }
 
 MainWindow::~MainWindow()
 {
 //	m_Scene->b3FreeVertices();
-	m_World.b3Free();
-
+	free();
 	delete ui;
 }
 
@@ -156,6 +124,20 @@ void MainWindow::animate(int frame)
 
 	ui->animationLabel->setText(timecode(frame));
 	ui->glView->update();
+}
+
+void MainWindow::selectCamera(QStandardItem * item)
+{
+	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(item);
+
+	camera_item->check();
+}
+
+void MainWindow::selectLight(QStandardItem * item)
+{
+	QB3LightItem * light_item = static_cast<QB3LightItem *>(item);
+
+	light_item->check();
 }
 
 QString MainWindow::timecode(const int frame) const
@@ -201,6 +183,75 @@ void MainWindow::enableAllLights(const bool all)
 	ui->actionLightSimple->setChecked(!all);
 	ui->actionLightAll->setChecked(all);
 	ui->glView->b3SetAllLights(all);
+}
+
+void MainWindow::free()
+{
+	m_World.b3Free();
+	camera_model->clear();
+	light_model->clear();
+}
+
+void MainWindow::prepareUI()
+{
+	for(b3CameraPart * camera = m_Scene->b3GetFirstCamera();
+		camera != nullptr;
+		camera  = m_Scene->b3GetNextCamera(camera))
+	{
+		QB3CameraItem * item = new QB3CameraItem(camera);
+
+		camera_model->appendRow(item);
+	}
+	B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
+	{
+		QB3LightItem * item = new QB3LightItem(light);
+
+		light_model->appendRow(item);
+	}
+
+	if (m_Animation != nullptr)
+	{
+		const b3_count fps = m_Animation->m_FramesPerSecond;
+
+		ui->animationSlider->setEnabled(true);
+		ui->animationSlider->setTickInterval(fps);
+		ui->animationSlider->setPageStep(fps * 5);
+		ui->animationSlider->setMinimum(0);
+		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
+		ui->animationSlider->setValue(0);
+
+		animation.setStartValue(0);
+		animation.setEndValue(ui->animationSlider->maximum());
+		animation.setDuration((m_Animation->m_End - m_Animation->m_Start) * 1000);
+		animate(0);
+	}
+	else
+	{
+		ui->animationSlider->setDisabled(true);
+	}
+
+	enableView(B3_VIEW_3D);
+	enableAllLights(ui->glView->b3IsAllLights());
+	enableAnimation();
+}
+
+void MainWindow::on_actionOpenScene_triggered()
+{
+	QFileDialog dialog(this, tr("Blizzard III Szene öffnen"), QString(data), "*.bwd");
+
+	dialog.setViewMode(QFileDialog::Detail);
+	dialog.setAcceptMode(QFileDialog::AcceptOpen);
+	if (dialog.exec())
+	{
+		QStringList files = dialog.selectedFiles();
+
+		free();
+		m_World.b3Read(files.first().toStdString().c_str());
+		m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
+		m_Animation = m_Scene->b3GetAnimation();
+		ui->glView->b3Prepare(m_Scene);
+		prepareUI();
+	}
 }
 
 void MainWindow::on_actionQuit_triggered()

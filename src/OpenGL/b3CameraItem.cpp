@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	qrender.cpp $
+**	$Filename:	b3CameraItem.cpp $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -18,5 +18,13 @@ QB3CameraItem::QB3CameraItem(b3CameraPart * camera) : m_Camera(camera)
 {
 	setCheckable(true);
 	setCheckState(camera->b3IsActive() ? Qt::Checked : Qt::Unchecked);
-	setText(camera->b3GetName());
+	setText(QString::fromLatin1(camera->b3GetName()));
+}
+
+bool QB3CameraItem::check()
+{
+	const bool checked = checkState() == Qt::Checked;
+
+	m_Camera->b3Activate(checked);
+	return checked;
 }

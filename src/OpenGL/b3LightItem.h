@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	qrender.cpp $
+**	$Filename:	b3LightItem.h $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -25,6 +25,13 @@ class QB3LightItem : public QStandardItem
 {
 public:
 	explicit QB3LightItem(b3Light * light);
+
+	inline operator b3Light *() const
+	{
+		return m_Light;
+	}
+
+	bool check();
 
 private:
 	b3Light * m_Light;

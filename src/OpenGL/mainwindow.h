@@ -33,6 +33,9 @@ namespace Ui
 }
 QT_END_NAMESPACE
 
+class QStandardItemModel;
+class QStandardItem;
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -43,7 +46,10 @@ public:
 
 private slots:
 	void animate(int frame);
+	void selectCamera(QStandardItem * item);
+	void selectLight(QStandardItem * item);
 
+	void on_actionOpenScene_triggered();
 	void on_actionQuit_triggered();
 
 	void on_actionView3D_triggered();
@@ -69,16 +75,21 @@ private:
 	void    enableAnimation();
 	void    enableAllLights(const bool all);
 
-	Ui::MainWindow  *  ui;
-	QPropertyAnimation animation;
+	void    free();
+	void    prepareUI();
 
-	b3Path          textures;
-	b3Path          pictures;
-	b3Path          data;
-	b3Loader        loader;
-	b3World         m_World;
-	b3Scene    *    m_Scene     = nullptr;
-	b3Animation  *  m_Animation = nullptr;
+	Ui::MainWindow   *   ui;
+	QPropertyAnimation   animation;
+	QStandardItemModel * camera_model;
+	QStandardItemModel * light_model;
+
+	b3Path               textures;
+	b3Path               pictures;
+	b3Path               data;
+	b3Loader             loader;
+	b3World              m_World;
+	b3Scene       *      m_Scene     = nullptr;
+	b3Animation     *    m_Animation = nullptr;
 };
 
 #endif // MAINWINDOW_H
