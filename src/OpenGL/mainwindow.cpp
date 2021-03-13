@@ -105,9 +105,62 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-//	m_Scene->b3FreeVertices();
 	free();
 	delete ui;
+}
+
+void MainWindow::free()
+{
+//	m_Scene->b3FreeVertexMemory();
+	m_World.b3Free();
+	camera_model->clear();
+	light_model->clear();
+
+	m_Scene     = nullptr;
+	m_Animation = nullptr;
+}
+
+void MainWindow::prepareUI()
+{
+	for(b3CameraPart * camera = m_Scene->b3GetFirstCamera();
+		camera != nullptr;
+		camera  = m_Scene->b3GetNextCamera(camera))
+	{
+		QB3CameraItem * item = new QB3CameraItem(camera);
+
+		camera_model->appendRow(item);
+	}
+	B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
+	{
+		QB3LightItem * item = new QB3LightItem(light);
+
+		light_model->appendRow(item);
+	}
+
+	if (m_Animation != nullptr)
+	{
+		const b3_count fps = m_Animation->m_FramesPerSecond;
+
+		ui->animationSlider->setEnabled(true);
+		ui->animationSlider->setTickInterval(fps);
+		ui->animationSlider->setPageStep(fps * 5);
+		ui->animationSlider->setMinimum(0);
+		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
+		ui->animationSlider->setValue(0);
+
+		animation.setStartValue(0);
+		animation.setEndValue(ui->animationSlider->maximum());
+		animation.setDuration((m_Animation->m_End - m_Animation->m_Start) * 1000);
+		animate(0);
+	}
+	else
+	{
+		ui->animationSlider->setDisabled(true);
+	}
+
+	enableView(B3_VIEW_3D);
+	enableAllLights(ui->glView->b3IsAllLights());
+	enableAnimation();
 }
 
 void MainWindow::animate(int frame)
@@ -185,55 +238,6 @@ void MainWindow::enableAllLights(const bool all)
 	ui->glView->b3SetAllLights(all);
 }
 
-void MainWindow::free()
-{
-	m_World.b3Free();
-	camera_model->clear();
-	light_model->clear();
-}
-
-void MainWindow::prepareUI()
-{
-	for(b3CameraPart * camera = m_Scene->b3GetFirstCamera();
-		camera != nullptr;
-		camera  = m_Scene->b3GetNextCamera(camera))
-	{
-		QB3CameraItem * item = new QB3CameraItem(camera);
-
-		camera_model->appendRow(item);
-	}
-	B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
-	{
-		QB3LightItem * item = new QB3LightItem(light);
-
-		light_model->appendRow(item);
-	}
-
-	if (m_Animation != nullptr)
-	{
-		const b3_count fps = m_Animation->m_FramesPerSecond;
-
-		ui->animationSlider->setEnabled(true);
-		ui->animationSlider->setTickInterval(fps);
-		ui->animationSlider->setPageStep(fps * 5);
-		ui->animationSlider->setMinimum(0);
-		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
-		ui->animationSlider->setValue(0);
-
-		animation.setStartValue(0);
-		animation.setEndValue(ui->animationSlider->maximum());
-		animation.setDuration((m_Animation->m_End - m_Animation->m_Start) * 1000);
-		animate(0);
-	}
-	else
-	{
-		ui->animationSlider->setDisabled(true);
-	}
-
-	enableView(B3_VIEW_3D);
-	enableAllLights(ui->glView->b3IsAllLights());
-	enableAnimation();
-}
 
 void MainWindow::on_actionOpenScene_triggered()
 {
