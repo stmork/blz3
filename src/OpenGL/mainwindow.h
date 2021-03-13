@@ -18,6 +18,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPropertyAnimation>
 
 #include <blz3/system/b3Dir.h>
 #include <blz3/system/b3Plugin.h>
@@ -55,11 +56,21 @@ private slots:
 
 	void on_actionDeaktivateAll_triggered();
 
+	void on_actionAnimPlay_triggered();
+
+	void on_actionAnimStop_triggered();
+
+	void on_actionAnimPause_triggered();
+
+	void on_actionAnimRepeat_triggered();
+
 private:
 	QString timecode(const int frame) const;
 	void    enableView(const b3_view_mode mode);
+	void    enableAnimation();
 
-	Ui::MainWindow * ui;
+	Ui::MainWindow *   ui;
+	QPropertyAnimation animation;
 
 	b3Path          textures;
 	b3Path          pictures;

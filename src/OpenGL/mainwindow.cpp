@@ -86,12 +86,20 @@ MainWindow::MainWindow(QWidget *parent) :
 		ui->animationSlider->setMinimum(0);
 		ui->animationSlider->setMaximum(fps * (m_Animation->m_End - m_Animation->m_Start));
 		ui->animationSlider->setValue(0);
+
+		animation.setStartValue(0);
+		animation.setEndValue(ui->animationSlider->maximum());
+		animation.setDuration((m_Animation->m_End - m_Animation->m_Start) * 1000);
 		animate(0);
 	}
 	else
 	{
 		ui->animationSlider->setDisabled(true);
 	}
+
+	animation.setTargetObject(ui->animationSlider);
+	animation.setPropertyName("value");
+
 	connect(
 				ui->animationSlider, &QSlider::valueChanged,
 				this, &MainWindow::animate);
@@ -152,6 +160,13 @@ void MainWindow::enableView(const b3_view_mode mode)
 	ui->glView->b3SetViewmode(mode);
 }
 
+void MainWindow::enableAnimation()
+{
+	ui->actionAnimPlay->setChecked(animation.state() == QPropertyAnimation::Running);
+	ui->actionAnimStop->setChecked(animation.state() == QPropertyAnimation::Paused);
+	ui->actionAnimPause->setChecked(animation.state() == QPropertyAnimation::Paused);
+}
+
 void MainWindow::on_actionQuit_triggered()
 {
 	QApplication::quit();
@@ -192,4 +207,43 @@ void MainWindow::on_actionDeaktivateAll_triggered()
 {
 	m_Scene->b3Activate(false);
 	ui->glView->update();
+}
+
+void MainWindow::on_actionAnimPlay_triggered()
+{
+	animation.start();
+	enableAnimation();
+}
+
+void MainWindow::on_actionAnimStop_triggered()
+{
+	animation.stop();
+	enableAnimation();
+}
+
+void MainWindow::on_actionAnimPause_triggered()
+{
+	switch(animation.state())
+	{
+	case QPropertyAnimation::Running:
+		animation.pause();
+		break;
+
+	case QPropertyAnimation::Stopped:
+		animation.start();
+		break;
+
+	case QPropertyAnimation::Paused:
+		animation.resume();
+		break;
+	}
+	enableAnimation();
+}
+
+void MainWindow::on_actionAnimRepeat_triggered()
+{
+	bool repeat = animation.loopCount() < 0;
+
+	animation.setLoopCount(repeat ? 1 : -1);
+	ui->actionAnimRepeat->setChecked(animation.loopCount() < 0);
 }
