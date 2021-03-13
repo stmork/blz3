@@ -31,6 +31,7 @@ public:
 
 	void b3Prepare(b3Scene * first);
 	void b3SetViewmode(const b3_view_mode mode);
+	void b3SetCamera(b3CameraPart * camera);
 
 	bool b3IsAllLights() const;
 	void b3SetAllLights(const bool all);

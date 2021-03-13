@@ -31,7 +31,6 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first)
 	m_Scene->b3Reorg();
 	m_Scene->b3GetDisplaySize(xSize, ySize);
 	m_Scene->b3PrepareScene(xSize, ySize);
-	m_Scene->b3SetCamera(m_Scene->b3GetFirstCamera(false));
 	m_Scene->b3Activate(false);
 
 	const b3ModellerInfo * info = m_Scene->b3GetModellerInfo();
@@ -39,6 +38,7 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first)
 
 	m_Scene->b3SetupVertexMemory(&m_Context);
 	m_Scene->b3ResetAnimation();
+	b3SetCamera(m_Scene->b3GetFirstCamera(false));
 	b3SetLights();
 
 	b3PrintF(B3LOG_NORMAL, "%7zd vertices\n",  m_Context.glVertexCount);
@@ -50,6 +50,13 @@ void QB3OpenGLWidget::b3SetViewmode(const b3_view_mode mode)
 {
 	m_ViewMode = mode;
 	m_View.b3SetViewMode(m_ViewMode);
+	update();
+}
+
+void QB3OpenGLWidget::b3SetCamera(b3CameraPart * camera)
+{
+	m_Scene->b3SetCamera(camera);
+	m_View.b3SetCamera(m_Scene);
 	update();
 }
 
@@ -111,7 +118,6 @@ void QB3OpenGLWidget::paintGL()
 	m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 	m_Context.b3StartDrawing();
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
-	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetupView(xWinSize, yWinSize);
 	m_Scene->b3Draw(&m_Context);
 }

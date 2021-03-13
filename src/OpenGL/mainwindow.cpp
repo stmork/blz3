@@ -348,3 +348,11 @@ void MainWindow::on_actionLightAll_triggered()
 {
 	enableAllLights(true);
 }
+
+void MainWindow::on_cameraListView_clicked(const QModelIndex &index)
+{
+	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
+	index;
+
+	ui->glView->b3SetCamera(*camera_item);
+}
