@@ -168,7 +168,7 @@ void b3AnimElement::b3Write()
 	b3StoreString(m_Object, B3_BOXSTRINGLEN);
 }
 
-char * b3AnimElement::b3GetName()
+const char * b3AnimElement::b3GetName() const
 {
 	return m_Name;
 }

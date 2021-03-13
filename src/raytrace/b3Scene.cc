@@ -200,20 +200,21 @@ b3_bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize)
 **                                                                      **
 *************************************************************************/
 
-char * b3Scene::b3GetName()
+const char * b3Scene::b3GetName() const
 {
-	m_Filename.b3SplitFileName(nullptr, m_SceneName);
-	m_SceneName.b3RemoveExt();
 	return m_SceneName;
 }
 
-char * b3Scene::b3GetFilename()
+const char * b3Scene::b3GetFilename() const
 {
 	return m_Filename;
 }
 
 void b3Scene::b3SetFilename(const char * filename)
 {
+	m_Filename.b3SplitFileName(nullptr, m_SceneName);
+	m_SceneName.b3RemoveExt();
+
 	m_Filename.b3Format("%s", filename);
 }
 

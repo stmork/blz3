@@ -60,7 +60,7 @@ public:
 	 * @param time The time point for animation.
 	 * @return The cloudiness.
 	 */
-	b3_f64 b3ComputeClouds(const b3_line64 * ray, b3_f64 & r, const b3_f64 time);
+	b3_f64 b3ComputeClouds(const b3_line64 * ray, b3_f64 & r, const b3_f64 time) const;
 };
 
 #endif

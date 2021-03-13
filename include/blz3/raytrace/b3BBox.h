@@ -87,7 +87,7 @@ public:
 	 */
 	static void      b3Register();
 	void             b3Write() override;
-	void             b3Dump(b3_count level);
+	void             b3Dump(b3_count level) const override;
 	void             b3SetName(const char * name);
 	void             b3SetupVertexMemory(b3RenderContext * context) override;
 	void             b3FreeVertexMemory() override;
@@ -107,7 +107,7 @@ public:
 	b3_bool          b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
 	b3_count         b3Count();
 	b3_bool          b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
-	char      *      b3GetName();
+	const char   *   b3GetName() const override;
 	b3_bool          b3BacktraceRecompute(b3BBox * search);
 	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox);
 	b3BBox     *     b3FindParentBBox(b3Shape * shape);
@@ -130,7 +130,7 @@ public:
 	 *
 	 * @return List of bounding box shapes.
 	 */
-	inline b3Base<b3Item> * b3GetShapeHead()
+	inline b3Base<b3Item> * b3GetShapeHead() const
 	{
 		return &m_Heads[0];
 	}
@@ -140,7 +140,7 @@ public:
 	 *
 	 * @return List of sub bounding boxes.
 	 */
-	inline b3Base<b3Item> * b3GetBBoxHead()
+	inline b3Base<b3Item> * b3GetBBoxHead() const
 	{
 		return &m_Heads[1];
 	}

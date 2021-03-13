@@ -240,7 +240,7 @@ public:
 	 *
 	 * @return The bump list.
 	 */
-	inline b3Base<b3Item> * b3GetBumpHead()
+	inline b3Base<b3Item> * b3GetBumpHead() const
 	{
 		return &m_Heads[0];
 	}
@@ -250,7 +250,7 @@ public:
 	 *
 	 * @return The stencil list.
 	 */
-	inline b3Base<b3Item> * b3GetConditionHead()
+	inline b3Base<b3Item> * b3GetConditionHead() const
 	{
 		return &m_Heads[1];
 	}
@@ -260,7 +260,7 @@ public:
 	 *
 	 * @return The material list.
 	 */
-	inline b3Base<b3Item> * b3GetMaterialHead()
+	inline b3Base<b3Item> * b3GetMaterialHead() const
 	{
 		return &m_Heads[2];
 	}

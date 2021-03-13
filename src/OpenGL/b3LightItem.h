@@ -26,7 +26,7 @@ class QB3LightItem : public QStandardItem
 public:
 	explicit QB3LightItem(b3Light * light);
 
-	inline operator b3Light *() const
+	inline operator b3Light * () const
 	{
 		return m_Light;
 	}

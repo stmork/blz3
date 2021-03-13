@@ -108,7 +108,7 @@ void b3BBox::b3Recount(b3Base<b3Item> * base, b3_count level)
 **                                                                      **
 *************************************************************************/
 
-b3_count b3Scene::b3GetBBoxCount()
+b3_count b3Scene::b3GetBBoxCount() const
 {
 	b3_count  count = 0;
 
@@ -164,6 +164,14 @@ void b3BBox::b3SetupVertexMemory(b3RenderContext * context)
 	{
 		shape->b3SetupVertexMemory(context);
 		shape->b3AddCount(context);
+	}
+}
+
+void b3Scene::b3FreeVertexMemory()
+{
+	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
+	{
+		bbox->b3FreeVertexMemory();
 	}
 }
 
@@ -460,7 +468,7 @@ void b3BBox::b3Activate(b3_bool activate, b3_bool recurse)
 **                                                                      **
 *************************************************************************/
 
-b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox)
+b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox) const
 {
 	b3Item     *     item;
 	b3BBox     *     inc_bbox;
@@ -540,7 +548,7 @@ void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation
 **                                                                      **
 *************************************************************************/
 
-b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape)
+b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape) const
 {
 	b3BBox * result;
 

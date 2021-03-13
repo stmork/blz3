@@ -209,7 +209,7 @@ public:
 	 *
 	 * @return The camera name.
 	 */
-	char  *  b3GetName();
+	const char  *  b3GetName() const override;
 
 	/**
 	 * This method sets a new camera name.

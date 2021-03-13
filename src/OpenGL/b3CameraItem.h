@@ -26,7 +26,7 @@ class QB3CameraItem : public QStandardItem
 public:
 	explicit QB3CameraItem(b3CameraPart * camera);
 
-	inline operator b3CameraPart *() const
+	inline operator b3CameraPart * () const
 	{
 		return m_Camera;
 	}

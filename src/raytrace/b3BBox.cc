@@ -172,7 +172,7 @@ b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursi
 	return true;
 }
 
-char * b3BBox::b3GetName()
+const char * b3BBox::b3GetName() const
 {
 	return m_BoxName;
 }
@@ -383,7 +383,7 @@ b3_bool b3BBox::b3IsExpanded()
 **                                                                      **
 *************************************************************************/
 
-void b3BBox::b3Dump(b3_count level)
+void b3BBox::b3Dump(b3_count level) const
 {
 	level = b3GetType();
 	b3DumpSpace(level);

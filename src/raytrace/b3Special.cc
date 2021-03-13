@@ -265,7 +265,7 @@ void b3CameraPart::b3Transform(b3_matrix * transformation)
 	b3Matrix::b3VMul(transformation, &m_Height,   &m_Height,   false);
 }
 
-char * b3CameraPart::b3GetName()
+const char * b3CameraPart::b3GetName() const
 {
 	return m_CameraName;
 }

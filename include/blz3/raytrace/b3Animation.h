@@ -138,7 +138,7 @@ public:
 	void b3Write() override;
 
 public:
-	char      *     b3GetName();
+	const char   *  b3GetName() const override;
 
 	/**
 	 * This method computes the center position.
