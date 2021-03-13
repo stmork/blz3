@@ -263,7 +263,7 @@ void b3RenderContext::b3LightReset(b3_pkd_color ambient)
 	b3PrintF(B3LOG_FULL, " b3RenderContext::b3LightReset()\n");
 
 #ifdef BLZ3_USE_OPENGL
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,     GL_TRUE);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, LOCAL_VIEWER);
 
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
@@ -338,7 +338,7 @@ b3_bool b3RenderContext::b3LightAdd(const b3_render_light_info * info)
 }
 
 void b3RenderContext::b3LightSet(
-	const b3_index              num,
+	const b3_index               num,
 	const b3_render_light_info * info)
 {
 #ifdef BLZ3_USE_OPENGL

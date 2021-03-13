@@ -245,7 +245,7 @@ public:
 	 * @param src The b3Color instance to convert.
 	 * @param dst The resulting OpenGL floats.
 	 */
-	static inline void b3ColorToGL(b3Color & src, GLfloat * dst)
+	static inline void b3ColorToGL(const b3Color & src, GLfloat * dst)
 	{
 		*dst++ =       src[b3Color::R];
 		*dst++ =       src[b3Color::G];
@@ -259,7 +259,7 @@ public:
 	 * @param src The b3Color instance to convert.
 	 * @param dst The resulting OpenGL unsigned bytes.
 	 */
-	static inline void b3ColorToGL(b3Color & src, GLubyte * dst)
+	static inline void b3ColorToGL(const b3Color & src, GLubyte * dst)
 	{
 		*dst++ = (GLubyte)(src[b3Color::R] * 255);
 		*dst++ = (GLubyte)(src[b3Color::G] * 255);
@@ -372,11 +372,11 @@ private:
  */
 class B3_PLUGIN b3RenderObject
 {
-	static b3Tx        glTextureBuffer;
-	static b3Mutex     glTextureMutex;
+	static b3Tx         glTextureBuffer;
+	static b3Mutex      glTextureMutex;
 
-	b3_bool            glMaterialComputed;
-	b3_bool            glInit;
+	b3_bool             glMaterialComputed;
+	b3_bool             glInit;
 
 protected:
 	b3VertexElements  * glVertexElements  = nullptr;  //!< The vertex data.
@@ -384,24 +384,24 @@ protected:
 	b3PolygonElements * glPolygonElements = nullptr;  //!< The triangle index data.
 
 #ifdef BLZ3_USE_OPENGL
-	GLuint             glDisplayList;            //!< The display list for defining material properties.
+	GLuint              glDisplayList;            //!< The display list for defining material properties.
 
 	// Some material values
-	GLfloat            glAmbient[4];             //!< The ambient material color.
-	GLfloat            glDiffuse[4];             //!< The diffuse material color.
-	GLfloat            glSpecular[4];            //!< The specular material color.
-	GLfloat            glShininess;              //!< The specular exponent.
+	GLfloat             glAmbient[4];             //!< The ambient material color.
+	GLfloat             glDiffuse[4];             //!< The diffuse material color.
+	GLfloat             glSpecular[4];            //!< The specular material color.
+	GLfloat             glShininess;              //!< The specular exponent.
 
 	// Some texture values
-	GLuint             glTextureId;              //!< The OpenGL texture id.
-	GLubyte      *     glTextureData = nullptr;  //!< The bitmap data of the texture.
-	b3_res             glTextureSize;            //!< The bitmap buffer size.
-	b3_res             glTextureSizeX;           //!< The x resolution of the texture.
-	b3_res             glTextureSizeY;           //!< The y resolution of the texture.
-	b3_f64             glTextureTransX;          //!< The texture x translation.
-	b3_f64             glTextureTransY;          //!< The texture y translation.
-	b3_f64             glTextureScaleX;          //!< The x scaling factor of the texture.
-	b3_f64             glTextureScaleY;          //!< The y scaling factor of the texture.
+	GLuint              glTextureId;              //!< The OpenGL texture id.
+	GLubyte      *      glTextureData = nullptr;  //!< The bitmap data of the texture.
+	b3_res              glTextureSize;            //!< The bitmap buffer size.
+	b3_res              glTextureSizeX;           //!< The x resolution of the texture.
+	b3_res              glTextureSizeY;           //!< The y resolution of the texture.
+	b3_f64              glTextureTransX;          //!< The texture x translation.
+	b3_f64              glTextureTransY;          //!< The texture y translation.
+	b3_f64              glTextureScaleX;          //!< The x scaling factor of the texture.
+	b3_f64              glTextureScaleY;          //!< The y scaling factor of the texture.
 #endif
 
 public:

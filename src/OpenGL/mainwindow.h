@@ -53,23 +53,23 @@ private slots:
 	void on_actionViewRight_triggered();
 
 	void on_actionActivateAll_triggered();
-
 	void on_actionDeaktivateAll_triggered();
 
 	void on_actionAnimPlay_triggered();
-
 	void on_actionAnimStop_triggered();
-
 	void on_actionAnimPause_triggered();
-
 	void on_actionAnimRepeat_triggered();
+
+	void on_actionLightSimple_triggered();
+	void on_actionLightAll_triggered();
 
 private:
 	QString timecode(const int frame) const;
 	void    enableView(const b3_view_mode mode);
 	void    enableAnimation();
+	void    enableAllLights(const bool all);
 
-	Ui::MainWindow *   ui;
+	Ui::MainWindow  *  ui;
 	QPropertyAnimation animation;
 
 	b3Path          textures;

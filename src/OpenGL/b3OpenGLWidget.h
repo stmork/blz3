@@ -32,6 +32,9 @@ public:
 	void b3Prepare(b3Scene * first);
 	void b3SetViewmode(const b3_view_mode mode);
 
+	bool b3IsAllLights() const;
+	void b3SetAllLights(const bool all);
+
 protected:
 	void initializeGL() override;
 	void resizeGL(int width, int height) override;

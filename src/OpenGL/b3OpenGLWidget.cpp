@@ -53,6 +53,21 @@ void QB3OpenGLWidget::b3SetViewmode(const b3_view_mode mode)
 	update();
 }
 
+bool QB3OpenGLWidget::b3IsAllLights() const
+{
+	return m_AllLights;
+}
+
+void QB3OpenGLWidget::b3SetAllLights(const bool all)
+{
+	m_AllLights = all;
+
+	makeCurrent();
+	b3SetLights();
+	doneCurrent();
+	update();
+}
+
 void QB3OpenGLWidget::b3SetLights()
 {
 	m_Context.b3LightReset();
@@ -77,6 +92,7 @@ void QB3OpenGLWidget::initializeGL()
 
 	m_Context.glBgColor.b3Init(0.7f, 0.7f, 1.0f);
 	m_Context.b3Init(true);
+	m_Context.b3SetAntiAliasing(true);
 }
 
 void QB3OpenGLWidget::resizeGL(int xSize, int ySize)

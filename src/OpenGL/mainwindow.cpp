@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	QSurfaceFormat format;
+	format.setSamples(4);
 	format.setProfile(QSurfaceFormat::CoreProfile);
 	format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
 
@@ -76,6 +77,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_Animation = m_Scene->b3GetAnimation();
 	ui->glView->b3Prepare(m_Scene);
 
+	enableView(B3_VIEW_3D);
+	enableAllLights(ui->glView->b3IsAllLights());
+	enableAnimation();
 	if (m_Animation != nullptr)
 	{
 		const b3_count fps = m_Animation->m_FramesPerSecond;
@@ -163,8 +167,15 @@ void MainWindow::enableView(const b3_view_mode mode)
 void MainWindow::enableAnimation()
 {
 	ui->actionAnimPlay->setChecked(animation.state() == QPropertyAnimation::Running);
-	ui->actionAnimStop->setChecked(animation.state() == QPropertyAnimation::Paused);
+	ui->actionAnimStop->setChecked(animation.state() == QPropertyAnimation::Stopped);
 	ui->actionAnimPause->setChecked(animation.state() == QPropertyAnimation::Paused);
+}
+
+void MainWindow::enableAllLights(const bool all)
+{
+	ui->actionLightSimple->setChecked(!all);
+	ui->actionLightAll->setChecked(all);
+	ui->glView->b3SetAllLights(all);
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -246,4 +257,14 @@ void MainWindow::on_actionAnimRepeat_triggered()
 
 	animation.setLoopCount(repeat ? 1 : -1);
 	ui->actionAnimRepeat->setChecked(animation.loopCount() < 0);
+}
+
+void MainWindow::on_actionLightSimple_triggered()
+{
+	enableAllLights(false);
+}
+
+void MainWindow::on_actionLightAll_triggered()
+{
+	enableAllLights(true);
 }
