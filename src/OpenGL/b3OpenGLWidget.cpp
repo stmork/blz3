@@ -56,7 +56,6 @@ void QB3OpenGLWidget::b3SetViewmode(const b3_view_mode mode)
 void QB3OpenGLWidget::b3SetCamera(b3CameraPart * camera)
 {
 	m_Scene->b3SetCamera(camera);
-	m_View.b3SetCamera(m_Scene);
 	update();
 }
 
@@ -117,6 +116,7 @@ void QB3OpenGLWidget::paintGL()
 
 	m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
 	m_Context.b3StartDrawing();
+	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
 	m_View.b3SetupView(xWinSize, yWinSize);
 	m_Scene->b3Draw(&m_Context);
