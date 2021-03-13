@@ -15,6 +15,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "b3CameraItem.h"
+#include "b3LightItem.h"
 
 /*************************************************************************
 **                                                                      **
@@ -80,6 +82,29 @@ MainWindow::MainWindow(QWidget *parent) :
 	enableView(B3_VIEW_3D);
 	enableAllLights(ui->glView->b3IsAllLights());
 	enableAnimation();
+
+	QStandardItemModel * camera_model = new QStandardItemModel(ui->cameraListView);
+	ui->cameraListView->setModel(camera_model);
+
+	for(b3CameraPart * camera = m_Scene->b3GetFirstCamera();
+		camera != nullptr;
+		camera  = m_Scene->b3GetNextCamera(camera))
+	{
+		QB3CameraItem * item = new QB3CameraItem(camera);
+
+		camera_model->appendRow(item);
+	}
+
+	QStandardItemModel * light_model = new QStandardItemModel(ui->lightListView);
+	ui->lightListView->setModel(light_model);
+
+	B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
+	{
+		QB3LightItem * item = new QB3LightItem(light);
+
+		light_model->appendRow(item);
+	}
+
 	if (m_Animation != nullptr)
 	{
 		const b3_count fps = m_Animation->m_FramesPerSecond;

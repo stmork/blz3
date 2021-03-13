@@ -110,7 +110,7 @@ public:
 	 *
 	 * @return The light name.
 	 */
-	char  *  b3GetName();
+	const char * b3GetName();
 
 	/**
 	 * This method renames the light source.

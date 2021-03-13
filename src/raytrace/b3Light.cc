@@ -229,7 +229,7 @@ void b3Light::b3Dump(b3_count level)
 	b3PrintF(B3LOG_NORMAL, "Light %s, switched %s\n", b3GetName(), b3IsActive() ? "on" : "off");
 }
 
-char * b3Light::b3GetName()
+const char * b3Light::b3GetName()
 {
 	return m_Name;
 }
