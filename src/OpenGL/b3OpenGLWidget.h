@@ -30,6 +30,7 @@ public:
 	explicit QB3OpenGLWidget(QWidget * parent = nullptr);
 
 	void b3Prepare(b3Scene * first);
+	void b3SetViewmode(const b3_view_mode mode);
 
 protected:
 	void initializeGL() override;
@@ -47,6 +48,7 @@ private:
 	b3_bool               m_SpotLight = true;
 	b3_res                xWinSize, yWinSize;
 	b3_vector             m_Lower, m_Upper;
+	b3_view_mode          m_ViewMode = B3_VIEW_3D;
 };
 
 #endif // QB3OPENGLWIDGET_H

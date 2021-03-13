@@ -140,3 +140,56 @@ QString MainWindow::timecode(const int frame) const
 		return "";
 	}
 }
+
+void MainWindow::enableView(const b3_view_mode mode)
+{
+	ui->actionView3D->setChecked(mode == B3_VIEW_3D);
+	ui->actionViewFront->setChecked(mode == B3_VIEW_FRONT);
+	ui->actionViewTop->setChecked(mode == B3_VIEW_TOP);
+	ui->actionViewRight->setChecked(mode == B3_VIEW_RIGHT);
+	ui->actionViewLeft->setChecked(mode == B3_VIEW_LEFT);
+
+	ui->glView->b3SetViewmode(mode);
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+	QApplication::quit();
+}
+
+void MainWindow::on_actionView3D_triggered()
+{
+	enableView(B3_VIEW_3D);
+}
+
+void MainWindow::on_actionViewFront_triggered()
+{
+	enableView(B3_VIEW_FRONT);
+}
+
+void MainWindow::on_actionViewTop_triggered()
+{
+	enableView(B3_VIEW_TOP);
+}
+
+void MainWindow::on_actionViewLeft_triggered()
+{
+	enableView(B3_VIEW_LEFT);
+}
+
+void MainWindow::on_actionViewRight_triggered()
+{
+	enableView(B3_VIEW_RIGHT);
+}
+
+void MainWindow::on_actionActivateAll_triggered()
+{
+	m_Scene->b3Activate(true);
+	ui->glView->update();
+}
+
+void MainWindow::on_actionDeaktivateAll_triggered()
+{
+	m_Scene->b3Activate(false);
+	ui->glView->update();
+}

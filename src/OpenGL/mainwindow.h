@@ -23,6 +23,7 @@
 #include <blz3/system/b3Plugin.h>
 #include <blz3/base/b3World.h>
 #include <blz3/raytrace/b3Scene.h>
+#include <blz3/raytrace/b3RenderView.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -42,8 +43,21 @@ public:
 private slots:
 	void animate(int frame);
 
+	void on_actionQuit_triggered();
+
+	void on_actionView3D_triggered();
+	void on_actionViewFront_triggered();
+	void on_actionViewTop_triggered();
+	void on_actionViewLeft_triggered();
+	void on_actionViewRight_triggered();
+
+	void on_actionActivateAll_triggered();
+
+	void on_actionDeaktivateAll_triggered();
+
 private:
 	QString timecode(const int frame) const;
+	void    enableView(const b3_view_mode mode);
 
 	Ui::MainWindow * ui;
 

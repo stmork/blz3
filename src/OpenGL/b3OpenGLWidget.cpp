@@ -46,6 +46,13 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first)
 	b3PrintF(B3LOG_NORMAL, "%7zd grids\n",     m_Context.glGridCount);
 }
 
+void QB3OpenGLWidget::b3SetViewmode(const b3_view_mode mode)
+{
+	m_ViewMode = mode;
+	m_View.b3SetViewMode(m_ViewMode);
+	update();
+}
+
 void QB3OpenGLWidget::b3SetLights()
 {
 	m_Context.b3LightReset();
@@ -77,7 +84,7 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 	B3_METHOD;
 
 	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
-	m_View.b3SetViewMode(B3_VIEW_3D);
+	m_View.b3SetViewMode(m_ViewMode);
 	m_Lights.b3SetupLight(&m_Context);
 }
 
