@@ -174,8 +174,17 @@
     <addaction name="actionAnimPause"/>
     <addaction name="actionAnimRepeat"/>
    </widget>
+   <widget class="QMenu" name="menuLicht">
+    <property name="title">
+     <string>Licht</string>
+    </property>
+    <addaction name="actionLightSimple"/>
+    <addaction name="actionLightAll"/>
+    <addaction name="actionLightSpot"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAnsicht"/>
+   <addaction name="menuLicht"/>
    <addaction name="menuAnimation"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -208,6 +217,7 @@
    <addaction name="separator"/>
    <addaction name="actionLightSimple"/>
    <addaction name="actionLightAll"/>
+   <addaction name="actionLightSpot"/>
   </widget>
   <action name="actionActivateAll">
    <property name="icon">
@@ -398,6 +408,17 @@
    </property>
    <property name="text">
     <string>Alle Lichter</string>
+   </property>
+  </action>
+  <action name="actionLightSpot">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spotlicht</string>
+   </property>
+   <property name="shortcut">
+    <string>O</string>
    </property>
   </action>
  </widget>

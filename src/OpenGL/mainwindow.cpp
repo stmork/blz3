@@ -159,7 +159,7 @@ void MainWindow::prepareUI()
 	}
 
 	enableView(B3_VIEW_3D);
-	enableAllLights(ui->glView->b3IsAllLights());
+	enableLight();
 	enableAnimation();
 }
 
@@ -231,11 +231,14 @@ void MainWindow::enableAnimation()
 	ui->actionAnimPause->setChecked(animation.state() == QPropertyAnimation::Paused);
 }
 
-void MainWindow::enableAllLights(const bool all)
+void MainWindow::enableLight()
 {
+	const bool all = ui->glView->b3IsAllLights();
+
 	ui->actionLightSimple->setChecked(!all);
 	ui->actionLightAll->setChecked(all);
-	ui->glView->b3SetAllLights(all);
+	ui->actionLightSpot->setEnabled(all);
+	ui->actionLightSpot->setChecked(ui->glView->b3IsSpotLight() && all);
 }
 
 
@@ -341,18 +344,25 @@ void MainWindow::on_actionAnimRepeat_triggered()
 
 void MainWindow::on_actionLightSimple_triggered()
 {
-	enableAllLights(false);
+	ui->glView->b3SetAllLights(false);
+	enableLight();
 }
 
 void MainWindow::on_actionLightAll_triggered()
 {
-	enableAllLights(true);
+	ui->glView->b3SetAllLights(true);
+	enableLight();
 }
 
 void MainWindow::on_cameraListView_clicked(const QModelIndex &index)
 {
 	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
-	index;
 
 	ui->glView->b3SetCamera(*camera_item);
+}
+
+void MainWindow::on_actionLightSpot_triggered()
+{
+	ui->glView->b3SetSpotLight(!ui->glView->b3IsSpotLight());
+	enableLight();
 }

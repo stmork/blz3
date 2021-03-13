@@ -71,11 +71,13 @@ private slots:
 
 	void on_cameraListView_clicked(const QModelIndex &index);
 
+	void on_actionLightSpot_triggered();
+
 private:
 	QString timecode(const int frame) const;
 	void    enableView(const b3_view_mode mode);
 	void    enableAnimation();
-	void    enableAllLights(const bool all);
+	void    enableLight();
 
 	void    free();
 	void    prepareUI();

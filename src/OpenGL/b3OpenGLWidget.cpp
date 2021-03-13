@@ -68,9 +68,20 @@ void QB3OpenGLWidget::b3SetAllLights(const bool all)
 {
 	m_AllLights = all;
 
-	makeCurrent();
 	b3SetLights();
-	doneCurrent();
+	update();
+}
+
+bool QB3OpenGLWidget::b3IsSpotLight() const
+{
+	return m_SpotLight;
+}
+
+void QB3OpenGLWidget::b3SetSpotLight(const bool spot)
+{
+	m_SpotLight = spot;
+
+	b3SetLights();
 	update();
 }
 
@@ -90,6 +101,11 @@ void QB3OpenGLWidget::b3SetLights()
 		b3PrintF(B3LOG_DEBUG, "Using one light...\n");
 		m_Lights.b3SetLightMode(B3_LIGHT_SIMPLE);
 	}
+
+	// Inform OpenGL
+	makeCurrent();
+	m_Lights.b3SetupLight(&m_Context);
+	doneCurrent();
 }
 
 void QB3OpenGLWidget::initializeGL()
@@ -99,6 +115,7 @@ void QB3OpenGLWidget::initializeGL()
 	m_Context.glBgColor.b3Init(0.7f, 0.7f, 1.0f);
 	m_Context.b3Init(true);
 	m_Context.b3SetAntiAliasing(true);
+	m_Lights.b3SetupLight(&m_Context);
 }
 
 void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
@@ -107,7 +124,6 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 
 	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
 	m_View.b3SetViewMode(m_ViewMode);
-	m_Lights.b3SetupLight(&m_Context);
 }
 
 void QB3OpenGLWidget::paintGL()

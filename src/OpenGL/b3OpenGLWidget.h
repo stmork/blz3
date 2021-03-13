@@ -35,6 +35,8 @@ public:
 
 	bool b3IsAllLights() const;
 	void b3SetAllLights(const bool all);
+	bool b3IsSpotLight() const;
+	void b3SetSpotLight(const bool spot);
 
 protected:
 	void initializeGL() override;
