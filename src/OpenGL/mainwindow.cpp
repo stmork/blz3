@@ -177,6 +177,7 @@ b3BBox * MainWindow::getSelectedBBox()
 {
 	const QModelIndex & index = ui->treeView->currentIndex();
 	const QB3BBoxItem * item  = static_cast<QB3BBoxItem *>(bbox_model->itemFromIndex(index));
+
 	return *item;
 }
 
@@ -323,12 +324,12 @@ void MainWindow::on_actionOpenScene_triggered()
 	if (dialog.exec())
 	{
 		const QStringList files = dialog.selectedFiles();
-		const char *      filename = files.first().toStdString().c_str();
+		const std::string filename = files.first().toStdString().c_str();
 
 		free();
-		m_World.b3Read(filename);
+		m_World.b3Read(filename.c_str());
 		m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
-		m_Scene->b3SetFilename(filename);
+		m_Scene->b3SetFilename(filename.c_str());
 		m_Animation = m_Scene->b3GetAnimation();
 		ui->glView->b3Prepare(m_Scene);
 		prepareUI();
@@ -381,26 +382,79 @@ void MainWindow::on_actionDeaktivateAll_triggered()
 
 void MainWindow::on_actionActivate_triggered()
 {
-	getSelectedBBox()->b3Activate(true);
-	updateTreeView();
-	ui->glView->update();
+	b3BBox * bbox = getSelectedBBox();
+
+	if (bbox != nullptr)
+	{
+		bbox->b3Activate(true);
+		updateTreeView();
+		ui->glView->update();
+
+		if (bbox->Succ != nullptr)
+		{
+			const QModelIndex & index  = ui->treeView->currentIndex();
+			const QModelIndex & parent = index.parent();
+			const QModelIndex & succ   = bbox_model->index(index.row() + 1, 0, parent);
+
+			ui->treeView->setCurrentIndex(succ);
+		}
+	}
 }
 
 void MainWindow::on_actionDeactivate_triggered()
 {
-	getSelectedBBox()->b3Activate(false);
-	updateTreeView();
-	ui->glView->update();
+	b3BBox * bbox = getSelectedBBox();
+
+	if (bbox != nullptr)
+	{
+		bbox->b3Activate(false);
+		updateTreeView();
+		ui->glView->update();
+
+		if (bbox->Succ != nullptr)
+		{
+			const QModelIndex & index  = ui->treeView->currentIndex();
+			const QModelIndex & parent = index.parent();
+			const QModelIndex & succ   = bbox_model->index(index.row() + 1, 0, parent);
+
+			ui->treeView->setCurrentIndex(succ);
+		}
+	}
 }
 
 void MainWindow::on_actionDeactivateOther_triggered()
 {
+	b3BBox * bbox = getSelectedBBox();
 
+	if (bbox != nullptr)
+	{
+		b3BBox * aux;
+
+		bbox->b3Activate(true);
+		for (aux = (b3BBox *)bbox->Prev;aux != nullptr;aux = (b3BBox *)aux->Prev)
+		{
+			aux->b3Activate(false);
+		}
+		for (aux = (b3BBox *)bbox->Succ;aux != nullptr;aux = (b3BBox *)aux->Succ)
+		{
+			aux->b3Activate(false);
+		}
+		updateTreeView();
+		ui->glView->update();
+	}
 }
 
 void MainWindow::on_actionDeactivateAllOther_triggered()
 {
+	b3BBox * bbox = getSelectedBBox();
 
+	if (bbox != nullptr)
+	{
+		m_Scene->b3Activate(false);
+		bbox->b3Activate(true);
+		updateTreeView();
+		ui->glView->update();
+	}
 }
 
 void MainWindow::on_actionAnimPlay_triggered()
