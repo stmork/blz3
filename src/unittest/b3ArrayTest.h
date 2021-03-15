@@ -47,10 +47,10 @@ public:
 
 	void test()
 	{
-		CPPUNIT_ASSERT(array.b3GetBuffer() != nullptr);
 		b3AddElements(4,  4);
 		b3AddElements(4,  8);
 		b3AddElements(4, 12);
+		CPPUNIT_ASSERT(array.b3GetBuffer() != nullptr);
 		CPPUNIT_ASSERT_NO_THROW(array.b3Sort(sorter));
 		array.b3Clear();
 		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(0), array.b3GetCount());
