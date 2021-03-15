@@ -48,6 +48,7 @@ private slots:
 	void animate(int frame);
 	void selectCamera(QStandardItem * item);
 	void selectLight(QStandardItem * item);
+	void on_itemChanged(QStandardItem * item);
 
 	void on_actionOpenScene_triggered();
 	void on_actionQuit_triggered();
@@ -60,6 +61,10 @@ private slots:
 
 	void on_actionActivateAll_triggered();
 	void on_actionDeaktivateAll_triggered();
+	void on_actionActivate_triggered();
+	void on_actionDeactivate_triggered();
+	void on_actionDeactivateOther_triggered();
+	void on_actionDeactivateAllOther_triggered();
 
 	void on_actionAnimPlay_triggered();
 	void on_actionAnimStop_triggered();
@@ -72,7 +77,6 @@ private slots:
 
 	void on_cameraListView_clicked(const QModelIndex & index);
 
-	void on_itemChanged(QStandardItem * item);
 
 private:
 	QString timecode(const int frame) const;
@@ -86,6 +90,8 @@ private:
 
 	void    free();
 	void    prepareUI();
+
+	b3BBox * getSelectedBBox();
 
 	Ui::MainWindow   *   ui;
 	QPropertyAnimation   animation;

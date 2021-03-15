@@ -164,6 +164,10 @@
     <addaction name="separator"/>
     <addaction name="actionActivateAll"/>
     <addaction name="actionDeaktivateAll"/>
+    <addaction name="actionActivate"/>
+    <addaction name="actionDeactivate"/>
+    <addaction name="actionDeactivateOther"/>
+    <addaction name="actionDeactivateAllOther"/>
    </widget>
    <widget class="QMenu" name="menuAnimation">
     <property name="title">
@@ -209,6 +213,10 @@
    <addaction name="separator"/>
    <addaction name="actionActivateAll"/>
    <addaction name="actionDeaktivateAll"/>
+   <addaction name="actionActivate"/>
+   <addaction name="actionDeactivate"/>
+   <addaction name="actionDeactivateOther"/>
+   <addaction name="actionDeactivateAllOther"/>
    <addaction name="separator"/>
    <addaction name="actionAnimPlay"/>
    <addaction name="actionAnimStop"/>
@@ -260,9 +268,9 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/view/res/toolbar/view/view_3d.png</normaloff>:/toolbar/view/res/toolbar/view/view_3d.png</iconset>
-       </property>
+   </property>
    <property name="text">
     <string>3D-Ansicht</string>
    </property>
@@ -275,7 +283,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/view/res/toolbar/view/view_front.png</normaloff>:/toolbar/view/res/toolbar/view/view_front.png</iconset>
    </property>
    <property name="text">
@@ -290,7 +298,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/view/res/toolbar/view/view_bottom.png</normaloff>:/toolbar/view/res/toolbar/view/view_bottom.png</iconset>
    </property>
    <property name="text">
@@ -305,7 +313,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/view/res/toolbar/view/view_right.png</normaloff>:/toolbar/view/res/toolbar/view/view_right.png</iconset>
    </property>
    <property name="text">
@@ -320,7 +328,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/view/res/toolbar/view/view_left.png</normaloff>:/toolbar/view/res/toolbar/view/view_left.png</iconset>
    </property>
    <property name="text">
@@ -335,7 +343,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/animation/res/toolbar/animation/animation_play.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_play.png</iconset>
    </property>
    <property name="text">
@@ -350,7 +358,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/animation/res/toolbar/animation/animation_stop.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_stop.png</iconset>
    </property>
    <property name="text">
@@ -365,7 +373,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/toolbar/animation/res/toolbar/animation/animation_pause.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_pause.png</iconset>
    </property>
    <property name="text">
@@ -419,6 +427,42 @@
    </property>
    <property name="shortcut">
     <string>O</string>
+   </property>
+  </action>
+  <action name="actionActivate">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_activate.png</normaloff>:/toolbar/object/res/toolbar/object/object_activate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Aktivieren</string>
+   </property>
+  </action>
+  <action name="actionDeactivate">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_deactivate.png</normaloff>:/toolbar/object/res/toolbar/object/object_deactivate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Deaktivieren</string>
+   </property>
+  </action>
+  <action name="actionDeactivateOther">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_reactivate.png</normaloff>:/toolbar/object/res/toolbar/object/object_reactivate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rest deaktivieren</string>
+   </property>
+  </action>
+  <action name="actionDeactivateAllOther">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_rest.png</normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_rest.png</iconset>
+   </property>
+   <property name="text">
+    <string>Einzig aktivieren</string>
    </property>
   </action>
  </widget>

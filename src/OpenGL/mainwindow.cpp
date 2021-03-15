@@ -173,6 +173,13 @@ void MainWindow::prepareUI()
 	enableAnimation();
 }
 
+b3BBox * MainWindow::getSelectedBBox()
+{
+	const QModelIndex & index = ui->treeView->currentIndex();
+	const QB3BBoxItem * item  = static_cast<QB3BBoxItem *>(bbox_model->itemFromIndex(index));
+	return *item;
+}
+
 void MainWindow::animate(int frame)
 {
 	if (m_Animation != nullptr)
@@ -187,20 +194,6 @@ void MainWindow::animate(int frame)
 
 	ui->animationLabel->setText(timecode(frame));
 	ui->glView->update();
-}
-
-void MainWindow::selectCamera(QStandardItem * item)
-{
-	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(item);
-
-	camera_item->check();
-}
-
-void MainWindow::selectLight(QStandardItem * item)
-{
-	QB3LightItem * light_item = static_cast<QB3LightItem *>(item);
-
-	light_item->check();
 }
 
 QString MainWindow::timecode(const int frame) const
@@ -255,6 +248,7 @@ void MainWindow::populateTreeView()
 {
 	QStandardItem * world = new QStandardItem(world_icon, m_Scene->b3GetFilename());
 
+	world->setSelectable(false);
 	bbox_model->appendRow(world);
 	ui->treeView->setExpanded(world->index(), true);
 	populateTreeView(world, m_Scene->b3GetBBoxHead());
@@ -296,6 +290,28 @@ void MainWindow::updateTreeView(QStandardItem * parent)
 			updateTreeView(item);
 		}
 	}
+}
+
+void MainWindow::selectCamera(QStandardItem * item)
+{
+	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(item);
+
+	camera_item->check();
+}
+
+void MainWindow::selectLight(QStandardItem * item)
+{
+	QB3LightItem * light_item = static_cast<QB3LightItem *>(item);
+
+	light_item->check();
+}
+
+void MainWindow::on_itemChanged(QStandardItem * item)
+{
+	b3BBox * bbox = item->data().value<b3BBox *>();
+
+	bbox->b3Expand(ui->treeView->isExpanded(item->index()));
+	bbox->b3SetName(item->text().toLatin1().constData());
 }
 
 void MainWindow::on_actionOpenScene_triggered()
@@ -363,6 +379,30 @@ void MainWindow::on_actionDeaktivateAll_triggered()
 	ui->glView->update();
 }
 
+void MainWindow::on_actionActivate_triggered()
+{
+	getSelectedBBox()->b3Activate(true);
+	updateTreeView();
+	ui->glView->update();
+}
+
+void MainWindow::on_actionDeactivate_triggered()
+{
+	getSelectedBBox()->b3Activate(false);
+	updateTreeView();
+	ui->glView->update();
+}
+
+void MainWindow::on_actionDeactivateOther_triggered()
+{
+
+}
+
+void MainWindow::on_actionDeactivateAllOther_triggered()
+{
+
+}
+
 void MainWindow::on_actionAnimPlay_triggered()
 {
 	animation.start();
@@ -425,12 +465,4 @@ void MainWindow::on_cameraListView_clicked(const QModelIndex &index)
 	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
 
 	ui->glView->b3SetCamera(*camera_item);
-}
-
-void MainWindow::on_itemChanged(QStandardItem * item)
-{
-	b3BBox * bbox = item->data().value<b3BBox *>();
-
-	bbox->b3Expand(ui->treeView->isExpanded(item->index()));
-	bbox->b3SetName(item->text().toLatin1().constData());
 }
