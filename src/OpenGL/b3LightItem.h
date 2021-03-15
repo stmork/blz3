@@ -17,23 +17,18 @@
 #ifndef QB3LIGHTITEM_H
 #define QB3LIGHTITEM_H
 
-#include <QStandardItem>
+#include "b3AbstractItem.h"
 
 #include <blz3/raytrace/b3Light.h>
 
 Q_DECLARE_METATYPE(b3Light *)
 
-class QB3LightItem : public QStandardItem
+class QB3LightItem : public QB3AbstractItem<b3Light>
 {
 public:
 	explicit QB3LightItem(b3Light * light);
 
-	inline operator b3Light * () const
-	{
-		return data().value<b3Light *>();
-	}
-
-	bool check();
+	bool check() override;
 };
 
 #endif // QB3LIGHTITEM_H

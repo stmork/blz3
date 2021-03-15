@@ -20,6 +20,7 @@
 #include "b3CameraItem.h"
 #include "b3LightItem.h"
 #include "b3BBoxItem.h"
+#include "b3SceneItem.h"
 
 /*************************************************************************
 **                                                                      **
@@ -43,8 +44,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
-	ui(new Ui::MainWindow),
-	world_icon(":/treeview/World")
+	ui(new Ui::MainWindow)
 {
 	QSurfaceFormat format;
 	format.setSamples(4);
@@ -255,9 +255,8 @@ void MainWindow::enableLight()
 
 void MainWindow::populateTreeView()
 {
-	QStandardItem * world = new QStandardItem(world_icon, m_Scene->b3GetName());
+	QStandardItem * world = new QB3SceneItem(m_Scene);
 
-	world->setSelectable(false);
 	bbox_model->appendRow(world);
 	ui->treeView->setExpanded(world->index(), true);
 	populateTreeView(world, m_Scene->b3GetBBoxHead());

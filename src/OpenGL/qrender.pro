@@ -13,14 +13,17 @@ SOURCES += \
 	b3CameraItem.cpp \
 	b3LightItem.cpp \
 	b3OpenGLWidget.cpp \
+	b3SceneItem.cpp \
 	qrender.cpp \
 	mainwindow.cpp
 
 HEADERS += \
+	b3AbstractItem.h \
 	b3BBoxItem.h \
 	b3CameraItem.h \
 	b3LightItem.h \
 	b3OpenGLWidget.h \
+	b3SceneItem.h \
 	mainwindow.h
 
 FORMS += \

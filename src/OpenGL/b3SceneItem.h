@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3CameraItem.h $
+**	$Filename:	b3SceneItem.h $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -14,21 +14,19 @@
 
 #pragma once
 
-#ifndef QB3CAMERAITEM_H
-#define QB3CAMERAITEM_H
+#ifndef QB3SCENEITEM_H
+#define QB3SCENEITEM_H
 
 #include "b3AbstractItem.h"
 
 #include <blz3/raytrace/b3Scene.h>
 
-Q_DECLARE_METATYPE(b3CameraPart *)
+Q_DECLARE_METATYPE(b3Scene *)
 
-class QB3CameraItem : public QB3AbstractItem<b3CameraPart>
+class QB3SceneItem : public QB3AbstractItem<b3Scene>
 {
 public:
-	explicit QB3CameraItem(b3CameraPart * camera);
-
-	bool check() override;
+	explicit QB3SceneItem(b3Scene * scene);
 };
 
-#endif // QB3CAMERAITEM_H
+#endif // QB3SCENEITEM_H

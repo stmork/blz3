@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3CameraItem.h $
+**	$Filename:	b3BBoxItem.h $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -17,13 +17,13 @@
 #ifndef QB3BBOXITEM_H
 #define QB3BBOXITEM_H
 
-#include <QStandardItem>
+#include "b3AbstractItem.h"
 
 #include <blz3/raytrace/b3BBox.h>
 
 Q_DECLARE_METATYPE(b3BBox *)
 
-class QB3BBoxItem : public QStandardItem
+class QB3BBoxItem : public QB3AbstractItem<b3BBox>
 {
 	enum bbox_taxonomy
 	{
@@ -38,12 +38,7 @@ class QB3BBoxItem : public QStandardItem
 public:
 	explicit QB3BBoxItem(b3BBox * bbox);
 
-	void update();
-
-	inline operator b3BBox * () const
-	{
-		return data().value<b3BBox *>();
-	}
+	void update() override;
 
 private:
 	static unsigned taxonomyOf(const b3BBox * bbox);

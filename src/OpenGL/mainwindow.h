@@ -98,7 +98,6 @@ private:
 	QStandardItemModel * camera_model;
 	QStandardItemModel * light_model;
 	QStandardItemModel * bbox_model;
-	QIcon                world_icon;
 
 	b3Path               textures;
 	b3Path               pictures;

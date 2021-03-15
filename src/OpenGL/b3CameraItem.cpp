@@ -14,9 +14,9 @@
 
 #include "b3CameraItem.h"
 
-QB3CameraItem::QB3CameraItem(b3CameraPart * camera)
+QB3CameraItem::QB3CameraItem(b3CameraPart * camera) :
+	QB3AbstractItem(camera, B3_TYPE_CAMERA)
 {
-	setData(QVariant::fromValue(camera));
 	setCheckable(true);
 	setCheckState(camera->b3IsActive() ? Qt::Checked : Qt::Unchecked);
 	setText(QString::fromLatin1(camera->b3GetName()));

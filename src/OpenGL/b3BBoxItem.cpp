@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3CameraItem.h $
+**	$Filename:	b3BBoxItem.cpp $
 **	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
@@ -14,10 +14,8 @@
 
 #include "b3BBoxItem.h"
 
-
-QB3BBoxItem::QB3BBoxItem(b3BBox * bbox)
+QB3BBoxItem::QB3BBoxItem(b3BBox * bbox) : QB3AbstractItem(bbox, B3_TYPE_BBOX)
 {
-	setData(QVariant::fromValue(bbox));
 	setIcon(iconOf(bbox));
 	setText(QString::fromLatin1(bbox->b3GetName()));
 }

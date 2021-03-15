@@ -14,9 +14,8 @@
 
 #include "b3LightItem.h"
 
-QB3LightItem::QB3LightItem(b3Light * light)
+QB3LightItem::QB3LightItem(b3Light * light) : QB3AbstractItem(light, B3_TYPE_LIGHT)
 {
-	setData(QVariant::fromValue(light));
 	setCheckable(true);
 	setCheckState(light->b3IsActive() ? Qt::Checked : Qt::Unchecked);
 	setText(QString::fromLatin1(light->b3GetName()));
