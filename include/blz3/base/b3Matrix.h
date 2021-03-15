@@ -2359,9 +2359,8 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector * b3VMul(
-		b3_matrix * A,
-		const b3_vector * Src,
-		b3_vector * Dst,
+		const b3_matrix * A,
+		const b3_vector * Src, b3_vector * Dst,
 		const b3_bool    Use4D)
 	{
 #ifdef B3_SSE2

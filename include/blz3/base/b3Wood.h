@@ -54,7 +54,7 @@ public:
 	 * \param distance Distance from eye point to give a level of detail.
 	 * \return The wooden pattern.
 	 */
-	b3_f64 b3ComputeWood(b3_vector * polar, b3_f64 distance);
+	b3_f64 b3ComputeWood(b3_vector * polar, b3_f64 distance) const;
 
 	/**
 	 * This method initializes the class with default propertiy values.
@@ -125,7 +125,7 @@ public:
 	 * \param index The used wood instance.
 	 * \return The wooden oak plank pattern.
 	 */
-	b3_f64   b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index);
+	b3_f64   b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index) const;
 
 	/**
 	 * This method initializes the class with default propertiy values.

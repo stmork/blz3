@@ -61,7 +61,7 @@ void b3Wood::b3PrepareWood(b3_vector * scale)
 	b3Matrix::b3RotateY(&m_Warp, &m_Warp, nullptr, m_yRot);
 }
 
-b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, b3_f64 dist)
+b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 {
 	b3_vector d;
 	b3_vector offset;
@@ -207,7 +207,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	}
 }
 
-b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index)
+b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index) const
 {
 	b3_vector surface;
 	b3_index  ix, iy;
@@ -222,5 +222,6 @@ b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_inde
 	ix  = (b3_index)surface.x;
 	iy  = (b3_index)surface.y;
 	index = (ix * m_yTimes + iy) % m_PlankCount;
+
 	return m_Planks[index].b3ComputeWood(&surface, distance);
 }

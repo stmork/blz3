@@ -35,7 +35,7 @@ enum b3_scaling_mode
 	B3_SCALE_IPOINT_ORIGINAL  //!< Scale intersection point inverse transformed by the collected transformations in the bounding box (3d).
 };
 
-typedef b3_vector64 * (*b3_scale_method)(b3_ray * ray);
+typedef const b3_vector64 * (*b3_scale_method)(const b3_ray * ray);
 
 /**
  * This class provides scaling of any form of the intersection point to a point
@@ -118,9 +118,9 @@ public:
 	 * @param scale An optional scale vector.
 	 * @param point The resulting scaled point.
 	 */
-	inline void b3Scale(b3_ray * ray, b3_vector * scale, b3_vector * point)
+	inline void b3Scale(const b3_ray * ray, const b3_vector * scale, b3_vector * point) const
 	{
-		b3_vector64 * polar = m_ScaleMethod(ray);
+		const b3_vector64 * polar = m_ScaleMethod(ray);
 
 		if (scale == nullptr)
 		{
@@ -137,11 +137,11 @@ public:
 	}
 
 private:
-	static b3_vector64 * b3ScaleBoxPolar(b3_ray * ray);
-	static b3_vector64 * b3ScaleIPoint(b3_ray * ray);
-	static b3_vector64 * b3ScalePolar(b3_ray * ray);
-	static b3_vector64 * b3ScaleObjectPolar(b3_ray * ray);
-	static b3_vector64 * b3ScaleIPointOriginal(b3_ray * ray);
+	static const b3_vector64 * b3ScaleBoxPolar(const b3_ray * ray);
+	static const b3_vector64 * b3ScaleIPoint(const b3_ray * ray);
+	static const b3_vector64 * b3ScalePolar(const b3_ray * ray);
+	static const b3_vector64 * b3ScaleObjectPolar(const b3_ray * ray);
+	static const b3_vector64 * b3ScaleIPointOriginal(const b3_ray * ray);
 };
 
 #endif

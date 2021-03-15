@@ -133,7 +133,7 @@ public:
 	 * @param surface The surface structure to fill in the material properties.
 	 * @return True if the material traversal should terminate.
 	 */
-	virtual b3_bool b3GetSurfaceValues(b3_surface * surface)
+	virtual inline b3_bool b3GetSurfaceValues(b3_surface * surface) const
 	{
 		surface->m_Diffuse     = B3_LIGHT_BLUE;
 		surface->m_Ambient     = surface->m_Diffuse * 0.2;
@@ -251,7 +251,7 @@ public:
 	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	virtual b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	virtual b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
 	void    b3Init();
@@ -290,7 +290,7 @@ public:
 	B3_ITEM_LOAD(b3MatChess); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -325,7 +325,7 @@ public:
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 	void    b3SetTexture(const char * name);
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -358,7 +358,7 @@ public:
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 	void    b3SetTexture(const char * name);
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -385,7 +385,7 @@ public:
 	B3_ITEM_LOAD(b3MatSlide); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 #define DIR_SLIDE_BIT       0
@@ -429,7 +429,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -483,7 +483,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
 	void    b3Init();
@@ -515,7 +515,7 @@ public:
 
 	void     b3Write() override;
 	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool  b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool  b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
 	void     b3Init();
@@ -548,7 +548,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
 };
 
@@ -576,7 +576,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -604,7 +604,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
 
 protected:
@@ -649,7 +649,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 #endif
