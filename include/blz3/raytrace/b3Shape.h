@@ -1284,7 +1284,7 @@ public:
 	 * @param mode The operation mode.
 	 * @return The resulting index.
 	 */
-	b3_size  b3GetOperationIndex(b3_csg_operation mode);
+	b3_size  b3GetOperationIndex(b3_csg_operation mode) const;
 
 	/**
 	 * This method sorts the intersection points by usage of the shapes CSG operation mode.
@@ -1314,7 +1314,7 @@ public:
 	 *
 	 * @return The maximal possible amount of intersection the shape can create.
 	 */
-	virtual b3_count b3GetMaxIntersections();
+	virtual b3_count b3GetMaxIntersections() const;
 };
 
 /*************************************************************************
@@ -1342,7 +1342,7 @@ public:
 	void     b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
 	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
-	b3_count b3GetMaxIntersections() override;
+	b3_count b3GetMaxIntersections() const override;
 	void     b3Normal(b3_ray * ray) const override;
 	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
 	void     b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
@@ -1378,7 +1378,7 @@ public:
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
 	void     b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
 	void     b3SetupPicking(b3PickInfo * info) override;
-	b3_count b3GetMaxIntersections() override;
+	b3_count b3GetMaxIntersections() const override;
 
 protected:
 	virtual void     b3ComputeNormals(b3_bool normalize = true) override;
@@ -1519,7 +1519,7 @@ public:
 	void     b3StoreShape() override;
 	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
-	b3_count b3GetMaxIntersections() override;
+	b3_count b3GetMaxIntersections() const override;
 	void     b3Normal(b3_ray * ray) const override;
 	void     b3SetupPicking(b3PickInfo * info) override;
 

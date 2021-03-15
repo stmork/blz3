@@ -99,7 +99,7 @@ void b3BumpNoise::b3Write()
 	b3StoreInt(m_ScaleFlags);
 }
 
-void b3BumpNoise::b3BumpNormal(b3_ray * ray)
+void b3BumpNoise::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector n;
 	b3_vector point;
@@ -161,7 +161,7 @@ b3_bool b3BumpMarble::b3Prepare(b3_preparation_info * info B3_UNUSED)
 	return true;
 }
 
-void b3BumpMarble::b3BumpNormal(b3_ray * ray)
+void b3BumpMarble::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector point;
 	b3_f64    r;
@@ -234,7 +234,7 @@ b3_bool b3BumpTexture::b3Prepare(b3_preparation_info * info B3_UNUSED)
 inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 	b3_f64     lx,
 	b3_f64     ly,
-	b3_vector * Deriv)
+	b3_vector * Deriv) const
 {
 	b3_f32    p1, p2, p3;
 	b3_coord  x, y;
@@ -265,7 +265,7 @@ inline b3_bool b3BumpTexture::b3GetNormalDeriv(
 
 	return true;
 }
-void b3BumpTexture::b3BumpNormal(b3_ray * ray)
+void b3BumpTexture::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector64 * xDeriv = &ray->xDeriv;
 	b3_vector64 * yDeriv = &ray->yDeriv;
@@ -353,7 +353,7 @@ b3_bool b3BumpWater::b3Prepare(b3_preparation_info * prep_info)
 	return true;
 }
 
-void b3BumpWater::b3BumpNormal(b3_ray * ray)
+void b3BumpWater::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector point, ox, oy, n;
 	b3_f64    Denom, r, water;
@@ -419,7 +419,7 @@ b3_bool b3BumpWave::b3Prepare(b3_preparation_info * info B3_UNUSED)
 	return true;
 }
 
-void b3BumpWave::b3BumpNormal(b3_ray * ray)
+void b3BumpWave::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector point, ox, oy, n;
 	b3_f64    Denom, r, wave;
@@ -485,7 +485,7 @@ b3_bool b3BumpGroove::b3Prepare(b3_preparation_info * info B3_UNUSED)
 	return true;
 }
 
-void b3BumpGroove::b3BumpNormal(b3_ray * ray)
+void b3BumpGroove::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector point, ox, oy, n;
 	b3_f64    Denom, r, groove;
@@ -549,7 +549,7 @@ void b3BumpGlossy::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-void b3BumpGlossy::b3BumpNormal(b3_ray * ray)
+void b3BumpGlossy::b3BumpNormal(b3_ray * ray) const
 {
 	b3_f64 Denom =
 		ray->normal.x * ray->normal.x +
@@ -656,7 +656,7 @@ b3_bool b3BumpWood::b3Prepare(b3_preparation_info * info B3_UNUSED)
 	return true;
 }
 
-void b3BumpWood::b3BumpNormal(b3_ray * ray)
+void b3BumpWood::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector   point, n;
 	b3_vector   xWood, yWood;
@@ -796,7 +796,7 @@ b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info * info B3_UNUSED)
 	return true;
 }
 
-void b3BumpOakPlank::b3BumpNormal(b3_ray * ray)
+void b3BumpOakPlank::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector   point, n;
 	b3_vector   xWood, yWood;
@@ -889,12 +889,12 @@ b3_bool b3BumpOcean::b3Prepare(b3_preparation_info * prep_info)
 	return true;
 }
 
-char * b3BumpOcean::b3GetName()
+const char * b3BumpOcean::b3GetName() const
 {
 	return nullptr;
 }
 
-void b3BumpOcean::b3BumpNormal(b3_ray * ray)
+void b3BumpOcean::b3BumpNormal(b3_ray * ray) const
 {
 	b3_vector point, n;
 	b3_f64    Denom;
@@ -915,7 +915,7 @@ void b3BumpOcean::b3BumpNormal(b3_ray * ray)
 	ray->normal.z = ray->normal.z * Denom + n.z;
 }
 
-b3_bool b3BumpOcean::b3NeedDeriv()
+b3_bool b3BumpOcean::b3NeedDeriv() const
 {
 	return false;
 }

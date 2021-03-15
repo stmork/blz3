@@ -57,7 +57,7 @@ b3CSGShape::b3CSGShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
-b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
+b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode) const
 {
 	b3_size i;
 
@@ -158,7 +158,7 @@ void b3CSGShape::b3InverseMap(
 {
 }
 
-b3_count b3CSGShape::b3GetMaxIntersections()
+b3_count b3CSGShape::b3GetMaxIntersections() const
 {
 	return 0;
 }
@@ -279,7 +279,7 @@ void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 	info->yInfo.factor = b3Vector::b3Length(&m_Dir3);;
 }
 
-b3_count b3CSGShape3::b3GetMaxIntersections()
+b3_count b3CSGShape3::b3GetMaxIntersections() const
 {
 	return 2;
 }

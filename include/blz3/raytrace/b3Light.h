@@ -110,7 +110,7 @@ public:
 	 *
 	 * @return The light name.
 	 */
-	const char * b3GetName();
+	const char * b3GetName() const override;
 
 	/**
 	 * This method renames the light source.
@@ -124,7 +124,7 @@ public:
 	 *
 	 * @return True if the light source is active.
 	 */
-	inline b3_bool  b3IsActive()
+	inline b3_bool  b3IsActive() const
 	{
 		return m_LightActive;
 	}
@@ -135,7 +135,7 @@ public:
 	 *
 	 * @return The spot lights directional light exponent for OpenGL.
 	 */
-	b3_f64   b3ComputeSpotExponent();
+	b3_f64   b3ComputeSpotExponent() const;
 
 	/**
 	 * This method illuminats a surface with the given shader.
@@ -146,14 +146,14 @@ public:
 	 * @see b3Shader
 	 * @see b3_surface.
 	 */
-	b3_bool  b3Illuminate(b3Shader * shader, b3_surface * surface);
+	b3_bool  b3Illuminate(b3Shader * shader, b3_surface * surface) const;
 
 private:
 	void            b3InitValues();
-	b3_bool         b3PointIllumination(b3Shader * shader, b3_surface * surface);
-	b3_bool         b3AreaIllumination(b3Shader * shader, b3_surface * surface);
+	b3_bool         b3PointIllumination(b3Shader * shader, b3_surface * surface) const;
+	b3_bool         b3AreaIllumination(b3Shader * shader, b3_surface * surface) const;
 	const b3Shape * b3CheckSinglePoint(b3Shader * shader, b3_surface * surface,
-		b3_light_info * Jit, b3_coord x, b3_coord y);
+		b3_light_info * Jit, b3_coord x, b3_coord y) const;
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) const // angle inside [0..1]
 	{

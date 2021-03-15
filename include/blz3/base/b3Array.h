@@ -139,6 +139,25 @@ public:
 	}
 
 	/**
+	 * This index operator provides const access to a special indexed array
+	 * element.
+	 *
+	 * @param index The array index.
+	 * @throw b3ArrayException
+	 * @return The const reference to the indexed array element.
+	 */
+	inline const T & operator [](const b3_index index) const
+	{
+#ifdef _DEBUG
+		if ((index < 0) || (index >= b3Size()))
+		{
+			B3_THROW(b3ArrayException, B3_ARRAY_OUT_OF_BOUNDS);
+		}
+#endif
+		return elements[index];
+	}
+
+	/**
 	 * This method sorts the array with a custom sorting method.
 	 *
 	 * @param sorter Sorting method.

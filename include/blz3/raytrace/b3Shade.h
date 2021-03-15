@@ -90,7 +90,7 @@ public:
 	 * @param jit The lighting info.
 	 * @param surface The surface values needed for shading.
 	 */
-	void            b3Shade(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void            b3Shade(const b3Light * light, b3_light_info * jit, b3_surface * surface) const;
 
 	/**
 	 * This method find any obscurer so that an intersection point may be
@@ -131,7 +131,7 @@ protected:
 	 * @param jit The position information of the light source.
 	 * @param surface The surface values to mix.
 	 */
-	virtual void            b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface) = 0;
+	virtual void            b3ShadeLight(const b3Light * light, b3_light_info * jit, b3_surface * surface) const = 0;
 
 protected:
 	/**
@@ -189,9 +189,9 @@ public:
 protected:
 	void    b3ShadeSurface(b3_surface * surface, b3_count depth) override;
 	void    b3ShadeLight(
-		b3Light    *    light,
+		const b3Light * light,
 		b3_light_info * jit,
-		b3_surface   *  surface) override;
+		b3_surface   *  surface) const override;
 };
 
 //////////////
@@ -218,9 +218,9 @@ public:
 protected:
 	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
 	void     b3ShadeLight(
-		b3Light    *    light,
+		const b3Light * light,
 		b3_light_info * jit,
-		b3_surface   *  surface) override;
+		b3_surface   *  surface) const override;
 };
 
 ///////////////////////
@@ -249,9 +249,9 @@ public:
 protected:
 	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
 	void     b3ShadeLight(
-		b3Light    *    light,
+		const b3Light * light,
 		b3_light_info * jit,
-		b3_surface   *  surface) override;
+		b3_surface   *  surface) const override;
 
 private:
 	void     b3ComputeFresnelCoeffs(b3_surface * surface, b3_f32 & refl, b3_f32 & refr);

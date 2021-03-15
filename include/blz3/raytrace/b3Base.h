@@ -61,19 +61,19 @@ class b3Material;
  */
 struct B3_PLUGIN b3_ray : public b3_line64
 {
-	b3_f64      Q;                     //!< Backward limit.
-	b3_vector64 ipoint;                //!< Intersection point.
-	b3_vector64 normal;                //!< Normal at intersection point.
-	b3_vector64 xDeriv;                //!< Surface x derivative.
-	b3_vector64 yDeriv;                //!< Surface y derivative.
-	b3_polar    polar;                 //!< Diverse polar coordinates.
-	const b3Shape  *  shape;                 //!< Intersected shape.
-	const b3BBox   *  bbox;                  //!< Bounding box which contains intersected shape.
-	b3Material * material;             //!< Hit material of intersected shape.
-	b3_bool     inside;                //!< Inside or outside flag.
-	b3Color     color;                 //!< Result color.
-	b3_index    TriaIndex;             //!< Triangle index at intersection point.
-	b3_f64      aTriaValue, bTriaValue; //!< Polar coordinates of that triangle.
+	b3_vector64        ipoint;         //!< Intersection point.
+	b3_vector64        normal;         //!< Normal at intersection point.
+	b3_vector64        xDeriv;         //!< Surface x derivative.
+	b3_vector64        yDeriv;         //!< Surface y derivative.
+	b3_polar           polar;          //!< Diverse polar coordinates.
+	b3_f64             Q;              //!< Backward limit.
+	const b3Shape *    shape;          //!< Intersected shape.
+	const b3BBox *     bbox;           //!< Bounding box which contains intersected shape.
+	const b3Material * material;       //!< Hit material of intersected shape.
+	b3_bool            inside;         //!< Inside or outside flag.
+	b3Color            color;          //!< Result color.
+	b3_index           TriaIndex;      //!< Triangle index at intersection point.
+	b3_f64             aTriaValue, bTriaValue; //!< Polar coordinates of that triangle.
 };
 
 /*************************************************************************

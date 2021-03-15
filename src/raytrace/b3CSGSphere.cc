@@ -119,7 +119,7 @@ void b3CSGSphere::b3InverseMap(b3_ray * ray B3_UNUSED, b3_csg_point * point B3_U
 {
 }
 
-b3_count b3CSGSphere::b3GetMaxIntersections()
+b3_count b3CSGSphere::b3GetMaxIntersections() const
 {
 	return 2;
 }

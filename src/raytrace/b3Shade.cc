@@ -187,9 +187,12 @@ b3_bool b3Shader::b3Shade(
 	return finite;
 }
 
-void b3Shader::b3Shade(b3Light * light, b3_light_info * jit, b3_surface * surface)
+void b3Shader::b3Shade(
+		const b3Light * light,
+		b3_light_info * jit,
+		b3_surface *    surface) const
 {
-	b3Material * material = surface->m_Incoming->material;
+	const b3Material * material = surface->m_Incoming->material;
 
 	if (!((material != nullptr) && material->b3Illuminate(surface, jit)))
 	{

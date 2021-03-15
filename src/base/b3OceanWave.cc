@@ -169,7 +169,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector * pos)
 }
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(
-	const b3_vector * pos, b3_vector * n B3_UNUSED)
+	const b3_vector * pos, b3_vector * n B3_UNUSED) const
 {
 	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;

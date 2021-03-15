@@ -187,7 +187,7 @@ void b3CSGTorus::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 	polar->m_Polar.z = 0;
 }
 
-b3_count b3CSGTorus::b3GetMaxIntersections()
+b3_count b3CSGTorus::b3GetMaxIntersections() const
 {
 	return 4;
 }

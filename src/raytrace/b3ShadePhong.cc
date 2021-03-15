@@ -39,9 +39,9 @@ b3ShaderPhong::b3ShaderPhong(b3Scene * scene) : b3Shader(scene)
 #define MIX_BOTH       (MIX_REFLECTION | MIX_REFRACTION)
 
 void b3ShaderPhong::b3ShadeLight(
-	b3Light    *   light,
+	const b3Light * light,
 	b3_light_info * Jit,
-	b3_surface  *  surface)
+	b3_surface  *   surface) const
 {
 	// No shadow => surface in light
 	if (Jit->shape == nullptr)

@@ -41,9 +41,9 @@ void b3ShaderMork2::b3Prepare(b3_preparation_info * prep_info)
 }
 
 void b3ShaderMork2::b3ShadeLight(
-	b3Light    *   light,
+	const b3Light * light,
 	b3_light_info * Jit,
-	b3_surface  *  surface)
+	b3_surface  *   surface) const
 {
 	b3Color illumination;
 

@@ -176,7 +176,7 @@ public:
 			b3_f64       reflection,
 			b3_f64       refraction)
 	{
-		b3Material * material = surface->m_Incoming->material;
+		const b3Material * material = surface->m_Incoming->material;
 
 		return material != nullptr ? material->b3ShadeComponents(surface, reflection, refraction) : false;
 	}

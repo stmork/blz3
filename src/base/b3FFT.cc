@@ -457,7 +457,7 @@ b3_u32 b3Fourier::b3ColumnFFT(void * ptr)
 	return 0;
 }
 
-b3_bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp)
+b3_bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp) const
 {
 	b3_u08    *   cPtr;
 	b3_loop       x, y;

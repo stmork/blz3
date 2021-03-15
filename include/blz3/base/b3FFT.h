@@ -119,7 +119,7 @@ public:
 		return b3FFT2D(-1);
 	}
 
-	b3_bool   b3GetBuffer(b3Tx * tx, b3_f64 amp);
+	b3_bool   b3GetBuffer(b3Tx * tx, b3_f64 amp) const;
 	b3_bool   b3GetSpectrum(b3Tx * tx, b3_f64 amp);
 
 	inline b3Complex64 * b3GetBuffer() const

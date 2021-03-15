@@ -88,7 +88,7 @@ public:
 	 * @param pos The position of the slope values to be computed.
 	 * @param n The computed slope values.
 	 */
-	void   b3ComputeOceanWaveDeriv(const b3_vector * pos, b3_vector * n);
+	void   b3ComputeOceanWaveDeriv(const b3_vector * pos, b3_vector * n) const;
 
 	/**
 	 * This returns the FFT forward buffer as texture.
@@ -96,7 +96,7 @@ public:
 	 * @param tx The image to put the buffer in.
 	 * @param scale Scales all values by this factor.
 	 */
-	inline void b3GetBuffer(b3Tx * tx, b3_f64 scale)
+	inline void b3GetBuffer(b3Tx * tx, b3_f64 scale) const
 	{
 		m_FFT.b3GetBuffer(tx, scale);
 	}
@@ -165,7 +165,7 @@ private:
 	void              b3TestSpectrum3();
 	void              b3TestSpectrum4();
 
-	inline b3_index  b3GetIndex(const b3_index x, const b3_index y)
+	inline b3_index  b3GetIndex(const b3_index x, const b3_index y) const
 	{
 		return ((y & m_fftMask) << m_Dim) | (x & m_fftMask);
 	}
