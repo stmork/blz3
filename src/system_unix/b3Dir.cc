@@ -212,7 +212,7 @@ void b3Path::b3LinkFileName(
 // link a name to an existing file path to create a
 // new full qualified filepath
 void b3Path::b3LinkFileName(
-	char    *   File,
+	char    *    File,
 	const char * FilePath,
 	const char * FileName)
 {
@@ -228,7 +228,10 @@ void b3Path::b3LinkFileName(
 	}
 	if (FileName != nullptr)
 	{
-		strncat(File, "/", B3_FILESTRINGLEN);
+		if ((FilePath != nullptr) && (strlen(FilePath) > 0))
+		{
+			strncat(File, "/", B3_FILESTRINGLEN);
+		}
 		strncat(File, FileName, B3_FILESTRINGLEN);
 	}
 #else
@@ -264,8 +267,8 @@ void b3Path::b3SplitFileName(
 // 2b to a filename of zero length if "uncorrected" is a directory
 void b3Path::b3SplitFileName(
 	const char * File,
-	char    *   FilePath,
-	char    *   FileName)
+	char    *    FilePath,
+	char    *    FileName)
 {
 	b3_size Length, i;
 	b3_bool Dir = false;
@@ -289,7 +292,7 @@ void b3Path::b3SplitFileName(
 	}
 
 	Length = strlen(File);
-	if (FileName)
+	if (FileName != nullptr)
 	{
 		if (Dir)
 		{
@@ -305,7 +308,7 @@ void b3Path::b3SplitFileName(
 			strcpy(FileName, &File[i]);
 		}
 	}
-	if (FilePath)
+	if (FilePath != nullptr)
 	{
 		strcpy(FilePath, File);
 		if (!Dir)

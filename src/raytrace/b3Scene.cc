@@ -212,10 +212,9 @@ const char * b3Scene::b3GetFilename() const
 
 void b3Scene::b3SetFilename(const char * filename)
 {
+	m_Filename = filename;
 	m_Filename.b3SplitFileName(nullptr, m_SceneName);
 	m_SceneName.b3RemoveExt();
-
-	m_Filename.b3Format("%s", filename);
 }
 
 void b3Scene::b3SetTexture(const char * name)
