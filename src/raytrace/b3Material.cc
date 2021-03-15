@@ -1168,7 +1168,7 @@ b3_bool b3MatCookTorrance::b3GetSurfaceValues(b3_surface * surface) const
 	return true;
 }
 
-b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit)
+b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) const
 {
 	b3_ray   *   ray = surface->m_Incoming;
 	b3_vector64  L;
@@ -1447,7 +1447,7 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface * surface) const
 	return true;
 }
 
-b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit)
+b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit) const
 {
 	jit->m_AmbientSum += surface->m_Ambient;
 	if (jit->shape == nullptr)
@@ -1483,7 +1483,7 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit)
 	return true;
 }
 
-b3_bool b3MatCarPaint::b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
+b3_bool b3MatCarPaint::b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) const
 {
 	surface->m_Incoming->color =
 		surface->m_AmbientSum +

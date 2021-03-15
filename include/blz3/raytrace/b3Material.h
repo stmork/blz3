@@ -157,7 +157,7 @@ public:
 	 */
 	virtual b3_bool b3Illuminate(
 		b3_surface   *  surface B3_UNUSED,
-		b3_light_info * lit     B3_UNUSED)
+		b3_light_info * lit     B3_UNUSED) const
 	{
 		return false;
 	}
@@ -171,7 +171,10 @@ public:
 	 * @param refraction The refractance.
 	 * @return True if mixed via material properties.
 	 */
-	static inline b3_bool b3MixComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
+	static inline b3_bool b3MixComponents(
+			b3_surface * surface,
+			b3_f64       reflection,
+			b3_f64       refraction)
 	{
 		b3Material * material = surface->m_Incoming->material;
 
@@ -190,7 +193,7 @@ protected:
 	virtual b3_bool b3ShadeComponents(
 		b3_surface * surface B3_UNUSED,
 		b3_f64       reflection B3_UNUSED,
-		b3_f64       refraction B3_UNUSED)
+		b3_f64       refraction B3_UNUSED) const
 	{
 		return false;
 	}
@@ -208,10 +211,10 @@ protected:
 	 * @see b3Math::b3Mix()
 	 */
 	static inline void b3Mix(
-		b3_surface * surface,
+		b3_surface *        surface,
 		const b3_material * a,
 		const b3_material * b,
-		const b3_f64       mix)
+		const b3_f64        mix)
 	{
 		b3Color mixer;
 
@@ -549,7 +552,7 @@ public:
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
-	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
+	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) const override;
 };
 
 /*************************************************************************
@@ -605,10 +608,10 @@ public:
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
-	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
+	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) const override;
 
 protected:
-	b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) override;
+	b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) const override;
 
 private:
 	static inline void b3Randomize(const b3_vector64 * src, b3_vector64 * dst, b3_f64 scale, b3_f64 half)

@@ -149,9 +149,9 @@ public:
 	b3_bool  b3Illuminate(b3Shader * shader, b3_surface * surface);
 
 private:
-	void         b3InitValues();
-	b3_bool      b3PointIllumination(b3Shader * shader, b3_surface * surface);
-	b3_bool      b3AreaIllumination(b3Shader * shader, b3_surface * surface);
+	void            b3InitValues();
+	b3_bool         b3PointIllumination(b3Shader * shader, b3_surface * surface);
+	b3_bool         b3AreaIllumination(b3Shader * shader, b3_surface * surface);
 	const b3Shape * b3CheckSinglePoint(b3Shader * shader, b3_surface * surface,
 		b3_light_info * Jit, b3_coord x, b3_coord y);
 
