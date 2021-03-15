@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1300</width>
-    <height>639</height>
+    <width>1417</width>
+    <height>839</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -140,7 +140,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1300</width>
+     <width>1417</width>
      <height>22</height>
     </rect>
    </property>
@@ -222,7 +222,7 @@
   <action name="actionActivateAll">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/object/res/object/object_activate_all.png</normaloff>:/object/res/object/object_activate_all.png</iconset>
+     <normaloff>:/toolbar/object/res/toolbar/object/object_activate_all.png</normaloff>:/toolbar/object/res/toolbar/object/object_activate_all.png</iconset>
    </property>
    <property name="text">
     <string>Alles aktivieren</string>
@@ -234,7 +234,7 @@
   <action name="actionDeaktivateAll">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/object/res/object/object_deactivate_all.png</normaloff>:/object/res/object/object_deactivate_all.png</iconset>
+     <normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_all.png</normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_all.png</iconset>
    </property>
    <property name="text">
     <string>Alles deaktivieren</string>
@@ -246,7 +246,7 @@
   <action name="actionOpenScene">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/file/res/file/file_open.png</normaloff>:/file/res/file/file_open.png</iconset>
+     <normaloff>:/toolbar/file/res/toolbar/file/file_open.png</normaloff>:/toolbar/file/res/toolbar/file/file_open.png</iconset>
    </property>
    <property name="text">
     <string>Szene öffnen</string>
@@ -260,9 +260,9 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/view/res/view/view_3d.png</normaloff>:/view/res/view/view_3d.png</iconset>
-   </property>
+    <iconset>
+     <normaloff>:/toolbar/view/res/toolbar/view/view_3d.png</normaloff>:/toolbar/view/res/toolbar/view/view_3d.png</iconset>
+       </property>
    <property name="text">
     <string>3D-Ansicht</string>
    </property>
@@ -275,8 +275,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/view/res/view/view_front.png</normaloff>:/view/res/view/view_front.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/view/res/toolbar/view/view_front.png</normaloff>:/toolbar/view/res/toolbar/view/view_front.png</iconset>
    </property>
    <property name="text">
     <string>Frontalansicht</string>
@@ -290,8 +290,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/view/res/view/view_bottom.png</normaloff>:/view/res/view/view_bottom.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/view/res/toolbar/view/view_bottom.png</normaloff>:/toolbar/view/res/toolbar/view/view_bottom.png</iconset>
    </property>
    <property name="text">
     <string>Aufsicht</string>
@@ -305,8 +305,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/view/res/view/view_right.png</normaloff>:/view/res/view/view_right.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/view/res/toolbar/view/view_right.png</normaloff>:/toolbar/view/res/toolbar/view/view_right.png</iconset>
    </property>
    <property name="text">
     <string>Seitenansicht rechts</string>
@@ -320,8 +320,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/view/res/view/view_left.png</normaloff>:/view/res/view/view_left.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/view/res/toolbar/view/view_left.png</normaloff>:/toolbar/view/res/toolbar/view/view_left.png</iconset>
    </property>
    <property name="text">
     <string>Seitenansicht links</string>
@@ -335,8 +335,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/animation/res/animation/animation_play.png</normaloff>:/animation/res/animation/animation_play.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/animation/res/toolbar/animation/animation_play.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_play.png</iconset>
    </property>
    <property name="text">
     <string>Abspielen</string>
@@ -350,8 +350,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/animation/res/animation/animation_stop.png</normaloff>:/animation/res/animation/animation_stop.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/animation/res/toolbar/animation/animation_stop.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -365,8 +365,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/animation/res/animation/animation_pause.png</normaloff>:/animation/res/animation/animation_pause.png</iconset>
+    <iconset>
+     <normaloff>:/toolbar/animation/res/toolbar/animation/animation_pause.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_pause.png</iconset>
    </property>
    <property name="text">
     <string>Pause</string>

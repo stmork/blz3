@@ -41,7 +41,20 @@
 *************************************************************************/
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), ui(new Ui::MainWindow)
+	QMainWindow(parent),
+	ui(new Ui::MainWindow),
+	world_icon(":/treeview/World"),
+	bbox_taxonomy_map
+	{
+		QIcon(":/treeview/BBox_empty"),        // BBOX_EMPTY
+		QIcon(":/treeview/BBox_empty"),        // BBOX_ACTIVATED
+		QIcon(":/treeview/BBox_sub"),          // BBOX_BBOX_SUB
+		QIcon(":/treeview/BBox_sub"),          // BBOX_BBOX_SUB | BBOX_ACTIVATED
+		QIcon(":/treeview/BBox_Shape"),        // BBOX_SHAPE_SUB
+		QIcon(":/treeview/BBox_Shape_sel"),    // BBOX_SHAPE_SUB | BBOX_ACTIVATED
+		QIcon(":/treeview/BBox_Shape_sub"),    // BBOX_SHAPE_SUB | BBOX_BBOX_SUB
+		QIcon(":/treeview/BBox_Shape_sub_sel") // BBOX_SHAPE_SUB | BBOX_BBOX_SUB | BBOX_ACTIVATED
+	}
 {
 	QSurfaceFormat format;
 	format.setSamples(4);
@@ -83,6 +96,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	light_model = new QStandardItemModel(ui->lightListView);
 	ui->lightListView->setModel(light_model);
 
+	bbox_model = new QStandardItemModel(ui->treeView);
+	ui->treeView->setModel(bbox_model);
+
 	animation.setTargetObject(ui->animationSlider);
 	animation.setPropertyName("value");
 
@@ -113,6 +129,7 @@ void MainWindow::free()
 {
 	camera_model->clear();
 	light_model->clear();
+	bbox_model->clear();
 	m_World.b3Free();
 
 	m_Scene     = nullptr;
@@ -135,6 +152,7 @@ void MainWindow::prepareUI()
 
 		light_model->appendRow(item);
 	}
+	populateTreeView();
 
 	if (m_Animation != nullptr)
 	{
@@ -238,6 +256,49 @@ void MainWindow::enableLight()
 	ui->actionLightAll->setChecked(all);
 	ui->actionLightSpot->setEnabled(all);
 	ui->actionLightSpot->setChecked(ui->glView->b3IsSpotLight() && all);
+}
+
+void MainWindow::populateTreeView()
+{
+	QStandardItem * world = new QStandardItem(world_icon, m_Scene->b3GetFilename());
+
+	bbox_model->appendRow(world);
+	populateTreeView(world, m_Scene->b3GetBBoxHead());
+}
+
+void MainWindow::populateTreeView(QStandardItem * parent, b3Base<b3Item> * base)
+{
+	B3_FOR_TYPED_BASE(b3BBox, base, bbox)
+	{
+		b3Base<b3Item> * sub_bboxes = bbox->b3GetBBoxHead();
+		QStandardItem *  item;
+		unsigned         taxonomy = BBOX_EMPTY;
+
+		if (bbox->b3IsActive())
+		{
+			taxonomy |= bbox_taxonomy::BBOX_ACTIVATED;
+		}
+		if (!sub_bboxes->b3IsEmpty())
+		{
+			taxonomy |= BBOX_BBOX_SUB;
+		}
+		if (!bbox->b3GetShapeHead()->b3IsEmpty())
+		{
+			taxonomy |= BBOX_SHAPE_SUB;
+		}
+
+		const QIcon & icon = bbox_taxonomy_map[taxonomy];
+		item = new QStandardItem(icon, QString::fromLatin1(bbox->b3GetName()));
+		if (bbox->b3IsExpanded())
+		{
+			// TODO: Expand item here!
+		}
+		parent->appendRow(item);
+		if (taxonomy & BBOX_BBOX_SUB)
+		{
+			populateTreeView(item, sub_bboxes);
+		}
+	}
 }
 
 
