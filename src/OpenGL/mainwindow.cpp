@@ -107,6 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	m_World.b3Read("FlippAmiga.bwd");
 	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
+	m_Scene->b3SetFilename("FlippAmiga");
 	m_Animation = m_Scene->b3GetAnimation();
 	ui->glView->b3Prepare(m_Scene);
 	prepareUI();
