@@ -148,7 +148,9 @@ public:
 	 *
 	 * @param limit The info structure to fill.
 	 */
-	virtual void    b3ComputeBound(b3_stencil_limit * limit);
+	virtual inline void b3ComputeBound(b3_stencil_limit * limit B3_UNUSED) const
+	{
+	}
 
 	/**
 	 * This method checks wether the given polar coordinates matches into the
@@ -157,7 +159,11 @@ public:
 	 * @param polar The polar coordinates to check.
 	 * @return True if the polar coordinates matches the stencil condition.
 	 */
-	virtual b3_bool b3CheckStencil(b3_polar * polar);
+	virtual inline b3_bool b3CheckStencil(b3_polar * polar B3_UNUSED) const
+	{
+		return true;
+	}
+
 
 	/**
 	 * This Method computes a Boolean expression depending of the
@@ -206,8 +212,8 @@ public:
 	B3_ITEM_LOAD(b3CondRectangle); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 #define RCB_ACTIVE  0
@@ -236,7 +242,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
 };
 
 /**
@@ -248,7 +254,7 @@ public:
 	B3_ITEM_INIT(b3CondPara); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondPara); //!< This constructor handles deserialization.
 
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 /**
@@ -260,7 +266,7 @@ public:
 	B3_ITEM_INIT(b3CondTria); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CondTria); //!< This constructor handles deserialization.
 
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 /**
@@ -278,8 +284,8 @@ public:
 	B3_ITEM_LOAD(b3CondCircle); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 /**
@@ -297,8 +303,8 @@ public:
 	B3_ITEM_LOAD(b3CondSegment); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 /**
@@ -317,8 +323,8 @@ public:
 	B3_ITEM_LOAD(b3CondEllipse); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 /**
@@ -342,8 +348,8 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 /**
@@ -365,8 +371,8 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	void    b3ComputeBound(b3_stencil_limit * limit) override;
-	b3_bool b3CheckStencil(b3_polar * polar) override;
+	void    b3ComputeBound(b3_stencil_limit * limit) const override;
+	b3_bool b3CheckStencil(b3_polar * polar) const override;
 };
 
 #endif

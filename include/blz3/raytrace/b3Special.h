@@ -96,7 +96,7 @@ public:
 	 *
 	 * @return The activation state.
 	 */
-	b3_bool b3IsActive();
+	b3_bool b3IsActive() const;
 
 	/**
 	 * This method sets the new activation state of super sampling.
@@ -159,7 +159,7 @@ public:
 	 * @param xAngle The longitude.
 	 * @param yAngle The latitude.
 	 */
-	void     b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle);
+	void     b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle) const;
 
 	/**
 	 * This method adjusts the focal length of the camera.
@@ -174,14 +174,14 @@ public:
 	 *
 	 * @return The focal length of this camera.
 	 */
-	b3_f64   b3GetFocalLength();
+	b3_f64   b3GetFocalLength() const;
 
 	/**
 	 * This method returns the camera twirl.
 	 *
 	 * @return The camera twirl.
 	 */
-	b3_f64   b3GetTwirl();
+	b3_f64   b3GetTwirl() const;
 
 	/**
 	 * This method adjusts the twirl of the camera.
@@ -223,7 +223,7 @@ public:
 	 *
 	 * @return True if camera is active.
 	 */
-	b3_bool  b3IsActive();
+	b3_bool  b3IsActive() const;
 
 	/**
 	 * This method sets the activation state of this camera.
@@ -259,7 +259,7 @@ public:
 	 *
 	 * @return True if nebular is active.
 	 */
-	b3_bool b3IsActive();
+	b3_bool b3IsActive() const;
 
 	/**
 	 * This method activates the nebular.
@@ -273,7 +273,7 @@ public:
 	 *
 	 * @param result The nebular filter color.
 	 */
-	void    b3GetNebularColor(b3Color & result);
+	void    b3GetNebularColor(b3Color & result) const;
 
 	/**
 	 * This method computes the nebular color depending on the input color, the
@@ -284,7 +284,9 @@ public:
 	 * @param result The resulting nebulated color.
 	 * @param distance The real distance.
 	 */
-	void    b3ComputeNebular(b3Color & input, b3Color & result, b3_f64 distance);
+	void    b3ComputeNebular(
+			const b3Color & input, b3Color & result,
+			const b3_f64    distance) const;
 };
 
 /**
@@ -370,35 +372,35 @@ public:
 	 *
 	 * @param translation The point to adjust to the grid.
 	 */
-	void        b3SnapToGrid(b3_vector * translation);
+	void        b3SnapToGrid(b3_vector * translation) const;
 
 	/**
 	 * This method snaps the given angle into the next angular grid position.
 	 *
 	 * @param angle The angle to adjust.
 	 */
-	void        b3SnapToCameraAngle(b3_f64 & angle);
+	void        b3SnapToCameraAngle(b3_f64 & angle) const;
 
 	/**
 	 * This method snaps the given angle into the next angular grid position.
 	 *
 	 * @param angle The angle to adjust.
 	 */
-	void        b3SnapToObjectAngle(b3_f64 & angle);
+	void        b3SnapToObjectAngle(b3_f64 & angle) const;
 
 	/**
 	 * This method returns the configured unit in milli meters.
 	 *
 	 * @return The length of the configured unit in milli meters.
 	 */
-	b3_f64      b3ScaleUnitToMM();
+	b3_f64      b3ScaleUnitToMM() const;
 
 	/**
 	 * This method returns the configured unit as clear text.
 	 *
 	 * @return The unit as clear text.
 	 */
-	const char * b3GetUnitDescr();
+	const char * b3GetUnitDescr() const;
 
 	/**
 	 * This method sets a new custom measuring unit.
@@ -426,10 +428,10 @@ public:
 	 * @return The measuring unit as value.
 	 * @see b3_measure
 	 */
-	b3_u32      b3GetMeasure(b3_bool forceCustomValue = true);
+	b3_u32      b3GetMeasure(b3_bool forceCustomValue = true) const;
 
 private:
-	void        b3Snap(b3_f64 & angle, b3_bool activation);
+	void        b3Snap(b3_f64 & angle, b3_bool activation) const;
 };
 
 #define B3_UNIT_MASK           0x0000f
@@ -490,7 +492,7 @@ public:
 	 *
 	 * @return The activation state of the animation.
 	 */
-	b3_bool         b3IsActive();
+	b3_bool         b3IsActive() const;
 
 	/**
 	 * This method activates the animation depending on the given flag.
@@ -539,7 +541,7 @@ public:
 	 * @param index The frame index to convert.
 	 * @return The converted time point.
 	 */
-	inline b3_f64   b3AnimTimeCode(b3_index index)
+	inline b3_f64   b3AnimTimeCode(b3_index index) const
 	{
 		return m_Start + (b3_f64)index / m_FramesPerSecond;
 	}

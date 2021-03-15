@@ -117,7 +117,7 @@ void b3SuperSample::b3Write()
 	b3StoreColor(&limit);
 }
 
-b3_bool b3SuperSample::b3IsActive()
+b3_bool b3SuperSample::b3IsActive() const
 {
 	return m_Active;
 }
@@ -165,7 +165,7 @@ void b3CameraPart::b3Write()
 	b3StoreString(m_CameraName, B3_CAMERANAMELEN);
 }
 
-b3_bool b3CameraPart::b3IsActive()
+b3_bool b3CameraPart::b3IsActive() const
 {
 	return (m_Flags & CAMERA_ACTIVE) != 0;
 }
@@ -228,7 +228,7 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3Normalize(&m_Height, height);
 }
 
-void b3CameraPart::b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle)
+void b3CameraPart::b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle) const
 {
 	xAngle = atan2(
 			m_EyePoint.y - m_ViewPoint.y,
@@ -243,8 +243,8 @@ void b3CameraPart::b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle)
 void b3CameraPart::b3Overview(
 	b3_vector * center,
 	b3_vector * size,
-	b3_f64     xAngle,
-	b3_f64     yAngle)
+	b3_f64      xAngle,
+	b3_f64      yAngle)
 {
 	b3_vector eye;
 	b3_f64    rad;
@@ -284,12 +284,12 @@ b3_bool b3CameraPart::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 	return true;
 }
 
-b3_f64 b3CameraPart::b3GetFocalLength()
+b3_f64 b3CameraPart::b3GetFocalLength() const
 {
 	return b3Vector::b3Distance(&m_ViewPoint, &m_EyePoint);
 }
 
-b3_f64 b3CameraPart::b3GetTwirl()
+b3_f64 b3CameraPart::b3GetTwirl() const
 {
 	b3_vector ViewDir, Right, Vup;
 
@@ -489,7 +489,7 @@ void b3ModellerInfo::b3Write()
 	b3StoreInt(m_AngleGrid);
 }
 
-void b3ModellerInfo::b3SnapToGrid(b3_vector * vector)
+void b3ModellerInfo::b3SnapToGrid(b3_vector * vector) const
 {
 	if (m_GridActive)
 	{
@@ -499,17 +499,17 @@ void b3ModellerInfo::b3SnapToGrid(b3_vector * vector)
 	}
 }
 
-void b3ModellerInfo::b3SnapToCameraAngle(b3_f64 & angle)
+void b3ModellerInfo::b3SnapToCameraAngle(b3_f64 & angle) const
 {
 	b3Snap(angle, m_AngleGridCamera);
 }
 
-void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 & angle)
+void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 & angle) const
 {
 	b3Snap(angle, m_AngleGridObjects);
 }
 
-void b3ModellerInfo::b3Snap(b3_f64 & angle, b3_bool activation)
+void b3ModellerInfo::b3Snap(b3_f64 & angle, b3_bool activation) const
 {
 	if (activation)
 	{
@@ -520,17 +520,17 @@ void b3ModellerInfo::b3Snap(b3_f64 & angle, b3_bool activation)
 	}
 }
 
-b3_f64 b3ModellerInfo::b3ScaleUnitToMM()
+b3_f64 b3ModellerInfo::b3ScaleUnitToMM() const
 {
 	return m_UnitScaleTable[m_Unit];
 }
 
-const char * b3ModellerInfo::b3GetUnitDescr()
+const char * b3ModellerInfo::b3GetUnitDescr() const
 {
 	return m_UnitDescrTable[m_Unit];
 }
 
-b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value)
+b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value) const
 {
 	return ((m_Measure == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
 		m_CustomMeasure : m_MeasureTable[m_Measure];
@@ -582,7 +582,7 @@ b3_bool b3Nebular::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 	return true;
 }
 
-b3_bool b3Nebular::b3IsActive()
+b3_bool b3Nebular::b3IsActive() const
 {
 	return m_NebularVal > 0;
 }
@@ -592,15 +592,14 @@ void b3Nebular::b3Activate(b3_bool flag)
 	m_NebularVal = (flag ? fabs(m_NebularVal) : -fabs(m_NebularVal));
 }
 
-void b3Nebular::b3GetNebularColor(b3Color & result)
+void b3Nebular::b3GetNebularColor(b3Color & result) const
 {
 	result = m_NebularColor;
 }
 
 void b3Nebular::b3ComputeNebular(
-	b3Color & input,
-	b3Color & result,
-	b3_f64   distance)
+	const b3Color & input, b3Color & result,
+	const b3_f64    distance) const
 {
 	b3_f64 NebularIndex = exp(-distance * m_NebularDenom);
 
@@ -909,7 +908,7 @@ void b3Animation::b3Write()
 	b3StorePtr(m_Element);
 }
 
-b3_bool b3Animation::b3IsActive()
+b3_bool b3Animation::b3IsActive() const
 {
 	return (m_Flags & ANIMF_ON) != 0;
 }

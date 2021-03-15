@@ -155,7 +155,7 @@ private:
 	const b3Shape * b3CheckSinglePoint(b3Shader * shader, b3_surface * surface,
 		b3_light_info * Jit, b3_coord x, b3_coord y);
 
-	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
+	inline b3_f64 b3GetSpotFactor(b3_f64 angle) const // angle inside [0..1]
 	{
 		if (m_SpotActive)
 		{
