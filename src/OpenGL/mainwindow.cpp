@@ -178,7 +178,14 @@ b3BBox * MainWindow::getSelectedBBox()
 	const QModelIndex & index = ui->treeView->currentIndex();
 	const QB3BBoxItem * item  = static_cast<QB3BBoxItem *>(bbox_model->itemFromIndex(index));
 
-	return *item;
+	if (item != nullptr)
+	{
+		return *item;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void MainWindow::animate(int frame)
@@ -247,7 +254,7 @@ void MainWindow::enableLight()
 
 void MainWindow::populateTreeView()
 {
-	QStandardItem * world = new QStandardItem(world_icon, m_Scene->b3GetFilename());
+	QStandardItem * world = new QStandardItem(world_icon, m_Scene->b3GetName());
 
 	world->setSelectable(false);
 	bbox_model->appendRow(world);
