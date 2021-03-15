@@ -271,34 +271,40 @@ void MainWindow::populateTreeView(QStandardItem * parent, b3Base<b3Item> * base)
 	B3_FOR_TYPED_BASE(b3BBox, base, bbox)
 	{
 		b3Base<b3Item> * sub_bboxes = bbox->b3GetBBoxHead();
-		QStandardItem *  item;
-		unsigned         taxonomy = BBOX_EMPTY;
+		unsigned         taxonomy   = taxonomyOf(bbox);
+		const QIcon &    icon       = bbox_taxonomy_map[taxonomy];
+		QStandardItem *  item       = new QStandardItem(icon, QString::fromLatin1(bbox->b3GetName()));
 
-		if (bbox->b3IsActive())
-		{
-			taxonomy |= bbox_taxonomy::BBOX_ACTIVATED;
-		}
-		if (!sub_bboxes->b3IsEmpty())
-		{
-			taxonomy |= BBOX_BBOX_SUB;
-		}
-		if (!bbox->b3GetShapeHead()->b3IsEmpty())
-		{
-			taxonomy |= BBOX_SHAPE_SUB;
-		}
-
-		const QIcon & icon = bbox_taxonomy_map[taxonomy];
-		item = new QStandardItem(icon, QString::fromLatin1(bbox->b3GetName()));
 		if (bbox->b3IsExpanded())
 		{
 			// TODO: Expand item here!
 		}
+//		item->setData(bbox);
 		parent->appendRow(item);
 		if (taxonomy & BBOX_BBOX_SUB)
 		{
 			populateTreeView(item, sub_bboxes);
 		}
 	}
+}
+
+unsigned MainWindow::taxonomyOf(const b3BBox * bbox)
+{
+	unsigned taxonomy = BBOX_EMPTY;
+
+	if (bbox->b3IsActive())
+	{
+		taxonomy |= bbox_taxonomy::BBOX_ACTIVATED;
+	}
+	if (!bbox->b3GetBBoxHead()->b3IsEmpty())
+	{
+		taxonomy |= BBOX_BBOX_SUB;
+	}
+	if (!bbox->b3GetShapeHead()->b3IsEmpty())
+	{
+		taxonomy |= BBOX_SHAPE_SUB;
+	}
+	return taxonomy;
 }
 
 

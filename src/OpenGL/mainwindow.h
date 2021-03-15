@@ -80,6 +80,7 @@ private:
 	void    enableLight();
 	void    populateTreeView(void);
 	void    populateTreeView(QStandardItem * item, b3Base<b3Item> * base);
+	static unsigned taxonomyOf(const b3BBox * bbox);
 
 	void    free();
 	void    prepareUI();
