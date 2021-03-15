@@ -112,7 +112,7 @@ void b3PickInfo::b3ComputeIndices()
 	glGridElements->b3SetCount(m_Grid.b3GetCount());
 }
 
-void b3PickInfo::b3GetGridColor(b3Color & color)
+void b3PickInfo::b3GetGridColor(b3Color & color) const
 {
 	color = m_GridColor;
 }

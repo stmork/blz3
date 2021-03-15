@@ -77,7 +77,7 @@ void b3CSGEllipsoid::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 	polar->m_Polar.z = 0;
 }
 
-void b3CSGEllipsoid::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3CSGEllipsoid::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    =  0;
 	info->xInfo.max    =  1;

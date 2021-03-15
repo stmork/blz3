@@ -155,7 +155,7 @@ void b3Torus::b3SetupPicking(b3PickInfo * info)
 	info->b3AddPickPoint(&m_Base, "b");
 }
 
-void b3Torus::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Torus::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

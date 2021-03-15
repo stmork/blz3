@@ -192,7 +192,7 @@ b3_count b3CSGTorus::b3GetMaxIntersections()
 	return 4;
 }
 
-void b3CSGTorus::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3CSGTorus::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

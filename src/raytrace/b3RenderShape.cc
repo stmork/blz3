@@ -197,7 +197,7 @@ b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons() const
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
+void b3Shape::b3ComputeBound(b3_stencil_limit * limit) const
 {
 	b3_stencil_bound  info;
 
@@ -221,7 +221,7 @@ void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3GetDiffuseColor(b3Color & color)
+void b3Shape::b3GetDiffuseColor(b3Color & color) const
 {
 	b3_ray       ray;
 	b3_surface   surface;
@@ -241,7 +241,7 @@ void b3Shape::b3GetDiffuseColor(b3Color & color)
 b3_f64 b3Shape::b3GetColors(
 	b3Color & ambient,
 	b3Color & diffuse,
-	b3Color & specular)
+	b3Color & specular) const
 {
 	b3_ray       ray;
 	b3_surface   surface;
@@ -274,7 +274,7 @@ b3_bool b3Shape::b3GetChess(
 	b3Color & black,
 	b3Color & white,
 	b3_res  & xRepeat,
-	b3_res  & yRepeat)
+	b3_res  & yRepeat) const
 {
 	b3Item * item;
 	b3_bool  result = false;
@@ -299,7 +299,7 @@ b3Tx * b3Shape::b3GetTexture(
 	b3_f64 & xTrans,
 	b3_f64 & yTrans,
 	b3_f64 & xScale,
-	b3_f64 & yScale)
+	b3_f64 & yScale) const
 {
 	b3Item * item;
 	b3Tx  *  tx = nullptr;
@@ -332,15 +332,14 @@ b3Tx * b3Shape::b3GetTexture(
 
 class b3RenderImageSampler : public b3Sampler
 {
-	b3Shape * m_Shape;
-	b3Tx  *  m_Tx;
+	const b3Shape * m_Shape;
+	b3Tx  *         m_Tx;
 
 public:
-	b3RenderImageSampler(b3Shape * shape, b3Tx * tx)
+	b3RenderImageSampler(const b3Shape * shape, b3Tx * tx) : m_Shape(shape)
 	{
 		B3_ASSERT(tx->b3IsTrueColor());
 
-		m_Shape = shape;
 		m_Tx    = tx;
 		m_xMax  = tx->xSize;
 		m_yMax  = tx->ySize;
@@ -440,7 +439,7 @@ private:
 	}
 };
 
-b3_bool b3Shape::b3GetImage(b3Tx * image)
+b3_bool b3Shape::b3GetImage(b3Tx * image) const
 {
 	b3Item    *   item;
 	b3_bool       result = false;

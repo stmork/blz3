@@ -119,7 +119,7 @@ b3_count b3Scene::b3GetBBoxCount() const
 	return count;
 }
 
-b3_count b3BBox::b3Count()
+b3_count b3BBox::b3Count() const
 {
 	b3_count count = 1;
 

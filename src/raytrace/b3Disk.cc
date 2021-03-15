@@ -195,7 +195,7 @@ void b3Disk::b3ComputeIndices()
 	glPolygonElements->b3SetCount(poly_count);
 }
 
-void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

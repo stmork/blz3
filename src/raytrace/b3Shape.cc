@@ -181,7 +181,7 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 	return true;
 }
 
-void b3Shape::b3BumpNormal(b3_ray * ray)
+void b3Shape::b3BumpNormal(b3_ray * ray) const
 {
 	b3_f64   denom;
 	b3_bool  deriv_computed = false;
@@ -226,7 +226,7 @@ void b3Shape::b3SetupGrid(b3PickInfo * info B3_UNUSED)
 {
 }
 
-b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
+b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface) const
 {
 	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
@@ -247,12 +247,12 @@ b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
 	return nullptr;
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar * polar B3_UNUSED)
+b3_bool b3Shape::b3CheckStencil(b3_polar * polar B3_UNUSED) const
 {
 	return true;
 }
 
-void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;
@@ -290,7 +290,7 @@ b3SimpleShape::b3SimpleShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
-b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar)
+b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar) const
 {
 	b3_bool      result = true;
 
@@ -430,7 +430,7 @@ b3_bool b3Shape3::b3Prepare(b3_preparation_info * prep_info)
 	return result;
 }
 
-void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

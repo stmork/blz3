@@ -60,7 +60,7 @@ void b3Ellipsoid::b3ComputeIndices()
 	b3ComputeEllipsoidIndices();
 }
 
-void b3Ellipsoid::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Ellipsoid::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    =  0;
 	info->xInfo.max    =  1;

@@ -69,7 +69,7 @@ void b3Sphere::b3GetCount(
 	b3GetEllipsoidIndexCount(gridCount, polyCount);
 }
 
-void b3Sphere::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Sphere::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    =  0;
 	info->xInfo.max    =  1;

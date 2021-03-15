@@ -70,7 +70,7 @@ void b3Box::b3ComputeIndices()
 	b3ComputeBoxIndices();
 }
 
-void b3Box::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Box::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

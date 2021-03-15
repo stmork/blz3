@@ -122,7 +122,7 @@ public:
 protected:
 	void     b3ComputeVertices() override;
 	void     b3ComputeIndices() override;
-	void     b3GetGridColor(b3Color & color) override;
+	void     b3GetGridColor(b3Color & color) const override;
 };
 
 #endif

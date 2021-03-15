@@ -122,7 +122,7 @@ void b3Area::b3ComputeIndices()
 	b3ComputeBound(&m_Limit);
 }
 
-void b3Area::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Area::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = -1;
 	info->xInfo.max    =  1;

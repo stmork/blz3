@@ -126,8 +126,8 @@ b3_bool b3Shader::b3Shade(
 	b3_ray  * ray,
 	b3_count  depth_count)
 {
-	b3BBox   *   bbox;
-	b3Shape   *  shape;
+	const b3BBox   *   bbox;
+	const b3Shape   *  shape;
 	b3_surface   surface;
 	b3_bool      finite;
 

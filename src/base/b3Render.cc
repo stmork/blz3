@@ -595,7 +595,7 @@ void b3RenderObject::b3RecomputeMaterial()
 #endif
 }
 
-void b3RenderObject::b3GetDiffuseColor(b3Color & diffuse)
+void b3RenderObject::b3GetDiffuseColor(b3Color & diffuse) const
 {
 	diffuse.b3Init(0.0f, 0.5f, 1.0f);
 }
@@ -603,7 +603,7 @@ void b3RenderObject::b3GetDiffuseColor(b3Color & diffuse)
 b3_f64 b3RenderObject::b3GetColors(
 	b3Color & ambient,
 	b3Color & diffuse,
-	b3Color & specular)
+	b3Color & specular) const
 {
 	ambient.b3Init(0.5, 0.5, 0.5);
 	diffuse.b3Init(0.0, 0.5, 1.0);
@@ -615,7 +615,7 @@ b3_bool b3RenderObject::b3GetChess(
 	B3_UNUSED b3Color & bColor,
 	B3_UNUSED b3Color & wColor,
 	B3_UNUSED b3_res & xRepeat,
-	B3_UNUSED b3_res & yRepeat)
+	B3_UNUSED b3_res & yRepeat) const
 {
 	return false;
 }
@@ -624,12 +624,12 @@ b3Tx * b3RenderObject::b3GetTexture(
 	B3_UNUSED b3_f64 & xTrans,
 	B3_UNUSED b3_f64 & yTrans,
 	B3_UNUSED b3_f64 & xScale,
-	B3_UNUSED b3_f64 & yScale)
+	B3_UNUSED b3_f64 & yScale) const
 {
 	return nullptr;
 }
 
-b3_bool b3RenderObject::b3GetImage(B3_UNUSED b3Tx * image)
+b3_bool b3RenderObject::b3GetImage(B3_UNUSED b3Tx * image) const
 {
 	return false;
 }

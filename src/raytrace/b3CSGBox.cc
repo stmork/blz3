@@ -97,7 +97,7 @@ void b3CSGBox::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 	polar->m_NormalIndex = point->m_Index;
 }
 
-void b3CSGBox::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3CSGBox::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

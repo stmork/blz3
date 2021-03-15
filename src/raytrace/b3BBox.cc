@@ -355,7 +355,7 @@ b3_bool b3BBox::b3Reverse(b3_matrix * original)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3BBox::b3IsActive()
+b3_bool b3BBox::b3IsActive() const
 {
 	return (m_Type & BBF_ACTIVE) != 0;
 }
@@ -372,7 +372,7 @@ void b3BBox::b3Expand(b3_bool expand)
 	}
 }
 
-b3_bool b3BBox::b3IsExpanded()
+b3_bool b3BBox::b3IsExpanded() const
 {
 	return (m_Type & BBF_EXPANDED) != 0;
 }

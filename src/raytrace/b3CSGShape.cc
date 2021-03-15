@@ -267,7 +267,7 @@ b3_bool b3CSGShape3::b3Prepare(b3_preparation_info * prep_info)
 	return result;
 }
 
-void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

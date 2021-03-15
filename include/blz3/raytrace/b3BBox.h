@@ -98,14 +98,14 @@ public:
 	void             b3ResetTransformation();
 	void             b3Activate(b3_bool activate = true, b3_bool recurse = true);
 	void             b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE, b3_bool recurse = true);
-	b3_bool          b3IsActive();
+	b3_bool          b3IsActive() const;
 	void             b3Expand(b3_bool expand = true);
-	b3_bool          b3IsExpanded();
+	b3_bool          b3IsExpanded() const;
 	void             b3Update();
 	void             b3UpdateMaterial();
 	void             b3UpdateBBox();
 	b3_bool          b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
-	b3_count         b3Count();
+	b3_count         b3Count() const;
 	b3_bool          b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
 	const char   *   b3GetName() const override;
 	b3_bool          b3BacktraceRecompute(b3BBox * search);
@@ -150,7 +150,7 @@ public:
 	 *
 	 * @param ray The ray containing the intersection point.
 	 */
-	inline void            b3ComputeBoxPolar(b3_ray * ray)
+	inline void         b3ComputeBoxPolar(b3_ray * ray) const
 	{
 		b3_f64 x = ray->ipoint.x;
 		b3_f64 y = ray->ipoint.y;
@@ -166,7 +166,7 @@ public:
 	}
 
 protected:
-	inline void b3GetGridColor(b3Color & color) override
+	inline void b3GetGridColor(b3Color & color) const override
 	{
 		color = m_GridColor;
 	}

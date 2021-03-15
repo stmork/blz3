@@ -591,7 +591,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual void b3GetGridColor(b3Color & color)
+	virtual void b3GetGridColor(b3Color & color) const
 	{
 		color = m_GridColor;
 	}
@@ -601,7 +601,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual void b3GetSelectedColor(b3Color & color)
+	virtual void b3GetSelectedColor(b3Color & color) const
 	{
 		color = m_SelectedColor;
 	}
@@ -611,7 +611,7 @@ protected:
 	 *
 	 * @param diffuse The resulting color.
 	 */
-	virtual void b3GetDiffuseColor(b3Color & diffuse);
+	virtual void b3GetDiffuseColor(b3Color & diffuse) const;
 
 	/**
 	 * The imlementation of this method retrieves the object color components.
@@ -621,7 +621,7 @@ protected:
 	 * @param specular The resulting specular color.
 	 * @return The resulting specular exponent.
 	 */
-	virtual b3_f64          b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular);
+	virtual b3_f64 b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular) const;
 
 	/**
 	 * If this method returns true the referenced values are initialized by the implementation of
@@ -634,7 +634,7 @@ protected:
 	 * @param yRepeat The repitition count in y direction.
 	 * @return True if the object has a chess material.
 	 */
-	virtual b3_bool b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat);
+	virtual b3_bool b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const;
 
 	/**
 	 * If the implementation of this method can simply return its texture this method returns this
@@ -646,7 +646,7 @@ protected:
 	 * @param yScale texture translation in y direction.
 	 * @return The texture to use.
 	 */
-	virtual b3Tx * b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale);
+	virtual b3Tx * b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale) const;
 
 	/**
 	 * If the render object is not a normal material nor a chess board nor a simple texture material the
@@ -655,7 +655,7 @@ protected:
 	 * @param image The image to which the surface colors are sampled in.
 	 * @return True if sampling was OK.
 	 */
-	virtual b3_bool b3GetImage(b3Tx * image);
+	virtual b3_bool b3GetImage(b3Tx * image) const;
 
 	/**
 	 * This method transforms the vertex data with the given transformation.
