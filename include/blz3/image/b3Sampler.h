@@ -37,7 +37,7 @@ struct b3SampleInfo
 	b3_res        m_xMax;          //!< The strip width.
 	b3_res        m_yMax;          //!< The overall sampling height.
 	void     *    m_Data;          //!< The resulting strip data.
-	const void *  m_Ptr;           //!< A pointer to custom information.
+	const void  * m_Ptr;           //!< A pointer to custom information.
 };
 
 /**

@@ -68,10 +68,11 @@ private slots:
 
 	void on_actionLightSimple_triggered();
 	void on_actionLightAll_triggered();
+	void on_actionLightSpot_triggered();
 
 	void on_cameraListView_clicked(const QModelIndex & index);
 
-	void on_actionLightSpot_triggered();
+	void on_itemChanged(QStandardItem * item);
 
 private:
 	QString timecode(const int frame) const;
@@ -80,19 +81,11 @@ private:
 	void    enableLight();
 	void    populateTreeView(void);
 	void    populateTreeView(QStandardItem * item, b3Base<b3Item> * base);
-	static unsigned taxonomyOf(const b3BBox * bbox);
+	void    updateTreeView();
+	void    updateTreeView(QStandardItem * item);
 
 	void    free();
 	void    prepareUI();
-
-	enum bbox_taxonomy
-	{
-		BBOX_EMPTY     = 0,
-		BBOX_ACTIVATED = 1,
-		BBOX_BBOX_SUB  = 2,
-		BBOX_SHAPE_SUB = 4,
-		BBOX_MASK      = BBOX_ACTIVATED | BBOX_BBOX_SUB | BBOX_SHAPE_SUB
-	};
 
 	Ui::MainWindow   *   ui;
 	QPropertyAnimation   animation;
@@ -100,7 +93,6 @@ private:
 	QStandardItemModel * light_model;
 	QStandardItemModel * bbox_model;
 	QIcon                world_icon;
-	QIcon                bbox_taxonomy_map[8];
 
 	b3Path               textures;
 	b3Path               pictures;

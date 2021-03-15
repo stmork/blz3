@@ -14,17 +14,19 @@
 
 #include "b3LightItem.h"
 
-QB3LightItem::QB3LightItem(b3Light * light) : m_Light(light)
+QB3LightItem::QB3LightItem(b3Light * light)
 {
+	setData(QVariant::fromValue(light));
 	setCheckable(true);
-	setCheckState(m_Light->b3IsActive() ? Qt::Checked : Qt::Unchecked);
-	setText(QString::fromLatin1(m_Light->b3GetName()));
+	setCheckState(light->b3IsActive() ? Qt::Checked : Qt::Unchecked);
+	setText(QString::fromLatin1(light->b3GetName()));
 }
 
 bool QB3LightItem::check()
 {
 	const bool checked = checkState() == Qt::Checked;
+	b3Light *  light   = *this;
 
-	m_Light->m_LightActive = checked;
+	light->m_LightActive = checked;
 	return checked;
 }

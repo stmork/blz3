@@ -19,6 +19,7 @@
 
 #include "b3CameraItem.h"
 #include "b3LightItem.h"
+#include "b3BBoxItem.h"
 
 /*************************************************************************
 **                                                                      **
@@ -43,18 +44,7 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	world_icon(":/treeview/World"),
-	bbox_taxonomy_map
-	{
-		QIcon(":/treeview/BBox_empty"),        // BBOX_EMPTY
-		QIcon(":/treeview/BBox_empty"),        // BBOX_ACTIVATED
-		QIcon(":/treeview/BBox_sub"),          // BBOX_BBOX_SUB
-		QIcon(":/treeview/BBox_sub"),          // BBOX_BBOX_SUB | BBOX_ACTIVATED
-		QIcon(":/treeview/BBox_Shape"),        // BBOX_SHAPE_SUB
-		QIcon(":/treeview/BBox_Shape_sel"),    // BBOX_SHAPE_SUB | BBOX_ACTIVATED
-		QIcon(":/treeview/BBox_Shape_sub"),    // BBOX_SHAPE_SUB | BBOX_BBOX_SUB
-		QIcon(":/treeview/BBox_Shape_sub_sel") // BBOX_SHAPE_SUB | BBOX_BBOX_SUB | BBOX_ACTIVATED
-	}
+	world_icon(":/treeview/World")
 {
 	QSurfaceFormat format;
 	format.setSamples(4);
@@ -111,6 +101,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(
 				light_model,  &QStandardItemModel::itemChanged,
 				this, &MainWindow::selectLight);
+	connect(
+				bbox_model, &QStandardItemModel::itemChanged,
+				this, &MainWindow::on_itemChanged);
 
 	m_World.b3Read("FlippAmiga.bwd");
 	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
@@ -152,7 +145,6 @@ void MainWindow::prepareUI()
 
 		light_model->appendRow(item);
 	}
-	populateTreeView();
 
 	if (m_Animation != nullptr)
 	{
@@ -174,6 +166,7 @@ void MainWindow::prepareUI()
 	{
 		ui->animationSlider->setDisabled(true);
 	}
+	populateTreeView();
 
 	enableView(B3_VIEW_3D);
 	enableLight();
@@ -263,6 +256,7 @@ void MainWindow::populateTreeView()
 	QStandardItem * world = new QStandardItem(world_icon, m_Scene->b3GetFilename());
 
 	bbox_model->appendRow(world);
+	ui->treeView->setExpanded(world->index(), true);
 	populateTreeView(world, m_Scene->b3GetBBoxHead());
 }
 
@@ -271,42 +265,38 @@ void MainWindow::populateTreeView(QStandardItem * parent, b3Base<b3Item> * base)
 	B3_FOR_TYPED_BASE(b3BBox, base, bbox)
 	{
 		b3Base<b3Item> * sub_bboxes = bbox->b3GetBBoxHead();
-		unsigned         taxonomy   = taxonomyOf(bbox);
-		const QIcon &    icon       = bbox_taxonomy_map[taxonomy];
-		QStandardItem *  item       = new QStandardItem(icon, QString::fromLatin1(bbox->b3GetName()));
+		QStandardItem *  item       = new QB3BBoxItem(bbox);
 
-		if (bbox->b3IsExpanded())
-		{
-			// TODO: Expand item here!
-		}
-//		item->setData(bbox);
 		parent->appendRow(item);
-		if (taxonomy & BBOX_BBOX_SUB)
+		if (!sub_bboxes->b3IsEmpty())
 		{
 			populateTreeView(item, sub_bboxes);
 		}
+
+		// Update expansion
+		const QModelIndex & index = item->index();
+		ui->treeView->setExpanded(index, bbox->b3IsExpanded());
 	}
 }
 
-unsigned MainWindow::taxonomyOf(const b3BBox * bbox)
+void MainWindow::updateTreeView()
 {
-	unsigned taxonomy = BBOX_EMPTY;
-
-	if (bbox->b3IsActive())
-	{
-		taxonomy |= bbox_taxonomy::BBOX_ACTIVATED;
-	}
-	if (!bbox->b3GetBBoxHead()->b3IsEmpty())
-	{
-		taxonomy |= BBOX_BBOX_SUB;
-	}
-	if (!bbox->b3GetShapeHead()->b3IsEmpty())
-	{
-		taxonomy |= BBOX_SHAPE_SUB;
-	}
-	return taxonomy;
+	updateTreeView(bbox_model->item(0));
 }
 
+void MainWindow::updateTreeView(QStandardItem * parent)
+{
+	for (int i = 0; i < parent->rowCount(); i++)
+	{
+		QB3BBoxItem * item = static_cast<QB3BBoxItem *>(parent->child(i));
+
+		item->update();
+		if (item->hasChildren())
+		{
+			updateTreeView(item);
+		}
+	}
+}
 
 void MainWindow::on_actionOpenScene_triggered()
 {
@@ -316,11 +306,13 @@ void MainWindow::on_actionOpenScene_triggered()
 	dialog.setAcceptMode(QFileDialog::AcceptOpen);
 	if (dialog.exec())
 	{
-		QStringList files = dialog.selectedFiles();
+		const QStringList files = dialog.selectedFiles();
+		const char *      filename = files.first().toStdString().c_str();
 
 		free();
-		m_World.b3Read(files.first().toStdString().c_str());
+		m_World.b3Read(filename);
 		m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
+		m_Scene->b3SetFilename(filename);
 		m_Animation = m_Scene->b3GetAnimation();
 		ui->glView->b3Prepare(m_Scene);
 		prepareUI();
@@ -360,12 +352,14 @@ void MainWindow::on_actionViewRight_triggered()
 void MainWindow::on_actionActivateAll_triggered()
 {
 	m_Scene->b3Activate(true);
+	updateTreeView();
 	ui->glView->update();
 }
 
 void MainWindow::on_actionDeaktivateAll_triggered()
 {
 	m_Scene->b3Activate(false);
+	updateTreeView();
 	ui->glView->update();
 }
 
@@ -420,6 +414,12 @@ void MainWindow::on_actionLightAll_triggered()
 	enableLight();
 }
 
+void MainWindow::on_actionLightSpot_triggered()
+{
+	ui->glView->b3SetSpotLight(!ui->glView->b3IsSpotLight());
+	enableLight();
+}
+
 void MainWindow::on_cameraListView_clicked(const QModelIndex &index)
 {
 	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
@@ -427,8 +427,10 @@ void MainWindow::on_cameraListView_clicked(const QModelIndex &index)
 	ui->glView->b3SetCamera(*camera_item);
 }
 
-void MainWindow::on_actionLightSpot_triggered()
+void MainWindow::on_itemChanged(QStandardItem * item)
 {
-	ui->glView->b3SetSpotLight(!ui->glView->b3IsSpotLight());
-	enableLight();
+	b3BBox * bbox = item->data().value<b3BBox *>();
+
+	bbox->b3Expand(ui->treeView->isExpanded(item->index()));
+	bbox->b3SetName(item->text().toLatin1().constData());
 }

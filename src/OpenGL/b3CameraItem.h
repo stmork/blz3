@@ -21,6 +21,8 @@
 
 #include <blz3/raytrace/b3Scene.h>
 
+Q_DECLARE_METATYPE(b3CameraPart *)
+
 class QB3CameraItem : public QStandardItem
 {
 public:
@@ -28,13 +30,10 @@ public:
 
 	inline operator b3CameraPart * () const
 	{
-		return m_Camera;
+		return data().value<b3CameraPart *>();
 	}
 
 	bool check();
-
-private:
-	b3CameraPart * m_Camera = nullptr;
 };
 
 #endif // QB3CAMERAITEM_H

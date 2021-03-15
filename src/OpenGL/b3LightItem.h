@@ -21,6 +21,8 @@
 
 #include <blz3/raytrace/b3Light.h>
 
+Q_DECLARE_METATYPE(b3Light *)
+
 class QB3LightItem : public QStandardItem
 {
 public:
@@ -28,13 +30,10 @@ public:
 
 	inline operator b3Light * () const
 	{
-		return m_Light;
+		return data().value<b3Light *>();
 	}
 
 	bool check();
-
-private:
-	b3Light * m_Light;
 };
 
 #endif // QB3LIGHTITEM_H

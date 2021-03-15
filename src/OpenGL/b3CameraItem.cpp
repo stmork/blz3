@@ -14,8 +14,9 @@
 
 #include "b3CameraItem.h"
 
-QB3CameraItem::QB3CameraItem(b3CameraPart * camera) : m_Camera(camera)
+QB3CameraItem::QB3CameraItem(b3CameraPart * camera)
 {
+	setData(QVariant::fromValue(camera));
 	setCheckable(true);
 	setCheckState(camera->b3IsActive() ? Qt::Checked : Qt::Unchecked);
 	setText(QString::fromLatin1(camera->b3GetName()));
@@ -23,8 +24,9 @@ QB3CameraItem::QB3CameraItem(b3CameraPart * camera) : m_Camera(camera)
 
 bool QB3CameraItem::check()
 {
-	const bool checked = checkState() == Qt::Checked;
+	const bool     checked = checkState() == Qt::Checked;
+	b3CameraPart * camera  = *this;
 
-	m_Camera->b3Activate(checked);
+	camera->b3Activate(checked);
 	return checked;
 }

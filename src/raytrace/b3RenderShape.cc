@@ -333,7 +333,7 @@ b3Tx * b3Shape::b3GetTexture(
 class b3RenderImageSampler : public b3Sampler
 {
 	const b3Shape * m_Shape;
-	b3Tx  *         m_Tx;
+	b3Tx      *     m_Tx;
 
 public:
 	b3RenderImageSampler(const b3Shape * shape, b3Tx * tx) : m_Shape(shape)

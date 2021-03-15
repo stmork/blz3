@@ -9,6 +9,7 @@ INSTALLS   += target
 message("*** Blizzard III Qt OpenGL renderer $$VERSION ***")
 
 SOURCES += \
+	b3BBoxItem.cpp \
 	b3CameraItem.cpp \
 	b3LightItem.cpp \
 	b3OpenGLWidget.cpp \
@@ -16,6 +17,7 @@ SOURCES += \
 	mainwindow.cpp
 
 HEADERS += \
+	b3BBoxItem.h \
 	b3CameraItem.h \
 	b3LightItem.h \
 	b3OpenGLWidget.h \
