@@ -22,6 +22,8 @@
 #include <blz3/raytrace/b3RenderView.h>
 #include <blz3/raytrace/b3Scene.h>
 
+class b3CameraVolume;
+
 class QB3OpenGLWidget : public QOpenGLWidget
 {
 	Q_OBJECT
@@ -29,7 +31,7 @@ class QB3OpenGLWidget : public QOpenGLWidget
 public:
 	explicit QB3OpenGLWidget(QWidget * parent = nullptr);
 
-	void b3Prepare(b3Scene * first);
+	void b3Prepare(b3Scene * first, b3CameraVolume * volume);
 	void b3SetViewmode(const b3_view_mode mode);
 	void b3SetCamera(b3CameraPart * camera);
 
@@ -47,6 +49,7 @@ private:
 	void b3SetLights();
 
 	b3Scene       *       m_Scene = nullptr;
+	b3CameraVolume *      m_CameraVolume = nullptr;
 	b3ShapeRenderContext  m_Context;
 	b3RenderLight         m_Lights;
 	b3RenderView          m_View;

@@ -178,7 +178,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	void              b3SetBounds(b3_vector * lower, b3_vector * upper);
+	void              b3SetBounds(const b3_vector * lower, const b3_vector * upper);
 
 	/**
 	 * This method returns the dimensions of the view section in world

@@ -26,6 +26,8 @@
 #include <blz3/raytrace/b3Scene.h>
 #include <blz3/raytrace/b3RenderView.h>
 
+#include "b3CameraVolume.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -46,8 +48,8 @@ public:
 
 private slots:
 	void animate(int frame);
-	void selectCamera(QStandardItem * item);
-	void selectLight(QStandardItem * item);
+	void on_selectedCamera(QStandardItem * item);
+	void on_selectLight(QStandardItem * item);
 	void on_itemChanged(QStandardItem * item);
 
 	void on_actionOpenScene_triggered();
@@ -91,7 +93,10 @@ private:
 	void    free();
 	void    prepareUI();
 
-	b3BBox * getSelectedBBox();
+	b3BBox *       getSelectedBBox();
+	b3CameraPart * getSelectedCamera();
+
+	void selectCamera(b3CameraPart * camera);
 
 	Ui::MainWindow   *   ui;
 	QPropertyAnimation   animation;
@@ -104,6 +109,7 @@ private:
 	b3Path               data;
 	b3Loader             loader;
 	b3World              m_World;
+	b3CameraVolume       m_CameraVolume;
 	b3Scene       *      m_Scene     = nullptr;
 	b3Animation     *    m_Animation = nullptr;
 };

@@ -97,10 +97,10 @@ MainWindow::MainWindow(QWidget *parent) :
 				this, &MainWindow::animate);
 	connect(
 				camera_model,  &QStandardItemModel::itemChanged,
-				this, &MainWindow::selectCamera);
+				this, &MainWindow::on_selectedCamera);
 	connect(
 				light_model,  &QStandardItemModel::itemChanged,
-				this, &MainWindow::selectLight);
+				this, &MainWindow::on_selectLight);
 	connect(
 				bbox_model, &QStandardItemModel::itemChanged,
 				this, &MainWindow::on_itemChanged);
@@ -109,7 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
 	m_Scene->b3SetFilename("FlippAmiga");
 	m_Animation = m_Scene->b3GetAnimation();
-	ui->glView->b3Prepare(m_Scene);
+	ui->glView->b3Prepare(m_Scene, &m_CameraVolume);
 	prepareUI();
 }
 
@@ -140,6 +140,8 @@ void MainWindow::prepareUI()
 
 		camera_model->appendRow(item);
 	}
+	selectCamera(m_Scene->b3GetActualCamera());
+
 	B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
 	{
 		QB3LightItem * item = new QB3LightItem(light);
@@ -189,6 +191,34 @@ b3BBox * MainWindow::getSelectedBBox()
 	}
 }
 
+b3CameraPart * MainWindow::getSelectedCamera()
+{
+	const QModelIndex &   index = ui->cameraListView->currentIndex();
+	const QB3CameraItem * item  = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
+
+	if (item != nullptr)
+	{
+		return *item;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+void MainWindow::selectCamera(b3CameraPart * camera)
+{
+	const QModelIndexList & list = camera_model->match(
+				camera_model->index(0,0),
+				Qt::UserRole + 1,
+				QVariant::fromValue(camera), Qt::UserRole + 1);
+
+	if (!list.isEmpty())
+	{
+		ui->cameraListView->setCurrentIndex(list.first());
+	}
+}
+
 void MainWindow::animate(int frame)
 {
 	if (m_Animation != nullptr)
@@ -198,6 +228,7 @@ void MainWindow::animate(int frame)
 
 		b3PrintF(B3LOG_DEBUG, "t=%1.3fs\n", t);
 		m_Scene->b3SetAnimation(t);
+		m_CameraVolume.b3Update(getSelectedCamera());
 		update();
 	}
 
@@ -300,14 +331,14 @@ void MainWindow::updateTreeView(QStandardItem * parent)
 	}
 }
 
-void MainWindow::selectCamera(QStandardItem * item)
+void MainWindow::on_selectedCamera(QStandardItem * item)
 {
 	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(item);
 
 	camera_item->check();
 }
 
-void MainWindow::selectLight(QStandardItem * item)
+void MainWindow::on_selectLight(QStandardItem * item)
 {
 	QB3LightItem * light_item = static_cast<QB3LightItem *>(item);
 
@@ -338,8 +369,8 @@ void MainWindow::on_actionOpenScene_triggered()
 		m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
 		m_Scene->b3SetFilename(filename.c_str());
 		m_Animation = m_Scene->b3GetAnimation();
-		ui->glView->b3Prepare(m_Scene);
 		prepareUI();
+		ui->glView->b3Prepare(m_Scene, &m_CameraVolume);
 	}
 }
 

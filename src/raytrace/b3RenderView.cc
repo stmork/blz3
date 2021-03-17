@@ -203,7 +203,7 @@ b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize)
 	return success;
 }
 
-void b3RenderView::b3SetBounds(b3_vector * lower, b3_vector * upper)
+void b3RenderView::b3SetBounds(const b3_vector * lower, const b3_vector * upper)
 {
 	m_Lower = *lower;
 	m_Upper = *upper;
