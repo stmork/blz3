@@ -285,8 +285,8 @@ public:
 	 * @param distance The real distance.
 	 */
 	void    b3ComputeNebular(
-			const b3Color & input, b3Color & result,
-			const b3_f64    distance) const;
+		const b3Color & input, b3Color & result,
+		const b3_f64    distance) const;
 };
 
 /**

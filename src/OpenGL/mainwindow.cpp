@@ -256,6 +256,12 @@ QString MainWindow::timecode(const int frame) const
 	}
 }
 
+/*************************************************************************
+**                                                                      **
+**                        UI control and updates                        **
+**                                                                      **
+*************************************************************************/
+
 void MainWindow::enableView(const b3_view_mode mode)
 {
 	ui->actionView3D->setChecked(mode == B3_VIEW_3D);
@@ -330,6 +336,12 @@ void MainWindow::updateTreeView(QStandardItem * parent)
 		}
 	}
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Actions                                       **
+**                                                                      **
+*************************************************************************/
 
 void MainWindow::on_selectedCamera(QStandardItem * item)
 {

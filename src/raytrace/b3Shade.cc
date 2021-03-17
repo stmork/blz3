@@ -188,9 +188,9 @@ b3_bool b3Shader::b3Shade(
 }
 
 void b3Shader::b3Shade(
-		const b3Light * light,
-		b3_light_info * jit,
-		b3_surface *    surface) const
+	const b3Light * light,
+	b3_light_info * jit,
+	b3_surface   *  surface) const
 {
 	const b3Material * material = surface->m_Incoming->material;
 

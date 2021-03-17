@@ -43,7 +43,7 @@ void b3ShaderMork::b3Prepare(b3_preparation_info * prep_info)
 void b3ShaderMork::b3ShadeLight(
 	const b3Light * light,
 	b3_light_info * Jit,
-	b3_surface  *   surface) const
+	b3_surface   *  surface) const
 {
 	b3_f64   ShapeAngle;
 	b3_f32   Factor;

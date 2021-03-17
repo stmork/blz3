@@ -93,7 +93,7 @@ private:
 	void    free();
 	void    prepareUI();
 
-	b3BBox *       getSelectedBBox();
+	b3BBox    *    getSelectedBBox();
 	b3CameraPart * getSelectedCamera();
 
 	void selectCamera(b3CameraPart * camera);

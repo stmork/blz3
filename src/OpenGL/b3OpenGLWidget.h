@@ -49,7 +49,7 @@ private:
 	void b3SetLights();
 
 	b3Scene       *       m_Scene = nullptr;
-	b3CameraVolume *      m_CameraVolume = nullptr;
+	b3CameraVolume    *   m_CameraVolume = nullptr;
 	b3ShapeRenderContext  m_Context;
 	b3RenderLight         m_Lights;
 	b3RenderView          m_View;

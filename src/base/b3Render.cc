@@ -1136,7 +1136,7 @@ void b3RenderObject::b3CheckGeometry(
 }
 
 void b3RenderObject::b3DrawGeometry(
-	b3RenderContext *      context,
+	b3RenderContext    *   context,
 	const b3_render_mode   render_mode)
 {
 	switch (render_mode)

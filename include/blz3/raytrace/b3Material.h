@@ -172,9 +172,9 @@ public:
 	 * @return True if mixed via material properties.
 	 */
 	static inline b3_bool b3MixComponents(
-			b3_surface * surface,
-			b3_f64       reflection,
-			b3_f64       refraction)
+		b3_surface * surface,
+		b3_f64       reflection,
+		b3_f64       refraction)
 	{
 		const b3Material * material = surface->m_Incoming->material;
 
@@ -211,7 +211,7 @@ protected:
 	 * @see b3Math::b3Mix()
 	 */
 	static inline void b3Mix(
-		b3_surface *        surface,
+		b3_surface     *    surface,
 		const b3_material * a,
 		const b3_material * b,
 		const b3_f64        mix)

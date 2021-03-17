@@ -39,6 +39,17 @@ public:
 	explicit QB3BBoxItem(b3BBox * bbox);
 
 	void update() override;
+	static QB3BBoxItem * find(QStandardItemModel * model, b3BBox * bbox)
+	{
+		const QModelIndexList & list = model->match(
+				model->index(0, 0),
+				Qt::UserRole + 1,
+				QVariant::fromValue(bbox),
+				1,
+				Qt::MatchExactly | Qt::MatchRecursive);
+
+		return list.isEmpty() ? nullptr : (QB3BBoxItem *)model->itemFromIndex(list.first());
+	}
 
 private:
 	static unsigned taxonomyOf(const b3BBox * bbox);

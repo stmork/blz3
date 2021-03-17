@@ -41,7 +41,7 @@ b3ShaderPhong::b3ShaderPhong(b3Scene * scene) : b3Shader(scene)
 void b3ShaderPhong::b3ShadeLight(
 	const b3Light * light,
 	b3_light_info * Jit,
-	b3_surface  *   surface) const
+	b3_surface   *  surface) const
 {
 	// No shadow => surface in light
 	if (Jit->shape == nullptr)
