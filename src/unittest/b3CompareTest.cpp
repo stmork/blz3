@@ -29,6 +29,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(b3CompareTest);
 
 #endif
+
 class b3TestCmp : public b3Comparator<b3TestCmp>
 {
 	int m_Value;

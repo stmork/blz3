@@ -33,6 +33,9 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3DataSizeTest);
 
+#define CPPUNIT_ASSERT_SIZET_EQUAL(e,a) CppUnit::assertEquals<size_t>((e),   (a), CPPUNIT_SOURCELINE(), "")
+#define CPPUNIT_ASSERT_U32_EQUAL(e,a)   CppUnit::assertEquals<uint32_t>((e), (a), CPPUNIT_SOURCELINE(), "")
+
 void b3DataSizeTest::setUp()
 {
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
@@ -76,19 +79,19 @@ void b3DataSizeTest::testDataSize()
 {
 	void * ptr = nullptr;
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), sizeof(b3_u08));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), sizeof(b3_u16));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), sizeof(b3_u32));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(8), sizeof(b3_u64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(1, sizeof(b3_u08));
+	CPPUNIT_ASSERT_SIZET_EQUAL(2, sizeof(b3_u16));
+	CPPUNIT_ASSERT_SIZET_EQUAL(4, sizeof(b3_u32));
+	CPPUNIT_ASSERT_SIZET_EQUAL(8, sizeof(b3_u64));
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), sizeof(b3_s08));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), sizeof(b3_s16));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), sizeof(b3_s32));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(8), sizeof(b3_s64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(1, sizeof(b3_s08));
+	CPPUNIT_ASSERT_SIZET_EQUAL(2, sizeof(b3_s16));
+	CPPUNIT_ASSERT_SIZET_EQUAL(4, sizeof(b3_s32));
+	CPPUNIT_ASSERT_SIZET_EQUAL(8, sizeof(b3_s64));
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), sizeof(b3_bool));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), sizeof(b3_f32));
-	CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(8), sizeof(b3_f64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(4, sizeof(b3_bool));
+	CPPUNIT_ASSERT_SIZET_EQUAL(4, sizeof(b3_f32));
+	CPPUNIT_ASSERT_SIZET_EQUAL(8, sizeof(b3_f64));
 	CPPUNIT_ASSERT(sizeof(b3_f96) >= 10);
 
 	CPPUNIT_ASSERT(sizeof(b3_ptr) == sizeof(ptr));
@@ -133,7 +136,7 @@ void b3DataSizeTest::testMemory()
 
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
-	CPPUNIT_ASSERT_EQUAL(ptr2, static_cast<void *>(nullptr));
+	CPPUNIT_ASSERT_EQUAL(static_cast<void *>(nullptr), ptr2);
 	ptr1 = nullptr;
 }
 
@@ -144,14 +147,14 @@ void b3DataSizeTest::testSwap()
 	v1 = 1;
 	v2 = 2;
 	B3_SWAP(v1, v2);
-	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
-	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));
+	CPPUNIT_ASSERT_U32_EQUAL(2, v1);
+	CPPUNIT_ASSERT_U32_EQUAL(1, v2);
 
 	v1 = 1;
 	v2 = 2;
 	B3_PSWAP(&v1, &v2);
-	CPPUNIT_ASSERT_EQUAL(v1, static_cast<b3_u32>(2));
-	CPPUNIT_ASSERT_EQUAL(v2, static_cast<b3_u32>(1));
+	CPPUNIT_ASSERT_U32_EQUAL(2, v1);
+	CPPUNIT_ASSERT_U32_EQUAL(1, v2);
 }
 
 #endif
