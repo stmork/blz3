@@ -27,6 +27,7 @@
 #include <blz3/raytrace/b3RenderView.h>
 
 #include "b3CameraVolume.h"
+#include "b3AbstractItem.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -97,6 +98,7 @@ private:
 	b3CameraPart * getSelectedCamera();
 
 	void selectCamera(b3CameraPart * camera);
+	QB3AbstractItem<b3BBox> * findBBoxItem(b3BBox * bbox);
 
 	Ui::MainWindow   *   ui;
 	QPropertyAnimation   animation;

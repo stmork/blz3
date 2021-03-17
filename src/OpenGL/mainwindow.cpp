@@ -219,6 +219,11 @@ void MainWindow::selectCamera(b3CameraPart * camera)
 	}
 }
 
+QB3AbstractItem<b3BBox> * MainWindow::findBBoxItem(b3BBox * bbox)
+{
+	return QB3BBoxItem::find(bbox_model, bbox);
+}
+
 void MainWindow::animate(int frame)
 {
 	if (m_Animation != nullptr)

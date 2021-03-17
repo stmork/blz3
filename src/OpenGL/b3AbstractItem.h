@@ -29,17 +29,22 @@ protected:
 		B3_TYPE_CAMERA,
 		B3_TYPE_LIGHT,
 		B3_TYPE_BBOX
-	} m_Type;
+	} m_Type = B3_TYPE_USER;
+
+	enum b3_item_role
+	{
+		B3_ITEM_USERROLE = Qt::UserRole + 1
+	} m_Role = B3_ITEM_USERROLE;
 
 public:
 	QB3AbstractItem(T * item, b3_item_type type) : m_Type(type)
 	{
-		setData(QVariant::fromValue(item));
+		setData(QVariant::fromValue(item), B3_ITEM_USERROLE);
 	}
 
 	inline operator T * () const
 	{
-		return data().value<T *>();
+		return data((int)B3_ITEM_USERROLE).value<T *>();
 	}
 
 	inline int type() const override
@@ -54,6 +59,18 @@ public:
 
 	inline virtual void update()
 	{
+	}
+
+	static QB3AbstractItem<T> * find(QStandardItemModel * model, T * item)
+	{
+		const QModelIndexList & list = model->match(
+				model->index(0, 0),
+				B3_ITEM_USERROLE,
+				QVariant::fromValue(item),
+				1,
+				Qt::MatchExactly | Qt::MatchRecursive);
+
+		return list.isEmpty() ? nullptr : (QB3AbstractItem<T> *)model->itemFromIndex(list.first());
 	}
 };
 
