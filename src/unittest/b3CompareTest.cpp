@@ -40,7 +40,6 @@ public:
 		m_Value = value;
 	}
 
-private:
 	inline int b3Cmp(const b3TestCmp * compare) const override
 	{
 		return m_Value - compare->m_Value;
@@ -52,8 +51,13 @@ void b3CompareTest::test()
 	const b3TestCmp l(1);
 	const b3TestCmp m(2);
 	const b3TestCmp r(3);
+	const b3TestCmp q(3);
 
 	CPPUNIT_ASSERT(l < m);
 	CPPUNIT_ASSERT(l < r);
 	CPPUNIT_ASSERT(m < r);
+
+	CPPUNIT_ASSERT(b3TestCmp::b3Sort(&l, &r) < 0);
+	CPPUNIT_ASSERT(b3TestCmp::b3Sort(&r, &l) > 0);
+	CPPUNIT_ASSERT(b3TestCmp::b3Sort(&r, &q) == 0);
 }
