@@ -10,6 +10,7 @@ HEADERS += \
 	b3AlignTest.h \
 	b3ArrayTest.h \
 	b3ColorTest.h \
+	b3CompareTest.h \
 	b3ComplexTest.h \
 	b3DataSizeTest.h \
 	b3FFTTest.h \
@@ -29,6 +30,7 @@ SOURCES += \
 	b3AlignTest.cc \
 	b3ArrayTest.cc \
 	b3ColorTest.cc \
+	b3CompareTest.cpp \
 	b3ComplexTest.cc \
 	b3DataSizeTest.cc \
 	b3FFTTest.cc \

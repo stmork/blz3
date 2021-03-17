@@ -49,12 +49,17 @@ template <class T> class B3_PLUGIN b3Array
 
 public:
 	/**
-	 * Constructor with default increment.
+	 * Constructor with unused default increment.
 	 *
 	 * @param increment The incremental reallocations of memory.
 	 * @throws b3ArrayException
 	 */
 	inline b3Array(b3_count increment B3_UNUSED = B3_ARRAY_DEFAULT_INCREMENT)
+	{
+	}
+
+	explicit inline b3Array(const std::initializer_list<T> & list) :
+		elements(list)
 	{
 	}
 
@@ -162,14 +167,12 @@ public:
 	 *
 	 * @param sorter Sorting method.
 	 */
-	inline void b3Sort(int (*sorter)(T * a, T * b))
+	inline void b3Sort(void)
 	{
-		std::sort(elements.begin(), elements.end(), [&](T a, T b)
-		{
-			return sorter(&a, &b);
-		});
+		std::sort(elements.begin(), elements.end());
 	}
 
+#if 0
 	/**
 	 * This method sorts the array using a comparator class.
 	 *
@@ -181,9 +184,10 @@ public:
 	{
 		std::sort(elements.begin(), elements.end(), [&](T a, T b)
 		{
-			return comparator.b3Sort(&a, &b);
+			return comparator.b3Sort(&a, &b) < 0;
 		});
 	}
+#endif
 };
 
 #endif

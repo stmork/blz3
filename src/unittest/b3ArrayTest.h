@@ -50,10 +50,33 @@ public:
 		b3AddElements(4,  4);
 		b3AddElements(4,  8);
 		b3AddElements(4, 12);
-		CPPUNIT_ASSERT(array.b3GetBuffer() != nullptr);
-		CPPUNIT_ASSERT_NO_THROW(array.b3Sort(sorter));
+
+		T * buffer = array.b3GetBuffer();
+		CPPUNIT_ASSERT(buffer != nullptr);
+
+		CPPUNIT_ASSERT_NO_THROW(array.b3Sort());
+
+		for (b3_loop i = 1; i < array.b3GetCount(); i++)
+		{
+			T l = array[i-1];
+			T r = array[i];
+
+			CPPUNIT_ASSERT(l <= r);
+		}
+
 		array.b3Clear();
 		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(0), array.b3GetCount());
+
+		b3Array<int> integers { 7, 34, 1, 4, 7643, 2, 324 };
+
+		integers.b3Sort();
+		for (b3_loop i = 1; i < integers.b3GetCount(); i++)
+		{
+			T l = integers[i-1];
+			T r = integers[i];
+
+			CPPUNIT_ASSERT(l < r);
+		}
 	}
 
 	inline b3_count b3AddElements(b3_count count, b3_count whole)
