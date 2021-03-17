@@ -216,6 +216,16 @@ void MainWindow::selectCamera(b3CameraPart * camera)
 	}
 }
 
+void MainWindow::selectBBox(b3BBox * bbox)
+{
+	const QModelIndexList & list = QB3BBoxItem::match(bbox_model, bbox);
+
+	if (!list.isEmpty())
+	{
+		ui->treeView->setCurrentIndex(list.first());
+	}
+}
+
 QB3AbstractItem<b3BBox> * MainWindow::findBBoxItem(b3BBox * bbox)
 {
 	return QB3BBoxItem::find(bbox_model, bbox);
@@ -442,14 +452,8 @@ void MainWindow::on_actionActivate_triggered()
 		updateTreeView();
 		ui->glView->update();
 
-		if (bbox->Succ != nullptr)
-		{
-			const QModelIndex & index  = ui->treeView->currentIndex();
-			const QModelIndex & parent = index.parent();
-			const QModelIndex & succ   = bbox_model->index(index.row() + 1, 0, parent);
-
-			ui->treeView->setCurrentIndex(succ);
-		}
+		// Proceed with next bbox.
+		selectBBox((b3BBox *)bbox->Succ);
 	}
 }
 
@@ -463,14 +467,8 @@ void MainWindow::on_actionDeactivate_triggered()
 		updateTreeView();
 		ui->glView->update();
 
-		if (bbox->Succ != nullptr)
-		{
-			const QModelIndex & index  = ui->treeView->currentIndex();
-			const QModelIndex & parent = index.parent();
-			const QModelIndex & succ   = bbox_model->index(index.row() + 1, 0, parent);
-
-			ui->treeView->setCurrentIndex(succ);
-		}
+		// Proceed with next bbox.
+		selectBBox((b3BBox *)bbox->Succ);
 	}
 }
 

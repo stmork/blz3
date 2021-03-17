@@ -98,6 +98,7 @@ private:
 	b3CameraPart * getSelectedCamera();
 
 	void selectCamera(b3CameraPart * camera);
+	void selectBBox(b3BBox * bbox);
 	QB3AbstractItem<b3BBox> * findBBoxItem(b3BBox * bbox);
 
 	Ui::MainWindow   *   ui;
