@@ -143,5 +143,8 @@ void QB3OpenGLWidget::paintGL()
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
 	m_View.b3SetupView(xWinSize, yWinSize);
 	m_Scene->b3Draw(&m_Context);
-	m_CameraVolume->b3Draw(&m_Context);
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		m_CameraVolume->b3Draw(&m_Context);
+	}
 }
