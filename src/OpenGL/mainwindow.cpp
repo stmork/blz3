@@ -208,10 +208,7 @@ b3CameraPart * MainWindow::getSelectedCamera()
 
 void MainWindow::selectCamera(b3CameraPart * camera)
 {
-	const QModelIndexList & list = camera_model->match(
-				camera_model->index(0,0),
-				Qt::UserRole + 1,
-				QVariant::fromValue(camera), Qt::UserRole + 1);
+	const QModelIndexList & list = QB3CameraItem::match(camera_model, camera);
 
 	if (!list.isEmpty())
 	{

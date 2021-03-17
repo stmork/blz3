@@ -61,14 +61,19 @@ public:
 	{
 	}
 
-	static QB3AbstractItem<T> * find(QStandardItemModel * model, T * item)
+	static inline QModelIndexList match(QStandardItemModel * model, T * item)
 	{
-		const QModelIndexList & list = model->match(
+		return model->match(
 				model->index(0, 0),
 				B3_ITEM_USERROLE,
 				QVariant::fromValue(item),
 				1,
 				Qt::MatchExactly | Qt::MatchRecursive);
+	}
+
+	static inline QB3AbstractItem<T> * find(QStandardItemModel * model, T * item)
+	{
+		const QModelIndexList & list = match(model, item);
 
 		return list.isEmpty() ? nullptr : (QB3AbstractItem<T> *)model->itemFromIndex(list.first());
 	}
