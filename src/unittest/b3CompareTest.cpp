@@ -35,7 +35,8 @@ class b3TestCmp : public b3Comparator<b3TestCmp>
 
 public:
 	b3TestCmp() = delete;
-	explicit b3TestCmp(int value)
+
+	explicit inline b3TestCmp(int value)
 	{
 		m_Value = value;
 	}
@@ -51,7 +52,7 @@ void b3CompareTest::test()
 	const b3TestCmp l(1);
 	const b3TestCmp m(2);
 	const b3TestCmp r(3);
-	const b3TestCmp q(3);
+	const b3TestCmp q(r);
 
 	CPPUNIT_ASSERT(l < m);
 	CPPUNIT_ASSERT(l < r);

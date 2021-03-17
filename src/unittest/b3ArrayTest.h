@@ -58,7 +58,7 @@ public:
 
 		for (b3_loop i = 1; i < array.b3GetCount(); i++)
 		{
-			T l = array[i-1];
+			T l = array[i - 1];
 			T r = array[i];
 
 			CPPUNIT_ASSERT(l <= r);
@@ -72,7 +72,7 @@ public:
 		integers.b3Sort();
 		for (b3_loop i = 1; i < integers.b3GetCount(); i++)
 		{
-			T l = integers[i-1];
+			T l = integers[i - 1];
 			T r = integers[i];
 
 			CPPUNIT_ASSERT(l < r);
