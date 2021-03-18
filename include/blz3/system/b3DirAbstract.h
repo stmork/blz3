@@ -55,9 +55,12 @@ protected:
 
 public:
 	/**
-	 * This constructor does simply nothing.
+	 * The default constructor supplies an empty path definition.
 	 */
-	inline b3PathAbstract() = default;
+	inline b3PathAbstract()
+	{
+		m_Path[0] = 0;
+	}
 
 	/**
 	 * This constructor initializes the path with the given filename.
@@ -75,6 +78,78 @@ public:
 		m_Path[sizeof(m_Path) - 1] = 0;
 
 		return *this;
+	}
+
+	/**
+	 * The comparision operator compares if two b3Path instances are
+	 * literally equal.
+	 *
+	 * @param other The other instance to compare to.
+	 * @return True if both contents are literally equal.
+	 */
+	inline bool operator==(const b3PathAbstract & other) const
+	{
+		return strcmp(m_Path, other.m_Path) == 0;
+	}
+
+	/**
+	 * The comparision operator compares if two b3Path instances are not
+	 * literally equal.
+	 *
+	 * @param other The other instance to compare to.
+	 * @return True if both contents are literally not equal.
+	 */
+	inline bool operator!=(const b3PathAbstract & other) const
+	{
+		return !operator ==(other);
+	}
+
+	/**
+	 * This cast operator returns the actual filename.
+	 *
+	 * \return  The actual filename.
+	 */
+	inline operator char * ()
+	{
+		return m_Path;
+	}
+
+	/**
+	 * This cast operator returns the actual filename as const.
+	 *
+	 * \return  The actual filename as const char pointer.
+	 */
+	inline operator const char * () const
+	{
+		return m_Path;
+	}
+
+	/**
+	 * The index operator gives a reference to the corresponding character
+	 * inside the path.
+	 *
+	 * @note The contents of the reference may be modified.
+	 *
+	 * @param index The path index to access.
+	 * @return The reference to the indexed character.
+	 */
+	inline char & operator [] (const b3_count index)
+	{
+		return m_Path[index];
+	}
+
+	/**
+	 * The index operator gives a const reference to the corresponding character
+	 * inside the path.
+	 *
+	 * @note The contents of the reference may not be modified.
+	 *
+	 * @param index The path index to access.
+	 * @return The const reference to the indexed character.
+	 */
+	inline const char & operator [] (const b3_count index) const
+	{
+		return m_Path[index];
 	}
 
 	/**
@@ -170,32 +245,22 @@ public:
 	__attribute__((format(printf, 2, 3))) = 0;
 
 	/**
+	 * This method appends a single character to the filename of this instance
+	 * in a safe way without a risk of a buffer overflow. So it may happen that
+	 * the character may not be appended.
+	 *
+	 * @param ext The single character to append.
+	 */
+
+	virtual void b3Append(const char ext) = 0;
+	/**
 	 * This method appends a string to the filename of this instance in a safe way
 	 * without a risk of a buffer overflow.
 	 *
 	 * @param ext The text to append.
 	 */
+
 	virtual void b3Append(const char * ext) = 0;
-
-	/**
-	 * This cast operator returns the actual filename.
-	 *
-	 * \return  The actual filename.
-	 */
-	inline operator char * ()
-	{
-		return m_Path;
-	}
-
-	/**
-	 * This cast operator returns the actual filename.
-	 *
-	 * \return  The actual filename.
-	 */
-	inline operator const char * () const
-	{
-		return m_Path;
-	}
 
 private:
 	static void b3RemoveDelimiter(char * path);

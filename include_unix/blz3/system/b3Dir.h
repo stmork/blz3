@@ -39,6 +39,8 @@ typedef b3Exception<b3_dir_error, 0x00444952> b3DirException;
 class b3Path : public b3PathAbstract
 {
 public:
+	static const char EXT_DELIMITER = '.';
+
 	/**
 	 * This constructor initializes this instance.
 	 */
@@ -76,7 +78,9 @@ public:
 	void b3Correct() override;
 	void b3Format(const char * format, ...) override
 	__attribute__((format(printf, 2, 3)));
+
 	void b3Append(const char * ext) override;
+	void b3Append(const char ext) override;
 
 	/**
 	 * This method concatenates a directory name and a filename and puts
@@ -178,6 +182,7 @@ class b3Dir : public b3DirAbstract, public b3Mem, public b3Path
 {
 protected:
 	DIR         *        dir;
+
 public:
 	/**
 	 * This constructor initializes the directory list class.
@@ -208,7 +213,7 @@ public:
 	 * @param newworkingdir The new working directory.
 	 * @return True on success.
 	 */
-	static b3_bool       b3ChDir(const char * newworkingdir);
+	static b3_bool       b3ChDir(const char * newWorkingdir);
 
 	/**
 	 * This method checks whether the specified filesystem entry exists as a directory.

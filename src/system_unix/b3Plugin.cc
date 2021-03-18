@@ -75,7 +75,8 @@ b3Plugin::b3Plugin(b3Path & library) : b3PluginBase(library)
 	}
 	else
 	{
-		b3PrintF(B3LOG_NORMAL, "Problems loading plugin %s:\n", (const char *)m_PluginPath);
+		b3PrintF(B3LOG_NORMAL, "Problems loading plugin %s:\n",
+			(const char *)m_PluginPath);
 		b3PrintF(B3LOG_NORMAL, "  %s\n", dlerror());
 	}
 }

@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_SKELETON_TEST_H
 #define B3_SKELETON_TEST_H
 
