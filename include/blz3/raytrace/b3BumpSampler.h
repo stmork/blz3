@@ -47,9 +47,9 @@ public:
 	 * @param tiles The number of tiles to use.
 	 */
 	b3BumpSampler(
-			b3Tx *            tx,
-			const b3_vector * bbox_size,
-			const b3_count    tiles = DEFAULT_BUMP_TILES);
+		b3Tx       *      tx,
+		const b3_vector * bbox_size,
+		const b3_count    tiles = DEFAULT_BUMP_TILES);
 
 	/**
 	 * This method sets the bump class instance.

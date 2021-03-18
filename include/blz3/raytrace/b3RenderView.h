@@ -250,8 +250,8 @@ public:
 	 * @return The resulting position angle.
 	 */
 	b3_f64            b3GetPositionAngle(
-			b3_vector * center,
-			b3_vector * position) const;
+		b3_vector * center,
+		b3_vector * position) const;
 
 	/**
 	 * This Method selects a new view section and puts the new view onto
@@ -314,10 +314,10 @@ public:
 	 * @param zRel The resulting view depth.
 	 */
 	void              b3Project(
-			const b3_vector * point,
-			b3_f64 & xRel,
-			b3_f64 & yRel,
-			b3_f64 & zRel) const;
+		const b3_vector * point,
+		b3_f64 & xRel,
+		b3_f64 & yRel,
+		b3_f64 & zRel) const;
 
 	/**
 	 * This method projects a point onto the projection plane of the actually
@@ -329,10 +329,10 @@ public:
 	 * @param z The resulting view depth.
 	 */
 	inline void       b3Project(
-			const b3_vector * point,
-			b3_coord & x,
-			b3_coord & y,
-			b3_f64 & z) const
+		const b3_vector * point,
+		b3_coord & x,
+		b3_coord & y,
+		b3_f64 & z) const
 	{
 		b3_f64 xRel, yRel;
 
@@ -398,9 +398,9 @@ public:
 	 * @param point The resulting point in world coordinates.
 	 */
 	inline void       b3Unproject(
-			const b3_f64 xRelParam,
-			const b3_f64 yRelParam,
-			const b3_f64 zRelParam, b3_vector * point) const
+		const b3_f64 xRelParam,
+		const b3_f64 yRelParam,
+		const b3_f64 zRelParam, b3_vector * point) const
 	{
 		b3UnprojectInternal(
 			xRelParam * m_xRes,
@@ -412,9 +412,9 @@ private:
 	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = nullptr);
 	b3_f64             b3ComputeFarClippingPlane() const;
 	void               b3UnprojectInternal(
-			const b3_f64 xRel,
-			const b3_f64 yRel,
-			const b3_f64 z, b3_vector * point) const;
+		const b3_f64 xRel,
+		const b3_f64 yRel,
+		const b3_f64 z, b3_vector * point) const;
 };
 
 #endif

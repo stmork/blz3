@@ -348,8 +348,8 @@ void b3RenderView::b3GetViewDirection(b3_vector * dir) const
 }
 
 b3_f64 b3RenderView::b3GetPositionAngle(
-		b3_vector * center,
-		b3_vector * position) const
+	b3_vector * center,
+	b3_vector * position) const
 {
 	b3_f64 result = 0;
 
