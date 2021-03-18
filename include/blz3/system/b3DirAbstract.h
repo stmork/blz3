@@ -107,7 +107,7 @@ public:
 	/**
 	 * This cast operator returns the actual filename.
 	 *
-	 * \return  The actual filename.
+	 * @return  The actual filename.
 	 */
 	inline operator char * ()
 	{
@@ -117,7 +117,7 @@ public:
 	/**
 	 * This cast operator returns the actual filename as const.
 	 *
-	 * \return  The actual filename as const char pointer.
+	 * @return  The actual filename as const char pointer.
 	 */
 	inline operator const char * () const
 	{
@@ -161,8 +161,8 @@ public:
 	 * This method concatenates a directory name and a filename and puts
 	 * the result into this instance.
 	 *
-	 * \param *path The directory name component.
-	 * \param *name The filename component.
+	 * @param path The directory name component.
+	 * @param name The filename component.
 	 */
 	virtual void b3LinkFileName(const char * path, const char * name) = 0;
 
@@ -172,8 +172,8 @@ public:
 	 * component is set to zero length. The oomponent pointer may be null
 	 * for convenience.
 	 *
-	 * \param *path The directory name component.
-	 * \param *name The filename component.
+	 * @param path The directory name component.
+	 * @param name The filename component.
 	 */
 	virtual void b3SplitFileName(char * path, char * name) = 0;
 
@@ -212,7 +212,7 @@ public:
 	 * puts the resulting extension into this instance. The resulting extension
 	 * contains no trailing dot.
 	 *
-	 * \param *filename The filename where to extract the file extension.
+	 * @param filename The filename where to extract the file extension.
 	 */
 	virtual void b3ExtractExt(const char * filename) = 0;
 
@@ -269,8 +269,8 @@ private:
 /**
  * This class handles directory listing. An example for scanning a
  * directory looks like this:
-\verbatim
-
+ *
+@verbatim
 	b3Path       name;
 	b3Dir        dir;
 	b3_path_type type;
@@ -300,7 +300,7 @@ private:
 	}
 	while (loop);
 	dir.b3CloseDir();
-\endverbatim
+@endverbatim
  */
 class B3_PLUGIN b3DirAbstract
 {
@@ -308,16 +308,16 @@ public:
 	/**
 	 * This method opens a directory for listing.
 	 *
-	 * \param *dirname The directory name to list.
-	 * \return True on success.
+	 * @param dirname The directory name to list.
+	 * @return True on success.
 	 */
 	virtual b3_bool       b3OpenDir(const char * dirname) = 0;
 
 	/**
 	 * This method retrieves the next directory entry.
 	 *
-	 * \param *direntry The name of the directory entry.
-	 * \return Type of directory entry.
+	 * @param direntry The name of the directory entry.
+	 * @return Type of directory entry.
 	 */
 	virtual b3_path_type  b3DirNext(char * direntry) = 0;
 
