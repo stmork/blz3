@@ -90,6 +90,30 @@ void QB3OpenGLWidget::b3SetSpotLight(const bool spot)
 	update();
 }
 
+void QB3OpenGLWidget::b3MoveView(const b3_f64 dx, const b3_f64 dy)
+{
+	m_View.b3Move(dx, dy);
+	update();
+}
+
+void QB3OpenGLWidget::b3ScaleView(const b3_f64 factor)
+{
+	m_View.b3Scale(factor);
+	update();
+}
+
+void QB3OpenGLWidget::b3FullView()
+{
+	m_View.b3Original();
+	update();
+}
+
+void QB3OpenGLWidget::b3PreviousView()
+{
+	m_View.b3PopView();
+	update();
+}
+
 void QB3OpenGLWidget::b3SetLights()
 {
 	m_Context.b3LightReset();

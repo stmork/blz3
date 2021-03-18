@@ -62,6 +62,15 @@ private slots:
 	void on_actionViewLeft_triggered();
 	void on_actionViewRight_triggered();
 
+	void on_actionViewZoomIn_triggered();
+	void on_actionViewZoomOut_triggered();
+	void on_actionViewPop_triggered();
+	void on_actionViewFull_triggered();
+	void on_actionViewMoveRight_triggered();
+	void on_actionViewMoveLeft_triggered();
+	void on_actionViewMoveUp_triggered();
+	void on_actionViewMoveDown_triggered();
+
 	void on_actionActivateAll_triggered();
 	void on_actionDeaktivateAll_triggered();
 	void on_actionActivate_triggered();
@@ -79,7 +88,6 @@ private slots:
 	void on_actionLightSpot_triggered();
 
 	void on_cameraListView_clicked(const QModelIndex & index);
-
 
 private:
 	QString timecode(const int frame) const;

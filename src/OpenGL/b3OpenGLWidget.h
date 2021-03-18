@@ -40,6 +40,11 @@ public:
 	bool b3IsSpotLight() const;
 	void b3SetSpotLight(const bool spot);
 
+	void b3MoveView(const b3_f64 dx, const b3_f64 dy);
+	void b3ScaleView(const b3_f64 factor);
+	void b3FullView();
+	void b3PreviousView();
+
 protected:
 	void initializeGL() override;
 	void resizeGL(int width, int height) override;

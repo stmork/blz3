@@ -55,6 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	QSurfaceFormat::setDefaultFormat(format);
 
 	ui->setupUi(this);
+	addAction(ui->actionViewMoveRight);
+	addAction(ui->actionViewMoveLeft);
+	addAction(ui->actionViewMoveUp);
+	addAction(ui->actionViewMoveDown);
 
 	const char * BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
 	const char * BLZ3_BIN     = getenv("BLZ3_BIN");
@@ -426,6 +430,46 @@ void MainWindow::on_actionViewLeft_triggered()
 void MainWindow::on_actionViewRight_triggered()
 {
 	enableView(B3_VIEW_RIGHT);
+}
+
+void MainWindow::on_actionViewZoomIn_triggered()
+{
+	ui->glView->b3ScaleView(0.8);
+}
+
+void MainWindow::on_actionViewZoomOut_triggered()
+{
+	ui->glView->b3ScaleView(1.25);
+}
+
+void MainWindow::on_actionViewPop_triggered()
+{
+	ui->glView->b3PreviousView();
+}
+
+void MainWindow::on_actionViewFull_triggered()
+{
+	ui->glView->b3FullView();
+}
+
+void MainWindow::on_actionViewMoveRight_triggered()
+{
+	ui->glView->b3MoveView(0.2, 0.0);
+}
+
+void MainWindow::on_actionViewMoveLeft_triggered()
+{
+	ui->glView->b3MoveView(-0.2, 0.0);
+}
+
+void MainWindow::on_actionViewMoveUp_triggered()
+{
+	ui->glView->b3MoveView(0.0, -0.2);
+}
+
+void MainWindow::on_actionViewMoveDown_triggered()
+{
+	ui->glView->b3MoveView(0.0, 0.2);
 }
 
 void MainWindow::on_actionActivateAll_triggered()

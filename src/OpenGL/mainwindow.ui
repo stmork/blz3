@@ -162,6 +162,11 @@
     <addaction name="actionViewRight"/>
     <addaction name="actionViewLeft"/>
     <addaction name="separator"/>
+    <addaction name="actionViewZoomIn"/>
+    <addaction name="actionViewZoomOut"/>
+    <addaction name="actionViewPop"/>
+    <addaction name="actionViewFull"/>
+    <addaction name="separator"/>
     <addaction name="actionActivateAll"/>
     <addaction name="actionDeaktivateAll"/>
     <addaction name="actionActivate"/>
@@ -217,6 +222,11 @@
    <addaction name="actionViewRight"/>
    <addaction name="actionViewLeft"/>
    <addaction name="separator"/>
+   <addaction name="actionViewZoomIn"/>
+   <addaction name="actionViewZoomOut"/>
+   <addaction name="actionViewPop"/>
+   <addaction name="actionViewFull"/>
+   <addaction name="separator"/>
    <addaction name="actionActivateAll"/>
    <addaction name="actionDeaktivateAll"/>
    <addaction name="actionActivate"/>
@@ -232,6 +242,7 @@
    <addaction name="actionLightSimple"/>
    <addaction name="actionLightAll"/>
    <addaction name="actionLightSpot"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionActivateAll">
    <property name="icon">
@@ -342,6 +353,83 @@
    </property>
    <property name="shortcut">
     <string>L</string>
+   </property>
+  </action>
+  <action name="actionViewZoomIn">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_bigger.png</normaloff>:/toolbar/view/res/toolbar/view/view_bigger.png</iconset>
+   </property>
+   <property name="text">
+    <string>Größer</string>
+   </property>
+   <property name="shortcut">
+    <string>+</string>
+   </property>
+  </action>
+  <action name="actionViewZoomOut">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_smaller.png</normaloff>:/toolbar/view/res/toolbar/view/view_smaller.png</iconset>
+   </property>
+   <property name="text">
+    <string>Kleiner</string>
+   </property>
+   <property name="shortcut">
+    <string>-</string>
+   </property>
+  </action>
+  <action name="actionViewPop">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_undo.png</normaloff>:/toolbar/view/res/toolbar/view/view_undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ansicht zurück</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionViewFull">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_full.png</normaloff>:/toolbar/view/res/toolbar/view/view_full.png</iconset>
+   </property>
+   <property name="text">
+    <string>Volle Ansicht</string>
+   </property>
+  </action>
+  <action name="actionViewMoveRight">
+   <property name="text">
+    <string>rechts</string>
+   </property>
+   <property name="shortcut">
+    <string>Right</string>
+   </property>
+  </action>
+  <action name="actionViewMoveLeft">
+   <property name="text">
+    <string>Links</string>
+   </property>
+   <property name="shortcut">
+    <string>Left</string>
+   </property>
+  </action>
+  <action name="actionViewMoveUp">
+   <property name="text">
+    <string>Hoch</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionViewMoveDown">
+   <property name="text">
+    <string>Runter</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
    </property>
   </action>
   <action name="actionAnimPlay">
