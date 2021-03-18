@@ -222,9 +222,9 @@ void b3CameraPart::b3Orientate(
 	{
 		b3Vector::b3Init(&up, 0, 0, 1);
 	}
-	b3Vector::b3CrossProduct(&dir, &up, &m_Width);
+	b3Vector::b3CrossProduct(&dir,     &up,  &m_Width);
 	b3Vector::b3CrossProduct(&m_Width, &dir, &m_Height);
-	b3Vector::b3Normalize(&m_Width, width);
+	b3Vector::b3Normalize(&m_Width,  width);
 	b3Vector::b3Normalize(&m_Height, height);
 }
 
@@ -259,10 +259,10 @@ void b3CameraPart::b3Overview(
 
 void b3CameraPart::b3Transform(b3_matrix * transformation)
 {
-	b3Matrix::b3VMul(transformation, &m_EyePoint, &m_EyePoint, true);
+	b3Matrix::b3VMul(transformation, &m_EyePoint,  &m_EyePoint, true);
 	b3Matrix::b3VMul(transformation, &m_ViewPoint, &m_ViewPoint, true);
-	b3Matrix::b3VMul(transformation, &m_Width,    &m_Width,    false);
-	b3Matrix::b3VMul(transformation, &m_Height,   &m_Height,   false);
+	b3Matrix::b3VMul(transformation, &m_Width,     &m_Width,    false);
+	b3Matrix::b3VMul(transformation, &m_Height,    &m_Height,   false);
 }
 
 const char * b3CameraPart::b3GetName() const

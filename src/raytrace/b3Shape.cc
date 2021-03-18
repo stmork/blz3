@@ -66,7 +66,7 @@ b3Activation::b3Activation()
 	b3Animate(B3_ANIM_DISABLED);
 }
 
-b3_bool b3Activation::b3IsActive()
+b3_bool b3Activation::b3IsActive() const
 {
 	switch (m_AnimActive)
 	{

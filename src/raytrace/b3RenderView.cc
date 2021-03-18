@@ -134,7 +134,7 @@ void b3RenderView::b3SetViewMode(b3_view_mode mode)
 	m_Actual   = m_ViewStack[m_ViewMode].Last;
 }
 
-b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode)
+b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode) const
 {
 	return m_ViewMode == mode;
 }
@@ -172,7 +172,7 @@ b3_bool b3RenderView::b3SetBounds(b3Scene * scene)
 	return result;
 }
 
-b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize)
+b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const
 {
 	b3_bool success = true;
 
@@ -209,7 +209,7 @@ void b3RenderView::b3SetBounds(const b3_vector * lower, const b3_vector * upper)
 	m_Upper = *upper;
 }
 
-b3_bool b3RenderView::b3ViewStackNotEmpty()
+b3_bool b3RenderView::b3ViewStackNotEmpty() const
 {
 	b3_bool result = false;
 
@@ -308,12 +308,12 @@ void b3RenderView::b3Move(b3_f64 xDir, b3_f64 yDir)
 	}
 }
 
-void b3RenderView::b3GetProjectionBase(b3_vector * eye)
+void b3RenderView::b3GetProjectionBase(b3_vector * eye) const
 {
 	*eye = m_ViewInfo.eye;
 }
 
-void b3RenderView::b3GetViewDirection(b3_vector * dir)
+void b3RenderView::b3GetViewDirection(b3_vector * dir) const
 {
 	switch (m_ViewMode)
 	{
@@ -347,7 +347,9 @@ void b3RenderView::b3GetViewDirection(b3_vector * dir)
 	}
 }
 
-b3_f64 b3RenderView::b3GetPositionAngle(b3_vector * center, b3_vector * position)
+b3_f64 b3RenderView::b3GetPositionAngle(
+		b3_vector * center,
+		b3_vector * position) const
 {
 	b3_f64 result = 0;
 
@@ -545,7 +547,7 @@ void b3RenderView::b3Project(
 	const b3_vector * point,
 	b3_f64  &  xRel,
 	b3_f64  &  yRel,
-	b3_f64  &  zRel)
+	b3_f64  &  zRel) const
 {
 #ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
@@ -567,7 +569,7 @@ void b3RenderView::b3Project(
 void b3RenderView::b3UnprojectInternal(
 	const b3_f64 x,
 	const b3_f64 y,
-	const b3_f64 z, b3_vector * point)
+	const b3_f64 z, b3_vector * point) const
 {
 #ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
@@ -661,7 +663,7 @@ void b3RenderView::b3Select(
 	}
 }
 
-inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
+inline b3_f64 b3RenderView::b3ComputeFarClippingPlane() const
 {
 #if 1
 	b3_f64    farCP = 1, denom, l;
@@ -914,7 +916,7 @@ void b3RenderView::b3SetupView(
 #define B3_RASTER_COUNT(a,e,grid) ((b3_count)(floor((e) / (grid)) - ceil((a) / (grid)) + 1))
 #define B3_RASTER_MINDIST  8
 
-void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color)
+void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color) const
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector xDisp, yDisp;
@@ -923,7 +925,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color)
 	b3_f64    yStart, yEnd;
 	b3_f64    depth;
 	b3_count  x, y, xCount, yCount;
-	b3_f64 aux = B3_RASTER_FLOOR(m_ViewInfo.look.x, grid);
+	b3_f64    aux = B3_RASTER_FLOOR(m_ViewInfo.look.x, grid);
 
 	if (m_Actual == nullptr)
 	{

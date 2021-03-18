@@ -54,7 +54,7 @@ public:
 	 *
 	 * @return True on activation.
 	 */
-	b3_bool b3IsActive();
+	b3_bool b3IsActive() const;
 
 	/**
 	 * This method sets the activation state.

@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_vector b3RenderLight::m_LightDirection =
+b3_vector b3RenderLight::m_LightDirection
 {
 	0, 0, -1
 };

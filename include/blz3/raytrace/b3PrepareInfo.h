@@ -39,10 +39,13 @@ class B3_PLUGIN b3BBoxReference : public b3Link<b3BBoxReference>
 public:
 	b3BBox * m_BBox; //!< The bounding box reference.
 
+	b3BBoxReference() = delete;
+
 	/**
 	 * This contructor initializes the bounding box reference.
 	 */
-	b3BBoxReference(b3BBox * bbox = nullptr) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
+	explicit inline b3BBoxReference(b3BBox * bbox = nullptr) :
+		b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
 	{
 		m_BBox = bbox;
 	}
