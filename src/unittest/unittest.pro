@@ -49,4 +49,4 @@ SOURCES += \
 	b3WorldTest.cc \
 	basetest.cc
 
-LIBS += -lb3System -lb3SystemUnix -lb3Image -lb3Base -lcppunit -ljpeg -ltiff -lGLU
+LIBS += -lb3Base -lb3Image -lb3SystemUnix -lb3System -lcppunit -ljpeg -ltiff -lGLU -ldl

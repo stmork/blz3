@@ -25,7 +25,7 @@ install:
 
 clean:
 	test -f src/Makefile && make -C src $@
-	rm -rf doc/html doc/latex Doxyfile
+	rm -rf doc/html doc/latex Doxyfile lcov-out
 
 configure:	configure.ac
 	autoreconf
@@ -45,6 +45,9 @@ dist:	configure
 astyle:
 	find . -name "*.h" | xargs astyle
 	find . -name "*.cc" | xargs astyle
+
+lcov:
+	+make -C src $@
 
 documentation:	Doxyfile
 	doxygen Doxyfile

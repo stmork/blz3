@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS  = system_unix system base image raytrace unittest brt3 render qrender
-CONFIG   = ordered
+CONFIG  += ordered
 
 include(common.pri)
 
@@ -21,11 +21,16 @@ image.depends    = system
 base.depends     = system image
 raytrace.depends = system base image
 unittest.depends = system base image
+
 brt3.depends     = raytrace
 render.depends   = raytrace
 qrender.depends  = raytrace
 
-QMAKE_EXTRA_TARGETS += cppcheck
+#####################################################################
+#
+# Extra target cppcheck.
+#
+#####################################################################
 
 cppcheck.commands = cppcheck\
 	--enable=style,warning,performance,portability\
@@ -40,4 +45,17 @@ cppcheck.commands = cppcheck\
 	--xml-version=2 --force -q -j 3\
 	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc 2>cppcheck.xml
 
-QMAKE_CLEAN += cppcheck.xml test-results*.xml *.wav *.dot *.mp4 *.deb *.qch
+QMAKE_EXTRA_TARGETS += cppcheck
+QMAKE_CLEAN         += cppcheck.xml test-results*.xml *.wav *.dot *.mp4 *.deb *.qch
+
+#####################################################################
+#
+# Extra target lcov
+#
+#####################################################################
+
+lcov.commands += lcov --no-external -c --directory $$BLZ3_HOME -o coverage.info;
+lcov.commands += genhtml coverage.info --legend --title=\"Blizzard III base libraries\" --output-directory $$BLZ3_LCOV
+
+QMAKE_EXTRA_TARGETS += lcov
+QMAKE_CLEAN         += $$BLZ3_LCOV
