@@ -26,4 +26,7 @@ Since 2020/05/22
 * Moved to at least C++11.
 
 Version 3.1, since 2021/02/27
-* Migration to Qt.
+* Migration to Qt using C++17.
+
+Version 3.1.1
+* First merge into master branch.
