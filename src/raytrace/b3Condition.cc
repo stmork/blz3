@@ -69,7 +69,7 @@ b3Condition::b3Condition(b3_u32 * src) : b3Item(src)
 {
 }
 
-b3_bool b3Condition::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Condition::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return true;
 }
@@ -93,15 +93,6 @@ b3_bool b3Condition::b3Conditionate(
 		return input && (!operation);
 	}
 	return input;
-}
-
-void b3Condition::b3ComputeBound(b3_stencil_limit * Limit)
-{
-}
-
-b3_bool b3Condition::b3CheckStencil(b3_polar * polar)
-{
-	return true;
 }
 
 void b3Condition::b3CheckInnerBound(
@@ -206,7 +197,7 @@ void b3CondRectangle::b3Write()
 	b3StoreInt(m_Flags);
 }
 
-void b3CondRectangle::b3ComputeBound(b3_stencil_limit * Limit)
+void b3CondRectangle::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound;
 
@@ -265,7 +256,7 @@ void b3CondRectangle::b3ComputeBound(b3_stencil_limit * Limit)
 	}
 }
 
-b3_bool b3CondRectangle::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondRectangle::b3CheckStencil(b3_polar * polar) const
 {
 	if ((m_Flags & RCF_ACTIVE) == 0)
 	{
@@ -312,7 +303,7 @@ void b3CondCircle::b3Write()
 	b3StoreFloat(m_Radius);
 }
 
-void b3CondCircle::b3ComputeBound(b3_stencil_limit * Limit)
+void b3CondCircle::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound;
 
@@ -336,7 +327,7 @@ void b3CondCircle::b3ComputeBound(b3_stencil_limit * Limit)
 	}
 }
 
-b3_bool b3CondCircle::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondCircle::b3CheckStencil(b3_polar * polar) const
 {
 	b3_f64 x, y;
 
@@ -375,7 +366,7 @@ void b3CondSegment::b3Write()
 	b3StoreFloat(m_AngleEnd);
 }
 
-void b3CondSegment::b3ComputeBound(b3_stencil_limit * Limit)
+void b3CondSegment::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound;
 
@@ -399,7 +390,7 @@ void b3CondSegment::b3ComputeBound(b3_stencil_limit * Limit)
 	}
 }
 
-b3_bool b3CondSegment::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondSegment::b3CheckStencil(b3_polar * polar) const
 {
 	b3_f64 x, y, angle, Rad;
 
@@ -468,13 +459,13 @@ void b3Cond2::b3Write()
 	b3StoreFloat(m_Denom);
 }
 
-b3_bool b3Cond2::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Cond2::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	m_Denom = m_xDir1 * m_yDir2 - m_yDir1 * m_xDir2;
 	return true;
 }
 
-void b3Cond2::b3ComputeBound(b3_stencil_limit * Limit)
+void b3Cond2::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound, Aux;
 
@@ -522,7 +513,7 @@ b3CondPara::b3CondPara(b3_u32 * src) : b3Cond2(src)
 {
 }
 
-b3_bool b3CondPara::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondPara::b3CheckStencil(b3_polar * polar) const
 {
 	b3_f64 Dx, Dy, a, b;
 
@@ -558,7 +549,7 @@ b3CondTria::b3CondTria(b3_u32 * src) : b3Cond2(src)
 {
 }
 
-b3_bool b3CondTria::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondTria::b3CheckStencil(b3_polar * polar) const
 {
 	b3_f64 Dx, Dy, a, b;
 
@@ -616,12 +607,12 @@ void b3CondTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3CondTexture::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3CondTexture::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
 
-void b3CondTexture::b3ComputeBound(b3_stencil_limit * Limit)
+void b3CondTexture::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound;
 
@@ -647,7 +638,7 @@ void b3CondTexture::b3ComputeBound(b3_stencil_limit * Limit)
 	}
 }
 
-b3_bool b3CondTexture::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondTexture::b3CheckStencil(b3_polar * polar) const
 {
 	b3_f64   fx, fy;
 	b3_coord x, y;
@@ -702,12 +693,12 @@ void b3CondWrapTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3CondWrapTexture::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3CondWrapTexture::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
 
-void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit * Limit)
+void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound;
 
@@ -747,7 +738,7 @@ void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit * Limit)
 	}
 }
 
-b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar * polar) const
 {
 	b3_coord x, y;
 	b3_f64   fx, fy, xEnd, xPolar;
@@ -836,7 +827,7 @@ void b3CondEllipse::b3Write()
 	b3StoreFloat(m_AngleEnd);
 }
 
-void b3CondEllipse::b3ComputeBound(b3_stencil_limit * Limit)
+void b3CondEllipse::b3ComputeBound(b3_stencil_limit * Limit) const
 {
 	b3_stencil_limit Bound;
 
@@ -860,7 +851,7 @@ void b3CondEllipse::b3ComputeBound(b3_stencil_limit * Limit)
 	}
 }
 
-b3_bool b3CondEllipse::b3CheckStencil(b3_polar * polar)
+b3_bool b3CondEllipse::b3CheckStencil(b3_polar * polar) const
 {
 	b3_f64 x, y, angle, AngleEnd, Rad;
 

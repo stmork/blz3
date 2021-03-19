@@ -38,7 +38,7 @@ template<typename T> class B3_PLUGIN b3Complex
 	/**
 	 * The value array. We advise to use b3_f64 as template class.
 	 */
-	T B3_ALIGN_16 v[2];
+	alignas(16) T v[2];
 
 public:
 	enum b3_complex_index
@@ -80,7 +80,7 @@ public:
 		v[Im] = im;
 	}
 
-	inline const bool operator==(const b3Complex<T> & a) const
+	inline bool operator==(const b3Complex<T> & a) const
 	{
 		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
 	}
@@ -128,7 +128,7 @@ public:
 	 */
 	inline b3Complex<T> & operator*=(const b3Complex<T> & a)
 	{
-		T B3_ALIGN_16 val[2];
+		alignas(16) T val[2];
 
 		val[Re] = v[Re] * a.v[Re] - v[Im] * a.v[Im];
 		val[Im] = v[Im] * a.v[Re] + v[Re] * a.v[Im];
@@ -150,9 +150,9 @@ public:
 	 */
 	inline b3Complex<T> & operator/=(const b3Complex<T> & a)
 	{
-		T B3_ALIGN_16 val[2];
-		T B3_ALIGN_16 den[2];
-		T B3_ALIGN_16 nom[2];
+		alignas(16) T val[2];
+		alignas(16) T den[2];
+		alignas(16) T nom[2];
 		T             denom;
 
 		for (b3_loop i = 0; i < 2; i++)
@@ -297,7 +297,7 @@ public:
 	/**
 	 * This method normalizes this complex number.
 	 */
-	inline const b3_bool b3Normalize(const T len = 1)
+	inline b3_bool b3Normalize(const T len = 1)
 	{
 		T old_len = b3Length();
 
@@ -324,7 +324,7 @@ public:
 	 */
 	inline const T b3SquareLength() const
 	{
-		T B3_ALIGN_16 val[2];
+		alignas(16) T val[2];
 
 		for (b3_loop i = 0; i < 2; i++)
 		{
@@ -350,7 +350,7 @@ public:
 	 */
 	inline void b3Square()
 	{
-		T B3_ALIGN_16 re[2];
+		alignas(16) T re[2];
 
 		for (b3_loop i = 0; i < 2; i++)
 		{

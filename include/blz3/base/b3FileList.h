@@ -42,7 +42,7 @@ public:
 	 *
 	 * @param new_name The new file name.
 	 */
-	b3FileEntry(const char * new_name);
+	explicit b3FileEntry(const char * new_name);
 
 	/**
 	 * This method implements the comparison method for the b3FileList::b3Sort
@@ -51,7 +51,7 @@ public:
 	 * @param compare The file entry to compare with.
 	 * @return The position indicator.
 	 */
-	const int    b3Cmp(const b3FileEntry * compare) const;
+	int    b3Cmp(const b3FileEntry * compare) const override;
 
 	/**
 	 * This method returns the file name of this entry.
@@ -69,6 +69,7 @@ public:
 class b3FileList
 {
 	b3Base<b3FileEntry> list;
+
 public:
 	/**
 	 * This constructor initializes this instance.
@@ -80,7 +81,7 @@ public:
 	 *
 	 * @param dir_name The path.
 	 */
-	b3FileList(const char * dir_name);
+	explicit b3FileList(const char * dir_name);
 
 	/**
 	 * This destructor deinitializes this instance.
@@ -112,7 +113,7 @@ public:
 	/**
 	 * This element adds a file list entry.
 	 */
-	const b3_bool  b3Add(const char * file_name);
+	b3_bool        b3Add(const char * file_name);
 
 	/**
 	 * This method sorts the file entries alphabetically.
@@ -129,7 +130,7 @@ public:
 	/**
 	 * Thie method returns the amount of file entries.
 	 */
-	inline const b3_count b3GetCount() const
+	inline b3_count b3GetCount() const
 	{
 		return list.b3GetCount();
 	}

@@ -78,7 +78,7 @@ b3_bool b3BaseTransformation::b3Prepare()
 
 void b3BaseTransformation::b3BaseTransform(
 	const b3_line64 * in,
-	b3_line64 * out)
+	b3_line64    *    out) const
 {
 #ifdef B3_SSE2
 	b3_vector64         pos;
@@ -136,7 +136,7 @@ void b3BaseTransformation::b3BaseTransform(
 
 void b3BaseTransformation::b3BaseTransform(
 	const b3_vector * in,
-	b3_vector * out)
+	b3_vector    *    out) const
 {
 #ifdef B3_SSE2
 	b3_vector64            pos;
@@ -175,7 +175,7 @@ void b3BaseTransformation::b3BaseTransform(
 
 void b3BaseTransformation::b3Project(
 	const b3_vector * in,
-	b3_vector * out)
+	b3_vector    *    out) const
 {
 	b3_f64 xPos, yPos, zPos;
 

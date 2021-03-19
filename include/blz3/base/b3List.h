@@ -22,6 +22,8 @@
 
 #define B3_NO_CLASS_CHECK
 
+#include <iterator>
+
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Compare.h"
 
@@ -63,7 +65,7 @@ enum b3_link_state
  *
  * @see b3Base
  */
-template <class T> class B3_PLUGIN b3Link
+template <class T> class B3_PLUGIN alignas(16) b3Link
 {
 public:
 	T     *    Succ; //!< The next list element or nullptr if this is the last one.
@@ -81,7 +83,7 @@ public:
 	 * @param new_size The class instance size.
 	 * @param new_class The class type for this list item.
 	 */
-	b3Link(const b3_size new_size, const b3_u32 new_class = 0)
+	explicit b3Link(const b3_size new_size, const b3_u32 new_class = 0)
 	{
 		Succ      = nullptr;
 		Prev      = nullptr;
@@ -99,7 +101,7 @@ public:
 	 *
 	 * @return The class part of the class type.
 	 */
-	inline const b3_u32 b3GetClass() const
+	inline b3_u32 b3GetClass() const
 	{
 		return ClassType & B3_CLASS_MASK;
 	}
@@ -109,7 +111,7 @@ public:
 	 *
 	 * \return The type part of the class type.
 	 */
-	inline b3_u32 b3GetType()
+	inline b3_u32 b3GetType() const
 	{
 		return ClassType & B3_TYPE_MASK;
 	}
@@ -119,7 +121,7 @@ public:
 	 *
 	 * @return The class type of this list element.
 	 */
-	inline const b3_u32 b3GetClassType() const
+	inline b3_u32 b3GetClassType() const
 	{
 		return ClassType;
 	}
@@ -129,15 +131,21 @@ public:
 	 *
 	 * @return The class instance size.
 	 */
-	inline const b3_size b3GetSize() const
+	inline b3_size b3GetSize() const
 	{
 		return Size;
 	}
 };
 
-#define B3_FOR_BASE(b,n)    for((n) = (b)->First;(n)!= nullptr;(n) = (n)->Succ)
-#define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= nullptr;(n) = (n)->Prev)
-#define B3_DELETE_BASE(b,n) ((b)->b3Free())
+#define B3_FOR_BASE(b,n)       for((n) = (b)->First;(n) != nullptr;(n) = (n)->Succ)
+#define B3_FOR_BASE_BACK(b,n)  for((n) = (b)->Last;(n)  != nullptr;(n) = (n)->Prev)
+
+#define B3_FOR_TYPED_BASE(t,b,n)\
+	for(t * (n) = static_cast<t *>((b)->First);\
+	(n) != nullptr;\
+	(n) = static_cast<t *>((n)->Succ))
+
+#define B3_DELETE_BASE(b,n)    ((b)->b3Free())
 
 /**
  * This class is the base container for a doubly linked list. All
@@ -158,7 +166,7 @@ public:
  *
  * @see b3Link
  */
-template <class T> class B3_PLUGIN b3Base
+template <class T> class B3_PLUGIN alignas(16) b3Base
 {
 protected:
 	b3_u32  Class; //!< The class specifier.
@@ -168,10 +176,143 @@ public:
 	T   *   Last;  //!< The last list element.
 
 public:
+	template<class I> struct b3Iterator
+	{
+		using iterator_category = std::bidirectional_iterator_tag;
+		using difference_type   = std::ptrdiff_t;
+		using value_type        = T;
+		using pointer           = T *;
+		using reference         = T &;
+
+		explicit inline b3Iterator(T * item = nullptr) : m_Item(item)
+		{
+		}
+
+		inline operator pointer() const
+		{
+			return m_Item;
+		}
+
+		inline reference operator*() const
+		{
+			return *m_Item;
+		}
+
+		inline pointer operator->() const
+		{
+			return m_Item;
+		}
+
+		inline I operator++(int)
+		{
+			I tmp = *this;
+
+			++(*this);
+			return tmp;
+		}
+
+		inline I operator--(int)
+		{
+			I tmp = *this;
+
+			--(*this);
+			return tmp;
+		}
+
+		inline bool operator==(const I & other) const
+		{
+			return m_Item == other.m_Item;
+		}
+
+		inline bool operator!=(const I & other) const
+		{
+			return m_Item != other.m_Item;
+		}
+
+		inline operator bool() const
+		{
+			return m_Item != nullptr;
+		}
+
+	protected:
+		T  * m_Item    = nullptr;
+	};
+
+	struct b3ForwardIterator : b3Iterator<b3ForwardIterator>
+	{
+		using b3Iterator<b3ForwardIterator>::m_Item;
+
+		explicit inline b3ForwardIterator(T * ptr = nullptr) :
+			b3Iterator<b3ForwardIterator>(ptr)
+		{
+		}
+
+		inline b3ForwardIterator & operator++()
+		{
+			m_Item = m_Item->Succ;
+
+			return *this;
+		}
+
+		inline b3ForwardIterator & operator--()
+		{
+			m_Item = m_Item->Prev;
+
+			return *this;
+		}
+	};
+
+	struct b3BackwardIterator : b3Iterator<b3BackwardIterator>
+	{
+		using b3Iterator<b3BackwardIterator>::m_Item;
+
+		explicit inline b3BackwardIterator(T * ptr = nullptr) :
+			b3Iterator<b3BackwardIterator>(ptr)
+		{
+		}
+
+		inline b3BackwardIterator & operator++()
+		{
+			m_Item = m_Item->Prev;
+
+			return *this;
+		}
+
+		inline b3BackwardIterator & operator--()
+		{
+			m_Item = m_Item->Succ;
+
+			return *this;
+		}
+	};
+
+	inline b3ForwardIterator begin() const
+	{
+		return b3ForwardIterator(First);
+	}
+
+	inline b3ForwardIterator end() const
+	{
+		return b3ForwardIterator();
+	}
+
+	inline b3BackwardIterator rbegin() const
+	{
+		return b3BackwardIterator(Last);
+	}
+
+	inline b3BackwardIterator rend() const
+	{
+		return b3BackwardIterator();
+	}
+
+	using iterator         = b3Iterator<b3ForwardIterator>;
+	using reverse_iterator = b3Iterator<b3BackwardIterator>;
+
 	/**
 	 * This constructor initializes the list with the specified class.
 	 */
-	b3Base(const b3_u32 new_class = 0)
+	explicit b3Base(const b3_u32 new_class = 0)
 	{
 		b3InitBase(new_class);
 	}
@@ -197,7 +338,7 @@ public:
 	 *
 	 * @return The class specifier.
 	 */
-	inline const b3_u32 b3GetClass() const
+	inline b3_u32 b3GetClass() const
 	{
 		return Class;
 	}
@@ -207,7 +348,7 @@ public:
 	 *
 	 * \return True if list is empty.
 	 */
-	inline const b3_bool b3IsEmpty() const
+	inline b3_bool b3IsEmpty() const
 	{
 		return (First == nullptr) && (Last == nullptr);
 	}
@@ -288,7 +429,7 @@ public:
 	 *
 	 * \return The amount of listed elements.
 	 */
-	inline const b3_count b3GetCount() const
+	inline b3_count b3GetCount() const
 	{
 		T    *    node;
 		b3_count  count = 0;
@@ -441,8 +582,6 @@ public:
 	 */
 	inline void b3Insert(T * pre, T * ptr)
 	{
-		T * succ;
-
 		B3_ASSERT((ptr->Succ == nullptr) && (ptr->Prev == nullptr));
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
@@ -470,7 +609,8 @@ public:
 		}
 		else
 		{
-			succ = pre->Succ;
+			T * succ = pre->Succ;
+
 			ptr->Succ = pre->Succ;
 			if (ptr->Succ == nullptr)
 			{
@@ -516,7 +656,7 @@ public:
 	 * \param *ptr The element
 	 * \return The state of the element.
 	 */
-	inline const b3_link_state b3State(const T * ptr) const
+	inline b3_link_state b3State(const T * ptr) const
 	{
 		int flags;
 
@@ -572,7 +712,7 @@ public:
 	 * \param *func The sorting method.
 	 * \param *Ptr A pointer to custom information.
 	 */
-	inline void b3Sort(const int (*func)(const T *, const T *, const void *), const void * Ptr = nullptr)
+	inline void b3Sort(int (*func)(const T *, const T *))
 	{
 		b3Base    Right;
 		T    *    start, *end;
@@ -622,8 +762,8 @@ public:
 
 		// & CONQUER
 		// This gives the algorithm the factor O(log n)
-		b3Sort(func, Ptr);
-		Right.b3Sort(func, Ptr);
+		b3Sort(func);
+		Right.b3Sort(func);
 
 		// Now we have to merge two sorted list into
 		// one sorted list.
@@ -636,7 +776,7 @@ public:
 			// at its place and use the following node.
 			// Else we remove the node from the second list
 			// an insert it before the node of the first list.
-			if (func((T *)start, (T *)end, Ptr) > 0)
+			if (func(start, end) > 0)
 			{
 				Right.b3Remove(end);
 				b3Insert(start->Prev, end);
@@ -682,6 +822,39 @@ public:
 		Last  = src->Last;
 		src->First = nullptr;
 		src->Last  = nullptr;
+	}
+
+	/**
+	 * This template function finds the first element in the doubly linked
+	 * list matching the given class type. The found element is casted to
+	 * the given template parameter.
+	 *
+	 * @param class_type The class type to compare to.
+	 * @return The found element or \c nullptr if no one was found.
+	 */
+	inline T * b3Find(const b3_u32 class_type)
+	{
+		for (T * item = First; item != nullptr ; item = item->Succ)
+		{
+			if (item->b3GetClassType() == class_type)
+			{
+				return item;
+			}
+		}
+		return nullptr;
+	}
+
+	/**
+	 * This template function finds the first element in the doubly linked
+	 * list matching the given class type. The found element is casted to
+	 * the given template parameter.
+	 *
+	 * @param class_type The class type to compare to.
+	 * @return The found element or \c nullptr if no one was found.
+	 */
+	template<class SUB> inline SUB * b3FindTyped(const b3_u32 class_type)
+	{
+		return static_cast<SUB *>(b3Find(class_type));
 	}
 };
 

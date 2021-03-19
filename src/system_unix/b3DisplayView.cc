@@ -135,7 +135,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color     ARGB,
 		b3_coord     x,
-		b3_coord     y)
+		b3_coord     y) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -166,7 +166,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x,
-		b3_coord y)
+		b3_coord y) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -197,7 +197,7 @@ public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
 		b3_coord x,
-		b3_coord y)
+		b3_coord y) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -227,8 +227,8 @@ class b3DisplayPixel24 : public b3DisplayPixelImpl
 public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
-		b3_coord x,
-		b3_coord y)
+		b3_coord x B3_UNUSED,
+		b3_coord y B3_UNUSED) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -245,8 +245,8 @@ class b3DisplayPixel24Inv : public b3DisplayPixelImpl
 public:
 	b3_pkd_color b3ARGBtoPixel(
 		b3_color ARGB,
-		b3_coord x,
-		b3_coord y)
+		b3_coord x B3_UNUSED,
+		b3_coord y B3_UNUSED) override
 	{
 		b3_pkd_color r, g, b;
 
@@ -298,7 +298,7 @@ b3DisplayView::b3DisplayView(
 
 b3DisplayView::~b3DisplayView()
 {
-	if (m_Pixel != null)
+	if (m_Pixel != nullptr)
 	{
 		delete m_Pixel;
 	}
@@ -327,7 +327,9 @@ void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_colo
 #endif
 }
 
-b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
+b3_bool b3DisplayView::b3IsCancelled(
+	const b3_coord x B3_UNUSED,
+	const b3_coord y B3_UNUSED)
 {
 #ifdef HAVE_LIBX11
 	b3_bool	 loop = true, result = false, really_ask;
@@ -383,7 +385,7 @@ b3_bool b3DisplayView::b3IsCancelled(const b3_coord x, const b3_coord y)
 		case KeyPress :
 			result   = true;
 			m_Closed = true;
-		// Walk through!
+			B3_FALLTHROUGH;
 		default :
 			loop   = false;
 			break;
@@ -445,7 +447,7 @@ void b3DisplayView::b3Open(
 	XTextProperty  CInfoName;
 	b3_res         xScr, yScr;
 
-	if (m_Title == null)
+	if (m_Title == nullptr)
 	{
 		m_Title = "Raytracen ist gut, Blizzard III ist noch besser...";
 	}
@@ -489,7 +491,7 @@ void b3DisplayView::b3Open(
 
 
 	m_Image = XCreatePixmap(m_Display, m_Window, m_xs, m_ys, m_depth);
-	if (m_Image == null)
+	if (m_Image == 0)
 	{
 		b3Free(m_Buffer);
 		b3PrintF(B3LOG_NORMAL, "Blizzard III ERROR:\n");
@@ -542,13 +544,13 @@ b3_bool b3DisplayView::b3CreateColormap()
 {
 #ifdef HAVE_LIBX11
 	XVisualInfo * info;
-	XVisualInfo  temp;
-	b3_bool      result = false;
-	int          count, i;
+	XVisualInfo   temp;
+	b3_bool       result = false;
+	int           count, i;
 
 	// use existing color map
-	m_Colormap = null;
-	m_Pixel    = null;
+	m_Colormap = 0;
+	m_Pixel    = nullptr;
 	switch (m_depth)
 	{
 	case  8:
@@ -572,10 +574,10 @@ b3_bool b3DisplayView::b3CreateColormap()
 		temp.screen   = m_Screen;
 		temp.depth    = m_depth;
 		info = XGetVisualInfo(m_Display, VisualIDMask | VisualScreenMask | VisualDepthMask, &temp, &count);
-		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %d.\n", count, info, m_depth);
+		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %ld.\n", count, info, m_depth);
 		for (i = 0; i < count; i++)
 		{
-			b3PrintF(B3LOG_FULL, "%2d: %08x %08x %08x # %4d %4d # %08x\n", i,
+			b3PrintF(B3LOG_FULL, "%2d: %08lx %08lx %08lx # %4d %4d # %08x\n", i,
 				info[i].red_mask,
 				info[i].green_mask,
 				info[i].blue_mask,
@@ -584,7 +586,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 				info[i].c_class);
 		}
 
-		if (info != null)
+		if (info != nullptr)
 		{
 			if ((info->red_mask  == 0x0000ff) &&
 				(info->blue_mask == 0xff0000))
@@ -601,7 +603,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 
 			XFree(info);
 		}
-		return m_Pixel != null;
+		return m_Pixel != nullptr;
 
 	default:
 		b3PrintF(B3LOG_NORMAL, "Unsupported color depth!\n");
@@ -610,7 +612,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 
 	b3CriticalSection lock(display_mutex);
 
-	if (cmap != null)
+	if (cmap != 0)
 	{
 		cmap_count++;
 		m_Colormap = cmap;
@@ -627,7 +629,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 				m_Window,
 				DefaultVisual(m_Display, m_Screen),
 				AllocAll);
-		if (cmap != null)
+		if (cmap != 0)
 		{
 			// compute colors
 			iMax = sizeof(NewColors) / sizeof(XColor);
@@ -661,7 +663,7 @@ void b3DisplayView::b3FreeColormap()
 		if (m_depth == 8)
 		{
 			XFreeColormap(m_Display, m_Colormap);
-			cmap = null;
+			cmap = 0;
 		}
 	}
 }
@@ -730,7 +732,10 @@ inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 	}
 }
 
-Bool b3DisplayView::b3SetPredicate(Display * display, XEvent * event, char * buffer)
+Bool b3DisplayView::b3SetPredicate(
+	Display * display B3_UNUSED,
+	XEvent  * event   B3_UNUSED,
+	char   *  buffer  B3_UNUSED)
 {
 	return True;
 }

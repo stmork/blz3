@@ -146,7 +146,7 @@ public:
 	 * @param mode The view mode to test.
 	 * @return True if the given view mode is used.
 	 */
-	b3_bool           b3IsViewMode(b3_view_mode mode);
+	b3_bool           b3IsViewMode(b3_view_mode mode) const;
 
 	/**
 	 * This method switches the perspective view to the given camera.
@@ -178,7 +178,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	void              b3SetBounds(b3_vector * lower, b3_vector * upper);
+	void              b3SetBounds(const b3_vector * lower, const b3_vector * upper);
 
 	/**
 	 * This method returns the dimensions of the view section in world
@@ -188,7 +188,7 @@ public:
 	 * @param ySize The view height in world coordinates.
 	 * @return True on success.
 	 */
-	b3_bool           b3GetDimension(b3_f64 & xSize, b3_f64 & ySize);
+	b3_bool           b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const;
 
 	/**
 	 * This method pops the actual view item from the actual view mode.
@@ -201,7 +201,7 @@ public:
 	 *
 	 * @return True if the actual view stack is not empty.
 	 */
-	b3_bool           b3ViewStackNotEmpty();
+	b3_bool           b3ViewStackNotEmpty() const;
 
 	/**
 	 * This method empties the actual view stack and put a new one
@@ -232,14 +232,14 @@ public:
 	 *
 	 * @param eye The resulting eye point.
 	 */
-	void              b3GetProjectionBase(b3_vector * eye);
+	void              b3GetProjectionBase(b3_vector * eye) const;
 
 	/**
 	 * This method returns the view direction.
 	 *
 	 * @param direction The resulting view direction.
 	 */
-	void              b3GetViewDirection(b3_vector * direction);
+	void              b3GetViewDirection(b3_vector * direction) const;
 
 	/**
 	 * This method returns a position angle between a given center and a given
@@ -249,7 +249,9 @@ public:
 	 * @param position The cursor position.
 	 * @return The resulting position angle.
 	 */
-	b3_f64            b3GetPositionAngle(b3_vector * center, b3_vector * position);
+	b3_f64            b3GetPositionAngle(
+		b3_vector * center,
+		b3_vector * position) const;
 
 	/**
 	 * This Method selects a new view section and puts the new view onto
@@ -278,7 +280,7 @@ public:
 	 * @param grid The snap to grid grid distance.
 	 * @param color The grid color.
 	 */
-	void              b3DrawRaster(b3_f64 grid, b3Color & color);
+	void              b3DrawRaster(b3_f64 grid, b3Color & color) const;
 
 	/**
 	 * This method initializes a real move direction vector from an initial stepper
@@ -311,7 +313,11 @@ public:
 	 * @param yRel The resulting relative y view port coordinate.
 	 * @param zRel The resulting view depth.
 	 */
-	void              b3Project(const b3_vector * point, b3_f64 & xRel, b3_f64 & yRel, b3_f64 & zRel);
+	void              b3Project(
+		const b3_vector * point,
+		b3_f64 & xRel,
+		b3_f64 & yRel,
+		b3_f64 & zRel) const;
 
 	/**
 	 * This method projects a point onto the projection plane of the actually
@@ -322,7 +328,11 @@ public:
 	 * @param y The resulting y view port coordinate.
 	 * @param z The resulting view depth.
 	 */
-	inline void       b3Project(const b3_vector * point, b3_coord & x, b3_coord & y, b3_f64 & z)
+	inline void       b3Project(
+		const b3_vector * point,
+		b3_coord & x,
+		b3_coord & y,
+		b3_f64 & z) const
 	{
 		b3_f64 xRel, yRel;
 
@@ -340,7 +350,7 @@ public:
 	 * @param y The y view port coordinate.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_coord x, const b3_coord y, b3_vector * point)
+	inline void       b3Unproject(const b3_coord x, const b3_coord y, b3_vector * point) const
 	{
 		b3Unproject(x, y, 0.5, point);
 	}
@@ -355,7 +365,7 @@ public:
 	 * @param yRel The relative vertical view port coordinate.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_f64 xRel, const b3_f64 yRel, b3_vector * point)
+	inline void       b3Unproject(const b3_f64 xRel, const b3_f64 yRel, b3_vector * point) const
 	{
 		b3Unproject(xRel, yRel, 0.5, point);
 	}
@@ -387,7 +397,10 @@ public:
 	 * @param zRelParam The view depth.
 	 * @param point The resulting point in world coordinates.
 	 */
-	inline void       b3Unproject(const b3_f64 xRelParam, const b3_f64 yRelParam, const b3_f64 zRelParam, b3_vector * point)
+	inline void       b3Unproject(
+		const b3_f64 xRelParam,
+		const b3_f64 yRelParam,
+		const b3_f64 zRelParam, b3_vector * point) const
 	{
 		b3UnprojectInternal(
 			xRelParam * m_xRes,
@@ -396,9 +409,12 @@ public:
 	}
 
 private:
-	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = null);
-	b3_f64            b3ComputeFarClippingPlane();
-	void              b3UnprojectInternal(const b3_f64 xRel, const b3_f64 yRel, const b3_f64 z, b3_vector * point);
+	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = nullptr);
+	b3_f64             b3ComputeFarClippingPlane() const;
+	void               b3UnprojectInternal(
+		const b3_f64 xRel,
+		const b3_f64 yRel,
+		const b3_f64 z, b3_vector * point) const;
 };
 
 #endif

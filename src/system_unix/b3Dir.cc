@@ -45,9 +45,9 @@ b3_path_type b3Dir::b3Exists(const char * Name)
 	return (S_ISDIR(status.st_mode) ? B3_TYPE_DIR : B3_TYPE_FILE);
 }
 
-b3_bool b3Dir::b3ChDir(const char * Name)
+b3_bool b3Dir::b3ChDir(const char * newWorkingdir)
 {
-	return (chdir(Name) == 0);
+	return (chdir(newWorkingdir) == 0);
 }
 
 b3_bool b3Dir::b3ChkDir(const char * Name)
@@ -110,7 +110,6 @@ b3_bool b3Dir::b3OpenDir(const char * open_path)
 
 b3_path_type b3Dir::b3DirNext(char * name)
 {
-	struct dirent * entry;
 	b3_path_type   type;
 	char           filename[B3_FILESTRINGLEN];
 	b3_bool        loop;
@@ -118,6 +117,8 @@ b3_path_type b3Dir::b3DirNext(char * name)
 	name[0] = 0;
 	do
 	{
+		struct dirent * entry;
+
 		loop = false;
 		type = B3_NOT_EXISTANT;
 		if ((entry = readdir(dir)) != nullptr)
@@ -158,6 +159,14 @@ void b3Dir::b3CloseDir()
 **                        b3Path                                        **
 **                                                                      **
 *************************************************************************/
+
+b3Path & b3Path::operator=(const char * path)
+{
+	strncpy(m_Path, path, sizeof(m_Path));
+	m_Path[sizeof(m_Path) - 1] = 0;
+
+	return *this;
+}
 
 void b3Path::b3Empty()
 {
@@ -203,7 +212,7 @@ void b3Path::b3LinkFileName(
 // link a name to an existing file path to create a
 // new full qualified filepath
 void b3Path::b3LinkFileName(
-	char    *   File,
+	char    *    File,
 	const char * FilePath,
 	const char * FileName)
 {
@@ -219,7 +228,10 @@ void b3Path::b3LinkFileName(
 	}
 	if (FileName != nullptr)
 	{
-		strncat(File, "/", B3_FILESTRINGLEN);
+		if ((FilePath != nullptr) && (strlen(FilePath) > 0))
+		{
+			strncat(File, "/", B3_FILESTRINGLEN);
+		}
 		strncat(File, FileName, B3_FILESTRINGLEN);
 	}
 #else
@@ -255,8 +267,8 @@ void b3Path::b3SplitFileName(
 // 2b to a filename of zero length if "uncorrected" is a directory
 void b3Path::b3SplitFileName(
 	const char * File,
-	char    *   FilePath,
-	char    *   FileName)
+	char    *    FilePath,
+	char    *    FileName)
 {
 	b3_size Length, i;
 	b3_bool Dir = false;
@@ -280,7 +292,7 @@ void b3Path::b3SplitFileName(
 	}
 
 	Length = strlen(File);
-	if (FileName)
+	if (FileName != nullptr)
 	{
 		if (Dir)
 		{
@@ -296,7 +308,7 @@ void b3Path::b3SplitFileName(
 			strcpy(FileName, &File[i]);
 		}
 	}
-	if (FilePath)
+	if (FilePath != nullptr)
 	{
 		strcpy(FilePath, File);
 		if (!Dir)
@@ -336,7 +348,7 @@ void b3Path::b3ParentName(const char * param_path)
 // Get the parent directory of a directory or file
 void b3Path::b3ParentName(
 	const char * file,
-	char * parent)
+	char    *    parent)
 {
 	b3Path   actDir;
 	b3_index i;
@@ -352,23 +364,23 @@ void b3Path::b3ParentName(
 	else
 	{
 		actDir.b3Correct(file);
-		for (len = strlen(actDir) - 1; (len >= 0) && (((char *)actDir)[len] == '/'); len--)
+		for (len = strlen(actDir) - 1; (len >= 0) && (actDir[len] == '/'); len--)
 		{
-			((char *)actDir)[len] = 0;
+			actDir[len] = 0;
 		}
 	}
 
 	// Remove trailing "/" or "\"
 	len = strlen(actDir);
-	for (i = len - 1; i >= 0; i--) switch (((char *)actDir)[i])
+	for (i = len - 1; i >= 0; i--) switch (actDir[i])
 		{
 		case '/' :
-			((char *)actDir)[i] = 0;
+			actDir[i] = 0;
 			i = 0;
 			break;
 
 		default :
-			((char *)actDir)[i] = 0;
+			actDir[i] = 0;
 			break;
 		}
 
@@ -449,7 +461,7 @@ void b3Path::b3ExtractExt(const char * filename, char * ext)
 	len = strlen(actName);
 	for (i = len - 1; i >= 0; i--)
 	{
-		if (actName[i] == '.')
+		if (actName[i] == EXT_DELIMITER)
 		{
 			strcpy(ext, &actName[i + 1]);
 			return;
@@ -479,5 +491,16 @@ void b3Path::b3Append(const char * ext)
 			return;
 		}
 		k++;
+	}
+}
+
+void b3Path::b3Append(const char ext)
+{
+	b3_size i = strlen(m_Path);
+
+	if (i < (sizeof(m_Path) - 1))
+	{
+		m_Path[i++] = ext;
+		m_Path[i]   = 0;
 	}
 }

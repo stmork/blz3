@@ -109,21 +109,21 @@ const b3_u08 b3Noise::m_OM[4][8][3] =
 **                                                                      **
 *************************************************************************/
 
-b3Noise       b3Noise::m_Noise;
-b3_noisetype * b3Noise::m_NoiseTable = null;
-b3_f64        b3Noise::epsilon      = FLT_EPSILON;
+b3Noise        b3Noise::m_Noise;
+b3_noisetype * b3Noise::m_NoiseTable = nullptr;
+b3_f64         b3Noise::epsilon      = FLT_EPSILON;
 
 b3Noise::b3Noise()
 {
 	b3Rand48<b3_noisetype> random_noise;
 	b3Rand48<b3_f64>       random_wave;
 
-	if (m_NoiseTable == null)
+	if (m_NoiseTable == nullptr)
 	{
 		b3_count i, max = NOISEDIM * NOISESIZE;
 
 		m_NoiseTable = (b3_noisetype *)b3MemAccess::b3Alloc(max * sizeof(b3_noisetype));
-		if (m_NoiseTable == null)
+		if (m_NoiseTable == nullptr)
 		{
 			B3_THROW(b3NoiseException, B3_NOISE_MEMORY);
 		}
@@ -169,10 +169,10 @@ b3Noise::b3Noise()
 
 b3Noise::~b3Noise()
 {
-	if (m_NoiseTable != null)
+	if (m_NoiseTable != nullptr)
 	{
 		b3MemAccess::b3Free(m_NoiseTable);
-		m_NoiseTable = null;
+		m_NoiseTable = nullptr;
 	}
 }
 
@@ -427,9 +427,9 @@ inline b3_f64 b3Noise::b3Interpolate(
 	const b3_f32   fz,
 	const b3_index d)
 {
-	b3_noisetype * NoiseTable = &m_NoiseTable[d * NOISESIZE];
-	b3_f32        B3_ALIGN_16 a[4], b[4], c[4];
-	b3_loop       i;
+	b3_noisetype    *    NoiseTable = &m_NoiseTable[d * NOISESIZE];
+	alignas(16) b3_f32   a[4], b[4], c[4];
+	b3_loop              i;
 
 	a[0] = NoiseTable[INDEX3D(ix, iy, iz)];
 	b[0] = NoiseTable[INDEX3D(ix + 1, iy, iz)];
@@ -480,7 +480,7 @@ inline b3_f64 b3Noise::b3GradNoise(
 	const b3_f32    z,
 	b3_index  i)
 {
-	b3_f32  B3_ALIGN_16 a[4], b[4], c[4];
+	b3_f32   a[4], b[4], c[4];
 	b3_index ix = (b3_index)floor(x);
 	b3_index iy = (b3_index)floor(y);
 	b3_index iz = (b3_index)floor(z);

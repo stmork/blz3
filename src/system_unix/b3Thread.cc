@@ -116,9 +116,6 @@ static b3_count   threadError;
 b3Thread::b3Thread(const char * task_name)
 {
 	m_Name      = task_name;
-	m_IsRunning = false;
-	m_Result    = 0;
-	m_Thread    = 0;
 }
 
 b3Thread::~b3Thread()
@@ -178,18 +175,18 @@ b3_bool b3Thread::b3Start(
 		threadSuccess++;
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # started thread %02lX (%s).\n",
 			m_Thread,
-			m_Name != null ? m_Name : "no name");
+			m_Name != nullptr ? m_Name : "no name");
 	}
 	else
 	{
 		b3CriticalSection lock(m_ThreadMutex);
 
 		threadError++;
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Thrd # Thread (%x) not started!\n",
+		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Thrd # Thread (%lx) not started!\n",
 			m_Thread);
-		b3PrintF(B3LOG_NORMAL, "    OK/error count: %d/%d\n",
+		b3PrintF(B3LOG_NORMAL, "    OK/error count: %zd/%zd\n",
 			threadSuccess, threadError);
-		b3PrintF(B3LOG_NORMAL, "    thread count:   %d\n",
+		b3PrintF(B3LOG_NORMAL, "    thread count:   %zd\n",
 			m_ThreadCount);
 	}
 	return success;
@@ -197,7 +194,7 @@ b3_bool b3Thread::b3Start(
 
 void * b3Thread::b3Trampoline(void * ptr)
 {
-	b3Thread * threadClass = (b3Thread *)ptr;
+	b3Thread * threadClass = static_cast<b3Thread *>(ptr);
 
 	if (nice(threadClass->m_Prio) == -1)
 	{
@@ -207,7 +204,7 @@ void * b3Thread::b3Trampoline(void * ptr)
 	threadClass->m_Result = threadClass->m_CallProc((void *)threadClass->m_CallArg);
 	threadClass->b3Dec();
 
-	return null;
+	return nullptr;
 }
 
 b3_bool b3Thread::b3IsRunning()
@@ -228,11 +225,11 @@ b3_bool b3Thread::b3Stop()
 	{
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # terminated thread %02lX (%s).\n",
 			m_Thread,
-			m_Name != null ? m_Name : "no name");
+			m_Name != nullptr ? m_Name : "no name");
 	}
 
 	b3Dec();
-	m_CallProc  = null;
+	m_CallProc  = nullptr;
 	m_CallArg   = 0;
 	m_Thread    = 0;
 

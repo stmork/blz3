@@ -123,11 +123,11 @@ class b3FirstItem;
  */
 class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 {
-	b3_u32     *    m_Buffer;
-	b3_u32          m_BufferSize;
+	b3_u32     *    m_Buffer = nullptr;
+	b3_u32          m_BufferSize = 0;
 	b3_bool         m_NeedEndianChange;
-	b3FirstItem  *  m_Start;
-	b3_count        m_Missed;
+	b3FirstItem  *  m_Start = nullptr;
+	b3_count        m_Missed = 0;
 
 public:
 	/**
@@ -135,7 +135,7 @@ public:
 	 * wanted if the hierarchy should survive the life time of this instance.
 	 * So you can disable auto deletion.
 	 */
-	b3_bool         m_AutoDelete;
+	b3_bool         m_AutoDelete = true;
 
 public:
 	/**
@@ -243,7 +243,7 @@ public:
 	/**
 	 * This method dumps the b3Item hierarchy for debugging purposes.
 	 */
-	void            b3Dump();
+	void            b3Dump() const;
 
 	/**
 	 * This method removes the first b3Item from the internal b3FirstItem class
@@ -259,7 +259,7 @@ public:
 	 *
 	 * @return The first b3Item.
 	 */
-	b3Item     *    b3GetFirst();
+	b3Item     *    b3GetFirst() const;
 
 	/**
 	 * This method sets the given b3Item as the first b3Item.
@@ -276,7 +276,7 @@ public:
 	 * @param classid The matching class id.
 	 * @return The base of the first b3Item.
 	 */
-	b3Base<b3Item> * b3GetHead(b3_u32 classid = 0);
+	b3Base<b3Item> * b3GetHead(b3_u32 classid = 0) const;
 
 	/**
 	 * This method clones the given b3Item. First b3Store is called to serialize
@@ -344,20 +344,20 @@ struct b3_preparation_info
 class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
-	b3_u32          m_ItemSize;    //!< The stored size of this item in bytes.
-	b3_s32          m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
-	b3Base<b3Item> * m_Heads;      //!< The list heads.
-	b3_u32          m_HeadCount;   //!< The number of list heads.
+	b3_u32           m_ItemSize;    //!< The stored size of this item in bytes.
+	b3_s32           m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
+	b3Base<b3Item> * m_Heads;       //!< The list heads.
+	b3_u32           m_HeadCount;   //!< The number of list heads.
 
 	// Attributes for parsing
-	b3_u32     *    m_Buffer;      //!< This is a memory buffer of an archived b3Item.
-	b3_u32          m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
+	b3_u32     *     m_Buffer;      //!< This is a memory buffer of an archived b3Item.
+	b3_u32           m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
 
 	// Attributes for writing
-	b3_u32          m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
-	b3_s32          m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
-	b3_u32          m_StoreSize;   //!< The number of 32 bit unsigned integers.
-	b3_u32     *    m_StoreBuffer; //!< A temporary store buffer.
+	b3_u32           m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
+	b3_s32           m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
+	b3_u32           m_StoreSize;   //!< The number of 32 bit unsigned integers.
+	b3_u32     *     m_StoreBuffer; //!< A temporary store buffer.
 
 public:
 	/**
@@ -458,7 +458,7 @@ public:
 	 * @throws b3WorldException
 	 * @return The overall size in bytes written yet.
 	 */
-	b3_u32          b3Store();
+	b3_u32  b3Store();
 
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
@@ -477,7 +477,7 @@ public:
 	 *
 	 * @return The computed checksum.
 	 */
-	const b3_u32    b3Checksum();
+	b3_u32    b3Checksum();
 
 	/**
 	 * This method returns true if the specified class type is in the same class
@@ -487,7 +487,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type is in the given class.
 	 */
-	static const b3_bool  b3IsClass(const b3_u32 classtype, const b3_u32 classid);
+	static b3_bool  b3IsClass(const b3_u32 classtype, const b3_u32 classid);
 
 	/**
 	 * This method returns true if the class type of this instance is in the same class
@@ -496,7 +496,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type of this instance  is in the given class.
 	 */
-	const b3_bool b3IsClass(const b3_u32 classid) const;
+	b3_bool b3IsClass(const b3_u32 classid) const;
 
 protected:
 	////////////////////////////////////////////// Parsing routines
@@ -545,7 +545,7 @@ protected:
 	 *
 	 * @param vec The vector buffer as pointer.
 	 */
-	void     b3InitVector(b3_vector  * vec = null);
+	void     b3InitVector(b3_vector  * vec = nullptr);
 
 	/**
 	 * This method reads a three component vector into the given vector reference.
@@ -559,7 +559,7 @@ protected:
 	 *
 	 * @param vec The vector buffer as pointer.
 	 */
-	void     b3InitVector4D(b3_vector4D * vec = null);
+	void     b3InitVector4D(b3_vector4D * vec = nullptr);
 
 	/**
 	 * This method reads a four component vector into the given vector reference.
@@ -596,7 +596,7 @@ protected:
 	 * @param controls The pointer to the spline control pointer.
 	 * @param knots The knot vector of the spline.
 	 */
-	void     b3InitSpline(b3Spline  * spline, b3_vector  * controls = null, b3_f32 * knots = null);
+	void     b3InitSpline(b3Spline  * spline, b3_vector  * controls = nullptr, b3_f32 * knots = nullptr);
 
 	/**
 	 * This method reads back a NURBS instance.
@@ -605,7 +605,7 @@ protected:
 	 * @param controls The pointer to the NURBS control pointer.
 	 * @param knots The knot vector of the NURBS.
 	 */
-	void     b3InitNurbs(b3Nurbs * nurbs, b3_vector4D * controls = null, b3_f32 * knots = null);
+	void     b3InitNurbs(b3Nurbs * nurbs, b3_vector4D * controls = nullptr, b3_f32 * knots = nullptr);
 
 	/**
 	 * This method reads back a string of the given size and corrects the read index.
@@ -692,7 +692,7 @@ protected:
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector(const b3_vector  * vec = null);
+	void     b3StoreVector(const b3_vector  * vec = nullptr);
 
 	/**
 	 * This method stores a three component vector.
@@ -706,7 +706,7 @@ protected:
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector4D(const b3_vector4D * vec = null);
+	void     b3StoreVector4D(const b3_vector4D * vec = nullptr);
 
 	/**
 	 * This method stores a four component vector.
@@ -813,7 +813,7 @@ public:
 	/**
 	 * This method write recursively the content of this instance.
 	 */
-	void    b3Write();
+	void    b3Write() override;
 
 protected:
 	/**

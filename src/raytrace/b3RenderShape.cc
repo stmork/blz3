@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_gl_line b3Shape::m_BoxGrids[] =
+const b3_gl_line b3Shape::m_BoxGrids[]
 {
 	{ 0, 1 }
 	,
@@ -48,7 +48,7 @@ const b3_gl_line b3Shape::m_BoxGrids[] =
 	{ 3, 4 }
 };
 
-const b3_gl_polygon b3Shape::m_BoxPolygons[] =
+const b3_gl_polygon b3Shape::m_BoxPolygons[]
 {
 	{  6, 7, 5 }
 	, // top
@@ -65,7 +65,7 @@ const b3_gl_polygon b3Shape::m_BoxPolygons[] =
 	{ 22, 21, 17 }
 };
 
-const b3_f32 b3Shape::m_BoxTexcoord[] =
+const b3_f32 b3Shape::m_BoxTexcoord[]
 {
 	0, 0,  1, 0,  1, 1,  0, 1,  0, 1, 1, 1,  1, 0,  0, 0,
 	0, 0,  1, 0,  1, 1,  0, 1,  0, 1, 1, 1,  1, 0,  0, 0,
@@ -82,22 +82,17 @@ b3_count b3ShapeRenderContext::m_SubDiv = 16;
 b3_f64   b3ShapeRenderContext::m_Sin[B3_MAX_RENDER_SUBDIV + 1];
 b3_f64   b3ShapeRenderContext::m_Cos[B3_MAX_RENDER_SUBDIV + 1];
 
-b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
+b3ShapeRenderContext::b3ShapeRenderContext(const b3_count new_subdiv)
 {
-	m_CylinderIndices  = null;
-	m_CylinderPolygons = null;
-	m_ConeIndices      = null;
-	m_ConePolygons     = null;
-	m_Between          = null;
 	b3InitSubdiv(new_subdiv);
 }
 
-void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
+void b3ShapeRenderContext::b3InitSubdiv(const b3_count new_subdiv)
 {
-	b3_gl_line  *  gPtr;
+	b3_gl_line   *  gPtr;
 	b3_gl_polygon * pPtr;
-	b3_index       a, i;
-	b3_f64         aux;
+	b3_index        a, i;
+	b3_f64          aux;
 
 	m_SubDiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
 	if (m_SubDiv < 8)
@@ -121,7 +116,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
 	m_CylinderPolygons = (b3_gl_polygon *)b3Alloc
 		((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
-	if ((m_CylinderIndices != null) && (m_CylinderPolygons != null))
+	if ((m_CylinderIndices != nullptr) && (m_CylinderPolygons != nullptr))
 	{
 		gPtr = m_CylinderIndices;
 		pPtr = m_CylinderPolygons;
@@ -158,7 +153,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
 	m_ConePolygons = (b3_gl_polygon *)b3Alloc
 		((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
-	if ((m_ConeIndices != null) && (m_ConePolygons != null))
+	if ((m_ConeIndices != nullptr) && (m_ConePolygons != nullptr))
 	{
 		gPtr = m_ConeIndices;
 		pPtr = m_ConePolygons;
@@ -176,22 +171,22 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 }
 
-b3_gl_line * b3ShapeRenderContext::b3GetCylinderIndices()
+b3_gl_line * b3ShapeRenderContext::b3GetCylinderIndices() const
 {
 	return m_CylinderIndices;
 }
 
-b3_gl_polygon * b3ShapeRenderContext::b3GetCylinderPolygons()
+b3_gl_polygon * b3ShapeRenderContext::b3GetCylinderPolygons() const
 {
 	return m_CylinderPolygons;
 }
 
-b3_gl_line * b3ShapeRenderContext::b3GetConeIndices()
+b3_gl_line * b3ShapeRenderContext::b3GetConeIndices() const
 {
 	return m_ConeIndices;
 }
 
-b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons()
+b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons() const
 {
 	return m_ConePolygons;
 }
@@ -202,10 +197,8 @@ b3_gl_polygon * b3ShapeRenderContext::b3GetConePolygons()
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
+void b3Shape::b3ComputeBound(b3_stencil_limit * limit) const
 {
-	b3Item      *     item;
-	b3Condition   *   cond;
 	b3_stencil_bound  info;
 
 	// Get outer limits
@@ -216,9 +209,8 @@ void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
 	limit->y2 = info.yInfo.max;
 
 	// Do any stencil make the limits closer?
-	B3_FOR_BASE(b3GetConditionHead(), item)
+	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
-		cond = (b3Condition *)item;
 		cond->b3ComputeBound(limit);
 	}
 }
@@ -229,18 +221,15 @@ void b3Shape::b3ComputeBound(b3_stencil_limit * limit)
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3GetDiffuseColor(b3Color & color)
+void b3Shape::b3GetDiffuseColor(b3Color & color) const
 {
-	b3Item   *   item;
-	b3Material * material;
 	b3_ray       ray;
 	b3_surface   surface;
 
 	color.b3Init(0.1f, 0.5f, 1.0f, 0.0f);
 	surface.m_Incoming = &ray;
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (material->b3GetSurfaceValues(&surface))
 		{
 			color = surface.m_Diffuse;
@@ -252,10 +241,8 @@ void b3Shape::b3GetDiffuseColor(b3Color & color)
 b3_f64 b3Shape::b3GetColors(
 	b3Color & ambient,
 	b3Color & diffuse,
-	b3Color & specular)
+	b3Color & specular) const
 {
-	b3Item   *   item;
-	b3Material * material;
 	b3_ray       ray;
 	b3_surface   surface;
 
@@ -269,9 +256,8 @@ b3_f64 b3Shape::b3GetColors(
 	surface.m_Incoming = &ray;
 	ray.Q = 1;
 	b3Vector::b3Init(&surface.m_Incoming->normal, 0, 0, 1);
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (material->b3GetSurfaceValues(&surface))
 		{
 			ambient  = surface.m_Ambient;
@@ -288,13 +274,13 @@ b3_bool b3Shape::b3GetChess(
 	b3Color & black,
 	b3Color & white,
 	b3_res  & xRepeat,
-	b3_res  & yRepeat)
+	b3_res  & yRepeat) const
 {
 	b3Item * item;
 	b3_bool  result = false;
 
 	item   = b3GetMaterialHead()->First;
-	if (item != null)
+	if (item != nullptr)
 	{
 		result = item->b3GetClassType() == CHESS;
 		if (result)
@@ -313,13 +299,13 @@ b3Tx * b3Shape::b3GetTexture(
 	b3_f64 & xTrans,
 	b3_f64 & yTrans,
 	b3_f64 & xScale,
-	b3_f64 & yScale)
+	b3_f64 & yScale) const
 {
 	b3Item * item;
-	b3Tx  * tx = null;
+	b3Tx  *  tx = nullptr;
 
 	item = b3GetMaterialHead()->First;
-	if ((item != null) && (item->b3GetClassType() == TEXTURE) && (item->Succ == null))
+	if ((item != nullptr) && (item->b3GetClassType() == TEXTURE) && (item->Succ == nullptr))
 	{
 		b3MatTexture   *  mat = (b3MatTexture *)item;
 		b3_stencil_limit  limit;
@@ -346,15 +332,14 @@ b3Tx * b3Shape::b3GetTexture(
 
 class b3RenderImageSampler : public b3Sampler
 {
-	b3Shape * m_Shape;
-	b3Tx  *  m_Tx;
+	const b3Shape * m_Shape;
+	b3Tx      *     m_Tx;
 
 public:
-	b3RenderImageSampler(b3Shape * shape, b3Tx * tx)
+	b3RenderImageSampler(const b3Shape * shape, b3Tx * tx) : m_Shape(shape)
 	{
 		B3_ASSERT(tx->b3IsTrueColor());
 
-		m_Shape = shape;
 		m_Tx    = tx;
 		m_xMax  = tx->xSize;
 		m_yMax  = tx->ySize;
@@ -362,7 +347,7 @@ public:
 	}
 
 private:
-	b3SampleInfo * b3SampleInit(const b3_count CPUs)
+	b3SampleInfo * b3SampleInit(const b3_count CPUs) override
 	{
 		b3SampleInfo * info = new b3SampleInfo[CPUs];
 		b3_loop       i;
@@ -385,7 +370,7 @@ private:
 		return info;
 	}
 
-	void b3SampleTask(const b3SampleInfo * info)
+	void b3SampleTask(const b3SampleInfo * info) override
 	{
 		b3Material    *   material;
 		b3_ray            ray;
@@ -407,7 +392,7 @@ private:
 		surface.m_Incoming->Q = 1;
 		ray.bbox  = &bbox;
 		ray.shape = m_Shape;
-		bbox.b3Prepare(null);
+		bbox.b3Prepare(nullptr);
 
 		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
 		ray.polar.m_NormalIndex = 0;
@@ -436,7 +421,7 @@ private:
 				color = B3_BLACK;
 				loop  = true;
 				for (material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
-					(material != null) && loop;
+					(material != nullptr) && loop;
 					material  = (b3Material *)material->Succ)
 				{
 					if (material->b3GetSurfaceValues(&surface))
@@ -454,14 +439,14 @@ private:
 	}
 };
 
-b3_bool b3Shape::b3GetImage(b3Tx * image)
+b3_bool b3Shape::b3GetImage(b3Tx * image) const
 {
 	b3Item    *   item;
 	b3_bool       result = false;
 	b3_u32        type;
 
 	for (item  = b3GetMaterialHead()->First;
-		(item != null) && (!result);
+		(item != nullptr) && (!result);
 		item  = item->Succ)
 	{
 		type   = item->b3GetClassType();

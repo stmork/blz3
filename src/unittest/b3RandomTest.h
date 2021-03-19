@@ -40,20 +40,20 @@ template<class R, typename T> class b3RandomTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		random.b3SetSeed();
 	}
 
-	void tearDown()
+	void tearDown() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
 	void test()
 	{
-		T       count = 0;
+		int     count = 0;
 		b3_loop i;
 		b3_f64  err;
 

@@ -85,7 +85,7 @@ public:
 	void b3Free();
 
 private:
-	b3_bool       b3ReloadTexture(b3Tx * texture, const char * name = null);
+	b3_bool       b3ReloadTexture(b3Tx * texture, const char * name = nullptr);
 	b3Tx     *    b3FindTextureUnsafe(const char * name);
 };
 

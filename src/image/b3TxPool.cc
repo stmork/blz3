@@ -114,7 +114,7 @@ b3Tx * b3TxPool::b3LoadTexture(const char * Name)
 	b3CriticalSection lock(m_Mutex);
 
 	tx = b3FindTextureUnsafe(Name);
-	if (tx == null)
+	if (tx == nullptr)
 	{
 		// OK, create new texture
 		tx = new b3Tx();
@@ -136,11 +136,11 @@ void b3TxPool::b3Dump()
 {
 	b3Tx * tx;
 
-	b3PrintF(B3LOG_NORMAL, "Image pool dump with %d textures.\n",
+	b3PrintF(B3LOG_NORMAL, "Image pool dump with %zd textures.\n",
 		m_Pool.b3GetCount());
 	B3_FOR_BASE(&m_Pool, tx)
 	{
-		b3PrintF(B3LOG_NORMAL, "TX: %5d x %5d - %s\n",
+		b3PrintF(B3LOG_NORMAL, "TX: %5zd x %5zd - %s\n",
 			tx->xSize,
 			tx->ySize,
 			tx->b3Name());

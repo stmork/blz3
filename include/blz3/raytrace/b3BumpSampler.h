@@ -46,28 +46,31 @@ public:
 	 * @param bbox_size The original bounding box size
 	 * @param tiles The number of tiles to use.
 	 */
-	b3BumpSampler(b3Tx * tx, const b3_vector * bbox_size, const b3_count tiles = DEFAULT_BUMP_TILES);
+	b3BumpSampler(
+		b3Tx       *      tx,
+		const b3_vector * bbox_size,
+		const b3_count    tiles = DEFAULT_BUMP_TILES);
 
 	/**
 	 * This method sets the bump class instance.
 	 *
 	 * @param bump The bump class instance to sample.
 	 */
-	void          b3SetBump(b3Bump * bump);
+	void           b3SetBump(b3Bump * bump);
 
 	/**
 	 * This method sets the actual time point.
 	 *
 	 * @param t The new time point
 	 */
-	inline void   b3SetTime(const b3_f64 t)
+	inline void    b3SetTime(const b3_f64 t)
 	{
 		m_t = t;
 	}
 
 protected:
-	b3SampleInfo * b3SampleInit(const b3_count CPUs);
-	void          b3SampleTask(const b3SampleInfo * info);
+	b3SampleInfo * b3SampleInit(const b3_count CPUs) override;
+	void           b3SampleTask(const b3SampleInfo * info) override;
 };
 
 #endif

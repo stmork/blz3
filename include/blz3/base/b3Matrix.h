@@ -111,11 +111,11 @@ public:
 	 * @return The result (= vec input).
 	 */
 	static inline b3_vector * b3Init(
-		b3_vector  * vec,
+		b3_vector     *     vec,
 		const b3_vector64 * src)
 	{
-		const b3_f64 B3_ALIGN_16 * s = &src->x;
-		b3_f32 B3_ALIGN_16 * d = &vec->x;
+		const b3_f64 * s = &src->x;
+		b3_f32    *    d = &vec->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -135,8 +135,8 @@ public:
 		b3_vector64 * vec,
 		const b3_vector  * src)
 	{
-		const b3_f32 B3_ALIGN_16 * s = &src->x;
-		b3_f64 B3_ALIGN_16 * d = &vec->x;
+		const b3_f32 * s = &src->x;
+		b3_f64    *    d = &vec->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -287,8 +287,8 @@ public:
 	 * @return The old length of the vector.
 	 */
 	static inline b3_f32 b3Normalize(
-		b3_vector * vector,
-		const b3_f64     length = 1.0)
+		b3_vector  *  vector,
+		const b3_f64  length = 1.0)
 	{
 		b3_f64 x      = vector->x;
 		b3_f64 y      = vector->y;
@@ -312,7 +312,7 @@ public:
 	 */
 	static inline b3_f64 b3Normalize(
 		b3_vector64 * vector,
-		const b3_f64       length = 1.0)
+		const b3_f64  length = 1.0)
 	{
 #ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 * v      = &vector->x;
@@ -353,7 +353,7 @@ public:
 	 */
 	static inline b3_f32 b3Normalize(
 		b3_gl_vector * vector,
-		const b3_f32        length = 1.0)
+		const b3_f32   length = 1.0)
 	{
 		b3_f32 x      = vector->x;
 		b3_f32 y      = vector->y;
@@ -393,7 +393,7 @@ public:
 	 * @return The resulting dot product.
 	 */
 	static inline b3_f64 b3SMul(
-		const b3_vector  * aVec,
+		const b3_vector  *  aVec,
 		const b3_vector64 * bVec)
 	{
 		return
@@ -404,7 +404,7 @@ public:
 
 	static inline b3_f64 b3SMul(
 		const b3_vector64 * aVec,
-		const b3_vector * bVec)
+		const b3_vector  *  bVec)
 	{
 		return b3SMul(bVec, aVec);
 	}
@@ -447,7 +447,7 @@ public:
 	 */
 	static inline b3_vector * b3Add(
 		const b3_vector * aVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x += aVec->x;
 		result->y += aVec->y;
@@ -465,7 +465,7 @@ public:
 	 */
 	static inline b3_vector64 * b3Add(
 		const b3_vector64 * aVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -492,7 +492,7 @@ public:
 	 */
 	static inline b3_gl_vector * b3Add(
 		const b3_gl_vector * aVec,
-		b3_gl_vector * result)
+		b3_gl_vector    *    result)
 	{
 		result->x += aVec->x;
 		result->y += aVec->y;
@@ -512,7 +512,7 @@ public:
 	static inline b3_vector * b3Add(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
@@ -532,7 +532,7 @@ public:
 	static inline b3_vector64 * b3Add(
 		const b3_vector64 * aVec,
 		const b3_vector64 * bVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -562,7 +562,7 @@ public:
 	static inline b3_gl_vector * b3Add(
 		const b3_gl_vector * aVec,
 		const b3_gl_vector * bVec,
-		b3_gl_vector * result)
+		b3_gl_vector    *    result)
 	{
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
@@ -580,7 +580,7 @@ public:
 	 */
 	static inline b3_vector * b3Sub(
 		const b3_vector * aVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x -= aVec->x;
 		result->y -= aVec->y;
@@ -598,7 +598,7 @@ public:
 	 */
 	static inline b3_vector64 * b3Sub(
 		const b3_vector64 * aVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -627,7 +627,7 @@ public:
 	static inline b3_vector * b3Sub(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
@@ -647,7 +647,7 @@ public:
 	static inline b3_vector64 * b3Sub(
 		const b3_vector64 * aVec,
 		const b3_vector64 * bVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -677,7 +677,7 @@ public:
 	static inline b3_gl_vector * b3Sub(
 		const b3_gl_vector * aVec,
 		const b3_gl_vector * bVec,
-		b3_gl_vector * result)
+		b3_gl_vector    *    result)
 	{
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
@@ -695,7 +695,7 @@ public:
 	 */
 	static inline b3_vector * b3Mul(
 		const b3_vector * aVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x *= aVec->x;
 		result->y *= aVec->y;
@@ -713,7 +713,7 @@ public:
 	 */
 	static inline b3_vector64 * b3Mul(
 		const b3_vector64 * aVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -740,7 +740,7 @@ public:
 	 */
 	static inline b3_gl_vector * b3Mul(
 		const b3_gl_vector * aVec,
-		b3_gl_vector * result)
+		b3_gl_vector    *    result)
 	{
 		result->x *= aVec->x;
 		result->y *= aVec->y;
@@ -760,7 +760,7 @@ public:
 	static inline b3_vector * b3Mul(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x = aVec->x * bVec->x;
 		result->y = aVec->y * bVec->y;
@@ -780,7 +780,7 @@ public:
 	static inline b3_vector64 * b3Mul(
 		const b3_vector64 * aVec,
 		const b3_vector64 * bVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -810,7 +810,7 @@ public:
 	static inline b3_gl_vector * b3Mul(
 		const b3_gl_vector * aVec,
 		const b3_gl_vector * bVec,
-		b3_gl_vector * result)
+		b3_gl_vector    *    result)
 	{
 		result->x = aVec->x * bVec->x;
 		result->y = aVec->y * bVec->y;
@@ -830,7 +830,7 @@ public:
 	static inline b3_vector * b3CrossProduct(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
@@ -850,7 +850,7 @@ public:
 	static inline b3_vector64 * b3CrossProduct(
 		const b3_vector  * aVec,
 		const b3_vector  * bVec,
-		b3_vector64 * result)
+		b3_vector64    *   result)
 	{
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
@@ -870,7 +870,7 @@ public:
 	static inline b3_vector64 * b3CrossProduct(
 		const b3_vector64 * aVec,
 		const b3_vector64 * bVec,
-		b3_vector64 * result)
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 * r = &result->x;
@@ -906,7 +906,7 @@ public:
 	static inline b3_gl_vector * b3CrossProduct(
 		const b3_gl_vector * aVec,
 		const b3_gl_vector * bVec,
-		b3_gl_vector * result)
+		b3_gl_vector    *    result)
 	{
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
@@ -1030,8 +1030,8 @@ public:
 	 * @param factor The scale factor.
 	 */
 	static inline b3_vector * b3Scale(
-		b3_vector * vector,
-		const b3_f32     factor)
+		b3_vector  * vector,
+		const b3_f32 factor)
 	{
 		vector->x *= factor;
 		vector->y *= factor;
@@ -1051,8 +1051,8 @@ public:
 	 */
 	static inline b3_vector * b3Scale(
 		const b3_vector * vector,
-		b3_vector * result,
-		const b3_f32     factor)
+		b3_vector    *    result,
+		const b3_f32      factor)
 	{
 		result->x = vector->x * factor;
 		result->y = vector->y * factor;
@@ -1097,8 +1097,8 @@ public:
 	 */
 	static inline b3_vector64 * b3Scale(
 		const b3_vector64 * vector,
-		b3_vector64 * result,
-		const b3_f64       factor)
+		b3_vector64    *    result,
+		const b3_f64        factor)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * v = &vector->x;
@@ -1176,8 +1176,8 @@ public:
 #ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 * m = &A->m11;
 		b3_f32 B3_ALIGN_16 * v = &vector->x;
-		b3_f32 B3_ALIGN_16  aux[4];
-		b3_f32              result;
+		b3_f32 B3_ALIGN_16   aux[4];
+		b3_f32               result;
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
@@ -1267,8 +1267,8 @@ public:
 	inline static b3_vector * b3Mix(
 		const b3_vector * low,
 		const b3_vector * high,
-		const b3_f32     mix,
-		b3_vector * result)
+		const b3_f32      mix,
+		b3_vector    *    result)
 	{
 		result->x = low->x + mix * (high->x - low->x);
 		result->y = low->y + mix * (high->y - low->y);
@@ -1290,8 +1290,8 @@ public:
 	inline static b3_vector64 * b3Mix(
 		const b3_vector64 * low,
 		const b3_vector64 * high,
-		const b3_f64       mix,
-		b3_vector64 * result)
+		const b3_f64        mix,
+		b3_vector64    *    result)
 	{
 		result->x = low->x + mix * (high->x - low->x);
 		result->y = low->y + mix * (high->y - low->y);
@@ -1313,8 +1313,8 @@ public:
 	static inline b3_vector * b3LinearCombine(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		const b3_f32     factor,
-		b3_vector * result)
+		const b3_f32      factor,
+		b3_vector    *    result)
 	{
 		result->x = aVec->x + factor * bVec->x;
 		result->y = aVec->y + factor * bVec->y;
@@ -1336,8 +1336,8 @@ public:
 	static inline b3_vector64 * b3LinearCombine(
 		const b3_vector64 * aVec,
 		const b3_vector64 * bVec,
-		const b3_f64       factor,
-		b3_vector64 * result)
+		const b3_f64        factor,
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -1370,7 +1370,7 @@ public:
 		const b3_vector  *  aVec,
 		const b3_vector  *  bVec,
 		const b3_f32        factor,
-		b3_gl_vector * result)
+		b3_gl_vector    *   result)
 	{
 		result->x = aVec->x + factor * bVec->x;
 		result->y = aVec->y + factor * bVec->y;
@@ -1393,9 +1393,9 @@ public:
 	static inline b3_vector * b3LinearCombine(
 		const b3_vector * bVec,
 		const b3_vector * cVec,
-		const b3_f32     x,
-		const b3_f32     y,
-		b3_vector * result)
+		const b3_f32      x,
+		const b3_f32      y,
+		b3_vector    *    result)
 	{
 		result->x = x * bVec->x + y * cVec->x;
 		result->y = x * bVec->y + y * cVec->y;
@@ -1420,7 +1420,7 @@ public:
 		const b3_vector  * cVec,
 		const b3_f32       x,
 		const b3_f32       y,
-		b3_vector64 * result)
+		b3_vector64    *   result)
 	{
 		result->x = x * bVec->x + y * cVec->x;
 		result->y = x * bVec->y + y * cVec->y;
@@ -1443,9 +1443,9 @@ public:
 	static inline b3_vector64 * b3LinearCombine(
 		const b3_vector64 * bVec,
 		const b3_vector64 * cVec,
-		const b3_f64       x,
-		const b3_f64       y,
-		b3_vector64 * result)
+		const b3_f64        x,
+		const b3_f64        y,
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
@@ -1480,9 +1480,9 @@ public:
 		const b3_vector * aVec,
 		const b3_vector * bVec,
 		const b3_vector * cVec,
-		const b3_f32     x,
-		const b3_f32     y,
-		b3_vector * result)
+		const b3_f32      x,
+		const b3_f32      y,
+		b3_vector    *    result)
 	{
 		result->x = aVec->x + x * bVec->x + y * cVec->x;
 		result->y = aVec->y + x * bVec->y + y * cVec->y;
@@ -1507,9 +1507,9 @@ public:
 		const b3_vector64 * aVec,
 		const b3_vector64 * bVec,
 		const b3_vector64 * cVec,
-		const b3_f64       x,
-		const b3_f64       y,
-		b3_vector64 * result)
+		const b3_f64        x,
+		const b3_f64        y,
+		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
@@ -1547,7 +1547,7 @@ public:
 		const b3_vector  * cVec,
 		const b3_f32       x,
 		const b3_f32       y,
-		b3_vector64 * result)
+		b3_vector64    *   result)
 	{
 		result->x = aVec->x + x * bVec->x + y * cVec->x;
 		result->y = aVec->y + x * bVec->y + y * cVec->y;
@@ -1574,7 +1574,7 @@ public:
 		const b3_vector  *  cVec,
 		const b3_f32        x,
 		const b3_f32        y,
-		b3_gl_vector * result)
+		b3_gl_vector    *   result)
 	{
 		return (b3_gl_vector *)b3LinearCombine(aVec, bVec, cVec, x, y, (b3_vector *)result);
 	}
@@ -1599,7 +1599,7 @@ public:
 		const b3_f32       x,
 		const b3_f32       y,
 		const b3_f32       z,
-		b3_vector64 * result)
+		b3_vector64    *   result)
 	{
 		result->x = x * aVec->x + y * bVec->x + z * cVec->x;
 		result->y = x * aVec->y + y * bVec->y + z * cVec->y;
@@ -1628,7 +1628,7 @@ public:
 		const b3_f32       x,
 		const b3_f32       y,
 		const b3_f32       z,
-		b3_vector  * result)
+		b3_vector     *    result)
 	{
 		result->x = x * aVec->x + y * bVec->x + z * cVec->x;
 		result->y = x * aVec->y + y * bVec->y + z * cVec->y;
@@ -1682,7 +1682,7 @@ public:
 		const b3_line64  * line,
 		const b3_f64       l,
 		const b3_vector  * base,
-		b3_vector  * result)
+		b3_vector     *    result)
 	{
 		result->x = line->pos.x + l * line->dir.x - base->x;
 		result->y = line->pos.y + l * line->dir.y - base->y;
@@ -1744,7 +1744,7 @@ public:
 		{
 			if (l[i] > u[i])
 			{
-				aux = l[i];
+				aux  = l[i];
 				l[i] = u[i];
 				u[i] = aux;
 			}
@@ -1802,7 +1802,7 @@ public:
 	 */
 	static inline b3_vector * b3SetMinimum(
 		b3_vector * vector,
-		b3_f32     min)
+		b3_f32      min)
 	{
 		b3_f32 m = (b3_f32)min;
 
@@ -1830,7 +1830,7 @@ public:
 	 * @param point The point to compare to.
 	 */
 	static inline b3_vector * b3CheckLowerBound(
-		b3_vector * lower,
+		b3_vector    *    lower,
 		const b3_vector * point)
 	{
 		if (point->x < lower->x)
@@ -1857,7 +1857,7 @@ public:
 	 */
 	static inline b3_vector * b3SetMaximum(
 		b3_vector * vector,
-		b3_f32     max)
+		b3_f32      max)
 	{
 		b3_f32 m = (b3_f32)max;
 
@@ -1885,7 +1885,7 @@ public:
 	 * @param point The point to compare to.
 	 */
 	static inline b3_vector * b3CheckUpperBound(
-		b3_vector * upper,
+		b3_vector    *    upper,
 		const b3_vector * point)
 	{
 		if (point->x > upper->x)
@@ -1914,8 +1914,8 @@ public:
 	 */
 	static inline void b3AdjustBound(
 		const b3_vector * point,
-		b3_vector * lower,
-		b3_vector * upper)
+		b3_vector    *    lower,
+		b3_vector    *    upper)
 	{
 		b3CheckLowerBound(lower, point);
 		b3CheckUpperBound(upper, point);
@@ -1931,8 +1931,8 @@ public:
 	 */
 	static inline void b3AdjustBound(
 		const b3_gl_vector * point,
-		b3_vector  *  lower,
-		b3_vector  *  upper)
+		b3_vector      *     lower,
+		b3_vector      *     upper)
 	{
 		b3_vector test;
 
@@ -1952,7 +1952,7 @@ class B3_PLUGIN b3Matrix
 
 	static b3_bool    b3NormalizeCol(b3_matrix * Dst, b3_index col_num);
 	static b3_bool    b3NormalizeRow(b3_matrix * Dst, b3_index row_num);
-	static b3_f64     b3Det4(b3_matrix * Matrix);
+	static b3_f64     b3Det4(const b3_matrix * Matrix);
 
 public:
 	/**
@@ -1970,7 +1970,7 @@ public:
 	 * @param Dst The inverted destination matrix.
 	 * @return The result (= Dst).
 	 */
-	static b3_matrix * b3Inverse(b3_matrix * Src, b3_matrix * Dst);
+	static b3_matrix * b3Inverse(const b3_matrix * Src, b3_matrix * Dst);
 
 	/**
 	 * This method copies the content of one matrix to another.
@@ -1979,7 +1979,7 @@ public:
 	 * @param Dst The destination matrix.
 	 * @return The result (= Dst).
 	 */
-	static b3_matrix * b3Transport(b3_matrix * Src, b3_matrix * Dst);
+	static b3_matrix * b3Transport(const b3_matrix * Src, b3_matrix * Dst);
 
 	/**
 	 * This method creates a translation transformation, multiplies it with an input matrix and stores the
@@ -1992,7 +1992,9 @@ public:
 	 * @param Move The translation vector to use to create the translation transformation.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3Move(b3_matrix * Src, b3_matrix * Dst, b3_vector * Move);
+	static b3_matrix * b3Move(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Move);
 
 	/**
 	 * This method creates a translation transformation, multiplies it with an input matrix and stores the
@@ -2007,7 +2009,9 @@ public:
 	 * @param z The z component of the translation vector to use to create the translation transformation.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3Move(b3_matrix * Src, b3_matrix * Dst, b3_f64 x, b3_f64 y, b3_f64 z);
+	static b3_matrix * b3Move(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_f64 x, const b3_f64 y, const  b3_f64 z);
 
 	/**
 	 * This method creates a translation transformation in negative direction, multiplies it with an input matrix and stores the
@@ -2020,7 +2024,9 @@ public:
 	 * @param MoveNeg The translation vector to use to create the translation transformation.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3MoveNegative(b3_matrix * Src, b3_matrix * Dst, b3_vector * MoveNeg);
+	static b3_matrix * b3MoveNegative(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * MoveNeg);
 
 	/**
 	 * This method creates a scale transformation, multiplies it with an input matrix and stores the
@@ -2034,7 +2040,10 @@ public:
 	 * @param Scale The scaling factor.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3Scale(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_vector * Scale);
+	static b3_matrix * b3Scale(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_vector * Scale);
 
 	/**
 	 * This method creates a scale transformation, multiplies it with an input matrix and stores the
@@ -2050,7 +2059,12 @@ public:
 	 * @param z The z component of the scale vector to use to create the translation transformation.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3Scale(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_f64 x = 1.0, b3_f64 y = 1.0, b3_f64 z = 1.0);
+	static b3_matrix * b3Scale(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_f64      x = 1.0,
+		const b3_f64      y = 1.0,
+		const b3_f64      z = 1.0);
 
 	/**
 	 * This method creates a rotation transformation around the x axis, multiplies it with an input matrix and stores the
@@ -2065,7 +2079,10 @@ public:
 	 * @param angle The rotation angle.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3RotateX(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_f64 angle);
+	static b3_matrix * b3RotateX(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_f64      angle);
 
 	/**
 	 * This method creates a rotation transformation around the y axis, multiplies it with an input matrix and stores the
@@ -2080,7 +2097,10 @@ public:
 	 * @param angle The rotation angle.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3RotateY(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_f64 angle);
+	static b3_matrix * b3RotateY(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_f64      angle);
 
 	/**
 	 * This method creates a rotation transformation around the z axis, multiplies it with an input matrix and stores the
@@ -2095,7 +2115,10 @@ public:
 	 * @param angle The rotation angle.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3RotateZ(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_f64 angle);
+	static b3_matrix * b3RotateZ(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_f64      angle);
 
 	/**
 	 * This method creates a rotation transformation around a given half ray, multiplies it with an input matrix and stores the
@@ -2110,7 +2133,10 @@ public:
 	 * @param angle The rotation angle.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3RotateVector(b3_matrix * Src, b3_matrix * Dst, b3_line  * axis,  b3_f64 angle);
+	static b3_matrix * b3RotateVector(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_line  *  axis,
+		const b3_f64      angle);
 
 	/**
 	 * This method creates a point mirror transformation around a given center point, multiplies it with an input matrix and stores the
@@ -2124,7 +2150,10 @@ public:
 	 * @param scale The mirror scaling. This value should be 1 or -1 otherwise it is simple scaling.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3MirrorPoint(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_f64 scale);
+	static b3_matrix * b3MirrorPoint(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_f64      scale);
 
 	/**
 	 * This method creates a axis mirror transformation around a given ray, multiplies it with an input matrix and stores the
@@ -2138,7 +2167,10 @@ public:
 	 * @param scale The mirror scaling. This value should be 1 or -1 otherwise it is simple scaling.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3MirrorAxis(b3_matrix * Src, b3_matrix * Dst, b3_line  * axis,  b3_f64 scale);
+	static b3_matrix * b3MirrorAxis(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_line  *  axis,
+		const b3_f64      scale);
 
 	/**
 	 * This method creates a plane mirror transformation around a given plane, multiplies it with an input matrix and stores the
@@ -2154,7 +2186,12 @@ public:
 	 * @param scale The mirror scaling. This value should be 1 or -1 otherwise it is simple scaling.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3MirrorPlane(b3_matrix * Src, b3_matrix * Dst, b3_vector * center, b3_vector * uDir, b3_vector * vDir, b3_f64 scale);
+	static b3_matrix * b3MirrorPlane(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * center,
+		const b3_vector * uDir,
+		const b3_vector * vDir,
+		const b3_f64      scale);
 
 	/**
 	 * This method creates an alignment transformation to a given half ray. The transformation includes a
@@ -2186,7 +2223,12 @@ public:
 	 * @param future controls whether we move forward or backward.
 	 * @return The resulting matrix.
 	 */
-	static b3_matrix * b3Dress(b3_matrix * Src, b3_matrix * Dst, b3_vector * Center, b3_vector * Dir1, b3_vector * Dir2, b3_bool future);
+	static b3_matrix * b3Dress(
+		const b3_matrix * Src, b3_matrix * Dst,
+		const b3_vector * Center,
+		const b3_vector * Dir1,
+		const b3_vector * Dir2,
+		const b3_bool future);
 
 	/**
 	 * This method multiplies matrix A and B and stores the result. The result pointer may be equal to
@@ -2197,7 +2239,7 @@ public:
 	 * @param Result The resulting matrix.
 	 * @return The result matrix pointer.
 	 */
-	static b3_matrix * b3MMul(b3_matrix * A,  b3_matrix * B,  b3_matrix * Result);
+	static b3_matrix * b3MMul(const b3_matrix * A,  const b3_matrix * B,  b3_matrix * Result);
 
 	/**
 	 * This method adds matrix A and B and stores the result. The result pointer may be equal to
@@ -2218,7 +2260,7 @@ public:
 	 * @param title An additional comment.
 	 * @return The input matrix.
 	 */
-	static b3_matrix * b3Dump(b3_matrix * mtx, const char * title = null);
+	static b3_matrix * b3Dump(b3_matrix * mtx, const char * title = nullptr);
 
 	/**
 	 * This method tests if the given transformation matrix is a unit matrix.
@@ -2228,8 +2270,8 @@ public:
 	 */
 	static inline b3_bool    b3IsUnitMatrix(b3_matrix * A)
 	{
-		b3_f32 B3_ALIGN_16 * ptr1 = &A->m11;
-		b3_f32 B3_ALIGN_16 * ptr2 = &m_UnitMatrix.m11;
+		b3_f32 * ptr1 = &A->m11;
+		b3_f32 * ptr2 = &m_UnitMatrix.m11;
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -2317,9 +2359,8 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector * b3VMul(
-		b3_matrix * A,
-		const b3_vector * Src,
-		b3_vector * Dst,
+		const b3_matrix * A,
+		const b3_vector * Src, b3_vector * Dst,
 		const b3_bool    Use4D)
 	{
 #ifdef B3_SSE2

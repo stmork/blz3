@@ -88,7 +88,7 @@ b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
 		}
 		else
 		{
-			Sub  = b3Math::b3Cbrt(-q);
+			Sub  = cbrt(-q);
 			x[0] = 2 * Sub;
 			x[1] =   - Sub;
 			NumOfX = 2;
@@ -107,7 +107,7 @@ b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
 	else
 	{
 		Sub    = sqrt(D);
-		x[0]   = b3Math::b3Cbrt(Sub - q) - b3Math::b3Cbrt(Sub + q);
+		x[0]   = cbrt(Sub - q) - cbrt(Sub + q);
 		NumOfX = 1;
 	}
 

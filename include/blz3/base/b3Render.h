@@ -77,23 +77,24 @@ struct b3_render_light_info
 class b3RenderContext : protected b3Mem
 {
 	b3_index             glLightCount;
-	b3RenderObject   *   glSelectedObject;
+	b3RenderObject   *   glSelectedObject = nullptr;
 
-	static b3_vector            glSimpleLightPosition;
-	static b3_vector            glSimpleLightDirection;
-	static b3_bool              glUse;
+	static b3_vector     glSimpleLightPosition;
+	static b3_vector     glSimpleLightDirection;
+	static b3_bool       glUse;
 
 #ifdef BLZ3_USE_OPENGL
-	static GLenum               glLightNum[];
+	static GLenum        glLightNum[];
 #endif
 
 public:
-	b3_count                    glVertexCount; //!< The overall vertex count
-	b3_count                    glPolyCount;   //!< The overall triangle count.
-	b3_count                    glGridCount;   //!< The overall line count.
-	b3_count                    glTextureSize; //!< The maximal texture resolution.
-	b3_bool                     glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
-	b3Color                     glBgColor;     //!< The background color.
+	b3_count             glVertexCount; //!< The overall vertex count
+	b3_count             glPolyCount;   //!< The overall triangle count.
+	b3_count             glGridCount;   //!< The overall line count.
+	b3_count             glTextureSize; //!< The maximal texture resolution.
+	b3_bool              glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
+	b3Color              glBgColor;     //!< The background color.
+
 public:
 	/**
 	 * The constructor initializes this instance and initializes the OpenGL background color.
@@ -244,7 +245,7 @@ public:
 	 * @param src The b3Color instance to convert.
 	 * @param dst The resulting OpenGL floats.
 	 */
-	static inline void b3ColorToGL(b3Color & src, GLfloat * dst)
+	static inline void b3ColorToGL(const b3Color & src, GLfloat * dst)
 	{
 		*dst++ =       src[b3Color::R];
 		*dst++ =       src[b3Color::G];
@@ -258,7 +259,7 @@ public:
 	 * @param src The b3Color instance to convert.
 	 * @param dst The resulting OpenGL unsigned bytes.
 	 */
-	static inline void b3ColorToGL(b3Color & src, GLubyte * dst)
+	static inline void b3ColorToGL(const b3Color & src, GLubyte * dst)
 	{
 		*dst++ = (GLubyte)(src[b3Color::R] * 255);
 		*dst++ = (GLubyte)(src[b3Color::G] * 255);
@@ -371,36 +372,36 @@ private:
  */
 class B3_PLUGIN b3RenderObject
 {
-	static b3Tx        glTextureBuffer;
-	static b3Mutex     glTextureMutex;
+	static b3Tx         glTextureBuffer;
+	static b3Mutex      glTextureMutex;
 
-	b3_bool            glMaterialComputed;
-	b3_bool            glInit;
+	b3_bool             glMaterialComputed;
+	b3_bool             glInit;
 
 protected:
-	b3VertexElements * glVertexElements;   //!< The vertex data.
-	b3GridElements  *  glGridElements;     //!< The line index data.
-	b3PolygonElements * glPolygonElements; //!< The triangle index data.
+	b3VertexElements  * glVertexElements  = nullptr;  //!< The vertex data.
+	b3GridElements   *  glGridElements    = nullptr;  //!< The line index data.
+	b3PolygonElements * glPolygonElements = nullptr;  //!< The triangle index data.
 
 #ifdef BLZ3_USE_OPENGL
-	GLuint             glDisplayList;      //!< The display list for defining material properties.
+	GLuint              glDisplayList;            //!< The display list for defining material properties.
 
 	// Some material values
-	GLfloat            glAmbient[4];       //!< The ambient material color.
-	GLfloat            glDiffuse[4];       //!< The diffuse material color.
-	GLfloat            glSpecular[4];      //!< The specular material color.
-	GLfloat            glShininess;        //!< The specular exponent.
+	GLfloat             glAmbient[4];             //!< The ambient material color.
+	GLfloat             glDiffuse[4];             //!< The diffuse material color.
+	GLfloat             glSpecular[4];            //!< The specular material color.
+	GLfloat             glShininess;              //!< The specular exponent.
 
 	// Some texture values
-	GLuint             glTextureId;        //!< The OpenGL texture id.
-	GLubyte      *     glTextureData;      //!< The bitmap data of the texture.
-	b3_res             glTextureSize;      //!< The bitmap buffer size.
-	b3_res             glTextureSizeX;     //!< The x resolution of the texture.
-	b3_res             glTextureSizeY;     //!< The y resolution of the texture.
-	b3_f64             glTextureTransX;    //!< The texture x translation.
-	b3_f64             glTextureTransY;    //!< The texture y translation.
-	b3_f64             glTextureScaleX;    //!< The x scaling factor of the texture.
-	b3_f64             glTextureScaleY;    //!< The y scaling factor of the texture.
+	GLuint              glTextureId;              //!< The OpenGL texture id.
+	GLubyte      *      glTextureData = nullptr;  //!< The bitmap data of the texture.
+	b3_res              glTextureSize;            //!< The bitmap buffer size.
+	b3_res              glTextureSizeX;           //!< The x resolution of the texture.
+	b3_res              glTextureSizeY;           //!< The y resolution of the texture.
+	b3_f64              glTextureTransX;          //!< The texture x translation.
+	b3_f64              glTextureTransY;          //!< The texture y translation.
+	b3_f64              glTextureScaleX;          //!< The x scaling factor of the texture.
+	b3_f64              glTextureScaleY;          //!< The y scaling factor of the texture.
 #endif
 
 public:
@@ -514,7 +515,7 @@ protected:
 	 * @param gridCount The computed line indexing count.
 	 * @param polyCount The computed polygon indexing count.
 	 */
-	virtual void            b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
+	virtual void     b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
 
 	/**
 	 * This method returns the used vertex range. The default implementation
@@ -523,7 +524,7 @@ protected:
 	 * @param start The start index including.
 	 * @param end The end index excluding.
 	 */
-	virtual void            b3GetVertexRange(b3_index & start, b3_index & end);
+	virtual void     b3GetVertexRange(b3_index & start, b3_index & end);
 
 	/**
 	 * This method sets up the b3VectorBuffer object implementation as needed.
@@ -539,7 +540,7 @@ protected:
 	 * @see b3VectorBufferObjects
 	 * @see b3VertexBuffer
 	 */
-	virtual void            b3AllocVertexMemory(b3RenderContext * context);
+	virtual void      b3AllocVertexMemory(b3RenderContext * context);
 
 	/**
 	 * The implementation of this method computes the vertices. The vertex buffer is
@@ -590,7 +591,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual void b3GetGridColor(b3Color & color)
+	virtual void b3GetGridColor(b3Color & color) const
 	{
 		color = m_GridColor;
 	}
@@ -600,7 +601,7 @@ protected:
 	 *
 	 * @param color The resulting color.
 	 */
-	virtual void b3GetSelectedColor(b3Color & color)
+	virtual void b3GetSelectedColor(b3Color & color) const
 	{
 		color = m_SelectedColor;
 	}
@@ -610,7 +611,7 @@ protected:
 	 *
 	 * @param diffuse The resulting color.
 	 */
-	virtual void b3GetDiffuseColor(b3Color & diffuse);
+	virtual void b3GetDiffuseColor(b3Color & diffuse) const;
 
 	/**
 	 * The imlementation of this method retrieves the object color components.
@@ -620,7 +621,7 @@ protected:
 	 * @param specular The resulting specular color.
 	 * @return The resulting specular exponent.
 	 */
-	virtual b3_f64          b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular);
+	virtual b3_f64 b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular) const;
 
 	/**
 	 * If this method returns true the referenced values are initialized by the implementation of
@@ -633,7 +634,7 @@ protected:
 	 * @param yRepeat The repitition count in y direction.
 	 * @return True if the object has a chess material.
 	 */
-	virtual b3_bool b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat);
+	virtual b3_bool b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const;
 
 	/**
 	 * If the implementation of this method can simply return its texture this method returns this
@@ -645,7 +646,7 @@ protected:
 	 * @param yScale texture translation in y direction.
 	 * @return The texture to use.
 	 */
-	virtual b3Tx * b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale);
+	virtual b3Tx * b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale) const;
 
 	/**
 	 * If the render object is not a normal material nor a chess board nor a simple texture material the
@@ -654,7 +655,7 @@ protected:
 	 * @param image The image to which the surface colors are sampled in.
 	 * @return True if sampling was OK.
 	 */
-	virtual b3_bool b3GetImage(b3Tx * image);
+	virtual b3_bool b3GetImage(b3Tx * image) const;
 
 	/**
 	 * This method transforms the vertex data with the given transformation.
@@ -685,7 +686,7 @@ private:
 	void            b3MapVertices(const b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	void            b3UnmapIndices();
 	void            b3UnmapVertices();
-	static  void            b3PrintMapping(const char * text, b3_vbo_mapping map_mode);
+	static  void    b3PrintMapping(const char * text, b3_vbo_mapping map_mode);
 };
 
 #endif

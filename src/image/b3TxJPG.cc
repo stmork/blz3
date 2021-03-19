@@ -182,11 +182,11 @@ void b3JPEG::b3ErrorHandler(j_common_ptr cinfo)
 	longjmp(myerr->m_SetjmpBuffer, 1);
 }
 
-void b3JPEG::b3JpegInitSource(j_decompress_ptr cinfo)
+void b3JPEG::b3JpegInitSource(j_decompress_ptr cinfo B3_UNUSED)
 {
 }
 
-boolean b3JPEG::b3JpegFillInputBuffer(j_decompress_ptr cinfo)
+boolean b3JPEG::b3JpegFillInputBuffer(j_decompress_ptr cinfo B3_UNUSED)
 {
 	return TRUE;
 }
@@ -201,7 +201,7 @@ void b3JPEG::b3JpegSkipInputData(
 	source->bytes_in_buffer -= (size_t)num_bytes;
 }
 
-void b3JPEG::b3JpegTermSource(j_decompress_ptr cinfo)
+void b3JPEG::b3JpegTermSource(j_decompress_ptr cinfo B3_UNUSED)
 {
 }
 

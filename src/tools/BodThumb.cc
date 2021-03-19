@@ -99,13 +99,13 @@ int main(int argc, char * argv[])
 	b3Path                textures;
 	b3Path                pictures;
 
-	if (HOME != null)
+	if (HOME != nullptr)
 	{
 		b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
 
 		b3Scene::m_TexturePool.b3AddPath(textures);
-		if (BLZ3_TEXTURES != null)
+		if (BLZ3_TEXTURES != nullptr)
 		{
 			b3Scene::m_TexturePool.b3AddPath(BLZ3_TEXTURES);
 		}

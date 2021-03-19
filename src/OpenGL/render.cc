@@ -38,7 +38,7 @@
 #if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
 static b3ShapeRenderContext  context;
-static b3World       *       world = null;
+static b3World       *       world = nullptr;
 static b3RenderLight         lights;
 static b3RenderView          view;
 static b3_bool               all_lights = true;
@@ -87,12 +87,12 @@ static void b3DisplayFunc()
 
 static void b3PlayAnimation()
 {
-	b3Scene   *  scene;
+	b3Scene   *   scene;
 	b3Animation * animation;
 
-	scene = (b3Scene *)world->b3GetFirst();
+	scene     = (b3Scene *)world->b3GetFirst();
 	animation = scene->b3GetAnimation();
-	if (animation == null)
+	if (animation == nullptr)
 	{
 		return;
 	}
@@ -127,7 +127,7 @@ static void b3PlayAnimation()
 		while (t < animation->m_End);
 
 		span = now - start;
-		b3PrintF(B3LOG_NORMAL, "Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
+		b3PrintF(B3LOG_NORMAL, "Rendered %zd frames in %3.2lf seconds with %3.3lf frames/sec.\n",
 			count, span, (double)count / span);
 	}
 }
@@ -137,15 +137,15 @@ static void b3NextCamera(b3Scene * scene)
 	b3CameraPart * camera, *act;
 
 	act = scene->b3GetActualCamera();
-	if (act != null)
+	if (act != nullptr)
 	{
 		camera = scene->b3GetNextCamera(act);
-		if (camera == null)
+		if (camera == nullptr)
 		{
 			// Take first camera
 			camera = scene->b3GetFirstCamera(false);
 		}
-		if (camera != null)
+		if (camera != nullptr)
 		{
 			b3PrintF(B3LOG_NORMAL, "Using camera %s\n", camera->b3GetName());
 			scene->b3SetCamera(camera);
@@ -161,7 +161,7 @@ static void b3SetupRC()
 	context.b3Init(double_buffered);
 }
 
-static void b3KeyboardFunc(unsigned char key, int x, int y)
+static void b3KeyboardFunc(unsigned char key, int x B3_UNUSED, int y B3_UNUSED)
 {
 	b3Scene * scene;
 	b3_bool   refresh = false;
@@ -244,9 +244,9 @@ static void b3Update(b3Scene * scene)
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower, &upper);
 
-	b3PrintF(B3LOG_NORMAL, "%d vertices\n", context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL, "%d triangles\n", context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL, "%d grids\n",    context.glGridCount);
+	b3PrintF(B3LOG_NORMAL, "%zd vertices\n",  context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL, "%zd triangles\n", context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL, "%zd grids\n",     context.glGridCount);
 
 	// Setup view
 	view.b3SetBounds(&lower, &upper);
@@ -261,19 +261,15 @@ static void b3Update(b3Scene * scene)
 
 static void b3Prepare(b3Scene * scene)
 {
-	b3ModellerInfo * info;
-	b3_res          xSize, ySize;
+	const b3ModellerInfo * info = scene->b3GetModellerInfo();
+	b3_res                 xSize, ySize;
 
 	scene->b3Reorg();
 	scene->b3GetDisplaySize(xSize, ySize);
 	scene->b3PrepareScene(xSize, ySize);
 	scene->b3SetCamera(scene->b3GetFirstCamera(false));
 
-	info = scene->b3GetModellerInfo();
-	if (info != null)
-	{
-		all_lights = info->m_UseSceneLights;
-	}
+	all_lights = info->m_UseSceneLights;
 
 	xWinSize = xSize;
 	yWinSize = ySize;
@@ -282,9 +278,9 @@ static void b3Prepare(b3Scene * scene)
 static void b3Banner(const char * command)
 {
 	b3PrintF(B3LOG_NORMAL, "Blizzard III OpenGL scene viewer\n");
-	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2021\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (command != null)
+	if (command != nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s [-d][-f][-v][-s] BWD-file\n", command);
@@ -312,7 +308,6 @@ int main(int argc, char * argv[])
 	b3Path          data;
 	b3Loader        loader;
 	b3_index        i;
-
 
 	if (argc <= 1)
 	{
@@ -348,10 +343,9 @@ int main(int argc, char * argv[])
 
 	try
 	{
-		b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
+		b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
 		b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
-		b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
 
 		b3Scene::m_TexturePool.b3AddPath(textures);
 		b3Scene::m_TexturePool.b3AddPath(pictures);
@@ -361,11 +355,11 @@ int main(int argc, char * argv[])
 		world->b3AddPath(data);
 
 		b3RaytracingItems::b3Register();
-		if (BLZ3_BIN != null)
+		if (BLZ3_BIN != nullptr)
 		{
 			loader.b3AddPath(BLZ3_BIN);
 		}
-		if (BLZ3_PLUGINS != null)
+		if (BLZ3_PLUGINS != nullptr)
 		{
 			loader.b3AddPath(BLZ3_PLUGINS);
 		}
@@ -373,7 +367,7 @@ int main(int argc, char * argv[])
 
 		world->b3Read(filename);
 		for (item  = world->b3GetFirst();
-			item != null;
+			item != nullptr;
 			item  = scene->Succ)
 		{
 			scene = (b3Scene *)item;

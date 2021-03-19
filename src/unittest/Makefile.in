@@ -20,14 +20,15 @@ PRGS			= basetest
 BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3ArrayTest.cc\
 	b3ColorTest.cc\
+	b3CompareTest.cc\
 	b3ComplexTest.cc\
 	b3DataSizeTest.cc\
 	b3FFTTest.cc\
 	b3FileTest.cc\
-	b3HashTest.cc\
 	b3ImageTest.cc\
 	b3ListTest.cc\
 	b3MathTest.cc\
+	b3PathTest.cc\
 	b3MatrixTest.cc\
 	b3RandomTest.cc\
 	b3SplineTest.cc\
@@ -37,15 +38,16 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3ArrayTest.o\
 	b3ColorTest.o\
+	b3CompareTest.o\
 	b3ComplexTest.o\
 	b3DataSizeTest.o\
 	b3FFTTest.o\
 	b3FileTest.o\
-	b3HashTest.o\
 	b3ImageTest.o\
 	b3ListTest.o\
 	b3MathTest.o\
 	b3MatrixTest.o\
+	b3PathTest.o\
 	b3RandomTest.o\
 	b3SplineTest.o\
 	b3VectorTest.o\
@@ -59,7 +61,7 @@ depend:
 	@CPP@ -M  $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
 
 clean:	cleantest
-	rm -f *.o *.bak *~ core img_test.* $(PRGS) ALL QUIET
+	rm -f *.o *.bak *~ core img_test.* $(PRGS) out ALL QUIET
 
 cleantest:
 	rm -f $(TEST_FILES)

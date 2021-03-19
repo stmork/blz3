@@ -43,7 +43,11 @@ void b3BBox::b3SetName(const char * name)
 	b3Item::b3SetString(m_BoxName, sizeof(m_BoxName), name);
 }
 
-void b3Box::b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount)
+void b3Box::b3GetCount(
+	b3RenderContext * context B3_UNUSED,
+	b3_count     &    vertCount,
+	b3_count     &    gridCount B3_UNUSED,
+	b3_count     &    polyCount B3_UNUSED)
 {
 	vertCount = 24;
 }
@@ -66,7 +70,7 @@ void b3Box::b3ComputeIndices()
 	b3ComputeBoxIndices();
 }
 
-void b3Box::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Box::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

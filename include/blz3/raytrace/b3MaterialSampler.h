@@ -32,8 +32,8 @@ class b3MaterialSampler : public b3Sampler, protected b3_scene_preparation
 	static const b3_count        DEFAULT_MATERIAL_TILES = 3;
 
 protected:
-	b3Tx    *   m_Tx;        //!< The image to sample in.
-	b3Material * m_Material; //!< The material to sample.
+	b3Tx       *      m_Tx;        //!< The image to sample in.
+	b3Material    *   m_Material; //!< The material to sample.
 	const b3_count    m_Tiles;     //!< How many sample plains to use.
 	const b3_vector * m_BBoxSize;  //!< The bounding box dimension.
 
@@ -65,8 +65,8 @@ public:
 	}
 
 protected:
-	b3SampleInfo * b3SampleInit(const b3_count CPUs);
-	void          b3SampleTask(const b3SampleInfo * info);
+	b3SampleInfo * b3SampleInit(const b3_count CPUs) override;
+	void           b3SampleTask(const b3SampleInfo * info) override;
 };
 
 #endif

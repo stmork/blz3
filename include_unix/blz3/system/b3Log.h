@@ -32,8 +32,10 @@ class B3_PLUGIN b3Log : public b3LogBase
 private:
 	b3Log();
 public:
-	void    b3LogTime(const char * comment = null);
-	void    b3LogFunction(const b3_log_level debug_level, const char * format, ...);
+	void    b3LogTime(const char * comment = nullptr) override;
+	void    b3LogFunction(
+		const b3_log_level debug_level,
+		const char    *    format, ...) override __attribute__((format(printf, 3, 4)));
 };
 
 #endif

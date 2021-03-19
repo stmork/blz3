@@ -34,9 +34,8 @@
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3Math::epsilon = FLT_EPSILON;
-
-b3_f64 b3Math::m_CbrtCoeffs[15] =
+alignas(16) b3_f64 b3Math::epsilon = FLT_EPSILON;
+alignas(16) b3_f64 b3Math::m_CbrtCoeffs[15]
 {
 	3.077639180760657e+00,
 	-1.519854532158648e+01,

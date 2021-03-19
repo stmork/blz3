@@ -37,12 +37,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3_vector b3RenderContext::glSimpleLightPosition =
+b3_vector b3RenderContext::glSimpleLightPosition
 {
 	1000.0f, -2500.0f, 2000.0f
 };
 
-b3_vector b3RenderContext::glSimpleLightDirection =
+b3_vector b3RenderContext::glSimpleLightDirection
 {
 	0, 0, -1
 };
@@ -55,7 +55,7 @@ b3_bool b3RenderContext::glUse = false;
 
 #ifdef BLZ3_USE_OPENGL
 
-GLenum b3RenderContext::glLightNum[] =
+GLenum b3RenderContext::glLightNum[]
 {
 	GL_LIGHT0,
 	GL_LIGHT1,
@@ -76,7 +76,7 @@ b3RenderContext::b3RenderContext()
 	//	b3PrintF(B3LOG_FULL," b3RenderContext::b3RenderContext()\n");
 	b3LightNum();
 	glDrawCachedTextures = true;
-	glSelectedObject     = null;
+	glSelectedObject     = nullptr;
 	glBgColor.b3Init(0.8f, 0.8f, 0.8f);
 }
 
@@ -85,52 +85,57 @@ void b3RenderContext::b3Init(b3_bool double_buffered)
 #ifdef BLZ3_USE_OPENGL
 	const char * extensions = (const char *)glGetString(GL_EXTENSIONS);
 
-	b3PrintF(B3LOG_FULL,  " b3RenderContext::b3Init()\n");
-	b3PrintF(B3LOG_NORMAL, "OpenGL vendor:     %s\n", glGetString(GL_VENDOR));
-	b3PrintF(B3LOG_NORMAL, "OpenGL renderer:   %s\n", glGetString(GL_RENDERER));
-	b3PrintF(B3LOG_NORMAL, "OpenGL version:    %s\n", glGetString(GL_VERSION));
-	b3PrintF(B3LOG_DEBUG, "OpenGL extensions: %s\n", extensions);
-
-	if (strstr(extensions, "GL_ARB_vertex_program") != null)
+	if (extensions == nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Vertex shader low level support.\n");
+		extensions = "";
+	}
+	b3PrintF(B3LOG_FULL,   " b3RenderContext::b3Init()\n");
+	b3PrintF(B3LOG_FULL,   "   OpenGL extensions: %s\n", extensions);
+	b3PrintF(B3LOG_NORMAL, "   OpenGL vendor:     %s\n", glGetString(GL_VENDOR));
+	b3PrintF(B3LOG_NORMAL, "   OpenGL renderer:   %s\n", glGetString(GL_RENDERER));
+	b3PrintF(B3LOG_NORMAL, "   OpenGL version:    %s\n", glGetString(GL_VERSION));
+
+	if (strstr(extensions, "GL_ARB_vertex_program") != nullptr)
+	{
+		b3PrintF(B3LOG_DEBUG, "   Vertex shader low level support.\n");
 	}
 
-	if (strstr(extensions, "GL_ARB_fragment_program") != null)
+	if (strstr(extensions, "GL_ARB_fragment_program") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Pixel shader low level support.\n");
+		b3PrintF(B3LOG_DEBUG, "   Pixel shader low level support.\n");
 	}
 
-	if (strstr(extensions, "GL_ARB_vertex_shader") != null)
+	if (strstr(extensions, "GL_ARB_vertex_shader") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Vertex shader language support (nice).\n");
+		b3PrintF(B3LOG_DEBUG, "   Vertex shader language support (nice).\n");
 	}
 
-	if (strstr(extensions, "GL_ARB_fragment_shader") != null)
+	if (strstr(extensions, "GL_ARB_fragment_shader") != nullptr)
 	{
-		b3PrintF(B3LOG_NORMAL, "Pixel shader language support (very fine).\n");
+		b3PrintF(B3LOG_NORMAL, "   Pixel shader language support (very fine).\n");
 	}
 
-	if (strstr(extensions, "GL_ARB_shading_language_100") != null)
+	if (strstr(extensions, "GL_ARB_shading_language_100") != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Support for OpenGL shading language V1.00.\n");
+		b3PrintF(B3LOG_DEBUG, "   Support for OpenGL shading language V1.00.\n");
 	}
 
 	b3VectorBufferObjects::b3Init(extensions);
 	if (b3VectorBufferObjects::b3HasVBO())
 	{
-		b3PrintF(B3LOG_DEBUG, "Having vertex buffer objects.\n");
+		b3PrintF(B3LOG_DEBUG, "   Having vertex buffer objects.\n");
 	}
 	if (b3VectorBufferObjects::b3AllowVBO())
 	{
-		b3PrintF(B3LOG_DEBUG, "Allowing vertex buffer objects.\n");
+		b3PrintF(B3LOG_DEBUG, "   Allowing vertex buffer objects.\n");
 	}
 
 	b3MultiSample::b3Init(extensions);
 	if (b3MultiSample::b3HasMS())
 	{
-		b3PrintF(B3LOG_DEBUG, "Having multisampling.\n");
-		b3PrintF(B3LOG_NORMAL, "Multisampling: %s\n", b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
+		b3PrintF(B3LOG_DEBUG, "   Having multisampling.\n");
+		b3PrintF(B3LOG_NORMAL, "   Multisampling: %s\n",
+			b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
 		b3MultiSample::b3Enable(true);
 	}
 
@@ -234,7 +239,7 @@ void b3RenderContext::b3SetAmbient(const b3_pkd_color ambient)
 {
 	GLfloat gl_ambient[4];
 
-	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08lx)\n",
+	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08x)\n",
 		ambient);
 
 	b3PkdColorToGL(ambient, gl_ambient);
@@ -245,7 +250,7 @@ void b3RenderContext::b3SetAmbient(b3Color & ambient)
 {
 	GLfloat gl_ambient[4];
 
-	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08lx)\n",
+	b3PrintF(B3LOG_FULL, " b3RenderContext::b3SetAmbient(%08x)\n",
 		(b3_pkd_color)ambient);
 
 	b3ColorToGL(ambient, gl_ambient);
@@ -258,7 +263,7 @@ void b3RenderContext::b3LightReset(b3_pkd_color ambient)
 	b3PrintF(B3LOG_FULL, " b3RenderContext::b3LightReset()\n");
 
 #ifdef BLZ3_USE_OPENGL
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,     GL_TRUE);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, LOCAL_VIEWER);
 
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
@@ -333,7 +338,7 @@ b3_bool b3RenderContext::b3LightAdd(const b3_render_light_info * info)
 }
 
 void b3RenderContext::b3LightSet(
-	const b3_index              num,
+	const b3_index               num,
 	const b3_render_light_info * info)
 {
 #ifdef BLZ3_USE_OPENGL

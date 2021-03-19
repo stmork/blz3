@@ -71,10 +71,10 @@ void b3Tx::b3TIFFWarnHandler(
 
 b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 {
-	data        = null;
-	palette     = null;
-	histogramme = null;
-	grid        = null;
+	data        = nullptr;
+	palette     = nullptr;
+	histogramme = nullptr;
+	grid        = nullptr;
 	type        = B3_TX_UNDEFINED;
 	FileType    = FT_UNKNOWN;
 	dSize       = 0;
@@ -107,10 +107,10 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 b3Tx::b3Tx(b3Tx * orig) : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 {
 	image_name.b3Empty();
-	histogramme = null;
-	grid        = null;
-	data        = null;
-	palette     = null;
+	histogramme = nullptr;
+	grid        = nullptr;
+	data        = nullptr;
+	palette     = nullptr;
 	b3Copy(orig);
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx instantiated (%ldx%ld, %ld bits, type=%d) (%p)\n",
@@ -181,7 +181,7 @@ b3_bool b3Tx::b3AllocTx(
 	B3_ASSERT(dSize > 0);
 
 	new_ptr = b3Realloc(data, dSize);
-	if (new_ptr == null)
+	if (new_ptr == nullptr)
 	{
 		b3FreeTx();
 		return false;
@@ -191,7 +191,7 @@ b3_bool b3Tx::b3AllocTx(
 	if (pSize > 0)
 	{
 		new_ptr = b3Realloc(palette, pSize * sizeof(b3_pkd_color));
-		if (new_ptr == null)
+		if (new_ptr == nullptr)
 		{
 			b3FreeTx();
 			return false;
@@ -229,13 +229,13 @@ b3_bool b3Tx::b3AllocTx(
 
 void b3Tx::b3FreeTx()
 {
-	if (data != null)
+	if (data != nullptr)
 	{
 		b3Free(data);
-		data  = null;
+		data  = nullptr;
 		dSize = 0;
 	}
-	if (palette != null)
+	if (palette != nullptr)
 	{
 		try
 		{
@@ -246,7 +246,7 @@ void b3Tx::b3FreeTx()
 			b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx   # b3Tx() Oops?\n");
 			b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx   # b3Tx() %s %d\n", __FILE__, __LINE__);
 		}
-		palette = null;
+		palette = nullptr;
 		pSize   = 0;
 	}
 	type      = B3_TX_UNDEFINED;
@@ -258,7 +258,7 @@ void b3Tx::b3FreeTx()
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
-const b3_bool b3Tx::b3IsGreyPalette() const
+b3_bool b3Tx::b3IsGreyPalette() const
 {
 	b3_loop      i, max;
 	b3_pkd_color mul, step;
@@ -295,7 +295,7 @@ inline void b3Tx::b3CopyILBMtoVGA(
 	b3_count  xBytes, xRest, index, BytesPerLine;
 
 	BytesPerLine = TX_BWA(xSize);
-	if ((palette != null) && (depth < 8))
+	if ((palette != nullptr) && (depth < 8))
 	{
 		xBytes = xSize >> 3;
 		xRest  = xSize  & 7;
@@ -386,7 +386,7 @@ inline void b3Tx::b3CopyILBMtoRGB8(
 	b3_pkd_color  Color, Bit;
 
 	BytesPerLine = TX_BWA(xSize);
-	if (palette == null)
+	if (palette == nullptr)
 	{
 		for (x = 0; x < xSize; x++)
 		{
@@ -420,7 +420,7 @@ inline void b3Tx::b3CopyILBMtoFloat(
 	b3_pkd_color  Color, Bit;
 
 	BytesPerLine = TX_BWA(xSize);
-	if (palette == null)
+	if (palette == nullptr)
 	{
 		for (x = 0; x < xSize; x++)
 		{
@@ -457,7 +457,7 @@ void b3Tx::b3Copy(b3Tx * srcTx)
 	if (b3AllocTx(srcTx->xSize, srcTx->ySize, srcTx->depth))
 	{
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Copy(): ");
-		if (data != null)
+		if (data != nullptr)
 		{
 			if (srcTx->type == B3_TX_ILBM)
 			{
@@ -511,7 +511,7 @@ void b3Tx::b3Copy(b3Tx * srcTx)
 			}
 			b3PrintF(B3LOG_FULL, " [data - %ld]", dSize);
 		}
-		if (palette != null)
+		if (palette != nullptr)
 		{
 			memcpy(palette, srcTx->b3GetPalette(), B3_MIN(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
 			b3PrintF(B3LOG_FULL, " [palette - %ld]", pSize);
@@ -532,9 +532,9 @@ void b3Tx::b3Copy(b3Tx * srcTx)
 	ScanLines   = srcTx->ScanLines;
 }
 
-const b3_bool b3Tx::b3IsLoaded() const
+b3_bool b3Tx::b3IsLoaded() const
 {
-	return ((xSize != 0) && (ySize != 0) && (data != null) && (type != B3_TX_UNDEFINED));
+	return ((xSize != 0) && (ySize != 0) && (data != nullptr) && (type != B3_TX_UNDEFINED));
 }
 
 const char * b3Tx::b3Name() const
@@ -544,7 +544,7 @@ const char * b3Tx::b3Name() const
 
 void b3Tx::b3Name(const char * ImageName)
 {
-	strlcpy(image_name, ImageName != null ? ImageName : "", B3_FILESTRINGLEN);
+	strlcpy(image_name, ImageName != nullptr ? ImageName : "", B3_FILESTRINGLEN);
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Name(%s)\n",
 		(const char *)image_name);
 }
@@ -592,7 +592,7 @@ void b3Tx::b3GetResolution(b3_res & xd, b3_res & yd) const
 **                                                                      **
 *************************************************************************/
 
-const b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
+b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 {
 	b3_pkd_color * lPtr;
 	b3_color   *  cPtr;
@@ -604,7 +604,7 @@ const b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 		return (b3GetValue(x, y) & 0xff) * 0.0039215686;
 
 	case B3_TX_VGA:
-		return palette == null ? 0 : (palette[data[y * xSize + x]] & 0xff) * 0.0039215686;
+		return palette == nullptr ? 0 : (palette[data[y * xSize + x]] & 0xff) * 0.0039215686;
 
 	case B3_TX_RGB8:
 		lPtr  = (b3_pkd_color *)data;
@@ -634,7 +634,7 @@ const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 		return b3Color(b3GetValue(x, y));
 
 	case B3_TX_VGA:
-		return b3Color(palette == null ? B3_BLACK : palette[data[y * xSize + x]]);
+		return b3Color(palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]]);
 
 	case B3_TX_RGB8:
 		lPtr  = (b3_pkd_color *)data;
@@ -652,7 +652,7 @@ const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 	}
 }
 
-const b3_pkd_color b3Tx::b3GetValue(
+b3_pkd_color b3Tx::b3GetValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -672,7 +672,7 @@ const b3_pkd_color b3Tx::b3GetValue(
 		return lPtr[y * xSize + x];
 
 	case B3_TX_VGA:
-		return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
+		return palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]];
 
 	case B3_TX_FLOAT:
 		cPtr  = (b3_color *)data;
@@ -686,7 +686,7 @@ const b3_pkd_color b3Tx::b3GetValue(
 	}
 }
 
-inline const b3_pkd_color b3Tx::b3ILBMValue(
+inline b3_pkd_color b3Tx::b3ILBMValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -711,7 +711,7 @@ inline const b3_pkd_color b3Tx::b3ILBMValue(
 		Address += BytesPerLine;
 		pattern += pattern;
 	}
-	if (palette != null)
+	if (palette != nullptr)
 	{
 		return palette[PlaneValue];
 	}
@@ -726,14 +726,14 @@ inline const b3_pkd_color b3Tx::b3ILBMValue(
 	return PlaneValue;
 }
 
-inline const b3_pkd_color b3Tx::b3VGAValue(
+inline b3_pkd_color b3Tx::b3VGAValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
-	return palette == null ? B3_BLACK : palette[data[y * xSize + x]];
+	return palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]];
 }
 
-inline const b3_pkd_color b3Tx::b3RGB4Value(
+inline b3_pkd_color b3Tx::b3RGB4Value(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -749,7 +749,7 @@ inline const b3_pkd_color b3Tx::b3RGB4Value(
 	return Result;
 }
 
-inline const b3_pkd_color b3Tx::b3RGB8Value(
+inline b3_pkd_color b3Tx::b3RGB8Value(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -759,7 +759,7 @@ inline const b3_pkd_color b3Tx::b3RGB8Value(
 	return Address[y * xSize + x];
 }
 
-inline const b3_pkd_color b3Tx::b3FloatValue(
+inline b3_pkd_color b3Tx::b3FloatValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -775,7 +775,7 @@ inline const b3_pkd_color b3Tx::b3FloatValue(
 **                                                                      **
 *************************************************************************/
 
-const b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
+b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 {
 	b3_u08    *   bPtr, bit;
 	b3_u16    *   sPtr;
@@ -846,7 +846,7 @@ inline void b3Tx::b3GetILBM(
 	b3_pkd_color  Color, Bit;
 
 	BytesPerLine = TX_BWA(xSize);
-	if (palette != null)
+	if (palette != nullptr)
 	{
 		for (x = 0; x < xSize; x++)
 		{
@@ -968,7 +968,7 @@ inline void b3Tx::b3GetVGA(
 
 inline void b3Tx::b3GetFloat(
 	b3_pkd_color * ColorLine,
-	const b3_coord      y) const
+	const b3_coord y) const
 {
 	b3_color * cPtr = (b3_color *)data;
 	b3_coord  x;
@@ -981,14 +981,14 @@ inline void b3Tx::b3GetFloat(
 }
 
 void b3Tx::b3GetRow(
-	b3_color * Line,
+	b3_color    *   Line,
 	const b3_coord  y) const
 {
-	b3_u08    *   bPtr;
-	b3_u16    *   sPtr;
+	b3_u08    *    bPtr;
+	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
-	b3_color   *  cPtr;
-	b3_coord      x;
+	b3_color   *   cPtr;
+	b3_coord       x;
 
 	switch (type)
 	{
@@ -1004,7 +1004,7 @@ void b3Tx::b3GetRow(
 		bPtr += (xSize * y);
 		for (x = 0; x < xSize; x++)
 		{
-			*Line++ = b3Color(palette != null ? palette[*bPtr] : B3_BLACK);
+			*Line++ = b3Color(palette != nullptr ? palette[*bPtr] : B3_BLACK);
 			bPtr++;
 		}
 		break;
@@ -1043,7 +1043,7 @@ void b3Tx::b3GetRow(
 
 void b3Tx::b3GetRow(
 	b3_pkd_color * Line,
-	const b3_coord      y) const
+	const b3_coord y) const
 {
 	switch (type)
 	{

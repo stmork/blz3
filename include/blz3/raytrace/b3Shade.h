@@ -90,7 +90,7 @@ public:
 	 * @param jit The lighting info.
 	 * @param surface The surface values needed for shading.
 	 */
-	void            b3Shade(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void            b3Shade(const b3Light * light, b3_light_info * jit, b3_surface * surface) const;
 
 	/**
 	 * This method find any obscurer so that an intersection point may be
@@ -131,7 +131,7 @@ protected:
 	 * @param jit The position information of the light source.
 	 * @param surface The surface values to mix.
 	 */
-	virtual void            b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface) = 0;
+	virtual void            b3ShadeLight(const b3Light * light, b3_light_info * jit, b3_surface * surface) const = 0;
 
 protected:
 	/**
@@ -159,12 +159,8 @@ protected:
 	 */
 	inline void b3Illuminate(b3_surface * surface)
 	{
-		b3Item   *   item;
-		b3Light   *  light;
-
-		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
+		B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
 		{
-			light = (b3Light *)item;
 			if (light->b3IsActive())
 			{
 				light->b3Illuminate(this, surface);
@@ -191,8 +187,11 @@ public:
 	b3ShaderPhong(b3Scene * scene);
 
 protected:
-	void    b3ShadeSurface(b3_surface * surface, b3_count depth);
-	void    b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void    b3ShadeSurface(b3_surface * surface, b3_count depth) override;
+	void    b3ShadeLight(
+		const b3Light * light,
+		b3_light_info * jit,
+		b3_surface   *  surface) const override;
 };
 
 //////////////
@@ -214,11 +213,14 @@ public:
 	 */
 	b3ShaderMork(b3Scene * scene);
 
-	void     b3Prepare(b3_preparation_info * prep_info);
+	void     b3Prepare(b3_preparation_info * prep_info) override;
 
 protected:
-	void     b3ShadeSurface(b3_surface * surface, b3_count depth);
-	void     b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
+	void     b3ShadeLight(
+		const b3Light * light,
+		b3_light_info * jit,
+		b3_surface   *  surface) const override;
 };
 
 ///////////////////////
@@ -242,11 +244,14 @@ public:
 	 */
 	b3ShaderMork2(b3Scene * scene);
 
-	void     b3Prepare(b3_preparation_info * prep_info);
+	void     b3Prepare(b3_preparation_info * prep_info) override;
 
 protected:
-	void     b3ShadeSurface(b3_surface * surface, b3_count depth);
-	void     b3ShadeLight(b3Light * light, b3_light_info * jit, b3_surface * surface);
+	void     b3ShadeSurface(b3_surface * surface, b3_count depth) override;
+	void     b3ShadeLight(
+		const b3Light * light,
+		b3_light_info * jit,
+		b3_surface   *  surface) const override;
 
 private:
 	void     b3ComputeFresnelCoeffs(b3_surface * surface, b3_f32 & refl, b3_f32 & refr);

@@ -167,7 +167,7 @@ b3Scene * b3Factory::b3CreateBBox(b3BBox * original_bbox, b3_u32 class_type, b3C
 	light->m_Distance   = 40.0 * rad;
 
 	b3Consolidate(scene);
-	if (original_camera != null)
+	if (original_camera != nullptr)
 	{
 		b3_f64    xAngle, yAngle;
 
@@ -204,12 +204,12 @@ b3Scene * b3Factory::b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, b3_u32 class
 	area->b3GetMaterialHead()->b3Append(chess);
 
 	// Transform ellipsoid
-	b3Matrix::b3Scale(null, &transform, null, 0.4, 0.4, 0.4);
+	b3Matrix::b3Scale(nullptr, &transform, nullptr, 0.4, 0.4, 0.4);
 	b3Matrix::b3Move(&transform, &transform, 0, 0, 20);
 	big->b3Transform(&transform, true);
 
 	// Enlarge whole scene
-	b3Matrix::b3Scale(null, &transform, null, 5, 5, 5);
+	b3Matrix::b3Scale(nullptr, &transform, nullptr, 5, 5, 5);
 	bbox->b3Transform(&transform, true, true);
 
 	// Create camera
@@ -248,7 +248,7 @@ b3Scene * b3Factory::b3CreateBump(b3Base<b3Item> ** ptrBumpHead, b3_u32 class_ty
 	area->b3GetMaterialHead()->b3Append(mat);
 
 	// Transform ellipsoid
-	b3Matrix::b3Scale(null, &transform, null, 0.2, 0.2, 0.2);
+	b3Matrix::b3Scale(nullptr, &transform, nullptr, 0.2, 0.2, 0.2);
 	b3Matrix::b3Move(&transform, &transform, 15, 3, 10);
 	big->b3Transform(&transform, true);
 

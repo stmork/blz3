@@ -60,7 +60,11 @@ b3Area::b3Area(b3_u32 * src) : b3Shape2(src)
 {
 }
 
-void b3Area::b3GetCount(b3RenderContext * context, b3_count & verts, b3_count & grids, b3_count & polys)
+void b3Area::b3GetCount(
+	b3RenderContext * context B3_UNUSED,
+	b3_count     &    verts,
+	b3_count     &    grids B3_UNUSED,
+	b3_count     &    polys B3_UNUSED)
 {
 	verts = 4;
 }
@@ -118,7 +122,7 @@ void b3Area::b3ComputeIndices()
 	b3ComputeBound(&m_Limit);
 }
 
-void b3Area::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Area::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = -1;
 	info->xInfo.max    =  1;

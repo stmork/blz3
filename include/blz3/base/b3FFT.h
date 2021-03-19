@@ -48,20 +48,20 @@ typedef void (*b3SampleFunc)(const b3_f64 fx, const b3_f64 fy, const b3_index in
 
 struct b3_fft_info
 {
-	b3_loop       m_xMin, m_xMax;
-	b3_loop       m_yMin, m_yMax;
+	b3_loop        m_xMin, m_xMax;
+	b3_loop        m_yMin, m_yMax;
 	b3Complex64 ** m_Lines;
-	b3Complex64 * m_Aux;
-	b3_res        m_xDim;
-	b3_res        m_yDim;
-	int           m_Dir;
+	b3Complex64  * m_Aux;
+	b3_res         m_xDim;
+	b3_res         m_yDim;
+	int            m_Dir;
 };
 
 class B3_PLUGIN b3Fourier : protected b3Mem
 {
 	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
 	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
-	//	b3_count               m_Size;
+//	b3_count               m_Size;
 
 	b3Complex64      *     m_Buffer;
 	b3Complex64     **     m_Lines;
@@ -79,7 +79,7 @@ public:
 	 * @param new_size The needed new size
 	 * @return True on success
 	 */
-	const b3_bool b3AllocBuffer(const b3_res new_size);
+	b3_bool b3AllocBuffer(const b3_res new_size);
 
 	/**
 	 * This method copies the values from a given image into the internal FFT
@@ -87,7 +87,7 @@ public:
 	 *
 	 * @param tx The image with the values to initialize.
 	 */
-	const b3_bool b3AllocBuffer(b3Tx * tx);
+	b3_bool b3AllocBuffer(b3Tx * tx);
 
 	/**
 	 * This method frees all used memory.
@@ -106,7 +106,7 @@ public:
 	/**
 	 * This method computes the forward FFT of the internal buffer.
 	 */
-	inline const b3_bool b3FFT2D()
+	inline b3_bool b3FFT2D()
 	{
 		return b3FFT2D(1);
 	}
@@ -114,13 +114,13 @@ public:
 	/**
 	 * This method computes the inverse FFT of the internal buffer.
 	 */
-	inline const b3_bool  b3IFFT2D()
+	inline b3_bool  b3IFFT2D()
 	{
 		return b3FFT2D(-1);
 	}
 
-	const b3_bool   b3GetBuffer(b3Tx * tx, b3_f64 amp);
-	const b3_bool   b3GetSpectrum(b3Tx * tx, b3_f64 amp);
+	b3_bool   b3GetBuffer(b3Tx * tx, b3_f64 amp) const;
+	b3_bool   b3GetSpectrum(b3Tx * tx, b3_f64 amp);
 
 	inline b3Complex64 * b3GetBuffer() const
 	{
@@ -130,7 +130,7 @@ public:
 	/**
 	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
 	 */
-	const b3_bool    b3SelfTest();
+	b3_bool    b3SelfTest();
 
 	/**
 	 * This method returns the number which is a power of 2 number
@@ -139,7 +139,7 @@ public:
 	 * @param value The value to compute the power of 2 number from.
 	 * @return The value which is a power of two number and greater or equal to the given number.
 	 */
-	static const b3_loop  b3PowOf2(const b3_loop value);
+	static b3_loop  b3PowOf2(const b3_loop value);
 
 	/**
 	 * This method returns the log of the given value.
@@ -147,15 +147,15 @@ public:
 	 * @param value The value to compute the log2 from.
 	 * @return The resulting log2 value.
 	 */
-	static const b3_count b3Log2(b3_u32 value);
+	static b3_count b3Log2(b3_u32 value);
 
 private:
-	static       b3_u32  b3RowFFT(void * ptr);
-	static       b3_u32  b3ColumnFFT(void * ptr);
-	static const b3_bool b3FFT(const int dir, const b3_res m, b3Complex64 * line);
+	static  b3_u32  b3RowFFT(void * ptr);
+	static  b3_u32  b3ColumnFFT(void * ptr);
+	static  b3_bool b3FFT(const int dir, const b3_res m, b3Complex64 * line);
 
-	const b3_bool b3FFT2D(const int dir);
-	const b3_bool b3ReallocBuffer();
+	b3_bool b3FFT2D(const int dir);
+	b3_bool b3ReallocBuffer();
 };
 
 #endif

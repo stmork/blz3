@@ -36,7 +36,7 @@ public:
 	 *
 	 * @param taskname The thread name.
 	 */
-	virtual void     b3Name(const char * taskname = null) = 0;
+	virtual void     b3Name(const char * taskname = nullptr) = 0;
 
 	/**
 	 * This method starts a new thread. There can be 5 different thread

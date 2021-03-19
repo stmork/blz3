@@ -37,7 +37,7 @@ struct b3SampleInfo
 	b3_res        m_xMax;          //!< The strip width.
 	b3_res        m_yMax;          //!< The overall sampling height.
 	void     *    m_Data;          //!< The resulting strip data.
-	void     *    m_Ptr;           //!< A pointer to custom information.
+	const void  * m_Ptr;           //!< A pointer to custom information.
 };
 
 /**
@@ -95,8 +95,8 @@ public:
 	b3ImageSampler(b3Tx * tx);
 
 protected:
-	b3SampleInfo * b3SampleInit(const b3_count CPUs);
-	void          b3SampleTask(const b3SampleInfo * info);
+	b3SampleInfo * b3SampleInit(const b3_count CPUs) override;
+	void           b3SampleTask(const b3SampleInfo * info) override;
 
 	/**
 	 * This method returns a pixel color at a given coordinate.

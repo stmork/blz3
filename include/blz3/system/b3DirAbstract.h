@@ -55,10 +55,11 @@ protected:
 
 public:
 	/**
-	 * This constructor does simply nothing.
+	 * The default constructor supplies an empty path definition.
 	 */
 	inline b3PathAbstract()
 	{
+		m_Path[0] = 0;
 	}
 
 	/**
@@ -68,8 +69,87 @@ public:
 	 */
 	inline b3PathAbstract(const char * path)
 	{
+		operator=(path);
+	}
+
+	inline b3PathAbstract & operator=(const char * path)
+	{
 		strncpy(m_Path, path, sizeof(m_Path));
 		m_Path[sizeof(m_Path) - 1] = 0;
+
+		return *this;
+	}
+
+	/**
+	 * The comparision operator compares if two b3Path instances are
+	 * literally equal.
+	 *
+	 * @param other The other instance to compare to.
+	 * @return True if both contents are literally equal.
+	 */
+	inline bool operator==(const b3PathAbstract & other) const
+	{
+		return strcmp(m_Path, other.m_Path) == 0;
+	}
+
+	/**
+	 * The comparision operator compares if two b3Path instances are not
+	 * literally equal.
+	 *
+	 * @param other The other instance to compare to.
+	 * @return True if both contents are literally not equal.
+	 */
+	inline bool operator!=(const b3PathAbstract & other) const
+	{
+		return !operator ==(other);
+	}
+
+	/**
+	 * This cast operator returns the actual filename.
+	 *
+	 * @return  The actual filename.
+	 */
+	inline operator char * ()
+	{
+		return m_Path;
+	}
+
+	/**
+	 * This cast operator returns the actual filename as const.
+	 *
+	 * @return  The actual filename as const char pointer.
+	 */
+	inline operator const char * () const
+	{
+		return m_Path;
+	}
+
+	/**
+	 * The index operator gives a reference to the corresponding character
+	 * inside the path.
+	 *
+	 * @note The contents of the reference may be modified.
+	 *
+	 * @param index The path index to access.
+	 * @return The reference to the indexed character.
+	 */
+	inline char & operator [] (const b3_count index)
+	{
+		return m_Path[index];
+	}
+
+	/**
+	 * The index operator gives a const reference to the corresponding character
+	 * inside the path.
+	 *
+	 * @note The contents of the reference may not be modified.
+	 *
+	 * @param index The path index to access.
+	 * @return The const reference to the indexed character.
+	 */
+	inline const char & operator [] (const b3_count index) const
+	{
+		return m_Path[index];
 	}
 
 	/**
@@ -81,8 +161,8 @@ public:
 	 * This method concatenates a directory name and a filename and puts
 	 * the result into this instance.
 	 *
-	 * \param *path The directory name component.
-	 * \param *name The filename component.
+	 * @param path The directory name component.
+	 * @param name The filename component.
 	 */
 	virtual void b3LinkFileName(const char * path, const char * name) = 0;
 
@@ -92,8 +172,8 @@ public:
 	 * component is set to zero length. The oomponent pointer may be null
 	 * for convenience.
 	 *
-	 * \param *path The directory name component.
-	 * \param *name The filename component.
+	 * @param path The directory name component.
+	 * @param name The filename component.
 	 */
 	virtual void b3SplitFileName(char * path, char * name) = 0;
 
@@ -132,7 +212,7 @@ public:
 	 * puts the resulting extension into this instance. The resulting extension
 	 * contains no trailing dot.
 	 *
-	 * \param *filename The filename where to extract the file extension.
+	 * @param filename The filename where to extract the file extension.
 	 */
 	virtual void b3ExtractExt(const char * filename) = 0;
 
@@ -161,35 +241,26 @@ public:
 	 * @param format The format string.
 	 * @param ... The arguments.
 	 */
-	virtual void b3Format(const char * format, ...) = 0;
+	virtual void b3Format(const char * format, ...)
+	__attribute__((format(printf, 2, 3))) = 0;
 
+	/**
+	 * This method appends a single character to the filename of this instance
+	 * in a safe way without a risk of a buffer overflow. So it may happen that
+	 * the character may not be appended.
+	 *
+	 * @param ext The single character to append.
+	 */
+
+	virtual void b3Append(const char ext) = 0;
 	/**
 	 * This method appends a string to the filename of this instance in a safe way
 	 * without a risk of a buffer overflow.
 	 *
 	 * @param ext The text to append.
 	 */
+
 	virtual void b3Append(const char * ext) = 0;
-
-	/**
-	 * This cast operator returns the actual filename.
-	 *
-	 * \return  The actual filename.
-	 */
-	inline operator char * ()
-	{
-		return m_Path;
-	}
-
-	/**
-	 * This cast operator returns the actual filename.
-	 *
-	 * \return  The actual filename.
-	 */
-	inline operator const char * () const
-	{
-		return m_Path;
-	}
 
 private:
 	static void b3RemoveDelimiter(char * path);
@@ -198,8 +269,8 @@ private:
 /**
  * This class handles directory listing. An example for scanning a
  * directory looks like this:
-\verbatim
-
+ *
+@verbatim
 	b3Path       name;
 	b3Dir        dir;
 	b3_path_type type;
@@ -229,7 +300,7 @@ private:
 	}
 	while (loop);
 	dir.b3CloseDir();
-\endverbatim
+@endverbatim
  */
 class B3_PLUGIN b3DirAbstract
 {
@@ -237,16 +308,16 @@ public:
 	/**
 	 * This method opens a directory for listing.
 	 *
-	 * \param *dirname The directory name to list.
-	 * \return True on success.
+	 * @param dirname The directory name to list.
+	 * @return True on success.
 	 */
 	virtual b3_bool       b3OpenDir(const char * dirname) = 0;
 
 	/**
 	 * This method retrieves the next directory entry.
 	 *
-	 * \param *direntry The name of the directory entry.
-	 * \return Type of directory entry.
+	 * @param direntry The name of the directory entry.
+	 * @return Type of directory entry.
 	 */
 	virtual b3_path_type  b3DirNext(char * direntry) = 0;
 

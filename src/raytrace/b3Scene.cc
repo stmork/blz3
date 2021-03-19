@@ -65,9 +65,9 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene), class_type)
 	m_Epsilon          = 0.001f;
 	m_xSize            = 200;
 	m_ySize            = 150;
-	m_BackTexture      = null;
-	m_ActualCamera     = null;
-	m_Shader           = null;
+	m_BackTexture      = nullptr;
+	m_ActualCamera     = nullptr;
+	m_Shader           = nullptr;
 	m_Filename.b3Empty();
 
 	b3ReallocateShader();
@@ -100,12 +100,12 @@ b3Scene::b3Scene(b3_u32 * buffer) : b3Item(buffer)
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
 	b3InitString(m_TextureName, B3_TEXSTRINGLEN);
-	m_BackTexture      = null;
-	m_ActualCamera     = null;
-	m_Nebular          = null;
-	m_LensFlare        = null;
-	m_SuperSample      = null;
-	m_Shader           = null;
+	m_BackTexture      = nullptr;
+	m_ActualCamera     = nullptr;
+	m_Nebular          = nullptr;
+	m_LensFlare        = nullptr;
+	m_SuperSample      = nullptr;
+	m_Shader           = nullptr;
 	m_Filename.b3Empty();
 
 	b3ReallocateShader();
@@ -142,7 +142,7 @@ void b3Scene::b3Write()
 
 b3Scene::~b3Scene()
 {
-	if (m_Shader != null)
+	if (m_Shader != nullptr)
 	{
 		delete m_Shader;
 	}
@@ -156,7 +156,7 @@ void b3Scene::b3SetShading(b3_u32 class_type)
 
 void b3Scene::b3ReallocateShader()
 {
-	if (m_Shader != null)
+	if (m_Shader != nullptr)
 	{
 		delete m_Shader;
 	}
@@ -164,8 +164,8 @@ void b3Scene::b3ReallocateShader()
 	{
 	case TRACEPHOTO_ALBRECHT:
 	case GLOBAL_ILLUM:
-		b3PrintF(B3LOG_NORMAL, "Warning: Scene type %08lx not implemented yet...\n", b3GetClassType());
-	// Walk through!!!
+		b3PrintF(B3LOG_NORMAL, "Warning: Scene type %08x not implemented yet...\n", b3GetClassType());
+		B3_FALLTHROUGH;
 	case TRACEPHOTO_MORK:
 	case TRACEANGLE_MORK:
 		m_Shader = new b3ShaderMork(this);
@@ -181,7 +181,7 @@ void b3Scene::b3ReallocateShader()
 		break;
 
 	default:
-		m_Shader = null;
+		m_Shader = nullptr;
 		break;
 	}
 	b3PrintF(B3LOG_DEBUG, "Using shader type %08x with instance %p\n", b3GetClassType(), m_Shader);
@@ -200,21 +200,21 @@ b3_bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize)
 **                                                                      **
 *************************************************************************/
 
-char * b3Scene::b3GetName()
+const char * b3Scene::b3GetName() const
 {
-	m_Filename.b3SplitFileName(null, m_SceneName);
-	m_SceneName.b3RemoveExt();
 	return m_SceneName;
 }
 
-char * b3Scene::b3GetFilename()
+const char * b3Scene::b3GetFilename() const
 {
 	return m_Filename;
 }
 
 void b3Scene::b3SetFilename(const char * filename)
 {
-	m_Filename.b3Format("%s", filename);
+	m_Filename = filename;
+	m_Filename.b3SplitFileName(nullptr, m_SceneName);
+	m_SceneName.b3RemoveExt();
 }
 
 void b3Scene::b3SetTexture(const char * name)
@@ -230,25 +230,12 @@ void b3Scene::b3SetTexture(const char * name)
 
 b3Animation * b3Scene::b3GetAnimation(b3_bool force)
 {
-	b3Animation * animation;
-	b3Item   *   item;
+	b3Animation * animation = b3GetSpecialHead()->b3FindTyped<b3Animation>(ANIMATION);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == ANIMATION)
-		{
-			return (b3Animation *)item;
-		}
-	}
-
-	if (force)
+	if (force && (animation == nullptr))
 	{
 		animation = new b3Animation(ANIMATION);
 		b3GetSpecialHead()->b3Append(animation);
-	}
-	else
-	{
-		animation = null;
 	}
 	return animation;
 }
@@ -257,151 +244,78 @@ b3_f64 b3Scene::b3GetTimePoint()
 {
 	b3Animation * anim = b3GetAnimation();
 
-	return anim != null ? anim->m_Time : 0;
+	return anim != nullptr ? anim->m_Time : 0;
 }
 
 b3ModellerInfo * b3Scene::b3GetModellerInfo()
 {
-	b3ModellerInfo * info;
-	b3Item     *    item;
+	b3ModellerInfo * info = b3GetSpecialHead()->b3FindTyped<b3ModellerInfo>(LINES_INFO);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
+	if (info == nullptr)
 	{
-		if (item->b3GetClassType() == LINES_INFO)
-		{
-			return (b3ModellerInfo *)item;
-		}
+		info = new b3ModellerInfo(LINES_INFO);
+		b3GetSpecialHead()->b3Append(info);
 	}
-
-	info = new b3ModellerInfo(LINES_INFO);
-	b3GetSpecialHead()->b3Append(info);
 	return info;
 }
 
 b3Distribute * b3Scene::b3GetDistributed(b3_bool force)
 {
-	b3Distribute * distributed;
-	b3Item    *   item;
+	b3Distribute * distributed = b3GetSpecialHead()->b3FindTyped<b3Distribute>(DISTRIBUTE);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == DISTRIBUTE)
-		{
-			return (b3Distribute *)item;
-		}
-	}
-
-	if (force)
+	if (force && (distributed == nullptr))
 	{
 		distributed = new b3Distribute(DISTRIBUTE);
 		b3GetSpecialHead()->b3Append(distributed);
-	}
-	else
-	{
-		distributed = null;
 	}
 	return distributed;
 }
 
 b3Nebular * b3Scene::b3GetNebular(b3_bool force)
 {
-	b3Nebular * nebular;
-	b3Item  *  item;
+	b3Nebular * nebular = b3GetSpecialHead()->b3FindTyped<b3Nebular>(NEBULAR);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == NEBULAR)
-		{
-			return (b3Nebular *)item;
-		}
-	}
-
-	if (force)
+	if (force && (nebular == nullptr))
 	{
 		nebular = new b3Nebular(NEBULAR);
 		b3GetSpecialHead()->b3Append(nebular);
-	}
-	else
-	{
-		nebular = null;
 	}
 	return nebular;
 }
 
 b3SuperSample * b3Scene::b3GetSuperSample(b3_bool force)
 {
-	b3SuperSample * supersample;
-	b3Item    *    item;
+	b3SuperSample * supersample = b3GetSpecialHead()->b3FindTyped<b3SuperSample>(SUPERSAMPLE4);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == SUPERSAMPLE4)
-		{
-			return (b3SuperSample *)item;
-		}
-	}
-
-	if (force)
+	if (force && (supersample == nullptr))
 	{
 		supersample = new b3SuperSample(SUPERSAMPLE4);
 		b3GetSpecialHead()->b3Append(supersample);
-	}
-	else
-	{
-		supersample = null;
 	}
 	return supersample;
 }
 
 b3LensFlare * b3Scene::b3GetLensFlare(b3_bool force)
 {
-	b3LensFlare * lensflare;
-	b3Item   *   item;
+	b3LensFlare * lensflare = b3GetSpecialHead()->b3FindTyped<b3LensFlare>(LENSFLARE);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == LENSFLARE)
-		{
-			return (b3LensFlare *)item;
-		}
-	}
-
-	if (force)
+	if (force && (lensflare == nullptr))
 	{
 		lensflare = new b3LensFlare(LENSFLARE);
 		b3GetSpecialHead()->b3Append(lensflare);
 	}
-	else
-	{
-		lensflare = null;
-	}
-
 	return lensflare;
 }
 
 b3CloudBackground * b3Scene::b3GetCloudBackground(b3_bool force)
 {
-	b3CloudBackground * clouds;
-	b3Item      *      item;
+	b3CloudBackground * clouds = b3GetSpecialHead()->b3FindTyped<b3CloudBackground>(CLOUDS);
 
-	B3_FOR_BASE(b3GetSpecialHead(), item)
-	{
-		if (item->b3GetClassType() == CLOUDS)
-		{
-			return (b3CloudBackground *)item;
-		}
-	}
-
-	if (force)
+	if (force && (clouds == nullptr))
 	{
 		clouds = new b3CloudBackground(CLOUDS);
 		b3GetSpecialHead()->b3Append(clouds);
 	}
-	else
-	{
-		clouds = null;
-	}
-
 	return clouds;
 }
 
@@ -413,15 +327,15 @@ b3CloudBackground * b3Scene::b3GetCloudBackground(b3_bool force)
 
 b3CameraPart * b3Scene::b3GetFirstCamera(b3_bool must_active)
 {
-	b3CameraPart * camera, *first = null;
-	b3Item    *   item;
+	b3CameraPart * camera, *first = nullptr;
+	b3Item    *    item;
 
 	B3_FOR_BASE(b3GetSpecialHead(), item)
 	{
 		if (item->b3GetClassType() == CAMERA)
 		{
 			camera = (b3CameraPart *)item;
-			if (first == null)
+			if (first == nullptr)
 			{
 				first = camera;
 			}
@@ -432,7 +346,7 @@ b3CameraPart * b3Scene::b3GetFirstCamera(b3_bool must_active)
 		}
 	}
 
-	if (first == null)
+	if (first == nullptr)
 	{
 		camera = new b3CameraPart(CAMERA);
 		camera->m_EyePoint  = m_EyePoint;
@@ -468,12 +382,12 @@ b3CameraPart * b3Scene::b3GetCameraByName(const char * camera_name)
 			}
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 b3CameraPart * b3Scene::b3GetActualCamera()
 {
-	if (m_ActualCamera == null)
+	if (m_ActualCamera == nullptr)
 	{
 		b3SetCamera(b3GetFirstCamera(false));
 	}
@@ -483,21 +397,21 @@ b3CameraPart * b3Scene::b3GetActualCamera()
 
 b3CameraPart * b3Scene::b3GetNextCamera(b3CameraPart * camera)
 {
-	while ((camera = (b3CameraPart *)camera->Succ) != null)
+	while ((camera = (b3CameraPart *)camera->Succ) != nullptr)
 	{
 		if (camera->b3GetClassType() == CAMERA)
 		{
 			return camera;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 b3CameraPart * b3Scene::b3UpdateCamera()
 {
-	if (m_ActualCamera != null)
+	if (m_ActualCamera != nullptr)
 	{
-		b3PrintF(B3LOG_DEBUG, "Using camera %s\n", m_ActualCamera->b3GetName());
+		b3PrintF(B3LOG_FULL, "Using camera %s\n", m_ActualCamera->b3GetName());
 		m_EyePoint 	= m_ActualCamera->m_EyePoint;
 		m_ViewPoint = m_ActualCamera->m_ViewPoint;
 		m_Width     = m_ActualCamera->m_Width;
@@ -510,7 +424,7 @@ void b3Scene::b3SetCamera(b3CameraPart * camera, b3_bool reorder)
 {
 	m_ActualCamera = camera;
 	b3UpdateCamera();
-	if (camera != null)
+	if (camera != nullptr)
 	{
 		if (reorder)
 		{
@@ -520,7 +434,7 @@ void b3Scene::b3SetCamera(b3CameraPart * camera, b3_bool reorder)
 
 		if (strlen(camera->m_CameraName) == 0)
 		{
-			b3Dir::b3SplitFileName(m_Filename, null, camera->m_CameraName);
+			b3Dir::b3SplitFileName(m_Filename, nullptr, camera->m_CameraName);
 		}
 	}
 }
@@ -528,7 +442,7 @@ void b3Scene::b3SetCamera(b3CameraPart * camera, b3_bool reorder)
 b3_bool b3Scene::b3GetTitle(char * title, size_t size)
 {
 	title[0] = 0;
-	if (m_ActualCamera != null)
+	if (m_ActualCamera != nullptr)
 	{
 		if (strlen(m_ActualCamera->m_CameraName) > 0)
 		{
@@ -537,7 +451,7 @@ b3_bool b3Scene::b3GetTitle(char * title, size_t size)
 	}
 	else
 	{
-		b3Dir::b3SplitFileName(m_Filename, null, title);
+		b3Dir::b3SplitFileName(m_Filename, nullptr, title);
 	}
 	return strlen(title) > 0;
 }
@@ -550,18 +464,14 @@ b3_bool b3Scene::b3GetTitle(char * title, size_t size)
 
 b3Light * b3Scene::b3GetLightByName(const char * light_name)
 {
-	b3Light * light;
-	b3Item * item;
-
-	B3_FOR_BASE(b3GetLightHead(), item)
+	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		light = (b3Light *)item;
 		if (stricmp(light->b3GetName(), light_name) == 0)
 		{
 			return light;
 		}
 	}
-	return null;
+	return nullptr;
 }
 
 b3_count b3Scene::b3GetLightCount()
@@ -571,19 +481,16 @@ b3_count b3Scene::b3GetLightCount()
 
 b3Light * b3Scene::b3GetLight(b3_bool must_active)
 {
-	b3Light * light;
-	b3Item * item;
-
-	B3_FOR_BASE(b3GetLightHead(), item)
+	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		light = (b3Light *)item;
 		if ((!must_active) || ((light->m_Flags & LIGHT_OFF) == 0))
 		{
 			return light;
 		}
 	}
 
-	if ((light = (b3Light *)b3GetLightHead()->First) == null)
+	b3Light * light;
+	if ((light = (b3Light *)b3GetLightHead()->First) == nullptr)
 	{
 		light = new b3Light(SPOT_LIGHT);
 		strlcpy(light->m_Name, "Light", sizeof(light->m_Name));
@@ -610,34 +517,30 @@ b3Scene * b3Scene::b3ReadTGF(const char * filename)
 **                                                                      **
 *************************************************************************/
 
-const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP]
 {
 	0.55, 0.0, 0.0, 0.25, 0.45, 0.55
 };
 
-const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP]
 {
 	0.9, 0.95, 0.95, 0.6, 0.6, 0.6
 };
 
-const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP]
 {
 	2.4, 1.5, 1.5, 2.0, 7.0, 4.0
 };
 
 void b3Scene::b3MixLensFlare(b3_ray * ray)
 {
-	b3Item  *  item;
-	b3Light  * light;
 	b3_vector  central, toLight, nLight;
 	b3Color    result;
 	b3_f64     distance, weight = 0.6;
 	b3_count   i;
 
-	B3_FOR_BASE(b3GetLightHead(), item)
+	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		light = (b3Light *)item;
-
 		toLight.x = light->m_Position.x - m_ViewPoint.x;
 		toLight.y = light->m_Position.y - m_ViewPoint.y;
 		toLight.z = light->m_Position.z - m_ViewPoint.z;

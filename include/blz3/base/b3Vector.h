@@ -56,7 +56,7 @@ typedef b3Exception<b3_vector_error, 0x564543> b3VectorException;
  */
 template<class F, b3_loop dim> class B3_PLUGIN b3VectorTemplate
 {
-	F B3_ALIGN_16 v[dim]; //!< The values.
+	alignas(16) F v[dim]; //!< The values.
 
 public:
 	/**
@@ -323,7 +323,7 @@ public:
 		return v[index];
 	}
 
-	inline const bool operator==(const b3VectorTemplate<F, dim> & a) const
+	inline bool operator==(const b3VectorTemplate<F, dim> & a) const
 	{
 		bool result = true;
 
@@ -334,7 +334,7 @@ public:
 		return result;
 	}
 
-	inline const bool operator!=(const b3VectorTemplate<F, dim> & a) const
+	inline bool operator!=(const b3VectorTemplate<F, dim> & a) const
 	{
 		bool result = false;
 
@@ -521,7 +521,7 @@ public:
 		const b3VectorTemplate<F, dim> & a,
 		const b3VectorTemplate<F, dim> & b)
 	{
-		F B3_ALIGN_16 r[dim];
+		alignas(16) F r[dim];
 		F             result = 0;
 		b3_loop       i;
 

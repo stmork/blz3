@@ -39,6 +39,8 @@ typedef b3Exception<b3_dir_error, 0x00444952> b3DirException;
 class b3Path : public b3PathAbstract
 {
 public:
+	static const char EXT_DELIMITER = '.';
+
 	/**
 	 * This constructor initializes this instance.
 	 */
@@ -51,23 +53,34 @@ public:
 	 *
 	 * @param path The filename for initializing.
 	 */
-	inline      b3Path(const char * path) : b3PathAbstract(path)
+	inline explicit b3Path(const char * path) : b3PathAbstract(path)
 	{
 	}
 
-	void b3Empty();
-	void b3LinkFileName(const char * path, const char * name);
-	void b3SplitFileName(char * path, char * name);
-	void b3RemoveExt(const char * filename);
-	void b3RemoveExt();
-	void b3ParentName(const char * filename);
-	void b3ParentName();
-	void b3ExtractExt(const char * filename);
-	void b3ExtractExt();
-	void b3Correct(const char * path);
-	void b3Correct();
-	void b3Format(const char * format, ...);
-	void b3Append(const char * ext);
+	/**
+	 * This copy operator copies a C style string into this instance.
+	 *
+	 * @param path The path to copy from.
+	 * @return This instance as reference.
+	 */
+	b3Path & operator=(const char * path);
+
+	void b3Empty() override;
+	void b3LinkFileName(const char * path, const char * name) override;
+	void b3SplitFileName(char * path, char * name) override;
+	void b3RemoveExt(const char * filename) override;
+	void b3RemoveExt() override;
+	void b3ParentName(const char * filename) override;
+	void b3ParentName() override;
+	void b3ExtractExt(const char * filename) override;
+	void b3ExtractExt() override;
+	void b3Correct(const char * path) override;
+	void b3Correct() override;
+	void b3Format(const char * format, ...) override
+	__attribute__((format(printf, 2, 3)));
+
+	void b3Append(const char * ext) override;
+	void b3Append(const char ext) override;
 
 	/**
 	 * This method concatenates a directory name and a filename and puts
@@ -169,6 +182,7 @@ class b3Dir : public b3DirAbstract, public b3Mem, public b3Path
 {
 protected:
 	DIR         *        dir;
+
 public:
 	/**
 	 * This constructor initializes the directory list class.
@@ -181,7 +195,7 @@ public:
 	 *
 	 * @param dirname The directory name to list.
 	 */
-	b3Dir(const char * dirname);
+	explicit b3Dir(const char * dirname);
 
 	/**
 	 * This destructor deinitializes this class by calling
@@ -189,9 +203,9 @@ public:
 	 */
 	~b3Dir();
 
-	b3_bool       b3OpenDir(const char * dirname);
-	b3_path_type  b3DirNext(char * direntry);
-	void          b3CloseDir();
+	b3_bool       b3OpenDir(const char * dirname) override;
+	b3_path_type  b3DirNext(char * direntry) override;
+	void          b3CloseDir() override;
 
 	/**
 	 * This method changes the current working directory to the specified one.
@@ -199,7 +213,7 @@ public:
 	 * @param newworkingdir The new working directory.
 	 * @return True on success.
 	 */
-	static b3_bool       b3ChDir(const char * newworkingdir);
+	static b3_bool       b3ChDir(const char * newWorkingdir);
 
 	/**
 	 * This method checks whether the specified filesystem entry exists as a directory.

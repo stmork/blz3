@@ -55,13 +55,13 @@ void b3Wood::b3InitWood()
 
 void b3Wood::b3PrepareWood(b3_vector * scale)
 {
-	b3Matrix::b3Move(null,   &m_Warp, -0.5, -0.5, -0.5);
-	b3Matrix::b3Scale(&m_Warp, &m_Warp, null, scale->x * M_PI, scale->y * M_PI, scale->z * M_PI);
-	b3Matrix::b3RotateZ(&m_Warp, &m_Warp, null, m_zRot);
-	b3Matrix::b3RotateY(&m_Warp, &m_Warp, null, m_yRot);
+	b3Matrix::b3Move(nullptr,   &m_Warp, -0.5, -0.5, -0.5);
+	b3Matrix::b3Scale(&m_Warp, &m_Warp, nullptr, scale->x * M_PI, scale->y * M_PI, scale->z * M_PI);
+	b3Matrix::b3RotateZ(&m_Warp, &m_Warp, nullptr, m_zRot);
+	b3Matrix::b3RotateY(&m_Warp, &m_Warp, nullptr, m_yRot);
 }
 
-b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, b3_f64 dist)
+b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 {
 	b3_vector d;
 	b3_vector offset;
@@ -155,12 +155,12 @@ void b3Wood::b3CopyWobbled(b3Wood * wood, b3_f64 wobble, b3_f64 fx, b3_f64 fy)
 
 b3OakPlank::b3OakPlank()
 {
-	m_Planks = null;
+	m_Planks = nullptr;
 }
 
 b3OakPlank::~b3OakPlank()
 {
-	if (m_Planks != null)
+	if (m_Planks != nullptr)
 	{
 		delete [] m_Planks;
 	}
@@ -185,7 +185,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	b3_index index;
 
 	b3PrepareWood(scale);
-	if (m_Planks != null)
+	if (m_Planks != nullptr)
 	{
 		delete [] m_Planks;
 	}
@@ -207,7 +207,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	}
 }
 
-b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index)
+b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index) const
 {
 	b3_vector surface;
 	b3_index  ix, iy;
@@ -222,5 +222,6 @@ b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_inde
 	ix  = (b3_index)surface.x;
 	iy  = (b3_index)surface.y;
 	index = (ix * m_yTimes + iy) % m_PlankCount;
+
 	return m_Planks[index].b3ComputeWood(&surface, distance);
 }

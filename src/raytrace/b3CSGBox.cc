@@ -39,10 +39,10 @@ b3CSGBox::b3CSGBox(b3_u32 * src) : b3CSGShape3(src)
 }
 
 void b3CSGBox::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count     &    vertCount,
+	b3_count     &    gridCount B3_UNUSED,
+	b3_count     &    polyCount B3_UNUSED)
 {
 	vertCount = 24;
 }
@@ -97,7 +97,7 @@ void b3CSGBox::b3InverseMap(b3_ray * ray, b3_csg_point * point)
 	polar->m_NormalIndex = point->m_Index;
 }
 
-void b3CSGBox::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3CSGBox::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

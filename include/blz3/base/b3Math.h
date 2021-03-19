@@ -445,15 +445,7 @@ public:
 #ifdef  CBRT_SLOW
 	static inline b3_f64 b3Cbrt(const b3_f64 x)
 	{
-		if (x > 0)
-		{
-			return (exp(log(x) / 3));
-		}
-		if (x < 0)
-		{
-			return (-exp(log(-x) / 3));
-		}
-		return 0;
+		return cbrt(x);
 	}
 #else
 	static inline b3_f64 b3Cbrt(b3_f64 x)

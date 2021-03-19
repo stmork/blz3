@@ -51,14 +51,14 @@ b3OceanWave::b3OceanWave()
 	m_l        =     0.0f;
 	m_Denom    = 1.0 / 4096.0;
 
-	m_Phillips = null;
-	m_Normals  = null;
+	m_Phillips = nullptr;
+	m_Normals  = nullptr;
 	m_Modified = true;
 }
 
 b3OceanWave::~b3OceanWave()
 {
-	if (m_Phillips != null)
+	if (m_Phillips != nullptr)
 	{
 		delete [] m_Phillips;
 	}
@@ -67,15 +67,15 @@ b3OceanWave::~b3OceanWave()
 void b3OceanWave::b3Modified(b3_bool modified)
 {
 	m_Modified = modified;
-	if (m_Phillips != null)
+	if (m_Phillips != nullptr)
 	{
 		delete [] m_Phillips;
-		m_Phillips = null;
+		m_Phillips = nullptr;
 	}
-	if (m_Normals != null)
+	if (m_Normals != nullptr)
 	{
 		b3Free(m_Normals);
-		m_Normals = null;
+		m_Normals = nullptr;
 	}
 }
 
@@ -113,9 +113,9 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 	b3PrintF(B3LOG_DEBUG, "     T   = %1.3f\n", m_T);
 	b3PrintF(B3LOG_DEBUG, "     t   = %1.3f\n", m_t);
 	b3PrintF(B3LOG_DEBUG, "     L   = %1.3f\n", m_L);
-	b3PrintF(B3LOG_DEBUG, "     L²  = %1.3f\n", m_L2);
-	b3PrintF(B3LOG_DEBUG, "    |w|² = %1.3f\n", m_W2);
-	b3PrintF(B3LOG_DEBUG, "     l²  = %1.3f\n", m_l2);
+	b3PrintF(B3LOG_DEBUG, "     LÂ²  = %1.3f\n", m_L2);
+	b3PrintF(B3LOG_DEBUG, "    |w|Â² = %1.3f\n", m_W2);
+	b3PrintF(B3LOG_DEBUG, "     lÂ²  = %1.3f\n", m_l2);
 
 #if 0
 	b3TestSpectrum3();
@@ -139,7 +139,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector * pos)
 	b3_f64                 dy;
 	b3_index               max    = m_fftDiff * m_fftDiff;
 	b3_index               index, xs, xe, y;
-	b3_f64    B3_ALIGN_16  a[2], b[2], c[2], dx[2];
+	alignas(16) b3_f64     a[2], b[2], c[2], dx[2];
 
 	xs = (b3_index)fx;
 	y  = (b3_index)fy;
@@ -169,7 +169,7 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector * pos)
 }
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(
-	const b3_vector * pos, b3_vector * n)
+	const b3_vector * pos, b3_vector * n B3_UNUSED) const
 {
 	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
 	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
@@ -194,17 +194,17 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 {
 	b3TimeStop stop("Compute Phillips spectrum");
 
-	if (m_Phillips == null)
+	if (m_Phillips == nullptr)
 	{
 		b3_size size = m_fftDiff * m_fftDiff;
 
 		m_Phillips = new b3Complex64[size];
-		if (m_Phillips == null)
+		if (m_Phillips == nullptr)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
 		m_Normals = (b3_vector *)b3Alloc(size * sizeof(b3_vector));
-		if (m_Normals == null)
+		if (m_Normals == nullptr)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
@@ -290,7 +290,7 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 	}
 
 #ifdef VERBOSE_DUMP
-	b3PrintF(B3LOG_NORMAL, "f: %f %f - K: %f %f # k²=%f k^4=%f L²=%f q=%f P=%f",
+	b3PrintF(B3LOG_NORMAL, "f: %f %f - K: %f %f # kÂ²=%f k^4=%f LÂ²=%f q=%f P=%f",
 		fx, fy,
 		Kr, Ki,
 		k2, k4, m_L2, quotient, phillips);
@@ -315,10 +315,10 @@ void b3OceanWave::b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index)
 }
 
 void b3OceanWave::b3SampleHeight(
-	const b3_f64        fx,
-	const b3_f64        fy,
-	const b3_index      index,
-	b3FilterInfo * filter_info)
+	const b3_f64     fx B3_UNUSED,
+	const b3_f64     fy B3_UNUSED,
+	const b3_index   index,
+	b3FilterInfo  *  filter_info)
 {
 	b3OceanWave * ocean  = (b3OceanWave *)filter_info;
 	b3Complex64 * buffer = ocean->b3GetBuffer();

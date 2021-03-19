@@ -110,10 +110,10 @@ b3_bool b3Torus::b3Prepare(b3_preparation_info * prep_info)
 }
 
 void b3Torus::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv + 2;
 
@@ -155,7 +155,7 @@ void b3Torus::b3SetupPicking(b3PickInfo * info)
 	info->b3AddPickPoint(&m_Base, "b");
 }
 
-void b3Torus::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Torus::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

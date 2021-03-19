@@ -138,7 +138,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III Image converter\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (command != null)
+	if (command != nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"%s -i input-img [-f][-u][g][-r thresh][-s scale]\n"

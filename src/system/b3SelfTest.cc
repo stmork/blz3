@@ -44,7 +44,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 {
 	b3_bool     *    ptr;
 
-	b3PrintF(B3LOG_NORMAL, "%d-Bit-CPU\n", b3Runtime::b3GetCPUBits());
+	b3PrintF(B3LOG_NORMAL, "%zd-Bit-CPU\n", b3Runtime::b3GetCPUBits());
 
 	switch (b3Runtime::b3GetCPUType())
 	{
@@ -64,18 +64,18 @@ b3_bool b3SelfTest::b3TestDataSize()
 	b3PrintF(B3LOG_NORMAL, "size of some basic data types:\n");
 	b3PrintF(B3LOG_NORMAL, "        uns. sgn.\n");
 	b3PrintF(B3LOG_NORMAL, "Integer:\n");
-	b3PrintF(B3LOG_NORMAL, " 8 bit: %3d  %3d (should be 1)\n", sizeof(b3_u08), sizeof(b3_s08));
-	b3PrintF(B3LOG_NORMAL, "16 bit: %3d  %3d (should be 2)\n", sizeof(b3_u16), sizeof(b3_s16));
-	b3PrintF(B3LOG_NORMAL, "32 bit: %3d  %3d (should be 4)\n", sizeof(b3_u32), sizeof(b3_s32));
-	b3PrintF(B3LOG_NORMAL, "64 bit: %3d  %3d (should be 8)\n", sizeof(b3_u64), sizeof(b3_s64));
-	b3PrintF(B3LOG_NORMAL, "bool:   %3d      (should be 4)\n", sizeof(b3_bool));
+	b3PrintF(B3LOG_NORMAL, " 8 bit: %3zd  %3zd (should be 1)\n", sizeof(b3_u08), sizeof(b3_s08));
+	b3PrintF(B3LOG_NORMAL, "16 bit: %3zd  %3zd (should be 2)\n", sizeof(b3_u16), sizeof(b3_s16));
+	b3PrintF(B3LOG_NORMAL, "32 bit: %3zd  %3zd (should be 4)\n", sizeof(b3_u32), sizeof(b3_s32));
+	b3PrintF(B3LOG_NORMAL, "64 bit: %3zd  %3zd (should be 8)\n", sizeof(b3_u64), sizeof(b3_s64));
+	b3PrintF(B3LOG_NORMAL, "bool:   %3zd      (should be 4)\n", sizeof(b3_bool));
 	b3PrintF(B3LOG_NORMAL, "Float:\n");
-	b3PrintF(B3LOG_NORMAL, "32 bit: %3d      (should be  4)\n",       sizeof(b3_f32));
-	b3PrintF(B3LOG_NORMAL, "64 bit: %3d      (should be  8)\n",       sizeof(b3_f64));
-	b3PrintF(B3LOG_NORMAL, "96 bit: %3d      (should be 12 or 16)\n", sizeof(b3_f96));
+	b3PrintF(B3LOG_NORMAL, "32 bit: %3zd      (should be  4)\n",       sizeof(b3_f32));
+	b3PrintF(B3LOG_NORMAL, "64 bit: %3zd      (should be  8)\n",       sizeof(b3_f64));
+	b3PrintF(B3LOG_NORMAL, "96 bit: %3zd      (should be 12 or 16)\n", sizeof(b3_f96));
 	b3PrintF(B3LOG_NORMAL, "\n");
-	b3PrintF(B3LOG_NORMAL, "Pointer size:                     %d bytes.\n", sizeof(ptr));
-	b3PrintF(B3LOG_NORMAL, "Int size for pointer arithmetics: %d bytes (%s).\n",
+	b3PrintF(B3LOG_NORMAL, "Pointer size:                     %zd bytes.\n", sizeof(ptr));
+	b3PrintF(B3LOG_NORMAL, "Int size for pointer arithmetics: %zd bytes (%s).\n",
 		sizeof(b3_ptr), sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
 
 	return true;
@@ -90,12 +90,12 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3_u08    buffer[MEM_MIN];
 	b3_bool   equal;
 	b3_bool   result = true;
-	int       i, v;
 
 	// Put some stuff into realloc buffer
 	b3PrintF(B3LOG_NORMAL, "\ntesting memory handling...\n");
-	for (i = 0; i < MEM_MIN; i++)
+	for (int i = 0; i < MEM_MIN; i++)
 	{
+		int v;
 #if 1
 		v         = B3_IRAN(256);
 #else
@@ -106,12 +106,12 @@ b3_bool b3SelfTest::b3TestMemory()
 	mem.b3Dump();
 
 	ptr1 = mem.b3Alloc(MEM_MIN);
-	result &= (ptr1 != null);
+	result &= (ptr1 != nullptr);
 	b3PrintF(B3LOG_NORMAL, "ptr1: %p\n", ptr1);
 	mem.b3Dump();
 
 	ptr2 = mem.b3Alloc(MEM_MIN);
-	result &= (ptr2 != null);
+	result &= (ptr2 != nullptr);
 	b3PrintF(B3LOG_NORMAL, "ptr2: %p\n", ptr2);
 	mem.b3Dump();
 
@@ -127,30 +127,30 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF(B3LOG_NORMAL, "whole node freed...\n");
 	mem.b3Dump();
 
-	ptr1 = mem.b3Realloc(null,  MEM_MIN * 2);
+	ptr1 = mem.b3Realloc(nullptr,  MEM_MIN * 2);
 	mem.b3Dump();
-	for (i = 0; i < MEM_MIN; i++)
+	for (int i = 0; i < MEM_MIN; i++)
 	{
 		((b3_u08 *)ptr1)[i] = buffer[i];
 	}
 	b3PrintF(B3LOG_NORMAL, "ptr1 = %p after b3Realloc() (%s)\n",
 		ptr1,
-		ptr1 != null ? "OK" : "wrong");
-	result &= (ptr1 != null);
+		ptr1 != nullptr ? "OK" : "wrong");
+	result &= (ptr1 != nullptr);
 
 	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
 	mem.b3Dump();
 	b3PrintF(B3LOG_NORMAL, "ptr2 = %p, ptr1 = %p after b3Realloc() with size reduction (%s)\n",
 		ptr2, ptr1,
-		(ptr1 == ptr2) && (ptr2 != null) ? "OK" : "wrong");
-	result &= ((ptr1 == ptr2) && (ptr2 != null));
+		(ptr1 == ptr2) && (ptr2 != nullptr) ? "OK" : "wrong");
+	result &= ((ptr1 == ptr2) && (ptr2 != nullptr));
 
 	ptr1 = mem.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
 	mem.b3Dump();
 	b3PrintF(B3LOG_NORMAL, "ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1, ptr2,
-		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
-	result &= ((ptr1 != ptr2) && (ptr1 != null));
+		(ptr1 != ptr2) && (ptr1 != nullptr) ? "OK" : "wrong");
+	result &= ((ptr1 != ptr2) && (ptr1 != nullptr));
 
 	equal = memcmp(buffer, ptr1, MEM_MIN) == 0;
 	b3PrintF(B3LOG_NORMAL, "   Memory buffer is %s\n",
@@ -159,7 +159,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	if (!equal)
 	{
 		result = false;
-		for (i = 0; i < MEM_MIN; i++)
+		for (int i = 0; i < MEM_MIN; i++)
 		{
 			if ((i & 7) == 0)
 			{
@@ -170,7 +170,7 @@ b3_bool b3SelfTest::b3TestMemory()
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 
-	for (i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
+	for (int i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
 	{
 		count += ((char *)ptr1)[i];
 	}
@@ -181,22 +181,22 @@ b3_bool b3SelfTest::b3TestMemory()
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	b3PrintF(B3LOG_NORMAL, "ptr2 = %p, ptr1 = %p after b3Realloc() with zero size allocation (%s)\n",
 		ptr2, ptr1,
-		(ptr1 != ptr2) && (ptr2 == null) ? "OK" : "wrong");
-	result &= ((ptr1 != ptr2) && (ptr2 == null));
+		(ptr1 != ptr2) && (ptr2 == nullptr) ? "OK" : "wrong");
+	result &= ((ptr1 != ptr2) && (ptr2 == nullptr));
 
 	b3PrintF(B3LOG_NORMAL, "\n");
 	v1 = 1;
 	v2 = 2;
-	b3PrintF(B3LOG_NORMAL, "SWAP:  i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "SWAP:  i=%u k=%u\n", v1, v2);
 	B3_SWAP(v1, v2);
-	b3PrintF(B3LOG_NORMAL, "       i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "       i=%u k=%u\n", v1, v2);
 	result &= ((v1 == 2) && (v2 == 1));
 
 	v1 = 1;
 	v2 = 2;
-	b3PrintF(B3LOG_NORMAL, "PSWAP: i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "PSWAP: i=%u k=%u\n", v1, v2);
 	B3_PSWAP(&v1, &v2);
-	b3PrintF(B3LOG_NORMAL, "       i=%ld k=%ld\n", v1, v2);
+	b3PrintF(B3LOG_NORMAL, "       i=%u k=%u\n", v1, v2);
 	result &= ((v1 == 2) && (v2 == 1));
 
 	return result;
@@ -292,7 +292,7 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract & file)
 		break;
 
 	default :
-		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %ld)\n", code);
+		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %d)\n", code);
 		success = false;
 		break;
 	}
@@ -353,7 +353,7 @@ b3_bool b3SelfTest::b3TestIO()
 		break;
 
 	default :
-		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %ld)\n", code);
+		b3PrintF(B3LOG_NORMAL, "Config.tst is if unknown file type (code %d)\n", code);
 		success = false;
 		break;
 	}

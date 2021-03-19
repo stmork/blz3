@@ -57,7 +57,7 @@ b3CSGShape::b3CSGShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
-b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
+b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode) const
 {
 	b3_size i;
 
@@ -152,11 +152,13 @@ void b3CSGShape::b3Operate(
 	}
 }
 
-void b3CSGShape::b3InverseMap(b3_ray * ray, b3_csg_point * point)
+void b3CSGShape::b3InverseMap(
+	b3_ray    *    ray B3_UNUSED,
+	b3_csg_point * point B3_UNUSED)
 {
 }
 
-b3_count b3CSGShape::b3GetMaxIntersections()
+b3_count b3CSGShape::b3GetMaxIntersections() const
 {
 	return 0;
 }
@@ -265,7 +267,7 @@ b3_bool b3CSGShape3::b3Prepare(b3_preparation_info * prep_info)
 	return result;
 }
 
-void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;
@@ -277,7 +279,7 @@ void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
 	info->yInfo.factor = b3Vector::b3Length(&m_Dir3);;
 }
 
-b3_count b3CSGShape3::b3GetMaxIntersections()
+b3_count b3CSGShape3::b3GetMaxIntersections() const
 {
 	return 2;
 }

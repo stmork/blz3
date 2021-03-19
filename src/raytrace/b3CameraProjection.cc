@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3CameraProjection::b3CameraProjection(b3CameraPart * camera)
+b3CameraProjection::b3CameraProjection(const b3CameraPart * camera)
 {
 	m_Base = camera->m_EyePoint;
 	m_Dir1 = camera->m_Width;

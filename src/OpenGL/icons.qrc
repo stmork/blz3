@@ -1,0 +1,113 @@
+<RCC>
+    <qresource prefix="/toolbar/file">
+        <file>res/toolbar/file/file_new.png</file>
+        <file>res/toolbar/file/file_open.png</file>
+        <file>res/toolbar/file/file_save.png</file>
+        <file>res/toolbar/file/file_save_object.png</file>
+        <file>res/toolbar/file/file_open_object.png</file>
+        <file>res/toolbar/file/file_5.png</file>
+        <file>res/toolbar/file/file_6.png</file>
+        <file>res/toolbar/file/file_7.png</file>
+        <file>res/toolbar/file/file_8.png</file>
+        <file>res/toolbar/file/file_delete_object.png</file>
+        <file>res/toolbar/file/file_split_object.png</file>
+        <file>res/toolbar/file/file_cut.png</file>
+        <file>res/toolbar/file/file_paste.png</file>
+        <file>res/toolbar/file/file_copy.png</file>
+        <file>res/toolbar/file/file_undo.png</file>
+        <file>res/toolbar/file/file_redo.png</file>
+        <file>res/toolbar/file/file_print.png</file>
+        <file>res/toolbar/file/file_about.png</file>
+        <file>res/toolbar/action/action_select.png</file>
+        <file>res/toolbar/action/action_object_move.png</file>
+        <file>res/toolbar/action/action_object_rotate.png</file>
+        <file>res/toolbar/action/action_object_resize.png</file>
+        <file>res/toolbar/action/action_camera_move.png</file>
+        <file>res/toolbar/action/action_camera_rotate.png</file>
+        <file>res/toolbar/action/action_camera_orientate.png</file>
+        <file>res/toolbar/action/action_7.png</file>
+        <file>res/toolbar/action/action_light_orientate.png</file>
+        <file>res/toolbar/action/action_9.png</file>
+        <file>res/toolbar/action/action_10.png</file>
+        <file>res/toolbar/action/action_11.png</file>
+        <file>res/toolbar/action/action_12.png</file>
+        <file>res/toolbar/action/action_13.png</file>
+        <file>res/toolbar/action/action_material_edit.png</file>
+        <file>res/toolbar/action/action_bump_edit.png</file>
+        <file>res/toolbar/action/action_condition_edit.png</file>
+    </qresource>
+    <qresource prefix="/toolbar/animation">
+        <file>res/toolbar/animation/animation_begin.png</file>
+        <file>res/toolbar/animation/animation_backward.png</file>
+        <file>res/toolbar/animation/animation_stop.png</file>
+        <file>res/toolbar/animation/animation_play.png</file>
+        <file>res/toolbar/animation/animation_pause.png</file>
+        <file>res/toolbar/animation/animation_forward.png</file>
+        <file>res/toolbar/animation/animation_end.png</file>
+        <file>res/toolbar/animation/animation_edit.png</file>
+    </qresource>
+    <qresource prefix="/toolbar/camera">
+        <file>res/toolbar/camera/camera_new.png</file>
+        <file>res/toolbar/camera/camera_delete.png</file>
+        <file>res/toolbar/camera/camera_edit.png</file>
+        <file>res/toolbar/camera/camera_justify.png</file>
+        <file>res/toolbar/camera/camera_enable.png</file>
+        <file>res/toolbar/camera/camera_5.png</file>
+    </qresource>
+    <qresource prefix="/toolbar/light">
+        <file>res/toolbar/light/light_6.png</file>
+        <file>res/toolbar/light/light_7.png</file>
+        <file>res/toolbar/light/light_curve.png</file>
+        <file>res/toolbar/light/light_delete.png</file>
+        <file>res/toolbar/light/light_dist.png</file>
+        <file>res/toolbar/light/light_edit.png</file>
+        <file>res/toolbar/light/light_enable.png</file>
+        <file>res/toolbar/light/light_new.png</file>
+    </qresource>
+    <qresource prefix="/toolbar/object">
+        <file>res/toolbar/object/object_0.png</file>
+        <file>res/toolbar/object/object_raytrace.png</file>
+        <file>res/toolbar/object/object_2.png</file>
+        <file>res/toolbar/object/object_3.png</file>
+        <file>res/toolbar/object/object_activate.png</file>
+        <file>res/toolbar/object/object_deactivate.png</file>
+        <file>res/toolbar/object/object_reactivate.png</file>
+        <file>res/toolbar/object/object_activate_all.png</file>
+        <file>res/toolbar/object/object_deactivate_all.png</file>
+        <file>res/toolbar/object/object_deactivate_rest.png</file>
+        <file>res/toolbar/object/object_edit.png</file>
+    </qresource>
+    <qresource prefix="/toolbar/view">
+        <file>res/toolbar/view/view_3d.png</file>
+        <file>res/toolbar/view/view_bottom.png</file>
+        <file>res/toolbar/view/view_front.png</file>
+        <file>res/toolbar/view/view_right.png</file>
+        <file>res/toolbar/view/view_back.png</file>
+        <file>res/toolbar/view/view_left.png</file>
+        <file>res/toolbar/view/view_bigger.png</file>
+        <file>res/toolbar/view/view_smaller.png</file>
+        <file>res/toolbar/view/view_select.png</file>
+        <file>res/toolbar/view/view_undo.png</file>
+        <file>res/toolbar/view/view_full.png</file>
+    </qresource>
+    <qresource prefix="/toolbar/display">
+        <file>res/toolbar/display/display_unfiltered.png</file>
+        <file>res/toolbar/display/display_filtered.png</file>
+        <file>res/toolbar/display/display_fit_all.png</file>
+        <file>res/toolbar/display/display_fit_width.png</file>
+        <file>res/toolbar/display/display_fit_height.png</file>
+        <file>res/toolbar/display/display_fit_original.png</file>
+        <file>res/toolbar/display/display_bigger.png</file>
+        <file>res/toolbar/display/display_smaller.png</file>
+        <file>res/toolbar/display/display_resize_select.png</file>
+    </qresource>
+    <qresource prefix="/treeview">
+        <file alias="World">res/treeview/BBox_World.png</file>
+        <file alias="BBox_empty">res/treeview/BBox_empty.png</file>
+        <file alias="BBox_sub">res/treeview/BBox_sub.png</file>
+        <file alias="BBox_Shape">res/treeview/BBox_Shape.png</file>
+        <file alias="BBox_Shape_sel">res/treeview/BBox_Shape_sel.png</file>
+        <file alias="BBox_Shape_sub">res/treeview/BBox_Shape_sub.png</file>
+        <file alias="BBox_Shape_sub_sel">res/treeview/BBox_Shape_sub_sel.png</file>
+    </qresource>
+</RCC>

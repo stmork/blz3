@@ -68,7 +68,7 @@ void b3Tx::b3GetSampleValues(
 	}
 }
 
-const b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
+b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 {
 	b3_u08   *   cPtr, *pPtr;
 	b3_u16       r[256], g[256], b[256];
@@ -125,7 +125,7 @@ const b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 	return B3_OK;
 }
 
-const b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
+b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
 {
 	b3_coord     y;
 	b3_count     xBytes;
@@ -170,7 +170,7 @@ const b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
 	return B3_OK;
 }
 
-const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
+b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 {
 	b3_pkd_color * lPtr;
 	b3_coord      x, y;
@@ -199,7 +199,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 
 	// alloc memory for three channels of one row
 	row = (b3_u08 *)b3Alloc(xSize * 3 * sizeof(b3_u08));
-	if (row == null)
+	if (row == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
@@ -258,7 +258,7 @@ const b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 	return B3_OK;
 }
 
-const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
+b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 {
 	b3_color   *  lPtr;
 	b3_coord      x, y;
@@ -287,7 +287,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 
 	// alloc memory for three channels of one row
 	row = (b3_u16 *)b3Alloc(xSize * 3 * sizeof(b3_u16));
-	if (row == null)
+	if (row == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
@@ -349,7 +349,7 @@ const b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	return B3_OK;
 }
 
-const b3_result b3Tx::b3SaveTIFF(const char * nameTx)
+b3_result b3Tx::b3SaveTIFF(const char * nameTx)
 {
 	TIFF    *    tiff;
 	b3_tx_error  result = B3_TX_OK;
@@ -361,7 +361,7 @@ const b3_result b3Tx::b3SaveTIFF(const char * nameTx)
 		B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 	}
 
-	if (nameTx == null)
+	if (nameTx == nullptr)
 	{
 		if (strlen(image_name) == 0)
 		{

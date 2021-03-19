@@ -56,7 +56,7 @@ void b3Log::b3LogTime(const char * comment)
 	struct timeval stamp;
 
 	gettimeofday(&stamp, 0);
-	b3LogFunction(B3LOG_FULL, "                      timecode %ld - %3hd (%s)\n",
+	b3LogFunction(B3LOG_FULL, "                      timecode %ld - %3ld (%s)\n",
 		stamp.tv_sec, stamp.tv_usec / 1000, comment ? comment : "-");
 }
 
@@ -72,11 +72,10 @@ void b3Log::b3LogFunction(
 	const b3_log_level  level,
 	const char     *    format, ...)
 {
-	va_list  argptr;
-
 	if (b3CheckLevel(level))
 	{
 		b3CriticalSection lock(m_LogMutex);
+		va_list           argptr;
 
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this

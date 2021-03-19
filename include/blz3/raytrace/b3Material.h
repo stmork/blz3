@@ -119,7 +119,7 @@ public:
 	 */
 	static  void    b3Register();
 
-	virtual b3_bool b3Prepare(b3_preparation_info * prep_info) override
+	virtual b3_bool b3Prepare(b3_preparation_info * prep_info B3_UNUSED) override
 	{
 		return true;
 	}
@@ -133,7 +133,7 @@ public:
 	 * @param surface The surface structure to fill in the material properties.
 	 * @return True if the material traversal should terminate.
 	 */
-	virtual b3_bool b3GetSurfaceValues(b3_surface * surface)
+	virtual inline b3_bool b3GetSurfaceValues(b3_surface * surface) const
 	{
 		surface->m_Diffuse     = B3_LIGHT_BLUE;
 		surface->m_Ambient     = surface->m_Diffuse * 0.2;
@@ -155,7 +155,9 @@ public:
 	 * @param lit The lighting values.
 	 * @return True on material computation, false on shader computation.
 	 */
-	virtual b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit)
+	virtual b3_bool b3Illuminate(
+		b3_surface   *  surface B3_UNUSED,
+		b3_light_info * lit     B3_UNUSED) const
 	{
 		return false;
 	}
@@ -169,11 +171,14 @@ public:
 	 * @param refraction The refractance.
 	 * @return True if mixed via material properties.
 	 */
-	static inline b3_bool b3MixComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
+	static inline b3_bool b3MixComponents(
+		b3_surface * surface,
+		b3_f64       reflection,
+		b3_f64       refraction)
 	{
-		b3Material * material = surface->m_Incoming->material;
+		const b3Material * material = surface->m_Incoming->material;
 
-		return material != null ? material->b3ShadeComponents(surface, reflection, refraction) : false;
+		return material != nullptr ? material->b3ShadeComponents(surface, reflection, refraction) : false;
 	}
 
 protected:
@@ -185,7 +190,10 @@ protected:
 	 * @param refraction The refractance.
 	 * @return True on component mixing, false on shader intelligence.
 	 */
-	virtual b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction)
+	virtual b3_bool b3ShadeComponents(
+		b3_surface * surface B3_UNUSED,
+		b3_f64       reflection B3_UNUSED,
+		b3_f64       refraction B3_UNUSED) const
 	{
 		return false;
 	}
@@ -203,10 +211,10 @@ protected:
 	 * @see b3Math::b3Mix()
 	 */
 	static inline void b3Mix(
-		b3_surface * surface,
+		b3_surface     *    surface,
 		const b3_material * a,
 		const b3_material * b,
-		const b3_f64       mix)
+		const b3_f64        mix)
 	{
 		b3Color mixer;
 
@@ -246,7 +254,7 @@ public:
 	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	virtual b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	virtual b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
 	void    b3Init();
@@ -285,7 +293,7 @@ public:
 	B3_ITEM_LOAD(b3MatChess); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -320,7 +328,7 @@ public:
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 	void    b3SetTexture(const char * name);
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -353,7 +361,7 @@ public:
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
 	void    b3SetTexture(const char * name);
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -380,7 +388,7 @@ public:
 	B3_ITEM_LOAD(b3MatSlide); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 #define DIR_SLIDE_BIT       0
@@ -424,7 +432,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -478,7 +486,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
 	void    b3Init();
@@ -510,7 +518,7 @@ public:
 
 	void     b3Write() override;
 	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool  b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool  b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
 	void     b3Init();
@@ -543,8 +551,8 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
-	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
+	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) const override;
 };
 
 /*************************************************************************
@@ -571,7 +579,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 /*************************************************************************
@@ -599,11 +607,11 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
-	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
+	b3_bool b3Illuminate(b3_surface * surface, b3_light_info * lit) const override;
 
 protected:
-	b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) override;
+	b3_bool b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) const override;
 
 private:
 	static inline void b3Randomize(const b3_vector64 * src, b3_vector64 * dst, b3_f64 scale, b3_f64 half)
@@ -644,7 +652,7 @@ public:
 
 	void    b3Write() override;
 	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	b3_bool b3GetSurfaceValues(b3_surface * surface) override;
+	b3_bool b3GetSurfaceValues(b3_surface * surface) const override;
 };
 
 #endif

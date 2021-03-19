@@ -32,19 +32,22 @@
 **                                                                      **
 *************************************************************************/
 
-b3PathEntry::b3PathEntry(const b3PathEntry & src) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
+b3PathEntry::b3PathEntry(const b3PathEntry & src) :
+	b3Link<b3PathEntry>(sizeof(b3PathEntry)), b3Path()
 {
 	snprintf(m_Path, sizeof(m_Path), "%s", src.m_Path);
 }
 
-b3PathEntry::b3PathEntry(const b3PathEntry * src) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
+b3PathEntry::b3PathEntry(const b3PathEntry * src) :
+	b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
-	snprintf(m_Path, sizeof(m_Path), "%s", src != null ? src->m_Path : "");
+	snprintf(m_Path, sizeof(m_Path), "%s", src != nullptr ? src->m_Path : "");
 }
 
-b3PathEntry::b3PathEntry(const char * new_path) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
+b3PathEntry::b3PathEntry(const char * new_path) :
+	b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
-	snprintf(m_Path, sizeof(m_Path), "%s", new_path != null ? new_path : "");
+	snprintf(m_Path, sizeof(m_Path), "%s", new_path != nullptr ? new_path : "");
 }
 
 void b3SearchPath::b3AddPath(const char * path)
@@ -83,7 +86,7 @@ b3_bool b3SearchPath::b3IsValid(const char * Name, char * FullName)
 {
 	b3PathEntry * path;
 
-	if ((Name != null) && (strlen(Name) > 0))
+	if ((Name != nullptr) && (strlen(Name) > 0))
 	{
 		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", (char *)Name);
 		if (b3Dir::b3Exists(Name) == B3_TYPE_FILE)

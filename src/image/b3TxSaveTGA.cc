@@ -46,7 +46,7 @@ b3InfoTGA::b3InfoTGA(b3Tx * tx, const char * filename) :
 	b3TxSaveInfo(tx, filename)
 {
 	m_SaveData = (b3_u08 *)b3Alloc(BUFFERSIZE + 16);
-	if (m_SaveData == null)
+	if (m_SaveData == nullptr)
 	{
 		m_File.b3Close();
 		b3Free();
@@ -140,7 +140,7 @@ b3InfoTGA::~b3InfoTGA()
 	m_File.b3Write(m_SaveData, 18);
 }
 
-const b3_result b3Tx::b3SaveTGA(const char * filename)
+b3_result b3Tx::b3SaveTGA(const char * filename)
 {
 	b3PrintF(B3LOG_FULL, "Saving TGA: %s\n", filename);
 

@@ -52,7 +52,7 @@ void b3VectorBufferObjects::b3Init(const char * extensions)
 #ifdef BLZ3_USE_OPENGL
 	const char * vendor = (const char *)glGetString(GL_VENDOR);
 
-	if (extensions == null)
+	if (extensions == nullptr)
 	{
 		extensions = (const char *)glGetString(GL_EXTENSIONS);
 	}
@@ -69,12 +69,12 @@ void b3VectorBufferObjects::b3Init(const char * extensions)
 	b3_bool is_not_ati = strncmp(vendor, "ATI", 3) != 0;
 	b3_bool driver_has_vbo = strstr(extensions, "ARB_vertex_buffer_object") != 0;
 	b3_bool methods_not_null =
-		(glGenBuffersARB != null) &&
-		(glDeleteBuffersARB != null) &&
-		(glBindBufferARB != null) &&
-		(glBufferDataARB != null) &&
-		(glMapBufferARB  != null) &&
-		(glUnmapBufferARB != null);
+		(glGenBuffersARB != nullptr) &&
+		(glDeleteBuffersARB != nullptr) &&
+		(glBindBufferARB != nullptr) &&
+		(glBufferDataARB != nullptr) &&
+		(glMapBufferARB  != nullptr) &&
+		(glUnmapBufferARB != nullptr);
 
 	glHasVBO = is_not_ati && driver_has_vbo && methods_not_null;
 

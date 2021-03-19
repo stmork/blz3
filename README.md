@@ -1,8 +1,14 @@
 # Welcome to Blizzard III - a fast multiplatform raytracer.
 
-You can compile it with gcc or Visual Studio on Windows. For gcc based systems you need only to call
+This is ongoing work to migrate the raytracing framework to Qt.
+
+You can compile it with gcc you need only to call
 
 ```
 make config depend
-make
+cd src
+qmake
+cd ..
+
+make install
 ```

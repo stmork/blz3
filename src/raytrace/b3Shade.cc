@@ -39,7 +39,7 @@ b3Shader::b3Shader(b3Scene * scene) : m_Scene(scene)
 	b3Prepare(&info);
 }
 
-void b3Shader::b3Prepare(b3_preparation_info * prep_info)
+void b3Shader::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	m_Nebular    = m_Scene->m_Nebular;
 	m_TraceDepth = m_Scene->m_TraceDepth;
@@ -126,8 +126,8 @@ b3_bool b3Shader::b3Shade(
 	b3_ray  * ray,
 	b3_count  depth_count)
 {
-	b3BBox   *   bbox;
-	b3Shape   *  shape;
+	const b3BBox   *   bbox;
+	const b3Shape   *  shape;
 	b3_surface   surface;
 	b3_bool      finite;
 
@@ -159,7 +159,7 @@ b3_bool b3Shader::b3Shade(
 		b3ShadeSurface(&surface, depth_count + 1);
 
 		// Post process nebular
-		if (m_Nebular != null)
+		if (m_Nebular != nullptr)
 		{
 			m_Nebular->b3ComputeNebular(ray->color, ray->color, ray->Q);
 		}
@@ -168,7 +168,7 @@ b3_bool b3Shader::b3Shade(
 	else
 	{
 		// Post process nebular
-		if (m_Nebular != null)
+		if (m_Nebular != nullptr)
 		{
 			m_Nebular->b3GetNebularColor(ray->color);
 			finite = true;
@@ -187,11 +187,14 @@ b3_bool b3Shader::b3Shade(
 	return finite;
 }
 
-void b3Shader::b3Shade(b3Light * light, b3_light_info * jit, b3_surface * surface)
+void b3Shader::b3Shade(
+	const b3Light * light,
+	b3_light_info * jit,
+	b3_surface   *  surface) const
 {
-	b3Material * material = surface->m_Incoming->material;
+	const b3Material * material = surface->m_Incoming->material;
 
-	if (!((material != null) && material->b3Illuminate(surface, jit)))
+	if (!((material != nullptr) && material->b3Illuminate(surface, jit)))
 	{
 		b3ShadeLight(light, jit, surface);
 	}

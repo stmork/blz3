@@ -43,25 +43,25 @@ void b3Item::b3Register(
 	b3ItemRegisterEntry * entry;
 
 	entry = new b3ItemRegisterEntry(init_func, load_func, class_type, is_class);
-	if (entry == null)
+	if (entry == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
-	b3ItemRegister::b3Append(entry);
+	b3ItemRegister::b3Instance().b3Append(entry);
 }
 
 b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))
 {
 	m_ItemSize   = 0;
 	m_ItemOffset = 0;
-	m_Buffer     = null;
+	m_Buffer     = nullptr;
 	m_HeadCount  = 0;
-	m_Heads      = null;
+	m_Heads      = nullptr;
 	m_ParseIndex = 0;
 
 	m_StoreIndex  = 0;
 	m_StoreOffset = 0;
-	m_StoreBuffer = null;
+	m_StoreBuffer = nullptr;
 	m_StoreSize   = 0;
 }
 
@@ -72,14 +72,14 @@ b3Item::b3Item(
 {
 	m_ItemSize   = 0;
 	m_ItemOffset = 0;
-	m_Buffer     = null;
+	m_Buffer     = nullptr;
 	m_HeadCount  = 0;
-	m_Heads      = null;
+	m_Heads      = nullptr;
 	m_ParseIndex = 0;
 
 	m_StoreIndex  = 0;
 	m_StoreOffset = 0;
-	m_StoreBuffer = null;
+	m_StoreBuffer = nullptr;
 	m_StoreSize   = 0;
 }
 
@@ -108,7 +108,7 @@ b3Item::b3Item(b3_u32 * src) :
 	if (m_HeadCount > 0)
 	{
 		m_Heads = (b3Base<b3Item> *)b3Alloc(m_HeadCount * sizeof(b3Base<b3Item>));
-		if (m_Heads != null)
+		if (m_Heads != nullptr)
 		{
 			k = B3_NODE_IDX_FIRSTHEAD_CLASS + B3_HEAD_IDX_CLASS;
 			for (i = 0; i < m_HeadCount; i++)
@@ -120,13 +120,13 @@ b3Item::b3Item(b3_u32 * src) :
 	}
 	else
 	{
-		m_Heads = null;
+		m_Heads = nullptr;
 	}
 	b3Init();
 
 	m_StoreIndex  = 0;
 	m_StoreOffset = 0;
-	m_StoreBuffer = null;
+	m_StoreBuffer = nullptr;
 	m_StoreSize   = 0;
 }
 
@@ -140,12 +140,12 @@ b3Item::~b3Item()
 	}
 }
 
-const b3_bool b3Item::b3IsClass(const b3_u32 class_type, const b3_u32 class_id)
+b3_bool b3Item::b3IsClass(const b3_u32 class_type, const b3_u32 class_id)
 {
 	return (class_type & B3_CLASS_MASK) == class_id;
 }
 
-const b3_bool b3Item::b3IsClass(const b3_u32 class_id) const
+b3_bool b3Item::b3IsClass(const b3_u32 class_id) const
 {
 	return b3IsClass(b3GetClassType(), class_id);
 }
@@ -155,7 +155,7 @@ b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
 	b3_u32  i;
 
 	m_Heads = (b3Base<b3Item> *)b3Alloc(new_head_count * sizeof(b3Base<b3Item>));
-	if (m_Heads != null)
+	if (m_Heads != nullptr)
 	{
 		m_HeadCount = new_head_count;
 		for (i = 0; i < m_HeadCount; i++)
@@ -163,15 +163,15 @@ b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
 			m_Heads[i].b3InitBase();
 		}
 	}
-	return m_Heads != null;
+	return m_Heads != nullptr;
 }
 
 const char * b3Item::b3GetName() const
 {
-	return null;
+	return nullptr;
 }
 
-b3_bool b3Item::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Item::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return true;
 }
@@ -190,12 +190,12 @@ void b3Item::b3Dump(b3_count level) const
 	b3_u32  i;
 
 	b3DumpSpace(level);
-	b3PrintF(B3LOG_NORMAL, "%08lx %7d\n", ClassType, Size);
+	b3PrintF(B3LOG_NORMAL, "%08x %7zd\n", ClassType, Size);
 
 	for (i = 0; i < m_HeadCount; i++)
 	{
 		b3DumpSpace(level);
-		b3PrintF(B3LOG_NORMAL, "%08lx -------------\n", m_Heads[i].b3GetClass());
+		b3PrintF(B3LOG_NORMAL, "%08x -------------\n", m_Heads[i].b3GetClass());
 		B3_FOR_BASE(&m_Heads[i], node)
 		{
 			node->b3Dump(level + 1);
@@ -208,17 +208,18 @@ void b3Item::b3DumpSimple(b3_count level, b3_log_level log_level) const
 	b3_u32  i, max = (b3_count)(m_ItemSize >> 2);
 
 	b3DumpSpace(level, log_level);
-	b3PrintF(log_level, "%08lx %7d # %7d %7d # %7d", ClassType, Size, m_ItemSize, m_ItemOffset, m_ParseIndex);
+	b3PrintF(log_level, "%08x %7zd # %7u %7u # %7u",
+		ClassType, Size, m_ItemSize, m_ItemOffset, m_ParseIndex);
 
 	for (i = 0; i < m_HeadCount; i++)
 	{
-		b3PrintF(log_level, "  %08lx", m_Heads[i].b3GetClass());
+		b3PrintF(log_level, "  %08x", m_Heads[i].b3GetClass());
 	}
 	b3PrintF(log_level, " #");
 
 	for (i = 0; i < max; i++)
 	{
-		b3PrintF(log_level, "  %08lx", m_Buffer[i]);
+		b3PrintF(log_level, "  %08x", m_Buffer[i]);
 	}
 	b3PrintF(log_level, "\n");
 }
@@ -270,7 +271,7 @@ b3_bool b3Item::b3InitBool()
 void b3Item::b3InitVector(b3_vector * vec)
 {
 	B3_ASSERT_INDEX;
-	if (vec != null)
+	if (vec != nullptr)
 	{
 		b3_f32 * ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
@@ -294,7 +295,7 @@ void b3Item::b3InitVector(b3Vector32 & vec)
 void b3Item::b3InitVector4D(b3_vector4D * vec)
 {
 	B3_ASSERT_INDEX;
-	if (vec != null)
+	if (vec != nullptr)
 	{
 		b3_f32 * ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
@@ -429,7 +430,7 @@ void * b3Item::b3InitNull()
 	B3_ASSERT_INDEX;
 	m_ParseIndex++;
 
-	return null;
+	return nullptr;
 }
 
 void b3Item::b3InitNOP()
@@ -456,7 +457,7 @@ b3_u32 b3Item::b3Store()
 	m_StoreOffset = 0;
 
 	// Allocate store buffer
-	if (m_StoreBuffer == null)
+	if (m_StoreBuffer == nullptr)
 	{
 		if ((m_ItemSize >> 2) < (b3_size)(B3_NODE_IDX_FIRSTHEAD_CLASS + m_HeadCount * B3_HEAD_SIZE))
 		{
@@ -467,7 +468,7 @@ b3_u32 b3Item::b3Store()
 			m_StoreSize = m_ItemSize;
 		}
 		m_StoreBuffer = (b3_u32 *)b3Alloc(m_StoreSize);
-		if (m_StoreBuffer == null)
+		if (m_StoreBuffer == nullptr)
 		{
 			B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 		}
@@ -492,8 +493,8 @@ b3_u32 b3Item::b3Store()
 	b3Write();
 
 	// Prepare b3Link
-	m_StoreBuffer[B3_NODE_IDX_SUCC]      = Succ != null ? 0xabadcafe : null;
-	m_StoreBuffer[B3_NODE_IDX_PREV]      = Prev != null ? 0xdeadbeef : null;
+	m_StoreBuffer[B3_NODE_IDX_SUCC]      = Succ != nullptr ? 0xabadcafe : 0;
+	m_StoreBuffer[B3_NODE_IDX_PREV]      = Prev != nullptr ? 0xdeadbeef : 0;
 	m_StoreBuffer[B3_NODE_IDX_CLASSTYPE] = b3GetClassType();
 	m_StoreBuffer[B3_NODE_IDX_SIZE]      = m_ItemSize   = m_StoreIndex  << 2;
 	m_StoreBuffer[B3_NODE_IDX_OFFSET]    = m_ItemOffset = m_StoreOffset << 2;
@@ -527,7 +528,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract * file)
 	b3_world_error  error = B3_WORLD_WRITE;
 	b3_u32          i;
 
-	if (m_StoreBuffer != null)
+	if (m_StoreBuffer != nullptr)
 	{
 		if (file->b3Write(m_StoreBuffer, m_ItemSize) == m_ItemSize)
 		{
@@ -539,7 +540,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract * file)
 					if (error != B3_WORLD_OK)
 					{
 						b3Free(m_StoreBuffer);
-						m_StoreBuffer = null;
+						m_StoreBuffer = nullptr;
 						m_StoreSize   = 0;
 						return error;
 					}
@@ -554,7 +555,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract * file)
 	}
 
 	b3Free(m_StoreBuffer);
-	m_StoreBuffer = null;
+	m_StoreBuffer = nullptr;
 	m_StoreSize   = 0;
 	return error;
 }
@@ -574,7 +575,7 @@ void b3Item::b3EnsureStoreBuffer(b3_u32 needed, b3_bool is_data)
 		b3_u32 * new_buffer;
 
 		new_buffer = (b3_u32 *)b3Alloc(new_size);
-		if (new_buffer != null)
+		if (new_buffer != nullptr)
 		{
 			memcpy(new_buffer, m_StoreBuffer, m_StoreIndex << 2);
 			b3Free(m_StoreBuffer);
@@ -583,7 +584,7 @@ void b3Item::b3EnsureStoreBuffer(b3_u32 needed, b3_bool is_data)
 #else
 		m_StoreBuffer = (b3_u32 *)b3Realloc(m_StoreBuffer, new_size);
 #endif
-		if (m_StoreBuffer == null)
+		if (m_StoreBuffer == nullptr)
 		{
 			m_StoreSize   = 0;
 			m_StoreIndex  = 0;
@@ -651,7 +652,7 @@ void b3Item::b3StorePtr(const void * ptr)
 {
 	b3EnsureStoreBuffer(1);
 
-	m_StoreBuffer[m_StoreIndex++] = ptr != null ? 0xbadc0ded : null;
+	m_StoreBuffer[m_StoreIndex++] = ptr != nullptr ? 0xbadc0ded : 0;
 }
 
 void b3Item::b3StoreVector(const b3_vector * vec)
@@ -659,7 +660,7 @@ void b3Item::b3StoreVector(const b3_vector * vec)
 	b3EnsureStoreBuffer(3);
 
 	b3_f32 * ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-	if (vec != null)
+	if (vec != nullptr)
 	{
 		*ptr++ = vec->x;
 		*ptr++ = vec->y;
@@ -692,7 +693,7 @@ void b3Item::b3StoreVector4D(const b3_vector4D * vec)
 	b3EnsureStoreBuffer(4);
 
 	b3_f32 * ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-	if (vec != null)
+	if (vec != nullptr)
 	{
 		*ptr++ = vec->x;
 		*ptr++ = vec->y;
@@ -826,7 +827,7 @@ void b3Item::b3StoreNOP()
 	m_StoreIndex++;
 }
 
-const b3_u32 b3Item::b3Checksum()
+b3_u32 b3Item::b3Checksum()
 {
 	b3_u32 result = 0;
 

@@ -113,7 +113,7 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_RGB8(%s)\n",
 		(const char *)image_name);
 
-	palette	 = null;
+	palette	 = nullptr;
 	while (Pos < (b3_index)buffer_size)
 	{
 		srcPtr = (b3_u32 *)&buffer[Pos];
@@ -190,7 +190,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_RGB4(%s)\n",
 		(const char *)image_name);
 
-	palette  = null;
+	palette  = nullptr;
 	FileType = FT_RGB4;
 	while (Pos < buffer_size)
 	{
@@ -206,7 +206,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
 		case IFF_BODY :
 			Max = xSize * ySize;
 			data = (b3_u08 *)b3Alloc(Max * 2);
-			if (data == null)
+			if (data == nullptr)
 			{
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -269,7 +269,7 @@ void b3Tx::b3EHBPalette()
 	FileType = FT_ILBM_EHB;
 	pSize    = 64;
 	NewPalette = (b3_u32 *)b3Alloc(pSize * sizeof(b3_u32));
-	if (NewPalette == null)
+	if (NewPalette == nullptr)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -348,14 +348,14 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 		FileType = FT_ILBM_HAM;
 		NewData = (b3_u16 *)b3Alloc(xSize * ySize * sizeof(b3_u16));
 	}
-	if (NewData == null)
+	if (NewData == nullptr)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 	Line    = (b3_u08 *)b3Alloc(xSize);
-	if (Line == null)
+	if (Line == nullptr)
 	{
 		b3Free(NewData);
 		b3FreeTx();
@@ -436,7 +436,7 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 	b3Free(palette);
 	b3Free(data);
 	data    = (b3_u08 *)sData;
-	palette = null;
+	palette = nullptr;
 
 	type = (HAM8 ? B3_TX_RGB8 : B3_TX_RGB4);
 }
@@ -454,7 +454,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_ILBM(%s)\n",
 		(const char *)image_name);
 
-	palette	 = null;
+	palette	 = nullptr;
 	FileType = FT_ILBM;
 	while (Pos < buffer_size)
 	{
@@ -488,7 +488,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			Max = b3Endian::b3GetMot32(&LongData[1]) / 3;
 			palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
 			pSize = Max;
-			if (palette == null)
+			if (palette == nullptr)
 			{
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -532,7 +532,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 				Max  = ((xSize + 15) & 0x7ffffff0) >> 3;
 				Max *= (ySize * depth);
 				data = (b3_u08 *)b3Alloc(Max + ySize + Max);
-				if (data == null)
+				if (data == nullptr)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -572,7 +572,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
 			{
 				Max = b3Endian::b3GetMot32(&LongData[1]);
 				data = (b3_u08 *)b3Alloc(Max);
-				if (data == null)
+				if (data == nullptr)
 				{
 					b3FreeTx();
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -623,9 +623,9 @@ inline b3_u32 b3Tx::b3ShiftCount(b3_count Count)
 
 b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u08 * Y = null;
-	b3_u08 * U = null;
-	b3_u08 * V = null;
+	b3_u08 * Y = nullptr;
+	b3_u08 * U = nullptr;
+	b3_u08 * V = nullptr;
 	b3_u08 * CharData;
 	b3_u32 * LongData;
 	b3_u08  y, u, v, Uprev, Vprev;
@@ -634,7 +634,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_YUVN(%s)\n",
 		(const char *)image_name);
 
-	palette  = null;
+	palette  = nullptr;
 	FileType = FT_YUV;
 	LongData = (b3_u32 *)&buffer[Pos];
 	CharData = (b3_u08 *)LongData;
@@ -716,7 +716,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 
 	if (Count == 0)		/* schwarz weiss  */
 	{
-		if (Y == null)
+		if (Y == nullptr)
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
@@ -732,7 +732,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
 	}
 	else					/* bunt */
 	{
-		if ((Y == null) || (U == null) || (V == null))
+		if ((Y == nullptr) || (U == nullptr) || (V == nullptr))
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");

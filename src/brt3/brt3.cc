@@ -1,15 +1,11 @@
 /*
 **
 **	$Filename:	brt3.cc $
-**	$Release:	Dortmund 2001, 2002, 2003 $
-**	$Revision$
-**	$Date$
-**	$Author$
-**	$Developer:	Steffen A. Mork $
+**	$Release:	Dortmund 2001 - 2021 $
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
+**      (C) Copyright 2001 - 2021  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -53,7 +49,7 @@ static b3_bool b3SaveRaytracedImage(
 	b3Path filename;
 
 	filename.b3RemoveExt(camera_name);
-	if (picture_home != null)
+	if (picture_home != nullptr)
 	{
 		imagename.b3LinkFileName(picture_home, filename);
 		imagename.b3Append(BLZ3_EXTENSION);
@@ -135,9 +131,9 @@ static b3Display * b3AllocDisplay(
 static void b3Banner(const char * command)
 {
 	b3PrintF(B3LOG_NORMAL, "Blizzard III Raytracer\n");
-	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2021\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
-	if (command != null)
+	if (command != nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p]%s {Blizzard World Data files}\n",
@@ -212,11 +208,11 @@ int main(int argc, char * argv[])
 	if (argc > 1)
 	{
 		world = new b3World();
-		if (HOME != null)
+		if (HOME != nullptr)
 		{
 			b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 			b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
-			b3Dir::b3LinkFileName(data,    HOME, "Blizzard/Data");
+			b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
 			b3Scene::m_TexturePool.b3AddPath(textures);
 			b3Scene::m_TexturePool.b3AddPath(BLZ3_TEXTURES);
 			b3Scene::m_TexturePool.b3AddPath(pictures);
@@ -231,12 +227,12 @@ int main(int argc, char * argv[])
 		loader.b3AddPath(BLZ3_PLUGINS);
 		loader.b3Load();
 
-		if (BLZ3_RENDER_PRIO != null)
+		if (BLZ3_RENDER_PRIO != nullptr)
 		{
 			b3Scene::m_RenderPriority = b3Math::b3Limit(atoi(BLZ3_RENDER_PRIO), -2, 2);
 		}
 
-		b3PrintF(B3LOG_NORMAL, "\nFound %d CPU core%s.\n",
+		b3PrintF(B3LOG_NORMAL, "\nFound %zd CPU core%s.\n",
 			CPUs,
 			CPUs > 1 ? "s" : "");
 
@@ -309,7 +305,7 @@ int main(int argc, char * argv[])
 #endif
 
 				case 'v' :
-					b3Banner(null);
+					b3Banner(nullptr);
 					break;
 				}
 			}
@@ -319,7 +315,7 @@ int main(int argc, char * argv[])
 				{
 					world->b3Read(argv[i]);
 					for (item  = world->b3GetFirst();
-						item != null;
+						item != nullptr;
 						item  = scene->Succ)
 					{
 						scene = (b3Scene *)item;
@@ -327,12 +323,12 @@ int main(int argc, char * argv[])
 						scene->b3SetupVertexMemory(&context);
 						scene->b3SetFilename(argv[i]);
 						animation = scene->b3GetAnimation();
-						if (animation != null)
+						if (animation != nullptr)
 						{
 							if ((!animation->b3IsActive()) || (force_no_anim))
 							{
 								b3PrintF(B3LOG_NORMAL, "Animation deactivated...\n");
-								animation = null;
+								animation = nullptr;
 							}
 							else
 							{
@@ -341,7 +337,7 @@ int main(int argc, char * argv[])
 						}
 
 						display = b3AllocDisplay(scene, force_no_display, size);
-						if ((camera = scene->b3GetFirstCamera(false)) != null)
+						if ((camera = scene->b3GetFirstCamera(false)) != nullptr)
 						{
 							do
 							{
@@ -351,7 +347,7 @@ int main(int argc, char * argv[])
 									b3PrintF(B3LOG_NORMAL, "Rendering \"%s\"...\n",
 										camera->m_CameraName);
 
-									if (animation != null)
+									if (animation != nullptr)
 									{
 										b3_f64   t;
 										b3_index iEnd, frame;
@@ -389,7 +385,7 @@ int main(int argc, char * argv[])
 								}
 								camera = scene->b3GetNextCamera(camera);
 							}
-							while (camera != null);
+							while (camera != nullptr);
 						}
 						else
 						{

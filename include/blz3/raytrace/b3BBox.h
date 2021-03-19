@@ -85,52 +85,52 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static void            b3Register();
-	void            b3Write();
-	void            b3Dump(b3_count level);
-	void            b3SetName(const char * name);
-	void            b3SetupVertexMemory(b3RenderContext * context);
-	void            b3FreeVertexMemory();
-	void            b3Draw(b3RenderContext * context);
-	b3_bool         b3Transform(b3_matrix * transformation, b3_bool is_affine, b3_bool force_action = false);
-	b3_bool         b3Inverse(b3_matrix *);
-	b3_bool         b3Reverse(b3_matrix *);
-	void            b3ResetTransformation();
-	void            b3Activate(b3_bool activate = true, b3_bool recurse = true);
-	void            b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE, b3_bool recurse = true);
-	b3_bool         b3IsActive();
-	void            b3Expand(b3_bool expand = true);
-	b3_bool         b3IsExpanded();
-	void            b3Update();
-	void            b3UpdateMaterial();
-	void            b3UpdateBBox();
-	b3_bool         b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
-	b3_count        b3Count();
-	b3_bool         b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
-	char      *     b3GetName();
-	b3_bool         b3BacktraceRecompute(b3BBox * search);
+	static void      b3Register();
+	void             b3Write() override;
+	void             b3Dump(b3_count level) const override;
+	void             b3SetName(const char * name);
+	void             b3SetupVertexMemory(b3RenderContext * context) override;
+	void             b3FreeVertexMemory() override;
+	void             b3Draw(b3RenderContext * context) override;
+	b3_bool          b3Transform(b3_matrix * transformation, b3_bool is_affine, b3_bool force_action = false);
+	b3_bool          b3Inverse(b3_matrix *);
+	b3_bool          b3Reverse(b3_matrix *);
+	void             b3ResetTransformation();
+	void             b3Activate(b3_bool activate = true, b3_bool recurse = true);
+	void             b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE, b3_bool recurse = true);
+	b3_bool          b3IsActive() const;
+	void             b3Expand(b3_bool expand = true);
+	b3_bool          b3IsExpanded() const;
+	void             b3Update();
+	void             b3UpdateMaterial();
+	void             b3UpdateBBox();
+	b3_bool          b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
+	b3_count         b3Count() const;
+	b3_bool          b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
+	const char   *   b3GetName() const override;
+	b3_bool          b3BacktraceRecompute(b3BBox * search);
 	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox);
-	b3BBox     *    b3FindParentBBox(b3Shape * shape);
-	b3_bool         b3Intersect(b3_ray * ray, b3_bool check_visibility);
-	b3CSGShape   *  b3IntersectCSG(b3_ray * ray);
-	void            b3CollectBBoxes(b3Array<b3BBoxReference> & array);
-	void            b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array);
-	void            b3CollectBBoxes(b3_vector * lower, b3_vector * upper, b3Array<b3BBox *> * array);
-	void            b3ComputeVisibility(b3CameraProjection * projection);
+	b3BBox     *     b3FindParentBBox(b3Shape * shape);
+	b3_bool          b3Intersect(b3_ray * ray, b3_bool check_visibility);
+	b3CSGShape   *   b3IntersectCSG(b3_ray * ray);
+	void             b3CollectBBoxes(b3Array<b3BBoxReference> & array);
+	void             b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array);
+	void             b3CollectBBoxes(b3_vector * lower, b3_vector * upper, b3Array<b3BBox *> * array);
+	void             b3ComputeVisibility(b3CameraProjection * projection);
 
-	void            b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation);
-	static void            b3Reorg(b3Base<b3Item> * depot, b3Base<b3Item> * base, b3_count level, b3_count rec, b3Item * insert_after = null);
-	static void            b3Recount(b3Base<b3Item> * base, b3_count level = 1);
-	static b3_bool         b3FindBBox(b3Base<b3Item> * base, b3BBox * search);
-	static b3BBox     *    b3ReadCOB(const char * filename);
-	static b3BBox     *    b3ReadTGF(const char * filename);
+	void             b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation);
+	static void      b3Reorg(b3Base<b3Item> * depot, b3Base<b3Item> * base, b3_count level, b3_count rec, b3Item * insert_after = nullptr);
+	static void      b3Recount(b3Base<b3Item> * base, b3_count level = 1);
+	static b3_bool   b3FindBBox(b3Base<b3Item> * base, b3BBox * search);
+	static b3BBox  * b3ReadCOB(const char * filename);
+	static b3BBox  * b3ReadTGF(const char * filename);
 
 	/**
 	 * This method returns the list base of the bounding box shapes.
 	 *
 	 * @return List of bounding box shapes.
 	 */
-	inline b3Base<b3Item> * b3GetShapeHead()
+	inline b3Base<b3Item> * b3GetShapeHead() const
 	{
 		return &m_Heads[0];
 	}
@@ -140,7 +140,7 @@ public:
 	 *
 	 * @return List of sub bounding boxes.
 	 */
-	inline b3Base<b3Item> * b3GetBBoxHead()
+	inline b3Base<b3Item> * b3GetBBoxHead() const
 	{
 		return &m_Heads[1];
 	}
@@ -150,7 +150,7 @@ public:
 	 *
 	 * @param ray The ray containing the intersection point.
 	 */
-	inline void            b3ComputeBoxPolar(b3_ray * ray)
+	inline void         b3ComputeBoxPolar(b3_ray * ray) const
 	{
 		b3_f64 x = ray->ipoint.x;
 		b3_f64 y = ray->ipoint.y;
@@ -166,20 +166,24 @@ public:
 	}
 
 protected:
-	inline void b3GetGridColor(b3Color & color)
+	inline void b3GetGridColor(b3Color & color) const override
 	{
 		color = m_GridColor;
 	}
 
-	inline b3_render_mode  b3GetRenderMode()
+	inline b3_render_mode  b3GetRenderMode() override
 	{
 		return m_GridVisible ? B3_RENDER_LINE : B3_RENDER_NOTHING;
 	}
 
-	void    b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount);
-	void    b3AllocVertexMemory(b3RenderContext * context);
-	void    b3ComputeVertices();
-	void    b3ComputeNormals(b3_bool normalize = true);
+	void    b3GetCount(
+		b3RenderContext * context,
+		b3_count     &    vertCount,
+		b3_count     &    gridCount,
+		b3_count     &    polyCount) override;
+	void    b3AllocVertexMemory(b3RenderContext * context) override;
+	void    b3ComputeVertices() override;
+	void    b3ComputeNormals(b3_bool normalize = true) override;
 };
 
 #define BBB_HTML         0

@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_vector b3RenderLight::m_LightDirection =
+b3_vector b3RenderLight::m_LightDirection
 {
 	0, 0, -1
 };
@@ -38,7 +38,7 @@ b3_vector b3RenderLight::m_LightDirection =
 b3RenderLight::b3RenderLight()
 {
 	m_LightMode = B3_LIGHT_SIMPLE;
-	m_Scene     = null;
+	m_Scene     = nullptr;
 }
 
 void b3RenderLight::b3SetLightMode(b3_light_mode mode)
@@ -54,9 +54,7 @@ void b3RenderLight::b3SetScene(b3Scene * scene)
 void b3RenderLight::b3SetupLight(b3RenderContext * context)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Item * item;
-	b3Light * light;
-	b3Color  ambient;
+	b3Color   ambient;
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, ">b3RenderLight::b3SetupLight() # %d\n", m_LightMode);
@@ -80,9 +78,8 @@ void b3RenderLight::b3SetupLight(b3RenderContext * context)
 		context->b3LightNum();
 		context->b3LightReset(ambient);
 
-		B3_FOR_BASE(m_Scene->b3GetLightHead(), item)
+		B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
 		{
-			light = (b3Light *)item;
 			if (light->b3IsActive())
 			{
 				b3_render_light_info info;

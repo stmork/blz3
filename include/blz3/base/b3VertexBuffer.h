@@ -61,22 +61,16 @@ class b3RenderContext;
 class B3_PLUGIN b3VertexBuffer
 {
 protected:
-	b3_count     glElementCount; //!< This is the amount of handled data elements.
-	b3_bool      glBound;        //!< This flag signals if the data is mapped into the CPUs address space.
-	b3_bool      glComputed;     //!< This flag signals if the data is up to date.
-	b3_bool      glCustom;       //!< This flag signals application handled memory or API handled memory.
+	b3_count     glElementCount = 0;  //!< This is the amount of handled data elements.
+	b3_bool      glBound    = false;  //!< This flag signals if the data is mapped into the CPUs address space.
+	b3_bool      glComputed = false;  //!< This flag signals if the data is up to date.
+	b3_bool      glCustom   = false;  //!< This flag signals application handled memory or API handled memory.
 
 public:
 	/**
 	 * This constructor initializes the vertex buffer elements of this instance.
 	 */
-	inline       b3VertexBuffer()
-	{
-		glElementCount = 0;
-		glBound        = false;
-		glComputed     = false;
-		glCustom       = false;
-	}
+	b3VertexBuffer() = default;
 
 	/**
 	 * This method maps the vertex data for access into the CPUs address space.
@@ -208,16 +202,13 @@ public:
 class B3_PLUGIN b3VertexElements : public b3VertexBuffer
 {
 protected:
-	b3_gl_vertex * glVertex; //!< The pointer to the vertex data.
+	b3_gl_vertex * glVertex = nullptr; //!< The pointer to the vertex data.
 
 public:
 	/**
 	 * This constructor initializes the vertex data.
 	 */
-	inline b3VertexElements()
-	{
-		glVertex = null;
-	}
+	b3VertexElements() = default;
 
 	virtual ~b3VertexElements() = default;
 
@@ -246,16 +237,13 @@ public:
 class B3_PLUGIN b3GridElements : public b3VertexBuffer
 {
 protected:
-	b3_gl_line  * glGrids; //!< The pointer to the line index data.
+	b3_gl_line  * glGrids = nullptr; //!< The pointer to the line index data.
 
 public:
 	/**
 	 * This constructor initializes the line index data.
 	 */
-	inline b3GridElements()
-	{
-		glGrids = null;
-	}
+	b3GridElements() = default;
 
 	virtual ~b3GridElements() = default;
 
@@ -292,7 +280,7 @@ public:
 	 */
 	inline b3PolygonElements()
 	{
-		glPolygons = null;
+		glPolygons = nullptr;
 	}
 
 	virtual ~b3PolygonElements() = default;

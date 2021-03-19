@@ -97,7 +97,7 @@ int main(int argc, char * argv[])
 	glTranslated(1.0, 2.0, 3.0);
 
 	b3RenderContext::b3GetMatrix(B3_MATRIX_OBJECT, &gl);
-	b3Matrix::b3Move(null, &b3, &move);
+	b3Matrix::b3Move(nullptr, &b3, &move);
 
 	b3PrintF(B3LOG_NORMAL, "GL Matrix\n");
 	b3PrintMatrix(&gl.m11);

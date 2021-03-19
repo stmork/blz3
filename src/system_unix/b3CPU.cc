@@ -24,14 +24,10 @@
 #include "blz3/system/b3Thread.h"
 #include <unistd.h>
 #include <errno.h>
+#include <thread>
 
 #ifdef __linux__
 #include <sys/utsname.h>
-#endif
-
-#ifdef __APPLE__
-#include <sys/param.h>
-#include <sys/sysctl.h>
 #endif
 
 /*************************************************************************
@@ -40,39 +36,13 @@
 **                                                                      **
 *************************************************************************/
 
-#ifndef _SC_NPROCESSORS_ONLN
-#ifdef  _SC_NPROC_ONLN
-#define _SC_NPROCESSORS_ONLN _SC_NPROC_ONLN
-#endif
-#endif
-
 b3_bool b3CPU::m_CorrectRUsage = true;
 
 b3CPU::b3CPU()
 {
 	if (cpu_count == 0)
 	{
-		long    result;
-
-#if defined(__APPLE__)
-		int     val;
-		int     mib[2] = { CTL_HW, HW_NCPU };
-		size_t  len    = sizeof(val);
-
-		result = sysctl(mib, 2, &val, &len, NULL, 0) == 0 ? val : 1;
-#elif defined(_SC_NPROCESSORS_ONLN)
-		result = sysconf(_SC_NPROCESSORS_ONLN);
-#else
-		result = 1;
-#endif
-		if ((result < 1) || (errno == EINVAL))
-		{
-			cpu_count = 1;
-		}
-		else
-		{
-			cpu_count = result;
-		}
+		cpu_count = std::thread::hardware_concurrency();
 
 #ifdef __linux__
 		struct utsname uinfo;

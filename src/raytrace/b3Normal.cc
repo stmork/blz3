@@ -30,21 +30,21 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Sphere::b3Normal(b3_ray * ray)
+void b3Sphere::b3Normal(b3_ray * ray) const
 {
 	ray->normal.x = ray->ipoint.x - m_Base.x;
 	ray->normal.y = ray->ipoint.y - m_Base.y;
 	ray->normal.z = ray->ipoint.z - m_Base.z;
 }
 
-void b3Shape2::b3Normal(b3_ray * ray)
+void b3Shape2::b3Normal(b3_ray * ray) const
 {
 	ray->normal.x = m_Normal.x;
 	ray->normal.y = m_Normal.y;
 	ray->normal.z = m_Normal.z;
 }
 
-void b3Cylinder::b3Normal(b3_ray * ray)
+void b3Cylinder::b3Normal(b3_ray * ray) const
 {
 	double	x, y;
 
@@ -54,7 +54,7 @@ void b3Cylinder::b3Normal(b3_ray * ray)
 	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &ray->normal);
 }
 
-void b3Cone::b3Normal(b3_ray * ray)
+void b3Cone::b3Normal(b3_ray * ray) const
 {
 	b3_f32    x, y;
 	b3_f32    z3q, n1q;
@@ -83,7 +83,7 @@ void b3Cone::b3Normal(b3_ray * ray)
 	b3Vector::b3LinearCombine(&m_Dir3, &n1, x, y, &ray->normal);
 }
 
-void b3Ellipsoid::b3Normal(b3_ray * ray)
+void b3Ellipsoid::b3Normal(b3_ray * ray) const
 {
 	b3_f64	x, y, z;
 
@@ -94,14 +94,14 @@ void b3Ellipsoid::b3Normal(b3_ray * ray)
 	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, &m_Dir3, x, y, z, &ray->normal);
 }
 
-void b3Box::b3Normal(b3_ray * ray)
+void b3Box::b3Normal(b3_ray * ray) const
 {
 	ray->normal.x = m_Normals[ray->polar.m_NormalIndex].x;
 	ray->normal.y = m_Normals[ray->polar.m_NormalIndex].y;
 	ray->normal.z = m_Normals[ray->polar.m_NormalIndex].z;
 }
 
-void b3Torus::b3Normal(b3_ray * ray)
+void b3Torus::b3Normal(b3_ray * ray) const
 {
 	b3_f64 Dist, x, y, z;
 
@@ -116,7 +116,7 @@ void b3Torus::b3Normal(b3_ray * ray)
 	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, &m_Dir3, x, y, z, &ray->normal);
 }
 
-void b3TriangleShape::b3Normal(b3_ray * ray)
+void b3TriangleShape::b3Normal(b3_ray * ray) const
 {
 	b3_f64   a, b;
 	b3_index P1, P2, P3;
@@ -142,14 +142,14 @@ void b3TriangleShape::b3Normal(b3_ray * ray)
 	}
 }
 
-void b3CSGSphere::b3Normal(b3_ray * ray)
+void b3CSGSphere::b3Normal(b3_ray * ray) const
 {
 	ray->normal.x = ray->ipoint.x - m_Base.x;
 	ray->normal.y = ray->ipoint.y - m_Base.y;
 	ray->normal.z = ray->ipoint.z - m_Base.z;
 }
 
-void b3CSGCylinder::b3Normal(b3_ray * ray)
+void b3CSGCylinder::b3Normal(b3_ray * ray) const
 {
 	b3_f64 x, y;
 
@@ -175,7 +175,7 @@ void b3CSGCylinder::b3Normal(b3_ray * ray)
 	}
 }
 
-void b3CSGCone::b3Normal(b3_ray * ray)
+void b3CSGCone::b3Normal(b3_ray * ray) const
 {
 	b3_f32    x, y, Factor, n1q;
 	b3_vector n1, z3;
@@ -212,7 +212,7 @@ void b3CSGCone::b3Normal(b3_ray * ray)
 	}
 }
 
-void b3CSGEllipsoid::b3Normal(b3_ray * ray)
+void b3CSGEllipsoid::b3Normal(b3_ray * ray) const
 {
 	b3_f64	x, y, z;
 
@@ -223,14 +223,14 @@ void b3CSGEllipsoid::b3Normal(b3_ray * ray)
 	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, &m_Dir3, x, y, z, &ray->normal);
 }
 
-void b3CSGBox::b3Normal(b3_ray * ray)
+void b3CSGBox::b3Normal(b3_ray * ray) const
 {
 	ray->normal.x = m_Normals[ray->polar.m_NormalIndex].x;
 	ray->normal.y = m_Normals[ray->polar.m_NormalIndex].y;
 	ray->normal.z = m_Normals[ray->polar.m_NormalIndex].z;
 }
 
-void b3CSGTorus::b3Normal(b3_ray * ray)
+void b3CSGTorus::b3Normal(b3_ray * ray) const
 {
 	b3_f64 Dist, x, y, z;
 

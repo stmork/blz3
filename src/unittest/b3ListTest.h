@@ -46,7 +46,7 @@ public:
 		this->element = value;
 	}
 
-	inline const int b3GetElement() const
+	inline int b3GetElement() const
 	{
 		return this->element;
 	}
@@ -64,7 +64,7 @@ template<typename T> class b3ListTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		a = 1;
@@ -74,7 +74,7 @@ public:
 		e = 5;
 	}
 
-	void tearDown()
+	void tearDown() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
@@ -82,8 +82,8 @@ public:
 	void test()
 	{
 		CPPUNIT_ASSERT_NO_THROW(base.b3InitBase(TEST_CLASS_TYPE));
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), base.First);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), base.Last);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), base.First);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), base.Last);
 		CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, base.b3GetClass());
 		CPPUNIT_ASSERT(base.b3IsEmpty());
 
@@ -107,7 +107,7 @@ public:
 			static_cast<b3_link_state>(
 				B3_NODE_NOT_NULL | B3_NODE_NOT_FIRST | B3_NODE_LAST | B3_NODE_PREV | B3_NODE_NOT_SUCC),
 			src.b3State(&c));
-		CPPUNIT_ASSERT_EQUAL(B3_NODE_NULL, src.b3State(null));
+		CPPUNIT_ASSERT_EQUAL(B3_NODE_NULL, src.b3State(nullptr));
 
 		CPPUNIT_ASSERT_NO_THROW(dst.b3InitBase(TEST_CLASS_TYPE));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Append(&d));
@@ -122,76 +122,125 @@ public:
 		CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, a.b3GetClassType());
 
 		CPPUNIT_ASSERT_NO_THROW(dst.b3RemoveAll());
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Succ);
 
 		CPPUNIT_ASSERT_NO_THROW(src.b3First(&a)); // a
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Succ);
 		CPPUNIT_ASSERT_EQUAL(&a, src.First);
 		CPPUNIT_ASSERT_EQUAL(&a, src.Last);
 
 		CPPUNIT_ASSERT_NO_THROW(src.b3Append(&b)); // a b
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Prev);
-		CPPUNIT_ASSERT_EQUAL(&b,                     a.Succ);
-		CPPUNIT_ASSERT_EQUAL(&a,                     b.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Succ);
-		CPPUNIT_ASSERT_EQUAL(&a,                     src.First);
-		CPPUNIT_ASSERT_EQUAL(&b,                     src.Last);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Prev);
+		CPPUNIT_ASSERT_EQUAL(&b,                        a.Succ);
+		CPPUNIT_ASSERT_EQUAL(&a,                        b.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Succ);
+		CPPUNIT_ASSERT_EQUAL(&a,                        src.First);
+		CPPUNIT_ASSERT_EQUAL(&b,                        src.Last);
 
-		CPPUNIT_ASSERT_NO_THROW(src.b3Insert(null, &c)); // c a b
-		CPPUNIT_ASSERT_EQUAL(&c,                     a.Prev);
-		CPPUNIT_ASSERT_EQUAL(&b,                     a.Succ);
-		CPPUNIT_ASSERT_EQUAL(&a,                     b.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Prev);
-		CPPUNIT_ASSERT_EQUAL(&a,                     c.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), d.Succ);
+		CPPUNIT_ASSERT_NO_THROW(src.b3Insert(nullptr, &c)); // c a b
+		CPPUNIT_ASSERT_EQUAL(&c,                        a.Prev);
+		CPPUNIT_ASSERT_EQUAL(&b,                        a.Succ);
+		CPPUNIT_ASSERT_EQUAL(&a,                        b.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Prev);
+		CPPUNIT_ASSERT_EQUAL(&a,                        c.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), d.Succ);
 		CPPUNIT_ASSERT_EQUAL(&c, src.First);
 		CPPUNIT_ASSERT_EQUAL(&b, src.Last);
 
 		CPPUNIT_ASSERT_NO_THROW(src.b3Insert(&a, &d)); // c a d b
-		CPPUNIT_ASSERT_EQUAL(&c,                     a.Prev);
-		CPPUNIT_ASSERT_EQUAL(&d,                     a.Succ);
-		CPPUNIT_ASSERT_EQUAL(&d,                     b.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Prev);
-		CPPUNIT_ASSERT_EQUAL(&a,                     c.Succ);
-		CPPUNIT_ASSERT_EQUAL(&a,                     d.Prev);
-		CPPUNIT_ASSERT_EQUAL(&b,                     d.Succ);
-		CPPUNIT_ASSERT_EQUAL(&c,                     src.First);
-		CPPUNIT_ASSERT_EQUAL(&b,                     src.Last);
+		CPPUNIT_ASSERT_EQUAL(&c,                        a.Prev);
+		CPPUNIT_ASSERT_EQUAL(&d,                        a.Succ);
+		CPPUNIT_ASSERT_EQUAL(&d,                        b.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Prev);
+		CPPUNIT_ASSERT_EQUAL(&a,                        c.Succ);
+		CPPUNIT_ASSERT_EQUAL(&a,                        d.Prev);
+		CPPUNIT_ASSERT_EQUAL(&b,                        d.Succ);
+		CPPUNIT_ASSERT_EQUAL(&c,                        src.First);
+		CPPUNIT_ASSERT_EQUAL(&b,                        src.Last);
 
 		CPPUNIT_ASSERT_NO_THROW(src.b3Remove(&a)); // c d b
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), a.Succ);
-		CPPUNIT_ASSERT_EQUAL(&d,                     b.Prev);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), b.Succ);
-		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(null), c.Prev);
-		CPPUNIT_ASSERT_EQUAL(&d,                     c.Succ);
-		CPPUNIT_ASSERT_EQUAL(&c,                     d.Prev);
-		CPPUNIT_ASSERT_EQUAL(&b,                     d.Succ);
-		CPPUNIT_ASSERT_EQUAL(&c,                     src.First);
-		CPPUNIT_ASSERT_EQUAL(&b,                     src.Last);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), a.Succ);
+		CPPUNIT_ASSERT_EQUAL(&d,                        b.Prev);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), b.Succ);
+		CPPUNIT_ASSERT_EQUAL(static_cast<T *>(nullptr), c.Prev);
+		CPPUNIT_ASSERT_EQUAL(&d,                        c.Succ);
+		CPPUNIT_ASSERT_EQUAL(&c,                        d.Prev);
+		CPPUNIT_ASSERT_EQUAL(&b,                        d.Succ);
+		CPPUNIT_ASSERT_EQUAL(&c,                        src.First);
+		CPPUNIT_ASSERT_EQUAL(&b,                        src.Last);
 
-		CPPUNIT_ASSERT_NO_THROW(src.b3Sort(sorter, null));
+		b3_count items = 0;
+		B3_FOR_TYPED_BASE(T, &src, item)
+		{
+			b3PrintF(B3LOG_NORMAL, "%p\n", item);
+
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      item->b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       item->b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, item->b3GetClassType());
+
+			items++;
+		}
+		CPPUNIT_ASSERT_EQUAL(src.b3GetCount(), items);
+
+		items = 0;
+		for (auto it = src.begin(); it != src.end(); ++it)
+		{
+			CPPUNIT_ASSERT(it);
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      it->b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       it->b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, it->b3GetClassType());
+
+			items++;
+		}
+		CPPUNIT_ASSERT_EQUAL(src.b3GetCount(), items);
+
+		items = 0;
+		for (auto it = src.rbegin(); it != src.rend(); ++it)
+		{
+			CPPUNIT_ASSERT(it);
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS,      it->b3GetClass());
+			CPPUNIT_ASSERT_EQUAL(TEST_TYPE,       it->b3GetType());
+			CPPUNIT_ASSERT_EQUAL(TEST_CLASS_TYPE, it->b3GetClassType());
+
+			items++;
+		}
+		CPPUNIT_ASSERT_EQUAL(src.b3GetCount(), items);
+
+		CPPUNIT_ASSERT(src.begin() != src.end());
+		CPPUNIT_ASSERT(src.rbegin() != src.rend());
+
+		b3Base<b3TestElement>::iterator         first = src.begin();
+		b3Base<b3TestElement>::reverse_iterator last  = src.rbegin();
+
+		b3TestElement * f = first;
+		b3TestElement * l = last;
+
+		CPPUNIT_ASSERT_EQUAL(f, src.First);
+		CPPUNIT_ASSERT_EQUAL(l, src.Last);
+
+		CPPUNIT_ASSERT_NO_THROW(src.b3Sort(sorter));
 		CPPUNIT_ASSERT_EQUAL(&b, src.First);
 		CPPUNIT_ASSERT_EQUAL(&d, src.Last);
 		CPPUNIT_ASSERT_EQUAL(c.Prev, src.First);
@@ -199,7 +248,7 @@ public:
 	}
 
 private:
-	static const int sorter(const T * aPtr, const T * bPtr, const void * ptr)
+	static int sorter(const T * aPtr, const T * bPtr)
 	{
 		return aPtr->b3GetElement() - bPtr->b3GetElement();
 	}

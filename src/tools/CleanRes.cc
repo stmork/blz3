@@ -179,7 +179,7 @@ public:
 		return i;
 	}
 
-	static const int b3SortFunc(const b3Define * a, const b3Define * b, const void * ptr)
+	static int b3SortFunc(const b3Define * a, const b3Define * b)
 	{
 		int a_type = a->m_Type;
 		int b_type = b->m_Type;
@@ -220,10 +220,10 @@ static b3_bool b3ReadResource(const char * filename, b3Base<b3Define> & defines)
 	int   value;
 
 	in = fopen(filename, B3_TREAD);
-	if (in != null)
+	if (in != nullptr)
 	{
 		defines.b3Append(new b3Define(true));
-		while (fgets(line, sizeof(line), in) != null)
+		while (fgets(line, sizeof(line), in) != nullptr)
 		{
 			if (sscanf(line, "#define %s %d\n", define, &value) == 2)
 			{
@@ -234,7 +234,7 @@ static b3_bool b3ReadResource(const char * filename, b3Base<b3Define> & defines)
 
 		fclose(in);
 	}
-	return in != null;
+	return in != nullptr;
 }
 
 int main(int argc, char * argv[])

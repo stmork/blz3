@@ -35,7 +35,7 @@
 
 b3FileMem::b3FileMem()
 {
-	m_Buffer     = null;
+	m_Buffer     = nullptr;
 	m_BufferSize = 0;
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;
@@ -45,7 +45,7 @@ b3FileMem::b3FileMem()
 // Instantiate as opened file
 b3FileMem::b3FileMem(const b3_access_mode access_mode)
 {
-	m_Buffer     = null;
+	m_Buffer     = nullptr;
 	m_BufferSize = 0;
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;
@@ -59,7 +59,7 @@ b3FileMem::b3FileMem(const b3_access_mode access_mode)
 // Instantiate as opened file
 b3FileMem::b3FileMem(const char * file_name, const b3_access_mode access_mode)
 {
-	m_Buffer     = null;
+	m_Buffer     = nullptr;
 	m_BufferSize = 0;
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;
@@ -84,7 +84,7 @@ b3_bool b3FileMem::b3Open(const b3_access_mode access_mode)
 	case B_WRITE :
 	case T_WRITE :
 		b3Close();
-	// Walk through!
+		B3_FALLTHROUGH;
 	case B_READ :
 	case T_READ :
 		if (b3Buffer(16000))
@@ -177,7 +177,7 @@ b3_size b3FileMem::b3Write(
 
 b3_bool b3FileMem::b3Flush()
 {
-	return m_Buffer != null;
+	return m_Buffer != nullptr;
 }
 
 b3_size b3FileMem::b3Seek(
@@ -232,11 +232,11 @@ b3_bool b3FileMem::b3Buffer(b3_size Size)
 
 void b3FileMem::b3Close()
 {
-	if (m_Buffer != null)
+	if (m_Buffer != nullptr)
 	{
 		b3Free();
 	}
-	m_Buffer     = null;
+	m_Buffer     = nullptr;
 	m_BufferSize = 0;
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;
@@ -245,11 +245,11 @@ void b3FileMem::b3Close()
 b3_bool b3FileMem::b3ReadBuffer(const char * filename)
 {
 	b3File   file;
-	b3_u08 * file_buffer = null;
+	b3_u08 * file_buffer = nullptr;
 	b3_size  file_size;
 
 	file_buffer = file.b3ReadBuffer(filename, file_size);
-	if (file_buffer != null)
+	if (file_buffer != nullptr)
 	{
 		if (b3EnsureBufferSize(file_size))
 		{
@@ -271,7 +271,7 @@ b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 		new_size += m_BufferInc;
 
 		new_buffer = (b3_u08 *)b3Alloc(new_size);
-		if (new_buffer == null)
+		if (new_buffer == nullptr)
 		{
 			B3_THROW(b3FileException, B3_FILE_MEMORY);
 		}

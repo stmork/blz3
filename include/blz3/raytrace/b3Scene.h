@@ -198,7 +198,7 @@ public:
 	 *
 	 * @see b3RenderObject::b3FreeVertices().
 	 */
-	void             b3FreeVertices();
+	void             b3FreeVertexMemory();
 
 	/**
 	 * This method iterates through all objects and shapes to draw
@@ -245,14 +245,14 @@ public:
 	 *
 	 * @return The scene name.
 	 */
-	char      *      b3GetName();
+	const char   *   b3GetName() const override;
 
 	/**
 	 * This method returns the file name of this scene.
 	 *
 	 * @return The used file name of this scene.
 	 */
-	char      *      b3GetFilename();
+	const char   *   b3GetFilename() const;
 
 	/**
 	 * This method sets a new file name of the scene.
@@ -323,7 +323,7 @@ public:
 		ray->Q     = max;
 		ray->shape = b3Intersect(b3GetFirstBBox(), ray, checkVisibility);
 
-		return ray->shape != null;
+		return ray->shape != nullptr;
 	}
 	/**
 	 * This method checks whether any intersection point is available on the
@@ -338,7 +338,7 @@ public:
 	{
 		ray->Q     = max;
 		ray->shape = b3IsObscured(b3GetFirstBBox(), ray);
-		return ray->shape != null;
+		return ray->shape != nullptr;
 	}
 
 	//////////////////
@@ -349,7 +349,7 @@ public:
 	 *
 	 * @return The configured shader instance.
 	 */
-	inline b3Shader * b3GetShader()
+	inline b3Shader * b3GetShader() const
 	{
 		return m_Shader;
 	}
@@ -396,7 +396,7 @@ public:
 	 *
 	 * @return The list base of the top level objects.
 	 */
-	inline b3Base<b3Item> * b3GetBBoxHead()
+	inline b3Base<b3Item> * b3GetBBoxHead() const
 	{
 		return &m_Heads[0];
 	}
@@ -406,7 +406,7 @@ public:
 	 *
 	 * @return The first object in the scene.
 	 */
-	inline b3BBox * b3GetFirstBBox()
+	inline b3BBox * b3GetFirstBBox() const
 	{
 		return (b3BBox *)b3GetBBoxHead()->First;
 	}
@@ -436,7 +436,7 @@ public:
 	 *
 	 * @return The object count in the scene.
 	 */
-	b3_count        b3GetBBoxCount();
+	b3_count        b3GetBBoxCount() const;
 
 	/**
 	 * This method recursively recomputes the scenes bounding box.
@@ -467,7 +467,7 @@ public:
 	 * @warning This method may be slow. It is ment for GUI purposes only.
 	 */
 
-	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox);
+	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox) const;
 	/**
 	 * this method searches in the object hierarchy the hosting object of the
 	 * given shape.
@@ -476,7 +476,7 @@ public:
 	 * @return The belonging object.
 	 * @warning This method may be slow. It is ment for GUI purposes only.
 	 */
-	b3BBox     *    b3FindParentBBox(b3Shape * shape);
+	b3BBox     *    b3FindParentBBox(b3Shape * shape) const;
 
 	/**
 	 * This method collects all objects which tangents the given ray.

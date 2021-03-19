@@ -104,7 +104,7 @@ public:
 	void  b3RemoveIFW(b3Base<b3TIFF_Entry> *);
 	long  b3OrgTags(long);
 	long  b3OrgStrips(long);
-	static const int  b3SortTags(const b3TIFF_Entry * a, const b3TIFF_Entry * b, const void * ptr);
+	static int  b3SortTags(const b3TIFF_Entry * a, const b3TIFF_Entry * b);
 };
 
 /**

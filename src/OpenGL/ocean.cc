@@ -94,8 +94,8 @@ GLfloat light0[] =
 	10.0, 15.0, 20.0, 1.0
 };
 
-GLfloat * vPtr = null;
-GLuint  * iPtr = null;
+GLfloat * vPtr = nullptr;
+GLuint  * iPtr = nullptr;
 b3_size   vSize, iSize;
 GLuint    size;
 b3Time    timepoint;
@@ -136,7 +136,7 @@ void init_vertices()
 		printf("No vertex buffer objects available.\n");
 	}
 
-	if (vPtr == null)
+	if (vPtr == nullptr)
 	{
 		GLfloat * ptr;
 
@@ -144,7 +144,7 @@ void init_vertices()
 		if (has_vbo)
 		{
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, vSize, null, GL_DYNAMIC_DRAW_ARB);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, vSize, nullptr, GL_DYNAMIC_DRAW_ARB);
 			vPtr = (GLfloat *)glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
 		}
 		else
@@ -169,7 +169,7 @@ void init_vertices()
 		}
 	}
 
-	if (iPtr == null)
+	if (iPtr == nullptr)
 	{
 		GLuint * ptr;
 		GLuint  index;
@@ -178,7 +178,7 @@ void init_vertices()
 		if (has_vbo)
 		{
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
-			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize, null, GL_DYNAMIC_DRAW_ARB);
+			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize, nullptr, GL_DYNAMIC_DRAW_ARB);
 			iPtr = (GLuint *)glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
 		}
 		else
@@ -212,7 +212,7 @@ void init_vertices()
 		if (has_vbo)
 		{
 			glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
-			iPtr = null;
+			iPtr = nullptr;
 		}
 	}
 
@@ -235,11 +235,11 @@ void init_vbo()
 
 		has_vbo =
 			false &&
-			(glGenBuffersARB != null) &&
-			(glBindBufferARB != null) &&
-			(glBufferDataARB != null) &&
-			(glMapBufferARB  != null) &&
-			(glUnmapBufferARB != null);
+			(glGenBuffersARB != nullptr) &&
+			(glBindBufferARB != nullptr) &&
+			(glBufferDataARB != nullptr) &&
+			(glMapBufferARB  != nullptr) &&
+			(glUnmapBufferARB != nullptr);
 		if (!has_vbo)
 		{
 			printf("glGenBuffersARB  = %p\n", glGenBuffersARB);

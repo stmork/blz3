@@ -34,7 +34,7 @@
 
 void b3Locale::b3IsoToLocale(const char * src, char * dst, b3_size len)
 {
-	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != null)
+	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
 	{
 		wchar_t result[1024];
 		size_t  max;
@@ -64,7 +64,7 @@ void b3Locale::b3LocaleToIso(const char * src, char * dst, b3_size len)
 	setlocale(LC_CTYPE, "");
 	mbstowcs(result, src, max);
 
-	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != null)
+	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
 	{
 		wcstombs(dst, result, len);
 	}

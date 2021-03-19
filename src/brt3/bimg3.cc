@@ -52,7 +52,7 @@ static void display(b3Tx * tx)
 
 	if (tx->b3IsLoaded())
 	{
-		b3PrintF(B3LOG_NORMAL, "%s: %dx%d\n",
+		b3PrintF(B3LOG_NORMAL, "%s: %ldx%ld\n",
 			tx->b3Name(), tx->xSize, tx->ySize);
 		display = new b3DisplayView(tx->xSize, tx->ySize, tx->b3Name());
 		display->b3PutTx(tx);
@@ -97,7 +97,7 @@ int main(int argc, char * argv[])
 
 	if (argc > 1)
 	{
-		if (HOME != null)
+		if (HOME != nullptr)
 		{
 			b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 			b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
@@ -128,7 +128,7 @@ int main(int argc, char * argv[])
 				{
 				case B3_TYPE_DIR:
 					list.b3CreateList(argv[i]);
-					for (entry = list.b3First(); entry != null; entry = entry->Succ)
+					for (entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 					{
 						load(entry->b3Name());
 					}

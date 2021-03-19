@@ -29,28 +29,16 @@ template<class T> class b3Comparator
 public:
 	/**
 	 * This static methods compares two instances
-	 * which override this interface.
+	 * which override this interface. It returns a negative number if \c a is
+	 * smaller than \c b, a positive number if \c a is greater than \c b and
+	 * \c 0 otherwise.
 	 *
-	 * @param a The first element to compare.
-	 * @param b The second element to compare.
+	 * @param left The first element to compare.
+	 * @param right The second element to compare.
 	 */
-	static int b3Sort(const T * a, const T * b)
+	static int b3Sort(const T * left, const T * right)
 	{
-		return a->b3Cmp(b);
-	}
-
-	/**
-	 * This static methods compares two instances
-	 * which override this interface.
-	 *
-	 * @param a The first element to compare.
-	 * @param b The second element to compare.
-	 * @param dummy A pointer to provide additional information into the
-	 *              comparing process.
-	 */
-	static const int b3Sort(const T * a, const T * b, const void * dummy)
-	{
-		return a->b3Cmp(b);
+		return left->b3Cmp(right);
 	}
 
 	/**
@@ -60,10 +48,18 @@ public:
 	 * a positive integer. If the external value is smaller return
 	 * a negative number. In case of two equal values return zero.
 	 *
-	 * @param compare The external instance to compare to.
+	 * @note This method may be changed to a spaceship operator when using
+	 * C++20.
+	 *
+	 * @param other The external instance to compare to.
 	 * @return The comparison value as documented above.
 	 */
-	virtual const int b3Cmp(const T * compare) const = 0;
+	virtual int b3Cmp(const T * other) const = 0;
+
+	inline bool operator<(const T & other) const
+	{
+		return b3Cmp(&other) < 0;
+	}
 };
 
 /**

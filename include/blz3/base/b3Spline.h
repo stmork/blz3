@@ -115,14 +115,14 @@ public:
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(b3_f64 * vector)
+	static inline void b3Homogenize(B3_UNUSED b3_f64 * vector)
 	{
 	}
 
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(b3_vector * vector)
+	static inline void b3Homogenize(B3_UNUSED b3_vector * vector)
 	{
 	}
 
@@ -360,8 +360,8 @@ public:
 		m_ControlNum = 0;
 		m_KnotNum    = 0;
 		m_Offset     = 1;
-		m_Controls   = null;
-		m_Knots      = null;
+		m_Controls   = nullptr;
+		m_Knots      = nullptr;
 		m_SubDiv     = B3_MAX_SUBDIV;
 		m_Closed     = false;
 	}
@@ -450,7 +450,7 @@ public:
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		if (m_Knots == null)
+		if (m_Knots == nullptr)
 		{
 			bspline_errno = B3_BSPLINE_MISSING_KNOTS;
 			return false;
@@ -636,7 +636,7 @@ public:
 		return true;
 	}
 
-	b3_index  b3DeBoor(VECTOR * point, b3_index index = 0)
+	b3_index  b3DeBoor(VECTOR * point, b3_index index = 0) const
 	{
 		b3_knot	 q, qStep;
 		b3_index i;
@@ -667,7 +667,7 @@ public:
 		return i;
 	}
 
-	b3_index  b3DeBoorControl(VECTOR * point, b3_index index)
+	b3_index  b3DeBoorControl(VECTOR * point, b3_index index) const
 	{
 		b3_index  i;
 
@@ -698,7 +698,7 @@ public:
 	 * @param it     Array where to store the basis function coefficents
 	 * @param qStart Parameter value inside the curve
 	 */
-	b3_index  b3Mansfield(b3_f64 * it, b3_f64 qStart)
+	b3_index  b3Mansfield(b3_f64 * it, b3_f64 qStart) const
 	{
 		b3_index  l, i, j, k;
 		b3_knot	  r, denom, q, diff;
@@ -765,7 +765,7 @@ public:
 		VECTOR  * point,
 		b3_f64  * it,
 		b3_index  i,
-		b3_index  index)
+		b3_index  index) const
 	{
 		b3_index  l, j;
 		VECTOR  * ctrls;
@@ -795,7 +795,7 @@ public:
 		b3SplineVector::b3Homogenize(point);
 	}
 
-	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q)
+	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
 	{
 		b3_index  l, i, j;
 		b3_knot   r;
@@ -828,7 +828,7 @@ public:
 		return i;
 	}
 
-	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart)
+	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
 	{
 		b3_index   l, i, j, k;
 		b3_knot    r, diff, q;
@@ -878,7 +878,7 @@ public:
 	static b3_count b3DeBoorSurfaceControl(
 		b3SplineTemplate<VECTOR> * controlSpline,
 		b3SplineTemplate<VECTOR> * curveSpline,
-		VECTOR          *         point)
+		VECTOR          *          point)
 	{
 		b3_knots  knot_ptr;
 		b3_index  i, x, end, index;
@@ -1436,7 +1436,7 @@ private:
 		return i;
 	}
 
-	inline b3_index iFind(b3_knot q)
+	inline b3_index iFind(b3_knot q) const
 	{
 		b3_index i;
 		b3_count max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;

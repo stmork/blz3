@@ -32,9 +32,9 @@
 
 b3PrepareInfo::b3PrepareInfo()
 {
-	m_PrepareProc = null;
+	m_PrepareProc = nullptr;
 	m_CPUs        = b3Runtime::b3GetNumCPUs();
-	m_Threads     = m_CPUs > 1 ? new b3Thread[m_CPUs] : null;
+	m_Threads     = m_CPUs > 1 ? new b3Thread[m_CPUs] : nullptr;
 
 #ifdef _DEBUG
 	m_MinBBoxesForThreading = 0;
@@ -45,7 +45,7 @@ b3PrepareInfo::b3PrepareInfo()
 
 b3PrepareInfo::~b3PrepareInfo()
 {
-	if (m_Threads != null)
+	if (m_Threads != nullptr)
 	{
 		delete [] m_Threads;
 	}
@@ -59,7 +59,7 @@ void b3PrepareInfo::b3CollectBBoxes(b3Scene * scene)
 void b3PrepareInfo::b3CollectBBoxes(b3BBox * bbox)
 {
 	m_BBoxRefArray.b3Clear();
-	while (bbox != null)
+	while (bbox != nullptr)
 	{
 		bbox->b3CollectBBoxes(m_BBoxRefArray);
 		bbox = (b3BBox *)bbox->Succ;
@@ -87,10 +87,10 @@ void b3PrepareInfo::b3RebuildListFromArray()
 
 b3_u32 b3PrepareInfo::b3PrepareThread(void * ptr)
 {
-	b3PrepareInfo  * info = (b3PrepareInfo *)ptr;
+	b3PrepareInfo  *  info = (b3PrepareInfo *)ptr;
 	b3BBoxReference * reference;
 
-	while ((reference = info->b3GetBBoxReference()) != null)
+	while ((reference = info->b3GetBBoxReference()) != nullptr)
 	{
 		if (!info->m_PrepareProc(reference->m_BBox, info->m_Ptr))
 		{
@@ -115,12 +115,12 @@ b3_bool b3PrepareInfo::b3Prepare(
 	m_Ptr         = ptr;
 	B3_ASSERT(m_PrepareProc != null);
 
-	if ((m_Threads != null) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading) && (threaded))
+	if ((m_Threads != nullptr) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading) && (threaded))
 	{
 		int i;
 
 		b3RebuildListFromArray();
-		b3PrintF(B3LOG_FULL, "    Starting %d prepare threads\n", m_CPUs);
+		b3PrintF(B3LOG_FULL, "    Starting %zd prepare threads\n", m_CPUs);
 		for (i = 0; i < m_CPUs; i++)
 		{
 			if (!m_Threads[i].b3Start(b3PrepareThread, this))

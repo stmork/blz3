@@ -39,12 +39,12 @@ b3_coord b3PickBase::m_PickSize = B3_PICK_SIZE;
 
 b3PickBase::b3PickBase()
 {
-	m_Selected = null;
+	m_Selected = nullptr;
 }
 
-const b3_bool b3PickBase::b3IsActive() const
+b3_bool b3PickBase::b3IsActive() const
 {
-	return m_Selected != null;
+	return m_Selected != nullptr;
 }
 
 void b3PickBase::b3Update()
@@ -57,7 +57,7 @@ void b3PickBase::b3Update()
 	}
 }
 
-const b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
+b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
 {
 	b3Pick * pick;
 
@@ -72,27 +72,27 @@ const b3_bool b3PickBase::b3Down(const b3_coord x, const b3_coord y)
 	return false;
 }
 
-const b3_bool b3PickBase::b3Move(const b3_coord x, const b3_coord y)
+b3_bool b3PickBase::b3Move(const b3_coord x, const b3_coord y)
 {
-	if (m_Selected != null)
+	if (m_Selected != nullptr)
 	{
 		return m_Selected->b3Moved(x, y);
 	}
 	return false;
 }
 
-const b3_bool b3PickBase::b3Up(const b3_coord x, const b3_coord y)
+b3_bool b3PickBase::b3Up(B3_UNUSED const b3_coord x, B3_UNUSED const b3_coord y)
 {
 	b3_bool result;
 
-	result = m_Selected != null;
-	m_Selected = null;
+	result = m_Selected != nullptr;
+	m_Selected = nullptr;
 	return result;
 }
 
 b3UndoOperation * b3PickBase::b3GetOperation(const b3RenderObject * object) const
 {
-	return m_Selected != null ? m_Selected->b3GetOperation(object) : null;
+	return m_Selected != nullptr ? m_Selected->b3GetOperation(object) : nullptr;
 }
 
 void b3PickBase::b3Draw(const b3DrawContext * dc)
@@ -125,11 +125,11 @@ void b3Pick::b3Update()
 {
 }
 
-void b3Pick::b3Draw(const b3DrawContext * dc)
+void b3Pick::b3Draw(const b3DrawContext * dc B3_UNUSED)
 {
 }
 
-const b3_bool b3Pick::b3Hit(const b3_coord x, const b3_coord y) const
+b3_bool b3Pick::b3Hit(const b3_coord x, const b3_coord y) const
 {
 	b3_coord xDiff = m_x - x;
 	b3_coord yDiff = m_y - y;
@@ -139,7 +139,7 @@ const b3_bool b3Pick::b3Hit(const b3_coord x, const b3_coord y) const
 		(B3_ABS(yDiff) <= b3PickBase::m_PickSize);
 }
 
-const b3_bool b3Pick::b3Moved(const b3_coord x, const b3_coord y)
+b3_bool b3Pick::b3Moved(const b3_coord x, const b3_coord y)
 {
 	b3_bool result;
 

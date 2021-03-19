@@ -35,17 +35,17 @@ public:
 	/**
 	 * This copy constructor initializes this instance with a path.
 	 */
-	b3PathEntry(const b3PathEntry & src);
+	explicit b3PathEntry(const b3PathEntry & src);
 
 	/**
 	 * This constructor initializes this instance with a path.
 	 */
-	b3PathEntry(const b3PathEntry * src);
+	explicit b3PathEntry(const b3PathEntry * src);
 
 	/**
 	 * This constructor initializes this instance with a path.
 	 */
-	b3PathEntry(const char * path);
+	explicit b3PathEntry(const char * path);
 };
 
 /**

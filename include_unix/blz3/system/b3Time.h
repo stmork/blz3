@@ -33,8 +33,8 @@ class b3TimeSpan : public b3TimeSpanAbstract
 	struct timeb  m_RealTime;
 
 public:
-	void    b3Start();
-	void    b3Stop();
+	void    b3Start() override;
+	void    b3Stop() override;
 };
 
 /**
@@ -53,9 +53,15 @@ public:
 	/**
 	 * This copy constructor copies the time from another instance.
 	 */
-	b3Time(b3Time & orig);
-	b3_f64  b3Now();
-	b3_f64  b3GetTime();
+	b3Time(const b3Time & orig);
+	b3_f64  b3Now() override;
+	b3_f64  b3GetTime() const override;
+	std::chrono::microseconds  b3GetStdTime() const override;
+
+	/**
+	 * This assignment operator copies the time from another instance.
+	 */
+	b3Time & operator=(const b3Time & orig);
 
 	/**
 	 * This assignment operator copies the time from another instance.

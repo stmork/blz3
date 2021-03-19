@@ -33,7 +33,7 @@
 b3SplineRotShape::b3SplineRotShape(b3_u32 class_type) :
 	b3TriangleShape(sizeof(b3SplineRotShape), class_type)
 {
-	m_Controls = null;
+	m_Controls = nullptr;
 	b3Vector::b3Init(&m_Axis.pos);
 	b3Vector::b3Init(&m_Axis.dir, 0, 0, 1);
 }
@@ -48,7 +48,7 @@ b3SplineRotShape::b3SplineRotShape(b3_u32 * src) :
 	{
 		m_Knots[i] = b3InitFloat();
 	}
-	b3InitSpline(&m_Spline, null, m_Knots);
+	b3InitSpline(&m_Spline, nullptr, m_Knots);
 	b3InitVector(&m_Axis.pos);
 	b3InitVector(&m_Axis.dir);
 
@@ -133,7 +133,7 @@ b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 	MySpline.m_Offset = 1;
 	for (x = 0; x < xSize; x++)
 	{
-		b3Matrix::b3RotateVector(null, &Matrix, &m_Axis, M_PI * 2.0 * x / xSize);
+		b3Matrix::b3RotateVector(nullptr, &Matrix, &m_Axis, M_PI * 2.0 * x / xSize);
 		for (y = 0; y < MySpline.m_ControlNum; y++)
 		{
 			b3Matrix::b3VMul(&Matrix, &m_Controls[y], &Between[y], true);
@@ -239,10 +239,10 @@ void b3SplineRotShape::b3SetupGrid(b3PickInfo * info)
 }
 
 void b3SplineRotShape::b3GetCount(
-	b3RenderContext * ctx,
-	b3_count    &    vertCount,
-	b3_count    &    gridCount,
-	b3_count    &    polyCount)
+	b3RenderContext * ctx B3_UNUSED,
+	b3_count     &    vertCount,
+	b3_count     &    gridCount,
+	b3_count     &    polyCount)
 {
 	m_ySubDiv   = m_Spline.m_SubDiv;
 	m_xSubDiv   = m_rSubDiv;
@@ -269,7 +269,7 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3_f64        fy, fyStep;
 
 	// Build rotation matrix
-	b3Matrix::b3RotateVector(null, &Matrix, &m_Axis, M_PI * 2 / m_rSubDiv);
+	b3Matrix::b3RotateVector(nullptr, &Matrix, &m_Axis, M_PI * 2 / m_rSubDiv);
 
 	// Copy BSpline
 	AuxSpline            = m_Spline;

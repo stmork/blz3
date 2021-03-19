@@ -97,7 +97,7 @@ b3SampleInfo * b3ImageSampler::b3SampleInit(const b3_count CPUs)
 	{
 		yEnd = m_yMax * (i + 1) / CPUs;
 		info[i].m_Sampler = this;
-		info[i].m_Ptr     = null;
+		info[i].m_Ptr     = nullptr;
 		info[i].m_xMax    = m_xMax;
 		info[i].m_yMax    = m_yMax;
 		info[i].m_yStart  = yStart;

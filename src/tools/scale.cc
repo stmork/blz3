@@ -73,7 +73,7 @@ public:
 		FILE    *    file;
 		b3_bool      row;
 
-		for (entry = m_List.b3First(); entry != null; entry = entry->Succ)
+		for (entry = m_List.b3First(); entry != nullptr; entry = entry->Succ)
 		{
 			b3LoadImage(entry);
 		}
@@ -81,7 +81,7 @@ public:
 		b3Path::b3LinkFileName(index, m_Dest, "index.html");
 
 		file = fopen(index, "wt");
-		if (file != null)
+		if (file != nullptr)
 		{
 			b3PrintF(B3LOG_NORMAL, "Writing %s\n", (const char *)index);
 			fprintf(file,
@@ -161,7 +161,7 @@ private:
 			b3_size size;
 
 			buffer = src.b3ReadBuffer(source, size);
-			if (buffer != null)
+			if (buffer != nullptr)
 			{
 				b3File  dst(full_normal, B_WRITE);
 
@@ -171,7 +171,7 @@ private:
 			{
 				return false;
 			}
-			b3PrintF(B3LOG_NORMAL, "   %s (copied %d bytes)\n", (const char *)full_normal, size);
+			b3PrintF(B3LOG_NORMAL, "   %s (copied %ld bytes)\n", (const char *)full_normal, size);
 		}
 		else
 		{
@@ -197,7 +197,7 @@ private:
 		b3_f64  scale;
 		b3_bool result = false;
 
-		source.b3LinkFileName(entry->b3Name(), null);
+		source.b3LinkFileName(entry->b3Name(), nullptr);
 		b3PrintF(B3LOG_NORMAL, "F: %s\n", (const char *)source);
 		if (normal.b3LoadImage(source) == B3_OK)
 		{
@@ -213,7 +213,8 @@ private:
 				xSize = (b3_res)(scale * normal.xSize);
 				ySize = (b3_res)(scale * normal.ySize);
 
-				b3PrintF(B3LOG_NORMAL, "   %s - %dx%d - %3.3f\n", (const char *)full_small, xSize, ySize, scale);
+				b3PrintF(B3LOG_NORMAL, "   %s - %ldx%ld - %3.3f\n",
+					(const char *)full_small, xSize, ySize, scale);
 				if (small.b3AllocTx(xSize, ySize, 24))
 				{
 					try
@@ -261,7 +262,7 @@ private:
 
 int main(int argc, char * argv[])
 {
-	b3Path      dir;
+	b3Path       dir;
 	const char * title = TITLE;
 
 	switch (argc)

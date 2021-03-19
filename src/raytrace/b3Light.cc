@@ -198,7 +198,7 @@ void b3Light::b3InitValues()
 	m_SpotActive  = false;
 }
 
-b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info)
+b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	if (m_LightActive)
 	{
@@ -229,7 +229,7 @@ void b3Light::b3Dump(b3_count level)
 	b3PrintF(B3LOG_NORMAL, "Light %s, switched %s\n", b3GetName(), b3IsActive() ? "on" : "off");
 }
 
-char * b3Light::b3GetName()
+const char * b3Light::b3GetName() const
 {
 	return m_Name;
 }
@@ -240,8 +240,8 @@ void b3Light::b3SetName(const char * name)
 }
 
 b3_bool b3Light::b3Illuminate(
-	b3Shader  * shader,
-	b3_surface * surface)
+	b3Shader  *  shader,
+	b3_surface * surface) const
 {
 	return (m_SoftShadow ?
 			b3AreaIllumination(shader, surface) :
@@ -250,7 +250,7 @@ b3_bool b3Light::b3Illuminate(
 
 inline b3_bool b3Light::b3PointIllumination(
 	b3Shader  * shader,
-	b3_surface * surface)
+	b3_surface * surface) const
 {
 	b3_light_info Jit;
 	b3_vector     point;
@@ -307,8 +307,8 @@ inline b3_bool b3Light::b3PointIllumination(
 }
 
 inline b3_bool b3Light::b3AreaIllumination(
-	b3Shader  * shader,
-	b3_surface * surface)
+	b3Shader  *  shader,
+	b3_surface * surface) const
 {
 	b3_light_info  Jit;
 	b3_bool        Edge1, Edge2, LastEdge = false, first = true;
@@ -374,8 +374,8 @@ inline b3_bool b3Light::b3AreaIllumination(
 	xs    = 1;
 	for (x = xs; x <= Distr; x += 2)
 	{
-		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, x, 0) != null;
-		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - x) != null;
+		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, x, 0) != nullptr;
+		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - x) != nullptr;
 
 		equal   &= (Edge1 == Edge2);
 		if ((x != xs) && (!first))
@@ -388,8 +388,8 @@ inline b3_bool b3Light::b3AreaIllumination(
 
 	for (y = 2 - xs; y < Distr; y += 2)
 	{
-		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, 0, y) != null;
-		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - y) != null;
+		Edge1 = b3CheckSinglePoint(shader, surface, &Jit, 0, y) != nullptr;
+		Edge2 =	b3CheckSinglePoint(shader, surface, &Jit, Distr, Distr - y) != nullptr;
 
 		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
 		LastEdge = Edge1;
@@ -430,12 +430,12 @@ inline b3_bool b3Light::b3AreaIllumination(
 	return true;
 }
 
-inline b3Shape * b3Light::b3CheckSinglePoint(
-	b3Shader   *   shader,
-	b3_surface  *  surface,
+inline const b3Shape * b3Light::b3CheckSinglePoint(
+	b3Shader    *   shader,
+	b3_surface   *  surface,
 	b3_light_info * Jit,
-	b3_coord       x,
-	b3_coord       y)
+	b3_coord        x,
+	b3_coord        y) const
 {
 	b3_f64   jx, jy, LightDist;
 
@@ -451,7 +451,7 @@ inline b3Shape * b3Light::b3CheckSinglePoint(
 	return Jit->shape;
 }
 
-b3_f64 b3Light::b3ComputeSpotExponent()
+b3_f64 b3Light::b3ComputeSpotExponent() const
 {
 	b3_index i, max = 20;
 	b3_f64   p     = 0, angle;

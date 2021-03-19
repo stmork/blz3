@@ -109,7 +109,7 @@ b3_result b3Tx::b3ParsePCX4(b3_u08 * buffer)
 
 	data    = (b3_u08 *)b3Alloc(dSize);
 	palette = (b3_pkd_color *)b3Alloc(pSize * sizeof(b3_pkd_color));
-	if ((data != null) && (palette != null))
+	if ((data != nullptr) && (palette != nullptr))
 	{
 		type      = B3_TX_ILBM;
 		FileType  = FT_PCX4;

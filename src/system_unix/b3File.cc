@@ -45,7 +45,7 @@ b3File::b3File()
 	m_Index       =  0;
 	m_BufferSize  =  0;
 	m_File        = -1;
-	m_Cache       =  null;
+	m_Cache       =  nullptr;
 }
 
 // Instantiate as opened file
@@ -56,7 +56,7 @@ b3File::b3File(
 	m_Index       =  0;
 	m_BufferSize  =  0;
 	m_File        = -1;
-	m_Cache       =  null;
+	m_Cache       =  nullptr;
 
 	if (!b3Open(Name, AccessMode))
 	{
@@ -338,12 +338,12 @@ b3_bool b3File::b3Buffer(b3_size size)
 	if (size > 32)
 	{
 		m_Cache = (b3_u08 *)b3Alloc(size);
-		if (m_Cache != null)
+		if (m_Cache != nullptr)
 		{
 			m_BufferSize =  size - 32;
 		}
 	}
-	return m_Cache != null;
+	return m_Cache != nullptr;
 }
 
 void b3File::b3Close()
@@ -365,14 +365,14 @@ void b3File::b3Close()
 
 b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 {
-	b3_u08    *    file_buffer = null;
+	b3_u08    *    file_buffer = nullptr;
 	b3_file_error  error;
 
 	if (b3Open(filename, B_READ))
 	{
 		file_size = b3Size();
 		file_buffer = (b3_u08 *)b3Alloc(file_size);
-		if (file_buffer != null)
+		if (file_buffer != nullptr)
 		{
 			if (b3Read(file_buffer, file_size) == file_size)
 			{
@@ -398,7 +398,7 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 
 	if (error != B3_FILE_OK)
 	{
-		if (file_buffer != null)
+		if (file_buffer != nullptr)
 		{
 			// We don't need the read buffer any more.
 			b3Free(file_buffer);

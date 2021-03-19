@@ -15,6 +15,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_SKELETON_TEST_H
 #define B3_SKELETON_TEST_H
 
@@ -24,8 +26,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 class b3SkeletonTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3SkeletonTest);
@@ -33,8 +33,8 @@ class b3SkeletonTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp();
-	void tearDown();
+	void setUp() override;
+	void tearDown() override;
 	void test();
 };
 

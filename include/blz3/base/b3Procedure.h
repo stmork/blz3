@@ -277,8 +277,8 @@ public:
 		const b3_f32     amplification,
 		const b3_f32     attenuation)
 	{
-		b3_f32 B3_ALIGN_16 v[4];
-		b3_f32 B3_ALIGN_16 factor[4];
+		alignas(16) b3_f32 v[4];
+		alignas(16) b3_f32 factor[4];
 		b3_f64             sum = 0, n;
 		b3_loop            i, k;
 
@@ -324,10 +324,10 @@ public:
 		const b3_f32     attenuation,
 		b3_vector * result)
 	{
-		b3_f32 B3_ALIGN_16 v[4];
-		b3_f32 B3_ALIGN_16 factor[4];
-		b3_f32 B3_ALIGN_16 aux[4];
-		b3_f32 B3_ALIGN_16 sum[4];
+		alignas(16) b3_f32 v[4];
+		alignas(16) b3_f32 factor[4];
+		alignas(16) b3_f32 aux[4];
+		alignas(16) b3_f32 sum[4];
 		b3_loop   i, k;
 
 		v[0] = 1;    // amplification

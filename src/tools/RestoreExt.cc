@@ -45,12 +45,12 @@ static const char * b3GetClassExt(b3_u32 world_class)
 	case CLASS_BUMP:
 		return "bbd";
 	}
-	return null;
+	return nullptr;
 }
 
 static void b3TestFile(const char * filename)
 {
-	const char * ext = null;
+	const char * ext = nullptr;
 	b3Path      new_filename;
 
 	try
@@ -80,12 +80,12 @@ static void b3TestFile(const char * filename)
 		return;
 	}
 
-	if (ext != null)
+	if (ext != nullptr)
 	{
 		new_filename.b3RemoveExt(filename);
 		new_filename.b3Append(".");
 		new_filename.b3Append(ext);
-		if (strcmp(filename, new_filename) != null)
+		if (strcmp(filename, new_filename) != 0)
 		{
 #if 1
 			rename(filename, new_filename);

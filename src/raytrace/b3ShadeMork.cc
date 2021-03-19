@@ -41,9 +41,9 @@ void b3ShaderMork::b3Prepare(b3_preparation_info * prep_info)
 }
 
 void b3ShaderMork::b3ShadeLight(
-	b3Light    *   light,
+	const b3Light * light,
 	b3_light_info * Jit,
-	b3_surface  *  surface)
+	b3_surface   *  surface) const
 {
 	b3_f64   ShapeAngle;
 	b3_f32   Factor;
@@ -52,7 +52,7 @@ void b3ShaderMork::b3ShadeLight(
 	Jit->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
 
 	// No shadow => surface in light
-	if (Jit->shape == null) // This shape is the obscurer not the intersection point shape!!!
+	if (Jit->shape == nullptr) // This shape is the obscurer not the intersection point shape!!!
 	{
 		// specular high light
 		if ((ShapeAngle =

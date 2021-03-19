@@ -40,12 +40,12 @@ template<int index> class b3WorldTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp()
+	void setUp() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 	}
 
-	void tearDown()
+	void tearDown() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
@@ -54,40 +54,40 @@ public:
 	{
 		b3File          srcFile;
 		b3File          dstFile;
-		b3_u08     *    src = null;
-		b3_u08     *    dst = null;
+		b3_u08     *    src = nullptr;
+		b3_u08     *    dst = nullptr;
 		b3_size         srcSize = 0;
 		b3_size         dstSize = 0;
-		b3Item     *    item1 = null;
-		b3Item     *    item2 = null;
-		b3Base<b3Item> * base1 = null;
-		b3Base<b3Item> * base2 = null;
+		b3Item     *    item1 = nullptr;
+		b3Item     *    item2 = nullptr;
+		b3Base<b3Item> * base1 = nullptr;
+		b3Base<b3Item> * base2 = nullptr;
 
 		CPPUNIT_ASSERT(world1.b3Read(m_Filename, false));
 		CPPUNIT_ASSERT(world1.b3Write("test1.bwd", false));
 		CPPUNIT_ASSERT(world1.b3Read("test1.bwd", false));
 
 		CPPUNIT_ASSERT_NO_THROW(item1 = world1.b3GetFirst());
-		CPPUNIT_ASSERT(item1 != null);
+		CPPUNIT_ASSERT(item1 != nullptr);
 		CPPUNIT_ASSERT_NO_THROW(base1 = world1.b3GetHead());
-		CPPUNIT_ASSERT(base1 != null);
+		CPPUNIT_ASSERT(base1 != nullptr);
 
 		CPPUNIT_ASSERT_NO_THROW(item2 = b3World::b3Clone(item1, false));
-		CPPUNIT_ASSERT(item2 != null);
+		CPPUNIT_ASSERT(item2 != nullptr);
 		CPPUNIT_ASSERT_NO_THROW(world2.b3SetFirst(item2));
 
 		CPPUNIT_ASSERT_NO_THROW(base2 = world2.b3GetHead());
-		CPPUNIT_ASSERT(base2 != null);
+		CPPUNIT_ASSERT(base2 != nullptr);
 		CPPUNIT_ASSERT(world2.b3Write("test2.bwd", false));
 
 		CPPUNIT_ASSERT_NO_THROW(src = srcFile.b3ReadBuffer("test1.bwd", srcSize));
-		CPPUNIT_ASSERT(src != null);
-		CPPUNIT_ASSERT(srcSize != null);
+		CPPUNIT_ASSERT(src != nullptr);
+		CPPUNIT_ASSERT(srcSize != 0);
 
 		CPPUNIT_ASSERT(world2.b3Read("test2.bwd", false));
 		CPPUNIT_ASSERT_NO_THROW(dst = dstFile.b3ReadBuffer("test2.bwd", dstSize));
-		CPPUNIT_ASSERT(dst != null);
-		CPPUNIT_ASSERT(dstSize != null);
+		CPPUNIT_ASSERT(dst != nullptr);
+		CPPUNIT_ASSERT(dstSize != 0);
 
 		CPPUNIT_ASSERT(srcSize == dstSize);
 		CPPUNIT_ASSERT(memcmp(src, dst, srcSize));

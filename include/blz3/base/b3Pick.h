@@ -39,11 +39,11 @@ protected:
 
 public:
 	b3Pick(const b3_coord x = 0, const b3_coord y = 0);
-	virtual                 ~b3Pick();
-	virtual void             b3Draw(const b3DrawContext * dc);
-	virtual void             b3Update();
-	virtual const b3_bool    b3Hit(const b3_coord x, const b3_coord y) const;
-	virtual const b3_bool    b3Moved(const b3_coord x, const b3_coord y);
+	virtual                  ~b3Pick();
+	virtual void              b3Draw(const b3DrawContext * dc);
+	virtual void              b3Update();
+	virtual b3_bool           b3Hit(const b3_coord x, const b3_coord y) const;
+	virtual b3_bool           b3Moved(const b3_coord x, const b3_coord y);
 	virtual b3UndoOperation * b3GetOperation(const b3RenderObject * object) = 0;
 };
 
@@ -60,12 +60,12 @@ public:
 
 public:
 	b3PickBase();
-	const b3_bool    b3IsActive() const;
-	const b3_bool    b3Down(const b3_coord x, const b3_coord y);
-	const b3_bool    b3Move(const b3_coord x, const b3_coord y);
-	const b3_bool    b3Up(const b3_coord x, const b3_coord y);
-	void             b3Draw(const b3DrawContext * dc);
-	void             b3Update();
+	b3_bool           b3IsActive() const;
+	b3_bool           b3Down(const b3_coord x, const b3_coord y);
+	b3_bool           b3Move(const b3_coord x, const b3_coord y);
+	b3_bool           b3Up(const b3_coord x, const b3_coord y);
+	void              b3Draw(const b3DrawContext * dc);
+	void              b3Update();
 	b3UndoOperation * b3GetOperation(const b3RenderObject * object) const;
 };
 

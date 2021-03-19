@@ -66,7 +66,7 @@ b3Activation::b3Activation()
 	b3Animate(B3_ANIM_DISABLED);
 }
 
-b3_bool b3Activation::b3IsActive()
+b3_bool b3Activation::b3IsActive() const
 {
 	switch (m_AnimActive)
 	{
@@ -154,32 +154,24 @@ void b3Shape::b3StoreShape()
 
 b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3Item   *   item;
-	b3Condition * cond;
-	b3Bump   *   bump;
-	b3Material * material;
-
-	B3_FOR_BASE(b3GetConditionHead(), item)
+	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
-		cond = (b3Condition *)item;
 		if (!cond->b3Prepare(prep_info))
 		{
 			return false;
 		}
 	}
 
-	B3_FOR_BASE(b3GetBumpHead(), item)
+	B3_FOR_TYPED_BASE(b3Bump, b3GetBumpHead(), bump)
 	{
-		bump = (b3Bump *)item;
 		if (!bump->b3Prepare(prep_info))
 		{
 			return false;
 		}
 	}
 
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (!material->b3Prepare(prep_info))
 		{
 			return false;
@@ -189,18 +181,15 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 	return true;
 }
 
-void b3Shape::b3BumpNormal(b3_ray * ray)
+void b3Shape::b3BumpNormal(b3_ray * ray) const
 {
-	b3Item * item;
-	b3Bump * bump;
 	b3_f64   denom;
 	b3_bool  deriv_computed = false;
 	b3_bool  deriv_ok       = false;
 
 	b3Normal(ray);
-	B3_FOR_BASE(b3GetBumpHead(), item)
+	B3_FOR_TYPED_BASE(b3Bump, b3GetBumpHead(), bump)
 	{
-		bump = (b3Bump *)item;
 		if (bump->b3NeedDeriv())
 		{
 			if (!deriv_computed)
@@ -229,22 +218,18 @@ void b3Shape::b3BumpNormal(b3_ray * ray)
 	ray->normal.z *= denom;
 }
 
-void b3Shape::b3SetupPicking(b3PickInfo * info)
+void b3Shape::b3SetupPicking(b3PickInfo * info B3_UNUSED)
 {
 }
 
-void b3Shape::b3SetupGrid(b3PickInfo * info)
+void b3Shape::b3SetupGrid(b3PickInfo * info B3_UNUSED)
 {
 }
 
-b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
+b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface) const
 {
-	b3Item   *  item;
-	b3Material * material;
-
-	B3_FOR_BASE(b3GetMaterialHead(), item)
+	B3_FOR_TYPED_BASE(b3Material, b3GetMaterialHead(), material)
 	{
-		material = (b3Material *)item;
 		if (material->b3GetSurfaceValues(surface))
 		{
 			return material;
@@ -259,15 +244,15 @@ b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface)
 	surface->m_Ior         =      1.0f;
 	surface->m_SpecularExp = 100000.0f;
 
-	return null;
+	return nullptr;
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar * polar)
+b3_bool b3Shape::b3CheckStencil(b3_polar * polar B3_UNUSED) const
 {
 	return true;
 }
 
-void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;
@@ -279,7 +264,9 @@ void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info)
 	info->yInfo.factor = 1;
 }
 
-void b3Shape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3Shape::b3Transform(
+	b3_matrix * transformation B3_UNUSED,
+	b3_bool     is_affine B3_UNUSED)
 {
 	b3PrintF(B3LOG_NORMAL, "b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);
@@ -303,17 +290,13 @@ b3SimpleShape::b3SimpleShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
-b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar)
+b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar) const
 {
-	b3Item   *   item;
-	b3Condition * cond;
 	b3_bool      result = true;
 
-	B3_FOR_BASE(b3GetConditionHead(), item)
+	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
-		cond   = (b3Condition *)item;
-		result = cond->b3Conditionate(
-				result, cond->b3CheckStencil(polar));
+		result = cond->b3Conditionate(result, cond->b3CheckStencil(polar));
 	}
 	return result;
 }
@@ -447,7 +430,7 @@ b3_bool b3Shape3::b3Prepare(b3_preparation_info * prep_info)
 	return result;
 }
 
-void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound * info)
+void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 {
 	info->xInfo.min    = 0;
 	info->xInfo.max    = 1;

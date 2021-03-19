@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.69)
-AC_INIT(blz3, 2.99.2-20, blz3-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 3.1.0-0, blz3-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -31,14 +31,10 @@ AC_SUBST(BLZ3_USE_SSE2)
 AC_SUBST(BLZ3_USE_SSE3)
 AC_SUBST(BLZ3_USE_X264)
 AC_SUBST(HAVE_LIBCPPUNIT)
-AC_SUBST(HAVE_MEMALIGN)
 AC_SUBST(HAVE_NEW_OVERLOADING)
 AC_SUBST(HAVE_SSE)
 AC_SUBST(HAVE_SSE2)
 AC_SUBST(HAVE_SSE3)
-AC_SUBST(HAVE_STRCASECMP)
-AC_SUBST(HAVE_STRICMP)
-AC_SUBST(HAVE_STRLCPY)
 AC_SUBST(HAVE_X264_DELAYED_FRAMES)
 AC_SUBST(HAVE_X264_PARAMETER_DEFINITION)
 AC_SUBST(SSE_ALIGNED)
@@ -54,7 +50,7 @@ AC_SUBST(X264LIBS)
 AC_SUBST(CPPUNITLIBS)
 
 AC_LANG_PUSH(C++)
-AX_CXX_COMPILE_STDCXX_11([ext], [mandatory])
+AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
 
 AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt strchr strerror strstr])
 
@@ -64,21 +60,6 @@ AC_TRY_LINK([#include <stdio.h>],[
 #error "This is not Linux!"
 #endif
 ],[AC_DEFINE([BLZ3_IS_LINUX], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING([for stricmp])
-AC_TRY_LINK([#include <strings.h>],[
-stricmp("small","BIG");
-],[AC_DEFINE([HAVE_STRICMP], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING([for strcasecmp])
-AC_TRY_LINK([#include <strings.h>],[
-strcasecmp("small","BIG");
-],[AC_DEFINE([HAVE_STRCASECMP], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
-AC_MSG_CHECKING([for strlcpy])
-AC_TRY_LINK([#include <string.h>],[
-char example[16];strlcpy(example,"Example",sizeof(example));
-],[AC_DEFINE([HAVE_STRLCPY], [], [Description]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 AC_MSG_CHECKING([for strerror])
 AC_TRY_LINK([#include <string.h>],[

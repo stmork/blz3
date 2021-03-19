@@ -173,8 +173,8 @@ int main(int argc, char * argv[])
 {
 	b3Tx         reference, image;
 	b3Calibrate * calibrate;
-	b3Path       source = "/tmp/maui";
-	b3Path       dest   = "/usr/local/maui/postproc2/data";
+	b3Path       source("/tmp/maui");
+	b3Path       dest("/usr/local/maui/postproc2/data");
 	b3Path       file;
 	char         name[32];
 	b3FileList   list;
@@ -187,7 +187,7 @@ int main(int argc, char * argv[])
 	list.b3CreateList(source);
 	list.b3Sort();
 
-	for (entry = list.b3First(); entry != null; entry = entry->Succ)
+	for (entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 	{
 		image.b3LoadImage(entry->b3Name());
 		calibrate->b3Adjust(image);

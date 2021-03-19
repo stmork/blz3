@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1417</width>
+    <height>839</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="left" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="leftVerticalLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QListView" name="cameraListView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListView" name="lightListView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTreeView" name="treeView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>3</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="right" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>10</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QVBoxLayout" name="rightVerticalLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="animationLayout">
+          <item>
+           <widget class="QLabel" name="animationLabel">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="animationSlider">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TicksAbove</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QB3OpenGLWidget" name="glView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>4</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1417</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Datei</string>
+    </property>
+    <addaction name="actionOpenScene"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuAnsicht">
+    <property name="title">
+     <string>Ansicht</string>
+    </property>
+    <addaction name="actionView3D"/>
+    <addaction name="actionViewFront"/>
+    <addaction name="actionViewTop"/>
+    <addaction name="actionViewRight"/>
+    <addaction name="actionViewLeft"/>
+    <addaction name="separator"/>
+    <addaction name="actionViewZoomIn"/>
+    <addaction name="actionViewZoomOut"/>
+    <addaction name="actionViewPop"/>
+    <addaction name="actionViewFull"/>
+    <addaction name="separator"/>
+    <addaction name="actionActivateAll"/>
+    <addaction name="actionDeaktivateAll"/>
+    <addaction name="actionActivate"/>
+    <addaction name="actionDeactivate"/>
+    <addaction name="actionDeactivateOther"/>
+    <addaction name="actionDeactivateAllOther"/>
+   </widget>
+   <widget class="QMenu" name="menuAnimation">
+    <property name="title">
+     <string>Animation</string>
+    </property>
+    <addaction name="actionAnimPlay"/>
+    <addaction name="actionAnimStop"/>
+    <addaction name="actionAnimPause"/>
+    <addaction name="actionAnimRepeat"/>
+   </widget>
+   <widget class="QMenu" name="menuLicht">
+    <property name="title">
+     <string>Licht</string>
+    </property>
+    <addaction name="actionLightSimple"/>
+    <addaction name="actionLightAll"/>
+    <addaction name="actionLightSpot"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAnsicht"/>
+   <addaction name="menuLicht"/>
+   <addaction name="menuAnimation"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>15</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpenScene"/>
+   <addaction name="actionQuit"/>
+   <addaction name="separator"/>
+   <addaction name="actionView3D"/>
+   <addaction name="actionViewFront"/>
+   <addaction name="actionViewTop"/>
+   <addaction name="actionViewRight"/>
+   <addaction name="actionViewLeft"/>
+   <addaction name="separator"/>
+   <addaction name="actionViewZoomIn"/>
+   <addaction name="actionViewZoomOut"/>
+   <addaction name="actionViewPop"/>
+   <addaction name="actionViewFull"/>
+   <addaction name="separator"/>
+   <addaction name="actionActivateAll"/>
+   <addaction name="actionDeaktivateAll"/>
+   <addaction name="actionActivate"/>
+   <addaction name="actionDeactivate"/>
+   <addaction name="actionDeactivateOther"/>
+   <addaction name="actionDeactivateAllOther"/>
+   <addaction name="separator"/>
+   <addaction name="actionAnimPlay"/>
+   <addaction name="actionAnimStop"/>
+   <addaction name="actionAnimPause"/>
+   <addaction name="actionAnimRepeat"/>
+   <addaction name="separator"/>
+   <addaction name="actionLightSimple"/>
+   <addaction name="actionLightAll"/>
+   <addaction name="actionLightSpot"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="actionActivateAll">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_activate_all.png</normaloff>:/toolbar/object/res/toolbar/object/object_activate_all.png</iconset>
+   </property>
+   <property name="text">
+    <string>Alles aktivieren</string>
+   </property>
+   <property name="shortcut">
+    <string>A</string>
+   </property>
+  </action>
+  <action name="actionDeaktivateAll">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_all.png</normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_all.png</iconset>
+   </property>
+   <property name="text">
+    <string>Alles deaktivieren</string>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+  </action>
+  <action name="actionOpenScene">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/file/res/toolbar/file/file_open.png</normaloff>:/toolbar/file/res/toolbar/file/file_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Szene öffnen</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionView3D">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_3d.png</normaloff>:/toolbar/view/res/toolbar/view/view_3d.png</iconset>
+   </property>
+   <property name="text">
+    <string>3D-Ansicht</string>
+   </property>
+   <property name="shortcut">
+    <string>3</string>
+   </property>
+  </action>
+  <action name="actionViewFront">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_front.png</normaloff>:/toolbar/view/res/toolbar/view/view_front.png</iconset>
+   </property>
+   <property name="text">
+    <string>Frontalansicht</string>
+   </property>
+   <property name="shortcut">
+    <string>F</string>
+   </property>
+  </action>
+  <action name="actionViewTop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_bottom.png</normaloff>:/toolbar/view/res/toolbar/view/view_bottom.png</iconset>
+   </property>
+   <property name="text">
+    <string>Aufsicht</string>
+   </property>
+   <property name="shortcut">
+    <string>T</string>
+   </property>
+  </action>
+  <action name="actionViewRight">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_right.png</normaloff>:/toolbar/view/res/toolbar/view/view_right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Seitenansicht rechts</string>
+   </property>
+   <property name="shortcut">
+    <string>R</string>
+   </property>
+  </action>
+  <action name="actionViewLeft">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_left.png</normaloff>:/toolbar/view/res/toolbar/view/view_left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Seitenansicht links</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionViewZoomIn">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_bigger.png</normaloff>:/toolbar/view/res/toolbar/view/view_bigger.png</iconset>
+   </property>
+   <property name="text">
+    <string>Größer</string>
+   </property>
+   <property name="shortcut">
+    <string>+</string>
+   </property>
+  </action>
+  <action name="actionViewZoomOut">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_smaller.png</normaloff>:/toolbar/view/res/toolbar/view/view_smaller.png</iconset>
+   </property>
+   <property name="text">
+    <string>Kleiner</string>
+   </property>
+   <property name="shortcut">
+    <string>-</string>
+   </property>
+  </action>
+  <action name="actionViewPop">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_undo.png</normaloff>:/toolbar/view/res/toolbar/view/view_undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ansicht zurück</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionViewFull">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_full.png</normaloff>:/toolbar/view/res/toolbar/view/view_full.png</iconset>
+   </property>
+   <property name="text">
+    <string>Volle Ansicht</string>
+   </property>
+  </action>
+  <action name="actionViewMoveRight">
+   <property name="text">
+    <string>rechts</string>
+   </property>
+   <property name="shortcut">
+    <string>Right</string>
+   </property>
+  </action>
+  <action name="actionViewMoveLeft">
+   <property name="text">
+    <string>Links</string>
+   </property>
+   <property name="shortcut">
+    <string>Left</string>
+   </property>
+  </action>
+  <action name="actionViewMoveUp">
+   <property name="text">
+    <string>Hoch</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionViewMoveDown">
+   <property name="text">
+    <string>Runter</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="actionAnimPlay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/animation/res/toolbar/animation/animation_play.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_play.png</iconset>
+   </property>
+   <property name="text">
+    <string>Abspielen</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionAnimStop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/animation/res/toolbar/animation/animation_stop.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>S</string>
+   </property>
+  </action>
+  <action name="actionAnimPause">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/animation/res/toolbar/animation/animation_pause.png</normaloff>:/toolbar/animation/res/toolbar/animation/animation_pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+P</string>
+   </property>
+  </action>
+  <action name="actionAnimRepeat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Endlos</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Beenden</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionLightSimple">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Einfaches Licht</string>
+   </property>
+  </action>
+  <action name="actionLightAll">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Alle Lichter</string>
+   </property>
+  </action>
+  <action name="actionLightSpot">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spotlicht</string>
+   </property>
+   <property name="shortcut">
+    <string>O</string>
+   </property>
+  </action>
+  <action name="actionActivate">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_activate.png</normaloff>:/toolbar/object/res/toolbar/object/object_activate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Aktivieren</string>
+   </property>
+  </action>
+  <action name="actionDeactivate">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_deactivate.png</normaloff>:/toolbar/object/res/toolbar/object/object_deactivate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Deaktivieren</string>
+   </property>
+  </action>
+  <action name="actionDeactivateOther">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_reactivate.png</normaloff>:/toolbar/object/res/toolbar/object/object_reactivate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rest deaktivieren</string>
+   </property>
+  </action>
+  <action name="actionDeactivateAllOther">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_rest.png</normaloff>:/toolbar/object/res/toolbar/object/object_deactivate_rest.png</iconset>
+   </property>
+   <property name="text">
+    <string>Einzig aktivieren</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QB3OpenGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>b3OpenGLWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

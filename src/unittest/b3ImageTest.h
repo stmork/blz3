@@ -50,14 +50,12 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void setUp()
+	void setUp() override
 	{
-		b3_f32        step = 1.0 / 32.0;
 		b3Color       row[TEST_IMG_XMAX];
 		b3_pkd_color * tRow;
 		b3_color   *  rRow;
 		b3_res width   = TEST_IMG_XMAX >> 3;
-		b3_res channel = TEST_IMG_XMAX / width;
 
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		m_TxPallColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,   8); // 8 bit palette entry
@@ -88,7 +86,7 @@ public:
 		}
 	}
 
-	void tearDown()
+	void tearDown() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}

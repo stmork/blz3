@@ -49,7 +49,7 @@ b3_bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
 	b3_size     txLen, nameLen;
 	b3_offset   diff;
 
-	if (*tx != null)
+	if (*tx != nullptr)
 	{
 		txName  = (*tx)->b3Name();
 		txLen   = strlen(txName);
@@ -61,12 +61,12 @@ b3_bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
 		}
 	}
 
-	if (*tx == null)
+	if (*tx == nullptr)
 	{
 		*tx = m_TexturePool.b3LoadTexture(name);
 	}
 
-	return *tx != null;
+	return *tx != nullptr;
 }
 
 b3_bool b3Scene::b3CutTextureName(const char * full_name, char * short_name)

@@ -59,7 +59,7 @@ b3Runtime::b3Runtime()
 	char * locale;
 
 	locale = setlocale(LC_ALL, "");
-	if (locale == null)
+	if (locale == nullptr)
 	{
 		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
 	}
@@ -137,13 +137,13 @@ b3_bool b3Runtime::b3Hostname(char * hostname, const b3_size buffer_size)
 b3_s32 b3Runtime::b3Execute(const char * command, const b3_bool async)
 {
 	char        set[1024];
-	const char * fmt;
 	b3_s32      result = 127;
 	b3_size     offset = sizeof(set) - (async ? 2 : 0);
 
 	if (strlen(command) < offset)
 	{
-		fmt = async ? "%s &" : "%s";
+		const char * fmt = async ? "%s &" : "%s";
+
 		snprintf(set, sizeof(set), fmt, command);
 		result = system(set);
 	}

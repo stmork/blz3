@@ -51,7 +51,7 @@ void b3Water::b3PrepareWater(const b3_f64 t)
 	m_t      = t;
 }
 
-b3_f64 b3Water::b3ComputeWater(const b3_vector * point)
+b3_f64 b3Water::b3ComputeWater(const b3_vector * point) const
 {
 	b3_vector P;
 	b3_f64    offset, turbulence;
