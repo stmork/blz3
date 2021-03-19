@@ -81,7 +81,7 @@
       <widget class="QWidget" name="right" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>10</horstretch>
+         <horstretch>4</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
@@ -165,6 +165,7 @@
     <addaction name="actionViewZoomIn"/>
     <addaction name="actionViewZoomOut"/>
     <addaction name="actionViewPop"/>
+    <addaction name="actionViewSelect"/>
     <addaction name="actionViewFull"/>
     <addaction name="separator"/>
     <addaction name="actionActivateAll"/>
@@ -225,6 +226,7 @@
    <addaction name="actionViewZoomIn"/>
    <addaction name="actionViewZoomOut"/>
    <addaction name="actionViewPop"/>
+   <addaction name="actionViewSelect"/>
    <addaction name="actionViewFull"/>
    <addaction name="separator"/>
    <addaction name="actionActivateAll"/>
@@ -389,6 +391,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionViewSelect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_select.png</normaloff>:/toolbar/view/res/toolbar/view/view_select.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ansicht auswählen</string>
    </property>
   </action>
   <action name="actionViewFull">

@@ -452,6 +452,11 @@ void MainWindow::on_actionViewPop_triggered()
 	ui->glView->b3PreviousView();
 }
 
+void MainWindow::on_actionViewSelect_triggered()
+{
+
+}
+
 void MainWindow::on_actionViewFull_triggered()
 {
 	ui->glView->b3FullView();

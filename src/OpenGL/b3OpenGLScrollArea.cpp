@@ -16,22 +16,23 @@
 
 #include <QLayout>
 
-QB3OpenGLScrollArea::QB3OpenGLScrollArea(QB3OpenGLWidget * glWidget) : child(glWidget)
+QB3OpenGLScrollArea::QB3OpenGLScrollArea(QB3OpenGLWidget * glWidget) :
+	child(glWidget)
 {
 	QWidget * parent = glWidget->parentWidget();
 	QLayout * layout = parent->layout();
 
-	setSizePolicy(glWidget->sizePolicy());
 	layout->replaceWidget(glWidget, this);
 	setViewport(glWidget);
-	glWidget->update();
 }
 
+// https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
 void QB3OpenGLScrollArea::resizeEvent(QResizeEvent * event)
 {
 	child->resizeEvent(event);
 }
 
+// https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
 void QB3OpenGLScrollArea::paintEvent(QPaintEvent * event)
 {
 	child->paintEvent(event);

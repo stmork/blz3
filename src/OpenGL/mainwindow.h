@@ -65,6 +65,7 @@ private slots:
 	void on_actionViewZoomIn_triggered();
 	void on_actionViewZoomOut_triggered();
 	void on_actionViewPop_triggered();
+	void on_actionViewSelect_triggered();
 	void on_actionViewFull_triggered();
 	void on_actionViewMoveRight_triggered();
 	void on_actionViewMoveLeft_triggered();
