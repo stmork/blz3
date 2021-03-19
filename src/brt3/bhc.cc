@@ -458,7 +458,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 			cond->m_yEnd   =  1;
 			right->b3GetConditionHead()->b3Append(cond);
 
-			b3PrintF(B3LOG_DEBUG, "       Added door/window of line %d\n", m_Openings[i].line);
+			b3PrintF(B3LOG_DEBUG, "       Added door/window of line %ld\n", m_Openings[i].line);
 		}
 
 		if ((m_Openings[i].a == b) && (m_Openings[i].b == a))
@@ -479,7 +479,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 			}
 			area->b3GetConditionHead()->b3Append(cond);
 
-			b3PrintF(B3LOG_DEBUG, "       Used door/window of line %d\n", m_Openings[i].line);
+			b3PrintF(B3LOG_DEBUG, "       Used door/window of line %ld\n", m_Openings[i].line);
 		}
 	}
 }

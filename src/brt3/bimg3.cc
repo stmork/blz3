@@ -52,7 +52,7 @@ static void display(b3Tx * tx)
 
 	if (tx->b3IsLoaded())
 	{
-		b3PrintF(B3LOG_NORMAL, "%s: %dx%d\n",
+		b3PrintF(B3LOG_NORMAL, "%s: %ldx%ld\n",
 			tx->b3Name(), tx->xSize, tx->ySize);
 		display = new b3DisplayView(tx->xSize, tx->ySize, tx->b3Name());
 		display->b3PutTx(tx);

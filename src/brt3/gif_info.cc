@@ -95,7 +95,7 @@ static void InfoGIF(char * name)
 					transPtr->flags & 1 ? "yes" : "no");
 				if (transPtr->flags & 1)
 				{
-					b3PrintF(B3LOG_NORMAL, "transparent color index: %ld\n",
+					b3PrintF(B3LOG_NORMAL, "transparent color index: %d\n",
 						transPtr->index);
 				}
 				b3PrintF(B3LOG_NORMAL, "delay time:  %ld/100 s\n", VAL2(transPtr->delay));

@@ -63,7 +63,7 @@ public:
 			{
 				count = 0;
 				sscanf(line, " %ld", &count);
-				b3PrintF(B3LOG_NORMAL, "Trying to read %d patches...\n", count);
+				b3PrintF(B3LOG_NORMAL, "Trying to read %ld patches...\n", count);
 				for (i = 0; i < count; i++)
 				{
 					if (b3ReadLine(line, sizeof(line), patchfile))
@@ -106,7 +106,7 @@ public:
 			{
 				count = 0;
 				sscanf(line, " %ld", &count);
-				b3PrintF(B3LOG_NORMAL, "Trying to read %d vertices...\n", count);
+				b3PrintF(B3LOG_NORMAL, "Trying to read %ld vertices...\n", count);
 				for (i = 0; i < count; i++)
 				{
 					if (b3ReadLine(line, sizeof(line), patchfile))
@@ -132,7 +132,7 @@ public:
 			}
 
 			fclose(patchfile);
-			b3PrintF(B3LOG_NORMAL, "Read %d patches and %d vertices.\n",
+			b3PrintF(B3LOG_NORMAL, "Read %ld patches and %ld vertices.\n",
 				m_Patches.b3GetCount(), m_Vertices.b3GetCount());
 		}
 	}
