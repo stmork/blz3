@@ -26,7 +26,7 @@ set -e
 make configure
 ./configure BLZ3_DOC=${BLZ3_DEBIAN_DEV}/usr/share/doc/blz3 --prefix=${BLZ3_DEBIAN} --exec-prefix=${BLZ3_DEBIAN}/usr
 make depend
-make 
+make -j `getconf _NPROCESSORS_ONLN`
 make install documentation
 make test
 

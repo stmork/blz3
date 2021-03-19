@@ -1,5 +1,5 @@
 Package: libblz3-dev
-Version: 2.99.3-%BUILD%
+Version: @PACKAGE_VERSION@-@BUILD@
 Section: libdevel
 Priority: optional
 Architecture: %ARCH%
