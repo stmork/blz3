@@ -397,8 +397,8 @@ void MainWindow::on_actionOpenScene_triggered()
 		m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
 		m_Scene->b3SetFilename(filename.c_str());
 		m_Animation = m_Scene->b3GetAnimation();
-		prepareUI();
 		ui->glView->b3Prepare(m_Scene, &m_CameraVolume);
+		prepareUI();
 	}
 }
 
