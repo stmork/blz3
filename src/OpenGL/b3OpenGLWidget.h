@@ -23,6 +23,7 @@
 #include <blz3/raytrace/b3Scene.h>
 
 class b3CameraVolume;
+class QB3OpenGLScrollArea;
 
 class QB3OpenGLWidget : public QOpenGLWidget
 {
@@ -63,6 +64,8 @@ private:
 	b3_res                xWinSize, yWinSize;
 	b3_vector             m_Lower, m_Upper;
 	b3_view_mode          m_ViewMode = B3_VIEW_3D;
+
+	friend class QB3OpenGLScrollArea;
 };
 
 #endif // QB3OPENGLWIDGET_H

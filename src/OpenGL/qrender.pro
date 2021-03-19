@@ -13,6 +13,7 @@ SOURCES += \
 	b3CameraItem.cpp \
 	b3CameraVolume.cpp \
 	b3LightItem.cpp \
+	b3OpenGLScrollArea.cpp \
 	b3OpenGLWidget.cpp \
 	b3SceneItem.cpp \
 	qrender.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
 	b3CameraItem.h \
 	b3CameraVolume.h \
 	b3LightItem.h \
+	b3OpenGLScrollArea.h \
 	b3OpenGLWidget.h \
 	b3SceneItem.h \
 	mainwindow.h

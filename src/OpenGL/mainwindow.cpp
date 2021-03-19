@@ -21,6 +21,7 @@
 #include "b3LightItem.h"
 #include "b3BBoxItem.h"
 #include "b3SceneItem.h"
+#include "b3OpenGLScrollArea.h"
 
 /*************************************************************************
 **                                                                      **
@@ -55,6 +56,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	QSurfaceFormat::setDefaultFormat(format);
 
 	ui->setupUi(this);
+
+	// TODO: Check if freed on exit!
+	new QB3OpenGLScrollArea(ui->glView);
+
 	addAction(ui->actionViewMoveRight);
 	addAction(ui->actionViewMoveLeft);
 	addAction(ui->actionViewMoveUp);
@@ -64,9 +69,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	const char * BLZ3_BIN     = getenv("BLZ3_BIN");
 	const char * HOME         = getenv("HOME");
 
-	b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
-	b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
-	b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
+	data.b3LinkFileName(    HOME, "Blizzard/Data");
+	textures.b3LinkFileName(HOME, "Blizzard/Textures");
+	pictures.b3LinkFileName(HOME, "Blizzard/Pictures");
 
 	b3Scene::m_TexturePool.b3AddPath(textures);
 	b3Scene::m_TexturePool.b3AddPath(pictures);
@@ -464,12 +469,12 @@ void MainWindow::on_actionViewMoveLeft_triggered()
 
 void MainWindow::on_actionViewMoveUp_triggered()
 {
-	ui->glView->b3MoveView(0.0, -0.2);
+	ui->glView->b3MoveView(0.0, 0.2);
 }
 
 void MainWindow::on_actionViewMoveDown_triggered()
 {
-	ui->glView->b3MoveView(0.0, 0.2);
+	ui->glView->b3MoveView(0.0, -0.2);
 }
 
 void MainWindow::on_actionActivateAll_triggered()
