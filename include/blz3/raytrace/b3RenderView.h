@@ -42,6 +42,23 @@ enum b3_view_mode
 };
 
 /**
+ * This structure represents two bounding rectangles which represents the
+ * bounds of the scene and the bounds of the selected view. The rectangles
+ * are converted respecting the chosen view mode. Note that the rectangles
+ * may overlap each other if only contents of the scene are visible. You
+ * have to compute the completing bounding rectangle by using B3_MIN on the
+ * lower bounds and B3_MAX on the upper bounds. Use b3GetView() to get
+ * the actual view info data.
+ *
+ * @see b3_view_mode
+ */
+struct b3_view_info
+{
+	b3_bound_2d scene;
+	b3_bound_2d view;
+};
+
+/**
  * This class represents one view. Several views can be stacked depending on
  * the view mode.
  */
@@ -189,6 +206,8 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool           b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const;
+
+	b3_bool           b3GetView(b3_view_info & view_info) const;
 
 	/**
 	 * This method pops the actual view item from the actual view mode.

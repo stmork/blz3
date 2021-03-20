@@ -34,12 +34,8 @@
 b3RenderViewItem::b3RenderViewItem() :
 	b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
 {
-	m_Mid.x =
-		m_Mid.y =
-			m_Mid.z = 0;
-	m_Size.x =
-		m_Size.y =
-			m_Size.z = 0;
+	m_Mid.x  = m_Mid.y  = m_Mid.z  = 0;
+	m_Size.x = m_Size.y = m_Size.z = 0;
 }
 
 b3RenderViewItem::b3RenderViewItem(
@@ -201,6 +197,51 @@ b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const
 		success = false;
 	}
 	return success;
+}
+
+b3_bool b3RenderView::b3GetView(b3_view_info & view_info) const
+{
+	switch (m_ViewMode)
+	{
+	default:
+		return false;
+
+	case B3_VIEW_TOP:
+		view_info.scene.left   = m_Lower.x;
+		view_info.scene.right  = m_Upper.x;
+		view_info.scene.bottom = m_Lower.y;
+		view_info.scene.top    = m_Upper.y;
+		view_info.view.left    = m_Actual->m_Mid.x - 0.5 * m_Actual->m_Size.x;
+		view_info.view.right   = m_Actual->m_Mid.x + 0.5 * m_Actual->m_Size.x;
+		view_info.view.bottom  = m_Actual->m_Mid.y - 0.5 * m_Actual->m_Size.y;
+		view_info.view.top     = m_Actual->m_Mid.y + 0.5 * m_Actual->m_Size.y;
+		break;
+
+	case B3_VIEW_FRONT:
+	case B3_VIEW_BACK:
+		view_info.scene.left   = m_Lower.x;
+		view_info.scene.right  = m_Upper.x;
+		view_info.scene.bottom = m_Lower.z;
+		view_info.scene.top    = m_Upper.z;
+		view_info.view.left    = m_Actual->m_Mid.x - 0.5 * m_Actual->m_Size.x;
+		view_info.view.right   = m_Actual->m_Mid.x + 0.5 * m_Actual->m_Size.x;
+		view_info.view.bottom  = m_Actual->m_Mid.z - 0.5 * m_Actual->m_Size.z;
+		view_info.view.top     = m_Actual->m_Mid.z + 0.5 * m_Actual->m_Size.z;
+		break;
+
+	case B3_VIEW_RIGHT:
+	case B3_VIEW_LEFT:
+		view_info.scene.left   = m_Lower.y;
+		view_info.scene.right  = m_Upper.y;
+		view_info.scene.bottom = m_Lower.z;
+		view_info.scene.top    = m_Upper.z;
+		view_info.view.left    = m_Actual->m_Mid.y - 0.5 * m_Actual->m_Size.y;
+		view_info.view.right   = m_Actual->m_Mid.y + 0.5 * m_Actual->m_Size.y;
+		view_info.view.bottom  = m_Actual->m_Mid.z - 0.5 * m_Actual->m_Size.z;
+		view_info.view.top     = m_Actual->m_Mid.z + 0.5 * m_Actual->m_Size.z;
+		break;
+	}
+	return true;
 }
 
 void b3RenderView::b3SetBounds(const b3_vector * lower, const b3_vector * upper)
@@ -545,9 +586,9 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 
 void b3RenderView::b3Project(
 	const b3_vector * point,
-	b3_f64  &  xRel,
-	b3_f64  &  yRel,
-	b3_f64  &  zRel) const
+	b3_f64      &     xRel,
+	b3_f64      &     yRel,
+	b3_f64      &     zRel) const
 {
 #ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
