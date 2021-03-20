@@ -195,8 +195,8 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 {
 	B3_METHOD;
 
-	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
 	m_View.b3SetViewMode(m_ViewMode);
+	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
 }
 
 void QB3OpenGLWidget::paintGL()

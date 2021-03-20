@@ -40,16 +40,32 @@ QB3OpenGLScrollArea::QB3OpenGLScrollArea(QB3OpenGLWidget * glWidget) :
 
 	layout->replaceWidget(glWidget, this);
 	setViewport(glWidget);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	dumpObjectTree();
 
-	connect(horizontalScrollBar(), &QScrollBar::valueChanged, [this] (int value)
+	connect(horizontalScrollBar(), &QScrollBar::valueChanged, [this] (int value B3_UNUSED)
 	{
-		child->b3MoveView(h.relFromBar(value - h.bar_pos), 0.0, h, v);
+#if 0
+		const int diff = value - h.bar_pos;
+
+		if (diff != 0)
+		{
+			child->b3MoveView(h.relFromBar(diff), 0.0, h, v);
+		}
+#endif
 	});
 
-	connect(verticalScrollBar(), &QScrollBar::valueChanged, [this] (int value)
+	connect(verticalScrollBar(), &QScrollBar::valueChanged, [this] (int value B3_UNUSED)
 	{
-		child->b3MoveView(0.0, v.relFromBar(value - v.bar_pos), h, v);
+#if 0
+		const int diff = v.bar_pos - value;
+
+		if (diff != 0)
+		{
+			child->b3MoveView(0.0, v.relFromBar(diff), h, v);
+		}
+#endif
 	});
 }
 
@@ -63,29 +79,29 @@ void QB3OpenGLScrollArea::b3SetViewmode(const b3_view_mode mode)
 void QB3OpenGLScrollArea::b3MoveView(const b3_f64 dx, const b3_f64 dy)
 {
 	child->b3MoveView(dx, dy, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update(horizontalScrollBar(), h, false);
+	update(verticalScrollBar(),   v, true);
 }
 
 void QB3OpenGLScrollArea::b3ScaleView(const b3_f64 factor)
 {
 	child->b3ScaleView(factor, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update(horizontalScrollBar(), h, false);
+	update(verticalScrollBar(),   v, true);
 }
 
 void QB3OpenGLScrollArea::b3FullView()
 {
 	child->b3FullView(h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update(horizontalScrollBar(), h, false);
+	update(verticalScrollBar(),   v, true);
 }
 
 void QB3OpenGLScrollArea::b3PreviousView()
 {
 	child->b3PreviousView(h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update(horizontalScrollBar(), h, false);
+	update(verticalScrollBar(),   v, true);
 }
 
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
@@ -100,11 +116,13 @@ void QB3OpenGLScrollArea::paintEvent(QPaintEvent * event)
 	child->paintEvent(event);
 }
 
-void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info)
+void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info, b3_bool negate)
 {
 	bar->setRange(QB3BarInfo::BAR_RANGE_MIN, QB3BarInfo::BAR_RANGE_MAX - info.bar_page_size);
 	bar->setPageStep(info.bar_page_size);
-	bar->setValue(info.posToBar(info.page_pos));
+
+	const int pos = info.posToBar(info.page_pos);
+	bar->setValue(negate ? QB3BarInfo::BAR_RANGE_MAX - pos : QB3BarInfo::BAR_RANGE_MIN + pos);
 }
 
 /*************************************************************************
@@ -114,10 +132,10 @@ void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info)
 *************************************************************************/
 
 void QB3BarInfo::set(
-		const b3_f32 scene_lower,
-		const b3_f32 scene_upper,
-		const b3_f32 view_lower,
-		const b3_f32 view_upper)
+	const b3_f32 scene_lower,
+	const b3_f32 scene_upper,
+	const b3_f32 view_lower,
+	const b3_f32 view_upper)
 {
 	min       = B3_MIN(scene_lower, view_lower);
 	max       = B3_MAX(scene_upper, view_upper);

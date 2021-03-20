@@ -37,17 +37,17 @@ struct QB3BarInfo
 	int    bar_pos;
 
 	void set(
-			const b3_f32 scene_lower,
-			const b3_f32 scene_upper,
-			const b3_f32 view_lower,
-			const b3_f32 view_upper);
+		const b3_f32 scene_lower,
+		const b3_f32 scene_upper,
+		const b3_f32 view_lower,
+		const b3_f32 view_upper);
 
 	b3_f64 relFromBar(const int value) const;
 	int    relToBar(const b3_f64 value) const;
 	int    posToBar(const b3_f64 pos);
 };
 
-class QB3OpenGLScrollArea : public QAbstractScrollArea
+class QB3OpenGLScrollArea : public QScrollArea
 {
 	Q_OBJECT
 
@@ -66,7 +66,7 @@ protected:
 
 private:
 	void update();
-	void update(QScrollBar * bar, QB3BarInfo & info);
+	void update(QScrollBar * bar, QB3BarInfo & info, b3_bool negate = false);
 
 	QB3OpenGLWidget * child;
 	QB3BarInfo        h, v;

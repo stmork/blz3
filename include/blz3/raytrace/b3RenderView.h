@@ -291,7 +291,11 @@ public:
 	 * @param xOffset The horizontal view port offset.
 	 * @param yOffset The vertical view port offset.
 	 */
-	void              b3SetupView(b3_res xSize, b3_res ySize, b3_f64 xOffset = 0.0, b3_f64 yOffset = 0.0);
+	void              b3SetupView(
+		b3_res xSize,
+		b3_res ySize,
+		b3_f64 xOffset = 0.0,
+		b3_f64 yOffset = 0.0);
 
 	/**
 	 * This method draws the snap grid.
@@ -299,7 +303,9 @@ public:
 	 * @param grid The snap to grid grid distance.
 	 * @param color The grid color.
 	 */
-	void              b3DrawRaster(b3_f64 grid, b3Color & color) const;
+	void              b3DrawRaster(
+		const b3_f64    grid,
+		const b3Color & color) const;
 
 	/**
 	 * This method initializes a real move direction vector from an initial stepper

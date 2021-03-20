@@ -771,7 +771,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane() const
 		farCP = l;
 	}
 
-	return farCP;// * 2 + 4;
+	return farCP; // * 2 + 4;
 #else
 	return 10000;
 #endif
@@ -805,15 +805,15 @@ void b3RenderView::b3SetupView(
 		// Prepare glOrtho();
 		distance   = b3Vector::b3Distance(&m_ViewPoint, &m_EyePoint);
 		factor     = min / distance;
-		m_ViewInfo.width  = factor * b3Vector::b3Length(&m_Width);
-		m_ViewInfo.height = factor * b3Vector::b3Length(&m_Height);
-		m_ViewInfo.near_cp     = min;
-		m_ViewInfo.far_cp      = b3ComputeFarClippingPlane();
+		m_ViewInfo.width   = factor * b3Vector::b3Length(&m_Width);
+		m_ViewInfo.height  = factor * b3Vector::b3Length(&m_Height);
+		m_ViewInfo.near_cp = min;
+		m_ViewInfo.far_cp  = b3ComputeFarClippingPlane();
 
 		// Prepare gluLookAt() - it's simple
 		m_ViewInfo.eye  = m_EyePoint;
 		m_ViewInfo.look = m_ViewPoint;
-		m_ViewInfo.up       = m_Height;
+		m_ViewInfo.up   = m_Height;
 
 		// Init Offset
 		b3Vector::b3Init(&m_ViewInfo.offset);
@@ -957,7 +957,9 @@ void b3RenderView::b3SetupView(
 #define B3_RASTER_COUNT(a,e,grid) ((b3_count)(floor((e) / (grid)) - ceil((a) / (grid)) + 1))
 #define B3_RASTER_MINDIST  8
 
-void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color) const
+void b3RenderView::b3DrawRaster(
+	const b3_f64    grid,
+	const b3Color & color) const
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector xDisp, yDisp;
