@@ -17,6 +17,8 @@
 
 #include <blz3/raytrace/b3Scene.h>
 
+#include "b3OpenGLScrollArea.h"
+
 QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
 	QOpenGLWidget(parent)
 {
@@ -175,15 +177,8 @@ void QB3OpenGLWidget::b3GetBarInfo(
 	QB3BarInfo     &     horizontal,
 	QB3BarInfo     &     vertical)
 {
-	horizontal.min       = B3_MIN(info.scene.left, info.view.left);
-	horizontal.max       = B3_MAX(info.scene.right, info.view.right);
-	horizontal.page_size = info.view.right - info.view.left;
-	horizontal.page_pos  = info.view.left;
-
-	vertical.min       = B3_MIN(info.scene.bottom, info.view.bottom);
-	vertical.max       = B3_MAX(info.scene.top, info.view.top);
-	vertical.page_size = info.view.top - info.view.bottom;
-	vertical.page_pos  = info.view.bottom;
+	horizontal.set(info.scene.left, info.scene.right, info.view.left, info.view.right);
+	vertical.set(info.scene.bottom, info.scene.top, info.view.bottom, info.view.top);
 }
 
 void QB3OpenGLWidget::initializeGL()

@@ -24,14 +24,7 @@
 
 class b3CameraVolume;
 class QB3OpenGLScrollArea;
-
-struct QB3BarInfo
-{
-	b3_f64 min;
-	b3_f64 max;
-	b3_f64 page_size;
-	b3_f64 page_pos;
-};
+class QB3BarInfo;
 
 class QB3OpenGLWidget : public QOpenGLWidget
 {
