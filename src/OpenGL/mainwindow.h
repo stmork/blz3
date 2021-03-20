@@ -38,6 +38,7 @@ QT_END_NAMESPACE
 
 class QStandardItemModel;
 class QStandardItem;
+class QB3OpenGLScrollArea;
 
 class MainWindow : public QMainWindow
 {
@@ -110,20 +111,21 @@ private:
 	void selectBBox(b3BBox * bbox);
 	QB3AbstractItem<b3BBox> * findBBoxItem(b3BBox * bbox);
 
-	Ui::MainWindow   *   ui;
-	QPropertyAnimation   animation;
-	QStandardItemModel * camera_model;
-	QStandardItemModel * light_model;
-	QStandardItemModel * bbox_model;
+	Ui::MainWindow    *   ui;
+	QPropertyAnimation    animation;
+	QStandardItemModel  * camera_model;
+	QStandardItemModel  * light_model;
+	QStandardItemModel  * bbox_model;
+	QB3OpenGLScrollArea * scroll_area;
 
-	b3Path               textures;
-	b3Path               pictures;
-	b3Path               data;
-	b3Loader             loader;
-	b3World              m_World;
-	b3CameraVolume       m_CameraVolume;
-	b3Scene       *      m_Scene     = nullptr;
-	b3Animation     *    m_Animation = nullptr;
+	b3Path                textures;
+	b3Path                pictures;
+	b3Path                data;
+	b3Loader              loader;
+	b3World               m_World;
+	b3CameraVolume        m_CameraVolume;
+	b3Scene       *       m_Scene     = nullptr;
+	b3Animation     *     m_Animation = nullptr;
 };
 
 #endif // MAINWINDOW_H

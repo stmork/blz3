@@ -24,7 +24,7 @@ QB3LightItem::QB3LightItem(b3Light * light) : QB3AbstractItem(light, B3_TYPE_LIG
 bool QB3LightItem::check()
 {
 	const bool checked = checkState() == Qt::Checked;
-	b3Light *  light   = *this;
+	b3Light  * light   = *this;
 
 	light->m_LightActive = checked;
 	return checked;

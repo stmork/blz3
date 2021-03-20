@@ -45,6 +45,7 @@ dist:	configure
 astyle:
 	find . -name "*.h" | xargs astyle
 	find . -name "*.cc" | xargs astyle
+	astyle src/OpenGL/*.cpp
 
 lcov:
 	+make -C src $@

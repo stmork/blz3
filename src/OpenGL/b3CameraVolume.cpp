@@ -37,9 +37,9 @@ b3_gl_line b3CameraVolume::m_VolumeIndices[B3_CV_INDEX_COUNT]
 	{ 4, 6 }, { 4, 7 }, { 4, 8}, { 4, 9 }   // camera edges
 };
 
-b3Color b3CameraVolume::m_GridColor(1.0f,0.1f,0.25f);
+b3Color b3CameraVolume::m_GridColor(1.0f, 0.1f, 0.25f);
 
-void b3CameraVolume::b3Update(b3CameraPart *camera)
+void b3CameraVolume::b3Update(b3CameraPart * camera)
 {
 	m_Camera = camera;
 	b3Recompute();
@@ -47,9 +47,9 @@ void b3CameraVolume::b3Update(b3CameraPart *camera)
 
 void b3CameraVolume::b3GetCount(
 	b3RenderContext * ctx B3_UNUSED,
-	b3_count &        vertCount,
-	b3_count &        gridCount B3_UNUSED,
-	b3_count &        polyCount B3_UNUSED)
+	b3_count     &    vertCount,
+	b3_count     &    gridCount B3_UNUSED,
+	b3_count     &    polyCount B3_UNUSED)
 {
 	vertCount = B3_CV_VERTEX_COUNT;
 }
@@ -75,35 +75,35 @@ void b3CameraVolume::b3ComputeVertices()
 	vertex[1].v.x = m_Camera->m_EyePoint.x + view_dir.x - m_Camera->m_Width.x + m_Camera->m_Height.x;
 	vertex[1].v.y = m_Camera->m_EyePoint.y + view_dir.y - m_Camera->m_Width.y + m_Camera->m_Height.y;
 	vertex[1].v.z = m_Camera->m_EyePoint.z + view_dir.z - m_Camera->m_Width.z + m_Camera->m_Height.z;
-														          				        
+
 	vertex[2].v.x = m_Camera->m_EyePoint.x + view_dir.x - m_Camera->m_Width.x - m_Camera->m_Height.x;
 	vertex[2].v.y = m_Camera->m_EyePoint.y + view_dir.y - m_Camera->m_Width.y - m_Camera->m_Height.y;
 	vertex[2].v.z = m_Camera->m_EyePoint.z + view_dir.z - m_Camera->m_Width.z - m_Camera->m_Height.z;
-														          				        
+
 	vertex[3].v.x = m_Camera->m_EyePoint.x + view_dir.x + m_Camera->m_Width.x - m_Camera->m_Height.x;
 	vertex[3].v.y = m_Camera->m_EyePoint.y + view_dir.y + m_Camera->m_Width.y - m_Camera->m_Height.y;
 	vertex[3].v.z = m_Camera->m_EyePoint.z + view_dir.z + m_Camera->m_Width.z - m_Camera->m_Height.z;
-	 
+
 	vertex[4].v.x = m_Camera->m_EyePoint.x;
 	vertex[4].v.y = m_Camera->m_EyePoint.y;
 	vertex[4].v.z = m_Camera->m_EyePoint.z;
-	 				        
+
 	vertex[5].v.x = m_Camera->m_EyePoint.x + view_dir.x * 2;
 	vertex[5].v.y = m_Camera->m_EyePoint.y + view_dir.y * 2;
 	vertex[5].v.z = m_Camera->m_EyePoint.z + view_dir.z * 2;
-					        
+
 	vertex[6].v.x = m_Camera->m_EyePoint.x + view_dir.x * 1.5 + m_Camera->m_Width.x * 1.5 + m_Camera->m_Height.x * 1.5;
 	vertex[6].v.y = m_Camera->m_EyePoint.y + view_dir.y * 1.5 + m_Camera->m_Width.y * 1.5 + m_Camera->m_Height.y * 1.5;
 	vertex[6].v.z = m_Camera->m_EyePoint.z + view_dir.z * 1.5 + m_Camera->m_Width.z * 1.5 + m_Camera->m_Height.z * 1.5;
-	 				        									          					          
+
 	vertex[7].v.x = m_Camera->m_EyePoint.x + view_dir.x * 1.5 - m_Camera->m_Width.x * 1.5 + m_Camera->m_Height.x * 1.5;
 	vertex[7].v.y = m_Camera->m_EyePoint.y + view_dir.y * 1.5 - m_Camera->m_Width.y * 1.5 + m_Camera->m_Height.y * 1.5;
 	vertex[7].v.z = m_Camera->m_EyePoint.z + view_dir.z * 1.5 - m_Camera->m_Width.z * 1.5 + m_Camera->m_Height.z * 1.5;
-	 														          					          
+
 	vertex[8].v.x = m_Camera->m_EyePoint.x + view_dir.x * 1.5 - m_Camera->m_Width.x * 1.5 - m_Camera->m_Height.x * 1.5;
 	vertex[8].v.y = m_Camera->m_EyePoint.y + view_dir.y * 1.5 - m_Camera->m_Width.y * 1.5 - m_Camera->m_Height.y * 1.5;
 	vertex[8].v.z = m_Camera->m_EyePoint.z + view_dir.z * 1.5 - m_Camera->m_Width.z * 1.5 - m_Camera->m_Height.z * 1.5;
-					        									          					          
+
 	vertex[9].v.x = m_Camera->m_EyePoint.x + view_dir.x * 1.5 + m_Camera->m_Width.x * 1.5 - m_Camera->m_Height.x * 1.5;
 	vertex[9].v.y = m_Camera->m_EyePoint.y + view_dir.y * 1.5 + m_Camera->m_Width.y * 1.5 - m_Camera->m_Height.y * 1.5;
 	vertex[9].v.z = m_Camera->m_EyePoint.z + view_dir.z * 1.5 + m_Camera->m_Width.z * 1.5 - m_Camera->m_Height.z * 1.5;
@@ -117,12 +117,12 @@ void b3CameraVolume::b3ComputeIndices()
 	glPolygonElements->b3SetCount(0);
 }
 
-void b3CameraVolume::b3Draw(b3RenderContext *context)
+void b3CameraVolume::b3Draw(b3RenderContext * context)
 {
 	int func;
 
 	glDisable(GL_DEPTH_TEST);
-	glGetIntegerv(GL_DEPTH_FUNC,&func);
+	glGetIntegerv(GL_DEPTH_FUNC, &func);
 	glDepthFunc(GL_ALWAYS);
 //	glDepthMask(GL_FALSE);
 	b3RenderObject::b3Draw(context);
