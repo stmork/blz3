@@ -20,6 +20,7 @@
 #include <QScrollArea>
 
 #include "b3OpenGLWidget.h"
+#include "src-gen/MouseSelect.h"
 
 struct QB3BarInfo
 {
@@ -46,7 +47,7 @@ struct QB3BarInfo
 	int    posToBar(const b3_f64 pos);
 };
 
-class QB3OpenGLScrollArea : public QScrollArea
+class QB3OpenGLScrollArea : public QScrollArea, protected MouseSelect
 {
 	Q_OBJECT
 

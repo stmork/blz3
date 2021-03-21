@@ -12,16 +12,19 @@
 **
 */
 
-#include "b3OpenGLWidget.h"
-#include "b3CameraVolume.h"
+#include <QMouseEvent>
+#include <QPainter>
 
 #include <blz3/raytrace/b3Scene.h>
 
 #include "b3OpenGLScrollArea.h"
+#include "b3OpenGLWidget.h"
+#include "b3CameraVolume.h"
 
 QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
-	QOpenGLWidget(parent)
+	QOpenGLWidget(parent), MouseSelect::Gui(nullptr)
 {
+	setOperationCallback(this);
 }
 
 void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
@@ -181,4 +184,29 @@ void QB3OpenGLWidget::paintGL()
 	{
 		m_CameraVolume->b3Draw(&m_Context);
 	}
+}
+
+void QB3OpenGLWidget::mousePressEvent(QMouseEvent * event)
+{
+	raiseMouseDown(SCT_point{ event->x(), event->y() });
+}
+
+void QB3OpenGLWidget::mouseMoveEvent(QMouseEvent * event)
+{
+	raiseMouseMove(SCT_point{ event->x(), event->y() });
+}
+
+void QB3OpenGLWidget::mouseReleaseEvent(QMouseEvent * event)
+{
+	raiseMouseUp(SCT_point{ event->x(), event->y() });
+}
+
+void QB3OpenGLWidget::drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	QPainter painter;
+}
+
+void QB3OpenGLWidget::select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	m_View.b3Select(x1, y1, x2, y2);
 }

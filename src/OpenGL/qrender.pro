@@ -9,6 +9,7 @@ INSTALLS   += target
 message("*** Blizzard III Qt OpenGL renderer $$VERSION ***")
 
 SOURCES += \
+	src-gen/MouseSelect.cpp \
 	b3BBoxItem.cpp \
 	b3CameraItem.cpp \
 	b3CameraVolume.cpp \
@@ -19,7 +20,10 @@ SOURCES += \
 	qrender.cpp \
 	mainwindow.cpp
 
-HEADERS += \
+HEADERS += point.h \
+	src-gen/MouseSelect.h \
+	src-lib/sc_statemachine.h \
+	src-lib/sc_types.h \
 	b3AbstractItem.h \
 	b3BBoxItem.h \
 	b3CameraItem.h \

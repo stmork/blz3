@@ -26,7 +26,11 @@ class b3CameraVolume;
 class QB3OpenGLScrollArea;
 class QB3BarInfo;
 
-class QB3OpenGLWidget : public QOpenGLWidget
+#include "src-gen/MouseSelect.h"
+
+class QB3OpenGLWidget : public QOpenGLWidget,
+		public MouseSelect::Gui,
+		protected MouseSelect::Gui::OperationCallback
 {
 	Q_OBJECT
 
@@ -58,6 +62,11 @@ protected:
 	void initializeGL() override;
 	void resizeGL(int width, int height) override;
 	void paintGL() override;
+	void mousePressEvent(QMouseEvent * event) override;
+	void mouseMoveEvent(QMouseEvent * event) override;
+	void mouseReleaseEvent(QMouseEvent * event) override;
+	void drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
+	void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
 
 private:
 	void b3SetLights();

@@ -26,6 +26,7 @@
 QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
 	QScrollArea(parent)
 {
+#if 0
 	QB3BarInfo test;
 
 	test.set(false, -30, 50, 10, 60);
@@ -34,6 +35,7 @@ QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
 	b3_f64 value = test.relFromBar(-test.bar_page_size / 2);
 
 	b3PrintF(B3LOG_FULL, "%d %d %lf\n", rel, pos, value);
+#endif
 }
 
 void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)

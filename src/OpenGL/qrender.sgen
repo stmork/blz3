@@ -1,0 +1,16 @@
+GeneratorModel for yakindu::cpp
+{
+	const PROJECT : string = "OpenGL"
+	const SRC_GEN : string = "src-gen"
+	const SRC_LIB : string = "src-lib"
+
+	statechart MouseSelect
+	{
+		feature Outlet
+		{
+			targetProject = PROJECT
+			targetFolder  = SRC_GEN
+			libraryTargetFolder = SRC_LIB
+		}
+	}
+}
