@@ -91,6 +91,8 @@ private slots:
 
 	void on_cameraListView_clicked(const QModelIndex & index);
 
+	void on_selection_end();
+
 private:
 	QString timecode(const int frame) const;
 	void    enableView(const b3_view_mode mode);

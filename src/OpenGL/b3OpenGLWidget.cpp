@@ -12,7 +12,6 @@
 **
 */
 
-#include <QMouseEvent>
 #include <QPainter>
 
 #include <blz3/raytrace/b3Scene.h>
@@ -21,10 +20,8 @@
 #include "b3OpenGLWidget.h"
 #include "b3CameraVolume.h"
 
-QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
-	QOpenGLWidget(parent), MouseSelect::Gui(nullptr)
+QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) : QOpenGLWidget(parent)
 {
-	setOperationCallback(this);
 }
 
 void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
@@ -186,27 +183,23 @@ void QB3OpenGLWidget::paintGL()
 	}
 }
 
-void QB3OpenGLWidget::mousePressEvent(QMouseEvent * event)
-{
-	raiseMouseDown(SCT_point{ event->x(), event->y() });
-}
-
-void QB3OpenGLWidget::mouseMoveEvent(QMouseEvent * event)
-{
-	raiseMouseMove(SCT_point{ event->x(), event->y() });
-}
-
-void QB3OpenGLWidget::mouseReleaseEvent(QMouseEvent * event)
-{
-	raiseMouseUp(SCT_point{ event->x(), event->y() });
-}
-
 void QB3OpenGLWidget::drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
 	QPainter painter;
+
+	painter.setPen(QColor(0xff1144));
+	painter.drawRect(x1, y1, x2, y2);
 }
 
 void QB3OpenGLWidget::select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
-	m_View.b3Select(x1, y1, x2, y2);
+	m_View.b3Select(
+		b3_f64(x1) / xWinSize, b3_f64(y1) / yWinSize,
+		b3_f64(x2) / xWinSize, b3_f64(y2) / yWinSize);
+	update();
+}
+
+bool QB3OpenGLWidget::is3D()
+{
+	return m_View.b3IsViewMode(B3_VIEW_3D);
 }

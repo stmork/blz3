@@ -16,6 +16,7 @@
 
 #include <QLayout>
 #include <QScrollBar>
+#include <QMouseEvent>
 
 /*************************************************************************
 **                                                                      **
@@ -24,7 +25,7 @@
 *************************************************************************/
 
 QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
-	QScrollArea(parent)
+	QScrollArea(parent), MouseSelect::Gui(this), MouseSelect::View(this)
 {
 #if 0
 	QB3BarInfo test;
@@ -49,6 +50,8 @@ void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	dumpObjectTree();
+	view()->setOperationCallback(glWidget);
+	subscribe(gui()->getSelectionEnd());
 
 #if 1
 	connect(horizontalScrollBar(), &QScrollBar::valueChanged,
@@ -56,6 +59,16 @@ void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
 	connect(verticalScrollBar(),   &QScrollBar::valueChanged,
 		this, &QB3OpenGLScrollArea::yValueChanged);
 #endif
+
+	enter();
+}
+
+void QB3OpenGLScrollArea::onSelect(bool checked)
+{
+	if (child != nullptr)
+	{
+		checked ? raiseOnSelect() : raiseOnDisable();
+	}
 }
 
 void QB3OpenGLScrollArea::b3SetViewMode(const b3_view_mode mode)
@@ -136,6 +149,27 @@ void QB3OpenGLScrollArea::b3PreviousView()
 	update(verticalScrollBar(),   v);
 }
 
+void QB3OpenGLScrollArea::mousePressEvent(QMouseEvent * event)
+{
+	raiseMouseDown(SCT_point{ event->x(), event->y() });
+}
+
+void QB3OpenGLScrollArea::mouseMoveEvent(QMouseEvent * event)
+{
+	raiseMouseMove(SCT_point{ event->x(), event->y() });
+}
+
+void QB3OpenGLScrollArea::next()
+{
+	emit selectionEnd();
+}
+
+void QB3OpenGLScrollArea::mouseReleaseEvent(QMouseEvent * event)
+{
+	raiseMouseUp(SCT_point{ event->x(), event->y() });
+}
+
+
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
 void QB3OpenGLScrollArea::resizeEvent(QResizeEvent * event)
 {
@@ -145,6 +179,7 @@ void QB3OpenGLScrollArea::resizeEvent(QResizeEvent * event)
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
 void QB3OpenGLScrollArea::paintEvent(QPaintEvent * event)
 {
+
 	child->paintEvent(event);
 }
 

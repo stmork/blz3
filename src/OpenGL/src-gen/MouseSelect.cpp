@@ -12,9 +12,11 @@ MouseSelect::MouseSelect()  :
 p1(),
 p2(),
 ifaceGui(sc_null),
+ifaceView(sc_null),
 isExecuting(false)
 {
 	this->ifaceGui.parent = this;
+	this->ifaceView.parent = this;
 	for (sc_ushort i = 0; i < maxOrthogonalStates; ++i)
 		stateConfVector[i] = MouseSelect_last_state;
 	
@@ -34,8 +36,14 @@ mouseMove_raised(false),
 mouseMove_value(),
 mouseUp_raised(false),
 mouseUp_value(),
+selectionEnd_raised(false),
+parent(parent)
+{
+}
+
+MouseSelect::View::View(MouseSelect* parent) :
 parent(parent),
-ifaceGuiOperationCallback(sc_null)
+ifaceViewOperationCallback(sc_null)
 {
 }
 
@@ -117,6 +125,14 @@ void MouseSelect::Gui::dispatch_event(SctEvent * event)
 			break;
 	}
 }
+void MouseSelect::View::dispatch_event(SctEvent * event)
+{
+	switch(event->name)
+	{
+		default:
+			break;
+	}
+}
 void MouseSelect::internal_dispatch_event(SctEvent * event)
 {
 	switch(event->name)
@@ -141,7 +157,7 @@ sc_boolean MouseSelect::isFinal() const
    return false;}
 
 sc_boolean MouseSelect::check() {
-	if (this->ifaceGui.ifaceGuiOperationCallback == sc_null) {
+	if (this->ifaceView.ifaceViewOperationCallback == sc_null) {
 		return false;
 	}
 	return true;
@@ -222,9 +238,18 @@ void MouseSelect::Gui::internal_raiseMouseUp(SCT_point value)
 	mouseUp_value = value;
 	mouseUp_raised = true;
 }
-void MouseSelect::Gui::setOperationCallback(OperationCallback* operationCallback)
+/* Functions for event selectionEnd in interface Gui */
+sc::rx::Observable<void>* MouseSelect::Gui::getSelectionEnd()
 {
-	ifaceGuiOperationCallback = operationCallback;
+	return &(this->selectionEnd_observable);
+}
+MouseSelect::View* MouseSelect::view()
+{
+	return &ifaceView;
+}
+void MouseSelect::View::setOperationCallback(OperationCallback* operationCallback)
+{
+	ifaceViewOperationCallback = operationCallback;
 }
 SCT_point MouseSelect::getP1() const
 {
@@ -253,14 +278,14 @@ void MouseSelect::setP2(SCT_point value)
 void MouseSelect::enact_main_region_Moving()
 {
 	/* Entry action for state 'Moving'. */
-	ifaceGui.ifaceGuiOperationCallback->drawRect(p1.x, p1.y, p2.x, p2.y);
+	ifaceView.ifaceViewOperationCallback->drawRect(p1.x, p1.y, p2.x, p2.y);
 }
 
 /* Exit action for state 'Moving'. */
 void MouseSelect::exact_main_region_Moving()
 {
 	/* Exit action for state 'Moving'. */
-	ifaceGui.ifaceGuiOperationCallback->drawRect(p1.x, p1.y, p2.x, p2.y);
+	ifaceView.ifaceViewOperationCallback->drawRect(p1.x, p1.y, p2.x, p2.y);
 }
 
 /* 'default' enter sequence for state Normal */
@@ -357,13 +382,24 @@ sc_integer MouseSelect::main_region_Normal_react(const sc_integer transitioned_b
 	sc_integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
-		if (ifaceGui.onSelect_raised)
+		if (((ifaceGui.onSelect_raised)) && ((!ifaceView.ifaceViewOperationCallback->is3D())))
 		{ 
 			exseq_main_region_Normal();
 			enseq_main_region_Selection_default();
 			react(0);
 			transitioned_after = 0;
-		} 
+		}  else
+		{
+			if (((ifaceGui.onSelect_raised)) && ((ifaceView.ifaceViewOperationCallback->is3D())))
+			{ 
+				exseq_main_region_Normal();
+				ifaceGui.selectionEnd_observable.next();
+				ifaceGui.selectionEnd_raised = true;
+				enseq_main_region_Normal_default();
+				react(0);
+				transitioned_after = 0;
+			} 
+		}
 	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
@@ -413,7 +449,9 @@ sc_integer MouseSelect::main_region_Moving_react(const sc_integer transitioned_b
 		if (ifaceGui.mouseUp_raised)
 		{ 
 			exseq_main_region_Moving();
-			ifaceGui.ifaceGuiOperationCallback->select(p1.x, p1.y, p2.x, p2.y);
+			ifaceGui.selectionEnd_observable.next();
+			ifaceGui.selectionEnd_raised = true;
+			ifaceView.ifaceViewOperationCallback->select(p1.x, p1.y, p2.x, p2.y);
 			enseq_main_region_Normal_default();
 			react(0);
 			transitioned_after = 0;

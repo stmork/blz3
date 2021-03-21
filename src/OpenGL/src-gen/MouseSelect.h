@@ -12,6 +12,7 @@
 #include "../point.h"
 #include <deque>
 #include "../src-lib/sc_types.h"
+#include "../src-lib/sc_rxcpp.h"
 #include "../src-lib/sc_statemachine.h"
 
 /*! \file Header of the state machine 'MouseSelect'.
@@ -139,23 +140,10 @@ class MouseSelect : public sc::StatemachineInterface
 				void raiseMouseUp(SCT_point value);
 				
 				
+				/*! Gets the observable of the out event 'selectionEnd' that is defined in the interface scope 'gui'. */
+				sc::rx::Observable<void>* getSelectionEnd();
 				
 				
-				//! Inner class for gui interface scope operation callbacks.
-				class OperationCallback
-				{
-					public:
-						virtual ~OperationCallback() = 0;
-						
-						virtual void drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
-						
-						virtual void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
-						
-						
-				};
-				
-				/*! Set the working instance of the operation callback interface 'OperationCallback'. */
-				void setOperationCallback(OperationCallback* operationCallback);
 				
 				
 			private:
@@ -179,13 +167,14 @@ class MouseSelect : public sc::StatemachineInterface
 				void internal_raiseMouseUp(SCT_point value);
 				sc_boolean mouseUp_raised;
 				SCT_point mouseUp_value;
+				sc::rx::Observable<void> selectionEnd_observable;
+				sc_boolean selectionEnd_raised;
 				void dispatch_event(mouseselect_events::SctEvent * event);
 				
 				MouseSelect* parent;
 				
 				
 				
-				OperationCallback* ifaceGuiOperationCallback;
 				
 				
 		};
@@ -193,26 +182,71 @@ class MouseSelect : public sc::StatemachineInterface
 		/*! Returns an instance of the interface class 'Gui'. */
 		Gui* gui();
 		
+		//! Inner class for view interface scope.
+		class View
+		{
+			public:
+				View(MouseSelect* parent);
+				
+				
+				
+				
+				//! Inner class for view interface scope operation callbacks.
+				class OperationCallback
+				{
+					public:
+						virtual ~OperationCallback() = 0;
+						
+						virtual sc_boolean is3D() = 0;
+						
+						virtual void drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
+						
+						virtual void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
+						
+						
+				};
+				
+				/*! Set the working instance of the operation callback interface 'OperationCallback'. */
+				void setOperationCallback(OperationCallback* operationCallback);
+				
+				
+			private:
+				friend class MouseSelect;
+				
+				void dispatch_event(mouseselect_events::SctEvent * event);
+				
+				MouseSelect* parent;
+				
+				
+				
+				OperationCallback* ifaceViewOperationCallback;
+				
+				
+		};
+		
+		/*! Returns an instance of the interface class 'View'. */
+		View* view();
+		
 		
 		/*
 		 * Functions inherited from StatemachineInterface
 		 */
-		virtual void enter() override;
+		virtual void enter();
 		
-		virtual void exit() override;
+		virtual void exit();
 		
 		/*!
 		 * Checks if the state machine is active (until 2.4.1 this method was used for states).
 		 * A state machine is active if it has been entered. It is inactive if it has not been entered at all or if it has been exited.
 		 */
-		virtual sc_boolean isActive() const override;
+		virtual sc_boolean isActive() const;
 		
 		
 		/*!
 		* Checks if all active states are final. 
 		* If there are no active states then the state machine is considered being inactive. In this case this method returns false.
 		*/
-		virtual sc_boolean isFinal() const override;
+		virtual sc_boolean isFinal() const;
 		
 		/*! 
 		 * Checks if member of the state machine must be set. For example an operation callback.
@@ -246,6 +280,7 @@ class MouseSelect : public sc::StatemachineInterface
 		
 		
 		Gui ifaceGui;
+		View ifaceView;
 		
 		
 		sc_boolean isExecuting;
@@ -293,7 +328,7 @@ class MouseSelect : public sc::StatemachineInterface
 };
 
 
-inline MouseSelect::Gui::OperationCallback::~OperationCallback() {}
+inline MouseSelect::View::OperationCallback::~OperationCallback() {}
 
 
 #endif /* MOUSESELECT_H_ */

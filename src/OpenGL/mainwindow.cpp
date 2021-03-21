@@ -103,6 +103,9 @@ MainWindow::MainWindow(QWidget * parent) :
 		ui->animationSlider, &QSlider::valueChanged,
 		this, &MainWindow::animate);
 	connect(
+		ui->scrollArea, &QB3OpenGLScrollArea::selectionEnd,
+		this, &MainWindow::on_selection_end);
+	connect(
 		camera_model,  &QStandardItemModel::itemChanged,
 		this, &MainWindow::on_selectedCamera);
 	connect(
@@ -288,6 +291,7 @@ void MainWindow::enableView(const b3_view_mode mode)
 	ui->actionViewTop->setChecked(mode == B3_VIEW_TOP);
 	ui->actionViewRight->setChecked(mode == B3_VIEW_RIGHT);
 	ui->actionViewLeft->setChecked(mode == B3_VIEW_LEFT);
+	ui->actionViewSelect->setDisabled(mode == B3_VIEW_3D);
 
 	ui->scrollArea->b3SetViewMode(mode);
 }
@@ -452,7 +456,7 @@ void MainWindow::on_actionViewPop_triggered()
 
 void MainWindow::on_actionViewSelect_triggered()
 {
-
+	ui->scrollArea->onSelect(ui->actionViewSelect->isChecked());
 }
 
 void MainWindow::on_actionViewFull_triggered()
@@ -621,4 +625,9 @@ void MainWindow::on_cameraListView_clicked(const QModelIndex & index)
 	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
 
 	ui->glView->b3SetCamera(*camera_item);
+}
+
+void MainWindow::on_selection_end()
+{
+	ui->actionViewSelect->setChecked(false);
 }

@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_K5IBwIpeEeuACMDFGlienA" specification="@EventDriven&#xA;&#xA;import : &quot;point.h&quot;&#xA;&#xA;interface gui:&#xA;&#xA;in event onSelect&#xA;in event onDisable&#xA;in event mouseDown : SCT_point&#xA;in event mouseMove : SCT_point&#xA;in event mouseUp : SCT_point&#xA;&#xA;operation drawRect(&#xA;&#x9;x1 : int32_t, y1 : int32_t,&#xA;&#x9;x2 : int32_t, y2 : int32_t) : void&#xA;&#xA;operation select(&#xA;&#x9;x1 : int32_t, y1 : int32_t,&#xA;&#x9;x2 : int32_t, y2 : int32_t) : void&#xA;&#xA;internal:&#xA;var p1 : SCT_point&#xA;var p2 : SCT_point&#xA;" name="MouseSelect" domainID="com.yakindu.domain.c">
+  <sgraph:Statechart xmi:id="_K5IBwIpeEeuACMDFGlienA" specification="@EventDriven&#xA;&#xA;import : &quot;point.h&quot;&#xA;&#xA;interface gui:&#xA;&#xA;in event onSelect&#xA;in event onDisable&#xA;in event mouseDown : SCT_point&#xA;in event mouseMove : SCT_point&#xA;in event mouseUp : SCT_point&#xA;&#xA;out event selectionEnd&#xA;&#xA;interface view:&#xA;&#xA;operation is3D() : bool&#xA;&#xA;operation drawRect(&#xA;&#x9;x1 : int32_t, y1 : int32_t,&#xA;&#x9;x2 : int32_t, y2 : int32_t) : void&#xA;&#xA;operation select(&#xA;&#x9;x1 : int32_t, y1 : int32_t,&#xA;&#x9;x2 : int32_t, y2 : int32_t) : void&#xA;&#xA;internal:&#xA;var p1 : SCT_point&#xA;var p2 : SCT_point&#xA;" name="MouseSelect" domainID="com.yakindu.domain.c">
     <regions xmi:id="_K5LFE4peEeuACMDFGlienA" name="main region">
       <vertices xsi:type="sgraph:Entry" xmi:id="_K5LFFIpeEeuACMDFGlienA">
         <outgoingTransitions xmi:id="_K5LFFYpeEeuACMDFGlienA" target="_K5LFFopeEeuACMDFGlienA"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_K5LFFopeEeuACMDFGlienA" name="Normal" incomingTransitions="_K5LFFYpeEeuACMDFGlienA _K5LsK4peEeuACMDFGlienA _wunAMIpeEeuACMDFGlienA">
-        <outgoingTransitions xmi:id="_K5LsIYpeEeuACMDFGlienA" specification="gui.onSelect" target="_K5LsKIpeEeuACMDFGlienA"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_K5LFFopeEeuACMDFGlienA" name="Normal" incomingTransitions="_K5LFFYpeEeuACMDFGlienA _K5LsK4peEeuACMDFGlienA _wunAMIpeEeuACMDFGlienA _fn0XMIqGEeusaZVehR3oIw">
+        <outgoingTransitions xmi:id="_K5LsIYpeEeuACMDFGlienA" specification="gui.onSelect[!view.is3D()]" target="_K5LsKIpeEeuACMDFGlienA"/>
+        <outgoingTransitions xmi:id="_fn0XMIqGEeusaZVehR3oIw" specification="gui.onSelect[view.is3D()] / raise gui.selectionEnd" target="_K5LFFopeEeuACMDFGlienA"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_K5LsKIpeEeuACMDFGlienA" name="Selection" incomingTransitions="_K5LsIYpeEeuACMDFGlienA">
         <outgoingTransitions xmi:id="_K5LsK4peEeuACMDFGlienA" specification="gui.onDisable" target="_K5LFFopeEeuACMDFGlienA"/>
         <outgoingTransitions xmi:id="_t8ihMIpeEeuACMDFGlienA" specification="gui.mouseDown / p1 = valueof(gui.mouseDown); p2 = valueof(gui.mouseDown)" target="_rnac4IpeEeuACMDFGlienA"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_rnac4IpeEeuACMDFGlienA" specification="entry / gui.drawRect(p1.x, p1.y, p2.x, p2.y)&#xA;exit / gui.drawRect(p1.x, p1.y, p2.x, p2.y)" name="Moving" incomingTransitions="_t8ihMIpeEeuACMDFGlienA _WqvZMIpfEeuACMDFGlienA">
-        <outgoingTransitions xmi:id="_wunAMIpeEeuACMDFGlienA" specification="gui.mouseUp / gui.select(p1.x, p1.y, p2.x, p2.y)" target="_K5LFFopeEeuACMDFGlienA"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_rnac4IpeEeuACMDFGlienA" specification="entry / view.drawRect(p1.x, p1.y, p2.x, p2.y)&#xA;exit / view.drawRect(p1.x, p1.y, p2.x, p2.y)" name="Moving" incomingTransitions="_t8ihMIpeEeuACMDFGlienA _WqvZMIpfEeuACMDFGlienA">
+        <outgoingTransitions xmi:id="_wunAMIpeEeuACMDFGlienA" specification="gui.mouseUp / raise gui.selectionEnd; view.select(p1.x, p1.y, p2.x, p2.y)" target="_K5LFFopeEeuACMDFGlienA"/>
         <outgoingTransitions xmi:id="_WqvZMIpfEeuACMDFGlienA" specification="gui.mouseMove / p2 = valueof(gui.mouseMove)" target="_rnac4IpeEeuACMDFGlienA"/>
       </vertices>
     </regions>
@@ -126,11 +127,11 @@
     <edges xmi:id="_K5MTf4peEeuACMDFGlienA" type="Transition" element="_K5LsK4peEeuACMDFGlienA" source="_K5MTV4peEeuACMDFGlienA" target="_K5MTS4peEeuACMDFGlienA">
       <children xsi:type="notation:DecorationNode" xmi:id="_K5MTgIpeEeuACMDFGlienA" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_K5MTgYpeEeuACMDFGlienA"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_K5MTgopeEeuACMDFGlienA" x="-1" y="-15"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_K5MTgopeEeuACMDFGlienA" x="88" y="45"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_K5MTg4peEeuACMDFGlienA" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_K5MThIpeEeuACMDFGlienA" fontName="Verdana"/>
-      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_K5MThYpeEeuACMDFGlienA" points="[93, -299, 12, 92]$[93, -368, 12, 23]"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_K5MThYpeEeuACMDFGlienA" points="[112, -119, 31, 272]$[172, -119, 91, 272]$[172, -389, 91, 2]$[112, -389, 31, 2]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_K5MThopeEeuACMDFGlienA" id="(0.25862068965517243,0.8301886792452831)"/>
       <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_K5MTh4peEeuACMDFGlienA" id="(0.7931034482758621,0.8490566037735849)"/>
     </edges>
@@ -147,11 +148,11 @@
     <edges xmi:id="_wunnQIpeEeuACMDFGlienA" type="Transition" element="_wunAMIpeEeuACMDFGlienA" source="_rncSEIpeEeuACMDFGlienA" target="_K5MTS4peEeuACMDFGlienA">
       <children xsi:type="notation:DecorationNode" xmi:id="_wuoOUIpeEeuACMDFGlienA" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_wuoOUYpeEeuACMDFGlienA"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_wuoOUopeEeuACMDFGlienA" x="162" y="10"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_wuoOUopeEeuACMDFGlienA" x="190" y="10"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_wunnQYpeEeuACMDFGlienA" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_wunnQ4peEeuACMDFGlienA" fontName="Verdana"/>
-      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_wunnQopeEeuACMDFGlienA" points="[52, -6, 643, 300]$[52, -275, 643, 31]$[-557, -275, 34, 31]"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_wunnQopeEeuACMDFGlienA" points="[52, -6, 643, 300]$[52, -331, 643, -25]$[-557, -331, 34, -25]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_wupccIpeEeuACMDFGlienA" id="(0.5828571428571429,0.027906976744186046)"/>
       <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_wupccYpeEeuACMDFGlienA" id="(0.7671232876712328,0.42953020134228187)"/>
     </edges>
@@ -165,6 +166,17 @@
       <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_WqwnUopfEeuACMDFGlienA" points="[-19, 3, -143, 42]$[-156, 3, -280, 42]$[-156, -171, -280, -132]$[95, -171, -29, -132]$[95, -89, -29, -50]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_WqycgIpfEeuACMDFGlienA" id="(0.05142857142857143,0.413953488372093)"/>
       <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_WqycgYpfEeuACMDFGlienA" id="(0.38285714285714284,0.23255813953488372)"/>
+    </edges>
+    <edges xmi:id="_fn2MYIqGEeusaZVehR3oIw" type="Transition" element="_fn0XMIqGEeusaZVehR3oIw" source="_K5MTS4peEeuACMDFGlienA" target="_K5MTS4peEeuACMDFGlienA">
+      <children xsi:type="notation:DecorationNode" xmi:id="_fn3agIqGEeusaZVehR3oIw" type="TransitionExpression">
+        <styles xsi:type="notation:ShapeStyle" xmi:id="_fn3agYqGEeusaZVehR3oIw"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_fn3agoqGEeusaZVehR3oIw" x="-1" y="156"/>
+      </children>
+      <styles xsi:type="notation:ConnectorStyle" xmi:id="_fn2MYYqGEeusaZVehR3oIw" routing="Rectilinear" lineColor="4210752"/>
+      <styles xsi:type="notation:FontStyle" xmi:id="_fn2zcIqGEeusaZVehR3oIw" fontName="Verdana"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_fn2MYoqGEeusaZVehR3oIw" points="[25, 56, 42, 95]$[87, 56, 104, 95]$[87, 13, 104, 52]$[25, 13, 42, 52]"/>
+      <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_fn5PsIqGEeusaZVehR3oIw" id="(0.8287671232876712,0.3691275167785235)"/>
+      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_fn5PsYqGEeusaZVehR3oIw" id="(0.7123287671232876,0.10738255033557047)"/>
     </edges>
   </notation:Diagram>
 </xmi:XMI>

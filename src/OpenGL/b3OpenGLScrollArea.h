@@ -47,7 +47,12 @@ struct QB3BarInfo
 	int    posToBar(const b3_f64 pos);
 };
 
-class QB3OpenGLScrollArea : public QScrollArea, protected MouseSelect
+class QB3OpenGLScrollArea :
+	public QScrollArea,
+	public MouseSelect,
+	public MouseSelect::Gui,
+	public MouseSelect::View,
+	public sc::rx::SingleSubscriptionObserver<void>
 {
 	Q_OBJECT
 
@@ -55,11 +60,15 @@ public:
 	explicit QB3OpenGLScrollArea(QWidget * parent = nullptr);
 
 	void setGlWidget(QB3OpenGLWidget * glWidget);
+	void onSelect(bool checked);
 	void b3SetViewMode(const b3_view_mode mode);
 	void b3MoveView(const b3_f64 dx, const b3_f64 dy);
 	void b3ScaleView(const b3_f64 factor);
 	void b3FullView();
 	void b3PreviousView();
+
+signals:
+	void selectionEnd();
 
 private slots:
 	void xValueChanged(int value);
@@ -68,6 +77,10 @@ private slots:
 protected:
 	void resizeEvent(QResizeEvent * event) override;
 	void paintEvent(QPaintEvent * event) override;
+	void mousePressEvent(QMouseEvent * event) override;
+	void mouseMoveEvent(QMouseEvent * event) override;
+	void mouseReleaseEvent(QMouseEvent * event) override;
+	void next() override;
 
 private:
 	void update();
