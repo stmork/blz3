@@ -41,21 +41,18 @@ public:
 	bool b3IsSpotLight() const;
 	void b3SetSpotLight(const bool spot);
 
-	void b3SetViewmode(const b3_view_mode mode,
-		QB3BarInfo     &     horizontal,
-		QB3BarInfo     &     vertical);
-	void b3MoveView(const b3_f64 dx, const b3_f64 dy,
-		QB3BarInfo     &     horizontal,
-		QB3BarInfo     &     vertical);
-	void b3ScaleView(const b3_f64 factor,
-		QB3BarInfo     &     horizontal,
-		QB3BarInfo     &     vertical);
-	void b3FullView(
-		QB3BarInfo     &     horizontal,
-		QB3BarInfo     &     vertical);
-	void b3PreviousView(
-		QB3BarInfo     &     horizontal,
-		QB3BarInfo     &     vertical);
+	void b3SetViewMode(
+		const b3_view_mode view_mode,
+		b3_view_info   &   view_info);
+	void b3MoveView(
+		const b3_f64   dx,
+		const b3_f64   dy,
+		b3_view_info & view_info);
+	void b3ScaleView(
+		const b3_f64   factor,
+		b3_view_info & view_info);
+	void b3FullView(b3_view_info & view_info);
+	void b3PreviousView(b3_view_info & view_info);
 
 protected:
 	void initializeGL() override;
@@ -64,10 +61,6 @@ protected:
 
 private:
 	void b3SetLights();
-	static void b3GetBarInfo(
-		const b3_view_info & info,
-		QB3BarInfo     &     horizontal,
-		QB3BarInfo     &     vertical);
 
 	b3Scene       *       m_Scene = nullptr;
 	b3CameraVolume    *   m_CameraVolume = nullptr;
@@ -78,7 +71,6 @@ private:
 	b3_bool               m_SpotLight = true;
 	b3_res                xWinSize, yWinSize;
 	b3_vector             m_Lower, m_Upper;
-	b3_view_mode          m_ViewMode = B3_VIEW_3D;
 
 	friend class QB3OpenGLScrollArea;
 };

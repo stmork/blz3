@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget * parent) :
 	QSurfaceFormat::setDefaultFormat(format);
 
 	ui->setupUi(this);
-	scroll_area = new QB3OpenGLScrollArea(ui->glView);
+	ui->scrollArea->setGlWidget(ui->glView);
 
 	addAction(ui->actionViewMoveRight);
 	addAction(ui->actionViewMoveLeft);
@@ -289,7 +289,7 @@ void MainWindow::enableView(const b3_view_mode mode)
 	ui->actionViewRight->setChecked(mode == B3_VIEW_RIGHT);
 	ui->actionViewLeft->setChecked(mode == B3_VIEW_LEFT);
 
-	scroll_area->b3SetViewmode(mode);
+	ui->scrollArea->b3SetViewMode(mode);
 }
 
 void MainWindow::enableAnimation()
@@ -437,17 +437,17 @@ void MainWindow::on_actionViewRight_triggered()
 
 void MainWindow::on_actionViewZoomIn_triggered()
 {
-	scroll_area->b3ScaleView(0.8);
+	ui->scrollArea->b3ScaleView(0.8);
 }
 
 void MainWindow::on_actionViewZoomOut_triggered()
 {
-	scroll_area->b3ScaleView(1.25);
+	ui->scrollArea->b3ScaleView(1.25);
 }
 
 void MainWindow::on_actionViewPop_triggered()
 {
-	scroll_area->b3PreviousView();
+	ui->scrollArea->b3PreviousView();
 }
 
 void MainWindow::on_actionViewSelect_triggered()
@@ -457,27 +457,27 @@ void MainWindow::on_actionViewSelect_triggered()
 
 void MainWindow::on_actionViewFull_triggered()
 {
-	scroll_area->b3FullView();
+	ui->scrollArea->b3FullView();
 }
 
 void MainWindow::on_actionViewMoveRight_triggered()
 {
-	scroll_area->b3MoveView(0.2, 0.0);
+	ui->scrollArea->b3MoveView(0.2, 0.0);
 }
 
 void MainWindow::on_actionViewMoveLeft_triggered()
 {
-	scroll_area->b3MoveView(-0.2, 0.0);
+	ui->scrollArea->b3MoveView(-0.2, 0.0);
 }
 
 void MainWindow::on_actionViewMoveUp_triggered()
 {
-	scroll_area->b3MoveView(0.0, 0.2);
+	ui->scrollArea->b3MoveView(0.0, 0.2);
 }
 
 void MainWindow::on_actionViewMoveDown_triggered()
 {
-	scroll_area->b3MoveView(0.0, -0.2);
+	ui->scrollArea->b3MoveView(0.0, -0.2);
 }
 
 void MainWindow::on_actionActivateAll_triggered()

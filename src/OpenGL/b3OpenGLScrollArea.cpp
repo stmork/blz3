@@ -23,85 +23,115 @@
 **                                                                      **
 *************************************************************************/
 
-QB3OpenGLScrollArea::QB3OpenGLScrollArea(QB3OpenGLWidget * glWidget) :
-	child(glWidget)
+QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
+	QScrollArea(parent)
 {
-	QWidget * parent = glWidget->parentWidget();
-	QLayout * layout = parent->layout();
-
 	QB3BarInfo test;
 
-	test.set(-3, 5, 1, 6);
+	test.set(false, -30, 50, 10, 60);
 	int rel = test.relToBar(-0.5); // This is in view relation
 	int pos = test.posToBar(5.0);
 	b3_f64 value = test.relFromBar(-test.bar_page_size / 2);
 
 	b3PrintF(B3LOG_FULL, "%d %d %lf\n", rel, pos, value);
+}
 
+void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
+{
+	QWidget * parent = glWidget->parentWidget();
+	QLayout * layout = parent->layout();
+
+	child = glWidget;
 	layout->replaceWidget(glWidget, this);
 	setViewport(glWidget);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	dumpObjectTree();
 
-	connect(horizontalScrollBar(), &QScrollBar::valueChanged, [this] (int value B3_UNUSED)
-	{
-#if 0
-		const int diff = value - h.bar_pos;
-
-		if (diff != 0)
-		{
-			child->b3MoveView(h.relFromBar(diff), 0.0, h, v);
-		}
+#if 1
+	connect(horizontalScrollBar(), &QScrollBar::valueChanged,
+		this, &QB3OpenGLScrollArea::xValueChanged);
+	connect(verticalScrollBar(),   &QScrollBar::valueChanged,
+		this, &QB3OpenGLScrollArea::yValueChanged);
 #endif
-	});
-
-	connect(verticalScrollBar(), &QScrollBar::valueChanged, [this] (int value B3_UNUSED)
-	{
-#if 0
-		const int diff = v.bar_pos - value;
-
-		if (diff != 0)
-		{
-			child->b3MoveView(0.0, v.relFromBar(diff), h, v);
-		}
-#endif
-	});
 }
 
-void QB3OpenGLScrollArea::b3SetViewmode(const b3_view_mode mode)
+void QB3OpenGLScrollArea::b3SetViewMode(const b3_view_mode mode)
 {
-	child->b3SetViewmode(mode, h, v);
+	b3_view_info view_info;
+
+	child->b3SetViewMode(mode, view_info);
+	b3GetBarInfo(view_info, h, v);
 	update(horizontalScrollBar(), h);
 	update(verticalScrollBar(), v);
 }
 
 void QB3OpenGLScrollArea::b3MoveView(const b3_f64 dx, const b3_f64 dy)
 {
-	child->b3MoveView(dx, dy, h, v);
-	update(horizontalScrollBar(), h, false);
-	update(verticalScrollBar(),   v, true);
+	b3_view_info view_info;
+
+	child->b3MoveView(dx, dy, view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(), v);
 }
 
 void QB3OpenGLScrollArea::b3ScaleView(const b3_f64 factor)
 {
-	child->b3ScaleView(factor, h, v);
-	update(horizontalScrollBar(), h, false);
-	update(verticalScrollBar(),   v, true);
+	b3_view_info view_info;
+
+	child->b3ScaleView(factor, view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(),   v);
+}
+
+void QB3OpenGLScrollArea::xValueChanged(int value)
+{
+	const int diff = value - h.bar_pos;
+
+	if (diff != 0)
+	{
+		const b3_f64 rel = h.relFromBar(diff);
+		b3_view_info view_info;
+
+		child->b3MoveView(rel, 0.0, view_info);
+		h.bar_pos = value;
+	}
+}
+
+void QB3OpenGLScrollArea::yValueChanged(int value)
+{
+	const int diff = value - v.bar_pos;
+
+	if (diff != 0)
+	{
+		const b3_f64 rel = v.relFromBar(diff);
+		b3_view_info view_info;
+
+		child->b3MoveView(0.0, rel, view_info);
+		v.bar_pos = value;
+	}
 }
 
 void QB3OpenGLScrollArea::b3FullView()
 {
-	child->b3FullView(h, v);
-	update(horizontalScrollBar(), h, false);
-	update(verticalScrollBar(),   v, true);
+	b3_view_info view_info;
+
+	child->b3FullView(view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(),   v);
 }
 
 void QB3OpenGLScrollArea::b3PreviousView()
 {
-	child->b3PreviousView(h, v);
-	update(horizontalScrollBar(), h, false);
-	update(verticalScrollBar(),   v, true);
+	b3_view_info view_info;
+
+	child->b3PreviousView(view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(),   v);
 }
 
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
@@ -116,13 +146,68 @@ void QB3OpenGLScrollArea::paintEvent(QPaintEvent * event)
 	child->paintEvent(event);
 }
 
-void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info, b3_bool negate)
+void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info)
 {
-	bar->setRange(QB3BarInfo::BAR_RANGE_MIN, QB3BarInfo::BAR_RANGE_MAX - info.bar_page_size);
-	bar->setPageStep(info.bar_page_size);
+	/* https://stackoverflow.com/questions/49148073/how-to-reverse-a-qsliders-range
+	 *
+	 * NOTE:
+	 * The minimum has to be always smaller than the maximum. The range is not
+	 * inverted. The UI orientation is inverted so there is no need to
+	 * invert the controls.
+	 */
+	bar->setInvertedAppearance(info.bar_inv);
+	bar->setInvertedControls(info.bar_inv);
 
-	const int pos = info.posToBar(info.page_pos);
-	bar->setValue(negate ? QB3BarInfo::BAR_RANGE_MAX - pos : QB3BarInfo::BAR_RANGE_MIN + pos);
+	bar->setRange(info.bar_min, info.bar_max);
+	bar->setPageStep(info.bar_page_size);
+	bar->setSingleStep(info.bar_page_size / 10);
+	bar->setValue(info.bar_pos);
+}
+
+void QB3OpenGLScrollArea::b3GetBarInfo(
+	const b3_view_info & info,
+	QB3BarInfo     &     horizontal,
+	QB3BarInfo     &     vertical)
+{
+	bool h_inverse;
+	bool v_inverse;
+
+	switch (info.m_ViewMode)
+	{
+	case B3_VIEW_TOP:
+		h_inverse = false;
+		v_inverse = true;
+		break;
+	case B3_VIEW_FRONT:
+		h_inverse = false;
+		v_inverse = true;
+		break;
+	case B3_VIEW_RIGHT:
+		h_inverse = false;
+		v_inverse = true;
+		break;
+	case B3_VIEW_BACK:
+		h_inverse = true;
+		v_inverse = true;
+		break;
+	case B3_VIEW_LEFT:
+		h_inverse = true;
+		v_inverse = true;
+		break;
+
+	default:
+		h_inverse = false;
+		v_inverse = false;
+	}
+
+	horizontal.set(
+		h_inverse,
+		info.m_Scene.left, info.m_Scene.right,
+		info.m_View.left, info.m_View.right);
+	vertical.set(
+		v_inverse,
+		info.m_Scene.bottom, info.m_Scene.top,
+		info.m_View.bottom, info.m_View.top);
 }
 
 /*************************************************************************
@@ -132,32 +217,35 @@ void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info, b3_bool ne
 *************************************************************************/
 
 void QB3BarInfo::set(
-	const b3_f32 scene_lower,
-	const b3_f32 scene_upper,
-	const b3_f32 view_lower,
-	const b3_f32 view_upper)
+	const b3_bool  inverse,
+	const b3_f32   scene_lower,
+	const b3_f32   scene_upper,
+	const b3_f32   view_lower,
+	const b3_f32   view_upper)
 {
 	min       = B3_MIN(scene_lower, view_lower);
 	max       = B3_MAX(scene_upper, view_upper);
-	page_size = view_upper - view_lower;
-	page_pos  = view_lower;
-	scale     = (max - min) / page_size;
+	page_size = ceil(view_upper) - floor(view_lower);
+	range     = ceil(max)        - floor(min);
 
-	bar_page_size = QB3BarInfo::BAR_RANGE / scale;
+	bar_inv       = inverse;
+	bar_page_size = page_size;
+	bar_min       = min;
+	bar_max       = max - page_size;
+	bar_pos       = view_lower;
 }
 
 b3_f64 QB3BarInfo::relFromBar(const int value) const
 {
-	return (value - BAR_RANGE_MIN) * scale / BAR_RANGE;
+	return b3_f64(value) / page_size;
 }
 
 int QB3BarInfo::relToBar(const b3_f64 value) const
 {
-	return value * BAR_RANGE / scale + BAR_RANGE_MIN;
+	return value * page_size;
 }
 
 int QB3BarInfo::posToBar(const b3_f64 pos)
 {
-	bar_pos = (pos - min) * BAR_RANGE / (max - min) + BAR_RANGE_MIN;
-	return bar_pos;
+	return pos;
 }

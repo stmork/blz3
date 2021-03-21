@@ -116,7 +116,6 @@ private:
 	QStandardItemModel  * camera_model;
 	QStandardItemModel  * light_model;
 	QStandardItemModel  * bbox_model;
-	QB3OpenGLScrollArea * scroll_area;
 
 	b3Path                textures;
 	b3Path                pictures;

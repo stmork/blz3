@@ -85,67 +85,43 @@ void QB3OpenGLWidget::b3SetSpotLight(const bool spot)
 	update();
 }
 
-void QB3OpenGLWidget::b3SetViewmode(
-	const b3_view_mode mode,
-	QB3BarInfo    &    horizontal,
-	QB3BarInfo    &    vertical)
+void QB3OpenGLWidget::b3SetViewMode(
+	const b3_view_mode view_mode,
+	b3_view_info   &   view_info)
 {
-	b3_view_info view_info;
-
-	m_ViewMode = mode;
-	m_View.b3SetViewMode(m_ViewMode);
+	m_View.b3SetViewMode(view_mode);
 	m_View.b3GetView(view_info);
-	b3GetBarInfo(view_info, horizontal, vertical);
 	update();
 }
 
 void QB3OpenGLWidget::b3MoveView(
-	const b3_f64 dx, const b3_f64 dy,
-	QB3BarInfo & horizontal,
-	QB3BarInfo & vertical)
+	const b3_f64   dx,
+	const b3_f64   dy,
+	b3_view_info & view_info)
 {
-	b3_view_info view_info;
-
 	m_View.b3Move(dx, dy);
 	m_View.b3GetView(view_info);
-	b3GetBarInfo(view_info, horizontal, vertical);
 	update();
 }
 
-void QB3OpenGLWidget::b3ScaleView(
-	const b3_f64 factor,
-	QB3BarInfo & horizontal,
-	QB3BarInfo & vertical)
+void QB3OpenGLWidget::b3ScaleView(const b3_f64 factor, b3_view_info & view_info)
 {
-	b3_view_info view_info;
-
 	m_View.b3Scale(factor);
 	m_View.b3GetView(view_info);
-	b3GetBarInfo(view_info, horizontal, vertical);
 	update();
 }
 
-void QB3OpenGLWidget::b3FullView(
-	QB3BarInfo & horizontal,
-	QB3BarInfo & vertical)
+void QB3OpenGLWidget::b3FullView(b3_view_info & view_info)
 {
-	b3_view_info view_info;
-
 	m_View.b3Original();
 	m_View.b3GetView(view_info);
-	b3GetBarInfo(view_info, horizontal, vertical);
 	update();
 }
 
-void QB3OpenGLWidget::b3PreviousView(
-	QB3BarInfo & horizontal,
-	QB3BarInfo & vertical)
+void QB3OpenGLWidget::b3PreviousView(b3_view_info & view_info)
 {
-	b3_view_info view_info;
-
 	m_View.b3PopView();
 	m_View.b3GetView(view_info);
-	b3GetBarInfo(view_info, horizontal, vertical);
 	update();
 }
 
@@ -172,15 +148,6 @@ void QB3OpenGLWidget::b3SetLights()
 	doneCurrent();
 }
 
-void QB3OpenGLWidget::b3GetBarInfo(
-	const b3_view_info & info,
-	QB3BarInfo     &     horizontal,
-	QB3BarInfo     &     vertical)
-{
-	horizontal.set(info.scene.left, info.scene.right, info.view.left, info.view.right);
-	vertical.set(info.scene.bottom, info.scene.top, info.view.bottom, info.view.top);
-}
-
 void QB3OpenGLWidget::initializeGL()
 {
 	B3_METHOD;
@@ -195,7 +162,6 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 {
 	B3_METHOD;
 
-	m_View.b3SetViewMode(m_ViewMode);
 	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
 }
 
@@ -211,7 +177,7 @@ void QB3OpenGLWidget::paintGL()
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
 	m_View.b3SetupView(xWinSize, yWinSize);
 	m_Scene->b3Draw(&m_Context);
-	if (m_ViewMode != B3_VIEW_3D)
+	if (!m_View.b3IsViewMode(B3_VIEW_3D))
 	{
 		m_CameraVolume->b3Draw(&m_Context);
 	}

@@ -23,24 +23,23 @@
 
 struct QB3BarInfo
 {
-	static const int BAR_RANGE_MIN =     0;
-	static const int BAR_RANGE_MAX = 16384;
-	static const int BAR_RANGE     = BAR_RANGE_MAX - BAR_RANGE_MIN;
+	b3_f64  min;
+	b3_f64  max;
+	b3_f64  page_size;
+	b3_f64  range;
 
-	b3_f64 min;
-	b3_f64 max;
-	b3_f64 page_size;
-	b3_f64 page_pos;
-	b3_f64 scale;
-
-	int    bar_page_size;
-	int    bar_pos;
+	int  bar_page_size;
+	int  bar_pos;
+	int  bar_min;
+	int  bar_max;
+	bool bar_inv;
 
 	void set(
-		const b3_f32 scene_lower,
-		const b3_f32 scene_upper,
-		const b3_f32 view_lower,
-		const b3_f32 view_upper);
+		const b3_bool inverse,
+		const b3_f32  scene_lower,
+		const b3_f32  scene_upper,
+		const b3_f32  view_lower,
+		const b3_f32  view_upper);
 
 	b3_f64 relFromBar(const int value) const;
 	int    relToBar(const b3_f64 value) const;
@@ -52,13 +51,18 @@ class QB3OpenGLScrollArea : public QScrollArea
 	Q_OBJECT
 
 public:
-	explicit QB3OpenGLScrollArea(QB3OpenGLWidget * glWidget);
+	explicit QB3OpenGLScrollArea(QWidget * parent = nullptr);
 
-	void b3SetViewmode(const b3_view_mode mode);
+	void setGlWidget(QB3OpenGLWidget * glWidget);
+	void b3SetViewMode(const b3_view_mode mode);
 	void b3MoveView(const b3_f64 dx, const b3_f64 dy);
 	void b3ScaleView(const b3_f64 factor);
 	void b3FullView();
 	void b3PreviousView();
+
+private slots:
+	void xValueChanged(int value);
+	void yValueChanged(int value);
 
 protected:
 	void resizeEvent(QResizeEvent * event) override;
@@ -66,9 +70,13 @@ protected:
 
 private:
 	void update();
-	void update(QScrollBar * bar, QB3BarInfo & info, b3_bool negate = false);
+	void update(QScrollBar * bar, QB3BarInfo & info);
+	static void b3GetBarInfo(
+		const b3_view_info & info,
+		QB3BarInfo     &     horizontal,
+		QB3BarInfo     &     vertical);
 
-	QB3OpenGLWidget * child;
+	QB3OpenGLWidget * child = nullptr;
 	QB3BarInfo        h, v;
 };
 

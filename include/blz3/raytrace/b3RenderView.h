@@ -54,8 +54,10 @@ enum b3_view_mode
  */
 struct b3_view_info
 {
-	b3_bound_2d scene;
-	b3_bound_2d view;
+	b3_bound_2d  m_Scene;
+	b3_bound_2d  m_View;
+	b3_view_mode m_ViewMode;
+	b3_f64       m_AspectRatio;
 };
 
 /**
@@ -151,7 +153,9 @@ public:
 	~b3RenderView();
 
 	/**
-	 * This method sets the actual view mode. It switches the correct view stack.
+	 * This method sets the actual view mode. It switches the correct view
+	 * stack. After changing the view mode the b3SetupView() method is
+	 * called.
 	 *
 	 * @param mode The new view mode to set.
 	 */

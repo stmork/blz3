@@ -129,6 +129,23 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QB3OpenGLScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1091</width>
+             <height>352</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -578,7 +595,13 @@
   <customwidget>
    <class>QB3OpenGLWidget</class>
    <extends>QOpenGLWidget</extends>
-   <header>b3OpenGLWidget.h</header>
+   <header location="global">b3OpenGLWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QB3OpenGLScrollArea</class>
+   <extends>QScrollArea</extends>
+   <header location="global">b3OpenGLScrollArea.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

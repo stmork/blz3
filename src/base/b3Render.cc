@@ -878,15 +878,15 @@ void b3RenderObject::b3CreateChess(
 
 void b3RenderObject::b3CopyTexture(
 	b3RenderContext * context,
-	b3Tx      *      input)
+	b3Tx       *      input)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Tx          scale;
+	b3Tx           scale;
 	b3_pkd_color * lPtr;
-	b3_res        xMax = B3_MAX_TX_SIZE;
-	b3_res        yMax = B3_MAX_TX_SIZE;
-	b3_res        size;
-	b3_coord      i = 0;
+	b3_res         xMax = B3_MAX_TX_SIZE;
+	b3_res         yMax = B3_MAX_TX_SIZE;
+	b3_res         size;
+	b3_coord       i = 0;
 
 	// Limit size
 	B3_ASSERT(input != null);
