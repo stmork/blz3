@@ -47,6 +47,9 @@ astyle:
 	+find . -name "*.cc" | xargs astyle
 	+astyle src/OpenGL/*.cpp
 
+cppcheck:
+	+make -C src $@
+
 lcov:
 	+make -C src $@
 

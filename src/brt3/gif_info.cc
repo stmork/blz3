@@ -92,7 +92,7 @@ static void InfoGIF(char * name)
 				b3PrintF(B3LOG_NORMAL, "*** Graphic Control Extension:\n");
 				b3PrintF(B3LOG_NORMAL, "flags: $%02x\n", transPtr->flags);
 				b3PrintF(B3LOG_NORMAL, "transparency: %s\n",
-					transPtr->flags & 1 ? "yes" : "no");
+					(transPtr->flags & 1) != 0 ? "yes" : "no");
 				if (transPtr->flags & 1)
 				{
 					b3PrintF(B3LOG_NORMAL, "transparent color index: %d\n",
@@ -147,9 +147,9 @@ static void InfoGIF(char * name)
 			b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", planes);
 			b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n", descrPtr->flags);
 			b3PrintF(B3LOG_NORMAL, "local color table: %s\n",
-				descrPtr->flags & 0x80 ? "yes" : "no");
+				(descrPtr->flags & 0x80) != 0 ? "yes" : "no");
 			b3PrintF(B3LOG_NORMAL, "interlace: %s\n",
-				descrPtr->flags & 0x40 ? "yes" : "no");
+				(descrPtr->flags & 0x40) != 0 ? "yes" : "no");
 			data   += sizeof(struct Descriptor);
 			if (descrPtr->flags & 0x80)
 			{
