@@ -8,9 +8,18 @@ GeneratorModel for yakindu::cpp
 	{
 		feature Outlet
 		{
-			targetProject = PROJECT
-			targetFolder  = SRC_GEN
+			targetProject       = PROJECT
+			targetFolder        = SRC_GEN
 			libraryTargetFolder = SRC_LIB
+		}
+
+		feature LicenseHeader
+		{
+			licenseText =
+			"       Generated with YAKINDU statechart tools\n" +
+			" *\n" +
+			" *   (C) Copyright  2001 - 2021  Steffen A. Mork\n" +
+			" *               All rights reserved\n"
 		}
 	}
 }

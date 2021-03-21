@@ -185,7 +185,7 @@ void QB3OpenGLWidget::paintGL()
 
 void QB3OpenGLWidget::drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
-	QPainter painter;
+	QPainter painter(this);
 
 	painter.setPen(QColor(0xff1144));
 	painter.drawRect(x1, y1, x2, y2);
