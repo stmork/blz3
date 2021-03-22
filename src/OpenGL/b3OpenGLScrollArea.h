@@ -49,10 +49,11 @@ struct QB3BarInfo
 
 class QB3OpenGLScrollArea :
 	public QScrollArea,
-	public MouseSelect,
-	public MouseSelect::Gui,
-	public MouseSelect::View,
-	public sc::rx::SingleSubscriptionObserver<void>
+	protected MouseSelect,
+	protected MouseSelect::Gui,
+	protected MouseSelect::View,
+	protected MouseSelect::Gui::OperationCallback,
+	protected sc::rx::SingleSubscriptionObserver<void>
 {
 	Q_OBJECT
 
@@ -73,6 +74,7 @@ signals:
 private slots:
 	void xValueChanged(int value);
 	void yValueChanged(int value);
+	void updateScrolling() override;
 
 protected:
 	void resizeEvent(QResizeEvent * event) override;

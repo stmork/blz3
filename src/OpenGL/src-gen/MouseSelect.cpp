@@ -40,7 +40,8 @@ mouseMove_value(),
 mouseUp_raised(false),
 mouseUp_value(),
 selectionEnd_raised(false),
-parent(parent)
+parent(parent),
+ifaceGuiOperationCallback(sc_null)
 {
 }
 
@@ -160,6 +161,9 @@ sc_boolean MouseSelect::isFinal() const
    return false;}
 
 sc_boolean MouseSelect::check() {
+	if (this->ifaceGui.ifaceGuiOperationCallback == sc_null) {
+		return false;
+	}
 	if (this->ifaceView.ifaceViewOperationCallback == sc_null) {
 		return false;
 	}
@@ -248,6 +252,10 @@ void MouseSelect::Gui::internal_raiseMouseUp(SCT_point value)
 sc::rx::Observable<void>* MouseSelect::Gui::getSelectionEnd()
 {
 	return &(this->selectionEnd_observable);
+}
+void MouseSelect::Gui::setOperationCallback(OperationCallback* operationCallback)
+{
+	ifaceGuiOperationCallback = operationCallback;
 }
 MouseSelect::View* MouseSelect::view()
 {
@@ -540,6 +548,7 @@ sc_integer MouseSelect::main_region_Panning_react(const sc_integer transitioned_
 			{ 
 				exseq_main_region_Panning();
 				ifaceView.ifaceViewOperationCallback->cursorArrow();
+				ifaceGui.ifaceGuiOperationCallback->updateScrolling();
 				enseq_main_region_Normal_default();
 				react(0);
 				transitioned_after = 0;

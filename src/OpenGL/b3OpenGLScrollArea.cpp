@@ -37,6 +37,7 @@ QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
 
 	b3PrintF(B3LOG_FULL, "%d %d %lf\n", rel, pos, value);
 #endif
+	gui()->setOperationCallback(this);
 }
 
 void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
@@ -127,6 +128,16 @@ void QB3OpenGLScrollArea::yValueChanged(int value)
 		child->b3MoveView(0.0, rel, view_info);
 		v.bar_pos = value;
 	}
+}
+
+void QB3OpenGLScrollArea::updateScrolling()
+{
+	b3_view_info view_info;
+
+	child->m_View.b3GetView(view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(), v);
 }
 
 void QB3OpenGLScrollArea::b3FullView()

@@ -151,6 +151,20 @@ public:
 
 
 
+		//! Inner class for gui interface scope operation callbacks.
+		class OperationCallback
+		{
+		public:
+			virtual ~OperationCallback() = 0;
+
+			virtual void updateScrolling() = 0;
+
+
+		};
+
+		/*! Set the working instance of the operation callback interface 'OperationCallback'. */
+		void setOperationCallback(OperationCallback * operationCallback);
+
 
 	private:
 		friend class MouseSelect;
@@ -181,6 +195,7 @@ public:
 
 
 
+		OperationCallback * ifaceGuiOperationCallback;
 
 
 	};
@@ -353,6 +368,7 @@ private:
 };
 
 
+inline MouseSelect::Gui::OperationCallback::~OperationCallback() {}
 inline MouseSelect::View::OperationCallback::~OperationCallback() {}
 
 
