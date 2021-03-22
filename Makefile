@@ -43,8 +43,12 @@ dist:	configure
 	cp blz3.spec /tmp/
 
 astyle:
-	find . -name "*.h" | xargs astyle
-	find . -name "*.cc" | xargs astyle
+	+find . -name "*.h" | xargs astyle
+	+find . -name "*.cc" | xargs astyle
+	+astyle src/OpenGL/*.cpp
+
+cppcheck:
+	+make -C src $@
 
 lcov:
 	+make -C src $@

@@ -34,12 +34,8 @@
 b3RenderViewItem::b3RenderViewItem() :
 	b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
 {
-	m_Mid.x =
-		m_Mid.y =
-			m_Mid.z = 0;
-	m_Size.x =
-		m_Size.y =
-			m_Size.z = 0;
+	m_Mid.x  = m_Mid.y  = m_Mid.z  = 0;
+	m_Size.x = m_Size.y = m_Size.z = 0;
 }
 
 b3RenderViewItem::b3RenderViewItem(
@@ -201,6 +197,56 @@ b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const
 		success = false;
 	}
 	return success;
+}
+
+b3_bool b3RenderView::b3GetView(b3_view_info & view_info) const
+{
+	view_info.m_ViewMode = m_ViewMode;
+
+	switch (m_ViewMode)
+	{
+	default:
+		return false;
+
+	case B3_VIEW_TOP:
+		view_info.m_Scene.left   = m_Lower.x;
+		view_info.m_Scene.right  = m_Upper.x;
+		view_info.m_Scene.bottom = m_Lower.y;
+		view_info.m_Scene.top    = m_Upper.y;
+		view_info.m_View.left    = m_Actual->m_Mid.x - 0.5 * m_Actual->m_Size.x;
+		view_info.m_View.right   = m_Actual->m_Mid.x + 0.5 * m_Actual->m_Size.x;
+		view_info.m_View.bottom  = m_Actual->m_Mid.y - 0.5 * m_Actual->m_Size.y;
+		view_info.m_View.top     = m_Actual->m_Mid.y + 0.5 * m_Actual->m_Size.y;
+		break;
+
+	case B3_VIEW_FRONT:
+	case B3_VIEW_BACK:
+		view_info.m_Scene.left   = m_Lower.x;
+		view_info.m_Scene.right  = m_Upper.x;
+		view_info.m_Scene.bottom = m_Lower.z;
+		view_info.m_Scene.top    = m_Upper.z;
+		view_info.m_View.left    = m_Actual->m_Mid.x - 0.5 * m_Actual->m_Size.x;
+		view_info.m_View.right   = m_Actual->m_Mid.x + 0.5 * m_Actual->m_Size.x;
+		view_info.m_View.bottom  = m_Actual->m_Mid.z - 0.5 * m_Actual->m_Size.z;
+		view_info.m_View.top     = m_Actual->m_Mid.z + 0.5 * m_Actual->m_Size.z;
+		break;
+
+	case B3_VIEW_RIGHT:
+	case B3_VIEW_LEFT:
+		view_info.m_Scene.left   = m_Lower.y;
+		view_info.m_Scene.right  = m_Upper.y;
+		view_info.m_Scene.bottom = m_Lower.z;
+		view_info.m_Scene.top    = m_Upper.z;
+		view_info.m_View.left    = m_Actual->m_Mid.y - 0.5 * m_Actual->m_Size.y;
+		view_info.m_View.right   = m_Actual->m_Mid.y + 0.5 * m_Actual->m_Size.y;
+		view_info.m_View.bottom  = m_Actual->m_Mid.z - 0.5 * m_Actual->m_Size.z;
+		view_info.m_View.top     = m_Actual->m_Mid.z + 0.5 * m_Actual->m_Size.z;
+		break;
+	}
+	view_info.m_AspectRatio =
+		(view_info.m_View.top   - view_info.m_View.bottom) /
+		(view_info.m_View.right - view_info.m_View.left);
+	return true;
 }
 
 void b3RenderView::b3SetBounds(const b3_vector * lower, const b3_vector * upper)
@@ -545,9 +591,9 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 
 void b3RenderView::b3Project(
 	const b3_vector * point,
-	b3_f64  &  xRel,
-	b3_f64  &  yRel,
-	b3_f64  &  zRel) const
+	b3_f64      &     xRel,
+	b3_f64      &     yRel,
+	b3_f64      &     zRel) const
 {
 #ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
@@ -730,7 +776,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane() const
 		farCP = l;
 	}
 
-	return farCP;// * 2 + 4;
+	return farCP; // * 2 + 4;
 #else
 	return 10000;
 #endif
@@ -764,15 +810,15 @@ void b3RenderView::b3SetupView(
 		// Prepare glOrtho();
 		distance   = b3Vector::b3Distance(&m_ViewPoint, &m_EyePoint);
 		factor     = min / distance;
-		m_ViewInfo.width  = factor * b3Vector::b3Length(&m_Width);
-		m_ViewInfo.height = factor * b3Vector::b3Length(&m_Height);
-		m_ViewInfo.near_cp     = min;
-		m_ViewInfo.far_cp      = b3ComputeFarClippingPlane();
+		m_ViewInfo.width   = factor * b3Vector::b3Length(&m_Width);
+		m_ViewInfo.height  = factor * b3Vector::b3Length(&m_Height);
+		m_ViewInfo.near_cp = min;
+		m_ViewInfo.far_cp  = b3ComputeFarClippingPlane();
 
 		// Prepare gluLookAt() - it's simple
 		m_ViewInfo.eye  = m_EyePoint;
 		m_ViewInfo.look = m_ViewPoint;
-		m_ViewInfo.up       = m_Height;
+		m_ViewInfo.up   = m_Height;
 
 		// Init Offset
 		b3Vector::b3Init(&m_ViewInfo.offset);
@@ -916,7 +962,9 @@ void b3RenderView::b3SetupView(
 #define B3_RASTER_COUNT(a,e,grid) ((b3_count)(floor((e) / (grid)) - ceil((a) / (grid)) + 1))
 #define B3_RASTER_MINDIST  8
 
-void b3RenderView::b3DrawRaster(b3_f64 grid, b3Color & color) const
+void b3RenderView::b3DrawRaster(
+	const b3_f64    grid,
+	const b3Color & color) const
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector xDisp, yDisp;

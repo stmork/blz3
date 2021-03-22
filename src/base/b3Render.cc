@@ -34,7 +34,7 @@
 #endif
 
 #ifndef _DEBUG
-#	define B3_MAX_TX_SIZE 128
+#	define B3_MAX_TX_SIZE 512
 #else
 #	define B3_MAX_TX_SIZE   8
 #	define no_VERBOSE
@@ -642,7 +642,7 @@ void b3RenderObject::b3DefineTexture()
 	b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE, blend);
 
 	// Set texture parameter
-	glTexEnvi(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE,  GL_BLEND);
+	glTexEnvi( GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE,  GL_BLEND);
 	glTexEnvfv(GL_TEXTURE_2D, GL_TEXTURE_ENV_COLOR, blend);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -878,15 +878,15 @@ void b3RenderObject::b3CreateChess(
 
 void b3RenderObject::b3CopyTexture(
 	b3RenderContext * context,
-	b3Tx      *      input)
+	b3Tx       *      input)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Tx          scale;
+	b3Tx           scale;
 	b3_pkd_color * lPtr;
-	b3_res        xMax = B3_MAX_TX_SIZE;
-	b3_res        yMax = B3_MAX_TX_SIZE;
-	b3_res        size;
-	b3_coord      i = 0;
+	b3_res         xMax = B3_MAX_TX_SIZE;
+	b3_res         yMax = B3_MAX_TX_SIZE;
+	b3_res         size;
+	b3_coord       i = 0;
 
 	// Limit size
 	B3_ASSERT(input != null);

@@ -21,6 +21,7 @@
 #include "b3LightItem.h"
 #include "b3BBoxItem.h"
 #include "b3SceneItem.h"
+#include "b3OpenGLScrollArea.h"
 
 /*************************************************************************
 **                                                                      **
@@ -42,7 +43,7 @@
 **                                                                      **
 *************************************************************************/
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget * parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
@@ -55,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QSurfaceFormat::setDefaultFormat(format);
 
 	ui->setupUi(this);
+	ui->scrollArea->setGlWidget(ui->glView);
+
 	addAction(ui->actionViewMoveRight);
 	addAction(ui->actionViewMoveLeft);
 	addAction(ui->actionViewMoveUp);
@@ -64,9 +67,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	const char * BLZ3_BIN     = getenv("BLZ3_BIN");
 	const char * HOME         = getenv("HOME");
 
-	b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
-	b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
-	b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");
+	data.b3LinkFileName(    HOME, "Blizzard/Data");
+	textures.b3LinkFileName(HOME, "Blizzard/Textures");
+	pictures.b3LinkFileName(HOME, "Blizzard/Pictures");
 
 	b3Scene::m_TexturePool.b3AddPath(textures);
 	b3Scene::m_TexturePool.b3AddPath(pictures);
@@ -97,17 +100,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	animation.setPropertyName("value");
 
 	connect(
-				ui->animationSlider, &QSlider::valueChanged,
-				this, &MainWindow::animate);
+		ui->animationSlider, &QSlider::valueChanged,
+		this, &MainWindow::animate);
 	connect(
-				camera_model,  &QStandardItemModel::itemChanged,
-				this, &MainWindow::on_selectedCamera);
+		ui->scrollArea, &QB3OpenGLScrollArea::selectionEnd,
+		this, &MainWindow::on_selection_end);
 	connect(
-				light_model,  &QStandardItemModel::itemChanged,
-				this, &MainWindow::on_selectLight);
+		camera_model,  &QStandardItemModel::itemChanged,
+		this, &MainWindow::on_selectedCamera);
 	connect(
-				bbox_model, &QStandardItemModel::itemChanged,
-				this, &MainWindow::on_itemChanged);
+		light_model,  &QStandardItemModel::itemChanged,
+		this, &MainWindow::on_selectLight);
+	connect(
+		bbox_model, &QStandardItemModel::itemChanged,
+		this, &MainWindow::on_itemChanged);
 
 	m_World.b3Read("FlippAmiga.bwd");
 	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
@@ -136,7 +142,7 @@ void MainWindow::free()
 
 void MainWindow::prepareUI()
 {
-	for(b3CameraPart * camera = m_Scene->b3GetFirstCamera();
+	for (b3CameraPart * camera = m_Scene->b3GetFirstCamera();
 		camera != nullptr;
 		camera  = m_Scene->b3GetNextCamera(camera))
 	{
@@ -197,7 +203,7 @@ b3BBox * MainWindow::getSelectedBBox()
 
 b3CameraPart * MainWindow::getSelectedCamera()
 {
-	const QModelIndex &   index = ui->cameraListView->currentIndex();
+	const QModelIndex  &  index = ui->cameraListView->currentIndex();
 	const QB3CameraItem * item  = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
 
 	if (item != nullptr)
@@ -264,7 +270,7 @@ QString MainWindow::timecode(const int frame) const
 		const unsigned sub    = abs(int(t * fps)) % fps;
 
 		return QString::asprintf("%02d:%02u:%02u.%02u  %3d",
-								 hour, minute, second, sub, frame);
+				hour, minute, second, sub, frame);
 	}
 	else
 	{
@@ -285,8 +291,9 @@ void MainWindow::enableView(const b3_view_mode mode)
 	ui->actionViewTop->setChecked(mode == B3_VIEW_TOP);
 	ui->actionViewRight->setChecked(mode == B3_VIEW_RIGHT);
 	ui->actionViewLeft->setChecked(mode == B3_VIEW_LEFT);
+	ui->actionViewSelect->setDisabled(mode == B3_VIEW_3D);
 
-	ui->glView->b3SetViewmode(mode);
+	ui->scrollArea->b3SetViewMode(mode);
 }
 
 void MainWindow::enableAnimation()
@@ -320,7 +327,7 @@ void MainWindow::populateTreeView(QStandardItem * parent, b3Base<b3Item> * base)
 	B3_FOR_TYPED_BASE(b3BBox, base, bbox)
 	{
 		b3Base<b3Item> * sub_bboxes = bbox->b3GetBBoxHead();
-		QStandardItem *  item       = new QB3BBoxItem(bbox);
+		QStandardItem  * item       = new QB3BBoxItem(bbox);
 
 		parent->appendRow(item);
 		if (!sub_bboxes->b3IsEmpty())
@@ -434,42 +441,47 @@ void MainWindow::on_actionViewRight_triggered()
 
 void MainWindow::on_actionViewZoomIn_triggered()
 {
-	ui->glView->b3ScaleView(0.8);
+	ui->scrollArea->b3ScaleView(0.8);
 }
 
 void MainWindow::on_actionViewZoomOut_triggered()
 {
-	ui->glView->b3ScaleView(1.25);
+	ui->scrollArea->b3ScaleView(1.25);
 }
 
 void MainWindow::on_actionViewPop_triggered()
 {
-	ui->glView->b3PreviousView();
+	ui->scrollArea->b3PreviousView();
+}
+
+void MainWindow::on_actionViewSelect_triggered()
+{
+	ui->scrollArea->onSelect(ui->actionViewSelect->isChecked());
 }
 
 void MainWindow::on_actionViewFull_triggered()
 {
-	ui->glView->b3FullView();
+	ui->scrollArea->b3FullView();
 }
 
 void MainWindow::on_actionViewMoveRight_triggered()
 {
-	ui->glView->b3MoveView(0.2, 0.0);
+	ui->scrollArea->b3MoveView(0.2, 0.0);
 }
 
 void MainWindow::on_actionViewMoveLeft_triggered()
 {
-	ui->glView->b3MoveView(-0.2, 0.0);
+	ui->scrollArea->b3MoveView(-0.2, 0.0);
 }
 
 void MainWindow::on_actionViewMoveUp_triggered()
 {
-	ui->glView->b3MoveView(0.0, -0.2);
+	ui->scrollArea->b3MoveView(0.0, 0.2);
 }
 
 void MainWindow::on_actionViewMoveDown_triggered()
 {
-	ui->glView->b3MoveView(0.0, 0.2);
+	ui->scrollArea->b3MoveView(0.0, -0.2);
 }
 
 void MainWindow::on_actionActivateAll_triggered()
@@ -525,11 +537,11 @@ void MainWindow::on_actionDeactivateOther_triggered()
 		b3BBox * aux;
 
 		bbox->b3Activate(true);
-		for (aux = (b3BBox *)bbox->Prev;aux != nullptr;aux = (b3BBox *)aux->Prev)
+		for (aux = (b3BBox *)bbox->Prev; aux != nullptr; aux = (b3BBox *)aux->Prev)
 		{
 			aux->b3Activate(false);
 		}
-		for (aux = (b3BBox *)bbox->Succ;aux != nullptr;aux = (b3BBox *)aux->Succ)
+		for (aux = (b3BBox *)bbox->Succ; aux != nullptr; aux = (b3BBox *)aux->Succ)
 		{
 			aux->b3Activate(false);
 		}
@@ -565,7 +577,7 @@ void MainWindow::on_actionAnimStop_triggered()
 
 void MainWindow::on_actionAnimPause_triggered()
 {
-	switch(animation.state())
+	switch (animation.state())
 	{
 	case QPropertyAnimation::Running:
 		animation.pause();
@@ -608,9 +620,14 @@ void MainWindow::on_actionLightSpot_triggered()
 	enableLight();
 }
 
-void MainWindow::on_cameraListView_clicked(const QModelIndex &index)
+void MainWindow::on_cameraListView_clicked(const QModelIndex & index)
 {
 	QB3CameraItem * camera_item = static_cast<QB3CameraItem *>(camera_model->itemFromIndex(index));
 
 	ui->glView->b3SetCamera(*camera_item);
+}
+
+void MainWindow::on_selection_end()
+{
+	ui->actionViewSelect->setChecked(false);
 }

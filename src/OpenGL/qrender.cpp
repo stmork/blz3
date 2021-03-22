@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
 	b3Log::b3SetLevel(B3LOG_DEBUG);
 

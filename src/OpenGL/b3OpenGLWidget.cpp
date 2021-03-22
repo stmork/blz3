@@ -12,13 +12,16 @@
 **
 */
 
-#include "b3OpenGLWidget.h"
-#include "b3CameraVolume.h"
+#include <QPainter>
 
 #include <blz3/raytrace/b3Scene.h>
 
+#include "b3OpenGLScrollArea.h"
+#include "b3OpenGLWidget.h"
+#include "b3CameraVolume.h"
+
 QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
-	QOpenGLWidget(parent)
+	QOpenGLWidget(parent), rubber_band(QRubberBand::Rectangle, this)
 {
 }
 
@@ -26,7 +29,7 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
 {
 	B3_METHOD;
 
-	b3_res                 xSize, ySize;
+	b3_res   xSize, ySize;
 
 	m_Scene = first;
 	m_Scene->b3Reorg();
@@ -48,13 +51,6 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
 	b3PrintF(B3LOG_NORMAL, "%7zd vertices\n",  m_Context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL, "%7zd triangles\n", m_Context.glPolyCount);
 	b3PrintF(B3LOG_NORMAL, "%7zd grids\n",     m_Context.glGridCount);
-}
-
-void QB3OpenGLWidget::b3SetViewmode(const b3_view_mode mode)
-{
-	m_ViewMode = mode;
-	m_View.b3SetViewMode(m_ViewMode);
-	update();
 }
 
 void QB3OpenGLWidget::b3SetCamera(b3CameraPart * camera)
@@ -90,27 +86,43 @@ void QB3OpenGLWidget::b3SetSpotLight(const bool spot)
 	update();
 }
 
-void QB3OpenGLWidget::b3MoveView(const b3_f64 dx, const b3_f64 dy)
+void QB3OpenGLWidget::b3SetViewMode(
+	const b3_view_mode view_mode,
+	b3_view_info   &   view_info)
+{
+	m_View.b3SetViewMode(view_mode);
+	m_View.b3GetView(view_info);
+	update();
+}
+
+void QB3OpenGLWidget::b3MoveView(
+	const b3_f64   dx,
+	const b3_f64   dy,
+	b3_view_info & view_info)
 {
 	m_View.b3Move(dx, dy);
+	m_View.b3GetView(view_info);
 	update();
 }
 
-void QB3OpenGLWidget::b3ScaleView(const b3_f64 factor)
+void QB3OpenGLWidget::b3ScaleView(const b3_f64 factor, b3_view_info & view_info)
 {
 	m_View.b3Scale(factor);
+	m_View.b3GetView(view_info);
 	update();
 }
 
-void QB3OpenGLWidget::b3FullView()
+void QB3OpenGLWidget::b3FullView(b3_view_info & view_info)
 {
 	m_View.b3Original();
+	m_View.b3GetView(view_info);
 	update();
 }
 
-void QB3OpenGLWidget::b3PreviousView()
+void QB3OpenGLWidget::b3PreviousView(b3_view_info & view_info)
 {
 	m_View.b3PopView();
+	m_View.b3GetView(view_info);
 	update();
 }
 
@@ -151,8 +163,7 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 {
 	B3_METHOD;
 
-	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
-	m_View.b3SetViewMode(m_ViewMode);
+	m_View.b3SetupView(m_xWinSize = xSize, m_yWinSize = ySize);
 }
 
 void QB3OpenGLWidget::paintGL()
@@ -165,10 +176,56 @@ void QB3OpenGLWidget::paintGL()
 	m_Context.b3StartDrawing();
 	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
-	m_View.b3SetupView(xWinSize, yWinSize);
+	m_View.b3SetupView(m_xWinSize, m_yWinSize);
 	m_Scene->b3Draw(&m_Context);
-	if (m_ViewMode != B3_VIEW_3D)
+	if (!m_View.b3IsViewMode(B3_VIEW_3D))
 	{
 		m_CameraVolume->b3Draw(&m_Context);
 	}
+}
+
+void QB3OpenGLWidget::show()
+{
+	rubber_band.show();
+}
+
+void QB3OpenGLWidget::hide()
+{
+	rubber_band.hide();
+}
+
+void QB3OpenGLWidget::cursorPanning()
+{
+	setCursor(Qt::ClosedHandCursor);
+}
+
+void QB3OpenGLWidget::cursorArrow()
+{
+	setCursor(Qt::ArrowCursor);
+}
+
+void QB3OpenGLWidget::setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	QRect    rect(QPoint(x1, y1), QPoint(x2, y2));
+
+	rubber_band.setGeometry(rect.normalized());
+}
+
+void QB3OpenGLWidget::select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	m_View.b3Select(
+		b3_f64(x1) / m_xWinSize, b3_f64(y1) / m_yWinSize,
+		b3_f64(x2) / m_xWinSize, b3_f64(y2) / m_yWinSize);
+	update();
+}
+
+void QB3OpenGLWidget::move(int32_t dx, int32_t dy)
+{
+	m_View.b3Move(b3_f64(-dx) / m_xWinSize, b3_f64(dy) / m_yWinSize);
+	update();
+}
+
+bool QB3OpenGLWidget::is3D()
+{
+	return m_View.b3IsViewMode(B3_VIEW_3D);
 }

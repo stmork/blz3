@@ -216,6 +216,18 @@ struct alignas(16) b3_point
 };
 
 /**
+ * This structure represents a 2D bounding rectangle. The lower elements should
+ * be smaller than the upper elements.
+ */
+struct alignas(16) b3_bound_2d
+{
+	b3_f32    left;   //!< The lower left bound
+	b3_f32    bottom; //!< The lower bottom bound
+	b3_f32    right;  //!< The upper right bound
+	b3_f32    top;    //!< The upper top bound
+};
+
+/**
  * This structure contains three RGB color values and an alpha value as floats. The
  * first element is aligned on a 16 byte boundary.
  */

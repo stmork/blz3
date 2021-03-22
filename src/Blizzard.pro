@@ -43,7 +43,8 @@ cppcheck.commands = cppcheck\
 	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\
 	--language=c++ --std=c++14\
 	--xml-version=2 --force -q -j 3\
-	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc 2>cppcheck.xml
+	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc\
+	OpenGL/*.c* OpenGL/*.h brt3/*.cc 2>cppcheck.xml
 
 QMAKE_EXTRA_TARGETS += cppcheck
 QMAKE_CLEAN         += cppcheck.xml test-results*.xml *.wav *.dot *.mp4 *.deb *.qch

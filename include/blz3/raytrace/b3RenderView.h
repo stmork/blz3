@@ -42,6 +42,25 @@ enum b3_view_mode
 };
 
 /**
+ * This structure represents two bounding rectangles which represents the
+ * bounds of the scene and the bounds of the selected view. The rectangles
+ * are converted respecting the chosen view mode. Note that the rectangles
+ * may overlap each other if only contents of the scene are visible. You
+ * have to compute the completing bounding rectangle by using B3_MIN on the
+ * lower bounds and B3_MAX on the upper bounds. Use b3GetView() to get
+ * the actual view info data.
+ *
+ * @see b3_view_mode
+ */
+struct b3_view_info
+{
+	b3_bound_2d  m_Scene;
+	b3_bound_2d  m_View;
+	b3_view_mode m_ViewMode;
+	b3_f64       m_AspectRatio;
+};
+
+/**
  * This class represents one view. Several views can be stacked depending on
  * the view mode.
  */
@@ -134,7 +153,9 @@ public:
 	~b3RenderView();
 
 	/**
-	 * This method sets the actual view mode. It switches the correct view stack.
+	 * This method sets the actual view mode. It switches the correct view
+	 * stack. After changing the view mode the b3SetupView() method is
+	 * called.
 	 *
 	 * @param mode The new view mode to set.
 	 */
@@ -189,6 +210,8 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool           b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const;
+
+	b3_bool           b3GetView(b3_view_info & view_info) const;
 
 	/**
 	 * This method pops the actual view item from the actual view mode.
@@ -272,7 +295,11 @@ public:
 	 * @param xOffset The horizontal view port offset.
 	 * @param yOffset The vertical view port offset.
 	 */
-	void              b3SetupView(b3_res xSize, b3_res ySize, b3_f64 xOffset = 0.0, b3_f64 yOffset = 0.0);
+	void              b3SetupView(
+		b3_res xSize,
+		b3_res ySize,
+		b3_f64 xOffset = 0.0,
+		b3_f64 yOffset = 0.0);
 
 	/**
 	 * This method draws the snap grid.
@@ -280,7 +307,9 @@ public:
 	 * @param grid The snap to grid grid distance.
 	 * @param color The grid color.
 	 */
-	void              b3DrawRaster(b3_f64 grid, b3Color & color) const;
+	void              b3DrawRaster(
+		const b3_f64    grid,
+		const b3Color & color) const;
 
 	/**
 	 * This method initializes a real move direction vector from an initial stepper

@@ -81,7 +81,7 @@
       <widget class="QWidget" name="right" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>10</horstretch>
+         <horstretch>4</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
@@ -129,6 +129,23 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QB3OpenGLScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1091</width>
+             <height>352</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -165,6 +182,7 @@
     <addaction name="actionViewZoomIn"/>
     <addaction name="actionViewZoomOut"/>
     <addaction name="actionViewPop"/>
+    <addaction name="actionViewSelect"/>
     <addaction name="actionViewFull"/>
     <addaction name="separator"/>
     <addaction name="actionActivateAll"/>
@@ -225,6 +243,7 @@
    <addaction name="actionViewZoomIn"/>
    <addaction name="actionViewZoomOut"/>
    <addaction name="actionViewPop"/>
+   <addaction name="actionViewSelect"/>
    <addaction name="actionViewFull"/>
    <addaction name="separator"/>
    <addaction name="actionActivateAll"/>
@@ -389,6 +408,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionViewSelect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/toolbar/view/res/toolbar/view/view_select.png</normaloff>:/toolbar/view/res/toolbar/view/view_select.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ansicht auswählen</string>
    </property>
   </action>
   <action name="actionViewFull">
@@ -564,7 +595,13 @@
   <customwidget>
    <class>QB3OpenGLWidget</class>
    <extends>QOpenGLWidget</extends>
-   <header>b3OpenGLWidget.h</header>
+   <header location="global">b3OpenGLWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QB3OpenGLScrollArea</class>
+   <extends>QScrollArea</extends>
+   <header location="global">b3OpenGLScrollArea.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

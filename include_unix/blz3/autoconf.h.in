@@ -1,33 +1,33 @@
 /* include_unix/blz3/autoconf.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Description */
+/* Is Blizzard running on Linux */
 #undef BLZ3_IS_LINUX
 
-/* Description */
+/* Do we have Cg header? */
 #undef BLZ3_USE_CG
 
-/* Description */
+/* Can we use divx? */
 #undef BLZ3_USE_DIVX4LINUX
 
-/* Description */
+/* Do we can use GLUT? */
 #undef BLZ3_USE_GLUT
 
-/* Description */
+/* Can we use OpenEXR? */
 #undef BLZ3_USE_OPENEXR
 
-/* Description */
+/* Do we can use GLU? */
 #undef BLZ3_USE_OPENGL
 
-/* Description */
+/* Does Blizzard use SSE? */
 #undef BLZ3_USE_SSE
 
-/* Description */
+/* Does Blizzard use SSE2? */
 #undef BLZ3_USE_SSE2
 
-/* Description */
+/* Does Blizzard use SSE3? */
 #undef BLZ3_USE_SSE3
 
-/* Description */
+/* Can we use x264 library? */
 #undef BLZ3_USE_X264
 
 /* Define to 1 if the `closedir' function returns void instead of `int'. */
@@ -35,6 +35,9 @@
 
 /* Define to 1 if you have the `alarm' function. */
 #undef HAVE_ALARM
+
+/* Define to 1 if you have the `cbrt' function. */
+#undef HAVE_CBRT
 
 /* define if the compiler supports basic C++17 syntax */
 #undef HAVE_CXX17
@@ -73,7 +76,7 @@
 /* Define to 1 if you have the `CgGL' library (-lCgGL). */
 #undef HAVE_LIBCGGL
 
-/* Description */
+/* Is CppUnit available? */
 #undef HAVE_LIBCPPUNIT
 
 /* Define to 1 if you have the `dl' library (-ldl). */
@@ -119,7 +122,7 @@
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H
 
-/* Description */
+/* Is memalign() available? */
 #undef HAVE_MEMALIGN
 
 /* Define to 1 if you have the <memory.h> header file. */
@@ -140,7 +143,7 @@
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
 
-/* Description */
+/* Is operator new available? */
 #undef HAVE_NEW_OVERLOADING
 
 /* Define to 1 if you have the `pow' function. */
@@ -149,13 +152,13 @@
 /* Define to 1 if you have the `sqrt' function. */
 #undef HAVE_SQRT
 
-/* Description */
+/* Is SSE available? */
 #undef HAVE_SSE
 
-/* Description */
+/* Is SSE2 available? */
 #undef HAVE_SSE2
 
-/* Description */
+/* Is SSE3 available? */
 #undef HAVE_SSE3
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the
@@ -174,7 +177,7 @@
 /* Define to 1 if you have the `strchr' function. */
 #undef HAVE_STRCHR
 
-/* Description */
+/* Is strerror() available? */
 #undef HAVE_STRERROR
 
 /* Define to 1 if you have the <strings.h> header file. */
@@ -215,10 +218,10 @@
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF
 
-/* Description */
+/* Does x264 have delayed frame support? */
 #undef HAVE_X264_DELAYED_FRAMES
 
-/* Description */
+/* Das x264 habe parameter definition support? */
 #undef HAVE_X264_PARAMETER_DEFINITION
 
 /* Define to 1 if `lstat' dereferences a symlink specified with a trailing
@@ -246,7 +249,7 @@
 /* Define as the return type of signal handlers (`int' or `void'). */
 #undef RETSIGTYPE
 
-/* Description */
+/* Is operator new memory aligned at 16 */
 #undef SSE_ALIGNED
 
 /* Define to 1 if you have the ANSI C header files. */
