@@ -24,6 +24,7 @@ HEADERS += point.h \
 	src-gen/MouseSelect.h \
 	src-lib/sc_statemachine.h \
 	src-lib/sc_types.h \
+	src-lib/sc_rxcpp.h \
 	b3AbstractItem.h \
 	b3BBoxItem.h \
 	b3CameraItem.h \

@@ -1,5 +1,5 @@
 CONFIG  += c++17
-VERSION  = 3.1.0
+VERSION  = 3.1.2
 
 BLZ3_HOME = $$(BLZ3_HOME)
 
