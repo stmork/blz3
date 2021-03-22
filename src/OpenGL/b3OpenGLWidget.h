@@ -65,8 +65,11 @@ protected:
 
 	void show() override;
 	void hide() override;
+	void cursorPanning() override;
+	void cursorArrow() override;
 	void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
 	void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
+	void move(int32_t dx, int32_t dy) override;
 	bool is3D() override;
 
 private:

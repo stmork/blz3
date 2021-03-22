@@ -180,6 +180,9 @@ sc_boolean MouseSelect::isStateActive(MouseSelectStates state) const
 		case main_region_Moving : 
 			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_MOVING] == main_region_Moving
 			);
+		case main_region_Panning : 
+			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_PANNING] == main_region_Panning
+			);
 		default: return false;
 	}
 }
@@ -284,6 +287,13 @@ void MouseSelect::enact_main_region_Moving()
 	ifaceView.ifaceViewOperationCallback->setRectangle(p1.x, p1.y, p2.x, p2.y);
 }
 
+/* Entry action for state 'Panning'. */
+void MouseSelect::enact_main_region_Panning()
+{
+	/* Entry action for state 'Panning'. */
+	p1 = p2;
+}
+
 /* Exit action for state 'Moving'. */
 void MouseSelect::exact_main_region_Moving()
 {
@@ -311,6 +321,14 @@ void MouseSelect::enseq_main_region_Moving_default()
 	/* 'default' enter sequence for state Moving */
 	enact_main_region_Moving();
 	stateConfVector[0] = main_region_Moving;
+}
+
+/* 'default' enter sequence for state Panning */
+void MouseSelect::enseq_main_region_Panning_default()
+{
+	/* 'default' enter sequence for state Panning */
+	enact_main_region_Panning();
+	stateConfVector[0] = main_region_Panning;
 }
 
 /* 'default' enter sequence for region main region */
@@ -342,6 +360,13 @@ void MouseSelect::exseq_main_region_Moving()
 	exact_main_region_Moving();
 }
 
+/* Default exit sequence for state Panning */
+void MouseSelect::exseq_main_region_Panning()
+{
+	/* Default exit sequence for state Panning */
+	stateConfVector[0] = MouseSelect_last_state;
+}
+
 /* Default exit sequence for region main region */
 void MouseSelect::exseq_main_region()
 {
@@ -362,6 +387,11 @@ void MouseSelect::exseq_main_region()
 		case main_region_Moving :
 		{
 			exseq_main_region_Moving();
+			break;
+		}
+		case main_region_Panning :
+		{
+			exseq_main_region_Panning();
 			break;
 		}
 		default: break;
@@ -401,7 +431,18 @@ sc_integer MouseSelect::main_region_Normal_react(const sc_integer transitioned_b
 				enseq_main_region_Normal_default();
 				react(0);
 				transitioned_after = 0;
-			} 
+			}  else
+			{
+				if (((ifaceGui.mouseDown_raised)) && ((!ifaceView.ifaceViewOperationCallback->is3D())))
+				{ 
+					exseq_main_region_Normal();
+					p2 = ifaceGui.mouseDown_value;
+					ifaceView.ifaceViewOperationCallback->cursorPanning();
+					enseq_main_region_Panning_default();
+					react(0);
+					transitioned_after = 0;
+				} 
+			}
 		}
 	} 
 	/* If no transition was taken then execute local reactions */
@@ -480,6 +521,39 @@ sc_integer MouseSelect::main_region_Moving_react(const sc_integer transitioned_b
 	return transitioned_after;
 }
 
+sc_integer MouseSelect::main_region_Panning_react(const sc_integer transitioned_before) {
+	/* The reactions of state Panning. */
+	sc_integer transitioned_after = transitioned_before;
+	if ((transitioned_after) < (0))
+	{ 
+		if (ifaceGui.mouseMove_raised)
+		{ 
+			exseq_main_region_Panning();
+			p2 = ifaceGui.mouseMove_value;
+			ifaceView.ifaceViewOperationCallback->move((p2.x - p1.x), (p2.y - p1.y));
+			enseq_main_region_Panning_default();
+			react(0);
+			transitioned_after = 0;
+		}  else
+		{
+			if (ifaceGui.mouseUp_raised)
+			{ 
+				exseq_main_region_Panning();
+				ifaceView.ifaceViewOperationCallback->cursorArrow();
+				enseq_main_region_Normal_default();
+				react(0);
+				transitioned_after = 0;
+			} 
+		}
+	} 
+	/* If no transition was taken then execute local reactions */
+	if ((transitioned_after) == (transitioned_before))
+	{ 
+		transitioned_after = react(transitioned_before);
+	} 
+	return transitioned_after;
+}
+
 void MouseSelect::clearInEvents() {
 	ifaceGui.onSelect_raised = false;
 	ifaceGui.onDisable_raised = false;
@@ -504,6 +578,11 @@ void MouseSelect::microStep() {
 		case main_region_Moving :
 		{
 			main_region_Moving_react(-1);
+			break;
+		}
+		case main_region_Panning :
+		{
+			main_region_Panning_react(-1);
 			break;
 		}
 		default: break;

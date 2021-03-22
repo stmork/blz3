@@ -98,6 +98,7 @@ namespace mouseselect_events
 #define SCVI_MAIN_REGION_NORMAL 0
 #define SCVI_MAIN_REGION_SELECTION 0
 #define SCVI_MAIN_REGION_MOVING 0
+#define SCVI_MAIN_REGION_PANNING 0
 
 
 class MouseSelect : public sc::StatemachineInterface
@@ -113,10 +114,11 @@ public:
 		MouseSelect_last_state,
 		main_region_Normal,
 		main_region_Selection,
-		main_region_Moving
+		main_region_Moving,
+		main_region_Panning
 	} MouseSelectStates;
 
-	static const sc_integer numStates = 3;
+	static const sc_integer numStates = 4;
 
 	//! Inner class for gui interface scope.
 	class Gui
@@ -197,6 +199,9 @@ public:
 
 
 
+
+
+
 		//! Inner class for view interface scope operation callbacks.
 		class OperationCallback
 		{
@@ -209,9 +214,15 @@ public:
 
 			virtual void hide() = 0;
 
+			virtual void cursorPanning() = 0;
+
+			virtual void cursorArrow() = 0;
+
 			virtual void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
 
 			virtual void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
+
+			virtual void move(int32_t dx, int32_t dy) = 0;
 
 
 		};
@@ -311,20 +322,24 @@ private:
 	// prototypes of all internal functions
 
 	void enact_main_region_Moving();
+	void enact_main_region_Panning();
 	void exact_main_region_Moving();
 	void enseq_main_region_Normal_default();
 	void enseq_main_region_Selection_default();
 	void enseq_main_region_Moving_default();
+	void enseq_main_region_Panning_default();
 	void enseq_main_region_default();
 	void exseq_main_region_Normal();
 	void exseq_main_region_Selection();
 	void exseq_main_region_Moving();
+	void exseq_main_region_Panning();
 	void exseq_main_region();
 	void react_main_region__entry_Default();
 	sc_integer react(const sc_integer transitioned_before);
 	sc_integer main_region_Normal_react(const sc_integer transitioned_before);
 	sc_integer main_region_Selection_react(const sc_integer transitioned_before);
 	sc_integer main_region_Moving_react(const sc_integer transitioned_before);
+	sc_integer main_region_Panning_react(const sc_integer transitioned_before);
 	void clearInEvents();
 	void microStep();
 	void runCycle();

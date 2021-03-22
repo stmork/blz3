@@ -194,6 +194,16 @@ void QB3OpenGLWidget::hide()
 	rubber_band.hide();
 }
 
+void QB3OpenGLWidget::cursorPanning()
+{
+	setCursor(Qt::ClosedHandCursor);
+}
+
+void QB3OpenGLWidget::cursorArrow()
+{
+	setCursor(Qt::ArrowCursor);
+}
+
 void QB3OpenGLWidget::setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
 	QRect    rect(QPoint(x1, y1), QPoint(x2, y2));
@@ -206,6 +216,12 @@ void QB3OpenGLWidget::select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 	m_View.b3Select(
 		b3_f64(x1) / m_xWinSize, b3_f64(y1) / m_yWinSize,
 		b3_f64(x2) / m_xWinSize, b3_f64(y2) / m_yWinSize);
+	update();
+}
+
+void QB3OpenGLWidget::move(int32_t dx, int32_t dy)
+{
+	m_View.b3Move(b3_f64(-dx) / m_xWinSize, b3_f64(dy) / m_yWinSize);
 	update();
 }
 
