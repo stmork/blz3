@@ -174,17 +174,26 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
+
 /* Define to 1 if you have the `strchr' function. */
 #undef HAVE_STRCHR
 
 /* Is strerror() available? */
 #undef HAVE_STRERROR
 
+/* Define to 1 if you have the `stricmp' function. */
+#undef HAVE_STRICMP
+
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
 
 /* Define to 1 if you have the `strstr' function. */
 #undef HAVE_STRSTR

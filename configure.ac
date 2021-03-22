@@ -55,7 +55,7 @@ AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
 AC_LANG_PUSH(C++)
 AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
 
-AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strchr strerror strstr])
+AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[
