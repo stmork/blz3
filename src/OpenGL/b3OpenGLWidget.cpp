@@ -163,7 +163,7 @@ void QB3OpenGLWidget::resizeGL(int xSize, int ySize)
 {
 	B3_METHOD;
 
-	m_View.b3SetupView(xWinSize = xSize, yWinSize = ySize);
+	m_View.b3SetupView(m_xWinSize = xSize, m_yWinSize = ySize);
 }
 
 void QB3OpenGLWidget::paintGL()
@@ -176,7 +176,7 @@ void QB3OpenGLWidget::paintGL()
 	m_Context.b3StartDrawing();
 	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
-	m_View.b3SetupView(xWinSize, yWinSize);
+	m_View.b3SetupView(m_xWinSize, m_yWinSize);
 	m_Scene->b3Draw(&m_Context);
 	if (!m_View.b3IsViewMode(B3_VIEW_3D))
 	{
@@ -204,8 +204,8 @@ void QB3OpenGLWidget::setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y
 void QB3OpenGLWidget::select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
 	m_View.b3Select(
-		b3_f64(x1) / xWinSize, b3_f64(y1) / yWinSize,
-		b3_f64(x2) / xWinSize, b3_f64(y2) / yWinSize);
+		b3_f64(x1) / m_xWinSize, b3_f64(y1) / m_yWinSize,
+		b3_f64(x2) / m_xWinSize, b3_f64(y2) / m_yWinSize);
 	update();
 }
 

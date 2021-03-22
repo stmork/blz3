@@ -81,7 +81,7 @@ private:
 	b3RenderView          m_View;
 	b3_bool               m_AllLights = true;
 	b3_bool               m_SpotLight = true;
-	b3_res                xWinSize, yWinSize;
+	b3_res                m_xWinSize, m_yWinSize;
 	b3_vector             m_Lower, m_Upper;
 
 	friend class QB3OpenGLScrollArea;
