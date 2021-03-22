@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.69)
-AC_INIT(blz3, 3.1.1, blz3-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 3.1.2, blz3-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -55,7 +55,7 @@ AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
 AC_LANG_PUSH(C++)
 AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
 
-AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strchr strerror strstr])
+AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[

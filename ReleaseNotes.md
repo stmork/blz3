@@ -30,3 +30,7 @@ Version 3.1, since 2021/02/27
 
 Version 3.1.1
 * First merge into master branch.
+* Added scrollbar support.
+
+Version 3.1.2
+* Optimized for Jenkins Build.
