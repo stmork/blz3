@@ -16,6 +16,7 @@
 #define QB3OPENGLWIDGET_H
 
 #include <QOpenGLWidget>
+#include <QRubberBand>
 
 #include <blz3/raytrace/b3ShapeRenderContext.h>
 #include <blz3/raytrace/b3RenderLight.h>
@@ -62,12 +63,16 @@ protected:
 	void resizeGL(int width, int height) override;
 	void paintGL() override;
 
-	void drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
+	void show() override;
+	void hide() override;
+	void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
 	void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override;
 	bool is3D() override;
 
 private:
 	void b3SetLights();
+
+	QRubberBand           rubber_band;
 
 	b3Scene       *       m_Scene = nullptr;
 	b3CameraVolume    *   m_CameraVolume = nullptr;

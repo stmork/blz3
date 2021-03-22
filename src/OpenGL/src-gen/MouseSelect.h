@@ -194,6 +194,8 @@ class MouseSelect : public sc::StatemachineInterface
 				
 				
 				
+				
+				
 				//! Inner class for view interface scope operation callbacks.
 				class OperationCallback
 				{
@@ -202,7 +204,11 @@ class MouseSelect : public sc::StatemachineInterface
 						
 						virtual sc_boolean is3D() = 0;
 						
-						virtual void drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
+						virtual void show() = 0;
+						
+						virtual void hide() = 0;
+						
+						virtual void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
 						
 						virtual void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
 						

@@ -20,7 +20,8 @@
 #include "b3OpenGLWidget.h"
 #include "b3CameraVolume.h"
 
-QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) : QOpenGLWidget(parent)
+QB3OpenGLWidget::QB3OpenGLWidget(QWidget * parent) :
+	QOpenGLWidget(parent), rubber_band(QRubberBand::Rectangle, this)
 {
 }
 
@@ -183,12 +184,21 @@ void QB3OpenGLWidget::paintGL()
 	}
 }
 
-void QB3OpenGLWidget::drawRect(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+void QB3OpenGLWidget::show()
 {
-	QPainter painter(this);
+	rubber_band.show();
+}
 
-	painter.setPen(QColor(0xff1144));
-	painter.drawRect(x1, y1, x2, y2);
+void QB3OpenGLWidget::hide()
+{
+	rubber_band.hide();
+}
+
+void QB3OpenGLWidget::setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+{
+	QRect    rect(QPoint(x1, y1), QPoint(x2, y2));
+
+	rubber_band.setGeometry(rect.normalized());
 }
 
 void QB3OpenGLWidget::select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)

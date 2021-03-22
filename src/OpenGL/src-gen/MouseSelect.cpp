@@ -281,14 +281,14 @@ void MouseSelect::setP2(SCT_point value)
 void MouseSelect::enact_main_region_Moving()
 {
 	/* Entry action for state 'Moving'. */
-	ifaceView.ifaceViewOperationCallback->drawRect(p1.x, p1.y, p2.x, p2.y);
+	ifaceView.ifaceViewOperationCallback->setRectangle(p1.x, p1.y, p2.x, p2.y);
 }
 
 /* Exit action for state 'Moving'. */
 void MouseSelect::exact_main_region_Moving()
 {
 	/* Exit action for state 'Moving'. */
-	ifaceView.ifaceViewOperationCallback->drawRect(p1.x, p1.y, p2.x, p2.y);
+	ifaceView.ifaceViewOperationCallback->setRectangle(p1.x, p1.y, p2.x, p2.y);
 }
 
 /* 'default' enter sequence for state Normal */
@@ -430,6 +430,7 @@ sc_integer MouseSelect::main_region_Selection_react(const sc_integer transitione
 				exseq_main_region_Selection();
 				p1 = ifaceGui.mouseDown_value;
 				p2 = ifaceGui.mouseDown_value;
+				ifaceView.ifaceViewOperationCallback->show();
 				enseq_main_region_Moving_default();
 				react(0);
 				transitioned_after = 0;
@@ -454,6 +455,7 @@ sc_integer MouseSelect::main_region_Moving_react(const sc_integer transitioned_b
 			exseq_main_region_Moving();
 			ifaceGui.selectionEnd_observable.next();
 			ifaceGui.selectionEnd_raised = true;
+			ifaceView.ifaceViewOperationCallback->hide();
 			ifaceView.ifaceViewOperationCallback->select(p1.x, p1.y, p2.x, p2.y);
 			enseq_main_region_Normal_default();
 			react(0);
