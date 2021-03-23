@@ -11,7 +11,6 @@ export CXXFLAGS=""
 export CPPFLAGS=""
 export JOBS=4
 
-test -e src/Makefile && make distclean
 make config depend
 
 cd src
