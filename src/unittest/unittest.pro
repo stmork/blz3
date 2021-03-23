@@ -43,7 +43,7 @@ SOURCES += \
 	b3MatrixTest.cc \
 	b3PathTest.cc \
 	b3RandomTest.cc \
-	b3SelfTestSuite.cpp \
+	b3SelfTestSuite.cc \
 	b3SkeletonTest.cc \
 	b3SplineTest.cc \
 	b3TimeTest.cc \
