@@ -81,7 +81,7 @@ void b3InfoTGA::b3Write()
 					i++;
 				}
 
-				m_SaveData[0] = 128 | (i & 0x7f);
+				m_SaveData[0] = 128 |  (i & 0x7f);
 				m_SaveData[1] =  a        & 0xff;
 				m_SaveData[2] = (a >>  8) & 0xff;
 				m_SaveData[3] = (a >> 16) & 0xff;
@@ -92,7 +92,8 @@ void b3InfoTGA::b3Write()
 				i = 1;
 				u = t + i + 1;
 				m_SaveIndex = 0;
-				while ((m_ThisRow[u - 1] != m_ThisRow[u]) && (u < m_Tx->xSize) && (i < 127))
+				while ((u < m_Tx->xSize) && (i < 127) &&
+					(m_ThisRow[u - 1] != m_ThisRow[u]))
 				{
 					i++;
 					u++;
