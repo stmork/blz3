@@ -278,7 +278,9 @@ public:
 	{
 		_MM_SET_EXCEPTION_STATE(0);
 		__m128d s = _mm_sqrt_pd(SSE_PD_LOAD(a.v));
-		if (_mm_getcsr() & _MM_EXCEPT_INVALID)
+		unsigned int csr = _mm_getcsr();
+
+		if (csr & _MM_EXCEPT_INVALID)
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
