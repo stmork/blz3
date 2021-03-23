@@ -66,6 +66,7 @@ void b3InfoTGA::b3Write()
 	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		m_Tx->b3GetRow(m_ThisRow, y);
+
 		t = 0;
 		while (t < m_Tx->xSize)
 		{
@@ -89,9 +90,9 @@ void b3InfoTGA::b3Write()
 			else
 			{
 				i = 1;
-				u = t + i;
+				u = t + i + 1;
 				m_SaveIndex = 0;
-				while ((m_ThisRow[u] != m_ThisRow[u + 1]) && (u < m_Tx->xSize) && (i < 127))
+				while ((m_ThisRow[u - 1] != m_ThisRow[u]) && (u < m_Tx->xSize) && (i < 127))
 				{
 					i++;
 					u++;
@@ -101,9 +102,9 @@ void b3InfoTGA::b3Write()
 				while (i != 0)
 				{
 					a = m_ThisRow[t++];
-					m_SaveData[1] =  a        & 0xff;
-					m_SaveData[2] = (a >>  8) & 0xff;
-					m_SaveData[3] = (a >> 16) & 0xff;
+					m_SaveData[0] =  a        & 0xff;
+					m_SaveData[1] = (a >>  8) & 0xff;
+					m_SaveData[2] = (a >> 16) & 0xff;
 					m_File.b3Write(m_SaveData, 3);
 					i--;
 				}

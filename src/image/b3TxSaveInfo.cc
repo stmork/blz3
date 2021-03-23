@@ -33,7 +33,7 @@ b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_
 {
 	m_Tx = tx;
 	m_Tx->b3Name(filename);
-	memset(m_SaveBuffer, 0, sizeof(m_SaveBuffer));
+	bzero(m_SaveBuffer, sizeof(m_SaveBuffer));
 
 	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
 	if (m_ThisRow == nullptr)
