@@ -25,7 +25,7 @@ make cppcheck
 
 bin/brt3 -n -s 512 data/*
 cd src/unittest
-./unittest
+make valgrind
 cd ../..
 
 make lcov
