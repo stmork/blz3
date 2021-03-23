@@ -31,6 +31,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3PathTest.cc\
 	b3MatrixTest.cc\
 	b3RandomTest.cc\
+	b3SelfTestSuite.cc\
 	b3SplineTest.cc\
 	b3VectorTest.cc\
 	b3WorldTest.cc
@@ -49,6 +50,7 @@ BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3MatrixTest.o\
 	b3PathTest.o\
 	b3RandomTest.o\
+	b3SelfTestSuite.o\
 	b3SplineTest.o\
 	b3VectorTest.o\
 	b3WorldTest.o

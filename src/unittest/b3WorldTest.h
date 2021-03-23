@@ -20,6 +20,7 @@
 
 #include "blz3/base/b3World.h"
 #include "blz3/system/b3File.h"
+#include "blz3/raytrace/b3Scene.h"
 
 #ifdef HAVE_LIBCPPUNIT
 
@@ -43,6 +44,7 @@ public:
 	void setUp() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+		b3RaytracingItems::b3Register();
 	}
 
 	void tearDown() override

@@ -21,6 +21,7 @@ HEADERS += \
 	b3MatrixTest.h \
 	b3PathTest.h \
 	b3RandomTest.h \
+	b3SelfTestSuite.h \
 	b3SkeletonTest.h \
 	b3SplineTest.h \
 	b3TimeTest.h \
@@ -42,6 +43,7 @@ SOURCES += \
 	b3MatrixTest.cc \
 	b3PathTest.cc \
 	b3RandomTest.cc \
+	b3SelfTestSuite.cpp \
 	b3SkeletonTest.cc \
 	b3SplineTest.cc \
 	b3TimeTest.cc \
@@ -49,4 +51,4 @@ SOURCES += \
 	b3WorldTest.cc \
 	basetest.cc
 
-LIBS += -lb3Base -lb3Image -lb3SystemUnix -lb3System -lcppunit -ljpeg -ltiff -lGLU -ldl
+LIBS += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System -lcppunit -ljpeg -ltiff -lGLU -ldl

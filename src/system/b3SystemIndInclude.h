@@ -16,6 +16,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_SYSTEM_SYSTEMINDINCLUDE_H
 #define B3_SYSTEM_SYSTEMINDINCLUDE_H
 

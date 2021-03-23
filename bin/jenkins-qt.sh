@@ -29,4 +29,3 @@ cd src/unittest
 cd ../..
 
 make lcov
-make documentation

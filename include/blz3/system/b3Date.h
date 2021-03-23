@@ -26,18 +26,20 @@
 // week days
 enum b3_week_day
 {
-	B3_MONDAY = 1,
+	B3_SUNDAY = 0,
+	B3_MONDAY,
 	B3_TUESDAY,
 	B3_WEDNESDAY,
 	B3_THURSDAY,
 	B3_FRIDAY,
 	B3_SATURDAY,
-	B3_SUNDAY
+	B3_WEEKDAY_COUNT
 };
 
 // months
 enum b3_month
 {
+	B3_NONE = 0,
 	B3_JANUARY = 1,
 	B3_FEBRUARY,
 	B3_MARCH,
@@ -84,9 +86,9 @@ class B3_PLUGIN b3Date
 public:
 	// date
 	unsigned long  year;     //!< The year.
-	unsigned short month;    //!< The month.
+	b3_month       month;    //!< The month.
 	unsigned short day;      //!< The day of month.
-	unsigned short wday;     //!< The day of week.
+	b3_week_day    wday;     //!< The day of week.
 
 	// time
 	unsigned short hour;     //!< The hour.
@@ -119,7 +121,7 @@ public:
 	 * @param year  The year to set.
 	 * @throws b3DateException
 	 */
-	b3Date(unsigned short day, unsigned short month, unsigned long year);
+	b3Date(unsigned short day, b3_month month, unsigned long year);
 
 	/**
 	 * This method sets the date values to the actual time point.
@@ -134,7 +136,7 @@ public:
 	 * @param year  The year to set.
 	 * @return Success.
 	 */
-	bool       b3SetDate(unsigned short day, unsigned short month, unsigned long year);
+	bool       b3SetDate(unsigned short day, b3_month month, unsigned long year);
 
 	/**
 	 * This method sets the date values to the days time point.
@@ -277,10 +279,11 @@ private:
 	void b3LocalTime();
 	void b3GMTime();
 	void b3DiffTime();
-	long b3Check(
-		unsigned short, unsigned short, unsigned short,
-		unsigned short, unsigned short, unsigned long,
-		unsigned short, bool);
+	long b3Check(unsigned short, unsigned short, unsigned short,
+		unsigned short, b3_month, unsigned long,
+		b3_week_day, bool);
+
+	void b3Dump(const long code);
 };
 
 #endif
