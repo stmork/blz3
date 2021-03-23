@@ -37,7 +37,7 @@ void b3Material::b3Register()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering materials...\n");
 #ifndef DEBUG_MATERIAL
-	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
+	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       NORMAL_MATERIAL);
 #endif
 	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
 	b3Item::b3Register(&b3MatChess::b3StaticInit,        &b3MatChess::b3StaticInit,        CHESS);

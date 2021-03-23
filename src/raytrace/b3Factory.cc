@@ -80,8 +80,8 @@ b3Scene * b3Factory::b3CreateGlobal(b3_u32 class_type)
 	b3Sphere   *  big    = new b3Sphere(SPHERE);
 	b3Area    *   area   = new b3Area(AREA);
 	b3MatChess  * chess  = new b3MatChess(CHESS);
-	b3MatNormal * mirror = new b3MatNormal(MATERIAL);
-	b3MatNormal * glass  = new b3MatNormal(MATERIAL);
+	b3MatNormal * mirror = new b3MatNormal(NORMAL_MATERIAL);
+	b3MatNormal * glass  = new b3MatNormal(NORMAL_MATERIAL);
 	b3Light   *   light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera = new b3CameraPart(CAMERA);
 	b3_vector     eye, view;
@@ -229,7 +229,7 @@ b3Scene * b3Factory::b3CreateBump(b3Base<b3Item> ** ptrBumpHead, b3_u32 class_ty
 	b3Ellipsoid * big   = new b3Ellipsoid(ELLIPSOID);
 	b3Area    *   area  = new b3Area(AREA);
 	b3MatChess  * chess = new b3MatChess(CHESS);
-	b3MatNormal * mat   = new b3MatNormal(MATERIAL);
+	b3MatNormal * mat   = new b3MatNormal(NORMAL_MATERIAL);
 	b3Light   *   light = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera;
 	b3_matrix     transform;

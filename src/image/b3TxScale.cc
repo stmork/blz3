@@ -280,9 +280,7 @@ const b3_u08 b3_tx_mask::TxMaskRight[8] =
 };
 
 #ifndef SLOW
-// NOTE:
-// Now the fast part begins here...
-
+// NOTE: Now the fast part begins here...
 // If a line is to be scaled up (means: destination is bigger)...
 void b3Tx::b3ComputeLineBigger(
 	b3_count * TxRowCounter,

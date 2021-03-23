@@ -450,7 +450,7 @@ b3_bool b3Shape::b3GetImage(b3Tx * image) const
 		item  = item->Succ)
 	{
 		type   = item->b3GetClassType();
-		result = ((type != MAT_NORMAL) && (type != CHESS));
+		result = ((type != NORMAL_MATERIAL) && (type != CHESS));
 	}
 
 	if (result)

@@ -19,6 +19,7 @@
 #define B3_SPLINE_TEST_H
 
 #include "blz3/base/b3Spline.h"
+#include "b3TestMacros.h"
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
@@ -61,10 +62,10 @@ public:
 		b = a;
 		CPPUNIT_ASSERT(b.b3InitCurve(3, 10, false));
 
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(10), a.b3GetSegmentCount());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(7), b.b3GetSegmentCount());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(10), a.b3GetSegmentKnotCount());
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(8), b.b3GetSegmentKnotCount());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 10, a.b3GetSegmentCount());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count,  7, b.b3GetSegmentCount());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 10, a.b3GetSegmentKnotCount());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count,  8, b.b3GetSegmentKnotCount());
 	}
 
 	void testClosed()

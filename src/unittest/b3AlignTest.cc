@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3AlignTest.h"
+#include "b3TestMacros.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,8 +35,6 @@
 #include <cstdalign>
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3AlignTest);
-
-#define CPPUNIT_ASSERT_TYPED_EQUAL(t,e,a) CppUnit::assertEquals<t>((e), (a), CPPUNIT_SOURCELINE(), "")
 
 void b3AlignTest::setUp()
 {

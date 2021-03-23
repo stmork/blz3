@@ -19,13 +19,12 @@
 #define B3_VECTOR_TEST_H
 
 #include "blz3/base/b3Vector.h"
+#include "b3TestMacros.h"
 
 #ifdef HAVE_LIBCPPUNIT
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#define CPPUNIT_ASSERT_TYPED_EQUAL(t,e,a) CppUnit::assertEquals<t>((e), (a), CPPUNIT_SOURCELINE(), "")
 
 template<typename T, b3_loop dim> class b3VectorTest : public CppUnit::TestFixture
 {

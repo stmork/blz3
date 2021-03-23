@@ -52,10 +52,10 @@ class b3ImageTest : public CppUnit::TestFixture
 public:
 	void setUp() override
 	{
-		b3Color       row[TEST_IMG_XMAX];
+		b3Color        row[TEST_IMG_XMAX];
 		b3_pkd_color * tRow;
-		b3_color   *  rRow;
-		b3_res width   = TEST_IMG_XMAX >> 3;
+		b3_color   *   rRow;
+		b3_res         width   = TEST_IMG_XMAX >> 3;
 
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		m_TxPallColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,   8); // 8 bit palette entry

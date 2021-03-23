@@ -642,7 +642,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 
 	size += len;
 
-	Mat = new b3MatNormal(MATERIAL);
+	Mat = new b3MatNormal(NORMAL_MATERIAL);
 	if (Mat != nullptr)
 	{
 		name[0] = 0;

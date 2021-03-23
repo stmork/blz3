@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3MatrixTest.h"
+#include "b3TestMacros.h"
 
 /*************************************************************************
 **                                                                      **
@@ -344,7 +345,7 @@ void b3MatrixTest::testMatrix()
 	CPPUNIT_ASSERT(b3Matrix::b3IsUnitMatrix(&am));
 	CPPUNIT_ASSERT_EQUAL(&bm, b3Matrix::b3Inverse(&am, &bm));
 	am.m11 = 0;
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_matrix *>(nullptr), b3Matrix::b3Inverse(&am, &cm));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_matrix *, nullptr, b3Matrix::b3Inverse(&am, &cm));
 	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Transport(&am, &dm));
 	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Move(nullptr, &dm, &as));
 	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Move(nullptr, &dm, 1, 2, 3));

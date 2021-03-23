@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3FFTTest.h"
+#include "b3TestMacros.h"
 
 /*************************************************************************
 **                                                                      **
@@ -70,23 +71,23 @@ void b3FFTTest::testFFT()
 	CPPUNIT_ASSERT(fft.b3GetBuffer(&tx, 1.0));
 	tx.b3SaveJPEG("fft_buffer.jpg");
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(0), fft.b3Log2(1));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(1), fft.b3Log2(2));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(1), fft.b3Log2(3));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(2), fft.b3Log2(4));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(2), fft.b3Log2(5));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(2), fft.b3Log2(6));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(2), fft.b3Log2(7));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(3), fft.b3Log2(8));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 0, fft.b3Log2(1));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 1, fft.b3Log2(2));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 1, fft.b3Log2(3));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, fft.b3Log2(4));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, fft.b3Log2(5));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, fft.b3Log2(6));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, fft.b3Log2(7));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 3, fft.b3Log2(8));
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(1), fft.b3PowOf2(1));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(2), fft.b3PowOf2(2));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(4), fft.b3PowOf2(3));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(4), fft.b3PowOf2(4));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(8), fft.b3PowOf2(5));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(8), fft.b3PowOf2(6));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(8), fft.b3PowOf2(7));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_loop>(8), fft.b3PowOf2(8));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 1, fft.b3PowOf2(1));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 2, fft.b3PowOf2(2));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 4, fft.b3PowOf2(3));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 4, fft.b3PowOf2(4));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 8, fft.b3PowOf2(5));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 8, fft.b3PowOf2(6));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 8, fft.b3PowOf2(7));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_loop, 8, fft.b3PowOf2(8));
 }
 
 void b3FFTTest::testSample()

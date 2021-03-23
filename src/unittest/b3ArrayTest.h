@@ -19,6 +19,7 @@
 #define B3_ARRAY_TEST_H
 
 #include "blz3/base/b3Array.h"
+#include "b3TestMacros.h"
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
@@ -65,7 +66,7 @@ public:
 		}
 
 		array.b3Clear();
-		CPPUNIT_ASSERT_EQUAL(static_cast<b3_count>(0), array.b3GetCount());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 0, array.b3GetCount());
 
 		b3Array<int> integers { 7, 34, 1, 4, 7643, 2, 324 };
 

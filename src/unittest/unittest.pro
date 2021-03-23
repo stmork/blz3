@@ -4,8 +4,6 @@ TEMPLATE = app
 
 include(../common.pri)
 
-LIBS += -L$$BLZ3_LIB
-
 HEADERS += \
 	b3AlignTest.h \
 	b3ArrayTest.h \
@@ -51,9 +49,11 @@ SOURCES += \
 	b3WorldTest.cc \
 	basetest.cc
 
-LIBS += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System -lcppunit -ljpeg -ltiff -lGLU -ldl
+LIBS        += -L$$BLZ3_LIB
+LIBS        += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System
+LIBS        += -lcppunit -ljpeg -ltiff -lGLU -ldl
 QMAKE_CLEAN += *.jpg *.ps *.tiff *.tga *.rgb8 *.exr
-QMAKE_CLEAN += test*.xml
+QMAKE_CLEAN += test*.xml test*.bwd unittest
 
 #####################################################################
 #

@@ -160,7 +160,7 @@ b3_bool b3TGFReader::b3ProcessMaterial(b3Shape * shape, b3_index index)
 	{
 		if (m_Materials[i].m_Index == index)
 		{
-			b3MatNormal * material = new b3MatNormal(MATERIAL);
+			b3MatNormal * material = new b3MatNormal(NORMAL_MATERIAL);
 
 			material->m_Diffuse = m_Materials[i].m_Color;
 			shape->b3GetMaterialHead()->b3Append(material);

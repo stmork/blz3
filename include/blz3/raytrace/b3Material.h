@@ -33,7 +33,7 @@
 *************************************************************************/
 
 #define CLASS_MATERIAL         0x40000000
-#define TYPE_NORMMATERIAL      0x00000001
+#define TYPE_MAT_NORMAL        0x00000001
 #define TYPE_MAT_TEXTURE       0x00000002
 #define TYPE_MAT_CHESS         0x00000003
 #define TYPE_MAT_WRAPTEXTURE   0x00000004
@@ -46,9 +46,7 @@
 #define TYPE_MAT_CAR_PAINT     0x0000000b
 #define TYPE_MAT_THIN_FILM     0x0000000c
 
-// WARNING: GL uses define MATERIAL, too!
-#define MAT_NORMAL          (CLASS_MATERIAL|TYPE_NORMMATERIAL)
-#define MATERIAL            (CLASS_MATERIAL|TYPE_NORMMATERIAL)
+#define NORMAL_MATERIAL     (CLASS_MATERIAL|TYPE_MAT_NORMAL)
 #define TEXTURE             (CLASS_MATERIAL|TYPE_MAT_TEXTURE)
 #define CHESS               (CLASS_MATERIAL|TYPE_MAT_CHESS)
 #define WRAPTEXTURE         (CLASS_MATERIAL|TYPE_MAT_WRAPTEXTURE)

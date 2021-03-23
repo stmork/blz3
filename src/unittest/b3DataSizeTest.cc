@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3DataSizeTest.h"
+#include "b3TestMacros.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,6 @@
 #ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3DataSizeTest);
-
-#define CPPUNIT_ASSERT_SIZET_EQUAL(e,a) CppUnit::assertEquals<size_t>((e),   (a), CPPUNIT_SOURCELINE(), "")
-#define CPPUNIT_ASSERT_U32_EQUAL(e,a)   CppUnit::assertEquals<uint32_t>((e), (a), CPPUNIT_SOURCELINE(), "")
 
 void b3DataSizeTest::setUp()
 {
@@ -94,7 +92,7 @@ void b3DataSizeTest::testDataSize()
 	CPPUNIT_ASSERT_SIZET_EQUAL(8, sizeof(b3_f64));
 	CPPUNIT_ASSERT(sizeof(b3_f96) >= 10);
 
-	CPPUNIT_ASSERT(sizeof(b3_ptr) == sizeof(ptr));
+	CPPUNIT_ASSERT_EQUAL(sizeof(b3_ptr), sizeof(ptr));
 }
 
 void b3DataSizeTest::testMemory()
@@ -132,11 +130,11 @@ void b3DataSizeTest::testMemory()
 	{
 		mask |= ptr[i];
 	}
-	CPPUNIT_ASSERT_EQUAL(mask, static_cast<b3_u08>(0));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u08, mask, 0);
 
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
-	CPPUNIT_ASSERT_EQUAL(static_cast<void *>(nullptr), ptr2);
+	CPPUNIT_ASSERT_TYPED_EQUAL(void *, nullptr, ptr2);
 	ptr1 = nullptr;
 }
 

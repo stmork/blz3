@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3ColorTest.h"
+#include "b3TestMacros.h"
 
 /*************************************************************************
 **                                                                      **
@@ -78,7 +79,7 @@ void b3ColorTest::test()
 
 	b3_offset  offset = reinterpret_cast<b3_offset>(fPtr) & 0xf;
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_offset>(0), offset);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, 0, offset);
 #endif
 
 	color = B3_WHITE;
@@ -179,9 +180,9 @@ void b3ColorTest::test()
 	CPPUNIT_ASSERT(ac.b3IsGreater(bc));
 	CPPUNIT_ASSERT(bc.b3IsGreater(ac));
 
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_pkd_color>(0xbf3f7fff), static_cast<b3_pkd_color>(ac));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_pkd_color>(0x3f3f3f7f), static_cast<b3_pkd_color>(bc));
-	CPPUNIT_ASSERT_EQUAL(static_cast<b3_pkd_color>(0x2f0f1f3f), static_cast<b3_pkd_color>(color));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xbf3f7fff, ac);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x3f3f3f7f, bc);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x2f0f1f3f, color);
 }
 
 #endif

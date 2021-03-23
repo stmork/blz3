@@ -136,7 +136,6 @@ b3_count b3BBox::b3Count() const
 **                                                                      **
 *************************************************************************/
 
-// FIXME: This should renamed into b3SetupVertexMemory
 void b3Scene::b3SetupVertexMemory(b3RenderContext * context)
 {
 	context->glVertexCount = 0;

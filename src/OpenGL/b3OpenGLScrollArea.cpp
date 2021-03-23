@@ -198,10 +198,9 @@ void QB3OpenGLScrollArea::update(QScrollBar * bar, QB3BarInfo & info)
 {
 	/* https://stackoverflow.com/questions/49148073/how-to-reverse-a-qsliders-range
 	 *
-	 * NOTE:
-	 * The minimum has to be always smaller than the maximum. The range is not
-	 * inverted. The UI orientation is inverted so there is no need to
-	 * invert the controls.
+	 * NOTE: The minimum has to be always smaller than the maximum.
+	 * The range is not inverted. The UI orientation is inverted so there is no
+	 * need to invert the controls.
 	 */
 	bar->setInvertedAppearance(info.bar_inv);
 	bar->setInvertedControls(info.bar_inv);

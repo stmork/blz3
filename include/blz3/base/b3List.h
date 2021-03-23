@@ -728,9 +728,8 @@ public:
 		// So we are going step by step from First and Last.
 		// If both paths hit in the same node we are in
 		// the middle of the list.
-		// NOTE:
-		// This is the inefficient part of this algorithm
-		// because it is O(n).
+		//
+		// NOTE: This is the inefficient part of this algorithm because it is O(n).
 		start = First;
 		end   = Last;
 		while (start->Succ != end)
@@ -750,8 +749,8 @@ public:
 
 		// DIVIDE
 		// Now we know the middle of the lists: Split It!
-		// NOTE:
-		// This is very efficient: O(1)
+		//
+		// NOTE: This is very efficient: O(1)
 		Right.Class = Class;
 		Right.First = end;
 		Right.Last  = Last;
@@ -790,8 +789,8 @@ public:
 
 		// We have to append the rest of the second list
 		// to at the end of the first list.
-		// NOTE:
-		// This is even more efficient: O(1)
+		//
+		// NOTE: This is even more efficient: O(1)
 		if (end) /* append right list to left list */
 		{
 			start = Last;
