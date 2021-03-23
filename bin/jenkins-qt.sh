@@ -9,7 +9,7 @@ export OFLAGS="-O2"
 export CFLAGS=""
 export CXXFLAGS=""
 export CPPFLAGS=""
-export JOBS=4
+export JOBS=`getconf _NPROCESSORS_ONLN`
 
 make config depend
 
