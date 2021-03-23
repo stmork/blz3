@@ -19,6 +19,7 @@ qmake CONFIG+=debug CONFIG+=gcov -r
 rm */Makefile
 cd ..
 
+make -j ${JOBS} install
 make -j ${JOBS}
 make install
 make cppcheck
