@@ -2027,7 +2027,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	}
 }
 
-void b3Tx::b3ScaleUnfilteredFromColor(
+void b3Tx::b3ScaleUnfilteredFromTrueColor(
 	b3Tx   *   Tx,
 	b3_count * rIndex,
 	b3_count * cIndex)
@@ -2045,6 +2045,36 @@ void b3Tx::b3ScaleUnfilteredFromColor(
 		for (x = 0; x < xSize; x++)
 		{
 			*lDst++ = lSrc[num + rIndex[x]];
+		}
+	}
+}
+
+void b3Tx::b3ScaleUnfilteredFromHighColor(
+	b3Tx   *   Tx,
+	b3_count * rIndex,
+	b3_count * cIndex)
+{
+	b3_coord       x, y;
+	b3_count       num;
+	b3_u16 *       sSrc;
+	b3_pkd_color * lDst;
+
+	sSrc = Tx->b3GetHighColorData();
+	lDst = b3GetTrueColorData();
+
+	for (y = 0; y < ySize; y++)
+	{
+		num = cIndex[y] * Tx->xSize;
+		for (x = 0; x < xSize; x++)
+		{
+			const b3_u16       color = sSrc[num + rIndex[x]];
+			b3_pkd_color r,g,b;
+
+			r = (color & 0xf00) << 12;
+			g = (color & 0x0f0) <<  8;
+			b = (color & 0x00f) <<  4;
+
+			*lDst++ = r | g | b;
 		}
 	}
 }
@@ -2242,8 +2272,14 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 		b3ScaleUnfilteredFromBW(srcTx, rIndex, cIndex);
 		break;
 
+	case 12:
+	case 16:
+		b3ScaleUnfilteredFromHighColor(srcTx, rIndex, cIndex);
+		break;
+
 	case 24:
-		b3ScaleUnfilteredFromColor(srcTx, rIndex, cIndex);
+	case 32:
+		b3ScaleUnfilteredFromTrueColor(srcTx, rIndex, cIndex);
 		break;
 
 	case  64:

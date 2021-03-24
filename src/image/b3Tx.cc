@@ -928,19 +928,20 @@ inline void b3Tx::b3GetRGB4(
 	b3_pkd_color  * ColorLine,
 	const b3_coord  y) const
 {
-	b3_u16    *   Data = data;
+	b3_u16    *   sPtr = data;
 	b3_coord      x;
 	b3_pkd_color  Color;
 
-	Data += (xSize * y);
+	sPtr += (xSize * y);
 	for (x = 0; x < xSize; x++)
 	{
-		Color  = ((long)Data[0] & 0x0f00) << 12;
-		Color |= ((long)Data[0] & 0x00f0) <<  8;
-		Color |= ((long)Data[0] & 0x000f) <<  4;
-		ColorLine[0] = Color;
-		ColorLine++;
-		Data++;
+		b3_pkd_color src = *sPtr++;
+
+		Color  = (src & 0x0f00) << 12;
+		Color |= (src & 0x00f0) <<  8;
+		Color |= (src & 0x000f) <<  4;
+
+		*ColorLine++ = Color;
 	}
 }
 

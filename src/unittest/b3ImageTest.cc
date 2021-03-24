@@ -39,7 +39,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3ImageTest);
 
 const b3_res b3ImageTest::m_TestDepth[]
 {
-	1, 8, 16, 32, 128
+	1, 8, 24, 32, 128
 };
 
 void b3ImageTest::testTxData()
@@ -76,29 +76,24 @@ void b3ImageTest::testTxData()
 
 void b3ImageTest::testScaleUnfiltered()
 {
-	b3Tx src, dst;
-
-	for (b3_res src_depth : m_TestDepth)
+	for (b3_res depth : m_TestDepth)
 	{
-		b3Tx src;
+		b3Tx   src;
+		b3Tx   dst_smaller;
+		b3Tx   dst_bigger;
+		b3Path path;
 
-		src.b3AllocTx(50, 50, src_depth);
-		for (b3_res dst_depth : m_TestDepth)
-		{
-			b3Tx   dst_smaller;
-			b3Tx   dst_bigger;
-			b3Path path;
+		src.b3AllocTx(50, 50, depth);
 
-			path.b3Format("img_test_scale_us_%03ld-%03ld.jpg", src_depth, dst_depth);
-			dst_smaller.b3AllocTx(40, 40, dst_depth);
-			dst_smaller.b3Scale(&src);
-			dst_smaller.b3SaveImage(path);
+		path.b3Format("img_test_scale_us_%03ld.jpg", depth);
+		dst_smaller.b3AllocTx(40, 40, depth);
+		dst_smaller.b3Scale(&src);
+		dst_smaller.b3SaveImage(path);
 
-			path.b3Format("img_test_scale_ub_%03ld-%03ld.jpg", src_depth, dst_depth);
-			dst_bigger.b3AllocTx(70, 70, dst_depth);
-			dst_bigger.b3Scale(&src);
-			dst_bigger.b3SaveImage(path);
-		}
+		path.b3Format("img_test_scale_ub_%03ld.jpg", depth);
+		dst_bigger.b3AllocTx(70, 70, depth);
+		dst_bigger.b3Scale(&src);
+		dst_bigger.b3SaveImage(path);
 	}
 }
 

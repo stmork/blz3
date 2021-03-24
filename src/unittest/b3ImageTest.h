@@ -47,7 +47,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testWriteTGA);
 	CPPUNIT_TEST(testWriteRGB8);
 	CPPUNIT_TEST(testWritePS);
-//	CPPUNIT_TEST(testScaleUnfiltered);
+	CPPUNIT_TEST(testScaleUnfiltered);
 //	CPPUNIT_TEST(testScaleFiltered);
 	CPPUNIT_TEST(testTransToGrey);
 

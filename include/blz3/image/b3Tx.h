@@ -1191,7 +1191,8 @@ private:
 	void           b3ScaleUnfilteredFromBW(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	void           b3ScaleUnfilteredFromILBM(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	void           b3ScaleUnfilteredFromVGA(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleUnfilteredFromColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
+	void           b3ScaleUnfilteredFromHighColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
+	void           b3ScaleUnfilteredFromTrueColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	void           b3ScaleUnfilteredFromFloat(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	b3_index       b3ILBMPlaneValue(const b3_coord x, const b3_coord y) const;
 
