@@ -755,7 +755,7 @@ public:
 		b3_f64   sigma,
 		b3_f64   niveau,
 		b3_f64   slope,
-		b3Tx   * srcTx = nullptr);
+		b3Tx  *  srcTx = nullptr);
 
 	/**
 	 * This method filters each color component seperately. If the source
@@ -1185,7 +1185,7 @@ private:
 	void           b3ScaleFilteredFromVGA(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	void           b3VGAScaleToVGA(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	void           b3VGAScaleToRGB8(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleFilteredFromColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
+	void           b3ScaleFilteredFromTrueColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 	void           b3ScaleFilteredFromFloat(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
 
 	void           b3ScaleUnfilteredFromBW(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
