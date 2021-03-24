@@ -76,7 +76,7 @@ void b3InfoTGA::b3Write()
 			{
 				i = 0;
 				t++;
-				while ((a == m_ThisRow[t]) && (t < m_Tx->xSize) && (i < 127))
+				while ((t < m_Tx->xSize) && (a == m_ThisRow[t]) && (i < 127))
 				{
 					t++;
 					i++;
