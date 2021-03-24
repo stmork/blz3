@@ -2279,6 +2279,7 @@ void b3Tx::b3TransToGrey()
 	b3_tx_data     old;
 	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
+	b3_color *     fPtr;
 	b3_pkd_color * pPtr;
 	b3_size        newSize;
 	b3_coord       x, y;
@@ -2313,7 +2314,8 @@ void b3Tx::b3TransToGrey()
 	switch (type)
 	{
 	case B3_TX_ILBM:
-		data = old = cPtr;
+		old  = data;
+		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
@@ -2331,11 +2333,13 @@ void b3Tx::b3TransToGrey()
 		break;
 
 	case B3_TX_VGA:
+		old  = data;
+		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				const b3_pkd_color color = palette[*sPtr++];
+				const b3_pkd_color color = palette[*cPtr];
 
 				r = ((color & 0xff0000) >> 16) * 0.35;
 				g = ((color & 0x00ff00) >>  8) * 0.51;
@@ -2378,6 +2382,24 @@ void b3Tx::b3TransToGrey()
 				r = ((color & 0xff0000) >> 16) * 0.35;
 				g = ((color & 0x00ff00) >>  8) * 0.51;
 				b = ((color & 0x0000ff))       * 0.14;
+				*cPtr++ = (b3_u08)(r + b + g);
+			}
+		}
+		b3Free(old);
+		break;
+
+	case B3_TX_FLOAT:
+		fPtr = old = data;
+		data = cPtr;
+		for (y = 0; y < ySize; y++)
+		{
+			for (x = 0; x < xSize; x++)
+			{
+				const b3_color color = *fPtr++;
+
+				r = color.r * 0.35;
+				g = color.g * 0.51;
+				b = color.b * 0.14;
 				*cPtr++ = (b3_u08)(r + b + g);
 			}
 		}
