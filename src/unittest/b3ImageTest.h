@@ -47,7 +47,8 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testWriteTGA);
 	CPPUNIT_TEST(testWriteRGB8);
 	CPPUNIT_TEST(testWritePS);
-	CPPUNIT_TEST(testScale);
+	CPPUNIT_TEST(testScaleUnfiltered);
+	CPPUNIT_TEST(testScaleFiltered);
 	CPPUNIT_TEST(testTransToGrey);
 
 #ifdef BLZ3_USE_OPENEXR
@@ -145,7 +146,8 @@ public:
 #endif
 
 	void testTxData();
-	void testScale();
+	void testScaleUnfiltered();
+	void testScaleFiltered();
 	void testTransToGrey();
 };
 

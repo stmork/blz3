@@ -676,7 +676,7 @@ public:
 	void           b3GetColorMask(
 		b3_u08    *   mask,
 		b3_count      BytesPerRow,
-		b3_pkd_color  colorMask);
+		b3_pkd_color  colorMask) const;
 
 	/**
 	 * This method blits an image area from the source image into this image. The
@@ -749,9 +749,13 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool  b3TxGauss(
-		b3_coord xPos, b3_coord yPos,
-		b3_f64   scale, b3_f64 sigma, b3_f64 niveau, b3_f64 slope,
-		b3Tx    *    srcTx = nullptr);
+		b3_coord xPos,
+		b3_coord yPos,
+		b3_f64   scale,
+		b3_f64   sigma,
+		b3_f64   niveau,
+		b3_f64   slope,
+		b3Tx   * srcTx = nullptr);
 
 	/**
 	 * This method filters each color component seperately. If the source
@@ -780,10 +784,10 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool  b3TxContrast(
-		b3_f64        highlight,
-		b3_f64        shadow,
-		b3_f64        gamma,
-		b3Tx    *    srcTx = nullptr);
+		b3_f64  highlight,
+		b3_f64  shadow,
+		b3_f64  gamma,
+		b3Tx  * srcTx = nullptr);
 
 	/**
 	 * This method converts the three color channels seperately using the source
@@ -851,8 +855,10 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool        b3AddHist(
-		b3_coord xStart, b3_coord yStart,
-		b3_coord xStop, b3_coord yStop);
+		b3_coord xStart,
+		b3_coord yStart,
+		b3_coord xStop,
+		b3_coord yStop);
 
 	/**
 	 * This method returns true if most of the image is white. The ratio is given
@@ -861,7 +867,7 @@ public:
 	 * @return True if the image is mostly white.
 	 * @see b3SetWhiteRatio().
 	 */
-	b3_bool        b3IsWhite();
+	b3_bool        b3IsWhite() const;
 
 	/**
 	 * This method sets the white level for white iamge computation. This
@@ -881,7 +887,7 @@ public:
 	 * @param entries The resulting number of histogramme entries.
 	 * @return True on success.
 	 */
-	b3_bool        b3GetHistogramme(b3_count * buffer, b3_count & entries);
+	b3_bool        b3GetHistogramme(b3_count * buffer, b3_count & entries) const;
 
 	/**
 	 * This method transforms the image to a B/W image. The given threshold
@@ -961,7 +967,7 @@ public:
 	 * @return The resulting image file extension
 	 * @see b3_tx_filetype
 	 */
-	const char         *         b3GetExt();
+	const char         *         b3GetExt() const;
 
 	/**
 	 * This method loads an image from the given image file. The file type is determined

@@ -377,7 +377,7 @@ b3_tx_filetype b3Tx::b3GetFileType(const char * ext)
 	return FT_UNKNOWN;
 }
 
-const char * b3Tx::b3GetExt()
+const char * b3Tx::b3GetExt() const
 {
 	return b3GetExt(FileType);
 }

@@ -1842,15 +1842,15 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
 {
 	b3_rect_info * RectInfo;
-	b3_count   *  rIndex;
-	b3_count   *  cIndex;
-	b3_u08    *   src, *dst;
-	b3_coord      x, y, rx;
-	b3_res        yMin, yMax, xSize;
-	b3_u32        dstBit, srcBit;
-	b3_u08        dstByte;
-	b3_count      dstBytes, srcBytes, num;
-	b3_index      index;
+	b3_count   *   rIndex;
+	b3_count   *   cIndex;
+	b3_u08    *    src, *dst;
+	b3_coord       x, y, rx;
+	b3_res         yMin, yMax, xSize;
+	b3_u32         dstBit, srcBit;
+	b3_u08         dstByte;
+	b3_count       dstBytes, srcBytes, num;
+	b3_index       index;
 
 	RectInfo = (b3_rect_info *)ptr;
 
@@ -1905,8 +1905,8 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
-	b3_coord      x, y, rx;
-	b3_count        bytes, num;
+	b3_coord       x, y, rx;
+	b3_count       bytes, num;
 	b3_index       value, index = 0;
 	b3_pkd_color   pal[2];
 	b3_pkd_color * tx_pal, color;
@@ -2276,6 +2276,7 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 void b3Tx::b3TransToGrey()
 {
 	b3_tx_data     cPtr;
+	b3_tx_data     old;
 	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
 	b3_pkd_color * pPtr;
@@ -2285,7 +2286,7 @@ void b3Tx::b3TransToGrey()
 
 	// First allocate new buffer;
 	newSize = xSize * ySize;
-	cPtr = (b3_u08 *)b3Alloc(newSize);
+	cPtr    = b3TypedAlloc<b3_u08>(newSize);
 	if (cPtr == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
@@ -2312,8 +2313,7 @@ void b3Tx::b3TransToGrey()
 	switch (type)
 	{
 	case B3_TX_ILBM:
-		b3Free(data);
-		data = cPtr;
+		data = old = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
@@ -2327,12 +2327,10 @@ void b3Tx::b3TransToGrey()
 				*cPtr++ = (b3_u08)(r + b + g);
 			}
 		}
+		b3Free(old);
 		break;
 
 	case B3_TX_VGA:
-		sPtr = data;
-		b3Free(data);
-		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
@@ -2346,11 +2344,11 @@ void b3Tx::b3TransToGrey()
 				*cPtr++ = (b3_u08)(r + b + g);
 			}
 		}
+		b3Free(old);
 		break;
 
 	case B3_TX_RGB4:
-		sPtr = data;
-		b3Free(data);
+		sPtr = old = data;
 		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
@@ -2365,11 +2363,11 @@ void b3Tx::b3TransToGrey()
 				*cPtr++ = (b3_u08)(r + b + g);
 			}
 		}
+		b3Free(old);
 		break;
 
 	case B3_TX_RGB8:
-		lPtr = data;
-		b3Free(data);
+		lPtr = old = data;
 		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
@@ -2383,6 +2381,7 @@ void b3Tx::b3TransToGrey()
 				*cPtr++ = (b3_u08)(r + b + g);
 			}
 		}
+		b3Free(old);
 		break;
 
 	default:

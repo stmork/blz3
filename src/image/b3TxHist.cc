@@ -284,7 +284,7 @@ b3_bool b3Tx::b3AddHist(
 	return false;
 }
 
-b3_bool b3Tx::b3IsWhite()
+b3_bool b3Tx::b3IsWhite() const
 {
 	b3_count black  = 0;
 	b3_count white  = 0;
@@ -355,7 +355,7 @@ b3_bool b3Tx::b3IsWhite()
 	return IsWhite;
 }
 
-b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries)
+b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries) const
 {
 	b3_index i;
 

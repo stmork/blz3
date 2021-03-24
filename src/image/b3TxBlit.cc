@@ -200,7 +200,7 @@ void b3Tx::b3Blit(
 void b3Tx::b3GetColorMask(
 	b3_u08    *   mask,
 	b3_count      BytesPerRow,
-	b3_pkd_color  colorMask)
+	b3_pkd_color  colorMask) const
 {
 	b3_pkd_color * lPtr, bit;
 	b3_u08    *   bPtr;

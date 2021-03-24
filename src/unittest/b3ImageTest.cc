@@ -74,7 +74,7 @@ void b3ImageTest::testTxData()
 	CPPUNIT_ASSERT(example == data);
 }
 
-void b3ImageTest::testScale()
+void b3ImageTest::testScaleUnfiltered()
 {
 	b3Tx src, dst;
 
@@ -85,25 +85,61 @@ void b3ImageTest::testScale()
 		src.b3AllocTx(50, 50, src_depth);
 		for (b3_res dst_depth : m_TestDepth)
 		{
-			b3Tx dst_smaller;
-			b3Tx dst_bigger;
+			b3Tx   dst_smaller;
+			b3Tx   dst_bigger;
+			b3Path path;
 
+			path.b3Format("img_test_scale_us_%03ld-%03ld.jpg", src_depth, dst_depth);
 			dst_smaller.b3AllocTx(40, 40, dst_depth);
-			dst_bigger.b3AllocTx(70, 70, dst_depth);
-
 			dst_smaller.b3Scale(&src);
+			dst_smaller.b3SaveImage(path);
+
+			path.b3Format("img_test_scale_ub_%03ld-%03ld.jpg", src_depth, dst_depth);
+			dst_bigger.b3AllocTx(70, 70, dst_depth);
 			dst_bigger.b3Scale(&src);
+			dst_bigger.b3SaveImage(path);
+		}
+	}
+}
+
+void b3ImageTest::testScaleFiltered()
+{
+	b3Tx src, dst;
+
+	for (b3_res src_depth : m_TestDepth)
+	{
+		b3Tx src;
+
+		src.b3AllocTx(50, 50, src_depth);
+		for (b3_res dst_depth : m_TestDepth)
+		{
+			b3Tx   dst_smaller;
+			b3Tx   dst_bigger;
+			b3Path path;
+
+			path.b3Format("img_test_scale_fs_%03ld-%03ld.jpg", src_depth, dst_depth);
+			dst_smaller.b3AllocTx(40, 40, dst_depth);
+			dst_smaller.b3ScaleToGrey(&src);
+			dst_smaller.b3SaveImage(path);
+
+			path.b3Format("img_test_scale_fb_%03ld-%03ld.jpg", src_depth, dst_depth);
+			dst_bigger.b3AllocTx(70, 70, dst_depth);
+			dst_bigger.b3ScaleToGrey(&src);
+			dst_bigger.b3SaveImage(path);
 		}
 	}
 }
 
 void b3ImageTest::testTransToGrey()
 {
-	for (b3_res src_depth : m_TestDepth)
+	for (b3_res depth : m_TestDepth)
 	{
-		b3Tx src;
+		b3Tx   tx;
+		b3Path path;
 
-		src.b3AllocTx(50, 50, src_depth);
-		src.b3TransToGrey();
+		path.b3Format("img_test_grey_%03ld.jpg", depth);
+		tx.b3AllocTx(50, 50, depth);
+		tx.b3TransToGrey();
+		tx.b3SaveImage(path);
 	}
 }
