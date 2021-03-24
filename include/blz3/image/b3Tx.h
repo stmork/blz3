@@ -101,11 +101,13 @@ struct HeaderSGI
 enum b3_tx_type
 {
 	B3_TX_UNDEFINED = -1, //!< Undefined or empty image.
-	B3_TX_ILBM      =  0, //!< BW image with 16 bit alignment for each scan line (b3_u16).
+	B3_TX_TYPE_START = 0, //!< The first type index for iterating types.
+	B3_TX_ILBM      =  B3_TX_TYPE_START, //!< BW image with 16 bit alignment for each scan line (b3_u16).
 	B3_TX_VGA       =  1, //!< Palette image with unsigned byte indices (b3_u08) and b3_pkd_color palette.
 	B3_TX_RGB4      =  2, //!< Color channels in true color ARGB nibbles (b3_u16).
 	B3_TX_RGB8      =  3, //!< Color channels in true color AARRGGBB nibbles (b3_pkd_color).
-	B3_TX_FLOAT     =  4  //!< Color channels in floating point true color ARGB (b3_color).
+	B3_TX_FLOAT     =  4, //!< Color channels in floating point true color ARGB (b3_color).
+	B3_TX_TYPE_COUNT      //!< The different type count.
 };
 
 /*************************************************************************
@@ -287,6 +289,18 @@ public:
 	inline b3_tx_data operator+(const b3_count sum) const
 	{
 		return b3_tx_data(m_Bytes + sum);
+	}
+
+	inline b3_tx_data operator++(int)
+	{
+		b3_tx_data actual(m_Bytes);
+		m_Bytes++;
+		return actual;
+	}
+
+	inline b3_u08 & operator*() const
+	{
+		return m_Bytes[0];
 	}
 
 	inline b3_u08 & operator[](const b3_count index) const

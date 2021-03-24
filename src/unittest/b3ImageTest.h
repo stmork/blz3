@@ -37,13 +37,19 @@ class b3ImageTest : public CppUnit::TestFixture
 	b3Tx m_TxTrueColor;
 	b3Tx m_TxRealColor;
 
+	static const b3_res m_TestDepth[];
+
 	CPPUNIT_TEST_SUITE(b3ImageTest);
+	CPPUNIT_TEST(testTxData);
 	CPPUNIT_TEST(testReadGIF);
 	CPPUNIT_TEST(testWriteTIFF);
 	CPPUNIT_TEST(testWriteJPEG);
 	CPPUNIT_TEST(testWriteTGA);
 	CPPUNIT_TEST(testWriteRGB8);
 	CPPUNIT_TEST(testWritePS);
+	CPPUNIT_TEST(testScale);
+	CPPUNIT_TEST(testTransToGrey);
+
 #ifdef BLZ3_USE_OPENEXR
 	CPPUNIT_TEST(testWriteOpenEXR);
 #endif
@@ -137,6 +143,10 @@ public:
 		m_TxRealColor.b3SaveImage("img_test_80.exr");
 	}
 #endif
+
+	void testTxData();
+	void testScale();
+	void testTransToGrey();
 };
 
 #endif

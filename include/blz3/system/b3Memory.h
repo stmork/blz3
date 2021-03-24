@@ -95,6 +95,11 @@ public:
 	 */
 	void  *  b3Alloc(const b3_size size);
 
+	template <class T> inline T * b3TypedAlloc(const b3_count count)
+	{
+		return static_cast<T *>(b3Alloc(sizeof(T) * count));
+	}
+
 	/**
 	 * This pointer reallocates a memory buffer. There are four cases:
 	 * -# oldptr is null: b3Realloc() behaves like b3Alloc().

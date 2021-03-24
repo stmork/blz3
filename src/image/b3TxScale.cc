@@ -2218,8 +2218,8 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 			this, xSize, ySize);
 		return;
 	}
-	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
-	cIndex = (b3_count *)b3Alloc((ySize + 1) * sizeof(b3_count));
+	rIndex = b3TypedAlloc<b3_count>(xSize + 1);
+	cIndex = b3TypedAlloc<b3_count>(ySize + 1);
 	if ((rIndex == nullptr) || (cIndex == nullptr))
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -2263,8 +2263,8 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 		break;
 	}
 
-	b3Free((void *)rIndex);
-	b3Free((void *)cIndex);
+	b3Free(rIndex);
+	b3Free(cIndex);
 }
 
 /*************************************************************************
@@ -2275,13 +2275,13 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 
 void b3Tx::b3TransToGrey()
 {
-	b3_u08    *   cPtr;
-	b3_u16    *   sPtr;
+	b3_tx_data     cPtr;
+	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
 	b3_pkd_color * pPtr;
-	b3_size       newSize;
-	b3_coord      x, y;
-	b3_f64        r, g, b;
+	b3_size        newSize;
+	b3_coord       x, y;
+	b3_f64         r, g, b;
 
 	// First allocate new buffer;
 	newSize = xSize * ySize;
@@ -2294,7 +2294,7 @@ void b3Tx::b3TransToGrey()
 	}
 
 	// alloc new palette
-	pPtr = (b3_pkd_color *)b3Alloc(256 * sizeof(b3_pkd_color));
+	pPtr = b3TypedAlloc<b3_pkd_color>(256);
 	if (pPtr == nullptr)
 	{
 		b3Free(cPtr);
@@ -2313,14 +2313,13 @@ void b3Tx::b3TransToGrey()
 	{
 	case B3_TX_ILBM:
 		b3Free(data);
-		data = (b3_u08 *)cPtr;
+		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				b3_pkd_color color;
+				const b3_pkd_color color = b3GetValue(x, y);
 
-				color = b3GetValue(x, y);
 				r = ((color & 0xff0000) >> 16) * 0.35;
 				g = ((color & 0x00ff00) >>  8) * 0.51;
 				b = ((color & 0x0000ff))       * 0.14;
@@ -2331,16 +2330,15 @@ void b3Tx::b3TransToGrey()
 		break;
 
 	case B3_TX_VGA:
-		sPtr = (b3_u16 *)data;
+		sPtr = data;
 		b3Free(data);
-		data = (b3_u08 *)cPtr;
+		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				b3_pkd_color color;
+				const b3_pkd_color color = palette[*sPtr++];
 
-				color = palette[*sPtr++];
 				r = ((color & 0xff0000) >> 16) * 0.35;
 				g = ((color & 0x00ff00) >>  8) * 0.51;
 				b = ((color & 0x0000ff))       * 0.14;
@@ -2351,16 +2349,15 @@ void b3Tx::b3TransToGrey()
 		break;
 
 	case B3_TX_RGB4:
-		sPtr = (b3_u16 *)data;
+		sPtr = data;
 		b3Free(data);
-		data = (b3_u08 *)cPtr;
+		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				b3_u16 color;
+				const b3_u16 color = *sPtr++;
 
-				color = *sPtr++;
 				r = ((color & 0xf00) >> 4) * 0.35;
 				g = ((color & 0x0f0))      * 0.51;
 				b = ((color & 0x00f) << 4) * 0.14;
@@ -2371,16 +2368,15 @@ void b3Tx::b3TransToGrey()
 		break;
 
 	case B3_TX_RGB8:
-		lPtr = (b3_pkd_color *)data;
+		lPtr = data;
 		b3Free(data);
-		data = (b3_u08 *)cPtr;
+		data = cPtr;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				b3_pkd_color color;
+				const b3_pkd_color color = *lPtr++;
 
-				color = *lPtr++;
 				r = ((color & 0xff0000) >> 16) * 0.35;
 				g = ((color & 0x00ff00) >>  8) * 0.51;
 				b = ((color & 0x0000ff))       * 0.14;
