@@ -67,7 +67,7 @@ void b3Tx::b3DeskewILBM()
 	xBytes = TX_BWA(xSize);
 	for (i = 0; i < B3_MEASURE_EDGE; i++)
 	{
-		unsigned long index;
+		unsigned index;
 
 		// Search for first 0-Bit from left to right
 		isBlack = true;

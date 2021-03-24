@@ -33,9 +33,9 @@
 
 b3_result b3Tx::b3ParseRAW(
 	b3_u08 * buffer,
-	b3_res  x,
-	b3_res  y,
-	b3_s32  ppm_type)
+	b3_res   x,
+	b3_res   y,
+	b3_s32   ppm_type)
 {
 	b3_u08    *   newCData;
 	b3_pkd_color  value;

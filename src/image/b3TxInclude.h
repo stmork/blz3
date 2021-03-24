@@ -12,6 +12,8 @@
 **
 */
 
+#pragma once
+
 #ifndef B3_IMAGE_TXINCLUDE_H
 #define B3_IMAGE_TXINCLUDE_H
 

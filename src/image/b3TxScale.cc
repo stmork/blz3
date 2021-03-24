@@ -30,28 +30,18 @@
 
 struct b3_rect_info
 {
-	b3_index   *  rIndex;
-	b3_index   *  cIndex;
+	b3_index   *   rIndex;
+	b3_index   *   cIndex;
 	b3_pkd_color * new_palette;
-	b3_res        yMin, yMax;
-	b3_coord      xSizeSrc, xSizeDst;
-	b3_coord      ySizeSrc, ySizeDst;
-	b3_tx_type    dstType;
-	union
-	{
-		b3_u08    *   bData;
-		b3_pkd_color * lData;
-		b3_color   *  cData;
-	}                  src;
-	union
-	{
-		b3_u08    *   bData;
-		b3_pkd_color * lData;
-		b3_color   *  cData;
-	}                  dst;
+	b3_res         yMin, yMax;
+	b3_coord       xSizeSrc, xSizeDst;
+	b3_coord       ySizeSrc, ySizeDst;
+	b3_tx_type     dstType;
+	b3_tx_data     src;
+	b3_tx_data     dst;
 };
 
-#define CPU_MAX      4
+#define CPU_MAX      8
 #define TX_PRIO      0
 
 /*************************************************************************
@@ -85,7 +75,7 @@ void b3ColorIndices::b3AddColorIndex(b3_index index)
 
 b3_index b3ColorIndices::b3ColorIndex(
 	b3_pkd_color * palette,
-	b3_pkd_color  color) const
+	b3_pkd_color   color) const
 {
 	b3_s32   r, rDiff;
 	b3_s32   g, gDiff;
@@ -255,7 +245,7 @@ class b3_tx_mask
 
 b3_tx_mask b3_tx_mask::TxMask;
 
-const b3_u08 b3_tx_mask::TxMaskLeft[8] =
+const b3_u08 b3_tx_mask::TxMaskLeft[8]
 {
 	0xff,		// 11111111
 	0x7f,		// 01111111
@@ -267,7 +257,7 @@ const b3_u08 b3_tx_mask::TxMaskLeft[8] =
 	0x01        // 00000001
 };
 
-const b3_u08 b3_tx_mask::TxMaskRight[8] =
+const b3_u08 b3_tx_mask::TxMaskRight[8]
 {
 	0x00,		// 00000000
 	0x80,		// 10000000
@@ -351,8 +341,8 @@ void b3Tx::b3ComputeLineSmaller(
 	b3_count * TxRowCounter,
 	b3_count * TxRowCells,
 	b3_count * rIndex,
-	b3_u08  * src,
-	b3_res    xDstSize)
+	b3_u08  *  src,
+	b3_res     xDstSize)
 {
 	b3_coord  xDst;
 	b3_res    xStart, xEnd, xByteStart, xByteEnd;
@@ -410,27 +400,27 @@ void b3Tx::b3ComputeLineSmaller(
 unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 {
 	b3_rect_info * RectInfo;
-	b3_tx_type    dstType;
-	b3_u08    *   src;
-	b3_u08    *   cDst;
+	b3_tx_type     dstType;
+	b3_u08    *    src;
+	b3_u08    *    cDst;
 	b3_pkd_color * lDst;
 	b3_pkd_color * pal;
-	b3_count   *  rIndex;
-	b3_count   *  cIndex;
-	b3_count   *  TxRowCounter;
-	b3_count   *  TxRowCells;
-	b3_res        xSrcSize;
-	b3_res        ySrcSize, ySrc;
-	b3_res        xDstSize, xDst;
-	b3_res        yDstSize, yDst;
-	b3_count      srcBytes, dstBytes;
-	b3_res        yMin, yMax;
+	b3_count   *   rIndex;
+	b3_count   *   cIndex;
+	b3_count   *   TxRowCounter;
+	b3_count   *   TxRowCells;
+	b3_res         xSrcSize;
+	b3_res         ySrcSize, ySrc;
+	b3_res         xDstSize, xDst;
+	b3_res         yDstSize, yDst;
+	b3_count       srcBytes, dstBytes;
+	b3_res         yMin, yMax;
 	void (*ComputeLine)(
 		b3_count * TxRowCounter,
 		b3_count * TxRowCells,
 		b3_count * rIndex,
 		b3_u08   * src,
-		b3_res    dstSize);
+		b3_res     dstSize);
 
 	// ... and some values
 	RectInfo = (b3_rect_info *)ptr;
@@ -438,7 +428,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
 	cIndex   =  RectInfo->cIndex;
-	src      =  RectInfo->src.bData;
+	src      =  RectInfo->src;
 	yMin     =  RectInfo->yMin;
 	yMax     =  RectInfo->yMax;
 	xSrcSize =  RectInfo->xSizeSrc;
@@ -447,10 +437,11 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 	yDstSize =  RectInfo->ySizeDst;
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes =  RectInfo->xSizeDst;
-	cDst     = &RectInfo->dst.bData[yMin * dstBytes];
-	lDst     = &RectInfo->dst.lData[yMin * dstBytes];
+	cDst     = &RectInfo->dst[yMin * dstBytes];
+	lDst     =  RectInfo->dst;
 	pal      =  RectInfo->new_palette;
 
+	lDst += yMin * dstBytes;
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
 		yMin, yMax);
 
@@ -585,16 +576,16 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 {
 	b3_rect_info * RectInfo;
-	b3_count   *  rIndex;
-	b3_count   *  cIndex;
+	b3_count   *   rIndex;
+	b3_count   *   cIndex;
 	b3_pkd_color * tx_pal;
-	b3_u08    *   src, *dst, byte;
-	b3_u08        bit;
-	b3_count      srcBytes, dstBytes;
-	b3_index      value, index;
-	b3_count      count, num;
-	b3_coord      x, y, sx, sy, ix, iy, rx, cy;
-	b3_res        xSize, yMin, yMax;
+	b3_u08    *    src, *dst, byte;
+	b3_u08         bit;
+	b3_count       srcBytes, dstBytes;
+	b3_index       value, index;
+	b3_count       count, num;
+	b3_coord       x, y, sx, sy, ix, iy, rx, cy;
+	b3_res         xSize, yMin, yMax;
 
 	RectInfo = b3_rect_info<ptr>;
 
@@ -668,7 +659,7 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 #endif
 
 void b3Tx::b3ScaleFilteredFromBW(
-	b3Tx   *  Tx,
+	b3Tx   *   Tx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
@@ -727,8 +718,8 @@ void b3Tx::b3ScaleFilteredFromBW(
 		RectInfo[i].dstType     = type;
 		RectInfo[i].rIndex      = rIndex;
 		RectInfo[i].cIndex      = cIndex;
-		RectInfo[i].src.bData   = Tx->data;
-		RectInfo[i].dst.bData   = data;
+		RectInfo[i].src         = Tx->data;
+		RectInfo[i].dst         = data;
 		RectInfo[i].xSizeSrc    = Tx->xSize;
 		RectInfo[i].xSizeDst    = xSize;
 		RectInfo[i].ySizeSrc    = Tx->ySize;
@@ -763,11 +754,11 @@ void b3Tx::b3ScaleFilteredFromBW(
 
 // If a line is to be scaled up (means: destination is bigger)...
 void b3Tx::b3RGB8ComputeLineBigger(
-	b3_count   *  TxRowCounter,
-	b3_count   *  TxRowCells,
-	b3_count   *  rIndex,
+	b3_count   *   TxRowCounter,
+	b3_count   *   TxRowCells,
+	b3_count   *   rIndex,
 	b3_pkd_color * src,
-	b3_res        xDstSize)
+	b3_res         xDstSize)
 {
 	b3_coord     xDst;
 	b3_index     index;
@@ -788,11 +779,11 @@ void b3Tx::b3RGB8ComputeLineBigger(
 
 // If a line is to be scaled down (means: destination is smaller)...
 void b3Tx::b3RGB8ComputeLineSmaller(
-	b3_count   *  TxRowCounter,
-	b3_count   *  TxRowCells,
-	b3_count   *  rIndex,
+	b3_count   *   TxRowCounter,
+	b3_count   *   TxRowCells,
+	b3_count   *   rIndex,
 	b3_pkd_color * src,
-	b3_res        xDstSize)
+	b3_res         xDstSize)
 {
 	b3_coord     xDst;
 	b3_res       xStart, xEnd;
@@ -820,24 +811,24 @@ void b3Tx::b3RGB8ComputeLineSmaller(
 unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 {
 	b3_rect_info * RectInfo;
-	b3_tx_type    dstType;
+	b3_tx_type     dstType;
 	b3_pkd_color * src;
-	b3_u08    *   bDst;
+	b3_u08    *    bDst;
 	b3_pkd_color * lDst;
-	b3_color   *  cDst;
-	b3_count   *  rIndex;
-	b3_count   *  cIndex;
-	b3_count   *  TxRowCounter;
-	b3_count   *  TxRowCells;
-	b3_res        xSrcSize, ySrcSize;
-	b3_res        xDstSize, yDstSize;
-	b3_coord      ySrc;
-	b3_coord      xDst, yDst;
-	b3_count      srcBytes, dstBytes;
-	b3_index      i;
-	b3_pkd_color  color;
-	b3_count      divisor;
-	b3_res        yMin, yMax;
+	b3_color   *   cDst;
+	b3_count   *   rIndex;
+	b3_count   *   cIndex;
+	b3_count   *   TxRowCounter;
+	b3_count   *   TxRowCells;
+	b3_res         xSrcSize, ySrcSize;
+	b3_res         xDstSize, yDstSize;
+	b3_coord       ySrc;
+	b3_coord       xDst, yDst;
+	b3_count       srcBytes, dstBytes;
+	b3_index       i;
+	b3_pkd_color   color;
+	b3_count       divisor;
+	b3_res         yMin, yMax;
 	void (*ComputeLine)(
 		b3_count     * TxRowCounter,
 		b3_count     * TxRowCells,
@@ -851,7 +842,7 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
 	cIndex   =  RectInfo->cIndex;
-	src      =  RectInfo->src.lData;
+	src      =  RectInfo->src;
 	yMin     =  RectInfo->yMin;
 	yMax     =  RectInfo->yMax;
 	xSrcSize =  RectInfo->xSizeSrc;
@@ -910,7 +901,7 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 			{
 			case B3_TX_VGA:
 				i = 0;
-				bDst = &RectInfo->dst.bData[yDst * dstBytes];
+				bDst = &RectInfo->dst[yDst * dstBytes];
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -932,7 +923,8 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 
 			case B3_TX_RGB8:
 				i = 0;
-				lDst = &RectInfo->dst.lData[yDst * dstBytes];
+				lDst  = RectInfo->dst;
+				lDst += yDst * dstBytes;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -964,7 +956,8 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 
 			case B3_TX_FLOAT:
 				i = 0;
-				cDst = &RectInfo->dst.cData[yDst * dstBytes];
+				cDst  = RectInfo->dst;
+				cDst += yDst * dstBytes;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1022,7 +1015,7 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 			{
 			case B3_TX_VGA:
 				i = 0;
-				bDst = &RectInfo->dst.bData[yDst * dstBytes];
+				bDst = &RectInfo->dst[yDst * dstBytes];
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1044,7 +1037,8 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 
 			case B3_TX_RGB8:
 				i = 0;
-				lDst = &RectInfo->dst.lData[yDst * dstBytes];
+				lDst  = RectInfo->dst;
+				lDst += yDst * dstBytes;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1075,8 +1069,9 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 				break;
 
 			case B3_TX_FLOAT:
-				i = 0;
-				cDst = &RectInfo->dst.cData[yDst * dstBytes];
+				i     = 0;
+				cDst  = RectInfo->dst;
+				cDst += yDst * dstBytes;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1152,10 +1147,8 @@ void b3Tx::b3ScaleFilteredFromColor(
 		RectInfo[i].dstType     = type;
 		RectInfo[i].rIndex      = rIndex;
 		RectInfo[i].cIndex      = cIndex;
-		RectInfo[i].src.lData   = (b3_pkd_color *)srcTx->data;
-		RectInfo[i].dst.bData   = (b3_u08 *)data;
-		RectInfo[i].dst.lData   = (b3_pkd_color *)data;
-		RectInfo[i].dst.cData   = (b3_color *)data;
+		RectInfo[i].src         = srcTx->data;
+		RectInfo[i].dst         = data;
 		RectInfo[i].xSizeSrc    = srcTx->xSize;
 		RectInfo[i].xSizeDst    = xSize;
 		RectInfo[i].ySizeSrc    = srcTx->ySize;
@@ -1277,7 +1270,7 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
 	cIndex   =  RectInfo->cIndex;
-	src      =  RectInfo->src.cData;
+	src      =  RectInfo->src;
 	yMin     =  RectInfo->yMin;
 	yMax     =  RectInfo->yMax;
 	xSrcSize =  RectInfo->xSizeSrc;
@@ -1338,8 +1331,8 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 			switch (dstType)
 			{
 			case B3_TX_VGA:
-				i = 0;
-				bDst = &RectInfo->dst.bData[yDst * xDstSize];
+				i    = 0;
+				bDst = &RectInfo->dst[yDst * xDstSize];
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					if (TxRowCells[xDst] > 0)
@@ -1357,8 +1350,9 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 				break;
 
 			case B3_TX_RGB8:
-				i = 0;
-				lDst = &RectInfo->dst.lData[yDst * xDstSize];
+				i     = 0;
+				lDst  = RectInfo->dst;
+				lDst += yDst * xDstSize;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1372,8 +1366,9 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 				break;
 
 			case B3_TX_FLOAT:
-				i = 0;
-				cDst = &RectInfo->dst.cData[yDst * xDstSize];
+				i     = 0;
+				cDst  = RectInfo->dst;
+				cDst += yDst * xDstSize;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1417,8 +1412,8 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 			switch (dstType)
 			{
 			case B3_TX_VGA:
-				i = 0;
-				bDst = &RectInfo->dst.bData[yDst * xDstSize];
+				i    = 0;
+				bDst = &RectInfo->dst[yDst * xDstSize];
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					if (TxRowCells[xDst] > 0)
@@ -1436,8 +1431,9 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 				break;
 
 			case B3_TX_RGB8:
-				i = 0;
-				lDst = &RectInfo->dst.lData[yDst * xDstSize];
+				i     = 0;
+				lDst  = RectInfo->dst;
+				lDst += yDst * xDstSize;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1450,8 +1446,9 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 				break;
 
 			case B3_TX_FLOAT:
-				i = 0;
-				cDst = &RectInfo->dst.cData[yDst * xDstSize];
+				i     = 0;
+				cDst  = RectInfo->dst;
+				cDst += yDst * xDstSize;
 				for (xDst = 0; xDst < xDstSize; xDst++)
 				{
 					divisor = TxRowCells[xDst];
@@ -1510,10 +1507,8 @@ void b3Tx::b3ScaleFilteredFromFloat(
 		RectInfo[i].dstType     = type;
 		RectInfo[i].rIndex      = rIndex;
 		RectInfo[i].cIndex      = cIndex;
-		RectInfo[i].src.cData   = (b3_color *)srcTx->data;
-		RectInfo[i].dst.bData   = (b3_u08 *)data;
-		RectInfo[i].dst.lData   = (b3_pkd_color *)data;
-		RectInfo[i].dst.cData   = (b3_color *)data;
+		RectInfo[i].src         = srcTx->data;
+		RectInfo[i].dst         = data;
 		RectInfo[i].xSizeSrc    = srcTx->xSize;
 		RectInfo[i].xSizeDst    = xSize;
 		RectInfo[i].ySizeSrc    = srcTx->ySize;
@@ -1861,8 +1856,8 @@ unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
-	dst      = RectInfo->dst.bData;
-	src      = RectInfo->src.bData;
+	dst      = RectInfo->dst;
+	src      = RectInfo->src;
 	yMin     = RectInfo->yMin;
 	yMax     = RectInfo->yMax;
 	xSize    = RectInfo->xSizeDst;
@@ -1906,20 +1901,20 @@ unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
 }
 
 void b3Tx::b3ScaleUnfilteredFromBW(
-	b3Tx   *  Tx,
+	b3Tx   *   Tx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
 	b3_coord      x, y, rx;
-	b3_count      bytes, num;
-	b3_index      value, index = 0;
-	b3_pkd_color  pal[2];
+	b3_count        bytes, num;
+	b3_index       value, index = 0;
+	b3_pkd_color   pal[2];
 	b3_pkd_color * tx_pal, color;
-	b3_u08    *   bData, bit;
-	b3_f64        r, g, b;
-	b3_rect_info  RectInfo[CPU_MAX];
-	b3_index      i;
-	b3_count      NumCPUs;
+	b3_u08    *    bData, bit;
+	b3_f64         r, g, b;
+	b3_rect_info   RectInfo[CPU_MAX];
+	b3_index       i;
+	b3_count       NumCPUs;
 
 #if 1
 	NumCPUs = b3Runtime::b3GetNumCPUs();
@@ -1966,7 +1961,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 
 	if (type == B3_TX_RGB8)
 	{
-		b3_pkd_color * lData = (b3_pkd_color *)data;
+		b3_pkd_color * lData = data;
 
 		for (y = 0; y < ySize; y++)
 		{
@@ -1998,8 +1993,8 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 		{
 			RectInfo[i].rIndex    = rIndex;
 			RectInfo[i].cIndex    = cIndex;
-			RectInfo[i].src.bData = Tx->data;
-			RectInfo[i].dst.bData = data;
+			RectInfo[i].src       = Tx->data;
+			RectInfo[i].dst       = data;
 			RectInfo[i].xSizeSrc  = Tx->xSize;
 			RectInfo[i].xSizeDst  = xSize;
 			RectInfo[i].ySizeSrc  = Tx->ySize;
@@ -2033,12 +2028,12 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 }
 
 void b3Tx::b3ScaleUnfilteredFromColor(
-	b3Tx   *  Tx,
+	b3Tx   *   Tx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
 	b3_coord       x, y;
-	b3_count      num;
+	b3_count       num;
 	b3_pkd_color * lSrc, *lDst;
 
 	lSrc = Tx->b3GetTrueColorData();
@@ -2055,13 +2050,13 @@ void b3Tx::b3ScaleUnfilteredFromColor(
 }
 
 void b3Tx::b3ScaleUnfilteredFromFloat(
-	b3Tx   *  Tx,
+	b3Tx   *   Tx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
 	b3_coord       x, y;
-	b3_count      num;
-	b3_color   *  cSrc;
+	b3_count       num;
+	b3_color   *   cSrc;
 	b3_pkd_color * lDst;
 
 	cSrc = Tx->b3GetHdrData();
@@ -2078,19 +2073,19 @@ void b3Tx::b3ScaleUnfilteredFromFloat(
 }
 
 void b3Tx::b3ScaleUnfilteredFromVGA(
-	b3Tx   *  Tx,
+	b3Tx   *   Tx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
 	b3_coord      x, y;
-	b3_count      num;
+	b3_count        num;
 	b3_pkd_color * pSrc;
-	b3_u08    *   cSrc;
+	b3_u08    *    cSrc;
 
 	// copying palette
 	if (depth == Tx->depth)
 	{
-		b3_pkd_color * pDst = (b3_pkd_color *)palette;
+		b3_pkd_color * pDst = palette;
 
 		pSrc = (b3_pkd_color *)Tx->b3GetPalette();
 		num  = 1 << depth;
@@ -2143,7 +2138,7 @@ b3_index b3Tx::b3ILBMPlaneValue(
 	const b3_coord y) const
 {
 	b3_u08    *   Address;
-	b3_index  Bit, PlaneValue;
+	b3_index      Bit, PlaneValue;
 	b3_index      BytesPerLine;
 	b3_res        i;
 
@@ -2165,12 +2160,12 @@ b3_index b3Tx::b3ILBMPlaneValue(
 }
 
 void b3Tx::b3ScaleUnfilteredFromILBM(
-	b3Tx   *  srcTx,
+	b3Tx   *   srcTx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
-	b3_coord      x, y;
-	b3_u08    *   cDst;
+	b3_coord       x, y;
+	b3_u08    *    cDst;
 	b3_pkd_color * lDst;
 
 	switch (type)
@@ -2205,7 +2200,7 @@ void b3Tx::b3ScaleUnfilteredFromILBM(
 
 void b3Tx::b3Scale(b3Tx * srcTx)
 {
-	b3_coord  x, y;
+	b3_coord   x, y;
 	b3_count * rIndex, *cIndex;
 
 	// Check if there is nothing to do

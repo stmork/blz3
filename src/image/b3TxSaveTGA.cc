@@ -63,6 +63,7 @@ void b3InfoTGA::b3Write()
 	b3_coord     t, u, y;
 	b3_count     i;
 
+	// https://www.fileformat.info/format/tga/egff.htm
 	for (y = 0; y < m_Tx->ySize; y++)
 	{
 		m_Tx->b3GetRow(m_ThisRow, y);

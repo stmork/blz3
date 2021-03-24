@@ -115,7 +115,7 @@ public:
 b3_u16 b3Endian::b3Get16(void * Ptr)
 {
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
-	b3_u16  Value;
+	b3_u16   Value;
 
 	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 	{
@@ -133,7 +133,7 @@ b3_u16 b3Endian::b3Get16(void * Ptr)
 b3_u32 b3Endian::b3Get32(void * Ptr)
 {
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
-	b3_u32  Value;
+	b3_u32   Value;
 
 	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 	{

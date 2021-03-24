@@ -39,10 +39,10 @@ void b3Tx::b3Blit(
 	b3_coord  ySrcOff)
 {
 	b3_pkd_color * lSrc, *lDst, *pal;
-	b3_u16    *   sSrc;
-	b3_u08    *   cSrc;
-	b3_coord      x, srcMod, SrcOff;
-	b3_coord      y, dstMod, DstOff;
+	b3_u16    *    sSrc;
+	b3_u08    *    cSrc;
+	b3_coord       x, srcMod, SrcOff;
+	b3_coord       y, dstMod, DstOff;
 
 	// We support only true color yet
 	if (type != B3_TX_RGB8)

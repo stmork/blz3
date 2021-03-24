@@ -43,12 +43,12 @@
 b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_pkd_color * LongData;
-	HeaderTIFF  * TIFF;
-	HeaderSGI  *  HeaderSGI;
-	b3_index      pos;
-	b3_coord      x, y;
-	b3_s32        ppm_type;
-	b3_index      i;
+	HeaderTIFF  *  TIFF;
+	HeaderSGI   *  HeaderSGI;
+	b3_index       pos;
+	b3_coord       x, y;
+	b3_s32         ppm_type;
+	b3_index       i;
 
 	b3FreeTx();
 
@@ -219,7 +219,6 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 		return b3ParseSGI(buffer);
 	}
 
-
 	// Targa
 	if ((buffer[2] == 2) || (buffer[2] == 10))
 	{
@@ -232,7 +231,6 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 			}
 		}
 	}
-
 
 	// PCX
 	if ((buffer[2] == 1) && (buffer[0] == 0x0a))

@@ -232,6 +232,87 @@ public:
 
 /*************************************************************************
 **                                                                      **
+**                        The image variant data representation         **
+**                                                                      **
+*************************************************************************/
+
+union b3_tx_data
+{
+private:
+	void     *     m_Void;
+	b3_u08    *    m_Bytes;
+	b3_u16    *    m_Words;
+	b3_pkd_color * m_Colors;
+	b3_color   *   m_Floats;
+
+public:
+	inline b3_tx_data()
+	{
+		m_Void = nullptr;
+	}
+
+	inline b3_tx_data(b3_u08 * ptr) : m_Bytes(ptr)
+	{
+	}
+
+	inline b3_tx_data(b3_pkd_color * ptr) : m_Colors(ptr)
+	{
+	}
+
+	inline operator b3_u08 * () const
+	{
+		return m_Bytes;
+	}
+
+	inline operator b3_u16 * () const
+	{
+		return m_Words;
+	}
+
+	inline operator b3_pkd_color * () const
+	{
+		return m_Colors;
+	}
+
+	inline operator b3_color * () const
+	{
+		return m_Floats;
+	}
+
+	inline operator void * () const
+	{
+		return m_Void;
+	}
+
+	inline b3_tx_data operator+(const b3_count sum) const
+	{
+		return b3_tx_data(m_Bytes + sum);
+	}
+
+	inline b3_u08 & operator[](const b3_count index) const
+	{
+		return m_Bytes[index];
+	}
+
+	inline bool operator== (const void * ptr) const
+	{
+		return m_Void == ptr;
+	}
+
+	inline bool operator!= (const void * ptr) const
+	{
+		return m_Void != ptr;
+	}
+
+	inline b3_tx_data & operator =(void * ptr)
+	{
+		m_Void = ptr;
+		return *this;
+	}
+};
+
+/*************************************************************************
+**                                                                      **
 **                        The image class itself!                       **
 **                                                                      **
 *************************************************************************/
@@ -251,7 +332,7 @@ class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 private:
 	b3_pkd_color   *  palette;
 	b3_count     *    histogramme;
-	b3_u08      *     data;
+	b3_tx_data        data;
 	b3_count          dSize, pSize;
 	b3_tx_type        type;
 	b3_tx_filetype    FileType;
@@ -354,7 +435,7 @@ public:
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
-		return reinterpret_cast<b3_u08 *>(data);
+		return data;
 	}
 
 	/**
@@ -372,7 +453,7 @@ public:
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
-		return reinterpret_cast<b3_u16 *>(data);
+		return data;
 	}
 
 	/**
@@ -390,7 +471,7 @@ public:
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
-		return reinterpret_cast<b3_pkd_color *>(data);
+		return data;
 	}
 
 	/**
@@ -408,7 +489,7 @@ public:
 		{
 			B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 		}
-		return reinterpret_cast<b3_color *>(data);
+		return data;
 	}
 
 	/**
@@ -1060,7 +1141,7 @@ private:
 	 *
 	 * @return The image data.
 	 */
-	inline void * b3GetVoidData()
+	inline b3_tx_data b3GetVoidData() const
 	{
 		return data;
 	}

@@ -296,8 +296,8 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 					if ((yk += b3GifDecoder::m_GifNextRow[status]) >= ySize)
 					{
 						yk  = b3GifDecoder::m_GifFirstRow[status];
-						out = (unsigned char *)(data +
-								b3GifDecoder::m_GifFirstRow[status++] * xSize);
+						out = data +
+							b3GifDecoder::m_GifFirstRow[status++] * xSize;
 					}
 					else
 					{

@@ -73,21 +73,18 @@ b3_bool b3TxPool::b3ReloadTexture(b3Tx * tx, const char * Name)
 
 b3Tx * b3TxPool::b3FindTexture(const char * ParamName)
 {
-	b3Tx * tx;
 	b3CriticalSection lock(m_Mutex);
 
-	tx = b3FindTextureUnsafe(ParamName);
-
-	return tx;
+	return b3FindTextureUnsafe(ParamName);
 }
 
 b3Tx * b3TxPool::b3FindTextureUnsafe(const char * ParamName)
 {
-	b3Path      Name;
-	b3Tx    *   tx;
+	b3Path       Name;
+	b3Tx    *    tx;
 	const char * txName;
-	b3_size     txLen, nameLen;
-	b3_offset   diff;
+	b3_size      txLen, nameLen;
+	b3_offset    diff;
 
 	Name.b3Correct(ParamName);
 	B3_FOR_BASE(&m_Pool, tx)
