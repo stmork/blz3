@@ -361,7 +361,7 @@ void b3BHDParser::b3AddWall(b3BBox * room)
 	B3_FOR_BASE(room->b3GetShapeHead(), item)
 	{
 		shape = (b3Shape *)item;
-		material = new b3MatNormal(MATERIAL);
+		material = new b3MatNormal(NORMAL_MATERIAL);
 		material->m_Diffuse.b3Init(1, 1, 1);
 		material->m_Ambient.b3Init(0.2, 0.2, 0.2);
 		material->m_Specular.b3Init(1, 1, 1);
