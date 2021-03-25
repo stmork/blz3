@@ -156,6 +156,8 @@ void b3ImageTest::testWriteOpenEXR()
 {
 #ifdef BLZ3_USE_OPENEXR
 	m_TxRealColor.b3SaveImage("img_test_80.exr");
+
+	compareImages(m_TxRealColor);
 #endif
 }
 
@@ -417,7 +419,8 @@ void b3ImageTest::compareImages(const b3Tx & src)
 	{
 		for (b3_res x = 0; x < tx.xSize; x++)
 		{
-			CPPUNIT_ASSERT_EQUAL(src.b3GetValue(x, y), tx.b3GetValue(x, y));
+			CPPUNIT_ASSERT_EQUAL(src.b3GetValue(x, y),    tx.b3GetValue(x, y));
+			CPPUNIT_ASSERT_EQUAL(src.b3GetHdrValue(x, y), tx.b3GetHdrValue(x, y));
 		}
 	}
 }
