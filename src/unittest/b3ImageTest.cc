@@ -206,7 +206,9 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(hdr.b3IsHdr());
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
-//		CPPUNIT_ASSERT_EQUAL(data_u32[i], hdr.b3GetValue(i, 0));
+		const b3_pkd_color aux = hdr.b3GetValue(i, 0);
+
+		CPPUNIT_ASSERT_EQUAL(data_u32[i], aux);
 	}
 }
 
@@ -237,7 +239,7 @@ void b3ImageTest::testRow()
 	for (i = 0; i < hdr.xSize; i++)
 	{
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
-//		CPPUNIT_ASSERT_EQUAL(data_col[i], row_col[i]);
+		CPPUNIT_ASSERT(data_col[i] == row_col[i]);
 	}
 
 	high.b3AllocTx(DATA_SIZE(data_u16), 1, 12);
@@ -252,7 +254,7 @@ void b3ImageTest::testRow()
 	for (i = 0; i < hdr.xSize; i++)
 	{
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
-//		CPPUNIT_ASSERT_EQUAL(data_col[i], row_col[i]);
+		CPPUNIT_ASSERT(data_col[i] == row_col[i]);
 	}
 
 	hdr.b3AllocTx(DATA_SIZE(data_col), 1, 128);
@@ -261,8 +263,8 @@ void b3ImageTest::testRow()
 	hdr.b3GetRow(row_col, 0);
 	for (i = 0; i < hdr.xSize; i++)
 	{
-//		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
-		CPPUNIT_ASSERT_EQUAL(b3Color(data_col[i]), b3Color(row_col[i]));
+		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
+		CPPUNIT_ASSERT(data_col[i] == row_col[i]);
 	}
 }
 

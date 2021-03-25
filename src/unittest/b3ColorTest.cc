@@ -34,20 +34,6 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3ColorTest);
 
-#define testColor(r,g,b,a)\
-{\
-	b3_f32 tr = round_color(color[b3Color::R]);\
-	b3_f32 tg = round_color(color[b3Color::G]);\
-	b3_f32 tb = round_color(color[b3Color::B]);\
-	b3_f32 ta = round_color(color[b3Color::A]);\
-\
-	CPPUNIT_ASSERT_EQUAL(r, tr);\
-	CPPUNIT_ASSERT_EQUAL(g, tg);\
-	CPPUNIT_ASSERT_EQUAL(b, tb);\
-	CPPUNIT_ASSERT_EQUAL(a, ta);\
-}\
-
-
 void b3ColorTest::setUp()
 {
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
@@ -183,6 +169,23 @@ void b3ColorTest::test()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xbf3f7fff, ac);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x3f3f3f7f, bc);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x2f0f1f3f, color);
+}
+
+void b3ColorTest::testColor(
+		const b3_f32 r,
+		const b3_f32 g,
+		const b3_f32 b,
+		const b3_f32 a)
+{
+	b3_f32 tr = round_color(color[b3Color::R]);
+	b3_f32 tg = round_color(color[b3Color::G]);
+	b3_f32 tb = round_color(color[b3Color::B]);
+	b3_f32 ta = round_color(color[b3Color::A]);
+
+	CPPUNIT_ASSERT_EQUAL(r, tr);
+	CPPUNIT_ASSERT_EQUAL(g, tg);
+	CPPUNIT_ASSERT_EQUAL(b, tb);
+	CPPUNIT_ASSERT_EQUAL(a, ta);
 }
 
 #endif

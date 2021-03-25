@@ -30,32 +30,40 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_f32 b3Color::m_Limit_d015[4]
+const b3_f32 b3Color::m_Limit_d015[4] alignas(16)
 {
-	1.0 / 15.0,
-	1.0 / 15.0,
-	1.0 / 15.0,
-	1.0 / 15.0
+	1.0 / COLOR_TOP_NIBBLE,
+	1.0 / COLOR_TOP_NIBBLE,
+	1.0 / COLOR_TOP_NIBBLE,
+	1.0 / COLOR_TOP_NIBBLE
 };
 
-const b3_f32 b3Color::m_Limit_d255[4]
+const b3_f32 b3Color::m_Limit_d255[4] alignas(16)
 {
-	1.0 / 255.0,
-	1.0 / 255.0,
-	1.0 / 255.0,
-	1.0 / 255.0
+	1.0 / COLOR_TOP_BYTE,
+	1.0 / COLOR_TOP_BYTE,
+	1.0 / COLOR_TOP_BYTE,
+	1.0 / COLOR_TOP_BYTE
+};
+
+const b3_f32 b3Color::m_Limit_m255[4] alignas(16)
+{
+	COLOR_TOP_BYTE,
+	COLOR_TOP_BYTE,
+	COLOR_TOP_BYTE,
+	COLOR_TOP_BYTE
 };
 
 #ifdef BLZ3_USE_SSE
 
-const b3_u32 b3Color::m_AbsMask[4]
+const b3_u32 b3Color::m_AbsMask[4] alignas(16)
 {
 	0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff
 };
 
 #else
 
-const b3_f32 b3Color::m_Limit_m000[4]
+const b3_f32 b3Color::m_Limit_m000[4] alignas(16)
 {
 	0.0f,
 	0.0f,
@@ -63,7 +71,7 @@ const b3_f32 b3Color::m_Limit_m000[4]
 	0.0f
 };
 
-const b3_f32 b3Color::m_Limit_m001[4]
+const b3_f32 b3Color::m_Limit_m001[4] alignas(16)
 {
 	1.0f,
 	1.0f,
@@ -71,20 +79,20 @@ const b3_f32 b3Color::m_Limit_m001[4]
 	1.0f
 };
 
-const b3_f32 b3Color::m_Limit_m255[4]
+const b3_f32 b3Color::m_Limit_m255[4] alignas(16)
 {
-	255.0f,
-	255.0f,
-	255.0f,
-	255.0f
+	COLOR_TOP_BYTE,
+	COLOR_TOP_BYTE,
+	COLOR_TOP_BYTE,
+	COLOR_TOP_BYTE
 };
 
-const b3_f32 b3Color::m_Limit_m015[4]
+const b3_f32 b3Color::m_Limit_m015[4] alignas(16)
 {
-	15.0f,
-	15.0f,
-	15.0f,
-	15.0f
+	COLOR_TOP_NIBBLE,
+	COLOR_TOP_NIBBLE,
+	COLOR_TOP_NIBBLE,
+	COLOR_TOP_NIBBLE
 };
 
 #endif

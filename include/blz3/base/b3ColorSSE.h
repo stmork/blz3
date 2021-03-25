@@ -24,6 +24,9 @@
 
 #include "blz3/b3Config.h"
 
+#define COLOR_TOP_NIBBLE   15.0
+#define COLOR_TOP_BYTE    255.0
+
 /**
  * This class provides color handling. It uses modern command sets
  * like SSE if the compiler can generate this and the underlying cpu
@@ -40,6 +43,7 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 	static const b3_u32 m_AbsMask[4];
 	static const b3_f32 m_Limit_d015[4];
 	static const b3_f32 m_Limit_d255[4];
+	static const b3_f32 m_Limit_m255[4];
 
 public:
 	/////////////////////////////////////////////////--------  constructors
@@ -327,7 +331,7 @@ public:
 	inline static b3Color b3Mix(
 		const b3Color & low,
 		const b3Color & high,
-		const b3_f32   mix)
+		const b3_f32    mix)
 	{
 		__m128  mixer = _mm_set_ps1(mix);
 		__m128  l     = SSE_PS_LOAD(low.v);
@@ -354,7 +358,7 @@ public:
 	inline static b3Color b3Mix(
 		const b3Color & low,
 		const b3Color & high,
-		const b3_f64   dMix)
+		const b3_f64    dMix)
 	{
 		float mix = dMix;
 		__m128  mixer = _mm_set_ps1(mix);
@@ -603,9 +607,9 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_mul_ps(
+		SSE_PS_STORE(result.v, _mm_div_ps(
 				SSE_PS_LOAD(v),
-				_mm_set_ps1(1.0 / value)));
+				_mm_set_ps1(value)));
 		return result;
 	}
 
@@ -620,9 +624,9 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_mul_ps(
+		SSE_PS_STORE(result.v, _mm_div_ps(
 				SSE_PS_LOAD(v),
-				_mm_set_ps1(1.0 / float(value))));
+				_mm_set_ps1(float(value))));
 		return result;
 	}
 
@@ -637,9 +641,9 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_mul_ps(
+		SSE_PS_STORE(result.v, _mm_div_ps(
 				SSE_PS_LOAD(v),
-				_mm_set_ps1(1.0 / float(value))));
+				_mm_set_ps1(float(value))));
 		return result;
 	}
 
@@ -707,7 +711,7 @@ public:
 				_mm_min_ps(
 					_mm_set_ps1(1),
 					_mm_max_ps(SSE_PS_LOAD(v), _mm_set_ps1(0))),
-				_mm_set_ps1(255)));
+				_mm_set_ps1(COLOR_TOP_BYTE)));
 
 		for (i = 0; i < 4; i++)
 		{

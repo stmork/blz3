@@ -237,6 +237,11 @@ typedef struct alignas(16) b3_color32
 	b3_f32 r; //!< The red channel.
 	b3_f32 g; //!< The green channel.
 	b3_f32 b; //!< The blue channel.
+
+	inline bool operator==(const b3_color32 & other) const
+	{
+		return (a == other.a) && (r == other.r) && (g == other.g) && (b == other.b);
+	}
 } b3_color;
 
 // Some OpenGL data structures
