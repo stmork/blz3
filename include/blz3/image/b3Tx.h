@@ -962,6 +962,11 @@ public:
 	 */
 	static       b3_tx_filetype  b3GetFileType(const char * extension);
 
+	inline const b3Path & b3GetFilename() const
+	{
+		return image_name;
+	}
+
 	/**
 	 * This method returns the image file extension depending on the given file type.
 	 *

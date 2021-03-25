@@ -99,6 +99,66 @@ void b3ImageTest::setUp()
 	}
 }
 
+void b3ImageTest::testReadGIF()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxGIF.b3LoadImage("fft_test.gif", true));
+}
+
+void b3ImageTest::testWriteTIFF()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tiff"));
+
+	compareImages(m_TxPallColor);
+	compareImages(m_TxTrueColor);
+}
+
+void b3ImageTest::testWriteJPEG()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.jpg"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.jpg"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.jpg"));
+
+	// No comparison because JPEG is not lossless.
+}
+
+void b3ImageTest::testWriteTGA()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tga"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tga"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tga"));
+
+	compareImages(m_TxPallColor);
+	compareImages(m_TxTrueColor);
+}
+
+void b3ImageTest::testWriteRGB8()
+{
+	b3Tx tx;
+
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.rgb8"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.rgb8"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.rgb8"));
+
+//	compareImages(m_TxPallColor);
+//	compareImages(m_TxTrueColor);
+}
+
+void b3ImageTest::testWritePS()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
+}
+
+void b3ImageTest::testWriteOpenEXR()
+{
+#ifdef BLZ3_USE_OPENEXR
+	m_TxRealColor.b3SaveImage("img_test_80.exr");
+#endif
+}
+
 void b3ImageTest::testTxData()
 {
 	static b3_u08 example[]
@@ -342,6 +402,23 @@ void b3ImageTest::testTransToGrey()
 		tx.b3AllocTx(50, 50, depth);
 		tx.b3TransToGrey();
 		tx.b3SaveImage(path);
+	}
+}
+
+void b3ImageTest::compareImages(const b3Tx & src)
+{
+	b3Tx tx;
+
+	CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3LoadImage(src.b3GetFilename()));
+	CPPUNIT_ASSERT_EQUAL(tx.xSize, src.xSize);
+	CPPUNIT_ASSERT_EQUAL(tx.ySize, src.ySize);
+
+	for (b3_res y = 0; y < tx.ySize; y++)
+	{
+		for (b3_res x = 0; x < tx.xSize; x++)
+		{
+			CPPUNIT_ASSERT_EQUAL(src.b3GetValue(x, y), tx.b3GetValue(x, y));
+		}
 	}
 }
 

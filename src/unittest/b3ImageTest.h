@@ -72,52 +72,13 @@ public:
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
-	void testReadGIF()
-	{
-		m_TxGIF.b3LoadImage("fft_test.gif", true);
-	}
-
-	void testWriteTIFF()
-	{
-		m_TxPallColor.b3SaveImage("img_test_08.tiff");
-		m_TxTrueColor.b3SaveImage("img_test_20.tiff");
-		m_TxRealColor.b3SaveImage("img_test_80.tiff");
-	}
-
-	void testWriteJPEG()
-	{
-		m_TxPallColor.b3SaveImage("img_test_08.jpg");
-		m_TxTrueColor.b3SaveImage("img_test_20.jpg");
-		m_TxRealColor.b3SaveImage("img_test_80.jpg");
-	}
-
-	void testWriteTGA()
-	{
-		m_TxPallColor.b3SaveImage("img_test_08.tga");
-		m_TxTrueColor.b3SaveImage("img_test_20.tga");
-		m_TxRealColor.b3SaveImage("img_test_80.tga");
-	}
-
-	void testWriteRGB8()
-	{
-		m_TxPallColor.b3SaveImage("img_test_08.rgb8");
-		m_TxTrueColor.b3SaveImage("img_test_20.rgb8");
-		m_TxRealColor.b3SaveImage("img_test_80.rgb8");
-	}
-
-	void testWritePS()
-	{
-		m_TxPallColor.b3SaveImage("img_test_08.ps");
-		m_TxTrueColor.b3SaveImage("img_test_20.ps");
-		m_TxRealColor.b3SaveImage("img_test_80.ps");
-	}
-
-#ifdef BLZ3_USE_OPENEXR
-	void testWriteOpenEXR()
-	{
-		m_TxRealColor.b3SaveImage("img_test_80.exr");
-	}
-#endif
+	void testReadGIF();
+	void testWriteTIFF();
+	void testWriteJPEG();
+	void testWriteTGA();
+	void testWriteRGB8();
+	void testWritePS();
+	void testWriteOpenEXR();
 
 	void testTxData();
 	void testPixel();
@@ -125,6 +86,9 @@ public:
 	void testScaleUnfiltered();
 	void testScaleFiltered();
 	void testTransToGrey();
+
+private:
+	void compareImages(const b3Tx & src);
 };
 
 #endif
