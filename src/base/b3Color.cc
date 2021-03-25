@@ -32,23 +32,26 @@
 
 const b3_f32 b3Color::m_Limit_d015[4]
 {
-	0.06666666666666666f,
-	0.06666666666666666f,
-	0.06666666666666666f,
-	0.06666666666666666f
+	1.0 / 15.0,
+	1.0 / 15.0,
+	1.0 / 15.0,
+	1.0 / 15.0
 };
 
 const b3_f32 b3Color::m_Limit_d255[4]
 {
-	0.0039215686f,
-	0.0039215686f,
-	0.0039215686f,
-	0.0039215686f
+	1.0 / 255.0,
+	1.0 / 255.0,
+	1.0 / 255.0,
+	1.0 / 255.0
 };
 
 #ifdef BLZ3_USE_SSE
 
-const b3_u32 b3Color::m_AbsMask[4] { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
+const b3_u32 b3Color::m_AbsMask[4]
+{
+	0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff
+};
 
 #else
 

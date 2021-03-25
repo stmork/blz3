@@ -624,17 +624,18 @@ b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 
 const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 {
+	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
 	b3_color   *   cPtr;
 
 	switch (type)
 	{
-	case B3_TX_ILBM:
-	case B3_TX_RGB4:
-		return b3Color(b3GetValue(x, y));
-
 	case B3_TX_VGA:
 		return b3Color(palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]]);
+
+	case B3_TX_RGB4:
+		sPtr = data;
+		return b3Color(b3Convert(sPtr[y * xSize + x]));
 
 	case B3_TX_RGB8:
 		lPtr  = data;
@@ -644,8 +645,9 @@ const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 		cPtr  = data;
 		return b3Color(cPtr[y * xSize + x]);
 
-	case B3_TX_UNDEFINED :
-		return b3Color(B3_BLACK);
+	case B3_TX_ILBM:
+	case B3_TX_UNDEFINED:
+		return b3Color(b3GetValue(x, y));
 
 	default :
 		B3_THROW(b3TxException, B3_TX_UNKNOWN_DATATYPE);
