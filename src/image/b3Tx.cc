@@ -656,6 +656,7 @@ b3_pkd_color b3Tx::b3GetValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
+	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
 	b3_color   *   cPtr;
 
@@ -665,7 +666,8 @@ b3_pkd_color b3Tx::b3GetValue(
 		return b3ILBMValue(x, y);
 
 	case B3_TX_RGB4:
-		return b3RGB4Value(x, y);
+		sPtr = data;
+		return b3Convert(sPtr[y * xSize + x]);
 
 	case B3_TX_RGB8:
 		lPtr  = data;
@@ -724,38 +726,6 @@ inline b3_pkd_color b3Tx::b3ILBMValue(
 		PlaneValue |= (i & 0x0000ff) << 16;
 	}
 	return PlaneValue;
-}
-
-inline b3_pkd_color b3Tx::b3VGAValue(
-	const b3_coord x,
-	const b3_coord y) const
-{
-	return palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]];
-}
-
-inline b3_pkd_color b3Tx::b3RGB4Value(
-	const b3_coord x,
-	const b3_coord y) const
-{
-	b3_u16 * Address = data;
-
-	return b3Convert(Address[y * xSize + x]);
-}
-
-inline b3_pkd_color b3Tx::b3RGB8Value(
-	const b3_coord x,
-	const b3_coord y) const
-{
-	return data[y * xSize + x];
-}
-
-inline b3_pkd_color b3Tx::b3FloatValue(
-	const b3_coord x,
-	const b3_coord y) const
-{
-	b3_color * Address = data;
-
-	return b3Color(Address[y * xSize + x]);
 }
 
 /*************************************************************************
@@ -921,7 +891,7 @@ inline void b3Tx::b3GetRGB4(
 	b3_pkd_color  * ColorLine,
 	const b3_coord  y) const
 {
-	b3_u16  *  sPtr = data;
+	b3_u16  *  sPtr = b3GetHighColorData();
 	b3_coord   x;
 
 	sPtr += (xSize * y);
@@ -935,7 +905,7 @@ inline void b3Tx::b3GetVGA(
 	b3_pkd_color  * ColorLine,
 	const b3_coord  y) const
 {
-	b3_u08  * Data = data;
+	b3_u08  * Data = b3GetIndexData();
 	b3_coord  x;
 
 	Data   += (xSize * y);
@@ -951,7 +921,7 @@ inline void b3Tx::b3GetFloat(
 	b3_pkd_color * ColorLine,
 	const b3_coord y) const
 {
-	b3_color * cPtr = data;
+	b3_color * cPtr = b3GetHdrData();
 	b3_coord   x;
 
 	cPtr += (xSize * y);

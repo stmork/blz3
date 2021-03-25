@@ -44,6 +44,61 @@ const b3_res b3ImageTest::m_TestDepth[]
 	1, 8, 12, 16, 24, 32, 128
 };
 
+b3_pkd_color b3ImageTest::data_u32[]
+{
+	B3_BLACK, B3_DARK_GREY, B3_GREY, B3_LIGHT_GREY, B3_WHITE,
+	B3_YELLOW, B3_GREEN, B3_CYAN, B3_RED, B3_MAGENTA, B3_BLUE
+};
+
+b3_u16       b3ImageTest::data_u16[]
+{
+	0x000, 0x444, 0x888, 0xccc, 0xfff, 0x900, 0x090, 0x009, 0x123
+};
+
+b3_u08       b3ImageTest::data_bw[]
+{
+	0xa0
+};
+
+b3_u08       b3ImageTest::data_vga[DATA_SIZE(data_u32)];
+b3_color     b3ImageTest::data_col[DATA_SIZE(data_u32)];
+
+void b3ImageTest::setUp()
+{
+	b3Color        row[TEST_IMG_XMAX];
+	b3_pkd_color * tRow;
+	b3_color   *   rRow;
+	b3_res         width   = TEST_IMG_XMAX >> 3;
+
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+	m_TxPallColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,   8); // 8 bit palette entry
+	m_TxTrueColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,  32); // True color, 8 bit per color
+	m_TxRealColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, 128); // Real color, 32 bit per color (floating point)
+
+	for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
+	{
+		b3_f32 r, g, b, value;
+		b3_index idx = x / width;
+
+		value = (b3_f32)(x % width) / width;
+		b = idx & 1 ? value : 0.0;
+		r = idx & 2 ? value : 0.0;
+		g = idx & 4 ? value : 0.0;
+		row[x].b3Init(r, g, b);
+	}
+
+	tRow = m_TxTrueColor.b3GetTrueColorData();
+	rRow = m_TxRealColor.b3GetHdrData();
+	for (b3_res y = 0; y < TEST_IMG_YMAX; y++)
+	{
+		for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
+		{
+			*tRow++ = row[x];
+			*rRow++ = row[x];
+		}
+	}
+}
+
 void b3ImageTest::testTxData()
 {
 	static b3_u08 example[]
@@ -78,17 +133,8 @@ void b3ImageTest::testTxData()
 
 void b3ImageTest::testPixel()
 {
-	b3_pkd_color data_u32[]
-	{
-		B3_BLACK, B3_DARK_GREY, B3_GREY, B3_LIGHT_GREY, B3_WHITE,
-		B3_YELLOW, B3_GREEN, B3_CYAN, B3_RED, B3_MAGENTA, B3_BLUE
-	};
-	b3_u08       data_bw[]  { 0xa0 };
-	b3_u16       data_u16[] { 0x000, 0x444, 0x888, 0xccc, 0xfff, 0x900, 0x090, 0x009, 0x123};
-	b3_u08       data_vga[DATA_SIZE(data_u32)];
-	b3_color     data_col[DATA_SIZE(data_u32)];
-	b3_size      i = 0;
-	b3Tx         bw, vga, high, color, hdr;
+	b3Tx     bw, vga, high, color, hdr;
+	b3_size  i = 0;
 
 	for (b3_pkd_color c : data_u32)
 	{
@@ -96,6 +142,7 @@ void b3ImageTest::testPixel()
 		data_col[i] = b3Color(c);
 		i++;
 	}
+
 	bw.b3AllocTx(4, 1, 1);
 	bw.b3SetData(data_bw, TX_BWA(sizeof(data_bw)));
 	CPPUNIT_ASSERT(bw.b3IsBW());
@@ -160,6 +207,62 @@ void b3ImageTest::testPixel()
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
 //		CPPUNIT_ASSERT_EQUAL(data_u32[i], hdr.b3GetValue(i, 0));
+	}
+}
+
+void b3ImageTest::testRow()
+{
+	b3Tx         bw, vga, high, color, hdr;
+	b3_pkd_color row_u32[DATA_SIZE(data_u32)];
+	b3_color     row_col[DATA_SIZE(data_u32)];
+	b3_res       i = 0;
+
+	for (b3_pkd_color c : data_u32)
+	{
+		data_vga[i] = i;
+		data_col[i] = b3Color(c);
+		i++;
+	}
+
+	bw.b3AllocTx(4, 1, 1);
+	bw.b3SetData(data_bw, TX_BWA(sizeof(data_bw)));
+	bw.b3GetRow(row_u32, 0);
+	bw.b3GetRow(row_col, 0);
+
+	vga.b3AllocTx(DATA_SIZE(data_vga), 1, 8);
+	vga.b3SetData(data_vga, sizeof(data_vga));
+	vga.b3SetPalette(data_u32, DATA_SIZE(data_u32));
+	vga.b3GetRow(row_u32, 0);
+	vga.b3GetRow(row_col, 0);
+	for (i = 0; i < hdr.xSize; i++)
+	{
+		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
+//		CPPUNIT_ASSERT_EQUAL(data_col[i], row_col[i]);
+	}
+
+	high.b3AllocTx(DATA_SIZE(data_u16), 1, 12);
+	high.b3SetData(data_u16, sizeof(data_u16));
+	high.b3GetRow(row_u32, 0);
+	high.b3GetRow(row_col, 0);
+
+	color.b3AllocTx(DATA_SIZE(data_u32), 1, 24);
+	color.b3SetData(data_u32, sizeof(data_u32));
+	color.b3GetRow(row_u32, 0);
+	color.b3GetRow(row_col, 0);
+	for (i = 0; i < hdr.xSize; i++)
+	{
+		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
+//		CPPUNIT_ASSERT_EQUAL(data_col[i], row_col[i]);
+	}
+
+	hdr.b3AllocTx(DATA_SIZE(data_col), 1, 128);
+	hdr.b3SetData(data_col, sizeof(data_col));
+	hdr.b3GetRow(row_u32, 0);
+	hdr.b3GetRow(row_col, 0);
+	for (i = 0; i < hdr.xSize; i++)
+	{
+//		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
+		CPPUNIT_ASSERT_EQUAL(b3Color(data_col[i]), b3Color(row_col[i]));
 	}
 }
 

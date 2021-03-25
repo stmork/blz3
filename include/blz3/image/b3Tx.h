@@ -1225,10 +1225,6 @@ private:
 
 	// b3Tx.cc
 	b3_pkd_color   b3ILBMValue(const b3_coord x, const b3_coord y) const;
-	b3_pkd_color   b3RGB4Value(const b3_coord x, const b3_coord y) const;
-	b3_pkd_color   b3RGB8Value(const b3_coord x, const b3_coord y) const;
-	b3_pkd_color   b3VGAValue(const b3_coord x, const b3_coord y) const;
-	b3_pkd_color   b3FloatValue(const b3_coord x, const b3_coord y) const;
 
 	// b3Tx.cc
 	void           b3CopyILBMtoVGA(b3_u08    *   row, b3_coord y);
