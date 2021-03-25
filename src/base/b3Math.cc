@@ -54,3 +54,31 @@ alignas(16) b3_f64 b3Math::m_CbrtCoeffs[15]
 	6.019941663742065e+00
 };
 
+b3_loop b3Math::b3PowOf2(const b3_loop value)
+{
+	b3_loop result = 1;
+
+	// Prevent busy loop
+	if ((value & 0x80000000) != 0)
+	{
+		return 0x80000000;
+	}
+
+	while (value > result)
+	{
+		result = result << 1;
+	}
+	return result;
+}
+
+b3_count b3Math::b3Log2(b3_u32 value)
+{
+	b3_count count = -1;
+
+	while (value > 0)
+	{
+		value = value >> 1;
+		count++;
+	}
+	return count;
+}

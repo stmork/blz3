@@ -22,6 +22,8 @@
 *************************************************************************/
 
 #include "b3MathTest.h"
+#include "b3TestMacros.h"
+#include <blz3/base/b3FFT.h>
 
 /*************************************************************************
 **                                                                      **
@@ -84,6 +86,29 @@ void b3MathTest::test()
 
 		CPPUNIT_ASSERT_EQUAL(expected, actual);
 	}
+}
+
+void b3MathTest::testLogPow()
+{
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 0, b3Math::b3Log2(1));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 1, b3Math::b3Log2(2));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 1, b3Math::b3Log2(3));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, b3Math::b3Log2(4));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, b3Math::b3Log2(5));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, b3Math::b3Log2(6));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 2, b3Math::b3Log2(7));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 3, b3Math::b3Log2(8));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 3, b3Math::b3Log2(9));
+
+	CPPUNIT_ASSERT_EQUAL(  1, b3Math::b3PowOf2(1));
+	CPPUNIT_ASSERT_EQUAL(  2, b3Math::b3PowOf2(2));
+	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3PowOf2(3));
+	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3PowOf2(4));
+	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3PowOf2(5));
+	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3PowOf2(6));
+	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3PowOf2(7));
+	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3PowOf2(8));
+	CPPUNIT_ASSERT_EQUAL( 16, b3Math::b3PowOf2(9));
 }
 
 #endif

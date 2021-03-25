@@ -180,7 +180,8 @@ enum b3_tx_error
 	B3_TX_ERR_HEADER,         //!< File header format error.
 	B3_TX_UNKNOWN_FILETYPE,   //!< Unknown file type.
 	B3_TX_UNKNOWN_DATATYPE,   //!< Unknown image representation.
-	B3_TX_ILLEGAL_DATATYPE    //!< Internal datatype use illegal.
+	B3_TX_ILLEGAL_DATATYPE,   //!< Internal datatype use illegal.
+	B3_TX_WRONG_SIZE          //!< The data size is not correct.
 };
 
 typedef b3Exception<b3_tx_error, 0x5458> b3TxException;
@@ -257,7 +258,15 @@ public:
 	{
 	}
 
+	inline b3_tx_data(b3_u16 * ptr) : m_Words(ptr)
+	{
+	}
+
 	inline b3_tx_data(b3_pkd_color * ptr) : m_Colors(ptr)
+	{
+	}
+
+	inline b3_tx_data(b3_color * ptr) : m_Floats(ptr)
 	{
 	}
 
@@ -371,7 +380,7 @@ public:
 	 * This constructor copies the given image as initialization.
 	 *
 	 * @param srcTx The source image.
-	 * @see b3CopyTx()
+	 * @see b3Copy()
 	 */
 	b3Tx(b3Tx * srcTx);
 
@@ -432,7 +441,9 @@ public:
 	 * @param entries The new palette.
 	 * @param numEntries The palette size.
 	 */
-	void           b3SetPalette(const b3_pkd_color * entries, b3_count numEntries);
+	void           b3SetPalette(
+		const b3_pkd_color * entries,
+		const b3_count       numEntries);
 
 	/**
 	 * This method returns the image as palette index data pointer.
@@ -507,14 +518,13 @@ public:
 	}
 
 	/**
-	 * This method sets the new image data in the given resolution. The old data is
+	 * This method sets the new image data. The old data is
 	 * deallocated.
 	 *
 	 * @param newData The new image data.
-	 * @param newXSize The new image width.
-	 * @param newYSize The new image height.
+	 * @param size The data size for verification against the internal dSize field.
 	 */
-	void           b3SetData(const void * newData, const b3_res newXSize, const b3_res newYSize);
+	void           b3SetData(const b3_tx_data newData, const b3_count size);
 
 	/**
 	 * This method returns the file name from which the image was loaded. If the
@@ -1164,6 +1174,23 @@ private:
 	inline b3_tx_data b3GetVoidData() const
 	{
 		return data;
+	}
+
+	static inline b3_pkd_color b3Convert(const b3_u16 px)
+	{
+		b3_u16       mask    = 0xf00;
+		b3_pkd_color result  = 0;
+
+		while (mask != 0)
+		{
+			const b3_u16 nibble = px & mask;
+
+			result  |= nibble;
+			result <<= 4;
+			result  |= nibble;
+			mask   >>= 4;
+		}
+		return result;
 	}
 
 	// b3TxTurn.cc

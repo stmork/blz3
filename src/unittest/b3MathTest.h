@@ -30,12 +30,14 @@ class b3MathTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3MathTest);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testLogPow);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
 	void test();
+	void testLogPow();
 };
 
 #endif

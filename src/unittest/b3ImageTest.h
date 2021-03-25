@@ -41,6 +41,7 @@ class b3ImageTest : public CppUnit::TestFixture
 
 	CPPUNIT_TEST_SUITE(b3ImageTest);
 	CPPUNIT_TEST(testTxData);
+	CPPUNIT_TEST(testPixel);
 	CPPUNIT_TEST(testReadGIF);
 	CPPUNIT_TEST(testWriteTIFF);
 	CPPUNIT_TEST(testWriteJPEG);
@@ -146,6 +147,7 @@ public:
 #endif
 
 	void testTxData();
+	void testPixel();
 	void testScaleUnfiltered();
 	void testScaleFiltered();
 	void testTransToGrey();

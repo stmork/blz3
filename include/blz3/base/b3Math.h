@@ -32,6 +32,23 @@ class B3_PLUGIN b3Math
 
 public:
 	/**
+	 * This method returns the number which is a power of 2 number
+	 * and greater or equal to the given number.
+	 *
+	 * @param value The value to compute the power of 2 number from.
+	 * @return The value which is a power of two number and greater or equal to the given number.
+	 */
+	static b3_loop  b3PowOf2(const b3_loop value);
+
+	/**
+	 * This method returns the log of the given value.
+	 *
+	 * @param value The value to compute the log2 from.
+	 * @return The resulting log2 value.
+	 */
+	static b3_count b3Log2(b3_u32 value);
+
+	/**
 	 * This method squares a value.
 	 *
 	 * \param value The value to square.

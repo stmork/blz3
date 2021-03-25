@@ -24,7 +24,8 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
-#include "blz3/base/b3Color.h"
+#include <blz3/base/b3Color.h>
+#include <blz3/base/b3Math.h>
 
 /*************************************************************************
 **                                                                      **
@@ -186,7 +187,7 @@ b3_bool b3Tx::b3AllocTx(
 		b3FreeTx();
 		return false;
 	}
-	data = reinterpret_cast<unsigned char *>(new_ptr);
+	data = new_ptr;
 
 	if (pSize > 0)
 	{
@@ -413,7 +414,7 @@ inline void b3Tx::b3CopyILBMtoRGB8(
 
 inline void b3Tx::b3CopyILBMtoFloat(
 	b3_color * row,
-	b3_coord  y)
+	b3_coord   y)
 {
 	b3_u08    *   Data;
 	b3_coord      x, d, BytesPerLine;
@@ -556,13 +557,10 @@ b3_pkd_color * b3Tx::b3GetPalette() const
 
 void b3Tx::b3SetPalette(
 	const b3_pkd_color * newPalette,
-	b3_count      NumColors)
+	const b3_count       NumColors)
 {
 	// compute bit depth
-	for (depth = 0; NumColors > 1; depth++)
-	{
-		NumColors = NumColors >> 1;
-	}
+	depth = b3Math::b3Log2(NumColors);
 	type = (depth == 1 ? B3_TX_ILBM : B3_TX_VGA);
 
 	// exchange pointer
@@ -570,14 +568,16 @@ void b3Tx::b3SetPalette(
 	palette = (b3_pkd_color *)newPalette;
 }
 
-void b3Tx::b3SetData(const void * newData, const b3_res newXSize, const b3_res newYSize)
+void b3Tx::b3SetData(const b3_tx_data newData, const b3_count size)
 {
+	if (size != dSize)
+	{
+		B3_THROW(b3TxException, B3_TX_WRONG_SIZE);
+	}
 	b3EndHist();
 	b3Free(data);
-	data  = (b3_u08 *)newData;
 
-	xSize = newXSize;
-	ySize = newYSize;
+	data  = newData;
 }
 
 void b3Tx::b3GetResolution(b3_res & xd, b3_res & yd) const
@@ -737,16 +737,9 @@ inline b3_pkd_color b3Tx::b3RGB4Value(
 	const b3_coord x,
 	const b3_coord y) const
 {
-	b3_u16    *   Address;
-	b3_pkd_color  Color, Result;
+	b3_u16 * Address = data;
 
-	Address  = data;
-	Address += (y * xSize + x);
-	Color    = (b3_pkd_color)Address[0];
-	Result   = (Color & 0x0f00) << 12;
-	Result  |= (Color & 0x00f0) <<  8;
-	Result  |= (Color & 0x000f) <<  4;
-	return Result;
+	return b3Convert(Address[y * xSize + x]);
 }
 
 inline b3_pkd_color b3Tx::b3RGB8Value(
@@ -928,20 +921,13 @@ inline void b3Tx::b3GetRGB4(
 	b3_pkd_color  * ColorLine,
 	const b3_coord  y) const
 {
-	b3_u16    *   sPtr = data;
-	b3_coord      x;
-	b3_pkd_color  Color;
+	b3_u16  *  sPtr = data;
+	b3_coord   x;
 
 	sPtr += (xSize * y);
 	for (x = 0; x < xSize; x++)
 	{
-		b3_pkd_color src = *sPtr++;
-
-		Color  = (src & 0x0f00) << 12;
-		Color |= (src & 0x00f0) <<  8;
-		Color |= (src & 0x000f) <<  4;
-
-		*ColorLine++ = Color;
+		*ColorLine++ = b3Convert(*sPtr++);
 	}
 }
 

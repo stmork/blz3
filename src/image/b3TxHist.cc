@@ -511,7 +511,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	switch (type)
 	{
 	case B3_TX_VGA:
-		bPtr = (b3_u08 *)data;
+		bPtr = data;
 		ptr  = dPtr;
 		for (y = 0; y < ySize; y++)
 		{
@@ -562,7 +562,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		break;
 
 	case B3_TX_RGB4:
-		sPtr = (b3_u16 *)data;
+		sPtr = data;
 		ptr  = dPtr;
 		for (y = 0; y < ySize; y++)
 		{
@@ -571,10 +571,10 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			i    =   0;
 			for (x = 0; x < xSize; x++)
 			{
-				color = *sPtr++;
-				r = ((color & 0xf00) >> 4) * 0.35;
-				g = ((color & 0x0f0))      * 0.51;
-				b = ((color & 0x00f) << 4) * 0.14;
+				color = b3Convert(*sPtr++);
+				r = ((color & 0xff0000) >> 16) * 0.35;
+				g = ((color & 0x00ff00) >>  8) * 0.51;
+				b = ((color & 0x0000ff))       * 0.14;
 
 				// Set bit if over threshold
 				if ((r + g + b) < threshold)
@@ -604,7 +604,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		break;
 
 	case B3_TX_RGB8:
-		lPtr = (b3_pkd_color *)data;
+		lPtr = data;
 		ptr  = dPtr;
 		for (y = 0; y < ySize; y++)
 		{
@@ -646,7 +646,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		break;
 
 	case B3_TX_FLOAT:
-		cPtr = (b3_color *)data;
+		cPtr = data;
 		ptr  = dPtr;
 		for (y = 0; y < ySize; y++)
 		{

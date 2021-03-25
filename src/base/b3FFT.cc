@@ -57,35 +57,6 @@ b3Fourier::~b3Fourier()
 	b3FreeBuffer();
 }
 
-b3_loop b3Fourier::b3PowOf2(const b3_loop value)
-{
-	b3_loop result = 1;
-
-	// Prevent busy loop
-	if ((value & 0x80000000) != 0)
-	{
-		return 0x80000000;
-	}
-
-	while (value > result)
-	{
-		result = result << 1;
-	}
-	return result;
-}
-
-b3_count b3Fourier::b3Log2(b3_u32 value)
-{
-	b3_count count = -1;
-
-	while (value > 0)
-	{
-		value = value >> 1;
-		count++;
-	}
-	return count;
-}
-
 void b3Fourier::b3FreeBuffer()
 {
 	b3Free();
@@ -108,7 +79,7 @@ void b3Fourier::b3FreeBuffer()
 
 b3_bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 {
-	b3_res size = b3PowOf2(new_size);
+	b3_res size = b3Math::b3PowOf2(new_size);
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%zd)\n", size);
 	m_xOrig  =
@@ -149,8 +120,8 @@ b3_bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 
 	m_xOrig  = tx->xSize;
 	m_yOrig  = tx->ySize;
-	m_xSize  = b3PowOf2(m_xOrig);
-	m_ySize  = b3PowOf2(m_yOrig);
+	m_xSize  = b3Math::b3PowOf2(m_xOrig);
+	m_ySize  = b3Math::b3PowOf2(m_yOrig);
 	max      = B3_MAX(m_xSize, m_ySize);
 	m_xSize  = max;
 	m_ySize  = max;
@@ -187,8 +158,8 @@ b3_bool b3Fourier::b3ReallocBuffer()
 {
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3ReallocBuffer()\n");
 
-	m_xDim   = b3Log2(m_xSize);
-	m_yDim   = b3Log2(m_ySize);
+	m_xDim   = b3Math::b3Log2(m_xSize);
+	m_yDim   = b3Math::b3Log2(m_ySize);
 
 	m_Buffer = new b3Complex64[m_xSize * m_ySize];
 	m_Lines  = new b3Complex64 *[m_ySize];
