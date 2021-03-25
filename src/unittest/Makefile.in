@@ -68,7 +68,7 @@ clean:	cleantest
 cleantest:
 	rm -f $(TEST_FILES)
 
-basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE)
+basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE) $(B3_LIB_RAYTRACE)
 
 test:	basetest
 	time ./basetest
