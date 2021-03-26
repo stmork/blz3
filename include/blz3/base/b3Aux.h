@@ -124,7 +124,12 @@ public:
 
 public:
 	/**
-	 * This constructor initializes this instance to zero values.
+	 * This constructor initializes this instance to zero default values.
+	 *
+	 * @param x1 The left coordinate.
+	 * @param y1 The top coordinate.
+	 * @param x2 The right coordinate.
+	 * @param y2 The bottom coordinate.
 	 */
 	explicit b3Rect(
 			const b3_coord x1 = 0,
@@ -185,7 +190,7 @@ public:
 	 * @param x The new x coordinate.
 	 * @param y The new y coordinate.
 	 */
-	inline b3Point(b3_f64 x = 0, b3_f64 y = 0)
+	explicit inline b3Point(b3_f64 x = 0, b3_f64 y = 0)
 	{
 		this->x = x;
 		this->y = y;

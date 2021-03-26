@@ -62,7 +62,7 @@
 
 b3Spline      b3Noise::m_MarbleSpline;
 b3_f32        b3Noise::m_MarbleKnots[16];
-b3_vector     b3Noise::m_MarbleControls[8] =
+b3_vector     b3Noise::m_MarbleControls[8]
 {
 	{ 0.0f, 0.5f, 0},
 	{ 1.0f, 0.7f, 0},
@@ -76,7 +76,7 @@ b3_vector     b3Noise::m_MarbleControls[8] =
 
 b3Spline      b3Noise::m_WoodSpline;
 b3_f32        b3Noise::m_WoodKnots[16];
-b3_vector     b3Noise::m_WoodControls[8] =
+b3_vector     b3Noise::m_WoodControls[8]
 {
 	{ 0.0f, 0.4f, 0},
 	{ 2.0f, 0.9f, 0},
@@ -92,7 +92,7 @@ b3Spline      b3Noise::m_WaveSpline;
 b3_f32        b3Noise::m_WaveKnots[14];
 b3_vector     b3Noise::m_WaveControls[10];
 
-const b3_u08 b3Noise::m_OM[4][8][3] =
+const b3_u08 b3Noise::m_OM[4][8][3]
 {
 	{	{1, 0, 0}
 		, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}, {2, 0, 0}, {2, 0, 1}, {2, 1, 0}, {2, 1, 1}
@@ -182,7 +182,7 @@ b3Noise::~b3Noise()
 **                                                                      **
 *************************************************************************/
 
-int b3Noise::m_Permutation[512] =
+int b3Noise::m_Permutation[512]
 {
 	151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233,  7, 225,
 	140, 36, 103, 30, 69, 142,  8, 99, 37, 240, 21, 10, 23, 190,  6, 148,
