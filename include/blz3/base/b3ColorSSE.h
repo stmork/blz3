@@ -149,6 +149,9 @@ public:
 #endif
 	}
 
+	typedef int   v4si __attribute__ ((vector_size (16)));
+	typedef float v4sf __attribute__ ((vector_size (16)));
+
 	/**
 	 * This constructor initializes this instance from a ::b3_pkd_color structure.
 	 *
@@ -156,27 +159,33 @@ public:
 	 */
 	inline b3Color(const b3_pkd_color input)
 	{
-		b3_pkd_color       color = input;
-		b3_loop            i;
-
 #ifdef BLZ3_USE_SSE2
-		alignas(16) b3_s32  c[4];
-		__m128i             ci;
-
-		for (i = 3; i >= 0; i--)
+		union
 		{
-			c[i]  = color & 0xff;
-			color = color >> 8;
-		}
+			b3_u08       b[4];
+			b3_pkd_color c;
+		} color;
+		union
+		{
+			__m128i sse;
+			v4si    v;
+		} u;
 
-		ci = _mm_loadu_si128((__m128i *)c);
+		color.c = input;
+		v4si c
+		{
+			color.b[3], color.b[2], color.b[1], color.b[0]
+		};
+
+		u.v = c;
 		SSE_PS_STORE(v, _mm_mul_ps(
-				_mm_cvtepi32_ps(ci),
-				_mm_loadu_ps(m_Limit_d255)));
+				_mm_cvtepi32_ps(u.sse),
+				_mm_load_ps(m_Limit_d255)));
 #else
-		b3_f32 B3_ALIGN_16 c[4];
+		alignas(16) b3_f32 c[4];
+		b3_pkd_color       color = input;
 
-		for (i = 3; i >= 0; i--)
+		for (b3_loop i = 3; i >= 0; i--)
 		{
 			c[i]  = b3_f32(color & 0xff);
 			color = color >> 8;

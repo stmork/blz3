@@ -662,6 +662,7 @@ BLZ3_USE_OPENGL
 BLZ3_USE_GLUT
 BLZ3_USE_CG
 BLZ3_IS_LINUX
+MFLAGS
 DOS2UNIX
 RANLIB
 AR
@@ -4722,6 +4723,7 @@ BUILD=${BUILD_NUMBER:-0}
 
 
 
+
 BLZ3_HOME="$PWD"
 
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"
@@ -6485,7 +6487,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___march_native" >&5
 $as_echo "$ax_cv_check_cxxflags___march_native" >&6; }
 if test "x$ax_cv_check_cxxflags___march_native" = xyes; then :
-  CXXFLAGS="$CXXFLAGS -march=native"
+  MFLAGS="$MFLAGS -march=native"
 else
   :
 fi
@@ -6520,7 +6522,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___ftree_vectorize" >&5
 $as_echo "$ax_cv_check_cxxflags___ftree_vectorize" >&6; }
 if test "x$ax_cv_check_cxxflags___ftree_vectorize" = xyes; then :
-  CXXFLAGS="$CXXFLAGS -ftree-vectorize"
+  MFLAGS="$MFLAGS -ftree-vectorize"
 else
   :
 fi
@@ -10085,7 +10087,7 @@ done
 
 
 
-ac_config_files="$ac_config_files control-blz3 control-libblz3-dev Doxyfile src/Makefile src/icc.make src/system_unix/Makefile src/system/Makefile src/base/Makefile src/image/Makefile src/raytrace/Makefile src/test_unix/Makefile src/OpenGL/Makefile src/brt3/Makefile src/divx/Makefile src/tools/Makefile src/cpuperf/Makefile src/unittest/Makefile"
+ac_config_files="$ac_config_files control-blz3 control-libblz3-dev Doxyfile src/flags.pri src/Makefile src/icc.make src/system_unix/Makefile src/system/Makefile src/base/Makefile src/image/Makefile src/raytrace/Makefile src/test_unix/Makefile src/OpenGL/Makefile src/brt3/Makefile src/divx/Makefile src/tools/Makefile src/cpuperf/Makefile src/unittest/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -10780,6 +10782,7 @@ do
     "control-blz3") CONFIG_FILES="$CONFIG_FILES control-blz3" ;;
     "control-libblz3-dev") CONFIG_FILES="$CONFIG_FILES control-libblz3-dev" ;;
     "Doxyfile") CONFIG_FILES="$CONFIG_FILES Doxyfile" ;;
+    "src/flags.pri") CONFIG_FILES="$CONFIG_FILES src/flags.pri" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/icc.make") CONFIG_FILES="$CONFIG_FILES src/icc.make" ;;
     "src/system_unix/Makefile") CONFIG_FILES="$CONFIG_FILES src/system_unix/Makefile" ;;

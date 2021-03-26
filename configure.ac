@@ -24,6 +24,7 @@ AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 
 BUILD=${BUILD_NUMBER:-0}
 
+AC_SUBST(MFLAGS)
 AC_SUBST(BLZ3_IS_LINUX)
 AC_SUBST(BLZ3_USE_CG)
 AC_SUBST(BLZ3_USE_GLUT)
@@ -55,8 +56,8 @@ AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
 AC_LANG_PUSH(C++)
 
 AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
-AX_CHECK_COMPILE_FLAG([-march=native], [CXXFLAGS="$CXXFLAGS -march=native"])
-AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [CXXFLAGS="$CXXFLAGS -ftree-vectorize"])
+AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
+AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
 
 AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
 
@@ -303,6 +304,7 @@ AC_CONFIG_FILES([
 	control-blz3
 	control-libblz3-dev
 	Doxyfile
+	src/flags.pri
 	src/Makefile
 	src/icc.make
 	src/system_unix/Makefile

@@ -43,7 +43,8 @@ enum b3_vector_unit
 	B3_VU_SSE2,    //!< SSE2
 	B3_VU_SSE3,    //!< SSE3
 	B3_VU_3DNOW,   //!< AMD 3DNow
-	B3_VU_ALTIVEC  //!< PowerPC AltiVec/Velocity Engine
+	B3_VU_ALTIVEC, //!< PowerPC AltiVec/Velocity Engine
+	B3_VU_NEON     //!< ARM vector unit.
 };
 
 /**

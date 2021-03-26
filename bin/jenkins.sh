@@ -17,7 +17,7 @@ mkdir -p ${BLZ3_DEBIAN_DEV}/usr/include
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/lib
 mkdir -p ${BLZ3_DEBIAN_DEV}/DEBIAN
 
-export CXXFLAGS="-O3 -ffast-math -ftree-vectorize -s"
+export CXXFLAGS="-O3 -s"
 CFLAGS="${CXXFLAGS}"
 unset CPPFLAGS
 

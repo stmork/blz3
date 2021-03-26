@@ -48,7 +48,8 @@ char      b3Runtime::m_Compiler[256];
 b3Runtime::b3Runtime()
 {
 	const char * vu;
-	b3_count    bits = b3GetCPUBits();
+	b3_count     bits = b3GetCPUBits();
+
 #if defined(B3_SSE2)
 	const char * math = "SSE2";
 #elif defined(B3_SSE)
@@ -56,9 +57,8 @@ b3Runtime::b3Runtime()
 #else
 	const char * math = "FPU";
 #endif
-	char * locale;
+	const char * locale = setlocale(LC_ALL, "");
 
-	locale = setlocale(LC_ALL, "");
 	if (locale == nullptr)
 	{
 		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
@@ -92,6 +92,9 @@ b3Runtime::b3Runtime()
 		break;
 	case B3_VU_ALTIVEC:
 		vu = "AltiVec";
+		break;
+	case B3_VU_NEON:
+		vu = "NEON";
 		break;
 	}
 
