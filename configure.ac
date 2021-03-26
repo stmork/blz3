@@ -58,6 +58,9 @@ AC_LANG_PUSH(C++)
 AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
 AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
 AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
+CFLAGS="$CFLAGS $MFLAGS"
+CXXFLAGS="$CXXFLAGS $MFLAGS"
+# CPPFLAGS="$CPPFLAGS $MFLAGS"
 
 AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
 

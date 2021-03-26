@@ -6527,6 +6527,9 @@ else
   :
 fi
 
+CFLAGS="$CFLAGS $MFLAGS"
+CXXFLAGS="$CXXFLAGS $MFLAGS"
+# CPPFLAGS="$CPPFLAGS $MFLAGS"
 
 for ac_func in floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr
 do :
