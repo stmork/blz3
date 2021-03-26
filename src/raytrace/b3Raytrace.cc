@@ -420,7 +420,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	}
 
 	b3PrintF(B3LOG_FULL, "  preparing global shader...\n");
-	B3_ASSERT(m_Shader != null);
+	B3_ASSERT(m_Shader != nullptr);
 	m_Shader->b3Prepare(info);
 
 	timepoint.b3Now();

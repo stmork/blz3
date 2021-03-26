@@ -161,22 +161,22 @@ void b3RenderObject::b3MapVertices(b3_vbo_mapping map_mode)
 {
 	print_mapping(" b3MapVertices", map_mode);
 
-	B3_ASSERT(glVertexElements != null);
+	B3_ASSERT(glVertexElements != nullptr);
 	glVertexElements->b3Map(map_mode);
 }
 
 void b3RenderObject::b3UnmapIndices()
 {
-	B3_ASSERT(glGridElements != null);
+	B3_ASSERT(glGridElements != nullptr);
 	glGridElements->b3Unmap();
 
-	B3_ASSERT(glPolygonElements != null);
+	B3_ASSERT(glPolygonElements != nullptr);
 	glPolygonElements->b3Unmap();
 }
 
 void b3RenderObject::b3UnmapVertices()
 {
-	B3_ASSERT(glVertexElements != null);
+	B3_ASSERT(glVertexElements != nullptr);
 	glVertexElements->b3Unmap();
 }
 
@@ -889,7 +889,7 @@ void b3RenderObject::b3CopyTexture(
 	b3_coord       i = 0;
 
 	// Limit size
-	B3_ASSERT(input != null);
+	B3_ASSERT(input != nullptr);
 	while (xMax > input->xSize)
 	{
 		xMax /= 2;
@@ -923,7 +923,7 @@ void b3RenderObject::b3CreateImage(
 	b3_pkd_color * lPtr = input->b3GetTrueColorData();
 	b3_coord      size, i = 0;
 
-	B3_ASSERT(lPtr != null);
+	B3_ASSERT(lPtr != nullptr);
 	size = input->xSize * input->ySize;
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "b3RenderObject::b3CreateImage(...) # size: %4d\n", size);
@@ -1081,7 +1081,7 @@ void b3RenderObject::b3CheckGeometry(
 			// the length of the lines to be drawn.
 			for (i = 0; i < glGridElements->b3GetCount(); i++)
 			{
-				b3_vector aPoint, bPoint;
+				b3_vector aPoint B3_UNUSED, bPoint B3_UNUSED;
 				b3_index  a, b;
 
 				a = glGrids[i].a;
@@ -1101,7 +1101,7 @@ void b3RenderObject::b3CheckGeometry(
 #ifdef _DEBUG
 			for (i = 0; i < glPolygonElements->b3GetCount(); i++)
 			{
-				b3_vector aPoint, bPoint, cPoint;
+				b3_vector aPoint B3_UNUSED, bPoint B3_UNUSED, cPoint B3_UNUSED;
 				b3_index  a, b, c;
 
 				a = glPolygons[i].a;
@@ -1237,7 +1237,7 @@ void b3RenderObject::b3DrawFilledGeometry(B3_UNUSED const b3RenderContext * cont
 
 #else
 
-void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context)
+void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context B3_UNUSED)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifdef VERBOSE
@@ -1257,7 +1257,7 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context)
 #endif
 }
 
-void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext * context)
+void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext * context B3_UNUSED)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifdef VERBOSE

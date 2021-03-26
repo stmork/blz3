@@ -78,7 +78,7 @@ b3_u32 b3Sampler::b3SampleThread(void * ptr)
 b3ImageSampler::b3ImageSampler(b3Tx * tx)
 {
 	// Init texture
-	B3_ASSERT(tx->b3IsHDR());
+	B3_ASSERT(tx->b3IsHdr());
 
 	m_xMax  = tx->xSize;
 	m_yMax  = tx->ySize;

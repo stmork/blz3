@@ -32,7 +32,7 @@ public:
 	inline b3TimeStop(const char * title, const b3_log_level level = B3LOG_FULL)
 		: m_Start(b3Now()), m_Level(level)
 	{
-		B3_ASSERT(title != null);
+		B3_ASSERT(title != nullptr);
 
 		m_Title = title;
 

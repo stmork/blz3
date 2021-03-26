@@ -6454,6 +6454,76 @@ $as_echo "#define HAVE_CXX17 1" >>confdefs.h
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: C++17 is not yet standardized, so the checks may change in incompatible ways anytime" >&5
 $as_echo "$as_me: WARNING: C++17 is not yet standardized, so the checks may change in incompatible ways anytime" >&2;}
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -march=native" >&5
+$as_echo_n "checking whether C++ compiler accepts -march=native... " >&6; }
+if ${ax_cv_check_cxxflags___march_native+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -march=native"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_check_cxxflags___march_native=yes
+else
+  ax_cv_check_cxxflags___march_native=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___march_native" >&5
+$as_echo "$ax_cv_check_cxxflags___march_native" >&6; }
+if test "x$ax_cv_check_cxxflags___march_native" = xyes; then :
+  OFLAGS="$OFLAGS -march=native"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -ftree-vectorize" >&5
+$as_echo_n "checking whether C++ compiler accepts -ftree-vectorize... " >&6; }
+if ${ax_cv_check_cxxflags___ftree_vectorize+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -ftree-vectorize"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_check_cxxflags___ftree_vectorize=yes
+else
+  ax_cv_check_cxxflags___ftree_vectorize=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___ftree_vectorize" >&5
+$as_echo "$ax_cv_check_cxxflags___ftree_vectorize" >&6; }
+if test "x$ax_cv_check_cxxflags___ftree_vectorize" = xyes; then :
+  OFLAGS="$OFLAGS -ftree-vectorize"
+else
+  :
+fi
+
 
 for ac_func in floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr
 do :

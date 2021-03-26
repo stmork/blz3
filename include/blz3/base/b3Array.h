@@ -135,7 +135,7 @@ public:
 	inline T & operator [](const b3_index index)
 	{
 #ifdef _DEBUG
-		if ((index < 0) || (index >= b3Size()))
+		if ((index < 0) || (index >= b3GetCount()))
 		{
 			B3_THROW(b3ArrayException, B3_ARRAY_OUT_OF_BOUNDS);
 		}
@@ -154,7 +154,7 @@ public:
 	inline const T & operator [](const b3_index index) const
 	{
 #ifdef _DEBUG
-		if ((index < 0) || (index >= b3Size()))
+		if ((index < 0) || (index >= b3GetCount()))
 		{
 			B3_THROW(b3ArrayException, B3_ARRAY_OUT_OF_BOUNDS);
 		}

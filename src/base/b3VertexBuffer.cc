@@ -181,7 +181,7 @@ b3ArrayVertexElements::b3ArrayVertexElements()
 
 void b3ArrayVertexElements::b3Draw()
 {
-	B3_ASSERT(glVertex != null);
+	B3_ASSERT(glVertex != nullptr);
 
 #ifdef BLZ3_USE_OPENGL
 	glInterleavedArrays(GL_T2F_N3F_V3F, 0, glVertex);
@@ -400,7 +400,7 @@ void b3VboGridElements::b3Map(b3_vbo_mapping map_mode)
 				(GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB,
 				(GLenum)map_mode);
 
-		B3_ASSERT(glGrids != null);
+		B3_ASSERT(glGrids != nullptr);
 	}
 #endif
 
@@ -499,7 +499,7 @@ void b3VboPolygonElements::b3Map(b3_vbo_mapping map_mode)
 				(GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB,
 				(GLenum)map_mode);
 
-		B3_ASSERT(glPolygons != null);
+		B3_ASSERT(glPolygons != nullptr);
 	}
 #endif
 

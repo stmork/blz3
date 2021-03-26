@@ -43,7 +43,7 @@ b3BumpSampler::b3BumpSampler(b3Tx * tx, const b3_vector * bbox_size, const b3_co
 	m_BBoxSize(bbox_size)
 {
 	// Init texture
-	B3_ASSERT(tx->b3IsHDR());
+	B3_ASSERT(tx->b3IsHdr());
 
 	m_t     = 0;
 	m_Scene = nullptr;
@@ -66,7 +66,7 @@ b3SampleInfo * b3BumpSampler::b3SampleInit(const b3_count CPUs)
 	b3_res                yStart, yEnd;
 	b3_color       *      data = (b3_color *)m_Data;
 
-	B3_ASSERT(m_Bump != null);
+	B3_ASSERT(m_Bump != nullptr);
 	m_Bump->b3Prepare(this);
 	yStart = 0;
 	for (i = 0; i < CPUs; i++)

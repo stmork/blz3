@@ -313,7 +313,7 @@ b3Tx * b3Shape::b3GetTexture(
 		b3_f64            yLocSize;
 
 		tx     = mat->m_Texture;
-		B3_ASSERT(tx != null);
+		B3_ASSERT(tx != nullptr);
 
 		b3ComputeBound(&limit);
 		xLocSize = limit.x2 - limit.x1;

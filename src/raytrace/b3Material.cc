@@ -1173,7 +1173,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * ji
 	b3_ray   *   ray = surface->m_Incoming;
 	b3_vector64  L;
 
-	B3_ASSERT(ray != null);
+	B3_ASSERT(ray != nullptr);
 
 	b3Vector::b3Init(&L, &jit->dir);
 	b3Vector::b3Normalize(&L);
@@ -1458,7 +1458,7 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit) c
 		b3_f64       nl;
 		b3_f64       rl;
 
-		B3_ASSERT(ray != null);
+		B3_ASSERT(ray != nullptr);
 
 		b3Vector::b3Init(&L, &jit->dir);
 		b3Vector::b3Normalize(&L);
@@ -1564,14 +1564,14 @@ b3_bool b3MatThinFilm::b3Prepare(b3_preparation_info * prep_info)
 
 b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface * surface) const
 {
-	b3Color      factor;
-	b3_vector    point;
-	b3_vector    shift;
+	b3Color       factor;
+	b3_vector     point;
+	b3_vector     shift;
 	b3_vector64 * normal = &surface->m_Incoming->normal;
-	b3_f64       quotient;
-	b3_f64       cos_phi;
-	b3_f64       sin_theta_sqr, cos_theta;
-	b3_f64       wobble;
+	b3_f64        quotient;
+	b3_f64        cos_phi;
+	b3_f64        sin_theta_sqr, cos_theta;
+	b3_f64        wobble;
 
 	// scale
 	b3Scale(surface->m_Incoming, &m_Scale, &point);
@@ -1583,7 +1583,7 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface * surface) const
 	point.z += m_ScaleTime.z * shift.z;
 
 	wobble =
-		b3Noise::b3SignedFilteredNoiseVector(point.x,    point.y,    point.z) +
+		b3Noise::b3SignedFilteredNoiseVector(point.x,     point.y,     point.z) +
 		b3Noise::b3SignedFilteredNoiseVector(point.x * 2, point.y * 2, point.z * 2) * 0.5 +
 		b3Noise::b3SignedFilteredNoiseVector(point.x * 4, point.y * 4, point.z * 4) * 0.25;
 

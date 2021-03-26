@@ -361,7 +361,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	}
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "G: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
+	b3PrintF(B3LOG_FULL, "G: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu\n",
 		ver, rev, id, parent, len, size);
 #endif
 
@@ -423,7 +423,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #ifdef _DEBUG
 			else
 			{
-				b3PrintF(B3LOG_FULL, "R: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
+				b3PrintF(B3LOG_FULL, "R: V%d.%02d ID: %8d P: %8d - size: %8d,%8d\n",
 					0, 0, 1, 0, 0, 0);
 			}
 #endif
@@ -432,7 +432,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	}
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "P: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
+	b3PrintF(B3LOG_FULL, "P: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu\n",
 		ver, rev, id, parent, len, size);
 #endif
 
@@ -636,7 +636,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 		&ver, &rev, &id, &parent, &size);
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "M: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
+	b3PrintF(B3LOG_FULL, "M: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu\n",
 		ver, rev, id, parent, len, size);
 #endif
 
@@ -719,7 +719,7 @@ b3_size b3COBReader::b3COB_ParseDummy(const char * buffer)
 		command, &ver, &rev, &id, &parent, &size);
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "D: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld (%c%c%c%c)\n",
+	b3PrintF(B3LOG_FULL, "D: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu (%c%c%c%c)\n",
 		ver, rev, id, parent, len, size,
 		command[0],
 		command[1],

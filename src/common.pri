@@ -13,7 +13,7 @@ BLZ3_LIB     = $$BLZ3_HOME/lib
 BLZ3_BIN     = $$BLZ3_HOME/bin
 BLZ3_LCOV    = $$BLZ3_HOME/lcov-out
 
-QMAKE_CXXFLAGS_DEBUG   += -Wsuggest-override
+QMAKE_CXXFLAGS_DEBUG   += -Wsuggest-override -D_DEBUG
 QMAKE_CXXFLAGS_RELEASE  = $$replace(QMAKE_CXXFLAGS_RELEASE,"-O2","-O3")
 QMAKE_CXXFLAGS_RELEASE += $$(OFLAGS)
 QMAKE_CLEAN            += *.gcno *.gcda coverage.info

@@ -69,7 +69,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext * context)
 
 	case B3_LIGHT_SCENE:
 	case B3_LIGHT_SCENE_SPOT:
-		B3_ASSERT(m_Scene != null);
+		B3_ASSERT(m_Scene != nullptr);
 		ambient.b3Init(
 			m_Scene->m_ShadowBrightness,
 			m_Scene->m_ShadowBrightness,

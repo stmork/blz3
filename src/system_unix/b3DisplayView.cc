@@ -477,7 +477,7 @@ void b3DisplayView::b3Open(
 	b3PrintF(B3LOG_NORMAL, "xMax:   %4ld\n", m_xMax);
 	b3PrintF(B3LOG_NORMAL, "yMax:   %4ld\n", m_yMax);
 	b3PrintF(B3LOG_NORMAL, "dep:    %4ld\n", m_depth);
-	b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", DisplayPlanes(m_Display, m_Screen));
+	b3PrintF(B3LOG_NORMAL, "planes: %4d\n", DisplayPlanes(m_Display, m_Screen));
 #endif
 
 	m_Window = XCreateSimpleWindow(

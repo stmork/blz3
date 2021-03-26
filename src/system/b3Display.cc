@@ -114,7 +114,7 @@ void b3Display::b3PutRow(const b3Row * row)
 	b3_coord  y = row->m_y;
 	b3_color * src, *dst;
 
-	B3_ASSERT(m_Buffer != null);
+	B3_ASSERT(m_Buffer != nullptr);
 	src = row->m_buffer;
 	dst = &m_Buffer[y * m_xMax];
 	if (src != dst)

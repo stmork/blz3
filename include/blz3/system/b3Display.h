@@ -128,7 +128,7 @@ public:
 	 */
 	virtual void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel)
 	{
-		B3_ASSERT(m_Buffer != null);
+		B3_ASSERT(m_Buffer != nullptr);
 		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
 		{
 			m_Buffer[y * m_xMax + x] = pixel;
@@ -145,7 +145,7 @@ public:
 	 */
 	virtual b3_color b3GetPixel(const b3_coord x, const b3_coord y)
 	{
-		B3_ASSERT(m_Buffer != null);
+		B3_ASSERT(m_Buffer != nullptr);
 		return
 			((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax)) ?
 			m_Buffer[y * m_xMax + x] :

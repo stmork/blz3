@@ -244,7 +244,7 @@ void b3TriangleShape::b3PrepareGridList()
 #ifdef _DEBUG
 	if (degenerated > 0)
 	{
-		b3PrintF(B3LOG_DEBUG, "%d triangles degenerated.\n", degenerated);
+		b3PrintF(B3LOG_DEBUG, "%ld triangles degenerated.\n", degenerated);
 	}
 #endif
 }
@@ -276,7 +276,7 @@ b3_bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 		{
 			m_ySize = 1;
 		}
-		B3_ASSERT(b3GetConditionHead()->First == null);
+		B3_ASSERT(b3GetConditionHead()->First == nullptr);
 	}
 
 	if (!m_GridComputed)

@@ -113,7 +113,7 @@ b3_bool b3PrepareInfo::b3Prepare(
 
 	m_PrepareProc = prepare_proc;
 	m_Ptr         = ptr;
-	B3_ASSERT(m_PrepareProc != null);
+	B3_ASSERT(m_PrepareProc != nullptr);
 
 	if ((m_Threads != nullptr) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading) && (threaded))
 	{

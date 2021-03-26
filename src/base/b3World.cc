@@ -240,7 +240,7 @@ b3_world_error b3World::b3Parse(const b3_bool throw_exception)
 		return B3_WORLD_PARSE;
 	}
 #ifdef _DEBUG
-	b3ItemRegister::b3Dump();
+	b3ItemRegister::b3Instance().b3Dump();
 #endif
 
 	b3PrintF(B3LOG_FULL, "Parsing...\n");

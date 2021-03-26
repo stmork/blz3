@@ -186,7 +186,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	for (y = 0; y < CurveNum; y++)
 	{
 #ifdef _DEBUG
-		b3PrintF(B3LOG_FULL, "     y: %d\n", y);
+		b3PrintF(B3LOG_FULL, "     y: %ld\n", y);
 #endif
 		Points = MySpline.b3DeBoor(SplVector, y);
 		for (t = 0; t < Points; t++)
@@ -216,7 +216,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	for (x = 0; x < CurveNum; x++)
 	{
 #ifdef _DEBUG
-		b3PrintF(B3LOG_FULL, "     x: %d\n", x);
+		b3PrintF(B3LOG_FULL, "     x: %ld\n", x);
 #endif
 		Points = MySpline.b3DeBoor(SplVector, x);
 		for (t = 0; t < Points; t++)

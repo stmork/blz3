@@ -274,7 +274,7 @@ void b3RenderView::b3PopView()
 	if (m_ViewMode != B3_VIEW_3D)
 	{
 		item = m_ViewStack[m_ViewMode].Last;
-		B3_ASSERT(item != null);
+		B3_ASSERT(item != nullptr);
 		if (item != m_ViewStack[m_ViewMode].First)
 		{
 			m_ViewStack[m_ViewMode].b3Remove(item);
@@ -311,7 +311,7 @@ void b3RenderView::b3Scale(b3_f64 scale)
 {
 	if (m_ViewMode != B3_VIEW_3D)
 	{
-		B3_ASSERT(m_Actual != null);
+		B3_ASSERT(m_Actual != nullptr);
 		m_Actual->m_Size.x *= scale;
 		m_Actual->m_Size.y *= scale;
 		m_Actual->m_Size.z *= scale;
@@ -322,7 +322,7 @@ void b3RenderView::b3Move(b3_f64 xDir, b3_f64 yDir)
 {
 	if (m_ViewMode != B3_VIEW_3D)
 	{
-		B3_ASSERT(m_Actual != null);
+		B3_ASSERT(m_Actual != nullptr);
 
 		xDir /= m_Actual->m_xRelation;
 		yDir *= m_Actual->m_yRelation;
@@ -800,7 +800,7 @@ void b3RenderView::b3SetupView(
 
 	m_xRes = xSize;
 	m_yRes = ySize;
-	B3_ASSERT((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
+	B3_ASSERT((m_Actual != nullptr) || (m_ViewMode == B3_VIEW_3D));
 	glViewport(0, 0, xSize, ySize);
 	b3Vector::b3Init(&m_ViewInfo.up);
 	switch (m_ViewMode)

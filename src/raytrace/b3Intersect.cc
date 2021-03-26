@@ -833,7 +833,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	b3_count     GridMax;
 #endif
 
-	B3_ASSERT(m_GridList != null);
+	B3_ASSERT(m_GridList != nullptr);
 
 	if (m_GridSize <= 1)
 	{
