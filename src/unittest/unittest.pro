@@ -11,6 +11,7 @@ HEADERS += \
 	b3CompareTest.h \
 	b3ComplexTest.h \
 	b3DataSizeTest.h \
+	b3EndianTest.h \
 	b3FFTTest.h \
 	b3FileTest.h \
 	b3ImageTest.h \
@@ -33,6 +34,7 @@ SOURCES += \
 	b3CompareTest.cc \
 	b3ComplexTest.cc \
 	b3DataSizeTest.cc \
+	b3EndianTest.cc \
 	b3FFTTest.cc \
 	b3FileTest.cc \
 	b3ImageTest.cc \
