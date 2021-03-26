@@ -43,46 +43,50 @@ b3RGB::b3RGB()
 **                                                                      **
 *************************************************************************/
 
-b3Rect::b3Rect()
+b3Rect::b3Rect(
+		const b3_coord x1,
+		const b3_coord y1,
+		const b3_coord x2,
+		const b3_coord y2)
 {
-	x1 = 0;
-	y1 = 0;
-	x2 = 0;
-	y2 = 0;
+	m_x1 = x1;
+	m_y1 = y1;
+	m_x2 = x2;
+	m_y2 = y2;
 }
 
-b3_res b3Rect::b3Width()
+b3_res b3Rect::b3Width() const
 {
-	return x2 - x1;
+	return m_x2 - m_x1;
 }
 
-b3_res b3Rect::b3Height()
+b3_res b3Rect::b3Height() const
 {
-	return y2 - y1;
+	return m_y2 - m_y1;
 }
 
 b3_bool b3Rect::b3UpdateBound(b3Rect * rect)
 {
 	b3_bool changed = false;
 
-	if (rect->x1 < x1)
+	if (rect->m_x1 < m_x1)
 	{
-		x1 = rect->x1;
+		m_x1 = rect->m_x1;
 		changed = true;
 	}
-	if (rect->y1 < y1)
+	if (rect->m_y1 < m_y1)
 	{
-		y1 = rect->y1;
+		m_y1 = rect->m_y1;
 		changed = true;
 	}
-	if (rect->x2 > x2)
+	if (rect->m_x2 > m_x2)
 	{
-		x2 = rect->x2;
+		m_x2 = rect->m_x2;
 		changed = true;
 	}
-	if (rect->y2 > y2)
+	if (rect->m_y2 > m_y2)
 	{
-		y2 = rect->y2;
+		m_y2 = rect->m_y2;
 		changed = true;
 	}
 	return changed;
@@ -92,34 +96,34 @@ b3_bool b3Rect::b3CheckBound(b3Rect * rect)
 {
 	bool changed = false;
 
-	if (x1 < rect->x1)
+	if (m_x1 < rect->m_x1)
 	{
-		x1 = rect->x1;
+		m_x1 = rect->m_x1;
 		changed = true;
 	}
-	if (y1 < rect->y1)
+	if (m_y1 < rect->m_y1)
 	{
-		y1 = rect->y1;
+		m_y1 = rect->m_y1;
 		changed = true;
 	}
-	if (x2 > rect->x2)
+	if (m_x2 > rect->m_x2)
 	{
-		x2 = rect->x2;
+		m_x2 = rect->m_x2;
 		changed = true;
 	}
-	if (y2 > rect->y2)
+	if (m_y2 > rect->m_y2)
 	{
-		y2 = rect->y2;
+		m_y2 = rect->m_y2;
 		changed = true;
 	}
-	if (x1 > x2)
+	if (m_x1 > m_x2)
 	{
-		x1 = x2;
+		m_x1 = m_x2;
 		changed = true;
 	}
-	if (y1 > y2)
+	if (m_y1 > m_y2)
 	{
-		y1 = y2;
+		m_y1 = m_y2;
 		changed = true;
 	}
 	return changed;

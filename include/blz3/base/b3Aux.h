@@ -115,18 +115,22 @@ public:
 	/**
 	 * The smaller edge coordinate.
 	 */
-	b3_coord x1, y1;
+	b3_coord m_x1, m_y1;
 
 	/**
 	 * The higher edge coordinate.
 	 */
-	b3_coord x2, y2;
+	b3_coord m_x2, m_y2;
 
 public:
 	/**
 	 * This constructor initializes this instance to zero values.
 	 */
-	b3Rect();
+	explicit b3Rect(
+			const b3_coord x1 = 0,
+			const b3_coord y1 = 0,
+			const b3_coord x2 = 0,
+			const b3_coord y2 = 0);
 
 	/**
 	 * This method returns the rectangle width. This value may
@@ -134,7 +138,7 @@ public:
 	 *
 	 * @return The rectangle width.
 	 */
-	b3_res  b3Width();
+	b3_res  b3Width() const;
 
 	/**
 	 * This method returns the rectangle height. This value may
@@ -142,7 +146,7 @@ public:
 	 *
 	 * @return The rectangle height.
 	 */
-	b3_res  b3Height();
+	b3_res  b3Height() const;
 
 	/**
 	 * This method adjusts the rectangle of this bound so that the

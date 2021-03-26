@@ -7,6 +7,7 @@ include(../common.pri)
 HEADERS += \
 	b3AlignTest.h \
 	b3ArrayTest.h \
+	b3AuxTest.h \
 	b3ColorTest.h \
 	b3CompareTest.h \
 	b3ComplexTest.h \
@@ -30,6 +31,7 @@ HEADERS += \
 SOURCES += \
 	b3AlignTest.cc \
 	b3ArrayTest.cc \
+	b3AuxTest.cc \
 	b3ColorTest.cc \
 	b3CompareTest.cc \
 	b3ComplexTest.cc \

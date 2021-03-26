@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	b3SkeletonTest.h $
+**	$Filename:	b3AuxTest.h $
 **	$Release:	Dortmund 2021 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Skeleton for unit tests.
+**	Blizzard III - Auxiliary for unit tests.
 **
 **      (C) Copyright 2001 - 2021  Steffen A. Mork
 **          All Rights Reserved
@@ -26,16 +26,20 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-class b3SkeletonTest : public CppUnit::TestFixture
+class b3AuxTest : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE(b3SkeletonTest);
-	CPPUNIT_TEST(test);
+	CPPUNIT_TEST_SUITE(b3AuxTest);
+	CPPUNIT_TEST(testAux);
+	CPPUNIT_TEST(testRect);
+	CPPUNIT_TEST(testPoint);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void test();
+	void testAux();
+	void testRect();
+	void testPoint();
 };
 
 #endif
