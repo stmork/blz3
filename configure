@@ -4748,6 +4748,7 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
+
   ax_cxx_compile_alternatives="17 1z"    ax_cxx_compile_cxx17_required=true
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -6484,7 +6485,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___march_native" >&5
 $as_echo "$ax_cv_check_cxxflags___march_native" >&6; }
 if test "x$ax_cv_check_cxxflags___march_native" = xyes; then :
-  OFLAGS="$OFLAGS -march=native"
+  CXXFLAGS="$CXXFLAGS -march=native"
 else
   :
 fi
@@ -6519,13 +6520,13 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___ftree_vectorize" >&5
 $as_echo "$ax_cv_check_cxxflags___ftree_vectorize" >&6; }
 if test "x$ax_cv_check_cxxflags___ftree_vectorize" = xyes; then :
-  OFLAGS="$OFLAGS -ftree-vectorize"
+  CXXFLAGS="$CXXFLAGS -ftree-vectorize"
 else
   :
 fi
 
 
-for ac_func in floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr
+for ac_func in floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"

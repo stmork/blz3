@@ -53,11 +53,12 @@ AC_SUBST(CPPUNITLIBS)
 AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
 
 AC_LANG_PUSH(C++)
-AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
-AX_CHECK_COMPILE_FLAG([-march=native], [OFLAGS="$OFLAGS -march=native"])
-AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [OFLAGS="$OFLAGS -ftree-vectorize"])
 
-AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
+AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
+AX_CHECK_COMPILE_FLAG([-march=native], [CXXFLAGS="$CXXFLAGS -march=native"])
+AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [CXXFLAGS="$CXXFLAGS -ftree-vectorize"])
+
+AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[
