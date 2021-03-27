@@ -27,15 +27,16 @@
 
 using namespace std;
 
-#define TEST_IMG_XMAX 320
-#define TEST_IMG_YMAX 240
-
 class b3ImageTest : public CppUnit::TestFixture
 {
 	b3Tx m_TxGIF;
 	b3Tx m_TxPallColor;
+	b3Tx m_TxHighColor;
 	b3Tx m_TxTrueColor;
 	b3Tx m_TxRealColor;
+
+	static const b3_res       TEST_IMG_XMAX = 400;
+	static const b3_res       TEST_IMG_YMAX = 300;
 
 	static       b3_pkd_color data_u32[];
 	static       b3_u16       data_u16[];

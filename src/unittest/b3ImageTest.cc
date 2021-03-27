@@ -67,11 +67,13 @@ void b3ImageTest::setUp()
 {
 	b3Color        row[TEST_IMG_XMAX];
 	b3_pkd_color * tRow;
+	b3_u16     *   sRow;
 	b3_color   *   rRow;
 	b3_res         width   = TEST_IMG_XMAX >> 3;
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 	m_TxPallColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,   8); // 8 bit palette entry
+	m_TxHighColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,  16); // High color, 4 bit per color
 	m_TxTrueColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX,  32); // True color, 8 bit per color
 	m_TxRealColor.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, 128); // Real color, 32 bit per color (floating point)
 
@@ -87,12 +89,20 @@ void b3ImageTest::setUp()
 		row[x].b3Init(r, g, b);
 	}
 
+	sRow = m_TxHighColor.b3GetHighColorData();
 	tRow = m_TxTrueColor.b3GetTrueColorData();
 	rRow = m_TxRealColor.b3GetHdrData();
 	for (b3_res y = 0; y < TEST_IMG_YMAX; y++)
 	{
 		for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
 		{
+			b3_u16 high_color = 0;
+
+			for (b3_index i = 0; i < 4; i++)
+			{
+				high_color = (high_color << 4) | b3_u16(row[x][i] * 15);
+			}
+			*sRow++ = high_color;
 			*tRow++ = row[x];
 			*rRow++ = row[x];
 		}
@@ -107,6 +117,7 @@ void b3ImageTest::testReadGIF()
 void b3ImageTest::testWriteTIFF()
 {
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tiff"));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tiff"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tiff"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tiff"));
 
@@ -117,6 +128,7 @@ void b3ImageTest::testWriteTIFF()
 void b3ImageTest::testWriteJPEG()
 {
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.jpg"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.jpg"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.jpg"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.jpg"));
 
@@ -126,6 +138,7 @@ void b3ImageTest::testWriteJPEG()
 void b3ImageTest::testWriteTGA()
 {
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tga"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tga"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tga"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tga"));
 
@@ -138,6 +151,7 @@ void b3ImageTest::testWriteRGB8()
 	b3Tx tx;
 
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.rgb8"));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.rgb4"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.rgb8"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.rgb8"));
 
@@ -148,6 +162,7 @@ void b3ImageTest::testWriteRGB8()
 void b3ImageTest::testWritePS()
 {
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.ps"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.ps"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
 }
@@ -216,8 +231,8 @@ void b3ImageTest::testPixel()
 
 	bw.b3AllocTx(4, 1, 1);
 	bw.b3SetData(data_bw, TX_BWA(sizeof(data_bw)));
-	CPPUNIT_ASSERT(bw.b3IsBW());
-	CPPUNIT_ASSERT(bw.b3IsPalette());
+	CPPUNIT_ASSERT( bw.b3IsBW());
+	CPPUNIT_ASSERT( bw.b3IsPalette());
 	CPPUNIT_ASSERT(!bw.b3IsHighColor());
 	CPPUNIT_ASSERT(!bw.b3IsTrueColor());
 	CPPUNIT_ASSERT(!bw.b3IsHdr());
@@ -230,7 +245,7 @@ void b3ImageTest::testPixel()
 	vga.b3SetData(data_vga, sizeof(data_vga));
 	vga.b3SetPalette(data_u32, DATA_SIZE(data_u32));
 	CPPUNIT_ASSERT(!vga.b3IsBW());
-	CPPUNIT_ASSERT(vga.b3IsPalette());
+	CPPUNIT_ASSERT( vga.b3IsPalette());
 	CPPUNIT_ASSERT(!vga.b3IsHighColor());
 	CPPUNIT_ASSERT(!vga.b3IsTrueColor());
 	CPPUNIT_ASSERT(!vga.b3IsHdr());
@@ -243,7 +258,7 @@ void b3ImageTest::testPixel()
 	high.b3SetData(data_u16, sizeof(data_u16));
 	CPPUNIT_ASSERT(!high.b3IsBW());
 	CPPUNIT_ASSERT(!high.b3IsPalette());
-	CPPUNIT_ASSERT(high.b3IsHighColor());
+	CPPUNIT_ASSERT( high.b3IsHighColor());
 	CPPUNIT_ASSERT(!high.b3IsTrueColor());
 	CPPUNIT_ASSERT(!high.b3IsHdr());
 	CPPUNIT_ASSERT_EQUAL(B3_BLACK, high.b3GetValue(0, 0));
@@ -261,7 +276,7 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(!color.b3IsBW());
 	CPPUNIT_ASSERT(!color.b3IsPalette());
 	CPPUNIT_ASSERT(!color.b3IsHighColor());
-	CPPUNIT_ASSERT(color.b3IsTrueColor());
+	CPPUNIT_ASSERT( color.b3IsTrueColor());
 	CPPUNIT_ASSERT(!color.b3IsHdr());
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
@@ -273,8 +288,8 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(!hdr.b3IsBW());
 	CPPUNIT_ASSERT(!hdr.b3IsPalette());
 	CPPUNIT_ASSERT(!hdr.b3IsHighColor());
-	CPPUNIT_ASSERT(hdr.b3IsTrueColor());
-	CPPUNIT_ASSERT(hdr.b3IsHdr());
+	CPPUNIT_ASSERT( hdr.b3IsTrueColor());
+	CPPUNIT_ASSERT( hdr.b3IsHdr());
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
 		const b3_pkd_color aux = hdr.b3GetValue(i, 0);
