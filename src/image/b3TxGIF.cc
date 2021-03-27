@@ -162,10 +162,10 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 		b3PrintF(B3LOG_NORMAL, "IMG GIF  # Error allocating memory:\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
-	out = (b3_u08 *)data;
+	out = data;
 
 	// Pointer to global color map
-	pPtr     += 13;
+	pPtr += 13;
 	for (i = 0; i < Colors; i++)
 	{
 
@@ -174,8 +174,6 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 		t += (b3_pkd_color) * pPtr++;
 		palette[i] = t;
 	}
-
-
 
 	interlaced = ((buffer[9] & 0x40) == 0x40);
 	status = 0;
@@ -199,7 +197,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 		buffer += 10;
 	}
 
-	/* Speicher f¸r tempor‰ren Stack und Tabellen anfordern */
+	/* Speicher f√ºr tempor√§ren Stack und Tabellen anfordern */
 	size = *buffer++; // get code size
 	if ((size < 2) || (9 < size))
 	{
@@ -216,8 +214,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 	codecnt     = newcodes = endcode + 1;
 	oldcode     = fc = 0;
 	sp          = charstack;
-	decoder.bitsleft =
-		decoder.availbytes = yk = 0;
+	decoder.bitsleft = decoder.availbytes = yk = 0;
 
 	while ((c = decoder.b3GetNextGifCode(&buffer, currsize)) != endcode)
 	{
@@ -260,11 +257,11 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 			while (code >= newcodes)
 			{
 				*sp++ = suffix[code];		/* Pixel auf Stack legen */
-				code = prefix[code];		/* Vorg‰nger */
+				code = prefix[code];		/* Vorg√§nger */
 			}
 			*sp++ = (unsigned char) code;	/* erstes Pixel der Kette */
 
-			/* logisch n‰chste Pixelkette in Tabelle eintragen */
+			/* logisch n√§chste Pixelkette in Tabelle eintragen */
 			if (codecnt < maxcode)
 			{
 				fc = code;
@@ -273,7 +270,7 @@ b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
 				oldcode = c;
 			}
 
-			/* Codel‰nge ggf. um ein Bit verl‰ngern */
+			/* Codel√§nge ggf. um ein Bit verl√§ngern */
 			if (codecnt >= maxcode)
 			{
 				if (currsize < 12)

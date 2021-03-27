@@ -28,6 +28,7 @@
 #include <blz3/image/b3TxPool.h>
 
 #include <array>
+#include <regex>
 
 /*************************************************************************
 **                                                                      **
@@ -113,22 +114,28 @@ void b3ImageTest::setUp()
 
 void b3ImageTest::testRead()
 {
-	b3FileList list;
+	static std::regex  regex(R"(Lenna-([012][01248])\.[a-z]+)");
+	static std::smatch matcher;
+	b3FileList         list;
 
 	list.b3RecCreateList(".");
+	list.b3Sort();
 	for (b3FileEntry * entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 	{
 		b3Path filename;
-		b3Path::b3SplitFileName(entry->b3Name(), nullptr, filename);
 
-		if (std::string(filename).rfind("Lenna-", 0) == 0)
+		b3Path::b3SplitFileName(entry->b3Name(), nullptr, filename);
+		std::string s(filename);
+		if (std::regex_match(s, matcher, regex))
 		{
-			b3Tx tx;
+			const b3_res depth = std::stol(matcher[1], 0, 16);
+			b3Tx         tx;
 
 			CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3LoadImage(entry->b3Name(), false));
 			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.xSize);
 			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.ySize);
 
+			CPPUNIT_ASSERT_EQUAL(depth, tx.depth);
 			CPPUNIT_ASSERT_TYPED_EQUAL(bool, tx.depth <= 8, tx.b3IsPalette());
 			if (tx.depth <= 8)
 			{
