@@ -60,6 +60,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testScaleUnfiltered);
 	CPPUNIT_TEST(testScaleFiltered);
 	CPPUNIT_TEST(testTransToGrey);
+	CPPUNIT_TEST(testMirror);
 	CPPUNIT_TEST(testHist);
 
 #ifdef BLZ3_USE_OPENEXR
@@ -90,6 +91,7 @@ public:
 	void testScaleUnfiltered();
 	void testScaleFiltered();
 	void testTransToGrey();
+	void testMirror();
 	void testHist();
 
 private:

@@ -31,8 +31,8 @@
 
 void b3Tx::b3MirrorHorizontal()
 {
-	b3_tx_data        ptr(data);
-	b3_coord       x, y, xMax = xSize >> 1;
+	b3_tx_data     ptr(data);
+	b3_coord       x, y, xHalf = xSize >> 1;
 	b3_color   *   ctPtr, *cbPtr, cColor;
 	b3_pkd_color * ltPtr, *lbPtr, lColor;
 	b3_u16    *    stPtr, *sbPtr, sColor;
@@ -43,14 +43,14 @@ void b3Tx::b3MirrorHorizontal()
 	{
 	case B3_TX_FLOAT:
 		cbPtr = ptr;
-		ctPtr = &cbPtr[xSize];
 		for (y = 0; y < ySize; y++)
 		{
-			for (x = 0; x < xMax; x++)
+			ctPtr = &cbPtr[xSize];
+			for (x = 0; x < xHalf; x++)
 			{
 				ctPtr--;
 				cColor   = *ctPtr;
-				*ctPtr    =  cbPtr[x];
+				*ctPtr   =  cbPtr[x];
 				cbPtr[x] =  cColor;
 			}
 			cbPtr += xSize;
@@ -59,14 +59,14 @@ void b3Tx::b3MirrorHorizontal()
 
 	case B3_TX_RGB8:
 		lbPtr = ptr;
-		ltPtr = &lbPtr[xSize];
 		for (y = 0; y < ySize; y++)
 		{
-			for (x = 0; x < xMax; x++)
+			ltPtr = &lbPtr[xSize];
+			for (x = 0; x < xHalf; x++)
 			{
 				ltPtr--;
 				lColor   = *ltPtr;
-				*ltPtr    =  lbPtr[x];
+				*ltPtr   =  lbPtr[x];
 				lbPtr[x] =  lColor;
 			}
 			lbPtr += xSize;
@@ -75,14 +75,14 @@ void b3Tx::b3MirrorHorizontal()
 
 	case B3_TX_RGB4:
 		sbPtr = ptr;
-		stPtr = &sbPtr[xSize];
 		for (y = 0; y < ySize; y++)
 		{
-			for (x = 0; x < xMax; x++)
+			stPtr = &sbPtr[xSize];
+			for (x = 0; x < xHalf; x++)
 			{
 				stPtr--;
 				sColor   = *stPtr;
-				*stPtr    =  sbPtr[x];
+				*stPtr   =  sbPtr[x];
 				sbPtr[x] =  sColor;
 			}
 			sbPtr += xSize;
@@ -90,15 +90,15 @@ void b3Tx::b3MirrorHorizontal()
 		break;
 
 	case B3_TX_VGA:
-		bbPtr = (b3_u08 *)data;
-		btPtr = &bbPtr[xSize];
+		bbPtr = data;
 		for (y = 0; y < ySize; y++)
 		{
-			for (x = 0; x < xMax; x++)
+			btPtr = &bbPtr[xSize];
+			for (x = 0; x < xHalf; x++)
 			{
 				btPtr--;
 				bColor   = *btPtr;
-				*btPtr    =  bbPtr[x];
+				*btPtr   =  bbPtr[x];
 				bbPtr[x] =  bColor;
 			}
 			bbPtr += xSize;
@@ -112,16 +112,16 @@ void b3Tx::b3MirrorHorizontal()
 
 void b3Tx::b3MirrorVertical()
 {
-	b3_coord      x, y, yMax = ySize >> 1;
-	b3_color   *  ctPtr, *cbPtr, cColor;
+	b3_coord       x, y, yMax = ySize >> 1;
+	b3_color   *   ctPtr, *cbPtr, cColor;
 	b3_pkd_color * ltPtr, *lbPtr, lColor;
-	b3_u16    *   stPtr, *sbPtr, sColor;
-	b3_u08    *   btPtr, *bbPtr, bColor;
+	b3_u16    *    stPtr, *sbPtr, sColor;
+	b3_u08    *    btPtr, *bbPtr, bColor;
 
 	switch (type)
 	{
 	case B3_TX_FLOAT:
-		ctPtr = (b3_color *)data;
+		ctPtr = data;
 		cbPtr = &ctPtr[xSize * ySize];
 		for (y = 0; y < yMax; y++)
 		{
@@ -137,7 +137,7 @@ void b3Tx::b3MirrorVertical()
 		break;
 
 	case B3_TX_RGB8:
-		ltPtr = (b3_pkd_color *)data;
+		ltPtr = data;
 		lbPtr = &ltPtr[xSize * ySize];
 		for (y = 0; y < yMax; y++)
 		{
@@ -153,7 +153,7 @@ void b3Tx::b3MirrorVertical()
 		break;
 
 	case B3_TX_RGB4:
-		stPtr = (b3_u16 *)data;
+		stPtr = data;
 		sbPtr = &stPtr[xSize * ySize];
 		for (y = 0; y < yMax; y++)
 		{
@@ -169,7 +169,7 @@ void b3Tx::b3MirrorVertical()
 		break;
 
 	case B3_TX_VGA:
-		btPtr = (b3_u08 *)data;
+		btPtr = data;
 		bbPtr = &btPtr[xSize * ySize];
 		for (y = 0; y < yMax; y++)
 		{
