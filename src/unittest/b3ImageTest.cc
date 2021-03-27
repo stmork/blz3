@@ -121,7 +121,7 @@ void b3ImageTest::testRead()
 		b3Path filename;
 		b3Path::b3SplitFileName(entry->b3Name(), nullptr, filename);
 
-		if (std::string(filename).rfind("Lenna.", 0) == 0)
+		if (std::string(filename).rfind("Lenna-", 0) == 0)
 		{
 			b3Tx tx;
 
