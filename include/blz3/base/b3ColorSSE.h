@@ -76,7 +76,7 @@ public:
 	 * @param b The new blue channel.
 	 * @param a The new alpha channel.
 	 */
-	inline b3Color(
+	explicit inline b3Color(
 		const b3_f32 r,
 		const b3_f32 g,
 		const b3_f32 b,

@@ -35,6 +35,8 @@ qrender.depends  = raytrace
 cppcheck.commands = cppcheck\
 	--enable=style,warning,performance,portability\
 	--inline-suppr\
+	--suppress=preprocessorErrorDirective\
+	--suppress=syntaxError\
 	--suppress=unusedStructMember\
 	--suppress=useStlAlgorithm\
 	--suppress=noCopyConstructor\
@@ -42,7 +44,7 @@ cppcheck.commands = cppcheck\
 	-I$$[QT_INSTALL_HEADERS]\
 	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\
 	--language=c++ --std=c++14\
-	--xml-version=2 --force -q -j 3\
+	--xml-version=2 --force -q -j 8\
 	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc\
 	OpenGL/*.c* OpenGL/*.h brt3/*.cc 2>cppcheck.xml
 
@@ -56,7 +58,7 @@ QMAKE_CLEAN         += cppcheck.xml test-results*.xml *.wav *.dot *.mp4 *.deb *.
 #####################################################################
 
 lcov.commands += lcov --no-external -c --directory $$BLZ3_HOME -o coverage.info;
-lcov.commands += genhtml coverage.info --legend --title=\"Blizzard III base libraries\" --output-directory $$BLZ3_LCOV
+lcov.commands += genhtml coverage.info --legend --title=\"Blizzard III base libraries\" --output-directory $$BLZ3_LCOV --rc genhtml_med_limit=50
 
 QMAKE_EXTRA_TARGETS += lcov
 QMAKE_CLEAN         += $$BLZ3_LCOV
