@@ -221,63 +221,63 @@ b3_bool b3Tx::b3AddHist(
 		return true;
 	}
 
+	if (type == B3_TX_RGB4)
+	{
+		b3_coord    x, y;
+		b3_u16    * sPtr;
+
+		sPtr  = data;
+		sPtr += yStart * xSize;
+		for (y = yStart; y < yStop; y++)
+		{
+			for (x = xStart; x < xStop; x++)
+			{
+				const b3_index grey = b3ToGrey(b3Convert(sPtr[x])) * 255;
+
+				histogramme[B3_MAX(grey, B3_TX_MAX_HISTGRM - 1)]++;
+			}
+			sPtr += xSize;
+		}
+		return true;
+	}
+
 	if (type == B3_TX_RGB8)
 	{
 		b3_coord       x, y;
-		b3_index       index;
-		b3_pkd_color * lPtr, color, grey;
-		b3_f64         r, g, b;
+		b3_pkd_color * lPtr;
 
-		lPtr  = (b3_pkd_color *)data;
-		index = yStart * xSize;
+		lPtr  = data;
+		lPtr += yStart * xSize;
 		for (y = yStart; y < yStop; y++)
 		{
-			for (x = 0; x < xSize; x++)
+			for (x = xStart; x < xStop; x++)
 			{
-				color = lPtr[index++];
-				r     = ((color & 0xff0000) >> 16) * 0.35;
-				g     = ((color & 0x00ff00) >>  8) * 0.51;
-				b     = ((color & 0x0000ff))       * 0.14;
+				const b3_index grey = b3ToGrey(lPtr[x]) * 255;
 
-				grey = (b3_pkd_color)(r + g + b);
-				if (grey >= B3_TX_MAX_HISTGRM)
-				{
-					grey = B3_TX_MAX_HISTGRM - 1;
-				}
-
-				histogramme[grey]++;
+				histogramme[B3_MAX(grey, B3_TX_MAX_HISTGRM - 1)]++;
 			}
+			lPtr += xSize;
 		}
 		return true;
 	}
 
 	if (type == B3_TX_FLOAT)
 	{
-		b3_coord      x, y;
-		b3_index      index;
-		b3_color   *  cPtr;
-		b3_pkd_color  grey;
-		b3_f64        r, g, b;
+		b3_coord   x, y;
+		b3_color * cPtr;
 
-		cPtr  = (b3_color *)data;
-		index = yStart * xSize;
+		cPtr  = data;
+		cPtr += yStart * xSize;
 		for (y = yStart; y < yStop; y++)
 		{
-			for (x = 0; x < xSize; x++)
+			for (x = xStart; x < xStop; x++)
 			{
-				r = cPtr[index].r *  89.25;
-				g = cPtr[index].g * 130.05;
-				b = cPtr[index].b *  35.7;
-				index++;
+				b3_color result = b3Color(cPtr[x]) * m_RgbEyeStimulus * 255.0;
+				const b3_index grey = result.r + result.g + result .b;
 
-				grey = (b3_pkd_color)(r + g + b);
-				if (grey >= B3_TX_MAX_HISTGRM)
-				{
-					grey = B3_TX_MAX_HISTGRM - 1;
-				}
-
-				histogramme[grey]++;
+				histogramme[B3_MAX(grey, B3_TX_MAX_HISTGRM - 1)]++;
 			}
+			cPtr += xSize;
 		}
 		return true;
 	}
@@ -470,7 +470,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	b3_index       i, grey;
 	b3_u08         byte;
 	b3_f64         r, g, b;
-	b3_pkd_color   color, bit;
+	b3_pkd_color   bit;
 	b3_bool        grey_palette;
 	b3_bool        result = false;
 
@@ -526,12 +526,8 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 				}
 				else
 				{
-					color = palette[*bPtr++];
-					r = ((color & 0xff0000) >> 16) * 0.35;
-					g = ((color & 0x00ff00) >>  8) * 0.51;
-					b = ((color & 0x0000ff))       * 0.14;
-
-					grey = (b3_pkd_color)(r + g + b);
+					// Set bit if over threshold
+					grey = b3ToGrey(palette[*bPtr++]) * 255;
 				}
 
 				// Set bit if over threshold
@@ -571,13 +567,10 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			i    =   0;
 			for (x = 0; x < xSize; x++)
 			{
-				color = b3Convert(*sPtr++);
-				r = ((color & 0xff0000) >> 16) * 0.35;
-				g = ((color & 0x00ff00) >>  8) * 0.51;
-				b = ((color & 0x0000ff))       * 0.14;
+				const b3_f32 grey = b3ToGrey(b3Convert(*sPtr++)) * 255;
 
 				// Set bit if over threshold
-				if ((r + g + b) < threshold)
+				if (grey < threshold)
 				{
 					byte |= bit;
 				}
@@ -613,13 +606,10 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 			i    =   0;
 			for (x = 0; x < xSize; x++)
 			{
-				color = *lPtr++;
-				r = ((color & 0xff0000) >> 16) * 0.35;
-				g = ((color & 0x00ff00) >>  8) * 0.51;
-				b = ((color & 0x0000ff))       * 0.14;
+				const b3_f32 grey = b3ToGrey(*lPtr++) * 255;
 
 				// Set bit if over threshold
-				if ((r + g + b) < threshold)
+				if (grey < threshold)
 				{
 					byte |= bit;
 				}

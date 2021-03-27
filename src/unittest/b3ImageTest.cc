@@ -193,6 +193,15 @@ void b3ImageTest::testTxData()
 	CPPUNIT_ASSERT(example == data);
 }
 
+void b3ImageTest::testColor()
+{
+	CPPUNIT_ASSERT_EQUAL(0.0f,  b3Tx::b3ToGrey(B3_BLACK));
+	CPPUNIT_ASSERT_EQUAL(1.0f,  b3Tx::b3ToGrey(B3_WHITE));
+	CPPUNIT_ASSERT_EQUAL(0.35f, b3Tx::b3ToGrey(B3_RED));
+	CPPUNIT_ASSERT_EQUAL(0.51f, b3Tx::b3ToGrey(B3_GREEN));
+	CPPUNIT_ASSERT_EQUAL(0.14f, b3Tx::b3ToGrey(B3_BLUE));
+}
+
 void b3ImageTest::testPixel()
 {
 	b3Tx     bw, vga, high, color, hdr;
@@ -344,12 +353,12 @@ void b3ImageTest::testScaleUnfiltered()
 		path.b3Format("img_test_scale_us_%03ld.jpg", depth);
 		dst_smaller.b3AllocTx(40, 40, depth);
 		dst_smaller.b3Scale(&src);
-		dst_smaller.b3SaveImage(path);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_smaller.b3SaveImage(path));
 
 		path.b3Format("img_test_scale_ub_%03ld.jpg", depth);
 		dst_bigger.b3AllocTx(70, 70, depth);
 		dst_bigger.b3Scale(&src);
-		dst_bigger.b3SaveImage(path);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_bigger.b3SaveImage(path));
 	}
 }
 
@@ -365,14 +374,14 @@ void b3ImageTest::testScaleFiltered()
 		src.b3AllocTx(50, 50, depth);
 
 		path.b3Format("img_test_scale_fs_%03ld-%03ld.jpg", depth, depth);
-		dst_smaller.b3AllocTx(40, 40, 32);
+		CPPUNIT_ASSERT(dst_smaller.b3AllocTx(40, 40, 32));
 		dst_smaller.b3ScaleToGrey(&src);
-		dst_smaller.b3SaveImage(path);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_smaller.b3SaveImage(path));
 
 		path.b3Format("img_test_scale_fb_%03ld-%03ld.jpg", depth, depth);
-		dst_bigger.b3AllocTx(70, 70, 32);
+		CPPUNIT_ASSERT(dst_bigger.b3AllocTx(70, 70, 32));
 		dst_bigger.b3ScaleToGrey(&src);
-		dst_bigger.b3SaveImage(path);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_bigger.b3SaveImage(path));
 	}
 
 	b3Tx   bw;
@@ -383,14 +392,14 @@ void b3ImageTest::testScaleFiltered()
 	bw.b3AllocTx(50, 50, 1);
 
 	path.b3Format("img_test_scale_fs_%03ld-%03ld.jpg", bw.depth, vga_smaller.depth);
-	vga_bigger.b3AllocTx(40, 40, 32);
+	CPPUNIT_ASSERT(vga_bigger.b3AllocTx(40, 40, 32));
 	vga_bigger.b3ScaleToGrey(&bw);
-	vga_bigger.b3SaveImage(path);
+	CPPUNIT_ASSERT_EQUAL(B3_OK, vga_bigger.b3SaveImage(path));
 
 	path.b3Format("img_test_scale_fb_%03ld-%03ld.jpg", bw.depth, vga_bigger.depth);
-	vga_bigger.b3AllocTx(70, 70, 32);
+	CPPUNIT_ASSERT(vga_bigger.b3AllocTx(70, 70, 32));
 	vga_bigger.b3ScaleToGrey(&bw);
-	vga_bigger.b3SaveImage(path);
+	CPPUNIT_ASSERT_EQUAL(B3_OK, vga_bigger.b3SaveImage(path));
 }
 
 void b3ImageTest::testTransToGrey()
@@ -401,9 +410,22 @@ void b3ImageTest::testTransToGrey()
 		b3Path path;
 
 		path.b3Format("img_test_grey_%03ld.jpg", depth);
-		tx.b3AllocTx(50, 50, depth);
+		CPPUNIT_ASSERT(tx.b3AllocTx(50, 50, depth));
 		tx.b3TransToGrey();
-		tx.b3SaveImage(path);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
+	}
+}
+
+void b3ImageTest::testHist()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   tx;
+		b3Path path;
+
+		path.b3Format("img_test_hist_%03ld.jpg", depth);
+		CPPUNIT_ASSERT(tx.b3AllocTx(50, 50, depth));
+		CPPUNIT_ASSERT(tx.b3Histogramme());
 	}
 }
 

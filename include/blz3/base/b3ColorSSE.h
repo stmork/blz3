@@ -23,6 +23,7 @@
 #define B3_BASE_COLORSSE_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Color.h"
 
 #define COLOR_TOP_NIBBLE   15.0
 #define COLOR_TOP_BYTE    255.0
@@ -801,7 +802,7 @@ public:
 
 		_mm_store_ps(a, SSE_PS_LOAD(v));
 		b3PrintF(B3LOG_NORMAL, "r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",
-			a[R], a[R], a[B], a[A]);
+			a[R], a[G], a[B], a[A]);
 	}
 
 #ifdef WIN32

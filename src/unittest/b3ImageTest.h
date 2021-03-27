@@ -47,6 +47,7 @@ class b3ImageTest : public CppUnit::TestFixture
 
 	CPPUNIT_TEST_SUITE(b3ImageTest);
 	CPPUNIT_TEST(testTxData);
+	CPPUNIT_TEST(testColor);
 	CPPUNIT_TEST(testPixel);
 	CPPUNIT_TEST(testRow);
 	CPPUNIT_TEST(testReadGIF);
@@ -58,6 +59,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testScaleUnfiltered);
 	CPPUNIT_TEST(testScaleFiltered);
 	CPPUNIT_TEST(testTransToGrey);
+	CPPUNIT_TEST(testHist);
 
 #ifdef BLZ3_USE_OPENEXR
 	CPPUNIT_TEST(testWriteOpenEXR);
@@ -81,11 +83,13 @@ public:
 	void testWriteOpenEXR();
 
 	void testTxData();
+	void testColor();
 	void testPixel();
 	void testRow();
 	void testScaleUnfiltered();
 	void testScaleFiltered();
 	void testTransToGrey();
+	void testHist();
 
 private:
 	void compareImages(const b3Tx & src);

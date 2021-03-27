@@ -205,8 +205,7 @@ class b3TxQuad
 
 		for (i = 0; i < 256; i++)
 		{
-			quad256[256 - i] =
-				quad256[256 + i] = i * i;
+			quad256[256 - i] = quad256[256 + i] = i * i;
 		}
 	}
 
@@ -346,6 +345,7 @@ public:
  */
 class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 {
+	static const b3Color m_RgbEyeStimulus;
 	static const b3_u08  m_Bits[8];
 	static const b3_u08  m_RightMaskLeftByte[16];
 	static const b3_u08  m_RightMaskRightByte[16];
@@ -1124,6 +1124,16 @@ public:
 	 */
 	b3_result b3SaveTGA(const char * ImageName);
 
+	static inline b3_f32 b3ToGrey(const b3_pkd_color input)
+	{
+		b3Color grey(input);
+
+		grey *= m_RgbEyeStimulus;
+
+		// Set bit if over threshold
+		return grey[b3Color::R] + grey[b3Color::G] + grey[b3Color::B];
+	}
+
 private:
 	// b3TxScale.cc
 	static unsigned int b3ScaleBW2BW(void * ptr);
@@ -1136,39 +1146,39 @@ private:
 		b3_count * TxRowCells,
 		b3_count * rIndex,
 		b3_color * src,
-		b3_res    xDstSize);
+		b3_res     xDstSize);
 	static void         b3FloatComputeLineBigger(
 		b3_color * TxRowCounter,
 		b3_count * TxRowCells,
 		b3_count * rIndex,
 		b3_color * src,
-		b3_res    xDstSize);
+		b3_res     xDstSize);
 
 	static void         b3RGB8ComputeLineSmaller(
-		b3_count   *  TxRowCounter,
-		b3_count   *  TxRowCells,
-		b3_count   *  rIndex,
+		b3_count   *   TxRowCounter,
+		b3_count   *   TxRowCells,
+		b3_count   *   rIndex,
 		b3_pkd_color * src,
-		b3_res        xDstSize);
+		b3_res         xDstSize);
 	static void         b3RGB8ComputeLineBigger(
-		b3_count   *  TxRowCounter,
-		b3_count   *  TxRowCells,
-		b3_count   *  rIndex,
+		b3_count   *   TxRowCounter,
+		b3_count   *   TxRowCells,
+		b3_count   *   rIndex,
 		b3_pkd_color * src,
-		b3_res        xDstSize);
+		b3_res         xDstSize);
 
 	static void         b3ComputeLineSmaller(
 		b3_count * TxRowCounter,
 		b3_count * TxRowCells,
 		b3_count * rIndex,
-		b3_u08  * src,
-		b3_res    xDstSize);
+		b3_u08  *  src,
+		b3_res     xDstSize);
 	static void         b3ComputeLineBigger(
 		b3_count * TxRowCounter,
 		b3_count * TxRowCells,
 		b3_count * rIndex,
-		b3_u08  * src,
-		b3_res    xDstSize);
+		b3_u08  *  src,
+		b3_res     xDstSize);
 
 private:
 	/**

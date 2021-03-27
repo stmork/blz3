@@ -38,6 +38,11 @@ const b3_u08 b3Tx::m_Bits[8] =
 	128, 64, 32, 16, 8, 4, 2, 1
 };
 
+const b3Color b3Tx::m_RgbEyeStimulus
+{
+	0.35, 0.51, 0.14, 0.0
+};
+
 b3_bool b3Tx::m_ErrorHandlerInstalled = false;
 
 /*************************************************************************
