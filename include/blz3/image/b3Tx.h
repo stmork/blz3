@@ -387,7 +387,7 @@ public:
 	/**
 	 * This destructor deinitializes the image.
 	 */
-	~b3Tx();
+	virtual ~b3Tx();
 
 	/**
 	 * This method copies the data of the given source image.

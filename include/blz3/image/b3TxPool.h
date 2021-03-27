@@ -42,7 +42,7 @@ public:
 	/**
 	 * Ths destructor deinitialize this instance and frees all images.
 	 */
-	~b3TxPool();
+	virtual ~b3TxPool();
 
 	/**
 	 * This method retrieves an image from the image list. If the image

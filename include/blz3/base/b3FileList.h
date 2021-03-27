@@ -86,7 +86,7 @@ public:
 	/**
 	 * This destructor deinitializes this instance.
 	 */
-	~b3FileList();
+	virtual ~b3FileList();
 
 	/**
 	 * This method creates a file list from the given path. The list

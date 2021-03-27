@@ -71,7 +71,7 @@ public:
 	/**
 	 * This destructor cleans up the instance. It calls b3Close().
 	 */
-	~b3FileMem();
+	virtual ~b3FileMem();
 
 	/**
 	 * This method initializes the instance with the specified access mode.

@@ -15,6 +15,7 @@ HEADERS += \
 	b3EndianTest.h \
 	b3ExceptionTest.h \
 	b3FFTTest.h \
+	b3FileListTest.h \
 	b3FileTest.h \
 	b3ImageTest.h \
 	b3ListTest.h \
@@ -40,6 +41,7 @@ SOURCES += \
 	b3EndianTest.cc \
 	b3ExceptionTest.cc \
 	b3FFTTest.cc \
+	b3FileListTest.cc \
 	b3FileTest.cc \
 	b3ImageTest.cc \
 	b3ListTest.cc \

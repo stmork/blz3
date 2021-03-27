@@ -54,14 +54,14 @@ public:
 
 	void test()
 	{
-		b3File          srcFile;
-		b3File          dstFile;
-		b3_u08     *    src = nullptr;
-		b3_u08     *    dst = nullptr;
-		b3_size         srcSize = 0;
-		b3_size         dstSize = 0;
-		b3Item     *    item1 = nullptr;
-		b3Item     *    item2 = nullptr;
+		b3File           srcFile;
+		b3File           dstFile;
+		b3_u08     *     src = nullptr;
+		b3_u08     *     dst = nullptr;
+		b3_size          srcSize = 0;
+		b3_size          dstSize = 0;
+		b3Item     *     item1 = nullptr;
+		b3Item     *     item2 = nullptr;
 		b3Base<b3Item> * base1 = nullptr;
 		b3Base<b3Item> * base2 = nullptr;
 

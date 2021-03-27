@@ -893,7 +893,7 @@ public:
 	/**
 	 * This destructor deinitializes the triangle shape.
 	 */
-	~b3TriangleShape();
+	virtual ~b3TriangleShape();
 
 	/**
 	 * This method initializes a new triangle list. It initializes the

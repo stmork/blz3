@@ -201,7 +201,7 @@ public:
 	 * This destructor deinitializes this class by calling
 	 * b3Close().
 	 */
-	~b3Dir();
+	virtual ~b3Dir();
 
 	b3_bool       b3OpenDir(const char * dirname) override;
 	b3_path_type  b3DirNext(char * direntry) override;

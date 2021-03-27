@@ -115,7 +115,7 @@ public:
 	/**
 	 * This destructor closes the window.
 	 */
-	~b3DisplayView();
+	virtual ~b3DisplayView();
 
 	void                b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel) override;
 	void                b3PutRow(const b3Row * row) override;

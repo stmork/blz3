@@ -71,7 +71,7 @@ class B3_PLUGIN b3Noise
 	static int                 m_Permutation[512];
 
 	b3Noise();
-	~b3Noise();
+	virtual ~b3Noise();
 
 public:
 	/**

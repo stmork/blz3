@@ -57,7 +57,7 @@ public:
 	 * @param mode The file access mode.
 	 */
 	b3File(const char * filename, const b3_access_mode mode);
-	~b3File();
+	virtual ~b3File();
 
 	b3_bool  b3Open(const char * filename, const b3_access_mode mode) override;
 	b3_size  b3Read(void * read_buffer, const b3_size size) override;

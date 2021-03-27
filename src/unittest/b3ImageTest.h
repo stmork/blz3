@@ -51,6 +51,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testColor);
 	CPPUNIT_TEST(testPixel);
 	CPPUNIT_TEST(testRow);
+	CPPUNIT_TEST(testRead);
 	CPPUNIT_TEST(testReadGIF);
 	CPPUNIT_TEST(testWriteTIFF);
 	CPPUNIT_TEST(testWriteJPEG);
@@ -76,6 +77,7 @@ public:
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
+	void testRead();
 	void testReadGIF();
 	void testWriteTIFF();
 	void testWriteJPEG();

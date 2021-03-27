@@ -317,7 +317,7 @@ public:
 		b3InitBase(new_class);
 	}
 
-	~b3Base()
+	virtual ~b3Base()
 	{
 	}
 

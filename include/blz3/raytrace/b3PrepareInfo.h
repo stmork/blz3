@@ -92,7 +92,7 @@ public:
 	/**
 	 * This destructor deinitializes this instance.
 	 */
-	~b3PrepareInfo();
+	virtual ~b3PrepareInfo();
 
 	/**
 	 * This method collects all bounding boxes of a scene.

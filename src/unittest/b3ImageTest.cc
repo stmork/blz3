@@ -24,6 +24,8 @@
 #include "b3ImageTest.h"
 #include "b3TestMacros.h"
 #include <blz3/base/b3Endian.h>
+#include <blz3/base/b3FileList.h>
+#include <blz3/image/b3TxPool.h>
 
 #include <array>
 
@@ -105,6 +107,33 @@ void b3ImageTest::setUp()
 			*sRow++ = high_color;
 			*tRow++ = row[x];
 			*rRow++ = row[x];
+		}
+	}
+}
+
+void b3ImageTest::testRead()
+{
+	b3FileList list;
+
+	list.b3RecCreateList(".");
+	for (b3FileEntry * entry = list.b3First(); entry != nullptr; entry = entry->Succ)
+	{
+		b3Path filename;
+		b3Path::b3SplitFileName(entry->b3Name(), nullptr, filename);
+
+		if (std::string(filename).rfind("Lenna.", 0) == 0)
+		{
+			b3Tx tx;
+
+			CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3LoadImage(entry->b3Name(), false));
+			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.xSize);
+			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.ySize);
+
+			CPPUNIT_ASSERT_TYPED_EQUAL(bool, tx.depth <= 8, tx.b3IsPalette());
+			if (tx.depth <= 8)
+			{
+				CPPUNIT_ASSERT(tx.b3GetPalette() != nullptr);
+			}
 		}
 	}
 }

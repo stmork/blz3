@@ -70,7 +70,7 @@ public:
 	/**
 	 * This destructor unlocks the mutex given by the constructor mutex.
 	 */
-	inline ~b3CriticalSection()
+	inline virtual ~b3CriticalSection()
 	{
 #ifdef _DEBUG
 		b3_bool unlocked = m_Mutex.b3Unlock();

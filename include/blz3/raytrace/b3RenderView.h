@@ -150,7 +150,7 @@ public:
 	/**
 	 * This destructor deinitializes this render view instance.
 	 */
-	~b3RenderView();
+	virtual ~b3RenderView();
 
 	/**
 	 * This method sets the actual view mode. It switches the correct view
