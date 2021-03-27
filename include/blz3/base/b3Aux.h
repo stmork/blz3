@@ -132,10 +132,10 @@ public:
 	 * @param y2 The bottom coordinate.
 	 */
 	explicit b3Rect(
-			const b3_coord x1 = 0,
-			const b3_coord y1 = 0,
-			const b3_coord x2 = 0,
-			const b3_coord y2 = 0);
+		const b3_coord x1 = 0,
+		const b3_coord y1 = 0,
+		const b3_coord x2 = 0,
+		const b3_coord y2 = 0);
 
 	/**
 	 * This method returns the rectangle width. This value may

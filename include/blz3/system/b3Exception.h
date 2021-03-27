@@ -90,7 +90,7 @@ public:
 	 *
 	 * \return The exceptions error cod.
 	 */
-	inline b3_errno b3GetError()
+	inline b3_errno b3GetError() const
 	{
 		return m_ErrorCode;
 	}

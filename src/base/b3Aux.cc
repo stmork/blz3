@@ -44,10 +44,10 @@ b3RGB::b3RGB()
 *************************************************************************/
 
 b3Rect::b3Rect(
-		const b3_coord x1,
-		const b3_coord y1,
-		const b3_coord x2,
-		const b3_coord y2)
+	const b3_coord x1,
+	const b3_coord y1,
+	const b3_coord x2,
+	const b3_coord y2)
 {
 	m_x1 = x1;
 	m_y1 = y1;

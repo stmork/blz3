@@ -224,7 +224,7 @@ b3_bool b3Tx::b3AddHist(
 	if (type == B3_TX_RGB4)
 	{
 		b3_coord    x, y;
-		b3_u16    * sPtr;
+		b3_u16   *  sPtr;
 
 		sPtr  = data;
 		sPtr += yStart * xSize;

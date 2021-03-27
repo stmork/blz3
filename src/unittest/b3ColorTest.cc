@@ -172,10 +172,10 @@ void b3ColorTest::test()
 }
 
 void b3ColorTest::testColor(
-		const b3_f32 r,
-		const b3_f32 g,
-		const b3_f32 b,
-		const b3_f32 a)
+	const b3_f32 r,
+	const b3_f32 g,
+	const b3_f32 b,
+	const b3_f32 a)
 {
 	b3_f32 tr = round_color(color[b3Color::R]);
 	b3_f32 tg = round_color(color[b3Color::G]);

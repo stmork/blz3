@@ -51,10 +51,10 @@ public:
 
 private:
 	void testColor(
-			const b3_f32 r,
-			const b3_f32 g,
-			const b3_f32 b,
-			const b3_f32 a);
+		const b3_f32 r,
+		const b3_f32 g,
+		const b3_f32 b,
+		const b3_f32 a);
 };
 
 #endif

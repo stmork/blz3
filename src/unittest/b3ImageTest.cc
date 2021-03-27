@@ -67,7 +67,7 @@ void b3ImageTest::setUp()
 {
 	b3Color        row[TEST_IMG_XMAX];
 	b3_pkd_color * tRow;
-	b3_u16     *   sRow;
+	b3_u16    *    sRow;
 	b3_color   *   rRow;
 	b3_res         width   = TEST_IMG_XMAX >> 3;
 

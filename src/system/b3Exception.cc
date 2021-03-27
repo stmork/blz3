@@ -125,7 +125,7 @@ const char * b3ExceptionBase::what() const noexcept
 	char buffer[128];
 
 	b3GetErrorMsg();
-	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5d", m_FileName, static_cast<int>(m_LineNo));
+	snprintf(buffer, sizeof(buffer), " file: %-32.32s line: %5zd", m_FileName, m_LineNo);
 	strncat(m_LocalMessageBuffer, buffer, sizeof(m_LocalMessageBuffer) - strlen(m_LocalMessageBuffer));
 
 	return m_LocalMessageBuffer;

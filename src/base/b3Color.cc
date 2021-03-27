@@ -33,17 +33,17 @@
 const b3_f32 b3Color::m_Limit_d015[4] alignas(16)
 {
 	1.0 / COLOR_TOP_NIBBLE,
-	1.0 / COLOR_TOP_NIBBLE,
-	1.0 / COLOR_TOP_NIBBLE,
-	1.0 / COLOR_TOP_NIBBLE
+		1.0 / COLOR_TOP_NIBBLE,
+		1.0 / COLOR_TOP_NIBBLE,
+		1.0 / COLOR_TOP_NIBBLE
 };
 
 const b3_f32 b3Color::m_Limit_d255[4] alignas(16)
 {
 	1.0 / COLOR_TOP_BYTE,
-	1.0 / COLOR_TOP_BYTE,
-	1.0 / COLOR_TOP_BYTE,
-	1.0 / COLOR_TOP_BYTE
+		1.0 / COLOR_TOP_BYTE,
+		1.0 / COLOR_TOP_BYTE,
+		1.0 / COLOR_TOP_BYTE
 };
 
 const b3_f32 b3Color::m_Limit_m255[4] alignas(16)
