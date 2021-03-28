@@ -63,6 +63,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testScaleUnfiltered);
 	CPPUNIT_TEST(testScaleFiltered);
 	CPPUNIT_TEST(testTransToGrey);
+	CPPUNIT_TEST(testTransToBlackWhite);
 	CPPUNIT_TEST(testMirror);
 	CPPUNIT_TEST(testHist);
 	CPPUNIT_TEST(testNegate);
@@ -97,6 +98,7 @@ public:
 	void testScaleUnfiltered();
 	void testScaleFiltered();
 	void testTransToGrey();
+	void testTransToBlackWhite();
 	void testMirror();
 	void testHist();
 	void testNegate();

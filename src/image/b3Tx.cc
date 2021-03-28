@@ -92,7 +92,7 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 	ScanLines   = 0;
 
 	image_name.b3Empty();
-	whiteRatio  = 0.025;
+	white_ratio  = 0.025;
 	xDPI        = 1;
 	yDPI        = 1;
 
@@ -534,7 +534,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 
 	xDPI        = srcTx->xDPI;
 	yDPI        = srcTx->yDPI;
-	whiteRatio  = srcTx->whiteRatio;
+	white_ratio  = srcTx->white_ratio;
 	ScanLines   = srcTx->ScanLines;
 }
 

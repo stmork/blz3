@@ -93,7 +93,7 @@ b3_tx_fill_bits b3_tx_fill_bits::m_FillBits;
 
 void b3Tx::b3SetWhiteRatio(b3_f64 newRatio)
 {
-	whiteRatio = newRatio;
+	white_ratio = newRatio;
 }
 
 // We need histogrammes to determine if the image is a white page. The
@@ -343,7 +343,7 @@ b3_bool b3Tx::b3IsWhite() const
 		{
 			ratio = 1.0 / ratio;
 		}
-		IsWhite = (ratio < whiteRatio);
+		IsWhite = (ratio < white_ratio);
 	}
 	else
 	{
@@ -378,13 +378,16 @@ b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries) const
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Tx::b3TransToBW(b3Tx * srcTx, b3_f64 ratio, b3_tx_threshold mode)
+b3_bool b3Tx::b3TransToBW(
+		const b3Tx * srcTx,
+		const b3_f64 ratio,
+		const b3_tx_threshold mode)
 {
 	b3Copy(srcTx);
 	return b3TransToBW(ratio, mode);
 }
 
-b3_bool b3Tx::b3TransToBW(b3_f64 ratio, b3_tx_threshold mode)
+b3_bool b3Tx::b3TransToBW(const b3_f64 ratio, const b3_tx_threshold mode)
 {
 	b3_index threshold;
 	b3_bool  result;
@@ -405,8 +408,9 @@ b3_bool b3Tx::b3TransToBW(b3_f64 ratio, b3_tx_threshold mode)
 	return result;
 }
 
-b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode)
+b3_index b3Tx::b3ComputeThreshold(const b3_f64 input, const b3_tx_threshold mode)
 {
+	b3_f64   ratio = input;
 	b3_count limit, count = 0, max;
 	b3_index i, threshold = 0;
 	b3_bool  compute_threshold = true;
@@ -423,7 +427,7 @@ b3_index b3Tx::b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode)
 		switch (mode)
 		{
 		case B3_THRESHOLD_WHITE_RATIO:
-			ratio = whiteRatio;
+			ratio = white_ratio;
 			break;
 
 		case B3_THRESHOLD_EQUALIZE:
@@ -477,7 +481,8 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	// Check if nothing is to do...
 	if (depth == 1)
 	{
-		return result;
+		// No conversion necessary.
+		return true;
 	}
 
 	// First allocate new buffer;

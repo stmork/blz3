@@ -547,6 +547,20 @@ void b3ImageTest::testTransToGrey()
 	}
 }
 
+void b3ImageTest::testTransToBlackWhite()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   tx;
+		b3Path path;
+
+		path.b3Format("img_test_bw_%03ld.tiff", depth);
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		CPPUNIT_ASSERT(tx.b3TransToBW(m_TxMap[depth]));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
+	}
+}
+
 void b3ImageTest::testMirror()
 {
 	for (b3_res depth : m_TestDepth)

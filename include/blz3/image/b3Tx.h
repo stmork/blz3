@@ -359,7 +359,7 @@ private:
 	b3_count          dSize, pSize;
 	b3_tx_type        type;
 	b3_tx_filetype    FileType;
-	b3_f64            whiteRatio;
+	b3_f64            white_ratio;
 	b3Path            image_name;
 	b3ColorIndices  * grid;
 
@@ -922,8 +922,9 @@ public:
 	 * @return True on success.
 	 * @see b3_tx_threshold.
 	 */
-	b3_bool        b3TransToBW(b3Tx * srcTx,
-		b3_f64 ratio = 0.5, b3_tx_threshold mode = B3_THRESHOLD_USE);
+	b3_bool        b3TransToBW(
+			const b3Tx * srcTx,
+		const b3_f64 ratio = 0.5, const b3_tx_threshold mode = B3_THRESHOLD_USE);
 
 	/**
 	 * This method transforms a this image into a B/W image using a specified
@@ -939,7 +940,8 @@ public:
 	 * @see b3_tx_threshold.
 	 */
 	b3_bool        b3TransToBW(
-		b3_f64 ratio = 0.5, b3_tx_threshold mode = B3_THRESHOLD_USE);
+			const b3_f64          ratio = 0.5,
+			const b3_tx_threshold mode  = B3_THRESHOLD_USE);
 
 	/**
 	 * This method converts the required ratio and threshold mode into a direct
@@ -951,7 +953,9 @@ public:
 	 * @param mode The separation mode.
 	 * @return The computed color index as threshold.
 	 */
-	b3_index       b3ComputeThreshold(b3_f64 ratio, b3_tx_threshold mode);
+	b3_index       b3ComputeThreshold(
+			const b3_f64          ratio,
+			const b3_tx_threshold mode);
 
 	/**
 	 * This method determines the file type depending on the given extension.
