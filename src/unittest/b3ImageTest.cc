@@ -630,6 +630,24 @@ void b3ImageTest::testTurn()
 	}
 }
 
+void b3ImageTest::testRemoveBlackBorder()
+{
+	b3Path path;
+
+	path.b3Format("img_test_rbb_%03ld.tiff", m_TxBW.depth);
+	m_TxBW.b3RemoveBlackBorder();
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxBW.b3SaveImage(path));
+}
+
+void b3ImageTest::testShrink()
+{
+	b3Path path;
+
+	path.b3Format("img_test_shrink_%03ld.tiff", m_TxBW.depth);
+	m_TxBW.b3Shrink();
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxBW.b3SaveImage(path));
+}
+
 void b3ImageTest::compareImages(const b3Tx & src)
 {
 	b3Tx tx;

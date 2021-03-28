@@ -1578,9 +1578,9 @@ b3_bool b3Tx::b3TxContrast(
 
 b3_bool b3Tx::b3TxReduce(b3Tx * src)
 {
-	b3_index      i, p, count, index;
+	b3_index       i, p, count, index;
 	b3_pkd_color * srcPtr = src->b3GetTrueColorData(), color;
-	b3_u08    *   dstPtr = b3GetIndexData();
+	b3_u08    *    dstPtr = b3GetIndexData();
 
 	if (!src->b3IsTrueColor())
 	{
