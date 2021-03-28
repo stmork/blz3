@@ -25,6 +25,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <unordered_map>
+
 class b3ImageTest : public CppUnit::TestFixture
 {
 	b3Tx m_TxGIF;
