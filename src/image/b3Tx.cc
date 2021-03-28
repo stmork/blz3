@@ -543,21 +543,11 @@ b3_bool b3Tx::b3IsLoaded() const
 	return ((xSize != 0) && (ySize != 0) && (data != nullptr) && (type != B3_TX_UNDEFINED));
 }
 
-const char * b3Tx::b3Name() const
-{
-	return image_name;
-}
-
 void b3Tx::b3Name(const char * ImageName)
 {
 	strlcpy(image_name, ImageName != nullptr ? ImageName : "", B3_FILESTRINGLEN);
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Name(%s)\n",
 		(const char *)image_name);
-}
-
-b3_pkd_color * b3Tx::b3GetPalette() const
-{
-	return palette;
 }
 
 void b3Tx::b3SetPalette(

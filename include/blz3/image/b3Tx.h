@@ -428,7 +428,10 @@ public:
 	 *
 	 * @return The palette data.
 	 */
-	b3_pkd_color * b3GetPalette() const;
+	b3_pkd_color * b3GetPalette() const
+	{
+		return palette;
+	}
 
 	/**
 	 * This method sets the given color palette. The bit depth is adjusted according
@@ -532,7 +535,10 @@ public:
 	 *
 	 * @return The file name of the image.
 	 */
-	const char  *  b3Name() const;
+	const char  *  b3Name() const
+	{
+		return image_name;
+	}
 
 	/**
 	 * This method sets a new file name.
