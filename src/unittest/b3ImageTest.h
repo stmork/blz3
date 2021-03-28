@@ -25,8 +25,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 class b3ImageTest : public CppUnit::TestFixture
 {
 	b3Tx m_TxGIF;
