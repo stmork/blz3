@@ -30,6 +30,7 @@ using namespace std;
 class b3ImageTest : public CppUnit::TestFixture
 {
 	b3Tx m_TxGIF;
+	b3Tx m_TxBW;
 	b3Tx m_TxPallColor;
 	b3Tx m_TxHighColor;
 	b3Tx m_TxTrueColor;
@@ -45,6 +46,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	static       b3_color     data_col[];
 
 	static const b3_res m_TestDepth[];
+	std::unordered_map<b3_res, const b3Tx *>  m_TxMap;
 
 	CPPUNIT_TEST_SUITE(b3ImageTest);
 	CPPUNIT_TEST(testTxData);

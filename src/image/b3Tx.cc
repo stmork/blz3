@@ -171,10 +171,10 @@ b3_bool b3Tx::b3AllocTx(
 		dSize = (x * y) * sizeof(b3_pkd_color);
 		type  = B3_TX_RGB8;
 	}
-	if ((d == 48) || (d == 96) || (d == 128))
+	if ((d == 48) || (d == 64) || // half precision
+		(d == 96) || (d == 128)) // single precision
 	{
 		dSize = (x * y) * sizeof(b3_color);
-		d     = sizeof(b3_color) << 3;
 		type  = B3_TX_FLOAT;
 	}
 
@@ -293,7 +293,7 @@ b3_bool b3Tx::b3IsGreyPalette() const
 
 inline void b3Tx::b3CopyILBMtoVGA(
 	b3_u08  * row,
-	b3_coord  y)
+	b3_coord  y) const
 {
 	b3_u08  * Data;
 	b3_u08    dstBit = 1, Bit;
@@ -385,7 +385,7 @@ inline void b3Tx::b3CopyILBMtoVGA(
 
 inline void b3Tx::b3CopyILBMtoRGB8(
 	b3_pkd_color * row,
-	b3_coord      y)
+	b3_coord       y) const
 {
 	b3_u08    *   Data;
 	b3_coord      x, d, BytesPerLine;
@@ -419,7 +419,7 @@ inline void b3Tx::b3CopyILBMtoRGB8(
 
 inline void b3Tx::b3CopyILBMtoFloat(
 	b3_color * row,
-	b3_coord   y)
+	b3_coord   y) const
 {
 	b3_u08    *   Data;
 	b3_coord      x, d, BytesPerLine;
@@ -451,7 +451,7 @@ inline void b3Tx::b3CopyILBMtoFloat(
 	}
 }
 
-void b3Tx::b3Copy(b3Tx * srcTx)
+void b3Tx::b3Copy(const b3Tx * srcTx)
 {
 	type = B3_TX_UNDEFINED;
 	if (!srcTx->b3IsLoaded())

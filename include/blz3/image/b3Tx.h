@@ -394,7 +394,7 @@ public:
 	 *
 	 * @param srcTx The source image to copy.
 	 */
-	void           b3Copy(b3Tx * srcTx);
+	void           b3Copy(const b3Tx * srcTx);
 
 	/**
 	 * This method allocates memory for bitmap data or palette data depending
@@ -1258,9 +1258,9 @@ private:
 	b3_pkd_color   b3ILBMValue(const b3_coord x, const b3_coord y) const;
 
 	// b3Tx.cc
-	void           b3CopyILBMtoVGA(b3_u08    *   row, b3_coord y);
-	void           b3CopyILBMtoRGB8(b3_pkd_color * row, b3_coord y);
-	void           b3CopyILBMtoFloat(b3_color   *  row, b3_coord y);
+	void           b3CopyILBMtoVGA(b3_u08    *   row, b3_coord y) const;
+	void           b3CopyILBMtoRGB8(b3_pkd_color * row, b3_coord y) const;
+	void           b3CopyILBMtoFloat(b3_color   *  row, b3_coord y) const;
 
 	// b3Tx.cc
 	void           b3GetILBM(b3_pkd_color * row, b3_coord y) const;
