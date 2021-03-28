@@ -716,7 +716,7 @@ public:
 	 *
 	 * @param shrink The iteration count.
 	 */
-	void           b3Shrink(b3_count shrink = 1);
+	void           b3Shrink(const b3_count shrink = 1);
 
 	/**
 	 * This method removes any black border on the left and right side of the image.
@@ -828,7 +828,7 @@ public:
 	 * @param src The source image.
 	 * @return True on successful reduce operation.
 	 */
-	b3_bool  b3TxReduce(b3Tx * src);
+	b3_bool        b3TxReduce(b3Tx * src);
 
 	// b3TxHist.cc
 	/**
@@ -923,7 +923,7 @@ public:
 	 * @see b3_tx_threshold.
 	 */
 	b3_bool        b3TransToBW(
-			const b3Tx * srcTx,
+		const b3Tx * srcTx,
 		const b3_f64 ratio = 0.5, const b3_tx_threshold mode = B3_THRESHOLD_USE);
 
 	/**
@@ -940,8 +940,8 @@ public:
 	 * @see b3_tx_threshold.
 	 */
 	b3_bool        b3TransToBW(
-			const b3_f64          ratio = 0.5,
-			const b3_tx_threshold mode  = B3_THRESHOLD_USE);
+		const b3_f64          ratio = 0.5,
+		const b3_tx_threshold mode  = B3_THRESHOLD_USE);
 
 	/**
 	 * This method converts the required ratio and threshold mode into a direct
@@ -954,8 +954,8 @@ public:
 	 * @return The computed color index as threshold.
 	 */
 	b3_index       b3ComputeThreshold(
-			const b3_f64          ratio,
-			const b3_tx_threshold mode);
+		const b3_f64          ratio,
+		const b3_tx_threshold mode);
 
 	/**
 	 * This method determines the file type depending on the given extension.
@@ -1170,43 +1170,43 @@ private:
 	static unsigned int b3FloatScaleToRGB8(void * ptr);
 
 	static void         b3FloatComputeLineSmaller(
-		b3_color * TxRowCounter,
-		b3_count * TxRowCells,
-		b3_count * rIndex,
-		b3_color * src,
-		b3_res     xDstSize);
+		b3_color    *    TxRowCounter,
+		b3_count    *    TxRowCells,
+		const b3_count * rIndex,
+		const b3_color * src,
+		const b3_res     xDstSize);
 	static void         b3FloatComputeLineBigger(
-		b3_color * TxRowCounter,
-		b3_count * TxRowCells,
-		b3_count * rIndex,
-		b3_color * src,
-		b3_res     xDstSize);
+		b3_color    *    TxRowCounter,
+		b3_count    *    TxRowCells,
+		const b3_count * rIndex,
+		const b3_color * src,
+		const b3_res     xDstSize);
 
 	static void         b3RGB8ComputeLineSmaller(
-		b3_count   *   TxRowCounter,
-		b3_count   *   TxRowCells,
-		b3_count   *   rIndex,
-		b3_pkd_color * src,
-		b3_res         xDstSize);
+		b3_count      *      TxRowCounter,
+		b3_count      *      TxRowCells,
+		const b3_count   *   rIndex,
+		const b3_pkd_color * src,
+		const b3_res         xDstSize);
 	static void         b3RGB8ComputeLineBigger(
-		b3_count   *   TxRowCounter,
-		b3_count   *   TxRowCells,
-		b3_count   *   rIndex,
-		b3_pkd_color * src,
-		b3_res         xDstSize);
+		b3_count      *      TxRowCounter,
+		b3_count      *      TxRowCells,
+		const b3_count   *   rIndex,
+		const b3_pkd_color * src,
+		const b3_res         xDstSize);
 
 	static void         b3ComputeLineSmaller(
-		b3_count * TxRowCounter,
-		b3_count * TxRowCells,
-		b3_count * rIndex,
-		b3_u08  *  src,
-		b3_res     xDstSize);
+		b3_count    *    TxRowCounter,
+		b3_count    *    TxRowCells,
+		const b3_count * rIndex,
+		const b3_u08  *  src,
+		const b3_res     xDstSize);
 	static void         b3ComputeLineBigger(
-		b3_count * TxRowCounter,
-		b3_count * TxRowCells,
-		b3_count * rIndex,
-		b3_u08  *  src,
-		b3_res     xDstSize);
+		b3_count    *    TxRowCounter,
+		b3_count    *    TxRowCells,
+		const b3_count * rIndex,
+		const b3_u08  *  src,
+		const b3_res     xDstSize);
 
 private:
 	/**
@@ -1251,19 +1251,55 @@ private:
 	void           b3TurnRightFloat();
 
 	// b3TxScale.cc
-	void           b3ScaleFilteredFromBW(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleFilteredFromVGA(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3VGAScaleToVGA(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3VGAScaleToRGB8(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleFilteredFromTrueColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleFilteredFromFloat(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
+	void           b3ScaleFilteredFromBW(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleFilteredFromVGA(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3VGAScaleToVGA(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3VGAScaleToRGB8(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleFilteredFromTrueColor(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleFilteredFromFloat(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
 
-	void           b3ScaleUnfilteredFromBW(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleUnfilteredFromILBM(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleUnfilteredFromVGA(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleUnfilteredFromHighColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleUnfilteredFromTrueColor(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
-	void           b3ScaleUnfilteredFromFloat(b3Tx * srcTx, b3_index * rIndex, b3_index * cIndex);
+	void           b3ScaleUnfilteredFromBW(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleUnfilteredFromILBM(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleUnfilteredFromVGA(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleUnfilteredFromHighColor(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleUnfilteredFromTrueColor(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
+	void           b3ScaleUnfilteredFromFloat(
+		const b3Tx   *   srcTx,
+		const b3_index * rIndex,
+		const b3_index * cIndex);
 	b3_index       b3ILBMPlaneValue(const b3_coord x, const b3_coord y) const;
 
 	// b3Tx.cc

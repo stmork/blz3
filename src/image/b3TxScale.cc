@@ -30,8 +30,8 @@
 
 struct b3_rect_info
 {
-	b3_index   *   rIndex;
-	b3_index   *   cIndex;
+	const b3_index   *   rIndex;
+	const b3_index   *   cIndex;
 	b3_pkd_color * new_palette;
 	b3_res         yMin, yMax;
 	b3_coord       xSizeSrc, xSizeDst;
@@ -273,11 +273,11 @@ const b3_u08 b3_tx_mask::TxMaskRight[8]
 // NOTE: Now the fast part begins here...
 // If a line is to be scaled up (means: destination is bigger)...
 void b3Tx::b3ComputeLineBigger(
-	b3_count * TxRowCounter,
-	b3_count * TxRowCells,
-	b3_count * rIndex,
-	b3_u08  * src,
-	b3_res    xDstSize)
+	b3_count    *    TxRowCounter,
+	b3_count    *    TxRowCells,
+	const b3_count * rIndex,
+	const b3_u08  *  src,
+	const b3_res     xDstSize)
 {
 	b3_coord xDst;
 	b3_index index;
@@ -338,11 +338,11 @@ void b3Tx::b3ComputeLineBigger(
 
 // If a line is to be scaled down (means: destination is smaller)...
 void b3Tx::b3ComputeLineSmaller(
-	b3_count * TxRowCounter,
-	b3_count * TxRowCells,
-	b3_count * rIndex,
-	b3_u08  *  src,
-	b3_res     xDstSize)
+	b3_count    *    TxRowCounter,
+	b3_count    *    TxRowCells,
+	const b3_count * rIndex,
+	const b3_u08  *  src,
+	b3_res           xDstSize)
 {
 	b3_coord  xDst;
 	b3_res    xStart, xEnd, xByteStart, xByteEnd;
@@ -405,8 +405,8 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 	b3_u08    *    cDst;
 	b3_pkd_color * lDst;
 	b3_pkd_color * pal;
-	b3_count   *   rIndex;
-	b3_count   *   cIndex;
+	const b3_count   *   rIndex;
+	const b3_count   *   cIndex;
 	b3_count   *   TxRowCounter;
 	b3_count   *   TxRowCells;
 	b3_res         xSrcSize;
@@ -418,8 +418,8 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 	void (*ComputeLine)(
 		b3_count * TxRowCounter,
 		b3_count * TxRowCells,
-		b3_count * rIndex,
-		b3_u08   * src,
+		const b3_count * rIndex,
+		const b3_u08   * src,
 		b3_res     dstSize);
 
 	// ... and some values
@@ -659,9 +659,9 @@ unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
 #endif
 
 void b3Tx::b3ScaleFilteredFromBW(
-	b3Tx   *   Tx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   Tx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3Thread      tx_thread[CPU_MAX];
 	b3_rect_info  RectInfo[CPU_MAX];
@@ -754,11 +754,11 @@ void b3Tx::b3ScaleFilteredFromBW(
 
 // If a line is to be scaled up (means: destination is bigger)...
 void b3Tx::b3RGB8ComputeLineBigger(
-	b3_count   *   TxRowCounter,
-	b3_count   *   TxRowCells,
-	b3_count   *   rIndex,
-	b3_pkd_color * src,
-	b3_res         xDstSize)
+	b3_count      *      TxRowCounter,
+	b3_count      *      TxRowCells,
+	const b3_count   *   rIndex,
+	const b3_pkd_color * src,
+	const b3_res         xDstSize)
 {
 	b3_coord     xDst;
 	b3_index     index;
@@ -779,11 +779,11 @@ void b3Tx::b3RGB8ComputeLineBigger(
 
 // If a line is to be scaled down (means: destination is smaller)...
 void b3Tx::b3RGB8ComputeLineSmaller(
-	b3_count   *   TxRowCounter,
-	b3_count   *   TxRowCells,
-	b3_count   *   rIndex,
-	b3_pkd_color * src,
-	b3_res         xDstSize)
+	b3_count      *      TxRowCounter,
+	b3_count      *      TxRowCells,
+	const b3_count   *   rIndex,
+	const b3_pkd_color * src,
+	b3_res               xDstSize)
 {
 	b3_coord     xDst;
 	b3_res       xStart, xEnd;
@@ -816,8 +816,8 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 	b3_u08    *    bDst;
 	b3_pkd_color * lDst;
 	b3_color   *   cDst;
-	b3_count   *   rIndex;
-	b3_count   *   cIndex;
+	const b3_count   *   rIndex;
+	const b3_count   *   cIndex;
 	b3_count   *   TxRowCounter;
 	b3_count   *   TxRowCells;
 	b3_res         xSrcSize, ySrcSize;
@@ -832,8 +832,8 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 	void (*ComputeLine)(
 		b3_count     * TxRowCounter,
 		b3_count     * TxRowCells,
-		b3_count     * rIndex,
-		b3_pkd_color * src,
+		const b3_count     * rIndex,
+		const b3_pkd_color * src,
 		b3_res        dstSize);
 
 	// ... and some values
@@ -1111,9 +1111,9 @@ unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 }
 
 void b3Tx::b3ScaleFilteredFromTrueColor(
-	b3Tx   *   srcTx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   srcTx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3Thread     tx_thread[CPU_MAX];
 	b3_rect_info RectInfo[CPU_MAX];
@@ -1181,11 +1181,11 @@ void b3Tx::b3ScaleFilteredFromTrueColor(
 
 // If a line is to be scaled up (means: destination is bigger)...
 void b3Tx::b3FloatComputeLineBigger(
-	b3_color   *  TxRowCounter,
-	b3_count   *  TxRowCells,
-	b3_count   *  rIndex,
-	b3_color   *  src,
-	b3_res        xDstSize)
+	b3_color    *    TxRowCounter,
+	b3_count    *    TxRowCells,
+	const b3_count * rIndex,
+	const b3_color * src,
+	const b3_res     xDstSize)
 {
 	b3_coord     xDst;
 	b3_index     index;
@@ -1204,11 +1204,11 @@ void b3Tx::b3FloatComputeLineBigger(
 
 // If a line is to be scaled down (means: destination is smaller)...
 void b3Tx::b3FloatComputeLineSmaller(
-	b3_color * TxRowCounter,
-	b3_count * TxRowCells,
-	b3_count * rIndex,
-	b3_color * src,
-	b3_res    xDstSize)
+	b3_color    *    TxRowCounter,
+	b3_count    *    TxRowCells,
+	const b3_count * rIndex,
+	const b3_color * src,
+	const b3_res     xDstSize)
 {
 	b3_coord     xDst;
 	b3_res       xStart, xEnd;
@@ -1238,8 +1238,8 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
 	b3_color   *   src;
-	b3_count   *   rIndex;
-	b3_count   *   cIndex;
+	const b3_count   *   rIndex;
+	const b3_count   *   cIndex;
 	b3_color   *   TxRowCounter;
 	b3_count   *   TxRowCells;
 	b3_res         xSrcSize, ySrcSize;
@@ -1257,8 +1257,8 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 	void (*ComputeLine)(
 		b3_color * TxRowCounter,
 		b3_count * TxRowCells,
-		b3_count * rIndex,
-		b3_color * src,
+		const b3_count * rIndex,
+		const b3_color * src,
 		b3_res     dstSize);
 
 	// ... and some values
@@ -1471,9 +1471,9 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 }
 
 void b3Tx::b3ScaleFilteredFromFloat(
-	b3Tx   *   srcTx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   srcTx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3Thread     tx_thread[CPU_MAX];
 	b3_rect_info RectInfo[CPU_MAX];
@@ -1595,9 +1595,9 @@ b3_index b3Tx::b3ColorIndex(b3_pkd_color color)
 }
 
 void b3Tx::b3VGAScaleToVGA(
-	b3Tx   *  srcTx,
-	b3_count * rIndex,
-	b3_index * cIndex)
+	const b3Tx   *   srcTx,
+	const b3_count * rIndex,
+	const b3_index * cIndex)
 {
 	b3_coord     x, y, sx, sy, ix, iy;
 	b3_count     count = 0;
@@ -1666,9 +1666,9 @@ void b3Tx::b3VGAScaleToVGA(
 }
 
 void b3Tx::b3VGAScaleToRGB8(
-	b3Tx   *  srcTx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   srcTx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_u08    *   cSrc;
 	b3_pkd_color * lDst;
@@ -1737,9 +1737,9 @@ void b3Tx::b3VGAScaleToRGB8(
 }
 
 void b3Tx::b3ScaleFilteredFromVGA(
-	b3Tx   *  srcTx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *  srcTx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	switch (type)
 	{
@@ -1837,9 +1837,9 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 
 unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
 {
+	const b3_count   *   rIndex;
+	const b3_count   *   cIndex;
 	b3_rect_info * RectInfo;
-	b3_count   *   rIndex;
-	b3_count   *   cIndex;
 	b3_u08    *    src, *dst;
 	b3_coord       x, y, rx;
 	b3_res         yMin, yMax, xSize;
@@ -1897,9 +1897,9 @@ unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
 }
 
 void b3Tx::b3ScaleUnfilteredFromBW(
-	b3Tx   *   Tx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   Tx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_coord       x, y, rx;
 	b3_count       bytes, num;
@@ -2024,9 +2024,9 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 }
 
 void b3Tx::b3ScaleUnfilteredFromTrueColor(
-	b3Tx   *   Tx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   Tx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_coord       x, y;
 	b3_count       num;
@@ -2046,14 +2046,14 @@ void b3Tx::b3ScaleUnfilteredFromTrueColor(
 }
 
 void b3Tx::b3ScaleUnfilteredFromHighColor(
-	b3Tx   *   Tx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   Tx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_coord       x, y;
 	b3_count       num;
-	b3_u16  *    src_ptr;
-	b3_u16  *    dst_ptr;
+	b3_u16   *   src_ptr;
+	b3_u16   *   dst_ptr;
 
 	src_ptr = Tx->b3GetHighColorData();
 	dst_ptr = b3GetHighColorData();
@@ -2069,9 +2069,9 @@ void b3Tx::b3ScaleUnfilteredFromHighColor(
 }
 
 void b3Tx::b3ScaleUnfilteredFromFloat(
-	b3Tx   *   Tx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   Tx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_coord   x, y;
 	b3_count   num;
@@ -2092,9 +2092,9 @@ void b3Tx::b3ScaleUnfilteredFromFloat(
 }
 
 void b3Tx::b3ScaleUnfilteredFromVGA(
-	b3Tx   *   Tx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   Tx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_coord      x, y;
 	b3_count        num;
@@ -2179,9 +2179,9 @@ b3_index b3Tx::b3ILBMPlaneValue(
 }
 
 void b3Tx::b3ScaleUnfilteredFromILBM(
-	b3Tx   *   srcTx,
-	b3_count * rIndex,
-	b3_count * cIndex)
+	const b3Tx   *   srcTx,
+	const b3_count * rIndex,
+	const b3_count * cIndex)
 {
 	b3_coord       x, y;
 	b3_u08    *    cDst;

@@ -379,9 +379,9 @@ b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries) const
 *************************************************************************/
 
 b3_bool b3Tx::b3TransToBW(
-		const b3Tx * srcTx,
-		const b3_f64 ratio,
-		const b3_tx_threshold mode)
+	const b3Tx * srcTx,
+	const b3_f64 ratio,
+	const b3_tx_threshold mode)
 {
 	b3Copy(srcTx);
 	return b3TransToBW(ratio, mode);

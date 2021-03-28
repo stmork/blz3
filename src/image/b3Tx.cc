@@ -613,11 +613,11 @@ b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 		return palette == nullptr ? 0 : (palette[data[y * xSize + x]] & 0xff) * 0.0039215686;
 
 	case B3_TX_RGB8:
-		lPtr  = (b3_pkd_color *)data;
+		lPtr  = data;
 		return (lPtr[y * xSize + x] & 0xff) * 0.0039215686;
 
 	case B3_TX_FLOAT:
-		cPtr  = (b3_color *)data;
+		cPtr  = data;
 		return cPtr[y * xSize + x].b;
 
 	case B3_TX_UNDEFINED :
@@ -805,8 +805,8 @@ b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 *************************************************************************/
 
 inline void b3Tx::b3GetILBM(
-	b3_pkd_color * ColorLine,
-	const b3_coord      y) const
+	b3_pkd_color  * ColorLine,
+	const b3_coord  y) const
 {
 	b3_u08    *   Data;
 	b3_coord      x, d, BytesPerLine;
@@ -861,8 +861,8 @@ inline void b3Tx::b3GetILBM(
 }
 
 inline void b3Tx::b3GetRGB8(
-	b3_pkd_color * dst,
-	const b3_coord      y) const
+	b3_pkd_color  * dst,
+	const b3_coord  y) const
 {
 	b3_pkd_color * src;
 

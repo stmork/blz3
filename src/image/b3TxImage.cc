@@ -420,7 +420,7 @@ void b3Tx::b3RemoveBlackBorder()
 
 #endif
 
-void b3Tx::b3Shrink(b3_count shrink)
+void b3Tx::b3Shrink(const b3_count shrink)
 {
 	b3_coord  y;
 	b3_count  xBytes, num;
