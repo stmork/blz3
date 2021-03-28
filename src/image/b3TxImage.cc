@@ -485,24 +485,22 @@ void b3Tx::b3Shrink(b3_count shrink)
 // Negate image by turning all color bits to reverse.
 void b3Tx::b3Negate()
 {
-	b3_color   *  cPtr;
+	b3_color   *   cPtr;
 	b3_pkd_color * lPtr;
-	b3_u16    *   sPtr;
-	b3_u08    *   bPtr;
-	b3_count      xBytes, max;
-	b3_index      i;
-	b3_u08        bVal;
+	b3_u16    *    sPtr;
+	b3_u08    *    bPtr;
+	b3_count       xBytes, max;
+	b3_index       i;
 
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Negate()\n");
 	if (b3IsBW())
 	{
-		bPtr   = (b3_u08 *)data;
+		bPtr   = data;
 		xBytes = TX_BWA(xSize);
 		max    = xBytes * ySize;
 		for (i = 0; i < max; i++)
 		{
-			bVal    = *bPtr;
-			*bPtr++ = (b3_u08)(bVal ^ 0xff);
+			*bPtr++ ^= 0xff;
 		}
 	}
 
@@ -513,33 +511,30 @@ void b3Tx::b3Negate()
 		max  = 1 << depth;
 		for (i = 0; i < max; i++)
 		{
-			*lPtr = *lPtr ^ 0xffffff;
-			lPtr++;
+			*lPtr++ ^= 0xffffff;
 		}
 		break;
 
 	case B3_TX_RGB4:
-		sPtr = (b3_u16 *)data;
+		sPtr = data;
 		max  = xSize * ySize;
 		for (i = 0; i < max; i++)
 		{
-			*sPtr = (b3_u16)(*sPtr ^ 0xfff);
-			sPtr++;
+			*sPtr++ ^= 0xfff;
 		}
 		break;
 
 	case B3_TX_RGB8:
-		lPtr = (b3_pkd_color *)data;
+		lPtr = data;
 		max  = xSize * ySize;
 		for (i = 0; i < max; i++)
 		{
-			*lPtr = *lPtr ^ 0xffffff;
-			lPtr++;
+			*lPtr++ ^= 0xffffff;
 		}
 		break;
 
 	case B3_TX_FLOAT:
-		cPtr = (b3_color *)data;
+		cPtr = data;
 		max  = xSize * ySize;
 		for (i = 0; i < max; i++)
 		{

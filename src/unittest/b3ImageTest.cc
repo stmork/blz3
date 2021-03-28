@@ -535,15 +535,15 @@ void b3ImageTest::testTransToGrey()
 {
 	for (b3_res depth : m_TestDepth)
 	{
-		b3Tx   src;
+		b3Tx   tx;
 		b3Path path;
 
 		path.b3Format("img_test_grey_%03ld.jpg", depth);
-		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
-		CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
-		src.b3TransToGrey();
-		CPPUNIT_ASSERT_EQUAL(B3_OK, src.b3SaveImage(path));
+		tx.b3TransToGrey();
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
 	}
 }
 
@@ -571,14 +571,14 @@ void b3ImageTest::testHist()
 {
 	for (b3_res depth : m_TestDepth)
 	{
-		b3Tx   src;
+		b3Tx   tx;
 		b3Path path;
 
 		path.b3Format("img_test_hist_%03ld.jpg", depth);
-		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
-		CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
-		CPPUNIT_ASSERT(src.b3Histogramme());
+		CPPUNIT_ASSERT(tx.b3Histogramme());
 	}
 }
 
@@ -589,8 +589,10 @@ void b3ImageTest::testNegate()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_negt_%03ld.jpg", depth);
+		path.b3Format("img_test_negate_%03ld.jpg", depth);
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
+
 		tx.b3Negate();
 		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
 	}
@@ -600,17 +602,17 @@ void b3ImageTest::testTurn()
 {
 	for (b3_res depth : m_TestDepth)
 	{
-		b3Tx   src;
+		b3Tx   tx;
 		b3Path path;
 
 		path.b3Format("img_test_turn_%03ld.jpg", depth);
-		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
-		CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
-		src.b3TurnLeft();
-		src.b3Turn();
-		src.b3TurnRight();
-		CPPUNIT_ASSERT_EQUAL(B3_OK, src.b3SaveImage(path));
+		tx.b3TurnLeft();
+		tx.b3Turn();
+		tx.b3TurnRight();
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
 	}
 }
 

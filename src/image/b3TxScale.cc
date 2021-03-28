@@ -247,26 +247,26 @@ b3_tx_mask b3_tx_mask::TxMask;
 
 const b3_u08 b3_tx_mask::TxMaskLeft[8]
 {
-	0xff,		// 11111111
-	0x7f,		// 01111111
-	0x3f,		// 00111111
-	0x1f,		// 00011111
-	0x0f,		// 00001111
-	0x07,		// 00000111
-	0x03,		// 00000011
-	0x01        // 00000001
+	0xff,   // 11111111
+	0x7f,   // 01111111
+	0x3f,   // 00111111
+	0x1f,   // 00011111
+	0x0f,   // 00001111
+	0x07,   // 00000111
+	0x03,   // 00000011
+	0x01    // 00000001
 };
 
 const b3_u08 b3_tx_mask::TxMaskRight[8]
 {
-	0x00,		// 00000000
-	0x80,		// 10000000
-	0xc0,		// 11000000
-	0xe0,		// 11100000
-	0xf0,		// 11110000
-	0xf8,		// 11111000
-	0xfc,		// 11111100
-	0xfe		// 11111110
+	0x00,   // 00000000
+	0x80,   // 10000000
+	0xc0,   // 11000000
+	0xe0,   // 11100000
+	0xf0,   // 11110000
+	0xf8,   // 11111000
+	0xfc,   // 11111100
+	0xfe    // 11111110
 };
 
 #ifndef SLOW
@@ -1236,30 +1236,30 @@ void b3Tx::b3FloatComputeLineSmaller(
 unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 {
 	b3_rect_info * RectInfo;
-	b3_tx_type    dstType;
-	b3_color   *  src;
-	b3_count   *  rIndex;
-	b3_count   *  cIndex;
-	b3_color   *  TxRowCounter;
-	b3_count   *  TxRowCells;
-	b3_res        xSrcSize, ySrcSize;
-	b3_res        xDstSize, yDstSize;
-	b3_coord      ySrc;
-	b3_coord      xDst, yDst;
-	b3_count      srcBytes;
-	b3_index      i;
-	b3_color      color;
-	b3_count      divisor = 1;
-	b3_res        yMin, yMax;
-	b3_u08    *   bDst;
+	b3_tx_type     dstType;
+	b3_color   *   src;
+	b3_count   *   rIndex;
+	b3_count   *   cIndex;
+	b3_color   *   TxRowCounter;
+	b3_count   *   TxRowCells;
+	b3_res         xSrcSize, ySrcSize;
+	b3_res         xDstSize, yDstSize;
+	b3_coord       ySrc;
+	b3_coord       xDst, yDst;
+	b3_count       srcBytes;
+	b3_index       i;
+	b3_color       color;
+	b3_count       divisor = 1;
+	b3_res         yMin, yMax;
+	b3_u08    *    bDst;
 	b3_pkd_color * lDst;
-	b3_color   *  cDst;
+	b3_color   *   cDst;
 	void (*ComputeLine)(
 		b3_color * TxRowCounter,
 		b3_count * TxRowCells,
 		b3_count * rIndex,
 		b3_color * src,
-		b3_res    dstSize);
+		b3_res     dstSize);
 
 	// ... and some values
 	RectInfo = (b3_rect_info *)ptr;
@@ -1471,7 +1471,7 @@ unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
 }
 
 void b3Tx::b3ScaleFilteredFromFloat(
-	b3Tx   *  srcTx,
+	b3Tx   *   srcTx,
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
@@ -1587,16 +1587,7 @@ b3_index b3Tx::b3ColorIndex(b3_pkd_color color)
 	}
 	else
 	{
-		b3_index index;
-		b3_f64   r, g, b;
-
-		// Extract RGB
-		r     = (color & 0xff0000) >> 16;
-		g     = (color & 0x00ff00) >>  8;
-		b     = (color & 0x0000ff);
-
-		// Compute grey index
-		index = (b3_index)(r * 0.35 + g * 0.51 + b * 0.14);
+		b3_index index = b3ToGrey(color) * 255;
 
 		// Check against bounds and return
 		return index > 255 ? 255 : index;
@@ -1821,6 +1812,9 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 		b3ScaleFilteredFromTrueColor(srcTx, rIndex, cIndex);
 		break;
 
+	case  48:
+	case  64:
+	case  96:
 	case 128:
 		b3ScaleFilteredFromFloat(srcTx, rIndex, cIndex);
 		break;
@@ -2058,8 +2052,8 @@ void b3Tx::b3ScaleUnfilteredFromHighColor(
 {
 	b3_coord       x, y;
 	b3_count       num;
-	b3_u16    *    src_ptr;
-	b3_u16    *    dst_ptr;
+	b3_u16  *    src_ptr;
+	b3_u16  *    dst_ptr;
 
 	src_ptr = Tx->b3GetHighColorData();
 	dst_ptr = b3GetHighColorData();
@@ -2079,20 +2073,20 @@ void b3Tx::b3ScaleUnfilteredFromFloat(
 	b3_count * rIndex,
 	b3_count * cIndex)
 {
-	b3_coord       x, y;
-	b3_count       num;
-	b3_color   *   cSrc;
-	b3_pkd_color * lDst;
+	b3_coord   x, y;
+	b3_count   num;
+	b3_color * src_ptr;
+	b3_color * dst_ptr;
 
-	cSrc = Tx->b3GetHdrData();
-	lDst = b3GetTrueColorData();
+	src_ptr = Tx->b3GetHdrData();
+	dst_ptr = b3GetHdrData();
 
 	for (y = 0; y < ySize; y++)
 	{
 		num = cIndex[y] * Tx->xSize;
 		for (x = 0; x < xSize; x++)
 		{
-			*lDst++ = b3Color(cSrc[num + rIndex[x]]);
+			*dst_ptr++ = src_ptr[num + rIndex[x]];
 		}
 	}
 }
@@ -2263,20 +2257,23 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 
 	switch (srcTx->depth)
 	{
-	case 1:
+	case   1:
 		b3ScaleUnfilteredFromBW(srcTx, rIndex, cIndex);
 		break;
 
-	case 12:
-	case 16:
+	case  12:
+	case  16:
 		b3ScaleUnfilteredFromHighColor(srcTx, rIndex, cIndex);
 		break;
 
-	case 24:
-	case 32:
+	case  24:
+	case  32:
 		b3ScaleUnfilteredFromTrueColor(srcTx, rIndex, cIndex);
 		break;
 
+	case  48:
+	case  64:
+	case  96:
 	case 128:
 		b3ScaleUnfilteredFromFloat(srcTx, rIndex, cIndex);
 		break;
@@ -2350,13 +2347,7 @@ void b3Tx::b3TransToGrey()
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				const b3_pkd_color color = b3GetValue(x, y);
-
-				r = ((color & 0xff0000) >> 16) * 0.35;
-				g = ((color & 0x00ff00) >>  8) * 0.51;
-				b = ((color & 0x0000ff))       * 0.14;
-
-				*cPtr++ = (b3_u08)(r + b + g);
+				*cPtr++ = b3ToGrey(b3GetValue(x, y)) * 255;
 			}
 		}
 		b3Free(old);
@@ -2369,13 +2360,7 @@ void b3Tx::b3TransToGrey()
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				const b3_pkd_color color = palette[*cPtr];
-
-				r = ((color & 0xff0000) >> 16) * 0.35;
-				g = ((color & 0x00ff00) >>  8) * 0.51;
-				b = ((color & 0x0000ff))       * 0.14;
-
-				*cPtr++ = (b3_u08)(r + b + g);
+				*cPtr++ = b3ToGrey(palette[*cPtr]) * 255;
 			}
 		}
 		b3Free(old);
@@ -2407,12 +2392,7 @@ void b3Tx::b3TransToGrey()
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				const b3_pkd_color color = *lPtr++;
-
-				r = ((color & 0xff0000) >> 16) * 0.35;
-				g = ((color & 0x00ff00) >>  8) * 0.51;
-				b = ((color & 0x0000ff))       * 0.14;
-				*cPtr++ = (b3_u08)(r + b + g);
+				*cPtr++ = b3ToGrey(*lPtr++) * 255;
 			}
 		}
 		b3Free(old);
@@ -2425,12 +2405,7 @@ void b3Tx::b3TransToGrey()
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				const b3_color color = *fPtr++;
-
-				r = color.r * 0.35;
-				g = color.g * 0.51;
-				b = color.b * 0.14;
-				*cPtr++ = (b3_u08)(r + b + g);
+				*cPtr++ = b3ToGrey(*fPtr++) * 255;
 			}
 		}
 		b3Free(old);

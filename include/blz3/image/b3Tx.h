@@ -1134,6 +1134,14 @@ public:
 		return grey[b3Color::R] + grey[b3Color::G] + grey[b3Color::B];
 	}
 
+	static inline b3_f32 b3ToGrey(const b3Color & input)
+	{
+		b3Color grey = input * m_RgbEyeStimulus;
+
+		// Set bit if over threshold
+		return grey[b3Color::R] + grey[b3Color::G] + grey[b3Color::B];
+	}
+
 	static inline b3_index b3ColorToIndex(const b3_pkd_color color)
 	{
 		return
