@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Saving an OpenEXR image
 **
-**	(C) Copyright 2011  Steffen A. Mork
+**	(C) Copyright 2011 - 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

@@ -9,7 +9,7 @@
 **
 **	Blizzard III - measuring an image for deskewing
 **
-**	(C) Copyright 2001  Steffen A. mork
+**	(C) Copyright 2001 - 2021  Steffen A. mork
 **	    All Rights Reserved
 **
 **

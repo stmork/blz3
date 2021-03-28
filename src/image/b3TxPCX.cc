@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Loading PCX images
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

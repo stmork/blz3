@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Texture pool
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

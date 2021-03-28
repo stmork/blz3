@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Precompiled header file for image package
 **
-**	(C) Copyright 2006  Steffen A. Mork
+**	(C) Copyright 2006 - 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Sample something
 **
-**	(C) Copyright 2004  Steffen A. Mork
+**	(C) Copyright 2004 - 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
