@@ -132,7 +132,7 @@ void b3ImageTest::setUp()
 		for (b3_res x = 0; x < TEST_IMG_XMAX; x += 16)
 		{
 			*bRow++ = (y & 2) ? 0xcc : 0x33;
-			*bRow++ = (y & 2) ? 0xcc : 0x33;
+			*bRow++ = (y & 2) ? 0x00 : 0xff;
 		}
 	}
 
