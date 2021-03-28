@@ -1134,6 +1134,22 @@ public:
 		return grey[b3Color::R] + grey[b3Color::G] + grey[b3Color::B];
 	}
 
+	static inline b3_index b3ColorToIndex(const b3_pkd_color color)
+	{
+		return
+			((color & 0xe00000) >> 16) |
+			((color & 0x00e000) >> 11) |
+			((color & 0x0000c0) >>  6);
+	}
+
+	static inline b3_pkd_color b3IndexToColor(const b3_index index)
+	{
+		return
+			((index & 0xe0) << 16) |
+			((index & 0x1c) << 11) |
+			((index & 0x03) <<  6);
+	}
+
 private:
 	// b3TxScale.cc
 	static unsigned int b3ScaleBW2BW(void * ptr);

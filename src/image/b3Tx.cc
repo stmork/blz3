@@ -566,6 +566,7 @@ void b3Tx::b3SetPalette(
 {
 	// compute bit depth
 	depth = b3Math::b3Log2(NumColors);
+	pSize = NumColors;
 	type = (depth == 1 ? B3_TX_ILBM : B3_TX_VGA);
 
 	// exchange pointer

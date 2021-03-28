@@ -63,6 +63,8 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testTransToGrey);
 	CPPUNIT_TEST(testMirror);
 	CPPUNIT_TEST(testHist);
+	CPPUNIT_TEST(testNegate);
+	CPPUNIT_TEST(testTurn);
 
 #ifdef BLZ3_USE_OPENEXR
 	CPPUNIT_TEST(testWriteOpenEXR);
@@ -95,6 +97,8 @@ public:
 	void testTransToGrey();
 	void testMirror();
 	void testHist();
+	void testNegate();
+	void testTurn();
 
 private:
 	void compareImages(const b3Tx & src);

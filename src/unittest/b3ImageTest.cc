@@ -32,7 +32,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Unit tests for file access                    **
+**                        Static data for unit tests                    **
 **                                                                      **
 *************************************************************************/
 
@@ -66,11 +66,18 @@ b3_u08       b3ImageTest::data_bw[]
 b3_u08       b3ImageTest::data_vga[DATA_SIZE(data_u32)];
 b3_color     b3ImageTest::data_col[DATA_SIZE(data_u32)];
 
+/*************************************************************************
+**                                                                      **
+**                        Unit test setup                               **
+**                                                                      **
+*************************************************************************/
+
 void b3ImageTest::setUp()
 {
 	b3Color        row[TEST_IMG_XMAX];
-	b3_pkd_color * tRow;
+	b3_u08    *    bRow;
 	b3_u16    *    sRow;
+	b3_pkd_color * tRow;
 	b3_color   *   rRow;
 	b3_res         width   = TEST_IMG_XMAX >> 3;
 
@@ -82,7 +89,7 @@ void b3ImageTest::setUp()
 
 	for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
 	{
-		b3_f32 r, g, b, value;
+		b3_f32   r, g, b, value;
 		b3_index idx = x / width;
 
 		value = (b3_f32)(x % width) / width;
@@ -92,6 +99,12 @@ void b3ImageTest::setUp()
 		row[x].b3Init(r, g, b);
 	}
 
+	b3_pkd_color * palette = m_TxPallColor.b3GetPalette();
+	for (b3_index i = 0; i < (1 << m_TxPallColor.depth); i++)
+	{
+		*palette++ = b3Tx::b3IndexToColor(i);
+	}
+	bRow = m_TxPallColor.b3GetIndexData();
 	sRow = m_TxHighColor.b3GetHighColorData();
 	tRow = m_TxTrueColor.b3GetTrueColorData();
 	rRow = m_TxRealColor.b3GetHdrData();
@@ -99,18 +112,27 @@ void b3ImageTest::setUp()
 	{
 		for (b3_res x = 0; x < TEST_IMG_XMAX; x++)
 		{
-			b3_u16 high_color = 0;
+			b3_pkd_color true_color = row[x];
+			b3_u16       high_color = 0;
 
 			for (b3_index i = 0; i < 4; i++)
 			{
 				high_color = (high_color << 4) | b3_u16(row[x][i] * 15);
 			}
+
+			*bRow++ = b3Tx::b3ColorToIndex(true_color);
 			*sRow++ = high_color;
-			*tRow++ = row[x];
+			*tRow++ = true_color;
 			*rRow++ = row[x];
 		}
 	}
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Unit tests for file access                    **
+**                                                                      **
+*************************************************************************/
 
 void b3ImageTest::testRead()
 {
@@ -148,6 +170,7 @@ void b3ImageTest::testRead()
 void b3ImageTest::testReadGIF()
 {
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxGIF.b3LoadImage("fft_test.gif", true));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.gif"));
 }
 
 void b3ImageTest::testWriteTIFF()
@@ -212,6 +235,12 @@ void b3ImageTest::testWriteOpenEXR()
 #endif
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Unit tests for basic data type handling       **
+**                                                                      **
+*************************************************************************/
+
 void b3ImageTest::testTxData()
 {
 	static b3_u08 example[]
@@ -251,6 +280,31 @@ void b3ImageTest::testColor()
 	CPPUNIT_ASSERT_EQUAL(0.35f, b3Tx::b3ToGrey(B3_RED));
 	CPPUNIT_ASSERT_EQUAL(0.51f, b3Tx::b3ToGrey(B3_GREEN));
 	CPPUNIT_ASSERT_EQUAL(0.14f, b3Tx::b3ToGrey(B3_BLUE));
+
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x00,  b3Tx::b3ColorToIndex(B3_BLACK));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xff,  b3Tx::b3ColorToIndex(B3_WHITE));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xe0,  b3Tx::b3ColorToIndex(B3_RED));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x1c,  b3Tx::b3ColorToIndex(B3_GREEN));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x03,  b3Tx::b3ColorToIndex(B3_BLUE));
+
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x00,  b3Tx::b3ColorToIndex(b3Color(0.0, 0.0, 0.0)));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xff,  b3Tx::b3ColorToIndex(b3Color(1.0, 1.0, 1.0)));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xe0,  b3Tx::b3ColorToIndex(b3Color(1.0, 0.0, 0.0)));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x1c,  b3Tx::b3ColorToIndex(b3Color(0.0, 1.0, 0.0)));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x03,  b3Tx::b3ColorToIndex(b3Color(0.0, 0.0, 1.0)));
+
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_BLACK, b3Tx::b3IndexToColor(0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xe0e0c0, b3Tx::b3IndexToColor(0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xe00000, b3Tx::b3IndexToColor(0xe0));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x00e000, b3Tx::b3IndexToColor(0x1c));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x0000c0, b3Tx::b3IndexToColor(0x03));
+
+	for (b3_index i = 0; i < 256; i++)
+	{
+		b3_pkd_color color = b3Tx::b3IndexToColor(i);
+
+		CPPUNIT_ASSERT_EQUAL(i, b3Tx::b3ColorToIndex(color));
+	}
 }
 
 void b3ImageTest::testPixel()
@@ -390,6 +444,12 @@ void b3ImageTest::testRow()
 	}
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Unit tests for image manipulation             **
+**                                                                      **
+*************************************************************************/
+
 void b3ImageTest::testScaleUnfiltered()
 {
 	for (b3_res depth : m_TestDepth)
@@ -495,6 +555,36 @@ void b3ImageTest::testHist()
 		path.b3Format("img_test_hist_%03ld.jpg", depth);
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT(tx.b3Histogramme());
+	}
+}
+
+void b3ImageTest::testNegate()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   tx;
+		b3Path path;
+
+		path.b3Format("img_test_negt_%03ld.jpg", depth);
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		tx.b3Negate();
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
+	}
+}
+
+void b3ImageTest::testTurn()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   tx;
+		b3Path path;
+
+		path.b3Format("img_test_turn_%03ld.jpg", depth);
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+		tx.b3TurnLeft();
+		tx.b3Turn();
+		tx.b3TurnRight();
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
 	}
 }
 
