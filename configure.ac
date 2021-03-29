@@ -118,6 +118,7 @@ AC_CHECK_HEADER([pmmintrin.h],[
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
 #include <pmmintrin.h>
+#include <tmmintrin.h>
 __m128d a;
 __m128d b,r;],[
 char result[[128]];

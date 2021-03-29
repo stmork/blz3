@@ -7118,6 +7118,7 @@ else
 #include <stdio.h>
 #include <emmintrin.h>
 #include <pmmintrin.h>
+#include <tmmintrin.h>
 __m128d a;
 __m128d b,r;
 int
