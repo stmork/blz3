@@ -60,7 +60,9 @@
 #		include <emmintrin.h>
 #		ifdef HAVE_SSE3
 #			include <pmmintrin.h>
-#			include <tmmintrin.h>
+#			ifdef HAVE_SSSE3
+#				include <tmmintrin.h>
+#			endif
 #		endif
 #	endif
 #	ifdef SSE_ALIGNED
