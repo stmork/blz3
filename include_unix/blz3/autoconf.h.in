@@ -27,6 +27,9 @@
 /* Does Blizzard use SSE3? */
 #undef BLZ3_USE_SSE3
 
+/* Does Blizzard use SSSE3? */
+#undef BLZ3_USE_SSSE3
+
 /* Can we use x264 library? */
 #undef BLZ3_USE_X264
 
@@ -163,6 +166,9 @@
 
 /* Is SSE3 available? */
 #undef HAVE_SSE3
+
+/* Is SSSE3 available? */
+#undef HAVE_SSSE3
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the
    zero-length file name argument. */

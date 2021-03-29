@@ -118,7 +118,6 @@ AC_CHECK_HEADER([pmmintrin.h],[
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
 #include <pmmintrin.h>
-#include <tmmintrin.h>
 __m128d a;
 __m128d b,r;],[
 char result[[128]];
@@ -129,6 +128,27 @@ r = _mm_hadd_pd(a,b);
 sprintf(result,"%lf\n",*((double *)&r));
 	])],
 	[AC_DEFINE([BLZ3_USE_SSE3], [3], [Does Blizzard use SSE3?]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+])
+
+AC_CHECK_HEADER([tmmintrin.h],[
+	AC_DEFINE([HAVE_SSSE3], [3], [Is SSSE3 available?])
+	AC_MSG_CHECKING([for SSSE3])
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <emmintrin.h>
+#include <pmmintrin.h>
+__m128i input = _mm_set1_pi(1);
+static const __m128i shuffle = _mm_set_epi8(
+					0x80, 0x80, 0x80, 0x00,
+					0x80, 0x80, 0x80, 0x01,
+					0x80, 0x80, 0x80, 0x02,
+					0x80, 0x80, 0x80, 0x03);
+__m128i sse = _mm_shuffle_epi8(_mm_set1_epi32(input), shuffle);
+
+// printf ("SSSE3 %p %p\n", &a, &b);
+sprintf(result,"%lf\n",*((double *)&r));
+	])],
+	[AC_DEFINE([BLZ3_USE_SSSE3], [3], [Does Blizzard use SSSE3?]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
