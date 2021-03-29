@@ -54,6 +54,10 @@ int main(int argc, char * argv[])
 	b3PrintF(B3LOG_NORMAL, "Using SSE3 intrinsics.\n");
 #endif
 
+#ifdef BLZ3_USE_SSSE3
+	b3PrintF(B3LOG_NORMAL, "Using Supplemental SSE3 intrinsics.\n");
+#endif
+
 #ifdef SSE_ALIGNED
 	b3PrintF(B3LOG_NORMAL, "Memory alignment SSE compatible.\n");
 #endif

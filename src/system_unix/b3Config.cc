@@ -87,6 +87,9 @@ b3Runtime::b3Runtime()
 	case B3_VU_SSE3:
 		vu = "SSE3";
 		break;
+	case B3_VU_SSSE3:
+		vu = "Supplemental SSE3";
+		break;
 	case B3_VU_3DNOW:
 		vu = "3DNow!";
 		break;
