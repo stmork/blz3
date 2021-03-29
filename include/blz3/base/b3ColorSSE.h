@@ -161,6 +161,15 @@ public:
 	inline b3Color(const b3_pkd_color input)
 	{
 #ifdef BLZ3_USE_SSE2
+		__m128i sse;
+#ifdef BLZ3_USE_SSE3
+		static __m128i shuffle = _mm_set_epi8(
+					0x80, 0x80, 0x80, 0x00,
+					0x80, 0x80, 0x80, 0x01,
+					0x80, 0x80, 0x80, 0x02,
+					0x80, 0x80, 0x80, 0x03);
+		sse = _mm_shuffle_epi8(_mm_set1_epi32(input), shuffle);
+#else
 		union
 		{
 			b3_u08       b[4];
@@ -179,8 +188,10 @@ public:
 		};
 
 		u.v = c;
+		sse = u.sse;
+#endif
 		SSE_PS_STORE(v, _mm_mul_ps(
-				_mm_cvtepi32_ps(u.sse),
+				_mm_cvtepi32_ps(sse),
 				_mm_load_ps(m_Limit_d255)));
 #else
 		alignas(16) b3_f32 c[4];
