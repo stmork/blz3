@@ -24,6 +24,8 @@
 #include "b3ColorTest.h"
 #include "b3TestMacros.h"
 
+#include <cstddef>
+
 /*************************************************************************
 **                                                                      **
 **                        Color unit test                               **
@@ -46,10 +48,16 @@ void b3ColorTest::tearDown()
 
 void b3ColorTest::test()
 {
+	b3_color   offset_color;
+
+	CPPUNIT_ASSERT_EQUAL(b3Color::A * sizeof (offset_color.a), offsetof(b3_color, a));
+	CPPUNIT_ASSERT_EQUAL(b3Color::R * sizeof (offset_color.r), offsetof(b3_color, r));
+	CPPUNIT_ASSERT_EQUAL(b3Color::G * sizeof (offset_color.g), offsetof(b3_color, g));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B * sizeof (offset_color.b), offsetof(b3_color, b));
+
 	//	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
 #if defined(BLZ3_USE_SSE) && defined(SSE_ALIGNED)
 	b3_f32  *  fPtr = &color[b3Color::A];
-
 #if 0
 	color[b3Color::A] = 0;
 	color[b3Color::R] = 1;

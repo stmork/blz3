@@ -168,8 +168,7 @@ public:
 
 		sse = _mm_shuffle_epi8(_mm_set1_epi32(input), shuffle);
 #else
-#	pragma GCC diagnostic ignored "-Wuninitialized"
-		const __m128i zero = _mm_xor_si128(sse, sse);
+		const __m128i zero = _mm_setzero_si128();
 
 		sse = _mm_shuffle_epi32(
 				_mm_unpacklo_epi8(
