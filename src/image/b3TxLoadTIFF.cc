@@ -291,10 +291,10 @@ long b3Tx::b3TIFFDecode(
 		switch (PlanarConfig)
 		{
 		case PLANARCONFIG_CONTIG :
-			lPtr = (b3_u08 *)b3Alloc(max);
+			lPtr = b3TypedAlloc<b3_u08>(max);
 			if (lPtr != nullptr)
 			{
-				cPtr = (b3_u08 *)data;
+				cPtr = data;
 				for (y = 0; y < ySize; y++)
 				{
 					if (TIFFReadScanline(tiff, lPtr, y, 0) != 1)
@@ -319,6 +319,8 @@ long b3Tx::b3TIFFDecode(
 							if (bit == 0)
 							{
 								bit = 1 << 7;
+
+								// BUG: Valgrind overflow
 								lVal = lPtr[++pos];
 							}
 						}
