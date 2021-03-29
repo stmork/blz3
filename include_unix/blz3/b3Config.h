@@ -91,7 +91,7 @@ typedef unsigned long b3DrawContext;
 #ifndef HAVE_STRLCPY
 static inline size_t strlcpy(char * dst, const char * src, size_t size)
 {
-	if (size > 0)
+	if ((size > 0) && (src != dst))
 	{
 		strncpy(dst, src, size);
 		dst[size - 1] = 0;
