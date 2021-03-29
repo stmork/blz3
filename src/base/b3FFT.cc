@@ -397,9 +397,9 @@ b3_u32 b3Fourier::b3RowFFT(void * ptr)
 
 b3_u32 b3Fourier::b3ColumnFFT(void * ptr)
 {
-	b3_fft_info *  info  = static_cast<b3_fft_info *>(ptr);
+	b3_fft_info  * info  = static_cast<b3_fft_info *>(ptr);
 	b3Complex64 ** lines = info->m_Lines;
-	b3Complex64 *  aux   = info->m_Aux;
+	b3Complex64  * aux   = info->m_Aux;
 	b3_loop        i, j;
 
 	/* Transform the columns */

@@ -150,9 +150,6 @@ public:
 #endif
 	}
 
-	typedef int   v4si __attribute__ ((vector_size (16)));
-	typedef float v4sf __attribute__ ((vector_size (16)));
-
 	/**
 	 * This constructor initializes this instance from a ::b3_pkd_color structure.
 	 *
@@ -168,27 +165,15 @@ public:
 				0x80, 0x80, 0x80, 0x01,
 				0x80, 0x80, 0x80, 0x02,
 				0x80, 0x80, 0x80, 0x03);
+
 		sse = _mm_shuffle_epi8(_mm_set1_epi32(input), shuffle);
 #else
-		union
-		{
-			b3_u08       b[4];
-			b3_pkd_color c;
-		} color;
-		union
-		{
-			__m128i sse;
-			v4si    v;
-		} u;
+#	pragma GCC diagnostic ignored "-Wuninitialized"
+		const __m128i zero = _mm_xor_si128(sse, sse);
 
-		color.c = input;
-		v4si c
-		{
-			color.b[3], color.b[2], color.b[1], color.b[0]
-		};
-
-		u.v = c;
-		sse = u.sse;
+		sse = _mm_shuffle_epi32(
+				_mm_unpacklo_epi8(
+					_mm_unpacklo_epi8(_mm_set1_epi32(input), zero), zero), 0x1b);
 #endif
 		SSE_PS_STORE(v, _mm_mul_ps(
 				_mm_cvtepi32_ps(sse),
