@@ -163,7 +163,7 @@ public:
 #ifdef BLZ3_USE_SSE2
 		__m128i sse;
 #ifdef BLZ3_USE_SSE3
-		static __m128i shuffle = _mm_set_epi8(
+		static const __m128i shuffle = _mm_set_epi8(
 					0x80, 0x80, 0x80, 0x00,
 					0x80, 0x80, 0x80, 0x01,
 					0x80, 0x80, 0x80, 0x02,
