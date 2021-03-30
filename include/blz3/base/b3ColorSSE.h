@@ -166,12 +166,13 @@ public:
 				0x80, 0x80, 0x80, 0x02,
 				0x80, 0x80, 0x80, 0x03);
 
+		// Extract bytes into 32 bit signed with rest zeroed.
 		sse = _mm_shuffle_epi8(_mm_set1_epi32(input), shuffle);
 #else
 		const __m128i zero = _mm_setzero_si128();
 
-		sse = _mm_shuffle_epi32(
-				_mm_unpacklo_epi8(
+		sse = _mm_shuffle_epi32( // swap high <-> low
+				_mm_unpacklo_epi8( // extract bytes into 16 bits
 					_mm_unpacklo_epi8(_mm_set1_epi32(input), zero), zero), 0x1b);
 #endif
 		SSE_PS_STORE(v, _mm_mul_ps(
@@ -705,28 +706,36 @@ public:
 	 */
 	inline operator b3_pkd_color() const
 	{
-		alignas(16) b3_s32 c[4];
-		alignas(16) b3_f32 sat[4];
-		b3_pkd_color       result = 0;
-		b3_loop            i;
+		__m128       sse;
+		b3_pkd_color result = 0;
 
-		_mm_storeu_ps(
-			sat,
-			_mm_mul_ps(
+		sse = _mm_mul_ps(
 				_mm_min_ps(
 					_mm_set_ps1(1),
 					_mm_max_ps(SSE_PS_LOAD(v), _mm_set_ps1(0))),
-				_mm_set_ps1(COLOR_TOP_BYTE)));
+				_mm_set_ps1(COLOR_TOP_BYTE));
+#ifdef BLZ3_USE_SSE2
+		// read reversed!
+		__m128i i = _mm_shuffle_epi32( // high <-> low
+					_mm_cvtps_epi32(sse), 0x1b); // convert 4 floats into 4 integer
 
-		for (i = 0; i < 4; i++)
-		{
-			c[i] = (b3_s32)sat[i];
-		}
+		// Simply zeroes as constant
+		static const __m128i zero = _mm_setzero_si128();
 
-		for (i = 0; i < 4; i++)
+		// read reversed!
+		result = _mm_cvtsi128_si32( // select low 32 bits only
+					_mm_packus_epi16( // pack 32 bit into 16 bit signed saturated
+						_mm_packs_epi32(i, zero), zero)); // pack 16 bit into 8 bit unsigned saturated
+#else
+		alignas(16) b3_f32 sat[4];
+
+		_mm_storeu_ps(sat, sse);
+
+		for (b3_loop i = 0; i < 4; i++)
 		{
-			result = (result << 8) | c[i];
+			result = (result << 8) | b3_u32(round(sat[i]));
 		}
+#endif
 		return result;
 	}
 

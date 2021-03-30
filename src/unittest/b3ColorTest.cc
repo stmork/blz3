@@ -174,9 +174,9 @@ void b3ColorTest::test()
 	CPPUNIT_ASSERT(ac.b3IsGreater(bc));
 	CPPUNIT_ASSERT(bc.b3IsGreater(ac));
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xbf3f7fff, ac);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x3f3f3f7f, bc);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x2f0f1f3f, color);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xbf4080ff, ac);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x40404080, bc);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x30102040, color);
 }
 
 void b3ColorTest::testColor(
