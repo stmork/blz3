@@ -54,7 +54,7 @@ b3World::~b3World()
 	{
 		if (!m_AutoDelete)
 		{
-			m_Start->b3GetHead()->b3RemoveAll();
+			m_Start->b3GetHead()->b3Free();
 		}
 		delete m_Start;
 	}
@@ -64,7 +64,7 @@ void b3World::b3Free()
 {
 	if (m_Start != nullptr)
 	{
-		m_Start->b3GetHead()->b3RemoveAll();
+		m_Start->b3GetHead()->b3Free();
 		delete m_Start;
 		m_Start      = nullptr;
 	}

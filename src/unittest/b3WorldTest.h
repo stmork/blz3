@@ -43,8 +43,6 @@ public:
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		b3RaytracingItems::b3Register();
-		world1.m_AutoDelete = true;
-		world2.m_AutoDelete = true;
 	}
 
 	void tearDown() override
@@ -71,8 +69,6 @@ public:
 		getcwd(cwd, B3_FILESTRINGLEN);
 		CPPUNIT_ASSERT(world1.b3Read(m_Filename, false));
 		CPPUNIT_ASSERT(world1.b3Write("test1.bwd", false));
-		world1.b3Free();
-
 		CPPUNIT_ASSERT(world1.b3Read("test1.bwd", false));
 
 		CPPUNIT_ASSERT_NO_THROW(item1 = world1.b3GetFirst());
@@ -91,7 +87,6 @@ public:
 		CPPUNIT_ASSERT_NO_THROW(src = srcFile.b3ReadBuffer("test1.bwd", srcSize));
 		CPPUNIT_ASSERT(src != nullptr);
 		CPPUNIT_ASSERT(srcSize != 0);
-		world2.b3Free();
 
 		CPPUNIT_ASSERT(world2.b3Read("test2.bwd", false));
 		CPPUNIT_ASSERT_NO_THROW(dst = dstFile.b3ReadBuffer("test2.bwd", dstSize));

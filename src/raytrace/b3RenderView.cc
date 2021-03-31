@@ -715,7 +715,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane() const
 	b3_f64    farCP = 1, denom, l;
 	b3_vector edge, look, cross;
 
-	B3_ASSERT(b3Vector::b3Distance(&m_Lower, &m_Upper) > b3Scene::epsilon);
+//	B3_ASSERT(b3Vector::b3Distance(&m_Lower, &m_Upper) > b3Scene::epsilon);
 	b3Vector::b3Sub(&m_ViewPoint, &m_EyePoint, &look);
 	b3Vector::b3CrossProduct(&m_Width, &m_Height, &cross);
 	denom = b3Vector::b3Length(&look) / (cross.x * look.x + cross.y * look.y + cross.z * look.z);
