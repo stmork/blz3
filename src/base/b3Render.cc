@@ -36,7 +36,7 @@
 #ifndef _DEBUG
 #	define B3_MAX_TX_SIZE 512
 #else
-#	define B3_MAX_TX_SIZE   8
+#	define B3_MAX_TX_SIZE 128
 #	define no_VERBOSE
 #endif
 
