@@ -115,50 +115,55 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 #endif
 
 	// PPM6
-	pos      = 0;
-	x        = 0;
-	y        = 0;
-	ppm_type = 0;
-	i   = sscanf((const char *)buffer, "P%d %zd %zd %*d%zd",
-			&ppm_type, &x, &y, &pos);
-	b3PrintF(B3LOG_FULL, "PxM (%d): (%zd,%zd - %zd) %zd\n",
-		ppm_type, x, y, i, pos);
-	if (i >= 2)
+	if (buffer[0] == 'P')
 	{
-		switch (ppm_type)
+		pos      = 0;
+		x        = 0;
+		y        = 0;
+		ppm_type = 0;
+
+		// BUG: Valgrind illegal read access
+		i   = sscanf((const char *)buffer, "P%d %zd %zd %*d%zd",
+				&ppm_type, &x, &y, &pos);
+		b3PrintF(B3LOG_FULL, "PxM (%d): (%zd,%zd - %zd) %zd\n",
+			ppm_type, x, y, i, pos);
+		if (i >= 2)
 		{
-		case 4 :
-			if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
+			switch (ppm_type)
 			{
-				pos = (b3_offset)buffer_size - ((x + 7) >> 3) * y;
-				FileType = FT_PBM;
-				return b3ParseRAW(&buffer[pos], x, y, ppm_type);
-			}
-			break;
+			case 4 :
+				if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
+				{
+					pos = (b3_offset)buffer_size - ((x + 7) >> 3) * y;
+					FileType = FT_PBM;
+					return b3ParseRAW(&buffer[pos], x, y, ppm_type);
+				}
+				break;
 
-		case 5 :
-			if ((b3_size)(x * y + pos) <= buffer_size)
-			{
-				pos = (b3_offset)buffer_size - x * y;
-				FileType = FT_PGM;
-				return b3ParseRAW(&buffer[pos], x, y, ppm_type);
-			}
-			break;
+			case 5 :
+				if ((b3_size)(x * y + pos) <= buffer_size)
+				{
+					pos = (b3_offset)buffer_size - x * y;
+					FileType = FT_PGM;
+					return b3ParseRAW(&buffer[pos], x, y, ppm_type);
+				}
+				break;
 
-		case 6 :
-			if ((b3_size)(x * y * 3 + pos) <= buffer_size)
-			{
-				pos = (b3_offset)buffer_size - 3 * x * y;
-				FileType = FT_PPM;
-				return b3ParseRAW(&buffer[pos], x, y, ppm_type);
-			}
-			break;
+			case 6 :
+				if ((b3_size)(x * y * 3 + pos) <= buffer_size)
+				{
+					pos = (b3_offset)buffer_size - 3 * x * y;
+					FileType = FT_PPM;
+					return b3ParseRAW(&buffer[pos], x, y, ppm_type);
+				}
+				break;
 
-		case 1 : /* ASCII pendants */
-		case 2 :
-		case 3 :
-		default :
-			B3_THROW(b3TxException, B3_TX_UNSUPP);
+			case 1 : /* ASCII pendants */
+			case 2 :
+			case 3 :
+			default :
+				B3_THROW(b3TxException, B3_TX_UNSUPP);
+			}
 		}
 	}
 
