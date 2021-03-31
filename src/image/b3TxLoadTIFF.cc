@@ -321,10 +321,7 @@ long b3Tx::b3TIFFDecode(
 								bit = 1 << 7;
 
 								// BUG: Valgrind overflow
-								if (++pos < xSize)
-								{
-									lVal = lPtr[pos];
-								}
+								lVal = lPtr[++pos];
 							}
 						}
 						*cPtr++ = cVal;

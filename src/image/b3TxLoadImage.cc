@@ -124,7 +124,9 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 		y        = 0;
 
 		// BUG: Valgrind illegal read access
-		i   = sscanf((const char *)buffer, "P%d %zd %zd %*d%zd",
+		const std::string parse((const char *)buffer, buffer_size);
+
+		i   = sscanf(parse.data(), "P%d %zd %zd %*d%zd",
 				&ppm_type, &x, &y, &pos);
 		b3PrintF(B3LOG_FULL, "PxM (%d): (%zd,%zd - %zd) %zd\n",
 			ppm_type, x, y, i, pos);
