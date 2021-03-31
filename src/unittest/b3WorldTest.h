@@ -27,8 +27,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 template<int index> class b3WorldTest : public CppUnit::TestFixture
 {
 	static const char * m_Filename;
@@ -45,6 +43,8 @@ public:
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 		b3RaytracingItems::b3Register();
+		world1.m_AutoDelete = true;
+		world2.m_AutoDelete = true;
 	}
 
 	void tearDown() override
@@ -66,7 +66,9 @@ public:
 		b3Item     *     item2 = nullptr;
 		b3Base<b3Item> * base1 = nullptr;
 		b3Base<b3Item> * base2 = nullptr;
+		b3Path           cwd;
 
+		getcwd(cwd, B3_FILESTRINGLEN);
 		CPPUNIT_ASSERT(world1.b3Read(m_Filename, false));
 		CPPUNIT_ASSERT(world1.b3Write("test1.bwd", false));
 		world1.b3Free();
