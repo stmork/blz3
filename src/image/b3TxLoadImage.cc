@@ -47,7 +47,6 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	HeaderSGI   *  HeaderSGI;
 	b3_index       pos;
 	b3_coord       x, y;
-	b3_s32         ppm_type;
 	b3_index       i;
 
 	b3FreeTx();
@@ -117,10 +116,12 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	// PPM6
 	if (buffer[0] == 'P')
 	{
+		b3_s32 ppm_type = 0;
+
+		// Init.
 		pos      = 0;
 		x        = 0;
 		y        = 0;
-		ppm_type = 0;
 
 		// BUG: Valgrind illegal read access
 		i   = sscanf((const char *)buffer, "P%d %zd %zd %*d%zd",
