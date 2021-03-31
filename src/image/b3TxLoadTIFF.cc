@@ -284,7 +284,7 @@ long b3Tx::b3TIFFDecode(
 		b3_size   max;
 		b3_index  pos;
 		b3_u32    bit;
-		b3_u08  * lPtr, lVal;
+		b3_u08  * lPtr;
 		b3_u08  * cPtr, cVal;
 
 		max = TIFFScanlineSize(tiff);
@@ -304,14 +304,14 @@ long b3Tx::b3TIFFDecode(
 					ScanLines++;
 
 					bit  = 1 << 7;
-					lVal = lPtr[pos = 0];
+					pos = 0;
 					for (x = 0; x < xSize; x++)
 					{
 						cVal = 0;
 						for (b = 0; b < depth; b++)
 						{
 							cVal = (b3_u08)(cVal << 1);
-							if (lVal & bit)
+							if (lPtr[pos] & bit)
 							{
 								cVal |= 1;
 							}
@@ -319,9 +319,7 @@ long b3Tx::b3TIFFDecode(
 							if (bit == 0)
 							{
 								bit = 1 << 7;
-
-								// BUG: Valgrind overflow
-								lVal = lPtr[++pos];
+								pos++;
 							}
 						}
 						*cPtr++ = cVal;
