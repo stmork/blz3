@@ -34,13 +34,15 @@ class b3ColorTest : public CppUnit::TestFixture
 	b3Color bc;
 
 	CPPUNIT_TEST_SUITE(b3ColorTest);
-	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testColor);
+	CPPUNIT_TEST(testPkdColor);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void test();
+	void testColor();
+	void testPkdColor();
 
 	inline b3_f32 round_color(b3_f32 x)
 	{

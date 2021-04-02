@@ -23,22 +23,23 @@
 #define B3_BASE_COLORSTD_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Color.h"
 
 /**
  * This class provides color handling. It uses modern command sets
  * like SSE if the compiler can generate this and the underlying cpu
  * architecture supports it.
  */
-class B3_PLUGIN b3Color : public b3ColorBase
+class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 {
-	b3_f32 B3_ALIGN_16 v[4];            //!< These are the color channels of a b3Color instance.
+	b3_f32 v[4];            //!< These are the color channels of a b3Color instance.
 
-	static const b3_f32 B3_ALIGN_16 m_Limit_m000[4]; //!< These color values represent black (for clamping).
-	static const b3_f32 B3_ALIGN_16 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
-	static const b3_f32 B3_ALIGN_16 m_Limit_m015[4]; //!< These values are used for conversion from integer.
-	static const b3_f32 B3_ALIGN_16 m_Limit_m255[4]; //!< These values are used for conversion into integer.
-	static const b3_f32 B3_ALIGN_16 m_Limit_d015[4]; //!< These values are used for conversion from integer.
-	static const b3_f32 B3_ALIGN_16 m_Limit_d255[4]; //!< These values are used for conversion from integer.
+	static const b3_f32 m_Limit_m000[4]; //!< These color values represent black (for clamping).
+	static const b3_f32 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
+	static const b3_f32 m_Limit_m015[4]; //!< These values are used for conversion from integer.
+	static const b3_f32 m_Limit_m255[4]; //!< These values are used for conversion into integer.
+	static const b3_f32 m_Limit_d015[4]; //!< These values are used for conversion from integer.
+	static const b3_f32 m_Limit_d255[4]; //!< These values are used for conversion from integer.
 
 public:
 	/////////////////////////////////////////////////--------  constructors
@@ -111,7 +112,7 @@ public:
 	inline b3Color(const b3_u16 input)
 	{
 		b3_u16             color = input;
-		b3_s32 B3_ALIGN_16 c[4];
+		alignas(16) b3_s32 c[4];
 		b3_loop            i;
 
 		for (i = 0; i < 4; i++)
@@ -139,7 +140,7 @@ public:
 	inline b3Color(const b3_pkd_color input)
 	{
 		b3_pkd_color       color = input;
-		b3_s32 B3_ALIGN_16 c[4];
+		alignas(16) b3_s32 c[4];
 		b3_loop            i;
 
 		for (i = 0; i < 4; i++)
@@ -157,6 +158,34 @@ public:
 		{
 			v[i] *= m_Limit_d255[i];
 		}
+	}
+
+	/**
+	 * This method packs four color component bytes into one unsigned 32
+	 * bit integer value.
+	 *
+	 * @param r The red byte.
+	 * @param g The green byte.
+	 * @param b The blue byte.
+	 * @param a The alpha channel byte.
+	 * @return The packed unsigned integer value.
+	 */
+	static inline b3_pkd_color b3MakePkdColor(
+		const b3_u08 r,
+		const b3_u08 g,
+		const b3_u08 b,
+		const b3_u08 a = 0)
+	{
+		b3_pkd_color result = a;
+
+		result <<= 8;
+		result  |= r;
+		result <<= 8;
+		result  |= g;
+		result <<= 8;
+		result  |= b;
+
+		return result;
 	}
 
 	//////////////////////////////////////////--------- initializers
@@ -210,9 +239,7 @@ public:
 	 */
 	inline void b3Init(const b3_f32 rgb, const b3_f32 a = 0)
 	{
-		v[R] =
-			v[G] =
-				v[B] = rgb;
+		v[R] = v[G] = v[B] = rgb;
 		v[A] = a;
 	}
 
@@ -230,10 +257,10 @@ public:
 		b3_f32 b,
 		b3_f32 a = 0)
 	{
+		v[A] = a;
 		v[R] = r;
 		v[G] = g;
 		v[B] = b;
-		v[A] = a;
 	}
 
 	//////////////////////////////////////--------- methods and operators
@@ -449,7 +476,7 @@ public:
 	 * @param a The color filter.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator*(const b3Color & a)
+	inline b3Color operator*(const b3Color & a) const
 	{
 		b3Color result;
 
@@ -502,7 +529,7 @@ public:
 	 * @param value The color filter value.
 	 * @return The new b3Color instance.
 	 */
-	inline b3Color operator*(const b3_f32 value)
+	inline b3Color operator*(const b3_f32 value) const
 	{
 		b3Color result, multiplicator;
 
@@ -520,7 +547,7 @@ public:
 	 * @param value The color filter value.
 	 * @return The new b3Color instance.
 	 */
-	inline b3Color operator*(const b3_f64 value)
+	inline b3Color operator*(const b3_f64 value) const
 	{
 		b3Color result, multiplicator;
 
@@ -574,7 +601,7 @@ public:
 	 * This operator divides the color channels by a given scalar.
 	 *
 	 * @param value The divisor.
-	 * ¶return A reference to this instance.
+	 * @return A reference to this instance.
 	 */
 	inline b3Color & operator/=(const b3_count value)
 	{
@@ -595,7 +622,7 @@ public:
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_f32 value)
+	inline b3Color operator/(const b3_f32 value) const
 	{
 		b3Color result, divisor;
 
@@ -614,7 +641,7 @@ public:
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_f64 value)
+	inline b3Color operator/(const b3_f64 value) const
 	{
 		b3Color result, divisor;
 
@@ -633,7 +660,7 @@ public:
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_count value)
+	inline b3Color operator/(const b3_count value) const
 	{
 		b3Color result, divisor;
 
@@ -653,7 +680,7 @@ public:
 	 * @param exp The exponent.
 	 * @return The resulting color.
 	 */
-	inline b3Color b3Pow(const b3_f32 exp)
+	inline b3Color b3Pow(const b3_f32 exp) const
 	{
 		b3Color result, exponent;
 
@@ -672,7 +699,7 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(const b3Color & limit)
+	inline b3_bool b3IsGreater(const b3Color & limit) const
 	{
 		return
 			(fabs(v[R]) >= limit.v[R]) ||
@@ -699,9 +726,9 @@ public:
 	inline operator b3_pkd_color() const
 	{
 		b3_pkd_color       result = 0;
-		b3_loop                i;
-		b3_s32 B3_ALIGN_16 c[4];
-		b3_f32 B3_ALIGN_16 sat[4];
+		b3_loop            i;
+		alignas(16) b3_s32 c[4];
+		alignas(16) b3_f32 sat[4];
 
 		for (i = 0; i < 4; i++)
 		{
@@ -719,7 +746,7 @@ public:
 
 		for (i = 0; i < 4; i++)
 		{
-			c[i] = (b3_s32)sat[i];
+			c[i] = (b3_s32)round(sat[i]);
 		}
 
 		for (i = 0; i < 4; i++)

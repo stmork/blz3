@@ -79,14 +79,6 @@ const b3_f32 b3Color::m_Limit_m001[4] alignas(16)
 	1.0f
 };
 
-const b3_f32 b3Color::m_Limit_m255[4] alignas(16)
-{
-	COLOR_TOP_BYTE,
-	COLOR_TOP_BYTE,
-	COLOR_TOP_BYTE,
-	COLOR_TOP_BYTE
-};
-
 const b3_f32 b3Color::m_Limit_m015[4] alignas(16)
 {
 	COLOR_TOP_NIBBLE,

@@ -46,7 +46,7 @@ void b3ColorTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3ColorTest::test()
+void b3ColorTest::testColor()
 {
 	b3_color   offset_color;
 
@@ -177,6 +177,23 @@ void b3ColorTest::test()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xbf4080ff, ac);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x40404080, bc);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x30102040, color);
+}
+
+void b3ColorTest::testPkdColor()
+{
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_WHITE,       b3Color::b3MakePkdColor(0xff, 0xff, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_LIGHT_GREY,  b3Color::b3MakePkdColor(0xc0, 0xc0, 0xc0));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_GREY,        b3Color::b3MakePkdColor(0x80, 0x80, 0x80));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_DARK_GREY,   b3Color::b3MakePkdColor(0x40, 0x40, 0x40));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_BLACK,       b3Color::b3MakePkdColor(0x00, 0x00, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_RED,         b3Color::b3MakePkdColor(0xff, 0x00, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_GREEN,       b3Color::b3MakePkdColor(0x00, 0xff, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_BLUE,        b3Color::b3MakePkdColor(0x00, 0x00, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_YELLOW,      b3Color::b3MakePkdColor(0xff, 0xff, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_MAGENTA,     b3Color::b3MakePkdColor(0xff, 0x00, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_CYAN,        b3Color::b3MakePkdColor(0x00, 0xff, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_MARKER,      b3Color::b3MakePkdColor(0xff, 0x11, 0x44));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_TRANSPARENT, b3Color::b3MakePkdColor(0x00, 0x00, 0x00, 0xff));
 }
 
 void b3ColorTest::testColor(

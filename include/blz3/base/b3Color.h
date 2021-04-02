@@ -45,6 +45,9 @@
 #define B3_MARKER      ((b3_pkd_color)0x00ff1144)
 #define B3_TRANSPARENT ((b3_pkd_color)0xff000000)
 
+#define COLOR_TOP_NIBBLE   15.0
+#define COLOR_TOP_BYTE    255.0
+
 /**
  * This class provides color handling. It uses modern command sets
  * like SSE if the compiler can generate this and the underlying cpu
@@ -80,10 +83,11 @@ public:
 		b3_f32 b = 0,
 		b3_f32 a = 0)
 	{
+		color->a = a;
 		color->r = r;
 		color->g = g;
 		color->b = b;
-		color->a = a;
+
 		return color;
 	}
 };
