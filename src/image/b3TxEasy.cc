@@ -247,7 +247,9 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 
 	B3_ASSERT(offsetof(b3HeaderBMP, biSize) == 14);
 	B3_ASSERT(sizeof(b3HeaderBMP) == 54);
+
 	b3Endian::b3GetIntel32(&bmp->bfOffBits);
+	b3Endian::b3GetIntel32(&bmp->bfSize);
 	b3Endian::b3GetIntel32(&bmp->biSize);
 	xNewSize  = b3Endian::b3GetIntel32(&bmp->biWidth);
 	yNewSize  = b3Endian::b3GetIntel32(&bmp->biHeight);

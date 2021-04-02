@@ -200,8 +200,14 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 
 	// MTV
-	if (sscanf((const char *)buffer, "%zd %zd", &x, &y) == 2)
+	try
 	{
+		const char *cPtr = (const char *)buffer;
+		std::size_t char_count = 0;
+
+		x = std::stoul(cPtr, &char_count);
+		y = std::stoul(&cPtr[char_count], &char_count);
+
 		for (pos = 0; (pos < 100) && (buffer[pos] != 10); pos++);
 		if (buffer[pos++] == 10)
 		{
@@ -211,6 +217,10 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 				return b3ParseRAW(&buffer[pos], x, y, 6);
 			}
 		}
+	}
+	catch(std::exception & e)
+	{
+		b3PrintF(B3LOG_FULL, "No MTV parsing possible: %s\n", e.what());
 	}
 
 
