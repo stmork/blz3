@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3ParseTGA(b3_u08 * buffer)
+b3_result b3Tx::b3ParseTGA(const b3_u08 * buffer)
 {
 	b3_pkd_color * srcPtr;
 	b3_count      DataSize, depth1, depth2;
@@ -80,7 +80,7 @@ b3_result b3Tx::b3ParseTGA(b3_u08 * buffer)
 			while (DataSize > 0)
 			{
 				Color = 0;
-				for (t = 0; t < depth1; t++)        /* Pixel übernehmen */
+				for (t = 0; t < depth1; t++)        /* Pixel Ã¼bernehmen */
 				{
 					Color = (Color << 8) | *buffer++;
 				}
@@ -92,7 +92,7 @@ b3_result b3Tx::b3ParseTGA(b3_u08 * buffer)
 
 				if (--xk == 0)                  /* Zeilenende */
 				{
-					srcPtr -= dNext;              /* nächste Zeile */
+					srcPtr -= dNext;              /* nÃ¤chste Zeile */
 					xk = xSize;
 				}
 			}
@@ -105,7 +105,7 @@ b3_result b3Tx::b3ParseTGA(b3_u08 * buffer)
 				count = (buffer[0] & 127) + 1;    /* Steuerbyte */
 				if (buffer[0] & 128)
 				{
-					/* nächste Farbe count mal */
+					/* nÃ¤chste Farbe count mal */
 					buffer++;
 					Color = 0;
 					for (t = 0; t < depth1; t++)   /* schreiben. */
@@ -132,7 +132,7 @@ b3_result b3Tx::b3ParseTGA(b3_u08 * buffer)
 				}
 				else
 				{
-					/* count Pixel übernehmen */
+					/* count Pixel Ã¼bernehmen */
 					buffer++;
 					while (count)
 					{

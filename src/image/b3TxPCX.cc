@@ -31,13 +31,13 @@
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3ParsePCX8(b3_u08 * buffer)
+b3_result b3Tx::b3ParsePCX8(const b3_u08 * buffer)
 {
-	b3_u08    *   srcPtr;
-	b3_u08    *   dstPtr, Col;
-	b3_pkd_color  t;
-	b3_res        xNewSize, yNewSize;
-	b3_index      i = 0;
+	const b3_u08 * srcPtr;
+	b3_u08    *    dstPtr, Col;
+	b3_pkd_color   t;
+	b3_res         xNewSize, yNewSize;
+	b3_index       i = 0;
 
 	b3PrintF(B3LOG_FULL, "IMG PCX  # b3ParsePCX8(%s)\n",
 		(const char *)image_name);
@@ -90,7 +90,7 @@ b3_result b3Tx::b3ParsePCX8(b3_u08 * buffer)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3ParsePCX4(b3_u08 * buffer)
+b3_result b3Tx::b3ParsePCX4(const b3_u08 * buffer)
 {
 	b3_u08    *   srcPtr;
 	b3_u08    *   dstPtr, Col;

@@ -148,7 +148,7 @@ struct b3HeaderBMP
 *************************************************************************/
 
 b3_result b3Tx::b3ParseRAW(
-	b3_u08 * buffer,
+	const b3_u08 * buffer,
 	b3_res   x,
 	b3_res   y,
 	b3_s32   ppm_type)
@@ -235,7 +235,7 @@ b3_result b3Tx::b3ParseRAW(
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
+b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 {
 	b3HeaderBMP *  bmp = (b3HeaderBMP *)buffer;
 	b3_pkd_color * lPtr;
@@ -287,7 +287,7 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 	{
 		if (numColors > 0)
 		{
-			b3_u08 * color_ptr = &buffer[bmp->bfOffBits - numColors * 4];
+			const b3_u08 * color_ptr = &buffer[bmp->bfOffBits - numColors * 4];
 
 			for (i = 0; i < numColors; i++)
 			{
@@ -434,7 +434,7 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3ParseBMF(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_u08    *   gray;
 	b3_coord      x, y;

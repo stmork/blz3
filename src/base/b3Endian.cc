@@ -46,9 +46,9 @@ class b3EndianChanger
 	b3_change_buffer m_Changer;
 
 public:
-	b3EndianChanger(void * ptr, b3_size size)
+	b3EndianChanger(const void * ptr, b3_size size)
 	{
-		b3_u08 * cPtr = (b3_u08 *)ptr;
+		const b3_u08 * cPtr = (const b3_u08 *)ptr;
 
 		for (b3_size i = 0; i < size; i++)
 		{
@@ -112,7 +112,7 @@ public:
 **                                                                      **
 *************************************************************************/
 
-b3_u16 b3Endian::b3Get16(void * Ptr)
+b3_u16 b3Endian::b3Get16(const void * Ptr)
 {
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 	b3_u16   Value;
@@ -130,7 +130,7 @@ b3_u16 b3Endian::b3Get16(void * Ptr)
 	return Value;
 }
 
-b3_u32 b3Endian::b3Get32(void * Ptr)
+b3_u32 b3Endian::b3Get32(const void * Ptr)
 {
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 	b3_u32   Value;
@@ -158,7 +158,7 @@ b3_u32 b3Endian::b3Get32(void * Ptr)
 **                                                                      **
 *************************************************************************/
 
-b3_u16 b3Endian::b3GetMot16(void * ptr)
+b3_u16 b3Endian::b3GetMot16(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u16));
 
@@ -169,7 +169,7 @@ b3_u16 b3Endian::b3GetMot16(void * ptr)
 	return changer.b3GetU16();
 }
 
-b3_u32 b3Endian::b3GetMot32(void * ptr)
+b3_u32 b3Endian::b3GetMot32(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u32));
 
@@ -180,7 +180,7 @@ b3_u32 b3Endian::b3GetMot32(void * ptr)
 	return changer.b3GetU32();
 }
 
-b3_f32 b3Endian::b3GetMotFloat(void * ptr)
+b3_f32 b3Endian::b3GetMotFloat(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f32));
 
@@ -191,7 +191,7 @@ b3_f32 b3Endian::b3GetMotFloat(void * ptr)
 	return changer.b3GetF32();
 }
 
-b3_f64 b3Endian::b3GetMotDouble(void * ptr)
+b3_f64 b3Endian::b3GetMotDouble(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f64));
 
@@ -208,7 +208,7 @@ b3_f64 b3Endian::b3GetMotDouble(void * ptr)
 **                                                                      **
 *************************************************************************/
 
-b3_u16 b3Endian::b3GetIntel16(void * ptr)
+b3_u16 b3Endian::b3GetIntel16(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u16));
 
@@ -219,7 +219,7 @@ b3_u16 b3Endian::b3GetIntel16(void * ptr)
 	return changer.b3GetU16();
 }
 
-b3_u32 b3Endian::b3GetIntel32(void * ptr)
+b3_u32 b3Endian::b3GetIntel32(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_u32));
 
@@ -230,7 +230,7 @@ b3_u32 b3Endian::b3GetIntel32(void * ptr)
 	return changer.b3GetU32();
 }
 
-b3_f32 b3Endian::b3GetIntelFloat(void * ptr)
+b3_f32 b3Endian::b3GetIntelFloat(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f32));
 
@@ -241,7 +241,7 @@ b3_f32 b3Endian::b3GetIntelFloat(void * ptr)
 	return changer.b3GetF32();
 }
 
-b3_f64 b3Endian::b3GetIntelDouble(void * ptr)
+b3_f64 b3Endian::b3GetIntelDouble(const void * ptr)
 {
 	b3EndianChanger changer(ptr, sizeof(b3_f64));
 

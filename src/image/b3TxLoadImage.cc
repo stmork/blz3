@@ -26,6 +26,7 @@
 #include "b3TxInclude.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+#include "blz3/base/b3Endian.h"
 
 #include "b3TxIFF.h"
 #include "b3TxTIFF.h"
@@ -42,7 +43,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_pkd_color * LongData;
 	HeaderTIFF  *  TIFF;

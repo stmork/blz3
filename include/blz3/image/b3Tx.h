@@ -1013,7 +1013,7 @@ public:
 	 * @return The result code of image parsing.
 	 * @see b3_result.
 	 */
-	b3_result                    b3LoadImage(b3_u08 * buffer, b3_size size);
+	b3_result                    b3LoadImage(const b3_u08 * buffer, b3_size size);
 
 	/**
 	 * This method saves the image to the given file name. The file type is determined from
@@ -1367,16 +1367,16 @@ private:
 	void           b3DeskewVGA();
 
 	// b3TxEasy.cc
-	b3_result      b3ParseRAW(b3_u08 * buffer, b3_res x, b3_res y, b3_s32 type);
-	b3_result      b3ParseBMP(b3_u08 * buffer);
-	b3_result      b3ParseMTV(b3_u08 * buffer);
-	b3_result      b3ParseBMF(b3_u08 * buffer, b3_size buffer_size);
+	b3_result      b3ParseRAW(const b3_u08 * buffer, b3_res x, b3_res y, b3_s32 type);
+	b3_result      b3ParseBMP(const b3_u08 * buffer);
+	b3_result      b3ParseMTV(const b3_u08 * buffer);
+	b3_result      b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size);
 
 	// b3TxIFF.cc
-	b3_result      b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size);
-	b3_result      b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size);
-	b3_result      b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size);
-	b3_result      b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size);
+	b3_result      b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size);
+	b3_result      b3ParseIFF_RGB8(const b3_u08 * buffer, b3_size buffer_size);
+	b3_result      b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size);
+	b3_result      b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size);
 	void           b3EHBPalette();
 	void           b3ConvertILBMLine(b3_u08 * Line, b3_u08 * Interleave, b3_res xMax, b3_count Planes);
 	void           b3HamPalette(b3_bool HAM8);
@@ -1384,7 +1384,7 @@ private:
 	static b3_u32  b3ShiftCount(b3_count Count);
 
 	// b3TxGIF.cc
-	b3_result      b3ParseGIF(b3_u08 * buffer);
+	b3_result      b3ParseGIF(const b3_u08 * buffer);
 
 #ifdef BLZ3_USE_OPENEXR
 	// b3TxEXR.cc
@@ -1392,21 +1392,26 @@ private:
 #endif
 
 	// b3TxPCX.cc
-	b3_result      b3ParsePCX4(b3_u08 * buffer);
-	b3_result      b3ParsePCX8(b3_u08 * buffer);
+	b3_result      b3ParsePCX4(const b3_u08 * buffer);
+	b3_result      b3ParsePCX8(const b3_u08 * buffer);
 
 	// b3TxIMG.cc
-	b3_result      b3ParseSGI(b3_u08 * buffer);
-	void           b3ParseSGI3(HeaderSGI * HeaderSGI, b3_u08 * Data);
+	b3_result      b3ParseSGI(const b3_u08 * buffer);
+	void           b3ParseSGI3(const HeaderSGI * HeaderSGI, const b3_u08 * Data);
 
 	static void    b3ConvertSGILine(b3_u16 * buffer, b3_offset offset, b3_size size, b3_count bytes);
-	static void    b3UnpackSGI(b3_u08 * buffer, void * inPtr, b3_count count, b3_count bytes, b3_offset offset);
+	static void    b3UnpackSGI(
+			b3_u08 *        buffer,
+			const void *    inPtr,
+			b3_count        count,
+			b3_count        bytes,
+			const b3_offset offset);
 
 	// b3TxTGA.cc
-	b3_result      b3ParseTGA(b3_u08 * buffer);
+	b3_result      b3ParseTGA(const b3_u08 * buffer);
 
 	// b3TxJPG.cc
-	b3_result      b3ParseJPEG(b3_u08 * buffer, b3_size buffer_size);
+	b3_result      b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size);
 };
 
 

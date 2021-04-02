@@ -66,7 +66,7 @@ class b3JPEG
 
 public:
 	b3JPEG();
-	b3_bool b3Init(b3_u08 * buffer, b3_size buffer_size);
+	b3_bool b3Init(const b3_u08 * buffer, b3_size buffer_size);
 	b3_bool b3Decompress(b3Tx * tx);
 	void    b3Deinit();
 
@@ -90,7 +90,7 @@ b3JPEG::b3JPEG()
 	memset(&m_SourceMgr,  0, sizeof(m_SourceMgr));
 }
 
-b3_bool b3JPEG::b3Init(b3_u08 * buffer, b3_size buffer_size)
+b3_bool b3JPEG::b3Init(const b3_u08 * buffer, b3_size buffer_size)
 {
 	int row_stride;
 
@@ -211,7 +211,7 @@ void b3JPEG::b3JpegTermSource(j_decompress_ptr cinfo B3_UNUSED)
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3ParseJPEG(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3JPEG jpeg;
 

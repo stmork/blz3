@@ -32,11 +32,11 @@
 *************************************************************************/
 
 inline void b3Tx::b3UnpackSGI(
-	b3_u08  *  buffer,
-	void   *   inPtr,
-	b3_count   count,
-	b3_count   bytes,
-	b3_offset  offset)
+	b3_u08  *    buffer,
+	const void * inPtr,
+	b3_count     count,
+	b3_count     bytes,
+	b3_offset    offset)
 {
 	b3_u16 * sBuffer;
 	b3_u08 * bBuffer;
@@ -147,8 +147,8 @@ inline void b3Tx::b3ConvertSGILine(
 }
 
 void b3Tx::b3ParseSGI3(
-	HeaderSGI * HeaderSGI,
-	b3_u08  *  buffer)
+	const HeaderSGI * HeaderSGI,
+	const b3_u08  *  buffer)
 {
 	b3_pkd_color * lineTable;
 	b3_pkd_color * lineSizes;
@@ -207,14 +207,14 @@ void b3Tx::b3ParseSGI3(
 		{
 			if (rle > 0) /* read raw data */
 			{
-				b3UnpackSGI(&line[0],          buffer, rle, bytes, y * xSize);
-				b3UnpackSGI(&line[xSize],      buffer, rle, bytes, y * xSize + block);
+				b3UnpackSGI(&line[0],             buffer, rle, bytes, y * xSize);
+				b3UnpackSGI(&line[xSize],         buffer, rle, bytes, y * xSize + block);
 				b3UnpackSGI(&line[xSize + xSize], buffer, rle, bytes, y * xSize + block + block);
 			}
 			else /* read RLE packed data */
 			{
-				b3UnpackSGI(&line[0],          buffer, rle, bytes, lineTable[y]);
-				b3UnpackSGI(&line[xSize],      buffer, rle, bytes, lineTable[y + ySize]);
+				b3UnpackSGI(&line[0],             buffer, rle, bytes, lineTable[y]);
+				b3UnpackSGI(&line[xSize],         buffer, rle, bytes, lineTable[y + ySize]);
 				b3UnpackSGI(&line[xSize + xSize], buffer, rle, bytes, lineTable[y + ySize + ySize]);
 			}
 			for (x = 0; x < xSize; x++)
@@ -250,7 +250,7 @@ void b3Tx::b3ParseSGI3(
 	b3Free(line);
 }
 
-b3_result b3Tx::b3ParseSGI(b3_u08 * buffer)
+b3_result b3Tx::b3ParseSGI(const b3_u08 * buffer)
 {
 	HeaderSGI * HeaderSGI;
 	b3_bool    success = false;

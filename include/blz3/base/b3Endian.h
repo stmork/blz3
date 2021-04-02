@@ -35,7 +35,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The two byte integer.
 	 */
-	static b3_u16   b3Get16(void * Ptr);
+	static b3_u16   b3Get16(const void * Ptr);
 
 	/**
 	 * This method gets a four byte integer in native order from the given pointer position.
@@ -43,7 +43,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The four byte integer.
 	 */
-	static b3_u32   b3Get32(void * Ptr);
+	static b3_u32   b3Get32(const void * Ptr);
 
 	/**
 	 * This method gets a two byte integer in big endian order from the given pointer position.
@@ -51,7 +51,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The two byte integer.
 	 */
-	static b3_u16   b3GetMot16(void * Ptr);
+	static b3_u16   b3GetMot16(const void * Ptr);
 
 	/**
 	 * This method gets a four byte integer in big endian order from the given pointer position.
@@ -59,7 +59,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The four byte integer.
 	 */
-	static b3_u32   b3GetMot32(void * Ptr);
+	static b3_u32   b3GetMot32(const void * Ptr);
 
 	/**
 	 * This method gets floating point number in big endian order from the given pointer position.
@@ -67,7 +67,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The floating point number.
 	 */
-	static b3_f32   b3GetMotFloat(void * Ptr);
+	static b3_f32   b3GetMotFloat(const void * Ptr);
 
 	/**
 	 * This method gets double precision floating point number in big endian order from the given pointer position.
@@ -75,7 +75,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The double precision floating point number.
 	 */
-	static b3_f64   b3GetMotDouble(void * Ptr);
+	static b3_f64   b3GetMotDouble(const void * Ptr);
 
 
 	/**
@@ -84,7 +84,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The two byte integer.
 	 */
-	static b3_u16   b3GetIntel16(void * Ptr);
+	static b3_u16   b3GetIntel16(const void * Ptr);
 
 	/**
 	 * This method gets a four byte integer in little endian order from the given pointer position.
@@ -92,7 +92,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The four byte integer.
 	 */
-	static b3_u32   b3GetIntel32(void * Ptr);
+	static b3_u32   b3GetIntel32(const void * Ptr);
 
 	/**
 	 * This method gets floating point number in little endian order from the given pointer position.
@@ -100,7 +100,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The floating point number.
 	 */
-	static b3_f32   b3GetIntelFloat(void * Ptr);
+	static b3_f32   b3GetIntelFloat(const void * Ptr);
 
 	/**
 	 * This method gets double precision floating point number in little endian order from the given pointer position.
@@ -108,7 +108,7 @@ public:
 	 * @param Ptr The memory position.
 	 * @return The double precision floating point number.
 	 */
-	static b3_f64   b3GetIntelDouble(void * Ptr);
+	static b3_f64   b3GetIntelDouble(const void * Ptr);
 
 
 	/**

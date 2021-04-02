@@ -102,7 +102,7 @@ b3_u08 b3_tx_yuv_table::m_ConvertBits[8] =
 **                                                                      **
 *************************************************************************/
 
-b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_RGB8(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_u08    *   cPtr;
 	b3_pkd_color * dstPtr, Color;
@@ -179,7 +179,7 @@ b3_result b3Tx::b3ParseIFF_RGB8(b3_u08 * buffer, b3_size buffer_size)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3ParseIFF_RGB4(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_u08 * CharData;
 	b3_u32 * LongData;
@@ -441,7 +441,7 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 	type = (HAM8 ? B3_TX_RGB8 : B3_TX_RGB4);
 }
 
-b3_result b3Tx::b3ParseIFF_ILBM(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_u08 * Copy;
 	b3_u08 * CharData;
@@ -621,7 +621,7 @@ inline b3_u32 b3Tx::b3ShiftCount(b3_count Count)
 	return Shift;
 }
 
-b3_result b3Tx::b3ParseIFF_YUVN(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_u08 * Y = nullptr;
 	b3_u08 * U = nullptr;

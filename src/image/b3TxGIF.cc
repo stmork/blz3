@@ -48,7 +48,7 @@ public:
 		currbyte   = 0;
 	}
 
-	b3_u32 b3GetNextGifCode(b3_u08 ** Data, b3_size currsize)
+	b3_u32 b3GetNextGifCode(const b3_u08 ** Data, b3_size currsize)
 	{
 		long code;
 
@@ -106,14 +106,14 @@ const long b3GifDecoder::m_GifMask[13]    =
 	0x3FF, 0x7FF, 0xFFF
 };
 
-b3_result b3Tx::b3ParseGIF(b3_u08 * buffer)
+b3_result b3Tx::b3ParseGIF(const b3_u08 * buffer)
 {
 	b3_index       i;
 	b3_count       Colors;
 	b3_size        currsize;
 	b3_u32         c;
 	b3_pkd_color   t;
-	b3_u08    *    pPtr = buffer;
+	const b3_u08    *    pPtr = buffer;
 	b3_u08    *    out;
 	b3_u08    *    sp;
 	b3_u08         suffix[4096];
