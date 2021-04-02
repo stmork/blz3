@@ -71,7 +71,7 @@
 /**
  * This structure defines the SGI image file format header.
  */
-struct HeaderSGI
+struct b3HeaderSGI
 {
 	b3_u16	imagic;		/* stuff saved on disk . . */
 	b3_u16 	type;
@@ -1397,7 +1397,7 @@ private:
 
 	// b3TxIMG.cc
 	b3_result      b3ParseSGI(const b3_u08 * buffer);
-	void           b3ParseSGI3(const HeaderSGI * HeaderSGI, const b3_u08 * Data);
+	void           b3ParseSGI3(const b3HeaderSGI * HeaderSGI, const b3_u08 * Data);
 
 	static void    b3ConvertSGILine(b3_u16 * buffer, b3_offset offset, b3_size size, b3_count bytes);
 	static void    b3UnpackSGI(

@@ -147,17 +147,17 @@ inline void b3Tx::b3ConvertSGILine(
 }
 
 void b3Tx::b3ParseSGI3(
-	const HeaderSGI * HeaderSGI,
-	const b3_u08  *  buffer)
+	const b3HeaderSGI * HeaderSGI,
+	const b3_u08  *     buffer)
 {
 	b3_pkd_color * lineTable;
 	b3_pkd_color * lineSizes;
 	b3_pkd_color * lPtr, value;
-	b3_u08    *   line;
-	b3_u08    *   cPtr;
-	b3_res        zSize = depth >> 3;
-	long               x, y, z;
-	long               rle, bytes, block;
+	b3_u08    *    line;
+	b3_u08    *    cPtr;
+	b3_res         zSize = depth >> 3;
+	long           x, y, z;
+	long           rle, bytes, block;
 
 	bytes =   HeaderSGI->type & 0x00ff; /* check bytes per pixel */
 	rle   = ((HeaderSGI->type & 0xff00) == 0x0100) ? 0 : xSize; /* check RLE */
@@ -252,15 +252,15 @@ void b3Tx::b3ParseSGI3(
 
 b3_result b3Tx::b3ParseSGI(const b3_u08 * buffer)
 {
-	HeaderSGI * HeaderSGI;
-	b3_bool    success = false;
-	b3_res     xNewSize, yNewSize;
-	b3_index   c;
+	b3HeaderSGI * HeaderSGI;
+	b3_bool       success = false;
+	b3_res        xNewSize, yNewSize;
+	b3_index      c;
 
 	b3PrintF(B3LOG_FULL, "IMG SGI  # b3ParseSGI(%s)\n",
 		(const char *)image_name);
 
-	HeaderSGI = (struct HeaderSGI *)buffer;
+	HeaderSGI = (struct b3HeaderSGI *)buffer;
 	if (HeaderSGI->imagic == IMAGIC2)
 	{
 		b3Endian::b3ChangeEndian16(&HeaderSGI->type);

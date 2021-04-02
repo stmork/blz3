@@ -38,22 +38,26 @@ enum b3_tiff_endian
 /**
  * This structure defines a TIFF format header.
  */
-struct HeaderTIFF
+#pragma pack(2)
+struct b3HeaderTIFF
 {
-	unsigned short TypeCPU;     //!< The endian version (MM or II).
-	short          VersionTIFF; //!< The version (always 0x2a).
-	long           FirstTag;    //!< The offset to the first TIFF directory.
+	b3_u16         TypeCPU;     //!< The endian version (MM or II).
+	b3_u16         VersionTIFF; //!< The version (always 0x2a).
+	b3_u32         FirstTag;    //!< The offset to the first TIFF directory.
 };
+#pragma pack()
 
 /**
  * This structure defines a TIFF tag.
  */
+#pragma pack(2)
 struct TagTIFF
 {
-	unsigned short Code;
-	unsigned short Type;
-	long           Data[2];
+	b3_u16         Code;
+	b3_u16         Type;
+	b3_u32         Data[2];
 };
+#pragma pack()
 
 class b3TIFF_Dir;
 
@@ -87,7 +91,7 @@ class b3TIFF_Entry : public b3Link<b3TIFF_Entry>, public b3Mem
 	unsigned long   end;
 	struct TagTIFF  tag;
 	void      *     buffer;		// buffer to data
-	long      *     ptr;		// new offsets of strips
+	b3_u32    *     ptr;		// new offsets of strips
 	long            size;		// size of data
 	long            offset;		// offset of this tag
 	long            act;        // offset of buffer (if buffer != null)
@@ -150,11 +154,11 @@ class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 {
 	b3Base<b3TIFF_Dir>  dirs;
 	unsigned long       end;
-	HeaderTIFF          head;
+	b3HeaderTIFF          head;
 	long                offset;	// offset of this header (= 0)
 
 public:
-	b3TIFF(struct HeaderTIFF *);
+	b3TIFF(struct b3HeaderTIFF *);
 	b3TIFF();
 	~b3TIFF();
 	long  b3DirCount();
@@ -181,7 +185,7 @@ public:
 
 private:
 	static void           b3ChangeTag(void * PtrTIFF, struct TagTIFF * DataTag);
-	static void           b3ChangeTIFF(struct HeaderTIFF * TIFF);
+	static void           b3ChangeTIFF(struct b3HeaderTIFF * TIFF);
 	static void     *     b3LogFuncPtr;
 	static b3LogTiffFunc  b3LogFuncTIFF;
 	static void           b3SetLogTiffFunc(b3LogTiffFunc log_func, void * ptr);

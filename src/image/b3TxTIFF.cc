@@ -144,7 +144,7 @@ void b3TIFF::b3ChangeTag(
 	}
 }
 
-void b3TIFF::b3ChangeTIFF(struct HeaderTIFF * TIFF)
+void b3TIFF::b3ChangeTIFF(struct b3HeaderTIFF * TIFF)
 {
 	long            offset, i, Tags;
 	b3_u08     *    Data;
@@ -504,9 +504,10 @@ long b3TIFF_Dir::b3WriteTags(b3FileAbstract * out, long act_offset)
 *************************************************************************/
 
 b3TIFF_Entry::b3TIFF_Entry(
-	b3TIFF_Dir  * dirTIFF,
+	b3TIFF_Dir  *    dirTIFF,
 	struct TagTIFF * ThisTag,
-	char      *     ptrTIFF) : b3Link<b3TIFF_Entry>(sizeof(b3TIFF_Entry), CLASS_TIFF_TAG)
+	char      *      ptrTIFF) :
+	b3Link<b3TIFF_Entry>(sizeof(b3TIFF_Entry), CLASS_TIFF_TAG)
 {
 	b3TIFF_Strip * strips = nullptr;
 	long            tag_size, num, s;
@@ -526,7 +527,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 
 	if (tag_size > 0)
 	{
-		long tag_num  = b3Endian::b3Get32(&tag.Data[0]);
+		b3_u32 tag_num  = b3Endian::b3Get32(&tag.Data[0]);
 		long tag_size = b3TIFF::b3GetTIFFSize(&tag);
 
 		if (tag_num > tag_size)
@@ -543,8 +544,8 @@ b3TIFF_Entry::b3TIFF_Entry(
 		tag.Type = MODE_LONG;
 		if (num > 1)
 		{
-			buffer = (long *)b3Alloc(num * sizeof(long));
-			ptr    = (long *)buffer;
+			buffer = b3TypedAlloc<b3_u32>(num);
+			ptr    = (b3_u32 *)buffer;
 		}
 		else
 		{
@@ -588,8 +589,8 @@ b3TIFF_Entry::b3TIFF_Entry(
 		// Get strips itself
 		if (num > 1)
 		{
-			buffer = (char *)b3Alloc(num * sizeof(long));
-			ptr    = (long *)buffer;
+			buffer = b3TypedAlloc<b3_u32>(num);
+			ptr    = (b3_u32 *)buffer;
 		}
 		else
 		{
@@ -664,10 +665,10 @@ long b3TIFF_Entry::b3OrgStrips(long act_offset)
 }
 
 long b3TIFF_Entry::b3WriteTag(
-	b3FileAbstract    *   out,
+	b3FileAbstract     *   out,
 	b3Base<b3TIFF_Strip> * strips,
-	long                  act_offset,
-	long                  stripNum)
+	long                   act_offset,
+	long                   stripNum)
 {
 	b3TIFF_Strip * sTIFF;
 
@@ -795,7 +796,8 @@ b3TIFF::b3TIFF() : b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_TIFF_HEAD)
 	dirs.b3InitBase(CLASS_TIFF_DIR);
 }
 
-b3TIFF::b3TIFF(struct HeaderTIFF * TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_TIFF_HEAD)
+b3TIFF::b3TIFF(struct b3HeaderTIFF * TIFF) :
+	b3Link<b3TIFF>(sizeof(b3TIFF), CLASS_TIFF_HEAD)
 {
 	long         offset, Tags;
 	b3_u08   *   Data;
@@ -879,7 +881,7 @@ void b3TIFF::b3Traverse(
 long b3TIFF::b3OrgTags(long act_offset)
 {
 	offset      = act_offset;
-	act_offset += sizeof(struct HeaderTIFF);
+	act_offset += sizeof(struct b3HeaderTIFF);
 
 #if THISPROCESSOR == INTEL
 	head.TypeCPU = TIFF_INTEL;
@@ -1243,7 +1245,7 @@ void b3TIFF::b3Write(char * name)
 	// writing TIFF header
 	out.b3Write(&head, sizeof(head));
 	b3LogTIFF("H:     %6ld - %6ld\n", offset, act_offset);
-	act_offset += sizeof(struct HeaderTIFF);
+	act_offset += sizeof(struct b3HeaderTIFF);
 
 	// writing dir and tag structure
 	for (dTIFF  = dirs.First;

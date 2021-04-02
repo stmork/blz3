@@ -27,6 +27,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Endian.h"
+#include "blz3/image/b3Tx.h"
 
 #include "b3TxIFF.h"
 #include "b3TxTIFF.h"
@@ -46,8 +47,8 @@
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_pkd_color * LongData;
-	HeaderTIFF  *  TIFF;
-	HeaderSGI   *  HeaderSGI;
+	b3HeaderTIFF  *  TIFF;
+	b3HeaderSGI *  b3HeaderSGI;
 	b3_size        pos;
 	b3_coord       x, y;
 	b3_index       i;
@@ -98,7 +99,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 #ifdef HAVE_LIBTIFF
 	// TIFF
-	TIFF = (HeaderTIFF *)buffer;
+	TIFF = (b3HeaderTIFF *)buffer;
 	if ((TIFF->TypeCPU == B3_BIG_ENDIAN) || (TIFF->TypeCPU == B3_LITTLE_ENDIAN))
 	{
 #ifndef USE_TIFFLIB_LOAD
@@ -200,27 +201,24 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 
 	// MTV
-	try
+	for (pos = 0; (pos < 100) && (buffer[pos] != 10); pos++);
+	if (pos > 3)
 	{
-		const char *cPtr = (const char *)buffer;
-		std::size_t char_count = 0;
+		static const std::regex  regex(R"((\d+)\s+(\d+).*)");
+		std::smatch              matcher;
+		const std::string        parse((const char *)buffer, pos++);
 
-		x = std::stoul(cPtr, &char_count);
-		y = std::stoul(&cPtr[char_count], &char_count);
-
-		for (pos = 0; (pos < 100) && (buffer[pos] != 10); pos++);
-		if (buffer[pos++] == 10)
+		if (std::regex_match(parse, matcher, regex))
 		{
+			x = std::stol(matcher[1]);
+			y = std::stol(matcher[2]);
+
 			if ((b3_size)(x * y * 3 + pos) == buffer_size)
 			{
 				FileType = FT_MTV;
 				return b3ParseRAW(&buffer[pos], x, y, 6);
 			}
 		}
-	}
-	catch(std::exception & e)
-	{
-		b3PrintF(B3LOG_FULL, "No MTV parsing possible: %s\n", e.what());
 	}
 
 
@@ -245,8 +243,8 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	}
 
 	// SGI RLE
-	HeaderSGI = (struct HeaderSGI *)buffer;
-	if ((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
+	b3HeaderSGI = (struct b3HeaderSGI *)buffer;
+	if ((b3HeaderSGI->imagic == IMAGIC1) || (b3HeaderSGI->imagic == IMAGIC2))
 	{
 		return b3ParseSGI(buffer);
 	}
