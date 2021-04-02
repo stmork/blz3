@@ -48,7 +48,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_pkd_color * LongData;
 	b3HeaderTIFF  *  TIFF;
-	b3HeaderSGI *  b3HeaderSGI;
+	b3HeaderSGI  * b3HeaderSGI;
 	b3_size        pos;
 	b3_coord       x, y;
 	b3_index       i;

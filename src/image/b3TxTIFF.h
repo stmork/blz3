@@ -91,7 +91,7 @@ class b3TIFF_Entry : public b3Link<b3TIFF_Entry>, public b3Mem
 	unsigned long   end;
 	struct TagTIFF  tag;
 	void      *     buffer;		// buffer to data
-	b3_u32    *     ptr;		// new offsets of strips
+	b3_u32     *    ptr;		// new offsets of strips
 	long            size;		// size of data
 	long            offset;		// offset of this tag
 	long            act;        // offset of buffer (if buffer != null)

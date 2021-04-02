@@ -1401,11 +1401,11 @@ private:
 
 	static void    b3ConvertSGILine(b3_u16 * buffer, b3_offset offset, b3_size size, b3_count bytes);
 	static void    b3UnpackSGI(
-			b3_u08 *        buffer,
-			const void *    inPtr,
-			b3_count        count,
-			b3_count        bytes,
-			const b3_offset offset);
+		b3_u08     *    buffer,
+		const void   *  inPtr,
+		b3_count        count,
+		b3_count        bytes,
+		const b3_offset offset);
 
 	// b3TxTGA.cc
 	b3_result      b3ParseTGA(const b3_u08 * buffer);

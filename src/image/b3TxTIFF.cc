@@ -504,7 +504,7 @@ long b3TIFF_Dir::b3WriteTags(b3FileAbstract * out, long act_offset)
 *************************************************************************/
 
 b3TIFF_Entry::b3TIFF_Entry(
-	b3TIFF_Dir  *    dirTIFF,
+	b3TIFF_Dir   *   dirTIFF,
 	struct TagTIFF * ThisTag,
 	char      *      ptrTIFF) :
 	b3Link<b3TIFF_Entry>(sizeof(b3TIFF_Entry), CLASS_TIFF_TAG)
@@ -665,7 +665,7 @@ long b3TIFF_Entry::b3OrgStrips(long act_offset)
 }
 
 long b3TIFF_Entry::b3WriteTag(
-	b3FileAbstract     *   out,
+	b3FileAbstract    *    out,
 	b3Base<b3TIFF_Strip> * strips,
 	long                   act_offset,
 	long                   stripNum)

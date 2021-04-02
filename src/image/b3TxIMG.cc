@@ -32,7 +32,7 @@
 *************************************************************************/
 
 inline void b3Tx::b3UnpackSGI(
-	b3_u08  *    buffer,
+	b3_u08   *   buffer,
 	const void * inPtr,
 	b3_count     count,
 	b3_count     bytes,
@@ -148,7 +148,7 @@ inline void b3Tx::b3ConvertSGILine(
 
 void b3Tx::b3ParseSGI3(
 	const b3HeaderSGI * HeaderSGI,
-	const b3_u08  *     buffer)
+	const b3_u08    *   buffer)
 {
 	b3_pkd_color * lineTable;
 	b3_pkd_color * lineSizes;

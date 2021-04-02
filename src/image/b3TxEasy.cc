@@ -237,7 +237,7 @@ b3_result b3Tx::b3ParseRAW(
 
 b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 {
-	b3HeaderBMP *  bmp = (b3HeaderBMP *)buffer;
+	b3HeaderBMP  * bmp = (b3HeaderBMP *)buffer;
 	b3_pkd_color * lPtr;
 	b3_u08    *    cPtr;
 	b3_res         xNewSize, yNewSize;
