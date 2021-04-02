@@ -157,6 +157,7 @@ void b3ImageTest::setUp()
 
 void b3ImageTest::testRead()
 {
+	// Use https://regex101.com/
 	static std::regex  regex(R"(Lenna-([012][01248])\.[a-z]+)");
 	static std::smatch matcher;
 	b3FileList         list;

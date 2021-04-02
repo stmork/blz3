@@ -38,7 +38,6 @@ b3_result b3Tx::b3ParseRAW(
 	b3_s32   ppm_type)
 {
 	b3_u08    *   newCData;
-	b3_pkd_color  value;
 	b3_count      i, Max;
 
 	b3PrintF(B3LOG_FULL, "IMG RAW  # b3ParseRAW(%s)\n",
@@ -91,9 +90,11 @@ b3_result b3Tx::b3ParseRAW(
 			Max      = x * y;
 			for (i = 0; i < Max; i++)
 			{
-				value       =                 *buffer++;
-				value       = (value << 8) | (*buffer++);
-				*newLData++ = (value << 8) | (*buffer++);
+				const b3_u08 r = *buffer++;
+				const b3_u08 g = *buffer++;
+				const b3_u08 b = *buffer++;
+
+				*newLData++ = b3Color::b3MakePkdColor(r, g, b);
 			}
 		}
 		else
@@ -120,12 +121,12 @@ b3_result b3Tx::b3ParseRAW(
 
 b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 {
-	b3_pkd_color * Long;
-	b3_u08    *   cPtr;
-	b3_res        xNewSize, yNewSize;
-	b3_coord      x, y;
-	b3_count      numPlanes, numColors;
-	b3_count      i, offset, value;
+	b3_pkd_color * lPtr;
+	b3_u08    *    cPtr;
+	b3_res         xNewSize, yNewSize;
+	b3_coord       x, y;
+	b3_count       numPlanes, numColors;
+	b3_count       i, offset, value;
 
 	b3PrintF(B3LOG_FULL, "IMG BMP  # b3ParseBMP(%s)\n",
 		(const char *)image_name);
@@ -265,19 +266,21 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 
 	case 24 :
 		offset = xSize & 3;
-		Long   = (b3_pkd_color *)data;
-		Long  += (xSize * ySize);
+		lPtr   = data;
+		lPtr  += (xSize * ySize);
 		for (y = 0; y < ySize; y++)
 		{
-			Long -= xSize;
+			lPtr -= xSize;
 			for (x = 0; x < xSize; x++)
 			{
-				value   =                buffer[2];
-				value   = (value << 8) | buffer[1];
-				*Long++ = (value << 8) | buffer[0];
-				buffer += 3;
+				// reversed blue, green, red
+				const b3_u08 b = *buffer++;
+				const b3_u08 g = *buffer++;
+				const b3_u08 r = *buffer++;
+
+				*lPtr++ = b3Color::b3MakePkdColor(r, g, b);
 			}
-			Long   -= xSize;
+			lPtr   -= xSize;
 			buffer += offset;
 		}
 		break;
@@ -345,10 +348,11 @@ b3_result b3Tx::b3ParseBMF(b3_u08 * buffer, b3_size buffer_size)
 				buffer -= lSize;
 				for (x = 0; x < xSize; x++)
 				{
-					*pixel++ =
-						(buffer[x]                 <<  0) |
-						(buffer[x + xSize]         <<  8) |
-						(buffer[x + xSize + xSize] << 16);
+					const b3_u08 r = buffer[x + xSize + xSize];
+					const b3_u08 g = buffer[x + xSize];
+					const b3_u08 b = buffer[x];
+
+					*pixel++ = b3Color::b3MakePkdColor(r, g, b);
 				}
 			}
 		}

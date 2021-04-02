@@ -30,6 +30,8 @@
 #include "b3TxIFF.h"
 #include "b3TxTIFF.h"
 
+#include <regex>
+
 #ifdef BLZ3_USE_OPENEXR
 #include <ImfVersion.h>
 #endif
@@ -45,7 +47,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	b3_pkd_color * LongData;
 	HeaderTIFF  *  TIFF;
 	HeaderSGI   *  HeaderSGI;
-	b3_index       pos;
+	b3_size        pos;
 	b3_coord       x, y;
 	b3_index       i;
 
@@ -113,25 +115,33 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	}
 #endif
 
-	// PPM6
+	// PPM types 4, 5 and 6 binary non ASCII.
+	// Use https://regex101.com/
 	if (buffer[0] == 'P')
 	{
-		b3_s32 ppm_type = 0;
+		static const std::regex  regex(R"(P([1-6])\n(\d+)\s+(\d+)\n.*)");
+		std::smatch              matcher;
+		unsigned                 ppm_type;
 
 		// Init.
-		pos      = 0;
 		x        = 0;
 		y        = 0;
 
-		// BUG: Valgrind illegal read access
-		const std::string parse((const char *)buffer, buffer_size);
-
-		i   = sscanf(parse.data(), "P%d %zd %zd %*d%zd",
-				&ppm_type, &x, &y, &pos);
-		b3PrintF(B3LOG_FULL, "PxM (%d): (%zd,%zd - %zd) %zd\n",
-			ppm_type, x, y, i, pos);
-		if (i >= 2)
+		b3_size space = 0;
+		for (pos = 0; (pos < buffer_size) && (space < 3); pos++)
 		{
+			if (isspace(buffer[pos]))
+			{
+				space++;
+			}
+		}
+		const std::string        parse((const char *)buffer, pos);
+		if (std::regex_match(parse, matcher, regex))
+		{
+			ppm_type = std::stoul(matcher[1]);
+			x        = std::stol(matcher[2]);
+			y        = std::stol(matcher[3]);
+
 			switch (ppm_type)
 			{
 			case 4 :
