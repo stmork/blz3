@@ -159,11 +159,14 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 	{
 		if (numColors > 0)
 		{
+			b3_u08 * color_ptr = &buffer[54];
+
 			for (i = 0; i < numColors; i++)
 			{
-				const b3_u08 r = buffer[(i << 2) + 56];
-				const b3_u08 g = buffer[(i << 2) + 55];
-				const b3_u08 b = buffer[(i << 2) + 54];
+				const b3_u08 b = *color_ptr++;
+				const b3_u08 g = *color_ptr++;
+				const b3_u08 r = *color_ptr++;
+				color_ptr++;
 
 				palette[i] = b3Color::b3MakePkdColor(r, g, b);
 			}
