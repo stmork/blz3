@@ -24,6 +24,7 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
+#include <blz3/base/b3Endian.h>
 
 /*************************************************************************
 **                                                                      **
@@ -160,10 +161,11 @@ b3_result b3Tx::b3ParseBMP(b3_u08 * buffer)
 		{
 			for (i = 0; i < numColors; i++)
 			{
-				palette[i] =
-					((b3_pkd_color)buffer[(i << 2) + 56] << 16) |
-					((b3_pkd_color)buffer[(i << 2) + 55] <<  8) |
-					((b3_pkd_color)buffer[(i << 2) + 54]);
+				const b3_u08 r = buffer[(i << 2) + 56];
+				const b3_u08 g = buffer[(i << 2) + 55];
+				const b3_u08 b = buffer[(i << 2) + 54];
+
+				palette[i] = b3Color::b3MakePkdColor(r, g, b);
 			}
 		}
 		else

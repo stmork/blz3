@@ -188,6 +188,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 	}
 #endif
 
+
 	// BMP
 	if ((buffer[0] == 'B') &&
 		(buffer[1] == 'M') &&
@@ -198,7 +199,7 @@ b3_result b3Tx::b3LoadImage(b3_u08 * buffer, b3_size buffer_size)
 
 
 	// MTV
-	if (sscanf((const char *)buffer, "%ld %ld", &x, &y) == 2)
+	if (sscanf((const char *)buffer, "%zd %zd", &x, &y) == 2)
 	{
 		for (pos = 0; (pos < 100) && (buffer[pos] != 10); pos++);
 		if (buffer[pos++] == 10)
