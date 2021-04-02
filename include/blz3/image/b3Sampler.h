@@ -21,6 +21,7 @@
 #define B3_IMAGE_SAMPLER_H
 
 #include "blz3/b3Config.h"
+#include "blz3/image/b3Tx.h"
 
 class b3Sampler;
 
@@ -36,7 +37,7 @@ struct b3SampleInfo
 	b3_res        m_yEnd;          //!< The vertical strip end coordinate.
 	b3_res        m_xMax;          //!< The strip width.
 	b3_res        m_yMax;          //!< The overall sampling height.
-	void     *    m_Data;          //!< The resulting strip data.
+	b3_tx_data    m_Data;          //!< The resulting strip data.
 	const void  * m_Ptr;           //!< A pointer to custom information.
 };
 
@@ -48,7 +49,7 @@ class b3Sampler
 protected:
 	b3_res        m_xMax;  //!< The sample width.
 	b3_res        m_yMax;  //!< The sample height.
-	void     *    m_Data;  //!< The resulting sampling data.
+	b3_tx_data    m_Data;  //!< The resulting sampling data.
 
 public:
 	/**

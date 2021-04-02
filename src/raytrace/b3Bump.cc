@@ -346,7 +346,7 @@ void b3BumpWater::b3Write()
 b3_bool b3BumpWater::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_scene_preparation * info = (b3_scene_preparation *)prep_info;
-	b3_f64                t = (m_ScaleTime < 0.0001 ? 0 : info->m_t / m_ScaleTime);
+	b3_f64                 t    = (m_ScaleTime < 0.0001 ? 0 : info->m_t / m_ScaleTime);
 
 	b3PrepareScaling();
 	b3PrepareWater(t);

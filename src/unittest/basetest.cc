@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
+#include "blz3/raytrace/b3Factory.h"
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -81,6 +82,7 @@ int main(int argc, char * argv[])
 	CppUnit::TestFactoryRegistry & registry  = CppUnit::TestFactoryRegistry::getRegistry();
 	CppUnit::XmlOutputter    *    outputter = new CppUnit::XmlOutputter(&runner.result(), xml);
 
+	b3RaytracingItems::b3Register();
 	b3Log::b3SetLevel(B3LOG_NONE);
 	if ((argc >= 2) && (argv[1][0] == '-'))
 	{

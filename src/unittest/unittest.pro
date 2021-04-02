@@ -23,6 +23,7 @@ HEADERS += \
 	b3MatrixTest.h \
 	b3PathTest.h \
 	b3RandomTest.h \
+	b3SamplerTest.h \
 	b3SelfTestSuite.h \
 	b3SkeletonTest.h \
 	b3SplineTest.h \
@@ -49,6 +50,7 @@ SOURCES += \
 	b3MatrixTest.cc \
 	b3PathTest.cc \
 	b3RandomTest.cc \
+	b3SamplerTest.cc \
 	b3SelfTestSuite.cc \
 	b3SkeletonTest.cc \
 	b3SplineTest.cc \

@@ -63,7 +63,7 @@ void b3Sampler::b3Sample()
 b3_u32 b3Sampler::b3SampleThread(void * ptr)
 {
 	b3SampleInfo * info    = (b3SampleInfo *)ptr;
-	b3Sampler  *  sampler = info->m_Sampler;
+	b3Sampler   *  sampler = info->m_Sampler;
 
 	sampler->b3SampleTask(info);
 	return 0;
@@ -78,8 +78,6 @@ b3_u32 b3Sampler::b3SampleThread(void * ptr)
 b3ImageSampler::b3ImageSampler(b3Tx * tx)
 {
 	// Init texture
-	B3_ASSERT(tx->b3IsHdr());
-
 	m_xMax  = tx->xSize;
 	m_yMax  = tx->ySize;
 	m_Data  = tx->b3GetHdrData();
@@ -88,9 +86,9 @@ b3ImageSampler::b3ImageSampler(b3Tx * tx)
 b3SampleInfo * b3ImageSampler::b3SampleInit(const b3_count CPUs)
 {
 	b3SampleInfo * info = new b3SampleInfo[CPUs];
-	b3_loop       i;
-	b3_res        yStart, yEnd;
-	b3_color   *  data = (b3_color *)m_Data;
+	b3_loop        i;
+	b3_res         yStart, yEnd;
+	b3_color   *   data = m_Data;
 
 	yStart = 0;
 	for (i = 0; i < CPUs; i++)
@@ -110,8 +108,8 @@ b3SampleInfo * b3ImageSampler::b3SampleInit(const b3_count CPUs)
 
 void b3ImageSampler::b3SampleTask(const b3SampleInfo * info)
 {
-	b3_coord  x, y;
-	b3_color * data = (b3_color *)info->m_Data;
+	b3_coord   x, y;
+	b3_color * data = info->m_Data;
 
 	for (y = info->m_yStart; y < info->m_yEnd; y++)
 	{

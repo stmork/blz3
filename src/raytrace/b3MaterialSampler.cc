@@ -36,8 +36,6 @@ b3MaterialSampler::b3MaterialSampler(b3Tx * tx, const b3_vector * bbox_size, con
 	m_BBoxSize(bbox_size)
 {
 	// Init texture
-	B3_ASSERT(tx->b3IsHdr());
-
 	m_t        = 0;
 	m_Scene    = nullptr;
 	m_Material = nullptr;
@@ -57,7 +55,7 @@ b3SampleInfo * b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 	b3SampleInfo * info = new b3SampleInfo[CPUs];
 	b3_loop       i;
 	b3_res        yStart, yEnd;
-	b3_color   *  data = (b3_color *)m_Data;
+	b3_color   *  data = m_Data;
 
 	B3_ASSERT(m_Material != nullptr);
 	m_Material->b3Prepare(this);
