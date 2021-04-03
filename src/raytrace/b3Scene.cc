@@ -68,6 +68,7 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene), class_type)
 	m_BackTexture      = nullptr;
 	m_ActualCamera     = nullptr;
 	m_Shader           = nullptr;
+	bzero(m_TextureName, sizeof(m_TextureName));
 	m_Filename.b3Empty();
 
 	b3ReallocateShader();

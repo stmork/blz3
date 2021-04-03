@@ -37,9 +37,8 @@ void b3Locale::b3IsoToLocale(const char * src, char * dst, b3_size len)
 	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
 	{
 		wchar_t result[1024];
-		size_t  max;
+		const size_t  max = sizeof(result) / sizeof(wchar_t);
 
-		max = sizeof(result) / sizeof(wchar_t);
 		B3_ASSERT(len < max);
 
 		mbstowcs(result, src, max);
@@ -56,9 +55,8 @@ void b3Locale::b3IsoToLocale(const char * src, char * dst, b3_size len)
 void b3Locale::b3LocaleToIso(const char * src, char * dst, b3_size len)
 {
 	wchar_t result[1024];
-	size_t  max;
+	const size_t  max = sizeof(result) / sizeof(wchar_t);
 
-	max = sizeof(result) / sizeof(wchar_t);
 	B3_ASSERT(len < max);
 
 	setlocale(LC_CTYPE, "");
