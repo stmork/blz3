@@ -35,9 +35,10 @@
 void b3Locale::b3IsoToLocale(
 	const char * src,
 	char    *    dst,
-	b3_size      len B3_UNUSED)
+	b3_size      len)
 {
 #if 1
+	bzero(dst, len);
 	while (*src)
 	{
 		b3_u08 c = *src;
