@@ -34,6 +34,10 @@ class b3MaterialTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3MaterialTest);
 	CPPUNIT_TEST(testGranite);
+	CPPUNIT_TEST(testMarble);
+	CPPUNIT_TEST(testWood);
+	CPPUNIT_TEST(testCarPaint);
+	CPPUNIT_TEST(testThinFilm);
 	CPPUNIT_TEST(testCookTorrance);
 	CPPUNIT_TEST_SUITE_END();
 
@@ -41,10 +45,13 @@ public:
 	void setUp() override;
 	void tearDown() override;
 	void testGranite();
+	void testMarble();
+	void testWood();
+	void testCarPaint();
+	void testThinFilm();
 	void testCookTorrance();
 
 private:
-	static void b3SaveGranite();
 	static void b3SaveCookTorrance(b3Color & color, int y);
 	static void b3Save(b3Scene * scene, b3Path & path);
 };

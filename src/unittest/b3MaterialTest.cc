@@ -157,19 +157,6 @@ void b3MaterialTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3MaterialTest::b3SaveGranite()
-{
-	b3_vector      dim;
-	b3MatGranite * material = new b3MatGranite(GRANITE);
-	b3TestMaterial scene(material, &dim);
-	b3Path         path;
-	b3_f64         scale = 0.15;
-
-	b3Vector::b3Init(&material->m_Scale, dim.x / scale, dim.y / scale, dim.z / scale);
-	path.b3Format("test_material_granite.bwd");
-	b3Save(scene, path);
-}
-
 void b3MaterialTest::b3SaveCookTorrance(b3Color & color, int y)
 {
 	int i;
@@ -205,7 +192,59 @@ void b3MaterialTest::b3Save(b3Scene * scene, b3Path & path)
 
 void b3MaterialTest::testGranite()
 {
-	b3SaveGranite();
+	b3_vector      dim;
+	b3MatGranite * material = new b3MatGranite(GRANITE);
+	b3TestMaterial scene(material, &dim);
+	b3Path         path;
+	b3_f64         scale = 0.15;
+
+	b3Vector::b3Init(&material->m_Scale, dim.x / scale, dim.y / scale, dim.z / scale);
+	path.b3Format("test_material_granite.bwd");
+	b3Save(scene, path);
+}
+
+void b3MaterialTest::testMarble()
+{
+	b3_vector      dim;
+	b3MatMarble  * material = new b3MatMarble(MARBLE);
+	b3TestMaterial scene(material, &dim);
+	b3Path         path;
+
+	path.b3Format("test_material_marble.bwd");
+	b3Save(scene, path);
+}
+
+void b3MaterialTest::testWood()
+{
+	b3_vector      dim;
+	b3MatWood   *  material = new b3MatWood(WOOD);
+	b3TestMaterial scene(material, &dim);
+	b3Path         path;
+
+	path.b3Format("test_material_wood.bwd");
+	b3Save(scene, path);
+}
+
+void b3MaterialTest::testCarPaint()
+{
+	b3_vector       dim;
+	b3MatCarPaint * material = new b3MatCarPaint(CAR_PAINT);
+	b3TestMaterial  scene(material, &dim);
+	b3Path          path;
+
+	path.b3Format("test_material_carpaint.bwd");
+	b3Save(scene, path);
+}
+
+void b3MaterialTest::testThinFilm()
+{
+	b3_vector       dim;
+	b3MatThinFilm * material = new b3MatThinFilm(THIN_FILM);
+	b3TestMaterial  scene(material, &dim);
+	b3Path          path;
+
+	path.b3Format("test_material_thinfilm.bwd");
+	b3Save(scene, path);
 }
 
 void b3MaterialTest::testCookTorrance()
