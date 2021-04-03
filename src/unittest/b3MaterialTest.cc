@@ -61,7 +61,7 @@ public:
 
 		scene->b3GetBBoxHead()->b3Append(bbox);
 		scene->b3GetLightHead()->b3Append(light);
-		scene->m_xSize = scene->m_ySize = 512;
+		scene->m_xSize = scene->m_ySize = 128;
 
 		big->b3Init(2, 9, false, 30);
 		b3Vector::b3Init(&big->m_Controls[0], 50, 0, -50);

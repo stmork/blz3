@@ -304,7 +304,7 @@ void b3SamplerTest::testOceanWave()
 	wave.m_Dim = 9;
 	xMax = yMax = 1 << wave.m_Dim;
 
-	CPPUNIT_ASSERT(tx.b3AllocTx(xMax, yMax, 128));
+	CPPUNIT_ASSERT(tx.b3AllocTx(128, 128, 128));
 
 	for (float t = 0.0; t < 5.0; t += 0.125)
 	{
