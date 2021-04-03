@@ -18,40 +18,56 @@ B3_LIB_RAYTRACE		= $(BLZ3_LIB)/libB3Raytrace.a
 PRGS			= basetest
 
 BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
+	b3AlignTest.cc\
 	b3ArrayTest.cc\
+	b3AuxTest.cc\
 	b3ColorTest.cc\
 	b3CompareTest.cc\
 	b3ComplexTest.cc\
 	b3DataSizeTest.cc\
+	b3EndianTest.cc\
+	b3ExceptionTest.cc\
 	b3FFTTest.cc\
+	b3FileListTest.cc\
 	b3FileTest.cc\
 	b3ImageTest.cc\
 	b3ListTest.cc\
+	b3MaterialTest.cc\
 	b3MathTest.cc\
 	b3PathTest.cc\
 	b3MatrixTest.cc\
 	b3RandomTest.cc\
+	b3SamplerTest.cc\
 	b3SelfTestSuite.cc\
 	b3SplineTest.cc\
+	b3TimeTest.cc\
 	b3VectorTest.cc\
 	b3WorldTest.cc
 
 BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
+	b3AlignTest.o\
 	b3ArrayTest.o\
+	b3AuxTest.o\
 	b3ColorTest.o\
 	b3CompareTest.o\
 	b3ComplexTest.o\
 	b3DataSizeTest.o\
+	b3EndianTest.o\
+	b3ExceptionTest.o\
 	b3FFTTest.o\
+	b3FileListTest.o\
 	b3FileTest.o\
 	b3ImageTest.o\
 	b3ListTest.o\
+	b3MaterialTest.o\
 	b3MathTest.o\
 	b3MatrixTest.o\
 	b3PathTest.o\
 	b3RandomTest.o\
+	b3SamplerTest.o\
 	b3SelfTestSuite.o\
 	b3SplineTest.o\
+	b3TimeTest.o\
 	b3VectorTest.o\
 	b3WorldTest.o
 
