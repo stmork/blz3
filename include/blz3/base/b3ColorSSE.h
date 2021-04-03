@@ -661,27 +661,6 @@ public:
 	}
 
 	/**
-	 * This method computes the power on all color channels with the given exponent.
-	 * This is useful for specular color computation.
-	 *
-	 * @param exp The exponent.
-	 * @return The resulting color.
-	 */
-	inline const b3Color b3Pow(const b3_f32 exp) const
-	{
-		alignas(16) b3_f32 b[4];
-		b3Color            result;
-
-		_mm_store_ps(b, SSE_PS_LOAD(v));
-		SSE_PS_STORE(result.v, _mm_set_ps(
-				pow(b[A], exp),
-				pow(b[R], exp),
-				pow(b[G], exp),
-				pow(b[B], exp)));
-		return result;
-	}
-
-	/**
 	 * This method returns true if any color channel is greater than any color
 	 * channel in the given b3Color instance.
 	 *
@@ -697,16 +676,6 @@ public:
 	}
 
 	/**
-	 * This method removes all negative signs on any color channel.
-	 */
-	inline void b3Abs()
-	{
-		SSE_PS_STORE(v, _mm_and_ps(
-				SSE_PS_LOAD(v),
-				_mm_loadu_ps((const float *)m_AbsMask)));
-	}
-
-	/**
 	 * This cast operator returns the color channels as ::b3_pkd_color.
 	 *
 	 * @return The color channels as ::b3_pkd_color.
@@ -716,10 +685,7 @@ public:
 		const __m128 zero_floats = _mm_set_ps1(0.0);
 		const __m128 ones_floats = _mm_set_ps1(1.0);
 		const __m128 max_floats  = _mm_set_ps1(COLOR_TOP_BYTE);
-		__m128              sse;
-		b3_pkd_color        result = 0;
-
-		sse = _mm_mul_ps(
+		const __m128 sse         = _mm_mul_ps(
 				_mm_min_ps(
 					ones_floats,
 					_mm_max_ps(v, zero_floats)),
@@ -735,11 +701,12 @@ public:
 				_MM_SHUFFLE(0, 1, 2, 3));
 
 		// read reversed!
-		result = _mm_cvtsi128_si32( // select low 32 bits only
+		return _mm_cvtsi128_si32( // select low 32 bits only
 				_mm_packus_epi16( // pack 32 bit into 16 bit signed saturated
 					_mm_packs_epi32(i, zero_ints), zero_ints)); // pack 16 bit into 8 bit unsigned saturated
 #else
 		alignas(16) b3_f32 sat[4];
+		b3_pkd_color result      = 0;
 
 		_mm_storeu_ps(sat, sse);
 
@@ -747,8 +714,8 @@ public:
 		{
 			result = (result << 8) | b3_u32(round(sat[i]));
 		}
-#endif
 		return result;
+#endif
 	}
 
 	/**

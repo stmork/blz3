@@ -272,7 +272,7 @@ void b3SamplerTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3SamplerTest::test()
+void b3SamplerTest::testSampler()
 {
 	b3Tx tx;
 
@@ -293,6 +293,28 @@ void b3SamplerTest::test()
 	sample(sampler_wood,      tx, "img_test_sample_wood.tga");
 	sample(sampler_plank,     tx, "img_test_sample_plank.tga");
 	sample(sampler_water,     tx, "img_test_sample_water.tga");
+}
+
+void b3SamplerTest::testOceanWave()
+{
+	b3OceanWave  wave;
+	b3Tx         tx;
+	b3_res       xMax, yMax;
+
+	wave.m_Dim = 9;
+	xMax = yMax = 1 << wave.m_Dim;
+
+	CPPUNIT_ASSERT(tx.b3AllocTx(xMax, yMax, 128));
+
+	for(float t = 0.0; t < 5.0; t += 0.125)
+	{
+		b3Path path;
+
+		path.b3Format("img_test_ocean_%1.3f.jpg", t);
+		wave.b3PrepareOceanWave(t);
+		wave.b3GetBuffer(&tx, 0.001);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
+	}
 }
 
 void b3SamplerTest::sample(b3Sampler & sampler, b3Tx & tx, const char * image_name)

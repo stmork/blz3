@@ -674,25 +674,6 @@ public:
 	}
 
 	/**
-	 * This method computes the power on all color channels with the given exponent.
-	 * This is useful for specular color computation.
-	 *
-	 * @param exp The exponent.
-	 * @return The resulting color.
-	 */
-	inline b3Color b3Pow(const b3_f32 exp) const
-	{
-		b3Color result, exponent;
-
-		exponent.b3Init(exp);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = pow(v[i], exponent.v[i]);
-		}
-		return result;
-	}
-
-	/**
 	 * This method returns true if any color channel is greater than any color
 	 * channel in the given b3Color instance.
 	 *
@@ -705,17 +686,6 @@ public:
 			(fabs(v[R]) >= limit.v[R]) ||
 			(fabs(v[G]) >= limit.v[G]) ||
 			(fabs(v[B]) >= limit.v[B]);
-	}
-
-	/**
-	 * This method removes all negative signs on any color channel.
-	 */
-	inline void b3Abs()
-	{
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			v[i] = fabs(v[i]);
-		}
 	}
 
 	/**

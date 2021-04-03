@@ -31,13 +31,15 @@
 class b3SamplerTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3SamplerTest);
-	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testSampler);
+	CPPUNIT_TEST(testOceanWave);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void test();
+	void testSampler();
+	void testOceanWave();
 
 private:
 	void sample(b3Sampler & sampler, b3Tx & tx, const char * image_name);

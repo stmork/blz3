@@ -118,10 +118,7 @@ void b3ColorTest::testColor()
 			b3Color(B3_WHITE), b3Color(B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
 	testColor(1.0f, 0.5f, 0.0f, 0.0f);
 
-	color.b3Init(-1.0, 2.0, -3.0, 4.0);
-	color.b3Abs();
-	testColor(1.0f, 2.0f, 3.0f, 4.0f);
-
+	color.b3Init(1.0f, 2.0f, 3.0f, 4.0f);
 	color.b3Sat();
 	testColor(1.0f, 1.0f, 1.0f, 1.0f);
 
