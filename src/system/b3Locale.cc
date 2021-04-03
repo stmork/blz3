@@ -32,8 +32,28 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Locale::b3IsoToLocale(const char * src, char * dst, b3_size len)
+void b3Locale::b3IsoToLocale(
+	const char * src,
+	char    *    dst,
+	b3_size      len B3_UNUSED)
 {
+#if 1
+	while (*src)
+	{
+		b3_u08 c = *src;
+
+		if (c < 128)
+		{
+			*dst++ = c;
+		}
+		else
+		{
+			*dst++ = 0xc0 + (c >> 6);
+			*dst++ = 0x80 + (c & 0x3f);
+		}
+		src++;
+	}
+#else
 	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
 	{
 		wchar_t result[1024];
@@ -50,6 +70,7 @@ void b3Locale::b3IsoToLocale(const char * src, char * dst, b3_size len)
 	{
 		memcpy(dst, src, len);
 	}
+#endif
 }
 
 void b3Locale::b3LocaleToIso(const char * src, char * dst, b3_size len)
