@@ -38,22 +38,24 @@ void b3Locale::b3IsoToLocale(
 	b3_size      len)
 {
 #if 1
-	bzero(dst, len);
-	while (*src)
+	b3_size i = 0;
+
+	while ((*src) && (i < len))
 	{
 		b3_u08 c = *src;
 
 		if (c < 128)
 		{
-			*dst++ = c;
+			dst[i++] = c;
 		}
 		else
 		{
-			*dst++ = 0xc0 + (c >> 6);
-			*dst++ = 0x80 + (c & 0x3f);
+			dst[i++] = 0xc0 + (c >> 6);
+			dst[i++] = 0x80 + (c & 0x3f);
 		}
 		src++;
 	}
+	dst[len-1] = 0;
 #else
 	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
 	{
