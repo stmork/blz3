@@ -44,13 +44,6 @@ public:
 	void testColor();
 	void testPkdColor();
 
-	inline b3_f32 round_color(b3_f32 x)
-	{
-		b3_f32 rnd = 10000.0f;
-
-		return roundf(x * rnd) / rnd;
-	}
-
 private:
 	void testColor(
 		const b3_f32 r,

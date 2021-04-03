@@ -66,7 +66,7 @@ public:
 		b3Base<b3Item> * base2 = nullptr;
 		b3Path           cwd;
 
-		getcwd(cwd, B3_FILESTRINGLEN);
+		CPPUNIT_ASSERT(getcwd(cwd, B3_FILESTRINGLEN) != nullptr);
 		CPPUNIT_ASSERT(world1.b3Read(m_Filename, false));
 		CPPUNIT_ASSERT(world1.b3Write("test1.bwd", false));
 		CPPUNIT_ASSERT(world1.b3Read("test1.bwd", false));

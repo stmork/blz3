@@ -49,8 +49,8 @@
 
 class b3DisplayPixelImpl : public b3DisplayPixel
 {
-	static b3_pkd_color dithermatrix[4][4];
-	static b3_pkd_color dithermask[8];
+	static const b3_pkd_color dithermatrix[4][4];
+	static const b3_pkd_color dithermask[8];
 
 protected:
 	inline static b3_pkd_color b3Convert(b3_f32 value)
@@ -116,7 +116,7 @@ protected:
 	}
 };
 
-b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
+const b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
 {
 	{  0, 8, 1, 9 },
 	{ 12, 4, 13, 5 },
@@ -124,7 +124,7 @@ b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
 	{ 15, 7, 14, 6 }
 };
 
-b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
+const b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
 {
 	MASK0, MASK1, MASK2, MASK3, MASK4, MASK5, MASK6, MASK7
 };
@@ -311,7 +311,10 @@ b3DisplayView::~b3DisplayView()
 #endif
 }
 
-void b3DisplayView::b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & Color)
+void b3DisplayView::b3PutPixel(
+		const b3_coord  x,
+		const b3_coord   y,
+		const b3_color & Color)
 {
 #ifdef HAVE_LIBX11
 	b3Display::b3PutPixel(x, y, Color);

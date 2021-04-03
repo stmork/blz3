@@ -202,15 +202,15 @@ void b3ColorTest::testColor(
 	const b3_f32 b,
 	const b3_f32 a)
 {
-	b3_f32 tr = round_color(color[b3Color::R]);
-	b3_f32 tg = round_color(color[b3Color::G]);
-	b3_f32 tb = round_color(color[b3Color::B]);
-	b3_f32 ta = round_color(color[b3Color::A]);
+	b3_f32 ta = color[b3Color::A];
+	b3_f32 tr = color[b3Color::R];
+	b3_f32 tg = color[b3Color::G];
+	b3_f32 tb = color[b3Color::B];
 
+	CPPUNIT_ASSERT_EQUAL(a, ta);
 	CPPUNIT_ASSERT_EQUAL(r, tr);
 	CPPUNIT_ASSERT_EQUAL(g, tg);
 	CPPUNIT_ASSERT_EQUAL(b, tb);
-	CPPUNIT_ASSERT_EQUAL(a, ta);
 }
 
 #endif

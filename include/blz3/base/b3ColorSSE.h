@@ -90,7 +90,7 @@ public:
 	 */
 	inline b3Color(const b3Color & color)
 	{
-		SSE_PS_STORE(v, SSE_PS_LOAD(color.v));
+		v = color.v;
 	}
 
 	/**
@@ -173,8 +173,8 @@ public:
 		const b3_u08 b,
 		const b3_u08 a = 0)
 	{
-		static const __m128i zero  = _mm_setzero_si128();
-		const        __m128i input = _mm_set_epi32(a, r, g, b);
+		const __m128i zero  = _mm_setzero_si128();
+		const __m128i input = _mm_set_epi32(a, r, g, b);
 
 		// read reversed!
 		return _mm_cvtsi128_si32( // select low 32 bits only
@@ -192,7 +192,7 @@ public:
 #ifdef BLZ3_USE_SSE2
 		__m128i sse;
 #ifdef BLZ3_USE_SSSE3
-		static const __m128i shuffle = _mm_set_epi8(
+		const __m128i shuffle = _mm_set_epi8(
 				0x80, 0x80, 0x80, 0x00,
 				0x80, 0x80, 0x80, 0x01,
 				0x80, 0x80, 0x80, 0x02,
@@ -201,7 +201,7 @@ public:
 		// Extract bytes into 32 bit signed with rest zeroed.
 		sse = _mm_shuffle_epi8(_mm_set1_epi32(input), shuffle);
 #else
-		static const __m128i zero = _mm_setzero_si128();
+		const __m128i zero = _mm_setzero_si128();
 
 		sse = _mm_shuffle_epi32( // swap high <-> low
 				_mm_unpacklo_epi8( // extract bytes into 16 bits
@@ -301,10 +301,9 @@ public:
 	 */
 	inline void b3SetAlpha(const b3_f32 alpha)
 	{
-		__m128 result = SSE_PS_LOAD(v);
-		__m128 a = _mm_set_ss(alpha);
+		const __m128 a = _mm_set_ss(alpha);
 
-		SSE_PS_STORE(v, _mm_move_ss(result, a));
+		v = _mm_move_ss(v, a);
 	}
 
 	/**
@@ -373,15 +372,14 @@ public:
 		const b3Color & high,
 		const b3_f32    mix)
 	{
-		__m128  mixer = _mm_set_ps1(mix);
-		__m128  l     = SSE_PS_LOAD(low.v);
+		const __m128  mixer = _mm_set_ps1(mix);
 		b3Color result;
 
-		SSE_PS_STORE(result.v, _mm_add_ps(
-				l,
+		result.v = _mm_add_ps(
+				low.v,
 				_mm_mul_ps(
 					mixer,
-					_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+					_mm_sub_ps(SSE_PS_LOAD(high.v), low.v)));
 
 		return result;
 	}
@@ -400,7 +398,7 @@ public:
 		const b3Color & high,
 		const b3_f64    dMix)
 	{
-		float mix = dMix;
+		float   mix = dMix;
 		__m128  mixer = _mm_set_ps1(mix);
 		__m128  l     = SSE_PS_LOAD(low.v);
 		b3Color result;
@@ -429,13 +427,12 @@ public:
 		const b3Color & mixer)
 	{
 		b3Color result;
-		__m128 l = SSE_PS_LOAD(low.v);
 
-		SSE_PS_STORE(result.v, _mm_add_ps(
-				l,
+		result.v = _mm_add_ps(
+				low.v,
 				_mm_mul_ps(
-					SSE_PS_LOAD(mixer.v),
-					_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
+					mixer.v,
+					_mm_sub_ps(high.v, low.v)));
 
 		return result;
 	}
@@ -491,9 +488,7 @@ public:
 	{
 		b3Color result;
 
-		SSE_PS_STORE(result.v, _mm_sub_ps(
-				SSE_PS_LOAD(v),
-				SSE_PS_LOAD(a.v)));
+		result.v = _mm_sub_ps(v, a.v);
 		return result;
 	}
 
@@ -505,9 +500,7 @@ public:
 	 */
 	inline b3Color & operator*=(const b3Color & a)
 	{
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				SSE_PS_LOAD(a.v)));
+		v = _mm_mul_ps(v, a.v);
 		return *this;
 	}
 
@@ -521,9 +514,7 @@ public:
 	{
 		b3Color result;
 
-		SSE_PS_STORE(result.v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				SSE_PS_LOAD(a.v)));
+		result.v = _mm_mul_ps(v, a.v);
 		return result;
 	}
 
@@ -535,9 +526,7 @@ public:
 	 */
 	inline b3Color & operator*=(const b3_f32 value)
 	{
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(value)));
+		v = _mm_mul_ps(v, _mm_set_ps1(value));
 		return *this;
 	}
 
@@ -549,9 +538,7 @@ public:
 	 */
 	inline b3Color & operator*=(const b3_f64 value)
 	{
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(float(value))));
+		v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
 		return *this;
 	}
 
@@ -565,9 +552,7 @@ public:
 	{
 		b3Color result;
 
-		SSE_PS_STORE(result.v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(value)));
+		result.v = _mm_mul_ps(v, _mm_set_ps1(value));
 		return result;
 	}
 
@@ -581,9 +566,7 @@ public:
 	{
 		b3Color result;
 
-		SSE_PS_STORE(result.v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(float(value))));
+		result.v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
 		return result;
 	}
 
@@ -596,9 +579,8 @@ public:
 	inline b3Color & operator/=(const b3_f32 value)
 	{
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(1.0 / value)));
+
+		v = _mm_div_ps(v, _mm_set_ps1(value));
 		return *this;
 	}
 
@@ -611,9 +593,8 @@ public:
 	inline b3Color & operator/=(const b3_f64 value)
 	{
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(float(1.0 / value))));
+
+		v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
 		return *this;
 	}
 
@@ -626,9 +607,8 @@ public:
 	inline b3Color & operator/=(const b3_count value)
 	{
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(1.0 / float(value))));
+
+		v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
 		return *this;
 	}
 
@@ -643,9 +623,8 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_div_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(value)));
+
+		result.v = _mm_div_ps(v, _mm_set_ps1(value));
 		return result;
 	}
 
@@ -660,9 +639,8 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_div_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(float(value))));
+
+		result.v = _mm_div_ps(v, _mm_set_ps1(float(value)));
 		return result;
 	}
 
@@ -677,9 +655,8 @@ public:
 		b3Color result;
 
 		B3_ASSERT(value != 0);
-		SSE_PS_STORE(result.v, _mm_div_ps(
-				SSE_PS_LOAD(v),
-				_mm_set_ps1(float(value))));
+
+		result.v = _mm_div_ps(v, _mm_set_ps1(float(value)));
 		return result;
 	}
 
@@ -736,29 +713,31 @@ public:
 	 */
 	inline operator b3_pkd_color() const
 	{
-		static const __m128 zero_vector = _mm_set_ps1(0.0);
-		static const __m128 ones_vector = _mm_set_ps1(1.0);
+		const __m128 zero_floats = _mm_set_ps1(0.0);
+		const __m128 ones_floats = _mm_set_ps1(1.0);
+		const __m128 max_floats  = _mm_set_ps1(COLOR_TOP_BYTE);
 		__m128              sse;
 		b3_pkd_color        result = 0;
 
 		sse = _mm_mul_ps(
 				_mm_min_ps(
-					ones_vector,
-					_mm_max_ps(SSE_PS_LOAD(v), zero_vector)),
-				_mm_set_ps1(COLOR_TOP_BYTE));
+					ones_floats,
+					_mm_max_ps(v, zero_floats)),
+				max_floats);
+
 #ifdef BLZ3_USE_SSE2
+		// Simply zeroes as constant
+		const __m128i zero_ints = _mm_setzero_si128();
+
 		// read reversed!
 		__m128i i = _mm_shuffle_epi32( // high <-> low
 				_mm_cvtps_epi32(sse), // convert 4 floats into 4 integer
 				_MM_SHUFFLE(0, 1, 2, 3));
 
-		// Simply zeroes as constant
-		static const __m128i zero = _mm_setzero_si128();
-
 		// read reversed!
 		result = _mm_cvtsi128_si32( // select low 32 bits only
 				_mm_packus_epi16( // pack 32 bit into 16 bit signed saturated
-					_mm_packs_epi32(i, zero), zero)); // pack 16 bit into 8 bit unsigned saturated
+					_mm_packs_epi32(i, zero_ints), zero_ints)); // pack 16 bit into 8 bit unsigned saturated
 #else
 		alignas(16) b3_f32 sat[4];
 
@@ -779,7 +758,7 @@ public:
 	 */
 	inline operator b3_color() const
 	{
-		b3_color            result;
+		b3_color result;
 
 #ifdef SSE_ALIGNED
 		_mm_store_ps(&result.a, v);
@@ -795,7 +774,7 @@ public:
 	 */
 	inline void b3Sat()
 	{
-		static const __m128 sat = _mm_set_ps1(1.0f);
+		const __m128 sat = _mm_set_ps1(1.0f);
 
 		v = _mm_min_ps(v, sat);
 	}
@@ -817,7 +796,7 @@ public:
 	 */
 	inline void b3Min()
 	{
-		static const __m128 zero = _mm_setzero_ps();
+		const __m128 zero = _mm_setzero_ps();
 
 		v = _mm_max_ps(v, zero);
 	}
