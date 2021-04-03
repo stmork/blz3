@@ -17,8 +17,8 @@
 
 #pragma once
 
-#ifndef B3_BASE_DISPLAY_H
-#define B3_BASE_DISPLAY_H
+#ifndef B3_SYSTEM_DISPLAY_H
+#define B3_SYSTEM_DISPLAY_H
 
 /*************************************************************************
 **                                                                      **
@@ -27,7 +27,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3Mem.h"
+#include "blz3/system/b3Memory.h"
 #include "blz3/system/b3Exception.h"
 #include "blz3/base/b3List.h"
 #include "blz3/image/b3Tx.h"
@@ -52,7 +52,42 @@ enum b3_display_error
 
 typedef b3Exception<b3_display_error, 0x445350> b3DisplayException;
 
-class b3Row;
+/**
+ * This class handles one single display row.
+ */
+class B3_PLUGIN b3Row : public b3Link<b3Row>, public b3Mem
+{
+protected:
+	const b3_res     m_xSize;  //!< The width of the row.
+
+public:
+	const b3_coord   m_y;      //!< The y positition of the row.
+	b3_color    *    m_buffer; //!< The color buffer of this row.
+
+public:
+	/**
+	 * This constructor initializes the row for the given width and y position.
+	 *
+	 * \param y The vertical position.
+	 * \param xSize The row width.
+	 */
+	b3Row(const b3_coord y, const b3_res xSize);
+
+	/**
+	 * This constructor initializes the internal color puffer with the given
+	 * pixel.
+	 *
+	 * \param y The vertical position.
+	 * \param xSize The row width.
+	 * \param *buffer The initial color buffer.
+	 */
+	b3Row(const b3_coord y, const b3_res xSize, b3_color * buffer);
+
+	/**
+	 * This destrucotr does nothing.
+	 */
+	virtual ~b3Row() = default;
+};
 
 /**
  * This class simulates a frame buffer for storing a true color image.
@@ -60,6 +95,7 @@ class b3Row;
 class B3_PLUGIN b3Display : public b3Mem
 {
 	b3_bool               m_OwnTx;
+
 protected:
 	b3_res                m_xMax;        //!< The display width.
 	b3_res                m_yMax;        //!< The display height.
@@ -161,7 +197,7 @@ public:
 	 * \param y The y coordinate to print.
 	 * \return True if an cancel event occured.
 	 */
-	virtual b3_bool b3IsCancelled(
+	virtual inline b3_bool b3IsCancelled(
 		const b3_coord x B3_UNUSED,
 		const b3_coord y B3_UNUSED)
 	{
@@ -198,44 +234,7 @@ public:
 	virtual b3_bool       b3SaveImage(const char * filename);
 
 private:
-	void          b3Init(const b3_res xSize, const b3_res ySize, const char * title);
-};
-
-/**
- * This class handles one single display row.
- */
-class B3_PLUGIN b3Row : public b3Link<b3Row>, public b3Mem
-{
-protected:
-	const b3_res     m_xSize;  //!< The width of the row.
-
-public:
-	const b3_coord   m_y;      //!< The y positition of the row.
-	b3_color * m_buffer; //!< The color buffer of this row.
-
-public:
-	/**
-	 * This constructor initializes the row for the given width and y position.
-	 *
-	 * \param y The vertical position.
-	 * \param xSize The row width.
-	 */
-	b3Row(const b3_coord y, const b3_res xSize);
-
-	/**
-	 * This constructor initializes the internal color puffer with the given
-	 * pixel.
-	 *
-	 * \param y The vertical position.
-	 * \param xSize The row width.
-	 * \param *buffer The initial color buffer.
-	 */
-	b3Row(const b3_coord y, const b3_res xSize, b3_color * buffer);
-
-	/**
-	 * This destrucotr does nothing.
-	 */
-	virtual ~b3Row() {}
+	void  b3Init(const b3_res xSize, const b3_res ySize, const char * title);
 };
 
 #endif

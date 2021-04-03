@@ -36,6 +36,7 @@ class b3ColorTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3ColorTest);
 	CPPUNIT_TEST(testColor);
 	CPPUNIT_TEST(testPkdColor);
+	CPPUNIT_TEST(testSaturation);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -43,6 +44,7 @@ public:
 	void tearDown() override;
 	void testColor();
 	void testPkdColor();
+	void testSaturation();
 
 private:
 	void testColor(

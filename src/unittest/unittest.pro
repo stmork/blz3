@@ -19,6 +19,7 @@ HEADERS += \
 	b3FileTest.h \
 	b3ImageTest.h \
 	b3ListTest.h \
+	b3MaterialTest.h \
 	b3MathTest.h \
 	b3MatrixTest.h \
 	b3PathTest.h \
@@ -46,6 +47,7 @@ SOURCES += \
 	b3FileTest.cc \
 	b3ImageTest.cc \
 	b3ListTest.cc \
+	b3MaterialTest.cc \
 	b3MathTest.cc \
 	b3MatrixTest.cc \
 	b3PathTest.cc \

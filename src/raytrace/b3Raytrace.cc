@@ -23,6 +23,7 @@
 *************************************************************************/
 
 #include "b3RaytraceInclude.h"
+#include "blz3/system/b3Display.h"
 
 #define no_DEBUG_SS4
 
@@ -49,8 +50,8 @@ b3_f64   b3Scene::epsilon          = 0.0008;
 b3_u32 b3Scene::b3RaytraceThread(void * ptr)
 {
 	b3_rt_info * info  = (b3_rt_info *)ptr;
-	b3Scene  *  scene = info->m_Scene;
-	b3RayRow  * row;
+	b3Scene   *  scene = info->m_Scene;
+	b3RayRow  *  row;
 
 	do
 	{
@@ -81,8 +82,8 @@ b3_u32 b3Scene::b3RaytraceThread(void * ptr)
 b3_u32 b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 {
 	b3_rt_info * info  = (b3_rt_info *)ptr;
-	b3Scene  *  scene = info->m_Scene;
-	b3RayRow  * row;
+	b3Scene   *  scene = info->m_Scene;
+	b3RayRow  *  row;
 
 	do
 	{

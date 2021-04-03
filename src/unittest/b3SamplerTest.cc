@@ -306,7 +306,7 @@ void b3SamplerTest::testOceanWave()
 
 	CPPUNIT_ASSERT(tx.b3AllocTx(xMax, yMax, 128));
 
-	for(float t = 0.0; t < 5.0; t += 0.125)
+	for (float t = 0.0; t < 5.0; t += 0.125)
 	{
 		b3Path path;
 

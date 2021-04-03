@@ -312,9 +312,9 @@ b3DisplayView::~b3DisplayView()
 }
 
 void b3DisplayView::b3PutPixel(
-		const b3_coord  x,
-		const b3_coord   y,
-		const b3_color & Color)
+	const b3_coord  x,
+	const b3_coord   y,
+	const b3_color & Color)
 {
 #ifdef HAVE_LIBX11
 	b3Display::b3PutPixel(x, y, Color);
