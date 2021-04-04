@@ -348,7 +348,7 @@ public:
 	 *
 	 * \return True if list is empty.
 	 */
-	inline b3_bool b3IsEmpty() const
+	inline bool    b3IsEmpty() const
 	{
 		return (First == nullptr) && (Last == nullptr);
 	}

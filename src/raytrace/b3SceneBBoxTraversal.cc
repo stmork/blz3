@@ -187,7 +187,7 @@ void b3Scene::b3Update()
 	m_PrepareInfo.b3Prepare(b3UpdateThread, nullptr, false);
 }
 
-b3_bool b3Scene::b3UpdateThread(b3BBox * bbox, void * ptr B3_UNUSED)
+bool b3Scene::b3UpdateThread(b3BBox * bbox, void * ptr B3_UNUSED)
 {
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "      Updating object <%s>\n", bbox->b3GetName());
@@ -220,9 +220,9 @@ void b3BBox::b3UpdateBBox()
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Scene::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
+bool b3Scene::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 {
-	b3_bool  result = false;
+	bool     result = false;
 
 	b3Update();
 
@@ -236,11 +236,11 @@ b3_bool b3Scene::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 	return result;
 }
 
-b3_bool b3BBox::b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance)
+bool b3BBox::b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance)
 {
 	b3_vector  subLower;
 	b3_vector  subUpper;
-	b3_bool    result = false;
+	bool       result = false;
 
 	b3Vector::b3InitBound(&subLower, &subUpper);
 	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
@@ -325,7 +325,7 @@ void b3Scene::b3RecomputeMaterial()
 	m_PrepareInfo.b3Prepare(b3RecomputeMaterialThread);
 }
 
-b3_bool b3Scene::b3RecomputeMaterialThread(b3BBox * bbox, void * ptr B3_UNUSED)
+bool b3Scene::b3RecomputeMaterialThread(b3BBox * bbox, void * ptr B3_UNUSED)
 {
 	bbox->b3RecomputeMaterial();
 	B3_FOR_TYPED_BASE(b3Shape, bbox->b3GetShapeHead(), shape)
@@ -377,8 +377,8 @@ void b3BBox::b3Draw(b3RenderContext * context)
 
 void b3Scene::b3Transform(
 	b3_matrix * transformation,
-	b3_bool    is_affine,
-	b3_bool    force_action)
+	bool       is_affine,
+	bool       force_action)
 {
 	if (!b3Matrix::b3IsUnitMatrix(transformation))
 	{
@@ -389,12 +389,12 @@ void b3Scene::b3Transform(
 	}
 }
 
-b3_bool b3BBox::b3Transform(
+bool b3BBox::b3Transform(
 	b3_matrix * transformation,
-	b3_bool    is_affine,
-	b3_bool    force_action)
+	bool        is_affine,
+	bool        force_action)
 {
-	b3_bool  transformed = false;
+	bool  transformed = false;
 
 	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
@@ -428,7 +428,7 @@ b3_bool b3BBox::b3Transform(
 **                                                                      **
 *************************************************************************/
 
-void b3Scene::b3Activate(b3_bool activate)
+void b3Scene::b3Activate(bool activate)
 {
 	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
@@ -436,7 +436,7 @@ void b3Scene::b3Activate(b3_bool activate)
 	}
 }
 
-void b3BBox::b3Activate(b3_bool activate, b3_bool recurse)
+void b3BBox::b3Activate(bool activate, bool recurse)
 {
 	if (activate)
 	{
@@ -518,7 +518,7 @@ b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
 **                                                                      **
 *************************************************************************/
 
-void b3Scene::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation)
+void b3Scene::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, bool activation)
 {
 	array->b3Clear();
 
@@ -528,7 +528,7 @@ void b3Scene::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activatio
 	}
 }
 
-void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation)
+void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, bool activation)
 {
 	if (b3IsActive() == activation)
 	{
@@ -591,9 +591,9 @@ b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Scene::b3BacktraceRecompute(b3BBox * search)
+bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 {
-	b3_bool  result;
+	bool  result;
 
 	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
@@ -612,9 +612,9 @@ b3_bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 	return false;
 }
 
-b3_bool b3BBox::b3BacktraceRecompute(b3BBox * search)
+bool b3BBox::b3BacktraceRecompute(b3BBox * search)
 {
-	b3_bool  result;
+	bool  result;
 
 	// Found?
 	if (search == this)

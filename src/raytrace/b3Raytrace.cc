@@ -31,7 +31,7 @@ struct b3_rt_info
 {
 	b3Display * m_Display;
 	b3Scene  * m_Scene;
-	b3_bool    m_Loop;
+	bool       m_Loop;
 	b3_count   m_Num;
 	b3Event    m_WaitForAnimation;
 	b3Event    m_WaitForCompletion;
@@ -47,7 +47,7 @@ b3_f64   b3Scene::epsilon          = 0.0008;
 **                                                                      **
 *************************************************************************/
 
-b3_u32 b3Scene::b3RaytraceThread(void * ptr)
+bool b3Scene::b3RaytraceThread(void * ptr)
 {
 	b3_rt_info * info  = (b3_rt_info *)ptr;
 	b3Scene   *  scene = info->m_Scene;
@@ -79,7 +79,7 @@ b3_u32 b3Scene::b3RaytraceThread(void * ptr)
 	return 0;
 }
 
-b3_u32 b3Scene::b3RaytraceMotionBlurThread(void * ptr)
+bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 {
 	b3_rt_info * info  = (b3_rt_info *)ptr;
 	b3Scene   *  scene = info->m_Scene;
@@ -264,12 +264,12 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Scene::b3PrepareBBoxThread(b3BBox * bbox, void * ptr)
+bool b3Scene::b3PrepareBBoxThread(b3BBox * bbox, void * ptr)
 {
 	return bbox->b3PrepareBBox((b3_scene_preparation *)ptr);
 }
 
-b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
+bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 {
 	b3Item        *        item;
 	b3Nebular       *      nebular;
@@ -433,13 +433,13 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 			true);
 }
 
-void b3Scene::b3Raytrace(b3Display * display, b3_bool multi_threaded)
+void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 {
 	b3Row   *   row;
 	b3_res      xSize, ySize;
 	b3_count    CPUs, i;
 	b3_f64      fy, fyStep;
-	b3_bool     isMotionBlur = false;
+	bool        isMotionBlur = false;
 
 	try
 	{

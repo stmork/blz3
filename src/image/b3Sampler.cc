@@ -60,13 +60,13 @@ void b3Sampler::b3Sample()
 	delete [] info;
 }
 
-b3_u32 b3Sampler::b3SampleThread(void * ptr)
+bool b3Sampler::b3SampleThread(void * ptr)
 {
 	b3SampleInfo * info    = (b3SampleInfo *)ptr;
 	b3Sampler   *  sampler = info->m_Sampler;
 
 	sampler->b3SampleTask(info);
-	return 0;
+	return false;
 }
 
 /*************************************************************************

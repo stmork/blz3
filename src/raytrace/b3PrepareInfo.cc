@@ -85,7 +85,7 @@ void b3PrepareInfo::b3RebuildListFromArray()
 	}
 }
 
-b3_u32 b3PrepareInfo::b3PrepareThread(void * ptr)
+bool b3PrepareInfo::b3PrepareThread(void * ptr)
 {
 	b3PrepareInfo  *  info = (b3PrepareInfo *)ptr;
 	b3BBoxReference * reference;
@@ -101,15 +101,15 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void * ptr)
 	}
 	b3PrintF(B3LOG_FULL, "      Objects prepared successfully!\n");
 
-	return 1;
+	return true;
 }
 
-b3_bool b3PrepareInfo::b3Prepare(
+bool b3PrepareInfo::b3Prepare(
 	b3PrepareProc  prepare_proc,
 	void     *     ptr,
-	b3_bool        threaded)
+	bool           threaded)
 {
-	b3_bool  result = true;
+	bool  result = true;
 
 	m_PrepareProc = prepare_proc;
 	m_Ptr         = ptr;

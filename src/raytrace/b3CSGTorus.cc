@@ -118,7 +118,7 @@ void b3CSGTorus::b3ComputeVertices()
 	b3ComputeTorusVertices(m_Base, m_Dir1, m_Dir2, m_Dir3, m_aRad, m_bRad);
 }
 
-void b3CSGTorus::b3ComputeNormals(b3_bool normalize)
+void b3CSGTorus::b3ComputeNormals(bool normalize)
 {
 	// b3ComputeVertices() does already compute the normals
 	// So only normalize if needed
@@ -133,7 +133,7 @@ void b3CSGTorus::b3ComputeIndices()
 	b3ComputeTorusIndices();
 }
 
-void b3CSGTorus::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3CSGTorus::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
 	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
@@ -147,10 +147,10 @@ void b3CSGTorus::b3SetupPicking(b3PickInfo * info)
 	info->b3AddPickPoint(&m_Base, "b");
 }
 
-b3_bool b3CSGTorus::b3Prepare(b3_preparation_info * prep_info)
+bool b3CSGTorus::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_f64  denom, scale;
-	b3_bool result = false;
+	bool    result = false;
 
 	scale    = b3Vector::b3Normalize(&m_Dir1);
 	denom    = b3Vector::b3Normalize(&m_Dir2);

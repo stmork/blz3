@@ -23,7 +23,7 @@
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Time.h"
 
-typedef b3_u32(*b3ThreadProc)(void *);
+typedef bool(*b3ThreadProc)(void *);
 
 /**
  * This abstract class defines basic thread handling operations.
@@ -47,21 +47,21 @@ public:
 	 * @param priority The threads priority.
 	 * @return True if there wa no thread running and the new thread started successfully.
 	 */
-	virtual b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0) = 0;
+	virtual bool     b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0) = 0;
 
 	/**
 	 * This method returns true if the thread is in running state.
 	 *
 	 * @return True if the thread is currently running.
 	 */
-	virtual b3_bool  b3IsRunning() = 0;
+	virtual bool     b3IsRunning() = 0;
 
 	/**
 	 * This method stops the actually running thread.
 	 *
 	 * @return True if the thread was running.
 	 */
-	virtual b3_bool  b3Stop() = 0;
+	virtual bool     b3Stop() = 0;
 
 	/**
 	 * This method waits until the thread terminates.

@@ -54,21 +54,21 @@ public:
 	 *
 	 * @return True on activation.
 	 */
-	b3_bool b3IsActive() const;
+	bool b3IsActive() const;
 
 	/**
 	 * This method sets the activation state.
 	 *
 	 * @param activate The new activation state.
 	 */
-	void    b3Activate(b3_bool activate = true);
+	void    b3Activate(bool activate = true);
 
 	/**
 	 * This method sets the animation state.
 	 *
 	 * @param activate The new animation state.
 	 */
-	void    b3Animate(b3_bool activate = true);
+	void    b3Animate(bool activate = true);
 
 	/**
 	 * This method sets the animation state.

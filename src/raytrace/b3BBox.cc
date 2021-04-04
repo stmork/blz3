@@ -49,7 +49,7 @@ const b3_gl_line b3BBox::m_BBoxIndices[12 * 2]
 };
 
 b3Color  b3BBox::m_GridColor{ 0.4f, 0.4f, 0.4f, 0.0f };
-b3_bool  b3BBox::m_GridVisible = true;
+bool     b3BBox::m_GridVisible = true;
 
 b3_count b3BBox::m_Visible;
 b3_count b3BBox::m_PartiallyVisible;
@@ -119,7 +119,7 @@ void b3BBox::b3Write()
 	b3StoreString(m_BoxURL,  B3_BOXSTRINGLEN);
 }
 
-b3_bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, b3_bool recursive)
+bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, bool recursive)
 {
 	b3Matrix::b3Inverse(&m_Matrix, &m_Inverse);
 	m_ShapeCount = 0;
@@ -264,7 +264,7 @@ void b3BBox::b3ComputeVertices()
 	glVertexElements->b3SetCount(8);
 }
 
-void b3BBox::b3ComputeNormals(b3_bool normalize B3_UNUSED)
+void b3BBox::b3ComputeNormals(bool normalize B3_UNUSED)
 {
 	// compute no normals!
 }
@@ -297,10 +297,10 @@ void b3BBox::b3ResetTransformation()
 	}
 }
 
-b3_bool b3BBox::b3Inverse(b3_matrix * original)
+bool b3BBox::b3Inverse(b3_matrix * original)
 {
 	b3_matrix inverse;
-	b3_bool   success;
+	bool      success;
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "--- b3BBox::b3Inverse() ---\n");
@@ -329,11 +329,10 @@ b3_bool b3BBox::b3Inverse(b3_matrix * original)
 	return success;
 }
 
-b3_bool b3BBox::b3Reverse(b3_matrix * original)
+bool b3BBox::b3Reverse(b3_matrix * original)
 {
-	b3_bool   success;
+	bool success = b3Matrix::b3Inverse(original, &m_Inverse) != nullptr;
 
-	success = b3Matrix::b3Inverse(original, &m_Inverse) != nullptr;
 	if (success)
 	{
 		b3Transform(original, true, true);
@@ -355,12 +354,12 @@ b3_bool b3BBox::b3Reverse(b3_matrix * original)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3BBox::b3IsActive() const
+bool b3BBox::b3IsActive() const
 {
 	return (m_Type & BBF_ACTIVE) != 0;
 }
 
-void b3BBox::b3Expand(b3_bool expand)
+void b3BBox::b3Expand(bool expand)
 {
 	if (expand)
 	{
@@ -372,7 +371,7 @@ void b3BBox::b3Expand(b3_bool expand)
 	}
 }
 
-b3_bool b3BBox::b3IsExpanded() const
+bool b3BBox::b3IsExpanded() const
 {
 	return (m_Type & BBF_EXPANDED) != 0;
 }
@@ -406,7 +405,7 @@ void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> & array)
 	}
 }
 
-b3_bool b3BBox::b3FindBBox(b3Base<b3Item> * base, b3BBox * search)
+bool b3BBox::b3FindBBox(b3Base<b3Item> * base, b3BBox * search)
 {
 	B3_FOR_TYPED_BASE(b3BBox, base, bbox)
 	{

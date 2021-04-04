@@ -148,9 +148,9 @@ void b3SupersamplingRayRow::b3Raytrace()
 	b3_ray        ray;
 	b3_f64        fxRight = -1;
 	b3_vector64   dir;
-	b3_bool       do_convert = false;
-	b3_bool       do_refine  = false;
-	b3_bool       do_refine_succ = false;
+	bool          do_convert = false;
+	bool          do_refine  = false;
+	bool          do_refine_succ = false;
 
 	// Init eye position
 	m_RowState = B3_STATE_COMPUTING;
@@ -217,7 +217,7 @@ void b3SupersamplingRayRow::b3Raytrace()
 	}
 }
 
-inline b3_bool b3SupersamplingRayRow::b3Test(const b3_res x)
+inline bool b3SupersamplingRayRow::b3Test(const b3_res x)
 {
 	b3Color diff = m_LastResult[x] - m_ThisResult[x];
 
@@ -250,14 +250,14 @@ inline void b3SupersamplingRayRow::b3Convert()
 	}
 }
 
-inline void b3SupersamplingRayRow::b3Refine(const b3_bool this_row)
+inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 {
 	b3_ray        ray;
 	b3_res        x;
-	b3_bool       add;
+	bool          add;
 	b3_vector64   dir;
 	b3_f64        fxLeft, fxRight, fyUp, fyDown;
-	b3_bool       do_refine_succ = false;
+	bool          do_refine_succ = false;
 	b3_pkd_color  result = B3_BLACK;
 
 	B3_ASSERT(m_RowState != B3_STATE_READY);

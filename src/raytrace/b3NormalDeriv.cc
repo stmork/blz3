@@ -30,14 +30,14 @@
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Shape::b3NormalDeriv(b3_ray * ray) const
+bool b3Shape::b3NormalDeriv(b3_ray * ray) const
 {
 	b3Vector::b3CrossProduct(&ray->dir, &ray->normal, &ray->xDeriv);
 	b3Vector::b3CrossProduct(&ray->normal, &ray->xDeriv, &ray->yDeriv);
 	return true;
 }
 
-b3_bool b3Sphere::b3NormalDeriv(b3_ray * ray) const
+bool b3Sphere::b3NormalDeriv(b3_ray * ray) const
 {
 	if ((ray->normal.x == 0) && (ray->normal.y == 0))
 	{
@@ -54,7 +54,7 @@ b3_bool b3Sphere::b3NormalDeriv(b3_ray * ray) const
 	return true;
 }
 
-b3_bool b3ShapeBaseTransformation::b3NormalDeriv(b3_ray * ray) const
+bool b3ShapeBaseTransformation::b3NormalDeriv(b3_ray * ray) const
 {
 	b3_vector64 EquaNormal;
 
@@ -71,7 +71,7 @@ b3_bool b3ShapeBaseTransformation::b3NormalDeriv(b3_ray * ray) const
 	return true;
 }
 
-b3_bool b3Shape2::b3NormalDeriv(b3_ray * ray) const
+bool b3Shape2::b3NormalDeriv(b3_ray * ray) const
 {
 	b3Vector::b3Init(&ray->xDeriv, &m_Dir1);
 	b3Vector::b3Init(&ray->yDeriv, &m_Dir2);

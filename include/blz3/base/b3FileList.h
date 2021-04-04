@@ -113,7 +113,7 @@ public:
 	/**
 	 * This element adds a file list entry.
 	 */
-	b3_bool        b3Add(const char * file_name);
+	bool           b3Add(const char * file_name);
 
 	/**
 	 * This method sorts the file entries alphabetically.

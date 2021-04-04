@@ -78,7 +78,7 @@ void b3CSGShape::b3Operate(
 {
 	b3_csg_point   *   Point, *PointA, *PointB;
 	b3_count           aCount, bCount;
-	b3_bool            stat, aStat, bStat, cStat;
+	bool               stat, aStat, bStat, cStat;
 
 	// pointer to result interval
 	result->m_Count = 0;
@@ -234,12 +234,12 @@ void b3CSGShape3::b3StoreShape()
 	b3StoreVector(); // This is BTLine.dir
 }
 
-void b3CSGShape3::b3ComputeNormals(b3_bool normalize)
+void b3CSGShape3::b3ComputeNormals(bool normalize)
 {
 	b3ComputeQuadricNormals(normalize);
 }
 
-void b3CSGShape3::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3CSGShape3::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
 	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
@@ -256,9 +256,9 @@ void b3CSGShape3::b3SetupPicking(b3PickInfo * info)
 	info->b3AddPickDir(&m_Base, &m_Dir3, "3");
 }
 
-b3_bool b3CSGShape3::b3Prepare(b3_preparation_info * prep_info)
+bool b3CSGShape3::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_bool result = false;
+	bool result = false;
 
 	if (b3ShapeBaseTransformation::b3Prepare())
 	{

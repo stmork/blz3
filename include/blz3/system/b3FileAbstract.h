@@ -131,7 +131,7 @@ public:
 	 * @param mode     The access mode.
 	 * @return         True if the file could successfully opened.
 	 */
-	virtual b3_bool  b3Open(const char * filename, const b3_access_mode mode) = 0;
+	virtual bool     b3Open(const char * filename, const b3_access_mode mode) = 0;
 
 	/**
 	 * This method reads a specified amount of bytes into a specified buffer. It returns
@@ -160,7 +160,7 @@ public:
 	 *
 	 * @see b3Buffer.
 	 */
-	virtual b3_bool  b3Flush() = 0;
+	virtual bool     b3Flush() = 0;
 
 	/**
 	 * This method moves the byte position inside the file. The position can be moved
@@ -187,7 +187,7 @@ public:
 	 * @param new_cache_size The new cache size.
 	 * @return Success if the cache was resized.
 	 */
-	virtual b3_bool  b3Buffer(const b3_size new_cache_size) = 0;
+	virtual bool     b3Buffer(const b3_size new_cache_size) = 0;
 
 	/**
 	 * This method closes the file.

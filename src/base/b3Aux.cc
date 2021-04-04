@@ -65,9 +65,9 @@ b3_res b3Rect::b3Height() const
 	return m_y2 - m_y1;
 }
 
-b3_bool b3Rect::b3UpdateBound(b3Rect * rect)
+bool b3Rect::b3UpdateBound(b3Rect * rect)
 {
-	b3_bool changed = false;
+	bool changed = false;
 
 	if (rect->m_x1 < m_x1)
 	{
@@ -92,7 +92,7 @@ b3_bool b3Rect::b3UpdateBound(b3Rect * rect)
 	return changed;
 }
 
-b3_bool b3Rect::b3CheckBound(b3Rect * rect)
+bool b3Rect::b3CheckBound(b3Rect * rect)
 {
 	bool changed = false;
 

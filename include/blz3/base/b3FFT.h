@@ -79,7 +79,7 @@ public:
 	 * @param new_size The needed new size
 	 * @return True on success
 	 */
-	b3_bool b3AllocBuffer(const b3_res new_size);
+	bool    b3AllocBuffer(const b3_res new_size);
 
 	/**
 	 * This method copies the values from a given image into the internal FFT
@@ -87,7 +87,7 @@ public:
 	 *
 	 * @param tx The image with the values to initialize.
 	 */
-	b3_bool b3AllocBuffer(b3Tx * tx);
+	bool    b3AllocBuffer(b3Tx * tx);
 
 	/**
 	 * This method frees all used memory.
@@ -106,7 +106,7 @@ public:
 	/**
 	 * This method computes the forward FFT of the internal buffer.
 	 */
-	inline b3_bool b3FFT2D()
+	inline bool    b3FFT2D()
 	{
 		return b3FFT2D(1);
 	}
@@ -114,13 +114,13 @@ public:
 	/**
 	 * This method computes the inverse FFT of the internal buffer.
 	 */
-	inline b3_bool  b3IFFT2D()
+	inline bool     b3IFFT2D()
 	{
 		return b3FFT2D(-1);
 	}
 
-	b3_bool   b3GetBuffer(b3Tx * tx, b3_f64 amp) const;
-	b3_bool   b3GetSpectrum(b3Tx * tx, b3_f64 amp);
+	bool      b3GetBuffer(b3Tx * tx, b3_f64 amp) const;
+	bool      b3GetSpectrum(b3Tx * tx, b3_f64 amp);
 
 	inline b3Complex64 * b3GetBuffer() const
 	{
@@ -130,15 +130,15 @@ public:
 	/**
 	 * This method provides a self test which executes a forward FFT and an inverse FFT afterwards.
 	 */
-	b3_bool    b3SelfTest();
+	bool       b3SelfTest();
 
 private:
-	static  b3_u32  b3RowFFT(void * ptr);
-	static  b3_u32  b3ColumnFFT(void * ptr);
-	static  b3_bool b3FFT(const int dir, const b3_res m, b3Complex64 * line);
+	static  bool    b3RowFFT(void * ptr);
+	static  bool    b3ColumnFFT(void * ptr);
+	static  bool    b3FFT(const int dir, const b3_res m, b3Complex64 * line);
 
-	b3_bool b3FFT2D(const int dir);
-	b3_bool b3ReallocBuffer();
+	bool    b3FFT2D(const int dir);
+	bool    b3ReallocBuffer();
 };
 
 #endif

@@ -680,7 +680,7 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(const b3Color & limit) const
+	inline bool    b3IsGreater(const b3Color & limit) const
 	{
 		return
 			(fabs(v[R]) >= limit.v[R]) ||

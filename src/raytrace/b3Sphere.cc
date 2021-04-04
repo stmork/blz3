@@ -51,7 +51,7 @@ void b3Sphere::b3StoreShape()
 	b3StoreFloat(m_QuadRadius);
 }
 
-b3_bool b3Sphere::b3Prepare(b3_preparation_info * prep_info)
+bool b3Sphere::b3Prepare(b3_preparation_info * prep_info)
 {
 	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
 	return b3Shape::b3Prepare(prep_info);
@@ -91,12 +91,12 @@ void b3Sphere::b3ComputeIndices()
 	b3ComputeEllipsoidIndices();
 }
 
-void b3Sphere::b3ComputeNormals(b3_bool normalize)
+void b3Sphere::b3ComputeNormals(bool normalize)
 {
 	b3ComputeSphereNormals(m_Base, normalize);
 }
 
-void b3Sphere::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3Sphere::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
 	b3Matrix::b3VMul(transformation, &m_Dir, &m_Dir, false);

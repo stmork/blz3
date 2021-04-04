@@ -75,7 +75,7 @@ b3FileMem::~b3FileMem()
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3FileMem::b3Open(const b3_access_mode access_mode)
+bool b3FileMem::b3Open(const b3_access_mode access_mode)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -105,7 +105,7 @@ b3_bool b3FileMem::b3Open(const b3_access_mode access_mode)
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3FileMem::b3Open(const char * file_name, const b3_access_mode access_mode)
+bool b3FileMem::b3Open(const char * file_name, const b3_access_mode access_mode)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -175,7 +175,7 @@ b3_size b3FileMem::b3Write(
 	return written_size;
 }
 
-b3_bool b3FileMem::b3Flush()
+bool b3FileMem::b3Flush()
 {
 	return m_Buffer != nullptr;
 }
@@ -224,7 +224,7 @@ b3_size b3FileMem::b3Size()
 	return m_BufferSize;
 }
 
-b3_bool b3FileMem::b3Buffer(b3_size Size)
+bool b3FileMem::b3Buffer(b3_size Size)
 {
 	m_BufferInc = Size;
 	return true;
@@ -242,7 +242,7 @@ void b3FileMem::b3Close()
 	m_BufferMax  = 0;
 }
 
-b3_bool b3FileMem::b3ReadBuffer(const char * filename)
+bool b3FileMem::b3ReadBuffer(const char * filename)
 {
 	b3File   file;
 	b3_u08 * file_buffer = nullptr;
@@ -262,7 +262,7 @@ b3_bool b3FileMem::b3ReadBuffer(const char * filename)
 	return false;
 }
 
-b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
+bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 {
 	b3_u08 * new_buffer;
 

@@ -297,7 +297,7 @@ public:
 	/**
 	 * This method normalizes this complex number.
 	 */
-	inline b3_bool b3Normalize(const T len = 1)
+	inline bool    b3Normalize(const T len = 1)
 	{
 		T old_len = b3Length();
 

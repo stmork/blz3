@@ -44,7 +44,7 @@ b3_vector b3Matrix::m_EmptyVector =
 	0, 0, 0
 };
 
-b3_bool b3Matrix::b3NormalizeCol(
+bool b3Matrix::b3NormalizeCol(
 	b3_matrix * Matrix,
 	b3_count    col)
 {
@@ -79,7 +79,7 @@ b3_bool b3Matrix::b3NormalizeCol(
 	}
 }
 
-b3_bool b3Matrix::b3NormalizeRow(
+bool b3Matrix::b3NormalizeRow(
 	b3_matrix * Matrix,
 	b3_count    row)
 {
@@ -694,7 +694,7 @@ b3_matrix * b3Matrix::b3Dress(
 	const b3_vector * center,
 	const b3_vector * lookTo,
 	const b3_vector * oldLook,
-	const b3_bool     future)
+	const bool        future)
 {
 	b3_matrix orientation;
 	b3_vector axis;

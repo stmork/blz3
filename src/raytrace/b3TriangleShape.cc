@@ -68,7 +68,7 @@ void b3TriangleShape::b3Clear()
 	m_Flags        = 0;
 }
 
-b3_bool b3TriangleShape::b3Init(
+bool b3TriangleShape::b3Init(
 	b3_count vertex_count,
 	b3_count tria_count,
 	b3_res   xSize,
@@ -93,7 +93,7 @@ b3_bool b3TriangleShape::b3Init(
 	return (m_Vertices != nullptr) && (m_Triangles != nullptr);
 }
 
-void b3TriangleShape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3TriangleShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3_index   i;
 	b3_vertex * ptr = m_Vertices;
@@ -259,7 +259,7 @@ void b3TriangleShape::b3FreeTriaRefs()
 	}
 }
 
-b3_bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
+bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_vector   Start, End, disp, diff;
 	b3_index    P1, P2, P3, i, max;

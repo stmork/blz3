@@ -270,14 +270,14 @@ b3_f64 b3Shape::b3GetColors(
 	return b3RenderObject::b3GetColors(ambient, diffuse, specular);
 }
 
-b3_bool b3Shape::b3GetChess(
+bool b3Shape::b3GetChess(
 	b3Color & black,
 	b3Color & white,
 	b3_res  & xRepeat,
 	b3_res  & yRepeat) const
 {
 	b3Item * item;
-	b3_bool  result = false;
+	bool     result = false;
 
 	item   = b3GetMaterialHead()->First;
 	if (item != nullptr)
@@ -382,7 +382,7 @@ private:
 		b3_coord          x, y;
 		b3_f64            fx, fxStep;
 		b3_f64            fy, fyStep;
-		b3_bool           loop;
+		bool              loop;
 
 		m_Shape->b3ComputeBound(&limit);
 		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / info->m_xMax;
@@ -439,10 +439,10 @@ private:
 	}
 };
 
-b3_bool b3Shape::b3GetImage(b3Tx * image) const
+bool b3Shape::b3GetImage(b3Tx * image) const
 {
 	b3Item    *   item;
-	b3_bool       result = false;
+	bool          result = false;
 	b3_u32        type;
 
 	for (item  = b3GetMaterialHead()->First;
@@ -529,7 +529,7 @@ b3_index b3Shape::b3FindVertex(b3_index index)
 	return index;
 }
 
-void b3Shape::b3ComputeQuadricNormals(b3_bool normalize)
+void b3Shape::b3ComputeQuadricNormals(bool normalize)
 {
 #ifdef USE_FIND_VERTEX
 	b3_vector normal;
@@ -646,7 +646,7 @@ void b3Shape::b3ComputeSphereVertices(
 	}
 }
 
-void b3Shape::b3ComputeSphereNormals(b3_vector & base, b3_bool normalize)
+void b3Shape::b3ComputeSphereNormals(b3_vector & base, bool normalize)
 {
 	b3_gl_vertex * glVertex = *glVertexElements;
 	b3_index i;
@@ -1492,7 +1492,7 @@ void b3Shape::b3GetTorusIndexCount(b3_count & gridCount, b3_count & polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index ys, ye;
-	b3_bool  EndCol = false;
+	bool     EndCol = false;
 	b3_f64   y1, y2;
 
 	b3ComputeBound(&m_Limit);

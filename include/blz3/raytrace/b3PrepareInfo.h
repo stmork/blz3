@@ -62,7 +62,7 @@ enum b3_error_prepare
 	B3_PREPARE_NO_THREAD   //!< No thread available.
 };
 
-typedef b3_bool(*b3PrepareProc)(b3BBox * bbox, void * ptr);
+typedef bool(*b3PrepareProc)(b3BBox * bbox, void * ptr);
 typedef b3Exception<b3_error_prepare, 0x505250> b3PrepareException;
 
 #define B3_MIN_BBOXES_FOR_THREADING 50
@@ -118,12 +118,12 @@ public:
 	 * @throws b3PrepareException
 	 * @return True on success.
 	 */
-	b3_bool           b3Prepare(b3PrepareProc prepareFunc, void * ptr = nullptr, b3_bool threaded = true);
+	bool              b3Prepare(b3PrepareProc prepareFunc, void * ptr = nullptr, bool threaded = true);
 
 private:
 	b3BBoxReference * b3GetBBoxReference();
 	void              b3RebuildListFromArray();
-	static b3_u32     b3PrepareThread(void * ptr);
+	static bool       b3PrepareThread(void * ptr);
 };
 
 #endif

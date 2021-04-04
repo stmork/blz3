@@ -246,7 +246,7 @@ void b3Triangles::b3ComputeVertices()
 	}
 }
 
-void b3Triangles::b3ComputeNormals(b3_bool normalize)
+void b3Triangles::b3ComputeNormals(bool normalize)
 {
 	b3RenderObject::b3ComputeNormals(normalize);
 }

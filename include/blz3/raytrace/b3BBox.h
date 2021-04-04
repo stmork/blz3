@@ -72,7 +72,7 @@ public:
 	b3_gl_vertex     m_BBoxVertex[8];             //!< Bounding box vertex list (custom list in b3RenderObject).
 
 	static b3Color   m_GridColor;                 //!< Grid color of bounding boxes.
-	static b3_bool   m_GridVisible;               //!< Flag if bounding box grid should be shown.
+	static bool      m_GridVisible;               //!< Flag if bounding box grid should be shown.
 
 	static b3_count  m_Visible;                   //!< Statistic cound of completely camera visible bounding boxes.
 	static b3_count  m_PartiallyVisible;          //!< Statistic cound of partially camera visible bounding boxes.
@@ -92,36 +92,36 @@ public:
 	void             b3SetupVertexMemory(b3RenderContext * context) override;
 	void             b3FreeVertexMemory() override;
 	void             b3Draw(b3RenderContext * context) override;
-	b3_bool          b3Transform(b3_matrix * transformation, b3_bool is_affine, b3_bool force_action = false);
-	b3_bool          b3Inverse(b3_matrix *);
-	b3_bool          b3Reverse(b3_matrix *);
+	bool             b3Transform(b3_matrix * transformation, bool is_affine, bool force_action = false);
+	bool             b3Inverse(b3_matrix *);
+	bool             b3Reverse(b3_matrix *);
 	void             b3ResetTransformation();
-	void             b3Activate(b3_bool activate = true, b3_bool recurse = true);
-	void             b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE, b3_bool recurse = true);
-	b3_bool          b3IsActive() const;
-	void             b3Expand(b3_bool expand = true);
-	b3_bool          b3IsExpanded() const;
+	void             b3Activate(bool activate = true, bool recurse = true);
+	void             b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE, bool recurse = true);
+	bool             b3IsActive() const;
+	void             b3Expand(bool expand = true);
+	bool             b3IsExpanded() const;
 	void             b3Update();
 	void             b3UpdateMaterial();
 	void             b3UpdateBBox();
-	b3_bool          b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
+	bool             b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
 	b3_count         b3Count() const;
-	b3_bool          b3PrepareBBox(b3_scene_preparation * prep_info, b3_bool recursive = false);
+	bool b3PrepareBBox(b3_scene_preparation * prep_info, bool recursive = false);
 	const char   *   b3GetName() const override;
-	b3_bool          b3BacktraceRecompute(b3BBox * search);
+	bool             b3BacktraceRecompute(b3BBox * search);
 	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox);
 	b3BBox     *     b3FindParentBBox(b3Shape * shape);
-	b3_bool          b3Intersect(b3_ray * ray, b3_bool check_visibility);
+	bool             b3Intersect(b3_ray * ray, bool check_visibility);
 	b3CSGShape   *   b3IntersectCSG(b3_ray * ray);
 	void             b3CollectBBoxes(b3Array<b3BBoxReference> & array);
 	void             b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array);
 	void             b3CollectBBoxes(b3_vector * lower, b3_vector * upper, b3Array<b3BBox *> * array);
 	void             b3ComputeVisibility(b3CameraProjection * projection);
 
-	void             b3CollectActiveBBoxes(b3Array<b3BBox *> * array, b3_bool activation);
+	void             b3CollectActiveBBoxes(b3Array<b3BBox *> * array, bool activation);
 	static void      b3Reorg(b3Base<b3Item> * depot, b3Base<b3Item> * base, b3_count level, b3_count rec, b3Item * insert_after = nullptr);
 	static void      b3Recount(b3Base<b3Item> * base, b3_count level = 1);
-	static b3_bool   b3FindBBox(b3Base<b3Item> * base, b3BBox * search);
+	static bool      b3FindBBox(b3Base<b3Item> * base, b3BBox * search);
 	static b3BBox  * b3ReadCOB(const char * filename);
 	static b3BBox  * b3ReadTGF(const char * filename);
 
@@ -183,7 +183,7 @@ protected:
 		b3_count     &    polyCount) override;
 	void    b3AllocVertexMemory(b3RenderContext * context) override;
 	void    b3ComputeVertices() override;
-	void    b3ComputeNormals(b3_bool normalize = true) override;
+	void    b3ComputeNormals(bool normalize = true) override;
 };
 
 #define BBB_HTML         0

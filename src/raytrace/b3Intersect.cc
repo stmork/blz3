@@ -1075,7 +1075,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3CSGShape::b3Intersect(
+bool b3CSGShape::b3Intersect(
 	b3_ray       *       ray      B3_UNUSED,
 	b3_shape_intervals * interval B3_UNUSED,
 	b3_line64      *     BTLine   B3_UNUSED)
@@ -1083,7 +1083,7 @@ b3_bool b3CSGShape::b3Intersect(
 	return false;
 }
 
-b3_bool b3CSGSphere::b3Intersect(
+bool b3CSGSphere::b3Intersect(
 	b3_ray       *       ray,
 	b3_shape_intervals * interval,
 	b3_line64      *     BTLine B3_UNUSED)
@@ -1114,7 +1114,7 @@ b3_bool b3CSGSphere::b3Intersect(
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGCylinder::b3Intersect(
+bool b3CSGCylinder::b3Intersect(
 	b3_ray       *      ray,
 	b3_shape_intervals * interval,
 	b3_line64     *     BTLine)
@@ -1213,7 +1213,7 @@ b3_bool b3CSGCylinder::b3Intersect(
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGCone::b3Intersect(
+bool b3CSGCone::b3Intersect(
 	b3_ray       *      ray,
 	b3_shape_intervals * interval,
 	b3_line64     *     BTLine)
@@ -1288,7 +1288,7 @@ b3_bool b3CSGCone::b3Intersect(
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGEllipsoid::b3Intersect(
+bool b3CSGEllipsoid::b3Intersect(
 	b3_ray       *      ray,
 	b3_shape_intervals * interval,
 	b3_line64     *     BTLine)
@@ -1315,7 +1315,7 @@ b3_bool b3CSGEllipsoid::b3Intersect(
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGBox::b3Intersect(
+bool b3CSGBox::b3Intersect(
 	b3_ray       *      ray,
 	b3_shape_intervals * interval,
 	b3_line64     *     BTLine)
@@ -1445,7 +1445,7 @@ b3_bool b3CSGBox::b3Intersect(
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGTorus::b3Intersect(
+bool b3CSGTorus::b3Intersect(
 	b3_ray       *      ray,
 	b3_shape_intervals * interval,
 	b3_line64     *     BTLine)
@@ -1507,7 +1507,7 @@ b3_bool b3CSGTorus::b3Intersect(
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3BBox::b3Intersect(b3_ray * ray, b3_bool check_visibility)
+bool b3BBox::b3Intersect(b3_ray * ray, bool check_visibility)
 {
 	b3_f64 start, end, t_near, t_far, m, pos;
 
@@ -1619,7 +1619,7 @@ b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 b3Shape * b3Scene::b3Intersect(
 	b3BBox * BBox,
 	b3_ray * ray,
-	b3_bool  check_visibility)
+	bool     check_visibility)
 {
 	b3Shape     *    ResultShape = nullptr, *aux;
 	b3_polar         polar;

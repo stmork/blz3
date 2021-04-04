@@ -125,7 +125,7 @@ class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 {
 	b3_u32     *    m_Buffer = nullptr;
 	b3_u32          m_BufferSize = 0;
-	b3_bool         m_NeedEndianChange;
+	bool            m_NeedEndianChange;
 	b3FirstItem  *  m_Start = nullptr;
 	b3_count        m_Missed = 0;
 
@@ -135,7 +135,7 @@ public:
 	 * wanted if the hierarchy should survive the life time of this instance.
 	 * So you can disable auto deletion.
 	 */
-	b3_bool         m_AutoDelete = true;
+	bool            m_AutoDelete = true;
 
 public:
 	/**
@@ -172,7 +172,7 @@ public:
 	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item * b3AllocNode(b3_u32  classtype, const b3_bool throw_exception = false);
+	static b3Item * b3AllocNode(b3_u32  classtype, const bool throw_exception = false);
 
 	/**
 	 * This method allocates a b3Item instance from the item registry. If the
@@ -186,7 +186,7 @@ public:
 	 *                        not registered.
 	 * @return The initialized b3Item instance.
 	 */
-	static b3Item * b3AllocNode(b3_u32 * buffer, const b3_bool throw_exception = false);
+	static b3Item * b3AllocNode(b3_u32 * buffer, const bool throw_exception = false);
 
 	/**
 	 * This method deserialize the content of the named file.
@@ -197,7 +197,7 @@ public:
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Read(const char * worldname, const b3_bool throw_exception = true);
+	bool            b3Read(const char * worldname, const bool throw_exception = true);
 
 	/**
 	 * This method serialize the content of the named file.
@@ -208,7 +208,7 @@ public:
 	 * @return True on success.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3Write(const char * worldname, const b3_bool throw_exception = true);
+	bool            b3Write(const char * worldname, const bool throw_exception = true);
 
 	/**
 	 * This method deserialize the content from the given file handle.
@@ -218,7 +218,7 @@ public:
 	 *                        not registered.
 	 * @return True on success.
 	 */
-	b3_world_error  b3Read(b3FileAbstract * filehandle, const b3_bool throw_exception = true);
+	b3_world_error  b3Read(b3FileAbstract * filehandle, const bool throw_exception = true);
 
 	/**
 	 * This method serialize the content into the given file handle.
@@ -228,7 +228,7 @@ public:
 	 *                        not registered.
 	 * @return The error code.
 	 */
-	b3_world_error  b3Write(b3FileAbstract * filehandle, const b3_bool throw_exception = true);
+	b3_world_error  b3Write(b3FileAbstract * filehandle, const bool throw_exception = true);
 
 	/**
 	 * this method dumps the content of the given file name to show the b3Item
@@ -238,7 +238,7 @@ public:
 	 * @return True if the content is correct.
 	 * @throws b3WorldException
 	 */
-	b3_bool         b3ReadDump(const char * worldname);
+	bool            b3ReadDump(const char * worldname);
 
 	/**
 	 * This method dumps the b3Item hierarchy for debugging purposes.
@@ -292,8 +292,7 @@ public:
 	 * @return The cloned b3Item.
 	 * @throws b3WorldException
 	 */
-	static b3Item * b3Clone(
-		b3Item * original, const b3_bool throw_exception = true);
+	static b3Item * b3Clone(b3Item * original, const bool throw_exception = true);
 
 	/**
 	 * This method clones a complete b3Base list. The items must be stored
@@ -307,11 +306,11 @@ public:
 	 */
 	static void     b3CloneBase(
 		b3Base<b3Item> * srcBase,
-		b3Base<b3Item> * dstBase, const b3_bool throw_exception = true);
+		b3Base<b3Item> * dstBase, const bool throw_exception = true);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
-	b3_world_error  b3Parse(const b3_bool throw_exception);
+	b3_world_error  b3Parse(const bool throw_exception);
 };
 
 /*************************************************************************
@@ -400,7 +399,7 @@ public:
 		b3_item_init_func initfunc,
 		b3_item_load_func loadfunc,
 		b3_u32            classtype,
-		b3_bool           isclass = false);
+		bool              isclass = false);
 
 	/**
 	 * This method serializes the content of this instance. The header is written
@@ -424,7 +423,7 @@ public:
 	 *
 	 * @return True on success.
 	 */
-	virtual b3_bool         b3Prepare(b3_preparation_info * info);
+	virtual bool            b3Prepare(b3_preparation_info * info);
 
 	/**
 	 * This method dumps the content of this instance. This method can be overloaded to
@@ -448,7 +447,7 @@ public:
 	 * @param headcount The number of heads needed.
 	 * @return True on success.
 	 */
-	b3_bool b3AllocHeads(b3_count headcount);
+	bool    b3AllocHeads(b3_count headcount);
 
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
@@ -487,7 +486,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type is in the given class.
 	 */
-	static b3_bool  b3IsClass(const b3_u32 classtype, const b3_u32 classid);
+	static bool     b3IsClass(const b3_u32 classtype, const b3_u32 classid);
 
 	/**
 	 * This method returns true if the class type of this instance is in the same class
@@ -496,7 +495,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type of this instance  is in the given class.
 	 */
-	b3_bool b3IsClass(const b3_u32 classid) const;
+	bool    b3IsClass(const b3_u32 classid) const;
 
 protected:
 	////////////////////////////////////////////// Parsing routines
@@ -782,7 +781,7 @@ protected:
 	static void     b3DumpSpace(const b3_count level, const b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	void            b3EnsureStoreBuffer(b3_u32 needed, b3_bool is_data = true);
+	void            b3EnsureStoreBuffer(b3_u32 needed, bool    is_data = true);
 	b3_world_error  b3ParseLinkuage(b3Item ** array, b3_u32 node_count, b3_u32 class_limit, b3_count level = 0);
 
 	friend class b3World;

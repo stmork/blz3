@@ -117,12 +117,12 @@ void b3SuperSample::b3Write()
 	b3StoreColor(&limit);
 }
 
-b3_bool b3SuperSample::b3IsActive() const
+bool b3SuperSample::b3IsActive() const
 {
 	return m_Active;
 }
 
-void b3SuperSample::b3Activate(b3_bool flag)
+void b3SuperSample::b3Activate(bool flag)
 {
 	m_Active = flag;
 }
@@ -165,12 +165,12 @@ void b3CameraPart::b3Write()
 	b3StoreString(m_CameraName, B3_CAMERANAMELEN);
 }
 
-b3_bool b3CameraPart::b3IsActive() const
+bool b3CameraPart::b3IsActive() const
 {
 	return (m_Flags & CAMERA_ACTIVE) != 0;
 }
 
-void b3CameraPart::b3Activate(b3_bool activate)
+void b3CameraPart::b3Activate(bool activate)
 {
 	if (activate)
 	{
@@ -275,7 +275,7 @@ void b3CameraPart::b3SetName(const char * name)
 	b3Mem::b3SetString(m_CameraName, sizeof(m_CameraName), name);
 }
 
-b3_bool b3CameraPart::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
+bool b3CameraPart::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrintF(B3LOG_DEBUG, "Camera %s, %sactive\n", b3GetName(), b3IsActive() ? "" : "not ");
 	b3PrintF(B3LOG_DEBUG, " W: %3.5f\n", b3Vector::b3Length(&m_Width));
@@ -509,7 +509,7 @@ void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 & angle) const
 	b3Snap(angle, m_AngleGridObjects);
 }
 
-void b3ModellerInfo::b3Snap(b3_f64 & angle, b3_bool activation) const
+void b3ModellerInfo::b3Snap(b3_f64 & angle, bool activation) const
 {
 	if (activation)
 	{
@@ -530,7 +530,7 @@ const char * b3ModellerInfo::b3GetUnitDescr() const
 	return m_UnitDescrTable[m_Unit];
 }
 
-b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value) const
+b3_u32 b3ModellerInfo::b3GetMeasure(bool force_custom_value) const
 {
 	return ((m_Measure == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
 		m_CustomMeasure : m_MeasureTable[m_Measure];
@@ -573,7 +573,7 @@ void b3Nebular::b3Write()
 	b3StoreFloat(m_NebularVal);
 }
 
-b3_bool b3Nebular::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
+bool b3Nebular::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	if (m_NebularVal > 0)
 	{
@@ -582,12 +582,12 @@ b3_bool b3Nebular::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 	return true;
 }
 
-b3_bool b3Nebular::b3IsActive() const
+bool b3Nebular::b3IsActive() const
 {
 	return m_NebularVal > 0;
 }
 
-void b3Nebular::b3Activate(b3_bool flag)
+void b3Nebular::b3Activate(bool flag)
 {
 	m_NebularVal = (flag ? fabs(m_NebularVal) : -fabs(m_NebularVal));
 }
@@ -635,12 +635,12 @@ void b3LensFlare::b3Write()
 	b3StoreFloat(m_Expon);
 }
 
-b3_bool b3LensFlare::b3IsActive()
+bool b3LensFlare::b3IsActive()
 {
 	return (m_Flags & LENSFLARE_ACTIVE) != 0;
 }
 
-void b3LensFlare::b3Activate(b3_bool flag)
+void b3LensFlare::b3Activate(bool flag)
 {
 	if (flag)
 	{
@@ -717,12 +717,12 @@ void b3Distribute::b3Write()
 	b3StoreInt(m_FrameAperture);
 }
 
-b3_bool b3Distribute::b3IsActive()
+bool b3Distribute::b3IsActive()
 {
 	return (m_Type & SAMPLE_SUPERSAMPLE) != 0;
 }
 
-b3_bool b3Distribute::b3IsMotionBlur()
+bool b3Distribute::b3IsMotionBlur()
 {
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
@@ -908,12 +908,12 @@ void b3Animation::b3Write()
 	b3StorePtr(m_Element);
 }
 
-b3_bool b3Animation::b3IsActive() const
+bool b3Animation::b3IsActive() const
 {
 	return (m_Flags & ANIMF_ON) != 0;
 }
 
-void b3Animation::b3Activate(b3_bool activate)
+void b3Animation::b3Activate(bool activate)
 {
 	if (activate)
 	{
@@ -985,7 +985,7 @@ void b3CloudBackground::b3Write()
 	b3StoreFloat(m_Sharpness);
 }
 
-b3_bool b3CloudBackground::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
+bool b3CloudBackground::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	b3PrepareClouds();
 	return true;

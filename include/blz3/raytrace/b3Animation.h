@@ -125,7 +125,7 @@ public:
 	b3_f64              m_End;                     //!< End of action
 	b3_u32              m_Flags;                   //!< ANIMF_xxx flags
 	b3_index            m_TrackIndex;              //!< Start track number
-	b3_bool             m_CurveUse;                //!< Number of curves used
+	bool                m_CurveUse;                //!< Number of curves used
 	b3Nurbs             m_Param;                   //!< Param. curves
 	b3_f32              m_Knots[B3_MAX_KNOTS];     //!< Knot vector
 	char                m_Name[B3_ANIMSTRINGLEN];  //!< Element name
@@ -172,7 +172,7 @@ public:
 	 *
 	 * @param scene The scene to animate.
 	 */
-	b3_bool         b3SelectAnimElement(b3Scene * scene);
+	bool            b3SelectAnimElement(b3Scene * scene);
 
 	/**
 	 * This method activates the objects for animation.

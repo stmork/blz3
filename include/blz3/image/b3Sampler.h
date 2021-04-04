@@ -77,7 +77,7 @@ protected:
 	virtual void           b3SampleTask(const b3SampleInfo * info) = 0;
 
 private:
-	static b3_u32 b3SampleThread(void * ptr);
+	static bool b3SampleThread(void * ptr);
 };
 
 class b3Tx;

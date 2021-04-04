@@ -86,7 +86,7 @@ public:
 	 */
 	static         void    b3Register();
 
-	virtual        b3_bool b3Prepare(b3_preparation_info * info B3_UNUSED) override
+	virtual        bool    b3Prepare(b3_preparation_info * info B3_UNUSED) override
 	{
 		return true;
 	}
@@ -106,7 +106,7 @@ public:
 	 *
 	 * @return True if the derivatives should be computed manually.
 	 */
-	virtual b3_bool b3NeedDeriv() const
+	virtual bool    b3NeedDeriv() const
 	{
 		return false;
 	}
@@ -151,7 +151,7 @@ public:
 	B3_ITEM_LOAD(b3BumpMarble); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info * info) override;
+	bool    b3Prepare(b3_preparation_info * info) override;
 	void    b3BumpNormal(b3_ray * ray) const override;
 };
 
@@ -180,9 +180,9 @@ public:
 	B3_ITEM_LOAD(b3BumpTexture); //!< This constructor handles deserialization.
 
 	void           b3Write() override;
-	b3_bool        b3Prepare(b3_preparation_info * info) override;
+	bool           b3Prepare(b3_preparation_info * info) override;
 	void           b3BumpNormal(b3_ray * ray) const override;
-	inline b3_bool b3NeedDeriv() const override
+	inline bool    b3NeedDeriv() const override
 	{
 		return true;
 	}
@@ -195,7 +195,7 @@ public:
 	void    b3SetTexture(const char * name);
 
 private:
-	b3_bool b3GetNormalDeriv(b3_f64 lx, b3_f64 ly, b3_vector * deriv) const;
+	bool    b3GetNormalDeriv(b3_f64 lx, b3_f64 ly, b3_vector * deriv) const;
 };
 
 /*************************************************************************
@@ -217,7 +217,7 @@ public:
 	B3_ITEM_LOAD(b3BumpWater); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info * info) override;
+	bool    b3Prepare(b3_preparation_info * info) override;
 	void    b3BumpNormal(b3_ray * ray) const override;
 };
 
@@ -237,7 +237,7 @@ public:
 	B3_ITEM_LOAD(b3BumpWave); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info * info) override;
+	bool    b3Prepare(b3_preparation_info * info) override;
 	void    b3BumpNormal(b3_ray * ray) const override;
 };
 
@@ -257,7 +257,7 @@ public:
 	B3_ITEM_LOAD(b3BumpGroove); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info * info) override;
+	bool    b3Prepare(b3_preparation_info * info) override;
 	void    b3BumpNormal(b3_ray * ray) const override;
 };
 
@@ -330,12 +330,12 @@ public:
 	B3_ITEM_INIT(b3BumpWood); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpWood); //!< This constructor handles deserialization.
 
-	inline b3_bool b3NeedDeriv() const override
+	inline bool    b3NeedDeriv() const override
 	{
 		return true;
 	}
 
-	b3_bool b3Prepare(b3_preparation_info * info) override;
+	bool    b3Prepare(b3_preparation_info * info) override;
 	void    b3Write() override;
 	void    b3BumpNormal(b3_ray * ray) const override;
 };
@@ -361,12 +361,12 @@ public:
 	B3_ITEM_INIT(b3BumpOakPlank); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3BumpOakPlank); //!< This constructor handles deserialization.
 
-	inline b3_bool b3NeedDeriv() const override
+	inline bool    b3NeedDeriv() const override
 	{
 		return true;
 	}
 
-	b3_bool b3Prepare(b3_preparation_info * info) override;
+	bool    b3Prepare(b3_preparation_info * info) override;
 	void    b3Write() override;
 	void    b3BumpNormal(b3_ray * ray) const override;
 };
@@ -388,12 +388,12 @@ public:
 	B3_ITEM_INIT(b3BumpOcean);
 	B3_ITEM_LOAD(b3BumpOcean);
 	void         b3Write() override;
-	b3_bool      b3Prepare(b3_preparation_info * info) override;
+	bool         b3Prepare(b3_preparation_info * info) override;
 	const char * b3GetName() const override;
 
 public:
 	virtual void    b3BumpNormal(b3_ray * ray) const override;
-	virtual b3_bool b3NeedDeriv() const override;
+	virtual bool    b3NeedDeriv() const override;
 };
 
 

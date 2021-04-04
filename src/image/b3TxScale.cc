@@ -397,7 +397,7 @@ void b3Tx::b3ComputeLineSmaller(
 	}
 }
 
-unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
+bool b3Tx::b3ScaleBW2Grey(void * ptr)
 {
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
@@ -808,7 +808,7 @@ void b3Tx::b3RGB8ComputeLineSmaller(
 	}
 }
 
-unsigned int b3Tx::b3RGB8ScaleToRGB8(void * ptr)
+bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 {
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
@@ -1233,7 +1233,7 @@ void b3Tx::b3FloatComputeLineSmaller(
 	}
 }
 
-unsigned int b3Tx::b3FloatScaleToRGB8(void * ptr)
+bool b3Tx::b3FloatScaleToRGB8(void * ptr)
 {
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
@@ -1835,7 +1835,7 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 **                                                                      **
 *************************************************************************/
 
-unsigned int b3Tx::b3ScaleBW2BW(void * ptr)
+bool b3Tx::b3ScaleBW2BW(void * ptr)
 {
 	const b3_count   *   rIndex;
 	const b3_count   *   cIndex;

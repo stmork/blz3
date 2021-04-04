@@ -155,7 +155,7 @@ void b3BumpMarble::b3Write()
 	b3StoreInt(m_ScaleFlags);
 }
 
-b3_bool b3BumpMarble::b3Prepare(b3_preparation_info * info B3_UNUSED)
+bool b3BumpMarble::b3Prepare(b3_preparation_info * info B3_UNUSED)
 {
 	b3PrepareScaling();
 	return true;
@@ -226,14 +226,14 @@ void b3BumpTexture::b3Write()
 	b3StoreString(m_Name, B3_TEXSTRINGLEN);
 }
 
-b3_bool b3BumpTexture::b3Prepare(b3_preparation_info * info B3_UNUSED)
+bool b3BumpTexture::b3Prepare(b3_preparation_info * info B3_UNUSED)
 {
 	return b3Scene::b3CheckTexture(&m_Texture, m_Name);
 }
 
-inline b3_bool b3BumpTexture::b3GetNormalDeriv(
-	b3_f64     lx,
-	b3_f64     ly,
+inline bool b3BumpTexture::b3GetNormalDeriv(
+	b3_f64      lx,
+	b3_f64      ly,
 	b3_vector * Deriv) const
 {
 	b3_f32    p1, p2, p3;
@@ -343,7 +343,7 @@ void b3BumpWater::b3Write()
 	b3StoreVector(&m_Anim);
 }
 
-b3_bool b3BumpWater::b3Prepare(b3_preparation_info * prep_info)
+bool b3BumpWater::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_scene_preparation * info = (b3_scene_preparation *)prep_info;
 	b3_f64                 t    = (m_ScaleTime < 0.0001 ? 0 : info->m_t / m_ScaleTime);
@@ -413,7 +413,7 @@ void b3BumpWave::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-b3_bool b3BumpWave::b3Prepare(b3_preparation_info * info B3_UNUSED)
+bool b3BumpWave::b3Prepare(b3_preparation_info * info B3_UNUSED)
 {
 	b3PrepareScaling();
 	return true;
@@ -479,7 +479,7 @@ void b3BumpGroove::b3Write()
 	b3StoreFloat(m_Amplitude);
 }
 
-b3_bool b3BumpGroove::b3Prepare(b3_preparation_info * info B3_UNUSED)
+bool b3BumpGroove::b3Prepare(b3_preparation_info * info B3_UNUSED)
 {
 	b3PrepareScaling();
 	return true;
@@ -645,7 +645,7 @@ void b3BumpWood::b3Write()
 	b3StoreFloat(m_Ringy);
 }
 
-b3_bool b3BumpWood::b3Prepare(b3_preparation_info * info B3_UNUSED)
+bool b3BumpWood::b3Prepare(b3_preparation_info * info B3_UNUSED)
 {
 	b3PrepareWood(&m_Scale);
 	b3PrepareScaling();
@@ -769,7 +769,7 @@ void b3BumpOakPlank::b3Write()
 	b3StoreFloat(m_Wobble);
 }
 
-b3_bool b3BumpOakPlank::b3Prepare(b3_preparation_info * info B3_UNUSED)
+bool b3BumpOakPlank::b3Prepare(b3_preparation_info * info B3_UNUSED)
 {
 	b3_index x, y;
 	b3_f64   fx, fy, wobble;
@@ -879,7 +879,7 @@ void b3BumpOcean::b3Write()
 	b3StoreFloat(m_Wy);
 }
 
-b3_bool b3BumpOcean::b3Prepare(b3_preparation_info * prep_info)
+bool b3BumpOcean::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_scene_preparation * scene_info = (b3_scene_preparation *)prep_info;
 
@@ -915,7 +915,7 @@ void b3BumpOcean::b3BumpNormal(b3_ray * ray) const
 	ray->normal.z = ray->normal.z * Denom + n.z;
 }
 
-b3_bool b3BumpOcean::b3NeedDeriv() const
+bool b3BumpOcean::b3NeedDeriv() const
 {
 	return false;
 }

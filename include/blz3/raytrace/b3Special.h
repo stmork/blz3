@@ -80,7 +80,7 @@ public:
  */
 class B3_PLUGIN b3SuperSample : public b3Special
 {
-	b3_bool     m_Active;
+	bool        m_Active;
 
 public:
 	b3Color     m_Limit; //!< The color distance as limit.
@@ -96,14 +96,14 @@ public:
 	 *
 	 * @return The activation state.
 	 */
-	b3_bool b3IsActive() const;
+	bool    b3IsActive() const;
 
 	/**
 	 * This method sets the new activation state of super sampling.
 	 *
 	 * @param activate The new activation state.
 	 */
-	void    b3Activate(b3_bool activate = true);
+	void    b3Activate(bool activate = true);
 };
 
 /**
@@ -124,7 +124,7 @@ public:
 	B3_ITEM_LOAD(b3CameraPart); //!< This constructor handles deserialization.
 
 	void     b3Write() override;
-	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
+	bool     b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method orientates the camera to the given values. The internal vectors
@@ -223,14 +223,14 @@ public:
 	 *
 	 * @return True if camera is active.
 	 */
-	b3_bool  b3IsActive() const;
+	bool     b3IsActive() const;
 
 	/**
 	 * This method sets the activation state of this camera.
 	 *
 	 * @param activate The new activation state.
 	 */
-	void     b3Activate(b3_bool activate = true);
+	void     b3Activate(bool activate = true);
 };
 
 #define CAMERA_TITLE  1
@@ -252,21 +252,21 @@ public:
 	B3_ITEM_LOAD(b3Nebular); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method returns the activation state.
 	 *
 	 * @return True if nebular is active.
 	 */
-	b3_bool b3IsActive() const;
+	bool    b3IsActive() const;
 
 	/**
 	 * This method activates the nebular.
 	 *
 	 * @param activate The activation state of the nebular.
 	 */
-	void    b3Activate(b3_bool activate = true);
+	void    b3Activate(bool activate = true);
 
 	/**
 	 * This method returns the nebular filter color.
@@ -350,13 +350,13 @@ public:
 	b3_vector        m_StepRotate;       //!< Rotating stepper.
 	b3_f32           m_GridMove;         //!< Scale to grid for moving.
 	b3_f32           m_GridRot;          //!< Scale to angular grid for rotating.
-	b3_bool          m_ResizeFlag;
-	b3_bool          m_BBoxTitles;       //!< Draw object names into scene.
-	b3_bool          m_GridActive;       //!< Scale to grid active.
-	b3_bool          m_AngleGridCamera;  //!< Snap to camera angle.
-	b3_bool          m_AngleGridObjects; //!< Snap to object angle.
-	b3_bool          m_CameraActive;
-	b3_bool          m_UseSceneLights;   //!< Simple lighting (false) or scene lighting (true).
+	bool             m_ResizeFlag;
+	bool             m_BBoxTitles;       //!< Draw object names into scene.
+	bool             m_GridActive;       //!< Scale to grid active.
+	bool             m_AngleGridCamera;  //!< Snap to camera angle.
+	bool             m_AngleGridObjects; //!< Snap to object angle.
+	bool             m_CameraActive;
+	bool             m_UseSceneLights;   //!< Simple lighting (false) or scene lighting (true).
 	b3_unit          m_Unit;             //!< Used unit.
 	b3_measure       m_Measure;          //!< Used measuring unit.
 	b3_u32           m_CustomMeasure;    //!< Custum measuring unit in case of m_Measure holds B3_MEASURE_CUSTOM.
@@ -428,10 +428,10 @@ public:
 	 * @return The measuring unit as value.
 	 * @see b3_measure
 	 */
-	b3_u32      b3GetMeasure(b3_bool forceCustomValue = true) const;
+	b3_u32      b3GetMeasure(bool forceCustomValue = true) const;
 
 private:
-	void        b3Snap(b3_f64 & angle, b3_bool activation) const;
+	void        b3Snap(b3_f64 & angle, bool activation) const;
 };
 
 #define B3_UNIT_MASK           0x0000f
@@ -492,14 +492,14 @@ public:
 	 *
 	 * @return The activation state of the animation.
 	 */
-	b3_bool         b3IsActive() const;
+	bool            b3IsActive() const;
 
 	/**
 	 * This method activates the animation depending on the given flag.
 	 *
 	 * @param activate The activation flag.
 	 */
-	void            b3Activate(b3_bool activate = true);
+	void            b3Activate(bool activate = true);
 
 	/**
 	 * This method computes all animation elements so that the animated objects
@@ -524,7 +524,7 @@ public:
 	 * @param activate The activation flag.
 	 * @return The old activation state.
 	 */
-	b3_bool         b3ActivateAnimation(b3Scene * scene, b3_bool activate = true);
+	bool            b3ActivateAnimation(b3Scene * scene, bool activate = true);
 
 	/**
 	 * This method computes the animation center position for the given time point.
@@ -640,14 +640,14 @@ public:
 	 *
 	 * @return True if distributed raytracing is active.
 	 */
-	b3_bool  b3IsActive();
+	bool     b3IsActive();
 
 	/**
 	 * This method returns the activation state of motion blur.
 	 *
 	 * @return True if motion blur is active.
 	 */
-	b3_bool  b3IsMotionBlur();
+	bool     b3IsMotionBlur();
 
 	/**
 	 * This method initializes the distributed raytracing with the given
@@ -694,14 +694,14 @@ public:
 	 *
 	 * @return True if lens flares are active.
 	 */
-	b3_bool b3IsActive();
+	bool    b3IsActive();
 
 	/**
 	 * This method sets the activation state of the lens flares.
 	 *
 	 * @param activate The new activation state.
 	 */
-	void    b3Activate(b3_bool activate = true);
+	void    b3Activate(bool activate = true);
 };
 
 #define LENSFLARE_ACTIVE 1
@@ -741,7 +741,7 @@ public:
 	B3_ITEM_LOAD(b3CloudBackground); //!< This constructor handles deserialization.
 
 	void    b3Write() override;
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 };
 
 #endif

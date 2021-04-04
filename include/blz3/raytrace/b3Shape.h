@@ -79,7 +79,7 @@ public:
 	 * @param ray The ray which contains the normal.
 	 * @return True on success.
 	 */
-	b3_bool b3NormalDeriv(b3_ray * ray) const;
+	bool    b3NormalDeriv(b3_ray * ray) const;
 };
 
 class b3Material;
@@ -110,7 +110,7 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 	static const b3_gl_polygon m_BoxPolygons[];
 	static const b3_f32        m_BoxTexcoord[];
 
-	b3_bool       m_EndLine;
+	bool          m_EndLine;
 	b3_count      m_Overhead, m_Heights, m_Widths;
 
 protected:
@@ -135,7 +135,7 @@ public:
 	 */
 	static  void        b3Register();
 	void                b3Write() override;
-	virtual b3_bool     b3Prepare(b3_preparation_info * prep_info) override;
+	virtual bool        b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method stores the basic shape values.
@@ -186,7 +186,7 @@ public:
 	 * @see b3Intersect()
 	 * @see b3_polar
 	 */
-	virtual b3_bool     b3CheckStencil(b3_polar * polar) const;
+	virtual bool        b3CheckStencil(b3_polar * polar) const;
 
 	/**
 	 * This method transforms the shape with the given transformation matrix. The
@@ -196,7 +196,7 @@ public:
 	 * @param transformation The transformation matrix.
 	 * @param isAffine The flag if the transformation is affine.
 	 */
-	virtual void        b3Transform(b3_matrix * transformation, b3_bool isAffine);
+	virtual void        b3Transform(b3_matrix * transformation, bool isAffine);
 
 	/**
 	 * This method returns the possible value range of the polar coordinates.
@@ -272,7 +272,7 @@ public:
 	 * @param ray The ray which contains the normal.
 	 * @return True on success.
 	 */
-	virtual b3_bool        b3NormalDeriv(b3_ray * ray) const;
+	virtual bool           b3NormalDeriv(b3_ray * ray) const;
 
 protected:
 	/**
@@ -285,9 +285,9 @@ protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl, b3_f64 yl);
 	void            b3GetDiffuseColor(b3Color & diffuse) const override;
 	b3_f64          b3GetColors(b3Color & ambient, b3Color & diffuse, b3Color & specular) const override;
-	b3_bool         b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const override;
+	bool            b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const override;
 	b3Tx      *     b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale) const override;
-	b3_bool         b3GetImage(b3Tx * image) const override;
+	bool            b3GetImage(b3Tx * image) const override;
 	b3_render_mode  b3GetRenderMode() override;
 
 	/**
@@ -295,7 +295,7 @@ protected:
 	 *
 	 * @param normalize This flag signals if the normal should be normalized.
 	 */
-	void            b3ComputeQuadricNormals(b3_bool normalize = true);
+	void            b3ComputeQuadricNormals(bool normalize = true);
 
 	/**
 	 * This method computes vertices for a sphere.
@@ -311,7 +311,7 @@ protected:
 	 * @param base The center point of the sphere.
 	 * @param normalize A flag to show if normalization is wanted.
 	 */
-	void            b3ComputeSphereNormals(b3_vector & base, b3_bool normalize);
+	void            b3ComputeSphereNormals(b3_vector & base, bool normalize);
 
 	/**
 	 * This method computes the cylinder vertices.
@@ -461,7 +461,7 @@ protected:
 	 * @param polar The polar coordinates to check against the stencil list.
 	 * @return True if the polar coordinates are valid.
 	 */
-	b3_bool             b3CheckStencil(b3_polar * polar) const override;
+	bool                b3CheckStencil(b3_polar * polar) const override;
 
 protected:
 	B3_ITEM_BASE(b3SimpleShape); //!< This is a base class deserialization constructor.
@@ -515,12 +515,12 @@ public:
 	B3_ITEM_LOAD(b3Sphere); //!< This constructor handles deserialization.
 
 	void    b3StoreShape() override;
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 	void    b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
 	b3_f64  b3Intersect(b3_ray * ray, b3_polar * polar) override;
 	void    b3Normal(b3_ray * ray) const override;
 	void    b3SetupPicking(b3PickInfo * info) override;
-	void    b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	void    b3Transform(b3_matrix * transformation, bool isAffine) override;
 
 	/**
 	 * This method computes the derivates along the normal given by the
@@ -529,12 +529,12 @@ public:
 	 * @param ray The ray which contains the normal.
 	 * @return True on success.
 	 */
-	b3_bool b3NormalDeriv(b3_ray * ray) const override;
+	bool    b3NormalDeriv(b3_ray * ray) const override;
 
 protected:
 	void    b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
 	void    b3ComputeVertices() override;
-	void    b3ComputeNormals(b3_bool normalize = true) override;
+	void    b3ComputeNormals(bool normalize = true) override;
 	void    b3ComputeIndices() override;
 };
 
@@ -566,8 +566,8 @@ public:
 	B3_ITEM_LOAD(b3Shape2); //!< This constructor handles deserialization.
 
 	void    b3StoreShape() override;
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	void    b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3Transform(b3_matrix * transformation, bool isAffine) override;
 	void    b3Normal(b3_ray * ray) const override;
 	void    b3SetupPicking(b3PickInfo * info) override;
 
@@ -578,7 +578,7 @@ public:
 	 * @param ray The ray which contains the normal.
 	 * @return True on success.
 	 */
-	b3_bool b3NormalDeriv(b3_ray * ray) const override;
+	bool    b3NormalDeriv(b3_ray * ray) const override;
 };
 
 /*************************************************************************
@@ -660,13 +660,13 @@ public:
 	B3_ITEM_LOAD(b3Shape3); //!< This constructor handles deserialization.
 
 	void    b3StoreShape() override;
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
-	void    b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	void    b3Transform(b3_matrix * transformation, bool isAffine) override;
 	void    b3SetupPicking(b3PickInfo * info) override;
 
 protected:
-	virtual void    b3ComputeNormals(b3_bool normalize = true) override;
+	virtual void    b3ComputeNormals(bool normalize = true) override;
 };
 
 /*************************************************************************
@@ -777,7 +777,7 @@ public:
 protected:
 	void   b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
 	void   b3ComputeVertices() override;
-	void   b3ComputeNormals(b3_bool normalize = true) override;
+	void   b3ComputeNormals(bool normalize = true) override;
 	void   b3ComputeIndices() override;
 };
 
@@ -810,14 +810,14 @@ public:
 	void    b3Normal(b3_ray * ray) const override;
 	void    b3SetupPicking(b3PickInfo * info) override;
 
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
-	void    b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	void    b3Transform(b3_matrix * transformation, bool isAffine) override;
 
 protected:
 	void    b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
 	void    b3ComputeVertices() override;
-	void    b3ComputeNormals(b3_bool normalize = true) override;
+	void    b3ComputeNormals(bool normalize = true) override;
 	void    b3ComputeIndices() override;
 };
 
@@ -855,7 +855,7 @@ class B3_PLUGIN b3TriangleShape : public b3SimpleShape
 {
 	b3Array<b3_index>   *  m_GridList;       // list of grids
 	b3Array<b3_triainfo>   m_TriaInfos;
-	b3_bool                m_GridComputed;
+	bool                   m_GridComputed;
 
 protected:
 	b3_vector              m_Base;           //!< Base point of bounding box of all triangles.
@@ -905,18 +905,18 @@ public:
 	 * @param ySize     The vertical vertex distribution for texture mapping.
 	 * @return True on success.
 	 */
-	b3_bool b3Init(b3_count vertCount, b3_count triaCount, b3_res xSize, b3_res ySize);
+	bool    b3Init(b3_count vertCount, b3_count triaCount, b3_res xSize, b3_res ySize);
 	b3_f64  b3Intersect(b3_ray * ray, b3_polar * polar) override;
 	void    b3Normal(b3_ray * ray) const override;
-	virtual b3_bool b3Prepare(b3_preparation_info * prep_info) override;
-	virtual void    b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	virtual bool    b3Prepare(b3_preparation_info * prep_info) override;
+	virtual void    b3Transform(b3_matrix * transformation, bool isAffine) override;
 
-	inline  b3_bool b3GetFlag(b3_u32 flag)
+	inline  bool    b3GetFlag(b3_u32 flag)
 	{
 		return (m_Flags & flag) != 0;
 	}
 
-	inline void     b3SetFlag(b3_u32 flag, b3_bool state)
+	inline void     b3SetFlag(b3_u32 flag, bool state)
 	{
 		m_Flags = (m_Flags & (~flag)) | (state ? flag : 0);
 	}
@@ -1011,7 +1011,7 @@ public:
 protected:
 	void   b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
 	void   b3ComputeVertices() override;
-	void   b3ComputeNormals(b3_bool normalize = true) override;
+	void   b3ComputeNormals(bool normalize = true) override;
 	void   b3ComputeIndices() override;
 };
 
@@ -1049,10 +1049,10 @@ public:
 	 * @param closed True if the spline curve is closed.
 	 * @param subdiv The rotation sub division.
 	 */
-	void    b3Init(b3_count degree, b3_count controlNum, b3_bool closed, b3_count subdiv);
+	void    b3Init(b3_count degree, b3_count controlNum, bool closed, b3_count subdiv);
 	void    b3StoreShape() override;
-	void    b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	void    b3Transform(b3_matrix * transformation, bool isAffine) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 	void    b3SetupPicking(b3PickInfo * info) override;
 	void    b3SetupGrid(b3PickInfo * info) override;
 
@@ -1101,7 +1101,7 @@ public:
 	 * @param vControlNum The vertical control point dimension.
 	 */
 	void b3Init(b3_count hDegree, b3_count vDegree, b3_count hControlNum, b3_count vControlNum);
-	void b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	void b3Transform(b3_matrix * transformation, bool isAffine) override;
 	void b3SetupPicking(b3PickInfo * info) override;
 	void b3SetupGrid(b3PickInfo * info) override;
 
@@ -1118,7 +1118,7 @@ private:
 	void b3ComputeGridIndices();
 	void b3ComputeSolidIndices();
 
-	b3_bool b3Prepare(b3_preparation_info * prep_info) override;
+	bool    b3Prepare(b3_preparation_info * prep_info) override;
 };
 
 /*************************************************************************
@@ -1276,7 +1276,7 @@ public:
 	 * @param BTLine The base transformed ray.
 	 * @return True if any intersection point was found.
 	 */
-	virtual b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine);
+	virtual bool     b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine);
 
 	/**
 	 * This method gets the index of an operation mode table from the given operation mode.
@@ -1340,18 +1340,18 @@ public:
 
 	void     b3StoreShape() override;
 	void     b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
-	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
+	bool     b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
 	b3_count b3GetMaxIntersections() const override;
 	void     b3Normal(b3_ray * ray) const override;
-	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
-	void     b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	bool     b3Prepare(b3_preparation_info * prep_info) override;
+	void     b3Transform(b3_matrix * transformation, bool isAffine) override;
 	void     b3SetupPicking(b3PickInfo * info) override;
 
 protected:
 	void     b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
 	void     b3ComputeVertices() override;
-	void     b3ComputeNormals(b3_bool normalize = true) override;
+	void     b3ComputeNormals(bool normalize = true) override;
 	void     b3ComputeIndices() override;
 };
 
@@ -1374,14 +1374,14 @@ public:
 	B3_ITEM_LOAD(b3CSGShape3); //!< This constructor handles deserialization.
 
 	void     b3StoreShape() override;
-	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
+	bool     b3Prepare(b3_preparation_info * prep_info) override;
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
-	void     b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	void     b3Transform(b3_matrix * transformation, bool isAffine) override;
 	void     b3SetupPicking(b3PickInfo * info) override;
 	b3_count b3GetMaxIntersections() const override;
 
 protected:
-	virtual void     b3ComputeNormals(b3_bool normalize = true) override;
+	virtual void     b3ComputeNormals(bool normalize = true) override;
 };
 
 /*************************************************************************
@@ -1401,7 +1401,7 @@ public:
 	B3_ITEM_INIT(b3CSGCylinder); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGCylinder); //!< This constructor handles deserialization.
 
-	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
+	bool     b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
 	void     b3Normal(b3_ray * ray) const override;
 
@@ -1429,7 +1429,7 @@ public:
 	B3_ITEM_INIT(b3CSGCone); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGCone); //!< This constructor handles deserialization.
 
-	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
+	bool     b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
 	void     b3Normal(b3_ray * ray) const override;
 
@@ -1455,7 +1455,7 @@ public:
 	B3_ITEM_INIT(b3CSGEllipsoid); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGEllipsoid); //!< This constructor handles deserialization.
 
-	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
+	bool     b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
 	void     b3Normal(b3_ray * ray) const override;
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
@@ -1483,14 +1483,14 @@ public:
 	B3_ITEM_INIT(b3CSGBox); //!< This constructor handles default initialization.
 	B3_ITEM_LOAD(b3CSGBox); //!< This constructor handles deserialization.
 
-	b3_bool b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
+	bool    b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void    b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
 	void    b3Normal(b3_ray * ray) const override;
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
 
 protected:
 	void    b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
-	void    b3ComputeNormals(b3_bool normalize = true) override;
+	void    b3ComputeNormals(bool normalize = true) override;
 	void    b3ComputeVertices() override;
 	void    b3ComputeIndices() override;
 };
@@ -1517,20 +1517,20 @@ public:
 	B3_ITEM_LOAD(b3CSGTorus); //!< This constructor handles deserialization.
 
 	void     b3StoreShape() override;
-	b3_bool  b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
+	bool     b3Intersect(b3_ray * ray, b3_shape_intervals * interval, b3_line64 * BTLine) override;
 	void     b3InverseMap(b3_ray * ray, b3_csg_point * point) override;
 	b3_count b3GetMaxIntersections() const override;
 	void     b3Normal(b3_ray * ray) const override;
 	void     b3SetupPicking(b3PickInfo * info) override;
 
-	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
+	bool     b3Prepare(b3_preparation_info * prep_info) override;
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound * info) const override;
-	void     b3Transform(b3_matrix * transformation, b3_bool isAffine) override;
+	void     b3Transform(b3_matrix * transformation, bool isAffine) override;
 
 protected:
 	void     b3GetCount(b3RenderContext * context, b3_count & vertCount, b3_count & gridCount, b3_count & polyCount) override;
 	void     b3ComputeVertices() override;
-	void     b3ComputeNormals(b3_bool normalize = true) override;
+	void     b3ComputeNormals(bool normalize = true) override;
 	void     b3ComputeIndices() override;
 };
 

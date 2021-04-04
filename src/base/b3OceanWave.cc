@@ -64,7 +64,7 @@ b3OceanWave::~b3OceanWave()
 	}
 }
 
-void b3OceanWave::b3Modified(b3_bool modified)
+void b3OceanWave::b3Modified(bool modified)
 {
 	m_Modified = modified;
 	if (m_Phillips != nullptr)

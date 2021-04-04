@@ -119,7 +119,7 @@ b3FileEntry * b3FileList::b3First() const
 	return list.First;
 }
 
-b3_bool b3FileList::b3Add(const char * name)
+bool b3FileList::b3Add(const char * name)
 {
 	b3FileEntry * entry;
 

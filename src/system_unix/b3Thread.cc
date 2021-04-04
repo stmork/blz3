@@ -46,13 +46,13 @@ b3IPCMutex::~b3IPCMutex()
 }
 
 // Method for entering a critical code section
-b3_bool b3IPCMutex::b3Lock()
+bool b3IPCMutex::b3Lock()
 {
 	return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 }
 
 // Method for leaving a critical code section
-b3_bool b3IPCMutex::b3Unlock()
+bool b3IPCMutex::b3Unlock()
 {
 	return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
 }
@@ -86,9 +86,9 @@ void b3Event::b3Pulse()
 }
 
 // Wait for a signal from another thread.
-b3_bool b3Event::b3Wait()
+bool b3Event::b3Wait()
 {
-	b3_bool success = true;
+	bool success = true;
 
 	success &= b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 	if (!pulse)
@@ -152,12 +152,12 @@ void b3Thread::b3Name(const char * task_name)
 	m_Name = task_name;
 }
 
-b3_bool b3Thread::b3Start(
+bool b3Thread::b3Start(
 	b3ThreadProc  proc,
 	void     *    ptr,
 	b3_s32        priority)
 {
-	b3_bool success;
+	bool    success;
 	int     error_code;
 
 	b3Stop();
@@ -207,14 +207,14 @@ void * b3Thread::b3Trampoline(void * ptr)
 	return nullptr;
 }
 
-b3_bool b3Thread::b3IsRunning()
+bool b3Thread::b3IsRunning()
 {
 	return m_IsRunning;
 }
 
-b3_bool b3Thread::b3Stop()
+bool b3Thread::b3Stop()
 {
-	b3_bool was_running;
+	bool was_running;
 
 	if (b3IsRunning())
 	{

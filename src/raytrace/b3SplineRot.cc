@@ -83,7 +83,7 @@ void b3SplineRotShape::b3StoreShape()
 void b3SplineRotShape::b3Init(
 	b3_count Degree,
 	b3_count ControlNum,
-	b3_bool  Closed,
+	bool     Closed,
 	b3_count SubDiv)
 {
 	m_rSubDiv = SubDiv;
@@ -98,7 +98,7 @@ void b3SplineRotShape::b3Init(
 	m_Spline.b3InitCurve(Degree, ControlNum, Closed);
 }
 
-b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
+bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3Spline     MySpline;
 	b3_triangle * Triangle;
@@ -176,7 +176,7 @@ b3_bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 	return b3TriangleShape::b3Prepare(prep_info);
 }
 
-void b3SplineRotShape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3SplineRotShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3_vector * control;
 	b3_index   offset;

@@ -89,7 +89,7 @@ public:
 	 *
 	 * @param really_free A flag which indicates if the memory should also be freed.
 	 */
-	inline void b3Clear(const b3_bool really_free B3_UNUSED = false)
+	inline void b3Clear(const bool really_free B3_UNUSED = false)
 	{
 		elements.clear();
 	}

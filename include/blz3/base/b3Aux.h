@@ -160,7 +160,7 @@ public:
 	 * @param rect The rectangle for adjusting.
 	 * @return True if any adjustment occured.
 	 */
-	b3_bool b3UpdateBound(b3Rect * rect);
+	bool    b3UpdateBound(b3Rect * rect);
 
 	/**
 	 * This method adjusts the rectangle of this bound so that the
@@ -170,7 +170,7 @@ public:
 	 * @param rect The rectangle for adjusting.
 	 * @return True if any adjustment occured.
 	 */
-	b3_bool b3CheckBound(b3Rect * rect);
+	bool    b3CheckBound(b3Rect * rect);
 };
 
 /**

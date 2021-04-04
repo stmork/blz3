@@ -412,7 +412,7 @@ void b3SplineShape::b3Draw()
 }
 #endif
 
-void b3SplineShape::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3SplineShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3_vector * control;
 	b3_index   offset;
@@ -507,7 +507,7 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 	}
 }
 
-b3_bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
+bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_vertex  * Vertex;
 	b3_triangle * Triangle;

@@ -36,7 +36,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3CPU::m_CorrectRUsage = true;
+bool b3CPU::m_CorrectRUsage = true;
 
 b3CPU::b3CPU()
 {

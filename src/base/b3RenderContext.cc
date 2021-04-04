@@ -48,9 +48,9 @@ b3_vector b3RenderContext::glSimpleLightDirection
 };
 
 #ifdef BLZ3_USE_OPENGL
-b3_bool b3RenderContext::glUse = true;
+bool b3RenderContext::glUse = true;
 #else
-b3_bool b3RenderContext::glUse = false;
+bool b3RenderContext::glUse = false;
 #endif
 
 #ifdef BLZ3_USE_OPENGL
@@ -80,7 +80,7 @@ b3RenderContext::b3RenderContext()
 	glBgColor.b3Init(0.8f, 0.8f, 0.8f);
 }
 
-void b3RenderContext::b3Init(b3_bool double_buffered)
+void b3RenderContext::b3Init(bool double_buffered)
 {
 #ifdef BLZ3_USE_OPENGL
 	const char * extensions = (const char *)glGetString(GL_EXTENSIONS);
@@ -170,7 +170,7 @@ void b3RenderContext::b3StartDrawing()
 #endif
 }
 
-void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
+void b3RenderContext::b3SetAntiAliasing(const bool enable)
 {
 #ifdef BLZ3_USE_OPENGL
 	if (enable)
@@ -322,9 +322,9 @@ void b3RenderContext::b3LightNum(b3_index num)
 #endif
 }
 
-b3_bool b3RenderContext::b3LightAdd(const b3_render_light_info * info)
+bool b3RenderContext::b3LightAdd(const b3_render_light_info * info)
 {
-	b3_bool result = false;
+	bool result = false;
 
 #ifdef BLZ3_USE_OPENGL
 	if (VALIDATE_LIGHT_NUM(glLightCount))
@@ -387,12 +387,12 @@ void b3RenderContext::b3LightSet(
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3RenderContext::b3GetMatrix(
+bool b3RenderContext::b3GetMatrix(
 	b3_matrix_mode  mode,
 	b3_matrix   *   matrix)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_bool result = false;
+	bool    result = false;
 	GLfloat values[16];
 
 	switch (mode)
@@ -439,12 +439,12 @@ b3_bool b3RenderContext::b3GetMatrix(
 #endif
 }
 
-b3_bool b3RenderContext::b3PutMatrix(
+bool b3RenderContext::b3PutMatrix(
 	const b3_matrix_mode  mode,
 	const b3_matrix   *   matrix)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_bool result = false;
+	bool    result = false;
 	GLfloat values[16];
 
 	values[ 0] = matrix->m11;

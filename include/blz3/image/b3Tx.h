@@ -1170,10 +1170,10 @@ public:
 
 private:
 	// b3TxScale.cc
-	static unsigned int b3ScaleBW2BW(void * ptr);
-	static unsigned int b3ScaleBW2Grey(void * ptr);
-	static unsigned int b3RGB8ScaleToRGB8(void * ptr);
-	static unsigned int b3FloatScaleToRGB8(void * ptr);
+	static bool         b3ScaleBW2BW(void * ptr);
+	static bool         b3ScaleBW2Grey(void * ptr);
+	static bool         b3RGB8ScaleToRGB8(void * ptr);
+	static bool         b3FloatScaleToRGB8(void * ptr);
 
 	static void         b3FloatComputeLineSmaller(
 		b3_color    *    TxRowCounter,

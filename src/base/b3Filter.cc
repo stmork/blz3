@@ -47,7 +47,7 @@ b3Filter * b3Filter::b3New(b3_filter filter)
 	return nullptr;
 }
 
-b3_f64 b3Filter::b3InvIntegral(b3_f64 val, b3_bool throw_exception)
+b3_f64 b3Filter::b3InvIntegral(b3_f64 val, bool throw_exception)
 {
 	b3_f64 y, xLower, xMid, xUpper, diff;
 

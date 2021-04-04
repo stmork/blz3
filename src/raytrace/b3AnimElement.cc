@@ -336,7 +336,7 @@ void b3AnimElement::b3ComputeTransformationMatrix(
 	}
 }
 
-void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, b3_bool recurse)
+void b3BBox::b3Animate(b3Activation::b3_anim_activation animate, bool recurse)
 {
 	B3_FOR_TYPED_BASE(b3Shape, b3GetShapeHead(), shape)
 	{
@@ -379,7 +379,7 @@ void b3AnimElement::b3SelectObjects(b3BBox * bbox)
 /* Global:  geometry structure */
 /* Element: amimation track */
 
-b3_bool b3AnimElement::b3SelectAnimElement(b3Scene * scene)
+bool b3AnimElement::b3SelectAnimElement(b3Scene * scene)
 {
 	scene->b3Animate(b3Activation::B3_ANIM_DEACTIVE);
 	if (m_Flags & ANIMFLAGF_OBJECT)

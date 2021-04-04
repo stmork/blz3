@@ -31,7 +31,7 @@
  */
 class b3CPU : public b3CPUBase
 {
-	static b3_bool  m_CorrectRUsage;
+	static bool     m_CorrectRUsage;
 
 public:
 	/**
@@ -54,7 +54,7 @@ public:
 	 *
 	 * @return True if getrusage() is correct.
 	 */
-	inline static b3_bool  b3HasCorrectRUsage()
+	inline static bool     b3HasCorrectRUsage()
 	{
 		return m_CorrectRUsage;
 	}
@@ -63,7 +63,7 @@ public:
 class b3PThread
 {
 public:
-	inline static b3_bool b3CheckResult(int error_code)
+	inline static bool    b3CheckResult(int error_code)
 	{
 #ifdef _DEBUG
 		if (error_code != 0)
@@ -104,12 +104,12 @@ public:
 		b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
 	}
 
-	inline b3_bool  b3Lock() override
+	inline bool     b3Lock() override
 	{
 		return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
 	}
 
-	inline b3_bool  b3Unlock() override
+	inline bool     b3Unlock() override
 	{
 		return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
 	}
@@ -128,8 +128,8 @@ class b3IPCMutex : public b3MutexAbstract
 public:
 	b3IPCMutex();
 	virtual ~b3IPCMutex();
-	b3_bool  b3Lock() override;
-	b3_bool  b3Unlock() override;
+	bool     b3Lock() override;
+	bool     b3Unlock() override;
 };
 
 /**
@@ -139,7 +139,8 @@ class b3Event : public b3EventAbstract
 {
 	pthread_cond_t  event;
 	pthread_mutex_t mutex;
-	volatile b3_bool         pulse;
+
+	volatile bool   pulse;
 
 public:
 	/**
@@ -153,7 +154,7 @@ public:
 	virtual ~b3Event();
 
 	void     b3Pulse() override;
-	b3_bool  b3Wait() override;
+	bool     b3Wait() override;
 };
 
 /**
@@ -166,7 +167,7 @@ class b3Thread : public b3ThreadAbstract
 	int           m_Prio = 0;
 
 	pthread_t              m_Thread    = 0;
-	volatile b3_bool       m_IsRunning = false;
+	volatile bool          m_IsRunning = false;
 	volatile b3_u32        m_Result    = 0;
 	volatile b3ThreadProc  m_CallProc  = nullptr;
 	volatile void     *    m_CallArg   = nullptr;
@@ -188,9 +189,9 @@ public:
 	virtual ~b3Thread();
 
 	void     b3Name(const char * taskname = nullptr) override;
-	b3_bool  b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0) override;
-	b3_bool  b3IsRunning() override;
-	b3_bool  b3Stop() override;
+	bool     b3Start(b3ThreadProc thread, void * ptr, b3_s32 priority = 0) override;
+	bool     b3IsRunning() override;
+	bool     b3Stop() override;
 	b3_u32   b3Wait() override;
 	void     b3AddTimeSpan(b3TimeSpan * span) override;
 

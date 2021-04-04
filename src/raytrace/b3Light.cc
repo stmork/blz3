@@ -198,7 +198,7 @@ void b3Light::b3InitValues()
 	m_SpotActive  = false;
 }
 
-b3_bool b3Light::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
+bool b3Light::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	if (m_LightActive)
 	{
@@ -239,7 +239,7 @@ void b3Light::b3SetName(const char * name)
 	b3Item::b3SetString(m_Name, sizeof(m_Name), name);
 }
 
-b3_bool b3Light::b3Illuminate(
+bool b3Light::b3Illuminate(
 	b3Shader  *  shader,
 	b3_surface * surface) const
 {
@@ -248,7 +248,7 @@ b3_bool b3Light::b3Illuminate(
 			b3PointIllumination(shader, surface));
 }
 
-inline b3_bool b3Light::b3PointIllumination(
+inline bool b3Light::b3PointIllumination(
 	b3Shader  * shader,
 	b3_surface * surface) const
 {
@@ -306,17 +306,17 @@ inline b3_bool b3Light::b3PointIllumination(
 	return true;
 }
 
-inline b3_bool b3Light::b3AreaIllumination(
+inline bool b3Light::b3AreaIllumination(
 	b3Shader  *  shader,
 	b3_surface * surface) const
 {
 	b3_light_info  Jit;
-	b3_bool        Edge1, Edge2, LastEdge = false, first = true;
+	bool           Edge1, Edge2, LastEdge = false, first = true;
 	b3_vector      point;
 	b3_f64         Factor, denomLightDist, q;
 	b3_coord       x, y, xs;
 	b3_count       max, Distr;
-	b3_bool        equal;
+	bool           equal;
 
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
@@ -455,7 +455,7 @@ b3_f64 b3Light::b3ComputeSpotExponent() const
 {
 	b3_index i, max = 20;
 	b3_f64   p     = 0, angle;
-	b3_bool  loop  = true;
+	bool     loop  = true;
 
 	if (m_SpotActive)
 	{

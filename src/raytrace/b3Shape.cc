@@ -66,7 +66,7 @@ b3Activation::b3Activation()
 	b3Animate(B3_ANIM_DISABLED);
 }
 
-b3_bool b3Activation::b3IsActive() const
+bool b3Activation::b3IsActive() const
 {
 	switch (m_AnimActive)
 	{
@@ -82,12 +82,12 @@ b3_bool b3Activation::b3IsActive() const
 	return false;
 }
 
-void b3Activation::b3Activate(b3_bool activate)
+void b3Activation::b3Activate(bool activate)
 {
 	m_Active = activate;
 }
 
-void b3Activation::b3Animate(b3_bool activate)
+void b3Activation::b3Animate(bool activate)
 {
 	m_AnimActive = activate ? B3_ANIM_ACTIVE : B3_ANIM_DEACTIVE;
 }
@@ -152,7 +152,7 @@ void b3Shape::b3StoreShape()
 {
 }
 
-b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
+bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 {
 	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
@@ -184,8 +184,8 @@ b3_bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 void b3Shape::b3BumpNormal(b3_ray * ray) const
 {
 	b3_f64   denom;
-	b3_bool  deriv_computed = false;
-	b3_bool  deriv_ok       = false;
+	bool     deriv_computed = false;
+	bool     deriv_ok       = false;
 
 	b3Normal(ray);
 	B3_FOR_TYPED_BASE(b3Bump, b3GetBumpHead(), bump)
@@ -247,7 +247,7 @@ b3Material * b3Shape::b3GetSurfaceValues(b3_surface * surface) const
 	return nullptr;
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar * polar B3_UNUSED) const
+bool b3Shape::b3CheckStencil(b3_polar * polar B3_UNUSED) const
 {
 	return true;
 }
@@ -266,7 +266,7 @@ void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 
 void b3Shape::b3Transform(
 	b3_matrix * transformation B3_UNUSED,
-	b3_bool     is_affine B3_UNUSED)
+	bool        is_affine B3_UNUSED)
 {
 	b3PrintF(B3LOG_NORMAL, "b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);
@@ -290,9 +290,9 @@ b3SimpleShape::b3SimpleShape(b3_u32 * src) : b3Shape(src)
 {
 }
 
-b3_bool b3SimpleShape::b3CheckStencil(b3_polar * polar) const
+bool b3SimpleShape::b3CheckStencil(b3_polar * polar) const
 {
-	b3_bool      result = true;
+	bool         result = true;
 
 	B3_FOR_TYPED_BASE(b3Condition, b3GetConditionHead(), cond)
 	{
@@ -338,14 +338,14 @@ void b3Shape2::b3StoreShape()
 	b3StoreFloat(m_NormalLength);
 }
 
-b3_bool b3Shape2::b3Prepare(b3_preparation_info * prep_info)
+bool b3Shape2::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3Vector::b3CrossProduct(&m_Dir1, &m_Dir2, &m_Normal);
 	m_NormalLength = b3Vector::b3Length(&m_Normal);
 	return b3Shape::b3Prepare(prep_info);
 }
 
-void b3Shape2::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3Shape2::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
 	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);
@@ -419,9 +419,9 @@ void b3Shape3::b3StoreShape()
 	b3StoreFloat(m_DirLen[2]);
 }
 
-b3_bool b3Shape3::b3Prepare(b3_preparation_info * prep_info)
+bool b3Shape3::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_bool result = false;
+	bool result = false;
 
 	if (b3BaseTransformation::b3Prepare())
 	{
@@ -442,12 +442,12 @@ void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound * info) const
 	info->yInfo.factor = b3Vector::b3Length(&m_Dir3);;
 }
 
-void b3Shape3::b3ComputeNormals(b3_bool normalize)
+void b3Shape3::b3ComputeNormals(bool normalize)
 {
 	b3ComputeQuadricNormals(normalize);
 }
 
-void b3Shape3::b3Transform(b3_matrix * transformation, b3_bool is_affine)
+void b3Shape3::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3Matrix::b3VMul(transformation, &m_Base, &m_Base, true);
 	b3Matrix::b3VMul(transformation, &m_Dir1, &m_Dir1, false);

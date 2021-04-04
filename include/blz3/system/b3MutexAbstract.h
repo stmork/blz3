@@ -33,12 +33,12 @@ public:
 	/**
 	 * This method locks a critical section for exclusive use.
 	 */
-	virtual b3_bool  b3Lock() = 0;
+	virtual bool     b3Lock() = 0;
 
 	/**
 	 * This method unlocks a critical section.
 	 */
-	virtual b3_bool  b3Unlock() = 0;
+	virtual bool     b3Unlock() = 0;
 };
 
 /**
@@ -59,7 +59,7 @@ public:
 	inline explicit b3CriticalSection(b3MutexAbstract & mutex) : m_Mutex(mutex)
 	{
 #ifdef _DEBUG
-		b3_bool locked = m_Mutex.b3Lock();
+		bool    locked = m_Mutex.b3Lock();
 
 		B3_ASSERT(locked);
 #else
@@ -73,7 +73,7 @@ public:
 	inline virtual ~b3CriticalSection()
 	{
 #ifdef _DEBUG
-		b3_bool unlocked = m_Mutex.b3Unlock();
+		bool    unlocked = m_Mutex.b3Unlock();
 
 		B3_ASSERT(unlocked);
 #else
@@ -101,7 +101,7 @@ public:
 	 *
 	 * @return True on success.
 	 */
-	virtual b3_bool b3Wait()  = 0;
+	virtual bool    b3Wait()  = 0;
 };
 
 #endif

@@ -294,12 +294,12 @@ void b3Scene::b3SetAnimation(b3_f64 t)
 	}
 }
 
-b3_bool b3Animation::b3ActivateAnimation(
+bool b3Animation::b3ActivateAnimation(
 	b3Scene * Global,
-	b3_bool  activation)
+	bool      activation)
 {
 	b3_f64  oldTime;
-	b3_bool oldActivation;
+	bool    oldActivation;
 
 	// get old state
 	oldActivation = (m_Flags & ANIMF_ON) != 0;

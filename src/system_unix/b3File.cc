@@ -73,7 +73,7 @@ b3File::~b3File()
 }
 
 // Open a file for reading, writing or appending
-b3_bool b3File::b3Open(
+bool b3File::b3Open(
 	const char      *     Name,
 	const b3_access_mode  AccessMode)
 {
@@ -232,7 +232,7 @@ b3_size b3File::b3Write(
 	return write(m_File, buffer, buffer_size);
 }
 
-b3_bool b3File::b3Flush()
+bool b3File::b3Flush()
 {
 	b3_size written, i, k, size;
 
@@ -321,7 +321,7 @@ b3_size b3File::b3Size()
 	return size;
 }
 
-b3_bool b3File::b3Buffer(b3_size size)
+bool b3File::b3Buffer(b3_size size)
 {
 	// Flush old buffer
 	if (!b3Flush())

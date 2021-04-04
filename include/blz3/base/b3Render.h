@@ -37,7 +37,7 @@ class b3RenderObject;
  */
 struct b3_render_view_info
 {
-	b3_bool   perspective;         //!< A flag whether the perspective is projective.
+	bool      perspective;         //!< A flag whether the perspective is projective.
 	b3_f64    near_cp;             //!< The near clipping plane.
 	b3_f64    far_cp;              //!< The far clipping plane.
 	b3_f64    width;               //!< The viewport width.
@@ -81,7 +81,7 @@ class b3RenderContext : protected b3Mem
 
 	static b3_vector     glSimpleLightPosition;
 	static b3_vector     glSimpleLightDirection;
-	static b3_bool       glUse;
+	static bool          glUse;
 
 #ifdef BLZ3_USE_OPENGL
 	static GLenum        glLightNum[];
@@ -92,7 +92,7 @@ public:
 	b3_count             glPolyCount;   //!< The overall triangle count.
 	b3_count             glGridCount;   //!< The overall line count.
 	b3_count             glTextureSize; //!< The maximal texture resolution.
-	b3_bool              glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
+	bool                 glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
 	b3Color              glBgColor;     //!< The background color.
 
 public:
@@ -106,7 +106,7 @@ public:
 	 *
 	 * @param use The flag whether to use OpenGL vertex initialization.
 	 */
-	static inline void b3UseGL(b3_bool use = true)
+	static inline void b3UseGL(bool use = true)
 	{
 		glUse = use;
 	}
@@ -116,7 +116,7 @@ public:
 	 *
 	 * @return The OpenGL vertex initialization flag.
 	 */
-	static inline b3_bool b3IsGL()
+	static inline bool    b3IsGL()
 	{
 		return glUse;
 	}
@@ -127,7 +127,7 @@ public:
 	 *
 	 * @param doublebuffered A flag if the render context (GLX or WGL) is double buffered.
 	 */
-	static  void     b3Init(b3_bool doublebuffered = true);
+	static  void     b3Init(bool doublebuffered = true);
 
 	/**
 	 * This method marks the beginning of render object drawing.
@@ -139,7 +139,7 @@ public:
 	 *
 	 * @param enable True if anti aliasing should be used.
 	 */
-	static  void     b3SetAntiAliasing(const b3_bool enable = false);
+	static  void     b3SetAntiAliasing(const bool enable = false);
 
 	/**
 	 * This method initializes the projection. The model view matrix
@@ -185,7 +185,7 @@ public:
 	 * @return True if the light was added.
 	 * @see b3_render_light_info
 	 */
-	b3_bool b3LightAdd(const b3_render_light_info * info);
+	bool    b3LightAdd(const b3_render_light_info * info);
 
 	/**
 	 * This method converts the information from the given information structure
@@ -205,7 +205,7 @@ public:
 	 * @return True on success.
 	 * @see b3_matrix_mode
 	 */
-	static  b3_bool  b3GetMatrix(const b3_matrix_mode mode, b3_matrix * matrix);
+	static  bool     b3GetMatrix(const b3_matrix_mode mode, b3_matrix * matrix);
 
 	/**
 	 * This method retrieves the current selected matrix in the specified OpenGL matrix mode.
@@ -214,7 +214,7 @@ public:
 	 * @param matrix The matrix to retrieve.
 	 * @return True on success.
 	 */
-	static  b3_bool  b3PutMatrix(const b3_matrix_mode mode, const b3_matrix * matrix);
+	static  bool     b3PutMatrix(const b3_matrix_mode mode, const b3_matrix * matrix);
 
 	/**
 	 * This method returns the actual selected render object.
@@ -375,8 +375,8 @@ class B3_PLUGIN b3RenderObject
 	static b3Tx         glTextureBuffer;
 	static b3Mutex      glTextureMutex;
 
-	b3_bool             glMaterialComputed;
-	b3_bool             glInit;
+	bool                glMaterialComputed;
+	bool                glInit;
 
 protected:
 	b3VertexElements  * glVertexElements  = nullptr;  //!< The vertex data.
@@ -503,7 +503,7 @@ public:
 	 * @param upper The upper bounding box corner.
 	 * @return True on success.
 	 */
-	b3_bool         b3ComputeBounds(b3_vector * lower, b3_vector * upper);
+	bool            b3ComputeBounds(b3_vector * lower, b3_vector * upper);
 
 protected:
 	/**
@@ -569,7 +569,7 @@ protected:
 	 *
 	 * @param normalize The flag if the computed normals shoud be normalized.
 	 */
-	virtual void            b3ComputeNormals(b3_bool normalize = true);
+	virtual void            b3ComputeNormals(bool normalize = true);
 
 	/**
 	 * The implementation of this method computes the render mode depending
@@ -634,7 +634,7 @@ protected:
 	 * @param yRepeat The repitition count in y direction.
 	 * @return True if the object has a chess material.
 	 */
-	virtual b3_bool b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const;
+	virtual bool    b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const;
 
 	/**
 	 * If the implementation of this method can simply return its texture this method returns this
@@ -655,7 +655,7 @@ protected:
 	 * @param image The image to which the surface colors are sampled in.
 	 * @return True if sampling was OK.
 	 */
-	virtual b3_bool b3GetImage(b3Tx * image) const;
+	virtual bool    b3GetImage(b3Tx * image) const;
 
 	/**
 	 * This method transforms the vertex data with the given transformation.
@@ -663,7 +663,7 @@ protected:
 	 * @param transformation The transformation matrix.
 	 * @param isAffine If false the normals must be recomputed.
 	 */
-	void b3TransformVertices(b3_matrix * transformation, b3_bool isAffine);
+	void b3TransformVertices(b3_matrix * transformation, bool isAffine);
 
 private:
 	void            b3DefineTexture();

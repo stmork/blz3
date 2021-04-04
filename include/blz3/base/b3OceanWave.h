@@ -53,7 +53,7 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3Rand48<b3_f64>        m_Random;
 	b3Complex64      *      m_Phillips;
 	b3_vector       *       m_Normals;
-	b3_bool                 m_Modified;
+	bool                    m_Modified;
 
 public:
 	// time animation values
@@ -128,7 +128,7 @@ public:
 	 *
 	 * @param modified A flag which indicates a modifiaction of computation values.
 	 */
-	void b3Modified(b3_bool modified = true);
+	void b3Modified(bool modified = true);
 
 	/**
 	 * This method dumps the actual computed Phillips spectrum as height field and

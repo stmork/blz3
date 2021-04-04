@@ -43,7 +43,7 @@ void b3RaytracingItems::b3Register()
 	b3Condition::b3Register();
 }
 
-b3_bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
+bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
 {
 	const char * txName;
 	b3_size     txLen, nameLen;
@@ -69,7 +69,7 @@ b3_bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
 	return *tx != nullptr;
 }
 
-b3_bool b3Scene::b3CutTextureName(const char * full_name, char * short_name)
+bool b3Scene::b3CutTextureName(const char * full_name, char * short_name)
 {
 	return m_TexturePool.b3CutName(full_name, short_name);
 }

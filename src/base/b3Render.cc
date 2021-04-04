@@ -410,7 +410,7 @@ void b3RenderObject::b3ComputeIndices()
 {
 }
 
-void b3RenderObject::b3ComputeNormals(b3_bool normalize)
+void b3RenderObject::b3ComputeNormals(bool normalize)
 {
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "        >b3RenderObject::b3ComputeNormals()\n");
@@ -496,15 +496,15 @@ void b3RenderObject::b3GetVertexRange(b3_index & start, b3_index & end)
 	end   = glVertexElements->b3GetCount();
 }
 
-b3_bool b3RenderObject::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
+bool b3RenderObject::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 {
 	b3Update();
 
 	b3MapVertices(B3_MAP_VBO_R);
 
 	b3_gl_vertex * glVertex = *glVertexElements;
-	b3_bool       result = false;
-	b3_index      i, start, end;
+	bool           result = false;
+	b3_index       i, start, end;
 
 	if (glVertexElements->b3IsComputed() &&
 		(glVertex != nullptr) &&
@@ -524,7 +524,7 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 
 void b3RenderObject::b3TransformVertices(
 	b3_matrix * transformation,
-	b3_bool    is_affine)
+	bool        is_affine)
 {
 	if (glVertexElements != nullptr)
 	{
@@ -611,7 +611,7 @@ b3_f64 b3RenderObject::b3GetColors(
 	return 1.0;
 }
 
-b3_bool b3RenderObject::b3GetChess(
+bool b3RenderObject::b3GetChess(
 	B3_UNUSED b3Color & bColor,
 	B3_UNUSED b3Color & wColor,
 	B3_UNUSED b3_res & xRepeat,
@@ -629,7 +629,7 @@ b3Tx * b3RenderObject::b3GetTexture(
 	return nullptr;
 }
 
-b3_bool b3RenderObject::b3GetImage(B3_UNUSED b3Tx * image) const
+bool b3RenderObject::b3GetImage(B3_UNUSED b3Tx * image) const
 {
 	return false;
 }

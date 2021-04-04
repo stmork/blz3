@@ -188,7 +188,7 @@ void b3Scene::b3ReallocateShader()
 	b3PrintF(B3LOG_DEBUG, "Using shader type %08x with instance %p\n", b3GetClassType(), m_Shader);
 }
 
-b3_bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize)
+bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize)
 {
 	xSize = this->m_xSize;
 	ySize = this->m_ySize;
@@ -229,7 +229,7 @@ void b3Scene::b3SetTexture(const char * name)
 **                                                                      **
 *************************************************************************/
 
-b3Animation * b3Scene::b3GetAnimation(b3_bool force)
+b3Animation * b3Scene::b3GetAnimation(bool force)
 {
 	b3Animation * animation = b3GetSpecialHead()->b3FindTyped<b3Animation>(ANIMATION);
 
@@ -260,7 +260,7 @@ b3ModellerInfo * b3Scene::b3GetModellerInfo()
 	return info;
 }
 
-b3Distribute * b3Scene::b3GetDistributed(b3_bool force)
+b3Distribute * b3Scene::b3GetDistributed(bool force)
 {
 	b3Distribute * distributed = b3GetSpecialHead()->b3FindTyped<b3Distribute>(DISTRIBUTE);
 
@@ -272,7 +272,7 @@ b3Distribute * b3Scene::b3GetDistributed(b3_bool force)
 	return distributed;
 }
 
-b3Nebular * b3Scene::b3GetNebular(b3_bool force)
+b3Nebular * b3Scene::b3GetNebular(bool force)
 {
 	b3Nebular * nebular = b3GetSpecialHead()->b3FindTyped<b3Nebular>(NEBULAR);
 
@@ -284,7 +284,7 @@ b3Nebular * b3Scene::b3GetNebular(b3_bool force)
 	return nebular;
 }
 
-b3SuperSample * b3Scene::b3GetSuperSample(b3_bool force)
+b3SuperSample * b3Scene::b3GetSuperSample(bool force)
 {
 	b3SuperSample * supersample = b3GetSpecialHead()->b3FindTyped<b3SuperSample>(SUPERSAMPLE4);
 
@@ -296,7 +296,7 @@ b3SuperSample * b3Scene::b3GetSuperSample(b3_bool force)
 	return supersample;
 }
 
-b3LensFlare * b3Scene::b3GetLensFlare(b3_bool force)
+b3LensFlare * b3Scene::b3GetLensFlare(bool force)
 {
 	b3LensFlare * lensflare = b3GetSpecialHead()->b3FindTyped<b3LensFlare>(LENSFLARE);
 
@@ -308,7 +308,7 @@ b3LensFlare * b3Scene::b3GetLensFlare(b3_bool force)
 	return lensflare;
 }
 
-b3CloudBackground * b3Scene::b3GetCloudBackground(b3_bool force)
+b3CloudBackground * b3Scene::b3GetCloudBackground(bool force)
 {
 	b3CloudBackground * clouds = b3GetSpecialHead()->b3FindTyped<b3CloudBackground>(CLOUDS);
 
@@ -326,7 +326,7 @@ b3CloudBackground * b3Scene::b3GetCloudBackground(b3_bool force)
 **                                                                      **
 *************************************************************************/
 
-b3CameraPart * b3Scene::b3GetFirstCamera(b3_bool must_active)
+b3CameraPart * b3Scene::b3GetFirstCamera(bool must_active)
 {
 	b3CameraPart * camera, *first = nullptr;
 	b3Item    *    item;
@@ -421,7 +421,7 @@ b3CameraPart * b3Scene::b3UpdateCamera()
 	return m_ActualCamera;
 }
 
-void b3Scene::b3SetCamera(b3CameraPart * camera, b3_bool reorder)
+void b3Scene::b3SetCamera(b3CameraPart * camera, bool reorder)
 {
 	m_ActualCamera = camera;
 	b3UpdateCamera();
@@ -440,7 +440,7 @@ void b3Scene::b3SetCamera(b3CameraPart * camera, b3_bool reorder)
 	}
 }
 
-b3_bool b3Scene::b3GetTitle(char * title, size_t size)
+bool b3Scene::b3GetTitle(char * title, size_t size)
 {
 	title[0] = 0;
 	if (m_ActualCamera != nullptr)
@@ -480,7 +480,7 @@ b3_count b3Scene::b3GetLightCount()
 	return m_LightCount;
 }
 
-b3Light * b3Scene::b3GetLight(b3_bool must_active)
+b3Light * b3Scene::b3GetLight(bool must_active)
 {
 	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{

@@ -41,9 +41,9 @@ static b3ShapeRenderContext  context;
 static b3World       *       world = nullptr;
 static b3RenderLight         lights;
 static b3RenderView          view;
-static b3_bool               all_lights = true;
-static b3_bool               spot_light = true;
-static b3_bool               double_buffered = true;
+static bool                  all_lights = true;
+static bool                  spot_light = true;
+static bool                  double_buffered = true;
 static b3_res                xWinSize, yWinSize;
 
 static void b3SetLights()
@@ -164,7 +164,7 @@ static void b3SetupRC()
 static void b3KeyboardFunc(unsigned char key, int x B3_UNUSED, int y B3_UNUSED)
 {
 	b3Scene * scene;
-	b3_bool   refresh = false;
+	bool      refresh = false;
 
 	scene = (b3Scene *)world->b3GetFirst();
 	switch (key)

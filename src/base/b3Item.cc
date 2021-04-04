@@ -38,7 +38,7 @@ void b3Item::b3Register(
 	b3_item_init_func init_func,
 	b3_item_load_func load_func,
 	b3_u32            class_type,
-	b3_bool           is_class)
+	bool              is_class)
 {
 	b3ItemRegisterEntry * entry;
 
@@ -140,17 +140,17 @@ b3Item::~b3Item()
 	}
 }
 
-b3_bool b3Item::b3IsClass(const b3_u32 class_type, const b3_u32 class_id)
+bool b3Item::b3IsClass(const b3_u32 class_type, const b3_u32 class_id)
 {
 	return (class_type & B3_CLASS_MASK) == class_id;
 }
 
-b3_bool b3Item::b3IsClass(const b3_u32 class_id) const
+bool b3Item::b3IsClass(const b3_u32 class_id) const
 {
 	return b3IsClass(b3GetClassType(), class_id);
 }
 
-b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
+bool b3Item::b3AllocHeads(b3_count new_head_count)
 {
 	b3_u32  i;
 
@@ -171,7 +171,7 @@ const char * b3Item::b3GetName() const
 	return nullptr;
 }
 
-b3_bool b3Item::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
+bool b3Item::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 {
 	return true;
 }
@@ -560,7 +560,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract * file)
 	return error;
 }
 
-void b3Item::b3EnsureStoreBuffer(b3_u32 needed, b3_bool is_data)
+void b3Item::b3EnsureStoreBuffer(b3_u32 needed, bool is_data)
 {
 	// Clearify some things...
 	if ((m_StoreOffset != 0) && (is_data))

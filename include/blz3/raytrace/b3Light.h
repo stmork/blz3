@@ -88,9 +88,9 @@ public:
 	b3Spline         m_Spline;       //!< The spline describing the light distribution curve.
 	b3_f32           m_Knots[B3_MAX_KNOTS];       //!< The knot vector of the light distribution curve.
 	b3_vector        m_Controls[B3_MAX_CONTROLS]; //!< The control points of the light distribution curve.
-	b3_bool          m_LightActive;               //!< Activation flag of the light source.
-	b3_bool          m_SoftShadow;                //!< A flag signalling soft lights.
-	b3_bool          m_SpotActive;                //!< A flag signalling directional spot lights.
+	bool             m_LightActive;               //!< Activation flag of the light source.
+	bool             m_SoftShadow;                //!< A flag signalling soft lights.
+	bool             m_SpotActive;                //!< A flag signalling directional spot lights.
 	char             m_Name[B3_LIGHTNAMELEN];     //!< The name of the light source.
 
 public:
@@ -103,7 +103,7 @@ public:
 	static void     b3Register();
 	void     b3Write() override;
 	void     b3Dump(b3_count level);
-	b3_bool  b3Prepare(b3_preparation_info * prep_info) override;
+	bool     b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method returns the lights name.
@@ -124,7 +124,7 @@ public:
 	 *
 	 * @return True if the light source is active.
 	 */
-	inline b3_bool  b3IsActive() const
+	inline bool     b3IsActive() const
 	{
 		return m_LightActive;
 	}
@@ -146,12 +146,12 @@ public:
 	 * @see b3Shader
 	 * @see b3_surface.
 	 */
-	b3_bool  b3Illuminate(b3Shader * shader, b3_surface * surface) const;
+	bool     b3Illuminate(b3Shader * shader, b3_surface * surface) const;
 
 private:
 	void            b3InitValues();
-	b3_bool         b3PointIllumination(b3Shader * shader, b3_surface * surface) const;
-	b3_bool         b3AreaIllumination(b3Shader * shader, b3_surface * surface) const;
+	bool            b3PointIllumination(b3Shader * shader, b3_surface * surface) const;
+	bool            b3AreaIllumination(b3Shader * shader, b3_surface * surface) const;
 	const b3Shape * b3CheckSinglePoint(b3Shader * shader, b3_surface * surface,
 		b3_light_info * Jit, b3_coord x, b3_coord y) const;
 

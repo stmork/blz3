@@ -57,7 +57,7 @@ void b3Box::b3ComputeVertices()
 	b3ComputeBoxVertices(m_Base, m_Dir1, m_Dir2, m_Dir3);
 }
 
-void b3Box::b3ComputeNormals(b3_bool normalize)
+void b3Box::b3ComputeNormals(bool normalize)
 {
 	b3RenderObject::b3ComputeNormals(normalize);
 }

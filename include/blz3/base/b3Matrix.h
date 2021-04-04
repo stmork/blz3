@@ -204,7 +204,7 @@ public:
 	 * @param vec2 The second vector.
 	 * @return True if both vectors are equal.
 	 */
-	static inline b3_bool b3IsEqual(
+	static inline bool    b3IsEqual(
 		const b3_vector * vec1,
 		const b3_vector * vec2)
 	{
@@ -222,7 +222,7 @@ public:
 	 * @param vec2 The second vector.
 	 * @return True if both vectors are equal.
 	 */
-	static inline b3_bool b3IsEqual(
+	static inline bool    b3IsEqual(
 		const b3_vector64 * vec1,
 		const b3_vector64 * vec2)
 	{
@@ -1950,8 +1950,8 @@ class B3_PLUGIN b3Matrix
 	static b3_matrix m_UnitMatrix;
 	static b3_vector m_EmptyVector;
 
-	static b3_bool    b3NormalizeCol(b3_matrix * Dst, b3_index col_num);
-	static b3_bool    b3NormalizeRow(b3_matrix * Dst, b3_index row_num);
+	static bool       b3NormalizeCol(b3_matrix * Dst, b3_index col_num);
+	static bool       b3NormalizeRow(b3_matrix * Dst, b3_index row_num);
 	static b3_f64     b3Det4(const b3_matrix * Matrix);
 
 public:
@@ -2228,7 +2228,7 @@ public:
 		const b3_vector * Center,
 		const b3_vector * Dir1,
 		const b3_vector * Dir2,
-		const b3_bool future);
+		const bool    future);
 
 	/**
 	 * This method multiplies matrix A and B and stores the result. The result pointer may be equal to
@@ -2268,7 +2268,7 @@ public:
 	 * @param A The matrix to test.
 	 * @return True if the given matrix is a unit matrix.
 	 */
-	static inline b3_bool    b3IsUnitMatrix(b3_matrix * A)
+	static inline bool       b3IsUnitMatrix(b3_matrix * A)
 	{
 		b3_f32 * ptr1 = &A->m11;
 		b3_f32 * ptr2 = &m_UnitMatrix.m11;
@@ -2361,7 +2361,7 @@ public:
 	static inline b3_vector * b3VMul(
 		const b3_matrix * A,
 		const b3_vector * Src, b3_vector * Dst,
-		const b3_bool    Use4D)
+		const bool        Use4D)
 	{
 #ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 * m = &A->m11;
@@ -2423,7 +2423,7 @@ public:
 	 * @param Use4D If true the input vector is a position. Otherwise it is a direction.
 	 * @return The result.
 	 */
-	static inline b3_vector64 * b3VMul(b3_matrix * A, b3_vector64 * Src, b3_vector64 * Dst, b3_bool Use4D)
+	static inline b3_vector64 * b3VMul(b3_matrix * A, b3_vector64 * Src, b3_vector64 * Dst, bool Use4D)
 	{
 #ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 * m = &A->m11;

@@ -667,7 +667,7 @@ public:
 	 * @param limit The b3Color instance to compare to.
 	 * @return True if any color channel overrides the limit.
 	 */
-	inline b3_bool b3IsGreater(const b3Color & limit)
+	inline bool    b3IsGreater(const b3Color & limit)
 	{
 		const b3_f32 * a = (const b3_f32 *)&v;
 		const b3_f32 * b = (const b3_f32 *)&limit.v;
