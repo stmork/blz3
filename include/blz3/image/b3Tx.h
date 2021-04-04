@@ -706,10 +706,9 @@ public:
 	 * @param xSrcOff The x image offset in the source image.
 	 * @param ySrcOff The y image offset in the source image.
 	 */
-	void           b3Blit(
-		b3Tx   *  srcTx,
-		b3_coord  xDstOff,  b3_coord yDstOff,
-		b3_res    xMax,     b3_res   yMax,
+	void           b3Blit(const b3Tx * srcTx,
+		b3_coord  xDstOff,     b3_coord yDstOff,
+		b3_res    xMax,        b3_res   yMax,
 		b3_coord  xSrcOff = 0, b3_coord ySrcOff = 0);
 
 	// b3TxImage.cc

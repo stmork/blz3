@@ -73,6 +73,9 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testTurn);
 	CPPUNIT_TEST(testRemoveBlackBorder);
 	CPPUNIT_TEST(testShrink);
+	CPPUNIT_TEST(testBlitSimple);
+	CPPUNIT_TEST(testBlitClipped);
+	CPPUNIT_TEST(testBlitOutside);
 
 #ifdef BLZ3_USE_OPENEXR
 	CPPUNIT_TEST(testWriteOpenEXR);
@@ -113,17 +116,20 @@ public:
 	void testTurn();
 	void testRemoveBlackBorder();
 	void testShrink();
+	void testBlitSimple();
+	void testBlitClipped();
+	void testBlitOutside();
 
 private:
 	void compareImages(
-			const b3Tx & src,
-			const bool   compare_meta = true,
-			const bool   compare_data = true);
+		const b3Tx & src,
+		const bool   compare_meta = true,
+		const bool   compare_data = true);
 	static void compareImages(
-			const b3Tx * src,
-			const b3Tx & dst,
-			const bool   compare_meta = false,
-			const bool   compare_data = true);
+		const b3Tx * src,
+		const b3Tx & dst,
+		const bool   compare_meta = false,
+		const bool   compare_data = true);
 };
 
 #endif

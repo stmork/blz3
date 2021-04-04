@@ -29,8 +29,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Tx::b3Blit(
-	b3Tx   *  srcTx,
+void b3Tx::b3Blit(const b3Tx   *  srcTx,
 	b3_coord  xDstOff,
 	b3_coord  yDstOff,
 	b3_res    xMax,
@@ -39,6 +38,7 @@ void b3Tx::b3Blit(
 	b3_coord  ySrcOff)
 {
 	b3_pkd_color * lSrc, *lDst, *pal;
+	b3_color   *   fSrc;
 	b3_u16    *    sSrc;
 	b3_u08    *    cSrc;
 	b3_coord       x, srcMod, SrcOff;
@@ -47,7 +47,7 @@ void b3Tx::b3Blit(
 	// We support only true color yet
 	if (type != B3_TX_RGB8)
 	{
-		return;
+		B3_THROW(b3TxException, B3_TX_UNSUPP);
 	}
 
 	// Clip against bounds (source)
@@ -77,7 +77,7 @@ void b3Tx::b3Blit(
 	case B3_TX_ILBM:
 		if (srcTx->depth != 1)
 		{
-			return;
+			B3_THROW(b3TxException, B3_TX_UNSUPP);
 		}
 
 		SrcOff = ySrcOff * TX_BWA(srcTx->xSize);
@@ -85,8 +85,8 @@ void b3Tx::b3Blit(
 
 		// compute start pointer
 		pal    = srcTx->b3GetPalette();
-		cSrc   = (b3_u08 *)srcTx->data;
-		lDst   = (b3_pkd_color *)data;
+		cSrc   = srcTx->data;
+		lDst   = data;
 		cSrc  += SrcOff;
 		lDst  += DstOff;
 
@@ -122,8 +122,8 @@ void b3Tx::b3Blit(
 
 		// compute start pointer
 		pal    = srcTx->b3GetPalette();
-		cSrc   = (b3_u08 *)srcTx->data;
-		lDst   = (b3_pkd_color *)data;
+		cSrc   = srcTx->data;
+		lDst   = data;
 		cSrc  += SrcOff;
 		lDst  += DstOff;
 
@@ -146,8 +146,8 @@ void b3Tx::b3Blit(
 		DstOff = yDstOff *        xSize + xDstOff;
 
 		// compute start pointer
-		sSrc   = (b3_u16 *)srcTx->data;
-		lDst   = (b3_pkd_color *)data;
+		sSrc   = srcTx->data;
+		lDst   = data;
 		sSrc  += SrcOff;
 		lDst  += DstOff;
 
@@ -173,8 +173,8 @@ void b3Tx::b3Blit(
 		DstOff = yDstOff *        xSize + xDstOff;
 
 		// compute start pointer
-		lSrc   = (b3_pkd_color *)srcTx->data;
-		lDst   = (b3_pkd_color *)data;
+		lSrc   = srcTx->data;
+		lDst   = data;
 		lSrc  += SrcOff;
 		lDst  += DstOff;
 
@@ -192,8 +192,34 @@ void b3Tx::b3Blit(
 		}
 		break;
 
-	default:
+	case B3_TX_FLOAT:
+		SrcOff = ySrcOff * srcTx->xSize + xSrcOff;
+		DstOff = yDstOff *        xSize + xDstOff;
+
+		// compute start pointer
+		fSrc   = srcTx->data;
+		lDst   = data;
+		fSrc  += SrcOff;
+		lDst  += DstOff;
+
+		// compute line skip value
+		srcMod = srcTx->xSize - xMax;
+		dstMod =        xSize - xMax;
+		for (y = 0; y < yMax; y++)
+		{
+			for (x = 0; x < xMax; x++)
+			{
+				const b3_pkd_color color = b3Color(*fSrc++);
+
+				*lDst++ = color;
+			}
+			fSrc += srcMod;
+			lDst += dstMod;
+		}
 		break;
+
+	default:
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 }
 

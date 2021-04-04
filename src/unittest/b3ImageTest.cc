@@ -732,7 +732,6 @@ void b3ImageTest::testTurn()
 		b3Path path;
 
 		path.b3Format("img_test_turn_%03ld.jpg", depth);
-		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
 		tx.b3TurnLeft();
@@ -760,10 +759,72 @@ void b3ImageTest::testShrink()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxBW.b3SaveImage(path));
 }
 
+void b3ImageTest::testBlitSimple()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   dst;
+		b3Path path;
+
+		path.b3Format("img_test_blit_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(m_TxMap[depth],
+				19, 27, 113, 127, 37, 41));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+	}
+}
+
+void b3ImageTest::testBlitClipped()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		const b3Tx *src = m_TxMap[depth];
+		b3Tx        dst;
+		b3Path      path;
+
+		path.b3Format("img_test_blit_clipped1_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
+				dst.xSize - 83, dst.ySize - 91, 113, 127, 37, 41));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+		// BUG: negative destination offsets cause memory corruption.
+#if 0
+		path.b3Format("img_test_blit_clipped2_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
+				-83, -91, 113, 127, 37, 41));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+#endif
+	}
+}
+
+void b3ImageTest::testBlitOutside()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		const b3Tx *src = m_TxMap[depth];
+		b3Tx        dst;
+		b3Path      path;
+
+		path.b3Format("img_test_blit_out1_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
+				dst.xSize + 83, dst.ySize + 91, 113, 127, 37, 41));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+		path.b3Format("img_test_blit_out2_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
+				83, 91, 113, 127, src->xSize + 151, src->ySize + 227));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+	}
+}
+
 void b3ImageTest::compareImages(
-		const b3Tx & src,
-		const bool   compare_meta,
-		const bool   compare_data)
+	const b3Tx & src,
+	const bool   compare_meta,
+	const bool   compare_data)
 {
 	b3Tx tx;
 
@@ -772,10 +833,10 @@ void b3ImageTest::compareImages(
 }
 
 void b3ImageTest::compareImages(
-		const b3Tx * src,
-		const b3Tx & dst,
-		const bool   compare_meta,
-		const bool   compare_data)
+	const b3Tx * src,
+	const b3Tx & dst,
+	const bool   compare_meta,
+	const bool   compare_data)
 {
 	CPPUNIT_ASSERT_EQUAL(src->xSize, dst.xSize);
 	CPPUNIT_ASSERT_EQUAL(src->ySize, dst.ySize);
@@ -783,7 +844,7 @@ void b3ImageTest::compareImages(
 	if (compare_meta)
 	{
 		CPPUNIT_ASSERT_EQUAL(
-					src->b3GetPalette() != nullptr, dst.b3GetPalette() != nullptr);
+			src->b3GetPalette() != nullptr, dst.b3GetPalette() != nullptr);
 		CPPUNIT_ASSERT_EQUAL(src->b3IsLoaded(),      dst.b3IsLoaded());
 		CPPUNIT_ASSERT_EQUAL(src->b3IsBW(),          dst.b3IsBW());
 		CPPUNIT_ASSERT_EQUAL(src->b3IsGreyPalette(), dst.b3IsGreyPalette());

@@ -673,11 +673,7 @@ void b3Tx::b3ScaleFilteredFromBW(
 	b3_f64        r1, g1, b1, c1;
 
 #if 1
-	NumCPUs = b3Runtime::b3GetNumCPUs();
-	if (NumCPUs > CPU_MAX)
-	{
-		NumCPUs = CPU_MAX;
-	}
+	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1122,11 +1118,7 @@ void b3Tx::b3ScaleFilteredFromTrueColor(
 	b3_count     NumCPUs;
 
 #if 1
-	NumCPUs = b3Runtime::b3GetNumCPUs();
-	if (NumCPUs > CPU_MAX)
-	{
-		NumCPUs = CPU_MAX;
-	}
+	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1482,11 +1474,7 @@ void b3Tx::b3ScaleFilteredFromFloat(
 	b3_count     NumCPUs;
 
 #if 1
-	NumCPUs = b3Runtime::b3GetNumCPUs();
-	if (NumCPUs > CPU_MAX)
-	{
-		NumCPUs = CPU_MAX;
-	}
+	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1913,11 +1901,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	b3_count       NumCPUs;
 
 #if 1
-	NumCPUs = b3Runtime::b3GetNumCPUs();
-	if (NumCPUs > CPU_MAX)
-	{
-		NumCPUs = CPU_MAX;
-	}
+	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -2050,8 +2034,8 @@ void b3Tx::b3ScaleUnfilteredFromHighColor(
 	const b3_count * rIndex,
 	const b3_count * cIndex)
 {
-	b3_coord       x, y;
-	b3_count       num;
+	b3_coord     x, y;
+	b3_count     num;
 	b3_u16   *   src_ptr;
 	b3_u16   *   dst_ptr;
 
