@@ -25,6 +25,38 @@
 
 #include "b3TxInclude.h"
 
+#pragma pack(1)
+/**
+ * The PCX file header.
+ *Sources:
+ * <ul>
+ * <li>https://www.fileformat.info/format/pcx/egff.htm</li>
+ * <li>https://de.wikipedia.org/wiki/Picture_exchange</li>
+ * </ul>
+ */
+struct b3HeaderPCX
+{
+	b3_u08 Identifier;        //!< PCX Id Number (Always 0x0A)
+	b3_u08 Version;           //!< Version Number
+	b3_u08 Encoding;          //!< Encoding Format
+	b3_u08 BitsPerPixel;      //!< Bits per Pixel
+	b3_u16 XStart;            //!< Left of image
+	b3_u16 YStart;            //!< Top of Image
+	b3_u16 XEnd;              //!< Right of Image
+	b3_u16 YEnd;              //!< Bottom of image
+	b3_u16 HorzRes;           //!< Horizontal Resolution
+	b3_u16 VertRes;           //!< Vertical Resolution
+	b3_u08 Palette[48];       //!< 16-Color EGA Palette
+	b3_u08 Reserved1;         //!< Reserved (Always 0)
+	b3_u08 NumBitPlanes;      //!< Number of Bit Planes
+	b3_u16 BytesPerLine;      //!< Bytes per Scan-line
+	b3_u16 PaletteType;       //!< Palette Type
+	b3_u16 HorzScreenSize;    //!< Horizontal Screen Size
+	b3_u16 VertScreenSize;    //!< Vertical Screen Size
+	b3_u08 Reserved2[54];     //!< Reserved (Always 0)
+};
+#pragma pack()
+
 /*************************************************************************
 **                                                                      **
 **                            Paintbrush PCX                            **

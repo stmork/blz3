@@ -75,12 +75,12 @@ public:
 		B3_SWAP(m_Changer.m_iBuffer[5], m_Changer.m_iBuffer[6]);
 	}
 
-	inline b3_bool b3IsIntel()
+	inline b3_bool b3IsIntel() const
 	{
 		return b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN;
 	}
 
-	inline b3_bool b3IsMotorola()
+	inline b3_bool b3IsMotorola() const
 	{
 		return b3Runtime::b3GetCPUType() == B3_BIG_ENDIAN;
 	}

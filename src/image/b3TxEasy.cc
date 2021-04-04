@@ -248,19 +248,10 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 	B3_ASSERT(offsetof(b3HeaderBMP, biSize) == 14);
 	B3_ASSERT(sizeof(b3HeaderBMP) == 54);
 
-	b3Endian::b3GetIntel32(&bmp->bfOffBits);
-	b3Endian::b3GetIntel32(&bmp->bfSize);
-	b3Endian::b3GetIntel32(&bmp->biSize);
 	xNewSize  = b3Endian::b3GetIntel32(&bmp->biWidth);
 	yNewSize  = b3Endian::b3GetIntel32(&bmp->biHeight);
-	b3Endian::b3GetIntel16(&bmp->biPlanes);
 	numPlanes = b3Endian::b3GetIntel16(&bmp->biBitCount);
-	b3Endian::b3GetIntel32(&bmp->biCompression);
-	b3Endian::b3GetIntel32(&bmp->biSizeImage);
-	b3Endian::b3GetIntel32(&bmp->biXPelsPerMeter);
-	b3Endian::b3GetIntel32(&bmp->biYPelsPerMeter);
 	numColors = b3Endian::b3GetIntel32(&bmp->biClrUsed);
-	b3Endian::b3GetIntel32(&bmp->biClrImportant);
 
 	b3PrintF(B3LOG_FULL, "IMG BMP  # b3ParseBMP(%s)\n",
 		(const char *)image_name);
