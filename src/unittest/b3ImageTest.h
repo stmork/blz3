@@ -54,6 +54,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testPixel);
 	CPPUNIT_TEST(testRow);
 	CPPUNIT_TEST(testEmpty);
+
 	CPPUNIT_TEST(testRead);
 	CPPUNIT_TEST(testReadGIF);
 	CPPUNIT_TEST(testWriteTIFF);
@@ -61,6 +62,7 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testWriteTGA);
 	CPPUNIT_TEST(testWriteRGB8);
 	CPPUNIT_TEST(testWritePS);
+
 	CPPUNIT_TEST(testScaleUnfiltered);
 	CPPUNIT_TEST(testScaleFiltered);
 	CPPUNIT_TEST(testTransToGrey);
@@ -85,6 +87,13 @@ public:
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
+	void testTxData();
+	void testColor();
+	void testPixel();
+	void testRow();
+	void testEmpty();
+	void testCopy();
+
 	void testRead();
 	void testReadGIF();
 	void testWriteTIFF();
@@ -94,11 +103,6 @@ public:
 	void testWritePS();
 	void testWriteOpenEXR();
 
-	void testTxData();
-	void testColor();
-	void testPixel();
-	void testRow();
-	void testEmpty();
 	void testScaleUnfiltered();
 	void testScaleFiltered();
 	void testTransToGrey();

@@ -151,115 +151,6 @@ void b3ImageTest::setUp()
 
 /*************************************************************************
 **                                                                      **
-**                        Unit tests for file access                    **
-**                                                                      **
-*************************************************************************/
-
-void b3ImageTest::testRead()
-{
-	// Use https://regex101.com/
-	static std::regex  regex(R"(Lenna-([012][01248])\.[a-z]+)");
-	static std::smatch matcher;
-	b3FileList         list;
-
-	list.b3RecCreateList(".");
-	list.b3Sort();
-	for (b3FileEntry * entry = list.b3First(); entry != nullptr; entry = entry->Succ)
-	{
-		b3Path filename;
-
-		b3Path::b3SplitFileName(entry->b3Name(), nullptr, filename);
-		std::string s(filename);
-		if (std::regex_match(s, matcher, regex))
-		{
-			const b3_res depth = std::stol(matcher[1], 0, 16);
-			b3Tx         tx;
-
-			CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3LoadImage(entry->b3Name(), false));
-			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.xSize);
-			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.ySize);
-
-			CPPUNIT_ASSERT_EQUAL(depth, tx.depth);
-			CPPUNIT_ASSERT_TYPED_EQUAL(bool, tx.depth <= 8, tx.b3IsPalette());
-			if (tx.depth <= 8)
-			{
-				CPPUNIT_ASSERT(tx.b3GetPalette() != nullptr);
-			}
-		}
-	}
-}
-
-void b3ImageTest::testReadGIF()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxGIF.b3LoadImage("fft_test.gif", true));
-//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.gif"));
-}
-
-void b3ImageTest::testWriteTIFF()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK,        m_TxBW.b3SaveImage("img_test_01.tiff"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tiff"));
-//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tiff"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tiff"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tiff"));
-
-	compareImages(m_TxPallColor);
-	compareImages(m_TxTrueColor);
-}
-
-void b3ImageTest::testWriteJPEG()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.jpg"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.jpg"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.jpg"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.jpg"));
-
-	// No comparison because JPEG is not lossless.
-}
-
-void b3ImageTest::testWriteTGA()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tga"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tga"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tga"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tga"));
-
-	compareImages(m_TxPallColor);
-	compareImages(m_TxTrueColor);
-}
-
-void b3ImageTest::testWriteRGB8()
-{
-	b3Tx tx;
-
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.rgb8"));
-//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.rgb4"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.rgb8"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.rgb8"));
-
-//	compareImages(m_TxPallColor);
-//	compareImages(m_TxTrueColor);
-}
-
-void b3ImageTest::testWritePS()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.ps"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.ps"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.ps"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
-}
-
-void b3ImageTest::testWriteOpenEXR()
-{
-#ifdef BLZ3_USE_OPENEXR
-	m_TxRealColor.b3SaveImage("img_test_80.exr");
-
-	compareImages(m_TxRealColor);
-#endif
-}
-
-/*************************************************************************
-**                                                                      **
 **                        Unit tests for basic data type handling       **
 **                                                                      **
 *************************************************************************/
@@ -539,6 +430,148 @@ void b3ImageTest::testEmpty()
 			CPPUNIT_ASSERT_THROW(empty.b3Shrink(), b3TxException);
 		}
 	}
+}
+
+void b3ImageTest::testCopy()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		const b3Tx * src = m_TxMap[depth];
+		b3Tx         dst;
+
+		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(src));
+
+		CPPUNIT_ASSERT_EQUAL(src->xSize, dst.xSize);
+		CPPUNIT_ASSERT_EQUAL(src->ySize, dst.ySize);
+		CPPUNIT_ASSERT_EQUAL(src->depth, dst.depth);
+
+		CPPUNIT_ASSERT_EQUAL(src->b3GetPalette(),    dst.b3GetPalette());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsLoaded(),      dst.b3IsLoaded());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsBW(),          dst.b3IsBW());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsGreyPalette(), dst.b3IsGreyPalette());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsHighColor(),   dst.b3IsHighColor());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsTrueColor(),   dst.b3IsTrueColor());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsHdr(),         dst.b3IsHdr());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsPalette(),     dst.b3IsPalette());
+
+		for (b3_res y = 0; y < src->ySize; y++)
+		{
+			for (b3_res x = 0; x < src->xSize; x++)
+			{
+				CPPUNIT_ASSERT_EQUAL(src->b3GetValue(x, y),    dst.b3GetValue(x, y));
+				CPPUNIT_ASSERT_EQUAL(src->b3GetHdrValue(x, y), dst.b3GetHdrValue(x, y));
+			}
+		}
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Unit tests for file access                    **
+**                                                                      **
+*************************************************************************/
+
+void b3ImageTest::testRead()
+{
+	// Use https://regex101.com/
+	static std::regex  regex(R"(Lenna-([012][01248])\.[a-z]+)");
+	static std::smatch matcher;
+	b3FileList         list;
+
+	list.b3RecCreateList(".");
+	list.b3Sort();
+	for (b3FileEntry * entry = list.b3First(); entry != nullptr; entry = entry->Succ)
+	{
+		b3Path filename;
+
+		b3Path::b3SplitFileName(entry->b3Name(), nullptr, filename);
+		std::string s(filename);
+		if (std::regex_match(s, matcher, regex))
+		{
+			const b3_res depth = std::stol(matcher[1], 0, 16);
+			b3Tx         tx;
+
+			CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3LoadImage(entry->b3Name(), false));
+			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.xSize);
+			CPPUNIT_ASSERT_TYPED_EQUAL(b3_res, 512, tx.ySize);
+
+			CPPUNIT_ASSERT_EQUAL(depth, tx.depth);
+			CPPUNIT_ASSERT_TYPED_EQUAL(bool, tx.depth <= 8, tx.b3IsPalette());
+			if (tx.depth <= 8)
+			{
+				CPPUNIT_ASSERT(tx.b3GetPalette() != nullptr);
+			}
+		}
+	}
+}
+
+void b3ImageTest::testReadGIF()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxGIF.b3LoadImage("fft_test.gif", true));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.gif"));
+}
+
+void b3ImageTest::testWriteTIFF()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK,        m_TxBW.b3SaveImage("img_test_01.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tiff"));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tiff"));
+
+	compareImages(m_TxPallColor);
+	compareImages(m_TxTrueColor);
+}
+
+void b3ImageTest::testWriteJPEG()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.jpg"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.jpg"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.jpg"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.jpg"));
+
+	// No comparison because JPEG is not lossless.
+}
+
+void b3ImageTest::testWriteTGA()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tga"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tga"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tga"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tga"));
+
+	compareImages(m_TxPallColor);
+	compareImages(m_TxTrueColor);
+}
+
+void b3ImageTest::testWriteRGB8()
+{
+	b3Tx tx;
+
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.rgb8"));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.rgb4"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.rgb8"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.rgb8"));
+
+//	compareImages(m_TxPallColor);
+//	compareImages(m_TxTrueColor);
+}
+
+void b3ImageTest::testWritePS()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
+}
+
+void b3ImageTest::testWriteOpenEXR()
+{
+#ifdef BLZ3_USE_OPENEXR
+	m_TxRealColor.b3SaveImage("img_test_80.exr");
+
+	compareImages(m_TxRealColor);
+#endif
 }
 
 /*************************************************************************
