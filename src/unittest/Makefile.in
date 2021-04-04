@@ -79,7 +79,7 @@ depend:
 	@CPP@ -M  $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
 
 clean:	cleantest
-	rm -f *.o *.bak *~ core img_test.* $(PRGS) out ALL QUIET
+	rm -f *.o *.bak *~ core img_test* test*.bwd $(PRGS) out ALL QUIET
 
 cleantest:
 	rm -f $(TEST_FILES)
