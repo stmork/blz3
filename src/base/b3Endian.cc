@@ -85,22 +85,22 @@ public:
 		return b3Runtime::b3GetCPUType() == B3_BIG_ENDIAN;
 	}
 
-	inline b3_u16 b3GetU16()
+	inline b3_u16 b3GetU16() const
 	{
 		return m_Changer.m_sBuffer[0];
 	}
 
-	inline b3_u32 b3GetU32()
+	inline b3_u32 b3GetU32() const
 	{
 		return m_Changer.m_lBuffer[0];
 	}
 
-	inline b3_f32 b3GetF32()
+	inline b3_f32 b3GetF32() const
 	{
 		return m_Changer.m_fBuffer[0];
 	}
 
-	inline b3_f64 b3GetF64()
+	inline b3_f64 b3GetF64() const
 	{
 		return m_Changer.m_dBuffer[0];
 	}
