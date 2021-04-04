@@ -778,9 +778,9 @@ void b3ImageTest::testBlitClipped()
 {
 	for (b3_res depth : m_TestDepth)
 	{
-		const b3Tx *src = m_TxMap[depth];
-		b3Tx        dst;
-		b3Path      path;
+		const b3Tx * src = m_TxMap[depth];
+		b3Tx         dst;
+		b3Path       path;
 
 		path.b3Format("img_test_blit_clipped1_%03ld.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
@@ -803,9 +803,9 @@ void b3ImageTest::testBlitOutside()
 {
 	for (b3_res depth : m_TestDepth)
 	{
-		const b3Tx *src = m_TxMap[depth];
-		b3Tx        dst;
-		b3Path      path;
+		const b3Tx * src = m_TxMap[depth];
+		b3Tx         dst;
+		b3Path       path;
 
 		path.b3Format("img_test_blit_out1_%03ld.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));

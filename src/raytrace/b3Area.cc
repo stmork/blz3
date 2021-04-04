@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_gl_line b3Area::m_AreaGrids[4] =
+b3_gl_line b3Area::m_AreaGrids[4]
 {
 	{ 0, 1 },
 	{ 1, 2 },
@@ -38,13 +38,13 @@ b3_gl_line b3Area::m_AreaGrids[4] =
 	{ 3, 0 }
 };
 
-b3_gl_polygon b3Area::m_AreaPolygons[2] =
+b3_gl_polygon b3Area::m_AreaPolygons[2]
 {
 	{ 0, 3, 1 },
 	{ 2, 1, 3 }
 };
 
-b3_f32 b3Area::m_AreaTexcoord[8] =
+b3_f32 b3Area::m_AreaTexcoord[8]
 {
 	0, 0,
 	0, 1,
