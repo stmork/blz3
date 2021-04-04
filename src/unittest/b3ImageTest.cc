@@ -554,6 +554,7 @@ void b3ImageTest::testScaleUnfiltered()
 		b3Tx   src;
 		b3Tx   dst_smaller;
 		b3Tx   dst_bigger;
+		b3Tx   dst_huger;
 		b3Path path;
 
 		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
@@ -568,6 +569,11 @@ void b3ImageTest::testScaleUnfiltered()
 		dst_bigger.b3AllocTx(src.xSize * 1.4, src.ySize * 1.4, depth);
 		dst_bigger.b3Scale(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_bigger.b3SaveImage(path));
+
+		path.b3Format("img_test_scale_uh_%03ld.jpg", depth);
+		CPPUNIT_ASSERT(dst_huger.b3AllocTx(1024, 1024, depth));
+		dst_huger.b3Scale(&src);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_huger.b3SaveImage(path));
 	}
 }
 
@@ -578,6 +584,7 @@ void b3ImageTest::testScaleFiltered()
 		b3Tx   src;
 		b3Tx   dst_smaller;
 		b3Tx   dst_bigger;
+		b3Tx   dst_huger;
 		b3Path path;
 
 		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
@@ -592,6 +599,11 @@ void b3ImageTest::testScaleFiltered()
 		CPPUNIT_ASSERT(dst_bigger.b3AllocTx(src.xSize * 1.4, src.ySize * 1.4, 32));
 		dst_bigger.b3ScaleToGrey(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_bigger.b3SaveImage(path));
+
+		path.b3Format("img_test_scale_fh_%03ld-%03ld.jpg", depth, depth);
+		CPPUNIT_ASSERT(dst_huger.b3AllocTx(1024, 1024, 32));
+		dst_huger.b3ScaleToGrey(&src);
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_huger.b3SaveImage(path));
 	}
 
 	b3Tx   bw;
