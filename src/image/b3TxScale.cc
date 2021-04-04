@@ -1774,7 +1774,7 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3ScaleToGrey(): destination image (0x%p) without extend (%ldx%ld)!\n",
 			this, xSize, ySize);
-		return;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 	rIndex = b3TypedAlloc<b3_count>(xSize + 1);
 	cIndex = b3TypedAlloc<b3_count>(ySize + 1);
@@ -1893,7 +1893,7 @@ bool b3Tx::b3ScaleBW2BW(void * ptr)
 		}
 		dst += dstBytes;
 	}
-	return 0;
+	return false;
 }
 
 void b3Tx::b3ScaleUnfilteredFromBW(
@@ -2235,7 +2235,7 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3Scale(): destination image (0x%p) without extend (%ldx%ld)!\n",
 			this, xSize, ySize);
-		return;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 	rIndex = b3TypedAlloc<b3_count>(xSize + 1);
 	cIndex = b3TypedAlloc<b3_count>(ySize + 1);
