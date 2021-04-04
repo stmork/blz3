@@ -115,7 +115,15 @@ public:
 	void testShrink();
 
 private:
-	void compareImages(const b3Tx & src);
+	void compareImages(
+			const b3Tx & src,
+			const bool   compare_meta = true,
+			const bool   compare_data = true);
+	static void compareImages(
+			const b3Tx * src,
+			const b3Tx & dst,
+			const bool   compare_meta = false,
+			const bool   compare_data = true);
 };
 
 #endif

@@ -441,27 +441,9 @@ void b3ImageTest::testCopy()
 
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(src));
 
-		CPPUNIT_ASSERT_EQUAL(src->xSize, dst.xSize);
-		CPPUNIT_ASSERT_EQUAL(src->ySize, dst.ySize);
 		CPPUNIT_ASSERT_EQUAL(src->depth, dst.depth);
 
-		CPPUNIT_ASSERT_EQUAL(src->b3GetPalette(),    dst.b3GetPalette());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsLoaded(),      dst.b3IsLoaded());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsBW(),          dst.b3IsBW());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsGreyPalette(), dst.b3IsGreyPalette());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsHighColor(),   dst.b3IsHighColor());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsTrueColor(),   dst.b3IsTrueColor());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsHdr(),         dst.b3IsHdr());
-		CPPUNIT_ASSERT_EQUAL(src->b3IsPalette(),     dst.b3IsPalette());
-
-		for (b3_res y = 0; y < src->ySize; y++)
-		{
-			for (b3_res x = 0; x < src->xSize; x++)
-			{
-				CPPUNIT_ASSERT_EQUAL(src->b3GetValue(x, y),    dst.b3GetValue(x, y));
-				CPPUNIT_ASSERT_EQUAL(src->b3GetHdrValue(x, y), dst.b3GetHdrValue(x, y));
-			}
-		}
+		compareImages(src, dst, true);
 	}
 }
 
@@ -530,7 +512,8 @@ void b3ImageTest::testWriteJPEG()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.jpg"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.jpg"));
 
-	// No comparison because JPEG is not lossless.
+	// No data comparison because JPEG is not lossless.
+	compareImages(m_TxTrueColor, true, false);
 }
 
 void b3ImageTest::testWriteTGA()
@@ -540,8 +523,11 @@ void b3ImageTest::testWriteTGA()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tga"));
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tga"));
 
-	compareImages(m_TxPallColor);
+	// No meta data comparison because TGA stores always in true color.
+	compareImages(m_TxPallColor, false);
+	compareImages(m_TxHighColor, false);
 	compareImages(m_TxTrueColor);
+	compareImages(m_TxRealColor, false, true);
 }
 
 void b3ImageTest::testWriteRGB8()
@@ -774,20 +760,48 @@ void b3ImageTest::testShrink()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxBW.b3SaveImage(path));
 }
 
-void b3ImageTest::compareImages(const b3Tx & src)
+void b3ImageTest::compareImages(
+		const b3Tx & src,
+		const bool   compare_meta,
+		const bool   compare_data)
 {
 	b3Tx tx;
 
 	CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3LoadImage(src.b3GetFilename()));
-	CPPUNIT_ASSERT_EQUAL(tx.xSize, src.xSize);
-	CPPUNIT_ASSERT_EQUAL(tx.ySize, src.ySize);
+	compareImages(&src, tx, compare_meta, compare_data);
+}
 
-	for (b3_res y = 0; y < tx.ySize; y++)
+void b3ImageTest::compareImages(
+		const b3Tx * src,
+		const b3Tx & dst,
+		const bool   compare_meta,
+		const bool   compare_data)
+{
+	CPPUNIT_ASSERT_EQUAL(src->xSize, dst.xSize);
+	CPPUNIT_ASSERT_EQUAL(src->ySize, dst.ySize);
+
+	if (compare_meta)
 	{
-		for (b3_res x = 0; x < tx.xSize; x++)
+		CPPUNIT_ASSERT_EQUAL(
+					src->b3GetPalette() != nullptr, dst.b3GetPalette() != nullptr);
+		CPPUNIT_ASSERT_EQUAL(src->b3IsLoaded(),      dst.b3IsLoaded());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsBW(),          dst.b3IsBW());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsGreyPalette(), dst.b3IsGreyPalette());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsHighColor(),   dst.b3IsHighColor());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsTrueColor(),   dst.b3IsTrueColor());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsHdr(),         dst.b3IsHdr());
+		CPPUNIT_ASSERT_EQUAL(src->b3IsPalette(),     dst.b3IsPalette());
+	}
+
+	if (compare_data)
+	{
+		for (b3_res y = 0; y < src->ySize; y++)
 		{
-			CPPUNIT_ASSERT_EQUAL(src.b3GetValue(x, y),    tx.b3GetValue(x, y));
-			CPPUNIT_ASSERT_EQUAL(src.b3GetHdrValue(x, y), tx.b3GetHdrValue(x, y));
+			for (b3_res x = 0; x < src->xSize; x++)
+			{
+				CPPUNIT_ASSERT_EQUAL(src->b3GetValue(x, y),    dst.b3GetValue(x, y));
+				CPPUNIT_ASSERT_EQUAL(src->b3GetHdrValue(x, y), dst.b3GetHdrValue(x, y));
+			}
 		}
 	}
 }
