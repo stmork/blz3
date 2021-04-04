@@ -43,7 +43,7 @@ const b3Color b3Tx::m_RgbEyeStimulus
 	0.35, 0.51, 0.14, 0.0
 };
 
-b3_bool b3Tx::m_ErrorHandlerInstalled = false;
+bool b3Tx::m_ErrorHandlerInstalled = false;
 
 /*************************************************************************
 **                                                                      **
@@ -132,14 +132,14 @@ b3Tx::~b3Tx()
 #endif
 }
 
-b3_bool b3Tx::b3AllocTx(
+bool b3Tx::b3AllocTx(
 	b3_res x,
 	b3_res y,
 	b3_res d)
 {
 	void * new_ptr;
 
-	if ((d == 0) || (x == 0) || (y == 0))
+	if ((d <= 0) || (x <= 0) || (y <= 0))
 	{
 		// This meens, we need an empty image, so
 		// free memory and nothing is OK!
@@ -264,7 +264,7 @@ void b3Tx::b3FreeTx()
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
-b3_bool b3Tx::b3IsGreyPalette() const
+bool b3Tx::b3IsGreyPalette() const
 {
 	b3_loop      i, max;
 	b3_pkd_color mul, step;
@@ -538,7 +538,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 	ScanLines   = srcTx->ScanLines;
 }
 
-b3_bool b3Tx::b3IsLoaded() const
+bool b3Tx::b3IsLoaded() const
 {
 	return ((xSize != 0) && (ySize != 0) && (data != nullptr) && (type != B3_TX_UNDEFINED));
 }
@@ -732,7 +732,7 @@ inline b3_pkd_color b3Tx::b3ILBMValue(
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
+bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 {
 	b3_u08    *    bPtr, bit;
 	b3_u16    *    sPtr;

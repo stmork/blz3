@@ -163,7 +163,7 @@ void b3Tx::b3ParseSGI3(
 	rle   = ((HeaderSGI->type & 0xff00) == 0x0100) ? 0 : xSize; /* check RLE */
 
 	/* line buffer */
-	line = (b3_u08 *)b3Alloc(xSize * zSize * bytes);
+	line = b3TypedAlloc<b3_u08>(xSize * zSize * bytes);
 	if (line == nullptr)
 	{
 		b3FreeTx();

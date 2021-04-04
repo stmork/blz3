@@ -55,7 +55,7 @@ void b3Locale::b3IsoToLocale(
 		}
 		src++;
 	}
-	dst[len-1] = 0;
+	dst[len - 1] = 0;
 #else
 	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
 	{

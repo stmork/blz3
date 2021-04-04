@@ -348,6 +348,12 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT_EQUAL(B3_BLACK, bw.b3GetValue(2, 0));
 	CPPUNIT_ASSERT_EQUAL(B3_WHITE, bw.b3GetValue(3, 0));
 
+	CPPUNIT_ASSERT(bw.b3GetPalette() != nullptr);
+	CPPUNIT_ASSERT_NO_THROW(bw.b3GetIndexData());
+	CPPUNIT_ASSERT_THROW(bw.b3GetHighColorData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(bw.b3GetTrueColorData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(bw.b3GetHdrData(), b3TxException);
+
 	CPPUNIT_ASSERT(vga.b3AllocTx(DATA_SIZE(data_vga), 1, 8));
 	vga.b3SetData(data_vga, sizeof(data_vga));
 	vga.b3SetPalette(data_u32, DATA_SIZE(data_u32));
@@ -356,6 +362,13 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(!vga.b3IsHighColor());
 	CPPUNIT_ASSERT(!vga.b3IsTrueColor());
 	CPPUNIT_ASSERT(!vga.b3IsHdr());
+
+	CPPUNIT_ASSERT(vga.b3GetPalette() != nullptr);
+	CPPUNIT_ASSERT_NO_THROW(vga.b3GetIndexData());
+	CPPUNIT_ASSERT_THROW(vga.b3GetHighColorData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(vga.b3GetTrueColorData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(vga.b3GetHdrData(), b3TxException);
+
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], vga.b3GetValue(i, 0));
@@ -368,6 +381,13 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT( high.b3IsHighColor());
 	CPPUNIT_ASSERT(!high.b3IsTrueColor());
 	CPPUNIT_ASSERT(!high.b3IsHdr());
+
+	CPPUNIT_ASSERT(high.b3GetPalette() == nullptr);
+	CPPUNIT_ASSERT_THROW(high.b3GetIndexData(), b3TxException);
+	CPPUNIT_ASSERT_NO_THROW(high.b3GetHighColorData());
+	CPPUNIT_ASSERT_THROW(high.b3GetTrueColorData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(high.b3GetHdrData(), b3TxException);
+
 	CPPUNIT_ASSERT_EQUAL(B3_BLACK, high.b3GetValue(0, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x444444, high.b3GetValue(1, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x888888, high.b3GetValue(2, 0));
@@ -385,6 +405,12 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(!color.b3IsHighColor());
 	CPPUNIT_ASSERT( color.b3IsTrueColor());
 	CPPUNIT_ASSERT(!color.b3IsHdr());
+
+	CPPUNIT_ASSERT(color.b3GetPalette() == nullptr);
+	CPPUNIT_ASSERT_THROW(color.b3GetIndexData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(color.b3GetHighColorData(), b3TxException);
+	CPPUNIT_ASSERT_NO_THROW(color.b3GetTrueColorData());
+	CPPUNIT_ASSERT_THROW(color.b3GetHdrData(), b3TxException);
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], color.b3GetValue(i, 0));
@@ -397,6 +423,12 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(!hdr.b3IsHighColor());
 	CPPUNIT_ASSERT( hdr.b3IsTrueColor());
 	CPPUNIT_ASSERT( hdr.b3IsHdr());
+
+	CPPUNIT_ASSERT(hdr.b3GetPalette() == nullptr);
+	CPPUNIT_ASSERT_THROW(hdr.b3GetIndexData(), b3TxException);
+	CPPUNIT_ASSERT_THROW(hdr.b3GetHighColorData(), b3TxException);
+	CPPUNIT_ASSERT_NO_THROW(hdr.b3GetTrueColorData());
+	CPPUNIT_ASSERT_NO_THROW(hdr.b3GetHdrData());
 	for (i = 0; i < DATA_SIZE(data_u32); i++)
 	{
 		const b3_pkd_color aux = hdr.b3GetValue(i, 0);
@@ -458,6 +490,54 @@ void b3ImageTest::testRow()
 	{
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
 		CPPUNIT_ASSERT(data_col[i] == row_col[i]);
+	}
+}
+
+void b3ImageTest::testEmpty()
+{
+	b3Tx empty, dst;
+
+	CPPUNIT_ASSERT(!empty.b3AllocTx(  0,   0, 32));
+	CPPUNIT_ASSERT(!empty.b3AllocTx( -1,  -1, -1));
+	CPPUNIT_ASSERT(!empty.b3AllocTx(128, 128, 19));
+
+	CPPUNIT_ASSERT(!empty.b3IsLoaded());
+	CPPUNIT_ASSERT(!empty.b3IsBW());
+	CPPUNIT_ASSERT(!empty.b3IsPalette());
+	CPPUNIT_ASSERT(!empty.b3IsHighColor());
+	CPPUNIT_ASSERT(!empty.b3IsTrueColor());
+	CPPUNIT_ASSERT(!empty.b3IsHdr());
+
+	CPPUNIT_ASSERT(nullptr == empty.b3GetPalette());
+	CPPUNIT_ASSERT(nullptr == empty.b3GetIndexData());
+	CPPUNIT_ASSERT(nullptr == empty.b3GetHighColorData());
+	CPPUNIT_ASSERT(nullptr == empty.b3GetTrueColorData());
+	CPPUNIT_ASSERT(nullptr == empty.b3GetHdrData());
+
+	CPPUNIT_ASSERT_THROW(dst.b3Scale(&empty), b3TxException);
+	CPPUNIT_ASSERT_THROW(dst.b3ScaleToGrey(&empty), b3TxException);
+	CPPUNIT_ASSERT_THROW(dst.b3TransToBW(&empty), b3TxException);
+	CPPUNIT_ASSERT(!empty.b3Negate());
+	CPPUNIT_ASSERT_THROW(empty.b3MirrorHorizontal(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3MirrorVertical(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3TurnLeft(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3Turn(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3TurnRight(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3RemoveBlackBorder(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3Shrink(), b3TxException);
+	CPPUNIT_ASSERT_THROW(empty.b3Histogramme(), b3TxException);
+
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx tx;
+
+		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
+
+		if (!tx.b3IsBW())
+		{
+			CPPUNIT_ASSERT_THROW(empty.b3RemoveBlackBorder(), b3TxException);
+			CPPUNIT_ASSERT_THROW(empty.b3Shrink(), b3TxException);
+		}
 	}
 }
 
@@ -575,8 +655,8 @@ void b3ImageTest::testMirror()
 			CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 			CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
 
-			src.b3MirrorHorizontal();
-			src.b3MirrorVertical();
+			CPPUNIT_ASSERT_NO_THROW(src.b3MirrorHorizontal());
+			CPPUNIT_ASSERT_NO_THROW(src.b3MirrorVertical());
 			CPPUNIT_ASSERT_EQUAL(B3_OK, src.b3SaveImage(path));
 		}
 	}

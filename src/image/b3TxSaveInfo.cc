@@ -35,7 +35,7 @@ b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_
 	m_Tx->b3Name(filename);
 	bzero(m_SaveBuffer, sizeof(m_SaveBuffer));
 
-	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
+	m_ThisRow = b3TypedAlloc<b3_pkd_color>(tx->xSize);
 	if (m_ThisRow == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "Save Image: not enough memory!\n");

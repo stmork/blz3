@@ -281,7 +281,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	B3_THROW(b3TxException, B3_TX_UNSUPP);
 }
 
-b3_result b3Tx::b3LoadImage(const char * name, b3_bool throw_exception)
+b3_result b3Tx::b3LoadImage(const char * name, bool throw_exception)
 {
 	b3File     file;
 	b3_u08  *  buffer;

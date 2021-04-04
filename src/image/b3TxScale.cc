@@ -54,10 +54,10 @@ b3TxQuad b3ColorIndices::m_TxQuad;
 
 b3ColorIndices::b3ColorIndices()
 {
-	unsigned long size = 256;
+	unsigned size = 256;
 
 	num     = 0;
-	indices = (b3_index *)b3Alloc(size * sizeof(b3_index));
+	indices = b3TypedAlloc<b3_index>(size);
 	max     = (indices != nullptr ? size : 0);
 	if (max == 0)
 	{

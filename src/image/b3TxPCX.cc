@@ -107,8 +107,8 @@ b3_result b3Tx::b3ParsePCX4(const b3_u08 * buffer)
 	dSize = TX_BWA(xSize) * ySize * depth;
 	pSize = 1 << depth;
 
-	data    = (b3_u08 *)b3Alloc(dSize);
-	palette = (b3_pkd_color *)b3Alloc(pSize * sizeof(b3_pkd_color));
+	data    = b3TypedAlloc<b3_u08>(dSize);
+	palette = b3TypedAlloc<b3_pkd_color>(pSize);
 	if ((data != nullptr) && (palette != nullptr))
 	{
 		type      = B3_TX_ILBM;

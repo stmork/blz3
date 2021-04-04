@@ -350,7 +350,7 @@ class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 	static const b3_u08  m_RightMaskLeftByte[16];
 	static const b3_u08  m_RightMaskRightByte[16];
 	static const b3_u08  m_RightBorder[];
-	static       b3_bool m_ErrorHandlerInstalled;
+	static       bool    m_ErrorHandlerInstalled;
 
 private:
 	b3_pkd_color   *  palette;
@@ -416,7 +416,7 @@ public:
 	 * @return True of success.
 	 * @see b3_tx_type
 	 */
-	b3_bool        b3AllocTx(const b3_res xSize, const b3_res ySize, const b3_res depth);
+	bool           b3AllocTx(const b3_res xSize, const b3_res ySize, const b3_res depth);
 
 	/**
 	 * This method frees all image data.
@@ -613,21 +613,21 @@ public:
 	 * @param y The y coordinate to test.
 	 * @return True if the pixel is transparent.
 	 */
-	b3_bool  b3IsBackground(const b3_coord x, const b3_coord  y) const;
+	bool     b3IsBackground(const b3_coord x, const b3_coord  y) const;
 
 	/**
 	 * This method returns true if this instance holds an image.
 	 *
 	 * @return True if this instance holds an image.
 	 */
-	b3_bool  b3IsLoaded() const;
+	bool     b3IsLoaded() const;
 
 	/**
 	 * This method returns true if this image is black/white.
 	 *
 	 * @return True if this image is b/w.
 	 */
-	inline b3_bool b3IsBW() const
+	inline bool    b3IsBW() const
 	{
 		return (depth == 1) && (type == B3_TX_ILBM);
 	}
@@ -637,7 +637,7 @@ public:
 	 *
 	 * @return True if this image is high color.
 	 */
-	inline b3_bool b3IsHighColor() const
+	inline bool    b3IsHighColor() const
 	{
 		return ((depth == 12) || (depth == 16)) && (type == B3_TX_RGB4);
 	}
@@ -647,7 +647,7 @@ public:
 	 *
 	 * @return True if this image is true color.
 	 */
-	inline b3_bool b3IsTrueColor() const
+	inline bool    b3IsTrueColor() const
 	{
 		return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
 	}
@@ -657,7 +657,7 @@ public:
 	 *
 	 * @return True if this image is a high dynamic range image.
 	 */
-	inline b3_bool b3IsHdr() const
+	inline bool    b3IsHdr() const
 	{
 		return (depth >= 96) && (type == B3_TX_FLOAT);
 	}
@@ -667,7 +667,7 @@ public:
 	 *
 	 * @return True if this image is palettized.
 	 */
-	inline b3_bool b3IsPalette() const
+	inline bool    b3IsPalette() const
 	{
 		return palette != nullptr;
 	}
@@ -677,7 +677,7 @@ public:
 	 *
 	 * @return True if this image is a palettized grey image.
 	 */
-	b3_bool        b3IsGreyPalette() const;
+	bool           b3IsGreyPalette() const;
 
 	// b3TxBlit.cc
 	/**
@@ -734,7 +734,7 @@ public:
 	/**
 	 * This method negates the color.
 	 */
-	void           b3Negate();
+	bool           b3Negate();
 
 	/**
 	 * This method turns left the image by 90 degrees.
@@ -764,7 +764,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	b3_bool  b3TxGauss(
+	bool     b3TxGauss(
 		b3_coord xPos,
 		b3_coord yPos,
 		b3_f64   scale,
@@ -783,7 +783,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	b3_bool  b3TxColorFilter(
+	bool     b3TxColorFilter(
 		b3_f64       redFilter,
 		b3_f64       greenFilter,
 		b3_f64       blueFilter,
@@ -799,7 +799,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	b3_bool  b3TxContrast(
+	bool     b3TxContrast(
 		b3_f64  highlight,
 		b3_f64  shadow,
 		b3_f64  gamma,
@@ -818,7 +818,7 @@ public:
 	 * @bug This method is only implemented for B3_TX_RGB8 images as source and
 	 *      destination. No type checking is performed yet.
 	 */
-	b3_bool  b3TxTransformTable(
+	bool     b3TxTransformTable(
 		b3_pkd_color * rTable,
 		b3_pkd_color * gTable,
 		b3_pkd_color * bTable,
@@ -834,7 +834,7 @@ public:
 	 * @param src The source image.
 	 * @return True on successful reduce operation.
 	 */
-	b3_bool        b3TxReduce(b3Tx * src);
+	bool           b3TxReduce(b3Tx * src);
 
 	// b3TxHist.cc
 	/**
@@ -845,14 +845,14 @@ public:
 	 * @throws b3TxException on out of memory.
 	 * @return True on success.
 	 */
-	b3_bool        b3Histogramme();
+	bool           b3Histogramme();
 
 	/**
 	 * This method initializes the histogramme.
 	 *
 	 * @return True on success.
 	 */
-	b3_bool        b3StartHist();
+	bool           b3StartHist();
 
 	/**
 	 * This method closes the histogramme counting.
@@ -870,7 +870,7 @@ public:
 	 * @param yStop The upper y coordinate.
 	 * @return True on success.
 	 */
-	b3_bool        b3AddHist(
+	bool           b3AddHist(
 		b3_coord xStart,
 		b3_coord yStart,
 		b3_coord xStop,
@@ -883,7 +883,7 @@ public:
 	 * @return True if the image is mostly white.
 	 * @see b3SetWhiteRatio().
 	 */
-	b3_bool        b3IsWhite() const;
+	bool           b3IsWhite() const;
 
 	/**
 	 * This method sets the white level for white iamge computation. This
@@ -903,7 +903,7 @@ public:
 	 * @param entries The resulting number of histogramme entries.
 	 * @return True on success.
 	 */
-	b3_bool        b3GetHistogramme(b3_count * buffer, b3_count & entries) const;
+	bool           b3GetHistogramme(b3_count * buffer, b3_count & entries) const;
 
 	/**
 	 * This method transforms the image to a B/W image. The given threshold
@@ -912,7 +912,7 @@ public:
 	 * @param threshold The separation threshold.
 	 * @return True on success.
 	 */
-	b3_bool        b3TransToBW(b3_index  threshold = 128);
+	bool           b3TransToBW(b3_index  threshold = 128);
 
 	/**
 	 * This method transforms a given source image into a B/W image using a specified
@@ -928,7 +928,7 @@ public:
 	 * @return True on success.
 	 * @see b3_tx_threshold.
 	 */
-	b3_bool        b3TransToBW(
+	bool           b3TransToBW(
 		const b3Tx * srcTx,
 		const b3_f64 ratio = 0.5, const b3_tx_threshold mode = B3_THRESHOLD_USE);
 
@@ -945,7 +945,7 @@ public:
 	 * @return True on success.
 	 * @see b3_tx_threshold.
 	 */
-	b3_bool        b3TransToBW(
+	bool           b3TransToBW(
 		const b3_f64          ratio = 0.5,
 		const b3_tx_threshold mode  = B3_THRESHOLD_USE);
 
@@ -1003,7 +1003,7 @@ public:
 	 * @return The result code if no exception is thrown anyway.
 	 * @see b3_result.
 	 */
-	b3_result                    b3LoadImage(const char * ImageName, b3_bool throwException = false);
+	b3_result                    b3LoadImage(const char * ImageName, bool    throwException = false);
 
 	/**
 	 * This method loads an image from the given buffer filled with image file data.
@@ -1379,7 +1379,7 @@ private:
 	b3_result      b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size);
 	void           b3EHBPalette();
 	void           b3ConvertILBMLine(b3_u08 * Line, b3_u08 * Interleave, b3_res xMax, b3_count Planes);
-	void           b3HamPalette(b3_bool HAM8);
+	void           b3HamPalette(bool    HAM8);
 
 	static b3_u32  b3ShiftCount(b3_count Count);
 

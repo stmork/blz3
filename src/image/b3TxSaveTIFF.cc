@@ -198,7 +198,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	// alloc memory for three channels of one row
-	row = (b3_u08 *)b3Alloc(xSize * 3 * sizeof(b3_u08));
+	row = b3TypedAlloc<b3_u08>(xSize * 3 * sizeof(b3_u08));
 	if (row == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
@@ -286,7 +286,7 @@ b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	// alloc memory for three channels of one row
-	row = (b3_u16 *)b3Alloc(xSize * 3 * sizeof(b3_u16));
+	row = b3TypedAlloc<b3_u16>(xSize * 3);
 	if (row == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,

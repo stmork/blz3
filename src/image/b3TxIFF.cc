@@ -204,8 +204,8 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 			depth	= CharData[16];
 			break;
 		case IFF_BODY :
-			Max = xSize * ySize;
-			data = (b3_u08 *)b3Alloc(Max * 2);
+			Max  = xSize * ySize;
+			data = b3TypedAlloc<b3_u08>(Max * 2);
 			if (data == nullptr)
 			{
 				b3FreeTx();
@@ -263,12 +263,12 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 
 void b3Tx::b3EHBPalette()
 {
-	b3_u32 * OldPalette;
-	b3_u32 * NewPalette, i, Color;
+	b3_pkd_color * OldPalette;
+	b3_pkd_color * NewPalette, i, Color;
 
 	FileType = FT_ILBM_EHB;
 	pSize    = 64;
-	NewPalette = (b3_u32 *)b3Alloc(pSize * sizeof(b3_u32));
+	NewPalette = b3TypedAlloc<b3_pkd_color>(pSize);
 	if (NewPalette == nullptr)
 	{
 		b3FreeTx();
@@ -327,7 +327,7 @@ void b3Tx::b3ConvertILBMLine(
 	}
 }
 
-void b3Tx::b3HamPalette(b3_bool HAM8)
+void b3Tx::b3HamPalette(bool HAM8)
 {
 	b3_u32  *  LData;
 	b3_u08  *  OldData;
@@ -341,12 +341,12 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 	if (HAM8)
 	{
 		FileType = FT_ILBM_HAM8;
-		NewData = (b3_u16 *)b3Alloc(xSize * ySize * sizeof(b3_u32));
+		NewData = b3TypedAlloc<b3_u16>(xSize * ySize);
 	}
 	else
 	{
 		FileType = FT_ILBM_HAM;
-		NewData = (b3_u16 *)b3Alloc(xSize * ySize * sizeof(b3_u16));
+		NewData = b3TypedAlloc<b3_u16>(xSize * ySize);
 	}
 	if (NewData == nullptr)
 	{
@@ -354,7 +354,7 @@ void b3Tx::b3HamPalette(b3_bool HAM8)
 		b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
-	Line    = (b3_u08 *)b3Alloc(xSize);
+	Line    = b3TypedAlloc<b3_u08>(xSize);
 	if (Line == nullptr)
 	{
 		b3Free(NewData);
@@ -449,7 +449,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 	b3_u32   Max, k, Color, Pos = 12;
 	b3_u32 * Set;
 	b3_u32 * LongData;
-	b3_bool  Compressed = false, Ham = false, EHB = false, Ham8 = false;
+	bool     Compressed = false, Ham = false, EHB = false, Ham8 = false;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_ILBM(%s)\n",
 		(const char *)image_name);
@@ -486,7 +486,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 			break;
 		case IFF_CMAP :
 			Max = b3Endian::b3GetMot32(&LongData[1]) / 3;
-			palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
+			palette = b3TypedAlloc<b3_pkd_color>(Max);
 			pSize = Max;
 			if (palette == nullptr)
 			{
@@ -531,7 +531,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 			{
 				Max  = ((xSize + 15) & 0x7ffffff0) >> 3;
 				Max *= (ySize * depth);
-				data = (b3_u08 *)b3Alloc(Max + ySize + Max);
+				data = b3TypedAlloc<b3_u08>(Max + ySize + Max);
 				if (data == nullptr)
 				{
 					b3FreeTx();
@@ -571,7 +571,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 			else
 			{
 				Max = b3Endian::b3GetMot32(&LongData[1]);
-				data = (b3_u08 *)b3Alloc(Max);
+				data = b3TypedAlloc<b3_u08>(Max);
 				if (data == nullptr)
 				{
 					b3FreeTx();

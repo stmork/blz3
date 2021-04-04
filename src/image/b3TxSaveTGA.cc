@@ -45,7 +45,7 @@ public:
 b3InfoTGA::b3InfoTGA(b3Tx * tx, const char * filename) :
 	b3TxSaveInfo(tx, filename)
 {
-	m_SaveData = (b3_u08 *)b3Alloc(BUFFERSIZE + 16);
+	m_SaveData = b3TypedAlloc<b3_u08>(BUFFERSIZE + 16);
 	if (m_SaveData == nullptr)
 	{
 		m_File.b3Close();

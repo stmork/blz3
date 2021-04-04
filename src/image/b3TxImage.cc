@@ -45,7 +45,7 @@ b3_count b3Tx::b3BuildRLE(
 	b3_count     count, num;
 	b3_index     i, x;
 	b3_pkd_color bit;
-	b3_bool      last, act;
+	bool         last, act;
 
 	// building RLE code
 	bit   = 128;
@@ -164,7 +164,7 @@ void b3Tx::b3RemoveBlackBorder()
 	{
 		return;
 	}
-	line = (b3_count *)b3Alloc(ySize * sizeof(b3_count));
+	line = b3TypedAlloc<b3_count>(ySize);
 	if (line == null)
 	{
 		throw b3TxException(B3_TX_MEMORY);
@@ -348,16 +348,16 @@ void b3Tx::b3RemoveBlackBorder()
 	b3_res   xEnd;
 	b3_count xBytes;
 	b3_u08  * cPtr;
-	b3_bool   loop;
+	bool      loop;
 
 	// Do nothing if image has no width.
 	if (!b3IsBW())
 	{
-		return;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 	if (xSize == 0)
 	{
-		return;
+		B3_THROW(b3TxException, B3_TX_WRONG_SIZE);
 	}
 
 	// Init some values...
@@ -430,15 +430,15 @@ void b3Tx::b3Shrink(const b3_count shrink)
 
 	if (!b3IsBW())
 	{
-		return;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
-	line = (b3_count *)b3Alloc(xSize * sizeof(b3_count));
+	line = b3TypedAlloc<b3_count>(xSize);
 	if (line == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
-	cPtr   = (b3_u08 *)data;
+	cPtr   = data;
 	xBytes = TX_BWA(xSize);
 	for (y = 0; y < ySize; y++)
 	{
@@ -483,7 +483,7 @@ void b3Tx::b3Shrink(const b3_count shrink)
 *************************************************************************/
 
 // Negate image by turning all color bits to reverse.
-void b3Tx::b3Negate()
+bool b3Tx::b3Negate()
 {
 	b3_color   *   cPtr;
 	b3_pkd_color * lPtr;
@@ -546,8 +546,9 @@ void b3Tx::b3Negate()
 		break;
 
 	default:
-		break;
+		return false;
 	}
+	return true;
 }
 
 /*************************************************************************
@@ -586,7 +587,7 @@ void b3Tx::b3TurnRightILBM()
 	yNewSize  = xSize;
 	xNewBytes = TX_BWA(xNewSize);
 	dSize     = xNewBytes * yNewSize;
-	newData   = (b3_u08 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u08>(dSize);
 	if (newData == null)
 	{
 		b3PrintF(B3LOG_NORMAL,
@@ -668,7 +669,7 @@ void b3Tx::b3TurnRightILBM()
 	yNewSize  = xSize;
 	xNewBytes = TX_BWA(xNewSize);
 	dSize     = xNewBytes * yNewSize;
-	newData   = (b3_u08 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u08>(dSize);
 	if (newData == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
@@ -749,7 +750,7 @@ void b3Tx::b3TurnRightVGA()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_u08 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u08>(dSize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -785,7 +786,7 @@ void b3Tx::b3TurnRightRGB4()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_u16 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u16>(xSize * ySize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -821,15 +822,15 @@ void b3Tx::b3TurnRightRGB8()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_pkd_color *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_pkd_color>(xSize * ySize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
 	// change data pointer
-	oldData   = (b3_pkd_color *)data;
-	data      = (b3_u08 *)newData;
+	oldData   = data;
+	data      = newData;
 
 	srcPos    = 0;
 	srcInit   = xSize * (ySize - 1);
@@ -857,7 +858,7 @@ void b3Tx::b3TurnRightFloat()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_color *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_color>(xSize * ySize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -904,8 +905,9 @@ void b3Tx::b3TurnRight()
 	case B3_TX_FLOAT :
 		b3TurnRightFloat();
 		break;
+
 	default:
-		break;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 }
 
@@ -932,7 +934,7 @@ void b3Tx::b3TurnLeftILBM()
 	yNewSize  = xSize;
 	xNewBytes = TX_BWA(xNewSize);
 	dSize     = xNewBytes * yNewSize;
-	newData   = (b3_u08 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u08>(dSize);
 	if (newData == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
@@ -1030,7 +1032,7 @@ void b3Tx::b3TurnLeftVGA()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_u08 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u08>(dSize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -1065,7 +1067,7 @@ void b3Tx::b3TurnLeftRGB4()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_u16 *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_u16>(xSize * ySize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -1100,7 +1102,7 @@ void b3Tx::b3TurnLeftRGB8()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_pkd_color *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_pkd_color>(xSize * ySize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
@@ -1135,15 +1137,15 @@ void b3Tx::b3TurnLeftFloat()
 
 	xNewSize  = ySize;
 	yNewSize  = xSize;
-	newData   = (b3_color *)b3Alloc(dSize);
+	newData   = b3TypedAlloc<b3_color>(xSize * ySize);
 	if (newData == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
 	// change data pointer
-	oldData   = (b3_color *)data;
-	data      = (b3_u08 *)newData;
+	oldData   = data;
+	data      = newData;
 
 	srcPos    = xSize - 1;
 	for (y = 0; y < yNewSize; y++)
@@ -1181,8 +1183,9 @@ void b3Tx::b3TurnLeft()
 	case B3_TX_FLOAT :
 		b3TurnLeftFloat();
 		break;
+
 	default:
-		break;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 }
 
@@ -1350,11 +1353,11 @@ void b3Tx::b3Turn()
 		break;
 
 	default:
-		break;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 }
 
-b3_bool b3Tx::b3TxGauss(
+bool b3Tx::b3TxGauss(
 	long   xPos,
 	long   yPos,
 	b3_f64 scale,
@@ -1449,7 +1452,7 @@ b3_bool b3Tx::b3TxGauss(
 	return true;
 }
 
-b3_bool b3Tx::b3TxTransformTable(
+bool b3Tx::b3TxTransformTable(
 	b3_pkd_color * rTable,
 	b3_pkd_color * gTable,
 	b3_pkd_color * bTable,
@@ -1505,7 +1508,7 @@ b3_bool b3Tx::b3TxTransformTable(
 	return num > 0;
 }
 
-b3_bool b3Tx::b3TxColorFilter(
+bool b3Tx::b3TxColorFilter(
 	b3_f64  fr,
 	b3_f64  fg,
 	b3_f64  fb,
@@ -1554,7 +1557,7 @@ b3_f64 b3Tx::b3Gamma(b3_f64 h, b3_f64 s, b3_f64 gamma, b3_f64 value, b3_f64 scal
 	return pow(result, 1.0 / gamma) * scale;
 }
 
-b3_bool b3Tx::b3TxContrast(
+bool b3Tx::b3TxContrast(
 	b3_f64  h,
 	b3_f64  s,
 	b3_f64  gamma,
@@ -1576,7 +1579,7 @@ b3_bool b3Tx::b3TxContrast(
 			correction_table, src);
 }
 
-b3_bool b3Tx::b3TxReduce(b3Tx * src)
+bool b3Tx::b3TxReduce(b3Tx * src)
 {
 	b3_index       i, p, count, index;
 	b3_pkd_color * srcPtr = src->b3GetTrueColorData(), color;

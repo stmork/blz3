@@ -150,7 +150,7 @@ b3InfoJPEG::b3InfoJPEG(b3Tx * tx, const char * filename, b3_u32 quality) :
 	JPEGline       = 0;
 	JPEGwritten    = 0;
 
-	JPEGrow        = (b3_u08 *)b3Alloc(JPEGrow_stride * JPEG_ROWS);
+	JPEGrow        = b3TypedAlloc<b3_u08>(JPEGrow_stride * JPEG_ROWS);
 	if (JPEGrow == nullptr)
 	{
 		m_File.b3Close();

@@ -99,15 +99,14 @@ void b3Tx::b3SetWhiteRatio(b3_f64 newRatio)
 // We need histogrammes to determine if the image is a white page. The
 // histogramme is created blockwise to make sure that this block is
 // complete in the L2 cache (higher performance).
-b3_bool b3Tx::b3StartHist()
+bool b3Tx::b3StartHist()
 {
 	b3_index i;
 
 	// allocate memory for histogramme
 	if (histogramme == nullptr)
 	{
-		histogramme = (b3_count *)b3Alloc(
-				B3_TX_MAX_HISTGRM * sizeof(b3_count));
+		histogramme = b3TypedAlloc<b3_count>(B3_TX_MAX_HISTGRM);
 		if (histogramme == nullptr)
 		{
 			return false;
@@ -132,7 +131,7 @@ void b3Tx::b3EndHist()
 }
 
 // All what we need is: "Schwarze Weizen Frühstückskorn"!
-b3_bool b3Tx::b3Histogramme()
+bool b3Tx::b3Histogramme()
 {
 	if (!b3StartHist())
 	{
@@ -141,7 +140,7 @@ b3_bool b3Tx::b3Histogramme()
 	return b3AddHist(0, 0, xSize, ySize);
 }
 
-b3_bool b3Tx::b3AddHist(
+bool b3Tx::b3AddHist(
 	b3_coord xStart,
 	b3_coord yStart,
 	b3_coord xStop,
@@ -281,10 +280,11 @@ b3_bool b3Tx::b3AddHist(
 		}
 		return true;
 	}
-	return false;
+
+	B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 }
 
-b3_bool b3Tx::b3IsWhite() const
+bool b3Tx::b3IsWhite() const
 {
 	b3_count black  = 0;
 	b3_count white  = 0;
@@ -292,7 +292,7 @@ b3_bool b3Tx::b3IsWhite() const
 	b3_index together;
 	b3_index i, s1, s2, s3;
 	b3_f64   ratio;
-	b3_bool  IsWhite;
+	bool     IsWhite;
 
 	if (histogramme == nullptr)
 	{
@@ -355,7 +355,7 @@ b3_bool b3Tx::b3IsWhite() const
 	return IsWhite;
 }
 
-b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries) const
+bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries) const
 {
 	b3_index i;
 
@@ -378,19 +378,19 @@ b3_bool b3Tx::b3GetHistogramme(b3_count * buffer, b3_count & entries) const
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Tx::b3TransToBW(
-	const b3Tx * srcTx,
-	const b3_f64 ratio,
-	const b3_tx_threshold mode)
+bool b3Tx::b3TransToBW(
+	const b3Tx      *      srcTx,
+	const b3_f64           ratio,
+	const b3_tx_threshold  mode)
 {
 	b3Copy(srcTx);
 	return b3TransToBW(ratio, mode);
 }
 
-b3_bool b3Tx::b3TransToBW(const b3_f64 ratio, const b3_tx_threshold mode)
+bool b3Tx::b3TransToBW(const b3_f64 ratio, const b3_tx_threshold mode)
 {
 	b3_index threshold;
-	b3_bool  result;
+	bool     result;
 
 	result = b3Histogramme();
 	if (result)
@@ -408,12 +408,14 @@ b3_bool b3Tx::b3TransToBW(const b3_f64 ratio, const b3_tx_threshold mode)
 	return result;
 }
 
-b3_index b3Tx::b3ComputeThreshold(const b3_f64 input, const b3_tx_threshold mode)
+b3_index b3Tx::b3ComputeThreshold(
+	const b3_f64          input,
+	const b3_tx_threshold mode)
 {
 	b3_f64   ratio = input;
 	b3_count limit, count = 0, max;
 	b3_index i, threshold = 0;
-	b3_bool  compute_threshold = true;
+	bool     compute_threshold = true;
 
 	if (histogramme == nullptr)
 	{
@@ -461,7 +463,7 @@ b3_index b3Tx::b3ComputeThreshold(const b3_f64 input, const b3_tx_threshold mode
 	return threshold;
 }
 
-b3_bool b3Tx::b3TransToBW(b3_index threshold)
+bool b3Tx::b3TransToBW(b3_index threshold)
 {
 	b3_u08    *    dPtr, *ptr;
 	b3_pkd_color * pPtr;
@@ -475,8 +477,8 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	b3_u08         byte;
 	b3_f64         r, g, b;
 	b3_pkd_color   bit;
-	b3_bool        grey_palette;
-	b3_bool        result = false;
+	bool           grey_palette;
+	bool           result = false;
 
 	// Check if nothing is to do...
 	if (depth == 1)
@@ -488,7 +490,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	// First allocate new buffer;
 	xBytes  = TX_BWA(xSize);
 	newSize = xBytes * ySize;
-	dPtr    = (b3_u08 *)b3Alloc(newSize);
+	dPtr    = b3TypedAlloc<b3_u08>(newSize);
 	if (dPtr == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL,
@@ -497,7 +499,7 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	}
 
 	// alloc new palette
-	pPtr = (b3_pkd_color *)b3Alloc(2 * sizeof(b3_pkd_color));
+	pPtr = b3TypedAlloc<b3_pkd_color>(2);
 	if (pPtr == nullptr)
 	{
 		b3Free(dPtr);
