@@ -724,6 +724,21 @@ void b3ImageTest::testNegate()
 	}
 }
 
+void b3ImageTest::testTurnLeft()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   tx;
+		b3Path path;
+
+		path.b3Format("img_test_turn_left_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
+
+		tx.b3TurnLeft();
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
+	}
+}
+
 void b3ImageTest::testTurn()
 {
 	for (b3_res depth : m_TestDepth)
@@ -734,8 +749,21 @@ void b3ImageTest::testTurn()
 		path.b3Format("img_test_turn_%03ld.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
-		tx.b3TurnLeft();
 		tx.b3Turn();
+		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
+	}
+}
+
+void b3ImageTest::testTurnRight()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		b3Tx   tx;
+		b3Path path;
+
+		path.b3Format("img_test_turn_right_%03ld.jpg", depth);
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
+
 		tx.b3TurnRight();
 		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
 	}

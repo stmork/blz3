@@ -70,7 +70,9 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testMirror);
 	CPPUNIT_TEST(testHist);
 	CPPUNIT_TEST(testNegate);
+	CPPUNIT_TEST(testTurnLeft);
 	CPPUNIT_TEST(testTurn);
+	CPPUNIT_TEST(testTurnRight);
 	CPPUNIT_TEST(testRemoveBlackBorder);
 	CPPUNIT_TEST(testShrink);
 	CPPUNIT_TEST(testBlitSimple);
@@ -113,7 +115,9 @@ public:
 	void testMirror();
 	void testHist();
 	void testNegate();
+	void testTurnLeft();
 	void testTurn();
+	void testTurnRight();
 	void testRemoveBlackBorder();
 	void testShrink();
 	void testBlitSimple();
