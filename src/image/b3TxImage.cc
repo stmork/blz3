@@ -1364,90 +1364,93 @@ bool b3Tx::b3TxGauss(
 	b3_f64 sigma,
 	b3_f64 niveau,
 	b3_f64 slope,
-	b3Tx * src)
+	const b3Tx * src)
 {
-	b3_coord      x, xHalf;
-	b3_coord      y, yHalf;
-	b3_pkd_color * srcPtr, srcColor;
-	b3_pkd_color * dstPtr, dstColor;
-	b3_s32        r, g, b, sub;
-	b3_f64        radius, xDiff, yDiff;
-	b3_f64        value, level, denom;
-
-	if (!b3IsTrueColor())
-	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx # b3TxGauss(): source image is no true color image!\n");
-		return false;
-	}
 	if (src == nullptr)
 	{
 		src = this;
 	}
-
-	denom  = -2.0 * sigma * sigma;
-
-	xHalf = xSize >> 1;
-	yHalf = ySize >> 1;
-	srcPtr = src->b3GetTrueColorData();
-	dstPtr = b3GetTrueColorData();
-	for (y = 0; y < (long)ySize; y++)
+	if ((src->xSize != xSize) || (src->ySize != ySize))
 	{
-		for (x = 0; x < (long)xSize; x++)
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+	}
+
+	switch (type)
+	{
+	case B3_TX_RGB8:
+		switch (src->type)
 		{
-			srcColor  = *srcPtr++;
-
-			// Extract colors
-			r = (srcColor & 0xff0000) >> 16;
-			g = (srcColor & 0x00ff00) >>  8;
-			b = (srcColor & 0x0000ff);
-
-			// Computing distance to center
-			xDiff  = (b3_f64)(x - xPos) / (b3_f64)xHalf;
-			yDiff  = (b3_f64)(y - yPos) / (b3_f64)yHalf;
-			radius = xDiff * xDiff + yDiff * yDiff;
-
-			// Computing Gauss value and left to right ramp
-			value  = exp(radius / denom) * scale;
-			level  = xDiff * slope + niveau;
-
-			// Subtract color values
-			sub    = (long)(255 * (level - value));
-			r     += sub;
-			g     += sub;
-			b     += sub;
-
-			// Upper clip
-			if (r <   0)
+		case B3_TX_VGA:
+			b3Gauss<b3_u08, b3_pkd_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src, [src] (const b3_u08 index)
 			{
-				r =   0;
-			}
-			if (g <   0)
-			{
-				g =   0;
-			}
-			if (b <   0)
-			{
-				b =   0;
-			}
+				return src->palette[index];
+			});
+			break;
+		case B3_TX_RGB4:
+			b3Gauss<b3_u16, b3_pkd_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src);
+			break;
+		case B3_TX_RGB8:
+			b3Gauss<b3_pkd_color, b3_pkd_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src);
+			break;
+		case B3_TX_FLOAT:
+			b3Gauss<b3_color, b3_pkd_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src);
+			break;
 
-			// Upper clip
-			if (r > 255)
-			{
-				r = 255;
-			}
-			if (g > 255)
-			{
-				g = 255;
-			}
-			if (b > 255)
-			{
-				b = 255;
-			}
-
-			// Combine colors
-			dstColor = (b3_pkd_color)((r << 16) | (g << 8) | b);
-			*dstPtr++ = dstColor;
+		default:
+			B3_THROW(b3TxException, B3_TX_UNSUPP);
 		}
+		break;
+
+	case B3_TX_FLOAT:
+		switch (src->type)
+		{
+		case B3_TX_VGA:
+			b3Gauss<b3_u08, b3_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src, [src] (const b3_u08 index)
+			{
+				return src->palette[index];
+			});
+			break;
+		case B3_TX_RGB4:
+			b3Gauss<b3_u16, b3_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src);
+			break;
+		case B3_TX_RGB8:
+			b3Gauss<b3_pkd_color, b3_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src);
+			break;
+		case B3_TX_FLOAT:
+			b3Gauss<b3_color, b3_color>(
+				xPos, yPos,
+				scale, sigma, niveau, slope,
+				src);
+			break;
+
+		default:
+			B3_THROW(b3TxException, B3_TX_UNSUPP);
+		}
+		break;
+
+	default:
+		B3_THROW(b3TxException, B3_TX_UNSUPP);
 	}
 	return true;
 }

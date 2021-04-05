@@ -78,6 +78,9 @@ class b3ImageTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testBlitSimple);
 	CPPUNIT_TEST(testBlitClipped);
 	CPPUNIT_TEST(testBlitOutside);
+	CPPUNIT_TEST(testContrast);
+	CPPUNIT_TEST(testGauss);
+	CPPUNIT_TEST(testFilter);
 
 #ifdef BLZ3_USE_OPENEXR
 	CPPUNIT_TEST(testWriteOpenEXR);
@@ -123,6 +126,9 @@ public:
 	void testBlitSimple();
 	void testBlitClipped();
 	void testBlitOutside();
+	void testContrast();
+	void testGauss();
+	void testFilter();
 
 private:
 	void compareImages(

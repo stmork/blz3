@@ -846,6 +846,45 @@ void b3ImageTest::testBlitOutside()
 	}
 }
 
+void b3ImageTest::testContrast()
+{
+
+}
+
+void b3ImageTest::testGauss()
+{
+	for (b3_res depth : m_TestDepth)
+	{
+		const b3Tx * src = m_TxMap[depth];
+		b3Tx   dst;
+		b3Path path;
+
+		if (src->depth >= 8)
+		{
+
+			path.b3Format("img_test_gauss_%03ld-20.jpg", depth);
+			CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 32));
+			CPPUNIT_ASSERT(dst.b3TxGauss(src->xSize >> 1, src->ySize >> 1, 1.0, 1.0, 1.0, 1.0, src));
+			CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+			path.b3Format("img_test_gauss_%03ld-80.jpg", depth);
+			CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 128));
+			CPPUNIT_ASSERT(dst.b3TxGauss(src->xSize >> 1, src->ySize >> 1, 1.0, 1.0, 1.0, 1.0, src));
+			CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+		}
+		else
+		{
+			CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 128));
+			CPPUNIT_ASSERT_THROW(dst.b3TxGauss(src->xSize >> 1, src->ySize >> 1, 1.0, 1.0, 1.0, 1.0, src), b3TxException);
+		}
+	}
+}
+
+void b3ImageTest::testFilter()
+{
+
+}
+
 void b3ImageTest::compareImages(
 	const b3Tx & src,
 	const bool   compare_meta,

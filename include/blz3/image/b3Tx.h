@@ -773,7 +773,7 @@ public:
 		b3_f64   sigma,
 		b3_f64   niveau,
 		b3_f64   slope,
-		b3Tx  *  srcTx = nullptr);
+		const b3Tx  *  srcTx = nullptr);
 
 	/**
 	 * This method filters each color component seperately. If the source
@@ -1286,6 +1286,51 @@ private:
 			}
 			src_ptr += src_modulo;
 			dst_ptr += dst_modulo;
+		}
+	}
+
+	template<class SRC, class DST> void b3Gauss(
+		const b3_coord xPos,
+		const b3_coord yPos,
+		const b3_f64   scale,
+		const b3_f64   sigma,
+		const b3_f64   niveau,
+		const b3_f64   slope,
+		const b3Tx  *  src,
+		std::function<b3Color(const SRC)> convert = [] (const SRC data)
+	{
+		return data;
+	})
+	{
+		const b3_f64   denom = -2.0 * sigma * sigma;
+		const b3_f64   xHalf = xSize >> 1;
+		const b3_f64   yHalf = ySize >> 1;
+
+		SRC * srcPtr = src->data;
+		DST * dstPtr = data;
+
+		for (b3_res y = 0; y < ySize; y++)
+		{
+			for (b3_res x = 0; x < xSize; x++)
+			{
+				b3Color color(convert(*srcPtr++));
+
+				// Computing distance to center
+				b3_f64 xDiff  = (b3_f64)(x - xPos) / (b3_f64)xHalf;
+				b3_f64 yDiff  = (b3_f64)(y - yPos) / (b3_f64)yHalf;
+				b3_f64 radius = xDiff * xDiff + yDiff * yDiff;
+
+				// Computing Gauss value and left to right ramp
+				const b3_f32 value  = exp(radius / denom) * scale;
+				const b3_f32 level  = xDiff * slope + niveau;
+
+				// Subtract color values
+				b3Color sub;
+
+				sub.b3Init(level - value);
+				color += sub;
+				*dstPtr++ = color;
+			}
 		}
 	}
 
