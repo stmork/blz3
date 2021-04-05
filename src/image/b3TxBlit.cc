@@ -29,6 +29,42 @@
 **                                                                      **
 *************************************************************************/
 
+b3_res b3Tx::b3ClipBlit(
+	b3_coord  &  src_offset,
+	b3_coord  &  dst_offset,
+	const b3_res src_size,
+	const b3_res dst_size,
+	const b3_res blit_size)
+{
+	b3_res max = blit_size;
+
+	if (dst_offset < 0)
+	{
+		max += dst_offset;
+		dst_offset = 0;
+	}
+	if (src_offset < 0)
+	{
+		max += src_offset;
+		src_offset = 0;
+	}
+
+	if (max > 0)
+	{
+		if ((src_offset + max) > src_size)
+		{
+			max = src_size - src_offset;
+		}
+
+		if ((dst_offset + max) > dst_size)
+		{
+			max = dst_size - dst_offset;
+		}
+	}
+
+	return max;
+}
+
 void b3Tx::b3Blit(const b3Tx   *  srcTx,
 	b3_coord  xDstOff,
 	b3_coord  yDstOff,
@@ -37,9 +73,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 	b3_coord  xSrcOff,
 	b3_coord  ySrcOff)
 {
-	b3_pkd_color * lSrc, *lDst, *pal;
-	b3_color   *   fSrc;
-	b3_u16    *    sSrc;
+	b3_pkd_color * lDst, *palette;
 	b3_u08    *    cSrc;
 	b3_coord       x, srcMod, SrcOff;
 	b3_coord       y, dstMod, DstOff;
@@ -50,27 +84,17 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		B3_THROW(b3TxException, B3_TX_UNSUPP);
 	}
 
-	// Clip against bounds (source)
-	if ((xSrcOff + xMax) > srcTx->xSize)
+	// Clip against bounds
+	xMax = b3ClipBlit(xSrcOff, xDstOff, srcTx->xSize, xSize, xMax);
+	yMax = b3ClipBlit(ySrcOff, yDstOff, srcTx->ySize, ySize, yMax);
+	if ((xMax <= 0) || (yMax <= 0))
 	{
-		xMax = srcTx->xSize - xSrcOff;
-	}
-	if ((ySrcOff + yMax) > srcTx->ySize)
-	{
-		yMax = srcTx->ySize - ySrcOff;
-	}
-
-	// Clip against bounds (destination)
-	if ((xDstOff + xMax) > xSize)
-	{
-		xMax = xSize        - xDstOff;
-	}
-	if ((yDstOff + yMax) > ySize)
-	{
-		yMax = ySize        - yDstOff;
+		// Nothing to blit: rectangle is outside.
+		return;
 	}
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Blit(): size: %ldx%ld (%ld,%ld) -> (%ld,%ld)\n",
+	b3PrintF(B3LOG_FULL,
+		"### CLASS: b3Tx   # b3Blit(): size: %ldx%ld (%ld,%ld) -> (%ld,%ld)\n",
 		xMax, yMax, xSrcOff, ySrcOff, xDstOff, yDstOff);
 	switch (srcTx->type)
 	{
@@ -84,11 +108,11 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		DstOff = yDstOff * xSize + xDstOff;
 
 		// compute start pointer
-		pal    = srcTx->b3GetPalette();
-		cSrc   = srcTx->data;
-		lDst   = data;
-		cSrc  += SrcOff;
-		lDst  += DstOff;
+		palette = srcTx->b3GetPalette();
+		cSrc    = srcTx->data;
+		lDst    = data;
+		cSrc   += SrcOff;
+		lDst   += DstOff;
 
 		// compute line skip value
 		srcMod = TX_BWA(srcTx->xSize);
@@ -103,7 +127,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 			for (x = 0; x < xMax; x++)
 			{
 
-				*lDst++ = pal[cSrc[ind] & bit ? 1 : 0];
+				*lDst++ = palette[cSrc[ind] & bit ? 1 : 0];
 				bit     = bit >> 1;
 				if (bit == 0)
 				{
@@ -117,105 +141,44 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		break;
 
 	case B3_TX_VGA:
-		SrcOff = ySrcOff * srcTx->xSize + xSrcOff;
-		DstOff = yDstOff *        xSize + xDstOff;
-
-		// compute start pointer
-		pal    = srcTx->b3GetPalette();
-		cSrc   = srcTx->data;
-		lDst   = data;
-		cSrc  += SrcOff;
-		lDst  += DstOff;
-
-		// compute line skip value
-		srcMod  = srcTx->xSize - xMax;
-		dstMod  =        xSize - xMax;
-		for (y = 0; y < yMax; y++)
+		b3Blit<b3_u08, b3_pkd_color>(
+			srcTx,   this,
+			xDstOff, yDstOff,
+			xMax,    yMax,
+			xSrcOff, ySrcOff, [srcTx] (const b3_u08 index)
 		{
-			for (x = 0; x < xMax; x++)
-			{
-				*lDst++ = pal[*cSrc++];
-			}
-			cSrc += srcMod;
-			lDst += dstMod;
-		}
+			return srcTx->palette[index];
+		});
 		break;
 
 	case B3_TX_RGB4:
-		SrcOff = ySrcOff * srcTx->xSize + xSrcOff;
-		DstOff = yDstOff *        xSize + xDstOff;
-
-		// compute start pointer
-		sSrc   = srcTx->data;
-		lDst   = data;
-		sSrc  += SrcOff;
-		lDst  += DstOff;
-
-		// compute line skip value
-		srcMod = srcTx->xSize - xMax;
-		dstMod =        xSize - xMax;
-		for (y = 0; y < yMax; y++)
+		b3Blit<b3_u16, b3_pkd_color>(
+			srcTx,   this,
+			xDstOff, yDstOff,
+			xMax,    yMax,
+			xSrcOff, ySrcOff, [] (const b3_u16 color)
 		{
-			b3_u16 col;
-
-			for (x = 0; x < xMax; x++)
-			{
-				col     = *sSrc++;
-				*lDst++ = TX_RGB4_TO_RGB8(col);
-			}
-			sSrc += srcMod;
-			lDst += dstMod;
-		}
+			return b3Convert(color);
+		});
 		break;
 
 	case B3_TX_RGB8:
-		SrcOff = ySrcOff * srcTx->xSize + xSrcOff;
-		DstOff = yDstOff *        xSize + xDstOff;
-
-		// compute start pointer
-		lSrc   = srcTx->data;
-		lDst   = data;
-		lSrc  += SrcOff;
-		lDst  += DstOff;
-
-		// compute line skip value
-		srcMod = srcTx->xSize - xMax;
-		dstMod =        xSize - xMax;
-		for (y = 0; y < yMax; y++)
-		{
-			for (x = 0; x < xMax; x++)
-			{
-				*lDst++ = *lSrc++;
-			}
-			lSrc += srcMod;
-			lDst += dstMod;
-		}
+		b3Blit<b3_pkd_color, b3_pkd_color>(
+			srcTx,   this,
+			xDstOff, yDstOff,
+			xMax,    yMax,
+			xSrcOff, ySrcOff);
 		break;
 
 	case B3_TX_FLOAT:
-		SrcOff = ySrcOff * srcTx->xSize + xSrcOff;
-		DstOff = yDstOff *        xSize + xDstOff;
-
-		// compute start pointer
-		fSrc   = srcTx->data;
-		lDst   = data;
-		fSrc  += SrcOff;
-		lDst  += DstOff;
-
-		// compute line skip value
-		srcMod = srcTx->xSize - xMax;
-		dstMod =        xSize - xMax;
-		for (y = 0; y < yMax; y++)
+		b3Blit<b3_color, b3_pkd_color>(
+			srcTx,   this,
+			xDstOff, yDstOff,
+			xMax,    yMax,
+			xSrcOff, ySrcOff, [] (const b3_color & color)
 		{
-			for (x = 0; x < xMax; x++)
-			{
-				const b3_pkd_color color = b3Color(*fSrc++);
-
-				*lDst++ = color;
-			}
-			fSrc += srcMod;
-			lDst += dstMod;
-		}
+			return b3Color(color);
+		});
 		break;
 
 	default:

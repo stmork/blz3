@@ -150,7 +150,7 @@ typedef struct alignas(32) b3_vector64_4D
 
 /**
  * This structure represents a 4x4 matrix with single precision floating point numbers. The
- * first element is aligned on a 16 byte boundary.
+ * first element is aligned on a 32 byte boundary.
  */
 typedef struct alignas(32) b3_matrix32_4D
 {
@@ -162,7 +162,7 @@ typedef struct alignas(32) b3_matrix32_4D
 
 /**
  * This structure represents a 4x4 matrix with double precision floating point numbers. The
- * first element is aligned on a 16 byte boundary.
+ * first element is aligned on a 32 byte boundary.
  */
 typedef struct alignas(32) b3_matrix64_4D
 {
@@ -174,7 +174,7 @@ typedef struct alignas(32) b3_matrix64_4D
 
 /**
  * This structure represents a ray with single precision floating point numbers. The
- * first element is aligned on a 32 byte boundary.
+ * first element is aligned on a 16 byte boundary.
  */
 typedef struct alignas(16) b3_line32_3D
 {
@@ -184,7 +184,7 @@ typedef struct alignas(16) b3_line32_3D
 
 /**
  * This structure represents a ray with double precision floating point numbers. The
- * first element is aligned on a 64 byte boundary.
+ * first element is aligned on a 16 byte boundary.
  */
 typedef struct alignas(16) b3_line64_3D
 {

@@ -27,6 +27,8 @@
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3List.h"
 
+#include <functional>
+
 #ifdef HAVE_LIBTIFF
 #	include "tiff.h"
 #	include "tiffio.h"
@@ -38,18 +40,18 @@
 **                                                                      **
 *************************************************************************/
 
+/** This macro returns a byte aligned byte offset computed from the x coordinate. */
 #define TX_BBA(x) ((((x) +  7) & 0xfffffff8) >> 3)
+
+/** This macro returns a word aligned byte offset computed from the x coordinate. */
 #define TX_BWA(x) ((((x) + 15) & 0xfffffff0) >> 3)
+
+/** This macro returns a long aligned byte offset computed from the x coordinate. */
 #define TX_BLA(x) ((((x) + 31) & 0xffffffe0) >> 3)
 
 #define TX_VBA(x)   (x)
 #define TX_VWA(x) (((x) +  1) & 0xfffffffe)
 #define TX_VLA(x) (((x) +  3) & 0xfffffffc)
-
-#define TX_RGB4_TO_RGB8(color) (\
-	(((color) & 0x0f00) << 12) |\
-	(((color) & 0x00f0) <<  8) |\
-	(((color) & 0x000f) <<  4))
 
 #define B3_MAX_GRID (1 << (2 + 2 + 2))
 #define b3ColorGridIndex(color) (\
@@ -1227,7 +1229,7 @@ private:
 
 	static inline b3_pkd_color b3Convert(const b3_u16 px)
 	{
-		b3_u16       mask    = 0xf00;
+		b3_u16       mask    = 0xf000;
 		b3_pkd_color result  = 0;
 
 		while (mask != 0)
@@ -1240,6 +1242,51 @@ private:
 			mask   >>= 4;
 		}
 		return result;
+	}
+
+	static b3_res b3ClipBlit(
+		b3_coord  &  src_offset,
+		b3_coord  &  dst_offset,
+		const b3_res src_size,
+		const b3_res dst_size,
+		const b3_res blit_size);
+
+	template<class SRC, class DST> void b3Blit(
+		const b3Tx   *  srcTx,
+		const b3Tx   *  dstTx,
+		const b3_coord  xDstOff,
+		const b3_coord  yDstOff,
+		const b3_res    xSrcSize,
+		const b3_res    ySrcSize,
+		const b3_coord  xSrcOff,
+		const b3_coord  ySrcOff,
+		std::function<DST(const SRC)> convert = [] (const SRC data)
+	{
+		return data;
+	})
+	{
+		const b3_coord src_offset = ySrcOff * srcTx->xSize + xSrcOff;
+		const b3_coord dst_offset = yDstOff * dstTx->xSize + xDstOff;
+		const b3_coord src_modulo = srcTx->xSize - xSrcSize;
+		const b3_coord dst_modulo = dstTx->xSize - xSrcSize;
+
+		// compute start pointer
+		SRC * src_ptr = srcTx->data;
+		DST * dst_ptr = dstTx->data;
+
+		src_ptr  += src_offset;
+		dst_ptr  += dst_offset;
+
+		// compute line skip value
+		for (b3_coord y = 0; y < ySrcSize; y++)
+		{
+			for (b3_coord x = 0; x < xSrcSize; x++)
+			{
+				*dst_ptr++ = convert(*src_ptr++);
+			}
+			src_ptr += src_modulo;
+			dst_ptr += dst_modulo;
+		}
 	}
 
 	// b3TxTurn.cc

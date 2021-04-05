@@ -816,14 +816,11 @@ void b3ImageTest::testBlitClipped()
 				dst.xSize - 83, dst.ySize - 91, 113, 127, 37, 41));
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-		// BUG: negative destination offsets cause memory corruption.
-#if 0
 		path.b3Format("img_test_blit_clipped2_%03ld.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
 				-83, -91, 113, 127, 37, 41));
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
-#endif
 	}
 }
 
