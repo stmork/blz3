@@ -848,7 +848,17 @@ void b3ImageTest::testBlitOutside()
 
 void b3ImageTest::testContrast()
 {
+	for (b3_f64 gamma = 1.0; gamma <= 2.0; gamma += 0.125)
+	{
+		const b3Tx * src = &m_TxTrueColor;
+		b3Tx         dst;
+		b3Path       path;
 
+		path.b3Format("img_test_contrast_%03d-%1.3lf-20.jpg", 24, gamma);
+		CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 32));
+		CPPUNIT_ASSERT(dst.b3TxContrast(0.75, 0.25, gamma, src));
+		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+	}
 }
 
 void b3ImageTest::testGauss()

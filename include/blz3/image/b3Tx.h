@@ -802,10 +802,10 @@ public:
 	 * @return True on success.
 	 */
 	bool     b3TxContrast(
-		b3_f64  highlight,
-		b3_f64  shadow,
-		b3_f64  gamma,
-		b3Tx  * srcTx = nullptr);
+		b3_f64       highlight,
+		b3_f64       shadow,
+		b3_f64       gamma,
+		const b3Tx * srcTx = nullptr);
 
 	/**
 	 * This method converts the three color channels seperately using the source
@@ -824,7 +824,7 @@ public:
 		b3_pkd_color * rTable,
 		b3_pkd_color * gTable,
 		b3_pkd_color * bTable,
-		b3Tx     *     srcTx = nullptr);
+		const b3Tx *   srcTx = nullptr);
 
 	/**
 	 * This method converts the source image into a palettized destination image.
@@ -836,7 +836,7 @@ public:
 	 * @param src The source image.
 	 * @return True on successful reduce operation.
 	 */
-	bool           b3TxReduce(b3Tx * src);
+	bool           b3TxReduce(const b3Tx * src);
 
 	// b3TxHist.cc
 	/**

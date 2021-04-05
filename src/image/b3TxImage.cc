@@ -1459,7 +1459,7 @@ bool b3Tx::b3TxTransformTable(
 	b3_pkd_color * rTable,
 	b3_pkd_color * gTable,
 	b3_pkd_color * bTable,
-	b3Tx     *     srcTx)
+	const b3Tx   * srcTx)
 {
 	b3_pkd_color * srcPtr = nullptr;
 	b3_pkd_color * dstPtr = nullptr;
@@ -1564,7 +1564,7 @@ bool b3Tx::b3TxContrast(
 	b3_f64  h,
 	b3_f64  s,
 	b3_f64  gamma,
-	b3Tx  * src)
+	const b3Tx  * src)
 {
 	b3_pkd_color correction_table[256];
 	b3_index     i;
@@ -1573,7 +1573,7 @@ bool b3Tx::b3TxContrast(
 	for (i = 0; i < 256; i++)
 	{
 		correction_table[i] =
-			(b3_pkd_color)floor(b3Gamma(h, s, gamma, i, 255.0) + 0.5);
+			(b3_pkd_color)round(b3Gamma(h, s, gamma, i, 255.0));
 	}
 
 	return b3TxTransformTable(
@@ -1582,7 +1582,7 @@ bool b3Tx::b3TxContrast(
 			correction_table, src);
 }
 
-bool b3Tx::b3TxReduce(b3Tx * src)
+bool b3Tx::b3TxReduce(const b3Tx * src)
 {
 	b3_index       i, p, count, index;
 	b3_pkd_color * srcPtr = src->b3GetTrueColorData(), color;
