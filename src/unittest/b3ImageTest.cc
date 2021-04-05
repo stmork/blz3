@@ -892,7 +892,34 @@ void b3ImageTest::testGauss()
 
 void b3ImageTest::testFilter()
 {
+	const b3Tx * src = &m_TxTrueColor;
+	b3Tx         dst;
+	b3Path       path;
 
+	path.b3Format("img_test_filter_n_%03ld.jpg", src->depth);
+	CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, src->depth));
+	CPPUNIT_ASSERT(dst.b3TxColorFilter(1.0, 1.0, 1.0, src));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+	path.b3Format("img_test_filter_r_%03ld.jpg", src->depth);
+	CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, src->depth));
+	CPPUNIT_ASSERT(dst.b3TxColorFilter(0.25, 1.0, 0.5, src));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+	path.b3Format("img_test_filter_g_%03ld.jpg", src->depth);
+	CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, src->depth));
+	CPPUNIT_ASSERT(dst.b3TxColorFilter(0.5, 0.25, 1.0, src));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+	path.b3Format("img_test_filter_b_%03ld.jpg", src->depth);
+	CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, src->depth));
+	CPPUNIT_ASSERT(dst.b3TxColorFilter(1.0, 0.5, 0.25, src));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
+
+	path.b3Format("img_test_filter_o_%03ld.jpg", src->depth);
+	CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, src->depth));
+	CPPUNIT_ASSERT(dst.b3TxColorFilter(2.0, 2.0, 2.0, src));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 }
 
 void b3ImageTest::compareImages(

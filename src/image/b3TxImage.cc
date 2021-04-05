@@ -1459,7 +1459,7 @@ bool b3Tx::b3TxTransformTable(
 	b3_pkd_color * rTable,
 	b3_pkd_color * gTable,
 	b3_pkd_color * bTable,
-	const b3Tx   * srcTx)
+	const b3Tx  *  srcTx)
 {
 	b3_pkd_color * srcPtr = nullptr;
 	b3_pkd_color * dstPtr = nullptr;
@@ -1515,7 +1515,7 @@ bool b3Tx::b3TxColorFilter(
 	b3_f64  fr,
 	b3_f64  fg,
 	b3_f64  fb,
-	b3Tx  * src)
+	const b3Tx  * src)
 {
 	b3_pkd_color filter_r[256];
 	b3_pkd_color filter_g[256];

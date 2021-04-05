@@ -789,7 +789,7 @@ public:
 		b3_f64       redFilter,
 		b3_f64       greenFilter,
 		b3_f64       blueFilter,
-		b3Tx    *    srcTx = nullptr);
+		const b3Tx * srcTx = nullptr);
 
 	/**
 	 * This method controls brightness, constrast and gamma of the given source
@@ -824,7 +824,7 @@ public:
 		b3_pkd_color * rTable,
 		b3_pkd_color * gTable,
 		b3_pkd_color * bTable,
-		const b3Tx *   srcTx = nullptr);
+		const b3Tx  *  srcTx = nullptr);
 
 	/**
 	 * This method converts the source image into a palettized destination image.
