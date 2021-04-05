@@ -1313,7 +1313,7 @@ private:
 		{
 			for (b3_res x = 0; x < xSize; x++)
 			{
-				b3Color color(convert(*srcPtr++));
+				const b3Color & color(convert(*srcPtr++));
 
 				// Computing distance to center
 				b3_f64 xDiff  = (b3_f64)(x - xPos) / (b3_f64)xHalf;
@@ -1328,8 +1328,8 @@ private:
 				b3Color sub;
 
 				sub.b3Init(level - value);
-				color += sub;
-				*dstPtr++ = color;
+
+				*dstPtr++ = color + sub;
 			}
 		}
 	}
