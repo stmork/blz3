@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include <math.h>
 #include <cstdint>
+#include <algorithm>
 
 #include "blz3/b3PluginDef.h"
 
@@ -116,7 +117,7 @@ typedef struct alignas(16) b3_vector32_3D
  * This structure represents a three component vector with double floating point numbers.
  * The first element is aligned on a 32 byte boundary.
  */
-typedef struct alignas(16) b3_vector64_3D
+typedef struct alignas(32) b3_vector64_3D
 {
 	b3_f64             x; //!< The 16 byte aligned x component.
 	b3_f64             y; //!< The y component.
@@ -139,7 +140,7 @@ typedef struct alignas(16) b3_vector32_4D
  * This structure represents a four component vector with double floating point numbers.
  * The first element is aligned on a 32 byte boundary.
  */
-typedef struct alignas(16) b3_vector64_4D
+typedef struct alignas(32) b3_vector64_4D
 {
 	b3_f64    x; //!< The 16 byte aligned x component.
 	b3_f64    y; //!< The y component.
@@ -151,7 +152,7 @@ typedef struct alignas(16) b3_vector64_4D
  * This structure represents a 4x4 matrix with single precision floating point numbers. The
  * first element is aligned on a 16 byte boundary.
  */
-typedef struct alignas(16) b3_matrix32_4D
+typedef struct alignas(32) b3_matrix32_4D
 {
 	b3_f32             m11, m12, m13, m14;
 	b3_f32             m21, m22, m23, m24;
@@ -163,7 +164,7 @@ typedef struct alignas(16) b3_matrix32_4D
  * This structure represents a 4x4 matrix with double precision floating point numbers. The
  * first element is aligned on a 16 byte boundary.
  */
-typedef struct alignas(16) b3_matrix64_4D
+typedef struct alignas(32) b3_matrix64_4D
 {
 	b3_f64    m11, m12, m13, m14;
 	b3_f64    m21, m22, m23, m24;
@@ -233,10 +234,10 @@ struct alignas(16) b3_bound_2d
  */
 typedef struct alignas(16) b3_color32
 {
-	b3_f32 a; //!< The alpha channel.
-	b3_f32 r; //!< The red channel.
-	b3_f32 g; //!< The green channel.
-	b3_f32 b; //!< The blue channel.
+	b3_f32    a; //!< The alpha channel.
+	b3_f32    r; //!< The red channel.
+	b3_f32    g; //!< The green channel.
+	b3_f32    b; //!< The blue channel.
 
 	inline bool operator==(const b3_color32 & other) const
 	{
@@ -250,8 +251,8 @@ typedef struct alignas(16) b3_color32
  */
 struct b3_gl_texture
 {
-	b3_f32 s; //!< The textural x direction.
-	b3_f32 t; //!< The textural y direction.
+	b3_f32    s; //!< The textural x direction.
+	b3_f32    t; //!< The textural y direction.
 };
 
 /**
@@ -259,9 +260,9 @@ struct b3_gl_texture
  */
 struct b3_gl_vector
 {
-	b3_f32 x; //!< The x component.
-	b3_f32 y; //!< The y component.
-	b3_f32 z; //!< The z component.
+	b3_f32    x; //!< The x component.
+	b3_f32    y; //!< The y component.
+	b3_f32    z; //!< The z component.
 };
 
 // Some definitions
@@ -269,11 +270,6 @@ struct b3_gl_vector
 #error "Pi is undefined"
 #endif
 
-#define B3_ABS(a)           ((a) < 0 ? (-(a)) : (a))
-#define B3_SIGN(a)          (((a) == 0) ? 0 : ((a) < 0 ? -1 : 1))
-#define B3_MIN(a,b)         ((a) < (b) ? (a) : (b))
-#define B3_MAX(a,b)         ((a) < (b) ? (b) : (a))
-#define B3_LIMIT(v,min,max) { if ((v) < (min)) (v) = (min); if ((v) > (max)) (v) = (max); }
 #define B3_RAD(a)           ((a) * M_PI / 180.0)
 #define B3_DEGREE(a)        ((a) * 180.0 / M_PI)
 

@@ -519,7 +519,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 		}
 		if (palette != nullptr)
 		{
-			memcpy(palette, srcTx->b3GetPalette(), B3_MIN(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
+			memcpy(palette, srcTx->b3GetPalette(), std::min(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
 			b3PrintF(B3LOG_FULL, " [palette - %ld]", pSize);
 		}
 

@@ -233,7 +233,7 @@ bool b3Tx::b3AddHist(
 			{
 				const b3_index grey = b3ToGrey(b3Convert(sPtr[x])) * 255;
 
-				histogramme[B3_MAX(grey, B3_TX_MAX_HISTGRM - 1)]++;
+				histogramme[std::max(grey, B3_TX_MAX_HISTGRM - 1)]++;
 			}
 			sPtr += xSize;
 		}
@@ -253,7 +253,7 @@ bool b3Tx::b3AddHist(
 			{
 				const b3_index grey = b3ToGrey(lPtr[x]) * 255;
 
-				histogramme[B3_MAX(grey, B3_TX_MAX_HISTGRM - 1)]++;
+				histogramme[std::max(grey, B3_TX_MAX_HISTGRM - 1)]++;
 			}
 			lPtr += xSize;
 		}
@@ -274,7 +274,7 @@ bool b3Tx::b3AddHist(
 				b3_color result = b3Color(cPtr[x]) * m_RgbEyeStimulus * 255.0;
 				const b3_index grey = result.r + result.g + result .b;
 
-				histogramme[B3_MAX(grey, B3_TX_MAX_HISTGRM - 1)]++;
+				histogramme[std::max(grey, B3_TX_MAX_HISTGRM - 1)]++;
 			}
 			cPtr += xSize;
 		}

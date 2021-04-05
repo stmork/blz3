@@ -47,11 +47,11 @@
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_pkd_color * LongData;
-	b3HeaderTIFF  *  TIFF;
+	b3HeaderTIFF * TIFF;
 	b3HeaderSGI  * b3HeaderSGI;
 	b3_size        pos;
 	b3_coord       x, y;
-	b3_index       i;
+	b3_size        i;
 
 	b3FreeTx();
 
@@ -82,7 +82,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 
 	// JPEG
-	for (i = 0; i < (b3_index)B3_MIN(256, buffer_size - 2); i++)
+	for (i = 0; i < std::min<b3_size>(256, buffer_size - 2); i++)
 	{
 		if ((buffer[i] == 0xff) && (buffer[i + 1] == 0xd8) && (buffer[i + 2] == 0xff))
 		{

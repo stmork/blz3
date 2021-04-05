@@ -41,7 +41,6 @@ struct b3_rect_info
 	b3_tx_data     dst;
 };
 
-#define CPU_MAX      8
 #define TX_PRIO      0
 
 /*************************************************************************
@@ -663,17 +662,17 @@ void b3Tx::b3ScaleFilteredFromBW(
 	const b3_count * rIndex,
 	const b3_count * cIndex)
 {
-	b3Thread      tx_thread[CPU_MAX];
-	b3_rect_info  RectInfo[CPU_MAX];
+	b3Thread       tx_thread[TX_CPU_MAX];
+	b3_rect_info   RectInfo[TX_CPU_MAX];
 	b3_pkd_color * new_palette, true_color_palette[256];
 	b3_pkd_color * tx_pal, color;
-	b3_index      i;
-	b3_count      NumCPUs;
-	b3_f64        r0, g0, b0, c0;
-	b3_f64        r1, g1, b1, c1;
+	b3_index       i;
+	b3_count       NumCPUs;
+	b3_f64         r0, g0, b0, c0;
+	b3_f64         r1, g1, b1, c1;
 
 #if 1
-	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
+	NumCPUs = std::min<b3_count>(b3Runtime::b3GetNumCPUs(), TX_CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1111,14 +1110,14 @@ void b3Tx::b3ScaleFilteredFromTrueColor(
 	const b3_count * rIndex,
 	const b3_count * cIndex)
 {
-	b3Thread     tx_thread[CPU_MAX];
-	b3_rect_info RectInfo[CPU_MAX];
+	b3Thread     tx_thread[TX_CPU_MAX];
+	b3_rect_info RectInfo[TX_CPU_MAX];
 	b3_pkd_color new_palette[256];
 	b3_index     i;
 	b3_count     NumCPUs;
 
 #if 1
-	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
+	NumCPUs = std::min<b3_count>(b3Runtime::b3GetNumCPUs(), TX_CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1467,14 +1466,14 @@ void b3Tx::b3ScaleFilteredFromFloat(
 	const b3_count * rIndex,
 	const b3_count * cIndex)
 {
-	b3Thread     tx_thread[CPU_MAX];
-	b3_rect_info RectInfo[CPU_MAX];
+	b3Thread     tx_thread[TX_CPU_MAX];
+	b3_rect_info RectInfo[TX_CPU_MAX];
 	b3_pkd_color new_palette[256];
 	b3_index     i;
 	b3_count     NumCPUs;
 
 #if 1
-	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
+	NumCPUs = std::min<b3_count>(b3Runtime::b3GetNumCPUs(), TX_CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1593,7 +1592,7 @@ void b3Tx::b3VGAScaleToVGA(
 	b3_pkd_color rVal, gVal, bVal, value, color;
 
 #if 1
-	memcpy(palette, srcTx->b3GetPalette(), B3_MIN(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
+	memcpy(palette, srcTx->b3GetPalette(), std::min(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
 #else
 	b3_pkd_color * srcpal = srcTx->b3GetPalette();
 	for (int i = 0; i < pSize; i++)
@@ -1896,12 +1895,12 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	b3_pkd_color * tx_pal, color;
 	b3_u08    *    bData, bit;
 	b3_f64         r, g, b;
-	b3_rect_info   RectInfo[CPU_MAX];
+	b3_rect_info   RectInfo[TX_CPU_MAX];
 	b3_index       i;
 	b3_count       NumCPUs;
 
 #if 1
-	NumCPUs = B3_MIN(b3Runtime::b3GetNumCPUs(), CPU_MAX);
+	NumCPUs = std::min<b3_count>(b3Runtime::b3GetNumCPUs(), TX_CPU_MAX);
 #else
 	NumCPUs = 1;
 #endif
@@ -1959,7 +1958,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 	}
 	if (type == B3_TX_ILBM)
 	{
-		b3Thread tx_thread[CPU_MAX];
+		b3Thread tx_thread[TX_CPU_MAX];
 
 		// It doesn't worth multi threading
 		// if the image is too small
@@ -2175,7 +2174,7 @@ void b3Tx::b3ScaleUnfilteredFromILBM(
 	{
 	case B3_TX_VGA:
 		cDst = (b3_u08 *)data;
-		memcpy(palette, srcTx->b3GetPalette(), B3_MIN(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
+		memcpy(palette, srcTx->b3GetPalette(), std::min(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)

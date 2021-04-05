@@ -149,7 +149,7 @@ b3_size b3FileMem::b3Read(
 {
 	b3_size read_bytes;
 
-	read_bytes = B3_MIN(buffer_size, m_BufferSize - m_BufferPos);
+	read_bytes = std::min(buffer_size, m_BufferSize - m_BufferPos);
 	memcpy(buffer, &m_Buffer[m_BufferPos], read_bytes);
 	m_BufferPos += read_bytes;
 

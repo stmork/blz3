@@ -176,8 +176,8 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 	m_Start = m_End = (Anim != nullptr ? Anim->m_Start : 0);
 	while (Anim != nullptr)
 	{
-		m_End     = B3_MAX(Anim->m_End,  m_End);
-		m_Start   = B3_MIN(Anim->m_Start, m_Start);
+		m_End     = std::max(Anim->m_End,  m_End);
+		m_Start   = std::min(Anim->m_Start, m_Start);
 		b3RecomputeNeutralInverse(Anim);
 		prev = b3FindSameTrack(Anim);
 		if (prev != nullptr)

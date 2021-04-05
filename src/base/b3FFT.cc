@@ -28,6 +28,8 @@
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Random.h"
 
+#define B3_FFT_MAX_THREADS 16
+
 /*************************************************************************
 **                                                                      **
 **                        b3SimpleFourier                               **
@@ -37,19 +39,15 @@
 b3Fourier::b3Fourier()
 {
 	// Dimension
-	m_xOrig  =
-		m_yOrig  = 0;
-	m_xSize  =
-		m_ySize  = 0;
-	m_xStart =
-		m_yStart = 0;
-	m_xDim   =
-		m_yDim   = 0;
+	m_xOrig  = m_yOrig  = 0;
+	m_xSize  = m_ySize  = 0;
+	m_xStart = m_yStart = 0;
+	m_xDim   = m_yDim   = 0;
 
 	m_Buffer = nullptr;
 	m_Lines  = nullptr;
 	m_Aux    = nullptr;
-	m_CPUs   = B3_MIN(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs());
+	m_CPUs   = std::min<b3_count>(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs());
 }
 
 b3Fourier::~b3Fourier()
@@ -122,7 +120,7 @@ bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 	m_yOrig  = tx->ySize;
 	m_xSize  = b3Math::b3PowOf2(m_xOrig);
 	m_ySize  = b3Math::b3PowOf2(m_yOrig);
-	max      = B3_MAX(m_xSize, m_ySize);
+	max      = std::max(m_xSize, m_ySize);
 	m_xSize  = max;
 	m_ySize  = max;
 	m_xStart = (m_xSize - m_xOrig) >> 1;
@@ -531,7 +529,7 @@ bool b3Fourier::b3SelfTest()
 		for (x = 0; x < m_xSize; x++)
 		{
 			e   = fabs(random.b3Rand() - m_Lines[y][x].b3Real());
-			err = B3_MAX(err, fabs(e));
+			err = std::max(err, fabs(e));
 		}
 	}
 	b3PrintF(B3LOG_NORMAL, "### CLASS: b3Four # error diff %g\n", err);

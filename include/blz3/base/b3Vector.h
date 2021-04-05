@@ -226,7 +226,7 @@ public:
 		const b3_f64 w = 0)
 	{
 		b3_f64  param[4];
-		b3_loop max = B3_MIN(4, dim);
+		b3_loop max = std::min(4, dim);
 
 		param[0] = x;
 		param[1] = y;

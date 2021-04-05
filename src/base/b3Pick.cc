@@ -135,8 +135,8 @@ bool b3Pick::b3Hit(const b3_coord x, const b3_coord y) const
 	b3_coord yDiff = m_y - y;
 
 	return
-		(B3_ABS(xDiff) <= b3PickBase::m_PickSize) &&
-		(B3_ABS(yDiff) <= b3PickBase::m_PickSize);
+		(std::abs(xDiff) <= b3PickBase::m_PickSize) &&
+		(std::abs(yDiff) <= b3PickBase::m_PickSize);
 }
 
 bool b3Pick::b3Moved(const b3_coord x, const b3_coord y)

@@ -57,10 +57,8 @@
 	(((color) & 0x00c000) >> 12) |\
 	(((color) & 0x0000c0) >>  6))
 
-#define B3_TX_MAX_HISTGRM_DEPTH 8
-#define B3_TX_MAX_HISTGRM       (1 << B3_TX_MAX_HISTGRM_DEPTH)
-
 #define B3_JPG_QUALITY       85
+#define TX_CPU_MAX            8
 
 /*************************************************************************
 **                                                                      **
@@ -353,15 +351,18 @@ class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 	static       bool    m_ErrorHandlerInstalled;
 
 private:
+	b3Path            image_name;
 	b3_pkd_color   *  palette;
 	b3_count     *    histogramme;
+	b3ColorIndices  * grid;
 	b3_tx_data        data;
+	b3_f64            white_ratio;
 	b3_count          dSize, pSize;
 	b3_tx_type        type;
 	b3_tx_filetype    FileType;
-	b3_f64            white_ratio;
-	b3Path            image_name;
-	b3ColorIndices  * grid;
+
+	static const b3_count B3_TX_MAX_HISTGRM_DEPTH  = 8;
+	static const b3_count B3_TX_MAX_HISTGRM        = (1 << B3_TX_MAX_HISTGRM_DEPTH);
 
 public:
 	b3_res            xSize;       //!< The image width;
@@ -382,12 +383,12 @@ public:
 	 * @param srcTx The source image.
 	 * @see b3Copy()
 	 */
-	b3Tx(b3Tx * srcTx);
+	explicit b3Tx(b3Tx * srcTx);
 
 	/**
 	 * This destructor deinitializes the image.
 	 */
-	virtual ~b3Tx();
+	virtual       ~b3Tx();
 
 	/**
 	 * This method copies the data of the given source image.

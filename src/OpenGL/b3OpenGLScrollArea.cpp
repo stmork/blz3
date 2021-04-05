@@ -270,8 +270,8 @@ void QB3BarInfo::set(
 	const b3_f32   view_lower,
 	const b3_f32   view_upper)
 {
-	min       = B3_MIN(scene_lower, view_lower);
-	max       = B3_MAX(scene_upper, view_upper);
+	min       = std::min(scene_lower, view_lower);
+	max       = std::max(scene_upper, view_upper);
 	page_size = ceil(view_upper) - floor(view_lower);
 	range     = ceil(max)        - floor(min);
 
@@ -292,7 +292,7 @@ int QB3BarInfo::relToBar(const b3_f64 value) const
 	return value * page_size;
 }
 
-int QB3BarInfo::posToBar(const b3_f64 pos)
+int QB3BarInfo::posToBar(const b3_f64 pos) const
 {
 	return pos;
 }

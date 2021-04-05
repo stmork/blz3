@@ -44,7 +44,7 @@ struct QB3BarInfo
 
 	b3_f64 relFromBar(const int value) const;
 	int    relToBar(const b3_f64 value) const;
-	int    posToBar(const b3_f64 pos);
+	int    posToBar(const b3_f64 pos) const;
 };
 
 class QB3OpenGLScrollArea :

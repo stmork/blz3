@@ -468,8 +468,8 @@ void b3DisplayView::b3Open(
 	xScr      = DisplayWidth(m_Display, m_Screen) - 20;
 	yScr      = DisplayHeight(m_Display, m_Screen) - 15;
 
-	m_xs      = B3_MIN(m_xMax, xScr);
-	m_ys      = B3_MIN(m_yMax, yScr);
+	m_xs      = std::min(m_xMax, xScr);
+	m_ys      = std::min(m_yMax, yScr);
 	m_Opened  = false;
 	m_Closed  = false;
 

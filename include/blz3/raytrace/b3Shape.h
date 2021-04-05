@@ -943,37 +943,37 @@ private:
 		b3_index   triangle,
 		b3_count   max);
 
-	inline b3_index b3GridDistance(b3_f32 v1, b3_f32 v2, b3_f32 v3)
+	inline b3_index b3GridDistance(b3_f32 v1, b3_f32 v2, b3_f32 v3) const
 	{
-		b3_index i1 = (b3_index)v1;
-		b3_index i2 = (b3_index)v2;
-		b3_index i3 = (b3_index)v3;
-		b3_index d12 = B3_ABS(i2 - i1);
-		b3_index d23 = B3_ABS(i3 - i2);
-		b3_index d31 = B3_ABS(i1 - i3);
+		const b3_index i1 = (b3_index)v1;
+		const b3_index i2 = (b3_index)v2;
+		const b3_index i3 = (b3_index)v3;
+		const b3_index d12 = std::abs(i2 - i1);
+		const b3_index d23 = std::abs(i3 - i2);
+		const b3_index d31 = std::abs(i1 - i3);
 
-		b3_index result = B3_MAX(d12, d23);
-		return B3_MAX(result, d31);
+		const b3_index result = std::max(d12, d23);
+		return std::max(result, d31);
 	}
 
-	inline void b3ToGridSpace(const b3_vector * point, b3_vector * result)
+	inline void b3ToGridSpace(const b3_vector * point, b3_vector * result) const
 	{
 		result->x = (point->x - m_Base.x) / m_Size.x;
 		result->y = (point->y - m_Base.y) / m_Size.y;
 		result->z = (point->z - m_Base.z) / m_Size.z;
 	}
 
-	inline b3_index b3GetGrid(b3_vector * p)
+	inline b3_index b3GetGrid(b3_vector * p) const
 	{
 		return GRID_INDEX(
 				b3_index(p->x), b3_index(p->y), b3_index(p->z), m_GridSize);
 	}
 
-	inline void b3AddTriangleToGrid(b3_index grid, b3_index triangle)
+	inline void b3AddTriangleToGrid(b3_index grid, b3_index triangle) const
 	{
 		if ((grid >= 0) && (grid < m_GridCount))
 		{
-			b3_count max = m_GridList[grid].b3GetCount();
+			const b3_count max = m_GridList[grid].b3GetCount();
 
 			if (max > 0)
 			{

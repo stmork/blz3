@@ -117,7 +117,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 			{
 				inring *= (1 - 0.4 * grain1valid);
 			}
-			grain = B3_MAX(grain, g);
+			grain = std::max(grain, g);
 		}
 		Pgrain.x += Pgrain.x;
 		Pgrain.y += Pgrain.y;

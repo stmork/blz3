@@ -654,9 +654,9 @@ void b3Scene::b3GetBackgroundColor(
 	case TP_SKY_N_HELL :
 		sight      = m_Clouds->b3ComputeClouds(ray, r, b3GetTimePoint());
 		ray->color = b3Color::b3Mix(m_BottomColor, b3Color(
-					B3_MAX(r, m_TopColor[b3Color::R]),
-					B3_MAX(r, m_TopColor[b3Color::G]),
-					B3_MAX(r, m_TopColor[b3Color::B])), sight);
+					std::max<b3_f64>(r, m_TopColor[b3Color::R]),
+					std::max<b3_f64>(r, m_TopColor[b3Color::G]),
+					std::max<b3_f64>(r, m_TopColor[b3Color::B])), sight);
 		break;
 
 	case TP_SLIDE :

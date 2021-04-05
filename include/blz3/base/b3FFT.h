@@ -44,8 +44,6 @@ struct b3FilterInfo
 
 typedef void (*b3SampleFunc)(const b3_f64 fx, const b3_f64 fy, const b3_index index, b3FilterInfo * info);
 
-#define B3_FFT_MAX_THREADS 4
-
 struct b3_fft_info
 {
 	b3_loop        m_xMin, m_xMax;
@@ -59,15 +57,13 @@ struct b3_fft_info
 
 class B3_PLUGIN b3Fourier : protected b3Mem
 {
-	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
-	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
-//	b3_count               m_Size;
-
 	b3Complex64      *     m_Buffer;
 	b3Complex64     **     m_Lines;
 	b3Complex64      *     m_Aux;
-
 	b3_count               m_CPUs;
+
+	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
+	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
 
 public:
 	b3Fourier();

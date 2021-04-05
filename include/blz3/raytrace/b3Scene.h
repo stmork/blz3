@@ -763,7 +763,7 @@ public:
 	 * @param name The image name to search for.
 	 * @return True on success.
 	 */
-	static  bool            b3CheckTexture(b3Tx ** tx, const char * name);
+	static  bool    b3CheckTexture(b3Tx ** tx, const char * name);
 
 	/**
 	 * This method shortens the given full qualified file name to a short

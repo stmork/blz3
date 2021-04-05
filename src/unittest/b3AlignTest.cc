@@ -70,19 +70,19 @@ void b3AlignTest::test()
 	b3_color     local_color;
 	b3Complex64  local_complex_64;
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(local_vector_3d));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(local_vector_4d));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(local_matrix_32));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(local_matrix_64));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(local_color));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(local_complex_64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(local_vector_3d));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(local_vector_4d));
+	CPPUNIT_ASSERT_SIZET_EQUAL(32, alignof(local_matrix_32));
+	CPPUNIT_ASSERT_SIZET_EQUAL(32, alignof(local_matrix_64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(local_color));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(local_complex_64));
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(*ptr_vector_3d));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(*ptr_vector_4d));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(*ptr_matrix_32));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(*ptr_matrix_64));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(*ptr_color));
-	CPPUNIT_ASSERT_TYPED_EQUAL(size_t, 16, alignof(*ptr_complex_64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(*ptr_vector_3d));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(*ptr_vector_4d));
+	CPPUNIT_ASSERT_SIZET_EQUAL(32, alignof(*ptr_matrix_32));
+	CPPUNIT_ASSERT_SIZET_EQUAL(32, alignof(*ptr_matrix_64));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(*ptr_color));
+	CPPUNIT_ASSERT_SIZET_EQUAL(16, alignof(*ptr_complex_64));
 }
 
 #endif

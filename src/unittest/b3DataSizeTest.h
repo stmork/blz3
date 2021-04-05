@@ -40,6 +40,7 @@ class b3DataSizeTest : public CppUnit::TestFixture
 	void   *  ptr1, *ptr2;
 
 	CPPUNIT_TEST_SUITE(b3DataSizeTest);
+	CPPUNIT_TEST(testAlignment);
 	CPPUNIT_TEST(testDataSize);
 	CPPUNIT_TEST(testMemory);
 	CPPUNIT_TEST(testSwap);
@@ -48,6 +49,8 @@ class b3DataSizeTest : public CppUnit::TestFixture
 public:
 	void setUp() override;
 	void tearDown() override;
+
+	void testAlignment();
 	void testDataSize();
 	void testMemory();
 	void testSwap();

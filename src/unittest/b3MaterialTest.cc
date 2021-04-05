@@ -138,7 +138,7 @@ private:
 
 	inline static void b3ComputeBBoxScale(b3BBox * bbox, b3_vector * scale)
 	{
-		b3_f64 min = B3_MIN(B3_MIN(bbox->m_DimSize.x, bbox->m_DimSize.y), bbox->m_DimSize.z);
+		b3_f64 min = std::min(std::min(bbox->m_DimSize.x, bbox->m_DimSize.y), bbox->m_DimSize.z);
 
 		scale->x = bbox->m_DimSize.x / min;
 		scale->y = bbox->m_DimSize.y / min;
