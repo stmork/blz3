@@ -63,7 +63,7 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 
 	// Copy control points
 	control_count = m_Spline[0].m_ControlMax * m_Spline[1].m_ControlMax;
-	m_Controls    = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
+	m_Controls    = b3Item::b3TypedAlloc<b3_vector>(control_count);
 	m_Spline[0].m_Controls =
 		m_Spline[1].m_Controls = m_Controls;
 	for (i = 0; i < control_count; i++)
@@ -108,9 +108,9 @@ void b3SplineShape::b3Init(
 	b3_count vControlNum)
 {
 	// Allocate controls
-	m_Controls      = (b3_vector *)b3Item::b3Alloc(
+	m_Controls      = b3Item::b3TypedAlloc<b3_vector>(
 			m_Spline[0].m_ControlMax *
-			m_Spline[1].m_ControlMax * sizeof(b3_vector));
+			m_Spline[1].m_ControlMax);
 
 	// Init horizontal spline
 	m_Spline[0].m_Knots    = m_Knots[0];
@@ -518,8 +518,7 @@ bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 	b3_count     SubDiv, TriaCount, VertexCount;
 	b3_vector    VertexField[B3_MAX_SUBDIV + 1];
 
-	Between = (b3_vector *)b3Item::b3Alloc(sizeof(b3_vector) *
-			(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
+	Between = b3Item::b3TypedAlloc<b3_vector>((B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
 	if (Between == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);

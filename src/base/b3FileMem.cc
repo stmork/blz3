@@ -270,7 +270,7 @@ bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 	{
 		new_size += m_BufferInc;
 
-		new_buffer = (b3_u08 *)b3Alloc(new_size);
+		new_buffer = b3TypedAlloc<b3_u08>(new_size);
 		if (new_buffer == nullptr)
 		{
 			B3_THROW(b3FileException, B3_FILE_MEMORY);

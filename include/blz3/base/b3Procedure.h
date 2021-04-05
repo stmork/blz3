@@ -90,7 +90,7 @@ public:
 	 * @param x The input value.
 	 * @return The pseudo random value.
 	 */
-	static inline b3_f64  b3SignedNoiseScalar(const b3_f64 x)
+	static inline b3_f64        b3SignedNoiseScalar(const b3_f64 x)
 	{
 		return b3NoiseScalar(x) * 2 - 1;
 	}

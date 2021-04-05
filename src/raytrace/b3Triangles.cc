@@ -52,8 +52,8 @@ b3Triangles::b3Triangles(b3_u32 * src) : b3TriangleShape(src)
 	b3InitNOP();
 	b3InitNOP();
 
-	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
-	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
+	m_Vertices  = b3Item::b3TypedAlloc<b3_vertex>(m_VertexCount);
+	m_Triangles = b3Item::b3TypedAlloc<b3_triangle>(m_TriaCount);
 
 	for (i = 0; i < m_VertexCount; i++)
 	{

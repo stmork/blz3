@@ -78,14 +78,14 @@ bool b3TriangleShape::b3Init(
 	{
 		b3Item::b3Free(m_Vertices);
 		m_VertexCount = vertex_count;
-		m_Vertices    = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
+		m_Vertices    = b3Item::b3TypedAlloc<b3_vertex>(m_VertexCount);
 	}
 
 	if (m_TriaCount != tria_count)
 	{
 		b3Item::b3Free(m_Triangles);
 		m_TriaCount = tria_count;
-		m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
+		m_Triangles = b3Item::b3TypedAlloc<b3_triangle>(m_TriaCount);
 	}
 	m_xSize = xSize;
 	m_ySize = ySize;

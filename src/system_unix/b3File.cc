@@ -337,7 +337,7 @@ bool b3File::b3Buffer(b3_size size)
 	// Allocate new buffer
 	if (size > 32)
 	{
-		m_Cache = (b3_u08 *)b3Alloc(size);
+		m_Cache = b3TypedAlloc<b3_u08>(size);
 		if (m_Cache != nullptr)
 		{
 			m_BufferSize =  size - 32;
@@ -371,7 +371,7 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 	if (b3Open(filename, B_READ))
 	{
 		file_size = b3Size();
-		file_buffer = (b3_u08 *)b3Alloc(file_size);
+		file_buffer = b3TypedAlloc<b3_u08>(file_size);
 		if (file_buffer != nullptr)
 		{
 			if (b3Read(file_buffer, file_size) == file_size)

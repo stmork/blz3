@@ -751,7 +751,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	spp     = m_SamplesPerPixel;
 	m_SPP   = type == SAMPLE_SEPARATED ? spp : spp * spp;
 
-	m_Samples  = (b3_f32 *)b3Alloc(xSize * m_SPP * sizeof(b3_f32) * 2);
+	m_Samples  = b3TypedAlloc<b3_f32>(xSize * m_SPP * 2);
 	if (m_Samples == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);

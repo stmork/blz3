@@ -203,7 +203,7 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);
 		}
-		m_Normals = (b3_vector *)b3Alloc(size * sizeof(b3_vector));
+		m_Normals = b3TypedAlloc<b3_vector>(size);
 		if (m_Normals == nullptr)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);

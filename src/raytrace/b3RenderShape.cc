@@ -112,10 +112,8 @@ void b3ShapeRenderContext::b3InitSubdiv(const b3_count new_subdiv)
 	b3Free(m_ConeIndices);
 	b3Free(m_ConePolygons);
 
-	m_CylinderIndices  = (b3_gl_line *)b3Alloc
-		((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
-	m_CylinderPolygons = (b3_gl_polygon *)b3Alloc
-		((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
+	m_CylinderIndices  = b3TypedAlloc<b3_gl_line>((m_SubDiv + 1) * 3);
+	m_CylinderPolygons = b3TypedAlloc<b3_gl_polygon>((m_SubDiv + 1) * 2);
 	if ((m_CylinderIndices != nullptr) && (m_CylinderPolygons != nullptr))
 	{
 		gPtr = m_CylinderIndices;
@@ -149,10 +147,8 @@ void b3ShapeRenderContext::b3InitSubdiv(const b3_count new_subdiv)
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
 
-	m_ConeIndices  = (b3_gl_line *)b3Alloc
-		((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
-	m_ConePolygons = (b3_gl_polygon *)b3Alloc
-		((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
+	m_ConeIndices  = b3TypedAlloc<b3_gl_line>((m_SubDiv + 1) * 2);
+	m_ConePolygons = b3TypedAlloc<b3_gl_polygon>((m_SubDiv + 1) * 1);
 	if ((m_ConeIndices != nullptr) && (m_ConePolygons != nullptr))
 	{
 		gPtr = m_ConeIndices;

@@ -122,7 +122,7 @@ b3Noise::b3Noise()
 	{
 		b3_count i, max = NOISEDIM * NOISESIZE;
 
-		m_NoiseTable = (b3_noisetype *)b3MemAccess::b3Alloc(max * sizeof(b3_noisetype));
+		m_NoiseTable = b3MemAccess::b3TypedAlloc<b3_noisetype>(max);
 		if (m_NoiseTable == nullptr)
 		{
 			B3_THROW(b3NoiseException, B3_NOISE_MEMORY);

@@ -49,7 +49,7 @@ public:
 		return ptr;
 	}
 
-	template<class T> static inline T * b3AllocTyped(const b3_size elements)
+	template<class T> static inline T * b3TypedAlloc(const b3_size elements = 1)
 	{
 		const b3_size size = elements * sizeof(T);
 		T      *      ptr  = static_cast<T *>(aligned_alloc(16, size));

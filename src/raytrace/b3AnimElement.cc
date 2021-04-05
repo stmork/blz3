@@ -40,7 +40,7 @@ b3AnimControl::b3AnimControl(b3_u32 class_type B3_UNUSED) :
 	m_Dimension = 4;
 	m_Used      = 0;
 	m_Max       = B3_MAX_CONTROLS;
-	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
+	m_Controls  = b3TypedAlloc<b3_vector4D>(m_Max);
 }
 
 b3AnimControl::b3AnimControl(b3_u32 * src) : b3Item(src)
@@ -51,7 +51,7 @@ b3AnimControl::b3AnimControl(b3_u32 * src) : b3Item(src)
 	m_Used      = b3InitInt();
 	m_Max       = b3InitInt();
 
-	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
+	m_Controls  = b3TypedAlloc<b3_vector4D>(m_Max);
 	if (m_Controls == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);

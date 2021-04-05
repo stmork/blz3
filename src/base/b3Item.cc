@@ -107,7 +107,7 @@ b3Item::b3Item(b3_u32 * src) :
 	// Init subclasses' heads
 	if (m_HeadCount > 0)
 	{
-		m_Heads = (b3Base<b3Item> *)b3Alloc(m_HeadCount * sizeof(b3Base<b3Item>));
+		m_Heads = b3TypedAlloc<b3Base<b3Item>>(m_HeadCount);
 		if (m_Heads != nullptr)
 		{
 			k = B3_NODE_IDX_FIRSTHEAD_CLASS + B3_HEAD_IDX_CLASS;
@@ -154,7 +154,7 @@ bool b3Item::b3AllocHeads(b3_count new_head_count)
 {
 	b3_u32  i;
 
-	m_Heads = (b3Base<b3Item> *)b3Alloc(new_head_count * sizeof(b3Base<b3Item>));
+	m_Heads = b3TypedAlloc<b3Base<b3Item>>(new_head_count);
 	if (m_Heads != nullptr)
 	{
 		m_HeadCount = new_head_count;

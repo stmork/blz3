@@ -52,7 +52,7 @@ b3SplineRotShape::b3SplineRotShape(b3_u32 * src) :
 	b3InitVector(&m_Axis.pos);
 	b3InitVector(&m_Axis.dir);
 
-	m_Controls = (b3_vector *)b3Item::b3Alloc(m_Spline.m_ControlMax * sizeof(b3_vector));
+	m_Controls = b3Item::b3TypedAlloc<b3_vector>(m_Spline.m_ControlMax);
 	m_Spline.m_Controls = m_Controls;
 	for (i = 0; i < m_Spline.m_ControlMax; i++)
 	{
@@ -89,7 +89,7 @@ void b3SplineRotShape::b3Init(
 	m_rSubDiv = SubDiv;
 
 	// Allocate controls
-	m_Controls      = (b3_vector *)b3Item::b3Alloc(m_Spline.m_ControlMax * sizeof(b3_vector));
+	m_Controls      = b3Item::b3TypedAlloc<b3_vector>(m_Spline.m_ControlMax);
 
 	// Init horizontal spline
 	m_Spline.m_Knots    = m_Knots;
