@@ -854,7 +854,7 @@ void b3ImageTest::testContrast()
 		b3Tx         dst;
 		b3Path       path;
 
-		path.b3Format("img_test_contrast_%03d-%1.3lf-%03ld.jpg", 24, 32 );
+		path.b3Format("img_test_contrast_%03d-%1.3lf-%03d.jpg", 24, gamma, 32);
 		CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 32));
 		CPPUNIT_ASSERT(dst.b3TxContrast(0.75, 0.25, gamma, src));
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
