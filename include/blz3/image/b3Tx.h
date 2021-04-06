@@ -1224,9 +1224,16 @@ private:
 	 *
 	 * @return The image data.
 	 */
-	inline b3_tx_data b3GetVoidData() const
+	inline b3_tx_data b3GetVoidData() const noexcept
 	{
 		return data;
+	}
+
+	template<typename T> inline T b3Get(const b3_coord x, const b3_coord y) const
+	{
+		const T * ptr = data;
+
+		return ptr[y * xSize + x];
 	}
 
 	static inline b3_u16 b3ConvertToHigh(const b3Color & color)
@@ -1246,7 +1253,7 @@ private:
 		return result;
 	}
 
-	static inline b3_pkd_color b3Convert(const b3_u16 px)
+	static inline b3_pkd_color b3Convert(const b3_u16 px) noexcept
 	{
 		b3_u16       mask    = 0xf000;
 		b3_pkd_color result  = 0;

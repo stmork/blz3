@@ -590,9 +590,6 @@ void b3Tx::b3GetResolution(b3_res & xd, b3_res & yd) const
 
 b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 {
-	b3_pkd_color * lPtr;
-	b3_color   *  cPtr;
-
 	switch (type)
 	{
 	case B3_TX_ILBM:
@@ -600,15 +597,13 @@ b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 		return (b3GetValue(x, y) & 0xff) * 0.0039215686;
 
 	case B3_TX_VGA:
-		return palette == nullptr ? 0 : (palette[data[y * xSize + x]] & 0xff) * 0.0039215686;
+		return palette == nullptr ? 0 : (palette[b3Get<b3_u08>(x, y)] & 0xff) * 0.0039215686;
 
 	case B3_TX_RGB8:
-		lPtr  = data;
-		return (lPtr[y * xSize + x] & 0xff) * 0.0039215686;
+		return (b3Get<b3_pkd_color>(x, y) & 0xff) * 0.0039215686;
 
 	case B3_TX_FLOAT:
-		cPtr  = data;
-		return cPtr[y * xSize + x].b;
+		return b3Get<b3_color>(x, y).b;
 
 	case B3_TX_UNDEFINED :
 		return 0;
@@ -620,26 +615,19 @@ b3_f32 b3Tx::b3GetBlue(const b3_coord x, const b3_coord y) const
 
 const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 {
-	b3_u16    *    sPtr;
-	b3_pkd_color * lPtr;
-	b3_color   *   cPtr;
-
 	switch (type)
 	{
 	case B3_TX_VGA:
-		return b3Color(palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]]);
+		return b3Color(palette == nullptr ? B3_BLACK : palette[b3Get<b3_u08>(x, y)]);
 
 	case B3_TX_RGB4:
-		sPtr = data;
-		return b3Color(b3Convert(sPtr[y * xSize + x]));
+		return b3Color(b3Get<b3_u16>(x, y));
 
 	case B3_TX_RGB8:
-		lPtr  = data;
-		return b3Color(lPtr[y * xSize + x]);
+		return b3Color(b3Get<b3_pkd_color>(x, y));
 
 	case B3_TX_FLOAT:
-		cPtr  = data;
-		return b3Color(cPtr[y * xSize + x]);
+		return b3Color(b3Get<b3_color>(x, y));
 
 	case B3_TX_ILBM:
 	case B3_TX_UNDEFINED:
@@ -654,29 +642,22 @@ b3_pkd_color b3Tx::b3GetValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
-	b3_u16    *    sPtr;
-	b3_pkd_color * lPtr;
-	b3_color   *   cPtr;
-
 	switch (type)
 	{
 	case B3_TX_ILBM:
 		return b3ILBMValue(x, y);
 
 	case B3_TX_RGB4:
-		sPtr = data;
-		return b3Convert(sPtr[y * xSize + x]);
+		return b3Convert(b3Get<b3_u16>(x, y));
 
 	case B3_TX_RGB8:
-		lPtr  = data;
-		return lPtr[y * xSize + x];
+		return b3Get<b3_pkd_color>(x, y);
 
 	case B3_TX_VGA:
-		return palette == nullptr ? B3_BLACK : palette[data[y * xSize + x]];
+		return palette == nullptr ? B3_BLACK : palette[b3Get<b3_u08>(x, y)];
 
 	case B3_TX_FLOAT:
-		cPtr  = data;
-		return b3Color(cPtr[y * xSize + x]);
+		return b3Color(b3Get<b3_color>(x, y));
 
 	case B3_TX_UNDEFINED :
 		return B3_BLACK;
@@ -734,11 +715,8 @@ inline b3_pkd_color b3Tx::b3ILBMValue(
 
 bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 {
-	b3_u08    *    bPtr, bit;
-	b3_u16    *    sPtr;
-	b3_pkd_color * lPtr;
-	b3_color   *   cPtr;
-	b3_count       i, xBytes;
+	b3_u08  *  bPtr, bit;
+	b3_count   xBytes;
 
 	switch (type)
 	{
@@ -747,7 +725,7 @@ bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 		bPtr   = data;
 		bPtr  += ((y + 1) * xBytes * depth + (x >> 3));
 		bit    = m_Bits[x & 7];
-		for (i = 0; i < depth; i++)
+		for (b3_res i = 0; i < depth; i++)
 		{
 			bPtr   -= xBytes;
 			if (*bPtr & bit)
@@ -760,26 +738,16 @@ bool b3Tx::b3IsBackground(const b3_coord x, const b3_coord y) const
 		return false;
 
 	case B3_TX_RGB8	:
-		lPtr = data;
-
-		// Check for alpha channel not equal to 0.
-		return (lPtr[x + y * xSize] & 0xff000000) != 0;
+		return (b3Get<b3_pkd_color>(x, y) & 0xff000000) != 0;
 
 	case B3_TX_RGB4	:
-		sPtr = data;
-
-		// Check for alpha channel not equal to 0.
-		return (sPtr[x + y * xSize] & 0xf000) != 0;
+		return (b3Get<b3_u16>(x, y) & 0xf000) != 0;
 
 	case B3_TX_VGA	:
-		bPtr = data;
-
-		// Check for first index.
-		return bPtr[x + y * xSize] != 0;
+		return (palette[b3Get<b3_u08>(x, y)] & 0xff000000) != 0;
 
 	case B3_TX_FLOAT :
-		cPtr = data;
-		return cPtr[x + y * xSize].a > 0;
+		return b3Get<b3_color>(x, y).a > 0;
 
 	default:
 		// No image -> no hit -> always transparent...

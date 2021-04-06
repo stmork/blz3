@@ -26,6 +26,7 @@
 #include "b3TxInclude.h"
 
 #include "b3TxIFF.h"
+#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **
@@ -91,7 +92,7 @@ class b3_tx_yuv_table
 
 b3_tx_yuv_table b3_tx_yuv_table::m_MultYuvTable;
 
-b3_u08 b3_tx_yuv_table::m_ConvertBits[8] =
+b3_u08 b3_tx_yuv_table::m_ConvertBits[8]
 {
 	128, 64, 32, 16, 8, 4, 2, 1
 };
@@ -446,7 +447,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 	b3_u08 * Copy;
 	b3_u08 * CharData;
 	b3_u32   Code, i;
-	b3_u32   Max, k, Color, Pos = 12;
+	b3_u32   Max, k, Pos = 12;
 	b3_u32 * Set;
 	b3_u32 * LongData;
 	bool     Compressed = false, Ham = false, EHB = false, Ham8 = false;
@@ -499,13 +500,11 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 			CharData += 8;
 			for (k = 0; k < Max; k++)
 			{
-				Color  = ((b3_u32)CharData[0] << 16);
-				CharData++;
-				Color |= ((b3_u32)CharData[0] <<  8);
-				CharData++;
-				Color |= (b3_u32)CharData[0];
-				CharData++;
-				*Set++ = Color;
+				const b3_u08 r = *CharData++;
+				const b3_u08 g = *CharData++;
+				const b3_u08 b = *CharData++;
+
+				*Set++ = b3Color::b3MakePkdColor(r, g, b);
 			}
 			break;
 		case IFF_CAMG :

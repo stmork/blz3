@@ -109,9 +109,9 @@ public:
 	 * \return The bound value.
 	 */
 	template<typename T> inline static T b3Clamp(
-			const T & input,
-			const T & min,
-			const T & max)
+		const T & input,
+		const T & min,
+		const T & max)
 	{
 		const T & r = input < min ? min : input;
 
