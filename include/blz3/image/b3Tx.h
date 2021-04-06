@@ -433,7 +433,7 @@ public:
 	 *
 	 * @return The palette data.
 	 */
-	b3_pkd_color * b3GetPalette() const
+	b3_pkd_color * b3GetPalette() const noexcept
 	{
 		return palette;
 	}
@@ -540,7 +540,7 @@ public:
 	 *
 	 * @return The file name of the image.
 	 */
-	const char  *  b3Name() const
+	const char  *  b3Name() const noexcept
 	{
 		return image_name;
 	}
@@ -625,14 +625,14 @@ public:
 	 *
 	 * @return True if this instance holds an image.
 	 */
-	bool     b3IsLoaded() const;
+	bool     b3IsLoaded() const noexcept;
 
 	/**
 	 * This method returns true if this image is black/white.
 	 *
 	 * @return True if this image is b/w.
 	 */
-	inline bool    b3IsBW() const
+	inline bool    b3IsBW() const noexcept
 	{
 		return (depth == 1) && (type == B3_TX_ILBM);
 	}
@@ -642,7 +642,7 @@ public:
 	 *
 	 * @return True if this image is high color.
 	 */
-	inline bool    b3IsHighColor() const
+	inline bool    b3IsHighColor() const noexcept
 	{
 		return ((depth == 12) || (depth == 16)) && (type == B3_TX_RGB4);
 	}
@@ -652,7 +652,7 @@ public:
 	 *
 	 * @return True if this image is true color.
 	 */
-	inline bool    b3IsTrueColor() const
+	inline bool    b3IsTrueColor() const noexcept
 	{
 		return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
 	}
@@ -662,7 +662,7 @@ public:
 	 *
 	 * @return True if this image is a high dynamic range image.
 	 */
-	inline bool    b3IsHdr() const
+	inline bool    b3IsHdr() const noexcept
 	{
 		return (depth >= 96) && (type == B3_TX_FLOAT);
 	}
@@ -672,7 +672,7 @@ public:
 	 *
 	 * @return True if this image is palettized.
 	 */
-	inline bool    b3IsPalette() const
+	inline bool    b3IsPalette() const noexcept
 	{
 		return palette != nullptr;
 	}
@@ -682,7 +682,7 @@ public:
 	 *
 	 * @return True if this image is a palettized grey image.
 	 */
-	bool           b3IsGreyPalette() const;
+	bool           b3IsGreyPalette() const noexcept;
 
 	// b3TxBlit.cc
 	/**
@@ -697,7 +697,7 @@ public:
 	void           b3GetColorMask(
 		b3_u08    *   mask,
 		b3_count      BytesPerRow,
-		b3_pkd_color  colorMask) const;
+		b3_pkd_color  colorMask) const ;
 
 	/**
 	 * This method blits an image area from the source image into this image. The
@@ -788,9 +788,9 @@ public:
 	 * @return True on success.
 	 */
 	bool     b3TxColorFilter(
-		b3_f64       redFilter,
-		b3_f64       greenFilter,
-		b3_f64       blueFilter,
+		const b3_f32 redFilter,
+		const b3_f32 greenFilter,
+		const b3_f32 blueFilter,
 		const b3Tx * srcTx = nullptr);
 
 	/**
@@ -1227,6 +1227,23 @@ private:
 	inline b3_tx_data b3GetVoidData() const
 	{
 		return data;
+	}
+
+	static inline b3_u16 b3ConvertToHigh(const b3Color & color)
+	{
+		b3_pkd_color px      = color;
+		b3_pkd_color mask    = 0xf0000000;
+		b3_pkd_color result  = 0;
+
+		while (mask != 0)
+		{
+			const b3_pkd_color nibble = px & mask;
+
+			result  |= nibble;
+			result >>= 4;
+			mask   >>= 8;
+		}
+		return result;
 	}
 
 	static inline b3_pkd_color b3Convert(const b3_u16 px)

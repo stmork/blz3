@@ -1468,47 +1468,87 @@ bool b3Tx::b3TxTransformTable(
 	b3_pkd_color * srcPtr = nullptr;
 	b3_pkd_color * dstPtr = nullptr;
 	b3_index       num    = 0, i;
-	b3_pkd_color   r, g, b, srcColor;
 
 	if (srcTx == nullptr)
 	{
 		srcTx = this;
 	}
-
-	if (b3IsPalette())
+	if ((srcTx->xSize != xSize) || (srcTx->ySize != ySize))
 	{
-		srcPtr = srcTx->b3GetPalette();
-		dstPtr = palette;
-		num    = 1 << depth;
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
+	}
 
-		if (srcTx != this)
+	switch (type)
+	{
+	case B3_TX_RGB4:
+		b3TxAlgorithms::b3Transform<b3_u16>(
+			srcTx, this, rTable, gTable, bTable, &b3Tx::b3ConvertToHigh);
+		return true;
+
+	case B3_TX_FLOAT:
+		b3TxAlgorithms::b3Transform<b3_color>(
+			srcTx, this, rTable, gTable, bTable);
+		return true;
+
+	case B3_TX_VGA:
+		if (srcTx->type == B3_TX_VGA)
 		{
-			// We have to copy the data, too.
-			// But only if srcTx and dstTx are different.
-			memcpy(data, srcTx->b3GetVoidData(), dSize);
+			srcPtr = srcTx->palette;
+			dstPtr = palette;
+			num    = 1 << srcTx->depth;
+
+			dSize = std::min(dSize, srcTx->dSize);
+			type  = srcTx->type;
+			if (srcTx != this)
+			{
+				// We have to copy the data, too.
+				// But only if srcTx and dstTx are different.
+				memcpy(data, srcTx->b3GetVoidData(), dSize);
+			}
 		}
+		else
+		{
+			return false;
+		}
+		break;
+
+	case B3_TX_RGB8:
+		if (srcTx->type == B3_TX_RGB8)
+		{
+			srcPtr = srcTx->b3GetTrueColorData();
+			dstPtr = b3GetTrueColorData();
+			num    = xSize * ySize;
+		}
+		else
+		{
+			b3TxAlgorithms::b3Transform<b3_pkd_color>(
+				srcTx, this, rTable, gTable, bTable);
+			return true;
+		}
+		break;
+
+	default:
+		return false;
 	}
 
-	if (b3IsTrueColor())
+	if ((srcPtr == nullptr) || (dstPtr == nullptr))
 	{
-
-		srcPtr = srcTx->b3GetTrueColorData();
-		dstPtr = b3GetTrueColorData();
-		num    = xSize * ySize;
+		return false;
 	}
 
-	// Do the loop!
+	// Do the loop! May be true color data or a palette.
 	for (i = 0; i < num; i++)
 	{
-		srcColor = *srcPtr++;
+		const b3_pkd_color color = *srcPtr++;
 
 		// Extract colors
-		r = rTable[(srcColor & 0xff0000) >> 16];
-		g = gTable[(srcColor & 0x00ff00) >>  8];
-		b = bTable[(srcColor & 0x0000ff)];
+		const b3_pkd_color a = (color & 0xff000000) >> 24;
+		const b3_pkd_color r = rTable[(color & 0xff0000) >> 16];
+		const b3_pkd_color g = gTable[(color & 0x00ff00) >>  8];
+		const b3_pkd_color b = bTable[(color & 0x0000ff)];
 
 		// Combine colors
-		*dstPtr++ = (r << 16) | (g << 8) | b;
+		*dstPtr++ = b3Color::b3MakePkdColor(r, g, b, a);
 	}
 
 	// True if we have initialized info
@@ -1516,28 +1556,56 @@ bool b3Tx::b3TxTransformTable(
 }
 
 bool b3Tx::b3TxColorFilter(
-	b3_f64  fr,
-	b3_f64  fg,
-	b3_f64  fb,
-	const b3Tx  * src)
+	const b3_f32  fr,
+	const b3_f32  fg,
+	const b3_f32  fb,
+	const b3Tx  * srcTx)
 {
-	b3_pkd_color filter_r[256];
-	b3_pkd_color filter_g[256];
-	b3_pkd_color filter_b[256];
-	b3_index     i;
-
-	for (i = 0; i < 256; i++)
+	if (srcTx == nullptr)
 	{
-		filter_r[i] = (b3_pkd_color)floor(i * fr + 0.5);
-		filter_g[i] = (b3_pkd_color)floor(i * fg + 0.5);
-		filter_b[i] = (b3_pkd_color)floor(i * fb + 0.5);
+		srcTx = this;
+	}
+	if ((srcTx->xSize != xSize) || (srcTx->ySize != ySize))
+	{
+		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
 
-	return b3TxTransformTable(
-			filter_r,
-			filter_g,
-			filter_b,
-			src);
+	if (b3IsHdr())
+	{
+		const b3Color & filter  = b3Color(fr, fg, fb, 1.0);
+		b3_color    *   dst_ptr = data;
+
+		for (b3_res y = 0; y < ySize; y++)
+		{
+			for (b3_res x = 0; x < xSize; x++)
+			{
+				const b3Color & color = srcTx->b3GetHdrValue(x, y);
+
+				*dst_ptr++ = color * filter;
+			}
+		}
+		return true;
+	}
+	else
+	{
+		b3_pkd_color filter_r[256];
+		b3_pkd_color filter_g[256];
+		b3_pkd_color filter_b[256];
+		b3_index     i;
+
+		for (i = 0; i < 256; i++)
+		{
+			filter_r[i] = std::clamp<b3_pkd_color>(round(i * fr), 0, 255);
+			filter_g[i] = std::clamp<b3_pkd_color>(round(i * fg), 0, 255);
+			filter_b[i] = std::clamp<b3_pkd_color>(round(i * fb), 0, 255);
+		}
+
+		return b3TxTransformTable(
+				filter_r,
+				filter_g,
+				filter_b,
+				srcTx);
+	}
 }
 
 b3_f64 b3Tx::b3Gamma(b3_f64 h, b3_f64 s, b3_f64 gamma, b3_f64 value, b3_f64 scale)
@@ -1568,7 +1636,7 @@ bool b3Tx::b3TxContrast(
 	b3_f64  h,
 	b3_f64  s,
 	b3_f64  gamma,
-	const b3Tx  * src)
+	const b3Tx  * srcTx)
 {
 	b3_pkd_color correction_table[256];
 	b3_index     i;
@@ -1583,7 +1651,7 @@ bool b3Tx::b3TxContrast(
 	return b3TxTransformTable(
 			correction_table,
 			correction_table,
-			correction_table, src);
+			correction_table, srcTx);
 }
 
 bool b3Tx::b3TxReduce(const b3Tx * src)

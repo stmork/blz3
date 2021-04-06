@@ -264,7 +264,7 @@ void b3Tx::b3FreeTx()
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
-bool b3Tx::b3IsGreyPalette() const
+bool b3Tx::b3IsGreyPalette() const noexcept
 {
 	b3_loop      i, max;
 	b3_pkd_color mul, step;
@@ -538,7 +538,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 	ScanLines   = srcTx->ScanLines;
 }
 
-bool b3Tx::b3IsLoaded() const
+bool b3Tx::b3IsLoaded() const noexcept
 {
 	return ((xSize != 0) && (ySize != 0) && (data != nullptr) && (type != B3_TX_UNDEFINED));
 }

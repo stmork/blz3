@@ -24,6 +24,41 @@
 
 struct B3_PLUGIN b3TxAlgorithms
 {
+	template<class DST> static void b3Transform(
+		const b3Tx     *    srcTx,
+		b3Tx        *       dstTx,
+		const b3_pkd_color * rTable,
+		const b3_pkd_color * gTable,
+		const b3_pkd_color * bTable,
+		std::function<DST(const b3Color & color)> convert = []
+			(const b3Color & color)
+	{
+		return color;
+	})
+	{
+		DST * dst_ptr = dstTx->data;
+
+		for (b3_res y = 0; y < dstTx->ySize; y++)
+		{
+			for (b3_res x = 0; x < dstTx->xSize; x++)
+			{
+				const b3_pkd_color color = srcTx->b3GetValue(x, y);
+
+				// Extract colors
+				const b3_pkd_color a =      (color & 0xff000000) >> 24;
+				const b3_pkd_color r = rTable[(color & 0xff0000) >> 16];
+				const b3_pkd_color g = gTable[(color & 0x00ff00) >>  8];
+				const b3_pkd_color b = bTable[(color & 0x0000ff)];
+
+				// Combine colors
+				const b3_pkd_color transformed =
+					b3Color::b3MakePkdColor(r, g, b, a);
+
+				*dst_ptr++ = convert(b3Color(transformed));
+			}
+		}
+	}
+
 	template<class SRC, class DST> static void b3Blit(
 		const b3Tx   *  srcTx,
 		const b3Tx   *  dstTx,
@@ -97,7 +132,7 @@ struct B3_PLUGIN b3TxAlgorithms
 				// Computing Gauss value and left to right ramp
 				const b3_f32  value = exp(radius / denom) * scale;
 				const b3_f32  level = xDiff * slope + niveau;
-				const b3Color sub   = (level - value);
+				const b3Color sub   = level - value;
 
 				*dstPtr++ = color + sub;
 			}
