@@ -24,13 +24,11 @@ linux:CONFIG(gcov) {
 	LIBS           += -lgcov
 }
 
-unix
-{
+unix {
 	INCLUDEPATH += $$BLZ3_HOME/include_unix
 }
 
-win32
-{
+win32 {
 	INCLUDEPATH += $$BLZ3_HOME/include_win32
 }
 
