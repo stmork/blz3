@@ -185,8 +185,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 	b3_u08 * CharData;
 	b3_u32 * LongData;
 	b3_u16 * dstPtr;
-	b3_u32  Amount, k, Pos = 12, Max, i = 0;
-	b3_u16  Color;
+	b3_u32   Pos = 12, Max, i = 0;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_RGB4(%s)\n",
 		(const char *)image_name);
@@ -204,26 +203,28 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 			ySize	= b3Endian::b3GetMot16(&CharData[10]);
 			depth	= CharData[16];
 			break;
+
 		case IFF_BODY :
-			Max  = xSize * ySize;
-			data = b3TypedAlloc<b3_u08>(Max * 2);
+			Max    = xSize * ySize;
+			dstPtr = b3TypedAlloc<b3_u16>(Max);
+			data   = dstPtr;
+			dSize  = Max * sizeof(b3_u16);
 			if (data == nullptr)
 			{
 				b3FreeTx();
 				b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 				B3_THROW(b3TxException, B3_TX_MEMORY);
 			}
-			dstPtr = (b3_u16 *)data;
 
 			CharData += 8;
 			while (i < Max)
 			{
-				Color  = (b3_u16)CharData[0] << 8;
-				CharData++;
-				Amount  = (b3_u32)CharData[0];
-				CharData++;
-				Color |= (b3_u16)Amount;
-				Color  = Color >> 4;
+				b3_u16 Color   = b3_u16(*CharData++) << 8;
+				b3_u32 Amount  = *CharData++;
+
+				Color  |= Amount;
+				Color >>= 4;
+
 				if ((Amount & 0x8) == 0)
 				{
 					Color |= 0xf000;
@@ -238,7 +239,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 						CharData += 2;
 					}
 				}
-				for (k = 0; k < Amount; k++)
+				for (b3_u32 k = 0; k < Amount; k++)
 				{
 					*dstPtr++ = Color;
 				}

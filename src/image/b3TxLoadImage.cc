@@ -46,7 +46,7 @@
 
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_pkd_color * LongData;
+	b3_u32       * LongData;
 	b3HeaderTIFF * TIFF;
 	b3HeaderSGI  * b3HeaderSGI;
 	b3_size        pos;
@@ -56,7 +56,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	b3FreeTx();
 
 	// Check for small buffer
-	LongData = (b3_pkd_color *)buffer;
+	LongData = (b3_u32 *)buffer;
 	if (buffer_size < 4)
 	{
 		B3_THROW(b3TxException, B3_TX_ERR_HEADER);
@@ -65,7 +65,9 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	// Check for IFF
 	if (b3Endian::b3GetMot32(LongData) == IFF_FORM)
 	{
-		switch (b3Endian::b3GetMot32(&LongData[2]))
+		const b3_u32 iff_type = b3Endian::b3GetMot32(&LongData[2]);
+
+		switch (iff_type)
 		{
 		case IFF_ILBM :
 			return b3ParseIFF_ILBM(buffer, buffer_size);
