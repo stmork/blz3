@@ -253,8 +253,8 @@ void b3AnimElement::b3AnimateRotate(
 	b3_vector  refCenter;
 	b3_bool    future;
 
-	t1 = b3Math::b3Round(b3Math::b3Limit(t - ANIM_STEP, m_Start, m_End), epsilon);
-	t2 = b3Math::b3Round(b3Math::b3Limit(t + ANIM_STEP, m_Start, m_End), epsilon);
+	t1 = b3Math::b3Round(b3Math::b3Clamp(t - ANIM_STEP, m_Start, m_End), epsilon);
+	t2 = b3Math::b3Round(b3Math::b3Clamp(t + ANIM_STEP, m_Start, m_End), epsilon);
 	if (t1 != t2)
 	{
 		// Compute present orientation
@@ -417,7 +417,7 @@ void b3Animation::b3ApplyTransformation(
 		{
 			b3PrintF(B3LOG_FULL, "  ANIM light %s\n", Anim->m_Object);
 			Anim->b3GetPosition(&Light->m_Position,
-				b3Math::b3Limit(t, Anim->m_Start, Anim->m_End));
+				b3Math::b3Clamp(t, Anim->m_Start, Anim->m_End));
 			if ((Light->m_SpotActive) &&
 				(Anim->b3GetClassType() == ANIM_ROTATE))
 			{
@@ -439,7 +439,7 @@ void b3Animation::b3ApplyTransformation(
 			height = b3Vector::b3Length(&Camera->m_Height);
 			diff   = Camera->m_EyePoint;
 			Anim->b3GetPosition(&Camera->m_EyePoint,
-				b3Math::b3Limit(t, Anim->m_Start, Anim->m_End));
+				b3Math::b3Clamp(t, Anim->m_Start, Anim->m_End));
 
 			if (Anim->b3GetClassType() == ANIM_ROTATE)
 			{

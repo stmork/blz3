@@ -565,7 +565,7 @@ public:
 	 */
 	inline b3_f64   b3ClipTimePoint(b3_f64 val)
 	{
-		return b3Math::b3Limit(val, m_Start, m_End);
+		return b3Math::b3Clamp(val, m_Start, m_End);
 	}
 
 	/**

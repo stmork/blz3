@@ -25,6 +25,7 @@
 #include "b3TxAlgorithms.h"
 
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3Math.h"
 
 #include <float.h>
 #include <algorithm>
@@ -1270,9 +1271,9 @@ bool b3Tx::b3TxColorFilter(
 
 		for (i = 0; i < 256; i++)
 		{
-			filter_r[i] = b3TxAlgorithms::b3Clamp<b3_pkd_color>(round(i * fr), 255, 0);
-			filter_g[i] = b3TxAlgorithms::b3Clamp<b3_pkd_color>(round(i * fg), 255, 0);
-			filter_b[i] = b3TxAlgorithms::b3Clamp<b3_pkd_color>(round(i * fb), 255, 0);
+			filter_r[i] = b3Math::b3Clamp<b3_pkd_color>(round(i * fr), 0, 255);
+			filter_g[i] = b3Math::b3Clamp<b3_pkd_color>(round(i * fg), 0, 255);
+			filter_b[i] = b3Math::b3Clamp<b3_pkd_color>(round(i * fb), 0, 255);
 		}
 
 		return b3TxTransformTable(

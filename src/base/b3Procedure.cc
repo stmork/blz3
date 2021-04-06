@@ -678,5 +678,5 @@ b3_f64 b3Noise::b3Granite(const b3_vector * point, const b3_count octaves)
 		z    += z;
 		freq += freq; // = freq *= 2;
 	}
-	return b3Math::b3Limit(sum);
+	return b3Math::b3Clamp(sum, 0.0, 1.0);
 }

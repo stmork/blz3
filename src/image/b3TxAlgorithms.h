@@ -226,13 +226,6 @@ struct B3_PLUGIN b3TxAlgorithms
 			}
 		}
 	}
-
-	template<typename T> inline static T b3Clamp(const T & input, const T & min, const T & max)
-	{
-		const T & r = input < min ? min : input;
-
-		return r > max ? max : r;
-	}
 };
 
 #endif

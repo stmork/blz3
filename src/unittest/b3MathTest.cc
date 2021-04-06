@@ -63,13 +63,13 @@ void b3MathTest::test()
 	CPPUNIT_ASSERT_EQUAL(2.0,   b3Math::b3Max(1.0, 2.0));
 	CPPUNIT_ASSERT_EQUAL(2.0,   b3Math::b3Max(2.0, 1.0));
 
-	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Limit(2.0));
-	CPPUNIT_ASSERT_EQUAL(0.5,   b3Math::b3Limit(0.5));
-	CPPUNIT_ASSERT_EQUAL(0.0,   b3Math::b3Limit(-1.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Clamp( 2.0, 0.0, 1.0));
+	CPPUNIT_ASSERT_EQUAL(0.5,   b3Math::b3Clamp( 0.5, 0.0, 1.0));
+	CPPUNIT_ASSERT_EQUAL(0.0,   b3Math::b3Clamp(-1.0, 0.0, 1.0));
 
-	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Limit(0.5, 1.0, 4.0));
-	CPPUNIT_ASSERT_EQUAL(2.5,   b3Math::b3Limit(2.5, 1.0, 4.0));
-	CPPUNIT_ASSERT_EQUAL(4.0,   b3Math::b3Limit(4.5, 1.0, 4.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Clamp(0.5, 1.0, 4.0));
+	CPPUNIT_ASSERT_EQUAL(2.5,   b3Math::b3Clamp(2.5, 1.0, 4.0));
+	CPPUNIT_ASSERT_EQUAL(4.0,   b3Math::b3Clamp(4.5, 1.0, 4.0));
 
 	for (base = 0; base < 13; base++)
 	{

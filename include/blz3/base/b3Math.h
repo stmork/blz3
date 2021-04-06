@@ -98,73 +98,24 @@ public:
 		return 0.5 * (a / b + c / d);
 	}
 
-	/**
-	 * This method limit a value against the bounds [0..1].
-	 *
-	 * \param value The value to limit.
-	 * \return The bound value.
-	 */
-	static inline b3_f64 b3Limit(const b3_f64 value)
-	{
-		if (value < 0)
-		{
-			return 0;
-		}
-		else if (value > 1)
-		{
-			return 1;
-		}
-		return value;
-	}
 
 	/**
 	 * This method limits a value against the specified bounds. This is the
 	 * floating point version.
 	 *
-	 * \param value The value to limit.
+	 * \param input The value to limit.
 	 * \param min The lower limit.
 	 * \param max The upper limit.
 	 * \return The bound value.
 	 */
-	static inline b3_f64 b3Limit(
-		const b3_f64 value,
-		const b3_f64 min,
-		const b3_f64 max)
+	template<typename T> inline static T b3Clamp(
+			const T & input,
+			const T & min,
+			const T & max)
 	{
-		if (value < min)
-		{
-			return min;
-		}
-		else if (value > max)
-		{
-			return max;
-		}
-		return value;
-	}
+		const T & r = input < min ? min : input;
 
-	/**
-	 * This method limits a value against the specified bounds. This is the integer
-	 * version.
-	 *
-	 * \param value The value to limit.
-	 * \param min The lower limit.
-	 * \param max The upper limit.
-	 * \return The bound value.
-	 */
-	static inline b3_s32 b3Limit(
-		const b3_s32 value,
-		const b3_s32 min,
-		const b3_s32 max)
-	{
-		if (value < min)
-		{
-			return min;
-		}
-		else if (value > max)
-		{
-			return max;
-		}
-		return value;
+		return r > max ? max : r;
 	}
 
 	/**

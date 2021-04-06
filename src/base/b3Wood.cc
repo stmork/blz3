@@ -110,7 +110,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x, Pgrain.y, Pgrain.z);
 
 			g *= (0.3 + 0.7 * inring);
-			g  = b3Math::b3Limit(0.8 - g);
+			g  = b3Math::b3Clamp(0.8 - g, 0.0, 1.0);
 			g *= g;
 			g  = m_Grainy * b3Math::b3Smoothstep(0.5, 1, g);
 			if (i == 0)

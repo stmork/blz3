@@ -540,7 +540,7 @@ b3BumpGlossy::b3BumpGlossy(b3_u32 class_type) : b3Bump(sizeof(b3BumpGlossy), cla
 b3BumpGlossy::b3BumpGlossy(b3_u32 * src) : b3Bump(src)
 {
 	m_Flags     = b3InitInt();
-	m_Amplitude = b3Math::b3Limit(b3InitFloat());
+	m_Amplitude = b3Math::b3Clamp<b3_f32>(b3InitFloat(), 0.0, 1.0);
 }
 
 void b3BumpGlossy::b3Write()

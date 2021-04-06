@@ -1209,7 +1209,7 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 		{
 			G = Gs;
 		}
-		G = b3Math::b3Limit(G);
+		G = b3Math::b3Clamp(G, 0.0, 1.0);
 
 		b3_f64 alpha = b3Math::b3Acos(nh);
 		b3_f64 nh_q  = nh * nh;
