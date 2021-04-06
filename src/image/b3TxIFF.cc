@@ -201,7 +201,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 		case IFF_BMHD :
 			xSize	= b3Endian::b3GetMot16(&CharData[ 8]);
 			ySize	= b3Endian::b3GetMot16(&CharData[10]);
-			depth	= CharData[16];
+			depth	= CharData[16] & 0xc;
 			break;
 
 		case IFF_BODY :
