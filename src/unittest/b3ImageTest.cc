@@ -456,7 +456,7 @@ void b3ImageTest::testCopy()
 void b3ImageTest::testRead()
 {
 	// Use https://regex101.com/
-	static std::regex  regex(R"(Lenna-([012][01248])\.[a-z]+)");
+	static std::regex  regex(R"(Lenna-([012][01248])\.[a-z0-9]+)");
 	static std::smatch matcher;
 	b3FileList         list;
 
