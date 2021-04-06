@@ -24,6 +24,94 @@
 
 struct B3_PLUGIN b3TxAlgorithms
 {
+	template<class DST> static void b3TurnLeft(b3Tx * tx)
+	{
+		const b3_res xNewSize = tx->ySize;
+		const b3_res yNewSize = tx->xSize;
+		DST     *    old_data;
+		DST     *    new_data;
+		b3_coord     src_pos;
+
+		new_data = tx->b3TypedAlloc<DST>(xNewSize * yNewSize);
+		if (new_data == nullptr)
+		{
+			B3_THROW(b3TxException, B3_TX_MEMORY);
+		}
+
+		// change data pointer
+		old_data = tx->data;
+		tx->data = new_data;
+		tx->xSize = xNewSize;
+		tx->ySize = yNewSize;
+
+		src_pos = yNewSize - 1;
+		for (b3_res y = 0; y < yNewSize; y++)
+		{
+			b3_coord src_start = src_pos;
+
+			for (b3_res x = 0; x < xNewSize; x++)
+			{
+				*new_data++  = old_data[src_start];
+				src_start    += yNewSize;
+			}
+			src_pos--;
+		}
+		tx->b3Free(old_data);
+	}
+
+	template<class DST> static void b3Turn(b3Tx * tx)
+	{
+		const b3_count size = tx->xSize * tx->ySize;
+		const b3_count max  = size >> 1;
+
+		DST * bfPtr = tx->data;
+		DST * bbPtr = bfPtr + size;
+
+		for (b3_count i = 0; i < max; i++)
+		{
+			bbPtr--;
+			const DST bBack  = *bbPtr;
+			*bbPtr = *bfPtr;
+			*bfPtr =  bBack;
+			bfPtr++;
+		}
+	}
+
+	template<class DST> static void b3TurnRight(b3Tx * tx)
+	{
+		const b3_coord xNewSize  = tx->ySize;
+		const b3_coord yNewSize  = tx->xSize;
+		DST      *     old_data;
+		DST      *     new_data;
+		b3_coord       src_pos, src_init;
+
+		new_data   = tx->b3TypedAlloc<DST>(xNewSize * yNewSize);
+		if (new_data == nullptr)
+		{
+			B3_THROW(b3TxException, B3_TX_MEMORY);
+		}
+
+		// change data pointer
+		old_data   = tx->data;
+		tx->data  = new_data;
+		tx->xSize = xNewSize;
+		tx->ySize = yNewSize;
+
+		src_pos    = 0;
+		src_init   = yNewSize * (xNewSize - 1);
+		for (b3_res y = 0; y < yNewSize; y++)
+		{
+			b3_coord srcStart = src_init + src_pos;
+			for (b3_res x = 0; x < xNewSize; x++)
+			{
+				*new_data++  = old_data[srcStart];
+				srcStart    -= yNewSize;
+			}
+			src_pos++;
+		}
+		tx->b3Free(old_data);
+	}
+
 	template<class DST> static void b3Transform(
 		const b3Tx     *    srcTx,
 		b3Tx        *       dstTx,

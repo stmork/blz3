@@ -743,150 +743,6 @@ void b3Tx::b3TurnRightILBM()
 }
 #endif
 
-void b3Tx::b3TurnRightVGA()
-{
-	b3_u08  * oldData;
-	b3_u08  * newData;
-	b3_res    xNewSize, yNewSize;
-	b3_coord  srcPos, srcStart, srcInit, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_u08>(dSize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = (b3_u08 *)data;
-	data      = newData;
-
-	srcPos    = 0;
-	srcInit   = xSize * (ySize - 1);
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcInit + srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++ = oldData[srcStart];
-			srcStart -= xSize;
-		}
-		srcPos++;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
-void b3Tx::b3TurnRightRGB4()
-{
-	b3_u16  * oldData;
-	b3_u16  * newData;
-	b3_res    xNewSize, yNewSize;
-	b3_coord  srcPos, srcStart, srcInit, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_u16>(xSize * ySize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = (b3_u16 *)data;
-	data      = (b3_u08 *)newData;
-
-	srcPos    = 0;
-	srcInit   = xSize * (ySize - 1);
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcInit + srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++ = oldData[srcStart];
-			srcStart -= xSize;
-		}
-		srcPos++;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
-void b3Tx::b3TurnRightRGB8()
-{
-	b3_pkd_color * oldData;
-	b3_pkd_color * newData;
-	b3_res        xNewSize, yNewSize;
-	b3_coord      srcPos, srcStart, srcInit, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_pkd_color>(xSize * ySize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = data;
-	data      = newData;
-
-	srcPos    = 0;
-	srcInit   = xSize * (ySize - 1);
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcInit + srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++ = oldData[srcStart];
-			srcStart -= xSize;
-		}
-		srcPos++;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
-void b3Tx::b3TurnRightFloat()
-{
-	b3_color * oldData;
-	b3_color * newData;
-	b3_res    xNewSize, yNewSize;
-	b3_coord  srcPos, srcStart, srcInit, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_color>(xSize * ySize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = (b3_color *)data;
-	data      = (b3_u08 *)newData;
-
-	srcPos    = 0;
-	srcInit   = xSize * (ySize - 1);
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcInit + srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++ = oldData[srcStart];
-			srcStart -= xSize;
-		}
-		srcPos++;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
 void b3Tx::b3TurnRight()
 {
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Right()\n");
@@ -896,16 +752,16 @@ void b3Tx::b3TurnRight()
 		b3TurnRightILBM();
 		break;
 	case B3_TX_VGA :
-		b3TurnRightVGA();
+		b3TxAlgorithms::b3TurnRight<b3_u08>(this);
 		break;
 	case B3_TX_RGB4 :
-		b3TurnRightRGB4();
+		b3TxAlgorithms::b3TurnRight<b3_u16>(this);
 		break;
 	case B3_TX_RGB8 :
-		b3TurnRightRGB8();
+		b3TxAlgorithms::b3TurnRight<b3_pkd_color>(this);
 		break;
 	case B3_TX_FLOAT :
-		b3TurnRightFloat();
+		b3TxAlgorithms::b3TurnRight<b3_color>(this);
 		break;
 
 	default:
@@ -1025,146 +881,6 @@ void b3Tx::b3TurnLeftILBM()
 	b3Free(ptrToFree);
 }
 
-void b3Tx::b3TurnLeftVGA()
-{
-	b3_u08  * oldData;
-	b3_u08  * newData;
-	b3_res    xNewSize, yNewSize;
-	b3_coord  srcPos, srcStart, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_u08>(dSize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = (b3_u08 *)data;
-	data      = (b3_u08 *)newData;
-
-	srcPos    = xSize - 1;
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++  = oldData[srcStart];
-			srcStart   += xSize;
-		}
-		srcPos--;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
-void b3Tx::b3TurnLeftRGB4()
-{
-	b3_u16  * oldData;
-	b3_u16  * newData;
-	b3_res    xNewSize, yNewSize;
-	b3_coord  srcPos, srcStart, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_u16>(xSize * ySize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = (b3_u16 *)data;
-	data      = (b3_u08 *)newData;
-
-	srcPos    = xSize - 1;
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++  = oldData[srcStart];
-			srcStart   += xSize;
-		}
-		srcPos--;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
-void b3Tx::b3TurnLeftRGB8()
-{
-	b3_pkd_color * oldData;
-	b3_pkd_color * newData;
-	b3_res        xNewSize, yNewSize;
-	b3_coord      srcPos, srcStart, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_pkd_color>(xSize * ySize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = (b3_pkd_color *)data;
-	data      = (b3_u08 *)newData;
-
-	srcPos    = xSize - 1;
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++  = oldData[srcStart];
-			srcStart   += xSize;
-		}
-		srcPos--;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
-void b3Tx::b3TurnLeftFloat()
-{
-	b3_color * oldData;
-	b3_color * newData;
-	b3_res    xNewSize, yNewSize;
-	b3_coord  srcPos, srcStart, x, y;
-
-	xNewSize  = ySize;
-	yNewSize  = xSize;
-	newData   = b3TypedAlloc<b3_color>(xSize * ySize);
-	if (newData == nullptr)
-	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	// change data pointer
-	oldData   = data;
-	data      = newData;
-
-	srcPos    = xSize - 1;
-	for (y = 0; y < yNewSize; y++)
-	{
-		srcStart = srcPos;
-		for (x = 0; x < xNewSize; x++)
-		{
-			*newData++  = oldData[srcStart];
-			srcStart   += xSize;
-		}
-		srcPos--;
-	}
-	xSize = xNewSize;
-	ySize = yNewSize;
-	b3Free(oldData);
-}
-
 void b3Tx::b3TurnLeft()
 {
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Left()\n");
@@ -1173,17 +889,18 @@ void b3Tx::b3TurnLeft()
 	case B3_TX_ILBM :
 		b3TurnLeftILBM();
 		break;
+
 	case B3_TX_VGA :
-		b3TurnLeftVGA();
+		b3TxAlgorithms::b3TurnLeft<b3_u08>(this);
 		break;
 	case B3_TX_RGB4 :
-		b3TurnLeftRGB4();
+		b3TxAlgorithms::b3TurnLeft<b3_u16>(this);
 		break;
 	case B3_TX_RGB8 :
-		b3TurnLeftRGB8();
+		b3TxAlgorithms::b3TurnLeft<b3_pkd_color>(this);
 		break;
 	case B3_TX_FLOAT :
-		b3TurnLeftFloat();
+		b3TxAlgorithms::b3TurnLeft<b3_color>(this);
 		break;
 
 	default:
@@ -1229,11 +946,7 @@ b3_tx_turn b3_tx_turn::TxTurn;
 void b3Tx::b3Turn()
 {
 	b3_u08        bBack, *bfPtr, *bbPtr, *bPtr;
-	b3_u16        sBack, *sfPtr, *sbPtr;
-	b3_pkd_color  lBack, *lfPtr, *lbPtr;
-	b3_color      cBack, *cfPtr, *cbPtr;
 	b3_coord      y;
-	b3_index      i, d;
 	b3_count      max, size;
 
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Turn()\n");
@@ -1250,10 +963,8 @@ void b3Tx::b3Turn()
 		// First: Turn horizontal
 		for (y = 0; y < ySize; y++)
 		{
-			for (d = 0; d < depth; d++)
+			for (b3_res d = 0; d < depth; d++)
 			{
-				b3_coord x;
-
 				// We turn two bytes at the same time
 				// using tables. No bit nibbling is
 				// needed here.
@@ -1263,7 +974,7 @@ void b3Tx::b3Turn()
 				// inside these bytes using a lookup table.
 				bfPtr = (b3_u08 *)bPtr;
 				bbPtr = (b3_u08 *)(bfPtr + size);
-				for (x = 0; x < max; x++)
+				for (b3_coord x = 0; x < max; x++)
 				{
 					bbPtr--;
 					bBack  = b3_tx_turn::TxTurn.Turnbytes[*bbPtr];
@@ -1282,13 +993,11 @@ void b3Tx::b3Turn()
 		for (y = 0; y < max; y++)
 		{
 			bPtr -= (depth * size);
-			for (d = 0; d < depth; d++)
+			for (b3_res d = 0; d < depth; d++)
 			{
-				b3_coord x;
-
 				// Now exchange the two lines. Do it! Do it!
 				bbPtr = (b3_u08 *)bPtr;
-				for (x = 0; x < size; x++)
+				for (b3_coord x = 0; x < size; x++)
 				{
 					bBack  = *bbPtr;
 					*bbPtr = *bfPtr;
@@ -1303,55 +1012,19 @@ void b3Tx::b3Turn()
 		break;
 
 	case B3_TX_VGA :
-		bfPtr = (b3_u08 *)data;
-		bbPtr = (b3_u08 *)(bfPtr + size);
-		for (i = 0; i < max; i++)
-		{
-			bbPtr--;
-			bBack  = *bbPtr;
-			*bbPtr = *bfPtr;
-			*bfPtr =  bBack;
-			bfPtr++;
-		}
+		b3TxAlgorithms::b3Turn<b3_u08>(this);
 		break;
 
 	case B3_TX_RGB4 :
-		sfPtr = (b3_u16 *)data;
-		sbPtr = (b3_u16 *)(sfPtr + size);
-		for (i = 0; i < max; i++)
-		{
-			sbPtr--;
-			sBack  = *sbPtr;
-			*sbPtr = *sfPtr;
-			*sfPtr =  sBack;
-			sfPtr++;
-		}
+		b3TxAlgorithms::b3Turn<b3_u16>(this);
 		break;
 
 	case B3_TX_RGB8 :
-		lfPtr = (b3_pkd_color *)data;
-		lbPtr = (b3_pkd_color *)(lfPtr + size);
-		for (i = 0; i < max; i++)
-		{
-			lbPtr--;
-			lBack  = *lbPtr;
-			*lbPtr = *lfPtr;
-			*lfPtr =  lBack;
-			lfPtr++;
-		}
+		b3TxAlgorithms::b3Turn<b3_pkd_color>(this);
 		break;
 
 	case B3_TX_FLOAT :
-		cfPtr = (b3_color *)data;
-		cbPtr = (b3_color *)(cfPtr + size);
-		for (i = 0; i < max; i++)
-		{
-			cbPtr--;
-			cBack  = *cbPtr;
-			*cbPtr = *cfPtr;
-			*cfPtr =  cBack;
-			cfPtr++;
-		}
+		b3TxAlgorithms::b3Turn<b3_color>(this);
 		break;
 
 	default:

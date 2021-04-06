@@ -1270,19 +1270,9 @@ private:
 		const b3_res dst_size,
 		const b3_res blit_size);
 
-	// b3TxTurn.cc
+	// b3TxImage.cc
 	void           b3TurnLeftILBM();
-	void           b3TurnLeftVGA();
-	void           b3TurnLeftRGB4();
-	void           b3TurnLeftRGB8();
-	void           b3TurnLeftFloat();
-
-	// b3TxTurn.cc
 	void           b3TurnRightILBM();
-	void           b3TurnRightVGA();
-	void           b3TurnRightRGB4();
-	void           b3TurnRightRGB8();
-	void           b3TurnRightFloat();
 
 	// b3TxScale.cc
 	void           b3ScaleFilteredFromBW(
