@@ -124,6 +124,18 @@ public:
 	}
 
 	/**
+	 * This constructor initializes this instance with equal color values
+	 * and a different alpha value.
+	 *
+	 * @param rgb The equal color components.
+	 * @param a The alpha component.
+	 */
+	inline b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
+	{
+		b3Init(rgb, a);
+	}
+
+	/**
 	 * This constructor initializes this instance from a ::b3_pkd_color structure.
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
@@ -155,31 +167,6 @@ public:
 				SSE_PS_LOAD(d),
 				SSE_PS_LOAD(m_Limit_d015)));
 #endif
-	}
-
-	/**
-	 * This method packs four color component bytes into one unsigned 32
-	 * bit integer value.
-	 *
-	 * @param r The red byte.
-	 * @param g The green byte.
-	 * @param b The blue byte.
-	 * @param a The alpha channel byte.
-	 * @return The packed unsigned integer value.
-	 */
-	static inline b3_pkd_color b3MakePkdColor(
-		const b3_u08 r,
-		const b3_u08 g,
-		const b3_u08 b,
-		const b3_u08 a = 0)
-	{
-		const __m128i zero  = _mm_setzero_si128();
-		const __m128i input = _mm_set_epi32(a, r, g, b);
-
-		// read reversed!
-		return _mm_cvtsi128_si32( // select low 32 bits only
-				_mm_packus_epi16( // pack 32 bit into 16 bit signed saturated
-					_mm_packs_epi32(input, zero), zero)); // pack 16 bit into 8 bit unsigned saturated
 	}
 
 	/**
@@ -231,6 +218,31 @@ public:
 				SSE_PS_LOAD(m_Limit_d255)));
 #endif
 #endif
+	}
+
+	/**
+	 * This method packs four color component bytes into one unsigned 32
+	 * bit integer value.
+	 *
+	 * @param r The red byte.
+	 * @param g The green byte.
+	 * @param b The blue byte.
+	 * @param a The alpha channel byte.
+	 * @return The packed unsigned integer value.
+	 */
+	static inline b3_pkd_color b3MakePkdColor(
+		const b3_u08 r,
+		const b3_u08 g,
+		const b3_u08 b,
+		const b3_u08 a = 0)
+	{
+		const __m128i zero  = _mm_setzero_si128();
+		const __m128i input = _mm_set_epi32(a, r, g, b);
+
+		// read reversed!
+		return _mm_cvtsi128_si32( // select low 32 bits only
+				_mm_packus_epi16( // pack 32 bit into 16 bit signed saturated
+					_mm_packs_epi32(input, zero), zero)); // pack 16 bit into 8 bit unsigned saturated
 	}
 
 	//////////////////////////////////////////--------- initializers

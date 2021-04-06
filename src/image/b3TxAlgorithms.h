@@ -90,16 +90,14 @@ struct B3_PLUGIN b3TxAlgorithms
 				const b3Color & color(convert(*srcPtr++));
 
 				// Computing distance to center
-				b3_f64 xDiff  = (b3_f64)(x - xPos) / (b3_f64)xHalf;
-				b3_f64 yDiff  = (b3_f64)(y - yPos) / (b3_f64)yHalf;
-				b3_f64 radius = xDiff * xDiff + yDiff * yDiff;
+				const b3_f64 xDiff  = (b3_f64)(x - xPos) / xHalf;
+				const b3_f64 yDiff  = (b3_f64)(y - yPos) / yHalf;
+				const b3_f64 radius = xDiff * xDiff + yDiff * yDiff;
 
 				// Computing Gauss value and left to right ramp
-				const b3_f32 value  = exp(radius / denom) * scale;
-				const b3_f32 level  = xDiff * slope + niveau;
-
-				// Subtract color values
-				b3f_32 sub = level - value;
+				const b3_f32  value = exp(radius / denom) * scale;
+				const b3_f32  level = xDiff * slope + niveau;
+				const b3Color sub   = (level - value);
 
 				*dstPtr++ = color + sub;
 			}

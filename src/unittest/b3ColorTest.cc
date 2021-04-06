@@ -76,6 +76,12 @@ void b3ColorTest::testColor()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, 0, offset);
 #endif
 
+	color = b3Color(0.5f);
+	testColor(0.5f, 0.5f, 0.5f, 0.0f);
+
+	color = b3Color(0.25f, 0.75f);
+	testColor(0.25f, 0.25f, 0.25f, 0.75f);
+
 	color = B3_WHITE;
 	testColor(1.0f, 1.0f, 1.0f, 0.0f);
 

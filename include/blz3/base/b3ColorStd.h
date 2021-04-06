@@ -105,6 +105,18 @@ public:
 	}
 
 	/**
+	 * This constructor initializes this instance with equal color values
+	 * and a different alpha value.
+	 *
+	 * @param rgb The equal color components.
+	 * @param a The alpha component.
+	 */
+	inline b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
+	{
+		b3Init(rgb, a);
+	}
+
+	/**
 	 * This constructor initializes this instance from a ::b3_pkd_color structure.
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
