@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
+#include "b3TxAlgorithms.h"
 
 /*************************************************************************
 **                                                                      **
@@ -141,7 +142,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		break;
 
 	case B3_TX_VGA:
-		b3Blit<b3_u08, b3_pkd_color>(
+		b3TxAlgorithms::b3Blit<b3_u08, b3_pkd_color>(
 			srcTx,   this,
 			xDstOff, yDstOff,
 			xMax,    yMax,
@@ -152,7 +153,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		break;
 
 	case B3_TX_RGB4:
-		b3Blit<b3_u16, b3_pkd_color>(
+		b3TxAlgorithms::b3Blit<b3_u16, b3_pkd_color>(
 			srcTx,   this,
 			xDstOff, yDstOff,
 			xMax,    yMax,
@@ -163,7 +164,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		break;
 
 	case B3_TX_RGB8:
-		b3Blit<b3_pkd_color, b3_pkd_color>(
+		b3TxAlgorithms::b3Blit<b3_pkd_color, b3_pkd_color>(
 			srcTx,   this,
 			xDstOff, yDstOff,
 			xMax,    yMax,
@@ -171,7 +172,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		break;
 
 	case B3_TX_FLOAT:
-		b3Blit<b3_color, b3_pkd_color>(
+		b3TxAlgorithms::b3Blit<b3_color, b3_pkd_color>(
 			srcTx,   this,
 			xDstOff, yDstOff,
 			xMax,    yMax,

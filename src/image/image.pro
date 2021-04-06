@@ -18,6 +18,7 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/image/b3Tx.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxMeasure.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxPool.h \
+	b3TxAlgorithms.h \
 	b3TxIFF.h \
 	b3TxSaveInfo.h \
 	b3TxTIFF.h

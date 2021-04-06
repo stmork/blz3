@@ -195,7 +195,7 @@ typedef b3Exception<b3_tx_error, 0x5458> b3TxException;
 /**
  * This class initializes a lookup table with squared values.
  */
-class b3TxQuad
+class B3_PLUGIN b3TxQuad
 {
 	b3_pkd_color quad256[512];
 
@@ -248,7 +248,7 @@ private:
 	b3_color   *   m_Floats;
 
 public:
-	inline b3_tx_data()
+	inline b3_tx_data() noexcept
 	{
 		m_Void = nullptr;
 	}
@@ -269,27 +269,27 @@ public:
 	{
 	}
 
-	inline operator b3_u08 * () const
+	inline operator b3_u08 * () const noexcept
 	{
 		return m_Bytes;
 	}
 
-	inline operator b3_u16 * () const
+	inline operator b3_u16 * () const noexcept
 	{
 		return m_Words;
 	}
 
-	inline operator b3_pkd_color * () const
+	inline operator b3_pkd_color * () const noexcept
 	{
 		return m_Colors;
 	}
 
-	inline operator b3_color * () const
+	inline operator b3_color * () const noexcept
 	{
 		return m_Floats;
 	}
 
-	inline operator void * () const
+	inline operator void * () const noexcept
 	{
 		return m_Void;
 	}
@@ -299,34 +299,34 @@ public:
 		return b3_tx_data(m_Bytes + sum);
 	}
 
-	inline b3_tx_data operator++(int)
+	inline b3_tx_data operator++(int) noexcept
 	{
 		b3_tx_data actual(m_Bytes);
 		m_Bytes++;
 		return actual;
 	}
 
-	inline b3_u08 & operator*() const
+	inline b3_u08 & operator*() const noexcept
 	{
 		return m_Bytes[0];
 	}
 
-	inline b3_u08 & operator[](const b3_count index) const
+	inline b3_u08 & operator[](const b3_count index) const noexcept
 	{
 		return m_Bytes[index];
 	}
 
-	inline bool operator== (const void * ptr) const
+	inline bool operator== (const void * ptr) const noexcept
 	{
 		return m_Void == ptr;
 	}
 
-	inline bool operator!= (const void * ptr) const
+	inline bool operator!= (const void * ptr) const noexcept
 	{
 		return m_Void != ptr;
 	}
 
-	inline b3_tx_data & operator =(void * ptr)
+	inline b3_tx_data & operator =(void * ptr) noexcept
 	{
 		m_Void = ptr;
 		return *this;
@@ -338,6 +338,8 @@ public:
 **                        The image class itself!                       **
 **                                                                      **
 *************************************************************************/
+
+class b3TxAlgorithms;
 
 /**
  * This big class represents one image in its best representation.
@@ -1251,89 +1253,6 @@ private:
 		const b3_res dst_size,
 		const b3_res blit_size);
 
-	template<class SRC, class DST> void b3Blit(
-		const b3Tx   *  srcTx,
-		const b3Tx   *  dstTx,
-		const b3_coord  xDstOff,
-		const b3_coord  yDstOff,
-		const b3_res    xSrcSize,
-		const b3_res    ySrcSize,
-		const b3_coord  xSrcOff,
-		const b3_coord  ySrcOff,
-		std::function<DST(const SRC)> convert = [] (const SRC data)
-	{
-		return data;
-	})
-	{
-		const b3_coord src_offset = ySrcOff * srcTx->xSize + xSrcOff;
-		const b3_coord dst_offset = yDstOff * dstTx->xSize + xDstOff;
-		const b3_coord src_modulo = srcTx->xSize - xSrcSize;
-		const b3_coord dst_modulo = dstTx->xSize - xSrcSize;
-
-		// compute start pointer
-		SRC * src_ptr = srcTx->data;
-		DST * dst_ptr = dstTx->data;
-
-		src_ptr  += src_offset;
-		dst_ptr  += dst_offset;
-
-		// compute line skip value
-		for (b3_coord y = 0; y < ySrcSize; y++)
-		{
-			for (b3_coord x = 0; x < xSrcSize; x++)
-			{
-				*dst_ptr++ = convert(*src_ptr++);
-			}
-			src_ptr += src_modulo;
-			dst_ptr += dst_modulo;
-		}
-	}
-
-	template<class SRC, class DST> void b3Gauss(
-		const b3_coord xPos,
-		const b3_coord yPos,
-		const b3_f64   scale,
-		const b3_f64   sigma,
-		const b3_f64   niveau,
-		const b3_f64   slope,
-		const b3Tx  *  src,
-		std::function<b3Color(const SRC)> convert = [] (const SRC data)
-	{
-		return data;
-	})
-	{
-		const b3_f64   denom = -2.0 * sigma * sigma;
-		const b3_f64   xHalf = xSize >> 1;
-		const b3_f64   yHalf = ySize >> 1;
-
-		SRC * srcPtr = src->data;
-		DST * dstPtr = data;
-
-		for (b3_res y = 0; y < ySize; y++)
-		{
-			for (b3_res x = 0; x < xSize; x++)
-			{
-				const b3Color & color(convert(*srcPtr++));
-
-				// Computing distance to center
-				b3_f64 xDiff  = (b3_f64)(x - xPos) / (b3_f64)xHalf;
-				b3_f64 yDiff  = (b3_f64)(y - yPos) / (b3_f64)yHalf;
-				b3_f64 radius = xDiff * xDiff + yDiff * yDiff;
-
-				// Computing Gauss value and left to right ramp
-				const b3_f32 value  = exp(radius / denom) * scale;
-				const b3_f32 level  = xDiff * slope + niveau;
-
-				// Subtract color values
-				b3Color sub;
-
-				sub.b3Init(level - value);
-
-				*dstPtr++ = color + sub;
-			}
-		}
-	}
-
 	// b3TxTurn.cc
 	void           b3TurnLeftILBM();
 	void           b3TurnLeftVGA();
@@ -1504,6 +1423,8 @@ private:
 
 	// b3TxJPG.cc
 	b3_result      b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size);
+
+	friend class b3TxAlgorithms;
 };
 
 

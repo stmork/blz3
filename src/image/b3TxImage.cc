@@ -22,6 +22,8 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
+#include "b3TxAlgorithms.h"
+
 #include "blz3/base/b3Color.h"
 #include <float.h>
 
@@ -1381,31 +1383,32 @@ bool b3Tx::b3TxGauss(
 		switch (src->type)
 		{
 		case B3_TX_VGA:
-			b3Gauss<b3_u08, b3_pkd_color>(
-				xPos, yPos,
+			b3TxAlgorithms::b3Gauss<b3_u08, b3_pkd_color>(
+				src,   this,
+				xPos,  yPos,
 				scale, sigma, niveau, slope,
-				src, [src] (const b3_u08 index)
+				[src] (const b3_u08 index)
 			{
 				return src->palette[index];
 			});
 			break;
 		case B3_TX_RGB4:
-			b3Gauss<b3_u16, b3_pkd_color>(
-				xPos, yPos,
-				scale, sigma, niveau, slope,
-				src);
+			b3TxAlgorithms::b3Gauss<b3_u16, b3_pkd_color>(
+				src,   this,
+				xPos,  yPos,
+				scale, sigma, niveau, slope);
 			break;
 		case B3_TX_RGB8:
-			b3Gauss<b3_pkd_color, b3_pkd_color>(
-				xPos, yPos,
-				scale, sigma, niveau, slope,
-				src);
+			b3TxAlgorithms::b3Gauss<b3_pkd_color, b3_pkd_color>(
+				src,   this,
+				xPos,  yPos,
+				scale, sigma, niveau, slope);
 			break;
 		case B3_TX_FLOAT:
-			b3Gauss<b3_color, b3_pkd_color>(
-				xPos, yPos,
-				scale, sigma, niveau, slope,
-				src);
+			b3TxAlgorithms::b3Gauss<b3_color, b3_pkd_color>(
+				src,   this,
+				xPos,  yPos,
+				scale, sigma, niveau, slope);
 			break;
 
 		default:
@@ -1417,31 +1420,32 @@ bool b3Tx::b3TxGauss(
 		switch (src->type)
 		{
 		case B3_TX_VGA:
-			b3Gauss<b3_u08, b3_color>(
-				xPos, yPos,
+			b3TxAlgorithms::b3Gauss<b3_u08, b3_color>(
+				src,   this,
+				xPos,  yPos,
 				scale, sigma, niveau, slope,
-				src, [src] (const b3_u08 index)
+				[src] (const b3_u08 index)
 			{
 				return src->palette[index];
 			});
 			break;
 		case B3_TX_RGB4:
-			b3Gauss<b3_u16, b3_color>(
-				xPos, yPos,
-				scale, sigma, niveau, slope,
-				src);
+			b3TxAlgorithms::b3Gauss<b3_u16, b3_color>(
+				src,   this,
+				xPos,  yPos,
+				scale, sigma, niveau, slope);
 			break;
 		case B3_TX_RGB8:
-			b3Gauss<b3_pkd_color, b3_color>(
-				xPos, yPos,
-				scale, sigma, niveau, slope,
-				src);
+			b3TxAlgorithms::b3Gauss<b3_pkd_color, b3_color>(
+				src,   this,
+				xPos,  yPos,
+				scale, sigma, niveau, slope);
 			break;
 		case B3_TX_FLOAT:
-			b3Gauss<b3_color, b3_color>(
-				xPos, yPos,
-				scale, sigma, niveau, slope,
-				src);
+			b3TxAlgorithms::b3Gauss<b3_color, b3_color>(
+				src,   this,
+				xPos,  yPos,
+				scale, sigma, niveau, slope);
 			break;
 
 		default:
