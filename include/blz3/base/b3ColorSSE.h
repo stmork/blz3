@@ -147,8 +147,8 @@ public:
 		}
 
 		const __m128i sse = _mm_shuffle_epi32(
-					_mm_load_si128((const __m128i *)c),
-					_MM_SHUFFLE(0, 1, 2, 3));
+				_mm_load_si128((const __m128i *)c),
+				_MM_SHUFFLE(0, 1, 2, 3));
 		v = _mm_div_ps(
 				_mm_cvtepi32_ps(sse),
 				_mm_set_ps1(15.0));

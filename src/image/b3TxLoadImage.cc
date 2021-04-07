@@ -46,7 +46,7 @@
 
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u32       * LongData;
+	b3_u32    *    LongData;
 	b3HeaderTIFF * TIFF;
 	b3HeaderSGI  * b3HeaderSGI;
 	b3_size        pos;
