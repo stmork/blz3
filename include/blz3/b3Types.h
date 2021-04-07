@@ -186,7 +186,7 @@ typedef struct alignas(16) b3_line32_3D
  * This structure represents a ray with double precision floating point numbers. The
  * first element is aligned on a 16 byte boundary.
  */
-typedef struct alignas(16) b3_line64_3D
+typedef struct alignas(32) b3_line64_3D
 {
 	b3_vector64 pos; //!< The base position.
 	b3_vector64 dir; //!< The direction vector.
