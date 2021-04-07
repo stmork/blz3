@@ -241,7 +241,7 @@ b3_result b3Tx::b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size)
 
 #else
 
-b3_result b3Tx::b3ParseJPEG(b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3FreeTx();
 	b3PrintF(B3LOG_NORMAL, "IMG JPEG # Missing JPEG support:\n");

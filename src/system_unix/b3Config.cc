@@ -167,7 +167,7 @@ void * b3Runtime::b3GetOpenGLExtension(const char * procedure_name)
 #if defined(BLZ3_USE_OPENGL) && defined(RTLD_NEXT)
 	return dlsym(RTLD_NEXT, procedure_name);
 #else
-	return null;
+	return nullptr;
 #endif
 }
 
