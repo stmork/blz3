@@ -34,13 +34,6 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 {
 	b3_f32 v[4];            //!< These are the color channels of a b3Color instance.
 
-	static const b3_f32 m_Limit_m000[4]; //!< These color values represent black (for clamping).
-	static const b3_f32 m_Limit_m001[4]; //!< These color values represent transparent white (for saturating).
-	static const b3_f32 m_Limit_m015[4]; //!< These values are used for conversion from integer.
-	static const b3_f32 m_Limit_m255[4]; //!< These values are used for conversion into integer.
-	static const b3_f32 m_Limit_d015[4]; //!< These values are used for conversion from integer.
-	static const b3_f32 m_Limit_d255[4]; //!< These values are used for conversion from integer.
-
 public:
 	/////////////////////////////////////////////////--------  constructors
 	/**
@@ -140,7 +133,7 @@ public:
 
 		for (i = 0; i < 4; i++)
 		{
-			v[i] *= m_Limit_d015[i];
+			v[i] /= 15.0;
 		}
 	}
 
@@ -168,7 +161,7 @@ public:
 
 		for (i = 0; i < 4; i++)
 		{
-			v[i] *= m_Limit_d255[i];
+			v[i] /= 255.0;
 		}
 	}
 
@@ -737,15 +730,15 @@ public:
 		for (i = 0; i < 4; i++)
 		{
 			sat[i] = v[i];
-			if (sat[i] < m_Limit_m000[i])
+			if (sat[i] < 0.0)
 			{
-				sat[i] = m_Limit_m000[i];
+				sat[i] = 0.0;
 			}
-			if (sat[i] > m_Limit_m001[i])
+			if (sat[i] > 1.0)
 			{
-				sat[i] = m_Limit_m001[i];
+				sat[i] = 1.0;
 			}
-			sat[i] *= m_Limit_m255[i];
+			sat[i] *= 255.0;
 		}
 
 		for (i = 0; i < 4; i++)
@@ -892,9 +885,9 @@ public:
 	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
-			if (v[i] > m_Limit_m001[i])
+			if (v[i] > 1.0)
 			{
-				v[i] = m_Limit_m001[i];
+				v[i] = 1.0;
 			}
 		}
 	}
@@ -922,9 +915,9 @@ public:
 	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
-			if (v[i] < m_Limit_m000[i])
+			if (v[i] < 0.0)
 			{
-				v[i] = m_Limit_m000[i];
+				v[i] = 0.0;
 			}
 		}
 	}

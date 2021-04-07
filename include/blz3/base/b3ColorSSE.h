@@ -38,11 +38,6 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 	alignas(16) b3_f32       v[4];
 #endif
 
-	static const b3_u32 m_AbsMask[4];
-	static const b3_f32 m_Limit_d015[4];
-	static const b3_f32 m_Limit_d255[4];
-	static const b3_f32 m_Limit_m255[4];
-
 public:
 	/////////////////////////////////////////////////--------  constructors
 	/**
@@ -144,29 +139,19 @@ public:
 	{
 		b3_u16             color = input;
 		alignas(16) b3_s32 c[4];
-		alignas(16) b3_f32 d[4];
-		b3_loop            i;
 
-		for (i = 3; i >= 0; i--)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			c[i]  = color & 0xf;
 			color = color >> 4;
 		}
 
-		for (i = 0; i < 4; i++)
-		{
-			d[i] = (b3_f32)c[i];
-		}
-
-#ifdef SSE_ALIGNED
-		SSE_PS_STORE(v, _mm_mul_ps(
-				_mm_load_ps(d),
-				_mm_load_ps(m_Limit_d015)));
-#else
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(d),
-				SSE_PS_LOAD(m_Limit_d015)));
-#endif
+		const __m128i sse = _mm_shuffle_epi32(
+					_mm_load_si128((const __m128i *)c),
+					_MM_SHUFFLE(0, 1, 2, 3));
+		v = _mm_div_ps(
+				_mm_cvtepi32_ps(sse),
+				_mm_set_ps1(15.0));
 	}
 
 	/**
@@ -196,9 +181,9 @@ public:
 						_mm_set1_epi32(input), zero), zero),
 				_MM_SHUFFLE(0, 1, 2, 3));
 #endif
-		SSE_PS_STORE(v, _mm_mul_ps(
+		SSE_PS_STORE(v, _mm_div_ps(
 				_mm_cvtepi32_ps(sse),
-				_mm_load_ps(m_Limit_d255)));
+				_mm_set_ps1(255.0)));
 #else
 		alignas(16) b3_f32 c[4];
 		b3_pkd_color       color = input;
@@ -208,15 +193,9 @@ public:
 			c[i]  = b3_f32(color & 0xff);
 			color = color >> 8;
 		}
-#ifdef SSE_ALIGNED
-		SSE_PS_STORE(v, _mm_mul_ps(
+		v = _mm_div_ps(
 				_mm_load_ps(c),
-				_mm_load_ps(m_Limit_d255)));
-#else
-		SSE_PS_STORE(v, _mm_mul_ps(
-				SSE_PS_LOAD(c),
-				SSE_PS_LOAD(m_Limit_d255)));
-#endif
+				_mm_set_ps1(255.0));
 #endif
 	}
 

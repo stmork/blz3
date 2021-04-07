@@ -17,7 +17,7 @@
 QB3BBoxItem::QB3BBoxItem(b3BBox * bbox) : QB3AbstractItem(bbox, B3_TYPE_BBOX)
 {
 	setIcon(iconOf(bbox));
-	setText(QString::fromLatin1(bbox->b3GetName()));
+	setText(QString::fromUtf8(bbox->b3GetName()));
 }
 
 void QB3BBoxItem::update()

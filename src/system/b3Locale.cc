@@ -40,6 +40,7 @@ void b3Locale::b3IsoToLocale(
 #if 1
 	b3_size i = 0;
 
+	bzero(dst, len);
 	while ((*src) && (i < len))
 	{
 		b3_u08 c = *src;
