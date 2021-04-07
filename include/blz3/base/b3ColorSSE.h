@@ -606,7 +606,7 @@ public:
 	{
 		B3_ASSERT(value != 0);
 
-		v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
+		v = _mm_div_ps(v, _mm_set_ps1(float(value)));
 		return *this;
 	}
 
@@ -620,7 +620,7 @@ public:
 	{
 		B3_ASSERT(value != 0);
 
-		v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
+		v = _mm_div_ps(v, _mm_set_ps1(float(value)));
 		return *this;
 	}
 
@@ -673,18 +673,104 @@ public:
 	}
 
 	/**
-	 * This method returns true if any color channel is greater than any color
-	 * channel in the given b3Color instance.
+	 * This method returns true if any color channel is greater or equal than any color
+	 * channel in the given b3Color instance without alpha.
 	 *
-	 * @param limit The b3Color instance to compare to.
-	 * @return True if any color channel overrides the limit.
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel is greater or equal the other color.
 	 */
-	inline bool    b3IsGreater(const b3Color & limit)
+	inline bool    operator >= (const b3Color & other) const
 	{
-		const b3_f32 * a = (const b3_f32 *)&v;
-		const b3_f32 * b = (const b3_f32 *)&limit.v;
+		const int result = _mm_movemask_ps(_mm_cmpge_ps(v, other.v));
 
-		return (fabs(a[R]) >= b[R]) || (fabs(a[G]) >= b[G]) || (fabs(a[B]) >= b[B]);
+		return (result & 14) == 14;
+	}
+
+	/**
+	 * This method returns true if any color channel is greater than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel overrides the other color.
+	 */
+	inline bool    operator > (const b3Color & other) const
+	{
+		const int result = _mm_movemask_ps(_mm_cmpgt_ps(v, other.v));
+
+		return (result & 14) == 14;
+	}
+
+	/**
+	 * This method returns true if any color channel is lower or equal than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel is lower or equal the other color.
+	 */
+	inline bool    operator <= (const b3Color & other) const
+	{
+		const int result = _mm_movemask_ps(_mm_cmple_ps(v, other.v));
+
+		return (result & 14) == 14;
+	}
+
+	/**
+	 * This method returns true if any color channel is lower than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel overrides the other color.
+	 */
+	inline bool operator < (const b3Color & other) const
+	{
+		const int result = _mm_movemask_ps(_mm_cmplt_ps(v, other.v));
+
+		return (result & 14) == 14;
+	}
+
+	/**
+	 * This method returns true if all color channels are equal than any color
+	 * channel in the given b3Color instance <em>including</em> alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if all color channels are equal to the other color cannels.
+	 */
+	inline bool operator == (const b3Color & other) const
+	{
+		const int result = _mm_movemask_ps(_mm_cmpeq_ps(v, other.v));
+
+		return result == 15;
+	}
+
+	/**
+	 * This method returns true if any color channels is not equal than any color
+	 * channel in the given b3Color instance <em>including</em> alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel is not equal to the other color cannels.
+	 */
+	inline bool operator != (const b3Color & other) const
+	{
+		const int result = _mm_movemask_ps(_mm_cmpeq_ps(v, other.v));
+
+		return result != 15;
+	}
+
+	inline operator b3_u16 () const
+	{
+		const b3_pkd_color px      = operator b3_pkd_color();
+		b3_pkd_color mask    = 0xf0000000;
+		b3_pkd_color result  = 0;
+
+		while (mask != 0)
+		{
+			const b3_pkd_color nibble = px & mask;
+
+			result  |= nibble;
+			result >>= 4;
+			mask   >>= 8;
+		}
+		return b3_u16(result);
 	}
 
 	/**
@@ -790,6 +876,18 @@ public:
 		const __m128 min = _mm_set_ps1(value);
 
 		v = _mm_max_ps(v, min);
+	}
+
+	/**
+	 * This computes the absolute value of each color channel including the
+	 * alpha channel.
+	 */
+	inline void b3Abs()
+	{
+		static const b3_u32 mask = 0x7fffffff;
+		const __m128 sign = _mm_load1_ps((const float *)&mask);
+
+		v = _mm_and_ps(sign, v);
 	}
 
 	inline void b3Dump() const

@@ -424,7 +424,7 @@ public:
 	 * @param a The color to add.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator+(const b3Color & a)
+	inline b3Color operator+(const b3Color & a) const
 	{
 		b3Color result;
 
@@ -456,7 +456,7 @@ public:
 	 * @param a The color to subtract.
 	 * @return A new b3Color instance.
 	 */
-	inline b3Color operator-(const b3Color & a)
+	inline b3Color operator-(const b3Color & a) const
 	{
 		b3Color result;
 
@@ -701,9 +701,31 @@ public:
 	}
 
 	/**
-	 * This cast operator returns the color channels as ::b3_pkd_color.
+	 * This cast operator returns the color channels as @c b3_u16 high color.
 	 *
-	 * @return The color channels as ::b3_pkd_color.
+	 * @return The color channels as @c b3_u16 high color.
+	 */
+	inline operator b3_u16 () const
+	{
+		const b3_pkd_color px      = operator b3_pkd_color();
+		b3_pkd_color mask    = 0xf0000000;
+		b3_pkd_color result  = 0;
+
+		while (mask != 0)
+		{
+			const b3_pkd_color nibble = px & mask;
+
+			result  |= nibble;
+			result >>= 4;
+			mask   >>= 8;
+		}
+		return b3_u16(result);
+	}
+
+	/**
+	 * This cast operator returns the color channels as @c ::b3_pkd_color.
+	 *
+	 * @return The color channels as @c ::b3_pkd_color.
 	 */
 	inline operator b3_pkd_color() const
 	{
@@ -736,6 +758,115 @@ public:
 			result = (result << 8) | c[i];
 		}
 		return result;
+	}
+
+	/**
+	 * This method returns true if any color channel is greater or equal than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel is greater or equal the other color.
+	 */
+	inline bool    operator >= (const b3Color & other) const
+	{
+		bool cmp = true;
+
+		for (b3_loop i = b3Color::R; i <= b3Color::B; i++)
+		{
+			cmp = cmp && (v[i] >= other.v[i]);
+		}
+		return cmp;
+	}
+
+	/**
+	 * This method returns true if any color channel is greater than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel overrides the other color.
+	 */
+	inline bool    operator > (const b3Color & other) const
+	{
+		bool cmp = true;
+
+		for (b3_loop i = b3Color::R; i <= b3Color::B; i++)
+		{
+			cmp = cmp && (v[i] > other.v[i]);
+		}
+		return cmp;
+	}
+
+	/**
+	 * This method returns true if any color channel is lower or equal than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel is lower or equal the other color.
+	 */
+	inline bool    operator <= (const b3Color & other) const
+	{
+		bool cmp = true;
+
+		for (b3_loop i = b3Color::R; i <= b3Color::B; i++)
+		{
+			cmp = cmp && (v[i] <= other.v[i]);
+		}
+		return cmp;
+	}
+
+	/**
+	 * This method returns true if any color channel is lower than any color
+	 * channel in the given b3Color instance without alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel overrides the other color.
+	 */
+	inline bool operator < (const b3Color & other) const
+	{
+		bool cmp = true;
+
+		for (b3_loop i = b3Color::R; i <= b3Color::B; i++)
+		{
+			cmp = cmp && (v[i] < other.v[i]);
+		}
+		return cmp;
+	}
+
+	/**
+	 * This method returns true if all color channels are equal than any color
+	 * channel in the given b3Color instance <em>including</em> alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if all color channels are equal to the other color cannels.
+	 */
+	inline bool operator == (const b3Color & other) const
+	{
+		bool cmp = true;
+
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			cmp = cmp && (v[i] == other.v[i]);
+		}
+		return cmp;
+	}
+
+	/**
+	 * This method returns true if any color channels is not equal than any color
+	 * channel in the given b3Color instance <em>including</em> alpha.
+	 *
+	 * @param other The b3Color instance to compare to.
+	 * @return True if any color channel is not equal to the other color cannels.
+	 */
+	inline bool operator != (const b3Color & other) const
+	{
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			if (v[i] != other.v[i])
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -811,6 +942,18 @@ public:
 			{
 				v[i] = min;
 			}
+		}
+	}
+
+	/**
+	 * This computes the absolute value of each color channel including the
+	 * alpha channel.
+	 */
+	inline void b3Abs()
+	{
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			v[i] = fabs(v[i]);
 		}
 	}
 

@@ -225,6 +225,7 @@ b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 				Color  |= Amount;
 				Color >>= 4;
 
+				// Add transparency
 				if ((Amount & 0x8) == 0)
 				{
 					Color |= 0xf000;

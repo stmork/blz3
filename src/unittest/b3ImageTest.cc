@@ -977,8 +977,16 @@ void b3ImageTest::compareImages(
 		{
 			for (b3_res x = 0; x < src->xSize; x++)
 			{
+
 				CPPUNIT_ASSERT_EQUAL(src->b3GetValue(x, y),    dst.b3GetValue(x, y));
-				CPPUNIT_ASSERT_EQUAL(src->b3GetHdrValue(x, y), dst.b3GetHdrValue(x, y));
+
+				if (src->b3IsHdr() && dst.b3IsHdr())
+				{
+					const b3Color & src_color = src->b3GetHdrValue(x, y);
+					const b3Color & dst_color = dst.b3GetHdrValue(x, y);
+
+					CPPUNIT_ASSERT(src_color == dst_color);
+				}
 			}
 		}
 	}

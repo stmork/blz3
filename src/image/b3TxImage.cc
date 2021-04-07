@@ -1158,7 +1158,7 @@ bool b3Tx::b3TxTransformTable(
 	{
 	case B3_TX_RGB4:
 		b3TxAlgorithms::b3Transform<b3_u16>(
-			srcTx, this, rTable, gTable, bTable, &b3Tx::b3ConvertToHigh);
+			srcTx, this, rTable, gTable, bTable);
 		return true;
 
 	case B3_TX_FLOAT:

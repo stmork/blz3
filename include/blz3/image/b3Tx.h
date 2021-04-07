@@ -1236,23 +1236,6 @@ private:
 		return ptr[y * xSize + x];
 	}
 
-	static inline b3_u16 b3ConvertToHigh(const b3Color & color)
-	{
-		b3_pkd_color px      = color;
-		b3_pkd_color mask    = 0xf0000000;
-		b3_pkd_color result  = 0;
-
-		while (mask != 0)
-		{
-			const b3_pkd_color nibble = px & mask;
-
-			result  |= nibble;
-			result >>= 4;
-			mask   >>= 8;
-		}
-		return result;
-	}
-
 	static inline b3_pkd_color b3Convert(const b3_u16 px) noexcept
 	{
 		b3_u16       mask    = 0xf000;

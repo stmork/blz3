@@ -221,7 +221,8 @@ inline bool b3SupersamplingRayRow::b3Test(const b3_res x)
 {
 	b3Color diff = m_LastResult[x] - m_ThisResult[x];
 
-	return diff.b3IsGreater(m_Limit);
+	diff.b3Abs();
+	return diff >= m_Limit;
 }
 
 inline void b3SupersamplingRayRow::b3Convert()

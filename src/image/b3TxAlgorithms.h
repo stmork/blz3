@@ -117,12 +117,7 @@ struct B3_PLUGIN b3TxAlgorithms
 		b3Tx        *       dstTx,
 		const b3_pkd_color * rTable,
 		const b3_pkd_color * gTable,
-		const b3_pkd_color * bTable,
-		std::function<DST(const b3Color & color)> convert = []
-			(const b3Color & color)
-	{
-		return color;
-	})
+		const b3_pkd_color * bTable)
 	{
 		DST * dst_ptr = dstTx->data;
 
@@ -142,7 +137,7 @@ struct B3_PLUGIN b3TxAlgorithms
 				const b3_pkd_color transformed =
 					b3Color::b3MakePkdColor(r, g, b, a);
 
-				*dst_ptr++ = convert(b3Color(transformed));
+				*dst_ptr++ = b3Color(transformed);
 			}
 		}
 	}
