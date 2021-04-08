@@ -23,8 +23,8 @@
 
 #include "b3SystemIndInclude.h"
 #include "blz3/system/b3Locale.h"
-#include <wchar.h>
-#include <locale.h>
+
+#include <stdexcept>
 
 /*************************************************************************
 **                                                                      **
@@ -37,63 +37,115 @@ void b3Locale::b3IsoToLocale(
 	char    *    dst,
 	b3_size      len)
 {
-#if 1
-	b3_size i = 0;
-
-	bzero(dst, len);
-	while ((*src) && (i < len))
+	if (!b3IsUtf8(src))
 	{
-		b3_u08 c = *src;
+		// Convert from ISO to UTF-8
+		b3_size i = 0;
 
-		if (c < 128)
+		bzero(dst, len);
+		while ((*src) && (i < len))
 		{
-			dst[i++] = c;
+			b3_u08 c = *src;
+
+			if (c < 128)
+			{
+				dst[i++] = c;
+			}
+			else if (c == 0xa4)
+			{
+				dst[i++] = 0xe2;
+				if (i < len)
+				{
+					dst[i++] = 0x82;
+					if (i < len)
+					{
+						dst[i++] = 0xac;
+					}
+				}
+			}
+			else
+			{
+				dst[i++] = 0xc0 + (c >> 6);
+				if (i < len)
+				{
+					dst[i++] = 0x80 + (c & 0x3f);
+				}
+			}
+			src++;
 		}
-		else
-		{
-			dst[i++] = 0xc0 + (c >> 6);
-			dst[i++] = 0x80 + (c & 0x3f);
-		}
-		src++;
+		dst[len - 1] = 0;
 	}
-	dst[len - 1] = 0;
-#else
-	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
+	else if (src != dst)
 	{
-		wchar_t result[1024];
-		const size_t  max = sizeof(result) / sizeof(wchar_t);
-
-		B3_ASSERT(len < max);
-
-		mbstowcs(result, src, max);
-
-		setlocale(LC_CTYPE, "");
-		wcstombs(dst, result, len);
+		strncpy(dst, src, len);
 	}
-	else
-	{
-		memcpy(dst, src, len);
-	}
-#endif
 }
 
-void b3Locale::b3LocaleToIso(const char * src, char * dst, b3_size len)
+void b3Locale::b3LocaleToIso(
+	const char * src,
+	char    *    dst,
+	b3_size      len)
 {
-	wchar_t result[1024];
-	const size_t  max = sizeof(result) / sizeof(wchar_t);
-
-	B3_ASSERT(len < max);
-
-	setlocale(LC_CTYPE, "");
-	mbstowcs(result, src, max);
-
-	if (setlocale(LC_CTYPE, "de_DE.ISO8859-1") != nullptr)
+	if (!b3IsUtf8(src))
 	{
-		wcstombs(dst, result, len);
+		throw std::invalid_argument("Input text not UTF-8!");
 	}
-	else
+	if (src != dst)
 	{
-		memcpy(dst, src, len);
+		strncpy(dst, src, len);
 	}
-	setlocale(LC_CTYPE, "");
+}
+
+bool b3Locale::b3IsUtf8(const char * text)
+{
+	unsigned count = 1;
+
+	for (unsigned i = 0; text[i] != 0; i++)
+	{
+		unsigned c = text[i] & 0xff;
+
+		if (c >= 0x80)
+		{
+			if (c < 0xc0)
+			{
+				if (count-- <= 1)
+				{
+					return false;
+				}
+			}
+			else if (c >= 0xf5)
+			{
+				return false;
+			}
+			else if (c >= 0xf0)
+			{
+				if (count > 1)
+				{
+					return false;
+				}
+				count = 4;
+			}
+			else if (c >= 0xe0)
+			{
+				if (count > 1)
+				{
+					return false;
+				}
+				count = 3;
+			}
+			else if (c >= 0xc2)
+			{
+				if (count > 1)
+				{
+					return false;
+				}
+				count = 2;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	return count <= 1;
 }
