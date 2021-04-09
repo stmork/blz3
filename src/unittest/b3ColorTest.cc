@@ -24,6 +24,8 @@
 #include "b3ColorTest.h"
 #include "b3TestMacros.h"
 
+#include "blz3/base/b3Render.h"
+
 #include <cstddef>
 
 /*************************************************************************
@@ -212,6 +214,44 @@ void b3ColorTest::testPkdColor()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_CYAN,        b3Color::b3MakePkdColor(0x00, 0xff, 0xff));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_MARKER,      b3Color::b3MakePkdColor(0xff, 0x11, 0x44));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_TRANSPARENT, b3Color::b3MakePkdColor(0x00, 0x00, 0x00, 0xff));
+}
+
+void b3ColorTest::testOpenGlColor()
+{
+#ifdef BLZ3_USE_OPENGL
+	b3Color src;
+	GLfloat dst_float[4];
+	GLubyte dst_ubyte[4];
+
+	src.b3Init(0.25, 0.5, 0.75, 0.125);
+
+	b3RenderContext::b3ColorToGL(src, dst_float);
+	CPPUNIT_ASSERT_EQUAL(0.25f,  dst_float[0]);
+	CPPUNIT_ASSERT_EQUAL(0.5f,   dst_float[1]);
+	CPPUNIT_ASSERT_EQUAL(0.75f,  dst_float[2]);
+	CPPUNIT_ASSERT_EQUAL(0.875f, dst_float[3]);
+
+	b3RenderContext::b3ColorToGL(src, dst_ubyte);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0x3f,  dst_ubyte[0]);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0x7f,  dst_ubyte[1]);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0xbf,  dst_ubyte[2]);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0xe0,  dst_ubyte[3]);
+
+	b3RenderContext::b3PkdColorToGL(0x204080c0, dst_float);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.25f,  dst_float[0], 1.0 / 255.0);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.5f,   dst_float[1], 1.0 / 255.0);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.75f,  dst_float[2], 1.0 / 255.0);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.875f, dst_float[3], 1.0 / 255.0);
+
+	b3RenderContext::b3PkdColorToGL(0x12345678, dst_ubyte);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0x34,  dst_ubyte[0]);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0x56,  dst_ubyte[1]);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0x78,  dst_ubyte[2]);
+	CPPUNIT_ASSERT_TYPED_EQUAL(GLubyte, 0xed,  dst_ubyte[3]);
+
+	const b3_pkd_color result = b3RenderContext::b3GLToPkdColor(dst_float);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x4080c0, result);
+#endif
 }
 
 void b3ColorTest::testSaturation()

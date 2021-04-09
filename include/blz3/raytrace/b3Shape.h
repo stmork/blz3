@@ -288,7 +288,7 @@ protected:
 	bool            b3GetChess(b3Color & bColor, b3Color & wColor, b3_res & xRepeat, b3_res & yRepeat) const override;
 	b3Tx      *     b3GetTexture(b3_f64 & xTrans, b3_f64 & yTrans, b3_f64 & xScale, b3_f64 & yScale) const override;
 	bool            b3GetImage(b3Tx * image) const override;
-	b3_render_mode  b3GetRenderMode() override;
+	b3_render_mode  b3GetRenderMode() const override;
 
 	/**
 	 * This method computes the quadratic normals of the shape.

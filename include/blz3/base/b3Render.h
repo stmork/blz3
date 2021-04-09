@@ -221,7 +221,7 @@ public:
 	 *
 	 * @return The selected object.
 	 */
-	inline b3RenderObject * b3GetSelected()
+	inline b3RenderObject * b3GetSelected() const
 	{
 		return glSelectedObject;
 	}
@@ -237,7 +237,6 @@ public:
 	}
 
 #ifdef BLZ3_USE_OPENGL
-	// Some inlines :-)
 
 	/**
 	 * This method converts a b3Color instance into OpenGL floats.
@@ -247,10 +246,12 @@ public:
 	 */
 	static inline void b3ColorToGL(const b3Color & src, GLfloat * dst)
 	{
-		*dst++ =       src[b3Color::R];
-		*dst++ =       src[b3Color::G];
-		*dst++ =       src[b3Color::B];
-		*dst   = 1.0 - src[b3Color::A];
+		const b3_color color = src;
+
+		*dst++ =       color.r;
+		*dst++ =       color.g;
+		*dst++ =       color.b;
+		*dst   = 1.0 - color.a;
 	}
 
 	/**
@@ -261,10 +262,28 @@ public:
 	 */
 	static inline void b3ColorToGL(const b3Color & src, GLubyte * dst)
 	{
-		*dst++ = (GLubyte)(src[b3Color::R] * 255);
-		*dst++ = (GLubyte)(src[b3Color::G] * 255);
-		*dst++ = (GLubyte)(src[b3Color::B] * 255);
-		*dst   = (GLubyte)(src[b3Color::A] * 255) ^ 0xff;
+		const b3_color color = src * 255.0f;
+
+		*dst++ = GLubyte(color.r);
+		*dst++ = GLubyte(color.g);
+		*dst++ = GLubyte(color.b);
+		*dst   = GLubyte(color.a) ^ 0xff;
+	}
+
+	/**
+	 * This method converts a b3_pkd_color into OpenGL floats.
+	 *
+	 * @param input The b3_pkd_color to convert.
+	 * @param dst The resulting OpenGL floats.
+	 */
+	static inline void b3PkdColorToGL(const b3_pkd_color input, GLfloat * dst)
+	{
+		const b3_color color = b3Color(input);
+
+		*dst++ =       color.r;
+		*dst++ =       color.g;
+		*dst++ =       color.b;
+		*dst   = 1.0 - color.a;
 	}
 
 	/**
@@ -282,20 +301,6 @@ public:
 	}
 
 	/**
-	 * This method converts a b3_pkd_color into OpenGL floats.
-	 *
-	 * @param input The b3_pkd_color to convert.
-	 * @param dst The resulting OpenGL floats.
-	 */
-	static inline void b3PkdColorToGL(const b3_pkd_color input, GLfloat * dst)
-	{
-		*dst++ = ((input & 0x00ff0000) >> 16) * 0.0039215686;
-		*dst++ = ((input & 0x0000ff00) >>  8) * 0.0039215686;
-		*dst++ = ((input & 0x000000ff))       * 0.0039215686;
-		*dst   = 1.0 - ((input & 0xff000000) >> 24) * 0.0039215686;
-	}
-
-	/**
 	 * This method converts OpenGL floats into a b3_pkd_color.
 	 *
 	 * @param color The OpenGL floats to convert.
@@ -303,10 +308,7 @@ public:
 	 */
 	static inline b3_pkd_color b3GLToPkdColor(const GLfloat * color)
 	{
-		return
-			(((b3_pkd_color)(color[0] * 255)) << 16) |
-			(((b3_pkd_color)(color[1] * 255)) <<  8) |
-			(b3_pkd_color)(color[2] * 255);
+		return b3Color(color[0], color[1], color[2]);
 	}
 
 	/**
@@ -333,12 +335,11 @@ public:
 	 */
 	static inline void b3VectorToDirectionalGL(const b3_vector * src, GLfloat * dst)
 	{
-		b3_f32 x, y, z, len;
+		const b3_f32 x   = src->x;
+		const b3_f32 y   = src->y;
+		const b3_f32 z   = src->z;
+		const b3_f32 len = sqrt(x * x + y * y + z * z);
 
-		x = src->x;
-		y = src->y;
-		z = src->z;
-		len = sqrt(x * x + y * y + z * z);
 		*dst++ = x / len;
 		*dst++ = y / len;
 		*dst++ = z / len;
@@ -581,7 +582,7 @@ protected:
 	 *
 	 * @return The actual render mode.
 	 */
-	virtual b3_render_mode  b3GetRenderMode()
+	virtual b3_render_mode  b3GetRenderMode() const
 	{
 		return B3_RENDER_LINE;
 	}

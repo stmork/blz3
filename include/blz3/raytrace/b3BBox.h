@@ -171,7 +171,7 @@ protected:
 		color = m_GridColor;
 	}
 
-	inline b3_render_mode  b3GetRenderMode() override
+	inline b3_render_mode  b3GetRenderMode() const override
 	{
 		return m_GridVisible ? B3_RENDER_LINE : B3_RENDER_NOTHING;
 	}

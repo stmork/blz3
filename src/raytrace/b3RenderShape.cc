@@ -460,7 +460,7 @@ bool b3Shape::b3GetImage(b3Tx * image) const
 	return result;
 }
 
-b3_render_mode b3Shape::b3GetRenderMode()
+b3_render_mode b3Shape::b3GetRenderMode() const
 {
 	return b3IsActive() ? B3_RENDER_FILLED : B3_RENDER_LINE;
 }
