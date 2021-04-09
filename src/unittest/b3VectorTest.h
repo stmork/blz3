@@ -235,5 +235,19 @@ public:
 	}
 };
 
+#ifdef BLZ3_USE_OPENGL
+class b3VectorOpenGlTest : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(b3VectorOpenGlTest);
+	CPPUNIT_TEST(test);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void setUp() override;
+	void tearDown() override;
+	void test();
+};
+#endif
+
 #endif
 #endif

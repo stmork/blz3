@@ -327,6 +327,20 @@ public:
 	}
 
 	/**
+	 * This method converts a four component b3_vector4D into four OpenGL floats.
+	 *
+	 * @param src The b3_vector4D instance.
+	 * @param dst The resulting OpenGL floats.
+	 */
+	static inline void b3VectorToGL(const b3_vector4D * src, GLfloat * dst)
+	{
+		*dst++ = src->x;
+		*dst++ = src->y;
+		*dst++ = src->z;
+		*dst   = src->w;
+	}
+
+	/**
 	 * This method copies a b3_vector into OpenGL floats for a direction.
 	 * The direction is normalized for OpenGL.
 	 *
@@ -344,20 +358,6 @@ public:
 		*dst++ = y / len;
 		*dst++ = z / len;
 		*dst   = 0;
-	}
-
-	/**
-	 * This method converts a four component b3_vector4D into four OpenGL floats.
-	 *
-	 * @param src The b3_vector4D instance.
-	 * @param dst The resulting OpenGL floats.
-	 */
-	static inline void b3Vector4dToGL(const b3_vector4D * src, GLfloat * dst)
-	{
-		*dst++ = src->x;
-		*dst++ = src->y;
-		*dst++ = src->z;
-		*dst   = src->w;
 	}
 
 private:
