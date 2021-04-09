@@ -35,7 +35,12 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 	b3_f32 v[4];            //!< These are the color channels of a b3Color instance.
 
 public:
-	/////////////////////////////////////////////////--------  constructors
+	/*************************************************************************
+	**                                                                      **
+	**                        Constructors                                  **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This constructor does simply nothing.
 	 */
@@ -165,6 +170,12 @@ public:
 		}
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Initializers                                  **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method packs four color component bytes into one unsigned 32
 	 * bit integer value.
@@ -193,7 +204,6 @@ public:
 		return result;
 	}
 
-	//////////////////////////////////////////--------- initializers
 	/**
 	 * This method initializes all channels of this instance
 	 * to zero.
@@ -268,7 +278,6 @@ public:
 		v[B] = b;
 	}
 
-	//////////////////////////////////////--------- methods and operators
 	/**
 	 * This method sets the alpha channel.
 	 *
@@ -278,6 +287,12 @@ public:
 	{
 		v[A] = alpha;
 	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Access operators                              **
+	**                                                                      **
+	*************************************************************************/
 
 	/**
 	 * This index operator returns the spedified color component and returns them.
@@ -323,78 +338,11 @@ public:
 		return v[(b3_color_index)index];
 	}
 
-	/**
-	 * This method mixes two colors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param mix The mixer component as single precision floating point number.
-	 * @return The resulting mixed color.
-	 */
-	inline static b3Color b3Mix(
-		const b3Color & low,
-		const b3Color & high,
-		const b3_f32   mix)
-	{
-		b3Color result;
-		b3Color mixer;
-
-		mixer.b3InitFactor(mix);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
-		}
-		return result;
-	}
-
-	/**
-	 * This method mixes two colors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param mix The mixer component as double precision floating point number.
-	 * @return The resulting mixed color.
-	 */
-	inline static b3Color b3Mix(
-		const b3Color & low,
-		const b3Color & high,
-		const b3_f64   mix)
-	{
-		b3Color result;
-		b3Color mixer;
-
-		mixer.b3InitFactor(mix);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
-		}
-		return result;
-	}
-
-	/**
-	 * This method mixes two colors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param mixer The mixer component as a color component. Each channel is mixed seperatly.
-	 * @return The resulting mixed color.
-	 */
-	inline static b3Color b3Mix(
-		const b3Color & low,
-		const b3Color & high,
-		const b3Color & mixer)
-	{
-		b3Color result;
-
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
-		}
-		return result;
-	}
+	/*************************************************************************
+	**                                                                      **
+	**                       Arithmetic operators                           **
+	**                                                                      **
+	*************************************************************************/
 
 	/**
 	 * This operator adds a specified color to this instance.
@@ -678,80 +626,11 @@ public:
 		return result;
 	}
 
-	/**
-	 * This method returns true if any color channel is greater than any color
-	 * channel in the given b3Color instance.
-	 *
-	 * @param limit The b3Color instance to compare to.
-	 * @return True if any color channel overrides the limit.
-	 */
-	inline bool    b3IsGreater(const b3Color & limit) const
-	{
-		return
-			(fabs(v[R]) >= limit.v[R]) ||
-			(fabs(v[G]) >= limit.v[G]) ||
-			(fabs(v[B]) >= limit.v[B]);
-	}
-
-	/**
-	 * This cast operator returns the color channels as @c b3_u16 high color.
-	 *
-	 * @return The color channels as @c b3_u16 high color.
-	 */
-	inline operator b3_u16 () const
-	{
-		const b3_pkd_color px      = operator b3_pkd_color();
-		b3_pkd_color mask    = 0xf0000000;
-		b3_pkd_color result  = 0;
-
-		while (mask != 0)
-		{
-			const b3_pkd_color nibble = px & mask;
-
-			result  |= nibble;
-			result >>= 4;
-			mask   >>= 8;
-		}
-		return b3_u16(result);
-	}
-
-	/**
-	 * This cast operator returns the color channels as @c ::b3_pkd_color.
-	 *
-	 * @return The color channels as @c ::b3_pkd_color.
-	 */
-	inline operator b3_pkd_color() const
-	{
-		b3_pkd_color       result = 0;
-		b3_loop            i;
-		alignas(16) b3_s32 c[4];
-		alignas(16) b3_f32 sat[4];
-
-		for (i = 0; i < 4; i++)
-		{
-			sat[i] = v[i];
-			if (sat[i] < 0.0)
-			{
-				sat[i] = 0.0;
-			}
-			if (sat[i] > 1.0)
-			{
-				sat[i] = 1.0;
-			}
-			sat[i] *= 255.0;
-		}
-
-		for (i = 0; i < 4; i++)
-		{
-			c[i] = (b3_s32)round(sat[i]);
-		}
-
-		for (i = 0; i < 4; i++)
-		{
-			result = (result << 8) | c[i];
-		}
-		return result;
-	}
+	/*************************************************************************
+	**                                                                      **
+	**                        Comparison operators                          **
+	**                                                                      **
+	*************************************************************************/
 
 	/**
 	 * This method returns true if any color channel is greater or equal than any color
@@ -862,6 +741,72 @@ public:
 		return false;
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Cast operators                                **
+	**                                                                      **
+	*************************************************************************/
+
+	/**
+	 * This cast operator returns the color channels as @c b3_u16 high color.
+	 *
+	 * @return The color channels as @c b3_u16 high color.
+	 */
+	inline operator b3_u16 () const
+	{
+		const b3_pkd_color px      = operator b3_pkd_color();
+		b3_pkd_color mask    = 0xf0000000;
+		b3_pkd_color result  = 0;
+
+		while (mask != 0)
+		{
+			const b3_pkd_color nibble = px & mask;
+
+			result  |= nibble;
+			result >>= 4;
+			mask   >>= 8;
+		}
+		return b3_u16(result);
+	}
+
+	/**
+	 * This cast operator returns the color channels as @c ::b3_pkd_color.
+	 *
+	 * @return The color channels as @c ::b3_pkd_color.
+	 */
+	inline operator b3_pkd_color() const
+	{
+		b3_pkd_color       result = 0;
+		b3_loop            i;
+		alignas(16) b3_s32 c[4];
+		alignas(16) b3_f32 sat[4];
+
+		for (i = 0; i < 4; i++)
+		{
+			sat[i] = v[i];
+			if (sat[i] < 0.0)
+			{
+				sat[i] = 0.0;
+			}
+			if (sat[i] > 1.0)
+			{
+				sat[i] = 1.0;
+			}
+			sat[i] *= 255.0;
+		}
+
+		for (i = 0; i < 4; i++)
+		{
+			c[i] = (b3_s32)round(sat[i]);
+		}
+
+		for (i = 0; i < 4; i++)
+		{
+			result = (result << 8) | c[i];
+		}
+		return result;
+	}
+
 	/**
 	 * This cast operator returns the color channels as ::b3_color.
 	 *
@@ -877,6 +822,12 @@ public:
 		result.a = v[A];
 		return result;
 	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Arithmetic modifiers                          **
+	**                                                                      **
+	*************************************************************************/
 
 	/**
 	 * This method saturates all color channels to 1.
@@ -948,6 +899,79 @@ public:
 		{
 			v[i] = fabs(v[i]);
 		}
+	}
+
+	/**
+	 * This method mixes two colors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mix The mixer component as single precision floating point number.
+	 * @return The resulting mixed color.
+	 */
+	inline static b3Color b3Mix(
+		const b3Color & low,
+		const b3Color & high,
+		const b3_f32   mix)
+	{
+		b3Color result;
+		b3Color mixer;
+
+		mixer.b3InitFactor(mix);
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * This method mixes two colors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mix The mixer component as double precision floating point number.
+	 * @return The resulting mixed color.
+	 */
+	inline static b3Color b3Mix(
+		const b3Color & low,
+		const b3Color & high,
+		const b3_f64   mix)
+	{
+		b3Color result;
+		b3Color mixer;
+
+		mixer.b3InitFactor(mix);
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * This method mixes two colors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mixer The mixer component as a color component. Each channel is mixed seperatly.
+	 * @return The resulting mixed color.
+	 */
+	inline static b3Color b3Mix(
+		const b3Color & low,
+		const b3Color & high,
+		const b3Color & mixer)
+	{
+		b3Color result;
+
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			result.v[i] = low.v[i] + mixer.v[i] * (high.v[i]  - low.v[i]);
+		}
+		return result;
 	}
 
 #ifdef WIN32

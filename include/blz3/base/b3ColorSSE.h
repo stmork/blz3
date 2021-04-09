@@ -39,7 +39,12 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 #endif
 
 public:
-	/////////////////////////////////////////////////--------  constructors
+	/*************************************************************************
+	**                                                                      **
+	**                        Constructors                                  **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This constructor does simply nothing.
 	 */
@@ -199,6 +204,12 @@ public:
 #endif
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Initialization methods                        **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method packs four color component bytes into one unsigned 32
 	 * bit integer value.
@@ -224,7 +235,6 @@ public:
 					_mm_packs_epi32(input, zero), zero)); // pack 16 bit into 8 bit unsigned saturated
 	}
 
-	//////////////////////////////////////////--------- initializers
 	/**
 	 * This method initializes all channels of this instance
 	 * to zero.
@@ -297,6 +307,12 @@ public:
 		v = _mm_move_ss(v, a);
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Access operators                              **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This index operator returns the spedified color component and returns them.
 	 * This is the L value variant.
@@ -349,84 +365,11 @@ public:
 		return ptr[index];
 	}
 
-	/**
-	 * This method mixes two colors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param mix The mixer component as single precision floating point number.
-	 * @return The resulting mixed color.
-	 */
-	inline static b3Color b3Mix(
-		const b3Color & low,
-		const b3Color & high,
-		const b3_f32    mix)
-	{
-		const __m128  mixer = _mm_set_ps1(mix);
-		b3Color result;
-
-		result.v = _mm_add_ps(
-				low.v,
-				_mm_mul_ps(
-					mixer,
-					_mm_sub_ps(SSE_PS_LOAD(high.v), low.v)));
-
-		return result;
-	}
-
-	/**
-	 * This method mixes two colors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param dMix The mixer component as double precision floating point number.
-	 * @return The resulting mixed color.
-	 */
-	inline static b3Color b3Mix(
-		const b3Color & low,
-		const b3Color & high,
-		const b3_f64    dMix)
-	{
-		float   mix = dMix;
-		__m128  mixer = _mm_set_ps1(mix);
-		__m128  l     = SSE_PS_LOAD(low.v);
-		b3Color result;
-
-		SSE_PS_STORE(result.v, _mm_add_ps(
-				l,
-				_mm_mul_ps(
-					mixer,
-					_mm_sub_ps(SSE_PS_LOAD(high.v), l))));
-
-		return result;
-	}
-
-	/**
-	 * This method mixes two colors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param mixer The mixer component as a color component. Each channel is mixed seperatly.
-	 * @return The resulting mixed color.
-	 */
-	inline static b3Color b3Mix(
-		const b3Color & low,
-		const b3Color & high,
-		const b3Color & mixer)
-	{
-		b3Color result;
-
-		result.v = _mm_add_ps(
-				low.v,
-				_mm_mul_ps(
-					mixer.v,
-					_mm_sub_ps(high.v, low.v)));
-
-		return result;
-	}
+	/*************************************************************************
+	**                                                                      **
+	**                        Arighmetic operators                          **
+	**                                                                      **
+	*************************************************************************/
 
 	/**
 	 * This operator adds a specified color to this instance.
@@ -651,6 +594,12 @@ public:
 		return result;
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Comparison operators                          **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method returns true if any color channel is greater or equal than any color
 	 * channel in the given b3Color instance without alpha.
@@ -735,6 +684,12 @@ public:
 		return result != 15;
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Cast operators                                **
+	**                                                                      **
+	*************************************************************************/
+
 	inline operator b3_u16 () const
 	{
 		const b3_pkd_color px      = operator b3_pkd_color();
@@ -813,6 +768,12 @@ public:
 		return result;
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Arithmetic modifiers                          **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method saturates all color channels to 1.
 	 */
@@ -867,6 +828,81 @@ public:
 		const __m128 sign = _mm_load1_ps((const float *)&mask);
 
 		v = _mm_and_ps(sign, v);
+	}
+
+	/**
+	 * This method mixes two colors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mix The mixer component as single precision floating point number.
+	 * @return The resulting mixed color.
+	 */
+	inline static b3Color b3Mix(
+		const b3Color & low,
+		const b3Color & high,
+		const b3_f32    mix)
+	{
+		b3Color result;
+
+		result.v = _mm_add_ps(
+				low.v,
+				_mm_mul_ps(
+					_mm_set_ps1(mix),
+					_mm_sub_ps(high.v, low.v)));
+
+		return result;
+	}
+
+	/**
+	 * This method mixes two colors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param dMix The mixer component as double precision floating point number.
+	 * @return The resulting mixed color.
+	 */
+	inline static b3Color b3Mix(
+		const b3Color & low,
+		const b3Color & high,
+		const b3_f64    dMix)
+	{
+		b3Color result;
+
+		result.v = _mm_add_ps(
+				low.v,
+				_mm_mul_ps(
+					_mm_set_ps1(float(dMix)),
+					_mm_sub_ps(high.v, low.v)));
+
+		return result;
+	}
+
+	/**
+	 * This method mixes two colors by a mixer component. The mixer must in the
+	 * range from [0..1].
+	 *
+	 * @param low The low component if the mixer is 0.
+	 * @param high The high component if the mixer is 1.
+	 * @param mixer The mixer component as a color component. Each channel is mixed seperatly.
+	 * @return The resulting mixed color.
+	 */
+	inline static b3Color b3Mix(
+		const b3Color & low,
+		const b3Color & high,
+		const b3Color & mixer)
+	{
+		b3Color result;
+
+		result.v = _mm_add_ps(
+				low.v,
+				_mm_mul_ps(
+					mixer.v,
+					_mm_sub_ps(high.v, low.v)));
+
+		return result;
 	}
 
 	inline void b3Dump() const
