@@ -46,7 +46,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 
 	b3PrintF(B3LOG_NORMAL, "%zd-Bit-CPU\n", b3Runtime::b3GetCPUBits());
 
-	switch (b3Runtime::b3GetCPUType())
+	switch (b3Runtime::b3Instance().b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
 		b3PrintF(B3LOG_NORMAL, "Big endian (MC 680x0)\n");

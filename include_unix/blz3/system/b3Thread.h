@@ -40,13 +40,6 @@ public:
 	b3CPU();
 
 	/**
-	 * This method returns the active amount of threads.
-	 *
-	 * @return The actually running number of threads.
-	 */
-	static b3_count b3GetNumThreads();
-
-	/**
 	 * This method returns true if the underlying operating system
 	 * provides a correct getrusage() method. Linux has an error
 	 * in that method until kernel version 2.6.9 with incorrect

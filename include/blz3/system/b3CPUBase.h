@@ -53,49 +53,15 @@ enum b3_vector_unit
  */
 class B3_PLUGIN b3CPUBase
 {
-private:
-	static b3_cpu_type cpu_type;
-	static b3_count    cpu_bits;
-
 protected:
-	static b3_count    cpu_count; //!< Number of usable CPUs.
+	static const b3_count    cpu_bits = sizeof(void *) * 8;
+	b3_cpu_type              cpu_type = B3_UNKNOWN_ENDIAN;
+	b3_count                 cpu_count = 0; //!< Number of usable CPUs.
 
-public:
 	/**
 	 * This constructor initializes information abount the installed CPUs.
 	 */
 	b3CPUBase();
-
-	/**
-	 * This method returns the number of usable CPUs.
-	 *
-	 * @return Number of usable CPUs.
-	 */
-	static inline b3_count b3GetNumCPUs()
-	{
-		return cpu_count;
-	}
-
-	/**
-	 * This method returns the used endian type of the CPU.
-	 *
-	 * @return The CPUs endian.
-	 */
-	static inline b3_cpu_type b3GetCPUType()
-	{
-		return cpu_type;
-	}
-
-	/**
-	 * This method returns the CPU's bit count. This is the size of
-	 * a pointer in bits.
-	 *
-	 * @return The used address space.
-	 */
-	static inline b3_count b3GetCPUBits()
-	{
-		return cpu_bits;
-	}
 
 	/**
 	 * Return type of available vector unit.

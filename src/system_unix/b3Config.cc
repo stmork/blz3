@@ -43,12 +43,9 @@ void * operator new (size_t size)
 }
 #endif
 
-b3Runtime b3Runtime::m_Runtime;
-char      b3Runtime::m_Compiler[256];
 b3Runtime::b3Runtime()
 {
 	const char * vu;
-	b3_count     bits = b3GetCPUBits();
 
 #if defined(B3_SSE2)
 	const char * math = "SSE2";
@@ -57,18 +54,6 @@ b3Runtime::b3Runtime()
 #else
 	const char * math = "FPU";
 #endif
-	const char * locale = setlocale(LC_ALL, "");
-
-	if (locale == nullptr)
-	{
-		fprintf(stderr, "Cannot set locale. Assuming we're right ;-)\n");
-	}
-	else
-	{
-#ifdef _DEBUG
-		fprintf(stderr, "Default locale: %s\n", locale);
-#endif
-	}
 
 	switch (b3GetVectorUnit())
 	{
@@ -107,7 +92,7 @@ b3Runtime::b3Runtime()
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
 	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d.%d (%ld bit) vector unit: %s math mode: %s",
-		__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__, bits, vu, math);
+		__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__, cpu_bits, vu, math);
 #	else
 	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",
 		__GNUC__, __GNUC_MINOR__, bits, vu, math);
@@ -159,7 +144,7 @@ b3_s32 b3Runtime::b3Execute(const char * command, const b3_bool async)
 
 char * b3Runtime::b3GetCompiler()
 {
-	return m_Compiler;
+	return b3Instance().m_Compiler;
 }
 
 void * b3Runtime::b3GetOpenGLExtension(const char * procedure_name)

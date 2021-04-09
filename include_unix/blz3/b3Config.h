@@ -150,12 +150,54 @@ static inline int stricmp(const char * a, const char * b)
  */
 class B3_PLUGIN b3Runtime : public b3CPU
 {
-	static b3Runtime   m_Runtime;
-	static char        m_Compiler[256];
+	char               m_Compiler[256];
 
 	b3Runtime();
 
 public:
+	/**
+	 * This method returns the singleton instance of the runtime description.
+	 *
+	 * @return The runtime description.
+	 */
+	static inline b3Runtime & b3Instance()
+	{
+		static b3Runtime   runtime;
+
+		return runtime;
+	}
+
+	/**
+	 * This method returns the number of usable CPUs.
+	 *
+	 * @return Number of usable CPUs.
+	 */
+	static inline b3_count b3GetNumCPUs()
+	{
+		return b3Instance().cpu_count;
+	}
+
+	/**
+	 * This method returns the used endian type of the CPU.
+	 *
+	 * @return The CPUs endian.
+	 */
+	static inline b3_cpu_type b3GetCPUType()
+	{
+		return b3Instance().cpu_type;
+	}
+
+	/**
+	 * This method returns the CPU's bit count. This is the size of
+	 * a pointer in bits.
+	 *
+	 * @return The used address space.
+	 */
+	static inline b3_count b3GetCPUBits()
+	{
+		return b3Instance().cpu_bits;
+	}
+
 	/**
 	 * This method swaps the 32 bits values the pointers specify.
 	 *

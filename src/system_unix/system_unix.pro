@@ -24,6 +24,7 @@ SOURCES += \
 	b3Time.cc
 
 HEADERS += \
+	../../include_unix/blz3/b3Config.h \
 	../../include_unix/blz3/system/b3Assert.h \
 	../../include_unix/blz3/system/b3Dir.h \
 	../../include_unix/blz3/system/b3DisplayView.h \

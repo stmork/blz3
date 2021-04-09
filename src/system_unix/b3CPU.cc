@@ -67,19 +67,3 @@ b3CPU::b3CPU()
 #endif
 	}
 }
-
-b3_count b3CPU::b3GetNumThreads()
-{
-	b3_count          resuming;
-	b3CriticalSection lock(b3Thread::m_ThreadMutex);
-
-	if (cpu_count > b3Thread::m_ThreadCount)
-	{
-		resuming = cpu_count - b3Thread::m_ThreadCount;
-	}
-	else
-	{
-		resuming = 1;
-	}
-	return resuming;
-}
