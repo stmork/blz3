@@ -190,10 +190,10 @@ public:
 	 * @param x The new x coordinate.
 	 * @param y The new y coordinate.
 	 */
-	explicit inline b3Point(b3_f64 x = 0, b3_f64 y = 0)
+	explicit inline b3Point(b3_f64 nx = 0, b3_f64 ny = 0)
 	{
-		this->x = x;
-		this->y = y;
+		this->x = nx;
+		this->y = ny;
 	}
 };
 

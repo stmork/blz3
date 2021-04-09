@@ -78,8 +78,8 @@ public:
  */
 class b3DisplayView : public b3Display
 {
-	b3_res          m_xs, m_ys; // This is the max. visible size
-	const char   *  m_Title;
+	b3_res           m_xs, m_ys; // This is the max. visible size
+	const char   *   m_Title;
 	b3DisplayPixel * m_Pixel;
 
 	// Some X values
@@ -92,7 +92,12 @@ class b3DisplayView : public b3Display
 	Colormap        m_Colormap;
 	Pixmap          m_Image;
 	GC              m_GC;
+	static Colormap m_Cmap;
+	static b3_count m_CmapCount;
 #endif
+
+	static b3Mutex  m_DisplayMutex;
+	static long     m_Count;
 
 public:
 	/**

@@ -43,7 +43,7 @@ namespace mouseselect_events
 	class SctEvent
 	{
 	public:
-		SctEvent(MouseSelectEventName name) : name(name) {}
+		SctEvent(MouseSelectEventName n_name) : name(n_name) {}
 		virtual ~SctEvent() {}
 		const MouseSelectEventName name;
 
@@ -53,9 +53,9 @@ namespace mouseselect_events
 	class TypedSctEvent : public SctEvent
 	{
 	public:
-		TypedSctEvent(MouseSelectEventName name, T value) :
-			SctEvent(name),
-			value(value)
+		TypedSctEvent(MouseSelectEventName n_name, T n_value) :
+			SctEvent(n_name),
+			value(n_value)
 		{}
 		virtual ~TypedSctEvent() {}
 		const T value;
@@ -64,30 +64,30 @@ namespace mouseselect_events
 	class SctEvent_Gui_onSelect : public SctEvent
 	{
 	public:
-		SctEvent_Gui_onSelect(MouseSelectEventName name) : SctEvent(name) {};
+		SctEvent_Gui_onSelect(MouseSelectEventName n_name) : SctEvent(n_name) {};
 	};
 	class SctEvent_Gui_onDisable : public SctEvent
 	{
 	public:
-		SctEvent_Gui_onDisable(MouseSelectEventName name) : SctEvent(name) {};
+		SctEvent_Gui_onDisable(MouseSelectEventName n_name) : SctEvent(n_name) {};
 	};
 	class SctEvent_Gui_mouseDown : public TypedSctEvent<SCT_point>
 	{
 	public:
-		SctEvent_Gui_mouseDown(MouseSelectEventName name, SCT_point value) :
-			TypedSctEvent(name, value) {};
+		SctEvent_Gui_mouseDown(MouseSelectEventName n_name, SCT_point n_value) :
+			TypedSctEvent(n_name, n_value) {};
 	};
 	class SctEvent_Gui_mouseMove : public TypedSctEvent<SCT_point>
 	{
 	public:
-		SctEvent_Gui_mouseMove(MouseSelectEventName name, SCT_point value) :
-			TypedSctEvent(name, value) {};
+		SctEvent_Gui_mouseMove(MouseSelectEventName n_name, SCT_point n_value) :
+			TypedSctEvent(n_name, n_value) {};
 	};
 	class SctEvent_Gui_mouseUp : public TypedSctEvent<SCT_point>
 	{
 	public:
-		SctEvent_Gui_mouseUp(MouseSelectEventName name, SCT_point value) :
-			TypedSctEvent(name, value) {};
+		SctEvent_Gui_mouseUp(MouseSelectEventName n_name, SCT_point n_value) :
+			TypedSctEvent(n_name, n_value) {};
 	};
 
 }
@@ -207,7 +207,7 @@ public:
 	class View
 	{
 	public:
-		View(MouseSelect * parent);
+		View(MouseSelect * n_parent);
 
 
 

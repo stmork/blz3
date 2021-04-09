@@ -36,9 +36,10 @@ class b3TestElement : public b3Link<b3TestElement>
 	int element;
 
 public:
-	b3TestElement(int element = 0) : b3Link<b3TestElement>(sizeof(b3TestElement), TEST_CLASS_TYPE)
+	b3TestElement(int new_element = 0) :
+		b3Link<b3TestElement>(sizeof(b3TestElement), TEST_CLASS_TYPE)
 	{
-		this->element = element;
+		this->element = new_element;
 	}
 
 	inline void operator=(const int & value)
@@ -234,11 +235,11 @@ public:
 		b3Base<b3TestElement>::iterator         first = src.begin();
 		b3Base<b3TestElement>::reverse_iterator last  = src.rbegin();
 
-		b3TestElement * f = first;
-		b3TestElement * l = last;
+		b3TestElement * tf = first;
+		b3TestElement * tl = last;
 
-		CPPUNIT_ASSERT_EQUAL(f, src.First);
-		CPPUNIT_ASSERT_EQUAL(l, src.Last);
+		CPPUNIT_ASSERT_EQUAL(tf, src.First);
+		CPPUNIT_ASSERT_EQUAL(tl, src.Last);
 
 		CPPUNIT_ASSERT_NO_THROW(src.b3Sort(sorter));
 		CPPUNIT_ASSERT_EQUAL(&b, src.First);

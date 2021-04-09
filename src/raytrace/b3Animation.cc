@@ -236,10 +236,10 @@ void b3Scene::b3ResetAnimation()
 void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 {
 	b3AnimElement * Anim;
-	b3Item    *    item;
-	b3_vector      lower, upper;
-	b3_matrix      resetMatrix;
-	b3_f64         tClipped;
+	b3Item     *    item;
+	b3_vector       lower, upper;
+	b3_matrix       resetMatrix;
+	b3_f64          tClipped;
 
 	t = b3Math::b3Round(t, b3AnimElement::epsilon);
 	b3PrintF(B3LOG_FULL, "<-- TIME POINT %3.3f -->\n", t);
@@ -262,7 +262,9 @@ void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 	}
 
 	// now: Animate the elements
-	B3_FOR_TYPED_BASE(b3AnimElement, b3GetAnimElementHead(), Anim)
+	for (Anim = static_cast<b3AnimElement *>(b3GetAnimElementHead()->First);
+		Anim != nullptr;
+		Anim = static_cast<b3AnimElement *>(Anim->Succ))
 	{
 		Anim->m_Center = m_AnimCenter;
 		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)

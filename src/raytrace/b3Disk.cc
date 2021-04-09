@@ -151,13 +151,13 @@ void b3Disk::b3ComputeVertices()
 
 void b3Disk::b3ComputeIndices()
 {
-	b3_gl_line  *  gPtr;
+	b3_gl_line   *  gPtr;
 	b3_gl_polygon * pPtr;
-	b3_bool        EndLines = false;
-	b3_index       i, pos;
-	b3_count       Overhead;
-	b3_count       grid_count = 0;
-	b3_count       poly_count = 0;
+	b3_bool         EndLines = false;
+	b3_index        i, pos;
+	b3_count        Overhead;
+	b3_count        grid_count = 0;
+	b3_count        poly_count = 0;
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead(0.0, 0.0);

@@ -263,20 +263,20 @@ bool b3Tx::b3AddHist(
 	if (type == B3_TX_FLOAT)
 	{
 		b3_coord   x, y;
-		b3_color * cPtr;
+		b3_color * fPtr;
 
-		cPtr  = data;
-		cPtr += yStart * xSize;
+		fPtr  = data;
+		fPtr += yStart * xSize;
 		for (y = yStart; y < yStop; y++)
 		{
 			for (x = xStart; x < xStop; x++)
 			{
-				b3_color result = b3Color(cPtr[x]) * m_RgbEyeStimulus * 255.0;
+				b3_color result = b3Color(fPtr[x]) * m_RgbEyeStimulus * 255.0;
 				const b3_index grey = result.r + result.g + result .b;
 
 				histogramme[std::max(grey, B3_TX_MAX_HISTGRM - 1)]++;
 			}
-			cPtr += xSize;
+			fPtr += xSize;
 		}
 		return true;
 	}
@@ -473,7 +473,7 @@ bool b3Tx::b3TransToBW(b3_index threshold)
 	b3_color   *   cPtr;
 	b3_coord       x, y;
 	b3_count       xBytes, newSize;
-	b3_index       i, grey;
+	b3_index       i;
 	b3_u08         byte;
 	b3_f64         r, g, b;
 	b3_pkd_color   bit;
@@ -527,6 +527,8 @@ bool b3Tx::b3TransToBW(b3_index threshold)
 			i    =   0;
 			for (x = 0; x < xSize; x++)
 			{
+				b3_u08 grey;
+
 				if (grey_palette)
 				{
 					grey = *bPtr++;

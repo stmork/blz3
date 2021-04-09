@@ -71,8 +71,8 @@ void b3TriangleShape::b3Clear()
 bool b3TriangleShape::b3Init(
 	b3_count vertex_count,
 	b3_count tria_count,
-	b3_res   xSize,
-	b3_res   ySize)
+	b3_res   new_xSize,
+	b3_res   new_ySize)
 {
 	if (m_VertexCount != vertex_count)
 	{
@@ -87,8 +87,8 @@ bool b3TriangleShape::b3Init(
 		m_TriaCount = tria_count;
 		m_Triangles = b3Item::b3TypedAlloc<b3_triangle>(m_TriaCount);
 	}
-	m_xSize = xSize;
-	m_ySize = ySize;
+	m_xSize = new_xSize;
+	m_ySize = new_ySize;
 
 	return (m_Vertices != nullptr) && (m_Triangles != nullptr);
 }

@@ -613,8 +613,8 @@ void b3Shape::b3ComputeSphereVertices(
 	Dir3.y = 0;
 	Dir3.z = Rad;
 	Circles = (SinCosSteps >> 1) + 1;
-	xSize	 = SinCosSteps + 1;
-	ySize  = Circles;
+	xSize   = SinCosSteps + 1;
+	ySize   = Circles;
 
 	a = 2.0 / SinCosSteps;
 	for (j = 0 ; j < Circles; j++)
@@ -1323,8 +1323,7 @@ void b3Shape::b3ComputeBoxVertices(
 
 	for (i = 0; i < 8; i++)
 	{
-		glVertex[i +  8] =
-			glVertex[i + 16] = glVertex[i];
+		glVertex[i +  8] = glVertex[i + 16] = glVertex[i];
 	}
 }
 

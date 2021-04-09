@@ -47,7 +47,7 @@
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3_u32    *    LongData;
-	b3HeaderTIFF * TIFF;
+	b3HeaderTIFF * header;
 	b3HeaderSGI  * b3HeaderSGI;
 	b3_size        pos;
 	b3_coord       x, y;
@@ -101,8 +101,8 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 #ifdef HAVE_LIBTIFF
 	// TIFF
-	TIFF = (b3HeaderTIFF *)buffer;
-	if ((TIFF->TypeCPU == B3_BIG_ENDIAN) || (TIFF->TypeCPU == B3_LITTLE_ENDIAN))
+	header = (b3HeaderTIFF *)buffer;
+	if ((header->TypeCPU == B3_BIG_ENDIAN) || (header->TypeCPU == B3_LITTLE_ENDIAN))
 	{
 #ifndef USE_TIFFLIB_LOAD
 		if (TIFF->VersionTIFF == 0x2a00)

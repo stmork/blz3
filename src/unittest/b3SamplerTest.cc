@@ -142,7 +142,7 @@ class b3WoodSampler : public b3ImageSampler, public b3Wood
 public:
 	b3WoodSampler(b3Tx * tx) : b3ImageSampler(tx)
 	{
-		b3_vector scale;
+		b3_vector scale_vector;
 		b3_f64    scalar = 200.0 / SAMPLE_RESOLUTION;
 
 		m_Translate = SAMPLE_RESOLUTION >> 1;
@@ -150,8 +150,8 @@ public:
 		m_Light     = B3_WHITE;
 
 		b3InitWood();
-		b3Vector::b3Init(&scale, scalar, scalar, scalar);
-		b3PrepareWood(&scale);
+		b3Vector::b3Init(&scale_vector, scalar, scalar, scalar);
+		b3PrepareWood(&scale_vector);
 	}
 
 protected:
@@ -180,7 +180,7 @@ class b3PlankSampler : public b3ImageSampler, public b3OakPlank
 public:
 	b3PlankSampler(b3Tx * tx) : b3ImageSampler(tx)
 	{
-		b3_vector scale;
+		b3_vector scale_vector;
 		b3_f64    scalar = 10;
 
 		m_Scale     = 1.0 / SAMPLE_RESOLUTION;
@@ -192,8 +192,8 @@ public:
 		m_xOffset = 0.52;
 		m_RingFrequency *= 0.1;
 #endif
-		b3Vector::b3Init(&scale, scalar, scalar, scalar);
-		b3PrepareOakPlank(&scale);
+		b3Vector::b3Init(&scale_vector, scalar, scalar, scalar);
+		b3PrepareOakPlank(&scale_vector);
 	}
 
 protected:

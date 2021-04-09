@@ -19,6 +19,7 @@
 #define B3_IMAGE_TXTIFF_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3List.h"
 
 /*************************************************************************
 **                                                                      **
@@ -101,10 +102,9 @@ public:
 	~b3TIFF_Entry();
 	long  b3WriteTag(b3FileAbstract * file_handle, b3Base<b3TIFF_Strip> *, long, long);
 	long  b3WriteData(b3FileAbstract * file_handle, long);
-	void  b3Traverse(
-		b3Base<class T> * head,
+	void  b3Traverse(b3Base<class T> * head,
 		void (*func)(b3Base<class T> * base, b3Link<class T> * link, void * ptr),
-		void      *      ptr);
+		void      *      custom_ptr);
 	void  b3RemoveIFW(b3Base<b3TIFF_Entry> *);
 	long  b3OrgTags(long);
 	long  b3OrgStrips(long);
@@ -125,7 +125,7 @@ class b3TIFF_Dir : public b3Link<b3TIFF_Dir>
 	long                  offset;		// offset of this dir structure
 	long                  next;			// offset of next dir structure
 public:
-	b3TIFF_Dir(char *, struct TagTIFF *, long);
+	b3TIFF_Dir(char * Data, struct TagTIFF *, long);
 	~b3TIFF_Dir();
 	void            b3Append(b3TIFF_Strip *);
 	void            b3Append(b3TIFF_Entry *);
@@ -154,11 +154,11 @@ class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 {
 	b3Base<b3TIFF_Dir>  dirs;
 	unsigned long       end;
-	b3HeaderTIFF          head;
+	b3HeaderTIFF        head;
 	long                offset;	// offset of this header (= 0)
 
 public:
-	b3TIFF(struct b3HeaderTIFF *);
+	b3TIFF(struct b3HeaderTIFF * header);
 	b3TIFF();
 	~b3TIFF();
 	long  b3DirCount();
@@ -169,8 +169,7 @@ public:
 	long  b3OrgTags(long);
 	void  b3OrgStrips();
 	void  b3TravRemoveIFW();
-	void  b3Traverse(
-		b3Base<class T> * head,
+	void  b3Traverse(b3Base<class T> * tiff_head,
 		void (*func)(b3Base<class T> *, b3Link<class T> *, void *),
 		void       *      ptr);
 
@@ -185,7 +184,7 @@ public:
 
 private:
 	static void           b3ChangeTag(void * PtrTIFF, struct TagTIFF * DataTag);
-	static void           b3ChangeTIFF(struct b3HeaderTIFF * TIFF);
+	static void           b3ChangeTIFF(struct b3HeaderTIFF * header);
 	static void     *     b3LogFuncPtr;
 	static b3LogTiffFunc  b3LogFuncTIFF;
 	static void           b3SetLogTiffFunc(b3LogTiffFunc log_func, void * ptr);

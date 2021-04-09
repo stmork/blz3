@@ -1657,16 +1657,14 @@ void b3Tx::b3VGAScaleToRGB8(
 	const b3_count * rIndex,
 	const b3_count * cIndex)
 {
-	b3_u08    *   cSrc;
+	b3_u08    *    cSrc;
 	b3_pkd_color * lDst;
-	b3_pkd_color * palette;
-	b3_coord      x, y, sx, sy, ix, iy;
-	b3_count      count = 0;
-	b3_pkd_color  rVal, gVal, bVal, color;
+	b3_coord       x, y, sx, sy, ix, iy;
+	b3_count       count = 0;
+	b3_pkd_color   rVal, gVal, bVal, color;
 
 	lDst    = b3GetTrueColorData();
 	cSrc    = srcTx->b3GetIndexData();
-	palette = srcTx->b3GetPalette();
 	for (y = 0; y < ySize; y++)
 	{
 		for (x = 0; x < xSize; x++)
@@ -1690,7 +1688,7 @@ void b3Tx::b3VGAScaleToRGB8(
 					sx < rIndex[x + ix];
 					sx++)
 				{
-					color = palette[cSrc[sx + sy * srcTx->xSize]];
+					color = srcTx->palette[cSrc[sx + sy * srcTx->xSize]];
 					rVal += (color & 0xff0000) >> 16;
 					gVal += (color & 0x00ff00) >>  8;
 					bVal += (color & 0x0000ff);

@@ -74,7 +74,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 	b3_coord  xSrcOff,
 	b3_coord  ySrcOff)
 {
-	b3_pkd_color * lDst, *palette;
+	b3_pkd_color * lDst;
 	b3_u08    *    cSrc;
 	b3_coord       x, srcMod, SrcOff;
 	b3_coord       y, dstMod, DstOff;
@@ -109,7 +109,6 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 		DstOff = yDstOff * xSize + xDstOff;
 
 		// compute start pointer
-		palette = srcTx->b3GetPalette();
 		cSrc    = srcTx->data;
 		lDst    = data;
 		cSrc   += SrcOff;
@@ -128,7 +127,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 			for (x = 0; x < xMax; x++)
 			{
 
-				*lDst++ = palette[cSrc[ind] & bit ? 1 : 0];
+				*lDst++ = srcTx->palette[cSrc[ind] & bit ? 1 : 0];
 				bit     = bit >> 1;
 				if (bit == 0)
 				{

@@ -216,11 +216,11 @@ void b3ColorTest::testPkdColor()
 
 void b3ColorTest::testSaturation()
 {
-	b3Color color;
+	b3Color test_color;
 
-	color.b3Init(2.0, 0.5, -1.5);
+	test_color.b3Init(2.0, 0.5, -1.5);
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xff8000, color);
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xff8000, test_color);
 }
 
 void b3ColorTest::testColor(

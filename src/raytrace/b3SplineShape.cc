@@ -509,14 +509,14 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 
 bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_vertex  * Vertex;
+	b3_vertex  *  Vertex;
 	b3_triangle * Triangle;
-	b3_vector  * Vector;
-	b3_vector  * Between;
-	b3Spline     MySpline;
-	b3_res       xSize, ySize, x, y;
-	b3_count     SubDiv, TriaCount, VertexCount;
-	b3_vector    VertexField[B3_MAX_SUBDIV + 1];
+	b3_vector  *  Vector;
+	b3_vector  *  Between;
+	b3Spline      MySpline;
+	b3_res        x, y;
+	b3_count      SubDiv, TriaCount, VertexCount;
+	b3_vector     VertexField[B3_MAX_SUBDIV + 1];
 
 	Between = b3Item::b3TypedAlloc<b3_vector>((B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
 	if (Between == nullptr)

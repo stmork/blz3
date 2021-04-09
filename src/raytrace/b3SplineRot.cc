@@ -100,13 +100,13 @@ void b3SplineRotShape::b3Init(
 
 bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3Spline     MySpline;
+	b3Spline      MySpline;
 	b3_triangle * Triangle;
-	b3_matrix    Matrix;
-	b3_res       xSize, ySize, x, y;
-	b3_count     VertexCount, TriaCount;
-	b3_vector    Between[B3_MAX_CONTROLS + 1];
-	b3_vector    VertexField[B3_MAX_SUBDIV + 1];
+	b3_matrix     Matrix;
+	b3_res        x, y;
+	b3_count      VertexCount, TriaCount;
+	b3_vector     Between[B3_MAX_CONTROLS + 1];
+	b3_vector     VertexField[B3_MAX_SUBDIV + 1];
 
 	// Create aux BSpline
 	MySpline            = m_Spline;

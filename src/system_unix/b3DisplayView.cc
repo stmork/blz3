@@ -264,12 +264,13 @@ public:
 **                                                                      **
 *************************************************************************/
 
-static b3Mutex  display_mutex;
 #ifdef HAVE_LIBX11
-static Colormap cmap;
+Colormap b3DisplayView::m_Cmap;
+b3_count b3DisplayView::m_CmapCount;
 #endif
-static b3_count cmap_count;
-static long     count = READY;
+
+b3Mutex  b3DisplayView::m_DisplayMutex;
+long     b3DisplayView::m_Count = READY;
 
 b3DisplayView::b3DisplayView(const char * title) : b3Display(title)
 {
@@ -340,15 +341,15 @@ b3_bool b3DisplayView::b3IsCancelled(
 
 	// CRITICAL SECTION
 	{
-		b3CriticalSection lock(display_mutex);
+		b3CriticalSection lock(m_DisplayMutex);
 
-		if (--count > 0)
+		if (--m_Count > 0)
 		{
 			really_ask = false;
 		}
 		else
 		{
-			count      = READY;
+			m_Count    = READY;
 			really_ask = true;
 		}
 	}
@@ -549,7 +550,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 	XVisualInfo * info;
 	XVisualInfo   temp;
 	b3_bool       result = false;
-	int           count, i;
+	int           count  = 0;
 
 	// use existing color map
 	m_Colormap = 0;
@@ -578,7 +579,7 @@ b3_bool b3DisplayView::b3CreateColormap()
 		temp.depth    = m_depth;
 		info = XGetVisualInfo(m_Display, VisualIDMask | VisualScreenMask | VisualDepthMask, &temp, &count);
 		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %ld.\n", count, info, m_depth);
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			b3PrintF(B3LOG_FULL, "%2d: %08lx %08lx %08lx # %4d %4d # %08x\n", i,
 				info[i].red_mask,
@@ -613,12 +614,12 @@ b3_bool b3DisplayView::b3CreateColormap()
 		return false;
 	}
 
-	b3CriticalSection lock(display_mutex);
+	b3CriticalSection lock(m_DisplayMutex);
 
-	if (cmap != 0)
+	if (m_Cmap != 0)
 	{
-		cmap_count++;
-		m_Colormap = cmap;
+		m_CmapCount++;
+		m_Colormap = m_Cmap;
 		result     = true;
 	}
 	else
@@ -627,12 +628,12 @@ b3_bool b3DisplayView::b3CreateColormap()
 		XColor  NewColors[256];
 
 		// create color map
-		cmap = XCreateColormap(
+		m_Cmap = XCreateColormap(
 				m_Display,
 				m_Window,
 				DefaultVisual(m_Display, m_Screen),
 				AllocAll);
-		if (cmap != 0)
+		if (m_Cmap != 0)
 		{
 			// compute colors
 			iMax = sizeof(NewColors) / sizeof(XColor);
@@ -647,9 +648,9 @@ b3_bool b3DisplayView::b3CreateColormap()
 			}
 
 			// init color map
-			XStoreColors(m_Display, cmap, NewColors, iMax);
-			cmap_count++;
-			m_Colormap = cmap;
+			XStoreColors(m_Display, m_Cmap, NewColors, iMax);
+			m_CmapCount++;
+			m_Colormap = m_Cmap;
 			result     = true;
 		}
 	}
@@ -659,14 +660,14 @@ b3_bool b3DisplayView::b3CreateColormap()
 
 void b3DisplayView::b3FreeColormap()
 {
-	b3CriticalSection lock(display_mutex);
+	b3CriticalSection lock(m_DisplayMutex);
 
-	if (--cmap_count <= 0)
+	if (--m_CmapCount <= 0)
 	{
 		if (m_depth == 8)
 		{
 			XFreeColormap(m_Display, m_Colormap);
-			cmap = 0;
+			m_Cmap = 0;
 		}
 	}
 }
@@ -726,7 +727,7 @@ void b3DisplayView::b3PutTx(b3Tx * tx)
 inline void b3DisplayView::b3RefreshRow(const b3_coord y)
 {
 	b3_color * ptr = &m_Buffer[y * m_xMax];
-	b3_coord  x;
+	b3_coord   x;
 
 	for (x = 0; x < m_xs; x++)
 	{

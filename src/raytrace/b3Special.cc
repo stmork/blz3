@@ -731,7 +731,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 {
 	b3_f32    *   samples;
 	b3_f64        start, step;
-	b3_coord      i, sx, sy;
+	b3_coord      sx, sy;
 	b3_coord      spp;
 	b3_sample     type;
 
@@ -760,7 +760,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	samples = m_Samples;
 	start   = 1.0;
 	step    = 2.0 / spp;
-	for (i = 0; i < xSize; i++)
+	for (b3_coord i = 0; i < xSize; i++)
 	{
 		switch (type)
 		{

@@ -433,6 +433,7 @@ public:
 	 *
 	 * @return The palette data.
 	 */
+	[[nodiscard]]
 	b3_pkd_color * b3GetPalette() const noexcept
 	{
 		return palette;
@@ -540,6 +541,7 @@ public:
 	 *
 	 * @return The file name of the image.
 	 */
+	[[nodiscard]]
 	const char  *  b3Name() const noexcept
 	{
 		return image_name;
@@ -632,6 +634,7 @@ public:
 	 *
 	 * @return True if this image is b/w.
 	 */
+	[[nodiscard]]
 	inline bool    b3IsBW() const noexcept
 	{
 		return (depth == 1) && (type == B3_TX_ILBM);
@@ -642,6 +645,7 @@ public:
 	 *
 	 * @return True if this image is high color.
 	 */
+	[[nodiscard]]
 	inline bool    b3IsHighColor() const noexcept
 	{
 		return ((depth == 12) || (depth == 16)) && (type == B3_TX_RGB4);
@@ -652,6 +656,7 @@ public:
 	 *
 	 * @return True if this image is true color.
 	 */
+	[[nodiscard]]
 	inline bool    b3IsTrueColor() const noexcept
 	{
 		return (depth >= 24) && ((type == B3_TX_RGB8) || (type == B3_TX_FLOAT));
@@ -662,6 +667,7 @@ public:
 	 *
 	 * @return True if this image is a high dynamic range image.
 	 */
+	[[nodiscard]]
 	inline bool    b3IsHdr() const noexcept
 	{
 		return (depth >= 96) && (type == B3_TX_FLOAT);
@@ -682,6 +688,7 @@ public:
 	 *
 	 * @return True if this image is a palettized grey image.
 	 */
+	[[nodiscard]]
 	bool           b3IsGreyPalette() const noexcept;
 
 	// b3TxBlit.cc
