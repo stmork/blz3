@@ -21,7 +21,9 @@
 #define B3_BASE_MATRIX_H
 
 #include "blz3/b3Config.h"
+
 #include <float.h>
+#include <string>
 
 /**
  * This class gives some static convenience methods for vector handing.
@@ -2260,7 +2262,9 @@ public:
 	 * @param title An additional comment.
 	 * @return The input matrix.
 	 */
-	static b3_matrix * b3Dump(b3_matrix * mtx, const char * title = nullptr);
+	static const b3_matrix * b3Dump(const b3_matrix * mtx, const char * title = nullptr);
+
+	static std::string b3ToString(const b3_matrix * mtx, const char * title);
 
 	/**
 	 * This method tests if the given transformation matrix is a unit matrix.

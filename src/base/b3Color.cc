@@ -29,3 +29,18 @@
 **                        color variables                               **
 **                                                                      **
 *************************************************************************/
+
+void b3Color::b3Dump() const
+{
+	const std::string & text = *this;
+
+	b3PrintF(B3LOG_NORMAL, "%s\n", text.c_str());
+}
+
+std::ostream & operator<< (std::ostream & out, const b3Color & color)
+{
+	const std::string & text = color;
+
+	out << text;
+	return out;
+}

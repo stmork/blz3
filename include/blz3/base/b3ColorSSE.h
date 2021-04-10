@@ -25,6 +25,8 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Color.h"
 
+#include <string>
+
 /**
  * This class provides color handling. It uses modern command sets
  * like SSE if the compiler can generate this and the underlying cpu
@@ -768,6 +770,19 @@ public:
 		return result;
 	}
 
+	inline operator std::string() const
+	{
+		alignas(16) b3_f32 a[4];
+		char               buffer[128];
+
+		_mm_store_ps(a, v);
+		snprintf(buffer, sizeof(buffer),
+			"b3Color(A=%1.03f RGB=%1.03f/%1.03f/%1.03f)",
+			a[A], a[R], a[G], a[B]);
+
+		return std::string(buffer);
+	}
+
 	/*************************************************************************
 	**                                                                      **
 	**                        Arithmetic modifiers                          **
@@ -905,14 +920,13 @@ public:
 		return result;
 	}
 
-	inline void b3Dump() const
-	{
-		alignas(16) b3_f32 a[4];
+	/**
+	 * This method simply dumps the contents of this b3Color instance using
+	 * the b3PrintF() method.
+	 */
+	void b3Dump() const;
 
-		_mm_store_ps(a, SSE_PS_LOAD(v));
-		b3PrintF(B3LOG_NORMAL, "r=%1.3f g=%1.3f b=%1.3f # a=%1.3f\n",
-			a[R], a[G], a[B], a[A]);
-	}
+	friend std::ostream & operator<< (std::ostream & out, const b3Color & color);
 
 #ifdef WIN32
 	/**

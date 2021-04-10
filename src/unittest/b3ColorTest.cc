@@ -197,6 +197,8 @@ void b3ColorTest::testColor()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x20202040, bc);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u16, 0xb48f, ac);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u16, 0x2224, bc);
+
+	CPPUNIT_ASSERT_NO_THROW(color.b3Dump());
 }
 
 void b3ColorTest::testPkdColor()
@@ -278,7 +280,7 @@ void b3ColorTest::testColor(
 	CPPUNIT_ASSERT_EQUAL(r, tr);
 	CPPUNIT_ASSERT_EQUAL(g, tg);
 	CPPUNIT_ASSERT_EQUAL(b, tb);
-	CPPUNIT_ASSERT(b3Color(r, g, b, a) == color);
+	CPPUNIT_ASSERT_EQUAL(b3Color(r, g, b, a), color);
 }
 
 #endif

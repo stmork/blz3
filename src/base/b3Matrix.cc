@@ -749,16 +749,39 @@ b3_matrix * b3Matrix::b3Dress(
 	return transform;
 }
 
-b3_matrix * b3Matrix::b3Dump(b3_matrix * m, const char * title)
+const b3_matrix * b3Matrix::b3Dump(const b3_matrix * m, const char * title)
 {
-	b3PrintF(B3LOG_FULL, "%s (m=%p)\n", title != nullptr ? title : "b3Matrix::b3Dump", m);
+	const std::string & test = b3ToString(m, title);
+
+	b3PrintF(B3LOG_FULL, "%s\n", test.c_str());
+	return m;
+}
+
+std::string b3Matrix::b3ToString(const b3_matrix * m, const char * title)
+{
+	std::string result;
+	char        head[128];
+
+	snprintf(head, sizeof(head),
+		"%s (m=%p)\n",
+		title != nullptr ? title : "b3Matrix::b3Dump", m);
+	result = head;
 
 	if (m != nullptr)
 	{
-		b3PrintF(B3LOG_FULL, "%3.3f %3.3f %3.3f %3.3f\n", m->m11, m->m12, m->m13, m->m14);
-		b3PrintF(B3LOG_FULL, "%3.3f %3.3f %3.3f %3.3f\n", m->m21, m->m22, m->m23, m->m24);
-		b3PrintF(B3LOG_FULL, "%3.3f %3.3f %3.3f %3.3f\n", m->m31, m->m32, m->m33, m->m34);
-		b3PrintF(B3LOG_FULL, "%3.3f %3.3f %3.3f %3.3f\n", m->m41, m->m42, m->m43, m->m44);
+		char buffer[256];
+
+		snprintf(buffer, sizeof(buffer),
+			"%3.03f %3.03f %3.03f %3.03f\n"
+			"%3.03f %3.03f %3.03f %3.03f\n"
+			"%3.03f %3.03f %3.03f %3.03f\n"
+			"%3.03f %3.03f %3.03f %3.03f\n",
+			m->m11, m->m12, m->m13, m->m14,
+			m->m21, m->m22, m->m23, m->m24,
+			m->m31, m->m32, m->m33, m->m34,
+			m->m41, m->m42, m->m43, m->m44);
+
+		result += std::string(buffer);
 	}
-	return m;
+	return result;
 }
