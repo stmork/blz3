@@ -389,8 +389,10 @@ void b3MatrixTest::testMatrix()
 	CPPUNIT_ASSERT_EQUAL(0.0, bd.y);
 	CPPUNIT_ASSERT_EQUAL(4.0, bd.z);
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(const b3_matrix *, &am,
-		b3Matrix::b3Dump(&am, "Matrix unit test"));
+	CPPUNIT_ASSERT_TYPED_EQUAL(const b3_matrix *, &am, b3Matrix::b3Dump(&am));
+
+	CPPUNIT_ASSERT_TYPED_EQUAL(const b3_matrix *, &bm,
+		b3Matrix::b3Dump(&bm, "Matrix unit test"));
 }
 
 #endif
