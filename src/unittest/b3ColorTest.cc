@@ -276,11 +276,11 @@ void b3ColorTest::testColor(
 	b3_f32 tg = color[b3Color::G];
 	b3_f32 tb = color[b3Color::B];
 
+	CPPUNIT_ASSERT_EQUAL(b3Color(r, g, b, a), color);
 	CPPUNIT_ASSERT_EQUAL(a, ta);
 	CPPUNIT_ASSERT_EQUAL(r, tr);
 	CPPUNIT_ASSERT_EQUAL(g, tg);
 	CPPUNIT_ASSERT_EQUAL(b, tb);
-	CPPUNIT_ASSERT_EQUAL(b3Color(r, g, b, a), color);
 }
 
 #endif
