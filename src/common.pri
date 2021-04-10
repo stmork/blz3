@@ -14,10 +14,14 @@ BLZ3_LCOV    = $$BLZ3_HOME/lcov-out
 
 include(flags.pri)
 
-QMAKE_CXXFLAGS         += -Wextra -Wshadow
-QMAKE_CXXFLAGS_DEBUG   += -Wsuggest-override -D_DEBUG
+QMAKE_CXXFLAGS         += -std=c++17 # qmake 5.9.x does not support C++17 :-(
+QMAKE_CXXFLAGS         += -Wextra -Wshadow -Wsuggest-override
 QMAKE_CXXFLAGS_RELEASE  = $$replace(QMAKE_CXXFLAGS_RELEASE,"-O2","-O3")
 QMAKE_CLEAN            += *.gcno *.gcda coverage.info
+
+linux:CONFIG(debug) {
+	DEFINES        += _DEBUG
+}
 
 linux:CONFIG(gcov) {
 	QMAKE_CXXFLAGS += --coverage

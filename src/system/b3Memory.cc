@@ -202,6 +202,20 @@ b3_bool b3Mem::b3Free()
 	return true;
 }
 
+b3_index b3Mem::b3Count() const
+{
+	b3_index count = 0;
+
+	for (b3_index i = 0; i < m_SlotMax; i++)
+	{
+		if (m_SlotPtr[i].m_Ptr != nullptr)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
 void b3Mem::b3Dump()
 {
 	const std::string & text(*this);

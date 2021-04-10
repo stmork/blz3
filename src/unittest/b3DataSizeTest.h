@@ -25,24 +25,11 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "blz3/system/b3Memory.h"
-
-using namespace std;
-
-#define MEM_MIN         1000
-#define MEM_LOW_MULT       2
-#define MEM_HIGH_MULT    200
-
 class b3DataSizeTest : public CppUnit::TestFixture
 {
-	b3Mem     mem;
-	b3_u08    buffer[MEM_MIN];
-	void   *  ptr1, *ptr2;
-
 	CPPUNIT_TEST_SUITE(b3DataSizeTest);
 	CPPUNIT_TEST(testAlignment);
 	CPPUNIT_TEST(testDataSize);
-	CPPUNIT_TEST(testMemory);
 	CPPUNIT_TEST(testSwap);
 	CPPUNIT_TEST_SUITE_END();
 
@@ -52,7 +39,6 @@ public:
 
 	void testAlignment();
 	void testDataSize();
-	void testMemory();
 	void testSwap();
 };
 

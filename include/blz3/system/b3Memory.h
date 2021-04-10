@@ -132,6 +132,13 @@ public:
 	b3_bool  b3Free();
 
 	/**
+	 * This method returns the number of managed memory chunks.
+	 *
+	 * @return The number of managed memory chunks.
+	 */
+	b3_index b3Count() const;
+
+	/**
 	 * This method simply dumps all memory chunks for debugging purposes.
 	 */
 	void     b3Dump();

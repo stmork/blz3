@@ -5,7 +5,7 @@ set -e
 export BLZ3_HOME=$PWD
 export LD_LIBRARY_PATH=$BLZ3_HOME/lib
 
-export OFLAGS="-O2"
+export OFLAGS="-O3"
 export CFLAGS=""
 export CXXFLAGS=""
 export CPPFLAGS=""

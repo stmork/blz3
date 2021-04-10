@@ -4,7 +4,7 @@ TEMPLATE = app
 
 include(../common.pri)
 
-HEADERS += \
+HEADERS += b3SkeletonTest.h \
 	b3AlignTest.h \
 	b3ArrayTest.h \
 	b3AuxTest.h \
@@ -23,17 +23,17 @@ HEADERS += \
 	b3MaterialTest.h \
 	b3MathTest.h \
 	b3MatrixTest.h \
+	b3MemoryTest.h \
 	b3PathTest.h \
 	b3RandomTest.h \
 	b3SamplerTest.h \
 	b3SelfTestSuite.h \
-	b3SkeletonTest.h \
 	b3SplineTest.h \
 	b3TimeTest.h \
 	b3VectorTest.h \
 	b3WorldTest.h
 
-SOURCES += \
+SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3AlignTest.cc \
 	b3ArrayTest.cc \
 	b3AuxTest.cc \
@@ -52,16 +52,15 @@ SOURCES += \
 	b3MaterialTest.cc \
 	b3MathTest.cc \
 	b3MatrixTest.cc \
+	b3MemoryTest.cc \
 	b3PathTest.cc \
 	b3RandomTest.cc \
 	b3SamplerTest.cc \
 	b3SelfTestSuite.cc \
-	b3SkeletonTest.cc \
 	b3SplineTest.cc \
 	b3TimeTest.cc \
 	b3VectorTest.cc \
 	b3WorldTest.cc \
-	basetest.cc
 
 LIBS        += -L$$BLZ3_LIB
 LIBS        += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System

@@ -22,9 +22,8 @@
 
 #define REALLY_FREE
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <strings.h>
+#include <cstdlib>
 
 #include "blz3/b3Types.h"
 
@@ -44,7 +43,7 @@ public:
 	[[nodiscard]]
 	static inline void * b3Alloc(const b3_size size)
 	{
-		void * ptr = std::aligned_alloc(16, size);
+		void * ptr = aligned_alloc(16, size);
 
 		if (ptr == nullptr)
 		{
