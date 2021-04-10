@@ -409,9 +409,25 @@ public:
 	 */
 	inline void b3Dump(const char * variable, const b3_log_level level = B3LOG_NORMAL) const
 	{
-		b3PrintF(level, "%s.re=%2.5f %s.im=%2.5f\n",
-			variable, v[Re],
-			variable, v[Im]);
+		b3PrintF(level, "%s\n", b3ToString(variable).c_str());
+	}
+
+	[[nodiscard]]
+	inline operator std::string() const
+	{
+		return b3ToString();
+	}
+
+	[[nodiscard]]
+	inline std::string b3ToString(const char * variable = nullptr) const
+	{
+		char buffer[128];
+
+		snprintf(buffer, sizeof(buffer), "%s(re=%2.5f im=%2.5f)",
+				 variable == nullptr ? "b3Complex" : variable,
+				 v[Re], v[Im]);
+
+		return std::string(buffer);
 	}
 };
 
