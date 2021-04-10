@@ -102,7 +102,7 @@ void * b3Mem::b3Alloc(const b3_size size)
 	return ptr;
 }
 
-void * b3Mem::b3Realloc(const void * old_ptr, const b3_size new_size)
+void * b3Mem::b3Realloc(void * old_ptr, const b3_size new_size)
 {
 	void   *   new_ptr  = nullptr;
 
@@ -154,7 +154,7 @@ void * b3Mem::b3Realloc(const void * old_ptr, const b3_size new_size)
 	return new_ptr;
 }
 
-b3_bool b3Mem::b3Free(const void * ptr)
+b3_bool b3Mem::b3Free(void * ptr)
 {
 	b3_index i;
 	b3_bool  found = false;
@@ -204,13 +204,29 @@ b3_bool b3Mem::b3Free()
 
 void b3Mem::b3Dump()
 {
-	b3CriticalSection lock(*this);
-	b3_index          i;
+	const std::string & text(*this);
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slot max: %ld  slot count: %ld\n", m_SlotMax, m_SlotCount);
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # slots: %p   initial slots: %p\n", m_SlotPtr, m_Slots);
-	for (i = 0; i < m_SlotMax; i++)
+	b3PrintF(B3LOG_FULL, "%s", text.c_str());
+}
+
+b3Mem::operator std::string()
+{
+	b3CriticalSection lock(*this);
+	std::string       result;
+	char              buffer[256];
+
+	snprintf(buffer, sizeof(buffer),
+		"### CLASS: b3Mem  # slot max: %ld  slot count: %ld\n"
+		"### CLASS: b3Mem  # slots: %p   initial slots: %p\n",
+			 m_SlotMax, m_SlotCount, m_SlotPtr, m_Slots);
+
+	result = buffer;
+	for (b3_index i = 0; i < m_SlotMax; i++)
 	{
-		b3PrintF(B3LOG_FULL, "### CLASS: b3Mem  # %3zd: %p\n", i, &m_SlotPtr[i]);
+		snprintf(buffer, sizeof(buffer),
+			"### CLASS: b3Mem  # %3zd: %p\n", i, &m_SlotPtr[i]);
+
+		result += buffer;
 	}
+	return result;
 }

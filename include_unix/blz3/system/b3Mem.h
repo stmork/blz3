@@ -41,10 +41,15 @@ public:
 	 * @param size The size of the new memory block.
 	 * @return The new memory block or null if there is no memory available.
 	 */
+	[[nodiscard]]
 	static inline void * b3Alloc(const b3_size size)
 	{
-		void * ptr = aligned_alloc(16, size);
+		void * ptr = std::aligned_alloc(16, size);
 
+		if (ptr == nullptr)
+		{
+			throw std::bad_alloc();
+		}
 		bzero(ptr, size);
 		return ptr;
 	}
@@ -52,10 +57,8 @@ public:
 	template<class T> static inline T * b3TypedAlloc(const b3_size elements = 1)
 	{
 		const b3_size size = elements * sizeof(T);
-		T      *      ptr  = static_cast<T *>(aligned_alloc(16, size));
 
-		bzero(ptr, size);
-		return ptr;
+		return static_cast<T *>(b3Alloc(size));
 	}
 
 	/**
@@ -63,10 +66,10 @@ public:
 	 *
 	 * @param ptr The pointer to the memory block.
 	 */
-	static inline void b3Free(const void * ptr)
+	static inline void b3Free(void * ptr)
 	{
 #ifdef REALLY_FREE
-		free((void *)ptr);
+		std::free(ptr);
 #endif
 	}
 };

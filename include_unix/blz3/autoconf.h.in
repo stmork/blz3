@@ -149,9 +149,6 @@
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
 
-/* Is operator new available? */
-#undef HAVE_NEW_OVERLOADING
-
 /* Define to 1 if you have the `pow' function. */
 #undef HAVE_POW
 
@@ -267,7 +264,7 @@
 /* Define as the return type of signal handlers (`int' or `void'). */
 #undef RETSIGTYPE
 
-/* Is operator new memory aligned at 16 */
+/* The compilation is SSE memory aligned */
 #undef SSE_ALIGNED
 
 /* Define to 1 if you have the ANSI C header files. */

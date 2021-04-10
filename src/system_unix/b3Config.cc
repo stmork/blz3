@@ -26,22 +26,11 @@
 #include <dlfcn.h>
 #include <locale.h>
 
-#ifdef HAVE_NEW_OVERLOADING
-#include <malloc.h>
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        b3Runtime static methods                      **
 **                                                                      **
 *************************************************************************/
-
-#ifdef HAVE_NEW_OVERLOADING
-void * operator new (size_t size)
-{
-	return memalign(16, size);
-}
-#endif
 
 b3Runtime::b3Runtime()
 {

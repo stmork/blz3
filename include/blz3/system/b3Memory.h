@@ -93,6 +93,7 @@ public:
 	 * @param size The requested memory size. This value can be 0 resulting in a null pointer.
 	 * @return The allocated memory pointer. Null means an error so please check!
 	 */
+	[[nodiscard]]
 	void  *  b3Alloc(const b3_size size);
 
 	template <class T> inline T * b3TypedAlloc(const b3_count count = 1)
@@ -112,7 +113,8 @@ public:
 	 * @param newsize  The requested memory size.
 	 * @return The new memory pointer.
 	 */
-	void  *  b3Realloc(const void * oldptr, const b3_size newsize);
+	[[nodiscard]]
+	void  *  b3Realloc(void * oldptr, const b3_size newsize);
 
 	/**
 	 * This method frees the specified memory chunk.
@@ -120,7 +122,7 @@ public:
 	 * @param ptr The memory pointer to free.
 	 * @return True if the memory chunk is handled and freed by this chunk handler.
 	 */
-	b3_bool  b3Free(const void * ptr);
+	b3_bool  b3Free(void * ptr);
 
 	/**
 	 * This method frees all memory chunks handled by this instance.
@@ -133,6 +135,8 @@ public:
 	 * This method simply dumps all memory chunks for debugging purposes.
 	 */
 	void     b3Dump();
+
+	operator std::string();
 
 	/**
 	 * This static method sets a specified text string into the specified

@@ -652,7 +652,6 @@ HAVE_X264_DELAYED_FRAMES
 HAVE_SSE3
 HAVE_SSE2
 HAVE_SSE
-HAVE_NEW_OVERLOADING
 HAVE_LIBCPPUNIT
 BLZ3_USE_X264
 BLZ3_USE_SSE3
@@ -4723,7 +4722,6 @@ BUILD=${BUILD_NUMBER:-0}
 
 
 
-
 BLZ3_HOME="$PWD"
 
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"
@@ -7295,93 +7293,6 @@ $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for operator new overloading" >&5
-$as_echo_n "checking for operator new overloading... " >&6; }
-if test "$cross_compiling" = yes; then :
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot run test program while cross compiling
-See \`config.log' for more details" "$LINENO" 5; }
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <malloc.h>
-
-#define no_DEBUG
-int counter = 0;
-
-class test
-{
-public:
-	test()
-	{
-		counter++;
-#ifdef _DEBUG
-		printf("<ctor this=%p> ", this);
-#endif
-	}
-
-	void call()
-	{
-		counter++;
-#ifdef _DEBUG
-		printf("<call> ");
-#endif
-	}
-
-	~test()
-	{
-		counter++;
-#ifdef _DEBUG
-		printf("<dtor> ");
-#endif
-	}
-};
-
-void *operator new (size_t size)
-{
-	void *ptr = memalign(16, size);
-#ifdef _DEBUG
-	printf("<ptr=%p> ", ptr);
-#endif
-	counter++;
-	return ptr;
-}
-
-int
-main ()
-{
-
-	test      *ptr = new test();
-	long int   ip  = reinterpret_cast<long int>(ptr);
-	ptr->call();
-	delete ptr;
-
-	return (counter == 4) && ((ip & 0xf) == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_run "$LINENO"; then :
-
-$as_echo "#define HAVE_NEW_OVERLOADING 1" >>confdefs.h
-
-$as_echo "#define SSE_ALIGNED 1" >>confdefs.h
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for X" >&5
 $as_echo_n "checking for X... " >&6; }

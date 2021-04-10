@@ -34,7 +34,6 @@ AC_SUBST(BLZ3_USE_SSE2)
 AC_SUBST(BLZ3_USE_SSE3)
 AC_SUBST(BLZ3_USE_X264)
 AC_SUBST(HAVE_LIBCPPUNIT)
-AC_SUBST(HAVE_NEW_OVERLOADING)
 AC_SUBST(HAVE_SSE)
 AC_SUBST(HAVE_SSE2)
 AC_SUBST(HAVE_SSE3)
@@ -183,63 +182,6 @@ AC_MSG_CHECKING([for memalign])
 AC_TRY_LINK([#include <malloc.h>],[
 memalign(16,10240);
 ],[AC_DEFINE([HAVE_MEMALIGN], [1], [Is memalign() available?]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
-
-AC_MSG_CHECKING([for operator new overloading])
-AC_RUN_IFELSE([AC_LANG_PROGRAM([
-#include <stdlib.h>
-#include <stdio.h>
-#include <malloc.h>
-
-#define no_DEBUG
-int counter = 0;
-
-class test
-{
-public:
-	test()
-	{
-		counter++;
-#ifdef _DEBUG
-		printf("<ctor this=%p> ", this);
-#endif
-	}
-
-	void call()
-	{
-		counter++;
-#ifdef _DEBUG
-		printf("<call> ");
-#endif
-	}
-
-	~test()
-	{
-		counter++;
-#ifdef _DEBUG
-		printf("<dtor> ");
-#endif
-	}
-};
-
-void *operator new (size_t size)
-{
-	void *ptr = memalign(16, size);
-#ifdef _DEBUG
-	printf("<ptr=%p> ", ptr);
-#endif
-	counter++;
-	return ptr;
-}
-],[
-	test      *ptr = new test();
-	long int   ip  = reinterpret_cast<long int>(ptr);
-	ptr->call();
-	delete ptr;
-
-	return (counter == 4) && ((ip & 0xf) == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-])],
-	[AC_DEFINE([HAVE_NEW_OVERLOADING], [1], [Is operator new available?]) AC_DEFINE([SSE_ALIGNED], [1], [Is operator new memory aligned at 16]) AC_MSG_RESULT(yes)],
-	[AC_MSG_RESULT(no)])
 
 AC_PATH_XTRA
 
