@@ -33,6 +33,7 @@ class b3MemoryTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3MemoryTest);
 	CPPUNIT_TEST(testSimple);
 	CPPUNIT_TEST(testMemory);
+	CPPUNIT_TEST(testMultiple);
 	CPPUNIT_TEST_SUITE_END();
 
 	static const b3_count ARRAY_COUNT   =  127;
@@ -49,6 +50,7 @@ public:
 	void tearDown() override;
 	void testSimple();
 	void testMemory();
+	void testMultiple();
 };
 
 #endif

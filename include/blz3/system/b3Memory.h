@@ -24,6 +24,8 @@
 #include "blz3/system/b3Thread.h"
 #include "blz3/system/b3Exception.h"
 
+#include <vector>
+
 #define LOOP_B      (b3_ptr(4))
 #define LOOP_INSIDE (b3_ptr(1 << LOOP_B))
 #define LOOP_MASK   (LOOP_INSIDE - 1)
@@ -55,16 +57,12 @@ struct b3_mem_info
  * managed seperately. It can be allocated, freed or reallocated.
  * On destruction all memory chunks handled here will be freed
  * automatically.
+ *
+ * @note This class is thread safe.
  */
 class B3_PLUGIN b3Mem : protected b3Mutex
 {
-	static const b3_count B3_MEM_INITIAL_SLOTS    =  5;
-	static const b3_count B3_MEM_ADDITIONAL_SLOTS = 64;
-
-	b3_mem_info  *  m_SlotPtr; //!< A pointer to the chunk pointer array. This array is initially inside this chunk handler.
-	b3_index        m_SlotMax; //!< The size of the chunk pointer array.
-	b3_index        m_SlotCount; //!< The used number of chunk pointer. This value is less or equal to the slot max value.
-	b3_mem_info     m_Slots[B3_MEM_INITIAL_SLOTS]; //!< This array is the initial chunk pointer array. It does not need any extra memory handling when creating this instance.
+	std::vector<b3_mem_info> m_Slots;
 
 public:
 	static b3_count m_Enlargement; //!< The amount of enlargement used for the chunk pointer array.
@@ -75,9 +73,6 @@ public:
 	 */
 	inline b3Mem()
 	{
-		m_SlotCount = B3_MEM_INITIAL_SLOTS;
-		m_SlotMax   = 0;
-		m_SlotPtr   = m_Slots;
 	}
 
 	/**
@@ -103,8 +98,8 @@ public:
 
 	/**
 	 * This pointer reallocates a memory buffer. There are four cases:
-	 * -# oldptr is null: b3Realloc() behaves like b3Alloc().
-	 * -# oldptr is not null:
+	 * -# oldptr is @c nullptr: b3Realloc() behaves like b3Alloc().
+	 * -# oldptr is not @c nullptr:
 	 *    -   newsize is 0: b3Realloc() behaves like b3Free().
 	 *    -   newsize is less or equal than the previous memory size: oldptr is returned.
 	 *    -   newsize is greater than the previous memory size: It returns a resized memory chunk with the old memory content at the beginning.
@@ -141,9 +136,14 @@ public:
 	/**
 	 * This method simply dumps all memory chunks for debugging purposes.
 	 */
-	void     b3Dump();
+	void     b3Dump() const;
 
-	operator std::string();
+	/**
+	 * This method returns a short info string about this memory pool.
+	 *
+	 * @return An info string.
+	 */
+	operator std::string() const;
 
 	/**
 	 * This static method sets a specified text string into the specified
@@ -211,21 +211,6 @@ public:
 		const b3_count  max)
 	{
 		std::copy(src, src + max, dst);
-	}
-
-private:
-	inline b3_index b3FindIndex(const void * ptr)
-	{
-		b3_index i;
-
-		for (i = 0; i < m_SlotMax; i++)
-		{
-			if (m_SlotPtr[i].m_Ptr == ptr)
-			{
-				return i;
-			}
-		}
-		return -1;
 	}
 };
 

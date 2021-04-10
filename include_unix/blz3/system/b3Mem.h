@@ -36,9 +36,12 @@ class B3_PLUGIN b3MemAccess
 public:
 	/**
 	 * This method allocates a new memory block.
+	 * @note You don't need to compare against @c nullptr since the method
+	 * throws the std::bad_alloc exception!
 	 *
 	 * @param size The size of the new memory block.
-	 * @return The new memory block or null if there is no memory available.
+	 * @return The new memory block.
+	 * @throws std::bad_alloc exception if no memory is available.
 	 */
 	[[nodiscard]]
 	static inline void * b3Alloc(const b3_size size)

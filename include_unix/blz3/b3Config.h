@@ -131,9 +131,6 @@ static inline int stricmp(const char * a, const char * b)
 #define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
 #define B3_BEEP             b3Runtime::b3Beep()
 
-#define B3_VERSION  3
-#define B3_REVISION 0
-
 #define B3_BREAD      "r"
 #define B3_BWRITE     "w"
 #define B3_BAPPEND    "a"

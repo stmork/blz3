@@ -35,71 +35,20 @@ b3_count b3Mem::m_Enlargement = 0;
 b3Mem::~b3Mem()
 {
 	b3Free();
-
-	if (m_SlotPtr != m_Slots)
-	{
-		b3MemAccess::b3Free(m_SlotPtr);
-	}
 }
 
 void * b3Mem::b3Alloc(const b3_size size)
 {
-	void       *       ptr = b3MemAccess::b3Alloc(size);
-	b3_index           i;
+	b3_mem_info info;
+
+	info.m_Ptr  = b3MemAccess::b3Alloc(size);
+	info.m_Size = size;
+
 	b3CriticalSection  lock(*this);
 
-	i = b3FindIndex(nullptr);
-	if (i >= 0)
-	{
-		// Found empty slot
-		m_SlotPtr[i].m_Ptr  = ptr;
-		m_SlotPtr[i].m_Size = size;
-	}
-	else
-	{
-		if (m_SlotMax < m_SlotCount)
-		{
-			// There are enough unused slots available
-			m_SlotPtr[m_SlotMax].m_Ptr  = ptr;
-			m_SlotPtr[m_SlotMax].m_Size = size;
-			m_SlotMax++;
-		}
-		else
-		{
-			// We need more slots...
-			b3_count      max   = m_SlotCount + B3_MEM_ADDITIONAL_SLOTS;
-			b3_mem_info * slots = b3MemAccess::b3TypedAlloc<b3_mem_info>(max);
+	m_Slots.push_back(info);
 
-			if (slots != nullptr)
-			{
-				memcpy(slots, m_SlotPtr, m_SlotMax * sizeof(b3_mem_info));
-				if (m_SlotPtr != m_Slots)
-				{
-					b3MemAccess::b3Free(m_SlotPtr);
-				}
-
-				m_SlotPtr   = slots;
-				m_SlotCount = max;
-				m_Enlargement++;
-
-				m_SlotPtr[m_SlotMax].m_Ptr  = ptr;
-				m_SlotPtr[m_SlotMax].m_Size = size;
-				m_SlotMax++;
-			}
-			else
-			{
-				// If there is no memory for new slots we should better
-				// check really requested memory chunk.
-				if (ptr != nullptr)
-				{
-					b3MemAccess::b3Free(ptr);
-				}
-				ptr = nullptr;
-			}
-		}
-	}
-
-	return ptr;
+	return info.m_Ptr;
 }
 
 void * b3Mem::b3Realloc(void * old_ptr, const b3_size new_size)
@@ -115,35 +64,27 @@ void * b3Mem::b3Realloc(void * old_ptr, const b3_size new_size)
 	{
 		if (new_size > 0)
 		{
-			b3CriticalSection lock(*this);
-			b3_index i;
-
-			i = b3FindIndex(old_ptr);
-			if (i >= 0)
+			for (b3_mem_info & info : m_Slots)
 			{
-				if (m_SlotPtr[i].m_Size >= new_size)
+				if (info.m_Ptr == old_ptr)
 				{
-					new_ptr = m_SlotPtr[i].m_Ptr;
-				}
-				else
-				{
-					new_ptr = b3MemAccess::b3Alloc(new_size);
-					if (new_ptr != nullptr)
+					if (info.m_Size >= new_size)
 					{
-						memcpy(new_ptr, m_SlotPtr[i].m_Ptr, m_SlotPtr[i].m_Size);
-						b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
-						m_SlotPtr[i].m_Ptr  = new_ptr;
-						m_SlotPtr[i].m_Size = new_size;
+						new_ptr = info.m_Ptr;
 					}
 					else
 					{
-						// Error!
+						b3CriticalSection lock(*this);
+
+						new_ptr = b3MemAccess::b3Alloc(new_size);
+
+						memcpy(new_ptr, info.m_Ptr, info.m_Size);
+						b3MemAccess::b3Free(info.m_Ptr);
+						info.m_Ptr  = new_ptr;
+						info.m_Size = new_size;
 					}
+					break;
 				}
-			}
-			else
-			{
-				// Error!
 			}
 		}
 		else
@@ -156,89 +97,64 @@ void * b3Mem::b3Realloc(void * old_ptr, const b3_size new_size)
 
 b3_bool b3Mem::b3Free(void * ptr)
 {
-	b3_index i;
-	b3_bool  found = false;
-
-	if (ptr != nullptr)
+	for (b3_mem_info & info : m_Slots)
 	{
-		// Critical Section
+		if (info.m_Ptr == ptr)
 		{
 			b3CriticalSection lock(*this);
 
-			i = b3FindIndex(ptr);
-			if (i >= 0)
-			{
-				m_SlotPtr[i].m_Ptr  = nullptr;
-				m_SlotPtr[i].m_Size = 0;
-				found = true;
-			}
-		}
+			const b3_mem_info & last = *m_Slots.rbegin();
 
-		if (found)
-		{
+			info = last;
+			m_Slots.pop_back();
+
 			b3MemAccess::b3Free(ptr);
+
+			return true;
 		}
 	}
 
-	return found;
+	return false;
 }
 
 b3_bool b3Mem::b3Free()
 {
 	b3CriticalSection lock(*this);
-	b3_index          i;
 
-	for (i = 0; i < m_SlotMax; i++)
+	for (const b3_mem_info & info : m_Slots)
 	{
-		if (m_SlotPtr[i].m_Ptr != nullptr)
-		{
-			b3MemAccess::b3Free(m_SlotPtr[i].m_Ptr);
-			m_SlotPtr[i].m_Ptr  = nullptr;
-			m_SlotPtr[i].m_Size = 0;
-		}
+		b3MemAccess::b3Free(info.m_Ptr);
 	}
-	m_SlotMax = 0;
+	m_Slots.clear();
 
 	return true;
 }
 
 b3_index b3Mem::b3Count() const
 {
-	b3_index count = 0;
-
-	for (b3_index i = 0; i < m_SlotMax; i++)
-	{
-		if (m_SlotPtr[i].m_Ptr != nullptr)
-		{
-			count++;
-		}
-	}
-	return count;
+	return m_Slots.size();
 }
 
-void b3Mem::b3Dump()
+void b3Mem::b3Dump() const
 {
 	const std::string & text(*this);
 
 	b3PrintF(B3LOG_FULL, "%s", text.c_str());
 }
 
-b3Mem::operator std::string()
+b3Mem::operator std::string() const
 {
-	b3CriticalSection lock(*this);
 	std::string       result;
 	char              buffer[256];
 
 	snprintf(buffer, sizeof(buffer),
-		"### CLASS: b3Mem  # slot max: %ld  slot count: %ld\n"
-		"### CLASS: b3Mem  # slots: %p   initial slots: %p\n",
-			 m_SlotMax, m_SlotCount, m_SlotPtr, m_Slots);
+		"### CLASS: b3Mem  # slot count: %ld\n", m_Slots.size());
 
 	result = buffer;
-	for (b3_index i = 0; i < m_SlotMax; i++)
+	for (const b3_mem_info & info : m_Slots)
 	{
 		snprintf(buffer, sizeof(buffer),
-			"### CLASS: b3Mem  # %3zd: %p\n", i, &m_SlotPtr[i]);
+			"### CLASS: b3Mem  # %3zd: %p\n", info.m_Size, info.m_Ptr);
 
 		result += buffer;
 	}

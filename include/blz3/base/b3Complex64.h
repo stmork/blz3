@@ -158,7 +158,7 @@ public:
 		b3Complex64 result;
 
 #ifdef BLZ3_USE_SSE2
-		result.v =_mm_sub_pd(v, sum.v);
+		result.v = _mm_sub_pd(v, sum.v);
 #else
 		for (int i = 0; i < 2; i++)
 		{

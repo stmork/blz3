@@ -79,8 +79,8 @@ void b3MemoryTest::testSimple()
 {
 	b3Mem      pool;
 	b3_color * ptr = nullptr;
-	void *     v   = nullptr;
-	void *     n   = nullptr;
+	void   *   v   = nullptr;
+	void   *   n   = nullptr;
 
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0, pool.b3Count());
 
@@ -165,6 +165,39 @@ void b3MemoryTest::testMemory()
 	CPPUNIT_ASSERT(ptr1 != ptr2);
 	CPPUNIT_ASSERT_TYPED_EQUAL(void *, nullptr, ptr2);
 	ptr1 = nullptr;
+}
+
+void b3MemoryTest::testMultiple()
+{
+	void * array[ARRAY_COUNT];
+	b3Mem  pool;
+
+	// Allocate a lot of memory chunks
+	for (b3_count i = 0; i < ARRAY_COUNT; i++)
+	{
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, i, pool.b3Count());
+		array[i] = pool.b3Alloc(B3_IRAN(ARRAY_COUNT) + 1);
+	}
+
+	// Permute pointers
+	for (b3_count i = 0; i < 100000; i++)
+	{
+		b3_index a = B3_IRAN(ARRAY_COUNT);
+		b3_index b = B3_IRAN(ARRAY_COUNT);
+		void  *  aux;
+
+		aux      = array[a];
+		array[a] = array[b];
+		array[b] = aux;
+	}
+
+	// Free memory chunks and verify.
+	for (b3_count i = 0; i < ARRAY_COUNT; i++)
+	{
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, ARRAY_COUNT - i, pool.b3Count());
+		CPPUNIT_ASSERT(pool.b3Free(array[i]));
+		CPPUNIT_ASSERT(!pool.b3Free(array[i]));
+	}
 }
 
 #endif

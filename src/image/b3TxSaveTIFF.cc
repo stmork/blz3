@@ -92,7 +92,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, ySize);
 	TIFFSetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
 
-	snprintf(software, sizeof(software), "Blizzard III V%d.%02d", B3_VERSION, B3_REVISION);
+	snprintf(software, sizeof(software), "Blizzard III V%s", B3_VERSION);
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	// setting palette
@@ -149,7 +149,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, ySize);
 	TIFFSetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
 
-	snprintf(software, sizeof(software), "Blizzard III V%d.%02d", B3_VERSION, B3_REVISION);
+	snprintf(software, sizeof(software), "Blizzard III V%s", B3_VERSION);
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	xBytes = TX_BWA(xSize);
@@ -194,7 +194,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, 1);
 	TIFFSetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_SEPARATE);
 
-	snprintf(software, sizeof(software), "Blizzard III V%d.%02d", B3_VERSION, B3_REVISION);
+	snprintf(software, sizeof(software), "Blizzard III V%s", B3_VERSION);
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	// alloc memory for three channels of one row
@@ -282,7 +282,7 @@ b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, 1);
 	TIFFSetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_SEPARATE);
 
-	snprintf(software, sizeof(software), "Blizzard III V%d.%02d", B3_VERSION, B3_REVISION);
+	snprintf(software, sizeof(software), "Blizzard III V%s", B3_VERSION);
 	TIFFSetField(tiff, TIFFTAG_SOFTWARE, software);
 
 	// alloc memory for three channels of one row

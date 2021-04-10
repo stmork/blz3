@@ -424,8 +424,8 @@ public:
 		char buffer[128];
 
 		snprintf(buffer, sizeof(buffer), "%s(re=%2.5f im=%2.5f)",
-				 variable == nullptr ? "b3Complex" : variable,
-				 v[Re], v[Im]);
+			variable == nullptr ? "b3Complex" : variable,
+			v[Re], v[Im]);
 
 		return std::string(buffer);
 	}
