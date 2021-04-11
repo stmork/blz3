@@ -192,7 +192,7 @@ public:
 		m_Max = max;
 	}
 
-	static b3_u32 run_test_a(void * ptr)
+	static bool run_test_a(void * ptr)
 	{
 		b3Test      *      test = (b3Test *)ptr;
 		vector<FTYPE, DIM>  a, b, c;
@@ -214,7 +214,7 @@ public:
 		return 0;
 	}
 
-	static b3_u32 run_test_b(void * ptr)
+	static bool run_test_b(void * ptr)
 	{
 		b3Test      *      test = (b3Test *)ptr;
 		vector<FTYPE, DIM>  a, b, c;
@@ -233,7 +233,7 @@ public:
 		return 0;
 	}
 
-	static b3_u32 run_test_c(void * ptr)
+	static bool run_test_c(void * ptr)
 	{
 		b3Test      *      test = (b3Test *)ptr;
 		vector<FTYPE, DIM>  a, b, c;
@@ -254,7 +254,7 @@ public:
 		return 0;
 	}
 
-	static b3_u32 run_test_d(void * ptr)
+	static bool run_test_d(void * ptr)
 	{
 		b3Test       *      test = (b3Test *)ptr;
 		vector<b3_f64, DIM>  a, b, c;
@@ -290,7 +290,7 @@ public:
 		m_Max = max;
 	}
 
-	void b3Execute(b3_u32(*func)(void *))
+	void b3Execute(bool(*func)(void *))
 	{
 		b3TimeSpan  span;
 		b3_count    i;
