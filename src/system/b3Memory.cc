@@ -151,7 +151,7 @@ b3Mem::operator std::string() const noexcept
 	char              buffer[256];
 
 	snprintf(buffer, sizeof(buffer),
-		"### CLASS: b3Mem  # slot count: %zd\n", m_Slots.size());
+		"### CLASS: b3Mem  # slot count: %zu\n", m_Slots.size());
 
 	result = buffer;
 	for (const b3_mem_info & info : m_Slots)
