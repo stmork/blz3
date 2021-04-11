@@ -48,7 +48,7 @@ public:
 	{
 		// Init material
 		m_Material = new b3MatWood(WOOD);
-		m_Material->b3Prepare(null);
+		m_Material->b3Prepare(nullptr);
 	}
 
 	virtual ~b3MatWoodSampler()
@@ -77,7 +77,7 @@ public:
 
 		// Init material
 		m_Material = material;
-		m_Material->b3Prepare(null);
+		m_Material->b3Prepare(nullptr);
 	}
 
 	virtual ~b3MatOakPlankSampler()
@@ -93,7 +93,7 @@ public:
 	{
 		// Init material
 		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
-		m_Bump->b3Prepare(null);
+		m_Bump->b3Prepare(nullptr);
 	}
 
 	virtual ~b3BumpWoodSampler()
@@ -114,7 +114,7 @@ public:
 
 		// Init material
 		m_Bump = bump;
-		m_Bump->b3Prepare(null);
+		m_Bump->b3Prepare(nullptr);
 	}
 
 	virtual ~b3BumpOakPlankSampler()

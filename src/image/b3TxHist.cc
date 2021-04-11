@@ -689,24 +689,11 @@ bool b3Tx::b3TransToBW(b3_index threshold)
 		break;
 	}
 
+	b3EndHist();
+	b3Free(data);
+	b3Free(palette);
+
 	// Replace image information
-	try
-	{
-		b3EndHist();
-		b3Free(data);
-		b3Free(palette);
-	}
-	catch (std::bad_alloc & ba)
-	{
-		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
-		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   #               error msg:  %s\n", ba.what());
-	}
-	catch (...)
-	{
-		result = false;
-	}
 	data    = dPtr;
 	palette = pPtr;
 	dSize   = newSize;

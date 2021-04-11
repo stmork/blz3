@@ -24,7 +24,6 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3Atomic.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Complex64.h"
@@ -33,6 +32,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <atomic>
 
 // This struct is transfered to the thread procedure
 struct mandel_info
@@ -42,11 +42,9 @@ struct mandel_info
 	b3_res     xSize;
 };
 
-#if 0
 typedef b3Complex64 b3Cmplx;
-#else
-typedef b3Complex<b3_f64> b3Cmplx;
-#endif
+
+using b3AtomicCounter = std::atomic_uint64_t;
 
 /*************************************************************************
 **                                                                      **
@@ -151,7 +149,7 @@ public:
 		iter_counter = 0;
 	}
 
-	static b3_u32 compute(void * ptr)
+	static bool compute(void * ptr)
 	{
 		mandel_info * info = (mandel_info *)ptr;
 		b3MandelRow * row;
@@ -166,27 +164,27 @@ public:
 			{
 				b3CriticalSection lock(row_mutex);
 
-				if ((row = (b3MandelRow *)rows.First) != null)
+				if ((row = (b3MandelRow *)rows.First) != nullptr)
 				{
 					rows.b3Remove(row);
 				}
 			}
 			// Leave critical section
 
-			if (row != null)
+			if (row != nullptr)
 			{
 				// We can handle the row for its own!
 				row->compute();
 				info->display->b3PutRow(row);
 
 				// count iterations
-				iter_counter.b3Add(row->cnt);
+				iter_counter += row->cnt;
 
 				// That's it.
 				delete row;
 			}
 		}
-		while (row != null);
+		while (row != nullptr);
 
 		// Reach this if the row list ran empty.
 		return 0;
@@ -236,7 +234,7 @@ void b3Mandel::b3Compute(
 
 	// Determine number of CPU's
 	CPUs = b3Runtime::b3GetNumCPUs();
-	b3PrintF(B3LOG_NORMAL, "Using %d CPU%s.\n",
+	b3PrintF(B3LOG_NORMAL, "Using %zd CPU%s.\n",
 		CPUs,
 		CPUs > 1 ? "'s" : "");
 
@@ -281,7 +279,7 @@ void b3Mandel::b3Compute(
 	count = b3MandelRow::b3GetIterations();
 
 	b3PrintF(B3LOG_NORMAL, "Computing took %3.3fs.\n", tDiff);
-	b3PrintF(B3LOG_NORMAL, "Iterations: %llu\n", count);
+	b3PrintF(B3LOG_NORMAL, "Iterations: %lu\n", count);
 	b3PrintF(B3LOG_NORMAL, "%3.3fM iterations/s\n", (b3_f64)count / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL, "%3.3fM complex ops/s\n", count * 3 / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL, "%3.3fM mults/s\n", count * 5 / tDiff / 1000000);

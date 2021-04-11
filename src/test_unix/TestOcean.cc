@@ -61,7 +61,7 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		pos.z = 0;
 
 		height = b3ComputeOceanWave(&pos);
-		water = b3Math::b3Limit(height * factor * 3 + 0.5);
+		water = b3Math::b3Clamp(height * factor * 3 + 0.5, 0.0, 1.0);
 		n.x = n.y = height;
 #if 1
 		b3ComputeOceanWaveDeriv(&pos, &n);
@@ -71,8 +71,8 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 		//		return b3Color(water, water, water);
 		return b3Color(
 				water,
-				b3Math::b3Limit(water + n.x * m_Amplitude),
-				b3Math::b3Limit(water + n.y * m_Amplitude));
+				b3Math::b3Clamp(water + n.x * m_Amplitude, 0.0, 1.0),
+				b3Math::b3Clamp(water + n.y * m_Amplitude, 0.0, 1.0));
 		//	printf("%d %d %f\n",x, y, n.x * factor + 0.5);
 		//		return b3Color(n.x * factor + 0.5, n.x * factor + 0.5, n.x * factor + 0.5);
 		//		return b3Color(n.y * factor + 0.5, n.y * factor + 0.5, n.y * factor + 0.5);

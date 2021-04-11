@@ -808,9 +808,9 @@ public:
 	 */
 	inline void b3Print(const char * comment) const
 	{
-		if (comment != 0)
+		if (comment != nullptr)
 		{
-			b3PrintF(B3LOG_NORMAL, comment);
+			b3PrintF(B3LOG_NORMAL, "%s", comment);
 		}
 		for (b3_loop i = 0; i < dim; i++)
 		{

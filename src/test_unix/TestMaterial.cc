@@ -64,7 +64,7 @@ class b3TestMaterial
 
 	inline static void b3ComputeBBoxScale(b3BBox * bbox, b3_vector * scale)
 	{
-		b3_f64 min = B3_MIN(B3_MIN(bbox->m_DimSize.x, bbox->m_DimSize.y), bbox->m_DimSize.z);
+		b3_f64 min = std::min(std::min(bbox->m_DimSize.x, bbox->m_DimSize.y), bbox->m_DimSize.z);
 
 		scale->x = bbox->m_DimSize.x / min;
 		scale->y = bbox->m_DimSize.y / min;
@@ -72,7 +72,7 @@ class b3TestMaterial
 	}
 
 public:
-	inline static b3Scene * b3CreateMaterial(b3Material * material, b3_vector * dim = null)
+	inline static b3Scene * b3CreateMaterial(b3Material * material, b3_vector * dim = nullptr)
 	{
 		b3Scene     *     scene = new b3Scene(TRACEPHOTO_MORK);
 		b3BBox      *     bbox  = new b3BBox(BBOX);
@@ -105,12 +105,12 @@ public:
 		area->b3GetMaterialHead()->b3Append(chess);
 
 		// Transform ellipsoid
-		b3Matrix::b3Scale(null, &transform, null, 0.4, 0.4, 0.4);
+		b3Matrix::b3Scale(nullptr, &transform, nullptr, 0.4, 0.4, 0.4);
 		b3Matrix::b3Move(&transform, &transform, 5, 5, 20);
 		big->b3Transform(&transform, true);
 
 		// Enlarge whole scene
-		b3Matrix::b3Scale(null, &transform, null, 5, 5, 5);
+		b3Matrix::b3Scale(nullptr, &transform, nullptr, 5, 5, 5);
 		bbox->b3Transform(&transform, true, true);
 
 		// Create camera
@@ -122,7 +122,7 @@ public:
 
 		big->b3GetMaterialHead()->b3Append(material);
 
-		if (dim != null)
+		if (dim != nullptr)
 		{
 			b3ComputeBBoxScale(bbox, dim);
 		}

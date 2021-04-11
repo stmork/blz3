@@ -49,7 +49,7 @@ static void b3TestFile(const char * filename)
 	}
 	catch (b3WorldException & e)
 	{
-		b3PrintF(B3LOG_NORMAL, "Error catched processing %s (stage: %d)\n", filename, stage);
+		b3PrintF(B3LOG_NORMAL, "Error catched processing %s (stage: %zd)\n", filename, stage);
 		b3PrintF(B3LOG_NORMAL, "  Error code: %d\n", e.b3GetError());
 		b3PrintF(B3LOG_NORMAL, "  Error msg:  %s\n", e.b3GetErrorMsg());
 		switch (e.b3GetError())
@@ -100,7 +100,7 @@ int main(int argc, char * argv[])
 			b3FileList   list(argv[i]);
 			b3FileEntry * entry;
 
-			for (entry = list.b3First(); entry != null; entry = entry->Succ)
+			for (entry = list.b3First(); entry != nullptr; entry = entry->Succ)
 			{
 				b3TestFile(entry->b3Name());
 			}

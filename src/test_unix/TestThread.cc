@@ -68,7 +68,7 @@ public:
 		counter = 0;
 	}
 
-	b3_bool TestStart(b3ThreadProc proc)
+	bool TestStart(b3ThreadProc proc)
 	{
 		int i;
 
@@ -97,7 +97,7 @@ public:
 		return safe_count;
 	}
 
-	static b3_u32 task_unsafe(void * ptr)
+	static bool task_unsafe(void * ptr)
 	{
 		TestInfo * info = (TestInfo *)ptr;
 		TestUnit * thisClass = info->thisClass;
@@ -114,11 +114,11 @@ public:
 		return 0;
 	}
 
-	static b3_u32 task_thread(void * ptr)
+	static bool task_thread(void * ptr)
 	{
 		TestInfo * info = (TestInfo *)ptr;
 		TestUnit * thisClass = info->thisClass;
-		int       i, num;
+		int        i, num;
 
 		num = info->num;
 		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
@@ -133,11 +133,11 @@ public:
 		return 0;
 	}
 
-	static b3_u32 task_ipc(void * ptr)
+	static bool task_ipc(void * ptr)
 	{
 		TestInfo * info = (TestInfo *)ptr;
 		TestUnit * thisClass = info->thisClass;
-		int       i, num;
+		int        i, num;
 
 		num = info->num;
 		b3PrintF(B3LOG_NORMAL, "Thread %d started.\n", num + 1);
@@ -208,12 +208,12 @@ static void * b3Counter(void * ptr)
 	return 0;
 }
 
-static b3_u32 b3CounterThread(void * ptr)
+static bool b3CounterThread(void * ptr)
 {
 	b3_count * counter = (b3_count *)ptr;
 
 	b3Counter(ptr);
-	return counter[0];
+	return counter[0] > 0;
 }
 
 static void b3TestThreadStart1()
@@ -259,13 +259,13 @@ static void b3TestThreadStart2()
 		if (!thread.b3Start(&b3CounterThread, &counter))
 		{
 			b3PrintF(B3LOG_NORMAL, "Thread not started!\n");
-			b3PrintF(B3LOG_NORMAL, "  attempt: %d\n", i);
-			b3PrintF(B3LOG_NORMAL, "  counter: %d\n", counter);
+			b3PrintF(B3LOG_NORMAL, "  attempt: %zd\n", i);
+			b3PrintF(B3LOG_NORMAL, "  counter: %zd\n", counter);
 			return;
 		}
 		thread.b3Wait();
 	}
-	b3PrintF(B3LOG_NORMAL, "  Counter: %d\n", counter);
+	b3PrintF(B3LOG_NORMAL, "  Counter: %zd\n", counter);
 	b3PrintF(B3LOG_NORMAL, "Done.\n\n");
 }
 

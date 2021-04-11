@@ -51,10 +51,6 @@ int main(int argc, char * argv[])
 			b3SelfTest::b3TestMemory() &&
 			b3SelfTest::b3TestIO();
 	}
-	catch (b3MemException & m)
-	{
-		b3PrintF(B3LOG_NORMAL, "Memory Error - %s\n", m.b3GetErrorMsg());
-	}
 	catch (b3FileException & f)
 	{
 		b3PrintF(B3LOG_NORMAL, "I/O Error - %s\n", f.b3GetErrorMsg());
@@ -77,7 +73,7 @@ int main(int argc, char * argv[])
 			world.b3Read("M:\\Blizzard\\Data\\AllShapes");
 #endif
 			for (item  = world.b3GetFirst();
-				item != null;
+				item != nullptr;
 				item  = scene->Succ)
 			{
 				scene = (b3Scene *)item;
