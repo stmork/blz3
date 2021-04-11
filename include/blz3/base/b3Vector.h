@@ -62,9 +62,7 @@ public:
 	/**
 	 * This constructor does simply nothing.
 	 */
-	inline b3VectorTemplate<F, dim>()
-	{
-	}
+	inline b3VectorTemplate<F, dim>() = default;
 
 	/**
 	 * This copy constructor copies one vector template instance.

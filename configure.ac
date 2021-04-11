@@ -280,7 +280,6 @@ AC_CONFIG_FILES([
 	src/test_unix/Makefile
 	src/OpenGL/Makefile
 	src/brt3/Makefile
-	src/divx/Makefile
 	src/tools/Makefile
 	src/cpuperf/Makefile
 	src/unittest/Makefile])

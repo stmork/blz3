@@ -696,14 +696,12 @@ bool b3Tx::b3TransToBW(b3_index threshold)
 		b3Free(data);
 		b3Free(palette);
 	}
-	catch (b3MemException & e)
+	catch (std::bad_alloc & ba)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   #               error code: %d\n", e.b3GetError());
-		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   #               error msg:  %s\n", e.b3GetErrorMsg());
+			"### CLASS: b3Tx   #               error msg:  %s\n", ba.what());
 	}
 	catch (...)
 	{

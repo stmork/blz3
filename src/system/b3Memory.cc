@@ -30,8 +30,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3_count b3Mem::m_Enlargement = 0;
-
 b3Mem::~b3Mem()
 {
 	b3Free();
@@ -40,6 +38,11 @@ b3Mem::~b3Mem()
 void * b3Mem::b3Alloc(const b3_size size)
 {
 	b3_mem_info info;
+
+	if (size <= 0)
+	{
+		return nullptr;
+	}
 
 	info.m_Ptr  = b3MemAccess::b3Alloc(size);
 	info.m_Size = size;
@@ -95,7 +98,7 @@ void * b3Mem::b3Realloc(void * old_ptr, const b3_size new_size)
 	return new_ptr;
 }
 
-b3_bool b3Mem::b3Free(void * ptr)
+b3_bool b3Mem::b3Free(void * ptr) noexcept
 {
 	for (b3_mem_info & info : m_Slots)
 	{
@@ -117,7 +120,7 @@ b3_bool b3Mem::b3Free(void * ptr)
 	return false;
 }
 
-b3_bool b3Mem::b3Free()
+b3_bool b3Mem::b3Free() noexcept
 {
 	b3CriticalSection lock(*this);
 
@@ -130,19 +133,19 @@ b3_bool b3Mem::b3Free()
 	return true;
 }
 
-b3_index b3Mem::b3Count() const
+b3_index b3Mem::b3Count() const noexcept
 {
 	return m_Slots.size();
 }
 
-void b3Mem::b3Dump() const
+void b3Mem::b3Dump() const noexcept
 {
 	const std::string & text(*this);
 
 	b3PrintF(B3LOG_FULL, "%s", text.c_str());
 }
 
-b3Mem::operator std::string() const
+b3Mem::operator std::string() const noexcept
 {
 	std::string       result;
 	char              buffer[256];

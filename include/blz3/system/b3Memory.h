@@ -26,32 +26,6 @@
 
 #include <vector>
 
-#define LOOP_B      (b3_ptr(4))
-#define LOOP_INSIDE (b3_ptr(1 << LOOP_B))
-#define LOOP_MASK   (LOOP_INSIDE - 1)
-
-/**
- * This enumeration lists all possible memory management errors.
- */
-enum b3_mem_error
-{
-	B3_MEM_ERROR = -1, //!< General error.
-	B3_MEM_OK    =  0, //!< Memory handling OK.
-	B3_MEM_MEMORY,     //!< ???
-	B3_MEM_UNKNOWN_PTR //!< Memory pointer unknown in this chunk handler.
-};
-
-typedef b3Exception<b3_mem_error, 0x4d454d> b3MemException;
-
-/**
- * This structure holds information about one memory chunk.
- */
-struct b3_mem_info
-{
-	void  *  m_Ptr;  //!< The memory chunk.
-	b3_size  m_Size; //!< The chunk size.
-};
-
 /**
  * This class handles an amount of memory chunk. Each chunk can be
  * managed seperately. It can be allocated, freed or reallocated.
@@ -62,18 +36,23 @@ struct b3_mem_info
  */
 class B3_PLUGIN b3Mem : protected b3Mutex
 {
-	std::vector<b3_mem_info> m_Slots;
 
-public:
-	static b3_count m_Enlargement; //!< The amount of enlargement used for the chunk pointer array.
+	/**
+	 * This structure holds information about one memory chunk.
+	 */
+	struct b3_mem_info
+	{
+		void  *  m_Ptr;  //!< The memory chunk.
+		b3_size  m_Size; //!< The chunk size.
+	};
+
+	std::vector<b3_mem_info> m_Slots; //!< The memory chunk information.
 
 public:
 	/**
 	 * This constructor initializes the chunk handler.
 	 */
-	inline b3Mem()
-	{
-	}
+	b3Mem() = default;
 
 	/**
 	 * This method frees all memory chunks registered with this chunk handler. It calls
@@ -82,11 +61,14 @@ public:
 	virtual ~b3Mem();
 
 	/**
-	 * This method allocates a memory buffer of the requested size. It returns null if
-	 * the requested size is too large to allocate.
+	 * This method allocates a memory buffer of the requested size. It returns
+	 * null if the requested size lower or equal to zero. If the requested size
+	 * is too large to allocate memory a std::bad_alloc exception is thrown.
 	 *
-	 * @param size The requested memory size. This value can be 0 resulting in a null pointer.
-	 * @return The allocated memory pointer. Null means an error so please check!
+	 * @param size The requested memory size. This value can be @c 0 resulting
+	 * in a @c nullptr pointer.
+	 * @return The allocated memory pointer. @c nullptr means an error so
+	 * please check!
 	 */
 	[[nodiscard]]
 	void  *  b3Alloc(const b3_size size);
@@ -117,33 +99,33 @@ public:
 	 * @param ptr The memory pointer to free.
 	 * @return True if the memory chunk is handled and freed by this chunk handler.
 	 */
-	b3_bool  b3Free(void * ptr);
+	b3_bool  b3Free(void * ptr) noexcept;
 
 	/**
 	 * This method frees all memory chunks handled by this instance.
 	 *
 	 * @return True if there were any memory chunks.
 	 */
-	b3_bool  b3Free();
+	b3_bool  b3Free() noexcept;
 
 	/**
 	 * This method returns the number of managed memory chunks.
 	 *
 	 * @return The number of managed memory chunks.
 	 */
-	b3_index b3Count() const;
+	b3_index b3Count() const noexcept;
 
 	/**
 	 * This method simply dumps all memory chunks for debugging purposes.
 	 */
-	void     b3Dump() const;
+	void     b3Dump() const noexcept;
 
 	/**
 	 * This method returns a short info string about this memory pool.
 	 *
 	 * @return An info string.
 	 */
-	operator std::string() const;
+	operator std::string() const noexcept;
 
 	/**
 	 * This static method sets a specified text string into the specified
