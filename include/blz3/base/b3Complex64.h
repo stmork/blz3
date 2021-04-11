@@ -44,15 +44,14 @@ public:
 		v = _mm_set_sd(re);
 	}
 
-	inline void operator=(const b3_f64 re)
+	inline b3Complex64(const std::complex<b3_f64> & other)
 	{
-		v = _mm_set_sd(re);
+		v = _mm_set_pd(other.imag(), other.real());
 	}
 
 	inline b3Complex64(const b3_f64 re, const b3_f64 im)
 	{
-		b3Real() = re;
-		b3Imag() = im;
+		v = _mm_set_pd(im, re);
 	}
 
 	inline b3Complex64(const b3Complex64 & orig)
@@ -63,6 +62,18 @@ public:
 	inline void operator=(const b3Complex64 & orig)
 	{
 		v = orig.v;
+	}
+
+	inline b3Complex64 & operator=(const std::complex<b3_f64> & other)
+	{
+		v = _mm_set_pd(other.imag(), other.real());
+
+		return *this;
+	}
+
+	inline void operator=(const b3_f64 re)
+	{
+		v = _mm_set_sd(re);
 	}
 
 	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
@@ -164,6 +175,15 @@ public:
 	inline void operator/=(const b3_f64 value)
 	{
 		v = _mm_div_pd(v, _mm_set1_pd(value));
+	}
+
+	inline operator std::complex<b3_f64>() const
+	{
+		alignas(16) b3_f64 comp[2];
+
+		_mm_store_pd(comp, v);
+
+		return std::complex<b3_f64>(comp[0], comp[1]);
 	}
 
 	inline b3_f64 b3SquareLength() const

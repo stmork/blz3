@@ -29,14 +29,15 @@ using namespace std;
 
 class b3ComplexTest : public CppUnit::TestFixture
 {
-	b3Complex<b3_f64> a, b, e;
+	b3Complex<b3_f64>   a, b, e;
 	b3Complex<b3_f64> * c, *d;
-	b3Complex64       ca, cb, cc, cd, ce;
+	b3Complex64         ca, cb, cc, cd, ce;
 
 	CPPUNIT_TEST_SUITE(b3ComplexTest);
 	CPPUNIT_TEST(testOps);
 	CPPUNIT_TEST(testEqual);
 	CPPUNIT_TEST(testComplex64);
+	CPPUNIT_TEST(testStdComplex);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -45,6 +46,7 @@ public:
 	void testOps();
 	void testEqual();
 	void testComplex64();
+	void testStdComplex();
 };
 
 #endif

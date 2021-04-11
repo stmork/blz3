@@ -25,6 +25,7 @@
 #include "blz3/b3Config.h"
 
 #include <stdexcept>
+#include <complex>
 
 /**
  * This template class defines generic operations to do
@@ -50,9 +51,7 @@ public:
 	/**
 	 * Simple constructor which does nothing.
 	 */
-	inline b3Complex<T>()
-	{
-	}
+	inline b3Complex<T>() = default;
 
 	/**
 	 * Copy constructor.
@@ -78,6 +77,44 @@ public:
 	{
 		v[Re] = re;
 		v[Im] = im;
+	}
+
+	/**
+	 * This converting constructor copies the contents of a std::complex
+	 * instance into a new b3Complex type.
+	 *
+	 * @param other The other std::complex instance to copy from.
+	 */
+	inline b3Complex<T>(const std::complex<T> & other)
+	{
+		v[Re] = other.real();
+		v[Im] = other.imag();
+	}
+
+	/**
+	 * This operator assigns a std::complex instance to this instance.
+	 *
+	 * @param other The instance to copy from.
+	 */
+	inline b3Complex<T> & operator=(const std::complex<T> & other)
+	{
+		v[Re] = other.real();
+		v[Im] = other.imag();
+
+		return *this;
+	}
+
+	/**
+	 * This operator assigns a real number instance to this instance.
+	 *
+	 * @param other The instance to copy from.
+	 */
+	inline b3Complex<T> & operator=(const T value)
+	{
+		v[Re] = value;
+		v[Im] = 0;
+
+		return *this;
 	}
 
 	inline bool operator==(const b3Complex<T> & a) const
@@ -282,6 +319,14 @@ public:
 	inline const b3Complex<T> operator/(const b3Complex<T> & a) const
 	{
 		return b3Complex<T>(*this) /= a;
+	}
+
+	/**
+	 * This returns a std::complex instance from this complex representation.
+	 */
+	inline operator std::complex<T>() const
+	{
+		return std::complex<T>(v[Re], v[Im]);
 	}
 
 	/**
