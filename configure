@@ -10183,7 +10183,7 @@ done
 
 
 
-ac_config_files="$ac_config_files control-blz3 control-libblz3-dev Doxyfile src/flags.pri src/Makefile src/icc.make src/system_unix/Makefile src/system/Makefile src/base/Makefile src/image/Makefile src/raytrace/Makefile src/test_unix/Makefile src/OpenGL/Makefile src/brt3/Makefile src/divx/Makefile src/tools/Makefile src/cpuperf/Makefile src/unittest/Makefile"
+ac_config_files="$ac_config_files control-blz3 control-libblz3-dev Doxyfile src/flags.pri src/Makefile src/icc.make src/system_unix/Makefile src/system/Makefile src/base/Makefile src/image/Makefile src/raytrace/Makefile src/test_unix/Makefile src/OpenGL/Makefile src/brt3/Makefile src/tools/Makefile src/cpuperf/Makefile src/unittest/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -10889,7 +10889,6 @@ do
     "src/test_unix/Makefile") CONFIG_FILES="$CONFIG_FILES src/test_unix/Makefile" ;;
     "src/OpenGL/Makefile") CONFIG_FILES="$CONFIG_FILES src/OpenGL/Makefile" ;;
     "src/brt3/Makefile") CONFIG_FILES="$CONFIG_FILES src/brt3/Makefile" ;;
-    "src/divx/Makefile") CONFIG_FILES="$CONFIG_FILES src/divx/Makefile" ;;
     "src/tools/Makefile") CONFIG_FILES="$CONFIG_FILES src/tools/Makefile" ;;
     "src/cpuperf/Makefile") CONFIG_FILES="$CONFIG_FILES src/cpuperf/Makefile" ;;
     "src/unittest/Makefile") CONFIG_FILES="$CONFIG_FILES src/unittest/Makefile" ;;
