@@ -1,7 +1,7 @@
 /*
 **
 **      $Filename:      b3Types.h $
-**      $Release:       Dortmund 2005 $
+**      $Release:       Dortmund 2001 - 2021 $
 **      $Revision$
 **      $Date$
 **      $Author$
@@ -29,8 +29,8 @@
 
 #include "blz3/b3PluginDef.h"
 
-#if __cplusplus < 201100
-#error "Need at least C++11 standard!"
+#if __cplusplus < 201703
+#error "Need at least C++17 standard!"
 #endif
 
 #if defined(__ICC)
@@ -45,15 +45,9 @@
 #	include <xmmintrin.h>
 #endif
 
-#define B3_UNUSED       [[maybe_unused]]
+#define B3_UNUSED       [[maybe_unused]] //!< This macro marks an unused argument.
 
-#if __cplusplus >= 201703
-#define B3_FALLTHROUGH  [[fallthrough]]
-#elif defined(__GNUC__)
-#define B3_FALLTHROUGH  __attribute__ ((fallthrough))
-#else
-#define B3_FALLTHROUGH
-#endif
+#define B3_FALLTHROUGH  [[fallthrough]] //!< this macro allows switch/case fall through
 
 // Some error codes
 /**
@@ -94,12 +88,7 @@ typedef ssize_t             b3_res;        //!< A signed display resolution spec
 typedef b3_u32              b3_pkd_color;  //!< An unsigned color specifier using AARRGGBB as nibbles.
 typedef ssize_t             b3_coord;      //!< A signed coordinate specifier.
 typedef int                 b3_loop;       //!< A signed integer for small loops (max. 32 bits, but can be more).
-
-#ifdef _WIN32
-typedef __w64               b3_ptr;        //!< A pointer for pointer arithmetics.
-#else
-typedef unsigned long       b3_ptr;        //!< A pointer for pointer arithmetics.
-#endif
+typedef std::ptrdiff_t      b3_ptr;        //!< A pointer for pointer arithmetics.
 
 // Some vectors
 /**
@@ -108,7 +97,7 @@ typedef unsigned long       b3_ptr;        //!< A pointer for pointer arithmetic
  */
 typedef struct alignas(16) b3_vector32_3D
 {
-	b3_f32             x; //!< The 16 byte aligned x component.
+	b3_f32             x; //!< The x component.
 	b3_f32             y; //!< The y component.
 	b3_f32             z; //!< The z component.
 } b3_vector32, b3_vector;
@@ -119,7 +108,7 @@ typedef struct alignas(16) b3_vector32_3D
  */
 typedef struct alignas(32) b3_vector64_3D
 {
-	b3_f64             x; //!< The 16 byte aligned x component.
+	b3_f64             x; //!< The x component.
 	b3_f64             y; //!< The y component.
 	b3_f64             z; //!< The z component.
 } b3_vector64;
@@ -130,7 +119,7 @@ typedef struct alignas(32) b3_vector64_3D
  */
 typedef struct alignas(16) b3_vector32_4D
 {
-	b3_f32    x; //!< The 16 byte aligned x component.
+	b3_f32    x; //!< The x component.
 	b3_f32    y; //!< The y component.
 	b3_f32    z; //!< The z component.
 	b3_f32    w; //!< The w component.
@@ -142,7 +131,7 @@ typedef struct alignas(16) b3_vector32_4D
  */
 typedef struct alignas(32) b3_vector64_4D
 {
-	b3_f64    x; //!< The 16 byte aligned x component.
+	b3_f64    x; //!< The x component.
 	b3_f64    y; //!< The y component.
 	b3_f64    z; //!< The z component.
 	b3_f64    w; //!< The w component.
@@ -241,7 +230,9 @@ typedef struct alignas(16) b3_color32
 
 	inline bool operator==(const b3_color32 & other) const
 	{
-		return (a == other.a) && (r == other.r) && (g == other.g) && (b == other.b);
+		return
+			(a == other.a) && (r == other.r) &&
+			(g == other.g) && (b == other.b);
 	}
 } b3_color;
 

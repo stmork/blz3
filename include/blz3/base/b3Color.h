@@ -68,14 +68,14 @@ public:
 	};
 
 	/**
-	 * This method initializes a ::b3_color structure instance.
+	 * This method initializes a b3_color structure instance.
 	 *
-	 * @param color The other ::b3_color instance to copy.
+	 * @param color The other b3_color instance to copy.
 	 * @param r The new red channel.
 	 * @param g The new green channel.
 	 * @param b The new blue channel.
 	 * @param a The new alpha channel.
-	 * @return The ::b3_color instance pointer.
+	 * @return The b3_color instance pointer.
 	 */
 	inline static b3_color * b3Init(b3_color * color,
 		b3_f32 r = 0,

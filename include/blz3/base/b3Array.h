@@ -164,8 +164,6 @@ public:
 
 	/**
 	 * This method sorts the array with a custom sorting method.
-	 *
-	 * @param sorter Sorting method.
 	 */
 	inline void b3Sort(void)
 	{

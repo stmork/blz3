@@ -22,7 +22,7 @@
 #ifndef B3_BASE_VECTOR_H
 #define B3_BASE_VECTOR_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 #include <float.h>
 #include "blz3/system/b3Exception.h"
 

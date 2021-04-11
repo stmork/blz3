@@ -25,7 +25,7 @@ install:
 
 clean:
 	test -f src/Makefile && make -C src $@
-	rm -rf doc/html doc/latex Doxyfile lcov-out
+	rm -rf doc/html doc/latex Doxyfile lcov-out BlizzardIII.qch
 
 configure:	configure.ac
 	autoreconf

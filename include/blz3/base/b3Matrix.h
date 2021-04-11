@@ -47,9 +47,9 @@ class B3_PLUGIN b3Vector
 
 public:
 	/**
-	 * This method initializes a ::b3_vector structure.
+	 * This method initializes a b3_vector structure.
 	 *
-	 * @param vec The ::b3_vector pointer.
+	 * @param vec The b3_vector pointer.
 	 * @param x The new x component.
 	 * @param y The new y component.
 	 * @param z The new z component.
@@ -69,9 +69,9 @@ public:
 	}
 
 	/**
-	 * This method initializes a ::b3_vector structure.
+	 * This method initializes a b3_vector structure.
 	 *
-	 * @param vec The ::b3_vector pointer.
+	 * @param vec The b3_vector pointer.
 	 * @param x The new x component.
 	 * @param y The new y component.
 	 * @param z The new z component.
@@ -91,7 +91,7 @@ public:
 	}
 
 	/**
-	 * This method copies a vector.
+	 * This method copies a b3_vector.
 	 *
 	 * @param vec The destination vector.
 	 * @param src The source vector.

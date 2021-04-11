@@ -5,6 +5,7 @@ BLZ3_DEBIAN=${PWD}/../debian/blz3
 BLZ3_DEBIAN_DEV=${PWD}/../debian/libblz3-dev
 ARCH=`dpkg --print-architecture`
 BUILD_NUMBER=${BUILD_NUMBER:=0}
+JOBS=`getconf _NPROCESSORS_ONLN`
 
 rm -rf ${BLZ3_DEBIAN} ${BLZ3_DEBIAN_DEV} 
 umask 022
@@ -26,9 +27,9 @@ set -e
 make configure
 ./configure BLZ3_DOC=${BLZ3_DEBIAN_DEV}/usr/share/doc/blz3 --prefix=${BLZ3_DEBIAN} --exec-prefix=${BLZ3_DEBIAN}/usr
 make depend
-make -j `getconf _NPROCESSORS_ONLN`
+make -j ${JOBS}
 make install documentation
-make test
+make -j ${JOBS} test
 
 sed\
 	-e "s/%ARCH%/${ARCH}/g"\

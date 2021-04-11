@@ -54,7 +54,7 @@ MANDEL_OBJS		= Mandel.o b3Mandel.o
 all:	$(PRGS)
 
 depend:
-	@CPP@ -M  $(PRG_SOURCE) $(CPPFLAGS) >.dep
+	@CPP@ -M @STDFLAGS@ $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET

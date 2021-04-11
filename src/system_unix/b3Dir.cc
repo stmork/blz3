@@ -45,9 +45,9 @@ b3_path_type b3Dir::b3Exists(const char * Name)
 	return (S_ISDIR(status.st_mode) ? B3_TYPE_DIR : B3_TYPE_FILE);
 }
 
-b3_bool b3Dir::b3ChDir(const char * newWorkingdir)
+b3_bool b3Dir::b3ChDir(const char * new_working_dir)
 {
-	return (chdir(newWorkingdir) == 0);
+	return (chdir(new_working_dir) == 0);
 }
 
 b3_bool b3Dir::b3ChkDir(const char * Name)

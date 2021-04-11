@@ -80,7 +80,7 @@ TEST_FILES = Config.tst *.jpg test1.bwd test2.bwd
 all:	$(PRGS)
 
 depend:
-	@CPP@ -M  $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
+	@CPP@ -M @STDFLAGS@ $(BASETEST_SOURCE) $(CPPFLAGS) >.dep
 
 clean:	cleantest
 	rm -f *.o *.bak *~ core img_test* test*.bwd $(PRGS) out ALL QUIET

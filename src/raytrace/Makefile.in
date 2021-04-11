@@ -126,7 +126,7 @@ PRG_OBJ			=\
 all:	$(LIBS)
 
 depend:
-	@CPP@ -M $(PRG_SOURCE) $(CPPFLAGS) >.dep
+	@CPP@ -M @STDFLAGS@ $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.il *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET

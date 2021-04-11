@@ -16,7 +16,6 @@ include(flags.pri)
 
 DEFINES                += B3_VERSION=\"\\\"$$VERSION\\\"\"
 
-QMAKE_CXXFLAGS         += -std=c++17 # qmake 5.9.x does not support C++17 :-(
 QMAKE_CXXFLAGS         += -Wextra -Wshadow -Wsuggest-override
 QMAKE_CXXFLAGS_RELEASE  = $$replace(QMAKE_CXXFLAGS_RELEASE,"-O2","-O3")
 QMAKE_CLEAN            += *.gcno *.gcda coverage.info

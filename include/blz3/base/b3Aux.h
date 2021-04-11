@@ -39,9 +39,9 @@ public:
 	b3RGB();
 
 	/**
-	 * This method returns the stored color as a ::b3_pkd_color type.
+	 * This method returns the stored color as a b3_pkd_color type.
 	 *
-	 * \return The color in ::b3_pkd_color representation.
+	 * \return The color in b3_pkd_color representation.
 	 */
 	inline b3_pkd_color  operator()() const
 	{
@@ -52,9 +52,9 @@ public:
 	}
 
 	/**
-	 * This method returns the stored color as a ::b3_pkd_color type.
+	 * This method returns the stored color as a b3_pkd_color type.
 	 *
-	 * \return The color in ::b3_pkd_color representation.
+	 * \return The color in b3_pkd_color representation.
 	 */
 	inline operator b3_pkd_color() const
 	{
@@ -78,7 +78,7 @@ public:
 	}
 
 	/**
-	 * This method assignes values from a given ::b3_color value
+	 * This method assignes values from a given b3_color value
 	 * to this class.
 	 *
 	 * \param color The given color representation.
@@ -187,8 +187,8 @@ public:
 	 * This constructor initializes this instance with the
 	 * given coordinates.
 	 *
-	 * @param x The new x coordinate.
-	 * @param y The new y coordinate.
+	 * @param nx The new x coordinate.
+	 * @param ny The new y coordinate.
 	 */
 	explicit inline b3Point(b3_f64 nx = 0, b3_f64 ny = 0)
 	{

@@ -29,7 +29,7 @@
 /**
  * This template class defines generic operations to do
  * complex math. It provides several operators for simple
- * use. It is recommended to use ::b3_f64 as template
+ * use. It is recommended to use b3_f64 as template
  * class because it fits best into use of the SSE2 unit of
  * most processors.
  */

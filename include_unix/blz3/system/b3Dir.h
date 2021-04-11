@@ -210,10 +210,10 @@ public:
 	/**
 	 * This method changes the current working directory to the specified one.
 	 *
-	 * @param newworkingdir The new working directory.
+	 * @param new_working_dir The new working directory.
 	 * @return True on success.
 	 */
-	static b3_bool       b3ChDir(const char * newWorkingdir);
+	static b3_bool       b3ChDir(const char * new_working_dir);
 
 	/**
 	 * This method checks whether the specified filesystem entry exists as a directory.

@@ -43,7 +43,7 @@ install:	$(INSTALL_PRGS)
 	(cd @bindir@; chmod 755 $^;)
 
 depend:
-	@CPP@ -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
+	@CPP@ -M @STDFLAGS@ $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET

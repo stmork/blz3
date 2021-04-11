@@ -15,6 +15,7 @@ AC_PROG_MAKE_SET
 AC_CHECK_TOOL(AR, ar, :)
 AC_PROG_RANLIB
 AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
+AC_CHECK_TOOL([QHELPGEN], [qhelpgenerator])
 
 # FIXME!
 #if test "$LD" = "ld"
@@ -25,6 +26,7 @@ AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 BUILD=${BUILD_NUMBER:-0}
 
 AC_SUBST(MFLAGS)
+AC_SUBST(STDFLAGS)
 AC_SUBST(BLZ3_IS_LINUX)
 AC_SUBST(BLZ3_USE_CG)
 AC_SUBST(BLZ3_USE_GLUT)
@@ -57,9 +59,10 @@ AC_LANG_PUSH(C++)
 AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
 AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
 AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
+AX_CHECK_COMPILE_FLAG([-std=c++17], [STDFLAGS="$STDFLAGS -std=c++17"])
 CFLAGS="$CFLAGS $MFLAGS"
 CXXFLAGS="$CXXFLAGS $MFLAGS"
-# CPPFLAGS="$CPPFLAGS $MFLAGS"
+# CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
 AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
 
