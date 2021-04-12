@@ -107,7 +107,7 @@ void b3MemoryTest::testSimple()
 	CPPUNIT_ASSERT(v != n);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 2, pool.b3Count());
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(void *,nullptr, pool.b3Alloc(0));
+	CPPUNIT_ASSERT_TYPED_EQUAL(void *, nullptr, pool.b3Alloc(0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 2, pool.b3Count());
 
 	CPPUNIT_ASSERT_NO_THROW(pool.b3Dump());
