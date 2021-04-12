@@ -206,7 +206,7 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL( 8.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 0.0f, b3_c32.b3Imag());
 
-	b3_c32 = 1 + 2i;
+	b3_c32 = 2.0if + 1.0f;
 	CPPUNIT_ASSERT_EQUAL( 1.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 2.0f, b3_c32.b3Imag());
 

@@ -188,7 +188,7 @@ public:
 	 * @param other The complex number to add.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator+=(const b3Complex<T> & other)
+	inline b3Complex<T> & operator+=(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
@@ -320,7 +320,7 @@ public:
 	 * @param value The scalar to divide this complex number.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator/=(const T value)
+	inline b3Complex<T> & operator/=(const T value)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
