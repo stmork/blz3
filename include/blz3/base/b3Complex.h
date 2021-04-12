@@ -48,6 +48,12 @@ public:
 		Im = 1  //!< Index of imaginary part of complex number
 	};
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Constructors                                  **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * Simple constructor which does nothing.
 	 */
@@ -67,6 +73,18 @@ public:
 	}
 
 	/**
+	 * This converting constructor copies the contents of a std::complex
+	 * instance into a new b3Complex type.
+	 *
+	 * @param other The other std::complex instance to copy from.
+	 */
+	inline b3Complex<T>(const std::complex<T> & other)
+	{
+		v[Re] = other.real();
+		v[Im] = other.imag();
+	}
+
+	/**
 	 * Initializer constructor which defines the components of
 	 * the complex number.
 	 *
@@ -79,16 +97,20 @@ public:
 		v[Im] = im;
 	}
 
-	/**
-	 * This converting constructor copies the contents of a std::complex
-	 * instance into a new b3Complex type.
-	 *
-	 * @param other The other std::complex instance to copy from.
-	 */
-	inline b3Complex<T>(const std::complex<T> & other)
+	/*************************************************************************
+	**                                                                      **
+	**                        Assignment operators                          **
+	**                                                                      **
+	*************************************************************************/
+
+	inline b3Complex<T> & operator=(const b3Complex<T> & other)
 	{
-		v[Re] = other.real();
-		v[Im] = other.imag();
+		for (b3_loop i = 0; i < 2; i++)
+		{
+			v[i] = other.v[i];
+		}
+
+		return *this;
 	}
 
 	/**
@@ -117,10 +139,36 @@ public:
 		return *this;
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Cast operators                                **
+	**                                                                      **
+	*************************************************************************/
+
+	/**
+	 * This returns a std::complex instance from this complex representation.
+	 */
+	inline operator std::complex<T>() const
+	{
+		return std::complex<T>(v[Re], v[Im]);
+	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Comparison operators                          **
+	**                                                                      **
+	*************************************************************************/
+
 	inline bool operator==(const b3Complex<T> & a) const
 	{
 		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
 	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Arithmetic operators                          **
+	**                                                                      **
+	*************************************************************************/
 
 	/**
 	 * The += operator. The operation is <code>this += a</code>.
@@ -284,6 +332,18 @@ public:
 	}
 
 	/**
+	 * The + operator. The operation is <code>result = this + a</code>.
+	 * Where <code>a</code> is a std::complex number.
+	 *
+	 * @param a The std::complex number to add.
+	 * @return This as result.
+	 */
+	inline const b3Complex<T> operator+(const std::complex<double> & a) const
+	{
+		return b3Complex<T>(*this) += b3Complex<T>(a);
+	}
+
+	/**
 	 * The - operator. The operation is <code>result = this - a</code>.
 	 * Where <code>a</code> is a complex number.
 	 *
@@ -293,6 +353,18 @@ public:
 	inline const b3Complex<T> operator-(const b3Complex<T> & a) const
 	{
 		return b3Complex<T>(*this) -= a;
+	}
+
+	/**
+	 * The - operator. The operation is <code>result = this + a</code>.
+	 * Where <code>a</code> is a std::complex number.
+	 *
+	 * @param a The std::complex number to add.
+	 * @return This as result.
+	 */
+	inline const b3Complex<T> operator-(const std::complex<T> & a) const
+	{
+		return b3Complex<T>(*this) -= b3Complex<T>(a);
 	}
 
 	/**
@@ -321,12 +393,26 @@ public:
 		return b3Complex<T>(*this) /= a;
 	}
 
+	/*************************************************************************
+	**                                                                      **
+	**                        Arithmetic modifiers                          **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
-	 * This returns a std::complex instance from this complex representation.
+	 * This method computes the length as square of this complex number.
+	 *
+	 * @return Squared length of this complex number.
 	 */
-	inline operator std::complex<T>() const
+	inline const T b3SquareLength() const
 	{
-		return std::complex<T>(v[Re], v[Im]);
+		alignas(16) T val[2];
+
+		for (b3_loop i = 0; i < 2; i++)
+		{
+			val[i] = v[i] * v[i];
+		}
+		return val[Re] + val[Im];
 	}
 
 	/**
@@ -360,22 +446,6 @@ public:
 		{
 			return false;
 		}
-	}
-
-	/**
-	 * This method computes the length as square of this complex number.
-	 *
-	 * @return Squared length of this complex number.
-	 */
-	inline const T b3SquareLength() const
-	{
-		alignas(16) T val[2];
-
-		for (b3_loop i = 0; i < 2; i++)
-		{
-			val[i] = v[i] * v[i];
-		}
-		return val[Re] + val[Im];
 	}
 
 	/**

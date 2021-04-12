@@ -33,6 +33,8 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3ComplexTest);
 
+using namespace std::complex_literals;
+
 void b3ComplexTest::setUp()
 {
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
@@ -170,14 +172,14 @@ void b3ComplexTest::testComplex64()
 void b3ComplexTest::testStdComplex()
 {
 	std::complex<b3_f32> std_c32;
-	b3Complex<b3_f32>    b3_c32 = 0;
 	std::complex<b3_f64> std_c64;
+	b3Complex<b3_f32>    b3_c32 = 0;
 	b3Complex64          b3_c64 = 0;
 
 	CPPUNIT_ASSERT_EQUAL(0.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL(0.0f, b3_c32.b3Imag());
 
-	std_c32 = 3i + 5;
+	std_c32 = 3i + 5.0;
 	b3_c32  = std_c32;
 
 	CPPUNIT_ASSERT_EQUAL( 5.0f, b3_c32.b3Real());
@@ -199,7 +201,7 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL( 8.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 0.0f, b3_c32.b3Imag());
 
-	b3_c32 = 1.0 + 2i;
+	b3_c32 = 2if + 1.0f;
 	CPPUNIT_ASSERT_EQUAL( 1.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 2.0f, b3_c32.b3Imag());
 
@@ -208,7 +210,7 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL(0.0,  b3_c64.b3Real());
 	CPPUNIT_ASSERT_EQUAL(0.0,  b3_c64.b3Imag());
 
-	std_c64 = 4i - 2;
+	std_c64 = 4i - 2.0;
 	b3_c64  = std_c64;
 
 	CPPUNIT_ASSERT_EQUAL(-2.0, b3_c64.b3Real());

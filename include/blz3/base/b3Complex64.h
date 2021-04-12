@@ -37,11 +37,23 @@ class B3_PLUGIN alignas(16) b3Complex64
 	}
 
 public:
+	enum b3_complex_index
+	{
+		Re = 0, //!< Index of real part of complex number
+		Im = 1  //!< Index of imaginary part of complex number
+	};
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Constructors                                  **
+	**                                                                      **
+	*************************************************************************/
+
 	inline b3Complex64() = default;
 
-	inline b3Complex64(const b3_f64 re)
+	inline b3Complex64(const b3Complex64 & other)
 	{
-		v = _mm_set_sd(re);
+		v = other.v;
 	}
 
 	inline b3Complex64(const std::complex<b3_f64> & other)
@@ -49,19 +61,27 @@ public:
 		v = _mm_set_pd(other.imag(), other.real());
 	}
 
+	inline b3Complex64(const b3_f64 re)
+	{
+		v = _mm_set_sd(re);
+	}
+
 	inline b3Complex64(const b3_f64 re, const b3_f64 im)
 	{
 		v = _mm_set_pd(im, re);
 	}
 
-	inline b3Complex64(const b3Complex64 & orig)
-	{
-		v = orig.v;
-	}
+	/*************************************************************************
+	**                                                                      **
+	**                        Assignment operators                          **
+	**                                                                      **
+	*************************************************************************/
 
-	inline void operator=(const b3Complex64 & orig)
+	inline b3Complex64 & operator=(const b3Complex64 & other)
 	{
-		v = orig.v;
+		v = other.v;
+
+		return *this;
 	}
 
 	inline b3Complex64 & operator=(const std::complex<b3_f64> & other)
@@ -71,21 +91,44 @@ public:
 		return *this;
 	}
 
-	inline void operator=(const b3_f64 re)
+	inline b3Complex64 & operator=(const b3_f64 re)
 	{
 		v = _mm_set_sd(re);
+
+		return *this;
 	}
 
-	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
-	{
-		_mm_stream_pd(&dst.b3Real(), src.v);
-	}
-
-	inline void operator=(b3Complex<b3_f64> & a)
+	inline b3Complex64 & operator=(b3Complex<b3_f64> & a)
 	{
 		b3Real() = a.b3Real();
 		b3Imag() = a.b3Imag();
+
+		return *this;
 	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Cast operators                                **
+	**                                                                      **
+	*************************************************************************/
+
+	/**
+	 * This returns a std::complex instance from this complex representation.
+	 */
+	inline operator std::complex<b3_f64>() const
+	{
+		alignas(16) b3_f64 comp[2];
+
+		_mm_store_pd(comp, v);
+
+		return std::complex<b3_f64>(comp[Re], comp[Im]);
+	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Comparison operators                          **
+	**                                                                      **
+	*************************************************************************/
 
 	inline bool operator==(const b3Complex64 & a) const
 	{
@@ -93,6 +136,12 @@ public:
 
 		return _mm_movemask_pd(eq) == 0;
 	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Arithmetic operators                          **
+	**                                                                      **
+	*************************************************************************/
 
 	inline b3Complex64 operator+(const b3Complex64 & sum) const
 	{
@@ -177,14 +226,11 @@ public:
 		v = _mm_div_pd(v, _mm_set1_pd(value));
 	}
 
-	inline operator std::complex<b3_f64>() const
-	{
-		alignas(16) b3_f64 comp[2];
-
-		_mm_store_pd(comp, v);
-
-		return std::complex<b3_f64>(comp[0], comp[1]);
-	}
+	/*************************************************************************
+	**                                                                      **
+	**                        Arithmetic modifiers                          **
+	**                                                                      **
+	*************************************************************************/
 
 	inline b3_f64 b3SquareLength() const
 	{
@@ -192,24 +238,12 @@ public:
 
 		_mm_store_pd(comp, _mm_mul_pd(v, v));
 
-		return comp[0] + comp[1];
+		return comp[Re] + comp[Im];
 	}
 
 	inline b3_f64 b3Length() const
 	{
 		return sqrt(b3SquareLength());
-	}
-
-	inline b3_f64 & b3Real() const
-	{
-		return (b3_f64 &)v;
-	}
-
-	inline b3_f64 & b3Imag() const
-	{
-		b3_f64 * ptr = (b3_f64 *)&v;
-
-		return ptr[1];
 	}
 
 	inline static b3Complex64 b3Sqrt(const b3Complex64 & a)
@@ -236,6 +270,23 @@ public:
 		__m128d aux = a.v;
 		a.v = b.v;
 		b.v = aux;
+	}
+
+	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
+	{
+		_mm_stream_pd(&dst.b3Real(), src.v);
+	}
+
+	inline b3_f64 & b3Real() const
+	{
+		return (b3_f64 &)v;
+	}
+
+	inline b3_f64 & b3Imag() const
+	{
+		b3_f64 * ptr = (b3_f64 *)&v;
+
+		return ptr[Im];
 	}
 };
 

@@ -25,8 +25,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 class b3ComplexTest : public CppUnit::TestFixture
 {
 	b3Complex<b3_f64>   a, b, e;
