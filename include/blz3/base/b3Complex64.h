@@ -98,10 +98,9 @@ public:
 		return *this;
 	}
 
-	inline b3Complex64 & operator=(b3Complex<b3_f64> & a)
+	template<class O> inline b3Complex64 & operator=(b3Complex<O> & other)
 	{
-		b3Real() = a.b3Real();
-		b3Imag() = a.b3Imag();
+		v = _mm_set_pd(other.b3Imag(), other.b3Real());
 
 		return *this;
 	}
@@ -130,9 +129,9 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
-	inline bool operator==(const b3Complex64 & a) const
+	inline bool operator==(const b3Complex64 & other) const
 	{
-		__m128d eq = _mm_cmpneq_pd(v, a.v);
+		__m128d eq = _mm_cmpneq_pd(v, other.v);
 
 		return _mm_movemask_pd(eq) == 0;
 	}
@@ -185,11 +184,6 @@ public:
 #endif
 	}
 
-	inline void b3Square()
-	{
-		v = product(*this);
-	}
-
 	inline b3Complex64 operator*(const b3Complex64 & mul) const
 	{
 		return product(mul);
@@ -232,6 +226,11 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
+	inline void b3Square()
+	{
+		v = product(*this);
+	}
+
 	inline b3_f64 b3SquareLength() const
 	{
 		alignas(16) b3_f64 comp[2];
@@ -267,7 +266,8 @@ public:
 
 	inline static void b3Swap(b3Complex64 & a, b3Complex64 & b)
 	{
-		__m128d aux = a.v;
+		const __m128d aux = a.v;
+
 		a.v = b.v;
 		b.v = aux;
 	}

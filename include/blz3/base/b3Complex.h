@@ -62,18 +62,18 @@ public:
 	/**
 	 * Copy constructor.
 	 *
-	 * @param complex The complex number we have to copy.
+	 * @param other The complex number we have to copy.
 	 */
-	inline b3Complex<T>(const b3Complex<T> & complex)
+	inline b3Complex<T>(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			v[i] = complex.v[i];
+			v[i] = other.v[i];
 		}
 	}
 
 	/**
-	 * This converting constructor copies the contents of a std::complex
+	 * This converting constructor copies the contents of a @c std::complex
 	 * instance into a new b3Complex type.
 	 *
 	 * @param other The other std::complex instance to copy from.
@@ -103,18 +103,21 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
-	inline b3Complex<T> & operator=(const b3Complex<T> & other)
+	/**
+	 * This operator assigns a real number instance to this instance.
+	 *
+	 * @param value The real component to initialize.
+	 */
+	inline b3Complex<T> & operator=(const T value)
 	{
-		for (b3_loop i = 0; i < 2; i++)
-		{
-			v[i] = other.v[i];
-		}
+		v[Re] = value;
+		v[Im] = 0;
 
 		return *this;
 	}
 
 	/**
-	 * This operator assigns a std::complex instance to this instance.
+	 * This operator assigns a @c std::complex instance to this instance.
 	 *
 	 * @param other The instance to copy from.
 	 */
@@ -127,14 +130,16 @@ public:
 	}
 
 	/**
-	 * This operator assigns a real number instance to this instance.
+	 * This operator assigns a b3Complex instance to this instance.
 	 *
 	 * @param other The instance to copy from.
 	 */
-	inline b3Complex<T> & operator=(const T value)
+	inline b3Complex<T> & operator=(b3Complex<T> & other)
 	{
-		v[Re] = value;
-		v[Im] = 0;
+		for (b3_loop i = 0; i < 2; i++)
+		{
+			v[i] += other.v[i];
+		}
 
 		return *this;
 	}
@@ -146,7 +151,7 @@ public:
 	*************************************************************************/
 
 	/**
-	 * This returns a std::complex instance from this complex representation.
+	 * This returns a @c std::complex instance from this complex representation.
 	 */
 	inline operator std::complex<T>() const
 	{
@@ -159,9 +164,15 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
-	inline bool operator==(const b3Complex<T> & a) const
+	/**
+	 * This method compares another b3Complex instance with this instance.
+	 *
+	 * @param other The other instance to compare to.
+	 * @return True if both instances are equal.
+	 */
+	inline bool operator==(const b3Complex<T> & other) const
 	{
-		return (v[Re] == a.v[Re]) && (v[Im] == a.v[Im]);
+		return (v[Re] == other.v[Re]) && (v[Im] == other.v[Im]);
 	}
 
 	/*************************************************************************
@@ -171,52 +182,52 @@ public:
 	*************************************************************************/
 
 	/**
-	 * The += operator. The operation is <code>this += a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The += operator. The operation is <code>this += other</code>.
+	 * Where @c other is a complex number.
 	 *
-	 * @param a The complex number to add.
+	 * @param other The complex number to add.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator+=(const b3Complex<T> & a)
+	inline b3Complex<T> operator+=(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			v[i] += a.v[i];
+			v[i] += other.v[i];
 		}
 
 		return *this;
 	}
 
 	/**
-	 * The -= operator. The operation is <code>this -= a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The -= operator. The operation is <code>this -= other</code>.
+	 * Where @c other is a complex number.
 	 *
-	 * @param a The complex number to subtract.
+	 * @param other The complex number to subtract.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> & operator-=(const b3Complex<T> & a)
+	inline b3Complex<T> & operator-=(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			v[i] -= a.v[i];
+			v[i] -= other.v[i];
 		}
 
 		return *this;
 	}
 
 	/**
-	 * The *= operator. The operation is <code>this *= a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The *= operator. The operation is <code>this *= other</code>.
+	 * Where @c other is a complex number.
 	 *
 	 * @param a The complex number to multiply.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> & operator*=(const b3Complex<T> & a)
+	inline b3Complex<T> & operator*=(const b3Complex<T> & other)
 	{
 		alignas(16) T val[2];
 
-		val[Re] = v[Re] * a.v[Re] - v[Im] * a.v[Im];
-		val[Im] = v[Im] * a.v[Re] + v[Re] * a.v[Im];
+		val[Re] = v[Re] * other.v[Re] - v[Im] * other.v[Im];
+		val[Im] = v[Im] * other.v[Re] + v[Re] * other.v[Im];
 
 		for (b3_loop i = 0; i < 2; i++)
 		{
@@ -227,13 +238,13 @@ public:
 	}
 
 	/**
-	 * The /= operator. The operation is <code>this /= a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The /= operator. The operation is <code>this /= other</code>.
+	 * Where @c other is a complex number.
 	 *
 	 * @param a The complex number to divide.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> & operator/=(const b3Complex<T> & a)
+	inline b3Complex<T> & operator/=(const b3Complex<T> & other)
 	{
 		alignas(16) T val[2];
 		alignas(16) T den[2];
@@ -242,10 +253,10 @@ public:
 
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			nom[i] =   v[i] * a.v[i];
-			den[i] = a.v[i] * a.v[i];
+			nom[i] =       v[i] * other.v[i];
+			den[i] = other.v[i] * other.v[i];
 		}
-		val[Im] = v[Im] * a.v[Re] - v[Re] * a.v[Im];
+		val[Im] = v[Im] * other.v[Re] - v[Re] * other.v[Im];
 		denom   = den[Re] + den[Im];
 		val[Re] = nom[Re] + nom[Im];
 
@@ -258,45 +269,45 @@ public:
 	}
 
 	/**
-	 * The += operator. The operation adds the scalar <code>a</code>
+	 * The += operator. The operation adds the scalar @c value
 	 * to the real part of this complex number.
 	 *
-	 * @param a The scalar to add to the real part.
+	 * @param value The scalar to add to the real part.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> & operator+=(const T a)
+	inline b3Complex<T> & operator+=(const T value)
 	{
-		v[Re] += a;
+		v[Re] += value;
 
 		return *this;
 	}
 
 	/**
-	 * The -= operator. The operation subtracts the scalar <code>a</code>
+	 * The -= operator. The operation subtracts the scalar @c value
 	 * from the real part of this complex number.
 	 *
-	 * @param a The scalar to subtract from the real part.
+	 * @param value The scalar to subtract from the real part.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> & operator-=(const T a)
+	inline b3Complex<T> & operator-=(const T value)
 	{
-		v[Re] -= a;
+		v[Re] -= value;
 
 		return *this;
 	}
 
 	/**
 	 * The *= operator. The operation scales this complex number
-	 * with the scalar <code>a</code>.
+	 * with the scalar @c value.
 	 *
-	 * @param a The scalar to scale this complex number.
+	 * @param value The scalar to scale this complex number.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> & operator*=(const T a)
+	inline b3Complex<T> & operator*=(const T value)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			v[i] *= a;
+			v[i] *= value;
 		}
 
 		return *this;
@@ -304,93 +315,93 @@ public:
 
 	/**
 	 * The /= operator. The operation divides this complex number
-	 * by the scalar <code>a</code>.
+	 * by the scalar @c value.
 	 *
-	 * @param a The scalar to divide this complex number.
+	 * @param value The scalar to divide this complex number.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> operator/=(const T a)
+	inline b3Complex<T> operator/=(const T value)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			v[i] /= a;
+			v[i] /= value;
 		}
 
 		return *this;
 	}
 
 	/**
-	 * The + operator. The operation is <code>result = this + a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The + operator. The operation is <code>result = this + other</code>.
+	 * Where @c other is a b3Complex number.
 	 *
-	 * @param a The complex number to add.
+	 * @param other The complex number to add.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator+(const b3Complex<T> & a) const
+	inline const b3Complex<T> operator+(const b3Complex<T> & other) const
 	{
-		return b3Complex<T>(*this) += a;
+		return b3Complex<T>(*this) += other;
 	}
 
 	/**
-	 * The + operator. The operation is <code>result = this + a</code>.
-	 * Where <code>a</code> is a std::complex number.
+	 * The + operator. The operation is <code>result = this + other</code>.
+	 * Where @c other is a @c std::complex number.
 	 *
-	 * @param a The std::complex number to add.
+	 * @param other The std::complex number to add.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator+(const std::complex<double> & a) const
+	inline const b3Complex<T> operator+(const std::complex<double> & other) const
 	{
-		return b3Complex<T>(*this) += b3Complex<T>(a);
+		return b3Complex<T>(*this) += b3Complex<T>(other);
 	}
 
 	/**
-	 * The - operator. The operation is <code>result = this - a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The - operator. The operation is <code>result = this - other</code>.
+	 * Where @c other is a complex number.
 	 *
-	 * @param a The complex number.
+	 * @param other The complex number.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator-(const b3Complex<T> & a) const
+	inline const b3Complex<T> operator-(const b3Complex<T> & other) const
 	{
-		return b3Complex<T>(*this) -= a;
+		return b3Complex<T>(*this) -= other;
 	}
 
 	/**
-	 * The - operator. The operation is <code>result = this + a</code>.
-	 * Where <code>a</code> is a std::complex number.
+	 * The - operator. The operation is <code>result = this - other</code>.
+	 * Where <code>other</code> is a std::complex number.
 	 *
-	 * @param a The std::complex number to add.
+	 * @param other The @c std::complex number to add.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator-(const std::complex<T> & a) const
+	inline const b3Complex<T> operator-(const std::complex<T> & other) const
 	{
-		return b3Complex<T>(*this) -= b3Complex<T>(a);
+		return b3Complex<T>(*this) -= b3Complex<T>(other);
 	}
 
 	/**
-	 * The * operator. The operation is <code>result = this * a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The * operator. The operation is <code>result = this * other</code>.
+	 * Where @c other is a complex number.
 	 *
-	 * @param a The complex number to multiply.
+	 * @param other The complex number to multiply.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator*(const b3Complex<T> & a) const
+	inline const b3Complex<T> operator*(const b3Complex<T> & other) const
 	{
 		return b3Complex<T>(
-				v[Re] * a.v[Re] - v[Im] * a.v[Im],
-				v[Im] * a.v[Re] + v[Re] * a.v[Im]);
+				v[Re] * other.v[Re] - v[Im] * other.v[Im],
+				v[Im] * other.v[Re] + v[Re] * other.v[Im]);
 	}
 
 	/**
-	 * The / operator. The operation is <code>result = this / a</code>.
-	 * Where <code>a</code> is a complex number.
+	 * The / operator. The operation is <code>result = this / other</code>.
+	 * Where @c other is a complex number.
 	 *
-	 * @param a The complex number to divide.
+	 * @param other The complex number to divide.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator/(const b3Complex<T> & a) const
+	inline const b3Complex<T> operator/(const b3Complex<T> & other) const
 	{
-		return b3Complex<T>(*this) /= a;
+		return b3Complex<T>(*this) /= other;
 	}
 
 	/*************************************************************************
@@ -416,7 +427,7 @@ public:
 	}
 
 	/**
-	 * This method computes the value/length of this complex number.
+	 * This method computes the magnitude of this complex number.
 	 *
 	 * @return Length of this complex number.
 	 */
@@ -426,7 +437,11 @@ public:
 	}
 
 	/**
-	 * This method normalizes this complex number.
+	 * This method normalizes the magnitude of this complex numer to the
+	 * desired length.
+	 *
+	 * @param len The wanted magnitude of the complex number.
+	 * @returns True if the magnitude is a positive non zero value.
 	 */
 	inline bool    b3Normalize(const T len = 1)
 	{
@@ -476,11 +491,23 @@ public:
 		v[Re]  = re[0] - re[1];
 	}
 
+	/**
+	 * This method returns the reference to the real part of this complex
+	 * number.
+	 *
+	 * @return The reference to the real part.
+	 */
 	inline T & b3Real()
 	{
 		return v[Re];
 	}
 
+	/**
+	 * This method returns the reference to the imaginary part of this complex
+	 * number.
+	 *
+	 * @return The reference to the imaginary part.
+	 */
 	inline T & b3Imag()
 	{
 		return v[Im];
@@ -501,14 +528,28 @@ public:
 		return result;
 	}
 
-	inline void b3Scale(const b3Complex<T> & a)
+	/**
+	 * This method scales the complex number instance by the components of
+	 * another complex number.
+	 *
+	 * @param other
+	 */
+	inline b3Complex<T> & b3Scale(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < 2; i++)
 		{
-			v[i] *= a.v[i];
+			v[i] *= other.v[i];
 		}
+
+		return *this;
 	}
 
+	/**
+	 * This method swaps the contents of two complex numbers.
+	 *
+	 * @param a The first value to swap.
+	 * @param b The second value to swap.
+	 */
 	inline static void b3Swap(b3Complex<T> & a, b3Complex & b)
 	{
 		b3Complex<T> aux;
