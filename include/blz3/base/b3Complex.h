@@ -547,7 +547,9 @@ public:
 	 * This method dumps the contents.
 	 *
 	 */
-	inline void b3Dump(const char * variable, const b3_log_level level = B3LOG_NORMAL) const
+	inline void b3Dump(
+			const char *       variable,
+			const b3_log_level level = B3LOG_NORMAL) const
 	{
 		b3PrintF(level, "%s\n", b3ToString(variable).c_str());
 	}
@@ -570,9 +572,12 @@ public:
 		return std::string(buffer);
 	}
 
-	friend std::ostream & operator<<(std::ostream & os, const b3Complex<T> & complex)
+	friend inline std::ostream & operator<<(
+			std::ostream & os, const b3Complex<T> & complex)
 	{
-		os << complex;
+		const std::string dump(complex);
+
+		os << dump;
 		return os;
 	}
 };

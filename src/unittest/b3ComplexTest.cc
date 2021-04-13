@@ -207,6 +207,11 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL(  8.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL(  6.0f, b3_c32.b3Imag());
 
+	b3_c32 = 100 + 49i;
+	b3_c32 = b3Complex<b3_f32>::b3Sqrt(b3Complex<b3_f32>(64.0f + 36.0if));
+	CPPUNIT_ASSERT_EQUAL(  8.0f, b3_c32.b3Real());
+	CPPUNIT_ASSERT_EQUAL(  6.0f, b3_c32.b3Imag());
+
 	b3_c32 = b3Complex<b3_f32>(1.0, 7.0);
 	CPPUNIT_ASSERT_EQUAL( 1.0f, b3_c32.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 7.0f, b3_c32.b3Imag());
@@ -282,6 +287,13 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL( 4.0f, b3_c32_init1.b3Imag());
 	CPPUNIT_ASSERT_EQUAL( 1.0f, b3_c32_init2.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 7.0f, b3_c32_init2.b3Imag());
+
+	b3_c32_init2 = b3_c32.b3Scale(b3_c32_init1);
+	CPPUNIT_ASSERT_EQUAL( 5.5f,    b3_c32_init1.b3Real());
+	CPPUNIT_ASSERT_EQUAL( 4.0f,    b3_c32_init1.b3Imag());
+	CPPUNIT_ASSERT_EQUAL(-1760.0f, b3_c32.b3Real());
+	CPPUNIT_ASSERT_EQUAL( -460.0f, b3_c32.b3Imag());
+	CPPUNIT_ASSERT_EQUAL(b3_c32,   b3_c32_init2);
 
 	b3_c32.b3Dump("c32 test");
 
@@ -361,6 +373,19 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL( 8.0, b3_c64_init1.b3Imag());
 	CPPUNIT_ASSERT_EQUAL( 2.5, b3_c64_init2.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 3.5, b3_c64_init2.b3Imag());
+
+	b3_c64_init2 = b3_c64.b3Scale(b3_c64_init1);
+	CPPUNIT_ASSERT_EQUAL( 4.5,   b3_c64_init1.b3Real());
+	CPPUNIT_ASSERT_EQUAL( 8.0,   b3_c64_init1.b3Imag());
+	CPPUNIT_ASSERT_EQUAL(20.25,  b3_c64.b3Real());
+	CPPUNIT_ASSERT_EQUAL(64.0,   b3_c64.b3Imag());
+	CPPUNIT_ASSERT_EQUAL(b3_c64, b3_c64_init2);
+
+	b3_c64_init2 = b3_c64.b3Sqrt(b3_c64);
+	CPPUNIT_ASSERT_EQUAL( 4.5,   b3_c64_init2.b3Real());
+	CPPUNIT_ASSERT_EQUAL( 8.0,   b3_c64_init2.b3Imag());
+	CPPUNIT_ASSERT_EQUAL(20.25,  b3_c64.b3Real());
+	CPPUNIT_ASSERT_EQUAL(64.0,   b3_c64.b3Imag());
 
 	std::string message = b3_c32;
 	CPPUNIT_ASSERT(message.length() > 0);
