@@ -569,6 +569,12 @@ public:
 
 		return std::string(buffer);
 	}
+
+	friend std::ostream & operator<<(std::ostream & os, const b3Complex<T> & complex)
+	{
+		os << complex;
+		return os;
+	}
 };
 
 #endif

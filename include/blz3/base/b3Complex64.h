@@ -289,6 +289,12 @@ public:
 		return ptr[Im];
 	}
 
+	friend std::ostream & operator<<(std::ostream & os, const b3Complex64 & complex)
+	{
+		os << complex;
+		return os;
+	}
+
 private:
 	inline __m128d product(const b3Complex64 & mul) const
 	{

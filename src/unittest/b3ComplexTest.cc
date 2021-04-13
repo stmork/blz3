@@ -55,7 +55,7 @@ void b3ComplexTest::testOps()
 {
 	b = a;
 
-	CPPUNIT_ASSERT(a == b);
+	CPPUNIT_ASSERT_EQUAL(a, b);
 	CPPUNIT_ASSERT(*c + *d == b3Complex<b3_f32>(10, 12));
 	CPPUNIT_ASSERT(*c - *d == b3Complex<b3_f32>(-2, -2));
 	CPPUNIT_ASSERT(*c * *d == b3Complex<b3_f32>(-11, 58));
@@ -84,7 +84,7 @@ void b3ComplexTest::testComplex64()
 	cb = ca;
 	CPPUNIT_ASSERT_EQUAL(2.0, cb.b3Real());
 	CPPUNIT_ASSERT_EQUAL(3.0, cb.b3Imag());
-	CPPUNIT_ASSERT(ca == cb);
+	CPPUNIT_ASSERT_EQUAL(ca, cb);
 
 	// BUG: This does not work in conjunction with valgrind.
 #if 0
@@ -321,6 +321,9 @@ void b3ComplexTest::testStdComplex()
 	CPPUNIT_ASSERT_EQUAL( 8.0, b3_c64_init1.b3Imag());
 	CPPUNIT_ASSERT_EQUAL( 2.5, b3_c64_init2.b3Real());
 	CPPUNIT_ASSERT_EQUAL( 3.5, b3_c64_init2.b3Imag());
+
+	std::string message = b3_c32;
+	CPPUNIT_ASSERT(message.length() > 0);
 }
 
 #endif
