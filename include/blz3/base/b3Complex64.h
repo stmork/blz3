@@ -31,17 +31,19 @@ class B3_PLUGIN alignas(16) b3Complex64
 {
 	__m128d     v;
 
+	enum b3_complex_index
+	{
+		Re = 0, //!< Index of real part of complex number
+		Im,     //!< Index of imaginary part of complex number
+		Max
+	};
+
 	inline b3Complex64(const __m128d in)
 	{
 		v = in;
 	}
 
 public:
-	enum b3_complex_index
-	{
-		Re = 0, //!< Index of real part of complex number
-		Im = 1  //!< Index of imaginary part of complex number
-	};
 
 	/*************************************************************************
 	**                                                                      **
@@ -77,6 +79,13 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
+	inline b3Complex64 & operator=(const b3_f64 re)
+	{
+		v = _mm_set_sd(re);
+
+		return *this;
+	}
+
 	inline b3Complex64 & operator=(const b3Complex64 & other)
 	{
 		v = other.v;
@@ -87,13 +96,6 @@ public:
 	inline b3Complex64 & operator=(const std::complex<b3_f64> & other)
 	{
 		v = _mm_set_pd(other.imag(), other.real());
-
-		return *this;
-	}
-
-	inline b3Complex64 & operator=(const b3_f64 re)
-	{
-		v = _mm_set_sd(re);
 
 		return *this;
 	}

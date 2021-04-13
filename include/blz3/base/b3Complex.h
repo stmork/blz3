@@ -136,7 +136,7 @@ public:
 	 *
 	 * @param other The instance to copy from.
 	 */
-	inline b3Complex<T> & operator=(b3Complex<T> & other)
+	inline b3Complex<T> & operator=(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < Max; i++)
 		{
