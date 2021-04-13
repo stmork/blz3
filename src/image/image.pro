@@ -1,7 +1,8 @@
 # Blizzard III Image processing library
 
-TEMPLATE  = lib
-CONFIG   += link_pkgconfig
+QT         -= gui core
+CONFIG     += link_pkgconfig
+TEMPLATE    = lib
 
 include(../common.pri)
 

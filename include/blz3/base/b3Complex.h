@@ -351,7 +351,7 @@ public:
 	 * @param other The std::complex number to add.
 	 * @return This as result.
 	 */
-	inline const b3Complex<T> operator+(const std::complex<double> & other) const
+	inline const b3Complex<T> operator+(const std::complex<T> & other) const
 	{
 		return b3Complex<T>(*this) += b3Complex<T>(other);
 	}

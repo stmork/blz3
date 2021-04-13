@@ -1,6 +1,7 @@
 # Blizzard III basic unittests.
 
-TEMPLATE = app
+QT       -= gui core
+TEMPLATE  = app
 
 include(../common.pri)
 

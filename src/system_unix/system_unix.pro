@@ -1,5 +1,6 @@
 # Blizzard III Unix System abstraction library
 
+QT         -= gui core
 TEMPLATE    = lib
 
 include(../common.pri)

@@ -59,7 +59,7 @@ AC_LANG_PUSH(C++)
 AX_CXX_COMPILE_STDCXX_17([ext], [mandatory])
 AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
 AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
-AX_CHECK_COMPILE_FLAG([-std=c++17], [STDFLAGS="$STDFLAGS -std=c++17"])
+AX_CHECK_COMPILE_FLAG([-std=gnu++1z], [STDFLAGS="$STDFLAGS -std=gnu++1z"])
 CFLAGS="$CFLAGS $MFLAGS"
 CXXFLAGS="$CXXFLAGS $MFLAGS"
 # CPPFLAGS="$CPPFLAGS $STDFLAGS"

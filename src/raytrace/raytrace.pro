@@ -1,6 +1,7 @@
 # Blizzard III Base library
 
-TEMPLATE  = lib
+QT         -= gui core
+TEMPLATE    = lib
 
 include(../common.pri)
 

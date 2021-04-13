@@ -1,5 +1,6 @@
 # Blizzard III Basic algorithm library
 
+CONFIG   -= gui core
 TEMPLATE  = lib
 
 include(../common.pri)
