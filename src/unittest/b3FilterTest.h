@@ -36,8 +36,10 @@ class b3FilterTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testGaussFilter);
 	CPPUNIT_TEST_SUITE_END();
 
-	static const      unsigned STEPS = 32;
-	static constexpr double    step  = 1.0 / STEPS;
+	static const      unsigned STEPS = 40;
+	static constexpr double    range = 10.0;
+	static constexpr double    step  = range * 2.0 / STEPS;
+
 public:
 	void setUp() override;
 	void tearDown() override;
@@ -47,7 +49,7 @@ public:
 
 private:
 	b3_f64 testFunc(const b3Filter & filter);
-	b3_f64 testIntegral(const b3Filter & filter);
+	void testIntegral(const b3Filter & filter);
 };
 
 #endif

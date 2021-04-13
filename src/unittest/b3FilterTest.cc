@@ -46,65 +46,65 @@ void b3FilterTest::tearDown()
 
 void b3FilterTest::testBoxFilter()
 {
-	b3BoxFilter filter;
+	const b3BoxFilter filter;
+	const b3_f64      func = testFunc(filter);
 
-	const b3_f64 func     = testFunc(filter);
-	const b3_f64 integral = testIntegral(filter);
+	testIntegral(filter);
 
 	CPPUNIT_ASSERT_GREATER(0.0, func);
-	CPPUNIT_ASSERT_GREATER(0.0, integral);
 }
 
 void b3FilterTest::testShutterFilter()
 {
-	b3ShutterFilter filter;
+	const b3ShutterFilter filter;
+	const b3_f64          func = testFunc(filter);
 
-	const b3_f64 func     = testFunc(filter);
-	const b3_f64 integral = testIntegral(filter);
+	testIntegral(filter);
 
 	CPPUNIT_ASSERT_GREATER(0.0, func);
-	CPPUNIT_ASSERT_GREATER(0.0, integral);
 }
 
 void b3FilterTest::testGaussFilter()
 {
-	b3GaussFilter filter;
+	const b3GaussFilter filter;
+	const b3_f64        func = testFunc(filter);
 
-	const b3_f64 func     = testFunc(filter);
-	const b3_f64 integral = testIntegral(filter);
+	testIntegral(filter);
 
 	CPPUNIT_ASSERT_GREATER(0.0, func);
-	CPPUNIT_ASSERT_GREATER(0.0, integral);
 }
 
 b3_f64 b3FilterTest::testFunc(const b3Filter & filter)
 {
 	b3_f64 value = 0.0;
+	b3_f64 left  = filter.b3Func(-range);
 
-	for (double x = -10; x <= 10; x += step)
+	for (double x = -range; x < range; x += step)
 	{
-		const b3_f64 left   = filter.b3Func(x - step * 0.5);
-		const b3_f64 right  = filter.b3Func(x + step * 0.5);
-		const b3_f64 sample = (left + right) * 0.5 * step;
+		const b3_f64 right  = filter.b3Func(x + step);
+		const b3_f64 sample = (left + right) * step;
 
 		value += sample;
+		left   = right;
 	}
 	return value;
 }
 
-b3_f64 b3FilterTest::testIntegral(const b3Filter & filter)
+void b3FilterTest::testIntegral(const b3Filter & filter)
 {
-	b3_f64 value = 0.0;
+	b3_f64 left  = filter.b3Integral(-range);;
 
-	for (double x = -10; x <= 10; x += step)
+	for (double x = -range; x <= range; x += step)
 	{
-		const b3_f64 left   = filter.b3Integral(x - step * 0.5);
-		const b3_f64 right  = filter.b3Integral(x + step * 0.5);
-		const b3_f64 sample = (left + right) * 0.5 * step;
+		const b3_f64 right  = filter.b3Integral(x + step);
+		const b3_f64 sample = (left + right) * step;
 
-		value += sample;
+		CPPUNIT_ASSERT_GREATEREQUAL(left, right);
+		CPPUNIT_ASSERT_GREATEREQUAL(0.0, sample);
+		CPPUNIT_ASSERT_LESSEQUAL(1.0, sample);
+
+		left = right;
 	}
-	return value;
 }
 
 #endif
