@@ -35,7 +35,8 @@ class b3ComplexTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testOps);
 	CPPUNIT_TEST(testEqual);
 	CPPUNIT_TEST(testComplex64);
-	CPPUNIT_TEST(testStdComplex);
+	CPPUNIT_TEST(testStdComplex32);
+	CPPUNIT_TEST(testStdComplex64);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -44,7 +45,8 @@ public:
 	void testOps();
 	void testEqual();
 	void testComplex64();
-	void testStdComplex();
+	void testStdComplex32();
+	void testStdComplex64();
 };
 
 #endif

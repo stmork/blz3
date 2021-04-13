@@ -228,11 +228,11 @@ void b3Fourier::b3Sample(b3FilterInfo * info, b3SampleFunc sample_func)
 */
 bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line)
 {
-	b3Complex64 one   = b3Complex64(1.0, 1.0);
-	b3Complex64 half  = b3Complex64(0.5, 0.5);
-	b3Complex64 dMult = b3Complex64(1.0, dir == 1 ? -1.0 : 1.0);
-	b3Complex64 c, u;
-	b3_loop     nn, i, i1, j, k, i2, l, l1, l2;
+	const b3Complex64 one( 1.0 + 1.0i);
+	const b3Complex64 half(0.5 + 0.5i);
+	const b3Complex64 dMult(1.0, dir == 1 ? -1.0 : 1.0);
+	b3Complex64       c, u;
+	b3_loop           nn, i, i1, j, k, i2, l, l1, l2;
 
 	/* Calculate the number of points */
 	nn = 1;

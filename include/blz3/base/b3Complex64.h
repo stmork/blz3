@@ -179,7 +179,7 @@ public:
 		return product(mul);
 	}
 
-	inline b3Complex64 &  operator*=(const b3Complex64 & mul)
+	inline b3Complex64  & operator*=(const b3Complex64 & mul)
 	{
 		v = product(mul);
 
@@ -194,7 +194,7 @@ public:
 		return result;
 	}
 
-	inline b3Complex64 &  operator*=(const b3_f64 value)
+	inline b3Complex64  & operator*=(const b3_f64 value)
 	{
 		v = _mm_mul_pd(v, _mm_set1_pd(value));
 
@@ -294,9 +294,14 @@ public:
 		return ptr[Im];
 	}
 
-	friend std::ostream & operator<<(std::ostream & os, const b3Complex64 & complex)
+	friend inline std::ostream & operator<<(std::ostream & os, const b3Complex64 & complex)
 	{
-		os << complex;
+		char buffer[128];
+
+		snprintf(buffer, sizeof(buffer), "b3Complex(re=%2.3lf im=%2.3lf)",
+			complex.b3Real(), complex.b3Imag());
+
+		os << buffer;
 		return os;
 	}
 
