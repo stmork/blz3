@@ -114,7 +114,7 @@ public:
 	/**
 	 * This returns a std::complex instance from this complex representation.
 	 */
-	inline operator std::complex<b3_f64>() const
+	inline operator const std::complex<b3_f64>() const
 	{
 		alignas(16) b3_f64 comp[2];
 
@@ -142,7 +142,7 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
-	inline b3Complex64 operator+(const b3Complex64 & sum) const
+	inline const b3Complex64 operator+(const b3Complex64 & sum) const
 	{
 		b3Complex64 result;
 
@@ -150,12 +150,14 @@ public:
 		return result;
 	}
 
-	inline void operator+=(const b3Complex64 & sum)
+	inline b3Complex64 & operator+=(const b3Complex64 & sum)
 	{
 		v = _mm_add_pd(v, sum.v);
+
+		return *this;
 	}
 
-	inline b3Complex64 operator-(const b3Complex64 & sum) const
+	inline const b3Complex64 operator-(const b3Complex64 & sum) const
 	{
 		b3Complex64 result;
 
@@ -163,38 +165,26 @@ public:
 		return result;
 	}
 
-	inline void operator-=(const b3Complex64 & sum)
+	inline b3Complex64 & operator-=(const b3Complex64 & sum)
 	{
 		v = _mm_sub_pd(v, sum.v);
+
+		return *this;
 	}
 
-	inline __m128d product(const b3Complex64 & mul) const
-	{
-		__m128d p1 = _mm_mul_pd(v,
-				_mm_unpacklo_pd(mul.v, mul.v));
-
-		__m128d p2 = _mm_mul_pd(
-				_mm_shuffle_pd(v, v, _MM_SHUFFLE2(0, 1)),
-				_mm_unpackhi_pd(mul.v, mul.v));
-
-#ifdef BLZ3_USE_SSE3
-		return _mm_addsub_pd(p1, p2);
-#else
-		return _mm_add_pd(p1, _mm_mul_pd(p2, _mm_setr_pd(-1, 1)));
-#endif
-	}
-
-	inline b3Complex64 operator*(const b3Complex64 & mul) const
+	inline const b3Complex64 operator*(const b3Complex64 & mul) const
 	{
 		return product(mul);
 	}
 
-	inline void operator*=(const b3Complex64 & mul)
+	inline b3Complex64 &  operator*=(const b3Complex64 & mul)
 	{
 		v = product(mul);
+
+		return *this;
 	}
 
-	inline b3Complex64 operator*(const b3_f64 value) const
+	inline const b3Complex64 operator*(const b3_f64 value) const
 	{
 		b3Complex64 result;
 
@@ -202,12 +192,14 @@ public:
 		return result;
 	}
 
-	inline void operator*=(const b3_f64 value)
+	inline b3Complex64 &  operator*=(const b3_f64 value)
 	{
 		v = _mm_mul_pd(v, _mm_set1_pd(value));
+
+		return *this;
 	}
 
-	inline b3Complex64 operator/(const b3_f64 value) const
+	inline const b3Complex64 operator/(const b3_f64 value) const
 	{
 		b3Complex64 result;
 
@@ -215,9 +207,11 @@ public:
 		return result;
 	}
 
-	inline void operator/=(const b3_f64 value)
+	inline b3Complex64 & operator/=(const b3_f64 value)
 	{
 		v = _mm_div_pd(v, _mm_set1_pd(value));
+
+		return *this;
 	}
 
 	/*************************************************************************
@@ -226,9 +220,11 @@ public:
 	**                                                                      **
 	*************************************************************************/
 
-	inline void b3Square()
+	inline b3Complex64 & b3Square()
 	{
 		v = product(*this);
+
+		return *this;
 	}
 
 	inline b3_f64 b3SquareLength() const
@@ -245,23 +241,25 @@ public:
 		return sqrt(b3SquareLength());
 	}
 
-	inline static b3Complex64 b3Sqrt(const b3Complex64 & a)
+	inline static const b3Complex64 b3Sqrt(const b3Complex64 & a)
 	{
 		_MM_SET_EXCEPTION_STATE(0);
-		__m128d s = _mm_sqrt_pd(a.v);
-		unsigned int csr = _mm_getcsr();
+		const __m128d      sqr = _mm_sqrt_pd(a.v);
+		const unsigned int csr = _mm_getcsr();
 
 		if (csr & _MM_EXCEPT_INVALID)
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
 
-		return b3Complex64(s);
+		return b3Complex64(sqr);
 	}
 
-	inline void b3Scale(const b3Complex64 & a)
+	inline b3Complex64 & b3Scale(const b3Complex64 & a)
 	{
 		v = _mm_mul_pd(v, a.v);
+
+		return *this;
 	}
 
 	inline static void b3Swap(b3Complex64 & a, b3Complex64 & b)
@@ -287,6 +285,23 @@ public:
 		b3_f64 * ptr = (b3_f64 *)&v;
 
 		return ptr[Im];
+	}
+
+private:
+	inline __m128d product(const b3Complex64 & mul) const
+	{
+		__m128d p1 = _mm_mul_pd(v,
+				_mm_unpacklo_pd(mul.v, mul.v));
+
+		__m128d p2 = _mm_mul_pd(
+				_mm_shuffle_pd(v, v, _MM_SHUFFLE2(0, 1)),
+				_mm_unpackhi_pd(mul.v, mul.v));
+
+#ifdef BLZ3_USE_SSE3
+		return _mm_addsub_pd(p1, p2);
+#else
+		return _mm_add_pd(p1, _mm_mul_pd(p2, _mm_setr_pd(-1, 1)));
+#endif
 	}
 };
 

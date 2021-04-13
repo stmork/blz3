@@ -415,7 +415,7 @@ public:
 	 *
 	 * @return Squared length of this complex number.
 	 */
-	inline const T b3SquareLength() const
+	inline T b3SquareLength() const
 	{
 		alignas(16) T val[2];
 
@@ -431,7 +431,7 @@ public:
 	 *
 	 * @return Length of this complex number.
 	 */
-	inline const T b3Length() const
+	inline T b3Length() const
 	{
 		return sqrt(b3SquareLength());
 	}
@@ -469,7 +469,7 @@ public:
 	 *
 	 * @return Phase of this complex number.
 	 */
-	inline const T b3Phase() const
+	inline T b3Phase() const
 	{
 		return atan2(v[Im], v[Re]);
 	}
