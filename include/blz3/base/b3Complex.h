@@ -36,17 +36,19 @@
  */
 template<typename T> class B3_PLUGIN b3Complex
 {
-	/**
-	 * The value array. We advise to use b3_f64 as template class.
-	 */
-	alignas(16) T v[2];
-
-public:
 	enum b3_complex_index
 	{
 		Re = 0, //!< Index of real part of complex number
-		Im = 1  //!< Index of imaginary part of complex number
+		Im,     //!< Index of imaginary part of complex number
+		Max
 	};
+
+	/**
+	 * The value array. We advise to use b3_f64 as template class.
+	 */
+	alignas(16) T v[Max];
+
+public:
 
 	/*************************************************************************
 	**                                                                      **
@@ -66,7 +68,7 @@ public:
 	 */
 	inline b3Complex<T>(const b3Complex<T> & other)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] = other.v[i];
 		}
@@ -136,7 +138,7 @@ public:
 	 */
 	inline b3Complex<T> & operator=(b3Complex<T> & other)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] += other.v[i];
 		}
@@ -190,7 +192,7 @@ public:
 	 */
 	inline b3Complex<T> & operator+=(const b3Complex<T> & other)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] += other.v[i];
 		}
@@ -207,7 +209,7 @@ public:
 	 */
 	inline b3Complex<T> & operator-=(const b3Complex<T> & other)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] -= other.v[i];
 		}
@@ -224,12 +226,12 @@ public:
 	 */
 	inline b3Complex<T> & operator*=(const b3Complex<T> & other)
 	{
-		alignas(16) T val[2];
+		alignas(16) T val[Max];
 
 		val[Re] = v[Re] * other.v[Re] - v[Im] * other.v[Im];
 		val[Im] = v[Im] * other.v[Re] + v[Re] * other.v[Im];
 
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] = val[i];
 		}
@@ -246,12 +248,12 @@ public:
 	 */
 	inline b3Complex<T> & operator/=(const b3Complex<T> & other)
 	{
-		alignas(16) T val[2];
-		alignas(16) T den[2];
-		alignas(16) T nom[2];
+		alignas(16) T val[Max];
+		alignas(16) T den[Max];
+		alignas(16) T nom[Max];
 		T             denom;
 
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			nom[i] =       v[i] * other.v[i];
 			den[i] = other.v[i] * other.v[i];
@@ -260,7 +262,7 @@ public:
 		denom   = den[Re] + den[Im];
 		val[Re] = nom[Re] + nom[Im];
 
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] = val[i] / denom;
 		}
@@ -305,7 +307,7 @@ public:
 	 */
 	inline b3Complex<T> & operator*=(const T value)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] *= value;
 		}
@@ -322,7 +324,7 @@ public:
 	 */
 	inline b3Complex<T> & operator/=(const T value)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] /= value;
 		}
@@ -417,9 +419,9 @@ public:
 	 */
 	inline T b3SquareLength() const
 	{
-		alignas(16) T val[2];
+		alignas(16) T val[Max];
 
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			val[i] = v[i] * v[i];
 		}
@@ -451,7 +453,7 @@ public:
 		{
 			T new_len = len / old_len;
 
-			for (b3_loop i = 0; i < 2; i++)
+			for (b3_loop i = 0; i < Max; i++)
 			{
 				v[i] *= new_len;
 			}
@@ -480,9 +482,9 @@ public:
 	 */
 	inline void b3Square()
 	{
-		alignas(16) T re[2];
+		alignas(16) T re[Max];
 
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			re[i] = v[i] * v[i];
 		}
@@ -521,7 +523,7 @@ public:
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			result.v[i] = sqrt(a.v[i]);
 		}
@@ -536,7 +538,7 @@ public:
 	 */
 	inline b3Complex<T> & b3Scale(const b3Complex<T> & other)
 	{
-		for (b3_loop i = 0; i < 2; i++)
+		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] *= other.v[i];
 		}
