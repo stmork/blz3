@@ -140,7 +140,7 @@ public:
 	{
 		for (b3_loop i = 0; i < Max; i++)
 		{
-			v[i] += other.v[i];
+			v[i] = other.v[i];
 		}
 
 		return *this;
@@ -477,23 +477,6 @@ public:
 	}
 
 	/**
-	 * This method multiplies this complex number with
-	 * themself.
-	 */
-	inline void b3Square()
-	{
-		alignas(16) T re[Max];
-
-		for (b3_loop i = 0; i < Max; i++)
-		{
-			re[i] = v[i] * v[i];
-		}
-		v[Im]  = v[Re] * v[Im];
-		v[Im] += v[Im];
-		v[Re]  = re[Re] - re[Im];
-	}
-
-	/**
 	 * This method returns the reference to the real part of this complex
 	 * number.
 	 *
@@ -552,11 +535,10 @@ public:
 	 * @param a The first value to swap.
 	 * @param b The second value to swap.
 	 */
-	inline static void b3Swap(b3Complex<T> & a, b3Complex & b)
+	inline static void b3Swap(b3Complex<T> & a, b3Complex<T> & b)
 	{
-		b3Complex<T> aux;
+		const b3Complex<T> aux(a);
 
-		aux = a;
 		a = b;
 		b = aux;
 	}
