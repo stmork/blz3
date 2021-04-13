@@ -47,7 +47,7 @@ b3Filter * b3Filter::b3New(b3_filter filter)
 	return nullptr;
 }
 
-b3_f64 b3Filter::b3InvIntegral(b3_f64 val, bool throw_exception)
+b3_f64 b3Filter::b3InvIntegral(b3_f64 val, bool throw_exception) const
 {
 	b3_f64 y, xLower, xMid, xUpper, diff;
 
@@ -116,12 +116,12 @@ b3GaussFilter::b3GaussFilter()
 	}
 }
 
-b3_f64 b3GaussFilter::b3Func(b3_f64 x)
+b3_f64 b3GaussFilter::b3Func(b3_f64 x) const
 {
 	return exp(-x * x * M_PI);
 }
 
-b3_f64 b3GaussFilter::b3Integral(b3_f64 val)
+b3_f64 b3GaussFilter::b3Integral(b3_f64 val) const
 {
 	b3_f64   lower, result;
 	b3_index index;
@@ -168,7 +168,7 @@ b3ShutterFilter::b3ShutterFilter(b3_f64 max)
 	m_Area  = 2.0 - 2.0 * max;
 }
 
-b3_f64 b3ShutterFilter::b3Func(b3_f64 x)
+b3_f64 b3ShutterFilter::b3Func(b3_f64 x) const
 {
 	b3_f64 ax = fabs(x);
 
@@ -183,7 +183,7 @@ b3_f64 b3ShutterFilter::b3Func(b3_f64 x)
 	return (1 - ax) * m_Slope;
 }
 
-b3_f64 b3ShutterFilter::b3Integral(b3_f64 x)
+b3_f64 b3ShutterFilter::b3Integral(b3_f64 x) const
 {
 	b3_f64 result;
 

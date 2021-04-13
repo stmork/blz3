@@ -18,6 +18,7 @@ HEADERS += b3SkeletonTest.h \
 	b3FFTTest.h \
 	b3FileListTest.h \
 	b3FileTest.h \
+	b3FilterTest.h \
 	b3ImageTest.h \
 	b3ListTest.h \
 	b3LocaleTest.h \
@@ -47,6 +48,7 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3FFTTest.cc \
 	b3FileListTest.cc \
 	b3FileTest.cc \
+	b3FilterTest.cc \
 	b3ImageTest.cc \
 	b3ListTest.cc \
 	b3LocaleTest.cc \
