@@ -257,6 +257,11 @@ public:
 		return b3Complex64(sqr);
 	}
 
+	inline b3Complex64 b3Sqrt() const
+	{
+		return b3Sqrt(*this);
+	}
+
 	inline b3Complex64 & b3Scale(const b3Complex64 & a)
 	{
 		v = _mm_mul_pd(v, a.v);

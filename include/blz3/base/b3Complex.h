@@ -498,6 +498,11 @@ public:
 		return v[Im];
 	}
 
+	/**
+	 * This method computes the square root of each complex component.
+	 *
+	 * @return The square rooted complex number.
+	 */
 	inline static b3Complex<T> b3Sqrt(const b3Complex<T> & a)
 	{
 		b3Complex<T> result;
@@ -511,6 +516,16 @@ public:
 			result.v[i] = sqrt(a.v[i]);
 		}
 		return result;
+	}
+
+	/**
+	 * This method computes the square root of each complex component.
+	 *
+	 * @return The square rooted complex number.
+	 */
+	inline b3Complex<T> b3Sqrt() const
+	{
+		return b3Sqrt(*this);
 	}
 
 	/**
