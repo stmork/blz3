@@ -490,7 +490,7 @@ public:
 		}
 		v[Im]  = v[Re] * v[Im];
 		v[Im] += v[Im];
-		v[Re]  = re[0] - re[1];
+		v[Re]  = re[Re] - re[Im];
 	}
 
 	/**
