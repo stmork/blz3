@@ -24,6 +24,7 @@
 #include "b3SystemIndInclude.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/image/b3Tx.h"
 
 #define no_SYNC
 #define no_DEBUG

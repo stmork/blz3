@@ -44,6 +44,8 @@ b3FactoryTest::b3FactoryTest() : m_Display(512, 512)
 
 void b3FactoryTest::setUp()
 {
+	m_Scene = nullptr;
+
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 

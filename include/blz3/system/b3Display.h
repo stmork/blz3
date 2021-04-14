@@ -26,11 +26,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-#include "blz3/system/b3Memory.h"
 #include "blz3/system/b3Exception.h"
+#include "blz3/system/b3Memory.h"
 #include "blz3/base/b3List.h"
-#include "blz3/image/b3Tx.h"
 
 /*************************************************************************
 **                                                                      **
@@ -51,6 +49,8 @@ enum b3_display_error
 };
 
 typedef b3Exception<b3_display_error, 0x445350> b3DisplayException;
+
+class b3Tx;
 
 /**
  * This class handles one single display row.
@@ -82,11 +82,6 @@ public:
 	 * \param *buffer The initial color buffer.
 	 */
 	b3Row(const b3_coord y, const b3_res xSize, b3_color * buffer);
-
-	/**
-	 * This destrucotr does nothing.
-	 */
-	virtual ~b3Row() = default;
 };
 
 /**
@@ -111,11 +106,11 @@ public:
 	b3Display();
 
 	/**
-	                * This constructor initializes a display with a default size.
+	 * This constructor initializes a display with a default size.
 	 * The window bar contains the given title.
 	 *
-	                * \param *title The window title.
-	                */
+	 * \param *title The window title.
+	 */
 	b3Display(const char * title);
 
 	/**
@@ -127,17 +122,18 @@ public:
 	b3Display(b3Tx * image);
 
 	/**
-	                * This constructor initializes a display with the given resolution
+	 * This constructor initializes a display with the given resolution
 	 * and the given title.
 	 *
-	                * \param xSize The new x resolution.
-	                * \param ySize The new y resolution.
-	                * \param *title The new window title.
-	                */
+	 * \param xSize The new x resolution.
+	 * \param ySize The new y resolution.
+	 * \param *title The new window title.
+	 */
 	b3Display(
 		const b3_res  xSize,
 		const b3_res  ySize,
 		const char  * title = nullptr);
+
 	/**
 	 * This destructor deinitializes the display.
 	 */
@@ -149,7 +145,7 @@ public:
 	 * \param &xSize A reference where the x size is stored.
 	 * \param &ySize A reference where the y size is stored.
 	 */
-	virtual void b3GetRes(b3_res & xSize, b3_res & ySize)
+	virtual void b3GetRes(b3_res & xSize, b3_res & ySize) const
 	{
 		xSize = m_xMax;
 		ySize = m_yMax;
@@ -162,7 +158,10 @@ public:
 	 * \param y The y coordinate.
 	 * \param pixel The pixel color.
 	 */
-	virtual void b3PutPixel(const b3_coord x, const b3_coord y, const b3_color & pixel)
+	virtual void b3PutPixel(
+		const b3_coord   x,
+		const b3_coord   y,
+		const b3_color & pixel)
 	{
 		B3_ASSERT(m_Buffer != nullptr);
 		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
@@ -198,9 +197,13 @@ public:
 	 * \return True if an cancel event occured.
 	 */
 	virtual inline b3_bool b3IsCancelled(
-		const b3_coord x B3_UNUSED,
-		const b3_coord y B3_UNUSED)
+		const b3_coord x,
+		const b3_coord y)
 	{
+		// B3_UNUSED a.k.a. [[maybe_unused]] makes weird things...
+		(void)x;
+		(void)y;
+
 		return false;
 	}
 
