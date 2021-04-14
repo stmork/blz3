@@ -45,7 +45,11 @@
 #	include <xmmintrin.h>
 #endif
 
+#ifdef __GNUC__
+#define B3_UNUSED __attribute__((unused))
+#else
 #define B3_UNUSED       [[maybe_unused]] //!< This macro marks an unused argument.
+#endif
 
 #define B3_FALLTHROUGH  [[fallthrough]] //!< this macro allows switch/case fall through
 

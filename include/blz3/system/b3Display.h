@@ -197,13 +197,9 @@ public:
 	 * \return True if an cancel event occured.
 	 */
 	virtual inline b3_bool b3IsCancelled(
-		const b3_coord x,
-		const b3_coord y)
+		const b3_coord x B3_UNUSED,
+		const b3_coord y B3_UNUSED)
 	{
-		// B3_UNUSED a.k.a. [[maybe_unused]] makes weird things...
-		(void)x;
-		(void)y;
-
 		return false;
 	}
 
