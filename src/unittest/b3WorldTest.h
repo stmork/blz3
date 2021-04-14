@@ -42,7 +42,6 @@ public:
 	void setUp() override
 	{
 		b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
-		b3RaytracingItems::b3Register();
 	}
 
 	void tearDown() override
@@ -96,6 +95,20 @@ public:
 		CPPUNIT_ASSERT(srcSize == dstSize);
 		CPPUNIT_ASSERT(memcmp(src, dst, srcSize));
 	}
+};
+
+class b3RegisterTest :  public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(b3RegisterTest);
+	CPPUNIT_TEST(test);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void setUp() override;
+
+	void tearDown() override;
+
+	void test();
 };
 
 #endif

@@ -57,7 +57,17 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 	*/
 }
 
-b3_bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check)
+b3_u32 b3ItemRegisterEntry::b3GetItemClassType() const
+{
+	return class_type;
+}
+
+bool b3ItemRegisterEntry::b3IsClass() const
+{
+	return is_class;
+}
+
+bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check) const
 {
 	if (is_class)
 	{
@@ -91,7 +101,7 @@ b3Item * b3ItemRegisterEntry::b3Load(b3_u32 * buffer)
 	return item;
 }
 
-void b3ItemRegisterEntry::b3Dump()
+void b3ItemRegisterEntry::b3Dump() const
 {
 	b3PrintF(B3LOG_FULL, "  class %04x:%04x%s.\n",
 		class_type >> 16, class_type & 0xffff, is_class ? " (class)" : "");

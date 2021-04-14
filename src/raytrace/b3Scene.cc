@@ -188,7 +188,7 @@ void b3Scene::b3ReallocateShader()
 	b3PrintF(B3LOG_DEBUG, "Using shader type %08x with instance %p\n", b3GetClassType(), m_Shader);
 }
 
-bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize)
+bool b3Scene::b3GetDisplaySize(b3_res & xSize, b3_res & ySize) const
 {
 	xSize = this->m_xSize;
 	ySize = this->m_ySize;
@@ -367,7 +367,7 @@ b3CameraPart * b3Scene::b3GetFirstCamera(bool must_active)
 }
 
 
-b3CameraPart * b3Scene::b3GetCameraByName(const char * camera_name)
+b3CameraPart * b3Scene::b3GetCameraByName(const char * camera_name) const
 {
 	b3CameraPart * camera;
 	b3Item    *   item;
@@ -396,7 +396,7 @@ b3CameraPart * b3Scene::b3GetActualCamera()
 	return m_ActualCamera;
 }
 
-b3CameraPart * b3Scene::b3GetNextCamera(b3CameraPart * camera)
+b3CameraPart * b3Scene::b3GetNextCamera(b3CameraPart * camera) const
 {
 	while ((camera = (b3CameraPart *)camera->Succ) != nullptr)
 	{
@@ -440,7 +440,7 @@ void b3Scene::b3SetCamera(b3CameraPart * camera, bool reorder)
 	}
 }
 
-bool b3Scene::b3GetTitle(char * title, size_t size)
+bool b3Scene::b3GetTitle(char * title, size_t size) const
 {
 	title[0] = 0;
 	if (m_ActualCamera != nullptr)
@@ -463,7 +463,7 @@ bool b3Scene::b3GetTitle(char * title, size_t size)
 **                                                                      **
 *************************************************************************/
 
-b3Light * b3Scene::b3GetLightByName(const char * light_name)
+b3Light * b3Scene::b3GetLightByName(const char * light_name) const
 {
 	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
@@ -475,7 +475,7 @@ b3Light * b3Scene::b3GetLightByName(const char * light_name)
 	return nullptr;
 }
 
-b3_count b3Scene::b3GetLightCount()
+b3_count b3Scene::b3GetLightCount() const
 {
 	return m_LightCount;
 }
@@ -533,7 +533,7 @@ const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP]
 	2.4, 1.5, 1.5, 2.0, 7.0, 4.0
 };
 
-void b3Scene::b3MixLensFlare(b3_ray * ray)
+void b3Scene::b3MixLensFlare(b3_ray * ray) const
 {
 	b3_vector  central, toLight, nLight;
 	b3Color    result;
@@ -620,8 +620,8 @@ void b3Scene::b3MixLensFlare(b3_ray * ray)
 
 void b3Scene::b3GetBackgroundColor(
 	b3_ray * ray,
-	b3_f64  lx,
-	b3_f64  ly)
+	b3_f64   lx,
+	b3_f64   ly)
 {
 	b3_coord  x, y;
 	b3_f64    r, sight;

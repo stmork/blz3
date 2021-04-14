@@ -159,7 +159,7 @@ public:
 	/**
 	 * This method frees all memory inside this world instance.
 	 */
-	void b3Free();
+	void            b3Free();
 
 	/**
 	 * This method allocates a b3Item instance from the item registry. If the
@@ -402,6 +402,14 @@ public:
 		bool              isclass = false);
 
 	/**
+	 * This method returns all class types registered in the b3ItemRegister.
+	 *
+	 * @param inclusive_classes
+	 * @return
+	 */
+	static std::vector<b3_u32> b3GetClassTypeList(bool inclusive_classes = true);
+
+	/**
 	 * This method serializes the content of this instance. The header is written
 	 * automatically through the b3Store(9 method. The content is written in the overloaded
 	 * version of this method and
@@ -476,7 +484,7 @@ public:
 	 *
 	 * @return The computed checksum.
 	 */
-	b3_u32    b3Checksum();
+	b3_u32          b3Checksum();
 
 	/**
 	 * This method returns true if the specified class type is in the same class
@@ -495,7 +503,7 @@ public:
 	 * @param classid   The class ID.
 	 * @return True if the class type of this instance  is in the given class.
 	 */
-	bool    b3IsClass(const b3_u32 classid) const;
+	bool            b3IsClass(const b3_u32 classid) const;
 
 protected:
 	////////////////////////////////////////////// Parsing routines

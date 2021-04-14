@@ -21,6 +21,8 @@
 #define B3_ITEMREGISTER_H
 
 #include "blz3/b3PluginDef.h"
+#include "blz3/base/b3List.h"
+#include "blz3/base/b3World.h"
 
 class B3_PLUGIN b3ItemRegisterEntry : public b3Link<b3ItemRegisterEntry>
 {
@@ -36,18 +38,20 @@ public:
 		b3_u32            new_class_type,
 		b3_bool           new_is_class = false);
 
-	b3_bool  b3IsClassType(b3_u32 class_type_to_check);
+	b3_u32   b3GetItemClassType() const;
+	bool     b3IsClass() const;
+	bool     b3IsClassType(b3_u32 class_type_to_check) const;
 	b3Item * b3Init();
 	b3Item * b3Load(b3_u32 * buffer);
-	void     b3Dump();
+	void     b3Dump() const;
 };
 
-class B3_PLUGIN b3ItemRegister : b3Base<b3ItemRegisterEntry>
+class B3_PLUGIN b3ItemRegister : public b3Base<b3ItemRegisterEntry>
 {
 	b3ItemRegister();
 
 public:
-	~b3ItemRegister();
+	virtual ~b3ItemRegister();
 
 	inline static b3ItemRegister & b3Instance()
 	{
@@ -57,14 +61,14 @@ public:
 	}
 
 	b3ItemRegisterEntry * b3Find(b3_u32 class_type);
-	void                  b3Dump();
+	void                  b3Dump() const;
 
 	inline void           b3Append(b3ItemRegisterEntry * new_entry)
 	{
 		b3Base::b3Append(new_entry);
 	}
 
-	inline b3_bool        b3IsEmpty()
+	inline b3_bool        b3IsEmpty() const
 	{
 		return b3IsEmpty();
 	}

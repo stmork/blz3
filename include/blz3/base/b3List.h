@@ -135,6 +135,17 @@ public:
 	{
 		return Size;
 	}
+
+	static inline std::string b3Format(b3_u32 class_type)
+	{
+		char buffer[128];
+
+		snprintf(buffer, sizeof(buffer), "%04x:%04x",
+				 (class_type & B3_CLASS_MASK) >> 16,
+				 (class_type & B3_TYPE_MASK));
+
+		return std::string(buffer);
+	}
 };
 
 #define B3_FOR_BASE(b,n)       for((n) = (b)->First;(n) != nullptr;(n) = (n)->Succ)
@@ -831,7 +842,7 @@ public:
 	 * @param class_type The class type to compare to.
 	 * @return The found element or \c nullptr if no one was found.
 	 */
-	inline T * b3Find(const b3_u32 class_type)
+	inline T * b3Find(const b3_u32 class_type) const
 	{
 		for (T * item = First; item != nullptr ; item = item->Succ)
 		{
@@ -851,7 +862,7 @@ public:
 	 * @param class_type The class type to compare to.
 	 * @return The found element or \c nullptr if no one was found.
 	 */
-	template<class SUB> inline SUB * b3FindTyped(const b3_u32 class_type)
+	template<class SUB> inline SUB * b3FindTyped(const b3_u32 class_type) const
 	{
 		return static_cast<SUB *>(b3Find(class_type));
 	}

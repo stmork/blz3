@@ -50,6 +50,21 @@ void b3Item::b3Register(
 	b3ItemRegister::b3Instance().b3Append(entry);
 }
 
+std::vector<b3_u32> b3Item::b3GetClassTypeList(bool inclusive_classes)
+{
+	std::vector<b3_u32> class_type_list;
+
+	for (const b3ItemRegisterEntry & item : b3ItemRegister::b3Instance())
+	{
+		if (inclusive_classes || !item.b3IsClass())
+		{
+			class_type_list.push_back(item.b3GetItemClassType());
+		}
+	}
+
+	return class_type_list;
+}
+
 b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))
 {
 	m_ItemSize   = 0;

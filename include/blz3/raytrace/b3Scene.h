@@ -82,6 +82,7 @@ class b3CameraPart;
 class b3CloudBackground;
 
 class b3RayRow;
+class b3Display;
 
 #define LENSFLARE_LOOP 6
 #define LENSFLARE_RING 2
@@ -166,9 +167,11 @@ public:
 	virtual ~b3Scene();
 
 	/**
-	 * Method for registering the shapes into the item registry.
+	 * Method for registering the scene elements into the item registry.
 	 */
-	static  void             b3Register();
+	static  void     b3Register();
+
+
 	void             b3Write() override;
 
 	/**
@@ -178,11 +181,14 @@ public:
 	 * @param ySize Image height.
 	 * @return True on success.
 	 */
-	bool             b3GetDisplaySize(b3_res & xSize, b3_res & ySize);
+	bool             b3GetDisplaySize(b3_res & xSize, b3_res & ySize) const;
 
-	//////////////////////////
-	////////// Render handling
-	//////////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Render handling                               **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method iterates through all objects and shapes to setup
 	 * vertex memory.
@@ -236,9 +242,12 @@ public:
 	 */
 	void             b3UpdateMaterial();
 
-	////////////////////////////
-	////////// Filename handling
-	////////////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Filename handling                             **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method returns the scene name. The scene name is computed from
 	 * the file name. The extension and the directory part is removed.
@@ -268,9 +277,12 @@ public:
 	 */
 	void             b3SetTexture(const char * name);
 
-	/////////////////////////
-	////////// Scene handling
-	/////////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Scene handling                                **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method prepares the scene for raytracing into an image of the
 	 * given resolution,
@@ -341,9 +353,12 @@ public:
 		return ray->shape != nullptr;
 	}
 
-	//////////////////
-	////////// Shading
-	//////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Shading                                       **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method returns the configured shader instance.
 	 *
@@ -379,7 +394,7 @@ public:
 	 * @param ray The shooting ray
 	 * @see b3_ray
 	 */
-	void             b3MixLensFlare(b3_ray * ray);
+	void             b3MixLensFlare(b3_ray * ray) const;
 
 	/**
 	 * This method computes the infinite color in case the ray depth is not
@@ -527,9 +542,12 @@ public:
 	 */
 	void            b3ComputeVisibility();
 
-	/////////////////////////
-	////////// camera methods
-	/////////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Camera methods                                **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method returns the first camera. If the given
 	 * must active flag is set the method returns the first
@@ -555,7 +573,7 @@ public:
 	 * @param cameraName The camera name to search for.
 	 * @return The found camera if any.
 	 */
-	b3CameraPart  * b3GetCameraByName(const char * cameraName);
+	b3CameraPart  * b3GetCameraByName(const char * cameraName) const;
 
 	/**
 	 * This method returns the next camera outgoing from the given camera.
@@ -563,7 +581,7 @@ public:
 	 * @param act The camera position to search from.
 	 * @return The next camera.
 	 */
-	b3CameraPart  * b3GetNextCamera(b3CameraPart * act);
+	b3CameraPart  * b3GetNextCamera(b3CameraPart * act) const;
 
 	/**
 	 * This method copies the values from the actual set camera
@@ -581,7 +599,7 @@ public:
 	 * @param size The buffer size of the retrieving camera name.
 	 * @return True if the result name has a length greater than zero.
 	 */
-	bool            b3GetTitle(char * title, size_t size);
+	bool            b3GetTitle(char * title, size_t size) const;
 
 	/**
 	 * This method sets a new actual camera. An additional flag signals if
@@ -594,15 +612,18 @@ public:
 	 */
 	void            b3SetCamera(b3CameraPart * camera, bool reorder = false);
 
-	////////////////////////
-	////////// Light methods
-	////////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Light methods                                 **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method returns the list base of all light sources.
 	 *
 	 * @return The list base of the light sources.
 	 */
-	inline b3Base<b3Item> * b3GetLightHead()
+	inline b3Base<b3Item> * b3GetLightHead() const
 	{
 		return &m_Heads[1];
 	}
@@ -624,24 +645,27 @@ public:
 	 * @param lightName The light name to search for.
 	 * @return The found light source if any.
 	 */
-	b3Light    *    b3GetLightByName(const char * lightName);
+	b3Light    *    b3GetLightByName(const char * lightName) const;
 
 	/**
 	 * This method returns the light source count.
 	 *
 	 * @return The amount of light sources.
 	 */
-	b3_count        b3GetLightCount();
+	b3_count        b3GetLightCount() const;
 
-	/////////////////////////////////
-	////////// Special access methods
-	/////////////////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Special access methods                        **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method returns the list base of global special effects.
 	 *
 	 * @return The list base of special effects.
 	 */
-	inline b3Base<b3Item> * b3GetSpecialHead()
+	inline b3Base<b3Item> * b3GetSpecialHead() const
 	{
 		return &m_Heads[2];
 	}
@@ -716,9 +740,12 @@ public:
 	 */
 	b3CloudBackground * b3GetCloudBackground(bool force = false);
 
-	////////////////////
-	////////// Animation
-	////////////////////
+	/*************************************************************************
+	**                                                                      **
+	**                        Animation                                     **
+	**                                                                      **
+	*************************************************************************/
+
 	/**
 	 * This method sets the global animation time point.
 	 *
@@ -751,7 +778,7 @@ public:
 	 * @param filename The file name of the TGF file.
 	 * @return The converted Blizzard III scene.
 	 */
-	static  b3Scene    *    b3ReadTGF(const char * filename);
+	static b3Scene * b3ReadTGF(const char * filename);
 
 	/**
 	 * This method checks the given image file name for existance in the
@@ -930,11 +957,11 @@ class B3_PLUGIN b3DistributedRayRow : public b3RayRow
 {
 protected:
 	b3Distribute * m_Distr;    //!< The class which describes distributed raytracing.
-	b3_count      m_SPP;       //!< Samples per pixel.
-	b3_count      m_SPF;       //!< Samples per frame.
-	b3_vector64 * m_xHalfDir;  //!< The half width of a pixel in world coordinates.
-	b3_vector64 * m_yHalfDir;  //!< The half height of a pixel in world coordinates.
-	b3_f32    *   m_Samples;   //!< The sampling offsets provided by the b3Distribute::m_Samples member.
+	b3_count       m_SPP;       //!< Samples per pixel.
+	b3_count       m_SPF;       //!< Samples per frame.
+	b3_vector64  * m_xHalfDir;  //!< The half width of a pixel in world coordinates.
+	b3_vector64  * m_yHalfDir;  //!< The half height of a pixel in world coordinates.
+	b3_f32    *    m_Samples;   //!< The sampling offsets provided by the b3Distribute::m_Samples member.
 
 public:
 	/**
@@ -947,8 +974,8 @@ public:
 	 * @param ySize The image height.
 	 */
 	b3DistributedRayRow(
-		b3Scene  * scene,
-		b3Display * display,
+		b3Scene     *    scene,
+		b3Display    *   display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);
@@ -985,8 +1012,8 @@ public:
 	 * @throws b3WorldException
 	 */
 	b3MotionBlurRayRow(
-		b3Scene  * scene,
-		b3Display * display,
+		b3Scene     *    scene,
+		b3Display    *   display,
 		const b3_coord   y,
 		const b3_res     xSize,
 		const b3_res     ySize);

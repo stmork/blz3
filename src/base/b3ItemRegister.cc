@@ -95,7 +95,7 @@ b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
 	return nullptr;
 }
 
-void b3ItemRegister::b3Dump()
+void b3ItemRegister::b3Dump() const
 {
 	b3ItemRegisterEntry * entry;
 

@@ -46,8 +46,8 @@ void b3RaytracingItems::b3Register()
 bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)
 {
 	const char * txName;
-	b3_size     txLen, nameLen;
-	b3_offset   diff;
+	b3_size      txLen, nameLen;
+	b3_offset    diff;
 
 	if (*tx != nullptr)
 	{
