@@ -40,14 +40,16 @@ inline void b3Factory::b3Consolidate(b3Scene * scene)
 	scene->b3ComputeBounds(&lower, &upper);
 }
 
-b3Scene * b3Factory::b3CreateNew(const char * filename, b3_u32 class_type)
+b3Scene * b3Factory::b3CreateNew(
+	const char  *  filename,
+	const b3_u32   class_type)
 {
-	b3Scene   *   scene  = new b3Scene(class_type);
-	b3BBox    *   bbox   = new b3BBox(BBOX);
-	b3Area    *   area   = new b3Area(AREA);
-	b3Light   *   light  = new b3Light(SPOT_LIGHT);
+	b3Scene    *   scene  = new b3Scene(class_type);
+	b3BBox    *    bbox   = new b3BBox(BBOX);
+	b3Area    *    area   = new b3Area(AREA);
+	b3Light    *   light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera = new b3CameraPart(CAMERA);
-	b3_vector     eye, view;
+	b3_vector      eye, view;
 
 	/*
 		b3SetCameraName(camera,IDS_NEW_CAMERA_NAME);
@@ -71,20 +73,20 @@ b3Scene * b3Factory::b3CreateNew(const char * filename, b3_u32 class_type)
 	return scene;
 }
 
-b3Scene * b3Factory::b3CreateGlobal(b3_u32 class_type)
+b3Scene * b3Factory::b3CreateGlobal(const b3_u32 class_type)
 {
-	b3Scene   *   scene  = new b3Scene(class_type);
-	b3BBox    *   bbox1  = new b3BBox(BBOX);
-	b3BBox    *   bbox2  = new b3BBox(BBOX);
-	b3Sphere   *  medium = new b3Sphere(SPHERE);
-	b3Sphere   *  big    = new b3Sphere(SPHERE);
-	b3Area    *   area   = new b3Area(AREA);
-	b3MatChess  * chess  = new b3MatChess(CHESS);
-	b3MatNormal * mirror = new b3MatNormal(NORMAL_MATERIAL);
-	b3MatNormal * glass  = new b3MatNormal(NORMAL_MATERIAL);
-	b3Light   *   light  = new b3Light(SPOT_LIGHT);
+	b3Scene    *   scene  = new b3Scene(class_type);
+	b3BBox    *    bbox1  = new b3BBox(BBOX);
+	b3BBox    *    bbox2  = new b3BBox(BBOX);
+	b3Sphere   *   medium = new b3Sphere(SPHERE);
+	b3Sphere   *   big    = new b3Sphere(SPHERE);
+	b3Area    *    area   = new b3Area(AREA);
+	b3MatChess  *  chess  = new b3MatChess(CHESS);
+	b3MatNormal  * mirror = new b3MatNormal(NORMAL_MATERIAL);
+	b3MatNormal  * glass  = new b3MatNormal(NORMAL_MATERIAL);
+	b3Light    *   light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera = new b3CameraPart(CAMERA);
-	b3_vector     eye, view;
+	b3_vector      eye, view;
 
 	scene->b3GetBBoxHead()->b3Append(bbox1);
 	scene->b3GetBBoxHead()->b3Append(bbox2);
@@ -131,8 +133,8 @@ b3Scene * b3Factory::b3CreateGlobal(b3_u32 class_type)
 
 b3CameraPart * b3Factory::b3CreateCamera(
 	b3Scene * scene,
-	b3_f64   xAngle,
-	b3_f64   yAngle)
+	b3_f64    xAngle,
+	b3_f64    yAngle)
 {
 	b3CameraPart * camera = new b3CameraPart(CAMERA);
 	b3_vector     lower, upper;
@@ -151,11 +153,11 @@ b3CameraPart * b3Factory::b3CreateCamera(
 
 b3Scene * b3Factory::b3CreateBBox(b3BBox * original_bbox, b3_u32 class_type, b3CameraPart * original_camera)
 {
-	b3Scene   *   scene  = new b3Scene(class_type);
-	b3BBox    *   bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
-	b3Light   *   light  = new b3Light(SPOT_LIGHT);
+	b3Scene    *   scene  = new b3Scene(class_type);
+	b3BBox    *    bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
+	b3Light    *   light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera;
-	b3_f64        rad;
+	b3_f64         rad;
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
@@ -184,16 +186,16 @@ b3Scene * b3Factory::b3CreateBBox(b3BBox * original_bbox, b3_u32 class_type, b3C
 	return scene;
 }
 
-b3Scene * b3Factory::b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, b3_u32 class_type)
+b3Scene * b3Factory::b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, const b3_u32 class_type)
 {
-	b3Scene   *   scene = new b3Scene(class_type);
-	b3BBox    *   bbox  = new b3BBox(BBOX);
-	b3Ellipsoid * big   = new b3Ellipsoid(ELLIPSOID);
-	b3Area    *   area  = new b3Area(AREA);
-	b3MatChess  * chess = new b3MatChess(CHESS);
-	b3Light   *   light = new b3Light(SPOT_LIGHT);
+	b3Scene    *   scene = new b3Scene(class_type);
+	b3BBox    *    bbox  = new b3BBox(BBOX);
+	b3Ellipsoid  * big   = new b3Ellipsoid(ELLIPSOID);
+	b3Area    *    area  = new b3Area(AREA);
+	b3MatChess  *  chess = new b3MatChess(CHESS);
+	b3Light    *   light = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera;
-	b3_matrix     transform;
+	b3_matrix      transform;
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
@@ -222,17 +224,17 @@ b3Scene * b3Factory::b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, b3_u32 class
 	return scene;
 }
 
-b3Scene * b3Factory::b3CreateBump(b3Base<b3Item> ** ptrBumpHead, b3_u32 class_type)
+b3Scene * b3Factory::b3CreateBump(b3Base<b3Item> ** ptrBumpHead, const b3_u32 class_type)
 {
-	b3Scene   *   scene = new b3Scene(class_type);
-	b3BBox    *   bbox  = new b3BBox(BBOX);
-	b3Ellipsoid * big   = new b3Ellipsoid(ELLIPSOID);
-	b3Area    *   area  = new b3Area(AREA);
-	b3MatChess  * chess = new b3MatChess(CHESS);
-	b3MatNormal * mat   = new b3MatNormal(NORMAL_MATERIAL);
-	b3Light   *   light = new b3Light(SPOT_LIGHT);
+	b3Scene    *   scene = new b3Scene(class_type);
+	b3BBox    *    bbox  = new b3BBox(BBOX);
+	b3Ellipsoid  * big   = new b3Ellipsoid(ELLIPSOID);
+	b3Area    *    area  = new b3Area(AREA);
+	b3MatChess  *  chess = new b3MatChess(CHESS);
+	b3MatNormal  * mat   = new b3MatNormal(NORMAL_MATERIAL);
+	b3Light    *   light = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera;
-	b3_matrix     transform;
+	b3_matrix      transform;
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);

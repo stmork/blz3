@@ -141,8 +141,8 @@ public:
 		char buffer[128];
 
 		snprintf(buffer, sizeof(buffer), "%04x:%04x",
-				 (class_type & B3_CLASS_MASK) >> 16,
-				 (class_type & B3_TYPE_MASK));
+			(class_type & B3_CLASS_MASK) >> 16,
+			(class_type & B3_TYPE_MASK));
 
 		return std::string(buffer);
 	}

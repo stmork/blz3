@@ -49,7 +49,7 @@ public:
 	 * @param classType The shading type of the new scene.
 	 * @return The new preview scene.
 	 */
-	static b3Scene   *   b3CreateGlobal(b3_u32 classType);
+	static b3Scene   *   b3CreateGlobal(const b3_u32 classType = TRACEPHOTO_MORK);
 
 	/**
 	 * This method creates an example scene which contains only the given object for
@@ -73,7 +73,7 @@ public:
 	 * @param classType The class type for scene rendering.
 	 * @return The created scene.
 	 */
-	static b3Scene    *   b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, b3_u32 classType);
+	static b3Scene    *   b3CreateMaterial(b3Base<b3Item> ** ptrMatHead, const b3_u32 classType);
 
 	/**
 	 * This method creates a scene for previewing bump mapping. The scene contains a checker
@@ -83,7 +83,7 @@ public:
 	 * @param classType The class type for scene rendering.
 	 * @return The created scene.
 	 */
-	static b3Scene    *   b3CreateBump(b3Base<b3Item> ** ptrBumpHead, b3_u32 classType);
+	static b3Scene    *   b3CreateBump(b3Base<b3Item> ** ptrBumpHead, const b3_u32 classType);
 
 private:
 	static void           b3Consolidate(b3Scene * scene);
