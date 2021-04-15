@@ -127,7 +127,6 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   4.0, b3_cpx.b3Imag());
 	}
 
-	// Init tests
 	template<class T, class C> void testStdComplexOps()
 	{
 		std::complex<T> std_cpx(1 + 7i);
@@ -143,6 +142,24 @@ private:
 		b3_cpx = b3_cpx_init1 / b3_cpx_init2;
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.724324, b3_cpx.b3Real(), 0.0001);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.745946, b3_cpx.b3Imag(), 0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.8001,   b3_cpx.b3Phase(), 0.0001);
+
+		b3_cpx = 1;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
+
+		b3_cpx = 2 + 2i;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(45.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
+
+		b3_cpx = 3i;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(90.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
+
+		b3_cpx = C(10.5) / C(3.0);
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Imag());
+
+		b3_cpx = C(0.0, 10.5) / C(0.0, 3.0);
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Imag());
 
 		b3_cpx = b3_cpx_init2 + std_cpx;
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  6.5, b3_cpx.b3Real());
@@ -181,9 +198,10 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  -460.0, b3_cpx.b3Imag());
 		CPPUNIT_ASSERT_EQUAL(b3_cpx,   b3_cpx_init2);
 
-		b3_cpx.b3Dump("c32 test");
+		b3_cpx.b3Dump("complex test");
 
 		std::string message = b3_cpx;
+
 		CPPUNIT_ASSERT(message.length() > 0);
 	}
 };

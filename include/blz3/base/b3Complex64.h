@@ -380,14 +380,11 @@ private:
 
 	inline __m128d division(const b3Complex64 & divisor) const
 	{
-
-		const b3Complex64 nom   =         v * divisor.v;
-		const b3Complex64 den   = divisor.v * divisor.v;
-		const b3_f64      denom = den.b3Real() + den.b3Imag();
-		b3Complex64 val;
-
-		val.b3Imag() = b3Imag() * divisor.b3Real() - b3Real() * divisor.b3Imag();
-		val.b3Real() = nom.b3Real() + nom.b3Imag();
+		const b3Complex64 nom   = divisor.v * v;
+		const b3_f64      denom = divisor.b3SquareLength();
+		const b3Complex64 val(
+			nom.b3Real() + nom.b3Imag(),
+			b3Imag() * divisor.b3Real() - b3Real() * divisor.b3Imag());
 
 		return _mm_div_pd(val.v, _mm_set1_pd(denom));
 	}
