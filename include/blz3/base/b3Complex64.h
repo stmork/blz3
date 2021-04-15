@@ -201,6 +201,18 @@ public:
 		return *this;
 	}
 
+	inline const b3Complex64 operator/(const b3Complex64 & divisor) const
+	{
+		return division(divisor);
+	}
+
+	inline b3Complex64  & operator/=(const b3Complex64 & divisor)
+	{
+		v = division(divisor);
+
+		return *this;
+	}
+
 	inline const b3Complex64 operator/(const b3_f64 value) const
 	{
 		b3Complex64 result;
@@ -243,6 +255,39 @@ public:
 		return sqrt(b3SquareLength());
 	}
 
+	inline bool   b3Normalize(const b3_f64 len = 1)
+	{
+		b3_f64 old_len = b3Length();
+
+		if (old_len != 0)
+		{
+			v *= len / old_len;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	inline b3_f64 b3Phase() const
+	{
+		return atan2(b3Imag(), b3Real());
+	}
+
+	inline b3_f64 & b3Real() const
+	{
+		return (b3_f64 &)v;
+	}
+
+	inline b3_f64 & b3Imag() const
+	{
+		b3_f64 * ptr = (b3_f64 *)&v;
+
+		return ptr[Im];
+	}
+
 	inline static const b3Complex64 b3Sqrt(const b3Complex64 & a)
 	{
 		_MM_SET_EXCEPTION_STATE(0);
@@ -277,32 +322,43 @@ public:
 		b.v = aux;
 	}
 
-	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
+	inline void b3Dump(
+		const char    *    variable,
+		const b3_log_level level = B3LOG_NORMAL) const
 	{
-		_mm_stream_pd(&dst.b3Real(), src.v);
+		b3PrintF(level, "%s\n", b3ToString(variable).c_str());
 	}
 
-	inline b3_f64 & b3Real() const
+	[[nodiscard]]
+	inline operator std::string() const
 	{
-		return (b3_f64 &)v;
+		return b3ToString();
 	}
 
-	inline b3_f64 & b3Imag() const
-	{
-		b3_f64 * ptr = (b3_f64 *)&v;
-
-		return ptr[Im];
-	}
-
-	friend inline std::ostream & operator<<(std::ostream & os, const b3Complex64 & complex)
+	[[nodiscard]]
+	inline std::string b3ToString(const char * variable = nullptr) const
 	{
 		char buffer[128];
 
-		snprintf(buffer, sizeof(buffer), "b3Complex(re=%2.3lf im=%2.3lf)",
-			complex.b3Real(), complex.b3Imag());
+		snprintf(buffer, sizeof(buffer), "%s(re=%2.3f im=%2.3f)",
+			variable == nullptr ? "b3Complex" : variable,
+			v[Re], v[Im]);
 
-		os << buffer;
+		return std::string(buffer);
+	}
+
+	friend inline std::ostream & operator<<(
+		std::ostream & os, const b3Complex64 & complex)
+	{
+		const std::string dump(complex);
+
+		os << dump;
 		return os;
+	}
+
+	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
+	{
+		_mm_stream_pd(&dst.b3Real(), src.v);
 	}
 
 private:
@@ -320,6 +376,20 @@ private:
 #else
 		return _mm_add_pd(p1, _mm_mul_pd(p2, _mm_setr_pd(-1, 1)));
 #endif
+	}
+
+	inline __m128d division(const b3Complex64 & divisor) const
+	{
+
+		const b3Complex64 nom   =         v * divisor.v;
+		const b3Complex64 den   = divisor.v * divisor.v;
+		const b3_f64      denom = den.b3Real() + den.b3Imag();
+		b3Complex64 val;
+
+		val.b3Imag() = b3Imag() * divisor.b3Real() - b3Real() * divisor.b3Imag();
+		val.b3Real() = nom.b3Real() + nom.b3Imag();
+
+		return _mm_div_pd(val.v, _mm_set1_pd(denom));
 	}
 };
 

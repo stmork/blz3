@@ -473,7 +473,7 @@ public:
 	 */
 	inline T b3Phase() const
 	{
-		return atan2(v[Im], v[Re]);
+		return atan2(b3Imag(), b3Real());
 	}
 
 	/**

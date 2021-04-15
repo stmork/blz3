@@ -37,8 +37,7 @@ class b3ComplexTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testOps);
 	CPPUNIT_TEST(testEqual);
 	CPPUNIT_TEST(testComplex64);
-	CPPUNIT_TEST(testStdComplex32);
-	CPPUNIT_TEST(testStdComplex64);
+	CPPUNIT_TEST(testStdComplex);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -47,14 +46,13 @@ public:
 	void testOps();
 	void testEqual();
 	void testComplex64();
-	void testStdComplex32();
-	void testStdComplex64();
+	void testStdComplex();
 
 private:
-	template<class T> void testStdComplexInit()
+	template<class T, class C> void testStdComplexInit()
 	{
 		std::complex<T> std_cpx;
-		b3Complex<T>    b3_cpx = 0;
+		C               b3_cpx = 0;
 
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Imag());
@@ -130,12 +128,12 @@ private:
 	}
 
 	// Init tests
-	template<class T> void testStdComplexOps()
+	template<class T, class C> void testStdComplexOps()
 	{
 		std::complex<T> std_cpx(1 + 7i);
-		b3Complex<T>    b3_cpx(5.5 + 4i);
-		b3Complex<T>    b3_cpx_init1(std_cpx);
-		b3Complex<T>    b3_cpx_init2(b3_cpx);
+		C               b3_cpx(5.5 + 4i);
+		C               b3_cpx_init1(std_cpx);
+		C               b3_cpx_init2(b3_cpx);
 
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx_init1.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, b3_cpx_init1.b3Imag());
@@ -170,7 +168,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, -320.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, -115.0, b3_cpx.b3Imag());
 
-		b3Complex<T>::b3Swap(b3_cpx_init1, b3_cpx_init2);
+		C::b3Swap(b3_cpx_init1, b3_cpx_init2);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  5.5, b3_cpx_init1.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  4.0, b3_cpx_init1.b3Imag());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx_init2.b3Real());
