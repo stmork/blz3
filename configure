@@ -638,7 +638,6 @@ HAVE_CXX17
 BUILD
 CPPUNITLIBS
 X264LIBS
-DIVXLIBS
 GLUTLIBS
 BLZ3_DOC
 BLZ3_BIN
@@ -4832,7 +4831,6 @@ BLZ3_DOC="$BLZ3_DOC"
 
 
 
-
 BUILD="$BUILD"
 
 
@@ -8913,55 +8911,6 @@ if test "x$ac_cv_lib_IlmImf_main" = xyes; then :
 _ACEOF
 
   LIBS="-lIlmImf $LIBS"
-
-fi
-
-
-# Check for DivX
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for encore in -ldivxencore" >&5
-$as_echo_n "checking for encore in -ldivxencore... " >&6; }
-if ${ac_cv_lib_divxencore_encore+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-ldivxencore  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char encore ();
-int
-main ()
-{
-return encore ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_divxencore_encore=yes
-else
-  ac_cv_lib_divxencore_encore=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_divxencore_encore" >&5
-$as_echo "$ac_cv_lib_divxencore_encore" >&6; }
-if test "x$ac_cv_lib_divxencore_encore" = xyes; then :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "encore2.h" "ac_cv_header_encore2_h" "$ac_includes_default"
-if test "x$ac_cv_header_encore2_h" = xyes; then :
-
-$as_echo "#define BLZ3_USE_DIVX4LINUX 4" >>confdefs.h
- DIVXLIBS="$DIVXLIBS -ldivxencore"
-fi
-
 
 fi
 

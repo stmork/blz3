@@ -49,7 +49,6 @@ AC_SUBST(BLZ3_LIB, "$BLZ3_HOME/lib", [The Blizzard III library directory])
 AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [The Blizzard III executable directory])
 AC_SUBST(BLZ3_DOC, "$BLZ3_DOC", [The Blizzard III documentation directory])
 AC_SUBST(GLUTLIBS)
-AC_SUBST(DIVXLIBS)
 AC_SUBST(X264LIBS)
 AC_SUBST(CPPUNITLIBS)
 AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
@@ -229,9 +228,6 @@ AC_CHECK_LIB([Half], [main])
 AC_CHECK_LIB([Iex], [main])
 AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
-
-# Check for DivX
-AC_CHECK_LIB([divxencore], [encore], [AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX], [4], [Can we use divx?]) DIVXLIBS="$DIVXLIBS -ldivxencore"])])
 
 # Check for x264
 AC_CHECK_LIB([x264], [x264_encoder_encode], [AC_CHECK_HEADER([x264.h],[AC_DEFINE([BLZ3_USE_X264], [4], [Can we use x264 library?]) X264LIBS="$X264LIBS -lx264"])])
