@@ -38,9 +38,9 @@ class B3_PLUGIN alignas(16) b3Complex64
 		Max
 	};
 
-	inline b3Complex64(const __m128d in)
+	inline b3Complex64(const __m128d input)
 	{
-		v = in;
+		v = input;
 	}
 
 public:
@@ -133,7 +133,7 @@ public:
 
 	inline bool operator==(const b3Complex64 & other) const
 	{
-		__m128d eq = _mm_cmpneq_pd(v, other.v);
+		const __m128d eq = _mm_cmpneq_pd(v, other.v);
 
 		return _mm_movemask_pd(eq) == 0;
 	}
@@ -146,10 +146,7 @@ public:
 
 	inline const b3Complex64 operator+(const b3Complex64 & sum) const
 	{
-		b3Complex64 result;
-
-		result.v = _mm_add_pd(v, sum.v);
-		return result;
+		return _mm_add_pd(v, sum.v);
 	}
 
 	inline b3Complex64 & operator+=(const b3Complex64 & sum)
@@ -161,10 +158,7 @@ public:
 
 	inline const b3Complex64 operator-(const b3Complex64 & sum) const
 	{
-		b3Complex64 result;
-
-		result.v = _mm_sub_pd(v, sum.v);
-		return result;
+		return _mm_sub_pd(v, sum.v);
 	}
 
 	inline b3Complex64 & operator-=(const b3Complex64 & sum)
@@ -188,10 +182,7 @@ public:
 
 	inline const b3Complex64 operator*(const b3_f64 value) const
 	{
-		b3Complex64 result;
-
-		result.v = _mm_mul_pd(v, _mm_set1_pd(value));
-		return result;
+		return _mm_mul_pd(v, _mm_set1_pd(value));
 	}
 
 	inline b3Complex64  & operator*=(const b3_f64 value)
@@ -215,10 +206,7 @@ public:
 
 	inline const b3Complex64 operator/(const b3_f64 value) const
 	{
-		b3Complex64 result;
-
-		result.v = _mm_div_pd(v, _mm_set1_pd(value));
-		return result;
+		return _mm_div_pd(v, _mm_set1_pd(value));
 	}
 
 	inline b3Complex64 & operator/=(const b3_f64 value)
@@ -297,7 +285,7 @@ public:
 			throw std::domain_error("negative component for sqrt()");
 		}
 
-		return b3Complex64(_mm_sqrt_pd(a.v));
+		return _mm_sqrt_pd(a.v);
 	}
 
 	inline b3Complex64 b3Sqrt() const

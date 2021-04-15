@@ -36,6 +36,17 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 {
 #ifdef SSE_ALIGNED
 	__m128 v;                   //!< These are the color channels of a b3Color instance.
+
+/**
+	 * This constructor initializes this instance with an SSE vector.
+	 *
+	 * @param color The color vector in SSE representation.
+	 */
+	inline b3Color(const __m128 input)
+	{
+		v = input;
+	}
+
 #else
 	alignas(16) b3_f32       v[4];
 #endif
@@ -55,16 +66,6 @@ public:
 #ifdef _DEBUG
 		b3Init(1.0f, 0.125f, 0.25f);
 #endif
-	}
-
-	/**
-	 * This constructor initializes this instance with an SSE vector.
-	 *
-	 * @param color The color vector in SSE representation.
-	 */
-	explicit inline b3Color(const __m128 color)
-	{
-		SSE_PS_STORE(v, color);
 	}
 
 	/**
@@ -383,11 +384,7 @@ public:
 	 */
 	inline const b3Color operator+(const b3Color & a) const
 	{
-		b3Color result;
-
-		result.v = _mm_add_ps(v, a.v);
-
-		return result;
+		return _mm_add_ps(v, a.v);
 	}
 
 	/**
@@ -411,10 +408,7 @@ public:
 	 */
 	inline const b3Color operator-(const b3Color & a) const
 	{
-		b3Color result;
-
-		result.v = _mm_sub_ps(v, a.v);
-		return result;
+		return _mm_sub_ps(v, a.v);
 	}
 
 	/**
@@ -437,10 +431,7 @@ public:
 	 */
 	inline const b3Color operator*(const b3Color & a) const
 	{
-		b3Color result;
-
-		result.v = _mm_mul_ps(v, a.v);
-		return result;
+		return _mm_mul_ps(v, a.v);
 	}
 
 	/**
@@ -475,10 +466,7 @@ public:
 	 */
 	inline const b3Color operator*(const b3_f32 value) const
 	{
-		b3Color result;
-
-		result.v = _mm_mul_ps(v, _mm_set_ps1(value));
-		return result;
+		return _mm_mul_ps(v, _mm_set_ps1(value));
 	}
 
 	/**
@@ -489,10 +477,7 @@ public:
 	 */
 	inline const b3Color operator*(const b3_f64 value) const
 	{
-		b3Color result;
-
-		result.v = _mm_mul_ps(v, _mm_set_ps1(float(value)));
-		return result;
+		return _mm_mul_ps(v, _mm_set_ps1(float(value)));
 	}
 
 	/**
@@ -545,12 +530,9 @@ public:
 	 */
 	inline const b3Color operator/(const b3_f32 value) const
 	{
-		b3Color result;
-
 		B3_ASSERT(value != 0);
 
-		result.v = _mm_div_ps(v, _mm_set_ps1(value));
-		return result;
+		return _mm_div_ps(v, _mm_set_ps1(value));
 	}
 
 	/**
@@ -561,12 +543,9 @@ public:
 	 */
 	inline const b3Color operator/(const b3_f64 value) const
 	{
-		b3Color result;
-
 		B3_ASSERT(value != 0);
 
-		result.v = _mm_div_ps(v, _mm_set_ps1(float(value)));
-		return result;
+		return _mm_div_ps(v, _mm_set_ps1(float(value)));
 	}
 
 	/**
@@ -577,12 +556,9 @@ public:
 	 */
 	inline const b3Color operator/(const b3_count value) const
 	{
-		b3Color result;
-
 		B3_ASSERT(value != 0);
 
-		result.v = _mm_div_ps(v, _mm_set_ps1(float(value)));
-		return result;
+		return _mm_div_ps(v, _mm_set_ps1(float(value)));
 	}
 
 	/*************************************************************************
