@@ -28,15 +28,15 @@
 class B3_PLUGIN b3RGB
 {
 public:
-	b3_u08 r; //!< The red component.
-	b3_u08 g; //!< The green component.
-	b3_u08 b; //!< The blue component.
+	b3_u08 r = 0xff; //!< The red component.
+	b3_u08 g = 0x11; //!< The green component.
+	b3_u08 b = 0x44; //!< The blue component.
 
 public:
 	/**
 	 * This constructor initializes the instance with default values.
 	 */
-	b3RGB();
+	b3RGB() = default;
 
 	/**
 	 * This method returns the stored color as a b3_pkd_color type.
@@ -73,6 +73,7 @@ public:
 
 		operator=(pkd);
 	}
+
 #ifdef WIN32
 	// Problem: COLORREF and b3_pkd_color are of the same type ???
 	/*
