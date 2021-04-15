@@ -90,6 +90,12 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
 
+		b3_cpx = -1;
+		CPPUNIT_ASSERT_THROW(b3_cpx.b3Sqrt(), std::domain_error);
+
+		b3_cpx = -1i;
+		CPPUNIT_ASSERT_THROW(b3_cpx.b3Sqrt(), std::domain_error);
+
 		b3_cpx = b3Complex<T>(1.0, 7.0);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, b3_cpx.b3Imag());
