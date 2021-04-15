@@ -6,9 +6,6 @@
 /* Do we have Cg header? */
 #undef BLZ3_USE_CG
 
-/* Can we use divx? */
-#undef BLZ3_USE_DIVX4LINUX
-
 /* Do we can use GLUT? */
 #undef BLZ3_USE_GLUT
 

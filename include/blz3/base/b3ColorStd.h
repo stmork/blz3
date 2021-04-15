@@ -843,25 +843,11 @@ public:
 	*************************************************************************/
 
 	/**
-	 * This method saturates all color channels to 1.
-	 */
-	inline void b3Sat()
-	{
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			if (v[i] > 1.0)
-			{
-				v[i] = 1.0;
-			}
-		}
-	}
-
-	/**
 	 * This method saturates all color channels to a given value.
 	 *
 	 * @param sat The saturation value.
 	 */
-	inline void b3Sat(const b3_f32 sat)
+	inline void b3Sat(const b3_f32 sat = 1.0f)
 	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -873,25 +859,11 @@ public:
 	}
 
 	/**
-	 * This method bottom clamps all color channels to 0.
-	 */
-	inline void b3Min()
-	{
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			if (v[i] < 0.0)
-			{
-				v[i] = 0.0;
-			}
-		}
-	}
-
-	/**
 	 * This method bottom clamps all color channels to a given value.
 	 *
 	 * @param min The minimum value for each color channel.
 	 */
-	inline void b3Min(const b3_f32 min)
+	inline void b3Min(const b3_f32 min = 0.0f)
 	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -926,7 +898,7 @@ public:
 	inline static b3Color b3Mix(
 		const b3Color & low,
 		const b3Color & high,
-		const b3_f32   mix)
+		const b3_f32    mix)
 	{
 		b3Color result;
 		b3Color mixer;
@@ -951,7 +923,7 @@ public:
 	inline static b3Color b3Mix(
 		const b3Color & low,
 		const b3Color & high,
-		const b3_f64   mix)
+		const b3_f64    mix)
 	{
 		b3Color result;
 		b3Color mixer;
