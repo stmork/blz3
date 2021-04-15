@@ -96,33 +96,23 @@ public:
 	}
 
 	/**
-	 * This constructor initializes this instance from a ::b3_color structure.
+	 * This constructor initializes this instance from a b3_color structure.
 	 *
-	 * @param color The other ::b3_color instance to copy.
+	 * @param color The other b3_color instance to copy.
 	 */
 	inline b3Color(const b3_color & color)
 	{
-#ifdef SSE_ALIGNED
 		v = _mm_load_ps(&color.a);
-#else
-		v = _mm_loadu_ps(&color.a);
-#endif
-//		b3Init(color.r, color.g, color.b, color.a);
 	}
 
 	/**
-	 * This constructor initializes this instance from a ::b3_color structure.
+	 * This constructor initializes this instance from a b3_color structure.
 	 *
-	 * @param color The other ::b3_color instance to copy.
+	 * @param color The other b3_color instance to copy.
 	 */
 	inline b3Color(const b3_color * color)
 	{
-#ifdef SSE_ALIGNED
 		v = _mm_load_ps(&color->a);
-#else
-		v = _mm_loadu_ps(&color->a);
-#endif
-//		b3Init(color->r, color->g, color->b, color->a);
 	}
 
 	/**
@@ -296,7 +286,6 @@ public:
 		v = _mm_set_ps(b, g, r, a);
 	}
 
-	//////////////////////////////////////--------- methods and operators
 	/**
 	 * This method sets the alpha channel.
 	 *
@@ -790,21 +779,11 @@ public:
 	*************************************************************************/
 
 	/**
-	 * This method saturates all color channels to 1.
-	 */
-	inline void b3Sat()
-	{
-		const __m128 sat = _mm_set_ps1(1.0f);
-
-		v = _mm_min_ps(v, sat);
-	}
-
-	/**
 	 * This method saturates all color channels to a given value.
 	 *
 	 * @param value The saturation value.
 	 */
-	inline void b3Sat(const b3_f32 value)
+	inline void b3Sat(const b3_f32 value = 1.0f)
 	{
 		const __m128 sat = _mm_set_ps1(value);
 
@@ -812,21 +791,11 @@ public:
 	}
 
 	/**
-	 * This method bottom clamps all color channels to 0.
-	 */
-	inline void b3Min()
-	{
-		const __m128 zero = _mm_setzero_ps();
-
-		v = _mm_max_ps(v, zero);
-	}
-
-	/**
 	 * This method bottom clamps all color channels to a given value.
 	 *
 	 * @param value The minimum value for each color channel.
 	 */
-	inline void b3Min(const b3_f32 value)
+	inline void b3Min(const b3_f32 value = 0.0f)
 	{
 		const __m128 min = _mm_set_ps1(value);
 

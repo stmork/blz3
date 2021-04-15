@@ -58,7 +58,7 @@ void b3ColorTest::testColor()
 	CPPUNIT_ASSERT_EQUAL(b3Color::B * sizeof (offset_color.b), offsetof(b3_color, b));
 
 	//	printf("color: %p %p %08x\n", &color, &color[b3Color::A],reinterpret_cast<int>(&color[b3Color::A]));
-#if defined(BLZ3_USE_SSE) && defined(SSE_ALIGNED)
+#ifdef BLZ3_USE_SSE
 	b3_f32  *  fPtr = &color[b3Color::A];
 #if 0
 	color[b3Color::A] = 0;
@@ -149,6 +149,15 @@ void b3ColorTest::testColor()
 	testColor(0.5f, 2.0f, 0.5f, 4.0f);
 
 	ac.b3Init(0.25f, 0.5f,  1.0f, 0.75f);
+	offset_color.r = ac[b3Color::R];
+	offset_color.g = ac[b3Color::G];
+	offset_color.b = ac[b3Color::B];
+	offset_color.a = ac[b3Color::A];
+	CPPUNIT_ASSERT_EQUAL(0.25f, offset_color.r);
+	CPPUNIT_ASSERT_EQUAL(0.5f,  offset_color.g);
+	CPPUNIT_ASSERT_EQUAL(1.0f,  offset_color.b);
+	CPPUNIT_ASSERT_EQUAL(0.75f, offset_color.a);
+
 	ac.b3Sat();
 	color = ac;
 	testColor(0.25f, 0.5f,  1.0f, 0.75f);
