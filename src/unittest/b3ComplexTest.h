@@ -90,6 +90,11 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
 
+		b3_cpx = 0;
+		CPPUNIT_ASSERT_NO_THROW(b3_cpx.b3Sqrt());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Imag());
+
 		b3_cpx = -1;
 		CPPUNIT_ASSERT_THROW(b3_cpx.b3Sqrt(), std::domain_error);
 
@@ -146,8 +151,8 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  4.0, b3_cpx_init2.b3Imag());
 
 		b3_cpx = b3_cpx_init1 / b3_cpx_init2;
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.724324, b3_cpx.b3Real(), 0.0001);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.745946, b3_cpx.b3Imag(), 0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.724324, b3_cpx.b3Real(),  0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.745946, b3_cpx.b3Imag(),  0.0001);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.8001,   b3_cpx.b3Phase(), 0.0001);
 
 		b3_cpx = 1;

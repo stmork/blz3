@@ -590,7 +590,7 @@ public:
 	friend inline std::ostream & operator<<(
 		std::ostream & os, const b3Complex<T> & complex)
 	{
-		const std::string dump(complex);
+		const std::string & dump(complex);
 
 		os << dump;
 		return os;

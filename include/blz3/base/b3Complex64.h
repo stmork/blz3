@@ -290,16 +290,14 @@ public:
 
 	inline static const b3Complex64 b3Sqrt(const b3Complex64 & a)
 	{
-		_MM_SET_EXCEPTION_STATE(0);
-		const __m128d      sqr = _mm_sqrt_pd(a.v);
-		const unsigned int csr = _mm_getcsr();
+		__m128d lt = _mm_cmplt_pd(a.v, _mm_set1_pd(0.0));
 
-		if (csr & _MM_EXCEPT_INVALID)
+		if (_mm_movemask_pd(lt) != 0)
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
 
-		return b3Complex64(sqr);
+		return b3Complex64(_mm_sqrt_pd(a.v));
 	}
 
 	inline b3Complex64 b3Sqrt() const
@@ -350,7 +348,7 @@ public:
 	friend inline std::ostream & operator<<(
 		std::ostream & os, const b3Complex64 & complex)
 	{
-		const std::string dump(complex);
+		const std::string & dump(complex);
 
 		os << dump;
 		return os;
