@@ -25,6 +25,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "b3TestMacros.h"
+
 class b3ComplexTest : public CppUnit::TestFixture
 {
 	b3Complex<b3_f32>   a, b, e;
@@ -47,6 +49,145 @@ public:
 	void testComplex64();
 	void testStdComplex32();
 	void testStdComplex64();
+
+private:
+	template<class T> void testStdComplexInit()
+	{
+		std::complex<T> std_cpx;
+		b3Complex<T>    b3_cpx = 0;
+
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Imag());
+		CPPUNIT_ASSERT(!b3_cpx.b3Normalize());
+
+		b3_cpx  = 2i + 1;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   1.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   2.0, b3_cpx.b3Imag());
+
+		b3_cpx  = 3.5 + 4i;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   3.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   4.0, b3_cpx.b3Imag());
+
+		b3_cpx  = 6.5;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Imag());
+
+		b3_cpx  = 7.5i;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   7.5, b3_cpx.b3Imag());
+
+		std_cpx = 3i + 4;
+		b3_cpx  = std_cpx;
+
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  25.0, b3_cpx.b3SquareLength());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   4.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   3.0, b3_cpx.b3Imag());
+		CPPUNIT_ASSERT(b3_cpx.b3Normalize(10));
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  10.0, b3_cpx.b3Length());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
+
+		b3_cpx = 64 + 36i;
+		b3_cpx = b3_cpx.b3Sqrt();
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
+
+		b3_cpx = b3Complex<T>(1.0, 7.0);
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, b3_cpx.b3Imag());
+
+		std_cpx = b3_cpx;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, std_cpx.real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, std_cpx.imag());
+
+		b3_cpx = 8.0i;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  8.0, b3_cpx.b3Imag());
+
+		b3_cpx = 8.0;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  8.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Imag());
+
+		b3_cpx = 2.0i + 1.0;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  2.0, b3_cpx.b3Imag());
+
+		b3_cpx += 2.5;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  2.0, b3_cpx.b3Imag());
+
+		b3_cpx *= 6.0;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  21.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  12.0, b3_cpx.b3Imag());
+
+		b3_cpx /= 3.0;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   7.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   4.0, b3_cpx.b3Imag());
+
+		b3_cpx -= 1.5;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   5.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,   4.0, b3_cpx.b3Imag());
+	}
+
+	// Init tests
+	template<class T> void testStdComplexOps()
+	{
+		std::complex<T> std_cpx(1 + 7i);
+		b3Complex<T>    b3_cpx(5.5 + 4i);
+		b3Complex<T>    b3_cpx_init1(std_cpx);
+		b3Complex<T>    b3_cpx_init2(b3_cpx);
+
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx_init1.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, b3_cpx_init1.b3Imag());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  5.5, b3_cpx_init2.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  4.0, b3_cpx_init2.b3Imag());
+
+		b3_cpx = b3_cpx_init1 / b3_cpx_init2;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.724324, b3_cpx.b3Real(), 0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.745946, b3_cpx.b3Imag(), 0.0001);
+
+		b3_cpx = b3_cpx_init2 + std_cpx;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  6.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, 11.0, b3_cpx.b3Imag());
+
+		b3_cpx = b3_cpx_init2 - std_cpx;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  4.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, -3.0, b3_cpx.b3Imag());
+
+		b3_cpx = b3_cpx_init1 + b3_cpx_init2;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  6.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, 11.0, b3_cpx.b3Imag());
+
+		b3_cpx = b3_cpx_init1 - b3_cpx_init2;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, -4.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.0, b3_cpx.b3Imag());
+
+		b3_cpx = b3_cpx_init1 * b3_cpx_init2;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, -22.5, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  42.5, b3_cpx.b3Imag());
+
+		b3_cpx *= b3_cpx_init1;
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, -320.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, -115.0, b3_cpx.b3Imag());
+
+		b3Complex<T>::b3Swap(b3_cpx_init1, b3_cpx_init2);
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  5.5, b3_cpx_init1.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  4.0, b3_cpx_init1.b3Imag());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx_init2.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, b3_cpx_init2.b3Imag());
+
+		b3_cpx_init2 = b3_cpx.b3Scale(b3_cpx_init1);
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,     5.5, b3_cpx_init1.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,     4.0, b3_cpx_init1.b3Imag());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T, -1760.0, b3_cpx.b3Real());
+		CPPUNIT_ASSERT_TYPED_EQUAL(T,  -460.0, b3_cpx.b3Imag());
+		CPPUNIT_ASSERT_EQUAL(b3_cpx,   b3_cpx_init2);
+
+		b3_cpx.b3Dump("c32 test");
+
+		std::string message = b3_cpx;
+		CPPUNIT_ASSERT(message.length() > 0);
+	}
 };
 
 #endif

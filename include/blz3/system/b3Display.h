@@ -111,7 +111,7 @@ public:
 	 *
 	 * \param *title The window title.
 	 */
-	b3Display(const char * title);
+	explicit b3Display(const char * title);
 
 	/**
 	 * This constructor opens a display with the resolution of the
@@ -119,7 +119,7 @@ public:
 	 *
 	 * \param *image The image to display.
 	 */
-	b3Display(b3Tx * image);
+	explicit b3Display(b3Tx * image);
 
 	/**
 	 * This constructor initializes a display with the given resolution
@@ -127,7 +127,7 @@ public:
 	 *
 	 * \param xSize The new x resolution.
 	 * \param ySize The new y resolution.
-	 * \param *title The new window title.
+	 * \param title The new window title.
 	 */
 	b3Display(
 		const b3_res  xSize,
