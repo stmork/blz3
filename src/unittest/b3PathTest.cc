@@ -133,6 +133,25 @@ void b3PathTest::testExt()
 	testEqual(full, linked);
 }
 
+void b3PathTest::testAppend()
+{
+	b3Path pwd(m_CurrentDir);
+
+	pwd += __FILE__;
+
+	CPPUNIT_ASSERT(strcmp(pwd, m_CurrentDir) != 0);
+	CPPUNIT_ASSERT(strcmp(pwd, __FILE__) != 0);
+	CPPUNIT_ASSERT_EQUAL(B3_TYPE_FILE, b3Dir::b3Exists(pwd));
+
+	pwd = m_CurrentDir;
+	b3Path aux = pwd + __FILE__;
+
+	CPPUNIT_ASSERT(strcmp(pwd, m_CurrentDir) == 0);
+	CPPUNIT_ASSERT(strcmp(aux, m_CurrentDir) != 0);
+	CPPUNIT_ASSERT(strcmp(aux, __FILE__) != 0);
+	CPPUNIT_ASSERT_EQUAL(B3_TYPE_FILE, b3Dir::b3Exists(aux));
+}
+
 void b3PathTest::testEmpty(const b3Path & path)
 {
 	CPPUNIT_ASSERT_EQUAL(0, strcmp("", path));

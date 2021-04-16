@@ -65,6 +65,24 @@ public:
 	 */
 	b3Path & operator=(const char * path);
 
+	/**
+	 * This operator appends a filename to this b3Path instance.
+	 *
+	 * @param appendix The filename to append
+	 * @return This b3Path instance.
+	 * @see b3LinkFileName()
+	 */
+	b3Path & operator+=(const char * appendix);
+
+	/**
+	 * This method adds a filename to this b3Path instance and returns a new
+	 * instance.
+	 *
+	 * @param appendix The filename to add.
+	 * @return The concatenated filename components.
+	 */
+	b3Path operator+(const char * appendix);
+
 	void b3Empty() override;
 	void b3LinkFileName(const char * path, const char * name) override;
 	void b3SplitFileName(char * path, char * name) override;

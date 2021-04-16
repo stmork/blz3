@@ -30,6 +30,7 @@ HEADERS += b3SkeletonTest.h \
 	b3PathTest.h \
 	b3RandomTest.h \
 	b3SamplerTest.h \
+	b3SearchPathTest.h \
 	b3SelfTestSuite.h \
 	b3SplineTest.h \
 	b3TimeTest.h \
@@ -61,6 +62,7 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3PathTest.cc \
 	b3RandomTest.cc \
 	b3SamplerTest.cc \
+	b3SearchPathTest.cc \
 	b3SelfTestSuite.cc \
 	b3SplineTest.cc \
 	b3TimeTest.cc \

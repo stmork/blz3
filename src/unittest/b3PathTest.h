@@ -37,6 +37,7 @@ class b3PathTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3PathTest);
 	CPPUNIT_TEST(testSplitting);
 	CPPUNIT_TEST(testExt);
+	CPPUNIT_TEST(testAppend);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -44,6 +45,7 @@ public:
 	void tearDown() override;
 	void testSplitting();
 	void testExt();
+	void testAppend();
 
 private:
 	void testEmpty(const b3Path & path);

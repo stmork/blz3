@@ -68,10 +68,6 @@ void b3SearchPath::b3AddPath(const char * path)
 #endif
 }
 
-b3SearchPath::b3SearchPath()
-{
-}
-
 b3SearchPath::~b3SearchPath()
 {
 	b3Empty();
@@ -82,29 +78,40 @@ void b3SearchPath::b3Empty()
 	m_SearchPath.b3Free();
 }
 
-b3_bool b3SearchPath::b3IsValid(const char * Name, char * FullName)
+b3_bool b3SearchPath::b3IsValid(
+	const char * partial_filename,
+	char    *    full_filename)
 {
 	b3PathEntry * path;
 
-	if ((Name != nullptr) && (strlen(Name) > 0))
+	if ((partial_filename != nullptr) && (strlen(partial_filename) > 0))
 	{
-		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", (char *)Name);
-		if (b3Dir::b3Exists(Name) == B3_TYPE_FILE)
+		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", (char *)partial_filename);
+		if (b3Dir::b3Exists(partial_filename) == B3_TYPE_FILE)
 		{
-			strcpy(FullName, Name);
+			if (full_filename != nullptr)
+			{
+				strncpy(full_filename, partial_filename, B3_FILESTRINGLEN);
+			}
 			return true;
 		}
 		else
 		{
 			B3_FOR_BASE(&m_SearchPath, path)
 			{
-				b3Path::b3LinkFileName(
-					(char *)FullName,
-					(const char *)*path, Name);
-				b3PrintF(B3LOG_FULL, "Trying \"%s\"...", (const char *)FullName);
-				if (b3Dir::b3Exists(FullName) == B3_TYPE_FILE)
+				b3Path fq_filename;
+
+				fq_filename.b3LinkFileName((const char *)*path, partial_filename);
+				b3PrintF(B3LOG_FULL, "Trying \"%s\"...", (const char *)full_filename);
+
+				if (b3Dir::b3Exists(fq_filename) == B3_TYPE_FILE)
 				{
 					b3PrintF(B3LOG_FULL, " OK!\n");
+
+					if (full_filename != nullptr)
+					{
+						strncpy(full_filename, fq_filename, B3_FILESTRINGLEN);
+					}
 					return true;
 				}
 				else
@@ -121,11 +128,15 @@ b3_bool b3SearchPath::b3IsValid(const char * Name, char * FullName)
 b3_bool b3SearchPath::b3CutName(const char * fullname, char * result)
 {
 	b3PathEntry * path;
-	b3_size      shortLen;
 
+	if (result == nullptr)
+	{
+		throw std::invalid_argument("Need result buffer!");
+	}
 	B3_FOR_BASE(&m_SearchPath, path)
 	{
-		shortLen = strlen(*path);
+		b3_size shortLen = strlen(*path);
+
 		if (strncmp(fullname, *path, shortLen) == 0)
 		{
 			while (((fullname[shortLen] == '/') ||

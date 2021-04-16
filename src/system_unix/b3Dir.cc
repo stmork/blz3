@@ -168,6 +168,23 @@ b3Path & b3Path::operator=(const char * path)
 	return *this;
 }
 
+b3Path & b3Path::operator+=(const char * appendix)
+{
+	b3Path aux(m_Path);
+
+	b3LinkFileName(aux, appendix);
+
+	return *this;
+}
+
+b3Path b3Path::operator+(const char * appendix)
+{
+	b3Path result;
+
+	result.b3LinkFileName(m_Path, appendix);
+	return result;
+}
+
 void b3Path::b3Empty()
 {
 	m_Path[0] = 0;

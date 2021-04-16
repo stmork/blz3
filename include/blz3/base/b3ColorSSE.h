@@ -35,9 +35,9 @@
 class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 {
 #ifdef SSE_ALIGNED
-	__m128 v;                   //!< These are the color channels of a b3Color instance.
+	__m128 v;    //!< These are the color channels of a b3Color instance.
 
-/**
+	/**
 	 * This constructor initializes this instance with an SSE vector.
 	 *
 	 * @param color The color vector in SSE representation.
@@ -60,6 +60,9 @@ public:
 
 	/**
 	 * This constructor does simply nothing.
+	 *
+	 * @note The color channel values are uninitialized fpr performance
+	 * issues.
 	 */
 	inline b3Color()
 	{

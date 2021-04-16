@@ -56,14 +56,14 @@ public:
  */
 class B3_PLUGIN b3SearchPath
 {
-public:
+protected:
 	b3Base<b3PathEntry> m_SearchPath; //!< This is the list of search paths.
 
 public:
 	/**
 	 * This constructor initializes the path search list.
 	 */
-	b3SearchPath();
+	b3SearchPath() = default;
 
 	/**
 	 * This destructor deinitializes the instance using the b3Empty() method.
@@ -85,14 +85,16 @@ public:
 
 	/**
 	 * This method checks wether the given file name is in the search path
-	 * as file. The fully qualified file name is returned.
+	 * as file. The fully qualified file name may returned if wanted.
 	 *
-	 * @param testname The name to test. This file may contain parent directory names.
-	 * @param fullname The resulting full qualified file name,
+	 * @param testname The name to test. This file may contain parent directory
+	 * names. A @c nullptr always leads into @c false as return value.
+	 * @param fullname The resulting full qualified file name. This may be
+	 * @c nullptr.
 	 * @return True if a full qualified file name was found.
 	 * @see b3Path::b3LinkFileName
 	 */
-	b3_bool  b3IsValid(const char * testname, char * fullname);
+	b3_bool  b3IsValid(const char * testname, char * fullname = nullptr);
 
 	/**
 	 * This method cuts the search path from the full qualified name if any. If no
@@ -100,7 +102,7 @@ public:
 	 *
 	 * @param fullname The full qualified name to test.
 	 * @param shortname The cut name.
-	 * @return True if a mathing search path was found.
+	 * @return True if a matching search path was found.
 	 */
 	b3_bool  b3CutName(const char * fullname, char * shortname);
 };
