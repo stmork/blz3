@@ -213,7 +213,7 @@ void b3Path::b3Correct(const char * input, char * output)
 	len = strlen(input);
 	for (i = 0; i < len; i++)
 	{
-		output[i] = (input[i] == '\\' ? '/' : input[i]);
+		output[i] = (input[i] == '\\' ? DIR_DELIMITER : input[i]);
 	}
 	output[i] = 0;
 }
@@ -247,7 +247,10 @@ void b3Path::b3LinkFileName(
 	{
 		if ((FilePath != nullptr) && (strlen(FilePath) > 0))
 		{
-			strncat(File, "/", B3_FILESTRINGLEN);
+			std::string delimiter;
+
+			delimiter += DIR_DELIMITER;
+			strncat(File, delimiter.c_str(), B3_FILESTRINGLEN);
 		}
 		strncat(File, FileName, B3_FILESTRINGLEN);
 	}
@@ -265,7 +268,7 @@ void b3Path::b3LinkFileName(
 	{
 		if (File[i] == '\\')
 		{
-			File[i] = '/';
+			File[i] = DIR_DELIMITER;
 		}
 	}
 }
@@ -318,7 +321,8 @@ void b3Path::b3SplitFileName(
 		else
 		{
 			i = Length;
-			while ((i > 0) && (File[i - 1] != '/') && (File[i - 1] != '~'))
+			while ((i > 0) &&
+				(File[i - 1] != DIR_DELIMITER) && (File[i - 1] != '~'))
 			{
 				i--;
 			}
@@ -331,7 +335,7 @@ void b3Path::b3SplitFileName(
 		if (!Dir)
 		{
 			i = Length;
-			while ((i > 0) && (File[i - 1] != '/') && (File[i - 1] != '~'))
+			while ((i > 0) && (File[i - 1] != DIR_DELIMITER) && (File[i - 1] != '~'))
 			{
 				i--;
 			}
@@ -381,7 +385,7 @@ void b3Path::b3ParentName(
 	else
 	{
 		actDir.b3Correct(file);
-		for (len = strlen(actDir) - 1; (len >= 0) && (actDir[len] == '/'); len--)
+		for (len = strlen(actDir) - 1; (len >= 0) && (actDir[len] == DIR_DELIMITER); len--)
 		{
 			actDir[len] = 0;
 		}
@@ -391,7 +395,7 @@ void b3Path::b3ParentName(
 	len = strlen(actDir);
 	for (i = len - 1; i >= 0; i--) switch (actDir[i])
 		{
-		case '/' :
+		case DIR_DELIMITER :
 			actDir[i] = 0;
 			i = 0;
 			break;

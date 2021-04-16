@@ -40,6 +40,7 @@ class b3Path : public b3PathAbstract
 {
 public:
 	static const char EXT_DELIMITER = '.';
+	static const char DIR_DELIMITER = '/';
 
 	/**
 	 * This constructor initializes this instance.
