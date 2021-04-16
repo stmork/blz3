@@ -31,6 +31,9 @@ class B3_PLUGIN alignas(16) b3Complex64
 {
 	__m128d     v;
 
+	/**
+	 * This enumeration contains the indices of the complex number parts.
+	 */
 	enum b3_complex_index
 	{
 		Re = 0, //!< Index of real part of complex number
@@ -231,7 +234,7 @@ public:
 
 	inline b3_f64 b3SquareLength() const
 	{
-		alignas(16) b3_f64 comp[2];
+		b3_f64 comp[2];
 
 		_mm_store_pd(comp, _mm_mul_pd(v, v));
 
