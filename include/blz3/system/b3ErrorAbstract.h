@@ -30,7 +30,7 @@ public:
 	 * This method returns an error message.
 	 * \return The error message.
 	 */
-	virtual char * b3GetErrorText() = 0;
+	virtual const char * b3GetErrorText() const = 0;
 
 protected:
 	/**

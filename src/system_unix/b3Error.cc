@@ -22,6 +22,8 @@
 *************************************************************************/
 
 #include "blz3/system/b3Error.h"
+#include "blz3/b3Config.h"
+
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
@@ -34,12 +36,7 @@
 
 b3Error::b3Error()
 {
-	m_ErrorCode = errno;
-#ifdef HAVE_STRERROR
-	strerror_r(m_ErrorCode, m_ErrorText, sizeof(m_ErrorText));
-#else
-	snprintf(m_ErrorText, sizeof(m_ErrorText), "errno.: %d\n", m_ErrorCode);
-#endif
+	b3RetrieveError();
 }
 
 int b3Error::b3GetError()
@@ -48,7 +45,7 @@ int b3Error::b3GetError()
 	return m_ErrorCode;
 }
 
-char * b3Error::b3GetErrorText()
+const char * b3Error::b3GetErrorText() const
 {
 	return m_ErrorText;
 }
@@ -56,8 +53,9 @@ char * b3Error::b3GetErrorText()
 void b3Error::b3RetrieveError()
 {
 	m_ErrorCode = errno;
+
 #ifdef HAVE_STRERROR
-	strerror_r(m_ErrorCode, m_ErrorText, sizeof(m_ErrorText));
+	strncpy(m_ErrorText, strerror(m_ErrorCode), sizeof(m_ErrorText));
 #else
 	snprintf(m_ErrorText, sizeof(m_ErrorText), "errno.: %d\n", m_ErrorCode);
 #endif

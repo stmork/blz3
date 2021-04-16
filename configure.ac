@@ -72,11 +72,6 @@ AC_TRY_LINK([#include <stdio.h>],[
 #endif
 ],[AC_DEFINE([BLZ3_IS_LINUX], [1], [Is Blizzard running on Linux]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
-AC_MSG_CHECKING([for strerror])
-AC_TRY_LINK([#include <string.h>],[
-char msg[1024];strerror_r(0,msg,sizeof(msg)));
-],[AC_DEFINE([HAVE_STRERROR], [1], [Is strerror() available?]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
-
 AC_CHECK_HEADER([xmmintrin.h],[
 	AC_DEFINE([HAVE_SSE], [1], [Is SSE available?])
 	AC_MSG_CHECKING([for SSE])

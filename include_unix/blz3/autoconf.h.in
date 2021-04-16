@@ -183,7 +183,7 @@
 /* Define to 1 if you have the `strchr' function. */
 #undef HAVE_STRCHR
 
-/* Is strerror() available? */
+/* Define to 1 if you have the `strerror' function. */
 #undef HAVE_STRERROR
 
 /* Define to 1 if you have the `stricmp' function. */

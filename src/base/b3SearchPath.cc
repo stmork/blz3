@@ -145,10 +145,10 @@ b3_bool b3SearchPath::b3CutName(const char * fullname, char * result)
 			{
 				shortLen++;
 			}
-			strcpy(result, &fullname[shortLen]);
+			strncpy(result, &fullname[shortLen], B3_FILESTRINGLEN);
 			return true;
 		}
 	}
-	strcpy(result, fullname);
+	strncpy(result, fullname, B3_FILESTRINGLEN);
 	return false;
 }
