@@ -32,18 +32,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3PathEntry::b3PathEntry(const b3PathEntry & src) :
-	b3Link<b3PathEntry>(sizeof(b3PathEntry)), b3Path()
-{
-	snprintf(m_Path, sizeof(m_Path), "%s", src.m_Path);
-}
-
-b3PathEntry::b3PathEntry(const b3PathEntry * src) :
-	b3Link<b3PathEntry>(sizeof(b3PathEntry))
-{
-	snprintf(m_Path, sizeof(m_Path), "%s", src != nullptr ? src->m_Path : "");
-}
-
 b3PathEntry::b3PathEntry(const char * new_path) :
 	b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {

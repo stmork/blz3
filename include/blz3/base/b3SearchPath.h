@@ -31,17 +31,9 @@
  */
 class B3_PLUGIN b3PathEntry : public b3Link<b3PathEntry>, public b3Path
 {
+	b3PathEntry() = delete;
+
 public:
-	/**
-	 * This copy constructor initializes this instance with a path.
-	 */
-	explicit b3PathEntry(const b3PathEntry & src);
-
-	/**
-	 * This constructor initializes this instance with a path.
-	 */
-	explicit b3PathEntry(const b3PathEntry * src);
-
 	/**
 	 * This constructor initializes this instance with a path.
 	 */
