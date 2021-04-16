@@ -782,7 +782,6 @@ b3Item * b3COBReader::b3COB_Parse(
 
 		default :
 #ifdef _DEBUG
-			B3_BEEP;
 			b3PrintF(B3LOG_FULL, "%6ld - %6ld: %s\n", pos, size, token == COB_POLH ? "PolH" : "-");
 #endif
 			b3PrintF(B3LOG_NORMAL, " ERROR: unknown token (%c%c%c%c) found in COB file!\n",

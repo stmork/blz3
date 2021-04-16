@@ -101,11 +101,11 @@ void b3Condition::b3CheckInnerBound(
 {
 	if (object->x2 < object->x1)
 	{
-		B3_PSWAP((b3_u32 *)&object->x1, (b3_u32 *)&object->x2);
+		std::swap(object->x1, object->x2);
 	}
 	if (object->y2 < object->y1)
 	{
-		B3_PSWAP((b3_u32 *)&object->y1, (b3_u32 *)&object->y2);
+		std::swap(object->y1, object->y2);
 	}
 
 	if (object->x1 > limit->x1)
@@ -132,11 +132,11 @@ void b3Condition::b3CheckOuterBound(
 {
 	if (object->x2 < object->x1)
 	{
-		B3_PSWAP((b3_u32 *)&object->x1, (b3_u32 *)&object->x2);
+		std::swap(object->x1, object->x2);
 	}
 	if (object->y2 < object->y1)
 	{
-		B3_PSWAP((b3_u32 *)&object->y1, (b3_u32 *)&object->y2);
+		std::swap(object->y1, object->y2);
 	}
 
 	if (object->x1 < limit->x1)

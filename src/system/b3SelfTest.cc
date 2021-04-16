@@ -195,7 +195,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	v1 = 1;
 	v2 = 2;
 	b3PrintF(B3LOG_NORMAL, "PSWAP: i=%u k=%u\n", v1, v2);
-	B3_PSWAP(&v1, &v2);
+	std::swap(v1, v2);
 	b3PrintF(B3LOG_NORMAL, "       i=%u k=%u\n", v1, v2);
 	result &= ((v1 == 2) && (v2 == 1));
 

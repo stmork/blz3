@@ -128,8 +128,6 @@ static inline int stricmp(const char * a, const char * b)
 #define B3_FRAN(x)          ((double)(x)        * drand48())
 #define B3_IRAN(x)          ((long)((double)(x) * drand48()))
 #define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
-#define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
-#define B3_BEEP             b3Runtime::b3Beep()
 
 #define B3_BREAD      "r"
 #define B3_BWRITE     "w"
@@ -196,19 +194,6 @@ public:
 	}
 
 	/**
-	 * This method swaps the 32 bits values the pointers specify.
-	 *
-	 * @param uPtr1 The first pointer.
-	 * @param uPtr2 The second pointer.
-	 */
-	static void        b3PSwap(b3_u32 * uPtr1, b3_u32 * uPtr2);
-
-	/**
-	 * This method creates a beep.
-	 */
-	static void        b3Beep();
-
-	/**
 	 * This method returns the hostname.
 	 *
 	 * @param hostname The buffer which receives the hostname.
@@ -229,7 +214,7 @@ public:
 	/**
 	 * This method returns information about the used compiler.
 	 */
-	static char    *   b3GetCompiler();
+	static const char * b3GetCompiler();
 
 	/**
 	 * This method returns an OpenGL function pointer from the given procedure name.

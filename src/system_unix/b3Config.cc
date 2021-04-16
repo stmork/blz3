@@ -92,23 +92,6 @@ b3Runtime::b3Runtime()
 #endif
 }
 
-void b3Runtime::b3PSwap(
-	b3_u32 * uPtr1,
-	b3_u32 * uPtr2)
-{
-	b3_u32 aux;
-
-	aux    = *uPtr1;
-	*uPtr1 = *uPtr2;
-	*uPtr2 = aux;
-}
-
-void b3Runtime::b3Beep()
-{
-	putchar(7);
-	fflush(stdout);
-}
-
 b3_bool b3Runtime::b3Hostname(char * hostname, const b3_size buffer_size)
 {
 	return gethostname(hostname, buffer_size) == 0;
@@ -131,7 +114,7 @@ b3_s32 b3Runtime::b3Execute(const char * command, const b3_bool async)
 	return result;
 }
 
-char * b3Runtime::b3GetCompiler()
+const char * b3Runtime::b3GetCompiler()
 {
 	return b3Instance().m_Compiler;
 }

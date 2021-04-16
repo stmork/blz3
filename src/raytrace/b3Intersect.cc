@@ -1059,10 +1059,6 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 			d.y   -=    d.z;
 			d.z    = dmax.z;
 		}
-		else
-		{
-			B3_BEEP;
-		}
 	}
 	while (true);
 

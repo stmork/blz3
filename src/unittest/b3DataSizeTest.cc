@@ -123,17 +123,17 @@ void b3DataSizeTest::testDataSize()
 
 void b3DataSizeTest::testSwap()
 {
-	b3_u32    v1, v2;
+	b3_u32 v1, v2;
 
 	v1 = 1;
 	v2 = 2;
-	B3_SWAP(v1, v2);
+	std::swap(v1, v2);
 	CPPUNIT_ASSERT_U32_EQUAL(2, v1);
 	CPPUNIT_ASSERT_U32_EQUAL(1, v2);
 
 	v1 = 1;
 	v2 = 2;
-	B3_PSWAP(&v1, &v2);
+	std::swap(v2, v1);
 	CPPUNIT_ASSERT_U32_EQUAL(2, v1);
 	CPPUNIT_ASSERT_U32_EQUAL(1, v2);
 }
