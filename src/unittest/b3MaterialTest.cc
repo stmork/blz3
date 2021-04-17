@@ -63,16 +63,17 @@ public:
 		scene->b3GetLightHead()->b3Append(light);
 		scene->m_xSize = scene->m_ySize = 128;
 
-		big->b3Init(2, 9, false, 36);
-		b3Vector::b3Init(&big->m_Controls[0], 50, 0, -50);
-		b3Vector::b3Init(&big->m_Controls[1], 50, 0, -30);
-		b3Vector::b3Init(&big->m_Controls[2], 15, 0,  10);
-		b3Vector::b3Init(&big->m_Controls[3], 15, 0,  30);
-		b3Vector::b3Init(&big->m_Controls[4], 25, 0,  40);
-		b3Vector::b3Init(&big->m_Controls[5], 25, 0,  50);
-		b3Vector::b3Init(&big->m_Controls[6], 10, 0,  50);
-		b3Vector::b3Init(&big->m_Controls[7], 10, 0,  40);
-		b3Vector::b3Init(&big->m_Controls[8], 15, 0,  40);
+		big->b3Init(2, 10, false, 36);
+		b3Vector::b3Init(&big->m_Controls[0],  0, 0, -50);
+		b3Vector::b3Init(&big->m_Controls[1], 50, 0, -50);
+		b3Vector::b3Init(&big->m_Controls[2], 50, 0, -30);
+		b3Vector::b3Init(&big->m_Controls[3], 15, 0,  10);
+		b3Vector::b3Init(&big->m_Controls[4], 15, 0,  30);
+		b3Vector::b3Init(&big->m_Controls[5], 25, 0,  40);
+		b3Vector::b3Init(&big->m_Controls[6], 25, 0,  50);
+		b3Vector::b3Init(&big->m_Controls[7], 10, 0,  50);
+		b3Vector::b3Init(&big->m_Controls[8], 10, 0,  40);
+		b3Vector::b3Init(&big->m_Controls[9], 15, 0,  40);
 		bbox->b3GetShapeHead()->b3Append(area);
 		bbox->b3GetShapeHead()->b3Append(big);
 
