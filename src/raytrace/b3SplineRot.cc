@@ -155,13 +155,13 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 	{
 		for (x = 0; x < xSize; x++)
 		{
-			Triangle->P1 =  x            + xSize *  y;
+			Triangle->P1 =  x              + xSize *  y;
 			Triangle->P2 = (x + 1) % xSize + xSize *  y;
-			Triangle->P3 =  x            + xSize * ((y + 1) % ySize);
+			Triangle->P3 =  x              + xSize * ((y + 1) % ySize);
 			Triangle++;
 
 			Triangle->P1 = (x + 1) % xSize + xSize * ((y + 1) % ySize);
-			Triangle->P2 =  x            + xSize * ((y + 1) % ySize);
+			Triangle->P2 =  x              + xSize * ((y + 1) % ySize);
 			Triangle->P3 = (x + 1) % xSize + xSize *  y;
 			Triangle++;
 		}
@@ -179,8 +179,8 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 void b3SplineRotShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
 	b3_vector * control;
-	b3_index   offset;
-	b3_index   x;
+	b3_index    offset;
+	b3_index    x;
 
 	control = m_Spline.m_Controls;
 	offset  = m_Spline.m_Offset;
@@ -201,8 +201,8 @@ void b3SplineRotShape::b3Transform(b3_matrix * transformation, bool is_affine)
 void b3SplineRotShape::b3SetupPicking(b3PickInfo * info)
 {
 	b3_vector * control;
-	b3_index   offset;
-	b3_index   x;
+	b3_index    offset;
+	b3_index    x;
 
 	info->b3AddPickPoint(&m_Axis.pos, "b");
 	info->b3AddPickDir(&m_Axis.pos, &m_Axis.dir, "d");
@@ -220,8 +220,8 @@ void b3SplineRotShape::b3SetupPicking(b3PickInfo * info)
 void b3SplineRotShape::b3SetupGrid(b3PickInfo * info)
 {
 	b3_vector * control;
-	b3_index   offset;
-	b3_index   x;
+	b3_index    offset;
+	b3_index    x;
 
 	control = m_Spline.m_Controls;
 	offset  = m_Spline.m_Offset;

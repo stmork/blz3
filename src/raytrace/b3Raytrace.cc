@@ -39,7 +39,7 @@ struct b3_rt_info
 
 b3TxPool b3Scene::m_TexturePool;
 b3_s32   b3Scene::m_RenderPriority = -2;
-b3_f64   b3Scene::epsilon          = 0.0008;
+b3_f64   b3Scene::epsilon          = 0.0009;
 
 /*************************************************************************
 **                                                                      **

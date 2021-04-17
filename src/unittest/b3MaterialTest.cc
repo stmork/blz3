@@ -191,6 +191,18 @@ void b3MaterialTest::b3Save(b3Scene * scene, b3Path & path)
 	CPPUNIT_ASSERT(display.b3SaveImage(path));
 }
 
+void b3MaterialTest::testNormal()
+{
+	b3_vector      dim;
+	b3MatNormal  * material = new b3MatNormal(NORMAL_MATERIAL);
+	b3TestMaterial scene(material, &dim);
+	b3Path         path;
+
+	material->m_Reflection = 0.2;
+	path.b3Format("test_material_normal.bwd");
+	b3Save(scene, path);
+}
+
 void b3MaterialTest::testGranite()
 {
 	b3_vector      dim;

@@ -736,7 +736,6 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 }
 
 #define INCREMENT(x)  ((x) >= 0 ? 1 : -1)
-#define FSWAP(a,b,m)  { m = a; a = b; b = m; }
 
 #define _TEST
 
@@ -849,7 +848,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	end     = (m_GridSize * m_Size.x - pos.x) * denom.x;
 	if (start > end)
 	{
-		FSWAP(start, end, m);
+		std::swap(start, end);
 	}
 
 	denom.y = 1.0 / ray->dir.y;
@@ -858,7 +857,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	tf      = (m_GridSize * m_Size.y - pos.y) * denom.y;
 	if (tn    > tf)
 	{
-		FSWAP(tn, tf, m);
+		std::swap(tn, tf);
 	}
 	if (tn    > start)
 	{
@@ -879,7 +878,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	tf      = (m_GridSize * m_Size.z - pos.z) * denom.z;
 	if (tn    > tf)
 	{
-		FSWAP(tn, tf, m);
+		std::swap(tn, tf);
 	}
 	if (tn    > start)
 	{

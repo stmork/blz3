@@ -177,9 +177,9 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 			b3Vector::b3Scale(&P31h, 0.5);
 
 			// Further subdivision
-			b3SubdivideIntoGrid(P1,  &P12h, &P31h, triangle, max - 1);
-			b3SubdivideIntoGrid(P2,  &P23h, &P12h, triangle, max - 1);
-			b3SubdivideIntoGrid(P3,  &P31h, &P23h, triangle, max - 1);
+			b3SubdivideIntoGrid(P1,    &P12h, &P31h, triangle, max - 1);
+			b3SubdivideIntoGrid(P2,    &P23h, &P12h, triangle, max - 1);
+			b3SubdivideIntoGrid(P3,    &P31h, &P23h, triangle, max - 1);
 			b3SubdivideIntoGrid(&P12h, &P23h, &P31h, triangle, max - 1);
 		}
 		else

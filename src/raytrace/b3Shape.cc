@@ -183,7 +183,6 @@ bool b3Shape::b3Prepare(b3_preparation_info * prep_info)
 
 void b3Shape::b3BumpNormal(b3_ray * ray) const
 {
-	b3_f64   denom;
 	bool     deriv_computed = false;
 	bool     deriv_ok       = false;
 
@@ -208,14 +207,7 @@ void b3Shape::b3BumpNormal(b3_ray * ray) const
 		}
 	}
 
-	denom = 1.0 / sqrt(
-			ray->normal.x * ray->normal.x +
-			ray->normal.y * ray->normal.y +
-			ray->normal.z * ray->normal.z);
-
-	ray->normal.x *= denom;
-	ray->normal.y *= denom;
-	ray->normal.z *= denom;
+	b3Vector::b3Normalize(&ray->normal);
 }
 
 void b3Shape::b3SetupPicking(b3PickInfo * info B3_UNUSED)

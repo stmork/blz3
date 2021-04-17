@@ -253,11 +253,11 @@ void b3Triangles::b3ComputeNormals(bool normalize)
 
 void b3Triangles::b3ComputeIndices()
 {
-	b3_gl_line  *  gPtr;
+	b3_gl_line   *  gPtr;
 	b3_gl_polygon * pPtr;
-	b3_triangle  * Triangle;
-	b3_count       i;
-	b3_u32         p1, p2, p3;
+	b3_triangle  *  Triangle;
+	b3_count        i;
+	b3_u32          p1, p2, p3;
 
 	Triangle = m_Triangles;
 	gPtr     = *glGridElements;

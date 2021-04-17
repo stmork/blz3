@@ -1182,7 +1182,7 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 
 	jit->m_AmbientSum += m_Ra;
 
-	if (jit->shape == nullptr)
+//	if (jit->shape == nullptr)
 	{
 #if 1
 		b3_vector64 H;
@@ -1379,7 +1379,7 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 * src) : b3Material(src)
 	else
 	{
 		m_Flags |= B3_MAT_CP_METALLIC;
-		m_MetallicScale = 0.018;
+		m_MetallicScale = 0.18;
 	}
 }
 
@@ -1436,20 +1436,22 @@ bool b3MatCarPaint::b3GetSurfaceValues(b3_surface * surface) const
 bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit) const
 {
 	jit->m_AmbientSum += surface->m_Ambient;
+
 	if (jit->shape == nullptr)
 	{
-		b3_ray   *   ray = surface->m_Incoming;
-		b3_vector64  L;
-		b3_vector64  refl_dir;
-		b3_f64       nl;
-		b3_f64       rl;
-
-		B3_ASSERT(ray != nullptr);
+		b3_vector64    L;
 
 		b3Vector::b3Init(&L, &jit->dir);
 		b3Vector::b3Normalize(&L);
 
-		nl = b3Vector::b3SMul(&ray->normal, &L);
+		const b3_ray * ray = surface->m_Incoming;
+		const b3_f64   nl  = b3Vector::b3SMul(&ray->normal, &L);
+
+#if 0
+		b3_vector64    refl_dir;
+		b3_f64         rl;
+
+		B3_ASSERT(ray != nullptr);
 
 		if (m_Flags & B3_MAT_CP_METALLIC)
 		{
@@ -1462,8 +1464,14 @@ bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit) cons
 			rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
 		}
 
-		jit->m_DiffuseSum  += surface->m_Diffuse * nl * jit->m_LightFrac;
+		jit->m_DiffuseSum  += surface->m_Diffuse  * b3Math::b3Clamp(nl, 0.0, 1.0) * jit->m_LightFrac;
 		jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl), (b3_u32)surface->m_SpecularExp);
+#else
+		const b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
+
+		jit->m_DiffuseSum  += surface->m_Diffuse  * b3Math::b3Clamp(nl, 0.0, 1.0);
+		jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl), (b3_u32)surface->m_SpecularExp);
+#endif
 	}
 
 	return true;
@@ -1498,10 +1506,10 @@ b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFil
 	m_Ambient     = m_Diffuse * 0.2;
 	m_Specular    = B3_GREY;
 	m_Intensity.b3Init(0.2f);
-	m_Reflection  =    0;
-	m_Refraction  =    0;
-	m_Ior         =    1.5f;
-	m_SpecularExp = 1000;
+	m_Reflection  =    0.2;
+	m_Refraction  =    0.2;
+	m_Ior         =    1.01f;
+	m_SpecularExp =  300;
 	m_Flags       =    0;
 	m_Thickness   =	   7; // in micro meter
 	b3InitScaling(0.05, B3_SCALE_IPOINT_ORIGINAL);
@@ -1594,5 +1602,6 @@ bool b3MatThinFilm::b3GetSurfaceValues(b3_surface * surface) const
 	surface->m_Refraction  = m_Refraction;
 	surface->m_Ior         = m_Ior;
 	surface->m_SpecularExp = m_SpecularExp;
+
 	return true;
 }

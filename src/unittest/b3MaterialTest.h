@@ -33,6 +33,7 @@ class b3Scene;
 class b3MaterialTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3MaterialTest);
+	CPPUNIT_TEST(testNormal);
 	CPPUNIT_TEST(testGranite);
 	CPPUNIT_TEST(testMarble);
 	CPPUNIT_TEST(testWood);
@@ -44,6 +45,7 @@ class b3MaterialTest : public CppUnit::TestFixture
 public:
 	void setUp() override;
 	void tearDown() override;
+	void testNormal();
 	void testGranite();
 	void testMarble();
 	void testWood();
