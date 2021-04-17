@@ -82,18 +82,11 @@ public:
 	 */
 	static inline b3_f64 b3GetFresnel(b3_f64 phi, const b3_f64 mu)
 	{
-		b3_f64 theta, a, b, c, d;
-
-		if (phi < epsilon)
-		{
-			phi = epsilon;
-		}
-		theta = asin(sin(phi) / mu);
-
-		a = b3Sqr(sin(phi - theta));
-		b = b3Sqr(sin(phi + theta));
-		c = b3Sqr(tan(phi - theta));
-		d = b3Sqr(tan(phi + theta));
+		const b3_f64 theta = asin(sin(phi) / mu);
+		const b3_f64 a     = b3Sqr(sin(phi - theta));
+		const b3_f64 b     = b3Sqr(sin(phi + theta));
+		const b3_f64 c     = b3Sqr(tan(phi - theta));
+		const b3_f64 d     = b3Sqr(tan(phi + theta));
 
 		return 0.5 * (a / b + c / d);
 	}

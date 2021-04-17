@@ -1178,14 +1178,13 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 	b3Vector::b3Init(&L, &jit->dir);
 	b3Vector::b3Normalize(&L);
 
-	b3_f64 nl = b3Vector::b3SMul(&ray->normal, &L);
+	const b3_f64 nl = b3Vector::b3SMul(&ray->normal, &L);
 
 	jit->m_AmbientSum += m_Ra;
-#if 1
-	b3Color Rf;
 
 	if (jit->shape == nullptr)
 	{
+#if 1
 		b3_vector64 H;
 
 		H.x = L.x - ray->dir.x;
@@ -1193,49 +1192,36 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 		H.z = L.z - ray->dir.z;
 		b3Vector::b3Normalize(&H);
 
-		b3_f64 nh =  b3Vector::b3SMul(&ray->normal, &H);
-		b3_f64 nv = -b3Vector::b3SMul(&ray->normal, &ray->dir);
-		b3_f64 vh = -b3Vector::b3SMul(&ray->dir, &H);
+		const b3_f64 nh =  b3Vector::b3SMul(&ray->normal, &H);
+		const b3_f64 nv =  b3Vector::b3SMul(&ray->normal, &ray->dir);
+		const b3_f64 vh =  b3Vector::b3SMul(&ray->dir, &H);
 
-		b3_f64 Gm = 2 * nh * nv / vh;
-		b3_f64 Gs = 2 * nh * nl / vh;
+		const b3_f64 Gm = 2 * nh * nv / vh;
+		const b3_f64 Gs = 2 * nh * nl / vh;
 
-		b3_f64 G = 1;
-		if (Gm < G)
-		{
-			G = Gm;
-		}
-		if (Gs < G)
-		{
-			G = Gs;
-		}
-		G = b3Math::b3Clamp(G, 0.0, 1.0);
+		const b3_f64 G = std::min(1.0, std::min(Gm, Gs));
 
-		b3_f64 alpha = b3Math::b3Acos(nh);
-		b3_f64 nh_q  = nh * nh;
-		b3_f64 D     = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) / (m_m * m_m * nh_q * nh_q);
-		b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
+		const b3_f64 alpha = b3Math::b3Acos(nh);
+		const b3_f64 nh_q  = nh * nh;
+		const b3_f64 D     = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) /
+			(m_m * m_m * nh_q * nh_q);
+		const b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
+		const b3_f64 phi   = b3Math::b3Asin(nl);
 
-		b3_f64 phi = b3Math::b3Asin(nl);
-		for (b3_loop i = b3Color::R; i <= b3Color::B; i++)
-		{
-			b3Color::b3_color_index l = (b3Color::b3_color_index)i;
+		b3Color Rf = b3Color(
+				b3Math::b3GetFresnel(phi, m_Mu[b3Color::R]),
+				b3Math::b3GetFresnel(phi, m_Mu[b3Color::G]),
+				b3Math::b3GetFresnel(phi, m_Mu[b3Color::B])) * Rs;
 
-			Rf[l] = b3Math::b3GetFresnel(phi, m_Mu[l]) * Rs;
-		}
-		Rf.b3SetAlpha(0);
-		Rf.b3Min();
-
-		jit->m_DiffuseSum  += m_Rd * nl;
+		jit->m_DiffuseSum  += m_Rd * b3Math::b3Clamp(nl, 0.0, 1.0);
 		jit->m_SpecularSum += Rf * m_ks;
-	}
-
 #else
-	b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
+		b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
 
-	jit->m_DiffuseSum  += m_Diffuse * nl;
-	jit->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl), (b3_u32)m_SpecularExp);
+		jit->m_DiffuseSum  += m_Diffuse  * b3Math::b3Clamp(nl, 0.0, 1.0);
+		jit->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl), (b3_u32)m_SpecularExp);
 #endif
+	}
 
 	return true;
 }

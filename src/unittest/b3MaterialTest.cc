@@ -63,7 +63,7 @@ public:
 		scene->b3GetLightHead()->b3Append(light);
 		scene->m_xSize = scene->m_ySize = 128;
 
-		big->b3Init(2, 9, false, 30);
+		big->b3Init(2, 9, false, 36);
 		b3Vector::b3Init(&big->m_Controls[0], 50, 0, -50);
 		b3Vector::b3Init(&big->m_Controls[1], 50, 0, -30);
 		b3Vector::b3Init(&big->m_Controls[2], 15, 0,  10);
@@ -132,7 +132,8 @@ private:
 		size.x   =  upper.x - lower.x;
 		size.y   =  upper.y - lower.y;
 		size.z   =  upper.z - lower.z;
-		camera->b3Overview(&center, &size, xAngle * M_PI / 180, yAngle * M_PI / 180);
+
+		camera->b3Overview(&center, &size, B3_RAD(xAngle), B3_RAD(yAngle));
 		return camera;
 	}
 
@@ -251,10 +252,10 @@ void b3MaterialTest::testCookTorrance()
 {
 	b3Color gold    = b3Color(0.79, 0.65, 0.2);
 	b3Color messing = b3Color(0.79, 0.54, 0.2);
-	b3Color copper  = b3Color(0.7, 0.32, 0.2);
-	b3Color silver  = b3Color(0.5, 0.6, 0.7);
-	b3Color grey    = b3Color(0.8, 0.8, 0.8);
-	b3Color blue    = b3Color(0.1, 0.3, 0.8);
+	b3Color copper  = b3Color(0.7,  0.32, 0.2);
+	b3Color silver  = b3Color(0.5,  0.6,  0.7);
+	b3Color grey    = b3Color(0.8,  0.8,  0.8);
+	b3Color blue    = b3Color(0.1,  0.3,  0.8);
 
 	b3SaveCookTorrance(gold, 0);
 	b3SaveCookTorrance(messing, 1);

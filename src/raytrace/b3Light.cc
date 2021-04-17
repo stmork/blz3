@@ -249,7 +249,7 @@ bool b3Light::b3Illuminate(
 }
 
 inline bool b3Light::b3PointIllumination(
-	b3Shader  * shader,
+	b3Shader  *  shader,
 	b3_surface * surface) const
 {
 	b3_light_info Jit;
