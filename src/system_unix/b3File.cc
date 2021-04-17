@@ -61,8 +61,6 @@ bool b3File::b3Open(
 	const char      *     Name,
 	const b3_access_mode  AccessMode)
 {
-	char error_msg[1024];
-
 	switch (AccessMode)
 	{
 	case B_READ :
@@ -77,7 +75,8 @@ bool b3File::b3Open(
 		{
 			const b3Error error;
 
-			b3PrintF(B3LOG_NORMAL, "File read error\n  filename: %s\n  error msg: %s\n",
+			b3PrintF(B3LOG_NORMAL,
+				"File read error\n  filename: %s\n  error msg: %s\n",
 				Name, error.b3GetErrorText());
 		}
 		break;
@@ -96,7 +95,8 @@ bool b3File::b3Open(
 		{
 			const b3Error error;
 
-			b3PrintF(B3LOG_NORMAL, "File write error\n  filename: %s\n  error msg: %s\n",
+			b3PrintF(B3LOG_NORMAL,
+				"File write error\n  filename: %s\n  error msg: %s\n",
 				Name, error.b3GetErrorText());
 		}
 		break;
@@ -114,10 +114,9 @@ bool b3File::b3Open(
 		{
 			const b3Error error;
 
-			b3PrintF(B3LOG_NORMAL, "File append error\n  filename: %s\n  error msg: %s\n",
+			b3PrintF(B3LOG_NORMAL,
+				"File append error\n  filename: %s\n  error msg: %s\n",
 				Name, error.b3GetErrorText());
-			b3PrintF(B3LOG_NORMAL, "File append error\n  filename: %s\n  error msg: %s\n",
-				Name, error_msg);
 		}
 		break;
 
