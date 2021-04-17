@@ -40,8 +40,15 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
+	char hostname[_SC_HOST_NAME_MAX];
+
 	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
-	b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
+	b3PrintF(B3LOG_NORMAL, "Compiler:     %s\n", b3Runtime::b3GetCompiler());
+
+	if (b3Runtime::b3Hostname(hostname, sizeof(hostname)))
+	{
+		b3PrintF(B3LOG_NORMAL, "Hostname:     %s\n", hostname);
+	}
 
 #ifdef BLZ3_USE_SSE
 	b3PrintF(B3LOG_NORMAL, "Using SSE intrinsics.\n");

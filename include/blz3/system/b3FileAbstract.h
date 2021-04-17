@@ -178,6 +178,7 @@ public:
 	 *
 	 * @return The actual file size or -1 on error.
 	 */
+	[[nodiscard]]
 	virtual b3_offset b3Size() = 0;
 
 	/**

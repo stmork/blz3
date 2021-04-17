@@ -38,6 +38,7 @@ public:
 	 */
 	b3Error();
 
+	[[nodiscard]]
 	const char * b3GetErrorText() const override;
 
 	/**
@@ -45,6 +46,7 @@ public:
 	 *
 	 * @return The error code of this instance.
 	 */
+	[[nodiscard]]
 	int   b3GetError();
 
 protected:
