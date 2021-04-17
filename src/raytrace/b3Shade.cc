@@ -107,7 +107,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface * surface)
 
 }
 
-b3_f64 b3Shader::b3ComputeFresnel(b3_surface * surface)
+b3_f64 b3Shader::b3ComputeFresnel(b3_surface * surface) const
 {
 	b3_f64 ica, ica_sqr, ica_pow5, R0;
 
@@ -134,7 +134,7 @@ b3_bool b3Shader::b3Shade(
 	// Normalize incoming ray
 	b3Vector::b3Normalize(&ray->dir);
 
-	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, (b3_bool)(depth_count == 0)))
+	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, depth_count == 0))
 	{
 		bbox  = ray->bbox;
 		shape = ray->shape;

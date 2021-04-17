@@ -1182,7 +1182,7 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 
 	jit->m_AmbientSum += m_Ra;
 
-//	if (jit->shape == nullptr)
+	if (jit->shape == nullptr)
 	{
 #if 1
 		b3_vector64 H;

@@ -45,7 +45,6 @@ void b3ShaderMork::b3ShadeLight(
 	b3_light_info * Jit,
 	b3_surface   *  surface) const
 {
-	b3_f64   ShapeAngle;
 	b3_f32   Factor;
 
 	// Real absorption
@@ -54,12 +53,13 @@ void b3ShaderMork::b3ShadeLight(
 	// No shadow => surface in light
 	if (Jit->shape == nullptr) // This shape is the obscurer not the intersection point shape!!!
 	{
+		const b3_f64 ShapeAngle = b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir);
+
 		// specular high light
-		if ((ShapeAngle =
-					b3Vector::b3SMul(&surface->m_Incoming->normal, &Jit->dir)) >= 0)
+		if (ShapeAngle >= 0)
 		{
-			b3_f64 lambda   = b3Vector::b3SMul(&surface->m_ReflRay.dir, &Jit->dir);
-			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
+			const b3_f64 lambda   = b3Vector::b3SMul(&surface->m_ReflRay.dir, &Jit->dir);
+			const b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
 			if (spec_exp < 100000)
 			{

@@ -346,9 +346,9 @@ private:
 	b3SampleInfo * b3SampleInit(const b3_count CPUs) override
 	{
 		b3SampleInfo * info = new b3SampleInfo[CPUs];
-		b3_loop       i;
-		b3_res        yStart, yEnd;
-		b3_pkd_color * data = (b3_pkd_color *)m_Data;
+		b3_loop        i;
+		b3_res         yStart, yEnd;
+		b3_pkd_color * data = m_Data;
 
 		yStart = 0;
 		for (i = 0; i < CPUs; i++)
@@ -373,7 +373,7 @@ private:
 		b3BBox            bbox = BBOX;
 		b3_surface        surface;
 		b3_stencil_limit  limit;
-		b3_pkd_color   *  data = (b3_pkd_color *)info->m_Data;
+		b3_pkd_color   *  data = info->m_Data;
 		b3_pkd_color      color;
 		b3_coord          x, y;
 		b3_f64            fx, fxStep;

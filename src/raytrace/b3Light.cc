@@ -240,8 +240,8 @@ void b3Light::b3SetName(const char * name)
 }
 
 bool b3Light::b3Illuminate(
-	b3Shader  *  shader,
-	b3_surface * surface) const
+	const b3Shader * shader,
+	b3_surface   *   surface) const
 {
 	return (m_SoftShadow ?
 			b3AreaIllumination(shader, surface) :
@@ -249,8 +249,8 @@ bool b3Light::b3Illuminate(
 }
 
 inline bool b3Light::b3PointIllumination(
-	b3Shader  *  shader,
-	b3_surface * surface) const
+	const b3Shader * shader,
+	b3_surface   *   surface) const
 {
 	b3_light_info Jit;
 	b3_vector     point;
@@ -307,8 +307,8 @@ inline bool b3Light::b3PointIllumination(
 }
 
 inline bool b3Light::b3AreaIllumination(
-	b3Shader  *  shader,
-	b3_surface * surface) const
+	const b3Shader * shader,
+	b3_surface   *   surface) const
 {
 	b3_light_info  Jit;
 	bool           Edge1, Edge2, LastEdge = false, first = true;
@@ -431,11 +431,11 @@ inline bool b3Light::b3AreaIllumination(
 }
 
 inline const b3Shape * b3Light::b3CheckSinglePoint(
-	b3Shader    *   shader,
-	b3_surface   *  surface,
-	b3_light_info * Jit,
-	b3_coord        x,
-	b3_coord        y) const
+	const b3Shader * shader,
+	b3_surface   *   surface,
+	b3_light_info  * Jit,
+	const b3_coord   x,
+	const b3_coord   y) const
 {
 	b3_f64   jx, jy, LightDist;
 

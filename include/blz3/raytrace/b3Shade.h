@@ -101,7 +101,7 @@ public:
 	 * This is because shapes behind the light source doesn't matter.
 	 * @return True if an obscurer was found.
 	 */
-	inline  b3_bool         b3FindObscurer(b3_ray * ray, b3_f64 max = DBL_MAX)
+	inline  bool    b3FindObscurer(b3_ray * ray, b3_f64 max = DBL_MAX) const
 	{
 		return m_Scene->b3Intersect(ray, false, max);
 	}
@@ -120,7 +120,7 @@ protected:
 	 * @param surface The collected surface values.
 	 * @param depth The maximal raytrace recursion depth for reflection or refraction.
 	 */
-	virtual void            b3ShadeSurface(b3_surface * surface, b3_count depth) = 0;
+	virtual void    b3ShadeSurface(b3_surface * surface, b3_count depth) = 0;
 
 	/**
 	 * This method mixes the surface lighting for one light source. This may
@@ -131,7 +131,8 @@ protected:
 	 * @param jit The position information of the light source.
 	 * @param surface The surface values to mix.
 	 */
-	virtual void            b3ShadeLight(const b3Light * light, b3_light_info * jit, b3_surface * surface) const = 0;
+	virtual void    b3ShadeLight(
+		const b3Light * light, b3_light_info * jit, b3_surface * surface) const = 0;
 
 protected:
 	/**
@@ -140,7 +141,7 @@ protected:
 	 * The refraction ray is computed if the refractance is higher than zero
 	 * and no total reflection occurs.
 	 */
-	void                    b3ComputeOutputRays(b3_surface * surface);
+	void            b3ComputeOutputRays(b3_surface * surface);
 
 	/**
 	 * This method computes the Fresnel terms of the given surface.
@@ -148,7 +149,7 @@ protected:
 	 * @param surface The surface values.
 	 * @return The resulting intensity level.
 	 */
-	b3_f64                  b3ComputeFresnel(b3_surface * surface);
+	b3_f64          b3ComputeFresnel(b3_surface * surface) const;
 
 	/**
 	 * This method illuminates the given surface by all activated
@@ -157,7 +158,7 @@ protected:
 	 * @param surface The surface to illuminate. The surface also contains the intersection point.
 	 * @see b3Light::b3Illuminate().
 	 */
-	inline void b3Illuminate(b3_surface * surface)
+	inline void     b3Illuminate(b3_surface * surface) const
 	{
 		B3_FOR_TYPED_BASE(b3Light, m_Scene->b3GetLightHead(), light)
 		{

@@ -146,14 +146,18 @@ public:
 	 * @see b3Shader
 	 * @see b3_surface.
 	 */
-	bool     b3Illuminate(b3Shader * shader, b3_surface * surface) const;
+	bool     b3Illuminate(const b3Shader * shader, b3_surface * surface) const;
 
 private:
 	void            b3InitValues();
-	bool            b3PointIllumination(b3Shader * shader, b3_surface * surface) const;
-	bool            b3AreaIllumination(b3Shader * shader, b3_surface * surface) const;
-	const b3Shape * b3CheckSinglePoint(b3Shader * shader, b3_surface * surface,
-		b3_light_info * Jit, b3_coord x, b3_coord y) const;
+	bool            b3PointIllumination(const b3Shader * shader, b3_surface * surface) const;
+	bool            b3AreaIllumination(const b3Shader * shader, b3_surface * surface) const;
+	const b3Shape * b3CheckSinglePoint(
+		const b3Shader * shader,
+		b3_surface   *   surface,
+		b3_light_info  * Jit,
+		const b3_coord   x,
+		const b3_coord   y) const;
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) const // angle inside [0..1]
 	{
