@@ -27,6 +27,8 @@
 
 #include "b3TestMacros.h"
 
+using namespace std::literals::complex_literals;
+
 class b3ComplexTest : public CppUnit::TestFixture
 {
 	b3Complex<b3_f32>   a, b, e;
@@ -58,7 +60,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Imag());
 		CPPUNIT_ASSERT(!b3_cpx.b3Normalize());
 
-		b3_cpx  = 2i + 1;
+		b3_cpx  = 2i + 1.0;
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   1.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   2.0, b3_cpx.b3Imag());
 
@@ -74,7 +76,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   7.5, b3_cpx.b3Imag());
 
-		std_cpx = 3i + 4;
+		std_cpx = 3i + 4.0;
 		b3_cpx  = std_cpx;
 
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  25.0, b3_cpx.b3SquareLength());
@@ -85,7 +87,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
 
-		b3_cpx = 64 + 36i;
+		b3_cpx = 64.0 + 36i;
 		b3_cpx = b3_cpx.b3Sqrt();
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
@@ -140,7 +142,7 @@ private:
 
 	template<class T, class C> void testStdComplexOps()
 	{
-		std::complex<T> std_cpx(1 + 7i);
+		std::complex<T> std_cpx(1.0 + 7i);
 		C               b3_cpx(5.5 + 4i);
 		C               b3_cpx_init1(std_cpx);
 		C               b3_cpx_init2(b3_cpx);
@@ -158,7 +160,7 @@ private:
 		b3_cpx = 1;
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
 
-		b3_cpx = 2 + 2i;
+		b3_cpx = 2.0f + 2i;
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(45.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
 
 		b3_cpx = 3i;
