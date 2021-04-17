@@ -102,9 +102,9 @@ public:
 	 * \return The bound value.
 	 */
 	template<typename T> inline static T b3Clamp(
-		const T & input,
-		const T & min,
-		const T & max)
+		const T input,
+		const T min,
+		const T max)
 	{
 		const T & r = input < min ? min : input;
 
@@ -118,25 +118,10 @@ public:
 	 * \param rnd The precision.
 	 * \return The rounded value.
 	 */
-	static inline b3_f32 b3Round(const b3_f32 x, const b3_f32 rnd)
+	template<typename T> static inline T b3Round(const T x, const T rnd)
 	{
-		b3_f32 mul    = floorf(0.5 / rnd + 0.5);
-		b3_f32 result = floorf(x * mul + 0.5) / mul;
-
-		return result;
-	}
-
-	/**
-	 * This method rounds a number by the given precision.
-	 *
-	 * \param x The value to round.
-	 * \param rnd The precision.
-	 * \return The rounded value.
-	 */
-	static inline b3_f64 b3Round(const b3_f64 x, const b3_f64 rnd)
-	{
-		b3_f64 mul    = floor(0.5 / rnd + 0.5);
-		b3_f64 result = floor(x * mul + 0.5) / mul;
+		const T mul    = std::floor(0.5 / rnd + 0.5);
+		const T result = std::floor(x * mul + 0.5) / mul;
 
 		return result;
 	}
