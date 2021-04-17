@@ -28,7 +28,6 @@
 class B3_PLUGIN b3Math
 {
 	static b3_f64 epsilon;
-	static b3_f64 m_CbrtCoeffs[15];
 
 public:
 	/**
@@ -192,7 +191,7 @@ public:
 	 * \param b Another value.
 	 * \return The lower value of both given values.
 	 */
-	static inline b3_f64 b3Min(const b3_f64 a, const b3_f64 b)
+	template<typename T> static inline T b3Min(const T a, const T b)
 	{
 		return a < b ? a : b;
 	}
@@ -204,7 +203,7 @@ public:
 	 * \param b Another value.
 	 * \return The greater value of both given values.
 	 */
-	static inline b3_f64 b3Max(const b3_f64 a, const b3_f64 b)
+	template<typename T> static inline T b3Max(const T a, const T b)
 	{
 		return a > b ? a : b;
 	}
@@ -380,81 +379,17 @@ public:
 		return atan2(v, u) * 180.0 / M_PI + (v < 0 ? 360.0 : 0);
 	}
 
-
-#ifndef CBRT_SYS
 	/**
 	 * This method computes the cubic root from a value.
 	 *
 	 * \param x The value to compute the cubic root from.
 	 * \return The cubic root.
 	 */
-#ifdef  CBRT_SLOW
+	[[deprecated]]
 	static inline b3_f64 b3Cbrt(const b3_f64 x)
 	{
 		return cbrt(x);
 	}
-#else
-	static inline b3_f64 b3Cbrt(b3_f64 x)
-	{
-		b3_f64   xx, y;
-		b3_count Negative;
-		int      expon, n;
-
-		if (x <= 0)
-		{
-			x = -x;
-			Negative = true;
-		}
-		else
-		{
-			Negative = false;
-		}
-
-		xx = frexp(x, &expon);
-		n = expon % 3;
-		y = ((((((((((((((
-								m_CbrtCoeffs[14]) * xx +
-							m_CbrtCoeffs[13]) * xx +
-						m_CbrtCoeffs[12]) * xx +
-					m_CbrtCoeffs[11]) * xx +
-				m_CbrtCoeffs[10]) * xx +
-												m_CbrtCoeffs[ 9]) * xx +
-											m_CbrtCoeffs[ 8]) * xx +
-										m_CbrtCoeffs[ 7]) * xx +
-									m_CbrtCoeffs[ 6]) * xx +
-								m_CbrtCoeffs[ 5]) * xx +
-							m_CbrtCoeffs[ 4]) * xx +
-						m_CbrtCoeffs[ 3]) * xx +
-					m_CbrtCoeffs[ 2]) * xx +
-				m_CbrtCoeffs[ 1]) * xx +
-			m_CbrtCoeffs[ 0];
-		y *= (4.0 / 3 - y * y * y * xx * (1.0 / 3));
-		y *= (y * xx);
-		if (n < 0)
-		{
-			n += 3;
-		}
-		if (n == 1)
-		{
-			y *= 1.25992104989;    /* 2 ^ (1/3) */
-		}
-		else if (n == 2)
-		{
-			y *= 1.58740105196;    /* 4 ^ (1/3) */
-		}
-
-		if ((n = expon) < 0)
-		{
-			n -= 2;
-		}
-		n /= 3;
-
-		b3_f64 result = ldexp(y, n);
-
-		return Negative ? -result : result;
-	}
-#endif
-#endif
 };
 
 #endif

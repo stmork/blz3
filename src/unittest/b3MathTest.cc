@@ -78,14 +78,6 @@ void b3MathTest::test()
 			CPPUNIT_ASSERT_EQUAL(pow(base, static_cast<double>(exp)), b3Math::b3FastPow(base, exp));
 		}
 	}
-
-	for (base = -81; base <= 81; base += 0.125)
-	{
-		const double expected = round(cbrt(base) * 10000000);
-		const double actual   = round(b3Math::b3Cbrt(base) * 10000000);
-
-		CPPUNIT_ASSERT_EQUAL(expected, actual);
-	}
 }
 
 void b3MathTest::testLogPow()
