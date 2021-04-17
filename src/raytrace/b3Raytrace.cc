@@ -30,11 +30,11 @@
 struct b3_rt_info
 {
 	b3Display * m_Display;
-	b3Scene  * m_Scene;
-	bool       m_Loop;
-	b3_count   m_Num;
-	b3Event    m_WaitForAnimation;
-	b3Event    m_WaitForCompletion;
+	b3Scene  *  m_Scene;
+	bool        m_Loop;
+	b3_count    m_Num;
+	b3Event     m_WaitForAnimation;
+	b3Event     m_WaitForCompletion;
 };
 
 b3TxPool b3Scene::m_TexturePool;

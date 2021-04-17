@@ -1447,7 +1447,7 @@ bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit) cons
 		const b3_ray * ray = surface->m_Incoming;
 		const b3_f64   nl  = b3Vector::b3SMul(&ray->normal, &L);
 
-#if 0
+#if 1
 		b3_vector64    refl_dir;
 		b3_f64         rl;
 
