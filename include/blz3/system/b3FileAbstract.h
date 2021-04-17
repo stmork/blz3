@@ -140,9 +140,9 @@ public:
 	 *
 	 * @param read_buffer The buffer where to store the read bytes.
 	 * @param size        The number of bytes to read.
-	 * @return The really number of read bytes.
+	 * @return The really number of read bytes of -1 in case of an error.
 	 */
-	virtual b3_size  b3Read(void * read_buffer, const b3_size size) = 0;
+	virtual b3_offset b3Read(void * read_buffer, const b3_size size) = 0;
 
 	/**
 	 * This method writes the specified amount of bytes from a buffer. It returns
@@ -160,25 +160,25 @@ public:
 	 *
 	 * @see b3Buffer.
 	 */
-	virtual bool     b3Flush() = 0;
+	virtual bool      b3Flush() = 0;
 
 	/**
-	 * This method moves the byte position inside the file. The position can be moved
-	 * from the actual position, from start and from the end of the file.
+	 * This method moves the byte position inside the file. The position can be
+	 * moved from the actual position, from start and from the end of the file.
 	 *
 	 * @param offset The offset to move.
 	 * @param type   The seek type to use.
-	 * @return The old file position from start.
+	 * @return The old file position from start or -1 on error.
 	 * @see b3_seek_type
 	 */
-	virtual b3_size  b3Seek(const b3_offset offset, const b3_seek_type type) = 0;
+	virtual b3_offset b3Seek(const b3_offset offset, const b3_seek_type type) = 0;
 
 	/**
 	 * This method returns the actual file size.
 	 *
-	 * @return The actual file size.
+	 * @return The actual file size or -1 on error.
 	 */
-	virtual b3_size  b3Size() = 0;
+	virtual b3_offset b3Size() = 0;
 
 	/**
 	 * This method resizes the file cache. It calls b3Flush() to write old

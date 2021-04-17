@@ -36,17 +36,17 @@
  */
 class B3_PLUGIN b3FileMem : public b3FileAbstract, public b3Mem
 {
-	b3_size    m_BufferPos;  //!< Actual file position.
-	b3_size    m_BufferMax;  //!< buffer size.
-	b3_size    m_BufferSize; //!< file size.
-	b3_u08  *  m_Buffer;     //!< buffer itself.
-	b3_size    m_BufferInc;  //!< buffer increment.
+	b3_u08  *  m_Buffer     = nullptr;     //!< buffer itself.
+	b3_offset  m_BufferPos  = -1;          //!< Actual file position.
+	b3_size    m_BufferMax  =  0;          //!< buffer size.
+	b3_offset  m_BufferSize =  0;          //!< file size.
+	b3_size    m_BufferInc  =  0;          //!< buffer increment.
 
 public:
 	/**
 	 * This constructor initializes the instance.
 	 */
-	b3FileMem();
+	b3FileMem() = default;
 
 	/**
 	 * This constructor initializes the instance with the specified access mode.
@@ -92,8 +92,8 @@ public:
 	 * @return True if the file open was successful.
 	 * @throws b3FileException
 	 */
-	bool     b3Open(const char * filename, const b3_access_mode mode) override;
-	b3_size  b3Read(void * read_buffer, const b3_size size) override;
+	bool      b3Open(const char * filename, const b3_access_mode mode) override;
+	b3_offset b3Read(void * read_buffer, const b3_size size) override;
 
 	/**
 	 * This method reads the complete content of the specified file into the
@@ -102,13 +102,13 @@ public:
 	 * @param filename The file to cache.
 	 * @return True if the operation was successful.
 	 */
-	bool     b3ReadBuffer(const char * filename);
-	b3_size  b3Write(const void * write_buffer, const b3_size size) override;
-	bool     b3Flush() override;
-	b3_size  b3Seek(const b3_offset offset, const b3_seek_type type) override;
-	b3_size  b3Size() override;
-	bool     b3Buffer(const b3_size new_cache_size) override;
-	void     b3Close() override;
+	bool      b3ReadBuffer(const char * filename);
+	b3_size   b3Write(const void * write_buffer, const b3_size size) override;
+	bool      b3Flush() override;
+	b3_offset b3Seek(const b3_offset offset, const b3_seek_type type) override;
+	b3_offset b3Size() override;
+	bool      b3Buffer(const b3_size new_cache_size) override;
+	void      b3Close() override;
 
 private:
 	bool     b3EnsureBufferSize(b3_size new_size);

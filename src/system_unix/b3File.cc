@@ -21,11 +21,13 @@
 **                                                                      **
 *************************************************************************/
 
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <errno.h>
+
+#include "blz3/system/b3Error.h"
 #include "blz3/system/b3File.h"
 
 #define DEFAULT_CACHESIZE 64000
@@ -36,28 +38,13 @@
 **                                                                      **
 *************************************************************************/
 
-b3_count b3File::m_OpenFiles = 0;
-b3Mutex  b3File::m_FilesOpenedMutex;
-
-// Initialize an instance only
-b3File::b3File()
-{
-	m_Index       =  0;
-	m_BufferSize  =  0;
-	m_File        = -1;
-	m_Cache       =  nullptr;
-}
+std::atomic_uint b3File::m_OpenFiles = 0;
 
 // Instantiate as opened file
 b3File::b3File(
 	const char      *     Name,
 	const b3_access_mode  AccessMode)
 {
-	m_Index       =  0;
-	m_BufferSize  =  0;
-	m_File        = -1;
-	m_Cache       =  nullptr;
-
 	if (!b3Open(Name, AccessMode))
 	{
 		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
@@ -66,10 +53,7 @@ b3File::b3File(
 
 b3File::~b3File()
 {
-	if (m_File != -1)
-	{
-		b3Close();
-	}
+	b3Close();
 }
 
 // Open a file for reading, writing or appending
@@ -86,18 +70,15 @@ bool b3File::b3Open(
 		m_File = open(Name, O_RDONLY);
 		if (m_File != -1)
 		{
-			b3CriticalSection lock(m_FilesOpenedMutex);
-
 			m_OpenFiles++;
 			return true;
 		}
 		else
 		{
-			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
-			{
-				b3PrintF(B3LOG_NORMAL, "File read error\n  filename: %s\n  error msg: %s\n",
-					Name, error_msg);
-			}
+			const b3Error error;
+
+			b3PrintF(B3LOG_NORMAL, "File read error\n  filename: %s\n  error msg: %s\n",
+				Name, error.b3GetErrorText());
 		}
 		break;
 
@@ -107,19 +88,16 @@ bool b3File::b3Open(
 		m_File = open(Name, O_WRONLY | O_CREAT, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 		if (m_File != -1)
 		{
-			b3CriticalSection lock(m_FilesOpenedMutex);
-
 			m_OpenFiles++;
 			b3Buffer(DEFAULT_CACHESIZE);
 			return true;
 		}
 		else
 		{
-			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
-			{
-				b3PrintF(B3LOG_NORMAL, "File write error\n  filename: %s\n  error msg: %s\n",
-					Name, error_msg);
-			}
+			const b3Error error;
+
+			b3PrintF(B3LOG_NORMAL, "File write error\n  filename: %s\n  error msg: %s\n",
+				Name, error.b3GetErrorText());
 		}
 		break;
 
@@ -128,19 +106,16 @@ bool b3File::b3Open(
 		m_File = open(Name, O_WRONLY | O_APPEND, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 		if (m_File != -1)
 		{
-			b3CriticalSection lock(m_FilesOpenedMutex);
-
 			m_OpenFiles++;
 			b3Buffer(DEFAULT_CACHESIZE);
 			return true;
 		}
 		else
 		{
-			if (strerror_r(errno, error_msg, sizeof(error_msg)) == 0)
-			{
-				b3PrintF(B3LOG_NORMAL, "File append error\n  filename: %s\n  error msg: %s\n",
-					Name, error_msg);
-			}
+			const b3Error error;
+
+			b3PrintF(B3LOG_NORMAL, "File append error\n  filename: %s\n  error msg: %s\n",
+				Name, error.b3GetErrorText());
 			b3PrintF(B3LOG_NORMAL, "File append error\n  filename: %s\n  error msg: %s\n",
 				Name, error_msg);
 		}
@@ -154,15 +129,12 @@ bool b3File::b3Open(
 }
 
 // Guess what
-b3_size b3File::b3Read(
+b3_offset b3File::b3Read(
 	void     *     buffer,
 	const b3_size  buffer_size)
 
 {
-	b3_size readBytes;
-
-	readBytes = read(m_File, (void *)buffer, buffer_size);
-	return readBytes;
+	return m_File != -1 ? read(m_File, (void *)buffer, buffer_size) : -1;
 }
 
 // Guess what, but including caching
@@ -275,50 +247,47 @@ bool b3File::b3Flush()
 	return m_Index == 0;
 }
 
-b3_size b3File::b3Seek(
+b3_offset b3File::b3Seek(
 	const b3_offset    offset,
 	const b3_seek_type SeekMode)
 {
-	b3_size OldPos;
+	const b3_offset old_pos = lseek(m_File, 0L, SEEK_CUR);
 
-	OldPos = lseek(m_File, 0L, SEEK_CUR);
-	if (b3Flush())
+	if (old_pos != -1)
 	{
-		switch (SeekMode)
+		if (b3Flush())
 		{
-		case B3_SEEK_START :
-			lseek(m_File, offset, SEEK_SET);
-			return OldPos;
-		case B3_SEEK_CURRENT :
-			lseek(m_File, offset, SEEK_CUR);
-			return OldPos;
-		case B3_SEEK_END :
-			lseek(m_File, offset, SEEK_END);
-			return OldPos;
+			switch (SeekMode)
+			{
+			case B3_SEEK_START :
+				lseek(m_File, offset, SEEK_SET);
+				return old_pos;
+			case B3_SEEK_CURRENT :
+				lseek(m_File, offset, SEEK_CUR);
+				return old_pos;
+			case B3_SEEK_END :
+				lseek(m_File, offset, SEEK_END);
+				return old_pos;
+			}
 		}
+		lseek(m_File, 0L, SEEK_CUR);
 	}
-	lseek(m_File, 0L, SEEK_CUR);
-	return OldPos;
+	return old_pos;
 }
 
-b3_size b3File::b3Size()
+b3_offset b3File::b3Size()
 {
-	b3_size pos, size;
+	if (m_File != -1)
+	{
+		struct stat statistics;
 
-	b3Flush();
+		if (fstat(m_File, &statistics) == 0)
+		{
+			return statistics.st_size;
+		}
+	}
 
-	// save old position
-	pos  = lseek(m_File, 0L, SEEK_CUR);
-
-	// Run to EOF
-	lseek(m_File, 0L, SEEK_END);
-
-	// save end position (= file size)
-	size = lseek(m_File, 0L, SEEK_CUR);
-
-	// Remember old position
-	lseek(m_File, pos, SEEK_SET);
-	return size;
+	return -1;
 }
 
 bool b3File::b3Buffer(b3_size size)
@@ -352,8 +321,6 @@ void b3File::b3Close()
 	b3Buffer(0);
 	if (m_File != -1)
 	{
-		b3CriticalSection lock(m_FilesOpenedMutex);
-
 		close(m_File);
 		m_OpenFiles--;
 		m_File  = -1;
@@ -374,7 +341,7 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 		file_buffer = b3TypedAlloc<b3_u08>(file_size);
 		if (file_buffer != nullptr)
 		{
-			if (b3Read(file_buffer, file_size) == file_size)
+			if (b3Read(file_buffer, file_size) == b3_offset(file_size))
 			{
 				error = B3_FILE_OK;
 			}
@@ -393,7 +360,7 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 		error = B3_FILE_NOT_FOUND;
 	}
 
-	file_size   = b3Size();
+	file_size = b3Size();
 	b3Close();
 
 	if (error != B3_FILE_OK)
@@ -402,8 +369,8 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 		{
 			// We don't need the read buffer any more.
 			b3Free(file_buffer);
+			file_buffer = nullptr;
 		}
-		B3_THROW(b3FileException, error);
 	}
 
 	return file_buffer;

@@ -246,16 +246,16 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract & file)
 	b3_bool      success;
 
 	b3PrintF(B3LOG_NORMAL, "File 'Config.tst' opened...\n");
-	file.b3Buffer(2048);
-	file.b3Write(array, 1024);
-	file.b3Flush();
-	file.b3Write(array, 1024);
-	file.b3Write(array, 1024);
-	file.b3Write(array, 1024);
-	file.b3Buffer(512);
-	file.b3Write(array, 1024);
+	success  = file.b3Buffer(2048);
+	success |= file.b3Write(array, 1024) == 1024;
+	success |= file.b3Flush();
+	success |= file.b3Write(array, 1024) == 1024;
+	success |= file.b3Write(array, 1024) == 1024;
+	success |= file.b3Write(array, 1024) == 1024;
+	success |= file.b3Buffer(512);
+	success |= file.b3Write(array, 1024) == 1024;
 	b3PrintF(B3LOG_NORMAL, "File Size: %ld (should be 5120 Bytes)\n", file.b3Size());
-	success = file.b3Size() == 5120;
+	success |= file.b3Size() == 5120;
 	file.b3Close();
 
 	if (file.b3Open("Config.tst", B_READ))
@@ -263,13 +263,13 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract & file)
 		b3PrintF(B3LOG_NORMAL, "File 'Config.tst' opened...\n");
 		if (file.b3Read(array, 128) < 128)
 		{
-			b3PrintF(B3LOG_NORMAL, "128 not read...\n");
+			b3PrintF(B3LOG_NORMAL, "128 bytes not read...\n");
 			success = false;
 		}
-		b3PrintF(B3LOG_NORMAL, "Seek1: %4ld (should be  128)\n", file.b3Seek(512, B3_SEEK_START));
-		b3PrintF(B3LOG_NORMAL, "Seek2: %4ld (should be  512)\n", file.b3Seek(512, B3_SEEK_CURRENT));
+		b3PrintF(B3LOG_NORMAL, "Seek1: %4ld (should be  128)\n", file.b3Seek( 512, B3_SEEK_START));
+		b3PrintF(B3LOG_NORMAL, "Seek2: %4ld (should be  512)\n", file.b3Seek( 512, B3_SEEK_CURRENT));
 		b3PrintF(B3LOG_NORMAL, "Seek3: %4ld (should be 1024)\n", file.b3Seek(-120, B3_SEEK_END));
-		b3PrintF(B3LOG_NORMAL, "Seek4: %4ld (should be 5000)\n", file.b3Seek(0, B3_SEEK_CURRENT));
+		b3PrintF(B3LOG_NORMAL, "Seek4: %4ld (should be 5000)\n", file.b3Seek(   0, B3_SEEK_CURRENT));
 		file.b3Close();
 	}
 	else

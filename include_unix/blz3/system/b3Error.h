@@ -22,19 +22,22 @@
 
 #include "blz3/system/b3ErrorAbstract.h"
 
+#include <string>
+
 /**
  * This class converts an error code into an error message.
  */
 class b3Error : public b3ErrorBase
 {
-	int   m_ErrorCode;
-	char  m_ErrorText[1024];
+	int          m_ErrorCode;
+	std::string  m_ErrorText;
 
 public:
 	/**
 	 * This constructor initializes the error code interpreter.
 	 */
 	b3Error();
+
 	const char * b3GetErrorText() const override;
 
 	/**

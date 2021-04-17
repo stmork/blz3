@@ -47,7 +47,7 @@ int b3Error::b3GetError()
 
 const char * b3Error::b3GetErrorText() const
 {
-	return m_ErrorText;
+	return m_ErrorText.c_str();
 }
 
 void b3Error::b3RetrieveError()
@@ -55,8 +55,8 @@ void b3Error::b3RetrieveError()
 	m_ErrorCode = errno;
 
 #ifdef HAVE_STRERROR
-	strncpy(m_ErrorText, strerror(m_ErrorCode), sizeof(m_ErrorText));
+	m_ErrorText.assign(strerror(m_ErrorCode));
 #else
-	snprintf(m_ErrorText, sizeof(m_ErrorText), "errno.: %d\n", m_ErrorCode);
+	m_ErrorText = "errno.: " + m_ErrorCode;
 #endif
 }

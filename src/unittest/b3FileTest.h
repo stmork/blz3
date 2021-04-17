@@ -26,8 +26,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 template<class FILE> class b3FileTest : public CppUnit::TestFixture
 {
 	FILE file;
@@ -35,6 +33,7 @@ template<class FILE> class b3FileTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3FileTest);
 	CPPUNIT_TEST(testWrite);
 	CPPUNIT_TEST(testRead);
+	CPPUNIT_TEST(testFailure);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -68,6 +67,8 @@ public:
 		CPPUNIT_ASSERT_TYPED_EQUAL(b3_size, 5120, file.b3Size());
 		CPPUNIT_ASSERT_NO_THROW(file.b3Close());
 		CPPUNIT_ASSERT_NO_THROW(removeFile("Config.tst"));
+		CPPUNIT_ASSERT(!file.b3Flush());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Size());
 	}
 
 	void testRead()
@@ -76,10 +77,24 @@ public:
 
 		CPPUNIT_ASSERT(openRead("Data1.bwd"));
 		CPPUNIT_ASSERT_TYPED_EQUAL(b3_size, 128,  file.b3Read(array, 128));
-		CPPUNIT_ASSERT_TYPED_EQUAL(b3_size, 128,  file.b3Seek( 512, B3_SEEK_START));
-		CPPUNIT_ASSERT_TYPED_EQUAL(b3_size, 512,  file.b3Seek( 512, B3_SEEK_CURRENT));
-		CPPUNIT_ASSERT_TYPED_EQUAL(b3_size, 1024, file.b3Seek(-120, B3_SEEK_END));
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, 128,  file.b3Seek( 512, B3_SEEK_START));
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, 512,  file.b3Seek( 512, B3_SEEK_CURRENT));
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, 1024, file.b3Seek(-120, B3_SEEK_END));
 		CPPUNIT_ASSERT_EQUAL(file.b3Size() - 120, file.b3Seek(   0, B3_SEEK_CURRENT));
+		CPPUNIT_ASSERT_NO_THROW(file.b3Close());
+		CPPUNIT_ASSERT(!file.b3Flush());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Size());
+	}
+
+	void testFailure()
+	{
+		char buffer[1024];
+
+		CPPUNIT_ASSERT(!openRead("XYZ.bwd"));
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Size());
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Seek( 512, B3_SEEK_START));
+		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Read(buffer, 128));
+		CPPUNIT_ASSERT(!file.b3Flush());
 		CPPUNIT_ASSERT_NO_THROW(file.b3Close());
 	}
 };

@@ -24,6 +24,8 @@
 #include "blz3/system/b3Mem.h"
 #include "blz3/system/b3FileAbstract.h"
 
+#include <atomic>
+
 /*************************************************************************
 **                                                                      **
 **                        b3File itself                                 **
@@ -35,19 +37,19 @@
  */
 class b3File : public b3FileAbstract, public b3Mem
 {
-	static b3_count  m_OpenFiles;
-	static b3Mutex   m_FilesOpenedMutex;
+	static std::atomic_uint  m_OpenFiles;
 
-	b3_u08   *  m_Cache;      //!< Cache buffer.
-	b3_offset   m_Index;      //!< Index in cache.
-	b3_size     m_BufferSize; //!< Size of cache.
-	int         m_File;       //!< Fileno.
+	b3_u08   *  m_Cache      = nullptr;  //!< Cache buffer.
+	b3_offset   m_Index      =  0;       //!< Index in cache.
+	b3_size     m_BufferSize =  0;       //!< Size of cache.
+	int         m_File       = -1;       //!< Fileno.
+
 public:
 	/**
 	 * This constructor initializes this instance. You need to call b3Open to do
 	 * file IO.
 	 */
-	b3File();
+	b3File() = default;
 
 	/**
 	 * This constructor prepares this instance to to file IO. It calls b3Open()
@@ -59,8 +61,8 @@ public:
 	b3File(const char * filename, const b3_access_mode mode);
 	virtual ~b3File();
 
-	bool     b3Open(const char * filename, const b3_access_mode mode) override;
-	b3_size  b3Read(void * read_buffer, const b3_size size) override;
+	bool      b3Open(const char * filename, const b3_access_mode mode) override;
+	b3_offset b3Read(void * read_buffer, const b3_size size) override;
 
 	/**
 	 * This method reads the complete content of the specified filename into a
@@ -71,13 +73,13 @@ public:
 	 * @param filesize Where to store the resulting buffer size.
 	 * @return The buffer of null if there occured an error.
 	 */
-	b3_u08 * b3ReadBuffer(const char * filename, b3_size & filesize);
-	b3_size  b3Write(const void * write_buffer, b3_size size) override;
-	bool     b3Flush() override;
-	b3_size  b3Seek(const b3_offset offset, const b3_seek_type type) override;
-	b3_size  b3Size() override;
-	bool     b3Buffer(const b3_size new_cache_size) override;
-	void     b3Close() override;
+	b3_u08  * b3ReadBuffer(const char * filename, b3_size & filesize);
+	b3_size   b3Write(const void * write_buffer, b3_size size) override;
+	bool      b3Flush() override;
+	b3_offset b3Seek(const b3_offset offset, const b3_seek_type type) override;
+	b3_offset b3Size() override;
+	bool      b3Buffer(const b3_size new_cache_size) override;
+	void      b3Close() override;
 };
 
 #endif
