@@ -69,7 +69,7 @@ void b3Disk::b3ComputeVertices()
 	ySize = 1;
 
 	// This is a ring formed disk
-	if ((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Math::epsilon)
 	{
 		//compute front fractional disk ring
 		a  = m_Limit.x1 * M_PI * 2;
@@ -122,7 +122,7 @@ void b3Disk::b3ComputeVertices()
 		xSize++;
 	}
 
-	if ((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Math::epsilon)
 	{
 		// compute rest fractional ring disk
 		a  = m_Limit.x2 * M_PI * 2;

@@ -44,7 +44,7 @@ b3_f64 b3Area::b3Intersect(b3_ray * ray, b3_polar * polar)
 						m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
 						m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
 						m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-					* Denom) >= b3Scene::epsilon) && (lValue < ray->Q))
+					* Denom) >= b3Math::epsilon) && (lValue < ray->Q))
 	{
 		aValue = (
 				m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
@@ -83,7 +83,7 @@ b3_f64 b3Disk::b3Intersect(b3_ray * ray, b3_polar * polar)
 					m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
 					m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
 					m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-				* Denom) < b3Scene::epsilon)
+				* Denom) < b3Math::epsilon)
 	{
 		return -1;
 	}
@@ -152,11 +152,11 @@ b3_f64 b3Sphere::b3Intersect(b3_ray * ray, b3_polar * polar)
 	l2 = -p + Discriminant;
 
 	// check against limit
-	if (l1  < b3Scene::epsilon)
+	if (l1  < b3Math::epsilon)
 	{
 		l1 = -2;
 	}
-	if (l2  < b3Scene::epsilon)
+	if (l2  < b3Math::epsilon)
 	{
 		l2 = -1;
 	}
@@ -264,7 +264,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray * ray, b3_polar * polar)
 	l1 = -p - z;
 	l2 = -p + z;
 
-	if (l1 < b3Scene::epsilon)
+	if (l1 < b3Math::epsilon)
 	{
 		l1 = -2;
 	}
@@ -276,7 +276,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray * ray, b3_polar * polar)
 			l1 = -2;
 		}
 	}
-	if (l2 < b3Scene::epsilon)
+	if (l2 < b3Math::epsilon)
 	{
 		l2 = -1;
 	}
@@ -362,7 +362,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray * ray, b3_polar * polar)
 	l2 = -p + z;
 
 
-	if (l1 < b3Scene::epsilon)
+	if (l1 < b3Math::epsilon)
 	{
 		l1 = -2;
 	}
@@ -374,7 +374,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray * ray, b3_polar * polar)
 			l1 = -2;
 		}
 	}
-	if (l2 < b3Scene::epsilon)
+	if (l2 < b3Math::epsilon)
 	{
 		l2 = -1;
 	}
@@ -448,11 +448,11 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray * ray, b3_polar * polar)
 	l1 = -z - p;
 	l2 =  z - p;
 
-	if (l1  < b3Scene::epsilon)
+	if (l1  < b3Math::epsilon)
 	{
 		l1 = -2;
 	}
-	if (l2  < b3Scene::epsilon)
+	if (l2  < b3Math::epsilon)
 	{
 		l2 = -1;
 	}
@@ -520,7 +520,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 	if (BTLine.dir.x != 0)
 	{
-		if ((m = BasePoint.x / BTLine.dir.x) >= b3Scene::epsilon)
+		if ((m = BasePoint.x / BTLine.dir.x) >= b3Math::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			z = m * BTLine.dir.z;
@@ -533,7 +533,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 			}
 		}
 
-		if ((m = EndPoint.x / BTLine.dir.x) >= b3Scene::epsilon)
+		if ((m = EndPoint.x / BTLine.dir.x) >= b3Math::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			z = m * BTLine.dir.z;
@@ -549,7 +549,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 	if (BTLine.dir.y != 0)
 	{
-		if ((m = BasePoint.y / BTLine.dir.y) >= b3Scene::epsilon)
+		if ((m = BasePoint.y / BTLine.dir.y) >= b3Math::epsilon)
 		{
 			x = m * BTLine.dir.x;
 			z = m * BTLine.dir.z;
@@ -562,7 +562,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 			}
 		}
 
-		if ((m = EndPoint.y / BTLine.dir.y) >= b3Scene::epsilon)
+		if ((m = EndPoint.y / BTLine.dir.y) >= b3Math::epsilon)
 		{
 			x = m * BTLine.dir.x;
 			z = m * BTLine.dir.z;
@@ -578,7 +578,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 	if (BTLine.dir.z != 0)
 	{
-		if ((m = BasePoint.z / BTLine.dir.z) >= b3Scene::epsilon)
+		if ((m = BasePoint.z / BTLine.dir.z) >= b3Math::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			x = m * BTLine.dir.x;
@@ -591,7 +591,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 			}
 		}
 
-		if ((m = EndPoint.z / BTLine.dir.z) >= b3Scene::epsilon)
+		if ((m = EndPoint.z / BTLine.dir.z) >= b3Math::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			x = m * BTLine.dir.x;
@@ -694,7 +694,7 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 	}
 	for (i = 0; i < NumOfX;)
 	{
-		if ((x[i] > b3Scene::epsilon) && (x[i] < ray->Q))
+		if ((x[i] > b3Math::epsilon) && (x[i] < ray->Q))
 		{
 			i++;
 		}
@@ -760,7 +760,7 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList(
 	{
 		const b3_index      tria_index  = buffer[i];
 		const b3_triainfo * info        = &infos[tria_index];
-		const b3_f64        denominator = -1.0 / b3Vector::b3SMul(&info->Normal, &ray->dir);
+		const b3_f64        denominator = -b3Vector::b3SMul(&info->Normal, &ray->dir);
 		b3_vector64         aux;
 
 		aux.x = ray->pos.x - info->base.x;
@@ -768,19 +768,19 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList(
 		aux.z = ray->pos.z - info->base.z;
 
 		// First compute distance
-		const b3_f64 lValue = denominator * b3Vector::b3SMul(&info->Normal, &aux);
+		const b3_f64 lValue = b3Vector::b3SMul(&info->Normal, &aux) / denominator;
 
 		// If distance is inside range compute polar coordinates
-		if ((lValue >= b3Scene::epsilon) && (lValue < ray->Q))
+		if ((lValue >= b3Math::epsilon) && (lValue < ray->Q))
 		{
 			b3_vector64     product;
 
 			b3Vector::b3CrossProduct(&aux, &ray->dir, &product);
-			const b3_f64 aValue = b3Vector::b3SMul(&info->dir2, &product) * denominator;
+			const b3_f64 aValue = b3Vector::b3SMul(&info->dir2, &product) / denominator;
 
 			if (aValue >= 0)
 			{
-				const b3_f64 bValue = -denominator * b3Vector::b3SMul(&info->dir1, &product);
+				const b3_f64 bValue = -b3Vector::b3SMul(&info->dir1, &product) / denominator;
 
 				// If inside triangle...
 				if ((bValue >= 0) && ((aValue + bValue) <= 1))
@@ -903,7 +903,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	{
 		start = 0;
 	}
-	end -= b3Scene::epsilon;
+	end -= b3Math::epsilon;
 	if (ray->Q < end)
 	{
 		end = ray->Q;
@@ -929,9 +929,9 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 
 	// correct start point
-	if (d.x > b3Scene::epsilon)
+	if (d.x > b3Math::epsilon)
 	{
-		if (ray->dir.x >= b3Scene::epsilon)
+		if (ray->dir.x >= b3Math::epsilon)
 		{
 			d.x  = (1.0 - d.x) * dmax.x;
 		}
@@ -948,9 +948,9 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 			gx--;
 		}
 	}
-	if (d.y > b3Scene::epsilon)
+	if (d.y > b3Math::epsilon)
 	{
-		if (ray->dir.y >= b3Scene::epsilon)
+		if (ray->dir.y >= b3Math::epsilon)
 		{
 			d.y  = (1.0 - d.y) * dmax.y;
 		}
@@ -967,9 +967,9 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 			gy--;
 		}
 	}
-	if (d.z > b3Scene::epsilon)
+	if (d.z > b3Math::epsilon)
 	{
-		if (ray->dir.z >= b3Scene::epsilon)
+		if (ray->dir.z >= b3Math::epsilon)
 		{
 			d.z  = (1.0 - d.z) * dmax.z;
 		}
@@ -1599,7 +1599,7 @@ b3CSGShape * b3BBox::b3IntersectCSG(b3_ray * ray)
 	point = result->m_x;
 	for (t = 0; t < result->m_Count; t++)
 	{
-		if ((point->m_Q >= b3Scene::epsilon) && (point->m_Q <= ray->Q))
+		if ((point->m_Q >= b3Math::epsilon) && (point->m_Q <= ray->Q))
 		{
 			b3CSGShape * shape  = point->m_Shape;
 

@@ -27,9 +27,14 @@
  */
 class B3_PLUGIN b3Math
 {
-	static b3_f64 epsilon;
-
 public:
+	/**
+	 * The near zero value epsilon.
+	 *
+	 * @see: https://en.wikipedia.org/wiki/Machine_epsilon
+	 */
+	static constexpr b3_f64  epsilon = 1.0 / 16384.0;
+
 	/**
 	 * This method returns the number which is a power of 2 number
 	 * and greater or equal to the given number.

@@ -208,7 +208,7 @@ void b3TriangleShape::b3PrepareGridList()
 	{
 		for (i = 0; i < m_TriaCount; i++)
 		{
-			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Scene::epsilon * b3Scene::epsilon))
+			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Math::epsilon * b3Math::epsilon))
 			{
 				b3ToGridSpace(&m_Vertices[m_Triangles[i].P1].Point, &P1);
 				b3ToGridSpace(&m_Vertices[m_Triangles[i].P2].Point, &P2);
@@ -228,7 +228,7 @@ void b3TriangleShape::b3PrepareGridList()
 	{
 		for (i = 0; i < m_TriaCount; i++)
 		{
-			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Scene::epsilon * b3Scene::epsilon))
+			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Math::epsilon * b3Math::epsilon))
 			{
 				m_GridList[0].b3Add(i);
 			}
@@ -350,7 +350,7 @@ bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 		Denom    = 1.0 / m_GridSize;
 		m_Base   = Start;
 		b3Vector::b3Scale(&diff, &m_Size, Denom);
-		b3Vector::b3SetMinimum(&m_Size, b3Scene::epsilon);
+		b3Vector::b3SetMinimum(&m_Size, b3Math::epsilon);
 
 		max = m_GridSize * m_GridSize * m_GridSize;
 		if (max != m_GridCount)

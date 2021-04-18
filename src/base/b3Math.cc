@@ -34,8 +34,6 @@
 **                                                                      **
 *************************************************************************/
 
-alignas(16) b3_f64 b3Math::epsilon = FLT_EPSILON;
-
 b3_loop b3Math::b3PowOf2(const b3_loop value)
 {
 	b3_loop result = 1;

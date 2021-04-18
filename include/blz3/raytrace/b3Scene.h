@@ -154,7 +154,6 @@ public:
 	char             m_TextureName[B3_TEXSTRINGLEN]; //!< Name of background image.
 
 	static b3TxPool  m_TexturePool;                  //!< The image pool.
-	static b3_f64    epsilon;                        //!< The near zero value.
 	static b3_s32    m_RenderPriority;               //!< The render thread priority to use for raytracing.
 
 public:

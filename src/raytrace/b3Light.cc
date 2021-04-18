@@ -189,7 +189,7 @@ void b3Light::b3InitValues()
 			(b3_f64)(i - INIT_DEGREE) /
 			(b3_f64)(INIT_CONTROL_MAX - INIT_DEGREE);
 	}
-	m_Knots[INIT_CONTROL_MAX] += b3Scene::epsilon;
+	m_Knots[INIT_CONTROL_MAX] += b3Math::epsilon;
 	m_Spline.b3ThroughEndControl();
 
 	b3SetName("Light");
@@ -276,11 +276,11 @@ inline bool b3Light::b3PointIllumination(
 		SpotAngle = -b3Vector::b3SMul(&Jit.dir, &m_SpotDir);
 		if (SpotAngle <= 0)
 		{
-			q = 1.0 - b3Scene::epsilon;
+			q = 1.0 - b3Math::epsilon;
 		}
 		else
 		{
-			q = (SpotAngle >= 1 ? b3Scene::epsilon : acos(SpotAngle) * 2.0 / M_PI);
+			q = (SpotAngle >= 1 ? b3Math::epsilon : acos(SpotAngle) * 2.0 / M_PI);
 		}
 
 		m_Spline.b3DeBoorOpened(&point, 0, q);
@@ -296,7 +296,7 @@ inline bool b3Light::b3PointIllumination(
 	Jit.m_DiffuseSum.b3Init();
 	Jit.m_SpecularSum.b3Init();
 
-	shader->b3FindObscurer(&Jit, LightDist - b3Scene::epsilon);
+	shader->b3FindObscurer(&Jit, LightDist - b3Math::epsilon);
 	shader->b3Shade(this, &Jit, surface);
 
 	surface->m_AmbientSum  += Jit.m_AmbientSum;
@@ -336,11 +336,11 @@ inline bool b3Light::b3AreaIllumination(
 		Factor = -b3Vector::b3SMul(&Jit.m_LightView, &m_SpotDir);
 		if (Factor <= 0)
 		{
-			q = 1.0 - b3Scene::epsilon;
+			q = 1.0 - b3Math::epsilon;
 		}
 		else
 		{
-			q = (Factor >= 1 ? b3Scene::epsilon : acos(Factor) * 2.0 / M_PI);
+			q = (Factor >= 1 ? b3Math::epsilon : acos(Factor) * 2.0 / M_PI);
 		}
 
 		m_Spline.b3DeBoorOpened(&point, 0, q);
@@ -445,7 +445,7 @@ inline const b3Shape * b3Light::b3CheckSinglePoint(
 	b3Vector::b3LinearCombine(&Jit->m_LightView, &Jit->m_xDir, &Jit->m_yDir, jx, jy, &Jit->dir);
 
 	LightDist = b3Vector::b3Normalize(&Jit->dir);
-	shader->b3FindObscurer(Jit, Jit->m_LightDist / LightDist - b3Scene::epsilon);
+	shader->b3FindObscurer(Jit, Jit->m_LightDist / LightDist - b3Math::epsilon);
 	shader->b3Shade(this, Jit, surface);
 
 	return Jit->shape;

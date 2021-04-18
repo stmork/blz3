@@ -381,8 +381,8 @@ private:
 		bool              loop;
 
 		m_Shape->b3ComputeBound(&limit);
-		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / info->m_xMax;
-		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / info->m_yMax;
+		fxStep = (limit.x2 - limit.x1 - 2 * b3Math::epsilon) / info->m_xMax;
+		fyStep = (limit.y2 - limit.y1 - 2 * b3Math::epsilon) / info->m_yMax;
 
 		surface.m_Incoming = &ray;
 		surface.m_Incoming->Q = 1;
@@ -390,7 +390,7 @@ private:
 		ray.shape = m_Shape;
 		bbox.b3Prepare(nullptr);
 
-		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
+		fy = limit.y1 + info->m_yStart * fyStep + b3Math::epsilon;
 		ray.polar.m_NormalIndex = 0;
 		ray.polar.m_BoxPolar.z =
 			ray.polar.m_ObjectPolar.z =
@@ -405,7 +405,7 @@ private:
 						ray.polar.m_BBoxOriginal.y =
 							ray.ipoint.y = fy;
 
-			fx = limit.x1 + b3Scene::epsilon;
+			fx = limit.x1 + b3Math::epsilon;
 			for (x = 0; x < info->m_xMax; x++)
 			{
 				ray.polar.m_BoxPolar.x =
@@ -493,11 +493,11 @@ b3_count b3Shape::b3GetIndexOverhead(
 	xs = (b3_index)ceil(x1);
 	xe = (b3_index)floor(x2);
 	Overhead = xe - xs;
-	if ((xs - x1) > b3Scene::epsilon)
+	if ((xs - x1) > b3Math::epsilon)
 	{
 		Overhead++;
 	}
-	if ((x2 - xe) > b3Scene::epsilon)
+	if ((x2 - xe) > b3Math::epsilon)
 	{
 		Overhead++;
 	}
@@ -703,7 +703,7 @@ void b3Shape::b3ComputeCylinderVertices(
 	xSize    = 0;
 	ySize    = 2;
 
-	if ((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Math::epsilon)
 	{
 		b  = m_Limit.x1 * M_PI * 2;
 		sx = cos(b);
@@ -752,7 +752,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Math::epsilon)
 	{
 		b = m_Limit.x2 * M_PI * 2;
 		sx = cos(b);
@@ -837,7 +837,7 @@ void b3Shape::b3ComputeConeVertices(
 	if (m_Limit.y2 < 1)
 	{
 		ySize++;
-		if ((i - start) > b3Scene::epsilon)
+		if ((i - start) > b3Math::epsilon)
 		{
 			a = m_Limit.x1 * M_PI * 2;
 			sx = (1 - b) * cos(a);
@@ -888,7 +888,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if ((end - iMax) > b3Scene::epsilon)
+		if ((end - iMax) > b3Math::epsilon)
 		{
 			a  = m_Limit.x2 * M_PI * 2;
 
@@ -923,7 +923,7 @@ void b3Shape::b3ComputeConeVertices(
 		Vector++;
 		glVertexCount++;
 
-		if ((i - start) > b3Scene::epsilon)
+		if ((i - start) > b3Math::epsilon)
 		{
 			a  = m_Limit.x1 * M_PI * 2;
 			sx = (1 - b) * cos(a);
@@ -956,7 +956,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if ((end - iMax) > b3Scene::epsilon)
+		if ((end - iMax) > b3Math::epsilon)
 		{
 			a  = m_Limit.x2 * M_PI * 2;
 			sx = (1 - b) * cos(a);
@@ -1036,7 +1036,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	end    = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if ((i - start) > b3Scene::epsilon)	/* underflow */
+	if ((i - start) > b3Math::epsilon)	/* underflow */
 	{
 		LocalSin[Circles] = m_Limit.y1;
 		Circles++;
@@ -1047,7 +1047,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
+	if ((end - iMax) > b3Math::epsilon)	/* Overflow */
 	{
 		LocalSin[Circles] = m_Limit.y2;
 		Circles++;
@@ -1066,7 +1066,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	xSize = 0;
 	ySize = Circles;
 
-	if ((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Math::epsilon)
 	{
 		a  = m_Limit.x1 * M_PI * 2;
 		sx = cos(a);
@@ -1109,7 +1109,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Math::epsilon)
 	{
 		a  = m_Limit.x2 * M_PI * 2;
 		sx = cos(a);
@@ -1157,33 +1157,33 @@ void b3Shape::b3GetEllipsoidIndexCount(b3_count & gridCount, b3_count & polyCoun
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	m_Heights = ye - ys;
-	if ((ys - y1) > b3Scene::epsilon)
+	if ((ys - y1) > b3Math::epsilon)
 	{
 		m_Heights++;
 	}
-	if ((y2 - ye) > b3Scene::epsilon)
+	if ((y2 - ye) > b3Math::epsilon)
 	{
 		m_Heights++;
 	}
 
 	m_Widths = m_Heights - 1;
-	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+	if ((SinCosSteps * 0.5 - y2) > b3Math::epsilon)
 	{
 		m_Widths++;
 	}
-	if (y1  > b3Scene::epsilon)
+	if (y1  > b3Math::epsilon)
 	{
 		m_Widths++;
 	}
 
 	gridCount = m_Heights * 2;
 	polyCount = m_Heights * 2;
-	if (y1 <= b3Scene::epsilon)
+	if (y1 <= b3Math::epsilon)
 	{
 		polyCount--;
 		gridCount--;
 	}
-	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+	if ((SinCosSteps * 0.5 - y2) > b3Math::epsilon)
 	{
 		gridCount++;
 	}
@@ -1216,7 +1216,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 		}
 
 		// North pole
-		if (y1 <= b3Scene::epsilon)
+		if (y1 <= b3Math::epsilon)
 		{
 			// NOTE: j = 0 substitution
 			B3_GL_PINIT(pPtr, s + m_Heights + 2, s + m_Heights + 1, s + 1);
@@ -1236,7 +1236,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 			j++;
 		}
 
-		if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+		if ((SinCosSteps * 0.5 - y2) > b3Math::epsilon)
 		{
 			B3_GL_LINIT(gPtr, s + j, s + j + m_Heights + 1);
 
@@ -1363,7 +1363,7 @@ void b3Shape::b3ComputeTorusVertices(
 	end    = m_Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if ((i - start) > b3Scene::epsilon)	/* underflow */
+	if ((i - start) > b3Math::epsilon)	/* underflow */
 	{
 		relTex[Circles]   = 0;
 		LocalSin[Circles] = m_Limit.y1;
@@ -1376,7 +1376,7 @@ void b3Shape::b3ComputeTorusVertices(
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
+	if ((end - iMax) > b3Math::epsilon)	/* Overflow */
 	{
 		relTex[Circles]   = 1;
 		LocalSin[Circles] = m_Limit.y2;
@@ -1396,7 +1396,7 @@ void b3Shape::b3ComputeTorusVertices(
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 
-	if ((i - start) > b3Scene::epsilon)
+	if ((i - start) > b3Math::epsilon)
 	{
 		a     = m_Limit.x1 * M_PI * 2;
 		sx    = cos(a);
@@ -1445,7 +1445,7 @@ void b3Shape::b3ComputeTorusVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > b3Scene::epsilon)
+	if ((end - iMax) > b3Math::epsilon)
 	{
 		a     = m_Limit.x2 * M_PI * 2;
 		sx    = cos(a);
@@ -1507,11 +1507,11 @@ void b3Shape::b3GetTorusIndexCount(b3_count & gridCount, b3_count & polyCount)
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	m_Heights = ye - ys;
-	if ((ys - y1) > b3Scene::epsilon)
+	if ((ys - y1) > b3Math::epsilon)
 	{
 		m_Heights++;
 	}
-	if ((y2 - ye) > b3Scene::epsilon)
+	if ((y2 - ye) > b3Math::epsilon)
 	{
 		m_Heights++;
 	}

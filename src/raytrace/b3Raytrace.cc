@@ -39,7 +39,6 @@ struct b3_rt_info
 
 b3TxPool b3Scene::m_TexturePool;
 b3_s32   b3Scene::m_RenderPriority = -2;
-b3_f64   b3Scene::epsilon          = 0.0009;
 
 /*************************************************************************
 **                                                                      **
@@ -297,7 +296,7 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 
 	xDenom = b3Vector::b3Length(&m_Width);
 	yDenom = b3Vector::b3Length(&m_Height);
-	if ((xDenom < epsilon) || (yDenom < epsilon))
+	if ((xDenom < b3Math::epsilon) || (yDenom < b3Math::epsilon))
 	{
 		b3PrintF(B3LOG_NORMAL, "Camera has got zero extend...\n");
 		return false;

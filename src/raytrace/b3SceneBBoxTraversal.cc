@@ -252,7 +252,7 @@ bool b3BBox::b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolera
 	{
 		// Use fresh data
 		b3Vector::b3Scale(b3Vector::b3Sub(&subUpper, &subLower, &m_DimSize), tolerance * 0.5);
-		b3Vector::b3SetMinimum(&m_DimSize, b3Scene::epsilon);
+		b3Vector::b3SetMinimum(&m_DimSize, b3Math::epsilon);
 		b3Vector::b3Sub(&m_DimSize, &subLower);
 		b3Vector::b3Add(&m_DimSize, &subUpper);
 	}
