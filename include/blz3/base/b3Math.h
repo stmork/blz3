@@ -182,10 +182,11 @@ public:
 	 * \param x The mixer in range [0..1].
 	 * \return The mixed value.
 	 */
-	static inline b3_f64 b3Mix(const b3_f64 a, const b3_f64 b, const b3_f64 x)
+	template<typename T> static inline T b3Mix(const T a, const T b, const	T x)
 	{
 		B3_ASSERT(x >= 0);
 		B3_ASSERT(x <= 1);
+
 		return a + x * (b - a);
 	}
 
@@ -302,7 +303,7 @@ public:
 	 * \param t
 	 * \return
 	 */
-	static inline b3_f64 b3Fade(const b3_f64 t)
+	template<typename T> static inline T b3Fade(const T t)
 	{
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}

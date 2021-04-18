@@ -432,11 +432,11 @@ private:
 	static void         b3OldMarble(const b3_vector * P, b3Color & Color);
 	static void         b3MarbleCurve(b3Spline * Spline, b3_vector * result, const b3_f64 x);
 
-	static inline b3_f64 b3Grad(const int hash, const b3_f64 x, const b3_f64 y, const b3_f64 z)
+	template<typename T> static inline T b3Grad(const int hash, const T x, const T y, const T z)
 	{
-		int    h = hash & 15;                   // CONVERT LO 4 BITS OF HASH CODE
-		b3_f64 u = h < 8 ? x : y;               // INTO 12 GRADIENT DIRECTIONS.
-		b3_f64 v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+		const int h = hash & 15;                   // CONVERT LO 4 BITS OF HASH CODE
+		const T   u = h < 8 ? x : y;               // INTO 12 GRADIENT DIRECTIONS.
+		const T   v = h < 4 ? y : h == 12 || h == 14 ? x : z;
 
 		return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 	}
