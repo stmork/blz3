@@ -225,37 +225,37 @@ b3_f64 b3Noise::b3SignedImprovedNoise(
 	const b3_f32 cy,
 	const b3_f32 cz)
 {
-	int X     = (int)floor(cx) & 255;      // FIND UNIT CUBE THAT
-	int Y     = (int)floor(cy) & 255;      // CONTAINS POINT.
-	int Z     = (int)floor(cz) & 255;
-	b3_f32 x  = cx - floor(cx);            // FIND RELATIVE X,Y,Z
-	b3_f32 y  = cy - floor(cy);            // OF POINT IN CUBE.
-	b3_f32 z  = cz - floor(cz);
-	b3_f32 u  = b3Math::b3Fade(x);         // COMPUTE FADE CURVES
-	b3_f32 v  = b3Math::b3Fade(y);         // FOR EACH OF X,Y,Z.
-	b3_f32 w  = b3Math::b3Fade(z);
-	int A     = m_Permutation[X  ] + Y;
-	int AA    = m_Permutation[A] + Z;
-	int AB    = m_Permutation[A + 1] + Z;  // HASH COORDINATES OF
-	int B     = m_Permutation[X + 1] + Y;
-	int BA    = m_Permutation[B] + Z;
-	int BB    = m_Permutation[B + 1] + Z;  // THE 8 CUBE CORNERS,
+	const int X     = (int)floor(cx) & 255;      // FIND UNIT CUBE THAT
+	const int Y     = (int)floor(cy) & 255;      // CONTAINS POINT.
+	const int Z     = (int)floor(cz) & 255;
+	const b3_f64 x  = cx - floor(cx);            // FIND RELATIVE X,Y,Z
+	const b3_f64 y  = cy - floor(cy);            // OF POINT IN CUBE.
+	const b3_f64 z  = cz - floor(cz);
+	const b3_f64 u  = b3Math::b3Fade(x);         // COMPUTE FADE CURVES
+	const b3_f64 v  = b3Math::b3Fade(y);         // FOR EACH OF X,Y,Z.
+	const b3_f64 w  = b3Math::b3Fade(z);
+	const int A     = m_Permutation[X  ] + Y;
+	const int AA    = m_Permutation[A] + Z;
+	const int AB    = m_Permutation[A + 1] + Z;  // HASH COORDINATES OF
+	const int B     = m_Permutation[X + 1] + Y;
+	const int BA    = m_Permutation[B] + Z;
+	const int BB    = m_Permutation[B + 1] + Z;  // THE 8 CUBE CORNERS,
 
 	return
 		b3Math::b3Mix(
 			b3Math::b3Mix(
 				b3Math::b3Mix(
-					b3Grad(m_Permutation[AA  ], x, y, z),              // AND ADD
+					b3Grad(m_Permutation[AA  ], x,     y, z),          // AND ADD
 					b3Grad(m_Permutation[BA  ], x - 1, y, z), u),      // BLENDED
 				b3Math::b3Mix(
-					b3Grad(m_Permutation[AB  ], x, y - 1, z),          // RESULTS
+					b3Grad(m_Permutation[AB  ], x,     y - 1, z),         // RESULTS
 					b3Grad(m_Permutation[BB  ], x - 1, y - 1, z), u), v), // FROM  8
 			b3Math::b3Mix(
 				b3Math::b3Mix(
-					b3Grad(m_Permutation[AA + 1], x, y, z - 1),        // CORNERS
+					b3Grad(m_Permutation[AA + 1], x,     y, z - 1),     // CORNERS
 					b3Grad(m_Permutation[BA + 1], x - 1, y, z - 1), u), // OF CUBE
 				b3Math::b3Mix(
-					b3Grad(m_Permutation[AB + 1], x, y - 1, z - 1),
+					b3Grad(m_Permutation[AB + 1], x,     y - 1, z - 1),
 					b3Grad(m_Permutation[BB + 1], x - 1, y - 1, z - 1), u), v), w);
 }
 
