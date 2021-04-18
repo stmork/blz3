@@ -840,10 +840,10 @@ protected:
  */
 struct b3_triainfo
 {
-	b3_vector32 base;     //!< The base point of the triangle.
-	b3_vector32 dir1;     //!< The precomputed direction vector to the second triangle corner.
-	b3_vector32 dir2;     //!< The precomputed direction vector to the third triangle corner.
-	b3_vector32 Normal;   //!< The precomputed triangle normal.
+	b3_vector base;     //!< The base point of the triangle.
+	b3_vector dir1;     //!< The precomputed direction vector to the second triangle corner.
+	b3_vector dir2;     //!< The precomputed direction vector to the third triangle corner.
+	b3_vector Normal;   //!< The precomputed triangle normal.
 };
 
 /**
@@ -929,9 +929,9 @@ protected:
 
 private:
 	b3_f64   b3IntersectTriangleList(
-		b3_ray  *  ray,
-		b3_polar * polar,
-		b3_index   index);
+		b3_ray     *     ray,
+		b3_polar    *    polar,
+		const b3_index   grid_index);
 
 	void     b3Clear();
 	void     b3PrepareGridList();

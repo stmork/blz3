@@ -743,80 +743,76 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 #define _TEST
 
 b3_f64 b3TriangleShape::b3IntersectTriangleList(
-	b3_ray  *  ray,
-	b3_polar * polar,
-	b3_index   TriaField)
+	b3_ray     *     ray,
+	b3_polar    *    polar,
+	const b3_index   grid_index)
 {
-	b3_index        Index, max;
-	b3_index    *   buffer;
-	b3_triainfo  *  infos, *info;
-	b3_res          dxSize;
-	b3_vector32     aux, product;
-	b3_vector32     dir, pos;
-	b3_f64          denominator;
-	b3_f64          aValue;
-	b3_f64          e = b3Scene::epsilon;
-	b3_f64          OldValue = -1;
 
-	xSize    = m_xSize;
-	ySize    = m_ySize;
-	dxSize   = m_xSize << 1;
+	const b3_res dxSize   = m_xSize << 1;
+	b3_f64       OldValue = -1;
 
-	pos.x    = ray->pos.x;
-	pos.y    = ray->pos.y;
-	pos.z    = ray->pos.z;
+	B3_ASSERT(grid_index < m_GridCount);
 
-	dir.x    = ray->dir.x;
-	dir.y    = ray->dir.y;
-	dir.z    = ray->dir.z;
-
-	B3_ASSERT(TriaField < m_GridCount);
-	infos  = m_TriaInfos.b3GetBuffer();
-	buffer = m_GridList[TriaField].b3GetBuffer();
-	max    = m_GridList[TriaField].b3GetCount();
+	b3_triainfo  * infos  = m_TriaInfos.b3GetBuffer();
+	b3_index   *   buffer = m_GridList[grid_index].b3GetBuffer();
+	const b3_index max    = m_GridList[grid_index].b3GetCount();
 
 	for (b3_index i = 0; i < max; i++)
 	{
-		Index    = buffer[i];
-		info     = &infos[Index];
+		const b3_index      tria_index  = buffer[i];
+		const b3_triainfo * info        = &infos[tria_index];
+		const b3_f64        denominator = -1.0 / b3Vector::b3SMul(&info->Normal, &ray->dir);
+		b3_vector64         aux;
 
-		denominator = -1.0 / b3Vector::b3SMul(&info->Normal, &ray->dir);
+		aux.x = ray->pos.x - info->base.x;
+		aux.y = ray->pos.y - info->base.y;
+		aux.z = ray->pos.z - info->base.z;
+
+		// First compute distance
+		const b3_f64 lValue = denominator * b3Vector::b3SMul(&info->Normal, &aux);
+
+		// If distance is inside range compute polar coordinates
+		if ((lValue >= b3Scene::epsilon) && (lValue < ray->Q))
 		{
-			b3Vector::b3Sub(&pos, &info->base, &aux);
+			b3_vector64     product;
 
-			const b3_f64 lValue = denominator * b3Vector::b3SMul(&info->Normal, &aux);
-			if ((lValue >= e) && (lValue < ray->Q))
+			b3Vector::b3CrossProduct(&aux, &ray->dir, &product);
+			const b3_f64 aValue = b3Vector::b3SMul(&info->dir2, &product) * denominator;
+
+			if (aValue >= 0)
 			{
-				b3Vector::b3CrossProduct(&aux, &dir, &product);
-				if ((aValue = b3Vector::b3SMul(&info->dir2, &product) * denominator) >= 0)
-				{
-					const b3_f64 bValue = -denominator * b3Vector::b3SMul(&info->dir1, &product);
+				const b3_f64 bValue = -denominator * b3Vector::b3SMul(&info->dir1, &product);
 
-					if ((bValue >= 0) && ((aValue + bValue) <= 1))
+				// If inside triangle...
+				if ((bValue >= 0) && ((aValue + bValue) <= 1))
+				{
+					// ...distinguish between the two triangles inside quad.
+					if (tria_index & 1)
 					{
-						if (Index & 1)
-						{
-							polar->m_Polar.x =
-								((((Index % dxSize) >> 1) + 1) - aValue) / xSize;
-							polar->m_Polar.y =
-								((Index / dxSize          + 1) - bValue) / ySize;
-						}
-						else
-						{
-							polar->m_Polar.x =
-								(((Index % dxSize) >> 1) + aValue) / xSize;
-							polar->m_Polar.y =
-								(Index / dxSize          + bValue) / ySize;
-						}
-						polar->m_Polar.z      = 0;
-						polar->m_ObjectPolar = polar->m_Polar;
-						if (b3CheckStencil(polar))
-						{
-							ray->Q = OldValue = lValue;
-							ray->TriaIndex    = Index;
-							ray->aTriaValue   = aValue;
-							ray->bTriaValue   = bValue;
-						}
+						polar->m_Polar.x =
+							((((tria_index % dxSize) >> 1) + 1) - aValue) / m_xSize;
+						polar->m_Polar.y =
+							((tria_index / dxSize          + 1) - bValue) / m_ySize;
+					}
+					else
+					{
+						polar->m_Polar.x =
+							(((tria_index % dxSize) >> 1) + aValue) / m_xSize;
+						polar->m_Polar.y =
+							(tria_index / dxSize          + bValue) / m_ySize;
+					}
+
+					// Last check if stencil
+					polar->m_Polar.z      = 0;
+					polar->m_ObjectPolar = polar->m_Polar;
+
+					if (b3CheckStencil(polar))
+					{
+						// Copy actual values.
+						ray->Q = OldValue = lValue;
+						ray->TriaIndex    = tria_index;
+						ray->aTriaValue   = aValue;
+						ray->bTriaValue   = bValue;
 					}
 				}
 			}

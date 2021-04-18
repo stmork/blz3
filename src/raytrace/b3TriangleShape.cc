@@ -262,7 +262,7 @@ void b3TriangleShape::b3FreeTriaRefs()
 bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 {
 	b3_vector   Start, End, disp, diff;
-	b3_index    P1, P2, P3, i, max;
+	b3_index    i, max;
 	b3_f64      Denom;
 	b3_triainfo info;
 
@@ -284,9 +284,9 @@ bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 		m_TriaInfos.b3Clear();
 		for (i = 0; i < m_TriaCount; i++)
 		{
-			P1 = m_Triangles[i].P1;		/* Base */
-			P2 = m_Triangles[i].P2;		/* Dir1 */
-			P3 = m_Triangles[i].P3;		/* Dir2 */
+			const b3_index P1 = m_Triangles[i].P1;		/* Base */
+			const b3_index P2 = m_Triangles[i].P2;		/* Dir1 */
+			const b3_index P3 = m_Triangles[i].P3;		/* Dir2 */
 
 			info.base  = m_Vertices[P1].Point;
 
