@@ -69,9 +69,9 @@ public:
 	 * \param F0
 	 * \return The computed Fresnel term.
 	 */
-	static inline b3_f64 b3GetMu(const b3_f64 F0)
+	template<typename T> static inline T b3GetMu(const T F0)
 	{
-		b3_f64 sF0 = sqrt(F0);
+		const b3_f64 sF0 = sqrt(F0);
 
 		return (1.0 + sF0) / (1.0 - sF0);
 	}
@@ -84,7 +84,7 @@ public:
 	 * \param mu
 	 * \return The fresnel computed value.
 	 */
-	static inline b3_f64 b3GetFresnel(b3_f64 phi, const b3_f64 mu)
+	template<typename T> static inline T b3GetFresnel(b3_f64 phi, const T mu)
 	{
 		const b3_f64 theta = asin(sin(phi) / mu);
 		const b3_f64 a     = b3Sqr(sin(phi - theta));
