@@ -114,14 +114,14 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 	b3_count      m_Overhead, m_Heights, m_Widths;
 
 protected:
-	b3_count           xSize;         //!< The horizontal count of vertex subdivision.
-	b3_count           ySize;         //!< The vertical count of vertex subdivision.
-	b3_stencil_limit   m_Limit;       //!< The 2D bounding box of this shape in surface coordinates.
+	b3_count         xSize;     //!< The horizontal count of vertex subdivision.
+	b3_count         ySize;     //!< The vertical count of vertex subdivision.
+	b3_stencil_limit m_Limit;   //!< The 2D bounding box of this shape in surface coordinates.
 
-	b3_gl_line    *    GridsCyl;      //!< The cylinder line indices.
-	b3_gl_polygon   *  PolysCyl;      //!< The cylinder triangle indices.
-	b3_gl_line    *    GridsCone;     //!< The cone line indices.
-	b3_gl_polygon   *  PolysCone;     //!< The cone triangle indices.
+	b3_gl_line   *   GridsCyl;  //!< The cylinder line indices.
+	b3_gl_polygon  * PolysCyl;  //!< The cylinder triangle indices.
+	b3_gl_line   *   GridsCone; //!< The cone line indices.
+	b3_gl_polygon  * PolysCone; //!< The cone triangle indices.
 
 protected:
 	B3_ITEM_BASE(b3Shape); //!< This is a base class deserialization constructor.
@@ -853,24 +853,24 @@ struct b3_triainfo
  */
 class B3_PLUGIN b3TriangleShape : public b3SimpleShape
 {
-	b3Array<b3_index>   *  m_GridList;       // list of grids
+	b3Array<b3_index>   *  m_GridList     = nullptr;  // list of grids
 	b3Array<b3_triainfo>   m_TriaInfos;
-	bool                   m_GridComputed;
+	bool                   m_GridComputed = false;
 
 protected:
-	b3_vector              m_Base;           //!< Base point of bounding box of all triangles.
-	b3_vector              m_Size;           //!< Dimension of bounding box of all triangles.
-	b3_count               m_GridSize;       //!< Number grid edges.
-	b3_count               m_GridCount;      //!< Array size of m_GridList.
+	b3_vector     m_Base;             //!< Base point of bounding box of all triangles.
+	b3_vector     m_Size;             //!< Dimension of bounding box of all triangles.
+	b3_count      m_GridSize    = 0;  //!< Number grid edges.
+	b3_count      m_GridCount   = 0;  //!< Array size of m_GridList.
 
 public:
-	b3_count               m_VertexCount;    //!< Number of vertices.
-	b3_count               m_TriaCount;      //!< Number of triangles.
-	b3_vertex       *      m_Vertices;       //!< Pointer to vertices.
-	b3_triangle      *     m_Triangles;      //!< Pointer to triangle index list.
-	b3_u32                 m_Flags;          //!< Interpolation flags.
-	b3_res                 m_xSize;          //!< Horizontal vertex distribution for texture mapping.
-	b3_res                 m_ySize;          //!< Vertical vertex distribution for texture mapping.
+	b3_count      m_VertexCount = 0;        //!< Number of vertices.
+	b3_count      m_TriaCount   = 0;        //!< Number of triangles.
+	b3_vertex  *  m_Vertices    = nullptr;  //!< Pointer to vertices.
+	b3_triangle * m_Triangles   = nullptr;  //!< Pointer to triangle index list.
+	b3_u32        m_Flags       = 0;        //!< Interpolation flags.
+	b3_res        m_xSize       = 0;        //!< Horizontal vertex distribution for texture mapping.
+	b3_res        m_ySize       = 0;        //!< Vertical vertex distribution for texture mapping.
 
 	/**
 	 * This enumeration lists the bit position of the triangle interpolation flags.

@@ -747,7 +747,6 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList(
 	b3_polar    *    polar,
 	const b3_index   grid_index)
 {
-
 	const b3_res dxSize   = m_xSize << 1;
 	b3_f64       OldValue = -1;
 
