@@ -81,9 +81,9 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_line64    *    out) const
 {
 #ifdef B3_SSE2
-	b3_vector64         pos;
-	b3_f64 B3_ALIGN_16 * op = &out->pos.x;
-	b3_f64 B3_ALIGN_16 * od = &out->dir.x;
+	b3_vector64  pos;
+	b3_f64 *     op = &out->pos.x;
+	b3_f64 *     od = &out->dir.x;
 
 	pos.x = in->pos.x - m_Base.x;
 	pos.y = in->pos.y - m_Base.y;
@@ -139,8 +139,8 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_vector    *    out) const
 {
 #ifdef B3_SSE2
-	b3_vector64            pos;
-	b3_f32    B3_ALIGN_16 * o = &out->x;
+	b3_vector64    pos;
+	b3_f32       * o = &out->x;
 
 	pos.x = in->x - m_Base.x;
 	pos.y = in->y - m_Base.y;

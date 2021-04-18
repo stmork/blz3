@@ -267,7 +267,7 @@ public:
 	static inline b3_vector64 * b3Negate(b3_vector64 * negate)
 	{
 #ifdef B3_SSE2
-		b3_f64 B3_ALIGN_16 * n = &negate->x;
+		b3_f64 * n = &negate->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -317,8 +317,8 @@ public:
 		const b3_f64  length = 1.0)
 	{
 #ifdef B3_SSE2
-		b3_f64 B3_ALIGN_16 * v      = &vector->x;
-		b3_f64              denom  = 0;
+		b3_f64 * v = &vector->x;
+		b3_f64        denom  = 0;
 		b3_f64              result;
 
 		for (b3_loop i = 0; i < 3; i++)
@@ -423,8 +423,8 @@ public:
 		const b3_vector64 * bVec)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
+		const b3_f64  * a = &aVec->x;
+		const b3_f64  * b = &bVec->x;
 		b3_f64              result = 0;
 
 		for (b3_loop i = 0; i < 3; i++)
@@ -470,8 +470,8 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		b3_f64  * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -537,9 +537,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		const b3_f64  * b = &bVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -603,8 +603,8 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -652,9 +652,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		const b3_f64  * b = &bVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -718,8 +718,8 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -785,9 +785,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		const b3_f64  * b = &bVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -875,8 +875,8 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		b3_f64 B3_ALIGN_16 * r = &result->x;
-		b3_f64 B3_ALIGN_16  a[4], b[4], c[4], d[4];
+		b3_f64  *            r = &result->x;
+		alignas(16) b3_f64   a[4], b[4], c[4], d[4];
 
 		a[Z] = c[Y] = aVec->x;
 		b[Y] = d[Z] = bVec->x;
@@ -968,8 +968,8 @@ public:
 	static inline b3_f64 b3QuadLength(const b3_vector64 * vector)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * v = &vector->x;
-		b3_f64              result = 0;
+		const b3_f64  * v = &vector->x;
+		b3_f64          result = 0;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1071,10 +1071,10 @@ public:
 	 */
 	static inline b3_vector64 * b3Scale(
 		b3_vector64 * vector,
-		const b3_f64       factor)
+		const b3_f64  factor)
 	{
 #ifdef B3_SSE2
-		b3_f64 B3_ALIGN_16 * v = &vector->x;
+		b3_f64  * v = &vector->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1103,8 +1103,8 @@ public:
 		const b3_f64        factor)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * v = &vector->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64 * v = &vector->x;
+		b3_f64       * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1130,10 +1130,10 @@ public:
 	static inline b3_vector * b3MatrixMul3D(const b3_matrix * A, b3_vector * vector)
 	{
 #ifdef B3_SSE2
-		const b3_f32 B3_ALIGN_16 * m = &A->m11;
-		b3_f32 B3_ALIGN_16 * v = &vector->x;
-		b3_f32 B3_ALIGN_16  aux[4];
-		b3_f32              result;
+		const b3_f32  *      m = &A->m11;
+		b3_f32  *            v = &vector->x;
+		alignas(16) b3_f32   aux[4];
+		b3_f32               result;
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
@@ -1176,10 +1176,10 @@ public:
 	static inline b3_vector * b3MatrixMul4D(const b3_matrix * A, b3_vector * vector)
 	{
 #ifdef B3_SSE2
-		const b3_f32 B3_ALIGN_16 * m = &A->m11;
-		b3_f32 B3_ALIGN_16 * v = &vector->x;
-		b3_f32 B3_ALIGN_16   aux[4];
-		b3_f32               result;
+		const b3_f32  *       m = &A->m11;
+		b3_f32  *             v = &vector->x;
+		alignas(16) b3_f32    aux[4];
+		b3_f32                result;
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
@@ -1342,9 +1342,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * a = &aVec->x;
+		const b3_f64  * b = &bVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1450,9 +1450,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
-		const b3_f64 B3_ALIGN_16 * c = &cVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64  * b = &bVec->x;
+		const b3_f64  * c = &cVec->x;
+		b3_f64        * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1514,10 +1514,10 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * a = &aVec->x;
-		const b3_f64 B3_ALIGN_16 * b = &bVec->x;
-		const b3_f64 B3_ALIGN_16 * c = &cVec->x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64 * a = &aVec->x;
+		const b3_f64 * b = &bVec->x;
+		const b3_f64 * c = &cVec->x;
+		b3_f64       * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1654,9 +1654,9 @@ public:
 		b3_vector64 * result)
 	{
 #ifdef B3_SSE2
-		const b3_f64 B3_ALIGN_16 * p = &line->pos.x;
-		const b3_f64 B3_ALIGN_16 * d = &line->dir.x;
-		b3_f64 B3_ALIGN_16 * r = &result->x;
+		const b3_f64 * p = &line->pos.x;
+		const b3_f64 * d = &line->dir.x;
+		b3_f64       * r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1738,9 +1738,9 @@ public:
 	static inline void b3Sort(b3_vector64 * lower, b3_vector64 * upper)
 	{
 #ifdef B3_SSE2
-		b3_f64 B3_ALIGN_16 * l = &lower->x;
-		b3_f64 B3_ALIGN_16 * u = &upper->x;
-		b3_f64              aux;
+		b3_f64 * l = &lower->x;
+		b3_f64 * u = &upper->x;
+		b3_f64   aux;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -2368,10 +2368,10 @@ public:
 		const bool        Use4D)
 	{
 #ifdef B3_SSE2
-		const b3_f32 B3_ALIGN_16 * m = &A->m11;
-		const b3_f32 B3_ALIGN_16 * s = &Src->x;
-		b3_f32 B3_ALIGN_16 * d = &Dst->x;
-		b3_f32 B3_ALIGN_16  aux[4];
+		const b3_f32 *      m = &A->m11;
+		const b3_f32 *      s = &Src->x;
+		b3_f32       *      d = &Dst->x;
+		alignas(16) b3_f32  aux[4];
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
@@ -2381,7 +2381,7 @@ public:
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
-			b3_f32 B3_ALIGN_16 prod[4];
+			alignas(16) b3_f32 prod[4];
 
 			for (b3_loop i = 0; i < 4; i++)
 			{
@@ -2427,13 +2427,15 @@ public:
 	 * @param Use4D If true the input vector is a position. Otherwise it is a direction.
 	 * @return The result.
 	 */
-	static inline b3_vector64 * b3VMul(b3_matrix * A, b3_vector64 * Src, b3_vector64 * Dst, bool Use4D)
+	static inline b3_vector64 * b3VMul(
+			const b3_matrix * A,
+			const b3_vector64 * Src, b3_vector64 * Dst, const bool Use4D)
 	{
 #ifdef B3_SSE2
-		const b3_f32 B3_ALIGN_16 * m = &A->m11;
-		const b3_f64 B3_ALIGN_16 * s = &Src->x;
-		b3_f64 B3_ALIGN_16 * d = &Dst->x;
-		b3_f64 B3_ALIGN_16  aux[4];
+		const b3_f32 *      m = &A->m11;
+		const b3_f64 *      s = &Src->x;
+		b3_f64 *            d = &Dst->x;
+		alignas(16) b3_f64  aux[4];
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
