@@ -546,15 +546,15 @@ const b3Color b3Noise::m_MarbleColors[4] =
 };
 
 inline void b3Noise::b3MarbleCurve(
-	b3Spline * Spline,
-	b3_vector * result,
-	const b3_f64     x)
+	b3Spline  *  Spline,
+	b3_vector  * result,
+	const b3_f64 x)
 {
 	b3_f32 * knots;
 	b3_f64  q;
 
 	knots = Spline->m_Knots;
-	q =         x  * knots[Spline->m_Degree] +
+	q =        x  * knots[Spline->m_Degree] +
 		(1.0 - x) * knots[Spline->m_ControlNum];
 	Spline->b3DeBoorOpened(result, 0, q);
 }
@@ -586,9 +586,9 @@ void b3Noise::b3OldMarble(const b3_vector * P, b3Color & Color)
 	{
 		t = 1;
 	}
-	s        = (long)(t * 4)     & 3;
-	e        = (long)(t * 4 + 1) & 3;
-	frac     = t - s;
+	s    = (b3_count)(t * 4)     & 3;
+	e    = (b3_count)(t * 4 + 1) & 3;
+	frac = t - s;
 
 	Color = b3Color::b3Mix(m_MarbleColors[e], m_MarbleColors[s], frac);
 }

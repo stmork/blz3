@@ -124,9 +124,9 @@ bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 void b3Scene::b3DoRaytrace(b3Display * display, b3_count CPUs)
 {
 	b3_rt_info * infos;
-	b3TimeSpan  span;
-	b3Thread  * threads;
-	b3_count    i;
+	b3TimeSpan   span;
+	b3Thread  *  threads;
+	b3_count     i;
 
 	// Allocate some instances
 	infos       = new b3_rt_info[CPUs];

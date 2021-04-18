@@ -184,13 +184,13 @@ int main(int argc, char * argv[])
 	b3CameraPart     *    camera;
 	b3Item        *       item;
 	b3_vector             lower, upper;
-	char         *        BLZ3_DATA        = getenv("BLZ3_DATA");
-	char         *        BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
-	char         *        BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
-	char         *        BLZ3_PLUGINS     = getenv("BLZ3_PLUGINS");
-	char         *        BLZ3_BIN         = getenv("BLZ3_BIN");
-	char         *        BLZ3_RENDER_PRIO = getenv("BLZ3_RENDER_PRIO");
-	char         *        HOME             = getenv("HOME");
+	const char      *     BLZ3_DATA        = getenv("BLZ3_DATA");
+	const char      *     BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
+	const char      *     BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
+	const char      *     BLZ3_PLUGINS     = getenv("BLZ3_PLUGINS");
+	const char      *     BLZ3_BIN         = getenv("BLZ3_BIN");
+	const char      *     BLZ3_RENDER_PRIO = getenv("BLZ3_RENDER_PRIO");
+	const char      *     HOME             = getenv("HOME");
 	b3Path                textures;
 	b3Path                pictures;
 	b3Path                data;
@@ -275,12 +275,16 @@ int main(int argc, char * argv[])
 					i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 					size = atoi(number);
 					break;
+#ifdef HAVE_LIBTIFF
 				case 'i':
 					strlcpy(BLZ3_EXTENSION, ".tif", sizeof(BLZ3_EXTENSION));
 					break;
+#endif
+#ifdef HAVE_LIBJPEG
 				case 'j':
 					strlcpy(BLZ3_EXTENSION, ".jpg", sizeof(BLZ3_EXTENSION));
 					break;
+#endif
 				case 'g':
 					strlcpy(BLZ3_EXTENSION, ".tga", sizeof(BLZ3_EXTENSION));
 					break;

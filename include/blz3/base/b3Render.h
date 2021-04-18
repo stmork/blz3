@@ -97,12 +97,13 @@ public:
 
 public:
 	/**
-	 * The constructor initializes this instance and initializes the OpenGL background color.
+	 * The constructor initializes this instance and initializes the OpenGL
+	 * background color.
 	 */
 	b3RenderContext();
 
 	/**
-	 * This method defines whether OpenGL verex computation should be used.
+	 * This method defines whether OpenGL vertex computation should be used.
 	 *
 	 * @param use The flag whether to use OpenGL vertex initialization.
 	 */

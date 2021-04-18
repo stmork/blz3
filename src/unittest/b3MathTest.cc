@@ -50,10 +50,10 @@ void b3MathTest::test()
 	b3_f64 base;
 	b3_u32 exp;
 
-	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Frac(4.0, 3.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Frac( 4.0, 3.0));
 	CPPUNIT_ASSERT_EQUAL(2.0,   b3Math::b3Frac(-4.0, 3.0));
-	CPPUNIT_ASSERT_EQUAL(0.0,   b3Math::b3Frac(4.0, 1.0));
-	CPPUNIT_ASSERT_EQUAL(0.125, b3Math::b3FracOne(4.125));
+	CPPUNIT_ASSERT_EQUAL(0.0,   b3Math::b3Frac( 4.0, 1.0));
+	CPPUNIT_ASSERT_EQUAL(0.125, b3Math::b3FracOne(  4.125));
 	CPPUNIT_ASSERT_EQUAL(0.875, b3Math::b3FracOne(-84.125));
 	CPPUNIT_ASSERT_EQUAL(1.25,  b3Math::b3Mix(1.0, 2.0, 0.25));
 
