@@ -33,7 +33,7 @@ public:
 	 *
 	 * @see: https://en.wikipedia.org/wiki/Machine_epsilon
 	 */
-	static constexpr b3_f64  epsilon = 1.0 / 16384.0;
+	static constexpr b3_f32  epsilon = 1.0 / 16384.0;
 
 	/**
 	 * This method returns the number which is a power of 2 number
