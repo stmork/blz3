@@ -237,10 +237,10 @@ public:
 	 * \param x The value to interpolate.
 	 * \return The hermite interpolation.
 	 */
-	static inline b3_f64 b3Smoothstep(
-		const b3_f64 s,
-		const b3_f64 e,
-		const b3_f64 x)
+	template<typename T> static inline T b3Smoothstep(
+		const T s,
+		const T e,
+		const T x)
 	{
 		if (x < s)
 		{
@@ -251,7 +251,7 @@ public:
 			return 1;
 		}
 
-		b3_f64 t = (x - s) / (e - s);
+		const b3_f64 t = (x - s) / (e - s);
 
 		return (3 - 2 * t) * t * t;
 	}
@@ -263,7 +263,7 @@ public:
 	 * \param t The input value.
 	 * \return The hermite interpolation.
 	 */
-	static inline b3_f64 b3Smoothstep(const b3_f64 t)
+	template<typename T> static inline T b3Smoothstep(const T t)
 	{
 		if (t < 0)
 		{

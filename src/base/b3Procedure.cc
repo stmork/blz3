@@ -422,7 +422,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 	const b3_index ix,
 	const b3_index iy,
 	const b3_index iz,
-	const b3_f32    fx,
+	const b3_f32   fx,
 	const b3_f32   fy,
 	const b3_f32   fz,
 	const b3_index d)

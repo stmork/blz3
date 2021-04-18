@@ -94,76 +94,72 @@ typedef ssize_t             b3_coord;      //!< A signed coordinate specifier.
 typedef int                 b3_loop;       //!< A signed integer for small loops (max. 32 bits, but can be more).
 typedef std::ptrdiff_t      b3_ptr;        //!< A pointer for pointer arithmetics.
 
+template<typename T> struct alignas(sizeof(T) * 4) b3_vector_3D_base
+{
+	T             x; //!< The x component.
+	T             y; //!< The y component.
+	T             z; //!< The z component.
+};
+
 // Some vectors
 /**
  * This structure represents a three component vector with single floating point numbers.
  * The first element is aligned on a 16 byte boundary.
  */
-typedef struct alignas(16) b3_vector32_3D
-{
-	b3_f32             x; //!< The x component.
-	b3_f32             y; //!< The y component.
-	b3_f32             z; //!< The z component.
-} b3_vector32, b3_vector;
+typedef b3_vector_3D_base<b3_f32> b3_vector32_3D, b3_vector32, b3_vector;
 
 /**
  * This structure represents a three component vector with double floating point numbers.
  * The first element is aligned on a 32 byte boundary.
  */
-typedef struct alignas(32) b3_vector64_3D
+typedef b3_vector_3D_base<b3_f64> b3_vector64_3D, b3_vector64;
+
+/**
+ * This structure represents a four component vector.
+ */
+template<typename T> struct alignas(sizeof(T) * 4) b3_vector_4D_base
 {
-	b3_f64             x; //!< The x component.
-	b3_f64             y; //!< The y component.
-	b3_f64             z; //!< The z component.
-} b3_vector64;
+	T             x; //!< The x component.
+	T             y; //!< The y component.
+	T             z; //!< The z component.
+	T             w; //!< The w component.
+};
 
 /**
  * This structure represents a four component vector with single floating point numbers.
  * The first element is aligned on a 16 byte boundary.
  */
-typedef struct alignas(16) b3_vector32_4D
-{
-	b3_f32    x; //!< The x component.
-	b3_f32    y; //!< The y component.
-	b3_f32    z; //!< The z component.
-	b3_f32    w; //!< The w component.
-} b3_vector4D;
+typedef b3_vector_4D_base<b3_f32> b3_vector32_4D, b3_vector4D;
 
 /**
  * This structure represents a four component vector with double floating point numbers.
  * The first element is aligned on a 32 byte boundary.
  */
-typedef struct alignas(32) b3_vector64_4D
-{
-	b3_f64    x; //!< The x component.
-	b3_f64    y; //!< The y component.
-	b3_f64    z; //!< The z component.
-	b3_f64    w; //!< The w component.
-} b3_vector4D_64;
+typedef b3_vector_4D_base<b3_f64> b3_vector64_4D;
 
 /**
- * This structure represents a 4x4 matrix with single precision floating point numbers. The
+ * This structure represents a 4x4 matrix with floating point numbers. The
  * first element is aligned on a 32 byte boundary.
  */
-typedef struct alignas(32) b3_matrix32_4D
+template<typename T> struct alignas(32) b3_matrix_base
 {
-	b3_f32             m11, m12, m13, m14;
-	b3_f32             m21, m22, m23, m24;
-	b3_f32             m31, m32, m33, m34;
-	b3_f32             m41, m42, m43, m44;
-} b3_matrix;
+	T             m11, m12, m13, m14;
+	T             m21, m22, m23, m24;
+	T             m31, m32, m33, m34;
+	T             m41, m42, m43, m44;
+};
 
 /**
- * This structure represents a 4x4 matrix with double precision floating point numbers. The
- * first element is aligned on a 32 byte boundary.
+ * This structure represents a 4x4 matrix with single precision floating point
+ * numbers. The first element is aligned on a 32 byte boundary.
  */
-typedef struct alignas(32) b3_matrix64_4D
-{
-	b3_f64    m11, m12, m13, m14;
-	b3_f64    m21, m22, m23, m24;
-	b3_f64    m31, m32, m33, m34;
-	b3_f64    m41, m42, m43, m44;
-} b3_matrix64;
+typedef b3_matrix_base<b3_f32> b3_matrix32_4D, b3_matrix;
+
+/**
+ * This structure represents a 4x4 matrix with double precision floating point
+ * numbers. The first element is aligned on a 32 byte boundary.
+ */
+typedef b3_matrix_base<b3_f64> b3_matrix64_4D, b3_matrix64;
 
 /**
  * This structure represents a ray with single precision floating point numbers. The

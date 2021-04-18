@@ -35,6 +35,17 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3MathTest);
 
+b3MathTest::b3MathTest()
+{
+	epsilon_s = epsilon<b3_f32>(loops_s);
+	epsilon_d = epsilon<b3_f64>(loops_d);
+	epsilon_x = epsilon<b3_f96>(loops_x);
+
+	recipr_s = 1.0 / epsilon_s;
+	recipr_d = 1.0 / epsilon_d;
+	recipr_x = 1.0 / epsilon_x;
+}
+
 void b3MathTest::setUp()
 {
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
@@ -101,6 +112,36 @@ void b3MathTest::testLogPow()
 	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3PowOf2(7));
 	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3PowOf2(8));
 	CPPUNIT_ASSERT_EQUAL( 16, b3Math::b3PowOf2(9));
+}
+
+void b3MathTest::testSmoothStep1()
+{
+	CPPUNIT_ASSERT_EQUAL(0.0,     b3Math::b3Smoothstep(-1.0));
+	CPPUNIT_ASSERT_EQUAL(0.0,     b3Math::b3Smoothstep( 0.0));
+	CPPUNIT_ASSERT_EQUAL(0.15625, b3Math::b3Smoothstep( 0.25));
+	CPPUNIT_ASSERT_EQUAL(0.5,     b3Math::b3Smoothstep( 0.5));
+	CPPUNIT_ASSERT_EQUAL(0.84375, b3Math::b3Smoothstep( 0.75));
+	CPPUNIT_ASSERT_EQUAL(1.0,     b3Math::b3Smoothstep( 1.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,     b3Math::b3Smoothstep( 2.0));
+}
+
+void b3MathTest::testSmoothStep2()
+{
+	CPPUNIT_ASSERT_EQUAL(0.0,     b3Math::b3Smoothstep(3.0, 5.0,  2.0));
+	CPPUNIT_ASSERT_EQUAL(0.0,     b3Math::b3Smoothstep(3.0, 5.0,  3.0));
+	CPPUNIT_ASSERT_EQUAL(0.15625, b3Math::b3Smoothstep(3.0, 5.0,  3.5));
+	CPPUNIT_ASSERT_EQUAL(0.5,     b3Math::b3Smoothstep(3.0, 5.0,  4.0));
+	CPPUNIT_ASSERT_EQUAL(0.84375, b3Math::b3Smoothstep(3.0, 5.0,  4.5));
+	CPPUNIT_ASSERT_EQUAL(1.0,     b3Math::b3Smoothstep(3.0, 5.0,  5.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,     b3Math::b3Smoothstep(3.0, 5.0,  6.0));
+
+	CPPUNIT_ASSERT_EQUAL(0.0,     b3Math::b3Smoothstep(-3.0, 5.0,  -5.0));
+	CPPUNIT_ASSERT_EQUAL(0.0,     b3Math::b3Smoothstep(-3.0, 5.0,  -3.0));
+	CPPUNIT_ASSERT_EQUAL(0.15625, b3Math::b3Smoothstep(-3.0, 5.0,  -1.0));
+	CPPUNIT_ASSERT_EQUAL(0.5,     b3Math::b3Smoothstep(-3.0, 5.0,   1.0));
+	CPPUNIT_ASSERT_EQUAL(0.84375, b3Math::b3Smoothstep(-3.0, 5.0,   3.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,     b3Math::b3Smoothstep(-3.0, 5.0,   5.0));
+	CPPUNIT_ASSERT_EQUAL(1.0,     b3Math::b3Smoothstep(-3.0, 5.0,   7.0));
 }
 
 #endif

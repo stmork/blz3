@@ -87,7 +87,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 	b3_f64 r  = sqrt(r2) * m_RingFrequency;
 
 	// For unround rings...
-	r += m_AngularWobble * b3Math::b3Smoothstep(0, 5, r) * b3Noise::b3SignedNoiseVector(
+	r += m_AngularWobble * b3Math::b3Smoothstep(0.0, 5.0, r) * b3Noise::b3SignedNoiseVector(
 			Pring.x * m_AngularWobbleFrequency,
 			Pring.y * m_AngularWobbleFrequency,
 			Pring.z * m_AngularWobbleFrequency * 0.1);
@@ -104,7 +104,8 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 
 	for (i = 0; i < 2; i++)
 	{
-		b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2, 0.6, dPgrain);
+		const b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2, 0.6, dPgrain);
+
 		if (grain1valid > 0)
 		{
 			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x, Pgrain.y, Pgrain.z);
@@ -112,7 +113,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 			g *= (0.3 + 0.7 * inring);
 			g  = b3Math::b3Clamp(0.8 - g, 0.0, 1.0);
 			g *= g;
-			g  = m_Grainy * b3Math::b3Smoothstep(0.5, 1, g);
+			g  = m_Grainy * b3Math::b3Smoothstep(0.5, 1.0, g);
 			if (i == 0)
 			{
 				inring *= (1 - 0.4 * grain1valid);

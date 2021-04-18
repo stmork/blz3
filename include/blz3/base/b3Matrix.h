@@ -1217,9 +1217,9 @@ public:
 	 * @param Vector2 The second vector.
 	 * @return The resulting angle.
 	 */
-	static inline b3_f32 b3AngleOfVectors(
-		const b3_vector * Vector1,
-		const b3_vector * Vector2)
+	template<typename T> static inline T b3AngleOfVectors(
+		const b3_vector_3D_base<T> * Vector1,
+		const b3_vector_3D_base<T> * Vector2)
 	{
 		b3_f64 Denom = b3Length(Vector1) * b3Length(Vector2);
 
