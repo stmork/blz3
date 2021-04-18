@@ -896,16 +896,15 @@ const char * b3BumpOcean::b3GetName() const
 
 void b3BumpOcean::b3BumpNormal(b3_ray * ray) const
 {
-	b3_vector point, n;
-	b3_f64    Denom;
+	const b3_f64  r   = m_Amplitude;
+	b3_vector     point, n;
 
-	b3_f64    r   = m_Amplitude;
 	b3Scale(ray, &m_Scale, &point);
 
 	b3ComputeOceanWaveDeriv(&point, &n);
 	b3Vector::b3Normalize(&n, r);
 
-	Denom = 1.0 / sqrt(
+	const b3_f64 Denom = 1.0 / sqrt(
 			ray->normal.x * ray->normal.x +
 			ray->normal.y * ray->normal.y +
 			ray->normal.z * ray->normal.z);

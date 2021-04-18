@@ -56,10 +56,10 @@ public:
 	 * @return  The vec input parameter.
 	 */
 	static inline b3_vector * b3Init(
-		b3_vector * vec,
-		const b3_f64     x = 0,
-		const b3_f64     y = 0,
-		const b3_f64     z = 0)
+		b3_vector  *  vec,
+		const b3_f64  x = 0,
+		const b3_f64  y = 0,
+		const b3_f64  z = 0)
 	{
 		vec->x   = (b3_f32)x;
 		vec->y   = (b3_f32)y;
@@ -79,9 +79,9 @@ public:
 	 */
 	static inline b3_vector64 * b3Init(
 		b3_vector64 * vec,
-		const b3_f64       x = 0,
-		const b3_f64       y = 0,
-		const b3_f64       z = 0)
+		const b3_f64  x = 0,
+		const b3_f64  y = 0,
+		const b3_f64  z = 0)
 	{
 		vec->x   = x;
 		vec->y   = y;
@@ -98,8 +98,8 @@ public:
 	 * @return The result (= vec input).
 	 */
 	static inline b3_vector	* b3Init(
-		b3_vector  * vec,
-		const b3_vector  * src)
+		b3_vector    *    vec,
+		const b3_vector * src)
 	{
 		*vec = *src;
 		return vec;
@@ -134,7 +134,7 @@ public:
 	 * @return The result (= vec input).
 	 */
 	static inline b3_vector64 * b3Init(
-		b3_vector64 * vec,
+		b3_vector64    *   vec,
 		const b3_vector  * src)
 	{
 		const b3_f32 * s = &src->x;
@@ -155,7 +155,7 @@ public:
 	 * @return The result (= vec input).
 	 */
 	static inline b3_vector64 * b3Init(
-		b3_vector64 * vec,
+		b3_vector64    *    vec,
 		const b3_vector64 * src)
 	{
 		*vec = *src;
@@ -172,7 +172,7 @@ public:
 	 * @return The result (= line input).
 	 */
 	static inline b3_line64 * b3Init(
-		b3_line64  * line,
+		b3_line64     *     line,
 		const b3_vector64 * base,
 		const b3_vector64 * dir)
 	{
@@ -190,7 +190,7 @@ public:
 	 * @return The result (= line input).
 	 */
 	static inline b3_line * b3Init(
-		b3_line  * line,
+		b3_line     *     line,
 		const b3_vector * base,
 		const b3_vector * dir)
 	{
@@ -244,7 +244,7 @@ public:
 	static inline b3_vector * b3Negate(b3_vector * negate)
 	{
 #ifdef B3_SSE1
-		b3_f32 B3_ALIGN_16 * n = &negate->x;
+		b3_f32 * n = &negate->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -292,11 +292,11 @@ public:
 		b3_vector  *  vector,
 		const b3_f64  length = 1.0)
 	{
-		b3_f64 x      = vector->x;
-		b3_f64 y      = vector->y;
-		b3_f64 z      = vector->z;
-		b3_f64 result;
-		b3_f64 denom  = length / (result = sqrt(x * x + y * y + z * z));
+		const b3_f64 x      = vector->x;
+		const b3_f64 y      = vector->y;
+		const b3_f64 z      = vector->z;
+		const b3_f64 result = sqrt(x * x + y * y + z * z);
+		const b3_f64 denom  = length / result;
 
 		vector->x *= denom;
 		vector->y *= denom;
@@ -318,8 +318,8 @@ public:
 	{
 #ifdef B3_SSE2
 		b3_f64 * v = &vector->x;
-		b3_f64        denom  = 0;
-		b3_f64              result;
+		b3_f64   denom  = 0;
+		b3_f64   result;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -360,8 +360,8 @@ public:
 		b3_f32 x      = vector->x;
 		b3_f32 y      = vector->y;
 		b3_f32 z      = vector->z;
-		b3_f32 result = 0;
-		b3_f32 denom  = length / (result = sqrt(x * x + y * y + z * z));
+		b3_f32 result = sqrt(x * x + y * y + z * z);
+		b3_f32 denom  = length / result;
 
 		vector->x *= denom;
 		vector->y *= denom;
@@ -537,9 +537,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		const b3_f64  * b = &bVec->x;
-		b3_f64        * r = &result->x;
+		const b3_f64 * a = &aVec->x;
+		const b3_f64 * b = &bVec->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -603,8 +603,8 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		b3_f64        * r = &result->x;
+		const b3_f64 * a = &aVec->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -652,9 +652,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		const b3_f64  * b = &bVec->x;
-		b3_f64        * r = &result->x;
+		const b3_f64 * a = &aVec->x;
+		const b3_f64 * b = &bVec->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -718,8 +718,8 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		b3_f64        * r = &result->x;
+		const b3_f64 * a = &aVec->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -785,9 +785,9 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		const b3_f64  * b = &bVec->x;
-		b3_f64        * r = &result->x;
+		const b3_f64 * a = &aVec->x;
+		const b3_f64 * b = &bVec->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -850,9 +850,9 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector64 * b3CrossProduct(
-		const b3_vector  * aVec,
-		const b3_vector  * bVec,
-		b3_vector64    *   result)
+		const b3_vector * aVec,
+		const b3_vector * bVec,
+		b3_vector64   *   result)
 	{
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
@@ -875,7 +875,7 @@ public:
 		b3_vector64    *    result)
 	{
 #ifdef B3_SSE2
-		b3_f64  *            r = &result->x;
+		b3_f64       *       r = &result->x;
 		alignas(16) b3_f64   a[4], b[4], c[4], d[4];
 
 		a[Z] = c[Y] = aVec->x;
@@ -968,8 +968,8 @@ public:
 	static inline b3_f64 b3QuadLength(const b3_vector64 * vector)
 	{
 #ifdef B3_SSE2
-		const b3_f64  * v = &vector->x;
-		b3_f64          result = 0;
+		const b3_f64 * v = &vector->x;
+		b3_f64         result = 0;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -992,36 +992,14 @@ public:
 	 * @param to   The second point.
 	 * @return The resulting distance.
 	 */
-	static inline b3_f32 b3Distance(
-		const b3_vector * from,
-		const b3_vector * to)
+	template<typename T> static inline T b3Distance(
+		const b3_vector_3D_base<T> * from,
+		const b3_vector_3D_base<T> * to)
 	{
-		b3_f64 x, y, z;
+		const T x = to->x - from->x;
+		const T y = to->y - from->y;
+		const T z = to->z - from->z;
 
-		x = to->x - from->x;
-		y = to->y - from->y;
-		z = to->z - from->z;
-
-		return sqrt(x * x + y * y + z * z);
-	}
-
-	/**
-	 * This method computes the distance between the two given
-	 * vectors interpreted as points.
-	 *
-	 * @param from The first point.
-	 * @param to   The second point.
-	 * @return The resulting distance.
-	 */
-	static inline b3_f64 b3Distance(
-		const b3_vector64 * from,
-		const b3_vector64 * to)
-	{
-		b3_f64 x, y, z;
-
-		x = to->x - from->x;
-		y = to->y - from->y;
-		z = to->z - from->z;
 		return sqrt(x * x + y * y + z * z);
 	}
 
@@ -1074,7 +1052,7 @@ public:
 		const b3_f64  factor)
 	{
 #ifdef B3_SSE2
-		b3_f64  * v = &vector->x;
+		b3_f64 * v = &vector->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1104,7 +1082,7 @@ public:
 	{
 #ifdef B3_SSE2
 		const b3_f64 * v = &vector->x;
-		b3_f64       * r = &result->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1130,8 +1108,8 @@ public:
 	static inline b3_vector * b3MatrixMul3D(const b3_matrix * A, b3_vector * vector)
 	{
 #ifdef B3_SSE2
-		const b3_f32  *      m = &A->m11;
-		b3_f32  *            v = &vector->x;
+		const b3_f32    *    m = &A->m11;
+		b3_f32       *       v = &vector->x;
 		alignas(16) b3_f32   aux[4];
 		b3_f32               result;
 
@@ -1176,8 +1154,8 @@ public:
 	static inline b3_vector * b3MatrixMul4D(const b3_matrix * A, b3_vector * vector)
 	{
 #ifdef B3_SSE2
-		const b3_f32  *       m = &A->m11;
-		b3_f32  *             v = &vector->x;
+		const b3_f32     *    m = &A->m11;
+		b3_f32        *       v = &vector->x;
 		alignas(16) b3_f32    aux[4];
 		b3_f32                result;
 
@@ -1266,34 +1244,11 @@ public:
 	 * @param result The mixer result.
 	 * @return The resulting mixed vector.
 	 */
-	inline static b3_vector * b3Mix(
-		const b3_vector * low,
-		const b3_vector * high,
-		const b3_f32      mix,
-		b3_vector    *    result)
-	{
-		result->x = low->x + mix * (high->x - low->x);
-		result->y = low->y + mix * (high->y - low->y);
-		result->z = low->z + mix * (high->z - low->z);
-
-		return result;
-	}
-
-	/**
-	 * This method mixes two vectors by a mixer component. The mixer must in the
-	 * range from [0..1].
-	 *
-	 * @param low The low component if the mixer is 0.
-	 * @param high The high component if the mixer is 1.
-	 * @param mix The mixer component as single precision floating point number.
-	 * @param result The mixer result.
-	 * @return The resulting mixed vector.
-	 */
-	inline static b3_vector64 * b3Mix(
-		const b3_vector64 * low,
-		const b3_vector64 * high,
-		const b3_f64        mix,
-		b3_vector64    *    result)
+	template<typename T> inline static b3_vector_3D_base<T> * b3Mix(
+		const b3_vector_3D_base<T> * low,
+		const b3_vector_3D_base<T> * high,
+		const T                      mix,
+		b3_vector_3D_base<T>    *    result)
 	{
 		result->x = low->x + mix * (high->x - low->x);
 		result->y = low->y + mix * (high->y - low->y);
@@ -1344,7 +1299,7 @@ public:
 #ifdef B3_SSE2
 		const b3_f64  * a = &aVec->x;
 		const b3_f64  * b = &bVec->x;
-		b3_f64        * r = &result->x;
+		b3_f64     *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1452,7 +1407,7 @@ public:
 #ifdef B3_SSE2
 		const b3_f64  * b = &bVec->x;
 		const b3_f64  * c = &cVec->x;
-		b3_f64        * r = &result->x;
+		b3_f64     *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1517,7 +1472,7 @@ public:
 		const b3_f64 * a = &aVec->x;
 		const b3_f64 * b = &bVec->x;
 		const b3_f64 * c = &cVec->x;
-		b3_f64       * r = &result->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -1656,7 +1611,7 @@ public:
 #ifdef B3_SSE2
 		const b3_f64 * p = &line->pos.x;
 		const b3_f64 * d = &line->dir.x;
-		b3_f64       * r = &result->x;
+		b3_f64    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -2368,8 +2323,8 @@ public:
 		const bool        Use4D)
 	{
 #ifdef B3_SSE2
-		const b3_f32 *      m = &A->m11;
-		const b3_f32 *      s = &Src->x;
+		const b3_f32    *   m = &A->m11;
+		const b3_f32    *   s = &Src->x;
 		b3_f32       *      d = &Dst->x;
 		alignas(16) b3_f32  aux[4];
 
@@ -2428,13 +2383,13 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector64 * b3VMul(
-			const b3_matrix * A,
-			const b3_vector64 * Src, b3_vector64 * Dst, const bool Use4D)
+		const b3_matrix * A,
+		const b3_vector64 * Src, b3_vector64 * Dst, const bool Use4D)
 	{
 #ifdef B3_SSE2
-		const b3_f32 *      m = &A->m11;
-		const b3_f64 *      s = &Src->x;
-		b3_f64 *            d = &Dst->x;
+		const b3_f32    *   m = &A->m11;
+		const b3_f64    *   s = &Src->x;
+		b3_f64       *      d = &Dst->x;
 		alignas(16) b3_f64  aux[4];
 
 		for (b3_loop o = 0; o < 3; o++)

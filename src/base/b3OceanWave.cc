@@ -169,25 +169,27 @@ b3_f64 b3OceanWave::b3ComputeOceanWave(const b3_vector * pos)
 }
 
 void b3OceanWave::b3ComputeOceanWaveDeriv(
-	const b3_vector * pos, b3_vector * n B3_UNUSED) const
+	const b3_vector * pos,
+	b3_vector    *    n) const
 {
-	b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff, dx;
-	b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
-	b3_index  x, y;
-	b3_index  ls, le, us, ue;
+	const b3_f64    fx = b3Math::b3FracOne(pos->x * m_GridScale) * m_fftDiff;
+	const b3_f64    fy = b3Math::b3FracOne(pos->y * m_GridScale) * m_fftDiff;
+
+	const b3_index x  = (b3_index)fx;
+	const b3_index y  = (b3_index)fy;
+	const b3_f32   dx = fx - x;
+
+	const b3_index ls = b3GetIndex(x,   y);
+	const b3_index le = b3GetIndex(x + 1, y);
+	const b3_index us = b3GetIndex(x,   y + 1);
+	const b3_index ue = b3GetIndex(x + 1, y + 1);
+
 	b3_vector l, u;
-
-	x  = (b3_index)fx;
-	y  = (b3_index)fy;
-	dx = fx - x;
-
-	ls = b3GetIndex(x,   y);
-	le = b3GetIndex(x + 1, y);
-	us = b3GetIndex(x,   y + 1);
-	ue = b3GetIndex(x + 1, y + 1);
 
 	b3Vector::b3Mix(&m_Normals[ls], &m_Normals[le], dx, &l);
 	b3Vector::b3Mix(&m_Normals[us], &m_Normals[ue], dx, &u);
+
+	b3Vector::b3CrossProduct(&l, &u, n);
 }
 
 void b3OceanWave::b3ComputePhillipsSpectrum()
