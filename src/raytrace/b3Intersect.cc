@@ -1097,9 +1097,9 @@ bool b3CSGSphere::b3Intersect(
 }
 
 bool b3CSGCylinder::b3Intersect(
-	b3_ray       *      ray,
+	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_line64      *     BTLine)
 {
 	double l1, l2, z, Discriminant, a, p, x, y;
 	bool   check;
@@ -1196,9 +1196,9 @@ bool b3CSGCylinder::b3Intersect(
 }
 
 bool b3CSGCone::b3Intersect(
-	b3_ray       *      ray,
+	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_line64      *     BTLine)
 {
 	b3_f64     l1, l2, z1, z2, Discriminant, a, p, x, y;
 	b3_index   Index = 0;
@@ -1271,9 +1271,9 @@ bool b3CSGCone::b3Intersect(
 }
 
 bool b3CSGEllipsoid::b3Intersect(
-	b3_ray       *      ray,
+	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_line64      *     BTLine)
 {
 	b3_f64  z, Discriminant, a, p;
 
@@ -1298,9 +1298,9 @@ bool b3CSGEllipsoid::b3Intersect(
 }
 
 bool b3CSGBox::b3Intersect(
-	b3_ray       *      ray,
+	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_line64      *     BTLine)
 {
 	b3_vector64   BasePoint, EndPoint;
 	b3_f64        l[2];
@@ -1428,24 +1428,23 @@ bool b3CSGBox::b3Intersect(
 }
 
 bool b3CSGTorus::b3Intersect(
-	b3_ray       *      ray,
+	b3_ray       *       ray,
 	b3_shape_intervals * interval,
-	b3_line64     *     BTLine)
+	b3_line64      *     BTLine)
 {
-	b3_loop       NumOfX;
-	b3_index      i, k, t = 0;
-	b3_f64        Val1, Val2, pQuad, dQuad, pdQuad;
-	b3_f64        Coeff[5], x[4];
+	alignas(16) b3_f64  x[4];
+	alignas(16) b3_f64  Coeff[5];
+	b3_index            t = 0;
 
 	interval->m_Count = 0;
 	b3BaseTransform(ray, BTLine);
-	pQuad  = BTLine->pos.z * BTLine->pos.z;
-	dQuad  = BTLine->dir.z * BTLine->dir.z;
-	pdQuad = BTLine->pos.z * BTLine->dir.z;
-	Val1   =
+	const b3_f64 pQuad  = BTLine->pos.z * BTLine->pos.z;
+	const b3_f64 dQuad  = BTLine->dir.z * BTLine->dir.z;
+	const b3_f64 pdQuad = BTLine->pos.z * BTLine->dir.z;
+	const b3_f64 Val1   =
 		BTLine->pos.x * BTLine->pos.x +
 		BTLine->pos.y * BTLine->pos.y + pQuad - m_aQuad - m_bQuad;
-	Val2   =
+	const b3_f64 Val2   =
 		BTLine->pos.x * BTLine->dir.x +
 		BTLine->pos.y * BTLine->dir.y + pdQuad;
 
@@ -1455,15 +1454,15 @@ bool b3CSGTorus::b3Intersect(
 	Coeff[1] = 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
 	Coeff[0] =      Val1 * Val1 + 4 * m_aQuad * (pQuad - m_bQuad);
 
-	NumOfX = b3Cubic::b3SolveOrd4(Coeff, x);
-	if ((NumOfX == 2) || (NumOfX == 4))
+	b3_loop num_solutions = b3Cubic::b3SolveOrd4(Coeff, x);
+	if ((num_solutions == 2) || (num_solutions == 4))
 	{
 		// Insert sorted
-		for (i = 0; i < NumOfX; i++)
+		for (b3_loop i = 0; i < num_solutions; i++)
 		{
 			// Simple bubble sort - with NumOfX <= 4
 			// it's much faster.
-			for (k = i; k < NumOfX; k++)
+			for (b3_loop k = i; k < num_solutions; k++)
 			{
 				if (x[k] <= x[i])
 				{
@@ -1477,7 +1476,7 @@ bool b3CSGTorus::b3Intersect(
 
 			x[t] = x[i];
 		}
-		interval->m_Count = NumOfX;
+		interval->m_Count = num_solutions;
 	}
 
 	return interval->m_Count > 0;
@@ -1603,9 +1602,9 @@ b3Shape * b3Scene::b3Intersect(
 	b3_ray * ray,
 	bool     check_visibility)
 {
-	b3Shape     *    ResultShape = nullptr, *aux;
-	b3_polar         polar;
-	b3_f64           Result;
+	b3Shape  * ResultShape = nullptr, *aux;
+	b3_polar   polar;
+	b3_f64     Result;
 
 	while (BBox != nullptr)
 	{
@@ -1769,9 +1768,9 @@ void b3BBox::b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array)
 }
 
 void b3Scene::b3CollectBBoxes(
-	b3_line64     *    line,
+	b3_line64     *     line,
 	b3Array<b3BBox *> * array,
-	b3_f64             max)
+	b3_f64              max)
 {
 	b3_ray  ray;
 
@@ -1792,8 +1791,8 @@ void b3Scene::b3CollectBBoxes(
 *************************************************************************/
 
 void b3BBox::b3CollectBBoxes(
-	b3_vector     *    lower,
-	b3_vector     *    upper,
+	b3_vector     *     lower,
+	b3_vector     *     upper,
 	b3Array<b3BBox *> * array)
 {
 	b3_vector  lLower, lUpper;
