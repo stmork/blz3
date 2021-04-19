@@ -273,7 +273,7 @@ bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line)
 			{
 				i1 = i + l1;
 
-				b3Complex64 t = u * line[i1];
+				const b3Complex64 t = u * line[i1];
 
 				line[i1]  = line[i] - t;
 				line[i]  += t;
@@ -281,8 +281,8 @@ bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line)
 			u *= c;
 		}
 
-		b3_f64 cr = c.b3Real();
-		b3Complex64 q = one + b3Complex64(cr, -cr);
+		const b3_f64  cr = c.b3Real();
+		b3Complex64   q  = one + b3Complex64(cr, -cr);
 
 		q.b3Scale(half);
 		c = b3Complex64::b3Sqrt(q);
@@ -292,7 +292,7 @@ bool b3Fourier::b3FFT(const int dir, const b3_res m, b3Complex64 * line)
 	/* Scaling for forward transform */
 	if (dir == 1)
 	{
-		b3Complex64 denom(1.0 / nn, 1.0 / nn);
+		const b3Complex64 denom(1.0 / nn, 1.0 / nn);
 
 		for (i = 0; i < nn; i++)
 		{
@@ -381,12 +381,11 @@ bool b3Fourier::b3FFT2D(const int dir)
 
 bool b3Fourier::b3RowFFT(void * ptr)
 {
-	b3_fft_info * info  = static_cast<b3_fft_info *>(ptr);
+	b3_fft_info  * info  = static_cast<b3_fft_info *>(ptr);
 	b3Complex64 ** lines = info->m_Lines;
-	b3_loop       j;
 
 	/* Transform the rows */
-	for (j = info->m_yMin; j < info->m_yMax; j++)
+	for (b3_loop j = info->m_yMin; j < info->m_yMax; j++)
 	{
 		b3FFT(info->m_Dir, info->m_xDim, lines[j]);
 	}
