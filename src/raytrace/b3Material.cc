@@ -1193,13 +1193,13 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 		b3Vector::b3Normalize(&H);
 
 		const b3_f64 nh =  b3Vector::b3SMul(&ray->normal, &H);
-		const b3_f64 nv =  b3Vector::b3SMul(&ray->normal, &ray->dir);
-		const b3_f64 vh =  b3Vector::b3SMul(&ray->dir, &H);
+		const b3_f64 nv = -b3Vector::b3SMul(&ray->normal, &ray->dir);
+		const b3_f64 vh = -b3Vector::b3SMul(&ray->dir, &H);
 
 		const b3_f64 Gm = 2 * nh * nv / vh;
 		const b3_f64 Gs = 2 * nh * nl / vh;
 
-		const b3_f64 G = std::min(1.0, std::min(Gm, Gs));
+		const b3_f64 G = std::min(Gs, std::min(Gm, 1.0));
 
 		const b3_f64 alpha = b3Math::b3Acos(nh);
 		const b3_f64 nh_q  = nh * nh;
