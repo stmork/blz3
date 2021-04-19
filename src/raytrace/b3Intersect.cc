@@ -33,27 +33,28 @@
 
 b3_f64 b3Area::b3Intersect(b3_ray * ray, b3_polar * polar)
 {
-	b3_f64    Denom, aValue, bValue, lValue, result = -1;
-	b3_vector Dir, Product;
+	b3_f64       result = -1;
+	b3_vector64  Dir, Product;
 
-	Denom = -1.0 / (
+	const b3_f64 Denom = -(
 			m_Normal.x * ray->dir.x +
 			m_Normal.y * ray->dir.y +
 			m_Normal.z * ray->dir.z);
-	if (((lValue = (
-						m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
-						m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
-						m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-					* Denom) >= b3Math::epsilon) && (lValue < ray->Q))
+	const b3_f64 lValue = (
+			m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
+			m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
+			m_Normal.z * (Dir.z = ray->pos.z - m_Base.z)) / Denom;
+	if ((lValue >= b3Math::epsilon) && (lValue < ray->Q))
 	{
-		aValue = (
+		const b3_f64 aValue = (
 				m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
 				m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
 				m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
-			* Denom;
+			/ Denom;
 		if (fabs(aValue) <= 1)
 		{
-			bValue = -b3Vector::b3SMul(&m_Dir1, &Product) * Denom;
+			const b3_f64 bValue = -b3Vector::b3SMul(&m_Dir1, &Product) / Denom;
+
 			if (fabs(bValue) <= 1)
 			{
 				polar->m_Polar.x = polar->m_ObjectPolar.x = aValue;
@@ -72,60 +73,47 @@ b3_f64 b3Area::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 b3_f64 b3Disk::b3Intersect(b3_ray * ray, b3_polar * polar)
 {
-	b3_f64     Denom, aValue, bValue, lValue;
-	b3_vector  Dir, Product;
+	b3_f64       result = -1;
+	b3_vector64  Dir, Product;
 
-	Denom = -1.0 / (
+	const b3_f64 Denom = -(
 			m_Normal.x * ray->dir.x +
 			m_Normal.y * ray->dir.y +
 			m_Normal.z * ray->dir.z);
-	if ((lValue = (
-					m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
-					m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
-					m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-				* Denom) < b3Math::epsilon)
+	const b3_f64 lValue = (
+			m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
+			m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
+			m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
+		/ Denom;
+	if ((lValue >= b3Math::epsilon) && (lValue < ray->Q))
 	{
-		return -1;
-	}
-	if (lValue > ray->Q)
-	{
-		return -1;
-	}
+		const b3_f64 aValue = (
+				m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
+				m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
+				m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
+			/ Denom;
+		if (fabs(aValue) <= 1)
+		{
+			const b3_f64 bValue = -b3Vector::b3SMul(&m_Dir1, &Product) / Denom;
+			const b3_f64 radius = aValue * aValue + bValue * bValue;
 
-	// check x axis
-	aValue = (
-			m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
-			m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
-			m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
-		* Denom;
-	if (fabs(aValue) > 1)
-	{
-		return -1;
+			if (radius <= 1)
+			{
+				polar->m_Polar.x       = b3Math::b3RelAngleOfScalars(aValue, bValue);
+				polar->m_Polar.y       = sqrt(radius);
+				polar->m_Polar.z       = 0;
+				polar->m_ObjectPolar.x = aValue;
+				polar->m_ObjectPolar.y = bValue;
+				polar->m_ObjectPolar.z = 0;
+
+				if (b3CheckStencil(polar))
+				{
+					result = lValue;
+				}
+			}
+		}
 	}
-
-	// check y axis
-	bValue = -b3Vector::b3SMul(&m_Dir1, &Product) * Denom;
-	if (fabs(bValue) > 1)
-	{
-		return -1;
-	}
-
-	// check radius
-	Denom = aValue * aValue + bValue * bValue;
-	if (Denom > 1)
-	{
-		return -1;
-	}
-
-	// compute surface coordinates
-	polar->m_Polar.x	= b3Math::b3RelAngleOfScalars(aValue, bValue);
-	polar->m_Polar.y	= sqrt(Denom);
-	polar->m_Polar.z	= 0;
-	polar->m_ObjectPolar.x = aValue;
-	polar->m_ObjectPolar.y = bValue;
-	polar->m_ObjectPolar.z = 0;
-
-	return b3CheckStencil(polar) ? lValue : -1;
+	return result;
 }
 
 b3_f64 b3Sphere::b3Intersect(b3_ray * ray, b3_polar * polar)
