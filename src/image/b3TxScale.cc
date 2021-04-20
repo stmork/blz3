@@ -51,54 +51,39 @@ struct b3_rect_info
 
 b3TxQuad b3ColorIndices::m_TxQuad;
 
-b3ColorIndices::b3ColorIndices()
+void b3ColorIndices::b3AddColorIndex(const b3_index index)
 {
-	unsigned size = 256;
-
-	num     = 0;
-	indices = b3TypedAlloc<b3_index>(size);
-	max     = (indices != nullptr ? size : 0);
-	if (max == 0)
+	if (m_Num < m_Max)
 	{
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-}
-
-void b3ColorIndices::b3AddColorIndex(b3_index index)
-{
-	if (num < max)
-	{
-		indices[num++] = index;
+		m_Indices[m_Num++] = index;
 	}
 }
 
 b3_index b3ColorIndices::b3ColorIndex(
-	b3_pkd_color * palette,
-	b3_pkd_color   color) const
+	const b3_pkd_color * palette,
+	const b3_pkd_color   color) const
 {
-	b3_s32   r, rDiff;
-	b3_s32   g, gDiff;
-	b3_s32   b, bDiff;
-	b3_s32   diff, actDiff;
-	b3_index i, index = 0, act, pos;
+	b3_s32   diff;
+	b3_index index = 0;
+
+	const b3_s32 r    = (b3_s32)((color & 0xff0000) >> 16);
+	const b3_s32 g    = (b3_s32)((color & 0x00ff00) >>  8);
+	const b3_s32 b    = (b3_s32)((color & 0x0000ff));
 
 	diff = 65536 * 3 + 1;
-	r    = (b3_s32)((color & 0xff0000) >> 16);
-	g    = (b3_s32)((color & 0x00ff00) >>  8);
-	b    = (b3_s32)((color & 0x0000ff));
-	for (i = 0; i < num; i++)
+	for (b3_index i = 0; i < m_Num; i++)
 	{
 		// Get actual color
-		pos = indices[i];
-		act = palette[pos];
+		const b3_index pos = m_Indices[i];
+		const b3_index act = palette[pos];
 
 		// Compute difference between "color" and test color "act".
-		rDiff = (b3_s32)((act & 0xff0000) >> 16) - r;
-		gDiff = (b3_s32)((act & 0x00ff00) >>  8) - g;
-		bDiff = (b3_s32)((act & 0x0000ff))       - b;
+		const b3_s32 rDiff = (b3_s32)((act & 0xff0000) >> 16) - r;
+		const b3_s32 gDiff = (b3_s32)((act & 0x00ff00) >>  8) - g;
+		const b3_s32 bDiff = (b3_s32)((act & 0x0000ff))       - b;
 
 		// Compute difference and test
-		actDiff  =
+		const b3_index actDiff  =
 			m_TxQuad.quad256[rDiff + 256] +
 			m_TxQuad.quad256[gDiff + 256] +
 			m_TxQuad.quad256[bDiff + 256];
@@ -1645,11 +1630,8 @@ void b3Tx::b3VGAScaleToVGA(
 		}
 	}
 	// Free grid
-	if (grid)
-	{
-		delete [] grid;
-		grid = nullptr;
-	}
+	delete [] grid;
+	grid = nullptr;
 }
 
 void b3Tx::b3VGAScaleToRGB8(

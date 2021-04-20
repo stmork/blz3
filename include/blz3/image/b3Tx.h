@@ -215,17 +215,21 @@ class B3_PLUGIN b3TxQuad
 /**
  * This class holds image palette indices.
  */
-class B3_PLUGIN b3ColorIndices : public b3Mem
+class B3_PLUGIN b3ColorIndices
 {
-	static b3TxQuad  m_TxQuad;
+	static b3TxQuad          m_TxQuad;
 
-	b3_count    num;
-	b3_count    max;
-	b3_index  * indices;
+	static const b3_count    m_Max = 256;
+	b3_count                 m_Num = 0;
+	b3_index                 m_Indices[m_Max];
+
 public:
-	b3ColorIndices();
-	void            b3AddColorIndex(b3_index);
-	b3_index        b3ColorIndex(b3_pkd_color *, b3_pkd_color) const;
+	b3ColorIndices() = default;
+
+	void            b3AddColorIndex(const b3_index index);
+	b3_index        b3ColorIndex(
+		const b3_pkd_color *,
+		const b3_pkd_color) const;
 };
 
 #define CLASS_TEXTURE       0x20000000
