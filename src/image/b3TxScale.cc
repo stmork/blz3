@@ -1809,9 +1809,6 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 		break;
 	}
 	b3PrintT("ScaleToGrey: stop");
-
-	b3Free(rIndex);
-	b3Free(cIndex);
 }
 
 /*************************************************************************
@@ -2270,9 +2267,6 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 		}
 		break;
 	}
-
-	b3Free(rIndex);
-	b3Free(cIndex);
 }
 
 /*************************************************************************
