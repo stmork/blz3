@@ -328,14 +328,14 @@ void b3Tx::b3ComputeLineSmaller(
 	const b3_u08  *  src,
 	b3_res           xDstSize)
 {
-	b3_coord  xDst;
-	b3_res    xStart, xEnd, xByteStart, xByteEnd;
+	b3_res    xEnd, xByteStart, xByteEnd;
 	b3_u08    mask;
 
 	xEnd = rIndex[0];
-	for (xDst = 0; xDst < xDstSize; xDst++)
+	for (b3_coord xDst = 0; xDst < xDstSize; xDst++)
 	{
-		xStart            = xEnd;
+		const b3_res xStart            = xEnd;
+
 		xEnd              = rIndex[xDst + 1];
 		TxRowCells[xDst] += (xEnd - xStart);
 
@@ -383,6 +383,7 @@ void b3Tx::b3ComputeLineSmaller(
 
 bool b3Tx::b3ScaleBW2Grey(void * ptr)
 {
+	b3Mem          pool;
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
 	b3_u08    *    src;
@@ -426,23 +427,20 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 	pal      =  RectInfo->new_palette;
 
 	lDst += yMin * dstBytes;
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2Grey(%5d - %5d)\n",
-		yMin, yMax);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # %s(%5d - %5d)\n",
+		__FUNCTION__, yMin, yMax);
 
 	// Alloc some memory
-	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCounter == nullptr)
+	try
 	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3ScaleBW2Grey(): "
-			"Not enough memory for row counter\n");
-		B3_THROW(b3TxException, B3_TX_MEMORY);
+		TxRowCounter = pool.b3TypedAlloc<b3_count>(xDstSize);
+		TxRowCells   = pool.b3TypedAlloc<b3_count>(xDstSize);
 	}
-	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCells == nullptr)
+	catch (std::bad_alloc & e)
 	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3MakeItGrey(): "
-			"Not enough memory for row cell sizes\n");
-		free(TxRowCounter);
+		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # %s(): "
+			"Not enough memory for row cell sizes\n",
+			__FUNCTION__);
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
@@ -542,10 +540,6 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 			}
 		}
 	}
-
-	// Free willie
-	free(TxRowCounter);
-	free(TxRowCells);
 	return 0;
 }
 
@@ -557,36 +551,34 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 **                                                                      **
 *************************************************************************/
 
-unsigned int b3Tx::b3ScaleBW2Grey(void * ptr)
+bool b3Tx::b3ScaleBW2Grey(void * ptr)
 {
-	b3_rect_info * RectInfo;
-	b3_count   *   rIndex;
-	b3_count   *   cIndex;
-	b3_pkd_color * tx_pal;
-	b3_u08    *    src, *dst, byte;
-	b3_u08         bit;
-	b3_count       srcBytes, dstBytes;
-	b3_index       value, index;
-	b3_count       count, num;
-	b3_coord       x, y, sx, sy, ix, iy, rx, cy;
-	b3_res         xSize, yMin, yMax;
+	b3_rect_info *   RectInfo;
+	const b3_count * rIndex;
+	const b3_count * cIndex;
+	b3_pkd_color *   tx_pal;
+	b3_u08      *    src, *dst, byte;
+	b3_u08           bit;
+	b3_count         srcBytes, dstBytes;
+	b3_index         value, index;
+	b3_count         count, num;
+	b3_coord         x, y, sx, sy, ix, iy, rx, cy;
+	b3_res           xSize, yMin, yMax;
 
-	RectInfo = b3_rect_info<ptr>;
+	RectInfo = (b3_rect_info *)ptr;
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
-	dst      = RectInfo->dst.bData;
-	src      = RectInfo->src.bData;
+	dst      = RectInfo->dst;
+	src      = RectInfo->src;
 	yMin     = RectInfo->yMin;
 	yMax     = RectInfo->yMax;
 	xSize    = RectInfo->xSizeDst;
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes = RectInfo->xSizeDst;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
-		yMin, yMax);
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # palette %06lx %06lx\n",
-		tx_pal[0], tx_pal[1]);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # %s(%5d - %5d)\n",
+		__FUNCTION__, yMin, yMax);
 
 
 	// For each new pixel in x- and y-direction...
@@ -790,6 +782,7 @@ void b3Tx::b3RGB8ComputeLineSmaller(
 
 bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 {
+	b3Mem          pool;
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
 	b3_pkd_color * src;
@@ -810,11 +803,11 @@ bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 	b3_count       divisor;
 	b3_res         yMin, yMax;
 	void (*ComputeLine)(
-		b3_count     * TxRowCounter,
-		b3_count     * TxRowCells,
+		b3_count     *       TxRowCounter,
+		b3_count     *       TxRowCells,
 		const b3_count     * rIndex,
 		const b3_pkd_color * src,
-		b3_res        dstSize);
+		b3_res               dstSize);
 
 	// ... and some values
 	RectInfo = (b3_rect_info *)ptr;
@@ -832,23 +825,20 @@ bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 	srcBytes =  RectInfo->xSizeSrc;
 	dstBytes =  RectInfo->xSizeDst;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(%5d - %5d)\n",
-		yMin, yMax);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # %s(%5d - %5d)\n",
+		__FUNCTION__, yMin, yMax);
 
 	// Alloc some memory
-	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count) * 3);
-	if (TxRowCounter == nullptr)
+	try
 	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
-			"Not enough memory for row counter\n");
-		B3_THROW(b3TxException, B3_TX_MEMORY);
+		TxRowCounter = pool.b3TypedAlloc<b3_count>(xDstSize * 3);
+		TxRowCells   = pool.b3TypedAlloc<b3_count>(xDstSize);
 	}
-	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCells == nullptr)
+	catch (std::bad_alloc & e)
 	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
-			"Not enough memory for row cell sizes\n");
-		free(TxRowCounter);
+		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # %s(): "
+			"Not enough memory for row cell sizes\n",
+			__FUNCTION__);
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
@@ -1083,10 +1073,6 @@ bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 			}
 		}
 	}
-
-	// Free willie
-	free(TxRowCounter);
-	free(TxRowCells);
 	return 0;
 }
 
@@ -1211,6 +1197,7 @@ void b3Tx::b3FloatComputeLineSmaller(
 
 bool b3Tx::b3FloatScaleToRGB8(void * ptr)
 {
+	b3Mem          pool;
 	b3_rect_info * RectInfo;
 	b3_tx_type     dstType;
 	b3_color   *   src;
@@ -1252,23 +1239,20 @@ bool b3Tx::b3FloatScaleToRGB8(void * ptr)
 	yDstSize =  RectInfo->ySizeDst;
 	srcBytes =  RectInfo->xSizeSrc;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(%5d - %5d)\n",
-		yMin, yMax);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # %s(%5d - %5d)\n",
+		__FUNCTION__, yMin, yMax);
 
 	// Alloc some memory
-	TxRowCounter = (b3_color *)malloc(xDstSize * sizeof(b3_color));
-	if (TxRowCounter == nullptr)
+	try
 	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
-			"Not enough memory for row counter\n");
-		B3_THROW(b3TxException, B3_TX_MEMORY);
+		TxRowCounter = pool.b3TypedAlloc<b3_color>(xDstSize);
+		TxRowCells   = pool.b3TypedAlloc<b3_count>(xDstSize);
 	}
-	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
-	if (TxRowCells == nullptr)
+	catch (std::bad_alloc & e)
 	{
-		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(): "
-			"Not enough memory for row cell sizes\n");
-		free(TxRowCounter);
+		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # %s(): "
+			"Not enough memory for row cell sizes\n",
+			__FUNCTION__);
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
@@ -1439,10 +1423,6 @@ bool b3Tx::b3FloatScaleToRGB8(void * ptr)
 			}
 		}
 	}
-
-	// Free willie
-	free(TxRowCounter);
-	free(TxRowCells);
 	return 0;
 }
 
@@ -1725,6 +1705,7 @@ void b3Tx::b3ScaleFilteredFromVGA(
 
 void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 {
+	b3Mem      pool;
 	b3_coord   x, y;
 	b3_count * rIndex, *cIndex;
 
@@ -1732,26 +1713,30 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 	if (srcTx->type == B3_TX_UNDEFINED)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3ScaleToGrey(): source image (0x%p) of undefined type!\n",
-			srcTx);
+			"### CLASS: b3Tx   # %s(): source image (0x%p) of undefined type!\n",
+			__FUNCTION__, srcTx);
 		B3_THROW(b3TxException, B3_TX_UNKNOWN_DATATYPE);
 	}
 	if ((xSize <= 0) || (ySize <= 0))
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3ScaleToGrey(): destination image (0x%p) without extend (%dx%d)!\n",
-			this, xSize, ySize);
+			"### CLASS: b3Tx   # %s(): destination image (0x%p) without extend (%dx%d)!\n",
+			__FUNCTION__, this, xSize, ySize);
 		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
-	rIndex = b3TypedAlloc<b3_count>(xSize + 1);
-	cIndex = b3TypedAlloc<b3_count>(ySize + 1);
-	if ((rIndex == nullptr) || (cIndex == nullptr))
+
+	try
+	{
+		rIndex = pool.b3TypedAlloc<b3_count>(xSize + 1);
+		cIndex = pool.b3TypedAlloc<b3_count>(ySize + 1);
+	}
+	catch (std::bad_alloc & e)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
 	// Compute resampled start coordinates
-	b3PrintT("ScaleToGrey: start");
+	B3_METHOD;
 	for (x = 0; x <= xSize; x++)
 	{
 		rIndex[x] = x * srcTx->xSize / xSize;
@@ -1790,7 +1775,6 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 		b3ScaleFilteredFromVGA(srcTx, rIndex, cIndex);
 		break;
 	}
-	b3PrintT("ScaleToGrey: stop");
 }
 
 /*************************************************************************
@@ -1824,8 +1808,8 @@ bool b3Tx::b3ScaleBW2BW(void * ptr)
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes = TX_BWA(RectInfo->xSizeDst);
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2BW(%5d - %5d)\n",
-		yMin, yMax);
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # %s(%5d - %5d)\n",
+		__FUNCTION__, yMin, yMax);
 
 	dst += (yMin * dstBytes);
 	for (y = yMin; y < yMax; y++)
@@ -2109,10 +2093,7 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 	}
 }
 
-#ifndef _DEBUG
-inline
-#endif
-b3_index b3Tx::b3ILBMPlaneValue(
+inline b3_index b3Tx::b3ILBMPlaneValue(
 	const b3_coord x,
 	const b3_coord y) const
 {
@@ -2179,6 +2160,7 @@ void b3Tx::b3ScaleUnfilteredFromILBM(
 
 void b3Tx::b3Scale(b3Tx * srcTx)
 {
+	b3Mem      pool;
 	b3_coord   x, y;
 	b3_count * rIndex, *cIndex;
 
@@ -2186,20 +2168,24 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 	if (srcTx->type == B3_TX_UNDEFINED)
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Scale(): source image (0x%p) of undefined type!\n",
-			srcTx);
+			"### CLASS: b3Tx   # %s(): source image (0x%p) of undefined type!\n",
+			__FUNCTION__, srcTx);
 		B3_THROW(b3TxException, B3_TX_UNKNOWN_DATATYPE);
 	}
 	if ((xSize <= 0) || (ySize <= 0))
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Scale(): destination image (0x%p) without extend (%dx%d)!\n",
-			this, xSize, ySize);
+			"### CLASS: b3Tx   # %s(): destination image (0x%p) without extend (%dx%d)!\n",
+			__FUNCTION__, this, xSize, ySize);
 		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
-	rIndex = b3TypedAlloc<b3_count>(xSize + 1);
-	cIndex = b3TypedAlloc<b3_count>(ySize + 1);
-	if ((rIndex == nullptr) || (cIndex == nullptr))
+
+	try
+	{
+		rIndex = pool.b3TypedAlloc<b3_count>(xSize + 1);
+		cIndex = pool.b3TypedAlloc<b3_count>(ySize + 1);
+	}
+	catch (std::bad_alloc & e)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -2264,28 +2250,26 @@ void b3Tx::b3TransToGrey()
 	b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
 	b3_color   *   fPtr;
-	b3_pkd_color * pPtr;
+	b3_pkd_color * pPtr = nullptr;
 	b3_size        newSize;
 	b3_coord       x, y;
 	b3_f64         r, g, b;
 
 	// First allocate new buffer;
 	newSize = xSize * ySize;
-	cPtr    = b3TypedAlloc<b3_u08>(newSize);
-	if (cPtr == nullptr)
+	try
 	{
-		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new image buffer!\n");
-		B3_THROW(b3TxException, B3_TX_MEMORY);
+		cPtr = b3TypedAlloc<b3_u08>(newSize);
+		pPtr = b3TypedAlloc<b3_pkd_color>(256);
 	}
-
-	// alloc new palette
-	pPtr = b3TypedAlloc<b3_pkd_color>(256);
-	if (pPtr == nullptr)
+	catch (std::bad_alloc & e)
 	{
 		b3Free(cPtr);
+		b3Free(pPtr);
+
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new palette!\n");
+			"### CLASS: b3Tx   # %s(): Not enogh memory for new image buffer!\n",
+			__FUNCTION__);
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
 
