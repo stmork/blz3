@@ -133,11 +133,11 @@ void b3TxPool::b3Dump()
 {
 	b3Tx * tx;
 
-	b3PrintF(B3LOG_NORMAL, "Image pool dump with %zd textures.\n",
+	b3PrintF(B3LOG_NORMAL, "Image pool dump with %d textures.\n",
 		m_Pool.b3GetCount());
 	B3_FOR_BASE(&m_Pool, tx)
 	{
-		b3PrintF(B3LOG_NORMAL, "TX: %5zd x %5zd - %s\n",
+		b3PrintF(B3LOG_NORMAL, "TX: %5d x %5d - %s\n",
 			tx->xSize,
 			tx->ySize,
 			tx->b3Name());

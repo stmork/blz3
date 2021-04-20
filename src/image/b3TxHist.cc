@@ -454,9 +454,9 @@ b3_index b3Tx::b3ComputeThreshold(
 			threshold = i;
 		}
 		b3PrintF(B3LOG_FULL,
-			"### CLASS: b3Tx   # b3ComputeThreshold() using %ld as threshold.\n", threshold);
+			"### CLASS: b3Tx   # b3ComputeThreshold() using %d as threshold.\n", threshold);
 		b3PrintF(B3LOG_FULL,
-			"### CLASS: b3Tx   # b3ComputeThreshold() %ld histogramme entries.\n", max);
+			"### CLASS: b3Tx   # b3ComputeThreshold() %d histogramme entries.\n", max);
 		b3PrintF(B3LOG_FULL,
 			"### CLASS: b3Tx   # b3ComputeThreshold() ratio: %3.2f%%.\n", ratio * 100.0);
 	}

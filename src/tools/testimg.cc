@@ -116,10 +116,10 @@ int main(int argc, char * argv[])
 		switch (i)
 		{
 		case 1:
-			sscanf(argv[i], "%ld", &xSize);
+			sscanf(argv[i], "%d", &xSize);
 			break;
 		case 2:
-			sscanf(argv[i], "%ld", &ySize);
+			sscanf(argv[i], "%d", &ySize);
 			break;
 		case 3:
 			imgname = argv[i];

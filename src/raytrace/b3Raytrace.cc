@@ -74,7 +74,7 @@ bool b3Scene::b3RaytraceThread(void * ptr)
 	while (row != nullptr);
 
 	// Reach this if the row list ran empty.
-	b3PrintF(B3LOG_FULL, "  Raytracing thread %zd terminates...\n", info->m_Num);
+	b3PrintF(B3LOG_FULL, "  Raytracing thread %d terminates...\n", info->m_Num);
 	return 0;
 }
 
@@ -86,9 +86,9 @@ bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 
 	do
 	{
-		b3PrintF(B3LOG_FULL, "  Thread %zd is waiting to start job.\n", info->m_Num);
+		b3PrintF(B3LOG_FULL, "  Thread %d is waiting to start job.\n", info->m_Num);
 		info->m_WaitForAnimation.b3Wait();
-		b3PrintF(B3LOG_FULL, "  Thread %zd is doing his job...\n", info->m_Num);
+		b3PrintF(B3LOG_FULL, "  Thread %d is doing his job...\n", info->m_Num);
 
 		do
 		{
@@ -112,12 +112,12 @@ bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 		}
 		while (row != nullptr);
 
-		b3PrintF(B3LOG_FULL, "  Signalling main thread done job of thread %zd.\n", info->m_Num);
+		b3PrintF(B3LOG_FULL, "  Signalling main thread done job of thread %d.\n", info->m_Num);
 		info->m_WaitForCompletion.b3Pulse();
 	}
 	while (info->m_Loop);
 
-	b3PrintF(B3LOG_FULL, "  Raytracing thread %zd for motion blur terminates...\n", info->m_Num);
+	b3PrintF(B3LOG_FULL, "  Raytracing thread %d for motion blur terminates...\n", info->m_Num);
 	return 0;
 }
 
@@ -178,7 +178,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 	threads     = new b3Thread[CPUs];
 
 	b3PrintF(B3LOG_NORMAL, "Starting threads...\n");
-	b3PrintF(B3LOG_FULL,  "  Reference time point: %3.3lf FPS: %zd\n",
+	b3PrintF(B3LOG_FULL,  "  Reference time point: %3.3lf FPS: %d\n",
 		base, anim->m_FramesPerSecond);
 	for (i = 0; i < CPUs; i++)
 	{
@@ -209,7 +209,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 		}
 
 		// Start raytracing at this time point
-		b3PrintF(B3LOG_FULL, "  Activating threads at index %zd, time point %3.3lf...\n", k, t);
+		b3PrintF(B3LOG_FULL, "  Activating threads at index %d, time point %3.3lf...\n", k, t);
 		for (i = 0; i < CPUs; i++)
 		{
 			infos[i].m_WaitForAnimation.b3Pulse();
@@ -280,7 +280,7 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	b3_scene_preparation * info = b3GetPrepareInfo();
 
 	tStart       = timepoint;
-	b3PrintF(B3LOG_FULL, "b3Scene::b3PrepareScene(%zd,%zd)\n", xSize, ySize);
+	b3PrintF(B3LOG_FULL, "b3Scene::b3PrepareScene(%d,%d)\n", xSize, ySize);
 	b3PrintF(B3LOG_FULL, "  preparing background color...\n");
 	m_AvrgColor = (m_BottomColor + m_TopColor) * 0.5;
 	m_DiffColor = (m_TopColor    - m_AvrgColor);

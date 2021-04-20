@@ -50,8 +50,8 @@ class b3Patch
 public:
 	b3Patch(const char * filename)
 	{
-		FILE * patchfile;
-		char  line[1024];
+		FILE  *  patchfile;
+		char     line[1024];
 		b3_count count, i;
 
 		m_BBox = nullptr;
@@ -62,15 +62,15 @@ public:
 			if (b3ReadLine(line, sizeof(line), patchfile))
 			{
 				count = 0;
-				sscanf(line, " %ld", &count);
-				b3PrintF(B3LOG_NORMAL, "Trying to read %ld patches...\n", count);
+				sscanf(line, " %d", &count);
+				b3PrintF(B3LOG_NORMAL, "Trying to read %d patches...\n", count);
 				for (i = 0; i < count; i++)
 				{
 					if (b3ReadLine(line, sizeof(line), patchfile))
 					{
 						b3_patch patch;
 
-						if (sscanf(line, "%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld",
+						if (sscanf(line, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
 								&patch.m_Indices[ 0],
 								&patch.m_Indices[ 1],
 								&patch.m_Indices[ 2],
@@ -105,8 +105,8 @@ public:
 			if (b3ReadLine(line, sizeof(line), patchfile))
 			{
 				count = 0;
-				sscanf(line, " %ld", &count);
-				b3PrintF(B3LOG_NORMAL, "Trying to read %ld vertices...\n", count);
+				sscanf(line, " %d", &count);
+				b3PrintF(B3LOG_NORMAL, "Trying to read %d vertices...\n", count);
 				for (i = 0; i < count; i++)
 				{
 					if (b3ReadLine(line, sizeof(line), patchfile))
@@ -132,7 +132,7 @@ public:
 			}
 
 			fclose(patchfile);
-			b3PrintF(B3LOG_NORMAL, "Read %ld patches and %ld vertices.\n",
+			b3PrintF(B3LOG_NORMAL, "Read %d patches and %d vertices.\n",
 				m_Patches.b3GetCount(), m_Vertices.b3GetCount());
 		}
 	}

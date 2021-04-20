@@ -244,7 +244,7 @@ void b3TriangleShape::b3PrepareGridList()
 #ifdef _DEBUG
 	if (degenerated > 0)
 	{
-		b3PrintF(B3LOG_DEBUG, "%ld triangles degenerated.\n", degenerated);
+		b3PrintF(B3LOG_DEBUG, "%d triangles degenerated.\n", degenerated);
 	}
 #endif
 }

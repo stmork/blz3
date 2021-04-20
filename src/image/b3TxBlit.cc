@@ -95,7 +95,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 	}
 
 	b3PrintF(B3LOG_FULL,
-		"### CLASS: b3Tx   # b3Blit(): size: %ldx%ld (%ld,%ld) -> (%ld,%ld)\n",
+		"### CLASS: b3Tx   # b3Blit(): size: %dx%d (%d,%d) -> (%d,%d)\n",
 		xMax, yMax, xSrcOff, ySrcOff, xDstOff, yDstOff);
 	switch (srcTx->type)
 	{

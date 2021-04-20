@@ -61,7 +61,7 @@ int main(int argc, char * argv[])
 		b3PrintF(B3LOG_NORMAL, "Using following values:\n");
 		b3PrintF(B3LOG_NORMAL, "Width  %f - %f:\n", xMin, xMax);
 		b3PrintF(B3LOG_NORMAL, "Height %f - %f:\n", yMin, yMax);
-		b3PrintF(B3LOG_NORMAL, "%lu iterations:\n", iter);
+		b3PrintF(B3LOG_NORMAL, "%d iterations:\n", iter);
 
 		try
 		{

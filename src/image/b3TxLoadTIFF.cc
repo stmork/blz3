@@ -491,10 +491,10 @@ b3_result b3Tx::b3LoadTIFF(
 	yDPI = (b3_res)yDoubleDPI;
 
 	depth = spp * bps;
-	b3PrintF(B3LOG_FULL, "IMG TIFF # xmax:              %4lu\n", xSize);
-	b3PrintF(B3LOG_FULL, "IMG TIFF # ymax:              %4lu\n", ySize);
-	b3PrintF(B3LOG_FULL, "IMG TIFF # x DPI:             %4lu\n", xDPI);
-	b3PrintF(B3LOG_FULL, "IMG TIFF # y DPI:             %4lu\n", yDPI);
+	b3PrintF(B3LOG_FULL, "IMG TIFF # xmax:              %4u\n", xSize);
+	b3PrintF(B3LOG_FULL, "IMG TIFF # ymax:              %4u\n", ySize);
+	b3PrintF(B3LOG_FULL, "IMG TIFF # x DPI:             %4u\n", xDPI);
+	b3PrintF(B3LOG_FULL, "IMG TIFF # y DPI:             %4u\n", yDPI);
 	b3PrintF(B3LOG_FULL, "IMG TIFF # samples per pixel: %4hu\n", spp);
 	b3PrintF(B3LOG_FULL, "IMG TIFF # bits per sample:   %4hu\n", bps);
 	b3PrintF(B3LOG_FULL, "IMG TIFF # photometric:       %4hu\n", pm);

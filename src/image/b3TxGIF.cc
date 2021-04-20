@@ -33,9 +33,9 @@
 
 class b3GifDecoder
 {
-	static const long m_GifFirstRow[4];
-	static const long m_GifNextRow[4];
-	static const long m_GifMask[13];
+	static const b3_res m_GifFirstRow[4];
+	static const b3_res m_GifNextRow[4];
+	static const b3_res m_GifMask[13];
 
 public:
 	b3_size bitsleft, availbytes, currbyte;
@@ -50,7 +50,7 @@ public:
 
 	b3_u32 b3GetNextGifCode(const b3_u08 ** Data, b3_size currsize)
 	{
-		long code;
+		b3_size code;
 
 		if (bitsleft == 0)
 		{
@@ -66,7 +66,7 @@ public:
 			availbytes--;
 		}
 
-		code = (long)(currbyte >> (8 - bitsleft));
+		code = currbyte >> (8 - bitsleft);
 		while (currsize > bitsleft)
 		{
 			if (availbytes <= 0)
@@ -89,17 +89,17 @@ public:
 	friend class b3Tx;
 };
 
-const long b3GifDecoder::m_GifFirstRow[4] =
+const b3_res b3GifDecoder::m_GifFirstRow[4]
 {
 	4, 2, 1, 0
 };
 
-const long b3GifDecoder::m_GifNextRow[4]  =
+const b3_res b3GifDecoder::m_GifNextRow[4]
 {
 	8, 8, 4, 2
 };
 
-const long b3GifDecoder::m_GifMask[13]    =
+const b3_res b3GifDecoder::m_GifMask[13]
 {
 	0x000, 0x001, 0x003, 0x007, 0x00F,
 	0x01F, 0x03F, 0x07F, 0x0FF, 0x1FF,

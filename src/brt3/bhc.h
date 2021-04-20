@@ -92,10 +92,10 @@ public:
 
 	explicit b3ParseException(const char * text, b3_count line)
 	{
-		sprintf(m_Message, "%s (line: %ld)", text, line);
+		sprintf(m_Message, "%s (line: %d)", text, line);
 	}
 
-	const char * what() const noexcept override
+	inline const char * what() const noexcept override
 	{
 		return m_Message;
 	}

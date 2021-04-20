@@ -460,7 +460,7 @@ void b3RenderObject::b3ComputeNormals(bool normalize)
 			(v2 < start) || (v2 >= end) ||
 			(v3 < start) || (v3 >= end))
 		{
-			b3PrintF(B3LOG_NORMAL, "###### %zd: %zd # %zd %zd %zd # %zd # (V: %zd  P: %zd  G: %zd) # (%s:l.%d)\n", i,
+			b3PrintF(B3LOG_NORMAL, "###### %d: %d # %d %d %d # %d # (V: %d  P: %d  G: %d) # (%s:l.%d)\n", i,
 				start, v1, v2, v3, end, glVertexCount, glPolyCount, glGridCount, __FILE__, __LINE__);
 		}
 		else

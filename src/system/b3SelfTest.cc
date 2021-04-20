@@ -44,7 +44,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 {
 	b3_bool     *    ptr;
 
-	b3PrintF(B3LOG_NORMAL, "%zd-Bit-CPU\n", b3Runtime::b3GetCPUBits());
+	b3PrintF(B3LOG_NORMAL, "%d-Bit-CPU\n", b3Runtime::b3GetCPUBits());
 
 	switch (b3Runtime::b3Instance().b3GetCPUType())
 	{

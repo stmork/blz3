@@ -259,13 +259,13 @@ static void b3TestThreadStart2()
 		if (!thread.b3Start(&b3CounterThread, &counter))
 		{
 			b3PrintF(B3LOG_NORMAL, "Thread not started!\n");
-			b3PrintF(B3LOG_NORMAL, "  attempt: %zd\n", i);
-			b3PrintF(B3LOG_NORMAL, "  counter: %zd\n", counter);
+			b3PrintF(B3LOG_NORMAL, "  attempt: %d\n", i);
+			b3PrintF(B3LOG_NORMAL, "  counter: %d\n", counter);
 			return;
 		}
 		thread.b3Wait();
 	}
-	b3PrintF(B3LOG_NORMAL, "  Counter: %zd\n", counter);
+	b3PrintF(B3LOG_NORMAL, "  Counter: %d\n", counter);
 	b3PrintF(B3LOG_NORMAL, "Done.\n\n");
 }
 

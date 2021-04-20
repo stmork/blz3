@@ -232,7 +232,7 @@ int main(int argc, char * argv[])
 			b3Scene::m_RenderPriority = b3Math::b3Clamp(atoi(BLZ3_RENDER_PRIO), -2, 2);
 		}
 
-		b3PrintF(B3LOG_NORMAL, "\nFound %zd CPU core%s.\n",
+		b3PrintF(B3LOG_NORMAL, "\nFound %d CPU core%s.\n",
 			CPUs,
 			CPUs > 1 ? "s" : "");
 
@@ -367,7 +367,7 @@ int main(int argc, char * argv[])
 											b3PrintF(B3LOG_NORMAL, "Rendering frame t=%1.2f\n", t);
 											scene->b3SetAnimation(t);
 											scene->b3Raytrace(display, multi_threaded);
-											img_name.b3Format("%s_%04ld", camera->b3GetName(), count++);
+											img_name.b3Format("%s_%04d", camera->b3GetName(), count++);
 											b3SaveRaytracedImage(
 												display,
 												BLZ3_PICTURES, img_name);

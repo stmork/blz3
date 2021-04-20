@@ -336,7 +336,7 @@ int main(int argc, char * argv[])
 	{
 		b3_count max = 1;
 
-		sscanf(argv[1], "%ld", &max);
+		sscanf(argv[1], "%d", &max);
 
 		b3Suite suite(max);
 

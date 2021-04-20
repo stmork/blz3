@@ -34,12 +34,12 @@
 
 static void InfoGIF(char * name)
 {
-	b3File             in;
-	b3_u08      *      buffer, *data;
-	b3_size            size;
-	b3_count           i, diff, planes;
-	b3_bool            loop = true;
-	struct Extension * transPtr;
+	b3File              in;
+	b3_u08       *      buffer, *data;
+	b3_size             size;
+	b3_count            i, diff, planes;
+	b3_bool             loop = true;
+	struct Extension  * transPtr;
 	struct Descriptor * descrPtr;
 
 	b3PrintF(B3LOG_NORMAL, "\n");
@@ -67,7 +67,7 @@ static void InfoGIF(char * name)
 	b3PrintF(B3LOG_NORMAL, "\n");
 	b3PrintF(B3LOG_NORMAL, "width:  %4ld\n", VAL2(data));
 	b3PrintF(B3LOG_NORMAL, "height: %4ld\n", VAL2(data + 2));
-	b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", planes = ((long)data[4] & 0x07) + 1);
+	b3PrintF(B3LOG_NORMAL, "planes: %4d\n", planes = ((long)data[4] & 0x07) + 1);
 	data += 7;
 	data += ((1 << planes) * 3);
 
@@ -144,7 +144,7 @@ static void InfoGIF(char * name)
 			b3PrintF(B3LOG_NORMAL, "yPos:   %4ld\n", VAL2(descrPtr->yPos));
 			b3PrintF(B3LOG_NORMAL, "xSize:  %4ld\n", VAL2(descrPtr->xSize));
 			b3PrintF(B3LOG_NORMAL, "ySize:  %4ld\n", VAL2(descrPtr->ySize));
-			b3PrintF(B3LOG_NORMAL, "planes: %4ld\n", planes);
+			b3PrintF(B3LOG_NORMAL, "planes: %4d\n", planes);
 			b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n", descrPtr->flags);
 			b3PrintF(B3LOG_NORMAL, "local color table: %s\n",
 				(descrPtr->flags & 0x80) != 0 ? "yes" : "no");

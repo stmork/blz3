@@ -441,7 +441,7 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 	pal      =  RectInfo->new_palette;
 
 	lDst += yMin * dstBytes;
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2Grey(%5d - %5d)\n",
 		yMin, yMax);
 
 	// Alloc some memory
@@ -847,7 +847,7 @@ bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 	srcBytes =  RectInfo->xSizeSrc;
 	dstBytes =  RectInfo->xSizeDst;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(%5ld - %5ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3RGB8ScaleToRGB8(%5d - %5d)\n",
 		yMin, yMax);
 
 	// Alloc some memory
@@ -1267,7 +1267,7 @@ bool b3Tx::b3FloatScaleToRGB8(void * ptr)
 	yDstSize =  RectInfo->ySizeDst;
 	srcBytes =  RectInfo->xSizeSrc;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(%5ld - %5ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FloatScaleToRGB8(%5d - %5d)\n",
 		yMin, yMax);
 
 	// Alloc some memory
@@ -1528,11 +1528,11 @@ void b3Tx::b3ScaleFilteredFromFloat(
 
 void b3Tx::b3ColorGrid()
 {
-	b3_index i, index;
+	b3_index index;
 	b3_count count = 0;
 
 	// Compare palette entries.
-	for (i = 0; i < pSize; i++)
+	for (b3_size i = 0; i < pSize; i++)
 	{
 		if (palette[i] == (b3_pkd_color)(0x010101 * i))
 		{
@@ -1556,7 +1556,7 @@ void b3Tx::b3ColorGrid()
 	}
 
 	// "Check in" palette
-	for (i = 0; i < pSize; i++)
+	for (b3_size i = 0; i < pSize; i++)
 	{
 		index = b3ColorGridIndex(palette[i]);
 		grid[index].b3AddColorIndex(i);
@@ -1757,7 +1757,7 @@ void b3Tx::b3ScaleToGrey(b3Tx * srcTx)
 	if ((xSize <= 0) || (ySize <= 0))
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3ScaleToGrey(): destination image (0x%p) without extend (%ldx%ld)!\n",
+			"### CLASS: b3Tx   # b3ScaleToGrey(): destination image (0x%p) without extend (%dx%d)!\n",
 			this, xSize, ySize);
 		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}
@@ -1845,7 +1845,7 @@ bool b3Tx::b3ScaleBW2BW(void * ptr)
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes = TX_BWA(RectInfo->xSizeDst);
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2BW(%5ld - %5ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3ScaleBW2BW(%5d - %5d)\n",
 		yMin, yMax);
 
 	dst += (yMin * dstBytes);
@@ -2214,7 +2214,7 @@ void b3Tx::b3Scale(b3Tx * srcTx)
 	if ((xSize <= 0) || (ySize <= 0))
 	{
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   # b3Scale(): destination image (0x%p) without extend (%ldx%ld)!\n",
+			"### CLASS: b3Tx   # b3Scale(): destination image (0x%p) without extend (%dx%d)!\n",
 			this, xSize, ySize);
 		B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
 	}

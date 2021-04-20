@@ -69,7 +69,7 @@ b3_result b3Tx::b3ParsePCX8(const b3_u08 * buffer)
 	b3_u08    *    dstPtr, Col;
 	b3_pkd_color   t;
 	b3_res         xNewSize, yNewSize;
-	b3_index       i = 0;
+	b3_size        i = 0;
 
 	b3PrintF(B3LOG_FULL, "IMG PCX  # b3ParsePCX8(%s)\n",
 		(const char *)image_name);
@@ -126,9 +126,9 @@ b3_result b3Tx::b3ParsePCX4(const b3_u08 * buffer)
 {
 	b3_u08    *   srcPtr;
 	b3_u08    *   dstPtr, Col;
-	b3_count      u, xSrcBytes, DataSize;
+	b3_count      u, xSrcBytes;
 	b3_pkd_color  t;
-	b3_index      i;
+	b3_size       i, DataSize;
 
 	b3PrintF(B3LOG_FULL, "IMG PCX  # b3ParsePCX4(%s)\n",
 		(const char *)image_name);

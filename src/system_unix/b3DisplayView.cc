@@ -278,7 +278,7 @@ b3DisplayView::b3DisplayView(const char * title) : b3Display(title)
 #ifdef HAVE_LIBX11
 	b3Open(m_xMax, m_yMax);
 #endif
-	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %lu,%lu (default)\n",
+	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %u,%u (default)\n",
 		m_Title,
 		m_xs, m_ys);
 }
@@ -292,7 +292,7 @@ b3DisplayView::b3DisplayView(
 #ifdef HAVE_LIBX11
 	b3Open(xSize, ySize);
 #endif
-	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %lu,%lu\n",
+	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %u,%u\n",
 		m_Title,
 		m_xs, m_ys);
 }
@@ -478,9 +478,9 @@ void b3DisplayView::b3Open(
 	Values.function      = GXcopy;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_NORMAL, "xMax:   %4ld\n", m_xMax);
-	b3PrintF(B3LOG_NORMAL, "yMax:   %4ld\n", m_yMax);
-	b3PrintF(B3LOG_NORMAL, "dep:    %4ld\n", m_depth);
+	b3PrintF(B3LOG_NORMAL, "xMax:   %4d\n", m_xMax);
+	b3PrintF(B3LOG_NORMAL, "yMax:   %4d\n", m_yMax);
+	b3PrintF(B3LOG_NORMAL, "dep:    %4d\n", m_depth);
 	b3PrintF(B3LOG_NORMAL, "planes: %4d\n", DisplayPlanes(m_Display, m_Screen));
 #endif
 
@@ -578,7 +578,8 @@ b3_bool b3DisplayView::b3CreateColormap()
 		temp.screen   = m_Screen;
 		temp.depth    = m_depth;
 		info = XGetVisualInfo(m_Display, VisualIDMask | VisualScreenMask | VisualDepthMask, &temp, &count);
-		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %ld.\n", count, info, m_depth);
+		b3PrintF(B3LOG_FULL, "%d visuals (%p) found - depth: %d.\n",
+			count, info, m_depth);
 		for (int i = 0; i < count; i++)
 		{
 			b3PrintF(B3LOG_FULL, "%2d: %08lx %08lx %08lx # %4d %4d # %08x\n", i,

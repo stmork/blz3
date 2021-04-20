@@ -80,7 +80,7 @@ b3Runtime::b3Runtime()
 		__ICC / 100, (__ICC / 10) % 10, bits, vu, math);
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d.%d (%ld bit) vector unit: %s math mode: %s",
+	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d.%d (%d bit) vector unit: %s math mode: %s",
 		__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__, cpu_bits, vu, math);
 #	else
 	snprintf(m_Compiler, sizeof(m_Compiler), "GCC V%d.%d (%ld bit) vector unit: %s math mode: %s",

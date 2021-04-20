@@ -63,7 +63,7 @@ b3InfoPS::b3InfoPS(b3Tx * tx, const char * filename) :
 #else
 	fprintf(m_FileHandle, "%%%%DocumentData: Clean7Bit\n");
 	fprintf(m_FileHandle, "%%%%Origin: 0 0\n");
-	fprintf(m_FileHandle, "%%%%BoundingBox: 0 0 %ld %ld\n", xSize, ySize);
+	fprintf(m_FileHandle, "%%%%BoundingBox: 0 0 %d %d\n", xSize, ySize);
 	fprintf(m_FileHandle, "%%%%LanguageLevel: 1\n");
 	fprintf(m_FileHandle, "%%%%Pages: (atend)\n");
 	fprintf(m_FileHandle, "%%%%EndComments\n");
@@ -72,13 +72,13 @@ b3InfoPS::b3InfoPS(b3Tx * tx, const char * filename) :
 	fprintf(m_FileHandle, "%%%%Page: 1 1\n");
 	fprintf(m_FileHandle, "gsave\n");
 	fprintf(m_FileHandle, "100 dict begin\n");
-	fprintf(m_FileHandle, "%ld.000000 %ld.000000 scale\n", xSize, ySize);
-	fprintf(m_FileHandle, "%%ImageData: %ld %ld 8 3 0 %ld 2 \"true 3 colorimage\"\n", xSize, ySize, xSize);
-	fprintf(m_FileHandle, "/line0 %ld string def\n", xSize);
-	fprintf(m_FileHandle, "/line1 %ld string def\n", xSize);
-	fprintf(m_FileHandle, "/line2 %ld string def\n", xSize);
-	fprintf(m_FileHandle, "%ld %ld 8\n", xSize, ySize);
-	fprintf(m_FileHandle, "[%ld 0 0 -%ld 0 %ld]\n", xSize, ySize, ySize);
+	fprintf(m_FileHandle, "%d.000000 %d.000000 scale\n", xSize, ySize);
+	fprintf(m_FileHandle, "%%ImageData: %d %d 8 3 0 %d 2 \"true 3 colorimage\"\n", xSize, ySize, xSize);
+	fprintf(m_FileHandle, "/line0 %d string def\n", xSize);
+	fprintf(m_FileHandle, "/line1 %d string def\n", xSize);
+	fprintf(m_FileHandle, "/line2 %d string def\n", xSize);
+	fprintf(m_FileHandle, "%d %d 8\n", xSize, ySize);
+	fprintf(m_FileHandle, "[%d 0 0 -%d 0 %d]\n", xSize, ySize, ySize);
 	fprintf(m_FileHandle, "{currentfile line0 readhexstring pop}bind\n");
 	fprintf(m_FileHandle, "{currentfile line1 readhexstring pop}bind\n");
 	fprintf(m_FileHandle, "{currentfile line2 readhexstring pop}bind\n");

@@ -754,7 +754,7 @@ void b3Scene::b3ComputeVisibility()
 		bbox->b3ComputeVisibility(&projection);
 	}
 
-	b3PrintF(B3LOG_FULL, "    Visible objects:           %5zd\n", b3BBox::m_Visible);
-	b3PrintF(B3LOG_FULL, "    Partially visible objects: %5zd\n", b3BBox::m_PartiallyVisible);
-	b3PrintF(B3LOG_FULL, "    Invisible objects:         %5zd\n", b3BBox::m_Invisible);
+	b3PrintF(B3LOG_FULL, "    Visible objects:           %5d\n", b3BBox::m_Visible);
+	b3PrintF(B3LOG_FULL, "    Partially visible objects: %5d\n", b3BBox::m_PartiallyVisible);
+	b3PrintF(B3LOG_FULL, "    Invisible objects:         %5d\n", b3BBox::m_Invisible);
 }

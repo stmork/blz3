@@ -228,7 +228,7 @@ bool b3Tx::b3AllocTx(
 		}
 	}
 	FileType  = FT_UNKNOWN;
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits) this=%p type=%d, %ld bytes)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3AllocTx(%dx%d, %d bits) this=%p type=%d, %ld bytes)\n",
 		xSize, ySize, depth, this, type, dSize);
 	return true;
 }
@@ -515,12 +515,12 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 			{
 				memcpy(data,   srcTx->b3GetVoidData(),   dSize);
 			}
-			b3PrintF(B3LOG_FULL, " [data - %ld]", dSize);
+			b3PrintF(B3LOG_FULL, " [data - %zd]", dSize);
 		}
 		if (palette != nullptr)
 		{
 			memcpy(palette, srcTx->b3GetPalette(), std::min(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
-			b3PrintF(B3LOG_FULL, " [palette - %ld]", pSize);
+			b3PrintF(B3LOG_FULL, " [palette - %zd]", pSize);
 		}
 
 
@@ -564,7 +564,7 @@ void b3Tx::b3SetPalette(
 	palette = (b3_pkd_color *)newPalette;
 }
 
-void b3Tx::b3SetData(const b3_tx_data newData, const b3_count size)
+void b3Tx::b3SetData(const b3_tx_data newData, const b3_size size)
 {
 	if (size != dSize)
 	{

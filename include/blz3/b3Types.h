@@ -86,11 +86,11 @@ typedef long double         b3_f96;  //!< Granted extended precision floating po
 // Some other types
 typedef size_t              b3_size;       //!< A size specifier (like size_t).
 typedef off_t               b3_offset;     //!< An offset specifier (like off_t).
-typedef ssize_t             b3_index;      //!< A signed index specifier.
-typedef ssize_t             b3_count;      //!< A signed counter.
-typedef ssize_t             b3_res;        //!< A signed display resolution specifier.
+typedef int                 b3_index;      //!< A signed index specifier.
+typedef int                 b3_count;      //!< A signed counter.
+typedef int                 b3_res;        //!< A signed display resolution specifier.
 typedef b3_u32              b3_pkd_color;  //!< An unsigned color specifier using AARRGGBB as nibbles.
-typedef ssize_t             b3_coord;      //!< A signed coordinate specifier.
+typedef int                 b3_coord;      //!< A signed coordinate specifier.
 typedef int                 b3_loop;       //!< A signed integer for small loops (max. 32 bits, but can be more).
 typedef std::ptrdiff_t      b3_ptr;        //!< A pointer for pointer arithmetics.
 

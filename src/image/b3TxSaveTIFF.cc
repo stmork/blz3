@@ -77,7 +77,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 	char         software[128];
 	b3_tx_error  result = B3_TX_OK;
 
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF paletted image (%ldx%ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF paletted image (%dx%d)\n",
 		xSize, ySize);
 	TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,    ySize);
@@ -134,7 +134,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF * tiff)
 	b3_tx_error  result = B3_TX_OK;
 
 	// setting up tag directory
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF fax G4 (%ldx%ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF fax G4 (%dx%d)\n",
 		xSize, ySize);
 	TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,    ySize);
@@ -179,7 +179,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF * tiff)
 	b3_tx_error   result = B3_TX_OK;
 
 	// setting the TIFF tags
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF true color (%ldx%ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF true color (%dx%d)\n",
 		xSize, ySize);
 	TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,    ySize);
@@ -267,7 +267,7 @@ b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	b3_tx_error   result = B3_TX_OK;
 
 	// setting the TIFF tags
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF real color (%ldx%ld)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx:  # saving TIFF real color (%dx%d)\n",
 		xSize, ySize);
 	TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,     xSize);
 	TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,    ySize);

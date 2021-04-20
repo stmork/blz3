@@ -634,7 +634,7 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 
 	default:
 		// Shouldn't be!
-		b3PrintF(B3LOG_FULL, "Index = %zd\n", Index);
+		b3PrintF(B3LOG_FULL, "Index = %d\n", Index);
 		B3_ASSERT(false);
 		return -1;
 	}
@@ -704,10 +704,10 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 			}
 		}
 		b3Vector::b3LinearCombine(&BTLine, lValue, &polar->m_ObjectPolar);
-		const b3_f64 xp = polar->m_ObjectPolar.x;
-		const b3_f64 yp = polar->m_ObjectPolar.y;
-
+		const b3_f64 xp    = polar->m_ObjectPolar.x;
+		const b3_f64 yp    = polar->m_ObjectPolar.y;
 		const b3_f64 angle = m_aRad - m_aQuad / sqrt(xp * xp + yp * yp);
+
 		polar->m_Polar.x = b3Math::b3RelAngleOfScalars(
 				polar->m_ObjectPolar.x,
 				polar->m_ObjectPolar.y);
@@ -985,7 +985,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 #ifdef _DEBUG
 		if (index >= GridMax)
 		{
-			b3PrintF(B3LOG_NORMAL, "index error: (%2ld,%2ld,%2ld) = %ld\n",
+			b3PrintF(B3LOG_NORMAL, "index error: (%2d,%2d,%2d) = %d\n",
 				gx, gy, gz, index);
 		}
 		else

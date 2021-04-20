@@ -49,7 +49,7 @@ static void b3TestFile(const char * filename)
 	}
 	catch (b3WorldException & e)
 	{
-		b3PrintF(B3LOG_NORMAL, "Error catched processing %s (stage: %zd)\n", filename, stage);
+		b3PrintF(B3LOG_NORMAL, "Error catched processing %s (stage: %d)\n", filename, stage);
 		b3PrintF(B3LOG_NORMAL, "  Error code: %d\n", e.b3GetError());
 		b3PrintF(B3LOG_NORMAL, "  Error msg:  %s\n", e.b3GetErrorMsg());
 		switch (e.b3GetError())

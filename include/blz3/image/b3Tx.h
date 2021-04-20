@@ -361,7 +361,7 @@ private:
 	b3ColorIndices  * grid;
 	b3_tx_data        data;
 	b3_f64            white_ratio;
-	b3_count          dSize, pSize;
+	b3_size           dSize, pSize;
 	b3_tx_type        type;
 	b3_tx_filetype    FileType;
 
@@ -533,7 +533,7 @@ public:
 	 * @param newData The new image data.
 	 * @param size The data size for verification against the internal dSize field.
 	 */
-	void           b3SetData(const b3_tx_data newData, const b3_count size);
+	void           b3SetData(const b3_tx_data newData, const b3_size size);
 
 	/**
 	 * This method returns the file name from which the image was loaded. If the
@@ -775,8 +775,7 @@ public:
 	 * @param srcTx The source image.
 	 * @return True on success.
 	 */
-	bool     b3TxGauss(
-		b3_coord xPos,
+	bool     b3TxGauss(const b3_coord xPos,
 		b3_coord yPos,
 		b3_f64   scale,
 		b3_f64   sigma,

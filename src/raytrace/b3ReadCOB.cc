@@ -348,10 +348,10 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	b3_size    len;
 	b3_cob_id  id, parent;
 	b3_count   ver, rev;
-	long int   size;
+	b3_size    size;
 
 	len = b3COB_GetLine(line, buffer, sizeof(line));
-	sscanf(line, "Grou V%ld.%ld Id %d Parent %d Size %08ld",
+	sscanf(line, "Grou V%d.%d Id %d Parent %d Size %08zd",
 		&ver, &rev, &id, &parent, &size);
 
 	b3COB_GetLine(line, &buffer[len + 1], sizeof(line));
@@ -361,7 +361,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	}
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "G: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu\n",
+	b3PrintF(B3LOG_FULL, "G: V%d.%02d ID: %8d P: %8d - size: %8zd,%8zd\n",
 		ver, rev, id, parent, len, size);
 #endif
 
@@ -404,10 +404,11 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #ifdef _DEBUG
 	b3_count         dbgCount = 0;
 #endif
-	long int         size, i, len, index;
+	b3_size          size, len, i;
+	b3_index         index;
 
 	len = b3COB_GetLine(line, buffer, sizeof(line));
-	sscanf(line, "PolH V%ld.%ld Id %d Parent %d Size %08ld",
+	sscanf(line, "PolH V%d.%d Id %d Parent %d Size %08zd",
 		&ver, &rev, &id, &parent, &size);
 
 	if (parent == 0)
@@ -432,7 +433,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	}
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "P: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu\n",
+	b3PrintF(B3LOG_FULL, "P: V%d.%02d ID: %8d P: %8d - size: %8zd,%8zd\n",
 		ver, rev, id, parent, len, size);
 #endif
 
@@ -443,7 +444,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 
 		/* read number of polygons, number of triangles */
-		if (sscanf(line, "Faces %ld", &polygons) == 1)
+		if (sscanf(line, "Faces %d", &polygons) == 1)
 		{
 			fPos  = i + len + 1;
 			faces = 0;
@@ -452,7 +453,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				i += (len + 1);
 				len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 				rev = 2;
-				if (sscanf(line, "Face verts %ld", &rev) == 1)
+				if (sscanf(line, "Face verts %d", &rev) == 1)
 				{
 					faces += (rev - 2);
 				}
@@ -463,7 +464,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		}
 
 		/* read number of vertices */
-		if (sscanf(line, "World Vertices %ld", &vertices) == 1)
+		if (sscanf(line, "World Vertices %d", &vertices) == 1)
 		{
 			vPos  = i + len + 1;
 		}
@@ -493,7 +494,8 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		}
 	}
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "%ld vertices, %ld polygons, %ld triangles\n", vertices, polygons, faces);
+	b3PrintF(B3LOG_FULL, "%d vertices, %d polygons, %d triangles\n",
+		vertices, polygons, faces);
 #endif
 
 	TriaShape = new b3Triangles(TRIANGLES);
@@ -525,7 +527,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			{
 				len = b3COB_GetLine(line, &buffer[i], sizeof(line));
 				rev = 0;
-				if (sscanf(line, "Face verts %ld", &rev) == 1)
+				if (sscanf(line, "Face verts %d", &rev) == 1)
 				{
 					rev -= 2;
 				}
@@ -536,13 +538,13 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #ifndef SINGLE_CYCLE
 				b3Array<b3_index> IDs;
 				b3_index          u, l;
-				long int          read;
+				b3_size           read;
 
 				/* first, scan indices */
 				rev += 2;
 				for (k = 0, len = 0; k < rev; k++)
 				{
-					sscanf(&line[len], "<%ld,%*d> %ln", &read, &index);
+					sscanf(&line[len], "<%zd,%*d> %d", &read, &index);
 					IDs.b3Add(read);
 					len += index;
 				}
@@ -629,14 +631,14 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 	b3_count     ver, rev;
 	b3_cob_id    id, parent;
 	b3_f32       ambient = 0, specular = 0, alpha, r, g, b;
-	long int     size, i, len;
+	b3_size      size, len, i;
 
 	len = b3COB_GetLine(line, buffer, sizeof(line));
-	sscanf(line, "Mat1 V%ld.%ld Id %d Parent %d Size %08ld",
+	sscanf(line, "Mat1 V%d.%d Id %d Parent %d Size %08zd",
 		&ver, &rev, &id, &parent, &size);
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "M: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu\n",
+	b3PrintF(B3LOG_FULL, "M: V%d.%02d ID: %8d P: %8d - size: %8zd,%8zd\n",
 		ver, rev, id, parent, len, size);
 #endif
 
@@ -710,16 +712,16 @@ b3_size b3COBReader::b3COB_ParseDummy(const char * buffer)
 {
 	char       line[MAX_LINE];
 	char       command[8];
-	long int   len, size;
+	b3_size    size, len;
 	b3_count   ver, rev;
 	b3_cob_id  id, parent;
 
 	len = b3COB_GetLine(line, buffer, sizeof(line));
-	sscanf(line, "%4s V%ld.%ld Id %d Parent %d Size %08ld",
+	sscanf(line, "%4s V%d.%d Id %d Parent %d Size %08zd",
 		command, &ver, &rev, &id, &parent, &size);
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "D: V%ld.%02ld ID: %8d P: %8d - size: %8lu,%8lu (%c%c%c%c)\n",
+	b3PrintF(B3LOG_FULL, "D: V%d.%02d ID: %8d P: %8d - size: %8zd,%8zd (%c%c%c%c)\n",
 		ver, rev, id, parent, len, size,
 		command[0],
 		command[1],

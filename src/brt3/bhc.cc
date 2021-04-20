@@ -229,7 +229,7 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 	b3_count         args;
 	b3_vector        normal;
 
-	args = sscanf(&m_Line[m_Pos], "%*s %s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
+	args = sscanf(&m_Line[m_Pos], "%*s %s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 			room->m_BoxName,
 			&index[ 0], &index[ 1], &index[ 2], &index[ 3], &index[ 4],
 			&index[ 5], &index[ 6], &index[ 7], &index[ 8], &index[ 9],
@@ -458,7 +458,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 			cond->m_yEnd   =  1;
 			right->b3GetConditionHead()->b3Append(cond);
 
-			b3PrintF(B3LOG_DEBUG, "       Added door/window of line %ld\n", m_Openings[i].line);
+			b3PrintF(B3LOG_DEBUG, "       Added door/window of line %d\n", m_Openings[i].line);
 		}
 
 		if ((m_Openings[i].a == b) && (m_Openings[i].b == a))
@@ -479,7 +479,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_i
 			}
 			area->b3GetConditionHead()->b3Append(cond);
 
-			b3PrintF(B3LOG_DEBUG, "       Used door/window of line %ld\n", m_Openings[i].line);
+			b3PrintF(B3LOG_DEBUG, "       Used door/window of line %d\n", m_Openings[i].line);
 		}
 	}
 }
@@ -489,7 +489,7 @@ void b3BHDParser::b3ParseWindow(b3_f64 scale)
 	b3_door window;
 
 	b3PrintF(B3LOG_DEBUG, "    creating window...\n");
-	if (sscanf(&m_Line[m_Pos], "%*s %ld %ld %lf %lf %lf %lf\n",
+	if (sscanf(&m_Line[m_Pos], "%*s %d %d %lf %lf %lf %lf\n",
 			&window.a, &window.b,
 			&window.pos, &window.base,
 			&window.width, &window.height) != 6)
@@ -508,7 +508,7 @@ void b3BHDParser::b3ParseDoor(b3_f64 scale)
 	b3_door  door;
 
 	b3PrintF(B3LOG_DEBUG, "    creating door...\n");
-	if (sscanf(&m_Line[m_Pos], "%*s %ld %ld %lf %lf\n",
+	if (sscanf(&m_Line[m_Pos], "%*s %d %d %lf %lf\n",
 			&door.a, &door.b,
 			&door.pos, &door.width) != 4)
 	{

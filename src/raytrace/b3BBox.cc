@@ -151,7 +151,7 @@ bool b3BBox::b3PrepareBBox(b3_scene_preparation * scene_prep, bool recursive)
 				"Not enough static memory for CSG computation [%s].\n",
 				b3GetName());
 			b3PrintF(B3LOG_NORMAL,
-				"Found %zd shapes with %zd max. possible intersections.\n",
+				"Found %d shapes with %d max. possible intersections.\n",
 				m_ShapeCount, m_CSGIntersectionCount);
 
 			return false;
@@ -386,7 +386,7 @@ void b3BBox::b3Dump(b3_count level) const
 {
 	level = b3GetType();
 	b3DumpSpace(level);
-	b3PrintF(B3LOG_NORMAL, "Object %s (level %zd)\n", m_BoxName, level);
+	b3PrintF(B3LOG_NORMAL, "Object %s (level %d)\n", m_BoxName, level);
 
 	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{

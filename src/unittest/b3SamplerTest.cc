@@ -226,7 +226,7 @@ public:
 		m_Factor = 1.0;
 		m_Time   = 0.0;
 
-		b3PrintF(B3LOG_NORMAL, "octaves=%ld\n", m_Octaves);
+		b3PrintF(B3LOG_NORMAL, "octaves=%d\n", m_Octaves);
 		b3PrintF(B3LOG_NORMAL, "Km=%3.3f\n", m_Km);
 		b3PrintF(B3LOG_NORMAL, "wind: frequency=%3.3f min=%3.3f amp=%3.3f\n",
 			m_WindFreq, m_MinWind, m_WindAmp);

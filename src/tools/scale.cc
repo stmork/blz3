@@ -156,9 +156,9 @@ private:
 		ext.b3ExtractExt(source);
 		if (b3Tx::b3GetFileType(ext) == FT_JPEG)
 		{
-			b3File  src;
+			b3File   src;
 			b3_u08 * buffer;
-			b3_size size;
+			b3_size  size;
 
 			buffer = src.b3ReadBuffer(source, size);
 			if (buffer != nullptr)
@@ -171,7 +171,7 @@ private:
 			{
 				return false;
 			}
-			b3PrintF(B3LOG_NORMAL, "   %s (copied %ld bytes)\n", (const char *)full_normal, size);
+			b3PrintF(B3LOG_NORMAL, "   %s (copied %zd bytes)\n", (const char *)full_normal, size);
 		}
 		else
 		{
@@ -213,7 +213,7 @@ private:
 				xSize = (b3_res)(scale * normal.xSize);
 				ySize = (b3_res)(scale * normal.ySize);
 
-				b3PrintF(B3LOG_NORMAL, "   %s - %ldx%ld - %3.3f\n",
+				b3PrintF(B3LOG_NORMAL, "   %s - %dx%d - %3.3f\n",
 					(const char *)full_small, xSize, ySize, scale);
 				if (small.b3AllocTx(xSize, ySize, 24))
 				{

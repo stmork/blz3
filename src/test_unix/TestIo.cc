@@ -146,6 +146,5 @@ int main(int argc, char * argv[])
 	b3PrintF(B3LOG_FULL, "Using SSE2 algorithms.\n");
 #endif
 
-	B3_BEEP;
 	return EXIT_SUCCESS;
 }

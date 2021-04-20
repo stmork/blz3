@@ -1036,12 +1036,12 @@ void b3Tx::b3Turn()
 }
 
 bool b3Tx::b3TxGauss(
-	long   xPos,
-	long   yPos,
-	b3_f64 scale,
-	b3_f64 sigma,
-	b3_f64 niveau,
-	b3_f64 slope,
+	const b3_coord     xPos,
+	b3_coord     yPos,
+	b3_f64       scale,
+	b3_f64       sigma,
+	b3_f64       niveau,
+	b3_f64       slope,
 	const b3Tx * src)
 {
 	if (src == nullptr)
@@ -1332,7 +1332,7 @@ bool b3Tx::b3TxContrast(
 
 bool b3Tx::b3TxReduce(const b3Tx * src)
 {
-	b3_index       i, p, count, index;
+	b3_index       i, count, index;
 	b3_pkd_color * srcPtr = src->b3GetTrueColorData(), color;
 	b3_u08    *    dstPtr = b3GetIndexData();
 
@@ -1361,7 +1361,7 @@ bool b3Tx::b3TxReduce(const b3Tx * src)
 
 		color = *srcPtr++;
 		index = pSize;
-		for (p = 0; p < pSize; p++)
+		for (b3_size p = 0; p < pSize; p++)
 		{
 			b3Color srcColor(color);
 			b3Color palColor(palette[p]);

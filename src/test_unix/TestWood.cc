@@ -68,7 +68,7 @@ protected:
 		b3_f64 mix = b3ComputeWood(&sample, 1.0);
 		result = b3Color::b3Mix(m_Dark, m_Light, mix);
 		b3PrintF(B3LOG_FULL,
-			"%3zd %3zd: %06x - %1.4f %2.3f %2.3f %2.3f\n",
+			"%3d %3d: %06x - %1.4f %2.3f %2.3f %2.3f\n",
 			x, y, b3_pkd_color(result), mix, sample.x, sample.y, sample.z);
 		return result;
 	}
@@ -119,7 +119,7 @@ protected:
 		b3_f64 mix = b3ComputeOakPlank(&sample, 1.0, index);
 		result = b3Color::b3Mix(m_Dark, m_Light, mix);
 		b3PrintF(B3LOG_NORMAL,
-			"%3zd %3zd: %06x - %1.4f / %2zd - %2.3f %2.3f %2.3f\n",
+			"%3d %3d: %06x - %1.4f / %2d - %2.3f %2.3f %2.3f\n",
 			x, y, b3_pkd_color(result), mix, index, sample.x, sample.y, sample.z);
 		return result;
 	}

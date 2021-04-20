@@ -127,7 +127,7 @@ static void b3PlayAnimation()
 		while (t < animation->m_End);
 
 		span = now - start;
-		b3PrintF(B3LOG_NORMAL, "Rendered %zd frames in %3.2lf seconds with %3.3lf frames/sec.\n",
+		b3PrintF(B3LOG_NORMAL, "Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
 			count, span, (double)count / span);
 	}
 }
@@ -244,9 +244,9 @@ static void b3Update(b3Scene * scene)
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower, &upper);
 
-	b3PrintF(B3LOG_NORMAL, "%zd vertices\n",  context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL, "%zd triangles\n", context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL, "%zd grids\n",     context.glGridCount);
+	b3PrintF(B3LOG_NORMAL, "%d vertices\n",  context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL, "%d triangles\n", context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL, "%d grids\n",     context.glGridCount);
 
 	// Setup view
 	view.b3SetBounds(&lower, &upper);

@@ -228,13 +228,13 @@ void b3Mandel::b3Compute(
 	b3PrintF(B3LOG_NORMAL, "Using following values:\n");
 	b3PrintF(B3LOG_NORMAL, "Width  %f - %f.\n", xMin, xMax);
 	b3PrintF(B3LOG_NORMAL, "Height %f - %f.\n", yMin, yMax);
-	b3PrintF(B3LOG_NORMAL, "Max. %lu iterations per pixel.\n", iter);
+	b3PrintF(B3LOG_NORMAL, "Max. %d iterations per pixel.\n", iter);
 
 	display->b3GetRes(xSize, ySize);
 
 	// Determine number of CPU's
 	CPUs = b3Runtime::b3GetNumCPUs();
-	b3PrintF(B3LOG_NORMAL, "Using %zd CPU%s.\n",
+	b3PrintF(B3LOG_NORMAL, "Using %d CPU%s.\n",
 		CPUs,
 		CPUs > 1 ? "'s" : "");
 

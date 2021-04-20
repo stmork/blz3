@@ -579,17 +579,17 @@ void b3ImageTest::testScaleUnfiltered()
 		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
 
-		path.b3Format("img_test_scale_us_%03ld.jpg", depth);
+		path.b3Format("img_test_scale_us_%03d.jpg", depth);
 		dst_smaller.b3AllocTx(src.xSize * 0.8, src.ySize * 0.8, depth);
 		dst_smaller.b3Scale(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_smaller.b3SaveImage(path));
 
-		path.b3Format("img_test_scale_ub_%03ld.jpg", depth);
+		path.b3Format("img_test_scale_ub_%03d.jpg", depth);
 		dst_bigger.b3AllocTx(src.xSize * 1.4, src.ySize * 1.4, depth);
 		dst_bigger.b3Scale(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_bigger.b3SaveImage(path));
 
-		path.b3Format("img_test_scale_uh_%03ld.jpg", depth);
+		path.b3Format("img_test_scale_uh_%03d.jpg", depth);
 		CPPUNIT_ASSERT(dst_huger.b3AllocTx(1024, 1024, depth));
 		dst_huger.b3Scale(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_huger.b3SaveImage(path));
@@ -609,17 +609,17 @@ void b3ImageTest::testScaleFiltered()
 		CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
 
-		path.b3Format("img_test_scale_fs_%03ld-%03ld.jpg", depth, depth);
+		path.b3Format("img_test_scale_fs_%03d-%03d.jpg", depth, depth);
 		CPPUNIT_ASSERT(dst_smaller.b3AllocTx(src.xSize * 0.8, src.ySize * 0.8, 32));
 		dst_smaller.b3ScaleToGrey(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_smaller.b3SaveImage(path));
 
-		path.b3Format("img_test_scale_fb_%03ld-%03ld.jpg", depth, depth);
+		path.b3Format("img_test_scale_fb_%03d-%03d.jpg", depth, depth);
 		CPPUNIT_ASSERT(dst_bigger.b3AllocTx(src.xSize * 1.4, src.ySize * 1.4, 32));
 		dst_bigger.b3ScaleToGrey(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_bigger.b3SaveImage(path));
 
-		path.b3Format("img_test_scale_fh_%03ld-%03ld.jpg", depth, depth);
+		path.b3Format("img_test_scale_fh_%03d-%03d.jpg", depth, depth);
 		CPPUNIT_ASSERT(dst_huger.b3AllocTx(1024, 1024, 32));
 		dst_huger.b3ScaleToGrey(&src);
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst_huger.b3SaveImage(path));
@@ -632,12 +632,12 @@ void b3ImageTest::testScaleFiltered()
 
 	bw.b3AllocTx(50, 50, 1);
 
-	path.b3Format("img_test_scale_fs_%03ld-%03ld.jpg", bw.depth, vga_smaller.depth);
+	path.b3Format("img_test_scale_fs_%03d-%0d.jpg", bw.depth, vga_smaller.depth);
 	CPPUNIT_ASSERT(vga_bigger.b3AllocTx(bw.xSize * 0.8, bw.ySize * 0.8, 32));
 	vga_bigger.b3ScaleToGrey(&bw);
 	CPPUNIT_ASSERT_EQUAL(B3_OK, vga_bigger.b3SaveImage(path));
 
-	path.b3Format("img_test_scale_fb_%03ld-%03ld.jpg", bw.depth, vga_bigger.depth);
+	path.b3Format("img_test_scale_fb_%03d-%03d.jpg", bw.depth, vga_bigger.depth);
 	CPPUNIT_ASSERT(vga_bigger.b3AllocTx(bw.xSize * 1.4, bw.ySize * 1.4, 32));
 	vga_bigger.b3ScaleToGrey(&bw);
 	CPPUNIT_ASSERT_EQUAL(B3_OK, vga_bigger.b3SaveImage(path));
@@ -650,7 +650,7 @@ void b3ImageTest::testTransToGrey()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_grey_%03ld.jpg", depth);
+		path.b3Format("img_test_grey_%03d.jpg", depth);
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
@@ -666,7 +666,7 @@ void b3ImageTest::testTransToBlackWhite()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_bw_%03ld.tiff", depth);
+		path.b3Format("img_test_bw_%03d.tiff", depth);
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT(tx.b3TransToBW(m_TxMap[depth]));
 		CPPUNIT_ASSERT_EQUAL(B3_OK, tx.b3SaveImage(path));
@@ -682,7 +682,7 @@ void b3ImageTest::testMirror()
 			b3Tx   src;
 			b3Path path;
 
-			path.b3Format("img_test_mirror_%03ld.jpg", depth);
+			path.b3Format("img_test_mirror_%03d.jpg", depth);
 			CPPUNIT_ASSERT(src.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 			CPPUNIT_ASSERT_NO_THROW(src.b3Copy(m_TxMap[depth]));
 
@@ -700,7 +700,7 @@ void b3ImageTest::testHist()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_hist_%03ld.jpg", depth);
+		path.b3Format("img_test_hist_%03d.jpg", depth);
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
@@ -715,7 +715,7 @@ void b3ImageTest::testNegate()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_negate_%03ld.jpg", depth);
+		path.b3Format("img_test_negate_%03d.jpg", depth);
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
@@ -731,7 +731,7 @@ void b3ImageTest::testTurnLeft()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_turn_left_%03ld.jpg", depth);
+		path.b3Format("img_test_turn_left_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
 		tx.b3TurnLeft();
@@ -746,7 +746,7 @@ void b3ImageTest::testTurn()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_turn_%03ld.jpg", depth);
+		path.b3Format("img_test_turn_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
 		tx.b3Turn();
@@ -761,7 +761,7 @@ void b3ImageTest::testTurnRight()
 		b3Tx   tx;
 		b3Path path;
 
-		path.b3Format("img_test_turn_right_%03ld.jpg", depth);
+		path.b3Format("img_test_turn_right_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
 		tx.b3TurnRight();
@@ -773,7 +773,7 @@ void b3ImageTest::testRemoveBlackBorder()
 {
 	b3Path path;
 
-	path.b3Format("img_test_rbb_%03ld.tiff", m_TxBW.depth);
+	path.b3Format("img_test_rbb_%03d.tiff", m_TxBW.depth);
 	m_TxBW.b3RemoveBlackBorder();
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxBW.b3SaveImage(path));
 }
@@ -782,7 +782,7 @@ void b3ImageTest::testShrink()
 {
 	b3Path path;
 
-	path.b3Format("img_test_shrink_%03ld.tiff", m_TxBW.depth);
+	path.b3Format("img_test_shrink_%03d.tiff", m_TxBW.depth);
 	m_TxBW.b3Shrink();
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxBW.b3SaveImage(path));
 }
@@ -794,7 +794,7 @@ void b3ImageTest::testBlitSimple()
 		b3Tx   dst;
 		b3Path path;
 
-		path.b3Format("img_test_blit_%03ld.jpg", depth);
+		path.b3Format("img_test_blit_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(m_TxMap[depth],
 				19, 27, 113, 127, 37, 41));
@@ -810,13 +810,13 @@ void b3ImageTest::testBlitClipped()
 		b3Tx         dst;
 		b3Path       path;
 
-		path.b3Format("img_test_blit_clipped1_%03ld.jpg", depth);
+		path.b3Format("img_test_blit_clipped1_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
 				dst.xSize - 83, dst.ySize - 91, 113, 127, 37, 41));
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-		path.b3Format("img_test_blit_clipped2_%03ld.jpg", depth);
+		path.b3Format("img_test_blit_clipped2_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
 				-83, -91, 113, 127, 37, 41));
@@ -832,13 +832,13 @@ void b3ImageTest::testBlitOutside()
 		b3Tx         dst;
 		b3Path       path;
 
-		path.b3Format("img_test_blit_out1_%03ld.jpg", depth);
+		path.b3Format("img_test_blit_out1_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
 				dst.xSize + 83, dst.ySize + 91, 113, 127, 37, 41));
 		CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-		path.b3Format("img_test_blit_out2_%03ld.jpg", depth);
+		path.b3Format("img_test_blit_out2_%03d.jpg", depth);
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Copy(&m_TxTrueColor));
 		CPPUNIT_ASSERT_NO_THROW(dst.b3Blit(src,
 				83, 91, 113, 127, src->xSize + 151, src->ySize + 227));
@@ -872,12 +872,12 @@ void b3ImageTest::testGauss()
 		{
 			b3Path path;
 
-			path.b3Format("img_test_gauss_%03ld-20.jpg", depth);
+			path.b3Format("img_test_gauss_%03d-20.jpg", depth);
 			CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 32));
 			CPPUNIT_ASSERT(dst.b3TxGauss(src->xSize >> 1, src->ySize >> 1, 1.0, 0.5, 0.0, 0.0, src));
 			CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-			path.b3Format("img_test_gauss_%03ld-80.jpg", depth);
+			path.b3Format("img_test_gauss_%03d-80.jpg", depth);
 			CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, 128));
 			CPPUNIT_ASSERT(dst.b3TxGauss(src->xSize >> 1, src->ySize >> 1, 1.0, 0.5, 0.0, 0.0, src));
 			CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
@@ -904,27 +904,27 @@ void b3ImageTest::testFilter()
 
 			if ((dst_depth > 8) || ((dst_depth <= 8) && (depth <= 8) && (dst_depth != 1) && (depth != 1)))
 			{
-				path.b3Format("img_test_filter_n_%03ld_%03ld.jpg", depth, dst_depth);
+				path.b3Format("img_test_filter_n_%03d_%03d.jpg", depth, dst_depth);
 				CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, dst_depth));
 				CPPUNIT_ASSERT(dst.b3TxColorFilter(1.0, 1.0, 1.0, src));
 				CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-				path.b3Format("img_test_filter_r_%03ld_%03ld.jpg", depth, dst_depth);
+				path.b3Format("img_test_filter_r_%03d_%03d.jpg", depth, dst_depth);
 				CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, dst_depth));
 				CPPUNIT_ASSERT(dst.b3TxColorFilter(1.0, 0.25, 0.25, src));
 				CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-				path.b3Format("img_test_filter_g_%03ld_%03ld.jpg", depth, dst_depth);
+				path.b3Format("img_test_filter_g_%03d_%03d.jpg", depth, dst_depth);
 				CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, dst_depth));
 				CPPUNIT_ASSERT(dst.b3TxColorFilter(0.25, 1.0, 0.25, src));
 				CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-				path.b3Format("img_test_filter_b_%03ld_%03ld.jpg", depth, dst_depth);
+				path.b3Format("img_test_filter_b_%03d_%03d.jpg", depth, dst_depth);
 				CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, dst_depth));
 				CPPUNIT_ASSERT(dst.b3TxColorFilter(0.25, 0.25, 1.0, src));
 				CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));
 
-				path.b3Format("img_test_filter_o_%03ld_%03ld.jpg", depth, dst_depth);
+				path.b3Format("img_test_filter_o_%03d_%03d.jpg", depth, dst_depth);
 				CPPUNIT_ASSERT(dst.b3AllocTx(src->xSize, src->ySize, dst_depth));
 				CPPUNIT_ASSERT(dst.b3TxColorFilter(2.0, 2.0, 2.0, src));
 				CPPUNIT_ASSERT_EQUAL(B3_OK, dst.b3SaveImage(path));

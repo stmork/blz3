@@ -48,9 +48,9 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
 	b3SetCamera(m_Scene->b3GetFirstCamera(false));
 	b3SetLights();
 
-	b3PrintF(B3LOG_NORMAL, "%7zd vertices\n",  m_Context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL, "%7zd triangles\n", m_Context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL, "%7zd grids\n",     m_Context.glGridCount);
+	b3PrintF(B3LOG_NORMAL, "%7d vertices\n",  m_Context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL, "%7d triangles\n", m_Context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL, "%7d grids\n",     m_Context.glGridCount);
 }
 
 void QB3OpenGLWidget::b3SetCamera(b3CameraPart * camera)
