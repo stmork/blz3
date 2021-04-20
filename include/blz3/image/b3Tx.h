@@ -1330,16 +1330,12 @@ private:
 	b3_pkd_color   b3ILBMValue(const b3_coord x, const b3_coord y) const;
 
 	// b3Tx.cc
-	void           b3CopyILBMtoVGA(b3_u08    *   row, b3_coord y) const;
+	void           b3CopyILBMtoVGA(b3_u08     *    row, b3_coord y) const;
 	void           b3CopyILBMtoRGB8(b3_pkd_color * row, b3_coord y) const;
 	void           b3CopyILBMtoFloat(b3_color   *  row, b3_coord y) const;
 
 	// b3Tx.cc
 	void           b3GetILBM(b3_pkd_color * row, b3_coord y) const;
-	void           b3GetRGB4(b3_pkd_color * row, b3_coord y) const;
-	void           b3GetRGB8(b3_pkd_color * row, b3_coord y) const;
-	void           b3GetVGA(b3_pkd_color * row, b3_coord y) const;
-	void           b3GetFloat(b3_pkd_color * row, b3_coord y) const;
 
 	// b3TxImage.cc
 	b3_count       b3BuildRLE(b3_count * row, b3_u08 * rle);
@@ -1433,6 +1429,5 @@ private:
 
 	friend class b3TxAlgorithms;
 };
-
 
 #endif

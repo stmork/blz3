@@ -367,10 +367,12 @@ void b3ImageTest::testRow()
 	color.b3SetData(data_u32, sizeof(data_u32));
 	color.b3GetRow(row_u32, 0);
 	color.b3GetRow(row_col, 0);
-	for (i = 0; i < hdr.xSize; i++)
+	for (i = 0; i < color.xSize; i++)
 	{
+		const b3_pkd_color value = b3Color(row_col[i]);
+
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
-		CPPUNIT_ASSERT(data_col[i] == row_col[i]);
+		CPPUNIT_ASSERT_EQUAL(data_u32[i], value);
 	}
 
 	CPPUNIT_ASSERT(hdr.b3AllocTx(DATA_SIZE(data_col), 1, 128));
@@ -379,7 +381,9 @@ void b3ImageTest::testRow()
 	hdr.b3GetRow(row_col, 0);
 	for (i = 0; i < hdr.xSize; i++)
 	{
-		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
+		const b3Color value(row_u32[i]);
+
+		CPPUNIT_ASSERT(data_col[i] == value);
 		CPPUNIT_ASSERT(data_col[i] == row_col[i]);
 	}
 }

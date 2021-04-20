@@ -190,27 +190,23 @@ b3_tx_divide b3_tx_divide::TxDivide;
 **                                                                      **
 *************************************************************************/
 
-#define BOOM
-
 class b3_tx_mask
 {
 	static       b3_tx_mask TxMask;
-
-	b3_u08     TxBitCount[256];
-	b3_u08     TxBitCountInv[256];
 	static const b3_u08     TxMaskLeft[8];
 	static const b3_u08     TxMaskRight[8];
 
+	b3_u08     TxBitCount[256];
+	b3_u08     TxBitCountInv[256];
+
 	b3_tx_mask()
 	{
-		b3_loop  i, bit;
-		b3_u08   count;
-
 		// For each possible value...
-		for (i = 0; i < 256; i++)
+		for (unsigned i = 0; i < 256; i++)
 		{
-			count = 0;
-			for (bit = 128; bit != 0; bit = bit >> 1)
+			b3_u08 count = 0;
+
+			for (b3_u08 bit = 128; bit != 0; bit = bit >> 1)
 			{
 				if (i & bit)
 				{
@@ -220,7 +216,7 @@ class b3_tx_mask
 
 			// Set number of set bits for each possible value [0;255]
 			TxBitCount[i]    = count;
-			TxBitCountInv[i] = (b3_u08)(8 - count);
+			TxBitCountInv[i] = 8 - count;
 		}
 	}
 
@@ -263,12 +259,10 @@ void b3Tx::b3ComputeLineBigger(
 	const b3_u08  *  src,
 	const b3_res     xDstSize)
 {
-	b3_coord xDst;
-	b3_index index;
-
-	for (xDst = 0; xDst < xDstSize; xDst++)
+	for (b3_coord xDst = 0; xDst < xDstSize; xDst++)
 	{
-		index = rIndex[xDst];
+		const b3_index index = rIndex[xDst];
+
 		if (src[index >> 3] & m_Bits[index & 7])
 		{
 			TxRowCounter[xDst]++;
@@ -383,23 +377,23 @@ void b3Tx::b3ComputeLineSmaller(
 
 bool b3Tx::b3ScaleBW2Grey(void * ptr)
 {
-	b3Mem          pool;
-	b3_rect_info * RectInfo;
-	b3_tx_type     dstType;
-	b3_u08    *    src;
-	b3_u08    *    cDst;
-	b3_pkd_color * lDst;
-	b3_pkd_color * pal;
-	const b3_count   *   rIndex;
-	const b3_count   *   cIndex;
-	b3_count   *   TxRowCounter;
-	b3_count   *   TxRowCells;
-	b3_res         xSrcSize;
-	b3_res         ySrcSize, ySrc;
-	b3_res         xDstSize, xDst;
-	b3_res         yDstSize, yDst;
-	b3_count       srcBytes, dstBytes;
-	b3_res         yMin, yMax;
+	b3Mem            pool;
+	b3_rect_info  *  RectInfo;
+	b3_tx_type       dstType;
+	b3_u08     *     src;
+	b3_u08     *     cDst;
+	b3_pkd_color  *  lDst;
+	b3_pkd_color  *  pal;
+	const b3_count * rIndex;
+	const b3_count * cIndex;
+	b3_count    *    TxRowCounter;
+	b3_count    *    TxRowCells;
+	b3_res           xSrcSize;
+	b3_res           ySrcSize, ySrc;
+	b3_res           xDstSize, xDst;
+	b3_res           yDstSize, yDst;
+	b3_count         srcBytes, dstBytes;
+	b3_res           yMin, yMax;
 	void (*ComputeLine)(
 		b3_count * TxRowCounter,
 		b3_count * TxRowCells,
@@ -439,7 +433,7 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 	catch (std::bad_alloc & e)
 	{
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Tx   # %s(): "
-			"Not enough memory for row cell sizes\n",
+			"Not enough memory for row cell counter!\n",
 			__FUNCTION__);
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
@@ -553,11 +547,11 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 
 bool b3Tx::b3ScaleBW2Grey(void * ptr)
 {
-	b3_rect_info *   RectInfo;
+	b3_rect_info  *  RectInfo;
 	const b3_count * rIndex;
 	const b3_count * cIndex;
-	b3_pkd_color *   tx_pal;
-	b3_u08      *    src, *dst, byte;
+	b3_pkd_color  *  tx_pal;
+	b3_u08     *     src, *dst, byte;
 	b3_u08           bit;
 	b3_count         srcBytes, dstBytes;
 	b3_index         value, index;

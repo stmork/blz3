@@ -27,6 +27,8 @@
 #include <blz3/base/b3Color.h>
 #include <blz3/base/b3Math.h>
 
+#include "b3TxAlgorithms.h"
+
 /*************************************************************************
 **                                                                      **
 **                        some constant tables                          **
@@ -534,7 +536,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 
 	xDPI        = srcTx->xDPI;
 	yDPI        = srcTx->yDPI;
-	white_ratio  = srcTx->white_ratio;
+	white_ratio = srcTx->white_ratio;
 	ScanLines   = srcTx->ScanLines;
 }
 
@@ -818,139 +820,49 @@ inline void b3Tx::b3GetILBM(
 	}
 }
 
-inline void b3Tx::b3GetRGB8(
-	b3_pkd_color  * dst,
-	const b3_coord  y) const
-{
-	b3_pkd_color * src;
-
-	src = b3GetTrueColorData();
-#if 0
-	memcpy(dst, &src[y * xSize], xSize * sizeof(b3_pkd_color));
-#else
-	b3_coord x;
-	b3_res   xInnerMax, xOuterMax;
-
-	src += (y * xSize);
-
-	xOuterMax = xSize >> 3;
-	xInnerMax = xSize & 0x7;
-	for (x = 0; x < xOuterMax; x++)
-	{
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-	}
-	for (x = 0; x < xInnerMax; x++)
-	{
-		*dst++ = *src++;
-	}
-#endif
-}
-
-inline void b3Tx::b3GetRGB4(
-	b3_pkd_color  * ColorLine,
-	const b3_coord  y) const
-{
-	b3_u16  *  sPtr = b3GetHighColorData();
-	b3_coord   x;
-
-	sPtr += (xSize * y);
-	for (x = 0; x < xSize; x++)
-	{
-		*ColorLine++ = b3Convert(*sPtr++);
-	}
-}
-
-inline void b3Tx::b3GetVGA(
-	b3_pkd_color  * ColorLine,
-	const b3_coord  y) const
-{
-	b3_u08  * Data = b3GetIndexData();
-	b3_coord  x;
-
-	Data   += (xSize * y);
-	for (x = 0; x < xSize; x++)
-	{
-		ColorLine[0] = palette[Data[0]];
-		ColorLine++;
-		Data++;
-	}
-}
-
-inline void b3Tx::b3GetFloat(
-	b3_pkd_color * ColorLine,
-	const b3_coord y) const
-{
-	b3_color * cPtr = b3GetHdrData();
-	b3_coord   x;
-
-	cPtr += (xSize * y);
-	for (x = 0; x < xSize; x++)
-	{
-		*ColorLine++ = b3Color(*cPtr++);
-	}
-}
-
 void b3Tx::b3GetRow(
 	b3_color    *   Line,
 	const b3_coord  y) const
 {
-	b3_u08    *    bPtr;
-	b3_u16    *    sPtr;
-	b3_pkd_color * lPtr;
-	b3_color   *   cPtr;
-	b3_coord       x;
-
 	switch (type)
 	{
 	case B3_TX_ILBM:
-		for (x = 0; x < xSize; x++)
+		for (b3_coord x = 0; x < xSize; x++)
 		{
 			*Line++ = b3Color(b3ILBMValue(x, y));
 		}
 		break;
 
 	case B3_TX_VGA:
-		bPtr  = data;
-		bPtr += (xSize * y);
-		for (x = 0; x < xSize; x++)
+		if (palette != nullptr)
 		{
-			*Line++ = b3Color(palette != nullptr ? palette[*bPtr] : B3_BLACK);
-			bPtr++;
+			b3TxAlgorithms::b3GetRow<b3_u08, b3_color>(Line, this, y,
+				[this] (const b3_u08 index)
+			{
+				return b3Color(palette[index]);
+			});
+		}
+		else
+		{
+			const b3_color black = b3Color(B3_BLACK);
+
+			for (b3_coord x = 0; x < xSize; x++)
+			{
+				*Line++ = black;
+			}
 		}
 		break;
 
 	case B3_TX_RGB4:
-		sPtr  = data;
-		sPtr += (xSize * y);
-		for (x = 0; x < xSize; x++)
-		{
-			*Line++ = b3Color(*sPtr++);
-		}
+		b3TxAlgorithms::b3GetRow<b3_u16, b3_color>(Line, this, y);
 		break;
 
 	case B3_TX_RGB8:
-		lPtr  = data;
-		lPtr += (xSize * y);
-		for (x = 0; x < xSize; x++)
-		{
-			*Line++ = b3Color(*lPtr++);
-		}
+		b3TxAlgorithms::b3GetRow<b3_pkd_color, b3_color>(Line, this, y);
 		break;
 
 	case B3_TX_FLOAT:
-		cPtr  = data;
-		cPtr += (xSize * y);
-		for (x = 0; x < xSize; x++)
-		{
-			*Line++ = *cPtr++;
-		}
+		b3TxAlgorithms::b3GetRow<b3_color, b3_color>(Line, this, y);
 		break;
 
 	default:
@@ -969,19 +881,29 @@ void b3Tx::b3GetRow(
 		break;
 
 	case B3_TX_RGB8 :
-		b3GetRGB8(Line, y);
+		{
+			const b3_pkd_color * src = b3GetTrueColorData();
+
+			src += y * xSize;
+			std::copy(src, src + xSize, Line);
+		}
 		break;
 
 	case B3_TX_RGB4 :
-		b3GetRGB4(Line, y);
+		b3TxAlgorithms::b3GetRow<b3_u16, b3_pkd_color>(Line, this, y,
+			&b3Tx::b3Convert);
 		break;
 
 	case B3_TX_VGA :
-		b3GetVGA(Line, y);
+		b3TxAlgorithms::b3GetRow<b3_u08, b3_pkd_color>(Line, this, y,
+			[this] (const b3_u08 index)
+		{
+			return palette[index];
+		});
 		break;
 
 	case B3_TX_FLOAT:
-		b3GetFloat(Line, y);
+		b3TxAlgorithms::b3GetRow<b3_color, b3_pkd_color>(Line, this, y);
 		break;
 
 	default:

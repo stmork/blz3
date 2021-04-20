@@ -24,6 +24,24 @@
 
 struct B3_PLUGIN b3TxAlgorithms
 {
+	template<class SRC, class DST> static void b3GetRow(
+		DST   *   Line,
+		const b3Tx  *  tx,
+		const b3_coord y,
+		std::function<DST(const SRC)> convert = [] (const SRC data)
+	{
+		return b3Color(data);
+	})
+	{
+		SRC * ptr = tx->data;
+
+		ptr += (tx->xSize * y);
+		for (b3_coord x = 0; x < tx->xSize; x++)
+		{
+			*Line++ = convert(*ptr++);
+		}
+	}
+
 	template<class DST> static void b3TurnLeft(b3Tx * tx)
 	{
 		const b3_res xNewSize = tx->ySize;
@@ -32,8 +50,11 @@ struct B3_PLUGIN b3TxAlgorithms
 		DST     *    new_data;
 		b3_coord     src_pos;
 
-		new_data = tx->b3TypedAlloc<DST>(xNewSize * yNewSize);
-		if (new_data == nullptr)
+		try
+		{
+			new_data = tx->b3TypedAlloc<DST>(xNewSize * yNewSize);
+		}
+		catch (std::bad_alloc & e)
 		{
 			B3_THROW(b3TxException, B3_TX_MEMORY);
 		}
@@ -85,8 +106,11 @@ struct B3_PLUGIN b3TxAlgorithms
 		DST      *     new_data;
 		b3_coord       src_pos, src_init;
 
-		new_data   = tx->b3TypedAlloc<DST>(xNewSize * yNewSize);
-		if (new_data == nullptr)
+		try
+		{
+			new_data = tx->b3TypedAlloc<DST>(xNewSize * yNewSize);
+		}
+		catch (std::bad_alloc & e)
 		{
 			B3_THROW(b3TxException, B3_TX_MEMORY);
 		}
