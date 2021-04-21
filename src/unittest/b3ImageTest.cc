@@ -352,7 +352,7 @@ void b3ImageTest::testRow()
 	vga.b3SetPalette(data_u32, DATA_SIZE(data_u32));
 	vga.b3GetRow(row_u32, 0);
 	vga.b3GetRow(row_col, 0);
-	for (i = 0; i < hdr.xSize; i++)
+	for (i = 0; i < vga.xSize; i++)
 	{
 		CPPUNIT_ASSERT_EQUAL(data_u32[i], row_u32[i]);
 		CPPUNIT_ASSERT(data_col[i] == row_col[i]);

@@ -98,10 +98,9 @@ b3AnimElement * b3Animation::b3FindSameTrack(b3AnimElement * Anim)
 	return prev;
 }
 
-void b3Animation::b3RecomputeCenter(
-	b3AnimElement * Element,
+void b3Animation::b3RecomputeCenter(const b3AnimElement * Element,
 	b3_vector   *   center,
-	b3_f64          t)
+	const b3_f64 t)
 {
 	b3_u32  flagmask = ANIMFLAGF_ACTIVE | ANIMFLAGF_CENTER;
 	b3_f64  tClipped;

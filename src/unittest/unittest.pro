@@ -28,6 +28,7 @@ HEADERS += b3SkeletonTest.h \
 	b3MathTest.h \
 	b3MatrixTest.h \
 	b3MemoryTest.h \
+	b3MovieTest.h \
 	b3PathTest.h \
 	b3RandomTest.h \
 	b3SamplerTest.h \
@@ -61,6 +62,7 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3MathTest.cc \
 	b3MatrixTest.cc \
 	b3MemoryTest.cc \
+	b3MovieTest.cc \
 	b3PathTest.cc \
 	b3RandomTest.cc \
 	b3SamplerTest.cc \

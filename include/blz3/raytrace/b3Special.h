@@ -533,7 +533,10 @@ public:
 	 * @param center The center point.
 	 * @param t The time point to use.
 	 */
-	void            b3RecomputeCenter(b3AnimElement * Element, b3_vector * center, b3_f64 t);
+	void            b3RecomputeCenter(
+		const b3AnimElement * Element,
+		b3_vector      *      center,
+		const b3_f64          t);
 
 	/**
 	 * This method converts a frame index into a time point.
@@ -541,7 +544,7 @@ public:
 	 * @param index The frame index to convert.
 	 * @return The converted time point.
 	 */
-	inline b3_f64   b3AnimTimeCode(b3_index index) const
+	inline b3_f64   b3AnimTimeCode(const b3_index index) const
 	{
 		return m_Start + (b3_f64)index / m_FramesPerSecond;
 	}
@@ -552,7 +555,7 @@ public:
 	 * @param t The time point.
 	 * @return The converted frame index.
 	 */
-	inline b3_index b3AnimFrameIndex(b3_f64 t)
+	inline b3_index b3AnimFrameIndex(const b3_f64 t)
 	{
 		return (b3_index)((t - m_Start) * m_FramesPerSecond);
 	}
@@ -563,7 +566,7 @@ public:
 	 * @param val The time point to clip.
 	 * @return The clipped time point.
 	 */
-	inline b3_f64   b3ClipTimePoint(b3_f64 val)
+	inline b3_f64   b3ClipTimePoint(const b3_f64 val)
 	{
 		return b3Math::b3Clamp(val, m_Start, m_End);
 	}
