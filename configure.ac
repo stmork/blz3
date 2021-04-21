@@ -188,6 +188,10 @@ AC_HEADER_STDC
 
 AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
 
+AC_CHECK_LIB([swscale], [main])
+AC_CHECK_LIB([avutil], [main])
+AC_CHECK_LIB([avformat], [main])
+AC_CHECK_LIB([avcodec], [main])
 AC_CHECK_LIB([tiff], [main])
 AC_CHECK_LIB([jpeg], [main])
 AC_CHECK_LIB([dl], [main])
@@ -236,15 +240,6 @@ LDFLAGS="$LDFLAGS -L$BLZ3_LIB $X_LIBS"
 ARFLAGS="rs"
 
 AC_CHECK_LIB([X11], [main])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
-AC_C_INLINE
-AC_TYPE_OFF_T
-AC_TYPE_SIZE_T
-AC_HEADER_TIME
-AC_STRUCT_TM
-AC_C_VOLATILE
 
 # Checks for library functions.
 AC_FUNC_CLOSEDIR_VOID

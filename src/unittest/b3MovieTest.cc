@@ -36,6 +36,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3MovieTest);
 
 #include "blz3/image/b3Tx.h"
 
+#ifdef HAVE_VIDEO_ENCODER
 extern "C"
 {
 #	include <x264.h>
@@ -46,19 +47,49 @@ extern "C"
 #	include <libavutil/opt.h>
 }
 
-class Packet
+class b3EncoderFrameBuffer
+{
+	AVFrame * frame = nullptr;
+
+public:
+	explicit b3EncoderFrameBuffer(const b3Tx * tx, int format)
+	{
+		frame = av_frame_alloc();
+		frame->format = format;
+		frame->width  = tx->xSize;
+		frame->height = tx->ySize;
+		av_frame_get_buffer(frame, 0);
+	}
+
+	virtual ~b3EncoderFrameBuffer()
+	{
+		av_frame_free(&frame);
+	}
+
+	inline operator AVFrame * ()
+	{
+		return frame;
+	}
+
+	inline AVFrame * operator -> ()
+	{
+		return frame;
+	}
+};
+
+class b3EncoderPacket
 {
 	AVPacket          pkt;
 
 public:
-	Packet()
+	b3EncoderPacket()
 	{
 		av_init_packet(&pkt);
 		pkt.data = nullptr;
 		pkt.size = 0;
 	}
 
-	virtual ~Packet()
+	virtual ~b3EncoderPacket()
 	{
 		av_packet_unref(&pkt);
 	}
@@ -74,7 +105,7 @@ public:
 	}
 };
 
-class MovieEncoder
+class b3MovieEncoder
 {
 	SwsContext    *   swsCtx  = nullptr;
 	AVOutputFormat  * fmt     = nullptr;
@@ -83,24 +114,29 @@ class MovieEncoder
 	AVStream     *    stream  = nullptr;
 	AVCodecContext  * cctx    = nullptr;
 
-	AVFrame     *     rgbpic  = nullptr;
-	AVFrame     *     yuvpic  = nullptr;
-	AVRational        fps;
+	b3EncoderFrameBuffer     rgbpic;
+	b3EncoderFrameBuffer     yuvpic;
+	AVRational               m_FramesPerSecond;
 
-	static const unsigned    kbit_rate = 900;
-	unsigned          iframe  = 0;
-	b3_res            m_xSize;
-	b3_res            m_ySize;
+	static const unsigned    m_kbit_rate = 900;
+	unsigned                 m_iFrame  = 0;
+	b3_res                   m_xSize;
+	b3_res                   m_ySize;
 
 public:
-	explicit MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second)
+	explicit b3MovieEncoder(
+		const char * filename,
+		const b3Tx * tx,
+		const b3_res frames_per_second) :
+		rgbpic(tx, AV_PIX_FMT_RGB24),
+		yuvpic(tx, AV_PIX_FMT_YUV420P)
 	{
 		int err;
 
 		m_xSize = tx->xSize;
 		m_ySize = tx->ySize;
-		fps.num =  1;
-		fps.den = frames_per_second;
+		m_FramesPerSecond.num =  1;
+		m_FramesPerSecond.den = frames_per_second;
 
 		av_register_all();
 		swsCtx = sws_getContext(
@@ -123,13 +159,12 @@ public:
 		stream->codecpar->width      = m_xSize;
 		stream->codecpar->height     = m_ySize;
 		stream->codecpar->format     = AV_PIX_FMT_YUV420P;
-		stream->codecpar->bit_rate   = kbit_rate * 1000;
+		stream->codecpar->bit_rate   = m_kbit_rate * 1000;
 		stream->codecpar->profile    = FF_PROFILE_H264_BASELINE;
-		stream->time_base            = fps;
-
+		stream->time_base            = m_FramesPerSecond;
 
 		avcodec_parameters_to_context(cctx, stream->codecpar);
-		cctx->time_base    = fps;
+		cctx->time_base    = m_FramesPerSecond;
 		cctx->max_b_frames =  2;
 		cctx->gop_size     = 12;
 		if (stream->codecpar->codec_id == AV_CODEC_ID_H264)
@@ -170,24 +205,9 @@ public:
 		}
 
 		av_dump_format(fmt_ctx, 0, filename, 1);
-
-		// Preparing the containers of the frame data:
-		// Allocating memory for each RGB frame, which will be lately converted to YUV.
-		rgbpic = av_frame_alloc();
-		rgbpic->format = AV_PIX_FMT_RGB24;
-		rgbpic->width  = m_xSize;
-		rgbpic->height = m_ySize;
-		av_frame_get_buffer(rgbpic, 0);
-
-		// Allocating memory for each conversion output YUV frame.
-		yuvpic = av_frame_alloc();
-		yuvpic->format = AV_PIX_FMT_YUV420P;
-		yuvpic->width  = m_xSize;
-		yuvpic->height = m_ySize;
-		av_frame_get_buffer(yuvpic, 0);
 	}
 
-	virtual ~MovieEncoder()
+	virtual ~b3MovieEncoder()
 	{
 		b3Finish();
 		if (!(fmt->flags & AVFMT_NOFILE))
@@ -197,35 +217,37 @@ public:
 		b3Free();
 	}
 
-	void add(const b3Tx * tx)
+	void b3AddFrame(const b3Tx * tx)
 	{
 		// The AVFrame data will be stored as RGBRGBRGB... row-wise,
 		// from left to right and from top to bottom.
 		for (b3_res y = 0; y < m_ySize; y++)
 		{
+			b3_pkd_color row[m_xSize];
+
+			tx->b3GetRow(row, y);
 			for (b3_res x = 0; x < m_xSize; x++)
 			{
-				const b3_pkd_color rgb = tx->b3GetValue(x, y);
-
 				// rgbpic->linesize[0] is equal to width.
-				rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 0] = (rgb & 0xff0000) >> 16;
-				rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 1] = (rgb & 0x00ff00) >>  8;
-				rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 2] = (rgb & 0x0000ff);
+				rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 0] = (row[x] & 0xff0000) >> 16;
+				rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 1] = (row[x] & 0x00ff00) >>  8;
+				rgbpic->data[0][y * rgbpic->linesize[0] + 3 * x + 2] = (row[x] & 0x0000ff);
 			}
 		}
 
 		// Not actually scaling anything, but just converting
 		// the RGB data to YUV and store it in yuvpic.
-		sws_scale(swsCtx, rgbpic->data, rgbpic->linesize, 0,
-			m_ySize, yuvpic->data, yuvpic->linesize);
+		sws_scale(swsCtx,
+			rgbpic->data, rgbpic->linesize, 0, m_ySize,
+			yuvpic->data, yuvpic->linesize);
 
 		// The PTS of the frame are just in a reference unit,
 		// unrelated to the format we are using. We set them,
 		// for instance, as the corresponding frame number.
-		yuvpic->pts = iframe++;
+		yuvpic->pts = m_iFrame++;
 		if (avcodec_send_frame(cctx, yuvpic) >= 0)
 		{
-			Packet pkt;
+			b3EncoderPacket pkt;
 
 			if (avcodec_receive_packet(cctx, pkt) >= 0)
 			{
@@ -241,7 +263,7 @@ private:
 		int result = 0;
 		do
 		{
-			Packet pkt;
+			b3EncoderPacket pkt;
 
 			avcodec_send_frame(cctx, nullptr);
 			result = avcodec_receive_packet(cctx, pkt);
@@ -257,13 +279,13 @@ private:
 	void b3Free()
 	{
 		// Freeing all the allocated memory:
-		av_frame_free(&rgbpic);
-		av_frame_free(&yuvpic);
 		avcodec_free_context(&cctx);
 		avformat_free_context(fmt_ctx);
 		sws_freeContext(swsCtx);
 	}
 };
+
+#endif
 
 void b3MovieTest::setUp()
 {
@@ -304,7 +326,9 @@ void b3MovieTest::test()
 	animation->m_FramesPerSecond = 25;
 
 	b3Display    display(640, 480);
-	MovieEncoder encoder("test-animation.mp4", display, animation->m_FramesPerSecond);
+#ifdef HAVE_VIDEO_ENCODER
+	b3MovieEncoder encoder("test-animation.mp4", display, animation->m_FramesPerSecond);
+#endif
 
 	// Dry run animation.
 	scene->b3ResetAnimation();
@@ -317,7 +341,9 @@ void b3MovieTest::test()
 
 		scene->b3SetAnimation(t);
 		scene->b3Raytrace(&display);
-		encoder.add(display);
+#ifdef HAVE_VIDEO_ENCODER
+		encoder.b3AddFrame(display);
+#endif
 
 		snprintf(imagename, sizeof(imagename), "test-animation-%04d.jpg", frame++);
 		display.b3SaveImage(imagename);
