@@ -88,9 +88,4 @@ void b3MovieTest::test()
 	}
 }
 
-void b3MovieTest::testAnimation()
-{
-
-}
-
 #endif
