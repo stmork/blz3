@@ -91,6 +91,7 @@ void b3Display::b3Init(const b3_res xSize, const b3_res ySize, const char * titl
 	b3PrintF(B3LOG_FULL, "Opening display \"%s\" of size %u,%u\n",
 		title,
 		xSize, ySize);
+
 	m_OwnTx = true;
 	m_xMax  = xSize;
 	m_yMax  = ySize;

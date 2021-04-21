@@ -232,6 +232,11 @@ public:
 	 */
 	virtual b3_bool       b3SaveImage(const char * filename);
 
+	inline operator b3Tx * () const
+	{
+		return m_Tx;
+	}
+
 private:
 	void  b3Init(const b3_res xSize, const b3_res ySize, const char * title);
 };
