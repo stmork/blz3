@@ -28,6 +28,7 @@ linux:CONFIG(gcov) {
 	QMAKE_CXXFLAGS += --coverage
 	QMAKE_LFLAGS   += --coverage
 	LIBS           += -lgcov
+	DEFINES        += USE_GCOV
 }
 
 unix {
