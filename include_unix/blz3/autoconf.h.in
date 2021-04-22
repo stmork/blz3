@@ -27,9 +27,6 @@
 /* Does Blizzard use SSSE3? */
 #undef BLZ3_USE_SSSE3
 
-/* Can we use x264 library? */
-#undef BLZ3_USE_X264
-
 /* Define to 1 if the `closedir' function returns void instead of `int'. */
 #undef CLOSEDIR_VOID
 
@@ -120,6 +117,9 @@
 
 /* Define to 1 if you have the `X11' library (-lX11). */
 #undef HAVE_LIBX11
+
+/* Define to 1 if you have the `x264' library (-lx264). */
+#undef HAVE_LIBX264
 
 /* Define to 1 if you have the `Xmu' library (-lXmu). */
 #undef HAVE_LIBXMU
@@ -241,12 +241,6 @@
 
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF
-
-/* Does x264 have delayed frame support? */
-#undef HAVE_X264_DELAYED_FRAMES
-
-/* Das x264 habe parameter definition support? */
-#undef HAVE_X264_PARAMETER_DEFINITION
 
 /* Define to 1 if `lstat' dereferences a symlink specified with a trailing
    slash. */

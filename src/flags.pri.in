@@ -6,3 +6,6 @@ lessThan($$QT_VERSION, 5.12.0) {
 } else {
 	CONFIG += c++17
 }
+
+LIBS += @LIBS@
+LIBS_CPPUNIT = @CPPUNITLIBS@

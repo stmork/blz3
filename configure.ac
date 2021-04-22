@@ -188,10 +188,6 @@ AC_HEADER_STDC
 
 AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
 
-AC_CHECK_LIB([swscale], [main])
-AC_CHECK_LIB([avutil], [main])
-AC_CHECK_LIB([avformat], [main])
-AC_CHECK_LIB([avcodec], [main])
 AC_CHECK_LIB([tiff], [main])
 AC_CHECK_LIB([jpeg], [main])
 AC_CHECK_LIB([dl], [main])
@@ -228,10 +224,12 @@ AC_CHECK_LIB([Iex], [main])
 AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
 
-# Check for x264
-AC_CHECK_LIB([x264], [x264_encoder_encode], [AC_CHECK_HEADER([x264.h],[AC_DEFINE([BLZ3_USE_X264], [4], [Can we use x264 library?]) X264LIBS="$X264LIBS -lx264"])])
-AC_CHECK_LIB([x264], [x264_param_default_preset], [AC_DEFINE([HAVE_X264_PARAMETER_DEFINITION], [1], [Das x264 habe parameter definition support?])])
-AC_CHECK_LIB([x264], [x264_encoder_delayed_frames], [AC_DEFINE([HAVE_X264_DELAYED_FRAMES], [1], [Does x264 have delayed frame support?])])
+# Check for video encoder
+AC_CHECK_LIB([x264], [main])
+AC_CHECK_LIB([swscale], [main])
+AC_CHECK_LIB([avutil], [main])
+AC_CHECK_LIB([avformat], [main])
+AC_CHECK_LIB([avcodec], [main])
 
 AC_LANG_POP(C++)
 
