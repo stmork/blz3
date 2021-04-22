@@ -36,6 +36,37 @@ b3CodecRegister::b3CodecRegister()
 	av_register_all();
 	avcodec_register_all();
 	av_log_set_callback(b3Log);
+
+	for (AVCodec * codec = av_codec_next(nullptr); codec != nullptr; codec = av_codec_next(codec))
+	{
+		if (av_codec_is_encoder(codec) && (codec->type == AVMEDIA_TYPE_VIDEO))
+		{
+			switch (codec->id)
+			{
+			case AV_CODEC_ID_H264:
+				m_h264 = true;
+				break;
+
+			case AV_CODEC_ID_HEVC:
+				m_hevc = true;
+				break;
+
+			case AV_CODEC_ID_VP8:
+				m_vp8 = true;
+				break;
+
+			case AV_CODEC_ID_VP9:
+				m_vp9 = true;
+				break;
+
+			default:
+				// Intentionally do nothing.
+				break;
+			}
+
+			b3PrintF(B3LOG_DEBUG, "  AV %s\n", codec->name);
+		}
+	}
 }
 
 void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)

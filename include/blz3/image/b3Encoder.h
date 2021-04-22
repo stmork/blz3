@@ -40,6 +40,11 @@ extern "C"
  */
 class b3CodecRegister
 {
+	bool m_h264 = false;
+	bool m_hevc = false;
+	bool m_vp8  = false;
+	bool m_vp9  = false;
+
 	b3CodecRegister();
 
 	static void b3Log(void *, int level, const char * fmt, va_list vargs);
