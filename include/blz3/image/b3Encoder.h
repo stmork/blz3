@@ -20,9 +20,12 @@
 #ifndef B3_IMAGE_ENCODER_H
 #define B3_IMAGE_ENCODER_H
 
-#include "blz3/image/b3Tx.h"
+#include "blz3/b3Config.h"
 
 #ifdef HAVE_VIDEO_ENCODER
+
+#include "blz3/image/b3Tx.h"
+
 extern "C"
 {
 #	include <libswscale/swscale.h>

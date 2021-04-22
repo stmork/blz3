@@ -23,6 +23,8 @@
 
 #include "blz3/image/b3Encoder.h"
 
+#ifdef HAVE_VIDEO_ENCODER
+
 /*************************************************************************
 **                                                                      **
 **                        AV registration singleton                     **
@@ -283,3 +285,5 @@ void b3MovieEncoder::b3Free()
 	avformat_free_context(m_FormatContext);
 	sws_freeContext(m_SwsCtx);
 }
+
+#endif
