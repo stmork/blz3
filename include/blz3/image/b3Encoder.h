@@ -172,8 +172,10 @@ public:
 	 * video stream.
 	 *
 	 * @param tx The b3Tx instance which contains the single image data.
+	 * @returns True on success or false on error or different b3Tx resolution
+	 * given during initialization.
 	 */
-	void b3AddFrame(const b3Tx * tx);
+	bool b3AddFrame(const b3Tx * tx);
 
 private:
 	/**

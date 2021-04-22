@@ -98,7 +98,7 @@ void b3MovieTest::test()
 		scene->b3SetAnimation(t);
 		scene->b3Raytrace(&display);
 #ifdef HAVE_VIDEO_ENCODER
-		encoder.b3AddFrame(display);
+		CPPUNIT_ASSERT(encoder.b3AddFrame(display));
 #endif
 
 		snprintf(imagename, sizeof(imagename), "test-animation-%04d.jpg", frame++);

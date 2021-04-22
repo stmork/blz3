@@ -210,8 +210,13 @@ b3MovieEncoder::~b3MovieEncoder()
 	b3Free();
 }
 
-void b3MovieEncoder::b3AddFrame(const b3Tx * tx)
+bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 {
+	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize))
+	{
+		return false;
+	}
+
 	// The AVFrame data will be stored as RGBRGBRGB... row-wise,
 	// from left to right and from top to bottom.
 	for (b3_res y = 0; y < m_ySize; y++)
@@ -238,16 +243,20 @@ void b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// unrelated to the format we are using. We set them,
 	// for instance, as the corresponding frame number.
 	m_YuvFrame->pts = m_iFrame++;
-	if (avcodec_send_frame(m_CodecContext, m_YuvFrame) >= 0)
+
+	int err = avcodec_send_frame(m_CodecContext, m_YuvFrame);
+	if (err >= 0)
 	{
 		b3EncoderPacket pkt;
 
-		if (avcodec_receive_packet(m_CodecContext, pkt) >= 0)
+		err = avcodec_receive_packet(m_CodecContext, pkt);
+		if (err >= 0)
 		{
 			pkt.key();
-			av_interleaved_write_frame(m_FormatContext, pkt);
+			err = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
+	return err < 0;
 }
 
 void b3MovieEncoder::b3Finish()
