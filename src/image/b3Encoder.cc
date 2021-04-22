@@ -249,14 +249,13 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	{
 		b3EncoderPacket pkt;
 
-		err = avcodec_receive_packet(m_CodecContext, pkt);
-		if (err >= 0)
+		if (avcodec_receive_packet(m_CodecContext, pkt) >= 0)
 		{
 			pkt.key();
 			err = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
-	return err < 0;
+	return err >= 0;
 }
 
 void b3MovieEncoder::b3Finish()
