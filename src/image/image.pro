@@ -15,6 +15,7 @@ INSTALLS   += target
 message("*** Blizzard III image processing library $$VERSION ***")
 
 HEADERS += \
+	$$BLZ3_INCLUDE/blz3/image/b3Encoder.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Sampler.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Tx.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxMeasure.h \
@@ -25,6 +26,7 @@ HEADERS += \
 	b3TxTIFF.h
 
 SOURCES += \
+	b3Encoder.cc \
 	b3Measure.cc \
 	b3Sampler.cc \
 	b3Tx.cc \
