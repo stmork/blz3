@@ -33,5 +33,10 @@ Version 3.1.1
 * Added scrollbar support.
 
 Version 3.1.2
-* Optimized for Jenkins Build.
+* Optimized for Jenkins build.
 * More tests.
+* Fixed bugs:
+  * Cook & Torrance
+  * Memory leaks
+* Corrected area intersection accuracy.
+* Added video encoding class b3MovieEncoder.
