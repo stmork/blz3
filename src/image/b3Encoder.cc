@@ -160,7 +160,7 @@ void b3EncoderPacket::key()
 **                                                                      **
 *************************************************************************/
 
-const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_RGBA;
+const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_BGRA;
 const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
 
 b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second) :
