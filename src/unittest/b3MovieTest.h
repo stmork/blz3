@@ -31,21 +31,23 @@
 
 class b3MovieTest : public CppUnit::TestFixture
 {
-	b3World        world;
-	b3Scene    *   scene      = nullptr;
-	b3Animation  * animation  = nullptr;
-	b3Distribute * distribute = nullptr;
-
+	b3World               world;
+	b3Scene       *       scene      = nullptr;
+	b3Animation     *     animation  = nullptr;
+	b3Distribute     *    distribute = nullptr;
 	b3ShapeRenderContext  context;
 
 	CPPUNIT_TEST_SUITE(b3MovieTest);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testEmpty);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
+
 	void test();
+	void testEmpty();
 };
 
 #endif

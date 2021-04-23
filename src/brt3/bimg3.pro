@@ -1,6 +1,7 @@
 # Blizzard III  image display tool
 
-TEMPLATE = app
+QT         -= gui core
+TEMPLATE    = app
 
 include(../common.pri)
 
@@ -12,4 +13,4 @@ message("*** Blizzard III console image viewer $$VERSION ***")
 
 SOURCES += bimg3.cc
 
-LIBS += -lb3System -lb3SystemUnix -lb3Image -lb3Base -lb3Raytrace -ljpeg -ltiff -lGLU
+LIBS += -lb3System -lb3SystemUnix -lb3Image -lb3Base -lb3Raytrace

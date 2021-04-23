@@ -41,7 +41,9 @@ void b3MovieTest::setUp()
 {
 	const char * filename = "Data1.bwd";
 
+#ifdef HAVE_VIDEO_ENCODER
 	b3CodecRegister::b3Instance();
+#endif
 
 	world.b3Read(filename);
 	scene = (b3Scene *)world.b3GetFirst();
@@ -104,6 +106,18 @@ void b3MovieTest::test()
 		snprintf(imagename, sizeof(imagename), "test-animation-%04d.jpg", frame++);
 		display.b3SaveImage(imagename);
 	}
+}
+
+void b3MovieTest::testEmpty()
+{
+#ifdef HAVE_VIDEO_ENCODER
+	b3Tx      tx;
+
+	CPPUNIT_ASSERT(tx.b3AllocTx(640, 480, 128));
+	b3MovieEncoder encoder("test-empty.mp4", &tx, 25);
+
+	encoder.b3AddFrame(&tx);
+#endif
 }
 
 #endif

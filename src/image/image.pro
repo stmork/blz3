@@ -55,3 +55,6 @@ SOURCES += \
 	b3TxScale.cc \
 	b3TxTGA.cc \
 	b3TxTIFF.cc
+
+LIBS       += -L$$BLZ3_LIB
+LIBS       += -lb3Base

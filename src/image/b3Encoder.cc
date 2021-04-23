@@ -36,8 +36,49 @@ b3CodecRegister::b3CodecRegister()
 	av_register_all();
 	avcodec_register_all();
 	av_log_set_callback(b3Log);
+}
 
-	for (AVCodec * codec = av_codec_next(nullptr); codec != nullptr; codec = av_codec_next(codec))
+void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)
+{
+	char message[8192];
+	b3_log_level b3_level;
+
+	switch (level)
+	{
+	case AV_LOG_QUIET:
+		b3_level = B3LOG_NONE;
+		break;
+
+	case AV_LOG_DEBUG:
+		b3_level = B3LOG_DEBUG;
+		break;
+
+	case AV_LOG_VERBOSE:
+	case AV_LOG_TRACE:
+		b3_level = B3LOG_FULL;
+		break;
+
+	default:
+		b3_level = B3LOG_NORMAL;
+		break;
+	}
+
+	vsnprintf(message, sizeof(message), fmt, vargs);
+	b3PrintF(b3_level, "%s\n", message);
+}
+
+b3CodecRegister & b3CodecRegister::b3Instance()
+{
+	static b3CodecRegister instance;
+
+	return instance;
+}
+
+void b3CodecRegister::b3PrepareCodecs()
+{
+	for (AVCodec * codec = av_codec_next(nullptr);
+		codec != nullptr;
+		codec = av_codec_next(codec))
 	{
 		if (av_codec_is_encoder(codec) && (codec->type == AVMEDIA_TYPE_VIDEO))
 		{
@@ -67,42 +108,6 @@ b3CodecRegister::b3CodecRegister()
 			b3PrintF(B3LOG_DEBUG, "  AV %s\n", codec->name);
 		}
 	}
-}
-
-void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)
-{
-	char message[8192];
-	b3_log_level b3_level;
-
-	switch(level)
-	{
-	case AV_LOG_QUIET:
-		b3_level = B3LOG_NONE;
-		break;
-
-	case AV_LOG_DEBUG:
-		b3_level = B3LOG_DEBUG;
-		break;
-
-	case AV_LOG_VERBOSE:
-	case AV_LOG_TRACE:
-		b3_level = B3LOG_FULL;
-		break;
-
-	default:
-		b3_level = B3LOG_NORMAL;
-		break;
-	}
-
-	vsnprintf(message, sizeof(message), fmt, vargs);
-	b3PrintF(b3_level, "%s\n", message);
-}
-
-b3CodecRegister & b3CodecRegister::b3Instance()
-{
-	static b3CodecRegister instance;
-
-	return instance;
 }
 
 /*************************************************************************
@@ -166,18 +171,19 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_FramesPerSecond.den = frames_per_second;
 
 	m_SwsCtx = sws_getContext(
-				m_xSize, m_ySize, AV_PIX_FMT_RGB24,
-				m_xSize, m_ySize, AV_PIX_FMT_YUV420P,
-				SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
+			m_xSize, m_ySize, AV_PIX_FMT_RGB24,
+			m_xSize, m_ySize, AV_PIX_FMT_YUV420P,
+			SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 
 	m_OutputFormat = av_guess_format(nullptr, filename, nullptr);
 	err = avformat_alloc_output_context2(&m_FormatContext, m_OutputFormat, nullptr, filename);
 	if (err != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "Error allocation context: %d!\n", err);
+		return;
 	}
-	m_Codec  = avcodec_find_encoder(m_OutputFormat->video_codec);
-	m_Stream = avformat_new_stream(m_FormatContext, m_Codec);
+	m_Codec          = avcodec_find_encoder(m_OutputFormat->video_codec);
+	m_Stream         = avformat_new_stream(m_FormatContext, m_Codec);
 	m_CodecContext   = avcodec_alloc_context3(m_Codec);
 
 	m_Stream->codecpar->codec_id   = m_OutputFormat->video_codec;
@@ -245,7 +251,7 @@ b3MovieEncoder::~b3MovieEncoder()
 
 bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 {
-	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize))
+	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize) || (m_RgbFrame == nullptr))
 	{
 		return false;
 	}
@@ -269,8 +275,8 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// Not actually scaling anything, but just converting
 	// the RGB data to YUV and store it in yuvpic.
 	sws_scale(m_SwsCtx,
-			  m_RgbFrame->data, m_RgbFrame->linesize, 0, m_ySize,
-			  m_YuvFrame->data, m_YuvFrame->linesize);
+		m_RgbFrame->data, m_RgbFrame->linesize, 0, m_ySize,
+		m_YuvFrame->data, m_YuvFrame->linesize);
 
 	// The PTS of the frame are just in a reference unit,
 	// unrelated to the format we are using. We set them,

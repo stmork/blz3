@@ -38,7 +38,7 @@ HEADERS += point.h \
 FORMS += \
 	mainwindow.ui
 
-LIBS  += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace -ljpeg -ltiff -lGLU
+LIBS  += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace
 
 RESOURCES += \
 	icons.qrc

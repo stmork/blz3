@@ -77,3 +77,6 @@ SOURCES += \
 	b3Water.cc \
 	b3Wood.cc \
 	b3World.cc
+
+LIBS       += -L$$BLZ3_LIB
+LIBS       += -lb3System

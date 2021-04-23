@@ -56,6 +56,8 @@ public:
 	 * @return The registrar service.
 	 */
 	static b3CodecRegister & b3Instance();
+
+	void b3PrepareCodecs();
 };
 
 /**
@@ -167,7 +169,7 @@ public:
 	explicit b3MovieEncoder(
 		const char * filename,
 		const b3Tx * tx,
-		const b3_res frames_per_second);
+		const b3_res frames_per_second = 25);
 
 	/**
 	 * The destructor finishes the video stream and frees all resources
