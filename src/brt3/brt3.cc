@@ -26,6 +26,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/image/b3TxPool.h"
+#include "blz3/image/b3Encoder.h"
 
 #include "blz3/raytrace/b3RenderLight.h"
 #include "blz3/raytrace/b3RenderView.h"
@@ -41,7 +42,7 @@
 static char BLZ3_EXTENSION[16] = ".jpg";
 
 static b3_bool b3SaveRaytracedImage(
-	b3Display * display,
+	b3Display  * display,
 	const char * picture_home,
 	const char * camera_name)
 {
@@ -223,6 +224,9 @@ int main(int argc, char * argv[])
 		}
 
 		b3RaytracingItems::b3Register();
+#ifdef HAVE_VIDEO_ENCODER
+		b3CodecRegister::b3Instance().b3PrepareCodecs();
+#endif
 		loader.b3AddPath(BLZ3_BIN);
 		loader.b3AddPath(BLZ3_PLUGINS);
 		loader.b3Load();
@@ -356,7 +360,15 @@ int main(int argc, char * argv[])
 										b3_f64   t;
 										b3_index iEnd, frame;
 										b3Path   img_name;
+#ifdef HAVE_VIDEO_ENCODER
+										img_name.b3LinkFileName(BLZ3_PICTURES, camera->b3GetName());
+										img_name.b3RemoveExt();
+										img_name.b3Append(".mp4");
+
+										b3MovieEncoder encoder(img_name, *display, animation->m_FramesPerSecond);
+#else
 										b3_count count = 0;
+#endif
 
 										b3PrintF(B3LOG_NORMAL, "Animating!!!\n\n");
 										scene->b3ResetAnimation();
@@ -367,10 +379,15 @@ int main(int argc, char * argv[])
 											b3PrintF(B3LOG_NORMAL, "Rendering frame t=%1.2f\n", t);
 											scene->b3SetAnimation(t);
 											scene->b3Raytrace(display, multi_threaded);
+#ifdef HAVE_VIDEO_ENCODER
+											encoder.b3AddFrame(*display);
+#else
 											img_name.b3Format("%s_%04d", camera->b3GetName(), count++);
+
 											b3SaveRaytracedImage(
 												display,
 												BLZ3_PICTURES, img_name);
+#endif
 										}
 									}
 									else

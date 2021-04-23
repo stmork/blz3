@@ -78,6 +78,7 @@ bool b3File::b3Open(
 			b3PrintF(B3LOG_NORMAL,
 				"File read error\n  filename: %s\n  error msg: %s\n",
 				Name, error.b3GetErrorText());
+			B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
 		}
 		break;
 
@@ -98,6 +99,7 @@ bool b3File::b3Open(
 			b3PrintF(B3LOG_NORMAL,
 				"File write error\n  filename: %s\n  error msg: %s\n",
 				Name, error.b3GetErrorText());
+			B3_THROW(b3FileException, B3_FILE_NOT_OPEN);
 		}
 		break;
 
@@ -117,6 +119,7 @@ bool b3File::b3Open(
 			b3PrintF(B3LOG_NORMAL,
 				"File append error\n  filename: %s\n  error msg: %s\n",
 				Name, error.b3GetErrorText());
+			B3_THROW(b3FileException, B3_FILE_NOT_OPEN);
 		}
 		break;
 
@@ -124,7 +127,7 @@ bool b3File::b3Open(
 		m_File = -1;
 		break;
 	}
-	return false;
+	B3_THROW(b3FileException, B3_FILE_ERROR);
 }
 
 // Guess what
@@ -336,7 +339,7 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 
 	if (b3Open(filename, B_READ))
 	{
-		file_size = b3Size();
+		file_size   = b3Size();
 		file_buffer = b3TypedAlloc<b3_u08>(file_size);
 		if (file_buffer != nullptr)
 		{
@@ -370,6 +373,7 @@ b3_u08 * b3File::b3ReadBuffer(const char * filename, b3_size & file_size)
 			b3Free(file_buffer);
 			file_buffer = nullptr;
 		}
+		B3_THROW (b3FileException, error);
 	}
 
 	return file_buffer;

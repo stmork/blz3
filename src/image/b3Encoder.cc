@@ -49,11 +49,12 @@ void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)
 		b3_level = B3LOG_NONE;
 		break;
 
+	case AV_LOG_INFO:
+	case AV_LOG_VERBOSE:
 	case AV_LOG_DEBUG:
 		b3_level = B3LOG_DEBUG;
 		break;
 
-	case AV_LOG_VERBOSE:
 	case AV_LOG_TRACE:
 		b3_level = B3LOG_FULL;
 		break;
@@ -64,7 +65,7 @@ void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)
 	}
 
 	vsnprintf(message, sizeof(message), fmt, vargs);
-	b3PrintF(b3_level, "%s\n", message);
+	b3PrintF(b3_level, "(%d/%d) %s", level, b3_level, message);
 }
 
 b3CodecRegister & b3CodecRegister::b3Instance()
@@ -85,19 +86,19 @@ void b3CodecRegister::b3PrepareCodecs()
 			switch (codec->id)
 			{
 			case AV_CODEC_ID_H264:
-				m_h264 = true;
+				m_Encoderinfo.bits.m_h264 = true;
 				break;
 
 			case AV_CODEC_ID_HEVC:
-				m_hevc = true;
+				m_Encoderinfo.bits.m_hevc = true;
 				break;
 
 			case AV_CODEC_ID_VP8:
-				m_vp8 = true;
+				m_Encoderinfo.bits.m_vp8 = true;
 				break;
 
 			case AV_CODEC_ID_VP9:
-				m_vp9 = true;
+				m_Encoderinfo.bits.m_vp9 = true;
 				break;
 
 			default:
@@ -105,7 +106,7 @@ void b3CodecRegister::b3PrepareCodecs()
 				break;
 			}
 
-			b3PrintF(B3LOG_DEBUG, "  AV %s\n", codec->name);
+			b3PrintF(B3LOG_FULL, "  AV %s\n", codec->name);
 		}
 	}
 }
@@ -159,9 +160,12 @@ void b3EncoderPacket::key()
 **                                                                      **
 *************************************************************************/
 
+const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_RGBA;
+const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
+
 b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second) :
-	m_RgbFrame(tx, AV_PIX_FMT_RGB24),
-	m_YuvFrame(tx, AV_PIX_FMT_YUV420P)
+	m_RgbFrame(tx, m_SrcFormat),
+	m_YuvFrame(tx, m_DstFormat)
 {
 	int err;
 
@@ -171,8 +175,8 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_FramesPerSecond.den = frames_per_second;
 
 	m_SwsCtx = sws_getContext(
-			m_xSize, m_ySize, AV_PIX_FMT_RGB24,
-			m_xSize, m_ySize, AV_PIX_FMT_YUV420P,
+			m_xSize, m_ySize, m_SrcFormat,
+			m_xSize, m_ySize, m_DstFormat,
 			SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 
 	m_OutputFormat = av_guess_format(nullptr, filename, nullptr);
@@ -256,8 +260,9 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 		return false;
 	}
 
-	// The AVFrame data will be stored as RGBRGBRGB... row-wise,
-	// from left to right and from top to bottom.
+	b3_tx_data     ptr  = m_RgbFrame->data[0];
+	b3_pkd_color * lPtr = ptr;
+
 	for (b3_res y = 0; y < m_ySize; y++)
 	{
 		b3_pkd_color row[m_xSize];
@@ -265,10 +270,7 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 		tx->b3GetRow(row, y);
 		for (b3_res x = 0; x < m_xSize; x++)
 		{
-			// rgbpic->linesize[0] is equal to width.
-			m_RgbFrame->data[0][y * m_RgbFrame->linesize[0] + 3 * x + 0] = (row[x] & 0xff0000) >> 16;
-			m_RgbFrame->data[0][y * m_RgbFrame->linesize[0] + 3 * x + 1] = (row[x] & 0x00ff00) >>  8;
-			m_RgbFrame->data[0][y * m_RgbFrame->linesize[0] + 3 * x + 2] = (row[x] & 0x0000ff);
+			*lPtr++ = row[x];
 		}
 	}
 

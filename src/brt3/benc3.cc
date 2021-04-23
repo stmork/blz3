@@ -33,6 +33,7 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker\n");
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2021\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
+
 	if (command != nullptr)
 	{
 #ifdef HAVE_VIDEO_ENCODER
@@ -56,6 +57,7 @@ int main(int argc, char * argv[])
 	b3FileList      list;
 	b3FileEntry  *  entry;
 
+	b3Log::b3SetLevel(B3LOG_NORMAL);
 	if (argc <= 1)
 	{
 		b3Banner(argv[0]);
@@ -66,6 +68,9 @@ int main(int argc, char * argv[])
 	{
 		filename = argv[1];
 	}
+
+	b3CodecRegister::b3Instance().b3PrepareCodecs();
+
 	for (int i = 2; i < argc; i++)
 	{
 		if (argv[i][0] == '-')
@@ -105,8 +110,6 @@ int main(int argc, char * argv[])
 	if (list.b3GetCount() > 0)
 	{
 		b3Tx            tx;
-
-		b3CodecRegister::b3Instance().b3PrepareCodecs();
 
 		list.b3Sort();
 		tx.b3LoadImage(list.b3First()->b3Name());

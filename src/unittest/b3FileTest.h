@@ -92,7 +92,7 @@ public:
 	{
 		char buffer[1024];
 
-		CPPUNIT_ASSERT(!openRead("XYZ.bwd"));
+		CPPUNIT_ASSERT_THROW(openRead("XYZ.bwd"), b3FileException);
 		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Size());
 		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Seek( 512, B3_SEEK_START));
 		CPPUNIT_ASSERT_TYPED_EQUAL(b3_offset, -1, file.b3Read(buffer, 128));

@@ -11,9 +11,11 @@ INSTALLS   += target
 
 message("*** Blizzard III video stream builder $$VERSION ***")
 
-SOURCES += benc3.cc
+SOURCES     += benc3.cc
 
-LIBS += -lb3Image -lb3Base -lb3System -lb3SystemUnix
+LIBS        += -lb3Image -lb3Base -lb3System -lb3SystemUnix
+
+QMAKE_CLEAN +=  *.mp4 *.hevc
 
 #####################################################################
 #
@@ -28,4 +30,4 @@ valgrind.commands = valgrind\
 	--xml=yes --xml-file=valgrind.xml ./benc3
 
 QMAKE_EXTRA_TARGETS += valgrind
-QMAKE_CLEAN         += valgrind.xml *.mp4
+QMAKE_CLEAN         += valgrind.xml

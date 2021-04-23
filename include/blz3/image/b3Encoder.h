@@ -40,10 +40,18 @@ extern "C"
  */
 class b3CodecRegister
 {
-	bool m_h264 = false;
-	bool m_hevc = false;
-	bool m_vp8  = false;
-	bool m_vp9  = false;
+	union
+	{
+		struct b3_encoder_info
+		{
+			unsigned m_h264: 1;
+			unsigned m_hevc: 1;
+			unsigned m_vp8: 1;
+			unsigned m_vp9: 1;
+		} bits;
+		unsigned value = 0;
+	} m_Encoderinfo;
+
 
 	b3CodecRegister();
 
@@ -139,21 +147,24 @@ public:
  */
 class b3MovieEncoder
 {
-	SwsContext       *       m_SwsCtx        = nullptr;
-	AVOutputFormat     *     m_OutputFormat  = nullptr;
-	AVFormatContext     *    m_FormatContext = nullptr;
-	AVCodec         *        m_Codec         = nullptr;
-	AVStream        *        m_Stream        = nullptr;
-	AVCodecContext     *     m_CodecContext  = nullptr;
+	SwsContext        *        m_SwsCtx        = nullptr;
+	AVOutputFormat      *      m_OutputFormat  = nullptr;
+	AVFormatContext      *     m_FormatContext = nullptr;
+	AVCodec          *         m_Codec         = nullptr;
+	AVStream         *         m_Stream        = nullptr;
+	AVCodecContext      *      m_CodecContext  = nullptr;
 
-	b3EncoderFrameBuffer     m_RgbFrame;
-	b3EncoderFrameBuffer     m_YuvFrame;
-	AVRational               m_FramesPerSecond;
+	b3EncoderFrameBuffer       m_RgbFrame;
+	b3EncoderFrameBuffer       m_YuvFrame;
+	AVRational                 m_FramesPerSecond;
 
-	static const unsigned    m_kbit_rate = 900;
-	unsigned                 m_iFrame    =   0;
-	b3_res                   m_xSize;
-	b3_res                   m_ySize;
+	static const unsigned      m_kbit_rate = 900;
+	static const AVPixelFormat m_SrcFormat;
+	static const AVPixelFormat m_DstFormat;
+
+	unsigned                   m_iFrame    =   0;
+	b3_res                     m_xSize;
+	b3_res                     m_ySize;
 
 public:
 	/**
