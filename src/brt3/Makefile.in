@@ -14,10 +14,11 @@ exec_prefix		= @exec_prefix@
 
 LINK.o			= $(LINK.cc)
 
-PRG_SOURCE		= brt3.cc bimg3.cc bconv3.cc bhc.cc rp.cc\
+PRG_SOURCE		= brt3.cc benc3.cc bimg3.cc bconv3.cc bhc.cc rp.cc\
 	gif_trans.cc gif_movie.cc gif_info.cc gif.cc
 
 BRT3_OBJS		= brt3.o
+BENC3_OBJS		= benc3.o
 BIMG3_OBJS		= bimg3.o
 BCONV3_OBJS		= bconv3.o
 BHC_OBJS		= bhc.o
@@ -48,6 +49,8 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 brt3:	$(BRT3_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
+
+benc3:	$(BRT3_OBJS) $(B3_LIB_BASE)
 
 bimg3:	$(BIMG3_OBJS) $(B3_LIB_BASE)
 

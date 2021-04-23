@@ -65,7 +65,7 @@ void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)
 	}
 
 	vsnprintf(message, sizeof(message), fmt, vargs);
-	b3PrintF(b3_level, "(%d/%d) %s", level, b3_level, message);
+	b3PrintF(b3_level, "%s", message);
 }
 
 b3CodecRegister & b3CodecRegister::b3Instance()

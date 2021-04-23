@@ -8,6 +8,7 @@ CPPFLAGS		= @CPPFLAGS@
 LDLIBS			= @LIBS@
 LIBS			= libB3Image.o
 LIB_SOURCE		=\
+	b3Encoder.cc\
 	b3Measure.cc\
 	b3Sampler.cc\
 	b3Tx.cc\
@@ -38,6 +39,7 @@ LIB_SOURCE		=\
 	b3TxTIFF.cc
 
 LIB_OBJ			=\
+	b3Encoder.o\
 	b3Measure.o\
 	b3Sampler.o\
 	b3Tx.o\
