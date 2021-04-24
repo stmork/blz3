@@ -291,7 +291,8 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// The PTS of the frame are just in a reference unit,
 	// unrelated to the format we are using. We set them,
 	// for instance, as the corresponding frame number.
-	m_YuvFrame->pts = 90000 * m_iFrame++ / m_FrameDuration.den;
+	m_YuvFrame->pts = m_Stream->time_base.den * m_iFrame++ /
+			(m_FrameDuration.den * m_Stream->time_base.num);
 
 	int error = avcodec_send_frame(m_CodecContext, m_YuvFrame);
 	if (error >= 0)
