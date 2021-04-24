@@ -194,7 +194,7 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_Stream->codecpar->width      = m_xSize;
 	m_Stream->codecpar->height     = m_ySize;
 	m_Stream->codecpar->format     = AV_PIX_FMT_YUV420P;
-	m_Stream->codecpar->bit_rate   = m_kbit_rate * 1000;
+	m_Stream->codecpar->bit_rate   = m_xSize * m_ySize * 3;
 	m_Stream->codecpar->profile    = FF_PROFILE_H264_BASELINE;
 	m_Stream->time_base            = m_FramesPerSecond;
 
