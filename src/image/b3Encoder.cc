@@ -357,6 +357,7 @@ void b3MovieEncoder::b3PrintErr(
 
 	if ((err < 0) && (throw_exception))
 	{
+		b3Free();
 		B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
 	}
 }
