@@ -29,7 +29,9 @@
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3ShapeRenderContext.h"
 
-class b3MovieTest : public CppUnit::TestFixture
+#include "b3ImageSetup.h"
+
+class b3MovieTest : public CppUnit::TestFixture, protected b3ImageSetup
 {
 	b3World               world;
 	b3Scene       *       scene      = nullptr;
@@ -41,6 +43,11 @@ class b3MovieTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(test);
 	CPPUNIT_TEST(testEmpty);
 	CPPUNIT_TEST(testUneven);
+	CPPUNIT_TEST(testMpg);
+	CPPUNIT_TEST(testMp4);
+	CPPUNIT_TEST(testMkv);
+	CPPUNIT_TEST(testHevc);
+	CPPUNIT_TEST(testWebm);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -50,6 +57,14 @@ public:
 	void test();
 	void testEmpty();
 	void testUneven();
+	void testMpg();
+	void testMp4();
+	void testMkv();
+	void testHevc();
+	void testWebm();
+
+private:
+	void createEmptyVideo(const char * filename);
 };
 
 #endif

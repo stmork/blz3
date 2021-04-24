@@ -33,6 +33,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3FileListTest.cc\
 	b3FileTest.cc\
 	b3FilterTest.cc\
+	b3ImageSetup.cc\
 	b3ImageTest.cc\
 	b3ListTest.cc\
 	b3LocaleTest.cc\
@@ -67,6 +68,7 @@ BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3FileListTest.o\
 	b3FileTest.o\
 	b3FilterTest.o\
+	b3ImageSetup.o\
 	b3ImageTest.o\
 	b3ListTest.o\
 	b3LocaleTest.o\

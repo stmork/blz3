@@ -21,6 +21,7 @@ HEADERS += b3SkeletonTest.h \
 	b3FileListTest.h \
 	b3FileTest.h \
 	b3FilterTest.h \
+	b3ImaheSetup.h \
 	b3ImageTest.h \
 	b3ListTest.h \
 	b3LocaleTest.h \
@@ -55,6 +56,7 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3FileListTest.cc \
 	b3FileTest.cc \
 	b3FilterTest.cc \
+	b3ImageSetup.cc \
 	b3ImageTest.cc \
 	b3ListTest.cc \
 	b3LocaleTest.cc \
@@ -76,7 +78,8 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 LIBS        += -L$$BLZ3_LIB
 LIBS        += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System
 LIBS        += $$LIBS_CPPUNIT
-QMAKE_CLEAN += *.jpg *.ps *.tiff *.tga *.rgb8 *.exr *.mp4 *.hevc
+QMAKE_CLEAN += *.jpg *.ps *.tiff *.tga *.rgb8 *.exr
+QMAKE_CLEAN += *.mpg *.mp4 *.hevc *.mkv *.webm
 QMAKE_CLEAN += test*.xml test*.bwd unittest
 
 #####################################################################

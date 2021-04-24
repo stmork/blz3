@@ -27,18 +27,10 @@
 
 #include <unordered_map>
 
-class b3ImageTest : public CppUnit::TestFixture
+#include "b3ImageSetup.h"
+
+class b3ImageTest : public CppUnit::TestFixture, protected b3ImageSetup
 {
-	b3Tx m_TxGIF;
-	b3Tx m_TxBW;
-	b3Tx m_TxPallColor;
-	b3Tx m_TxHighColor;
-	b3Tx m_TxTrueColor;
-	b3Tx m_TxRealColor;
-
-	static const b3_res       TEST_IMG_XMAX = 400;
-	static const b3_res       TEST_IMG_YMAX = 300;
-
 	static       b3_pkd_color data_u32[];
 	static       b3_u16       data_u16[];
 	static       b3_u08       data_bw[];

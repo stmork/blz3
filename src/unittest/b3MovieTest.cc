@@ -45,6 +45,8 @@ void b3MovieTest::setUp()
 	b3CodecRegister::b3Instance();
 #endif
 
+	b3SetupImages();
+
 	world.b3Read(filename);
 	scene = (b3Scene *)world.b3GetFirst();
 	scene->b3Reorg();
@@ -126,6 +128,44 @@ void b3MovieTest::testUneven()
 
 	tx.b3AllocTx(19, 31, 32);
 	CPPUNIT_ASSERT_THROW(b3MovieEncoder encoder("test-uneven.mp4", &tx, 25), b3TxException);
+}
+
+void b3MovieTest::testMpg()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mpg"));
+}
+
+void b3MovieTest::testMp4()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mp4"));
+}
+
+void b3MovieTest::testMkv()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mkv"));
+}
+
+void b3MovieTest::testHevc()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.hevc"));
+}
+
+void b3MovieTest::testWebm()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.webm"));
+}
+
+void b3MovieTest::createEmptyVideo(const char * filename)
+{
+	b3Tx tx;
+
+	tx.b3Copy(&m_TxTrueColor);
+	b3MovieEncoder encoder(filename, &tx, 25);
+
+	for (int i = 0; i < 100; i++)
+	{
+		encoder.b3AddFrame(&tx);
+	}
 }
 
 #endif
