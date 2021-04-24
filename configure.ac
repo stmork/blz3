@@ -225,7 +225,8 @@ AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
 
 # Check for video encoder
-AC_CHECK_LIB([x264], [main])
+#AC_CHECK_LIB([x264], [main])
+#AC_CHECK_LIB([x265], [main])
 AC_CHECK_LIB([swscale], [main])
 AC_CHECK_LIB([avutil], [main])
 AC_CHECK_LIB([avformat], [main])
