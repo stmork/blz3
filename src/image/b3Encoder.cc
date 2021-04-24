@@ -85,6 +85,10 @@ void b3CodecRegister::b3PrepareCodecs()
 		{
 			switch (codec->id)
 			{
+			case AV_CODEC_ID_MPEG1VIDEO:
+				m_Encoderinfo.bits.m_mpg = true;
+				break;
+
 			case AV_CODEC_ID_H264:
 				m_Encoderinfo.bits.m_h264 = true;
 				break;
@@ -195,7 +199,28 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_Stream->codecpar->height     = m_ySize;
 	m_Stream->codecpar->format     = AV_PIX_FMT_YUV420P;
 	m_Stream->codecpar->bit_rate   = m_xSize * m_ySize * 3;
-	m_Stream->codecpar->profile    = FF_PROFILE_H264_BASELINE;
+	switch (m_Stream->codecpar->codec_id)
+	{
+	case AV_CODEC_ID_MPEG2VIDEO:
+		m_Stream->codecpar->profile    = FF_PROFILE_MPEG2_MAIN;
+		break;
+
+	case AV_CODEC_ID_H264:
+		m_Stream->codecpar->profile    = FF_PROFILE_H264_BASELINE;
+		break;
+
+	case AV_CODEC_ID_HEVC:
+		m_Stream->codecpar->profile    = FF_PROFILE_HEVC_MAIN;
+		break;
+
+	case AV_CODEC_ID_VP9:
+		m_Stream->codecpar->profile    = FF_PROFILE_VP9_0;
+		break;
+
+	default:
+		// Intentionally do nothing!
+		break;
+	}
 
 	avcodec_parameters_to_context(m_CodecContext, m_Stream->codecpar);
 	m_CodecContext->time_base     = m_FrameDuration;
@@ -204,15 +229,27 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_CodecContext->max_b_frames  =  2;
 	m_CodecContext->gop_size      = 12;
 
-	if (m_Stream->codecpar->codec_id == AV_CODEC_ID_H264)
+	switch (m_Stream->codecpar->codec_id)
 	{
+	case AV_CODEC_ID_H264:
+		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "animation", 0);
-		av_opt_set(m_CodecContext, "preset", "ultrafast", 0);
-		av_opt_set(m_CodecContext, "crf", "20", 0);
+		break;
+
+	case AV_CODEC_ID_HEVC:
+		av_opt_set(m_CodecContext, "preset", "medium", 0);
+		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
+		break;
+
+	default:
+		// Intentionally do nothing!
+		break;
 	}
 	if (m_FormatContext->oformat->flags & AVFMT_GLOBALHEADER)
 	{
-		//			cctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+#if 0
+		m_CodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+#endif
 	}
 
 	error = avcodec_parameters_from_context(m_Stream->codecpar, m_CodecContext);
@@ -292,7 +329,7 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// unrelated to the format we are using. We set them,
 	// for instance, as the corresponding frame number.
 	m_YuvFrame->pts = m_Stream->time_base.den * m_iFrame++ /
-			(m_FrameDuration.den * m_Stream->time_base.num);
+		(m_FrameDuration.den * m_Stream->time_base.num);
 
 	int error = avcodec_send_frame(m_CodecContext, m_YuvFrame);
 	if (error >= 0)

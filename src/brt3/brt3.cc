@@ -369,7 +369,7 @@ int main(int argc, char * argv[])
 #ifdef HAVE_VIDEO_ENCODER
 										img_name.b3LinkFileName(BLZ3_PICTURES, camera->b3GetName());
 										img_name.b3RemoveExt();
-										img_name.b3Append(".mp4");
+										img_name.b3Append(".webm");
 
 										b3MovieEncoder encoder(img_name, *display, animation->m_FramesPerSecond);
 #else
