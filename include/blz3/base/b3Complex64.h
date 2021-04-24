@@ -369,10 +369,10 @@ private:
 
 	inline __m128d division(const b3Complex64 & divisor) const
 	{
-		const b3Complex64 nom   = divisor.v * v;
+		const b3Complex64 num   = divisor.v * v;
 		const b3_f64      denom = divisor.b3SquareLength();
 		const b3Complex64 val(
-			nom.b3Real() + nom.b3Imag(),
+			num.b3Real() + num.b3Imag(),
 			b3Imag() * divisor.b3Real() - b3Real() * divisor.b3Imag());
 
 		return _mm_div_pd(val.v, _mm_set1_pd(denom));
