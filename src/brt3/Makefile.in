@@ -50,7 +50,7 @@ clean:
 
 brt3:	$(BRT3_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 
-benc3:	$(BRT3_OBJS) $(B3_LIB_BASE)
+benc3:	$(BENC3_OBJS) $(B3_LIB_BASE)
 
 bimg3:	$(BIMG3_OBJS) $(B3_LIB_BASE)
 
