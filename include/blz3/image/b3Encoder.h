@@ -136,6 +136,14 @@ public:
 	}
 
 	/**
+	 * This cast operator simply dereferences a AV frame pointer for convenience.
+	 */
+	inline AVPacket * operator -> ()
+	{
+		return &m_Packet;
+	}
+
+	/**
 	 * This method marks the AV packet as a key frame.
 	 */
 	inline void key();
@@ -156,7 +164,7 @@ class b3MovieEncoder
 
 	b3EncoderFrameBuffer       m_RgbFrame;
 	b3EncoderFrameBuffer       m_YuvFrame;
-	AVRational                 m_FramesPerSecond;
+	AVRational                 m_FrameDuration;
 
 	static const unsigned      m_kbit_rate = 900;
 	static const AVPixelFormat m_SrcFormat;

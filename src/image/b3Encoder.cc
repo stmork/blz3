@@ -171,8 +171,8 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 
 	m_xSize = tx->xSize;
 	m_ySize = tx->ySize;
-	m_FramesPerSecond.num =  1;
-	m_FramesPerSecond.den = frames_per_second;
+	m_FrameDuration.num =  1;
+	m_FrameDuration.den = frames_per_second;
 
 	m_SwsCtx = sws_getContext(
 			m_xSize, m_ySize, m_SrcFormat,
@@ -196,18 +196,17 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_Stream->codecpar->format     = AV_PIX_FMT_YUV420P;
 	m_Stream->codecpar->bit_rate   = m_xSize * m_ySize * 3;
 	m_Stream->codecpar->profile    = FF_PROFILE_H264_BASELINE;
-	m_Stream->time_base            = m_FramesPerSecond;
 
 	avcodec_parameters_to_context(m_CodecContext, m_Stream->codecpar);
-	m_CodecContext->time_base     = m_FramesPerSecond;
-	m_CodecContext->framerate.num = m_FramesPerSecond.den;
-	m_CodecContext->framerate.den = m_FramesPerSecond.num;
+	m_CodecContext->time_base     = m_FrameDuration;
+	m_CodecContext->framerate.num = m_FrameDuration.den;
+	m_CodecContext->framerate.den = m_FrameDuration.num;
 	m_CodecContext->max_b_frames  =  2;
 	m_CodecContext->gop_size      = 12;
 
 	if (m_Stream->codecpar->codec_id == AV_CODEC_ID_H264)
 	{
-		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
+		av_opt_set(m_CodecContext, "tune", "animation", 0);
 		av_opt_set(m_CodecContext, "preset", "ultrafast", 0);
 		av_opt_set(m_CodecContext, "crf", "20", 0);
 	}
@@ -292,7 +291,7 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// The PTS of the frame are just in a reference unit,
 	// unrelated to the format we are using. We set them,
 	// for instance, as the corresponding frame number.
-	m_YuvFrame->pts = m_iFrame++;
+	m_YuvFrame->pts = 90000 * m_iFrame++ / m_FrameDuration.den;
 
 	int error = avcodec_send_frame(m_CodecContext, m_YuvFrame);
 	if (error >= 0)
