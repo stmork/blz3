@@ -208,6 +208,11 @@ private:
 	 * This method frees all resources allocated by this video encoder.
 	 */
 	void b3Free();
+
+	void b3PrintErr(
+		const char * description,
+		const int    err,
+		const bool   throw_exception = true);
 };
 
 #endif

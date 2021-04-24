@@ -64,11 +64,11 @@ static b3_bool b3SaveRaytracedImage(
 
 static b3Display * b3AllocDisplay(
 	b3Scene * scene,
-	b3_bool  force_no_display,
-	b3_res   size)
+	b3_bool   force_no_display,
+	b3_res    size)
 {
 	b3Display * display;
-	b3_res     xSize, ySize;
+	b3_res      xSize, ySize;
 
 #ifdef DEBUG_VIEW
 	// Show a small display in every case
@@ -94,6 +94,12 @@ static b3Display * b3AllocDisplay(
 			xSize = size;
 			ySize = size * 3 / 4;
 		}
+
+		// Ensure size is dividsible by two!
+		xSize &= 0xfffe;
+		ySize &= 0xfffe;
+
+		// And now prepare display.
 		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
 		{
 			display = new b3Display(xSize, ySize);

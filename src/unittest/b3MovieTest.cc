@@ -120,4 +120,12 @@ void b3MovieTest::testEmpty()
 #endif
 }
 
+void b3MovieTest::testUneven()
+{
+	b3Tx tx;
+
+	tx.b3AllocTx(19, 31, 32);
+	CPPUNIT_ASSERT_THROW(b3MovieEncoder encoder("test-uneven.mp4", &tx, 25), b3TxException);
+}
+
 #endif

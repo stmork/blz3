@@ -40,6 +40,7 @@ class b3MovieTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3MovieTest);
 	CPPUNIT_TEST(test);
 	CPPUNIT_TEST(testEmpty);
+	CPPUNIT_TEST(testUneven);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -48,6 +49,7 @@ public:
 
 	void test();
 	void testEmpty();
+	void testUneven();
 };
 
 #endif

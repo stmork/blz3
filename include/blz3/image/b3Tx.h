@@ -181,7 +181,8 @@ enum b3_tx_error
 	B3_TX_UNKNOWN_FILETYPE,   //!< Unknown file type.
 	B3_TX_UNKNOWN_DATATYPE,   //!< Unknown image representation.
 	B3_TX_ILLEGAL_DATATYPE,   //!< Internal datatype use illegal.
-	B3_TX_WRONG_SIZE          //!< The data size is not correct.
+	B3_TX_WRONG_SIZE,         //!< The data size is not correct.
+	B3_TX_STREAMING_ERROR     //!< Error occured while video encoding.
 };
 
 typedef b3Exception<b3_tx_error, 0x5458> b3TxException;

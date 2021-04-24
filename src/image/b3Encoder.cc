@@ -183,8 +183,7 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	err = avformat_alloc_output_context2(&m_FormatContext, m_OutputFormat, nullptr, filename);
 	if (err != 0)
 	{
-		b3PrintF(B3LOG_NORMAL, "Error allocation context: %d!\n", err);
-		return;
+		b3PrintErr("Error allocation context", err);
 	}
 	m_Codec          = avcodec_find_encoder(m_OutputFormat->video_codec);
 	m_Stream         = avformat_new_stream(m_FormatContext, m_Codec);
@@ -200,9 +199,12 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	m_Stream->time_base            = m_FramesPerSecond;
 
 	avcodec_parameters_to_context(m_CodecContext, m_Stream->codecpar);
-	m_CodecContext->time_base    = m_FramesPerSecond;
-	m_CodecContext->max_b_frames =  2;
-	m_CodecContext->gop_size     = 12;
+	m_CodecContext->time_base     = m_FramesPerSecond;
+	m_CodecContext->framerate.num = m_FramesPerSecond.den;
+	m_CodecContext->framerate.den = m_FramesPerSecond.num;
+	m_CodecContext->max_b_frames  =  2;
+	m_CodecContext->gop_size      = 12;
+
 	if (m_Stream->codecpar->codec_id == AV_CODEC_ID_H264)
 	{
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
@@ -213,31 +215,37 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	{
 		//			cctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 	}
-	avcodec_parameters_from_context(m_Stream->codecpar, m_CodecContext);
-
-	err = avcodec_open2(m_CodecContext, m_Codec, nullptr);
+	err = avcodec_parameters_from_context(m_Stream->codecpar, m_CodecContext);
 	if (err >= 0)
 	{
-		if ((m_OutputFormat->flags & AVFMT_NOFILE) == 0)
+		err = avcodec_open2(m_CodecContext, m_Codec, nullptr);
+		if (err >= 0)
 		{
-			err = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
-			if (err >= 0)
+			if ((m_OutputFormat->flags & AVFMT_NOFILE) == 0)
 			{
-				err = avformat_write_header(m_FormatContext, nullptr);
-				if (err < 0)
+				err = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
+				if (err >= 0)
 				{
-					b3PrintF(B3LOG_NORMAL, "Error writing header: %d!\n", err);
+					err = avformat_write_header(m_FormatContext, nullptr);
+					if (err < 0)
+					{
+						b3PrintErr("Error writing header", err);
+					}
+				}
+				else
+				{
+					b3PrintErr("Error opening file", err);
 				}
 			}
-			else
-			{
-				b3PrintF(B3LOG_NORMAL, "Error opening file: %d!\n", err);
-			}
+		}
+		else
+		{
+			b3PrintErr("Error opening codec", err);
 		}
 	}
 	else
 	{
-		b3PrintF(B3LOG_NORMAL, "Error opening codec: %d!\n", err);
+		b3PrintErr("Error preparing parameters from codec", err);
 	}
 
 	av_dump_format(m_FormatContext, 0, filename, 1);
@@ -296,12 +304,15 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 			err = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
+
+	b3PrintErr("Error writing trailer", err, false);
 	return err >= 0;
 }
 
 void b3MovieEncoder::b3Finish()
 {
 	int result = 0;
+
 	do
 	{
 		b3EncoderPacket pkt;
@@ -314,7 +325,12 @@ void b3MovieEncoder::b3Finish()
 		}
 	}
 	while (result == 0);
-	av_write_trailer(m_FormatContext);
+
+	int err = av_write_trailer(m_FormatContext);
+	if (err < 0)
+	{
+		b3PrintErr("Error writing trailer", err, false);
+	}
 }
 
 void b3MovieEncoder::b3Free()
@@ -323,6 +339,23 @@ void b3MovieEncoder::b3Free()
 	avcodec_free_context(&m_CodecContext);
 	avformat_free_context(m_FormatContext);
 	sws_freeContext(m_SwsCtx);
+}
+
+void b3MovieEncoder::b3PrintErr(
+	const char * description,
+	const int    err,
+	const bool   throw_exception)
+{
+	char message[256];
+
+	av_strerror(err, message, sizeof(message));
+	b3PrintF(err >= 0 ? B3LOG_DEBUG : B3LOG_NORMAL,
+		"%s: %s (%d)\n", description, message, err);
+
+	if (throw_exception)
+	{
+		B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
+	}
 }
 
 #endif
