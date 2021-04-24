@@ -292,17 +292,17 @@ public:
 		b3_vector  *  vector,
 		const b3_f64  length = 1.0)
 	{
-		const b3_f64 x      = vector->x;
-		const b3_f64 y      = vector->y;
-		const b3_f64 z      = vector->z;
-		const b3_f64 result = sqrt(x * x + y * y + z * z);
-		const b3_f64 denom  = length / result;
+		const b3_f64 x        = vector->x;
+		const b3_f64 y        = vector->y;
+		const b3_f64 z        = vector->z;
+		const b3_f64 denom    = sqrt(x * x + y * y + z * z);
+		const b3_f64 quotient = length / denom;
 
-		vector->x *= denom;
-		vector->y *= denom;
-		vector->z *= denom;
+		vector->x *= quotient;
+		vector->y *= quotient;
+		vector->z *= quotient;
 
-		return result;
+		return denom;
 	}
 
 	/**
@@ -318,30 +318,28 @@ public:
 	{
 #ifdef B3_SSE2
 		b3_f64 * v = &vector->x;
-		b3_f64   denom  = 0;
-		b3_f64   result;
+		b3_f64   denom = 0;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
 			denom += v[i] * v[i];
 		}
 
-		result = sqrt(denom);
-		denom  = length / result;
+		const b3_f64 quotient  = length / sqrt(denom);
 		for (b3_loop i = 0; i < 3; i++)
 		{
-			v[i] *= denom;
+			v[i] *= quotient;
 		}
 #else
-		b3_f64 x      = vector->x;
-		b3_f64 y      = vector->y;
-		b3_f64 z      = vector->z;
-		b3_f64 result = sqrt(x * x + y * y + z * z);
-		b3_f64 denom  = length / result;
+		b3_f64 x        = vector->x;
+		b3_f64 y        = vector->y;
+		b3_f64 z        = vector->z;
+		b3_f64 result   = sqrt(x * x + y * y + z * z);
+		b3_f64 quotient = length / result;
 
-		vector->x *= denom;
-		vector->y *= denom;
-		vector->z *= denom;
+		vector->x *= quotient;
+		vector->y *= quotient;
+		vector->z *= quotient;
 #endif
 		return result;
 	}
@@ -357,15 +355,15 @@ public:
 		b3_gl_vector * vector,
 		const b3_f32   length = 1.0)
 	{
-		b3_f32 x      = vector->x;
-		b3_f32 y      = vector->y;
-		b3_f32 z      = vector->z;
-		b3_f32 result = sqrt(x * x + y * y + z * z);
-		b3_f32 denom  = length / result;
+		b3_f32 x        = vector->x;
+		b3_f32 y        = vector->y;
+		b3_f32 z        = vector->z;
+		b3_f32 result   = sqrt(x * x + y * y + z * z);
+		b3_f32 quotient = length / result;
 
-		vector->x *= denom;
-		vector->y *= denom;
-		vector->z *= denom;
+		vector->x *= quotient;
+		vector->y *= quotient;
+		vector->z *= quotient;
 
 		return result;
 	}
@@ -425,7 +423,7 @@ public:
 #ifdef B3_SSE2
 		const b3_f64  * a = &aVec->x;
 		const b3_f64  * b = &bVec->x;
-		b3_f64              result = 0;
+		b3_f64          result = 0;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
