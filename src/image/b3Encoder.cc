@@ -234,11 +234,13 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	case AV_CODEC_ID_H264:
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "animation", 0);
+		av_opt_set(m_CodecContext, "crf", "23", 0);
 		break;
 
 	case AV_CODEC_ID_HEVC:
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
+		av_opt_set(m_CodecContext, "crf", "28", 0);
 		break;
 
 	default:

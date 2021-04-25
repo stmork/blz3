@@ -116,7 +116,7 @@ void b3MovieTest::testEmpty()
 	b3Tx      tx;
 
 	CPPUNIT_ASSERT(tx.b3AllocTx(640, 480, 128));
-	b3MovieEncoder encoder("test-empty.mp4", &tx, 25);
+	b3MovieEncoder encoder("test-video-empty.mp4", &tx, 25);
 
 	encoder.b3AddFrame(&tx);
 #endif
@@ -127,7 +127,7 @@ void b3MovieTest::testUneven()
 	b3Tx tx;
 
 	tx.b3AllocTx(19, 31, 32);
-	CPPUNIT_ASSERT_THROW(b3MovieEncoder encoder("test-uneven.mp4", &tx, 25), b3TxException);
+	CPPUNIT_ASSERT_THROW(b3MovieEncoder encoder("test-video-uneven.mp4", &tx, 25), b3TxException);
 }
 
 void b3MovieTest::testMpg()
@@ -143,6 +143,11 @@ void b3MovieTest::testMp4()
 void b3MovieTest::testMkv()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mkv"));
+}
+
+void b3MovieTest::testMov()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mov"));
 }
 
 void b3MovieTest::testHevc()
