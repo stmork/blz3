@@ -159,8 +159,10 @@ class b3MovieEncoder
 	SwsContext        *        m_SwsCtx        = nullptr;
 	AVOutputFormat      *      m_OutputFormat  = nullptr;
 	AVFormatContext      *     m_FormatContext = nullptr;
-	AVCodec          *         m_Codec         = nullptr;
-	AVStream         *         m_Stream        = nullptr;
+	AVCodec          *         m_AudioCodec    = nullptr;
+	AVCodec          *         m_VideoCodec    = nullptr;
+	AVStream         *         m_AudioStream   = nullptr;
+	AVStream         *         m_VideoStream   = nullptr;
 	AVCodecContext      *      m_CodecContext  = nullptr;
 
 	b3EncoderFrameBuffer       m_RgbFrame;

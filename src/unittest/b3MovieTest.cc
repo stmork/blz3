@@ -130,6 +130,11 @@ void b3MovieTest::testUneven()
 	CPPUNIT_ASSERT_THROW(b3MovieEncoder encoder("test-video-uneven.mp4", &tx, 25), b3TxException);
 }
 
+void b3MovieTest::testAvi()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.avi"));
+}
+
 void b3MovieTest::testMpg()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mpg"));
@@ -167,7 +172,7 @@ void b3MovieTest::createEmptyVideo(const char * filename)
 	tx.b3Copy(&m_TxTrueColor);
 	b3MovieEncoder encoder(filename, &tx, 25);
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i <= 100; i++)
 	{
 		encoder.b3AddFrame(&tx);
 	}

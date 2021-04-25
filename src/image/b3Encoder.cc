@@ -183,111 +183,86 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 			m_xSize, m_ySize, m_DstFormat,
 			SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
 
-	m_OutputFormat = av_guess_format(nullptr, filename, nullptr);
-	error = avformat_alloc_output_context2(&m_FormatContext, m_OutputFormat, nullptr, filename);
-	if (error != 0)
-	{
-		b3PrintErr("Error allocation context", error);
-	}
-	m_Codec          = avcodec_find_encoder(m_OutputFormat->video_codec);
-	m_Stream         = avformat_new_stream(m_FormatContext, m_Codec);
-	m_CodecContext   = avcodec_alloc_context3(m_Codec);
+	error = avformat_alloc_output_context2(&m_FormatContext, nullptr, nullptr, filename);
+	b3PrintErr("Format context allocation", error);
 
-	m_Stream->codecpar->codec_id   = m_OutputFormat->video_codec;
-	m_Stream->codecpar->codec_type = AVMEDIA_TYPE_VIDEO;
-	m_Stream->codecpar->width      = m_xSize;
-	m_Stream->codecpar->height     = m_ySize;
-	m_Stream->codecpar->format     = AV_PIX_FMT_YUV420P;
-	m_Stream->codecpar->bit_rate   = m_xSize * m_ySize * 3;
-	switch (m_Stream->codecpar->codec_id)
+	m_OutputFormat           = m_FormatContext->oformat;
+	AVCodecID audio_codec_id = av_guess_codec(m_OutputFormat, nullptr, filename, nullptr, AVMEDIA_TYPE_AUDIO);
+	AVCodecID video_codec_id = av_guess_codec(m_OutputFormat, nullptr, filename, nullptr, AVMEDIA_TYPE_VIDEO);
+
+	m_AudioCodec       = avcodec_find_encoder(audio_codec_id);
+	m_VideoCodec       = avcodec_find_encoder(video_codec_id);
+//	m_AudioStream      = avformat_new_stream(m_FormatContext, m_AudioCodec);
+	m_VideoStream      = avformat_new_stream(m_FormatContext, m_VideoCodec);
+	m_CodecContext     = avcodec_alloc_context3(m_VideoCodec);
+
+	// Prepare codec context.
+	m_CodecContext->width                 = m_xSize;
+	m_CodecContext->height                = m_ySize;
+	m_CodecContext->pix_fmt               = m_DstFormat;
+	m_CodecContext->sample_aspect_ratio   = av_make_q(1, 1);
+	m_CodecContext->color_range           = AVCOL_RANGE_MPEG;
+	m_CodecContext->bit_rate              = m_xSize * m_ySize * 3;
+	m_CodecContext->time_base             = m_FrameDuration;
+	m_CodecContext->framerate.num         = m_FrameDuration.den;
+	m_CodecContext->framerate.den         = m_FrameDuration.num;
+	m_CodecContext->max_b_frames          =  1;
+	m_CodecContext->gop_size              = 10;
+	m_CodecContext->strict_std_compliance = FF_COMPLIANCE_VERY_STRICT;
+
+	// Prepare codec specific parameters.
+	switch (m_VideoCodec->id)
 	{
 	case AV_CODEC_ID_MPEG2VIDEO:
-		m_Stream->codecpar->profile    = FF_PROFILE_MPEG2_MAIN;
+		m_CodecContext->profile = FF_PROFILE_MPEG2_MAIN;
 		break;
 
-	case AV_CODEC_ID_H264:
-		m_Stream->codecpar->profile    = FF_PROFILE_H264_BASELINE;
+	case AV_CODEC_ID_MPEG4:
+		m_CodecContext->profile = FF_PROFILE_MPEG4_MAIN;
 		break;
 
-	case AV_CODEC_ID_HEVC:
-		m_Stream->codecpar->profile    = FF_PROFILE_HEVC_MAIN;
-		break;
-
-	case AV_CODEC_ID_VP9:
-		m_Stream->codecpar->profile    = FF_PROFILE_VP9_0;
-		break;
-
-	default:
-		// Intentionally do nothing!
-		break;
-	}
-
-	avcodec_parameters_to_context(m_CodecContext, m_Stream->codecpar);
-	m_CodecContext->time_base     = m_FrameDuration;
-	m_CodecContext->framerate.num = m_FrameDuration.den;
-	m_CodecContext->framerate.den = m_FrameDuration.num;
-	m_CodecContext->max_b_frames  =  2;
-	m_CodecContext->gop_size      = 12;
-
-	switch (m_Stream->codecpar->codec_id)
-	{
 	case AV_CODEC_ID_H264:
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
-		av_opt_set(m_CodecContext, "tune", "animation", 0);
+		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "23", 0);
+		m_CodecContext->profile = FF_PROFILE_H264_MAIN;
 		break;
 
 	case AV_CODEC_ID_HEVC:
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "28", 0);
+		m_CodecContext->profile = FF_PROFILE_HEVC_MAIN;
+		break;
+
+	case AV_CODEC_ID_VP9:
+		m_CodecContext->profile = FF_PROFILE_VP9_0;
 		break;
 
 	default:
 		// Intentionally do nothing!
 		break;
 	}
-	if (m_FormatContext->oformat->flags & AVFMT_GLOBALHEADER)
+
+	// Prepare stream.
+	m_VideoStream->avg_frame_rate = m_CodecContext->framerate;
+
+	error = avcodec_parameters_from_context(m_VideoStream->codecpar, m_CodecContext);
+	b3PrintErr("Converting codec context parameter", error);
+
+	error = avcodec_open2(m_CodecContext, m_VideoCodec, nullptr);
+	b3PrintErr("Codec opening", error);
+
+	if ((m_OutputFormat->flags & AVFMT_NOFILE) == 0)
 	{
-#if 0
-		m_CodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-#endif
+		error = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
+		b3PrintErr("File opening", error);
 	}
 
-	error = avcodec_parameters_from_context(m_Stream->codecpar, m_CodecContext);
-	if (error >= 0)
-	{
-		error = avcodec_open2(m_CodecContext, m_Codec, nullptr);
-		if (error >= 0)
-		{
-			if ((m_OutputFormat->flags & AVFMT_NOFILE) == 0)
-			{
-				error = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
-				if (error >= 0)
-				{
-					error = avformat_write_header(m_FormatContext, nullptr);
-					if (error < 0)
-					{
-						b3PrintErr("Error writing header", error);
-					}
-				}
-				else
-				{
-					b3PrintErr("Error opening file", error);
-				}
-			}
-		}
-		else
-		{
-			b3PrintErr("Error opening codec", error);
-		}
-	}
-	else
-	{
-		b3PrintErr("Error preparing parameters from codec", error);
-	}
+	error = avformat_write_header(m_FormatContext, nullptr);
+	b3PrintErr("Header writing", error);
 
-	av_dump_format(m_FormatContext, 0, filename, 1);
+	av_dump_format(m_FormatContext, m_VideoStream->index, filename, 1);
 }
 
 b3MovieEncoder::~b3MovieEncoder()
@@ -330,22 +305,26 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// The PTS of the frame are just in a reference unit,
 	// unrelated to the format we are using. We set them,
 	// for instance, as the corresponding frame number.
-	m_YuvFrame->pts = m_Stream->time_base.den * m_iFrame++ /
-		(m_FrameDuration.den * m_Stream->time_base.num);
+	m_YuvFrame->pts = m_VideoStream->time_base.den * m_iFrame++ /
+		(m_FrameDuration.den * m_VideoStream->time_base.num);
 
 	int error = avcodec_send_frame(m_CodecContext, m_YuvFrame);
 	if (error >= 0)
 	{
 		b3EncoderPacket pkt;
 
-		if (avcodec_receive_packet(m_CodecContext, pkt) >= 0)
+		error = avcodec_receive_packet(m_CodecContext, pkt);
+		if ((error == AVERROR(EAGAIN)) || (error == AVERROR_EOF))
 		{
-			pkt.key();
+			return true;
+		}
+		if (error >= 0)
+		{
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
 
-	b3PrintErr("Frame writing", error);
+	b3PrintErr("Frame writing", error, false);
 	return error >= 0;
 }
 
@@ -369,10 +348,7 @@ void b3MovieEncoder::b3Finish()
 	while (result == 0);
 
 	error = av_write_trailer(m_FormatContext);
-	if (error < 0)
-	{
-		b3PrintErr("Error writing trailer", error, false);
-	}
+	b3PrintErr("Trailer writing", error, false);
 }
 
 void b3MovieEncoder::b3Free()
@@ -381,6 +357,8 @@ void b3MovieEncoder::b3Free()
 	avcodec_free_context(&m_CodecContext);
 	avformat_free_context(m_FormatContext);
 	sws_freeContext(m_SwsCtx);
+	m_OutputFormat = nullptr;
+	m_SwsCtx = nullptr;
 }
 
 void b3MovieEncoder::b3PrintErr(
