@@ -150,6 +150,9 @@ public:
 	inline void key();
 };
 
+class b3AudioStream;
+class b3VideoStream;
+
 /**
  * This class provides an easy way to encode multiple single images into
  * one video encoded MP4 file.
@@ -159,11 +162,8 @@ class b3MovieEncoder
 	SwsContext        *        m_SwsCtx        = nullptr;
 	AVOutputFormat      *      m_OutputFormat  = nullptr;
 	AVFormatContext      *     m_FormatContext = nullptr;
-	AVCodec          *         m_AudioCodec    = nullptr;
-	AVCodec          *         m_VideoCodec    = nullptr;
-	AVStream         *         m_AudioStream   = nullptr;
-	AVStream         *         m_VideoStream   = nullptr;
-	AVCodecContext      *      m_CodecContext  = nullptr;
+	b3AudioStream       *      m_AudioStream   = nullptr;
+	b3VideoStream       *      m_VideoStream   = nullptr;
 
 	b3EncoderFrameBuffer       m_RgbFrame;
 	b3EncoderFrameBuffer       m_YuvFrame;
