@@ -160,14 +160,12 @@ class b3VideoStream;
 class b3MovieEncoder
 {
 	SwsContext        *        m_SwsCtx        = nullptr;
-	AVOutputFormat      *      m_OutputFormat  = nullptr;
 	AVFormatContext      *     m_FormatContext = nullptr;
 	b3AudioStream       *      m_AudioStream   = nullptr;
 	b3VideoStream       *      m_VideoStream   = nullptr;
 
 	b3EncoderFrameBuffer       m_RgbFrame;
 	b3EncoderFrameBuffer       m_YuvFrame;
-	AVRational                 m_FrameDuration;
 
 	static const unsigned      m_kbit_rate = 900;
 	static const AVPixelFormat m_SrcFormat;

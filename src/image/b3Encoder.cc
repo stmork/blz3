@@ -204,10 +204,12 @@ public:
 	b3AudioStream(AVFormatContext * format_context, const char * filename) :
 		b3MovieStream(format_context, filename, AVMEDIA_TYPE_AUDIO)
 	{
-		m_CodecContext->sample_rate = 44100 / 25;
-		m_CodecContext->sample_fmt  = AV_SAMPLE_FMT_S16;
-		m_CodecContext->channels    = 2;
-		m_CodecContext->channel_layout = 2;
+		m_CodecContext->bit_rate       = 64000;
+		m_CodecContext->sample_rate    = 44100;
+		m_CodecContext->sample_fmt     = AV_SAMPLE_FMT_FLTP;
+		m_CodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
+		m_CodecContext->channels       = av_get_channel_layout_nb_channels(
+				m_CodecContext->channel_layout);
 	}
 };
 
@@ -279,6 +281,12 @@ public:
 		// Prepare stream.
 		m_Stream->avg_frame_rate = m_CodecContext->framerate;
 	}
+
+	int64_t b3Pts(const unsigned iFrame) const
+	{
+		return m_Stream->time_base.den * iFrame /
+			(m_FrameDuration.den * m_Stream->time_base.num);
+	}
 };
 
 b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second) :
@@ -289,8 +297,6 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 
 	m_xSize = tx->xSize;
 	m_ySize = tx->ySize;
-	m_FrameDuration.num =  1;
-	m_FrameDuration.den = frames_per_second;
 
 	m_SwsCtx = sws_getContext(
 			m_xSize, m_ySize, m_SrcFormat,
@@ -300,7 +306,6 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	error = avformat_alloc_output_context2(&m_FormatContext, nullptr, nullptr, filename);
 	b3PrintErr("Format context allocation", error);
 
-	m_OutputFormat = m_FormatContext->oformat;
 //	m_AudioStream  = new b3AudioStream(m_FormatContext, filename);
 	m_VideoStream  = new b3VideoStream(m_FormatContext, filename, m_xSize, m_ySize, m_DstFormat, frames_per_second);
 
@@ -326,7 +331,7 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 		av_dump_format(m_FormatContext, m_AudioStream->m_Stream->index, filename, 1);
 	}
 
-	if ((m_OutputFormat->flags & AVFMT_NOFILE) == 0)
+	if ((m_FormatContext->oformat->flags & AVFMT_NOFILE) == 0)
 	{
 		error = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
 		b3PrintErr("File opening", error);
@@ -339,7 +344,7 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 b3MovieEncoder::~b3MovieEncoder()
 {
 	b3Finish();
-	if (!(m_OutputFormat->flags & AVFMT_NOFILE))
+	if (!(m_FormatContext->oformat->flags & AVFMT_NOFILE))
 	{
 		avio_close(m_FormatContext->pb);
 	}
@@ -376,8 +381,7 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	// The PTS of the frame are just in a reference unit,
 	// unrelated to the format we are using. We set them,
 	// for instance, as the corresponding frame number.
-	m_YuvFrame->pts = m_VideoStream->m_Stream->time_base.den * m_iFrame++ /
-		(m_FrameDuration.den * m_VideoStream->m_Stream->time_base.num);
+	m_YuvFrame->pts = m_VideoStream->b3Pts(m_iFrame++);
 
 	int error = avcodec_send_frame(*m_VideoStream, m_YuvFrame);
 	if (error >= 0)
@@ -430,10 +434,10 @@ void b3MovieEncoder::b3Free()
 
 	avformat_free_context(m_FormatContext);
 	sws_freeContext(m_SwsCtx);
-	m_AudioStream  = nullptr;
-	m_VideoStream  = nullptr;
-	m_OutputFormat = nullptr;
-	m_SwsCtx       = nullptr;
+	m_FormatContext = nullptr;
+	m_AudioStream   = nullptr;
+	m_VideoStream   = nullptr;
+	m_SwsCtx        = nullptr;
 }
 
 void b3MovieEncoder::b3PrintErr(
