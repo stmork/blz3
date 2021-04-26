@@ -121,6 +121,15 @@ void b3CodecRegister::b3PrepareCodecs()
 **                                                                      **
 *************************************************************************/
 
+b3EncoderFrameBuffer::b3EncoderFrameBuffer()
+{
+	m_Frame = av_frame_alloc();
+	m_Frame->format         = AV_SAMPLE_FMT_FLTP;
+	m_Frame->nb_samples     = 44100 / 25;
+	m_Frame->channel_layout = AV_CH_LAYOUT_STEREO;
+	av_frame_get_buffer(m_Frame, 0);
+}
+
 b3EncoderFrameBuffer::b3EncoderFrameBuffer(const b3Tx * tx, int format)
 {
 	m_Frame = av_frame_alloc();
@@ -160,15 +169,15 @@ void b3EncoderPacket::key()
 
 /*************************************************************************
 **                                                                      **
-**                        AV MP4/h.264 encoder implementation           **
+**                        AV stream/codec implementation                **
 **                                                                      **
 *************************************************************************/
 
-const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_BGRA;
-const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
-
 class b3MovieStream
 {
+protected:
+	AVRational                 m_FrameDuration;
+
 public:
 	AVCodecID        codec_id       = AV_CODEC_ID_PROBE;
 	AVCodec     *    m_Codec        = nullptr;
@@ -176,9 +185,16 @@ public:
 	AVCodecContext * m_CodecContext = nullptr;
 
 public:
-	b3MovieStream(AVFormatContext * format_context, const char * filename, AVMediaType media_type)
+	b3MovieStream(
+		AVFormatContext * format_context,
+		const char    *   filename,
+		const b3_res      frames_per_second,
+		const AVMediaType media_type)
 	{
 		codec_id = av_guess_codec(format_context->oformat, nullptr, filename, nullptr, media_type);
+
+		m_FrameDuration.num =  1;
+		m_FrameDuration.den = frames_per_second;
 
 		m_Codec        = avcodec_find_encoder(codec_id);
 		m_Stream       = avformat_new_stream(format_context, m_Codec);
@@ -192,6 +208,12 @@ public:
 		m_Stream = nullptr;
 	}
 
+	int64_t b3Pts(const unsigned iFrame) const
+	{
+		return m_Stream->time_base.den * iFrame /
+			(m_FrameDuration.den * m_Stream->time_base.num);
+	}
+
 	inline operator AVCodecContext * ()
 	{
 		return m_CodecContext;
@@ -200,12 +222,18 @@ public:
 
 class b3AudioStream : public b3MovieStream
 {
+	static const unsigned SAMPLE_RATE = 44100;
+
 public:
-	b3AudioStream(AVFormatContext * format_context, const char * filename) :
-		b3MovieStream(format_context, filename, AVMEDIA_TYPE_AUDIO)
+	b3AudioStream(
+		AVFormatContext * format_context,
+		const char    *   filename,
+		const b3_res      frames_per_second) :
+		b3MovieStream(format_context, filename, frames_per_second, AVMEDIA_TYPE_AUDIO)
 	{
 		m_CodecContext->bit_rate       = 64000;
-		m_CodecContext->sample_rate    = 44100;
+		m_CodecContext->sample_rate    = SAMPLE_RATE;
+		m_CodecContext->frame_size     = SAMPLE_RATE / frames_per_second;
 		m_CodecContext->sample_fmt     = AV_SAMPLE_FMT_FLTP;
 		m_CodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
 		m_CodecContext->channels       = av_get_channel_layout_nb_channels(
@@ -215,28 +243,23 @@ public:
 
 class b3VideoStream : public b3MovieStream
 {
-	AVRational                 m_FrameDuration;
-
 public:
 	b3VideoStream(
-		AVFormatContext * format_context,
-		const char * filename,
-		const b3_res m_xSize,
-		const b3_res m_ySize,
-		const AVPixelFormat pixel_format,
-		const b3_res frames_per_second) :
-		b3MovieStream(format_context, filename, AVMEDIA_TYPE_VIDEO)
+		AVFormatContext  *  format_context,
+		const char     *    filename,
+		const b3_res        frames_per_second,
+		const b3_res        xSize,
+		const b3_res        ySize,
+		const AVPixelFormat pixel_format) :
+		b3MovieStream(format_context, filename, frames_per_second, AVMEDIA_TYPE_VIDEO)
 	{
-		m_FrameDuration.num =  1;
-		m_FrameDuration.den = frames_per_second;
-
 		// Prepare codec context.
-		m_CodecContext->width                 = m_xSize;
-		m_CodecContext->height                = m_ySize;
+		m_CodecContext->width                 = xSize;
+		m_CodecContext->height                = ySize;
 		m_CodecContext->pix_fmt               = pixel_format;
 		m_CodecContext->sample_aspect_ratio   = av_make_q(1, 1);
 		m_CodecContext->color_range           = AVCOL_RANGE_MPEG;
-		m_CodecContext->bit_rate              = m_xSize * m_ySize * 3;
+		m_CodecContext->bit_rate              = xSize * ySize * 3;
 		m_CodecContext->time_base             = m_FrameDuration;
 		m_CodecContext->framerate.num         = m_FrameDuration.den;
 		m_CodecContext->framerate.den         = m_FrameDuration.num;
@@ -281,17 +304,21 @@ public:
 		// Prepare stream.
 		m_Stream->avg_frame_rate = m_CodecContext->framerate;
 	}
-
-	int64_t b3Pts(const unsigned iFrame) const
-	{
-		return m_Stream->time_base.den * iFrame /
-			(m_FrameDuration.den * m_Stream->time_base.num);
-	}
 };
+
+/*************************************************************************
+**                                                                      **
+**                        AV MP4/h.264 encoder implementation           **
+**                                                                      **
+*************************************************************************/
+
+const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_BGRA;
+const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
 
 b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second) :
 	m_RgbFrame(tx, m_SrcFormat),
-	m_YuvFrame(tx, m_DstFormat)
+	m_YuvFrame(tx, m_DstFormat),
+	m_AudioFrame()
 {
 	int error = 0;
 
@@ -306,8 +333,8 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	error = avformat_alloc_output_context2(&m_FormatContext, nullptr, nullptr, filename);
 	b3PrintErr("Format context allocation", error);
 
-//	m_AudioStream  = new b3AudioStream(m_FormatContext, filename);
-	m_VideoStream  = new b3VideoStream(m_FormatContext, filename, m_xSize, m_ySize, m_DstFormat, frames_per_second);
+	m_VideoStream  = new b3VideoStream(m_FormatContext, filename, frames_per_second, m_xSize, m_ySize, m_DstFormat);
+	m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second);
 
 	if (m_VideoStream != nullptr)
 	{
@@ -316,8 +343,6 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 
 		error = avcodec_open2(*m_VideoStream, m_VideoStream->m_Codec, nullptr);
 		b3PrintErr("Codec opening", error);
-
-		av_dump_format(m_FormatContext, m_VideoStream->m_Stream->index, filename, 1);
 	}
 
 	if (m_AudioStream != nullptr)
@@ -327,8 +352,6 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 
 		error = avcodec_open2(*m_AudioStream, m_AudioStream->m_Codec, nullptr);
 		b3PrintErr("Codec opening", error);
-
-		av_dump_format(m_FormatContext, m_AudioStream->m_Stream->index, filename, 1);
 	}
 
 	if ((m_FormatContext->oformat->flags & AVFMT_NOFILE) == 0)
@@ -339,6 +362,8 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 
 	error = avformat_write_header(m_FormatContext, nullptr);
 	b3PrintErr("Header writing", error);
+
+	av_dump_format(m_FormatContext, 0, filename, 1);
 }
 
 b3MovieEncoder::~b3MovieEncoder()
@@ -352,6 +377,56 @@ b3MovieEncoder::~b3MovieEncoder()
 }
 
 bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
+{
+	bool success = true;
+
+	if (m_VideoStream != nullptr)
+	{
+		success = success && b3AddVideoFrame(tx);
+	}
+	if (m_AudioStream != nullptr)
+	{
+		success = success && b3AddAudioFrame();
+	}
+	m_iFrame++;
+	return success;
+}
+
+void b3MovieEncoder::b3Finish()
+{
+	int result = 0;
+	int error  = 0;
+
+	do
+	{
+		result = b3SendFrame(m_VideoStream);
+	}
+	while (result == 0);
+	do
+	{
+		result = b3SendFrame(m_AudioStream);
+	}
+	while (result == 0);
+
+	error = av_write_trailer(m_FormatContext);
+	b3PrintErr("Trailer writing", error, false);
+}
+
+void b3MovieEncoder::b3Free()
+{
+	// Freeing all the allocated memory:
+	delete m_VideoStream;
+	delete m_AudioStream;
+
+	avformat_free_context(m_FormatContext);
+	sws_freeContext(m_SwsCtx);
+	m_FormatContext = nullptr;
+	m_AudioStream   = nullptr;
+	m_VideoStream   = nullptr;
+	m_SwsCtx        = nullptr;
+}
+
+bool b3MovieEncoder::b3AddVideoFrame(const b3Tx * tx)
 {
 	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize) || (m_RgbFrame == nullptr))
 	{
@@ -378,18 +453,46 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 		m_RgbFrame->data, m_RgbFrame->linesize, 0, m_ySize,
 		m_YuvFrame->data, m_YuvFrame->linesize);
 
-	// The PTS of the frame are just in a reference unit,
-	// unrelated to the format we are using. We set them,
-	// for instance, as the corresponding frame number.
-	m_YuvFrame->pts = m_VideoStream->b3Pts(m_iFrame++);
+	int error = b3SendFrame(m_VideoStream, m_YuvFrame);
 
-	int error = avcodec_send_frame(*m_VideoStream, m_YuvFrame);
-	if (error >= 0)
+	b3PrintErr("Video frame writing", error, false);
+	return error >= 0;
+}
+
+bool b3MovieEncoder::b3AddAudioFrame()
+{
+	if (m_AudioFrame == nullptr)
+	{
+		return false;
+	}
+
+	int error = b3SendFrame(m_AudioStream, m_AudioFrame);
+
+	b3PrintErr("Audio frame writing", error, false);
+	return error >= 0;
+}
+
+int b3MovieEncoder::b3SendFrame(b3MovieStream * stream, AVFrame * frame)
+{
+	if (stream == nullptr)
+	{
+		return AVERROR_STREAM_NOT_FOUND;
+	}
+	if (frame != nullptr)
+	{
+		frame->pts = stream->b3Pts(m_iFrame);
+	}
+
+	int error = avcodec_send_frame(*stream, frame);
+	b3PrintErr("Frame send to encoder", error, false);
+
+//	if (error >= 0)
 	{
 		b3EncoderPacket pkt;
 
-		error = avcodec_receive_packet(*m_VideoStream, pkt);
-		if ((error == AVERROR(EAGAIN)) || (error == AVERROR_EOF))
+		error = avcodec_receive_packet(*stream, pkt);
+		b3PrintErr("Frame received from encoder", error, false);
+		if (b3Delayed(error))
 		{
 			return true;
 		}
@@ -398,46 +501,7 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
-
-	b3PrintErr("Frame writing", error, false);
-	return error >= 0;
-}
-
-void b3MovieEncoder::b3Finish()
-{
-	int result = 0;
-	int error  = 0;
-
-	do
-	{
-		b3EncoderPacket pkt;
-
-		avcodec_send_frame(*m_VideoStream, nullptr);
-		result = avcodec_receive_packet(*m_VideoStream, pkt);
-		if (result == 0)
-		{
-			error = av_interleaved_write_frame(m_FormatContext, pkt);
-			b3PrintErr("Frame writing", error, false);
-		}
-	}
-	while (result == 0);
-
-	error = av_write_trailer(m_FormatContext);
-	b3PrintErr("Trailer writing", error, false);
-}
-
-void b3MovieEncoder::b3Free()
-{
-	// Freeing all the allocated memory:
-	delete m_VideoStream;
-	delete m_AudioStream;
-
-	avformat_free_context(m_FormatContext);
-	sws_freeContext(m_SwsCtx);
-	m_FormatContext = nullptr;
-	m_AudioStream   = nullptr;
-	m_VideoStream   = nullptr;
-	m_SwsCtx        = nullptr;
+	return error;
 }
 
 void b3MovieEncoder::b3PrintErr(

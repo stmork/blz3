@@ -79,6 +79,8 @@ class b3EncoderFrameBuffer
 	AVFrame * m_Frame = nullptr;
 
 public:
+	explicit b3EncoderFrameBuffer();
+
 	/**
 	 * Thie constructor allocates an AV frame in the specified resolution
 	 * given by the b3Tx instance and a color format.
@@ -150,6 +152,7 @@ public:
 	inline void key();
 };
 
+class b3MovieStream;
 class b3AudioStream;
 class b3VideoStream;
 
@@ -166,6 +169,7 @@ class b3MovieEncoder
 
 	b3EncoderFrameBuffer       m_RgbFrame;
 	b3EncoderFrameBuffer       m_YuvFrame;
+	b3EncoderFrameBuffer       m_AudioFrame;
 
 	static const unsigned      m_kbit_rate = 900;
 	static const AVPixelFormat m_SrcFormat;
@@ -217,6 +221,16 @@ private:
 	 * This method frees all resources allocated by this video encoder.
 	 */
 	void b3Free();
+
+	bool b3AddVideoFrame(const b3Tx * tx);
+	bool b3AddAudioFrame();
+
+	int  b3SendFrame(b3MovieStream * stream, AVFrame * frame = nullptr);
+
+	static inline bool b3Delayed(int error)
+	{
+		return (error == AVERROR(EAGAIN)) || (error == AVERROR_EOF);
+	}
 
 	void b3PrintErr(
 		const char * description,
