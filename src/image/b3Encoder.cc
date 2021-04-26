@@ -334,7 +334,7 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	b3PrintErr("Format context allocation", error);
 
 	m_VideoStream  = new b3VideoStream(m_FormatContext, filename, frames_per_second, m_xSize, m_ySize, m_DstFormat);
-	m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second);
+//	m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second);
 
 	if (m_VideoStream != nullptr)
 	{
