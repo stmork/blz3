@@ -79,7 +79,7 @@ LIBS        += -L$$BLZ3_LIB
 LIBS        += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System
 LIBS        += $$LIBS_CPPUNIT
 QMAKE_CLEAN += *.jpg *.ps *.tiff *.tga *.rgb8 *.exr
-QMAKE_CLEAN += *.mpg *.mp4 *.hevc *.mkv *.webm
+QMAKE_CLEAN += *.avi *.mp4 *.mpg *.mov *.hevc *.mkv *.webm
 QMAKE_CLEAN += test*.xml test*.bwd unittest
 
 #####################################################################

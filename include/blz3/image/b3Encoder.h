@@ -77,6 +77,8 @@ public:
 class b3EncoderFrameBuffer
 {
 	AVFrame * m_Frame = nullptr;
+	int buffer_size = 0;
+	int sample_size = 0;
 
 public:
 	explicit b3EncoderFrameBuffer();
@@ -94,6 +96,8 @@ public:
 	 * The destructor frees the frame resource.
 	 */
 	virtual ~b3EncoderFrameBuffer();
+
+	void b3InitAudio(const AVCodecContext * codec_context, const b3_res frames_per_second);
 
 	/**
 	 * This cast operator simply returns a AV frame pointer for convenience.
@@ -175,7 +179,6 @@ class b3MovieEncoder
 	static const AVPixelFormat m_SrcFormat;
 	static const AVPixelFormat m_DstFormat;
 
-	unsigned                   m_iFrame    =   0;
 	b3_res                     m_xSize;
 	b3_res                     m_ySize;
 
@@ -221,6 +224,8 @@ private:
 	 * This method frees all resources allocated by this video encoder.
 	 */
 	void b3Free();
+
+	void b3PrepareStream(b3MovieStream * stream);
 
 	bool b3AddVideoFrame(const b3Tx * tx);
 	bool b3AddAudioFrame();

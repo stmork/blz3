@@ -124,10 +124,26 @@ void b3CodecRegister::b3PrepareCodecs()
 b3EncoderFrameBuffer::b3EncoderFrameBuffer()
 {
 	m_Frame = av_frame_alloc();
-	m_Frame->format         = AV_SAMPLE_FMT_FLTP;
-	m_Frame->nb_samples     = 44100 / 25;
-	m_Frame->channel_layout = AV_CH_LAYOUT_STEREO;
+}
+
+void b3EncoderFrameBuffer::b3InitAudio(
+		const AVCodecContext * codec_context,
+		const b3_res           frames_per_second)
+{
+	m_Frame->format         = codec_context->sample_fmt;
+	m_Frame->sample_rate    = codec_context->sample_rate;
+	m_Frame->channel_layout = codec_context->channel_layout;
+	m_Frame->channels       = av_get_channel_layout_nb_channels(m_Frame->channel_layout);
+	m_Frame->nb_samples     = codec_context->sample_rate * m_Frame->channels / frames_per_second;
+
+	buffer_size = av_samples_get_buffer_size(nullptr,
+			m_Frame->channels,
+			codec_context->sample_rate / frames_per_second,
+			codec_context->sample_fmt, 0);
+	sample_size = av_get_bytes_per_sample (codec_context->sample_fmt);
+
 	av_frame_get_buffer(m_Frame, 0);
+	bzero(m_Frame->data[0], m_Frame->linesize[0]);
 }
 
 b3EncoderFrameBuffer::b3EncoderFrameBuffer(const b3Tx * tx, int format)
@@ -175,6 +191,8 @@ void b3EncoderPacket::key()
 
 class b3MovieStream
 {
+	unsigned                   m_FrameNo    =   0;
+
 protected:
 	AVRational                 m_FrameDuration;
 
@@ -197,6 +215,10 @@ public:
 		m_FrameDuration.den = frames_per_second;
 
 		m_Codec        = avcodec_find_encoder(codec_id);
+		if (m_Codec == nullptr)
+		{
+			B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
+		}
 		m_Stream       = avformat_new_stream(format_context, m_Codec);
 		m_CodecContext = avcodec_alloc_context3(m_Codec);
 	}
@@ -208,9 +230,9 @@ public:
 		m_Stream = nullptr;
 	}
 
-	int64_t b3Pts(const unsigned iFrame) const
+	int64_t b3Pts()
 	{
-		return m_Stream->time_base.den * iFrame /
+		return m_Stream->time_base.den * m_FrameNo++ /
 			(m_FrameDuration.den * m_Stream->time_base.num);
 	}
 
@@ -222,22 +244,43 @@ public:
 
 class b3AudioStream : public b3MovieStream
 {
-	static const unsigned SAMPLE_RATE = 44100;
-
 public:
+	static const unsigned SAMPLE_RATE = 8000;
+
 	b3AudioStream(
 		AVFormatContext * format_context,
 		const char    *   filename,
-		const b3_res      frames_per_second) :
+		const b3_res      frames_per_second,
+		b3EncoderFrameBuffer & buffer) :
 		b3MovieStream(format_context, filename, frames_per_second, AVMEDIA_TYPE_AUDIO)
 	{
+		m_CodecContext->sample_rate    = b3SuggestSampleRate();
 		m_CodecContext->bit_rate       = 64000;
-		m_CodecContext->sample_rate    = SAMPLE_RATE;
-		m_CodecContext->frame_size     = SAMPLE_RATE / frames_per_second;
-		m_CodecContext->sample_fmt     = AV_SAMPLE_FMT_FLTP;
-		m_CodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
+		m_CodecContext->sample_fmt     = m_Codec->sample_fmts[0];
+		m_CodecContext->channel_layout = AV_CH_LAYOUT_MONO;
 		m_CodecContext->channels       = av_get_channel_layout_nb_channels(
 				m_CodecContext->channel_layout);
+		m_CodecContext->frame_size     = av_samples_get_buffer_size(nullptr,
+				m_CodecContext->channels,
+				m_CodecContext->sample_rate / frames_per_second,
+				m_CodecContext->sample_fmt, 0);
+
+		buffer.b3InitAudio(m_CodecContext, frames_per_second);
+	}
+
+private:
+	int b3SuggestSampleRate()
+	{
+		int sample_rate = SAMPLE_RATE;
+
+		if (m_Codec->supported_samplerates != nullptr)
+		{
+			for (const int *p = m_Codec->supported_samplerates; *p != 0; p++)
+			{
+				sample_rate = std::min(sample_rate, *p);
+			}
+		}
+		return sample_rate;
 	}
 };
 
@@ -315,10 +358,22 @@ public:
 const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_BGRA;
 const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
 
+/**
+ *
+ * @see https://superuser.com/questions/579008/add-1-second-of-silence-to-audio-through-ffmpeg
+ * @code
+ffmpeg -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 2 silence.ac3
+@endcode
+ *
+ * @see https://superuser.com/questions/590201/add-audio-to-video-using-ffmpeg
+ * @code
+ffmpeg -i test-video.mp4 -i silence.ac3 -c:v copy output.mp4
+@endcode
+*/
+
 b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second) :
 	m_RgbFrame(tx, m_SrcFormat),
-	m_YuvFrame(tx, m_DstFormat),
-	m_AudioFrame()
+	m_YuvFrame(tx, m_DstFormat)
 {
 	int error = 0;
 
@@ -334,25 +389,10 @@ b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_
 	b3PrintErr("Format context allocation", error);
 
 	m_VideoStream  = new b3VideoStream(m_FormatContext, filename, frames_per_second, m_xSize, m_ySize, m_DstFormat);
-//	m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second);
+//	m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second, m_AudioFrame);
 
-	if (m_VideoStream != nullptr)
-	{
-		error = avcodec_parameters_from_context(m_VideoStream->m_Stream->codecpar, *m_VideoStream);
-		b3PrintErr("Converting codec context parameter", error);
-
-		error = avcodec_open2(*m_VideoStream, m_VideoStream->m_Codec, nullptr);
-		b3PrintErr("Codec opening", error);
-	}
-
-	if (m_AudioStream != nullptr)
-	{
-		error = avcodec_parameters_from_context(m_AudioStream->m_Stream->codecpar, *m_AudioStream);
-		b3PrintErr("Converting codec context parameter", error);
-
-		error = avcodec_open2(*m_AudioStream, m_AudioStream->m_Codec, nullptr);
-		b3PrintErr("Codec opening", error);
-	}
+	b3PrepareStream(m_VideoStream);
+	b3PrepareStream(m_AudioStream);
 
 	if ((m_FormatContext->oformat->flags & AVFMT_NOFILE) == 0)
 	{
@@ -388,7 +428,6 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	{
 		success = success && b3AddAudioFrame();
 	}
-	m_iFrame++;
 	return success;
 }
 
@@ -424,6 +463,20 @@ void b3MovieEncoder::b3Free()
 	m_AudioStream   = nullptr;
 	m_VideoStream   = nullptr;
 	m_SwsCtx        = nullptr;
+}
+
+void b3MovieEncoder::b3PrepareStream(b3MovieStream * stream)
+{
+	if (stream != nullptr)
+	{
+		int error = 0;
+
+		error = avcodec_parameters_from_context(stream->m_Stream->codecpar, *stream);
+		b3PrintErr("Converting codec context parameter", error);
+
+		error = avcodec_open2(*stream, stream->m_Codec, nullptr);
+		b3PrintErr("Codec opening", error);
+	}
 }
 
 bool b3MovieEncoder::b3AddVideoFrame(const b3Tx * tx)
@@ -466,6 +519,7 @@ bool b3MovieEncoder::b3AddAudioFrame()
 		return false;
 	}
 
+	bzero(m_AudioFrame->data[0], m_AudioFrame->linesize[0]);
 	int error = b3SendFrame(m_AudioStream, m_AudioFrame);
 
 	b3PrintErr("Audio frame writing", error, false);
@@ -480,7 +534,7 @@ int b3MovieEncoder::b3SendFrame(b3MovieStream * stream, AVFrame * frame)
 	}
 	if (frame != nullptr)
 	{
-		frame->pts = stream->b3Pts(m_iFrame);
+		frame->pts = stream->b3Pts();
 	}
 
 	int error = avcodec_send_frame(*stream, frame);
@@ -498,6 +552,7 @@ int b3MovieEncoder::b3SendFrame(b3MovieStream * stream, AVFrame * frame)
 		}
 		if (error >= 0)
 		{
+			pkt->stream_index = stream->m_Stream->index;
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
