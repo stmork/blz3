@@ -155,11 +155,6 @@ void b3MovieTest::testMov()
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mov"));
 }
 
-void b3MovieTest::testHevc()
-{
-	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.hevc"));
-}
-
 void b3MovieTest::testWebm()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.webm"));
