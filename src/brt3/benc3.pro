@@ -13,7 +13,7 @@ message("*** Blizzard III video stream builder $$VERSION ***")
 
 SOURCES     += benc3.cc
 
-LIBS        += -lb3Image -lb3Base -lb3System -lb3SystemUnix
+LIBS        += -lb3System -lb3SystemUnix -lb3Base -lb3Image
 
 QMAKE_CLEAN +=  *.mp4 *.hevc
 

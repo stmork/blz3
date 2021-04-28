@@ -174,6 +174,8 @@ void b3MovieTest::createEmptyVideo(const char * filename)
 	{
 		encoder.b3AddFrame(&tx);
 	}
+#else
+	(void)filename;
 #endif
 }
 

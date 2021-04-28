@@ -182,9 +182,9 @@ public:
 						_mm_set1_epi32(input), zero), zero),
 				_MM_SHUFFLE(0, 1, 2, 3));
 #endif
-		SSE_PS_STORE(v, _mm_div_ps(
+		v = _mm_div_ps(
 				_mm_cvtepi32_ps(sse),
-				_mm_set_ps1(255.0)));
+				_mm_set_ps1(255.0));
 #else
 		alignas(16) b3_f32 c[4];
 		b3_pkd_color       color = input;

@@ -18,9 +18,13 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/b3Config.h"
+
+#ifdef HAVE_VIDEO_ENCODER
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3Encoder.h"
 #include "blz3/base/b3FileList.h"
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -143,6 +147,11 @@ int main(int argc, char * argv[])
 				b3PrintF(B3LOG_NORMAL, "Unknown error occured on image %s!\n", entry->b3Name());
 			}
 		}
+	}
+#else
+	if (argc <= 1)
+	{
+		b3Banner(argv[0]);
 	}
 #endif
 
