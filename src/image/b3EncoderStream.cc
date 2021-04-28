@@ -60,6 +60,7 @@ b3EncoderStream::b3EncoderStream(
 
 b3EncoderStream::~b3EncoderStream()
 {
+	avcodec_close(m_CodecContext);
 	avcodec_free_context(&m_CodecContext);
 	m_Codec  = nullptr;
 	m_Stream = nullptr;

@@ -317,9 +317,10 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 	{
 		const int64_t pts = stream->b3Rescale();
 		const b3_f64  t   = stream->b3Time();
+		const AVMediaType media_type = stream->b3GetMediaType();
 
-		b3PrintF(B3LOG_FULL, "%s t=%2.03f pts: %ld\n",
-				 m_MediaMap.get(stream->b3GetMediaType()).c_str(), t, pts);
+		b3PrintF(B3LOG_DEBUG, "%s t=%2.03f pts: %ld\n",
+			m_MediaMap.get(media_type).c_str(), t, pts);
 		frame->pts = stream->b3Pts();
 	}
 

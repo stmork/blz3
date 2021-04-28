@@ -145,7 +145,7 @@ public:
 
 	inline AVMediaType b3GetMediaType() const
 	{
-		return AVMEDIA_TYPE_AUDIO;
+		return m_CodecContext->codec_type;
 	}
 };
 
