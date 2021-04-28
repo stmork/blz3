@@ -24,6 +24,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3ColorTest.cc\
 	b3CompareTest.cc\
 	b3ComplexTest.cc\
+	b3ConstantMapTest.cc\
 	b3DataSizeTest.cc\
 	b3EndianTest.cc\
 	b3ErrorTest.cc\
@@ -59,6 +60,7 @@ BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3ColorTest.o\
 	b3CompareTest.o\
 	b3ComplexTest.o\
+	b3ConstantMapTest.o\
 	b3DataSizeTest.o\
 	b3EndianTest.o\
 	b3ErrorTest.o\

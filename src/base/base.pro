@@ -22,6 +22,7 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Compare.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Complex.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Complex64.h \
+	$$BLZ3_INCLUDE/blz3/base/b3ConstantMap.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Cubic.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Endian.h \
 	$$BLZ3_INCLUDE/blz3/base/b3FFT.h \
