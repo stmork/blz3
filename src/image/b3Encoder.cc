@@ -203,6 +203,9 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 
 		if (m_AudioStream != nullptr)
 		{
+			b3PrintF(B3LOG_DEBUG, "at=%2.03f  vt=%2.03f\n",
+				m_AudioStream->b3Time(), m_VideoStream->b3Time());
+
 			while ((m_AudioStream->b3Time() < m_VideoStream->b3Time()) && success)
 			{
 				success = success && b3AddAudioFrame();

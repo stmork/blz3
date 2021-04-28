@@ -127,11 +127,10 @@ b3AudioStream::b3AudioStream(
 
 	buffer.b3InitAudio(m_CodecContext, frames_per_second);
 
-
-	m_FrameDuration.den = m_CodecContext->frame_size /
+	m_FrameDuration.num = m_CodecContext->frame_size /
 		(av_get_bytes_per_sample (m_CodecContext->sample_fmt) *
 			m_CodecContext->channels);
-	m_FrameDuration.num = m_CodecContext->sample_rate;
+	m_FrameDuration.den = m_CodecContext->sample_rate;
 	m_CodecContext->time_base             = m_FrameDuration;
 	m_CodecContext->framerate.num         = m_FrameDuration.den;
 	m_CodecContext->framerate.den         = m_FrameDuration.num;
