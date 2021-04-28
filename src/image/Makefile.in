@@ -9,6 +9,8 @@ LDLIBS			= @LIBS@
 LIBS			= libB3Image.o
 LIB_SOURCE		=\
 	b3Encoder.cc\
+	b3EncoderBuffer.cc\
+	b3EncoderStream.cc\
 	b3Measure.cc\
 	b3Sampler.cc\
 	b3Tx.cc\
@@ -40,6 +42,8 @@ LIB_SOURCE		=\
 
 LIB_OBJ			=\
 	b3Encoder.o\
+	b3EncoderBuffer.o\
+	b3EncoderStream.o\
 	b3Measure.o\
 	b3Sampler.o\
 	b3Tx.o\

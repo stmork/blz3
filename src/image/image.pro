@@ -16,10 +16,12 @@ message("*** Blizzard III image processing library $$VERSION ***")
 
 HEADERS += \
 	$$BLZ3_INCLUDE/blz3/image/b3Encoder.h \
+	$$BLZ3_INCLUDE/blz3/image/b3EncoderBuffer.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Sampler.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Tx.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxMeasure.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxPool.h \
+	b3EncoderStream.h \
 	b3TxAlgorithms.h \
 	b3TxIFF.h \
 	b3TxSaveInfo.h \
@@ -27,6 +29,8 @@ HEADERS += \
 
 SOURCES += \
 	b3Encoder.cc \
+	b3EncoderBuffer.cc \
+	b3EncoderStream.cc \
 	b3Measure.cc \
 	b3Sampler.cc \
 	b3Tx.cc \

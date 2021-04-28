@@ -53,6 +53,7 @@ static void b3Banner(const char * command)
 
 int main(int argc, char * argv[])
 {
+#ifdef HAVE_VIDEO_ENCODER
 	const char   *  filename = "test-movie.mp4";
 	b3FileList      list;
 	b3FileEntry  *  entry;
@@ -143,6 +144,7 @@ int main(int argc, char * argv[])
 			}
 		}
 	}
+#endif
 
 	return EXIT_SUCCESS;
 }

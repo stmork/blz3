@@ -25,6 +25,8 @@
 
 #ifdef HAVE_VIDEO_ENCODER
 
+#include "b3EncoderStream.h"
+
 /*************************************************************************
 **                                                                      **
 **                        AV registration singleton                     **
@@ -114,279 +116,6 @@ void b3CodecRegister::b3PrepareCodecs()
 		}
 	}
 }
-
-/*************************************************************************
-**                                                                      **
-**                        AV frame buffer implementation                **
-**                                                                      **
-*************************************************************************/
-
-b3EncoderFrameBuffer::b3EncoderFrameBuffer()
-{
-	m_Frame = av_frame_alloc();
-}
-
-void b3EncoderFrameBuffer::b3InitAudio(
-		const AVCodecContext * codec_context,
-		const b3_res           frames_per_second)
-{
-	m_Frame->format         = codec_context->sample_fmt;
-	m_Frame->sample_rate    = codec_context->sample_rate;
-	m_Frame->channel_layout = codec_context->channel_layout;
-	m_Frame->channels       = av_get_channel_layout_nb_channels(m_Frame->channel_layout);
-	m_Frame->nb_samples     = codec_context->sample_rate * m_Frame->channels / frames_per_second;
-
-	buffer_size = av_samples_get_buffer_size(nullptr,
-			m_Frame->channels,
-			codec_context->sample_rate / frames_per_second,
-			codec_context->sample_fmt, 0);
-	sample_size = av_get_bytes_per_sample (codec_context->sample_fmt);
-
-	av_frame_get_buffer(m_Frame, 0);
-	bzero(m_Frame->data[0], m_Frame->linesize[0]);
-}
-
-b3EncoderFrameBuffer::b3EncoderFrameBuffer(const b3Tx * tx, int format)
-{
-	m_Frame = av_frame_alloc();
-	m_Frame->format = format;
-	m_Frame->width  = tx->xSize;
-	m_Frame->height = tx->ySize;
-	av_frame_get_buffer(m_Frame, 0);
-}
-
-b3EncoderFrameBuffer::~b3EncoderFrameBuffer()
-{
-	av_frame_free(&m_Frame);
-}
-
-/*************************************************************************
-**                                                                      **
-**                        AV stream packet implementation               **
-**                                                                      **
-*************************************************************************/
-
-b3EncoderPacket::b3EncoderPacket()
-{
-	av_init_packet(&m_Packet);
-	m_Packet.data = nullptr;
-	m_Packet.size = 0;
-}
-
-b3EncoderPacket::~b3EncoderPacket()
-{
-	av_packet_unref(&m_Packet);
-}
-
-void b3EncoderPacket::key()
-{
-	m_Packet.flags |= AV_PKT_FLAG_KEY;
-}
-
-/*************************************************************************
-**                                                                      **
-**                        AV stream/codec implementation                **
-**                                                                      **
-*************************************************************************/
-
-class b3MovieStream
-{
-protected:
-	unsigned                   m_FrameNo    =   0;
-	int64_t                    m_Pts        = 0;
-	AVRational                 m_FrameDuration;
-
-
-public:
-	AVCodecID        codec_id       = AV_CODEC_ID_PROBE;
-	AVCodec     *    m_Codec        = nullptr;
-	AVStream    *    m_Stream       = nullptr;
-	AVCodecContext * m_CodecContext = nullptr;
-
-public:
-	b3MovieStream(
-		AVFormatContext * format_context,
-		const char    *   filename,
-		const b3_res      frames_per_second B3_UNUSED,
-		const AVCodecID   preferred_codec_id,
-		const AVMediaType media_type)
-	{
-		if(avformat_query_codec(format_context->oformat, preferred_codec_id,FF_COMPLIANCE_VERY_STRICT) > 0)
-		{
-			codec_id = preferred_codec_id;
-		}
-		else
-		{
-			codec_id = av_guess_codec(format_context->oformat, nullptr, filename, nullptr, media_type);
-		}
-
-		m_Codec        = avcodec_find_encoder(codec_id);
-		if (m_Codec == nullptr)
-		{
-			B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
-		}
-		m_Stream       = avformat_new_stream(format_context, m_Codec);
-		m_CodecContext = avcodec_alloc_context3(m_Codec);
-	}
-
-	virtual ~b3MovieStream()
-	{
-		avcodec_free_context(&m_CodecContext);
-		m_Codec  = nullptr;
-		m_Stream = nullptr;
-	}
-
-	int64_t b3Pts(const unsigned increment = 1)
-	{
-		m_Pts =
-			(m_CodecContext->time_base.num * m_Stream->time_base.den * m_FrameNo) /
-			(m_CodecContext->time_base.den * m_Stream->time_base.num);
-		m_FrameNo += increment;
-
-		return m_Pts;
-	}
-
-	int64_t b3Rescale() const
-	{
-		return av_rescale_q(m_FrameNo, m_CodecContext->time_base, m_Stream->time_base);
-	}
-
-	b3_f64 b3Time() const
-	{
-		b3_f64 result = m_FrameNo;
-
-		result *= m_CodecContext->time_base.num;
-		result /= m_CodecContext->time_base.den;
-
-		return result;
-	}
-
-	inline operator AVCodecContext * ()
-	{
-		return m_CodecContext;
-	}
-};
-
-class b3AudioStream : public b3MovieStream
-{
-public:
-	static const unsigned SAMPLE_RATE = 8000;
-
-	b3AudioStream(
-		AVFormatContext * format_context,
-		const char    *   filename,
-		const b3_res      frames_per_second,
-		b3EncoderFrameBuffer & buffer) :
-		b3MovieStream(format_context, filename, frames_per_second, AV_CODEC_ID_AAC, AVMEDIA_TYPE_AUDIO)
-	{
-		m_CodecContext->sample_rate    = b3SuggestSampleRate();
-		m_CodecContext->bit_rate       = 64000;
-		m_CodecContext->sample_fmt     = m_Codec->sample_fmts[0];
-		m_CodecContext->channel_layout = AV_CH_LAYOUT_MONO;
-		m_CodecContext->channels       = av_get_channel_layout_nb_channels(
-				m_CodecContext->channel_layout);
-		m_CodecContext->frame_size     = av_samples_get_buffer_size(nullptr,
-				m_CodecContext->channels,
-				m_CodecContext->sample_rate / frames_per_second,
-				m_CodecContext->sample_fmt, 0);
-
-		buffer.b3InitAudio(m_CodecContext, frames_per_second);
-
-
-		m_FrameDuration.den = m_CodecContext->frame_size /
-				(av_get_bytes_per_sample (m_CodecContext->sample_fmt) *
-				 m_CodecContext->channels);
-		m_FrameDuration.num = m_CodecContext->sample_rate;
-		m_CodecContext->time_base             = m_FrameDuration;
-		m_CodecContext->framerate.num         = m_FrameDuration.den;
-		m_CodecContext->framerate.den         = m_FrameDuration.num;
-	}
-
-private:
-	int b3SuggestSampleRate()
-	{
-		int sample_rate = SAMPLE_RATE;
-
-		if (m_Codec->supported_samplerates != nullptr)
-		{
-			sample_rate = std::max(sample_rate, *m_Codec->supported_samplerates);
-
-			for (const int *p = m_Codec->supported_samplerates; *p != 0; p++)
-			{
-				sample_rate = std::min(sample_rate, *p);
-			}
-		}
-		return sample_rate;
-	}
-};
-
-class b3VideoStream : public b3MovieStream
-{
-public:
-	b3VideoStream(
-		AVFormatContext  *  format_context,
-		const char     *    filename,
-		const b3_res        frames_per_second,
-		const b3_res        xSize,
-		const b3_res        ySize,
-		const AVPixelFormat pixel_format) :
-		b3MovieStream(format_context, filename, frames_per_second, AV_CODEC_ID_H265, AVMEDIA_TYPE_VIDEO)
-	{
-		m_FrameDuration.num =  1;
-		m_FrameDuration.den = frames_per_second;
-
-		// Prepare codec context.
-		m_CodecContext->width                 = xSize;
-		m_CodecContext->height                = ySize;
-		m_CodecContext->pix_fmt               = pixel_format;
-		m_CodecContext->sample_aspect_ratio   = av_make_q(1, 1);
-		m_CodecContext->color_range           = AVCOL_RANGE_MPEG;
-		m_CodecContext->bit_rate              = xSize * ySize * 3;
-		m_CodecContext->time_base             = m_FrameDuration;
-		m_CodecContext->framerate.num         = m_FrameDuration.den;
-		m_CodecContext->framerate.den         = m_FrameDuration.num;
-		m_CodecContext->max_b_frames          =  1;
-		m_CodecContext->gop_size              = 10;
-		m_CodecContext->strict_std_compliance = FF_COMPLIANCE_VERY_STRICT;
-
-		// Prepare codec specific parameters.
-		switch (codec_id)
-		{
-		case AV_CODEC_ID_MPEG2VIDEO:
-			m_CodecContext->profile = FF_PROFILE_MPEG2_MAIN;
-			break;
-
-		case AV_CODEC_ID_MPEG4:
-			m_CodecContext->profile = FF_PROFILE_MPEG4_MAIN;
-			break;
-
-		case AV_CODEC_ID_H264:
-			av_opt_set(m_CodecContext, "preset", "medium", 0);
-			av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
-			av_opt_set(m_CodecContext, "crf", "23", 0);
-			m_CodecContext->profile = FF_PROFILE_H264_MAIN;
-			break;
-
-		case AV_CODEC_ID_HEVC:
-			av_opt_set(m_CodecContext, "preset", "medium", 0);
-			av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
-			av_opt_set(m_CodecContext, "crf", "28", 0);
-			m_CodecContext->profile = FF_PROFILE_HEVC_MAIN;
-			break;
-
-		case AV_CODEC_ID_VP9:
-			m_CodecContext->profile = FF_PROFILE_VP9_0;
-			break;
-
-		default:
-			// Intentionally do nothing!
-			break;
-		}
-
-		// Prepare stream.
-		m_Stream->avg_frame_rate = m_CodecContext->framerate;
-	}
-};
 
 /*************************************************************************
 **                                                                      **
@@ -508,16 +237,16 @@ void b3MovieEncoder::b3Free()
 	m_SwsCtx        = nullptr;
 }
 
-void b3MovieEncoder::b3PrepareStream(b3MovieStream * stream)
+void b3MovieEncoder::b3PrepareStream(b3EncoderStream * stream)
 {
 	if (stream != nullptr)
 	{
 		int error = 0;
 
-		error = avcodec_parameters_from_context(stream->m_Stream->codecpar, *stream);
+		error = stream->b3Prepare();
 		b3PrintErr("Converting codec context parameter", error);
 
-		error = avcodec_open2(*stream, stream->m_Codec, nullptr);
+		error = stream->b3Open();
 		b3PrintErr("Codec opening", error);
 	}
 }
@@ -569,7 +298,7 @@ bool b3MovieEncoder::b3AddAudioFrame()
 	return error >= 0;
 }
 
-int b3MovieEncoder::b3SendFrame(b3MovieStream * stream, AVFrame * frame)
+int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 {
 	if (stream == nullptr)
 	{
@@ -599,7 +328,7 @@ int b3MovieEncoder::b3SendFrame(b3MovieStream * stream, AVFrame * frame)
 		}
 		if (error >= 0)
 		{
-			pkt->stream_index = stream->m_Stream->index;
+			pkt->stream_index = stream->b3GetIndex();
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}
