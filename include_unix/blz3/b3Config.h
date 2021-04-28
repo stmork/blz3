@@ -87,7 +87,7 @@
 #define B3_PLUGIN
 
 #if defined(HAVE_LIBSWSCALE) && defined(HAVE_LIBAVCODEC) && defined(HAVE_LIBAVFORMAT) && defined(HAVE_LIBAVUTIL)
-#	define _HAVE_VIDEO_ENCODER
+#	define HAVE_VIDEO_ENCODER
 #endif
 
 typedef unsigned long b3DrawContext;
