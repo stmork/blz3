@@ -142,6 +142,11 @@ public:
 	{
 		return m_Stream->index;
 	}
+
+	inline AVMediaType b3GetMediaType() const
+	{
+		return AVMEDIA_TYPE_AUDIO;
+	}
 };
 
 /**

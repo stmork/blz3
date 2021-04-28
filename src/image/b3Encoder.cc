@@ -126,6 +126,15 @@ void b3CodecRegister::b3PrepareCodecs()
 const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_BGRA;
 const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
 
+const b3ConstantMap<AVMediaType> b3MovieEncoder::m_MediaMap
+{
+	B3_CONSTANT(AVMEDIA_TYPE_VIDEO),
+	B3_CONSTANT(AVMEDIA_TYPE_AUDIO),
+	B3_CONSTANT(AVMEDIA_TYPE_DATA),
+	B3_CONSTANT(AVMEDIA_TYPE_SUBTITLE),
+	B3_CONSTANT(AVMEDIA_TYPE_ATTACHMENT)
+};
+
 /**
  *
  * @see https://superuser.com/questions/579008/add-1-second-of-silence-to-audio-through-ffmpeg
@@ -309,7 +318,8 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 		const int64_t pts = stream->b3Rescale();
 		const b3_f64  t   = stream->b3Time();
 
-		b3PrintF(B3LOG_FULL, "t=%2.03f pts: %ld\n", t, pts);
+		b3PrintF(B3LOG_FULL, "%s t=%2.03f pts: %ld\n",
+				 m_MediaMap.get(stream->b3GetMediaType()).c_str(), t, pts);
 		frame->pts = stream->b3Pts();
 	}
 

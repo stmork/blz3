@@ -24,6 +24,7 @@
 
 #ifdef HAVE_VIDEO_ENCODER
 
+#include "blz3/base/b3ConstantMap.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3EncoderBuffer.h"
 
@@ -95,6 +96,8 @@ class b3MovieEncoder
 
 	b3_res                     m_xSize;
 	b3_res                     m_ySize;
+
+	static const b3ConstantMap<AVMediaType> m_MediaMap;
 
 public:
 	/**
