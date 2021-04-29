@@ -164,6 +164,11 @@ b3MovieEncoder::b3MovieEncoder(
 			m_xSize, m_ySize, m_SrcFormat,
 			m_xSize, m_ySize, m_DstFormat,
 			SWS_FAST_BILINEAR, nullptr, nullptr, nullptr);
+	if (m_SwsCtx == nullptr)
+	{
+		b3PrintF(B3LOG_NORMAL, "Scaling context not available!\n");
+		B3_THROW(b3TxException, B3_TX_UNSUPP);
+	}
 
 	error = avformat_alloc_output_context2(&m_FormatContext, nullptr, nullptr, filename);
 	b3PrintErr("Format context allocation", error);
