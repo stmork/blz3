@@ -123,7 +123,7 @@ void b3CodecRegister::b3PrepareCodecs()
 **                                                                      **
 *************************************************************************/
 
-const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_BGRA;
+const AVPixelFormat b3MovieEncoder::m_SrcFormat = AV_PIX_FMT_RGB32;
 const AVPixelFormat b3MovieEncoder::m_DstFormat = AV_PIX_FMT_YUV420P;
 
 const b3ConstantMap<AVMediaType> b3MovieEncoder::m_MediaMap
@@ -148,7 +148,10 @@ ffmpeg -i test-video.mp4 -i silence.ac3 -c:v copy output.mp4
 @endcode
 */
 
-b3MovieEncoder::b3MovieEncoder(const char * filename, const b3Tx * tx, const b3_res frames_per_second) :
+b3MovieEncoder::b3MovieEncoder(
+	const char  *  filename,
+	const b3Tx  *  tx,
+	const b3_res   frames_per_second) :
 	m_RgbFrame(tx, m_SrcFormat),
 	m_YuvFrame(tx, m_DstFormat)
 {
@@ -215,40 +218,6 @@ bool b3MovieEncoder::b3AddFrame(const b3Tx * tx)
 	return success;
 }
 
-void b3MovieEncoder::b3Finish()
-{
-	int result = 0;
-	int error  = 0;
-
-	do
-	{
-		result = b3SendFrame(m_VideoStream);
-	}
-	while (result == 0);
-	do
-	{
-		result = b3SendFrame(m_AudioStream);
-	}
-	while (result == 0);
-
-	error = av_write_trailer(m_FormatContext);
-	b3PrintErr("Trailer writing", error, false);
-}
-
-void b3MovieEncoder::b3Free()
-{
-	// Freeing all the allocated memory:
-	delete m_VideoStream;
-	delete m_AudioStream;
-
-	avformat_free_context(m_FormatContext);
-	sws_freeContext(m_SwsCtx);
-	m_FormatContext = nullptr;
-	m_AudioStream   = nullptr;
-	m_VideoStream   = nullptr;
-	m_SwsCtx        = nullptr;
-}
-
 void b3MovieEncoder::b3PrepareStream(b3EncoderStream * stream)
 {
 	if (stream != nullptr)
@@ -265,7 +234,7 @@ void b3MovieEncoder::b3PrepareStream(b3EncoderStream * stream)
 
 bool b3MovieEncoder::b3AddVideoFrame(const b3Tx * tx)
 {
-	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize) || (m_RgbFrame == nullptr))
+	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize) || (m_YuvFrame == nullptr))
 	{
 		return false;
 	}
@@ -275,13 +244,8 @@ bool b3MovieEncoder::b3AddVideoFrame(const b3Tx * tx)
 
 	for (b3_res y = 0; y < m_ySize; y++)
 	{
-		b3_pkd_color row[m_xSize];
-
-		tx->b3GetRow(row, y);
-		for (b3_res x = 0; x < m_xSize; x++)
-		{
-			*lPtr++ = row[x];
-		}
+		tx->b3GetRow(lPtr, y);
+		lPtr += m_xSize;
 	}
 
 	// Not actually scaling anything, but just converting
@@ -347,6 +311,40 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 		}
 	}
 	return error;
+}
+
+void b3MovieEncoder::b3Finish()
+{
+	int result = 0;
+	int error  = 0;
+
+	do
+	{
+		result = b3SendFrame(m_VideoStream);
+	}
+	while (result == 0);
+	do
+	{
+		result = b3SendFrame(m_AudioStream);
+	}
+	while (result == 0);
+
+	error = av_write_trailer(m_FormatContext);
+	b3PrintErr("Trailer writing", error, false);
+}
+
+void b3MovieEncoder::b3Free()
+{
+	// Freeing all the allocated memory:
+	delete m_VideoStream;
+	delete m_AudioStream;
+
+	avformat_free_context(m_FormatContext);
+	sws_freeContext(m_SwsCtx);
+	m_FormatContext = nullptr;
+	m_AudioStream   = nullptr;
+	m_VideoStream   = nullptr;
+	m_SwsCtx        = nullptr;
 }
 
 void b3MovieEncoder::b3PrintErr(

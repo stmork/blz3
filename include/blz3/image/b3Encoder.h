@@ -132,6 +132,43 @@ public:
 	bool b3AddFrame(const b3Tx * tx);
 
 private:
+
+	/**
+	 * This method prepares and opens a media stream. Since the b3EncoderStream
+	 * and b3EncoderFrame classes both don't have error handling this is done
+	 * inside this method.
+	 *
+	 * @param stream The stream to prepare and open.
+	 * @throws b3TxException If the stream cannot prepared or opened.
+	 */
+	void b3PrepareStream(b3EncoderStream * stream);
+
+	/**
+	 * This method adds a video frame to the video stream using the
+	 * b3SendFrame() method.
+	 *
+	 * @param tx The b3Tx class containing the image to send.
+	 * @return True on success.
+	 */
+	bool b3AddVideoFrame(const b3Tx * tx);
+
+	/**
+	 * This method adds an empty audio frame to the audio stream using the
+	 * b3SendFrame() method.
+	 *
+	 * @return True on success.
+	 */
+	bool b3AddAudioFrame();
+
+	/**
+	 * This method simply sends an AVFrame to a given media stream.
+	 *
+	 * @param stream The stream to send the frame.
+	 * @param frame The frame to send.
+	 * @return True on success.
+	 */
+	int  b3SendFrame(b3EncoderStream * stream, AVFrame * frame = nullptr);
+
 	/**
 	 * This method encodes delayed packes at the end of the video stream.
 	 */
@@ -142,13 +179,13 @@ private:
 	 */
 	void b3Free();
 
-	void b3PrepareStream(b3EncoderStream * stream);
-
-	bool b3AddVideoFrame(const b3Tx * tx);
-	bool b3AddAudioFrame();
-
-	int  b3SendFrame(b3EncoderStream * stream, AVFrame * frame = nullptr);
-
+	/**
+	 * This method checks an error variable if the error was caused by
+	 * sending a delayed frame. In this case it is not really an error.
+	 *
+	 * @param error The error variable to check.
+	 * @return True if a delayed frame was sent.
+	 */
 	static inline bool b3Delayed(int error)
 	{
 		return (error == AVERROR(EAGAIN)) || (error == AVERROR_EOF);
