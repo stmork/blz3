@@ -183,6 +183,7 @@ b3VideoStream::b3VideoStream(
 	m_CodecContext->max_b_frames          =  1;
 	m_CodecContext->gop_size              = 10;
 	m_CodecContext->strict_std_compliance = FF_COMPLIANCE_VERY_STRICT;
+//	m_CodecContext->flags                |= CODEC_FLAG_GLOBAL_HEADER;
 
 	// Prepare codec specific parameters.
 	switch (m_CodecId)

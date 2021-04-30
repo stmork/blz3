@@ -118,7 +118,7 @@ public:
 	/**
 	 * This method marks the AV packet as a key frame.
 	 */
-	inline void key();
+	void key();
 };
 
 #endif

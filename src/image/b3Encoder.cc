@@ -179,11 +179,20 @@ b3MovieEncoder::b3MovieEncoder(
 	b3PrepareStream(m_VideoStream);
 	b3PrepareStream(m_AudioStream);
 
+//	m_VideoStream->m_Stream->codecpar->extradata = m_FormatContext->streams[m_VideoStream->b3GetIndex()]->codecpar->extradata;
+
 	if ((m_FormatContext->oformat->flags & AVFMT_NOFILE) == 0)
 	{
 		error = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
 		b3PrintErr("File opening", error);
 	}
+
+	av_dict_set(&m_FormatContext->metadata, "Software", b3Runtime::b3GetProduct(), 0);
+#ifdef B3_VERSION
+	av_dict_set(&m_FormatContext->metadata, "Version", B3_VERSION, 0);
+#endif
+	av_dict_set(&m_FormatContext->metadata, "Author", "Steffen A. Mork", 0);
+	av_dict_set(&m_FormatContext->metadata, "comment", b3Runtime::b3GetProduct(), 0);
 
 	error = avformat_write_header(m_FormatContext, nullptr);
 	b3PrintErr("Header writing", error);

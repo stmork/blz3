@@ -90,6 +90,12 @@ b3Runtime::b3Runtime()
 	snprintf(m_Compiler, sizeof(m_Compiler), "Unknown compiler vector unit: %s math mode: %s",
 		vu, math);
 #endif
+
+#ifdef B3_VERSION
+	snprintf(m_Product, sizeof(m_Product), "%s V%s", B3_NAME, B3_VERSION);
+#else
+	strncpy(m_Product, B3_NAME, sizeof(m_Product));
+#endif
 }
 
 b3_bool b3Runtime::b3Hostname(char * hostname, const b3_size buffer_size)
@@ -117,6 +123,11 @@ b3_s32 b3Runtime::b3Execute(const char * command, const b3_bool async)
 const char * b3Runtime::b3GetCompiler()
 {
 	return b3Instance().m_Compiler;
+}
+
+const char * b3Runtime::b3GetProduct()
+{
+	return b3Instance().m_Product;
 }
 
 void * b3Runtime::b3GetOpenGLExtension(const char * procedure_name)

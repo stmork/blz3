@@ -132,6 +132,8 @@ static inline int stricmp(const char * a, const char * b)
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
 #define B3_FILESTRINGLEN  (MAXNAMLEN)
 
+#define B3_NAME       "Blizzard III"
+
 /**
  * This class provides some runtime information. See the b3CPU class
  * for some more information.
@@ -139,6 +141,7 @@ static inline int stricmp(const char * a, const char * b)
 class B3_PLUGIN b3Runtime : public b3CPU
 {
 	char               m_Compiler[256];
+	char               m_Product[256];
 
 	b3Runtime();
 
@@ -208,6 +211,11 @@ public:
 	 * This method returns information about the used compiler.
 	 */
 	static const char * b3GetCompiler();
+
+	/**
+	 * This method returns information about this software framework.
+	 */
+	static const char * b3GetProduct();
 
 	/**
 	 * This method returns an OpenGL function pointer from the given procedure name.
