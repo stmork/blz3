@@ -157,6 +157,11 @@ int b3AudioStream::b3SuggestSampleRate()
 **                        AV stream/codec implementation (Video)        **
 **                                                                      **
 *************************************************************************/
+unsigned char sps_pps[]
+{
+	0x00, 0x00, 0x00, 0x01, 0x67, 0x64, 0x00, 0x29, 0xac, 0x1b, 0x1a, 0xc1, 0xe0, 0x51, 0x90,
+	0x00, 0x00, 0x00, 0x01, 0x68, 0xea, 0x43, 0xcb
+};
 
 b3VideoStream::b3VideoStream(
 	AVFormatContext  *  format_context,
@@ -165,10 +170,24 @@ b3VideoStream::b3VideoStream(
 	const b3_res        xSize,
 	const b3_res        ySize,
 	const AVPixelFormat pixel_format) :
-	b3EncoderStream(format_context, filename, frames_per_second, AV_CODEC_ID_H265, AVMEDIA_TYPE_VIDEO)
+	b3EncoderStream(format_context, filename, frames_per_second, AV_CODEC_ID_HEVC, AVMEDIA_TYPE_VIDEO)
 {
 	m_FrameDuration.num =  1;
 	m_FrameDuration.den = frames_per_second;
+
+#if 0
+	if(format_context->oformat->flags & AVFMT_GLOBALHEADER)
+	{
+		m_CodecContext->flags         |= CODEC_FLAG_GLOBAL_HEADER;
+	}
+	m_CodecContext->extradata_size = sizeof(sps_pps);
+	m_CodecContext->extradata      = (uint8_t *)av_malloc(
+				sizeof(sps_pps) + AV_INPUT_BUFFER_PADDING_SIZE);
+	if (m_CodecContext->extradata != nullptr)
+	{
+		memcpy(m_CodecContext->extradata, sps_pps, sizeof(sps_pps));
+	}
+#endif
 
 	// Prepare codec context.
 	m_CodecContext->width                 = xSize;
@@ -183,7 +202,6 @@ b3VideoStream::b3VideoStream(
 	m_CodecContext->max_b_frames          =  1;
 	m_CodecContext->gop_size              = 10;
 	m_CodecContext->strict_std_compliance = FF_COMPLIANCE_VERY_STRICT;
-//	m_CodecContext->flags                |= CODEC_FLAG_GLOBAL_HEADER;
 
 	// Prepare codec specific parameters.
 	switch (m_CodecId)
@@ -200,14 +218,16 @@ b3VideoStream::b3VideoStream(
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "23", 0);
-		m_CodecContext->profile = FF_PROFILE_H264_MAIN;
+		m_CodecContext->codec_tag = 0x31637661;
+		m_CodecContext->profile   = FF_PROFILE_H264_MAIN;
 		break;
 
 	case AV_CODEC_ID_HEVC:
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "28", 0);
-		m_CodecContext->profile = FF_PROFILE_HEVC_MAIN;
+		m_CodecContext->codec_tag = 0x31637668;
+		m_CodecContext->profile   = FF_PROFILE_HEVC_MAIN;
 		break;
 
 	case AV_CODEC_ID_VP9:

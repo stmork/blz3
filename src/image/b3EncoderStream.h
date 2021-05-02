@@ -128,6 +128,7 @@ public:
 	/**
 	 * This operator casts this instance to an AVCodecContext pointer.
 	 */
+	[[nodiscard]]
 	inline operator AVCodecContext * () const
 	{
 		return m_CodecContext;
@@ -138,11 +139,18 @@ public:
 	 *
 	 * @return The container stream index.
 	 */
+	[[nodiscard]]
 	inline int b3GetIndex() const
 	{
 		return m_Stream->index;
 	}
 
+	/**
+	 * This method returns the AV media type enumeration.
+	 *
+	 * @return The represented media type.
+	 */
+	[[nodiscard]]
 	inline AVMediaType b3GetMediaType() const
 	{
 		return m_CodecContext->codec_type;
