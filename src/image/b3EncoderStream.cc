@@ -49,13 +49,18 @@ b3EncoderStream::b3EncoderStream(
 		m_CodecId = av_guess_codec(format_context->oformat, nullptr, filename, nullptr, media_type);
 	}
 
+#if 1
 	m_Codec        = avcodec_find_encoder(m_CodecId);
+#else
+	m_Codec        = avcodec_find_encoder_by_name("h264_nvenc");
+	m_CodecId      = m_Codec->id;
+#endif
 	if (m_Codec == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
 	}
-	m_CodecContext = avcodec_alloc_context3(m_Codec);
 	m_Stream       = avformat_new_stream(format_context, m_Codec);
+	m_CodecContext = avcodec_alloc_context3(m_Codec);
 }
 
 b3EncoderStream::~b3EncoderStream()
@@ -66,6 +71,14 @@ b3EncoderStream::~b3EncoderStream()
 	m_Stream = nullptr;
 }
 
+int64_t b3EncoderStream::b3FrameNo(const unsigned increment)
+{
+	const int64_t frame_no = m_FrameNo;
+
+	m_FrameNo += increment;
+	return frame_no;
+}
+
 int64_t b3EncoderStream::b3Pts(const unsigned increment)
 {
 	m_Pts =
@@ -74,6 +87,11 @@ int64_t b3EncoderStream::b3Pts(const unsigned increment)
 	m_FrameNo += increment;
 
 	return m_Pts;
+}
+
+void b3EncoderStream::b3Rescale(AVPacket * packet) const
+{
+	av_packet_rescale_ts(packet, m_CodecContext->time_base, m_Stream->time_base);
 }
 
 int64_t b3EncoderStream::b3Rescale() const
@@ -170,19 +188,19 @@ b3VideoStream::b3VideoStream(
 	const b3_res        xSize,
 	const b3_res        ySize,
 	const AVPixelFormat pixel_format) :
-	b3EncoderStream(format_context, filename, frames_per_second, AV_CODEC_ID_HEVC, AVMEDIA_TYPE_VIDEO)
+	b3EncoderStream(format_context, filename, frames_per_second, AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
 {
 	m_FrameDuration.num =  1;
 	m_FrameDuration.den = frames_per_second;
 
 #if 0
-	if(format_context->oformat->flags & AVFMT_GLOBALHEADER)
+	if (format_context->oformat->flags & AVFMT_GLOBALHEADER)
 	{
 		m_CodecContext->flags         |= CODEC_FLAG_GLOBAL_HEADER;
 	}
 	m_CodecContext->extradata_size = sizeof(sps_pps);
 	m_CodecContext->extradata      = (uint8_t *)av_malloc(
-				sizeof(sps_pps) + AV_INPUT_BUFFER_PADDING_SIZE);
+			sizeof(sps_pps) + AV_INPUT_BUFFER_PADDING_SIZE);
 	if (m_CodecContext->extradata != nullptr)
 	{
 		memcpy(m_CodecContext->extradata, sps_pps, sizeof(sps_pps));
@@ -190,18 +208,24 @@ b3VideoStream::b3VideoStream(
 #endif
 
 	// Prepare codec context.
-	m_CodecContext->width                 = xSize;
-	m_CodecContext->height                = ySize;
-	m_CodecContext->pix_fmt               = pixel_format;
-	m_CodecContext->sample_aspect_ratio   = av_make_q(1, 1);
-	m_CodecContext->color_range           = AVCOL_RANGE_MPEG;
-	m_CodecContext->bit_rate              = xSize * ySize * 3;
-	m_CodecContext->time_base             = m_FrameDuration;
-	m_CodecContext->framerate.num         = m_FrameDuration.den;
-	m_CodecContext->framerate.den         = m_FrameDuration.num;
-	m_CodecContext->max_b_frames          =  1;
-	m_CodecContext->gop_size              = 10;
-	m_CodecContext->strict_std_compliance = FF_COMPLIANCE_VERY_STRICT;
+	m_CodecContext->width                  = xSize;
+	m_CodecContext->height                 = ySize;
+	m_CodecContext->pix_fmt                = pixel_format;
+	m_CodecContext->sample_aspect_ratio    = av_make_q(1, 1);
+	m_CodecContext->bit_rate               = xSize * ySize * 3;
+	m_CodecContext->time_base              = m_FrameDuration;
+	m_CodecContext->framerate.num          = m_FrameDuration.den;
+	m_CodecContext->framerate.den          = m_FrameDuration.num;
+	m_CodecContext->max_b_frames           =  2;
+	m_CodecContext->gop_size               = 10;
+	m_CodecContext->strict_std_compliance  = FF_COMPLIANCE_VERY_STRICT;
+
+	// Prepare color values
+	m_CodecContext->color_primaries        = AVCOL_PRI_BT709;
+	m_CodecContext->color_trc              = AVCOL_TRC_BT709;
+	m_CodecContext->colorspace             = AVCOL_SPC_BT709;
+	m_CodecContext->color_range            = AVCOL_RANGE_MPEG;
+	m_CodecContext->chroma_sample_location = AVCHROMA_LOC_CENTER;
 
 	// Prepare codec specific parameters.
 	switch (m_CodecId)
@@ -218,7 +242,6 @@ b3VideoStream::b3VideoStream(
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "23", 0);
-		m_CodecContext->codec_tag = 0x31637661;
 		m_CodecContext->profile   = FF_PROFILE_H264_MAIN;
 		break;
 
@@ -226,7 +249,6 @@ b3VideoStream::b3VideoStream(
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "28", 0);
-		m_CodecContext->codec_tag = 0x31637668;
 		m_CodecContext->profile   = FF_PROFILE_HEVC_MAIN;
 		break;
 
@@ -240,6 +262,7 @@ b3VideoStream::b3VideoStream(
 	}
 
 	// Prepare stream.
+	m_Stream->sample_aspect_ratio = m_CodecContext->sample_aspect_ratio;
 	m_Stream->avg_frame_rate = m_CodecContext->framerate;
 }
 

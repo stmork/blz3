@@ -302,13 +302,13 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 
 		b3PrintF(B3LOG_DEBUG, "%s t=%2.03f pts: %ld\n",
 			m_MediaMap.get(media_type).c_str(), t, pts);
-		frame->pts = stream->b3Pts();
+		frame->pts = stream->b3FrameNo();
 	}
 
 	int error = avcodec_send_frame(*stream, frame);
 	b3PrintErr("Frame send to encoder", error, false);
 
-//	if (error >= 0)
+	if (error >= 0)
 	{
 		b3EncoderPacket pkt;
 
@@ -320,7 +320,9 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 		}
 		if (error >= 0)
 		{
+//			pkt.key();
 			pkt->stream_index = stream->b3GetIndex();
+			stream->b3Rescale(pkt);
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
 		}
 	}

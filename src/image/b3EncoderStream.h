@@ -53,11 +53,11 @@ class b3EncoderFrameBuffer;
  */
 class b3EncoderStream
 {
-	unsigned         m_FrameNo      = 0;
+	int64_t          m_FrameNo      = 0;
 	int64_t          m_Pts          = 0;
 
 protected:
-	AVRational       m_FrameDuration{ 0, 1 };
+	AVRational       m_FrameDuration { 0, 1 };
 	AVCodecID        m_CodecId      = AV_CODEC_ID_PROBE;
 	AVCodec     *    m_Codec        = nullptr;
 	AVCodecContext * m_CodecContext = nullptr;
@@ -84,11 +84,30 @@ public:
 	virtual ~b3EncoderStream();
 
 	/**
-	 * This method computes the streams PTS using the internal frame counter.
+	 * This method returns the internal frame counter and increments the frame
+	 * counter by the given value.
 	 *
-	 * @return The actual frame PTS.
+	 * @param increment The increment of the frame counter.
+	 * @return The frame counter before incrementing.
+	 */
+	int64_t b3FrameNo(const unsigned increment = 1);
+
+	/**
+	 * This method computes the streams PTS using the internal frame counter
+	 * and increments the frame counter by the given value.
+	 *
+	 * @param increment The increment of the frame counter.
+	 * @return The actual frame PTS using the framecounter before incrementing.
 	 */
 	int64_t b3Pts(const unsigned increment = 1);
+
+	/**
+	 * This method computes the streams PTS and DTS using the
+	 * av_packet_rescale_ts() method.
+	 *
+	 * @param packet The packet to rescale.
+	 */
+	void b3Rescale(AVPacket * packet) const;
 
 	/**
 	 * This method computes the streams PTS using the av_rescale_q()
