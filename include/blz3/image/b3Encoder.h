@@ -187,12 +187,11 @@ private:
 	 * method may throw an b3TxException on failed state.
 	 *
 	 * @param description The purpose of action done.
-	 * @param err The error code of that action.
+	 * @param error The error code of that action.
 	 * @param throw_exception If an exception should be thrown in failed state.
 	 */
-	void b3PrintErr(
-		const char * description,
-		const int    err,
+	void b3PrintErr(const char * description,
+		const int    error,
 		const bool   throw_exception = true);
 };
 

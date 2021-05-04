@@ -367,16 +367,17 @@ void b3MovieEncoder::b3Free()
 
 void b3MovieEncoder::b3PrintErr(
 	const char * description,
-	const int    err,
+	const int    error,
 	const bool   throw_exception)
 {
-	char message[256];
+	char       message[256];
+	const bool is_success = (error >= 0) || (error == AVERROR_EOF) || (error == AVERROR(EAGAIN));
 
-	av_strerror(err, message, sizeof(message));
-	b3PrintF(err >= 0 ? B3LOG_DEBUG : B3LOG_NORMAL,
-		"%s: %s (%d)\n", description, message, err);
+	av_strerror(error, message, sizeof(message));
+	b3PrintF(is_success ? B3LOG_DEBUG : B3LOG_NORMAL,
+		"%s: %s (%d)\n", description, message, error);
 
-	if ((err < 0) && (throw_exception))
+	if (!is_success && (throw_exception))
 	{
 		b3Free();
 		B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
