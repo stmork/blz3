@@ -63,6 +63,8 @@ b3EncoderFrameBuffer::b3EncoderFrameBuffer(const b3Tx * tx, int format)
 	m_Frame->width  = tx->xSize;
 	m_Frame->height = tx->ySize;
 	av_frame_get_buffer(m_Frame, 0);
+	m_Frame->extended_data = m_Frame->data;
+
 }
 
 b3EncoderFrameBuffer::~b3EncoderFrameBuffer()

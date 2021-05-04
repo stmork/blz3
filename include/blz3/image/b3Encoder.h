@@ -180,17 +180,16 @@ private:
 	void b3Free();
 
 	/**
-	 * This method checks an error variable if the error was caused by
-	 * sending a delayed frame. In this case it is not really an error.
+	 * This Method prints a purpose and depending on the error code its
+	 * error message as clear text. The log level depends on the given error
+	 * code. Non negative error codes leeds into successful debug logging
+	 * whereas negative error codes leeds into failed normal logging. The
+	 * method may throw an b3TxException on failed state.
 	 *
-	 * @param error The error variable to check.
-	 * @return True if a delayed frame was sent.
+	 * @param description The purpose of action done.
+	 * @param err The error code of that action.
+	 * @param throw_exception If an exception should be thrown in failed state.
 	 */
-	static inline bool b3Delayed(int error)
-	{
-		return (error == AVERROR(EAGAIN)) || (error == AVERROR_EOF);
-	}
-
 	void b3PrintErr(
 		const char * description,
 		const int    err,

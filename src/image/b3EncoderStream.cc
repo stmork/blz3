@@ -49,18 +49,19 @@ b3EncoderStream::b3EncoderStream(
 		m_CodecId = av_guess_codec(format_context->oformat, nullptr, filename, nullptr, media_type);
 	}
 
-#if 1
 	m_Codec        = avcodec_find_encoder(m_CodecId);
-#else
-	m_Codec        = avcodec_find_encoder_by_name("h264_nvenc");
-	m_CodecId      = m_Codec->id;
-#endif
 	if (m_Codec == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_STREAMING_ERROR);
 	}
 	m_Stream       = avformat_new_stream(format_context, m_Codec);
 	m_CodecContext = avcodec_alloc_context3(m_Codec);
+
+	// Populate extradata if encoder has support.
+	if (format_context->oformat->flags & AVFMT_GLOBALHEADER)
+	{
+		m_CodecContext->flags         |= CODEC_FLAG_GLOBAL_HEADER;
+	}
 }
 
 b3EncoderStream::~b3EncoderStream()
@@ -175,11 +176,6 @@ int b3AudioStream::b3SuggestSampleRate()
 **                        AV stream/codec implementation (Video)        **
 **                                                                      **
 *************************************************************************/
-unsigned char sps_pps[]
-{
-	0x00, 0x00, 0x00, 0x01, 0x67, 0x64, 0x00, 0x29, 0xac, 0x1b, 0x1a, 0xc1, 0xe0, 0x51, 0x90,
-	0x00, 0x00, 0x00, 0x01, 0x68, 0xea, 0x43, 0xcb
-};
 
 b3VideoStream::b3VideoStream(
 	AVFormatContext  *  format_context,
@@ -188,24 +184,11 @@ b3VideoStream::b3VideoStream(
 	const b3_res        xSize,
 	const b3_res        ySize,
 	const AVPixelFormat pixel_format) :
-	b3EncoderStream(format_context, filename, frames_per_second, AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
+	b3EncoderStream(format_context, filename, frames_per_second,
+					AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
 {
 	m_FrameDuration.num =  1;
 	m_FrameDuration.den = frames_per_second;
-
-#if 0
-	if (format_context->oformat->flags & AVFMT_GLOBALHEADER)
-	{
-		m_CodecContext->flags         |= CODEC_FLAG_GLOBAL_HEADER;
-	}
-	m_CodecContext->extradata_size = sizeof(sps_pps);
-	m_CodecContext->extradata      = (uint8_t *)av_malloc(
-			sizeof(sps_pps) + AV_INPUT_BUFFER_PADDING_SIZE);
-	if (m_CodecContext->extradata != nullptr)
-	{
-		memcpy(m_CodecContext->extradata, sps_pps, sizeof(sps_pps));
-	}
-#endif
 
 	// Prepare codec context.
 	m_CodecContext->width                  = xSize;
@@ -263,7 +246,7 @@ b3VideoStream::b3VideoStream(
 
 	// Prepare stream.
 	m_Stream->sample_aspect_ratio = m_CodecContext->sample_aspect_ratio;
-	m_Stream->avg_frame_rate = m_CodecContext->framerate;
+	m_Stream->avg_frame_rate      = m_CodecContext->framerate;
 }
 
 #endif

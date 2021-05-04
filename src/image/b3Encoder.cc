@@ -179,8 +179,6 @@ b3MovieEncoder::b3MovieEncoder(
 	b3PrepareStream(m_VideoStream);
 	b3PrepareStream(m_AudioStream);
 
-//	m_VideoStream->m_Stream->codecpar->extradata = m_FormatContext->streams[m_VideoStream->b3GetIndex()]->codecpar->extradata;
-
 	if ((m_FormatContext->oformat->flags & AVFMT_NOFILE) == 0)
 	{
 		error = avio_open(&m_FormatContext->pb, filename, AVIO_FLAG_WRITE);
@@ -238,11 +236,11 @@ void b3MovieEncoder::b3PrepareStream(b3EncoderStream * stream)
 	{
 		int error = 0;
 
-		error = stream->b3Prepare();
-		b3PrintErr("Converting codec context parameter", error);
-
 		error = stream->b3Open();
 		b3PrintErr("Codec opening", error);
+
+		error = stream->b3Prepare();
+		b3PrintErr("Converting codec context parameter", error);
 	}
 }
 
@@ -271,7 +269,7 @@ bool b3MovieEncoder::b3AddVideoFrame(const b3Tx * tx)
 	int error = b3SendFrame(m_VideoStream, m_YuvFrame);
 
 	b3PrintErr("Video frame writing", error, false);
-	return error >= 0;
+	return (error >= 0) || (error == AVERROR(EAGAIN));
 }
 
 bool b3MovieEncoder::b3AddAudioFrame()
@@ -294,38 +292,42 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 	{
 		return AVERROR_STREAM_NOT_FOUND;
 	}
+
+	const int64_t     pts        = stream->b3Rescale();
+	const b3_f64      t          = stream->b3Time();
+	const AVMediaType media_type = stream->b3GetMediaType();
+	int64_t           frame_no   = stream->b3FrameNo();
+
 	if (frame != nullptr)
 	{
-		const int64_t pts = stream->b3Rescale();
-		const b3_f64  t   = stream->b3Time();
-		const AVMediaType media_type = stream->b3GetMediaType();
-
-		b3PrintF(B3LOG_DEBUG, "%s t=%2.03f pts: %ld\n",
-			m_MediaMap.get(media_type).c_str(), t, pts);
-		frame->pts = stream->b3FrameNo();
+		frame->pts = frame_no;
 	}
+
+	b3PrintF(B3LOG_DEBUG, "###############################################\n");
+	b3PrintF(B3LOG_DEBUG, "%-20.20s ==== t=%2.03f pts: %6ld %p\n",
+		m_MediaMap.get(media_type).c_str(), t, pts, frame);
 
 	int error = avcodec_send_frame(*stream, frame);
 	b3PrintErr("Frame send to encoder", error, false);
 
-	if (error >= 0)
+	do
 	{
 		b3EncoderPacket pkt;
 
 		error = avcodec_receive_packet(*stream, pkt);
-		b3PrintErr("Frame received from encoder", error, false);
-		if (b3Delayed(error))
-		{
-			return true;
-		}
+		b3PrintErr("Packet receive from encoder", error, false);
 		if (error >= 0)
 		{
-//			pkt.key();
 			pkt->stream_index = stream->b3GetIndex();
 			stream->b3Rescale(pkt);
+			b3PrintF(B3LOG_DEBUG, "========================= no.: %4ld pts: %6ld  dts: %6ld  flags: %02x\n",
+				frame_no, pkt->pts, pkt->dts, pkt->flags);
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
+			b3PrintErr("Packet write", error, true);
 		}
 	}
+	while (error == 0);
+
 	return error;
 }
 
