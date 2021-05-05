@@ -114,11 +114,6 @@ public:
 	{
 		return &m_Packet;
 	}
-
-	/**
-	 * This method marks the AV packet as a key frame.
-	 */
-	void key();
 };
 
 #endif

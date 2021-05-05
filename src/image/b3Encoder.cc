@@ -151,7 +151,8 @@ ffmpeg -i test-video.mp4 -i silence.ac3 -c:v copy output.mp4
 b3MovieEncoder::b3MovieEncoder(
 	const char  *  filename,
 	const b3Tx  *  tx,
-	const b3_res   frames_per_second) :
+	const b3_res   frames_per_second,
+	const bool     use_audio) :
 	m_RgbFrame(tx, m_SrcFormat),
 	m_YuvFrame(tx, m_DstFormat)
 {
@@ -174,7 +175,10 @@ b3MovieEncoder::b3MovieEncoder(
 	b3PrintErr("Format context allocation", error);
 
 	m_VideoStream  = new b3VideoStream(m_FormatContext, filename, frames_per_second, m_xSize, m_ySize, m_DstFormat);
-//	m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second, m_AudioFrame);
+	if (use_audio)
+	{
+		m_AudioStream  = new b3AudioStream(m_FormatContext, filename, frames_per_second, m_AudioFrame);
+	}
 
 	b3PrepareStream(m_VideoStream);
 	b3PrepareStream(m_AudioStream);

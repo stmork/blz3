@@ -132,6 +132,11 @@ void b3MovieTest::testUneven()
 #endif
 }
 
+void b3MovieTest::testAudio()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video-audio.mp4", true));
+}
+
 void b3MovieTest::testAvi()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.avi"));
@@ -162,15 +167,16 @@ void b3MovieTest::testWebm()
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.webm"));
 }
 
-void b3MovieTest::createEmptyVideo(const char * filename)
+void b3MovieTest::createEmptyVideo(const char * filename, const bool use_audio)
 {
 #ifdef HAVE_VIDEO_ENCODER
-	b3Tx tx;
+	b3_res frames = FRAMES_PER_SECONDS * DURATION;
+	b3Tx   tx;
 
 	tx.b3Copy(&m_TxTrueColor);
-	b3MovieEncoder encoder(filename, &tx, 25);
+	b3MovieEncoder encoder(filename, &tx, FRAMES_PER_SECONDS, use_audio);
 
-	for (int i = 0; i <= 100; i++)
+	for (int i = 0; i <= frames; i++)
 	{
 		encoder.b3AddFrame(&tx);
 	}

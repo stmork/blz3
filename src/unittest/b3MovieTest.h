@@ -39,10 +39,14 @@ class b3MovieTest : public CppUnit::TestFixture, protected b3ImageSetup
 	b3Distribute     *    distribute = nullptr;
 	b3ShapeRenderContext  context;
 
+	static constexpr b3_f64 DURATION           = 4.0;
+	static const     b3_res FRAMES_PER_SECONDS = 25;
+
 	CPPUNIT_TEST_SUITE(b3MovieTest);
 	CPPUNIT_TEST(test);
 	CPPUNIT_TEST(testEmpty);
 	CPPUNIT_TEST(testUneven);
+	CPPUNIT_TEST(testAudio);
 	CPPUNIT_TEST(testAvi);
 	CPPUNIT_TEST(testMpg);
 	CPPUNIT_TEST(testMp4);
@@ -58,6 +62,7 @@ public:
 	void test();
 	void testEmpty();
 	void testUneven();
+	void testAudio();
 	void testAvi();
 	void testMpg();
 	void testMp4();
@@ -66,7 +71,7 @@ public:
 	void testWebm();
 
 private:
-	void createEmptyVideo(const char * filename);
+	void createEmptyVideo(const char * filename, const bool use_audio = false);
 };
 
 #endif

@@ -90,9 +90,4 @@ b3EncoderPacket::~b3EncoderPacket()
 	av_packet_unref(&m_Packet);
 }
 
-void b3EncoderPacket::key()
-{
-	m_Packet.flags |= AV_PKT_FLAG_KEY;
-}
-
 #endif

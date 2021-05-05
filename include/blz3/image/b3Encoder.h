@@ -110,10 +110,10 @@ public:
 	 * on encoding the image pixel data.
 	 * @param frames_per_second The frames per second to encode.
 	 */
-	explicit b3MovieEncoder(
-		const char * filename,
+	explicit b3MovieEncoder(const char * filename,
 		const b3Tx * tx,
-		const b3_res frames_per_second = 25);
+		const b3_res frames_per_second = 25,
+		const bool   use_audio         = false);
 
 	/**
 	 * The destructor finishes the video stream and frees all resources
