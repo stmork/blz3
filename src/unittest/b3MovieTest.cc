@@ -142,6 +142,11 @@ void b3MovieTest::testAvi()
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.avi"));
 }
 
+void b3MovieTest::testM2v()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.m2v"));
+}
+
 void b3MovieTest::testMpg()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mpg"));

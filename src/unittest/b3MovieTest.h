@@ -48,6 +48,7 @@ class b3MovieTest : public CppUnit::TestFixture, protected b3ImageSetup
 	CPPUNIT_TEST(testUneven);
 	CPPUNIT_TEST(testAudio);
 	CPPUNIT_TEST(testAvi);
+	CPPUNIT_TEST(testM2v);
 	CPPUNIT_TEST(testMpg);
 	CPPUNIT_TEST(testMp4);
 	CPPUNIT_TEST(testMkv);
@@ -64,6 +65,7 @@ public:
 	void testUneven();
 	void testAudio();
 	void testAvi();
+	void testM2v();
 	void testMpg();
 	void testMp4();
 	void testMkv();

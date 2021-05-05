@@ -93,15 +93,6 @@ public:
 	int64_t b3FrameNo(const unsigned increment = 1);
 
 	/**
-	 * This method computes the streams PTS using the internal frame counter
-	 * and increments the frame counter by the given value.
-	 *
-	 * @param increment The increment of the frame counter.
-	 * @return The actual frame PTS using the framecounter before incrementing.
-	 */
-	int64_t b3Pts(const unsigned increment = 1);
-
-	/**
 	 * This method computes the streams PTS and DTS using the
 	 * av_packet_rescale_ts() method.
 	 *

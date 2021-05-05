@@ -80,16 +80,6 @@ int64_t b3EncoderStream::b3FrameNo(const unsigned increment)
 	return frame_no;
 }
 
-int64_t b3EncoderStream::b3Pts(const unsigned increment)
-{
-	m_Pts =
-		(m_CodecContext->time_base.num * m_Stream->time_base.den * m_FrameNo) /
-		(m_CodecContext->time_base.den * m_Stream->time_base.num);
-	m_FrameNo += increment;
-
-	return m_Pts;
-}
-
 void b3EncoderStream::b3Rescale(AVPacket * packet) const
 {
 	av_packet_rescale_ts(packet, m_CodecContext->time_base, m_Stream->time_base);
@@ -214,7 +204,7 @@ b3VideoStream::b3VideoStream(
 	switch (m_CodecId)
 	{
 	case AV_CODEC_ID_MPEG2VIDEO:
-		m_CodecContext->profile = FF_PROFILE_MPEG2_MAIN;
+		m_CodecContext->profile = FF_PROFILE_MPEG2_HIGH;
 		break;
 
 	case AV_CODEC_ID_MPEG4:
