@@ -185,7 +185,7 @@ b3VideoStream::b3VideoStream(
 	const b3_res        ySize,
 	const AVPixelFormat pixel_format) :
 	b3EncoderStream(format_context, filename, frames_per_second,
-					AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
+		AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
 {
 	m_FrameDuration.num =  1;
 	m_FrameDuration.den = frames_per_second;

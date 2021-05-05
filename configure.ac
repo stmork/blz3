@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.69)
-AC_INIT(blz3, 3.1.2, blz3-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 3.1.3, blz3-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 

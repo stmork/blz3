@@ -134,7 +134,7 @@ public:
 	 * This constructor initializes the exception.
 	 *
 	 * \param error The exception base.
-	 * \param *FileName The modules' file name.
+	 * \param FileName The modules' file name.
 	 * \param LineNo The line number in the module.
 	 */
 	explicit b3Exception(
