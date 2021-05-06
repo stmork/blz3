@@ -132,6 +132,19 @@ void b3MovieTest::testUneven()
 #endif
 }
 
+void b3MovieTest::testDiffTx()
+{
+#ifdef HAVE_VIDEO_ENCODER
+	b3Tx tx;
+
+	CPPUNIT_ASSERT(tx.b3AllocTx(640, 480, 128));
+
+	b3MovieEncoder encoder("test-video-difftx.mp4", &tx, 25);
+	CPPUNIT_ASSERT(tx.b3AllocTx(320,320,32));
+	CPPUNIT_ASSERT(!encoder.b3AddFrame(&tx));
+#endif
+}
+
 void b3MovieTest::testAudio()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video-audio.mp4", true));
