@@ -88,7 +88,11 @@ void b3CodecRegister::b3PrepareCodecs()
 			switch (codec->id)
 			{
 			case AV_CODEC_ID_MPEG1VIDEO:
-				m_Encoderinfo.bits.m_mpg = true;
+				m_Encoderinfo.bits.m_mpg1 = true;
+				break;
+
+			case AV_CODEC_ID_MPEG2VIDEO:
+				m_Encoderinfo.bits.m_mpg2 = true;
 				break;
 
 			case AV_CODEC_ID_H264:
@@ -287,7 +291,7 @@ bool b3MovieEncoder::b3AddAudioFrame()
 	int error = b3SendFrame(m_AudioStream, m_AudioFrame);
 
 	b3PrintErr("Audio frame writing", error, false);
-	return error >= 0;
+	return (error >= 0) || (error == AVERROR(EAGAIN));
 }
 
 int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)

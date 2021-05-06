@@ -70,14 +70,12 @@ public:
 	 *
 	 * @param format_context The description of the container format.
 	 * @param filename The container filename.
-	 * @param frames_per_second The video frames per second.
 	 * @param preferred_codec_id The codecs' preferred ID.
 	 * @param media_type The media type (audio or video) to use.
 	 */
 	b3EncoderStream(
 		AVFormatContext * format_context,
 		const char    *   filename,
-		const b3_res      frames_per_second B3_UNUSED,
 		const AVCodecID   preferred_codec_id,
 		const AVMediaType media_type);
 

@@ -36,7 +36,6 @@
 b3EncoderStream::b3EncoderStream(
 	AVFormatContext * format_context,
 	const char    *   filename,
-	const b3_res      frames_per_second B3_UNUSED,
 	const AVCodecID   preferred_codec_id,
 	const AVMediaType media_type)
 {
@@ -121,7 +120,7 @@ b3AudioStream::b3AudioStream(
 	const char      *      filename,
 	const b3_res           frames_per_second,
 	b3EncoderFrameBuffer & buffer) :
-	b3EncoderStream(format_context, filename, frames_per_second, AV_CODEC_ID_AAC, AVMEDIA_TYPE_AUDIO)
+	b3EncoderStream(format_context, filename, AV_CODEC_ID_PROBE, AVMEDIA_TYPE_AUDIO)
 {
 	m_CodecContext->sample_rate    = b3SuggestSampleRate();
 	m_CodecContext->bit_rate       = 64000;
@@ -132,17 +131,20 @@ b3AudioStream::b3AudioStream(
 	m_CodecContext->frame_size     = av_samples_get_buffer_size(nullptr,
 			m_CodecContext->channels,
 			m_CodecContext->sample_rate / frames_per_second,
-			m_CodecContext->sample_fmt, 0);
+			m_CodecContext->sample_fmt, 1);
 
 	buffer.b3InitAudio(m_CodecContext, frames_per_second);
 
-	m_FrameDuration.num = m_CodecContext->frame_size /
+#if 0
+	m_FrameDuration.num       = m_CodecContext->frame_size /
 		(av_get_bytes_per_sample (m_CodecContext->sample_fmt) *
 			m_CodecContext->channels);
-	m_FrameDuration.den = m_CodecContext->sample_rate;
-	m_CodecContext->time_base             = m_FrameDuration;
-	m_CodecContext->framerate.num         = m_FrameDuration.den;
-	m_CodecContext->framerate.den         = m_FrameDuration.num;
+	m_FrameDuration.den       = m_CodecContext->sample_rate;
+#else
+	m_FrameDuration           = AVRational { 1, frames_per_second };
+#endif
+	m_CodecContext->time_base = m_FrameDuration;
+	m_CodecContext->framerate = av_inv_q(m_FrameDuration);
 }
 
 int b3AudioStream::b3SuggestSampleRate()
@@ -174,24 +176,22 @@ b3VideoStream::b3VideoStream(
 	const b3_res        xSize,
 	const b3_res        ySize,
 	const AVPixelFormat pixel_format) :
-	b3EncoderStream(format_context, filename, frames_per_second,
-		AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
+	b3EncoderStream(format_context, filename, AV_CODEC_ID_PROBE, AVMEDIA_TYPE_VIDEO)
 {
 	m_FrameDuration.num =  1;
 	m_FrameDuration.den = frames_per_second;
 
 	// Prepare codec context.
-	m_CodecContext->width                  = xSize;
-	m_CodecContext->height                 = ySize;
-	m_CodecContext->pix_fmt                = pixel_format;
-	m_CodecContext->sample_aspect_ratio    = av_make_q(1, 1);
-	m_CodecContext->bit_rate               = xSize * ySize * 3;
-	m_CodecContext->time_base              = m_FrameDuration;
-	m_CodecContext->framerate.num          = m_FrameDuration.den;
-	m_CodecContext->framerate.den          = m_FrameDuration.num;
-	m_CodecContext->max_b_frames           =  2;
-	m_CodecContext->gop_size               = 10;
-	m_CodecContext->strict_std_compliance  = FF_COMPLIANCE_VERY_STRICT;
+	m_CodecContext->width                 = xSize;
+	m_CodecContext->height                = ySize;
+	m_CodecContext->pix_fmt               = pixel_format;
+	m_CodecContext->sample_aspect_ratio   = av_make_q(1, 1);
+	m_CodecContext->bit_rate              = xSize * ySize * 3;
+	m_CodecContext->time_base             = m_FrameDuration;
+	m_CodecContext->framerate             = av_inv_q(m_FrameDuration);
+	m_CodecContext->max_b_frames          =  2;
+	m_CodecContext->gop_size              = 10;
+	m_CodecContext->strict_std_compliance = FF_COMPLIANCE_VERY_STRICT;
 
 	// Prepare color values
 	m_CodecContext->color_primaries        = AVCOL_PRI_BT709;

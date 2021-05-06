@@ -49,10 +49,10 @@ void b3EncoderFrameBuffer::b3InitAudio(
 	m_BufferSize = av_samples_get_buffer_size(nullptr,
 			m_Frame->channels,
 			codec_context->sample_rate / frames_per_second,
-			codec_context->sample_fmt, 0);
+			codec_context->sample_fmt, 1);
 	m_SampleSize = av_get_bytes_per_sample (codec_context->sample_fmt);
 
-	av_frame_get_buffer(m_Frame, 0);
+	av_frame_get_buffer(m_Frame, 1);
 	bzero(m_Frame->data[0], m_Frame->linesize[0]);
 }
 

@@ -46,7 +46,8 @@ class b3CodecRegister
 	{
 		struct b3_encoder_info
 		{
-			unsigned m_mpg: 1;
+			unsigned m_mpg1: 1;
+			unsigned m_mpg2: 1;
 			unsigned m_h264: 1;
 			unsigned m_hevc: 1;
 			unsigned m_vp8: 1;
@@ -109,6 +110,7 @@ public:
 	 * @param tx The b3Tx instance which contains the image resolution and
 	 * on encoding the image pixel data.
 	 * @param frames_per_second The frames per second to encode.
+	 * @param use_audio True if an silent audio stream should be included.
 	 */
 	explicit b3MovieEncoder(const char * filename,
 		const b3Tx * tx,
