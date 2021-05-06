@@ -121,6 +121,21 @@ void b3CodecRegister::b3PrepareCodecs()
 	}
 }
 
+void b3CodecRegister::b3PrepareOutputFormats()
+{
+	for (AVOutputFormat * oformat = av_oformat_next(nullptr);
+		oformat != nullptr;
+		oformat = av_oformat_next(oformat))
+	{
+		b3PrintF(B3LOG_FULL, "%s\n", oformat->long_name);
+
+		if (oformat->video_codec == AV_CODEC_ID_H265)
+		{
+			b3PrintF(B3LOG_FULL, "Container for h.265 found: %s\n", oformat->long_name);
+		}
+	}
+}
+
 /*************************************************************************
 **                                                                      **
 **                        AV MP4/h.264 encoder implementation           **

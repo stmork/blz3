@@ -140,7 +140,7 @@ void b3MovieTest::testDiffTx()
 	CPPUNIT_ASSERT(tx.b3AllocTx(640, 480, 128));
 
 	b3MovieEncoder encoder("test-video-difftx.mp4", &tx, 25);
-	CPPUNIT_ASSERT(tx.b3AllocTx(320,320,32));
+	CPPUNIT_ASSERT(tx.b3AllocTx(320, 320, 32));
 	CPPUNIT_ASSERT(!encoder.b3AddFrame(&tx));
 #endif
 }
@@ -178,6 +178,11 @@ void b3MovieTest::testMkv()
 void b3MovieTest::testMov()
 {
 	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.mov"));
+}
+
+void b3MovieTest::testHevc()
+{
+	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.hevc"));
 }
 
 void b3MovieTest::testWebm()

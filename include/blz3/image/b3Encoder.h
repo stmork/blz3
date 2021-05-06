@@ -70,6 +70,7 @@ public:
 	static b3CodecRegister & b3Instance();
 
 	void b3PrepareCodecs();
+	void b3PrepareOutputFormats();
 };
 
 class b3EncoderStream;

@@ -232,6 +232,7 @@ int main(int argc, char * argv[])
 		b3RaytracingItems::b3Register();
 #ifdef HAVE_VIDEO_ENCODER
 		b3CodecRegister::b3Instance().b3PrepareCodecs();
+		b3CodecRegister::b3Instance().b3PrepareOutputFormats();
 #endif
 		loader.b3AddPath(BLZ3_BIN);
 		loader.b3AddPath(BLZ3_PLUGINS);

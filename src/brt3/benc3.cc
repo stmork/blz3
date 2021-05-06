@@ -75,6 +75,7 @@ int main(int argc, char * argv[])
 	}
 
 	b3CodecRegister::b3Instance().b3PrepareCodecs();
+	b3CodecRegister::b3Instance().b3PrepareOutputFormats();
 
 	for (int i = 2; i < argc; i++)
 	{
