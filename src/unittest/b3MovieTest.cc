@@ -200,6 +200,7 @@ void b3MovieTest::createEmptyVideo(const char * filename, const bool use_audio)
 	}
 #else
 	(void)filename;
+	(void)use_audio;
 #endif
 }
 
