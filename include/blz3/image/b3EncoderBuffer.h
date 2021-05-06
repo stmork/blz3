@@ -39,14 +39,14 @@ extern "C"
  * encoding job. Mostly the RGB video input has to converted into YUV format and
  * then encoded as h.264.
  */
-class b3EncoderFrameBuffer
+class b3CodecFrame
 {
 	AVFrame * m_Frame      = nullptr;
 	int       m_BufferSize = 0;
 	int       m_SampleSize = 0;
 
 public:
-	explicit b3EncoderFrameBuffer();
+	explicit b3CodecFrame();
 
 	/**
 	 * Thie constructor allocates an AV frame in the specified resolution
@@ -55,12 +55,12 @@ public:
 	 * @param tx The b3Tx instance to get the frame resolution from.
 	 * @param format The color format of the AV frame.
 	 */
-	explicit b3EncoderFrameBuffer(const b3Tx * tx, int format);
+	explicit b3CodecFrame(const b3Tx * tx, int format);
 
 	/**
 	 * The destructor frees the frame resource.
 	 */
-	virtual ~b3EncoderFrameBuffer();
+	virtual ~b3CodecFrame();
 
 	void b3InitAudio(const AVCodecContext * codec_context, const b3_res frames_per_second);
 
@@ -84,7 +84,7 @@ public:
 /**
  * The AV packet contains the encoded video data.
  */
-class b3EncoderPacket
+class b3CodecPacket
 {
 	AVPacket  m_Packet;
 
@@ -92,12 +92,12 @@ public:
 	/**
 	 * The constructor initializes the AV packet for further usage.
 	 */
-	b3EncoderPacket();
+	b3CodecPacket();
 
 	/**
 	 * The destructor frees references to this AV packet.
 	 */
-	virtual ~b3EncoderPacket();
+	virtual ~b3CodecPacket();
 
 	/**
 	 * This cast operator simply returns a AV packet pointer for convenience.

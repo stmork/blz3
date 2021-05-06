@@ -87,9 +87,9 @@ class b3MovieEncoder
 	b3AudioStream       *      m_AudioStream   = nullptr;
 	b3VideoStream       *      m_VideoStream   = nullptr;
 
-	b3EncoderFrameBuffer       m_RgbFrame;
-	b3EncoderFrameBuffer       m_YuvFrame;
-	b3EncoderFrameBuffer       m_AudioFrame;
+	b3CodecFrame               m_RgbFrame;
+	b3CodecFrame               m_YuvFrame;
+	b3CodecFrame               m_AudioFrame;
 
 	static const unsigned      m_kbit_rate = 900;
 	static const AVPixelFormat m_SrcFormat;

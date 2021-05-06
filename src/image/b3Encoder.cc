@@ -320,7 +320,7 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 
 	do
 	{
-		b3EncoderPacket pkt;
+		b3CodecPacket pkt;
 
 		error = avcodec_receive_packet(*stream, pkt);
 		b3PrintErr("Packet receive from encoder", error, false);

@@ -119,7 +119,7 @@ b3AudioStream::b3AudioStream(
 	AVFormatContext    *   format_context,
 	const char      *      filename,
 	const b3_res           frames_per_second,
-	b3EncoderFrameBuffer & buffer) :
+	b3CodecFrame & buffer) :
 	b3EncoderStream(format_context, filename, AV_CODEC_ID_PROBE, AVMEDIA_TYPE_AUDIO)
 {
 	m_CodecContext->sample_rate    = b3SuggestSampleRate();

@@ -31,12 +31,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3EncoderFrameBuffer::b3EncoderFrameBuffer()
+b3CodecFrame::b3CodecFrame()
 {
 	m_Frame = av_frame_alloc();
 }
 
-void b3EncoderFrameBuffer::b3InitAudio(
+void b3CodecFrame::b3InitAudio(
 	const AVCodecContext * codec_context,
 	const b3_res           frames_per_second)
 {
@@ -56,7 +56,7 @@ void b3EncoderFrameBuffer::b3InitAudio(
 	bzero(m_Frame->data[0], m_Frame->linesize[0]);
 }
 
-b3EncoderFrameBuffer::b3EncoderFrameBuffer(const b3Tx * tx, int format)
+b3CodecFrame::b3CodecFrame(const b3Tx * tx, int format)
 {
 	m_Frame = av_frame_alloc();
 	m_Frame->format = format;
@@ -67,7 +67,7 @@ b3EncoderFrameBuffer::b3EncoderFrameBuffer(const b3Tx * tx, int format)
 
 }
 
-b3EncoderFrameBuffer::~b3EncoderFrameBuffer()
+b3CodecFrame::~b3CodecFrame()
 {
 	av_frame_free(&m_Frame);
 }
@@ -78,14 +78,14 @@ b3EncoderFrameBuffer::~b3EncoderFrameBuffer()
 **                                                                      **
 *************************************************************************/
 
-b3EncoderPacket::b3EncoderPacket()
+b3CodecPacket::b3CodecPacket()
 {
 	av_init_packet(&m_Packet);
 	m_Packet.data = nullptr;
 	m_Packet.size = 0;
 }
 
-b3EncoderPacket::~b3EncoderPacket()
+b3CodecPacket::~b3CodecPacket()
 {
 	av_packet_unref(&m_Packet);
 }

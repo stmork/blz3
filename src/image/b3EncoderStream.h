@@ -34,7 +34,7 @@ extern "C"
 #	include <libavutil/opt.h>
 }
 
-class b3EncoderFrameBuffer;
+class b3CodecFrame;
 
 /*************************************************************************
 **                                                                      **
@@ -88,6 +88,7 @@ public:
 	 * @param increment The increment of the frame counter.
 	 * @return The frame counter before incrementing.
 	 */
+	[[nodiscard]]
 	int64_t b3FrameNo(const unsigned increment = 1);
 
 	/**
@@ -104,6 +105,7 @@ public:
 	 *
 	 * @return The actual frame PTS.
 	 */
+	[[nodiscard]]
 	int64_t b3Rescale() const;
 
 	/**
@@ -112,6 +114,7 @@ public:
 	 *
 	 * @return The time point of the actual state.
 	 */
+	[[nodiscard]]
 	b3_f64  b3Time() const;
 
 	/**
@@ -183,10 +186,10 @@ public:
 	 * @param buffer b3EncoderFrameBuffer AVFrame buffer to initialize.
 	 */
 	b3AudioStream(
-		AVFormatContext    *   format_context,
-		const char      *      filename,
-		const b3_res           frames_per_second,
-		b3EncoderFrameBuffer & buffer);
+		AVFormatContext * format_context,
+		const char    *   filename,
+		const b3_res      frames_per_second,
+		b3CodecFrame   &  buffer);
 
 private:
 	int b3SuggestSampleRate();
