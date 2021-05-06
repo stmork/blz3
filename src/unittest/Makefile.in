@@ -98,6 +98,9 @@ depend:
 
 clean:	cleantest
 	rm -f *.o *.bak *~ core img_test* test*.bwd $(PRGS) out ALL QUIET
+	rm -f *.avi *.mp4 *.mpg *.mov *.hevc *.mkv *.m2v *.webm
+	rm -f *.jpg *.ps *.tiff *.tga *.rgb8 *.exr
+	rm -f test*.xml test*.bwd
 
 cleantest:
 	rm -f $(TEST_FILES)
