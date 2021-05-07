@@ -4,7 +4,7 @@
    match-leak-kinds: possible
    fun:calloc
    fun:g_malloc0
-   fun:call_init
-   fun:_dl_init
+   obj:*
+   obj:*
    obj:*
 }
