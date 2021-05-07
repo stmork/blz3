@@ -46,16 +46,15 @@ class b3CodecRegister
 	{
 		struct b3_encoder_info
 		{
-			unsigned m_mpg1: 1;
-			unsigned m_mpg2: 1;
-			unsigned m_h264: 1;
-			unsigned m_hevc: 1;
-			unsigned m_vp8: 1;
-			unsigned m_vp9: 1;
+			unsigned m_mpg1 : 1;
+			unsigned m_mpg2 : 1;
+			unsigned m_h264 : 1;
+			unsigned m_hevc : 1;
+			unsigned m_vp8  : 1;
+			unsigned m_vp9  : 1;
 		} bits;
 		unsigned value = 0;
 	} m_Encoderinfo;
-
 
 	b3CodecRegister();
 

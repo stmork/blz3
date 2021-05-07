@@ -15,7 +15,9 @@
 **
 */
 
-#include "b3SystemIndInclude.h"
+#include "blz3/system/b3LogBase.h"
+#include "blz3/system/b3File.h"
+
 #include <errno.h>
 
 /*************************************************************************
@@ -34,10 +36,6 @@ b3LogBase  *  b3LogBase::m_Logger;
 b3Mutex       b3LogBase::m_LogMutex;
 FILE     *    b3LogBase::m_Out = nullptr;
 char          b3LogBase::m_Message[B3_MAX_LOGSIZE];
-
-b3LogBase::b3LogBase()
-{
-}
 
 b3_bool b3LogBase::b3OpenLogFile()
 {

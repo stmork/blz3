@@ -60,7 +60,7 @@ protected:
 	/**
 	 * This constructor prepares for logging.
 	 */
-	b3LogBase();
+	b3LogBase() = default;
 
 	/**
 	 * This method prepares the log file.

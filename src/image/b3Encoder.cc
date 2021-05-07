@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/image/b3Encoder.h"
+#include "blz3/system/b3LogBase.h"
 
 #ifdef HAVE_VIDEO_ENCODER
 
@@ -42,7 +43,7 @@ b3CodecRegister::b3CodecRegister()
 
 void b3CodecRegister::b3Log(void *, int level, const char * fmt, va_list vargs)
 {
-	char message[8192];
+	char         message[8192];
 	b3_log_level b3_level;
 
 	switch (level)
