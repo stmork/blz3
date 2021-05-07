@@ -92,6 +92,7 @@ QMAKE_CLEAN += test*.xml test*.bwd unittest
 
 valgrind.commands = valgrind\
 	--suppressions=glib.supp\
+	--suppressions=b3.supp\
 	--tool=memcheck --leak-check=full\
 	--show-reachable=no --undef-value-errors=no --track-origins=no\
 	--child-silent-after-fork=no --trace-children=no --gen-suppressions=no\
