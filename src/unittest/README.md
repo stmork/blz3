@@ -17,7 +17,7 @@ suppression file for valgrind names glib.supp downloaded from
 
 https://gitlab.gnome.org/GNOME/glib/-/blob/master/glib.supp
 
-The hint was given by an issue at the Gnome environment:
+The hint was given by an issue around the Gnome environment:
 
 https://gitlab.gnome.org/GNOME/glib/-/issues/2076
 
