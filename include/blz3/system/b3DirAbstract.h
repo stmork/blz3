@@ -125,6 +125,17 @@ public:
 	}
 
 	/**
+	 * This cast operator returns the actual filename as a temporary string
+	 * instance.
+	 *
+	 * @return The path as std::string.
+	 */
+	inline operator std::string () const
+	{
+		return std::string(m_Path);
+	}
+
+	/**
 	 * The index operator gives a reference to the corresponding character
 	 * inside the path.
 	 *

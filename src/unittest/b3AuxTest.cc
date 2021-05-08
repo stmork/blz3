@@ -120,4 +120,53 @@ void b3AuxTest::testPoint()
 	CPPUNIT_ASSERT_EQUAL( 2.5, point.y);
 }
 
+void b3AuxTest::testStrCase()
+{
+	const std::string test1 = "AA12BB-Öß";
+	const std::string test2 = "Aa12Bb-öß";
+	const std::string test3 = "Aa12bb-Öß";
+	const std::string lower = "aa12bb-öß";
+	const std::string upper = "AA12BB-Öß";
+
+	CPPUNIT_ASSERT_EQUAL(lower, b3StringTool::b3ToLower(test1));
+	CPPUNIT_ASSERT_EQUAL(lower, b3StringTool::b3ToLower(test2));
+	CPPUNIT_ASSERT_EQUAL(lower, b3StringTool::b3ToLower(test3));
+
+	CPPUNIT_ASSERT_EQUAL(upper, b3StringTool::b3ToUpper(test1));
+	CPPUNIT_ASSERT_EQUAL(upper, b3StringTool::b3ToUpper(test2));
+	CPPUNIT_ASSERT_EQUAL(upper, b3StringTool::b3ToUpper(test3));
+}
+
+void b3AuxTest::testStrCaseCmp()
+{
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("", "") == 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("", "a") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "") > 0);
+
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "aa") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "AA") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("A", "aA") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("A", "AA") < 0);
+
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "b") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "B") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("A", "b") < 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("A", "B") < 0);
+
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "a") == 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("a", "A") == 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("A", "a") == 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("A", "A") == 0);
+
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("b", "a") > 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("b", "A") > 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("B", "a") > 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("B", "A") > 0);
+
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("aa", "a") > 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("aa", "A") > 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("AA", "a") > 0);
+	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("AA", "A") > 0);
+}
+
 #endif

@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Master of little help
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -17,10 +17,13 @@
 
 #pragma once
 
-#ifndef B3_IMAGE_AUX_H
-#define B3_IMAGE_AUX_H
+#ifndef B3_BASE_AUX_H
+#define B3_BASE_AUX_H
 
 #include "blz3/base/b3Color.h"
+
+#include <locale>
+#include <codecvt>
 
 /**
  * This class represents a RGB color triplet.
@@ -180,6 +183,47 @@ public:
 		this->x = nx;
 		this->y = ny;
 	}
+};
+
+/**
+ * This class provides some useful string operating methods.
+ */
+class B3_PLUGIN b3StringTool
+{
+	static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> m_Convert;
+	static std::locale                                            m_Locale;
+
+public:
+	/**
+	 * This method compares two string ignoring their case.
+	 *
+	 * @param left The left string to compare.
+	 * @param right The right string to compare.
+	 * @return 0 if both strings are equal ignoring their case. Negative if
+	 * the left string ist lexically smaller than the right string and positive
+	 * if the right string is lexically smaller.
+	 */
+	static int b3CaseCompare(
+		const std::string & left,
+		const std::string & right);
+
+	/**
+	 * This converts a std::string to lower case. This method is able to
+	 * convert german umlauts.
+	 *
+	 * @param input The input std::string to convert.
+	 * @return The lower case std::string.
+	 */
+	static std::string b3ToLower(const std::string & input);
+
+	/**
+	 * This converts a std::string to upper case. This method is able to
+	 * convert german umlauts.
+	 *
+	 * @param input The input std::string to convert.
+	 * @return The upper case std::string.
+	 */
+	static std::string b3ToUpper(const std::string & input);
 };
 
 #endif

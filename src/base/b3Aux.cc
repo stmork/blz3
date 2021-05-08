@@ -115,3 +115,63 @@ bool b3Rect::b3CheckBound(b3Rect * rect)
 	}
 	return changed;
 }
+
+/*************************************************************************
+**                                                                      **
+**                        String tool                                   **
+**                                                                      **
+*************************************************************************/
+
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> b3StringTool::m_Convert;
+std::locale                                            b3StringTool::m_Locale("de_DE.UTF-8");
+
+int b3StringTool::b3CaseCompare(
+	const std::string & left,
+	const std::string & right)
+{
+	std::wstring u16_left  = m_Convert.from_bytes(left);
+	std::wstring u16_right = m_Convert.from_bytes(right);
+	b3_index     i = 0;
+	int          diff;
+
+	i = 0;
+	do
+	{
+		diff = std::tolower(u16_left[i], m_Locale) - std::tolower(u16_right[i], m_Locale);
+		if ((u16_left[i] == 0) || (u16_right[i] == 0))
+		{
+			return diff;
+		}
+		i++;
+	}
+	while (diff == 0);
+
+	return diff;
+
+}
+
+std::string b3StringTool::b3ToLower(const std::string & input)
+{
+	std::wstring result = m_Convert.from_bytes(input);
+
+	for (unsigned i = 0; i < result.size(); i++)
+	{
+		result[i] = std::tolower(result[i], m_Locale);
+	}
+
+	return m_Convert.to_bytes(result);
+}
+
+std::string b3StringTool::b3ToUpper(const std::string & input)
+{
+	std::wstring result = m_Convert.from_bytes(input);
+
+	std::transform(
+		result.begin(), result.end(), result.begin(),
+		[] (const wchar_t ch)
+	{
+		return std::toupper(ch, m_Locale);
+	});
+
+	return m_Convert.to_bytes(result);
+}

@@ -63,7 +63,7 @@ CFLAGS="$CFLAGS $MFLAGS"
 CXXFLAGS="$CXXFLAGS $MFLAGS"
 # CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
-AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr])
+AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strlcpy strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[
@@ -225,8 +225,8 @@ AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
 
 # Check for video encoder
-#AC_CHECK_LIB([x264], [main])
-#AC_CHECK_LIB([x265], [main])
+AC_CHECK_LIB([x264], [main])
+AC_CHECK_LIB([x265], [main])
 AC_CHECK_LIB([swscale], [main])
 AC_CHECK_LIB([avutil], [main])
 AC_CHECK_LIB([avformat], [main])

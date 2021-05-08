@@ -218,12 +218,14 @@ b3VideoStream::b3VideoStream(
 		m_CodecContext->profile   = FF_PROFILE_H264_MAIN;
 		break;
 
+#ifdef HAVE_LIBX265
 	case AV_CODEC_ID_HEVC:
 		av_opt_set(m_CodecContext, "preset", "medium", 0);
 		av_opt_set(m_CodecContext, "tune", "zerolatency", 0);
 		av_opt_set(m_CodecContext, "crf", "28", 0);
 		m_CodecContext->profile   = FF_PROFILE_HEVC_MAIN;
 		break;
+#endif
 
 	case AV_CODEC_ID_VP9:
 		m_CodecContext->profile = FF_PROFILE_VP9_0;

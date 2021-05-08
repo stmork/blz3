@@ -24,6 +24,7 @@
 
 #include "b3RaytraceInclude.h"
 #include "b3ReadTGF.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -377,7 +378,7 @@ b3CameraPart * b3Scene::b3GetCameraByName(const char * camera_name) const
 		if (item->b3GetClassType() == CAMERA)
 		{
 			camera = (b3CameraPart *)item;
-			if (stricmp(camera->b3GetName(), camera_name) == 0)
+			if (b3StringTool::b3CaseCompare(camera->b3GetName(), camera_name) == 0)
 			{
 				return camera;
 			}
@@ -467,7 +468,7 @@ b3Light * b3Scene::b3GetLightByName(const char * light_name) const
 {
 	B3_FOR_TYPED_BASE(b3Light, b3GetLightHead(), light)
 	{
-		if (stricmp(light->b3GetName(), light_name) == 0)
+		if (b3StringTool::b3CaseCompare(light->b3GetName(), light_name) == 0)
 		{
 			return light;
 		}

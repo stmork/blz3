@@ -32,6 +32,8 @@ class b3AuxTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testAux);
 	CPPUNIT_TEST(testRect);
 	CPPUNIT_TEST(testPoint);
+	CPPUNIT_TEST(testStrCase);
+	CPPUNIT_TEST(testStrCaseCmp);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -40,6 +42,8 @@ public:
 	void testAux();
 	void testRect();
 	void testPoint();
+	void testStrCase();
+	void testStrCaseCmp();
 };
 
 #endif

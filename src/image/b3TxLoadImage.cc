@@ -26,6 +26,7 @@
 #include "b3TxInclude.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Endian.h"
 #include "blz3/image/b3Tx.h"
 
@@ -333,75 +334,75 @@ b3_result b3Tx::b3LoadImage(const char * name, bool throw_exception)
 
 b3_tx_filetype b3Tx::b3GetFileType(const char * ext)
 {
-	if (stricmp(ext, "tif")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "tif")  == 0)
 	{
 		return FT_TIFF;
 	}
-	if (stricmp(ext, "tiff") == 0)
+	if (b3StringTool::b3CaseCompare(ext, "tiff") == 0)
 	{
 		return FT_TIFF;
 	}
-	if (stricmp(ext, "tga")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "tga")  == 0)
 	{
 		return FT_TGA;
 	}
-	if (stricmp(ext, "jpg")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "jpg")  == 0)
 	{
 		return FT_JPEG;
 	}
-	if (stricmp(ext, "jpeg") == 0)
+	if (b3StringTool::b3CaseCompare(ext, "jpeg") == 0)
 	{
 		return FT_JPEG;
 	}
-	if (stricmp(ext, "gif")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "gif")  == 0)
 	{
 		return FT_GIF;
 	}
-	if (stricmp(ext, "rgb8") == 0)
+	if (b3StringTool::b3CaseCompare(ext, "rgb8") == 0)
 	{
 		return FT_RGB8;
 	}
-	if (stricmp(ext, "rgb4") == 0)
+	if (b3StringTool::b3CaseCompare(ext, "rgb4") == 0)
 	{
 		return FT_RGB4;
 	}
-	if (stricmp(ext, "rgbn") == 0)
+	if (b3StringTool::b3CaseCompare(ext, "rgbn") == 0)
 	{
 		return FT_RGB4;
 	}
-	if (stricmp(ext, "pcx")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "pcx")  == 0)
 	{
 		return FT_PCX8;
 	}
-	if (stricmp(ext, "lbm")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "lbm")  == 0)
 	{
 		return FT_ILBM;
 	}
-	if (stricmp(ext, "iff")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "iff")  == 0)
 	{
 		return FT_ILBM;
 	}
-	if (stricmp(ext, "ilbm") == 0)
+	if (b3StringTool::b3CaseCompare(ext, "ilbm") == 0)
 	{
 		return FT_ILBM;
 	}
-	if (stricmp(ext, "yuv")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "yuv")  == 0)
 	{
 		return FT_YUV;
 	}
-	if (stricmp(ext, "img")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "img")  == 0)
 	{
 		return FT_SGI_RLE;
 	}
-	if (stricmp(ext, "ps")   == 0)
+	if (b3StringTool::b3CaseCompare(ext, "ps")   == 0)
 	{
 		return FT_PS;
 	}
-	if (stricmp(ext, "bmp")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "bmp")  == 0)
 	{
 		return FT_BMP;
 	}
-	if (stricmp(ext, "exr")  == 0)
+	if (b3StringTool::b3CaseCompare(ext, "exr")  == 0)
 	{
 		return FT_EXR;
 	}

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/system/b3Plugin.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3FileList.h"
 
 #include <dlfcn.h>
@@ -37,7 +38,7 @@ b3_bool b3Loader::b3IsPlugin(b3Path & library)
 	b3Path ext(library);
 
 	ext.b3ExtractExt();
-	return stricmp(ext, "so") == 0;
+	return b3StringTool::b3CaseCompare(ext, "so") == 0;
 }
 
 b3PluginBase * b3Loader::b3CreatePlugin(b3Path & library)

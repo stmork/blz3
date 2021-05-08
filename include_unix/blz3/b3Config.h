@@ -93,31 +93,6 @@ static inline size_t strlcpy(char * dst, const char * src, size_t size)
 }
 #endif
 
-#ifndef HAVE_STRICMP
-#ifdef HAVE_STRCASECMP
-#define stricmp(a,b) strcasecmp(a,b)
-#else
-static inline int stricmp(const char * a, const char * b)
-{
-	int diff, i;
-
-	i = 0;
-	do
-	{
-		diff = tolower(a[i]) - tolower(b[i]);
-		if ((a[i] == 0) || (b[i] == 0))
-		{
-			return diff;
-		}
-		i++;
-	}
-	while (diff == 0);
-
-	return diff;
-}
-#endif
-#endif
-
 #define B3_FRAN(x)          ((double)(x)        * drand48())
 #define B3_IRAN(x)          ((long)((double)(x) * drand48()))
 #define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}

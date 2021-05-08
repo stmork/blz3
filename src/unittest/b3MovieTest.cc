@@ -182,7 +182,9 @@ void b3MovieTest::testMov()
 
 void b3MovieTest::testHevc()
 {
+#ifdef HAVE_LIBX265
 //	CPPUNIT_ASSERT_NO_THROW(createEmptyVideo("test-video.hevc"));
+#endif
 }
 
 void b3MovieTest::testWebm()

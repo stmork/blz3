@@ -6603,7 +6603,7 @@ CFLAGS="$CFLAGS $MFLAGS"
 CXXFLAGS="$CXXFLAGS $MFLAGS"
 # CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
-for ac_func in floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt stricmp strcasecmp strlcpy strchr strerror strstr
+for ac_func in floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strlcpy strchr strerror strstr
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -8835,8 +8835,84 @@ fi
 
 
 # Check for video encoder
-#AC_CHECK_LIB([x264], [main])
-#AC_CHECK_LIB([x265], [main])
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lx264" >&5
+$as_echo_n "checking for main in -lx264... " >&6; }
+if ${ac_cv_lib_x264_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lx264  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_x264_main=yes
+else
+  ac_cv_lib_x264_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_x264_main" >&5
+$as_echo "$ac_cv_lib_x264_main" >&6; }
+if test "x$ac_cv_lib_x264_main" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBX264 1
+_ACEOF
+
+  LIBS="-lx264 $LIBS"
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lx265" >&5
+$as_echo_n "checking for main in -lx265... " >&6; }
+if ${ac_cv_lib_x265_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lx265  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_x265_main=yes
+else
+  ac_cv_lib_x265_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_x265_main" >&5
+$as_echo "$ac_cv_lib_x265_main" >&6; }
+if test "x$ac_cv_lib_x265_main" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBX265 1
+_ACEOF
+
+  LIBS="-lx265 $LIBS"
+
+fi
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lswscale" >&5
 $as_echo_n "checking for main in -lswscale... " >&6; }
 if ${ac_cv_lib_swscale_main+:} false; then :

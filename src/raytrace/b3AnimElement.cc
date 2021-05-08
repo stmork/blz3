@@ -23,6 +23,7 @@
 *************************************************************************/
 
 #include "b3RaytraceInclude.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -364,7 +365,7 @@ void b3AnimElement::b3SelectObjects(b3BBox * bbox)
 {
 	while (bbox != nullptr)
 	{
-		if (stricmp(bbox->b3GetName(), m_Object) == 0)
+		if (b3StringTool::b3CaseCompare(bbox->b3GetName(), m_Object) == 0)
 		{
 			bbox->b3Animate(b3Activation::B3_ANIM_ACTIVE, (m_Flags & ANIMFLAGF_RECURSIVE) != 0);
 		}
