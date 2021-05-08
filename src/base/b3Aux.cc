@@ -123,7 +123,7 @@ bool b3Rect::b3CheckBound(b3Rect * rect)
 *************************************************************************/
 
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> b3StringTool::m_Convert;
-std::locale                                            b3StringTool::m_Locale("de_DE.UTF-8");
+std::locale                                            b3StringTool::m_Locale("");
 
 int b3StringTool::b3CaseCompare(
 	const std::string & left,
