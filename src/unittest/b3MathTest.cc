@@ -91,6 +91,35 @@ void b3MathTest::test()
 	}
 }
 
+void b3MathTest::testRound()
+{
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.0,   0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.125, 0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.5, b3Math::b3Round(  0.25,  0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.5, b3Math::b3Round(  0.375, 0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.5, b3Math::b3Round(  0.5,   0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.5, b3Math::b3Round(  0.625, 0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  0.75,  0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  0.875, 0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  1.0,   0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  1.125, 0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.5, b3Math::b3Round(  1.25,  0.25), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.5, b3Math::b3Round(  1.5,   0.25), b3Math::epsilon);
+
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.0,   0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.125, 0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.25,  0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.375, 0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  0.5,   0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  0.625, 0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  0.75,  0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  0.875, 0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  1.0,   0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  1.125, 0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Math::b3Round(  1.25,  0.5), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 2.0, b3Math::b3Round(  1.5,   0.5), b3Math::epsilon);
+}
+
 void b3MathTest::testLogPow()
 {
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 0, b3Math::b3Log2(1));

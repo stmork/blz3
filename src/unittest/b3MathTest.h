@@ -30,6 +30,7 @@ class b3MathTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3MathTest);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testRound);
 	CPPUNIT_TEST(testLogPow);
 	CPPUNIT_TEST(testSmoothStep1);
 	CPPUNIT_TEST(testSmoothStep2);
@@ -53,6 +54,7 @@ public:
 	void setUp() override;
 	void tearDown() override;
 	void test();
+	void testRound();
 	void testLogPow();
 	void testSmoothStep1();
 	void testSmoothStep2();

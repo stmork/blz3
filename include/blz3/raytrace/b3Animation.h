@@ -187,7 +187,7 @@ private:
 	void            b3AnimateScale(b3Animation * AnimRoot, b3_matrix * transform, b3_f64 t);
 
 public:
-	static b3_f64 epsilon; //!< A near zero value for numeric purposes.
+	static const b3_f64 epsilon; //!< A near zero value for numeric purposes.
 };
 
 #endif

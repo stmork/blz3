@@ -154,7 +154,7 @@ bool b3Fourier::b3AllocBuffer(b3Tx * tx)
 
 bool b3Fourier::b3ReallocBuffer()
 {
-	b3PrintF(B3LOG_FULL, ">b3Fourier::b3ReallocBuffer()\n");
+	B3_METHOD;
 
 	m_xDim   = b3Math::b3Log2(m_xSize);
 	m_yDim   = b3Math::b3Log2(m_ySize);
@@ -173,7 +173,6 @@ bool b3Fourier::b3ReallocBuffer()
 		m_Lines[y] = &m_Buffer[y * m_xSize];
 	}
 
-	b3PrintF(B3LOG_FULL, "<b3Fourier::b3ReallocBuffer()\n");
 	return true;
 }
 

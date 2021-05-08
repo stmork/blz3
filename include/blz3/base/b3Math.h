@@ -124,8 +124,8 @@ public:
 	 */
 	template<typename T> static inline T b3Round(const T x, const T rnd)
 	{
-		const T mul    = std::floor(0.5 / rnd + 0.5);
-		const T result = std::floor(x * mul + 0.5) / mul;
+		const T mul    = std::round(0.5 / rnd);
+		const T result = std::round(x * mul) / mul;
 
 		return result;
 	}

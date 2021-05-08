@@ -30,7 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3AnimElement::epsilon = 1.0 / 2048;
+const b3_f64 b3AnimElement::epsilon = 1.0 / 2048;
 
 #define ANIM_STEP (2.0 * b3AnimElement::epsilon)
 
