@@ -122,11 +122,11 @@ void b3AuxTest::testPoint()
 
 void b3AuxTest::testStrCase()
 {
-	const std::string test1 = "AA12BB-Öß";
-	const std::string test2 = "Aa12Bb-öß";
-	const std::string test3 = "Aa12bb-Öß";
-	const std::string lower = "aa12bb-öß";
-	const std::string upper = "AA12BB-Öß";
+	const std::string test1 = "AA12BB-Öß-Αθήνα";
+	const std::string test2 = "Aa12Bb-öß-Αθήνα";
+	const std::string test3 = "Aa12bb-Öß-Αθήνα";
+	const std::string lower = "aa12bb-öß-αθήνα";
+	const std::string upper = "AA12BB-Öß-ΑΘΉΝΑ";
 
 	CPPUNIT_ASSERT_EQUAL(lower, b3StringTool::b3ToLower(test1));
 	CPPUNIT_ASSERT_EQUAL(lower, b3StringTool::b3ToLower(test2));
