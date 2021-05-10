@@ -118,29 +118,16 @@ void b3RenderObject::b3AddCount(b3RenderContext * context)
 **                                                                      **
 *************************************************************************/
 
+const b3ConstantMap<b3_vbo_mapping> b3RenderObject::glVboMap
+{
+	B3_CONSTANT(B3_MAP_VBO_R),
+	B3_CONSTANT(B3_MAP_VBO_W),
+	B3_CONSTANT(B3_MAP_VBO_RW)
+};
+
 void b3RenderObject::b3PrintMapping(const char * text, b3_vbo_mapping map_mode)
 {
-	const char * mapping_text;
-
-	switch (map_mode)
-	{
-	case B3_MAP_VBO_R:
-		mapping_text = "B3_MAP_VBO_R";
-		break;
-
-	case B3_MAP_VBO_W:
-		mapping_text = "B3_MAP_VBO_W";
-		break;
-
-	case B3_MAP_VBO_RW:
-		mapping_text = "B3_MAP_VBO_RW";
-		break;
-
-	default:
-		mapping_text = "???";
-		break;
-	}
-	b3PrintF(B3LOG_FULL, "      %s(%s)\n", text, mapping_text);
+	b3PrintF(B3LOG_FULL, "      %s(%s)\n", text, glVboMap.b3Get(map_mode).c_str());
 }
 
 #ifdef VERBOSE

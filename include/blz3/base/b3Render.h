@@ -22,6 +22,7 @@
 #define B3_BASE_RENDER_H
 
 #include "blz3/b3Config.h"
+#include <blz3/base/b3ConstantMap.h>
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3RenderTypes.h"
 #include "blz3/base/b3VectorBufferObjects.h"
@@ -374,6 +375,8 @@ private:
  */
 class B3_PLUGIN b3RenderObject
 {
+	static const b3ConstantMap<b3_vbo_mapping> glVboMap;
+
 	static b3Tx         glTextureBuffer;
 	static b3Mutex      glTextureMutex;
 

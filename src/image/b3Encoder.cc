@@ -329,7 +329,7 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 
 	b3PrintF(B3LOG_DEBUG, "###############################################\n");
 	b3PrintF(B3LOG_DEBUG, "%-20.20s ==== t=%2.03f pts: %6ld %p\n",
-		m_MediaMap.get(media_type).c_str(), t, pts, frame);
+		m_MediaMap.b3Get(media_type).c_str(), t, pts, frame);
 
 	int error = avcodec_send_frame(*stream, frame);
 	b3PrintErr("Frame send to encoder", error, false);

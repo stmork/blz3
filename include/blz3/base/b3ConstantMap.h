@@ -47,7 +47,7 @@
  * You may access the mapper like every std::unordered_map.
  *
  * @note The operator[] may throw a std::out_of_range exception. It
- * is a safe way to map using the get() method instead.
+ * is a safe way to map using the b3Get() method instead.
  */
 template<class T> class b3ConstantMap : public std::unordered_map<T, std::string>
 {
@@ -88,7 +88,7 @@ public:
 	 * @param key The symbolic value.
 	 * @return The string representation of the symbolic value.
 	 */
-	inline std::string get(const T key) const
+	inline std::string b3Get(const T key) const
 	{
 		ConstantMapConstIterator it = std::unordered_map<T, std::string>::find(key);
 
@@ -113,7 +113,7 @@ public:
 	 * select the key by using
 	 *
 	 * @code
-	 * auto it = mapper.findKey("WHAT_EVER");
+	 * auto it = mapper.b3FindKey("WHAT_EVER");
 	 *
 	 * if (it != mapper.end())
 	 * {
@@ -125,7 +125,7 @@ public:
 	 * @return A FlagMapPair const_iterator which may contain the key when
 	 * the const_iterator is not equal to the end() iterator.
 	 */
-	inline ConstantMapConstIterator findKey(
+	inline ConstantMapConstIterator b3FindKey(
 		const std::string & value) const
 	{
 		ConstantMapConstIterator it;

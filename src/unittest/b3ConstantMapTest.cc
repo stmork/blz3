@@ -53,13 +53,13 @@ void b3ConstantMapTest::tearDown()
 void b3ConstantMapTest::test()
 {
 	CPPUNIT_ASSERT(map.at(EBUSY)  == "EBUSY");
-	CPPUNIT_ASSERT(map.get(EBUSY)  == "EBUSY");
+	CPPUNIT_ASSERT(map.b3Get(EBUSY)  == "EBUSY");
 	CPPUNIT_ASSERT(map.at(EINVAL) == "EINVAL");
-	CPPUNIT_ASSERT(map.get(EINVAL) == "EINVAL");
-	CPPUNIT_ASSERT(map.get(EAGAIN) == "0x0B");
+	CPPUNIT_ASSERT(map.b3Get(EINVAL) == "EINVAL");
+	CPPUNIT_ASSERT(map.b3Get(EAGAIN) == "0x0B");
 
-	CPPUNIT_ASSERT(map.findKey("EINVAL")->first == EINVAL);
-	CPPUNIT_ASSERT(map.findKey("XYZ") == map.end());
+	CPPUNIT_ASSERT(map.b3FindKey("EINVAL")->first == EINVAL);
+	CPPUNIT_ASSERT(map.b3FindKey("XYZ") == map.end());
 
 	CPPUNIT_ASSERT_THROW(map.at(EAGAIN), std::out_of_range);
 }
