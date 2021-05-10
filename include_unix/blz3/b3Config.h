@@ -33,6 +33,8 @@
 #include <time.h>
 #include <limits.h>
 
+#include <unordered_map>
+
 #include "blz3/autoconf.h"
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
@@ -104,6 +106,8 @@ class B3_PLUGIN b3Runtime : public b3CPU
 	char               m_Compiler[256];
 	char               m_Product[256];
 
+	static const std::unordered_map<b3_vector_unit, const char *> m_VectorMap;
+
 	b3Runtime();
 
 public:
@@ -158,15 +162,6 @@ public:
 	 * @return True on success.
 	 */
 	static b3_bool     b3Hostname(char * hostname, const b3_size size);
-
-	/**
-	 * This method executes another program.
-	 *
-	 * @param command The command string to execute via shell.
-	 * @param async If the command should start asynchronously.
-	 * @return The execution result when executing synchronously.
-	 */
-	static b3_s32      b3Execute(const char * command, const b3_bool async);
 
 	/**
 	 * This method returns information about the used compiler.
