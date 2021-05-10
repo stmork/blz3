@@ -71,7 +71,7 @@ void b3PickTest::testPick()
 {
 	const b3_coord   x = 10;
 	const b3_coord   y = 10;
-	const b3NullPick pick(x, y);
+	b3NullPick       pick(x, y);
 
 	CPPUNIT_ASSERT(pick.b3Hit(x, y));
 	CPPUNIT_ASSERT(pick.b3Hit(x, y + b3PickBase::m_PickSize));
@@ -82,6 +82,7 @@ void b3PickTest::testPick()
 	CPPUNIT_ASSERT(!pick.b3Hit(x, y - b3PickBase::m_PickSize - 1));
 	CPPUNIT_ASSERT(!pick.b3Hit(x + b3PickBase::m_PickSize + 2, y));
 	CPPUNIT_ASSERT(!pick.b3Hit(x - b3PickBase::m_PickSize - 1, y));
+	CPPUNIT_ASSERT_NO_THROW(pick.b3GetOperation(nullptr));
 }
 
 void b3PickTest::testMoveActive()
