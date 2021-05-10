@@ -34,6 +34,8 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3OpTest);
 
+const int b3TestOperation::OP_ID = 1912;
+
 void b3OpTest::setUp()
 {
 	m_Op = new b3TestOperation();
@@ -60,6 +62,8 @@ void b3OpTest::test()
 	CPPUNIT_ASSERT_NO_THROW(m_UndoBuffer.b3Redo());
 	CPPUNIT_ASSERT(m_UndoBuffer.b3HasUndo());
 	CPPUNIT_ASSERT(!m_UndoBuffer.b3HasRedo());
+
+	CPPUNIT_ASSERT_EQUAL(b3TestOperation::OP_ID, m_Op->b3GetId());
 }
 
 #endif

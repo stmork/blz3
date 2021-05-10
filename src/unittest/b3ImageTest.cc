@@ -497,14 +497,14 @@ void b3ImageTest::testWritePS()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
 }
 
+#ifdef BLZ3_USE_OPENEXR
 void b3ImageTest::testWriteOpenEXR()
 {
-#ifdef BLZ3_USE_OPENEXR
 	m_TxRealColor.b3SaveImage("img_test_80.exr");
 
 	compareImages(m_TxRealColor);
-#endif
 }
+#endif
 
 /*************************************************************************
 **                                                                      **

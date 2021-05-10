@@ -30,6 +30,8 @@
 class b3TestOperation : public b3UndoOperation
 {
 public:
+	static const int OP_ID;
+
 	void b3Prepare(b3UndoPrepareInfo * info B3_UNUSED) override
 	{
 		b3Initialize();
@@ -37,7 +39,7 @@ public:
 
 	int b3GetId() const override
 	{
-		return 0;
+		return OP_ID;
 	}
 };
 

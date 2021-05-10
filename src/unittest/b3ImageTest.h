@@ -46,6 +46,7 @@ class b3ImageTest : public CppUnit::TestFixture, protected b3ImageSetup
 	CPPUNIT_TEST(testPixel);
 	CPPUNIT_TEST(testRow);
 	CPPUNIT_TEST(testEmpty);
+	CPPUNIT_TEST(testCopy);
 
 	CPPUNIT_TEST(testRead);
 	CPPUNIT_TEST(testReadGIF);
@@ -54,6 +55,9 @@ class b3ImageTest : public CppUnit::TestFixture, protected b3ImageSetup
 	CPPUNIT_TEST(testWriteTGA);
 	CPPUNIT_TEST(testWriteRGB8);
 	CPPUNIT_TEST(testWritePS);
+#ifdef BLZ3_USE_OPENEXR
+	CPPUNIT_TEST(testWriteOpenEXR);
+#endif
 
 	CPPUNIT_TEST(testScaleUnfiltered);
 	CPPUNIT_TEST(testScaleFiltered);
@@ -101,7 +105,9 @@ public:
 	void testWriteTGA();
 	void testWriteRGB8();
 	void testWritePS();
+#ifdef BLZ3_USE_OPENEXR
 	void testWriteOpenEXR();
+#endif
 
 	void testScaleUnfiltered();
 	void testScaleFiltered();
