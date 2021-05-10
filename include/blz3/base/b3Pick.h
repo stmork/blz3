@@ -41,7 +41,7 @@ protected:
 public:
 	b3Pick(const b3_coord x = 0, const b3_coord y = 0);
 	virtual                  ~b3Pick();
-	virtual void              b3Draw(const b3DrawContext * dc);
+	virtual void              b3Draw(const b3DrawContext * dc) = 0;
 	virtual void              b3Update();
 	virtual bool              b3Hit(const b3_coord x, const b3_coord y) const;
 	virtual bool              b3Moved(const b3_coord x, const b3_coord y);
