@@ -288,22 +288,22 @@ int main(int argc, char * argv[])
 					break;
 #ifdef HAVE_LIBTIFF
 				case 'i':
-					strlcpy(BLZ3_EXTENSION, ".tif", sizeof(BLZ3_EXTENSION));
+					b3StringTool::b3Copy(BLZ3_EXTENSION, ".tif", sizeof(BLZ3_EXTENSION));
 					break;
 #endif
 #ifdef HAVE_LIBJPEG
 				case 'j':
-					strlcpy(BLZ3_EXTENSION, ".jpg", sizeof(BLZ3_EXTENSION));
+					b3StringTool::b3Copy(BLZ3_EXTENSION, ".jpg", sizeof(BLZ3_EXTENSION));
 					break;
 #endif
 				case 'g':
-					strlcpy(BLZ3_EXTENSION, ".tga", sizeof(BLZ3_EXTENSION));
+					b3StringTool::b3Copy(BLZ3_EXTENSION, ".tga", sizeof(BLZ3_EXTENSION));
 					break;
 				case 'r':
-					strlcpy(BLZ3_EXTENSION, ".rgb8", sizeof(BLZ3_EXTENSION));
+					b3StringTool::b3Copy(BLZ3_EXTENSION, ".rgb8", sizeof(BLZ3_EXTENSION));
 					break;
 				case 'p':
-					strlcpy(BLZ3_EXTENSION, ".ps", sizeof(BLZ3_EXTENSION));
+					b3StringTool::b3Copy(BLZ3_EXTENSION, ".ps", sizeof(BLZ3_EXTENSION));
 					break;
 				case 'S':
 					multi_threaded = false;

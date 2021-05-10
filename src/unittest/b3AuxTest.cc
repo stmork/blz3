@@ -185,4 +185,18 @@ void b3AuxTest::testStrCaseCmp()
 	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("AA", "A") > 0);
 }
 
+void b3AuxTest::testStrCopy()
+{
+	char        buffer[8];
+	const char *test1 = "1234";
+	const char *test2 = "1234567";
+	const char *test3 = "12345678";
+	const char *test4 = "123456789";
+
+	CPPUNIT_ASSERT_EQUAL(strlen(test1), b3StringTool::b3Copy(buffer, test1, sizeof(buffer)));
+	CPPUNIT_ASSERT_EQUAL(strlen(test2), b3StringTool::b3Copy(buffer, test2, sizeof(buffer)));
+	CPPUNIT_ASSERT_EQUAL(sizeof(buffer) - 1, b3StringTool::b3Copy(buffer, test3, sizeof(buffer)));
+	CPPUNIT_ASSERT_EQUAL(sizeof(buffer) - 1, b3StringTool::b3Copy(buffer, test4, sizeof(buffer)));
+}
+
 #endif

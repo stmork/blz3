@@ -357,7 +357,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	b3COB_GetLine(line, &buffer[len + 1], sizeof(line));
 	if (sscanf(line, "Name %32s", boxName) != 1)
 	{
-		strlcpy(boxName, "bbox", sizeof(boxName));
+		b3StringTool::b3Copy(boxName, "bbox", sizeof(boxName));
 	}
 
 #ifdef _DEBUG
@@ -368,7 +368,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	BBox = new b3BBox(BBOX);
 	if (BBox != nullptr)
 	{
-		strlcpy(BBox->m_BoxName, boxName, sizeof(BBox->m_BoxName));
+		b3StringTool::b3Copy(BBox->m_BoxName, boxName, sizeof(BBox->m_BoxName));
 		if (!b3COB_AllocObject(BBox, id, parent, COB_GROU))
 		{
 			delete BBox;
@@ -416,7 +416,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		BBox = new b3BBox(BBOX);
 		if (BBox != nullptr)
 		{
-			strlcpy(BBox->m_BoxName, name, sizeof(BBox->m_BoxName));
+			b3StringTool::b3Copy(BBox->m_BoxName, name, sizeof(BBox->m_BoxName));
 			if (!b3COB_AllocObject(BBox, 1, parent, COB_GROU))
 			{
 				delete BBox;

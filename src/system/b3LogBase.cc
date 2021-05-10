@@ -76,14 +76,17 @@ b3_bool b3LogBase::b3OpenLogFile()
 	return m_Out != nullptr;
 }
 
-void b3LogBase::b3GetLogFile(char * DebugFile)
+const char * b3LogBase::b3GetLogFile()
 {
-	strcpy(DebugFile, m_LogFile);
+	return m_LogFile;
 }
 
 b3_bool b3LogBase::b3SetLogFile(const char * DebugFile)
 {
-	strlcpy(m_LogFile, DebugFile, sizeof(m_LogFile));
+	if (strlen(DebugFile) < (sizeof(m_LogFile) - 1))
+	{
+		strcpy(m_LogFile, DebugFile);
+	}
 
 	return m_Out == nullptr;
 }

@@ -32,6 +32,7 @@
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Endian.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -67,7 +68,7 @@ b3_size b3TGFReader::b3StrCpy(
 	{
 		len = src_size;
 	}
-	strlcpy(dst, src, len);
+	b3StringTool::b3Copy(dst, src, len);
 	return strlen(dst);
 }
 
@@ -483,7 +484,7 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 
 		b3Path::b3SplitFileName(filename, nullptr, name);
 		name.b3RemoveExt();
-		strlcpy(bbox->m_BoxName, name, sizeof(bbox->m_BoxName));
+		b3StringTool::b3Copy(bbox->m_BoxName, name, sizeof(bbox->m_BoxName));
 	}
 	else
 	{

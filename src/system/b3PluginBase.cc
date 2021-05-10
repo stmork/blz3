@@ -50,7 +50,7 @@ void b3LoaderBase::b3Load()
 
 		for (file = list.b3First(); file != nullptr; file = file->Succ)
 		{
-			strlcpy(name, file->b3Name(), B3_FILESTRINGLEN);
+			name = file->b3Name();
 			if (b3IsPlugin(name))
 			{
 				plugin = b3CreatePlugin(name);

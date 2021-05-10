@@ -63,7 +63,7 @@ CFLAGS="$CFLAGS $MFLAGS"
 CXXFLAGS="$CXXFLAGS $MFLAGS"
 # CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
-AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strlcpy strchr strerror strstr])
+AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[

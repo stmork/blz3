@@ -25,6 +25,7 @@
 #include "blz3/base/b3UndoOperation.h"
 
 class b3RenderObject;
+class b3DrawContext;
 
 /**
  * This class provides methods for pick points. Pick points
@@ -53,10 +54,10 @@ public:
 class b3PickBase : public b3Base<b3Pick>
 {
 protected:
-	b3Pick     *     m_Selected;  //!< The actually selected pick point.
+	b3Pick     *     m_Selected = nullptr;  //!< The actually selected pick point.
 
 public:
-	static b3_coord  m_PickSize;  //!< The size of the pick point as radius.
+	static b3_coord  m_PickSize;  //!< The size of the pick point as square.
 
 public:
 	b3PickBase();

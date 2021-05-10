@@ -448,7 +448,7 @@ bool b3Scene::b3GetTitle(char * title, size_t size) const
 	{
 		if (strlen(m_ActualCamera->m_CameraName) > 0)
 		{
-			strlcpy(title, m_ActualCamera->m_CameraName, size);
+			b3StringTool::b3Copy(title, m_ActualCamera->m_CameraName, size);
 		}
 	}
 	else
@@ -495,7 +495,7 @@ b3Light * b3Scene::b3GetLight(bool must_active)
 	if ((light = (b3Light *)b3GetLightHead()->First) == nullptr)
 	{
 		light = new b3Light(SPOT_LIGHT);
-		strlcpy(light->m_Name, "Light", sizeof(light->m_Name));
+		b3StringTool::b3Copy(light->m_Name, "Light", sizeof(light->m_Name));
 		b3GetLightHead()->b3Append(light);
 	}
 

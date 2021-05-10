@@ -112,7 +112,7 @@ public:
 	 *
 	 * @return The new log file name.
 	 */
-	static  void    b3GetLogFile(char     *    logfile);
+	static  const char * b3GetLogFile();
 
 	/**
 	 * This method specifies the log file wher to log into.

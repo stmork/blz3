@@ -79,20 +79,6 @@
 #	define HAVE_VIDEO_ENCODER
 #endif
 
-typedef unsigned long b3DrawContext;
-
-#ifndef HAVE_STRLCPY
-static inline size_t strlcpy(char * dst, const char * src, size_t size)
-{
-	if ((size > 0) && (src != dst))
-	{
-		strncpy(dst, src, size);
-		dst[size - 1] = 0;
-	}
-	return strlen(dst);
-}
-#endif
-
 #define B3_FRAN(x)          ((double)(x)        * drand48())
 #define B3_IRAN(x)          ((long)((double)(x) * drand48()))
 #define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}

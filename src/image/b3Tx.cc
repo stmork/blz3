@@ -547,7 +547,7 @@ bool b3Tx::b3IsLoaded() const noexcept
 
 void b3Tx::b3Name(const char * ImageName)
 {
-	strlcpy(image_name, ImageName != nullptr ? ImageName : "", B3_FILESTRINGLEN);
+	image_name = ImageName != nullptr ? ImageName : "";
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Name(%s)\n",
 		(const char *)image_name);
 }
