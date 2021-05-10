@@ -85,6 +85,14 @@ void b3PathTest::testSplitting()
 	dir_splitted.b3Empty();
 	testEmpty(dir_splitted);
 
+	dir_splitted  = "a";
+	file_splitted = "b";
+	CPPUNIT_ASSERT_NO_THROW(b3Path::b3SplitFileName(nullptr, dir_splitted, file_splitted));
+	CPPUNIT_ASSERT_EQUAL(b3Path("a"), dir_splitted);
+	CPPUNIT_ASSERT_EQUAL(b3Path("b"), file_splitted);
+	CPPUNIT_ASSERT(dir_splitted == "a");
+	CPPUNIT_ASSERT(file_splitted == "b");
+
 	full.b3SplitFileName(dir_splitted, file_splitted);
 
 	CPPUNIT_ASSERT_EQUAL(B3_TYPE_DIR,  b3Dir::b3Exists(pwd));
@@ -152,6 +160,26 @@ void b3PathTest::testAppend()
 	CPPUNIT_ASSERT(strcmp(aux, m_CurrentDir) != 0);
 	CPPUNIT_ASSERT(strcmp(aux, __FILE__) != 0);
 	CPPUNIT_ASSERT_EQUAL(B3_TYPE_FILE, b3Dir::b3Exists(aux));
+}
+
+void b3PathTest::testCorrect()
+{
+	b3Path pwd(m_CurrentDir);
+
+	CPPUNIT_ASSERT_NO_THROW(pwd.b3Correct());
+}
+
+void b3PathTest::testParent()
+{
+	b3Path pwd(m_CurrentDir);
+	b3Path file(m_CurrentDir);
+
+	file += __FILE__;
+	CPPUNIT_ASSERT_NO_THROW(pwd.b3ParentName());
+	CPPUNIT_ASSERT_NO_THROW(file.b3ParentName());
+	CPPUNIT_ASSERT_EQUAL(B3_TYPE_DIR, b3Dir::b3Exists(pwd));
+	CPPUNIT_ASSERT_EQUAL(B3_TYPE_DIR, b3Dir::b3Exists(file));
+	CPPUNIT_ASSERT_EQUAL(pwd, file);
 }
 
 void b3PathTest::testEmpty(const b3Path & path)

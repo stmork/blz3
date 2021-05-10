@@ -38,6 +38,8 @@ class b3PathTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testSplitting);
 	CPPUNIT_TEST(testExt);
 	CPPUNIT_TEST(testAppend);
+	CPPUNIT_TEST(testCorrect);
+	CPPUNIT_TEST(testParent);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -46,6 +48,8 @@ public:
 	void testSplitting();
 	void testExt();
 	void testAppend();
+	void testCorrect();
+	void testParent();
 
 private:
 	void testEmpty(const b3Path & path);

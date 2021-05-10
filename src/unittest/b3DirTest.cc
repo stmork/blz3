@@ -61,13 +61,17 @@ void b3DirTest::test()
 	CPPUNIT_ASSERT(b3Dir::b3ChkDir(work_dir));
 	CPPUNIT_ASSERT(!b3Dir::b3ChkDir(__FILE__));
 
+	CPPUNIT_ASSERT(!b3Dir::b3ChDir("/blz3"));
+	CPPUNIT_ASSERT(b3Dir::b3ChDir(work_dir));
+
 	CPPUNIT_ASSERT(!b3Dir::b3MkDir("/blz3"));
+	CPPUNIT_ASSERT(b3Dir::b3MkDir(test_dir));
 	CPPUNIT_ASSERT(b3Dir::b3MkDir(test_dir));
 	CPPUNIT_ASSERT(b3Dir::b3RmDir(test_dir));
 	CPPUNIT_ASSERT_EQUAL(B3_NOT_EXISTANT, b3Dir::b3Exists(test_dir));
 
 	CPPUNIT_ASSERT_THROW(b3Dir("/blz3"), b3DirException);
-	CPPUNIT_ASSERT_NO_THROW(b3Dir working("."));
+	CPPUNIT_ASSERT_NO_THROW(b3Dir working(work_dir));
 
 	CPPUNIT_ASSERT_NO_THROW(dir.b3OpenDir(work_dir));
 	CPPUNIT_ASSERT(dir.b3DirNext(path) != B3_NOT_EXISTANT);

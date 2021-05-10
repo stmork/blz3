@@ -96,6 +96,18 @@ public:
 	}
 
 	/**
+	 * The comparision operator compares if a b3Path instance and a C like
+	 * string are literally equal.
+	 *
+	 * @param other The other instance to compare to.
+	 * @return True if both contents are literally equal.
+	 */
+	inline bool operator==(const char * other) const
+	{
+		return strcmp(m_Path, other) == 0;
+	}
+
+	/**
 	 * The comparision operator compares if two b3Path instances are not
 	 * literally equal.
 	 *

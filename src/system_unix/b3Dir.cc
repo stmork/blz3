@@ -339,7 +339,7 @@ void b3Path::b3SplitFileName(
 	}
 	if (FilePath != nullptr)
 	{
-		strcpy(FilePath, File);
+		strncpy(FilePath, File, B3_FILESTRINGLEN);
 		if (!Dir)
 		{
 			i = Length;
@@ -380,10 +380,9 @@ void b3Path::b3ParentName(
 	char    *    parent)
 {
 	b3Path   actDir;
-	b3_index i;
 	b3_count len;
 
-	assert((file != nullptr) && (parent != nullptr));
+	B3_ASSERT((file != nullptr) && (parent != nullptr));
 
 	// Source is a file so split directory first
 	if (b3Dir::b3Exists(file) == B3_TYPE_FILE)
@@ -401,7 +400,7 @@ void b3Path::b3ParentName(
 
 	// Remove trailing "/" or "\"
 	len = strlen(actDir);
-	for (i = len - 1; i >= 0; i--) switch (actDir[i])
+	for (b3_index i = len - 1; i >= 0; i--) switch (actDir[i])
 		{
 		case DIR_DELIMITER :
 			actDir[i] = 0;
