@@ -52,10 +52,7 @@ b3CPU::b3CPU()
 		{
 			if (sscanf(uinfo.release, "%d.%d.%d", &a, &b, &c) == 3)
 			{
-				if ((a * 100000 + b * 1000 + c) < 206009)
-				{
-					m_CorrectRUsage = false;
-				}
+				m_CorrectRUsage = (a * 100000 + b * 1000 + c) >= 206009;
 			}
 		}
 

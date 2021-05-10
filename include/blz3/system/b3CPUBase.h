@@ -80,6 +80,8 @@ protected:
 		return B3_VU_SSE;
 #elif defined(BLZ3_USE_ALTIVEC)
 		return B3_VU_ALTIVEC;
+#elif defined(BLZ3_USE_NEON)
+		return B3_VU_NEON;
 #else
 		return B3_VU_FPU;
 #endif
