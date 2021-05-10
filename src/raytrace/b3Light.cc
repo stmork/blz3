@@ -22,7 +22,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
+#include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Light.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Shade.h"
 
 /*************************************************************************
 **                                                                      **
@@ -236,7 +239,7 @@ const char * b3Light::b3GetName() const
 
 void b3Light::b3SetName(const char * name)
 {
-	b3Item::b3SetString(m_Name, sizeof(m_Name), name);
+	b3StringTool::b3Copy(m_Name, name, sizeof(m_Name));
 }
 
 bool b3Light::b3Illuminate(

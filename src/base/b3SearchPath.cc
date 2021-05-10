@@ -25,6 +25,7 @@
 
 #include "b3BaseInclude.h"
 #include "blz3/base/b3SearchPath.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -79,7 +80,7 @@ b3_bool b3SearchPath::b3IsValid(
 		{
 			if (full_filename != nullptr)
 			{
-				strncpy(full_filename, partial_filename, B3_FILESTRINGLEN);
+				b3StringTool::b3Copy(full_filename, partial_filename, B3_FILESTRINGLEN);
 			}
 			return true;
 		}
@@ -98,7 +99,7 @@ b3_bool b3SearchPath::b3IsValid(
 
 					if (full_filename != nullptr)
 					{
-						strncpy(full_filename, fq_filename, B3_FILESTRINGLEN);
+						b3StringTool::b3Copy(full_filename, fq_filename, B3_FILESTRINGLEN);
 					}
 					return true;
 				}
@@ -133,7 +134,7 @@ b3_bool b3SearchPath::b3CutName(const char * fullname, char * result)
 			{
 				shortLen++;
 			}
-			strncpy(result, &fullname[shortLen], B3_FILESTRINGLEN);
+			b3StringTool::b3Copy(result, &fullname[shortLen], B3_FILESTRINGLEN);
 			return true;
 		}
 	}

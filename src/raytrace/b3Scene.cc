@@ -221,7 +221,7 @@ void b3Scene::b3SetFilename(const char * filename)
 
 void b3Scene::b3SetTexture(const char * name)
 {
-	b3Item::b3SetString(m_TextureName, sizeof(m_TextureName), name);
+	b3StringTool::b3Copy(m_TextureName, name, sizeof(m_TextureName));
 }
 
 /*************************************************************************

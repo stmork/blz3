@@ -22,7 +22,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
+#include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Special.h"
 
 /*************************************************************************
 **                                                                      **
@@ -272,7 +274,7 @@ const char * b3CameraPart::b3GetName() const
 
 void b3CameraPart::b3SetName(const char * name)
 {
-	b3Mem::b3SetString(m_CameraName, sizeof(m_CameraName), name);
+	b3StringTool::b3Copy(m_CameraName, name, sizeof(m_CameraName));
 }
 
 bool b3CameraPart::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)

@@ -128,21 +128,6 @@ public:
 	operator std::string() const noexcept;
 
 	/**
-	 * This static method sets a specified text string into the specified
-	 * memory buffer and cuts the string that it fits into this buffer.
-	 *
-	 * @param buffer The buffer to copy to (destination).
-	 * @param size   The buffer size. The source text will be cut to fit into this buffer.
-	 * @param src    The text string (source).
-	 */
-	inline static void b3SetString(
-		char * buffer, size_t size, const char * src)
-	{
-		strncpy(buffer, src, size);
-		buffer[size - 1] = 0;
-	}
-
-	/**
 	 * This method fills a complete memory buffer to an unsigned 32 bit integer value.
 	 * The data pointer must be on a 32 bit boundary. The max value is meant as the number
 	 * of 32 unsigned integer values not as bytes.

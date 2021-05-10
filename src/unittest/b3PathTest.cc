@@ -25,13 +25,15 @@
 
 #ifdef HAVE_LIBCPPUNIT
 
+#include "blz3/base/b3Aux.h"
+
 CPPUNIT_TEST_SUITE_REGISTRATION(b3PathTest);
 
 void b3PathTest::setUp()
 {
 	if (getcwd(m_CurrentDir, sizeof(m_CurrentDir)) == nullptr)
 	{
-		strncpy(m_CurrentDir, ".", sizeof(m_CurrentDir));
+		b3StringTool::b3Copy(m_CurrentDir, ".", sizeof(m_CurrentDir));
 	}
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);

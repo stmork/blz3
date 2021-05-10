@@ -74,8 +74,11 @@ public:
 
 	inline b3PathAbstract & operator=(const char * path)
 	{
-		strncpy(m_Path, path, sizeof(m_Path));
-		m_Path[sizeof(m_Path) - 1] = 0;
+		if (m_Path != path)
+		{
+			strncpy(m_Path, path, sizeof(m_Path));
+			m_Path[sizeof(m_Path) - 1] = 0;
+		}
 
 		return *this;
 	}
