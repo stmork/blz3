@@ -49,8 +49,6 @@ b3Light::b3Light(b3_u32 class_type) : b3Item(sizeof(b3Light), class_type)
 
 b3Light::b3Light(b3_u32 * src) : b3Item(src)
 {
-	b3_index i;
-
 	b3InitValues();
 	b3InitVector(&m_Position);
 	b3InitColor(m_Color);
@@ -63,8 +61,9 @@ b3Light::b3Light(b3_u32 * src) : b3Item(src)
 		m_JitterEdge = b3InitInt();
 		if (b3GetClassType() >= SPOT_LIGHT && B3_PARSE_INDEX_VALID)
 		{
-			b3InitVector(&m_Direction);
+			b3_index i;
 
+			b3InitVector(&m_Direction);
 			b3InitSpline(&m_Spline, m_Controls, m_Knots);
 			for (i = 0; i < B3_MAX_KNOTS; i++)
 			{

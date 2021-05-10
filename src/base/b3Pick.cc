@@ -127,10 +127,6 @@ void b3Pick::b3Update()
 {
 }
 
-void b3Pick::b3Draw(const b3DrawContext * dc B3_UNUSED)
-{
-}
-
 bool b3Pick::b3Hit(const b3_coord x, const b3_coord y) const
 {
 	const b3_coord xDiff = m_x - x;

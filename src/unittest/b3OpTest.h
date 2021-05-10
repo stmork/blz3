@@ -29,19 +29,7 @@
 
 class b3TestOperation : public b3UndoOperation
 {
-	b3_count m_Count = 0;
-
 public:
-	void b3Redo() override
-	{
-		m_Count++;
-	}
-
-	void b3Undo() override
-	{
-		m_Count--;
-	}
-
 	void b3Prepare(b3UndoPrepareInfo * info B3_UNUSED) override
 	{
 		b3Initialize();
