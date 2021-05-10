@@ -45,12 +45,12 @@ b3_path_type b3Dir::b3Exists(const char * Name)
 	return (S_ISDIR(status.st_mode) ? B3_TYPE_DIR : B3_TYPE_FILE);
 }
 
-b3_bool b3Dir::b3ChDir(const char * new_working_dir)
+bool b3Dir::b3ChDir(const char * new_working_dir)
 {
 	return (chdir(new_working_dir) == 0);
 }
 
-b3_bool b3Dir::b3ChkDir(const char * Name)
+bool b3Dir::b3ChkDir(const char * Name)
 {
 	struct stat status;
 
@@ -61,13 +61,18 @@ b3_bool b3Dir::b3ChkDir(const char * Name)
 	return S_ISDIR(status.st_mode);
 }
 
-b3_bool b3Dir::b3MkDir(const char * Name)
+bool b3Dir::b3MkDir(const char * Name)
 {
 	if (b3ChkDir(Name))
 	{
 		return true;
 	}
-	return (mkdir(Name, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0);
+	return mkdir(Name, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
+}
+
+bool b3Dir::b3RmDir(const char * dir)
+{
+	return rmdir(dir) == 0;
 }
 
 /*************************************************************************
@@ -78,7 +83,7 @@ b3_bool b3Dir::b3MkDir(const char * Name)
 
 b3Dir::b3Dir()
 {
-	dir       = nullptr;
+	dir = nullptr;
 	b3Empty();
 }
 
@@ -146,7 +151,7 @@ b3_path_type b3Dir::b3DirNext(char * name)
 
 void b3Dir::b3CloseDir()
 {
-	if (dir)
+	if (dir != nullptr)
 	{
 		closedir(dir);
 		dir = nullptr;

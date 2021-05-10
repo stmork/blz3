@@ -232,7 +232,7 @@ public:
 	 * @param new_working_dir The new working directory.
 	 * @return True on success.
 	 */
-	static b3_bool       b3ChDir(const char * new_working_dir);
+	static bool          b3ChDir(const char * new_working_dir);
 
 	/**
 	 * This method checks whether the specified filesystem entry exists as a directory.
@@ -240,7 +240,7 @@ public:
 	 * @param testdir The filesystem entry to check.
 	 * @return True if the directory exists.
 	 */
-	static b3_bool       b3ChkDir(const char * testdir);
+	static bool          b3ChkDir(const char * testdir);
 
 	/**
 	 * This method creates a new directory. The parent directory must exist.
@@ -248,7 +248,17 @@ public:
 	 * @param newdir The new directory to create.
 	 * @return True on success.
 	 */
-	static b3_bool       b3MkDir(const char * newdir);
+	static bool          b3MkDir(const char * newdir);
+
+	/**
+	 * This method removes an existing directory.
+	 *
+	 * @note The directory must be empty.
+	 *
+	 * @param dir The directory to remove.
+	 * @return True on success.
+	 */
+	static bool          b3RmDir(const char * dir);
 
 	/**
 	 * This method checks the given filesystem entry for existance and returns the
