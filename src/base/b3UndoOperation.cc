@@ -68,7 +68,7 @@ void b3UndoBuffer::b3Clear()
 	b3Delete(&m_RedoBuffer);
 }
 
-b3_bool b3UndoBuffer::b3Do(b3UndoOperation * op)
+bool b3UndoBuffer::b3Do(b3UndoOperation * op)
 {
 	b3_bool result = op->b3IsInitialized();
 
@@ -113,12 +113,12 @@ void b3UndoBuffer::b3Redo()
 	}
 }
 
-b3_bool b3UndoBuffer::b3HasUndo()
+bool b3UndoBuffer::b3HasUndo() const
 {
 	return !m_UndoBuffer.b3IsEmpty();
 }
 
-b3_bool b3UndoBuffer::b3HasRedo()
+bool b3UndoBuffer::b3HasRedo() const
 {
 	return !m_RedoBuffer.b3IsEmpty();
 }
@@ -129,13 +129,8 @@ b3_bool b3UndoBuffer::b3HasRedo()
 **                                                                      **
 *************************************************************************/
 
-b3UndoOperation::b3UndoOperation() : b3Link<b3UndoOperation>(sizeof(b3UndoOperation))
-{
-	m_Initialized = false;
-	m_Done        = false;
-}
-
-b3UndoOperation::~b3UndoOperation()
+b3UndoOperation::b3UndoOperation() :
+	b3Link<b3UndoOperation>(sizeof(b3UndoOperation))
 {
 }
 

@@ -50,8 +50,8 @@ class b3UndoOperation : public b3Link<b3UndoOperation>
 {
 	friend class b3UndoBuffer;
 
-	b3_bool          m_Initialized;
-	b3_bool          m_Done;
+	bool    m_Initialized = false;
+	bool    m_Done        = false;
 
 public:
 	/**
@@ -64,7 +64,7 @@ public:
 	/**
 	 * This destructor deinitializes the operation.
 	 */
-	virtual         ~b3UndoOperation();
+	virtual         ~b3UndoOperation() = default;
 
 protected:
 	/**
@@ -106,7 +106,7 @@ protected:
 	 *
 	 * @param init The new initialization state.
 	 */
-	inline  void     b3Initialize(b3_bool init = true)
+	inline  void     b3Initialize(bool init = true)
 	{
 		m_Initialized = init;
 	}
@@ -117,7 +117,7 @@ protected:
 	 *
 	 * @param done The new done state.
 	 */
-	inline  void     b3Done(b3_bool done)
+	inline  void     b3Done(bool done)
 	{
 		m_Done = done;
 	}
@@ -127,7 +127,7 @@ protected:
 	 *
 	 * @return The initialization state.
 	 */
-	inline  b3_bool  b3IsInitialized()
+	inline  bool     b3IsInitialized() const
 	{
 		return m_Initialized;
 	}
@@ -141,19 +141,19 @@ protected:
 	 *
 	 * @return True if the operation is in done or redone state.
 	 */
-	inline  b3_bool  b3IsDone()
+	inline  bool     b3IsDone() const
 	{
 		return m_Done;
 	}
 
 public:
-	virtual int      b3GetId() = 0;
 	/**
-	 * This method returns a unique ID for each operation implementation. This can be used in GUIs
-	 * such MFC to convert this ID into clear text.
+	 * This method returns a unique ID for each operation implementation. This
+	 * can be used in GUIs such MFC to convert this ID into clear text.
 	 *
 	 * @return An unique ID for each operation implementation.
 	 */
+	virtual int      b3GetId() const = 0;
 };
 
 /**
@@ -164,7 +164,7 @@ class b3UndoBuffer
 protected:
 	b3Base<b3UndoOperation>  m_UndoBuffer;   //!< The list of undo operations.
 	b3Base<b3UndoOperation>  m_RedoBuffer;   //!< The list of redo operations.
-	b3UndoPrepareInfo    *   m_PrepareInfo;  //!< An information class for custom purposes.
+	b3UndoPrepareInfo    *   m_PrepareInfo = nullptr;  //!< An information class for custom purposes.
 
 public:
 	/**
@@ -196,7 +196,7 @@ public:
 	 * @param operation The new operation for doing.
 	 * @return True if the operation was initialized.
 	 */
-	b3_bool  b3Do(b3UndoOperation * operation);
+	bool b3Do(b3UndoOperation * operation);
 
 	/**
 	 * This method removes the last undo operation from the list if any
@@ -219,14 +219,14 @@ public:
 	 *
 	 * @return True if the undo operation list is not empty.
 	 */
-	b3_bool  b3HasUndo();
+	bool     b3HasUndo() const;
 
 	/**
 	 * This method returns true if any operation is in the redo list.
 	 *
 	 * @return True if the redo operation list is not empty.
 	 */
-	b3_bool  b3HasRedo();
+	bool     b3HasRedo() const;
 
 private:
 	void     b3Delete(b3UndoOperation * op);
