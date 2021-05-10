@@ -63,6 +63,7 @@ void b3PickTest::test()
 
 	// TODO: More tests need more sophisticated implementation.
 	CPPUNIT_ASSERT(m_PickPoints.b3GetOperation(nullptr) == nullptr);
+	CPPUNIT_ASSERT_NO_THROW(m_PickPoints.b3Update());
 	CPPUNIT_ASSERT_NO_THROW(m_PickPoints.b3Draw(nullptr));
 }
 
