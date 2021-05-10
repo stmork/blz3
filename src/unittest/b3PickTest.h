@@ -20,7 +20,6 @@
 #ifndef B3_PICK_TEST_H
 #define B3_PICK_TEST_H
 
-#include "blz3/b3Config.h"
 #include "blz3/base/b3Pick.h"
 
 #ifdef HAVE_LIBCPPUNIT

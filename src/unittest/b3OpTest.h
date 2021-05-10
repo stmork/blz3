@@ -20,7 +20,6 @@
 #ifndef B3_OP_TEST_H
 #define B3_OP_TEST_H
 
-#include "blz3/b3Config.h"
 #include "blz3/base/b3UndoOperation.h"
 
 #ifdef HAVE_LIBCPPUNIT
