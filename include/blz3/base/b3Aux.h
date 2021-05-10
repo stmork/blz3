@@ -143,22 +143,13 @@ public:
 
 	/**
 	 * This method adjusts the rectangle of this bound so that the
-	 * given ractangle fits into it.
+	 * given ractangle fits into it. So the b3Rect instance would
+	 * expand.
 	 *
 	 * @param rect The rectangle for adjusting.
 	 * @return True if any adjustment occured.
 	 */
 	bool    b3UpdateBound(b3Rect * rect);
-
-	/**
-	 * This method adjusts the rectangle of this bound so that the
-	 * given ractangle fits into it. Additionally the coordinates
-	 * are adjusted to at least zero dimension.
-	 *
-	 * @param rect The rectangle for adjusting.
-	 * @return True if any adjustment occured.
-	 */
-	bool    b3CheckBound(b3Rect * rect);
 };
 
 /**

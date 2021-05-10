@@ -79,43 +79,6 @@ bool b3Rect::b3UpdateBound(b3Rect * rect)
 	return changed;
 }
 
-bool b3Rect::b3CheckBound(b3Rect * rect)
-{
-	bool changed = false;
-
-	if (m_x1 < rect->m_x1)
-	{
-		m_x1 = rect->m_x1;
-		changed = true;
-	}
-	if (m_y1 < rect->m_y1)
-	{
-		m_y1 = rect->m_y1;
-		changed = true;
-	}
-	if (m_x2 > rect->m_x2)
-	{
-		m_x2 = rect->m_x2;
-		changed = true;
-	}
-	if (m_y2 > rect->m_y2)
-	{
-		m_y2 = rect->m_y2;
-		changed = true;
-	}
-	if (m_x1 > m_x2)
-	{
-		m_x1 = m_x2;
-		changed = true;
-	}
-	if (m_y1 > m_y2)
-	{
-		m_y1 = m_y2;
-		changed = true;
-	}
-	return changed;
-}
-
 /*************************************************************************
 **                                                                      **
 **                        String tool                                   **

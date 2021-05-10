@@ -91,22 +91,38 @@ void b3AuxTest::testRect()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  4, r2.m_y2);
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  2, r2.b3Width());
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  2, r2.b3Height());
+}
 
-	CPPUNIT_ASSERT(!rect.b3CheckBound(&r1));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  0, rect.m_x1);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  0, rect.m_y1);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  0, rect.m_x2);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  0, rect.m_y2);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  0, rect.b3Width());
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  0, rect.b3Height());
+void b3AuxTest::testBound()
+{
+	b3Rect rect( 3, 4, 6,  8);
+	b3Rect inner(3, 5, 5,  7);
+	b3Rect left( 2, 3, 4,  9);
+	b3Rect right(5, 2, 7, 10);
 
-	CPPUNIT_ASSERT(r1.b3CheckBound(&r2));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  1, r1.m_x1);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  2, r1.m_y1);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  3, r1.m_x2);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  4, r1.m_y2);
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  2, r1.b3Width());
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_coord,  2, r1.b3Height());
+	CPPUNIT_ASSERT(!rect.b3UpdateBound(&rect));
+	CPPUNIT_ASSERT_EQUAL(3, rect.m_x1);
+	CPPUNIT_ASSERT_EQUAL(4, rect.m_y1);
+	CPPUNIT_ASSERT_EQUAL(6, rect.m_x2);
+	CPPUNIT_ASSERT_EQUAL(8, rect.m_y2);
+
+	CPPUNIT_ASSERT(!rect.b3UpdateBound(&inner));
+	CPPUNIT_ASSERT_EQUAL(3, rect.m_x1);
+	CPPUNIT_ASSERT_EQUAL(4, rect.m_y1);
+	CPPUNIT_ASSERT_EQUAL(6, rect.m_x2);
+	CPPUNIT_ASSERT_EQUAL(8, rect.m_y2);
+
+	CPPUNIT_ASSERT(rect.b3UpdateBound(&left));
+	CPPUNIT_ASSERT_EQUAL(2, rect.m_x1);
+	CPPUNIT_ASSERT_EQUAL(3, rect.m_y1);
+	CPPUNIT_ASSERT_EQUAL(6, rect.m_x2);
+	CPPUNIT_ASSERT_EQUAL(9, rect.m_y2);
+
+	CPPUNIT_ASSERT(rect.b3UpdateBound(&right));
+	CPPUNIT_ASSERT_EQUAL( 2, rect.m_x1);
+	CPPUNIT_ASSERT_EQUAL( 2, rect.m_y1);
+	CPPUNIT_ASSERT_EQUAL( 7, rect.m_x2);
+	CPPUNIT_ASSERT_EQUAL(10, rect.m_y2);
 }
 
 void b3AuxTest::testPoint()

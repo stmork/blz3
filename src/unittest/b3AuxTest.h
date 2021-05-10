@@ -31,6 +31,7 @@ class b3AuxTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3AuxTest);
 	CPPUNIT_TEST(testAux);
 	CPPUNIT_TEST(testRect);
+	CPPUNIT_TEST(testBound);
 	CPPUNIT_TEST(testPoint);
 	CPPUNIT_TEST(testStrCase);
 	CPPUNIT_TEST(testStrCaseCmp);
@@ -41,6 +42,7 @@ public:
 	void tearDown() override;
 	void testAux();
 	void testRect();
+	void testBound();
 	void testPoint();
 	void testStrCase();
 	void testStrCaseCmp();
