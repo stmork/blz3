@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Memory.h"
 #include "blz3/base/b3List.h"
 
 /*************************************************************************
@@ -36,7 +37,7 @@ static struct b3DefineType
 	int         m_Prio;
 	int         m_Start;
 	int         m_Last;
-} define_types[] =
+} define_types[]
 {
 	{ "IDP_OLE_INIT_FAILED",  1, 101 },
 	{ "IDR_MAINFRAME",  1,   110 },
@@ -84,7 +85,7 @@ public:
 
 	b3Define(const char * define, const int value) : b3Link<b3Define>(sizeof(b3Define))
 	{
-		strlcpy(m_Define, define, sizeof(m_Define));
+		b3Mem::b3StrCpy(m_Define, define, sizeof(m_Define));
 		m_Value = value;
 		m_File  = stdout;
 		m_Type  = b3FindDefineType();
