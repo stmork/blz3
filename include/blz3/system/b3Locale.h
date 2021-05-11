@@ -22,13 +22,48 @@
 
 #include "blz3/b3Types.h"
 
+#include <locale>
+#include <codecvt>
+
 /**
  * This class contains static methods for converting character encodings
  * from ISO-8859 into UTF-8.
  */
 class B3_PLUGIN b3Locale
 {
+	static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> m_Convert;
+
+	std::locale m_Locale;
+
 public:
+	b3Locale();
+
+	/**
+	 * This method returns the std::locale instance as cast operator.
+	 */
+	inline operator std::locale & ()
+	{
+		return m_Locale;
+	}
+
+	/**
+	 * This method converts an UTF-8 qc char typed string into an @c wchar_t
+	 * based string using UTF-16.
+	 *
+	 * @param input The UTF-8 input string.
+	 * @return The resulting UTF-16 string-.
+	 */
+	std::wstring b3FromBytes(const std::string & input);
+
+	/**
+	 * This method converts an UTF-16 @c wchar_t typed string into an @c char
+	 * based string using UTF-16.
+	 *
+	 * @param input The UTF-8 input string.
+	 * @return The resulting UTF-16 string-.
+	 */
+	std::string b3ToBytes(const std::wstring & input);
+
 	/**
 	 * This method converts a given ISO-8859-15 encoded input text into UTf-8.
 	 * If the input text is already UTF-8 using the b3IsUtf8() method the

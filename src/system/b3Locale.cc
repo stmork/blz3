@@ -32,6 +32,22 @@
 **                                                                      **
 *************************************************************************/
 
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> b3Locale::m_Convert;
+
+b3Locale::b3Locale() : m_Locale("")
+{
+}
+
+std::wstring b3Locale::b3FromBytes(const std::string & input)
+{
+	return m_Convert.from_bytes(input);
+}
+
+std::string b3Locale::b3ToBytes(const std::wstring & input)
+{
+	return m_Convert.to_bytes(input);
+}
+
 void b3Locale::b3IsoToLocale(
 	const char * src,
 	char    *    dst,

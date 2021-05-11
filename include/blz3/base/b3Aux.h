@@ -22,9 +22,6 @@
 
 #include "blz3/base/b3Color.h"
 
-#include <locale>
-#include <codecvt>
-
 /**
  * This class represents a RGB color triplet.
  */
@@ -181,9 +178,6 @@ public:
  */
 class B3_PLUGIN b3StringTool
 {
-	static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> m_Convert;
-	static std::locale                                            m_Locale;
-
 public:
 	/**
 	 * This method compares two string ignoring their case.

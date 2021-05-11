@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3BaseInclude.h"
+#include "blz3/system/b3Locale.h"
 #include "blz3/base/b3Aux.h"
 
 /*************************************************************************
@@ -85,22 +86,20 @@ bool b3Rect::b3UpdateBound(b3Rect * rect)
 **                                                                      **
 *************************************************************************/
 
-std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> b3StringTool::m_Convert;
-std::locale                                            b3StringTool::m_Locale("");
-
 int b3StringTool::b3CaseCompare(
 	const std::string & left,
 	const std::string & right)
 {
-	std::wstring u16_left  = m_Convert.from_bytes(left);
-	std::wstring u16_right = m_Convert.from_bytes(right);
+	b3Locale     locale;
+	std::wstring u16_left  = locale.b3FromBytes(left);
+	std::wstring u16_right = locale.b3FromBytes(right);
 	b3_index     i = 0;
 	int          diff;
 
 	i = 0;
 	do
 	{
-		diff = std::tolower(u16_left[i], m_Locale) - std::tolower(u16_right[i], m_Locale);
+		diff = std::tolower(u16_left[i], locale) - std::tolower(u16_right[i], locale);
 		if ((u16_left[i] == 0) || (u16_right[i] == 0))
 		{
 			return diff;
@@ -115,28 +114,28 @@ int b3StringTool::b3CaseCompare(
 
 std::string b3StringTool::b3ToLower(const std::string & input)
 {
-	std::wstring result = m_Convert.from_bytes(input);
+	b3Locale     locale;
+	std::wstring result = locale.b3FromBytes(input);
 
 	for (unsigned i = 0; i < result.size(); i++)
 	{
-		result[i] = std::tolower(result[i], m_Locale);
+		result[i] = std::tolower(result[i], locale);
 	}
 
-	return m_Convert.to_bytes(result);
+	return locale.b3ToBytes(result);
 }
 
 std::string b3StringTool::b3ToUpper(const std::string & input)
 {
-	std::wstring result = m_Convert.from_bytes(input);
+	b3Locale     locale;
+	std::wstring result = locale.b3FromBytes(input);
 
-	std::transform(
-		result.begin(), result.end(), result.begin(),
-		[] (const wchar_t ch)
+	for (unsigned i = 0; i < result.size(); i++)
 	{
-		return std::toupper(ch, m_Locale);
-	});
+		result[i] = std::toupper(result[i], locale);
+	}
 
-	return m_Convert.to_bytes(result);
+	return locale.b3ToBytes(result);
 }
 
 size_t b3StringTool::b3Copy(char * dst, const char * src, size_t size)
