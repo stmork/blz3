@@ -111,15 +111,13 @@ public:
 };
 #endif
 
+#ifdef BLZ3_USE_OPENEXR
 b3_result b3Tx::b3SaveEXR(const char * filename B3_UNUSED)
 {
-#ifdef BLZ3_USE_OPENEXR
 	b3PrintF(B3LOG_FULL, "Saving EXR: %s\n", filename);
 
 	b3InfoEXR info(this, filename);
 	info.b3Write();
 	return B3_OK;
-#else
-	return B3_ERROR;
-#endif
 }
+#endif

@@ -1122,6 +1122,7 @@ public:
 	 */
 	b3_result b3SavePS(const char * ImageName);
 
+#ifdef BLZ3_USE_OPENEXR
 	/**
 	 * This method saves the image as OpenEXR file.
 	 *
@@ -1130,6 +1131,7 @@ public:
 	 * @see b3_result.
 	 */
 	b3_result b3SaveEXR(const char * ImageName);
+#endif
 
 	/**
 	 * This method saves the image as RGB8 file.

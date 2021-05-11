@@ -508,8 +508,10 @@ b3_result b3Tx::b3SaveImage(const char * filename)
 			return b3SaveRGB8(filename);
 		case FT_PS:
 			return b3SavePS(filename);
+#ifdef BLZ3_USE_OPENEXR
 		case FT_EXR:
 			return b3SaveEXR(filename);
+#endif
 
 		case FT_UNKNOWN:
 			B3_THROW(b3TxException, B3_TX_UNKNOWN_FILETYPE);
