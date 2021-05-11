@@ -18,7 +18,6 @@
 #define B3_IMAGE_TXINCLUDE_H
 
 #include "blz3/image/b3Tx.h"
-#include "blz3/image/b3TxMeasure.h"
 #include "blz3/image/b3TxPool.h"
 #include "blz3/base/b3Endian.h"
 #include "b3TxSaveInfo.h"

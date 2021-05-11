@@ -31,11 +31,9 @@ SOURCES += \
 	b3Encoder.cc \
 	b3EncoderBuffer.cc \
 	b3EncoderStream.cc \
-	b3Measure.cc \
 	b3Sampler.cc \
 	b3Tx.cc \
 	b3TxBlit.cc \
-	b3TxDeskew.cc \
 	b3TxEXR.cc \
 	b3TxEasy.cc \
 	b3TxGIF.cc \

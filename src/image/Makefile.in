@@ -11,11 +11,9 @@ LIB_SOURCE		=\
 	b3Encoder.cc\
 	b3EncoderBuffer.cc\
 	b3EncoderStream.cc\
-	b3Measure.cc\
 	b3Sampler.cc\
 	b3Tx.cc\
 	b3TxBlit.cc\
-	b3TxDeskew.cc\
 	b3TxEasy.cc\
 	b3TxEXR.cc\
 	b3TxGIF.cc\
@@ -44,11 +42,9 @@ LIB_OBJ			=\
 	b3Encoder.o\
 	b3EncoderBuffer.o\
 	b3EncoderStream.o\
-	b3Measure.o\
 	b3Sampler.o\
 	b3Tx.o\
 	b3TxBlit.o\
-	b3TxDeskew.o\
 	b3TxEasy.o\
 	b3TxEXR.o\
 	b3TxGIF.o\
