@@ -93,7 +93,7 @@
 #define B3_TAPPEND    "a"
 
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
-#define B3_FILESTRINGLEN  (MAXNAMLEN)
+#define B3_FILESTRINGLEN  (PATH_MAX)
 
 #define B3_NAME       "Blizzard III"
 

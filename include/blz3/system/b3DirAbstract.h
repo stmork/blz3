@@ -22,6 +22,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Exception.h"
+#include "blz3/system/b3Memory.h"
 
 /**
  * This enumeration lists the types of a file system item.
@@ -51,7 +52,7 @@ enum b3_dir_error
 class B3_PLUGIN b3PathAbstract
 {
 protected:
-	char m_Path[B3_FILESTRINGLEN];
+	alignas(16) char m_Path[B3_FILESTRINGLEN];
 
 public:
 	/**
