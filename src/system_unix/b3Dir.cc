@@ -172,6 +172,7 @@ b3Path & b3Path::operator=(const char * path)
 	if (full_path != nullptr)
 	{
 		b3Mem::b3StrCpy(m_Path, full_path, sizeof(m_Path));
+		free((void *)full_path);
 	}
 	else if (m_Path != path)
 	{
