@@ -80,7 +80,7 @@ b3_bool b3SearchPath::b3IsValid(
 		{
 			if (full_filename != nullptr)
 			{
-				b3StringTool::b3Copy(full_filename, partial_filename, B3_FILESTRINGLEN);
+				b3Mem::b3StrCpy(full_filename, partial_filename, B3_FILESTRINGLEN);
 			}
 			return true;
 		}
@@ -99,7 +99,7 @@ b3_bool b3SearchPath::b3IsValid(
 
 					if (full_filename != nullptr)
 					{
-						b3StringTool::b3Copy(full_filename, fq_filename, B3_FILESTRINGLEN);
+						b3Mem::b3StrCpy(full_filename, fq_filename, B3_FILESTRINGLEN);
 					}
 					return true;
 				}
@@ -134,10 +134,10 @@ b3_bool b3SearchPath::b3CutName(const char * fullname, char * result)
 			{
 				shortLen++;
 			}
-			b3StringTool::b3Copy(result, &fullname[shortLen], B3_FILESTRINGLEN);
+			b3Mem::b3StrCpy(result, &fullname[shortLen], B3_FILESTRINGLEN);
 			return true;
 		}
 	}
-	strncpy(result, fullname, B3_FILESTRINGLEN);
+	b3Mem::b3StrCpy(result, fullname, B3_FILESTRINGLEN);
 	return false;
 }

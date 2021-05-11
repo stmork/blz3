@@ -94,6 +94,7 @@ void b3Locale::b3IsoToLocale(
 	else if (src != dst)
 	{
 		strncpy(dst, src, len);
+		dst[len - 1] = 0;
 	}
 }
 
@@ -109,6 +110,7 @@ void b3Locale::b3LocaleToIso(
 	if (src != dst)
 	{
 		strncpy(dst, src, len);
+		dst[len - 1] = 0;
 	}
 }
 

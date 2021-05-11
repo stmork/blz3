@@ -210,17 +210,6 @@ public:
 	 */
 	static std::string b3ToUpper(const std::string & input);
 
-	/**
-	 * Copy src to string dst of size siz. At most siz-1 characters will be
-	 * copied. Always NULL terminates (unless size == 0).
-	 *
-	 * @param dst The destination buffer to copy into.
-	 * @param src The source buffer to copy from.
-	 * @param size The size of the destination buffer.
-	 * @return The strlcpy() function returns strlen(src). If retval >= siz,
-	 * truncation occurred.
-	 */
-	static size_t b3Copy(char * dst, const char * src, size_t size);
 };
 
 #endif

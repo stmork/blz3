@@ -238,7 +238,7 @@ const char * b3Light::b3GetName() const
 
 void b3Light::b3SetName(const char * name)
 {
-	b3StringTool::b3Copy(m_Name, name, sizeof(m_Name));
+	b3Mem::b3StrCpy(m_Name, name, sizeof(m_Name));
 }
 
 bool b3Light::b3Illuminate(

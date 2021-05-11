@@ -33,7 +33,7 @@ void b3PathTest::setUp()
 {
 	if (getcwd(m_CurrentDir, sizeof(m_CurrentDir)) == nullptr)
 	{
-		b3StringTool::b3Copy(m_CurrentDir, ".", sizeof(m_CurrentDir));
+		b3Mem::b3StrCpy(m_CurrentDir, ".", sizeof(m_CurrentDir));
 	}
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);

@@ -41,7 +41,7 @@ b3Box::b3Box(b3_u32 * src) : b3Shape3(src)
 
 void b3BBox::b3SetName(const char * name)
 {
-	b3StringTool::b3Copy(m_BoxName, name, sizeof(m_BoxName));
+	b3Mem::b3StrCpy(m_BoxName, name, sizeof(m_BoxName));
 }
 
 void b3Box::b3GetCount(

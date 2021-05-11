@@ -127,5 +127,6 @@ int b3Runtime::b3ParseOption(
 			option[0] = 0;
 		}
 	}
+	option[size - 1] = 0;
 	return i;
 }

@@ -163,3 +163,26 @@ b3Mem::operator std::string() const noexcept
 	}
 	return result;
 }
+
+size_t b3Mem::b3StrCpy(char * dst, const char * src, const size_t len)
+{
+	if ((src != nullptr) && (len > 0))
+	{
+		if (dst != src)
+		{
+			const size_t max = std::min(strlen(src), len - 1);
+
+			for (size_t i = 0; i < max; i++)
+			{
+				dst[i] = src[i];
+			}
+			dst[max] = 0;
+		}
+
+		return strlen(dst);
+	}
+	else
+	{
+		return 0;
+	}
+}

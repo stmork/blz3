@@ -128,7 +128,7 @@ b3_path_type b3Dir::b3DirNext(char * name)
 		type = B3_NOT_EXISTANT;
 		if ((entry = readdir(dir)) != nullptr)
 		{
-			strncpy(name, entry->d_name, B3_FILESTRINGLEN);
+			b3Mem::b3StrCpy(name, entry->d_name, B3_FILESTRINGLEN);
 			b3LinkFileName(filename, m_Path, name);
 			type = b3Exists(filename);
 			if (type == B3_TYPE_DIR)
@@ -171,13 +171,11 @@ b3Path & b3Path::operator=(const char * path)
 
 	if (full_path != nullptr)
 	{
-		strncpy(m_Path, path, sizeof(m_Path));
-		m_Path[sizeof(m_Path) - 1] = 0;
+		b3Mem::b3StrCpy(m_Path, full_path, sizeof(m_Path));
 	}
-	if (m_Path != path)
+	else if (m_Path != path)
 	{
-		strncpy(m_Path, path, sizeof(m_Path));
-		m_Path[sizeof(m_Path) - 1] = 0;
+		b3Mem::b3StrCpy(m_Path, path, sizeof(m_Path));
 	}
 
 	return *this;
@@ -315,11 +313,11 @@ void b3Path::b3SplitFileName(
 
 	if (b3Dir::b3Exists(File) == B3_TYPE_DIR)
 	{
-		if (FilePath)
+		if (FilePath != nullptr)
 		{
-			strcpy(FilePath, File);
+			b3Mem::b3StrCpy(FilePath, File, B3_FILESTRINGLEN);
 		}
-		if (FileName)
+		if (FileName != nullptr)
 		{
 			FileName[0] = 0;
 		}
@@ -341,12 +339,12 @@ void b3Path::b3SplitFileName(
 			{
 				i--;
 			}
-			strcpy(FileName, &File[i]);
+			b3Mem::b3StrCpy(FileName, &File[i], B3_FILESTRINGLEN);
 		}
 	}
 	if (FilePath != nullptr)
 	{
-		strncpy(FilePath, File, B3_FILESTRINGLEN);
+		b3Mem::b3StrCpy(FilePath, File, B3_FILESTRINGLEN);
 		if (!Dir)
 		{
 			i = Length;

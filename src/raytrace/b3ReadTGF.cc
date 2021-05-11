@@ -53,10 +53,10 @@ b3TGFReader::~b3TGFReader()
 }
 
 b3_size b3TGFReader::b3StrCpy(
-	char * dst,
+	char    *    dst,
 	const char * src,
-	b3_size    	dst_size,
-	b3_size     src_size)
+	b3_size      dst_size,
+	b3_size      src_size)
 {
 	b3_size len;
 
@@ -68,7 +68,7 @@ b3_size b3TGFReader::b3StrCpy(
 	{
 		len = src_size;
 	}
-	b3StringTool::b3Copy(dst, src, len);
+	b3Mem::b3StrCpy(dst, src, len);
 	return strlen(dst);
 }
 
@@ -484,7 +484,7 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 
 		b3Path::b3SplitFileName(filename, nullptr, name);
 		name.b3RemoveExt();
-		b3StringTool::b3Copy(bbox->m_BoxName, name, sizeof(bbox->m_BoxName));
+		b3Mem::b3StrCpy(bbox->m_BoxName, name, sizeof(bbox->m_BoxName));
 	}
 	else
 	{

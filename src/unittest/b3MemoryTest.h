@@ -34,6 +34,7 @@ class b3MemoryTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testSimple);
 	CPPUNIT_TEST(testMemory);
 	CPPUNIT_TEST(testMultiple);
+	CPPUNIT_TEST(testStrCopy);
 	CPPUNIT_TEST_SUITE_END();
 
 	static const b3_count ARRAY_COUNT   =  127;
@@ -41,8 +42,8 @@ class b3MemoryTest : public CppUnit::TestFixture
 	static const b3_count MEM_LOW_MULT  =    2;
 	static const b3_count MEM_HIGH_MULT =  200;
 
-	b3Mem     mem;
-	b3_u08    buffer[MEM_MIN];
+	b3Mem     m_MemPool;
+	b3_u08    m_Buffer[MEM_MIN];
 	void   *  ptr1, *ptr2;
 
 public:
@@ -51,6 +52,7 @@ public:
 	void testSimple();
 	void testMemory();
 	void testMultiple();
+	void testStrCopy();
 };
 
 #endif

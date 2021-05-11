@@ -40,7 +40,7 @@ void b3MemoryTest::setUp()
 {
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 
-	mem.b3Free();
+	m_MemPool.b3Free();
 	for (b3_loop i = 0; i < MEM_MIN; i++)
 	{
 		b3_u08  v;
@@ -49,7 +49,7 @@ void b3MemoryTest::setUp()
 #else
 		v         = i;
 #endif
-		buffer[i] = (b3_u08)(v & 0xff);
+		m_Buffer[i] = (b3_u08)(v & 0xff);
 	}
 	ptr1 = nullptr;
 	ptr2 = nullptr;
@@ -69,10 +69,10 @@ void b3MemoryTest::tearDown()
 		{
 			b3PrintF(B3LOG_NORMAL, "\n%04x: ", i);
 		}
-		b3PrintF(B3LOG_NORMAL, " %02x-%02x", buffer[i], ((b3_u08 *)ptr1)[i]);
+		b3PrintF(B3LOG_NORMAL, " %02x-%02x", m_Buffer[i], ((b3_u08 *)ptr1)[i]);
 	}
 	b3PrintF(B3LOG_NORMAL, "\n");
-	mem.b3Free();
+	m_MemPool.b3Free();
 }
 
 void b3MemoryTest::testSimple()
@@ -133,29 +133,29 @@ void b3MemoryTest::testMemory()
 	b3_u08 * ptr;
 	b3_u08   mask = 0;
 
-	ptr1 = mem.b3Alloc(MEM_MIN);
+	ptr1 = m_MemPool.b3Alloc(MEM_MIN);
 	CPPUNIT_ASSERT(ptr1 != nullptr);
 
-	ptr2 = mem.b3Alloc(MEM_MIN);
+	ptr2 = m_MemPool.b3Alloc(MEM_MIN);
 	CPPUNIT_ASSERT(ptr2 != nullptr);
 
-	CPPUNIT_ASSERT(mem.b3Free(ptr1));
-	CPPUNIT_ASSERT(!mem.b3Free(nullptr));
-	CPPUNIT_ASSERT(mem.b3Free());
+	CPPUNIT_ASSERT(m_MemPool.b3Free(ptr1));
+	CPPUNIT_ASSERT(!m_MemPool.b3Free(nullptr));
+	CPPUNIT_ASSERT(m_MemPool.b3Free());
 
-	ptr1 = mem.b3Realloc(nullptr,  MEM_MIN * 2);
+	ptr1 = m_MemPool.b3Realloc(nullptr,  MEM_MIN * 2);
 	CPPUNIT_ASSERT(ptr1 != nullptr);
 
-	memcpy(ptr1, buffer, MEM_MIN);
+	memcpy(ptr1, m_Buffer, MEM_MIN);
 
-	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
+	ptr2 = m_MemPool.b3Realloc(ptr1,  MEM_MIN);
 	CPPUNIT_ASSERT_EQUAL(ptr1, ptr2);
 	CPPUNIT_ASSERT(ptr2 != nullptr);
 
-	ptr1 = mem.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
+	ptr1 = m_MemPool.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
 	CPPUNIT_ASSERT(ptr1 != nullptr);
-	CPPUNIT_ASSERT(memcmp(buffer, ptr1, MEM_MIN)  == 0);
+	CPPUNIT_ASSERT(memcmp(m_Buffer, ptr1, MEM_MIN)  == 0);
 
 	ptr = static_cast<b3_u08 *>(ptr1);
 	for (i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
@@ -164,7 +164,7 @@ void b3MemoryTest::testMemory()
 	}
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u08, mask, 0);
 
-	ptr2 = mem.b3Realloc(ptr1,     0);
+	ptr2 = m_MemPool.b3Realloc(ptr1,     0);
 	CPPUNIT_ASSERT(ptr1 != ptr2);
 	CPPUNIT_ASSERT_TYPED_EQUAL(void *, nullptr, ptr2);
 	ptr1 = nullptr;
@@ -201,6 +201,37 @@ void b3MemoryTest::testMultiple()
 		CPPUNIT_ASSERT(pool.b3Free(array[i]));
 		CPPUNIT_ASSERT(!pool.b3Free(array[i]));
 	}
+}
+
+void b3MemoryTest::testStrCopy()
+{
+	char         buffer[8];
+	const char * test1 = "1234";
+	const char * test2 = "1234567";
+	const char * test3 = "12345678";
+	const char * test4 = "123456789";
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(strlen(test1), b3Mem::b3StrCpy(buffer, test1, sizeof(buffer)));
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(strlen(test2), b3Mem::b3StrCpy(buffer, test2, sizeof(buffer)));
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(sizeof(buffer) - 1, b3Mem::b3StrCpy(buffer, test3, sizeof(buffer)));
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(sizeof(buffer) - 1, b3Mem::b3StrCpy(buffer, test4, sizeof(buffer)));
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(size_t(0), b3Mem::b3StrCpy(buffer, nullptr, sizeof(buffer)));
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(size_t(0), b3Mem::b3StrCpy(buffer, test1, 0));
+
+	std::fill(buffer, buffer + sizeof(buffer), 0xa5);
+	CPPUNIT_ASSERT_EQUAL(size_t(0), b3Mem::b3StrCpy(buffer, test1, 1));
+	CPPUNIT_ASSERT_EQUAL(size_t(0), strlen(buffer));
 }
 
 #endif
