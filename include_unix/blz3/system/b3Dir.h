@@ -54,8 +54,9 @@ public:
 	 *
 	 * @param path The filename for initializing.
 	 */
-	inline explicit b3Path(const char * path) : b3PathAbstract(path)
+	inline explicit b3Path(const char * path) : b3PathAbstract()
 	{
+		operator=(path);
 	}
 
 	/**

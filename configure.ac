@@ -186,14 +186,8 @@ AC_PATH_XTRA
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 
-AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h filesystem])
 
-AC_CHECK_LIB([tiff], [main])
-AC_CHECK_LIB([jpeg], [main])
-AC_CHECK_LIB([dl], [main])
-AC_CHECK_LIB([pthread], [main])
-AC_CHECK_LIB([z], [main])
-AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT], [1], [Is CppUnit available?]) CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
 
 # Check for OpenGL
 AC_CHECK_HEADER([GL/glut.h],
@@ -219,6 +213,7 @@ CPPFLAGS="$CPPFLAGS -I$OPENEXR"
 AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR], [1], [Can we use OpenEXR?])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
 # END OpenEXR
 
+# Check for OpenEXR
 AC_CHECK_LIB([Half], [main])
 AC_CHECK_LIB([Iex], [main])
 AC_CHECK_LIB([Imath], [main])
@@ -231,6 +226,16 @@ AC_CHECK_LIB([swscale], [main])
 AC_CHECK_LIB([avutil], [main])
 AC_CHECK_LIB([avformat], [main])
 AC_CHECK_LIB([avcodec], [main])
+
+# Check for image io libraries
+AC_CHECK_LIB([tiff], [main])
+AC_CHECK_LIB([jpeg], [main])
+
+# Check for system libraries
+AC_CHECK_LIB([dl], [main])
+AC_CHECK_LIB([pthread], [main])
+AC_CHECK_LIB([z], [main])
+AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT], [1], [Is CppUnit available?]) CPPUNITLIBS="$CPPUNITLIBS -lcppunit"])
 
 AC_LANG_POP(C++)
 

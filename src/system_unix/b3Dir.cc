@@ -167,6 +167,13 @@ void b3Dir::b3CloseDir()
 
 b3Path & b3Path::operator=(const char * path)
 {
+	const char * full_path = realpath(path, nullptr);
+
+	if (full_path != nullptr)
+	{
+		strncpy(m_Path, path, sizeof(m_Path));
+		m_Path[sizeof(m_Path) - 1] = 0;
+	}
 	if (m_Path != path)
 	{
 		strncpy(m_Path, path, sizeof(m_Path));
