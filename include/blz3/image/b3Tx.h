@@ -1377,12 +1377,6 @@ private:
 	void           b3ColorGrid();
 	b3_index       b3ColorIndex(b3_pkd_color color);
 
-	// b3TxDeskew.cc (deskew page)
-	void           b3DeskewILBM();
-	void           b3DeskewRGB4();
-	void           b3DeskewRGB8();
-	void           b3DeskewVGA();
-
 	// b3TxEasy.cc
 	b3_result      b3ParseRAW(const b3_u08 * buffer, b3_res x, b3_res y, b3_s32 type);
 	b3_result      b3ParseBMP(const b3_u08 * buffer);

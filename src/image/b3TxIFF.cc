@@ -540,7 +540,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 					B3_THROW(b3TxException, B3_TX_MEMORY);
 				}
 
-				Copy = (b3_u08 *)data;
+				Copy = data;
 				CharData += 8;
 				k = 0;
 				while (k < Max)
@@ -629,8 +629,8 @@ b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 	b3_u08 * V = nullptr;
 	b3_u08 * CharData;
 	b3_u32 * LongData;
-	b3_u08  y, u, v, Uprev, Vprev;
-	b3_u32  i, k, Max, Pos = 12, Count = 0, Shift;
+	b3_u08   y, u, v, Uprev, Vprev;
+	b3_u32   i, k, Max, Pos = 12, Count = 0, Shift;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_YUVN(%s)\n",
 		(const char *)image_name);
