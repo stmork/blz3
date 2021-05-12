@@ -40,3 +40,7 @@ Version 3.1.2
   * Memory leaks
 * Corrected area intersection accuracy.
 * Added video encoding class b3MovieEncoder.
+
+Version 3.1.3
+* Structural improvements.
+* More tests.
