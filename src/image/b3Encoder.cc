@@ -36,8 +36,12 @@
 
 b3CodecRegister::b3CodecRegister()
 {
+#if LIBAVFORMAT_VERSION_MAJOR <= 57
 	av_register_all();
+#endif
+#if LIBAVCODEC_VERSION_MAJOR <= 57
 	avcodec_register_all();
+#endif
 	av_log_set_callback(b3Log);
 }
 
