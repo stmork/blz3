@@ -2,6 +2,7 @@
 
 CC			= @CC@
 CXX			= @CXX@
+LD			= @LD@
 CFLAGS			= @CFLAGS@
 CXXFLAGS		= @CXXFLAGS@
 CPPFLAGS		= @CPPFLAGS@

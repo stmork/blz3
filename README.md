@@ -31,6 +31,21 @@ Example:
 make install documentation
 ```
 
+### Cross Compiling
+If you want to cross compile you have to specify the sysroot directory to
+build against. You should give this by using the ```CXXFLAGS``` environment
+variale and setting the ```--sysroot=<DIR>``` option. After that you have to
+add the ```--host=<TARGET_ARCH>``` option to the configure script.
+
+Example:
+```
+export CXXFLAGS="-O3 --sysroot=/opt/rootfs/armhf/atmel/buster"
+./configure --host=arm-linux-gnueabihf
+```
+
+Look to your requested environment to cross compile against other CPU
+architectures.
+
 ## Qt with qmake
 After configuring like described you have to remove the Makefile generated
 during ```configure```:
