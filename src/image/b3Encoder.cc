@@ -131,7 +131,7 @@ void b3CodecRegister::b3PrepareCodecs()
 
 void b3CodecRegister::b3PrepareOutputFormats()
 {
-#ifdef _HAVE_AV_MUXER_ITERATE
+#ifdef HAVE_AV_MUXER_ITERATE
 	const AVOutputFormat * oformat;
 	void         *         opaque = nullptr;
 
