@@ -169,17 +169,17 @@ public:
 };
 
 
-int main(int argc, char * argv[])
+int main(int argc B3_UNUSED, char * argv[] B3_UNUSED)
 {
-	b3Tx         reference, image;
+	b3Tx          reference, image;
 	b3Calibrate * calibrate;
-	b3Path       source("/tmp/maui");
-	b3Path       dest("/usr/local/maui/postproc2/data");
-	b3Path       file;
-	char         name[32];
-	b3FileList   list;
+	b3Path        source("/tmp/maui");
+	b3Path        dest("/usr/local/maui/postproc2/data");
+	b3Path        file;
+	char          name[32];
+	b3FileList    list;
 	b3FileEntry * entry;
-	b3_count     count = 0;
+	b3_count      count = 0;
 
 	reference.b3LoadImage("/home/sm/Kalibrierung.tif");
 	calibrate = new b3Calibrate(reference);

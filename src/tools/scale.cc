@@ -270,6 +270,7 @@ int main(int argc, char * argv[])
 	default:
 	case 3:
 		title = argv[2];
+		B3_FALLTHROUGH;
 	case 2:
 		dir = argv[1];
 		break;
