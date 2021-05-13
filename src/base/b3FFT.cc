@@ -30,6 +30,8 @@
 
 #define B3_FFT_MAX_THREADS 16
 
+using namespace std::complex_literals;
+
 /*************************************************************************
 **                                                                      **
 **                        b3SimpleFourier                               **

@@ -59,12 +59,12 @@ b3EncoderStream::b3EncoderStream(
 	// Populate extradata if encoder has support.
 	if (format_context->oformat->flags & AVFMT_GLOBALHEADER)
 	{
-#if defined(CODEC_FLAG_GLOBAL_HEADER)
+#if      defined(CODEC_FLAG_GLOBAL_HEADER)
 		m_CodecContext->flags         |= CODEC_FLAG_GLOBAL_HEADER;
 #elif defined(AV_CODEC_FLAG_GLOBAL_HEADER)
 		m_CodecContext->flags         |= AV_CODEC_FLAG_GLOBAL_HEADER;
 #else
-#	error "Cannot compile in global container file data."
+#		error "Cannot compile in global container file data!"
 #endif
 	}
 }
