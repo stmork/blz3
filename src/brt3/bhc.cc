@@ -216,7 +216,7 @@ void b3BHDParser::b3ParsePoint(b3_f64 scale)
 	m_Points.b3Add(point);
 }
 
-void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64 scale)
+void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64 scale B3_UNUSED)
 {
 	b3BBox     *     room = new b3BBox(BBOX);
 	b3CondRectangle * cond;

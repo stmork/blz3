@@ -152,9 +152,9 @@ public:
 #define B3_FOR_BASE_BACK(b,n)  for((n) = (b)->Last;(n)  != nullptr;(n) = (n)->Prev)
 
 #define B3_FOR_TYPED_BASE(t,b,n)\
-	for(t * (n) = static_cast<t *>((b)->First);\
-	(n) != nullptr;\
-	(n) = static_cast<t *>((n)->Succ))
+	for(t * n = static_cast<t *>((b)->First);\
+	n != nullptr;\
+	n = static_cast<t *>((n)->Succ))
 
 #define B3_DELETE_BASE(b,n)    ((b)->b3Free())
 

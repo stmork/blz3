@@ -34,9 +34,9 @@
 static struct b3DefineType
 {
 	const char * m_Type;
-	int         m_Prio;
-	int         m_Start;
-	int         m_Last;
+	int          m_Prio;
+	int          m_Start;
+	int          m_Last = 0;
 } define_types[]
 {
 	{ "IDP_OLE_INIT_FAILED",  1, 101 },
@@ -72,13 +72,14 @@ class b3Define : public b3Link<b3Define>
 {
 	FILE     *    m_File;
 	char          m_Define[1024];
-	int           m_Value;
-	int           m_Type;
-	b3DefineMode  m_Mode;
+	int           m_Value = 0;
+	int           m_Type  = 0;
+	b3DefineMode  m_Mode  = DM_NOP;
 
 public:
 	b3Define(const b3_bool start) : b3Link<b3Define>(sizeof(b3Define))
 	{
+		bzero(m_Define, sizeof(m_Define));
 		m_Mode = (start ? DM_START : DM_END);
 		m_File = stdout;
 	}
@@ -96,7 +97,7 @@ public:
 		}
 	}
 
-	static const int b3GetDefineTypesLastValue(const char * define)
+	static int b3GetDefineTypesLastValue(const char * define)
 	{
 		int type = b3FindDefineType(define);
 
@@ -113,9 +114,11 @@ public:
 			fprintf(m_File, "// Used by AppLines.rc\r\n");
 			fprintf(m_File, "//\r\n");
 			break;
+
 		case DM_DEFINE:
 			fprintf(m_File, "#define %-31s %d\r\n", m_Define, m_Value);
 			break;
+
 		case DM_END:
 			fprintf(m_File, "\r\n");
 			fprintf(m_File, "// Next default values for new objects\r\n");
@@ -242,7 +245,7 @@ int main(int argc, char * argv[])
 {
 	b3Base<b3Define>  defines;
 	b3Define     *    define;
-	int               last;
+	int               last = 0;
 
 	for (int i = 1; i < argc; i++)
 	{
