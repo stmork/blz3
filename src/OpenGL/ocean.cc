@@ -20,57 +20,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
-**                                                                      **
-*************************************************************************/
-
-/*
-**	$Log$
-**	Revision 1.8  2006/05/23 20:25:12  sm
-**	- Some test updates.
-**	- Changed exception handling a little bit.
-**
-**	Revision 1.7  2006/05/13 10:01:01  sm
-**	- Introduced special complex number computation for FFT handling.
-**
-**	Revision 1.6  2006/05/11 15:34:22  sm
-**	- Added unit tests
-**	- Corrected normal computation for ocean waves
-**	- Optimized b3Complex
-**	- Added new FFT
-**	- Added own assertion include
-**
-**	Revision 1.5  2006/05/01 10:44:46  sm
-**	- Unifying ocean wave values.
-**
-**	Revision 1.4  2006/04/30 08:53:24  sm
-**	- Removed some signed/unsigned issues.
-**	- Reflect new FFT algorithm.
-**
-**	Revision 1.3  2006/04/29 20:45:57  sm
-**	- New scaling.
-**
-**	Revision 1.2  2006/04/29 17:58:27  sm
-**	- Minor value changes.
-**
-**	Revision 1.1  2006/04/29 11:39:04  sm
-**	- Added ocean bump to main packet.
-**	- b3Prepare signature: Added further initialization information
-**	  for animation preparation
-**	- Added test module for ocean waves.
-**	- Added module for random number generation.
-**	- Adjusted material and bump sampler to reflect preparation
-**	  signature change.
-**	- Added OpenGL test program for ocean waves.
-**	- Changed Phillips spectrum computation to be independent
-**	  from time.
-**	- Interpolated height field for ocean waves.
-**
-**
-*/
-
-/*************************************************************************
-**                                                                      **
 **                        Some static data                              **
 **                                                                      **
 *************************************************************************/
@@ -96,7 +45,6 @@ GLfloat light0[] =
 
 GLfloat * vPtr = nullptr;
 GLuint  * iPtr = nullptr;
-b3_size   vSize, iSize;
 GLuint    size;
 b3Time    timepoint;
 b3_f64    start;
@@ -114,17 +62,18 @@ PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
 
 GLuint  vbo[2];
 b3_bool has_vbo;
+b3Mem   pool;
 
 void init_vertices()
 {
 	b3_f64 factor;
 	GLuint i, k;
 
-	size = 1 << ocean.m_Dim;
+	size     = 1 << ocean.m_Dim;
 	halfgrid = ocean.m_GridSize * 0.5;
 	factor   = ocean.m_GridSize / size;
-	vSize = size * size * sizeof(GLfloat) * 3;
-	iSize = 2 * size * (size - 1) * sizeof(GLint) * 2;
+	const b3_size vSize    = size * size * sizeof(GLfloat) * 3;
+	const b3_size iSize    = 2 * size * (size - 1) * 2;
 
 	if (has_vbo)
 	{
@@ -149,7 +98,7 @@ void init_vertices()
 		}
 		else
 		{
-			vPtr = (GLfloat *)malloc(vSize);
+			vPtr = pool.b3TypedAlloc<GLfloat>(vSize);
 		}
 		ptr = vPtr;
 
@@ -178,12 +127,12 @@ void init_vertices()
 		if (has_vbo)
 		{
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
-			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize, nullptr, GL_DYNAMIC_DRAW_ARB);
+			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize * sizeof(GLint), nullptr, GL_DYNAMIC_DRAW_ARB);
 			iPtr = (GLuint *)glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
 		}
 		else
 		{
-			iPtr  = (GLuint *)malloc(iSize);
+			iPtr  = pool.b3TypedAlloc<GLuint>(iSize);
 		}
 		ptr = iPtr;
 
