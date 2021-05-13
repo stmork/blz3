@@ -80,9 +80,16 @@ b3CodecRegister & b3CodecRegister::b3Instance()
 
 void b3CodecRegister::b3PrepareCodecs()
 {
+#ifdef HAVE_AV_CODEC_ITERATE
+	const AVCodec * codec;
+	void      *     opaque = nullptr;
+
+	while ((codec = av_codec_iterate(&opaque)) != nullptr)
+#else
 	for (AVCodec * codec = av_codec_next(nullptr);
 		codec != nullptr;
 		codec = av_codec_next(codec))
+#endif
 	{
 		if (av_codec_is_encoder(codec) && (codec->type == AVMEDIA_TYPE_VIDEO))
 		{
@@ -117,22 +124,29 @@ void b3CodecRegister::b3PrepareCodecs()
 				break;
 			}
 
-			b3PrintF(B3LOG_FULL, "  AV %s\n", codec->name);
+			b3PrintF(B3LOG_FULL, "  AV codec %s\n", codec->name);
 		}
 	}
 }
 
 void b3CodecRegister::b3PrepareOutputFormats()
 {
+#ifdef _HAVE_AV_MUXER_ITERATE
+	const AVOutputFormat * oformat;
+	void         *         opaque = nullptr;
+
+	while ((oformat = av_muxer_iterate(&opaque)) != nullptr)
+#else
 	for (AVOutputFormat * oformat = av_oformat_next(nullptr);
 		oformat != nullptr;
 		oformat = av_oformat_next(oformat))
+#endif
 	{
-		b3PrintF(B3LOG_FULL, "%s\n", oformat->long_name);
+		b3PrintF(B3LOG_FULL, "  AV output format: %s\n", oformat->long_name);
 
 		if (oformat->video_codec == AV_CODEC_ID_H265)
 		{
-			b3PrintF(B3LOG_FULL, "Container for h.265 found: %s\n", oformat->long_name);
+			b3PrintF(B3LOG_FULL, "     Container for h.265 found: %s\n", oformat->long_name);
 		}
 	}
 }

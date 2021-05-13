@@ -249,6 +249,8 @@ ARFLAGS="rs"
 
 AC_CHECK_LIB([X11], [main])
 
+AC_CHECK_FUNCS_ONCE([av_muxer_iterate av_codec_iterate])
+
 # Checks for library functions.
 AC_FUNC_CLOSEDIR_VOID
 AC_FUNC_MALLOC

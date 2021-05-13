@@ -211,6 +211,10 @@ int main(int argc, char * argv[])
 	b3_res                size = 0;
 
 	context.b3UseGL(false);
+#ifdef HAVE_VIDEO_ENCODER
+	b3CodecRegister::b3Instance().b3PrepareCodecs();
+	b3CodecRegister::b3Instance().b3PrepareOutputFormats();
+#endif
 
 	if (argc > 1)
 	{
@@ -230,10 +234,6 @@ int main(int argc, char * argv[])
 		}
 
 		b3RaytracingItems::b3Register();
-#ifdef HAVE_VIDEO_ENCODER
-		b3CodecRegister::b3Instance().b3PrepareCodecs();
-		b3CodecRegister::b3Instance().b3PrepareOutputFormats();
-#endif
 		loader.b3AddPath(BLZ3_BIN);
 		loader.b3AddPath(BLZ3_PLUGINS);
 		loader.b3Load();

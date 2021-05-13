@@ -33,6 +33,12 @@
 /* Define to 1 if you have the `alarm' function. */
 #undef HAVE_ALARM
 
+/* Define to 1 if you have the `av_codec_iterate' function. */
+#undef HAVE_AV_CODEC_ITERATE
+
+/* Define to 1 if you have the `av_muxer_iterate' function. */
+#undef HAVE_AV_MUXER_ITERATE
+
 /* Define to 1 if you have the `cbrt' function. */
 #undef HAVE_CBRT
 
