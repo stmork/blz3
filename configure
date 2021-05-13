@@ -6494,6 +6494,146 @@ $as_echo "#define HAVE_CXX17 1" >>confdefs.h
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: C++17 is not yet standardized, so the checks may change in incompatible ways anytime" >&5
 $as_echo "$as_me: WARNING: C++17 is not yet standardized, so the checks may change in incompatible ways anytime" >&2;}
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -Wall" >&5
+$as_echo_n "checking whether C++ compiler accepts -Wall... " >&6; }
+if ${ax_cv_check_cxxflags___Wall+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -Wall"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_check_cxxflags___Wall=yes
+else
+  ax_cv_check_cxxflags___Wall=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___Wall" >&5
+$as_echo "$ax_cv_check_cxxflags___Wall" >&6; }
+if test "x$ax_cv_check_cxxflags___Wall" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -Wall"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -Wextra" >&5
+$as_echo_n "checking whether C++ compiler accepts -Wextra... " >&6; }
+if ${ax_cv_check_cxxflags___Wextra+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -Wextra"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_check_cxxflags___Wextra=yes
+else
+  ax_cv_check_cxxflags___Wextra=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___Wextra" >&5
+$as_echo "$ax_cv_check_cxxflags___Wextra" >&6; }
+if test "x$ax_cv_check_cxxflags___Wextra" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -Wextra"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -Wshadow" >&5
+$as_echo_n "checking whether C++ compiler accepts -Wshadow... " >&6; }
+if ${ax_cv_check_cxxflags___Wshadow+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -Wshadow"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_check_cxxflags___Wshadow=yes
+else
+  ax_cv_check_cxxflags___Wshadow=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___Wshadow" >&5
+$as_echo "$ax_cv_check_cxxflags___Wshadow" >&6; }
+if test "x$ax_cv_check_cxxflags___Wshadow" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -Wshadow"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -Wsuggest-override" >&5
+$as_echo_n "checking whether C++ compiler accepts -Wsuggest-override... " >&6; }
+if ${ax_cv_check_cxxflags___Wsuggest_override+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -Wsuggest-override"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ax_cv_check_cxxflags___Wsuggest_override=yes
+else
+  ax_cv_check_cxxflags___Wsuggest_override=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___Wsuggest_override" >&5
+$as_echo "$ax_cv_check_cxxflags___Wsuggest_override" >&6; }
+if test "x$ax_cv_check_cxxflags___Wsuggest_override" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -Wsuggest-override"
+else
+  :
+fi
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -march=native" >&5
 $as_echo_n "checking whether C++ compiler accepts -march=native... " >&6; }
 if ${ax_cv_check_cxxflags___march_native+:} false; then :
