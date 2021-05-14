@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.69)
-AC_INIT(blz3, 3.1.4, blz3-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 3.1.4, linux-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -218,14 +218,14 @@ AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR], [1], [Can we use O
 # END OpenEXR
 
 # Check for OpenEXR
-AC_CHECK_LIB([Half], [main])
-AC_CHECK_LIB([Iex], [main])
-AC_CHECK_LIB([Imath], [main])
-AC_CHECK_LIB([IlmImf], [main])
+if test "x$BLZ3_USE_OPENEXR" != "x"; then
+	AC_CHECK_LIB([Half], [main])
+	AC_CHECK_LIB([Iex], [main])
+	AC_CHECK_LIB([Imath], [main])
+	AC_CHECK_LIB([IlmImf], [main])
+fi
 
 # Check for video encoder
-AC_CHECK_LIB([x264], [main])
-AC_CHECK_LIB([x265], [main])
 AC_CHECK_LIB([swscale], [main])
 AC_CHECK_LIB([avutil], [main])
 AC_CHECK_LIB([avformat], [main])

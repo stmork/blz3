@@ -5,9 +5,10 @@ Priority: optional
 Architecture: %ARCH%
 Depends: libc6, libstdc++6, libgcc1, libx11-6, libxext6, libxau6, libxdmcp6,
  libopenexr6|libopenexr22, freeglut3, libgl1-mesa-glx, libglu1-mesa, 
- zlib1g, libx264-120(>=2:0.120)|libx264-148|libx264-152, libxcb1, libjpeg8
+ zlib1g, libx264-120(>=2:0.120)|libx264-148|libx264-152, libxcb1, libjpeg8,
+ ffmpeg
 Installed-Size: 8
-Maintainer: Steffen A. Mork <linux-dev@morknet.de>
-Homepage: http://morknet.de
+Maintainer: "Steffen A. Mork" <linux-dev@morknet.de>
+Homepage: https://github.com/stmork/blz3
 Description: This is a very fast raytracer developed since the early 1990s.
  It contains some tools for image conversion.
