@@ -60,11 +60,11 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Imag());
 		CPPUNIT_ASSERT(!b3_cpx.b3Normalize());
 
-		b3_cpx  = 2i + 1.0;
+		b3_cpx  = C(1, 2);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   1.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   2.0, b3_cpx.b3Imag());
 
-		b3_cpx  = 3.5 + 4i;
+		b3_cpx  = C(3.5, 4);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   3.5, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   4.0, b3_cpx.b3Imag());
 
@@ -72,7 +72,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.5, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Imag());
 
-		b3_cpx  = 7.5i;
+		b3_cpx  = C(0, 7.5);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   0.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   7.5, b3_cpx.b3Imag());
 
@@ -87,7 +87,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
 
-		b3_cpx = 64.0 + 36i;
+		b3_cpx = C(64, 36);
 		b3_cpx = b3_cpx.b3Sqrt();
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,   6.0, b3_cpx.b3Imag());
@@ -100,7 +100,7 @@ private:
 		b3_cpx = -1;
 		CPPUNIT_ASSERT_THROW(b3_cpx.b3Sqrt(), std::domain_error);
 
-		b3_cpx = -1i;
+		b3_cpx = C(0, -1);
 		CPPUNIT_ASSERT_THROW(b3_cpx.b3Sqrt(), std::domain_error);
 
 		b3_cpx = b3Complex<T>(1.0, 7.0);
@@ -111,7 +111,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, std_cpx.real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  7.0, std_cpx.imag());
 
-		b3_cpx = 8.0i;
+		b3_cpx = C(0, 8);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  8.0, b3_cpx.b3Imag());
 
@@ -119,7 +119,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Imag());
 
-		b3_cpx = 2.0i + 1.0;
+		b3_cpx = C(1,2);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  2.0, b3_cpx.b3Imag());
 
@@ -143,7 +143,7 @@ private:
 	template<class T, class C> void testStdComplexOps()
 	{
 		std::complex<T> std_cpx(1.0 + 7i);
-		C               b3_cpx(5.5 + 4i);
+		C               b3_cpx(5.5, 4);
 		C               b3_cpx_init1(std_cpx);
 		C               b3_cpx_init2(b3_cpx);
 
@@ -160,10 +160,10 @@ private:
 		b3_cpx = 1;
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
 
-		b3_cpx = 2.0f + 2i;
+		b3_cpx = C(2, 2);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(45.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
 
-		b3_cpx = 3i;
+		b3_cpx = C(0, 3);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(90.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
 
 		b3_cpx = C(10.5) / C(3.0);
