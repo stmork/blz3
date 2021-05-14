@@ -39,6 +39,7 @@ void b3SearchPathTest::setUp()
 	path.b3AddPath(nullptr);
 	path.b3AddPath(getenv("WORKSPACE"));
 	path.b3AddPath(getenv("BLZ3_HOME"));
+	path.b3AddPath("../..");
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
