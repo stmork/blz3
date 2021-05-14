@@ -25,13 +25,14 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 template<class SPLINE> class b3SplineTest : public CppUnit::TestFixture
 {
-	SPLINE a;
-	SPLINE b;
+	SPLINE            a;
+	SPLINE            b;
 	b3Spline::b3_knot knots[b3Spline::B3_MAX_KNOTS];
+	b3_f64            curve_controls[b3Spline::B3_MAX_CONTROLS];
+	b3_vector         spline_controls[b3Spline::B3_MAX_CONTROLS];
+	b3_vector4D       nurbs_controls[b3Spline::B3_MAX_CONTROLS];
 
 	CPPUNIT_TEST_SUITE(b3SplineTest<SPLINE>);
 	CPPUNIT_TEST(testInit);
@@ -50,6 +51,13 @@ public:
 	void testInit()
 	{
 		CPPUNIT_ASSERT(a.b3InitCurve(3, 10, true));
+		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
+
+		CPPUNIT_ASSERT(!a.b3InitCurve(0, 10, true));
+		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_INVALID_ARGUMENT, b.bspline_errno);
+
+		CPPUNIT_ASSERT(!a.b3InitCurve(3, 0, true));
+		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_INVALID_ARGUMENT, b.bspline_errno);
 
 		CPPUNIT_ASSERT(!b.b3InitCurve(3, b.m_ControlMax * 2, false));
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_MUCH_CONTROLS, b.bspline_errno);

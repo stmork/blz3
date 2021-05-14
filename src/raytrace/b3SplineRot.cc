@@ -85,7 +85,7 @@ void b3SplineRotShape::b3Init(
 	m_rSubDiv = SubDiv;
 
 	// Allocate controls
-	m_Controls      = b3Item::b3TypedAlloc<b3_vector>(m_Spline.m_ControlMax);
+	m_Controls = b3Item::b3TypedAlloc<b3_vector>(m_Spline.m_ControlMax);
 
 	// Init horizontal spline
 	m_Spline.m_Knots    = m_Knots;

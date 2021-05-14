@@ -36,6 +36,7 @@
 #ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3AuxTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineControlClosedTest);
 
 void b3AuxTest::setUp()
 {
@@ -183,6 +184,54 @@ void b3AuxTest::testStrCaseCmp()
 	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("aa", "A") > 0);
 	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("AA", "a") > 0);
 	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("AA", "A") > 0);
+}
+
+void b3SplineControlClosedTest::setUp()
+{
+	m_Nurbs.m_Knots    = m_Knots;
+	m_Nurbs.m_Controls = m_Controls;
+	m_Nurbs.b3InitCurve(2, 8, true);
+
+	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
+	{
+		const double angle = i * 2.0 * M_PI;
+
+		m_Controls[i].x = round(cos(angle / m_Nurbs.m_ControlNum)) * RADIUS;
+		m_Controls[i].y = round(sin(angle / m_Nurbs.m_ControlNum)) * RADIUS;
+		m_Controls[i].z = 0;
+		m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
+	}
+
+	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
+	{
+		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
+	}
+
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+}
+
+void b3SplineControlClosedTest::tearDown()
+{
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+}
+
+void b3SplineControlClosedTest::test()
+{
+	b3_vector4D p[m_Nurbs.m_SubDiv + 1];
+	b3_f64      r[m_Nurbs.m_SubDiv + 1];
+
+	bzero(p, sizeof(p));
+	const unsigned count = m_Nurbs.b3DeBoor(p);
+
+	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
+	for (unsigned i = 0; i < count; i++)
+	{
+		const double radius = sqrt(p[i].x * p[i].x + p[i].y * p[i].y);
+
+		r[i] = radius;
+//		CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Spline::B3_BSPLINE_EPSILON);
+	}
+	b3PrintF(B3LOG_DEBUG, "%p\n", r);
 }
 
 #endif

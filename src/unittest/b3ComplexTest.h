@@ -119,7 +119,7 @@ private:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  8.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  0.0, b3_cpx.b3Imag());
 
-		b3_cpx = C(1,2);
+		b3_cpx = C(1, 2);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  2.0, b3_cpx.b3Imag());
 

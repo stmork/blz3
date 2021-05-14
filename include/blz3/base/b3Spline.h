@@ -30,8 +30,6 @@
 **                                                                      **
 *************************************************************************/
 
-#define B3_BSPLINE_EPSILON 0.0001
-
 #define B3_BSPLINE_SEGMENTS(s)     ((s)->b3GetSegmentCount())
 #define B3_BSPLINE_SEGMENTKNOTS(s) ((s)->b3GetSegmentKnotCount())
 
@@ -53,7 +51,8 @@ enum b3_bspline_error
 	B3_BSPLINE_TOO_FEW_MAXCONTROLS,
 	B3_BSPLINE_MISSING_KNOTS,
 	B3_BSPLINE_CLOSED,
-	B3_BSPLINE_TOO_LOW_MULTIPLICATION
+	B3_BSPLINE_TOO_LOW_MULTIPLICATION,
+	B3_BSPLINE_INVALID_ARGUMENT         //!< The input parameter are illegal.
 };
 
 /*************************************************************************
@@ -96,14 +95,14 @@ public:
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(B3_UNUSED b3_f64 * vector)
+	static inline void b3Homogenize(b3_f64 * vector B3_UNUSED)
 	{
 	}
 
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(B3_UNUSED b3_vector * vector)
+	static inline void b3Homogenize(b3_vector * vector B3_UNUSED)
 	{
 	}
 
@@ -114,13 +113,12 @@ public:
 	 */
 	static inline void b3Homogenize(b3_vector4D * vector)
 	{
-		b3_f32 w;
+		const b3_f32 w = vector->w;
 
-		B3_ASSERT(vector->w != 0);
-		w = 1.0 / vector->w;
-		vector->x = (b3_f32)(vector->x * w);
-		vector->y = (b3_f32)(vector->y * w);
-		vector->z = (b3_f32)(vector->z * w);
+		B3_ASSERT(w != 0);
+		vector->x /= w;
+		vector->y /= w;
+		vector->z /= w;
 	}
 
 	static inline void b3Sub(
@@ -134,7 +132,7 @@ public:
 	static inline void b3Sub(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		b3_vector * result)
+		b3_vector    *    result)
 	{
 #ifdef B3_SSE
 		const b3_f32 * a = &aVec->x;
@@ -155,12 +153,12 @@ public:
 	static inline void b3Sub(
 		const b3_vector4D * aVec,
 		const b3_vector4D * bVec,
-		b3_vector4D * result)
+		b3_vector4D    *    result)
 	{
 #ifdef B3_SSE1
 		const b3_f32 * a = &aVec->x;
 		const b3_f32 * b = &bVec->x;
-		b3_f32 * r = &result->x;
+		b3_f32    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -175,21 +173,21 @@ public:
 	}
 
 	static inline void b3AddScaled(
-		const b3_f32  factor,
+		const b3_f32   factor,
 		const b3_f64 * offset,
-		b3_f64 * vector)
+		b3_f64    *    vector)
 	{
 		*vector = *vector + factor * *offset;
 	}
 
 	static inline void b3AddScaled(
-		const b3_f32     factor,
+		const b3_f32      factor,
 		const b3_vector * offset,
-		b3_vector * vector)
+		b3_vector    *    vector)
 	{
 #ifdef B3_SSE
 		const b3_f32 * o = &offset->x;
-		b3_f32 * v = &vector->x;
+		b3_f32    *    v = &vector->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
@@ -203,13 +201,13 @@ public:
 	}
 
 	static inline void b3AddScaled(
-		const b3_f32       factor,
+		const b3_f32        factor,
 		const b3_vector4D * offset,
-		b3_vector4D * vector)
+		b3_vector4D    *    vector)
 	{
 #ifdef B3_SSE1
 		const b3_f32 * o = &offset->x;
-		b3_f32 * v = &vector->x;
+		b3_f32    *    v = &vector->x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -227,7 +225,7 @@ public:
 		const b3_f64 * a,
 		const b3_f64 * b,
 		const b3_f64  factor,
-		b3_f64 * result)
+		b3_f64    *   result)
 	{
 		*result = *a + factor * *b;
 	}
@@ -235,8 +233,8 @@ public:
 	static inline void b3LinearCombine(
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		const b3_f32     b,
-		b3_vector * result)
+		const b3_f32      b,
+		b3_vector    *    result)
 	{
 		result->x = (b3_f32)(aVec->x + b * bVec->x);
 		result->y = (b3_f32)(aVec->y + b * bVec->y);
@@ -246,13 +244,13 @@ public:
 	static inline void b3LinearCombine(
 		const b3_vector4D * aVec,
 		const b3_vector4D * bVec,
-		const b3_f32       f,
-		b3_vector4D * result)
+		const b3_f32        f,
+		b3_vector4D    *    result)
 	{
 #ifdef B3_SSE1
 		const b3_f32 * a = &aVec->x;
 		const b3_f32 * b = &bVec->x;
-		b3_f32 * r = &result->x;
+		b3_f32    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -267,19 +265,19 @@ public:
 	}
 
 	static inline void b3Mix(
-		b3_f64 * result,
+		b3_f64    *    result,
 		const b3_f64 * a,
 		const b3_f64 * b,
-		const b3_f64  f)
+		const b3_f64   f)
 	{
 		*result = *a + f * (*b - *a);
 	}
 
 	static inline void b3Mix(
-		b3_vector * result,
+		b3_vector    *    result,
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		const b3_f32     f)
+		const b3_f32      f)
 	{
 		result->x = aVec->x + f * (bVec->x - aVec->x);
 		result->y = aVec->y + f * (bVec->y - aVec->y);
@@ -287,15 +285,15 @@ public:
 	}
 
 	static inline void b3Mix(
-		b3_vector4D * result,
+		b3_vector4D    *    result,
 		const b3_vector4D * aVec,
 		const b3_vector4D * bVec,
-		const b3_f32       f)
+		const b3_f32        f)
 	{
 #ifdef B3_SSE1
 		const b3_f32 * a = &aVec->x;
 		const b3_f32 * b = &bVec->x;
-		b3_f32 * r = &result->x;
+		b3_f32    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -322,28 +320,29 @@ public:
 template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 {
 public:
-	static b3_bspline_error bspline_errno;
-
-	static const unsigned B3_MAX_CONTROLS = 32;
-	static const unsigned B3_MAX_SUBDIV   = 64;
-	static const unsigned B3_MAX_DEGREE   = B3_MAX_CONTROLS;
-	static const unsigned B3_MAX_KNOTS    = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
-
 	typedef b3_f32    b3_knot;
-	typedef b3_knot   b3_knot_vector[B3_MAX_KNOTS];
 	typedef b3_knot * b3_knots;
 
-	VECTOR     *    m_Controls;              // control point sequence.
-	b3_knots        m_Knots;                 // knot sequence.
-	unsigned        m_ControlNum;            // used number of controls.
-	unsigned        m_KnotNum;               // used number of knots.
-	unsigned        m_Degree;                // spline degree.
-	unsigned        m_SubDiv;                // Sub division for triangulation.
-	unsigned        m_ControlMax;            // max. available control points.
-	unsigned        m_KnotMax;               // max. available knots.
-	b3_index        m_Offset;                // index offset between each control
-	b3_bool         m_Closed;                // open/closed curve.
+	static b3_bspline_error bspline_errno;
 
+	static const     unsigned B3_MAX_CONTROLS    = 32;
+	static const     unsigned B3_MAX_SUBDIV      = 64;
+	static const     unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
+	static const     unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
+	static constexpr b3_knot  B3_BSPLINE_EPSILON = 1.0 / 16384;
+
+	typedef          b3_knot  b3_knot_vector[B3_MAX_KNOTS];
+
+	VECTOR     *    m_Controls;           // control point sequence.
+	b3_knots        m_Knots;              // knot sequence.
+	unsigned        m_ControlNum;         // used number of controls.
+	unsigned        m_KnotNum;            // used number of knots.
+	unsigned        m_Degree;             // spline degree.
+	unsigned        m_SubDiv;             // Sub division for triangulation.
+	unsigned        m_ControlMax;         // max. available control points.
+	unsigned        m_KnotMax;            // max. available knots.
+	b3_index        m_Offset;             // index offset between each control
+	bool            m_Closed;             // open/closed curve.
 
 public:
 	b3SplineTemplate<VECTOR>()
@@ -436,7 +435,7 @@ public:
 		// Make some checks
 		if ((Degree <= 0) || (ControlNum <= 0))
 		{
-			bspline_errno = B3_BSPLINE_TOO_FEW_CONTROLS;
+			bspline_errno = B3_BSPLINE_INVALID_ARGUMENT;
 			return false;
 		}
 
@@ -517,12 +516,12 @@ public:
 		bspline_errno = B3_BSPLINE_OK;
 
 		m_KnotNum = m_ControlNum + m_Degree + 1;
-		start    = m_Knots[m_Degree];
-		end      = m_Knots[m_ControlNum];
+		start     = m_Knots[m_Degree];
+		end       = m_Knots[m_ControlNum];
 
 		for (unsigned i = 0; i < m_Degree; i++)
 		{
-			m_Knots[i]                   = start;
+			m_Knots[i]                    = start;
 			m_Knots[m_ControlNum + i + 1] = end;
 		}
 		return true;
@@ -545,7 +544,7 @@ public:
 		bspline_errno = B3_BSPLINE_OK;
 
 		m_KnotNum = m_ControlNum * 2;
-		m_Degree   = m_ControlNum - 1;
+		m_Degree  = m_ControlNum - 1;
 		for (i = 0; i < m_ControlNum; i++)
 		{
 			m_Knots[i] = 0;
@@ -630,14 +629,14 @@ public:
 		}
 
 		m_KnotNum = m_ControlNum + newDegree + 1;
-		m_Degree   = newDegree;
+		m_Degree  = newDegree;
 		return true;
 	}
 
-	b3_index  b3DeBoor(VECTOR * point, b3_index index = 0) const
+	unsigned  b3DeBoor(VECTOR * point, b3_index index = 0) const
 	{
 		b3_knot	 q, qStep;
-		unsigned i;
+		unsigned i = 0;
 
 		if (m_Closed)
 		{
@@ -718,9 +717,9 @@ public:
 				k      = i;
 				for (j = 0; j < l; j++)
 				{
-					denom      = m_Knots[k + l] - m_Knots[k];
-					r          = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
-					it[l - j]   += r * it[l - j - 1];
+					denom          = m_Knots[k + l] - m_Knots[k];
+					r              = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
+					it[l - j]     += r * it[l - j - 1];
 					it[l - j - 1] *= (1 - r);
 					if (--k < 0) /* check underflow of knots */
 					{
@@ -739,9 +738,9 @@ public:
 				it[l]  = 0;
 				for (j = 0; j < l; j++)
 				{
-					denom      = m_Knots[i - j + l]      - m_Knots[i - j];
-					r          = (denom != 0 ? (qStart - m_Knots[i - j]) / denom : 0);
-					it[l - j]   += r * it[l - j - 1];
+					denom          = m_Knots[i - j + l]    - m_Knots[i - j];
+					r              = (denom != 0 ? (qStart - m_Knots[i - j]) / denom : 0);
+					it[l - j]     += r * it[l - j - 1];
 					it[l - j - 1] *= (1 - r);
 				}
 			}
@@ -796,12 +795,8 @@ public:
 
 	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
 	{
-		b3_index  i;
-		b3_knot   r;
-		b3_knot   denom;
-		b3_knot   it[B3_MAX_DEGREE + 1];
-
-		i = iFind(q);
+		const unsigned  i = iFind(q);
+		b3_knot         it[m_Degree + 1];
 
 		it[0]  = 1;
 		for (unsigned l = 1; l <= m_Degree; l++)
@@ -809,9 +804,10 @@ public:
 			it[l]  = 0;
 			for (unsigned j = 0; j < l; j++)
 			{
-				denom      = m_Knots[i - j + l] - m_Knots[i - j];
-				r          = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
-				it[l - j]   += r * it[l - j - 1];
+				const b3_knot denom = m_Knots[i - j + l] - m_Knots[i - j];
+				const b3_knot r     = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
+
+				it[l - j]     += r * it[l - j - 1];
 				it[l - j - 1] *= (1 - r);
 			}
 		}
@@ -829,13 +825,12 @@ public:
 
 	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
 	{
-		unsigned   i;
-		b3_knot    r, diff, q;
-		b3_knot    denom;
-		b3_knot    it[B3_MAX_DEGREE + 1];
+		const b3_knot diff    = m_Knots[m_ControlNum] - m_Knots[0];
+		unsigned      i= iFind(qStart);
+		b3_knot       q;
+		b3_knot       it[m_Degree + 1];
 
-		diff    = m_Knots[m_ControlNum] - m_Knots[0];
-		if ((i = iFind(qStart)) >= m_ControlNum)
+		if (i >= m_ControlNum)
 		{
 			i -= m_ControlNum;
 		}
@@ -843,14 +838,16 @@ public:
 		it[0]  = 1;
 		for (unsigned l = 1; l <= m_Degree; l++)
 		{
+			b3_index k = i;
+
 			it[l]  = 0;
 			q      = qStart;
-			b3_index k = i;
 			for (unsigned j = 0; j < l; j++)
 			{
-				denom      = m_Knots[k + l] - m_Knots[k];
-				r          = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
-				it[l - j]   += r * it[l - j - 1];
+				const b3_knot denom = m_Knots[k + l] - m_Knots[k];
+				const b3_knot r     = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
+
+				it[l - j]     += r * it[l - j - 1];
 				it[l - j - 1] *= (1 - r);
 				if (--k < 0) /* check underflow of knots */
 				{
@@ -948,9 +945,9 @@ public:
 				{
 					m_Knots[l] = m_Knots[l - 1];
 				}
-				m_Knots[i + 1]  = (b3_knot)q;
-				m_KnotNum    = ++KnotNum;
-				m_ControlNum = ++m;
+				m_Knots[i + 1] = (b3_knot)q;
+				m_KnotNum      = ++KnotNum;
+				m_ControlNum   = ++m;
 				for (l = 0; l <= m_Degree; l++)
 				{
 					m_Knots[l + m] = m_Knots[l] - start + end;
