@@ -25,6 +25,7 @@
 #include "b3TestMacros.h"
 #include <blz3/base/b3Endian.h>
 #include <blz3/base/b3FileList.h>
+#include <blz3/base/b3Math.h>
 #include <blz3/image/b3TxPool.h>
 
 #include <array>
@@ -131,11 +132,11 @@ void b3ImageTest::testTxData()
 
 void b3ImageTest::testColor()
 {
-	CPPUNIT_ASSERT_EQUAL(0.0f,  b3Tx::b3ToGrey(B3_BLACK));
-	CPPUNIT_ASSERT_EQUAL(1.0f,  b3Tx::b3ToGrey(B3_WHITE));
-	CPPUNIT_ASSERT_EQUAL(0.35f, b3Tx::b3ToGrey(B3_RED));
-	CPPUNIT_ASSERT_EQUAL(0.51f, b3Tx::b3ToGrey(B3_GREEN));
-	CPPUNIT_ASSERT_EQUAL(0.14f, b3Tx::b3ToGrey(B3_BLUE));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0,  b3Tx::b3ToGrey(B3_BLACK), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,  b3Tx::b3ToGrey(B3_WHITE), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.35, b3Tx::b3ToGrey(B3_RED),   b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.51, b3Tx::b3ToGrey(B3_GREEN), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.14, b3Tx::b3ToGrey(B3_BLUE),  b3Math::epsilon);
 
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x00,  b3Tx::b3ColorToIndex(B3_BLACK));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xff,  b3Tx::b3ColorToIndex(B3_WHITE));
