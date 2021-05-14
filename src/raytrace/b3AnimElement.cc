@@ -40,7 +40,7 @@ b3AnimControl::b3AnimControl(b3_u32 class_type B3_UNUSED) :
 {
 	m_Dimension = 4;
 	m_Used      = 0;
-	m_Max       = B3_MAX_CONTROLS;
+	m_Max       = b3Spline::B3_MAX_CONTROLS;
 	m_Controls  = b3TypedAlloc<b3_vector4D>(m_Max);
 }
 
@@ -135,7 +135,7 @@ b3AnimElement::b3AnimElement(b3_u32 * src) : b3Item(src)
 
 	// Init nurbs
 	b3InitNurbs(&m_Param, nullptr, m_Knots);
-	for (b3_index i = 0; i < m_Param.m_KnotMax; i++)
+	for (unsigned i = 0; i < m_Param.m_KnotMax; i++)
 	{
 		m_Knots[i] = b3InitFloat();
 	}
@@ -160,7 +160,7 @@ void b3AnimElement::b3Write()
 
 	// Init nurbs
 	b3StoreNurbs(&m_Param);
-	for (b3_index i = 0; i < m_Param.m_KnotMax; i++)
+	for (unsigned i = 0; i < m_Param.m_KnotMax; i++)
 	{
 		b3StoreFloat(m_Knots[i]);
 	}
@@ -185,9 +185,9 @@ const char * b3AnimElement::b3GetName() const
 void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 {
 	b3AnimControl * ctrl = (b3AnimControl *)m_Heads[0].First;
-	b3_f64         q, qStart, ratio;
-	b3_index       pos;
-	b3_f64         coeffs[B3_MAX_DEGREE + 1];
+	b3_f64          q, qStart, ratio;
+	b3_index        pos;
+	b3_f64          coeffs[b3Spline::B3_MAX_DEGREE + 1];
 
 	if (ctrl != nullptr)
 	{

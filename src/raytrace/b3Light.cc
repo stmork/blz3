@@ -61,15 +61,15 @@ b3Light::b3Light(b3_u32 * src) : b3Item(src)
 		m_JitterEdge = b3InitInt();
 		if (b3GetClassType() >= SPOT_LIGHT && B3_PARSE_INDEX_VALID)
 		{
-			b3_index i;
+			b3_size i;
 
 			b3InitVector(&m_Direction);
 			b3InitSpline(&m_Spline, m_Controls, m_Knots);
-			for (i = 0; i < B3_MAX_KNOTS; i++)
+			for (i = 0; i < b3Spline::B3_MAX_KNOTS; i++)
 			{
 				m_Knots[i] = b3InitFloat();
 			}
-			for (i = 0; i < B3_MAX_CONTROLS; i++)
+			for (i = 0; i < b3Spline::B3_MAX_CONTROLS; i++)
 			{
 				b3InitVector(&m_Controls[i]);
 			}
@@ -114,7 +114,7 @@ b3Light::b3Light(b3_u32 * src) : b3Item(src)
 
 void b3Light::b3Write()
 {
-	b3_index i;
+	b3_size i;
 
 	m_Flags = 0;
 	ClassType = SPOT_LIGHT;
@@ -140,11 +140,11 @@ void b3Light::b3Write()
 	b3StoreVector(&m_Direction);
 
 	b3StoreSpline(&m_Spline);
-	for (i = 0; i < B3_MAX_KNOTS; i++)
+	for (i = 0; i < b3Spline::B3_MAX_KNOTS; i++)
 	{
 		b3StoreFloat(m_Knots[i]);
 	}
-	for (i = 0; i < B3_MAX_CONTROLS; i++)
+	for (i = 0; i < b3Spline::B3_MAX_CONTROLS; i++)
 	{
 		b3StoreVector(&m_Controls[i]);
 	}
@@ -157,7 +157,7 @@ void b3Light::b3Write()
 
 void b3Light::b3InitValues()
 {
-	b3_index i;
+	b3_size i;
 
 	m_Color.b3Init(1.0, 1.0, 1.0);
 	m_Distance    =  50000.0;

@@ -30,24 +30,10 @@
 **                                                                      **
 *************************************************************************/
 
-#define B3_MAX_CONTROLS   32
-#define B3_MAX_SUBDIV     64
-#define B3_MAX_DEGREE    (B3_MAX_CONTROLS)
-#define B3_MAX_KNOTS    ((B3_MAX_CONTROLS) + (B3_MAX_DEGREE) + 1)
-
-typedef b3_f32   b3_knot;
-typedef b3_knot  b3_knot_vector[B3_MAX_KNOTS];
-typedef b3_knot * b3_knots;
-
 #define B3_BSPLINE_EPSILON 0.0001
 
 #define B3_BSPLINE_SEGMENTS(s)     ((s)->b3GetSegmentCount())
 #define B3_BSPLINE_SEGMENTKNOTS(s) ((s)->b3GetSegmentKnotCount())
-#define B3_BSPLINE_GEOMETRY(s,c,k) {\
-	(s)->m_Controls = c;\
-	(s)->m_Knots    = k;\
-	(s)->m_ControlMax = (sizeof(c) / sizeof(c[0]));\
-	(s)->m_KnotMax    = (sizeof(k) / sizeof(b3_knot)); }
 
 /*************************************************************************
 **                                                                      **
@@ -96,9 +82,7 @@ public:
 	 */
 	static inline void b3Clear(b3_vector * vector)
 	{
-		vector->x =
-			vector->y =
-				vector->z = 0;
+		vector->x = vector->y = vector->z = 0;
 	}
 
 	/**
@@ -106,10 +90,7 @@ public:
 	 */
 	static inline void b3Clear(b3_vector4D * vector)
 	{
-		vector->x =
-			vector->y =
-				vector->z =
-					vector->w = 0;
+		vector->x = vector->y = vector->z = vector->w = 0;
 	}
 
 	/**
@@ -145,7 +126,7 @@ public:
 	static inline void b3Sub(
 		const b3_f64 * aVec,
 		const b3_f64 * bVec,
-		b3_f64 * result)
+		b3_f64    *    result)
 	{
 		*result = *aVec - *bVec;
 	}
@@ -343,13 +324,26 @@ template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 public:
 	static b3_bspline_error bspline_errno;
 
-	b3_count        m_ControlNum, m_KnotNum; // used number of knots/controls.
-	b3_count        m_Degree, m_SubDiv;      // values of B-Spline
-	b3_count        m_ControlMax, m_KnotMax; // max. values
+	static const unsigned B3_MAX_CONTROLS = 32;
+	static const unsigned B3_MAX_SUBDIV   = 64;
+	static const unsigned B3_MAX_DEGREE   = B3_MAX_CONTROLS;
+	static const unsigned B3_MAX_KNOTS    = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
+
+	typedef b3_f32    b3_knot;
+	typedef b3_knot   b3_knot_vector[B3_MAX_KNOTS];
+	typedef b3_knot * b3_knots;
+
+	VECTOR     *    m_Controls;              // control point sequence.
+	b3_knots        m_Knots;                 // knot sequence.
+	unsigned        m_ControlNum;            // used number of controls.
+	unsigned        m_KnotNum;               // used number of knots.
+	unsigned        m_Degree;                // spline degree.
+	unsigned        m_SubDiv;                // Sub division for triangulation.
+	unsigned        m_ControlMax;            // max. available control points.
+	unsigned        m_KnotMax;               // max. available knots.
 	b3_index        m_Offset;                // index offset between each control
-	b3_bool         m_Closed;                // open/closed curve
-	VECTOR     *    m_Controls;              // control sequence
-	b3_knots        m_Knots;                 // knot sequence
+	b3_bool         m_Closed;                // open/closed curve.
+
 
 public:
 	b3SplineTemplate<VECTOR>()
@@ -384,19 +378,19 @@ public:
 		m_Closed     = src.m_Closed;
 	}
 
-	inline b3_count b3GetSegmentCount()
+	inline b3_count b3GetSegmentCount() const
 	{
 		return m_Closed ? m_ControlNum : m_ControlNum - m_Degree;
 	}
 
-	inline b3_count b3GetSegmentKnotCount()
+	inline b3_count b3GetSegmentKnotCount() const
 	{
 		return m_Closed ? m_ControlNum : m_ControlNum - m_Degree + 1;
 	}
 
 	inline b3_f64 b3ArcLengthParameter(
 		b3_count n,
-		b3_f64   scale = 1)
+		b3_f64   scale = 1) const
 	{
 		B3_ASSERT(!m_Closed);
 		return b3ArcLengthParameter(n, m_Degree, m_ControlNum, scale);
@@ -432,19 +426,26 @@ public:
 	}
 
 	b3_bool b3InitCurve(
-		const b3_count Degree,
-		const b3_count ControlNum,
+		const unsigned Degree,
+		const unsigned ControlNum,
 		const b3_bool  Closed,
 		const b3_count Offset = 1)
 	{
-		b3_index  i;
+		unsigned i;
 
 		// Make some checks
+		if ((Degree <= 0) || (ControlNum <= 0))
+		{
+			bspline_errno = B3_BSPLINE_TOO_FEW_CONTROLS;
+			return false;
+		}
+
 		if (ControlNum > m_ControlMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_MUCH_CONTROLS;
 			return false;
 		}
+
 		if ((ControlNum + Degree + 1) > m_KnotMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
@@ -497,9 +498,7 @@ public:
 
 	void b3ClearControls(b3_index index = 0)
 	{
-		b3_index i;
-
-		for (i = 0; i < m_ControlNum; i++)
+		for (unsigned i = 0; i < m_ControlNum; i++)
 		{
 			b3SplineVector::b3Clear(&m_Controls[index]);
 			index += m_Offset;
@@ -509,7 +508,6 @@ public:
 	b3_bool b3ThroughEndControl()
 	{
 		b3_knot   start, end;
-		b3_index  i;
 
 		if (m_Closed)
 		{
@@ -522,7 +520,7 @@ public:
 		start    = m_Knots[m_Degree];
 		end      = m_Knots[m_ControlNum];
 
-		for (i = 0; i < m_Degree; i++)
+		for (unsigned i = 0; i < m_Degree; i++)
 		{
 			m_Knots[i]                   = start;
 			m_Knots[m_ControlNum + i + 1] = end;
@@ -532,7 +530,7 @@ public:
 
 	b3_bool b3ToBezier()
 	{
-		b3_index i;
+		unsigned i;
 
 		if (m_Closed)
 		{
@@ -560,10 +558,10 @@ public:
 		return true;
 	}
 
-	b3_bool b3Degree(const b3_count newDegree)
+	b3_bool b3Degree(const unsigned newDegree)
 	{
 		b3_knot	  start, end;
-		b3_index  i;
+		unsigned  i;
 
 		bspline_errno = B3_BSPLINE_OK;
 		if (m_Degree == newDegree)
@@ -583,7 +581,7 @@ public:
 
 		if (newDegree < m_Degree)     /* decreasing degree */
 		{
-			b3_index diff = m_Degree - newDegree;
+			unsigned diff = m_Degree - newDegree;
 
 			end = m_Knots[m_ControlNum];
 			for (i = 0; i <  diff; i++)
@@ -639,7 +637,7 @@ public:
 	b3_index  b3DeBoor(VECTOR * point, b3_index index = 0) const
 	{
 		b3_knot	 q, qStep;
-		b3_index i;
+		unsigned i;
 
 		if (m_Closed)
 		{
@@ -700,7 +698,8 @@ public:
 	 */
 	b3_index  b3Mansfield(b3_f64 * it, b3_f64 qStart) const
 	{
-		b3_index  l, i, j, k;
+		unsigned  i, j, l;
+		b3_index  k;
 		b3_knot	  r, denom, q, diff;
 
 		if (m_Closed)
@@ -797,18 +796,18 @@ public:
 
 	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
 	{
-		b3_index  l, i, j;
+		b3_index  i;
 		b3_knot   r;
-		b3_knot    denom;
-		b3_knot    it[B3_MAX_DEGREE + 1];
+		b3_knot   denom;
+		b3_knot   it[B3_MAX_DEGREE + 1];
 
 		i = iFind(q);
 
 		it[0]  = 1;
-		for (l = 1; l <= m_Degree; l++)
+		for (unsigned l = 1; l <= m_Degree; l++)
 		{
 			it[l]  = 0;
-			for (j = 0; j < l; j++)
+			for (unsigned j = 0; j < l; j++)
 			{
 				denom      = m_Knots[i - j + l] - m_Knots[i - j];
 				r          = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
@@ -818,8 +817,8 @@ public:
 		}
 
 		b3SplineVector::b3Clear(point);
-		j = i * m_Offset + index;
-		for (l = m_Degree; l >= 0; l--)
+		b3_index j = i * m_Offset + index;
+		for (b3_index l = m_Degree; l >= 0; l--)
 		{
 			b3SplineVector::b3AddScaled(it[l], &m_Controls[j], point);
 			j -= m_Offset;
@@ -830,10 +829,10 @@ public:
 
 	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
 	{
-		b3_index   l, i, j, k;
+		unsigned   i;
 		b3_knot    r, diff, q;
-		b3_knot     denom;
-		b3_knot     it[B3_MAX_DEGREE + 1];
+		b3_knot    denom;
+		b3_knot    it[B3_MAX_DEGREE + 1];
 
 		diff    = m_Knots[m_ControlNum] - m_Knots[0];
 		if ((i = iFind(qStart)) >= m_ControlNum)
@@ -842,12 +841,12 @@ public:
 		}
 
 		it[0]  = 1;
-		for (l = 1; l <= m_Degree; l++)
+		for (unsigned l = 1; l <= m_Degree; l++)
 		{
 			it[l]  = 0;
 			q      = qStart;
-			k      = i;
-			for (j = 0; j < l; j++)
+			b3_index k = i;
+			for (unsigned j = 0; j < l; j++)
 			{
 				denom      = m_Knots[k + l] - m_Knots[k];
 				r          = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
@@ -862,8 +861,8 @@ public:
 		}
 
 		b3SplineVector::b3Clear(point);
-		j = i;
-		for (l = m_Degree; l >= 0; l--)
+		b3_index j = i;
+		for (b3_index l = m_Degree; l >= 0; l--)
 		{
 			b3SplineVector::b3AddScaled(it[l], &m_Controls[j * m_Offset + index], point);
 			if (--j < 0)
@@ -881,11 +880,11 @@ public:
 		VECTOR          *          point)
 	{
 		b3_knots  knot_ptr;
-		b3_index  i, x, end, index;
+		b3_index  i, end, index;
 		b3_count  ControlNum;
 		b3_f64    it[B3_MAX_DEGREE + 1];
 
-		ControlNum = B3_BSPLINE_SEGMENTKNOTS(curveSpline);
+		ControlNum = curveSpline->b3GetSegmentKnotCount();
 		knot_ptr   = curveSpline->m_Knots;
 		end        = curveSpline->m_ControlNum;
 		if (!curveSpline->m_Closed)
@@ -896,7 +895,7 @@ public:
 		for (i = (curveSpline->m_Closed ? 0 : curveSpline->m_Degree); i < end; i++)
 		{
 			index = curveSpline->b3Mansfield(it, knot_ptr[i]);
-			for (x = 0; x < controlSpline->m_ControlNum; x++)
+			for (unsigned x = 0; x < controlSpline->m_ControlNum; x++)
 			{
 				curveSpline->b3MansfieldVector(&point[x * ControlNum], it,
 					index, x * controlSpline->m_Offset);
@@ -1316,7 +1315,7 @@ public:
 		b3PrintF(level, "  Knot count: %d max: %d\n", m_KnotNum, m_KnotMax);
 		b3PrintF(level, "  Control count: %d max: %d\n", m_ControlNum, m_ControlMax);
 		b3PrintF(level, "  Offset: %d\n", m_Offset);
-		b3PrintF(level, "  Subdivision: %d max: %d\n", m_SubDiv, B3_MAX_SUBDIV);
+		b3PrintF(level, "  Subdivision: %u max: %u\n", m_SubDiv, B3_MAX_SUBDIV);
 		b3PrintF(level, "  Spline type: %s\n", m_Closed ? "closed" : "open");
 		b3PrintF(level, "  Controls: %p\n", m_Controls);
 		b3PrintF(level, "  Knots: %p\n", m_Knots);
@@ -1436,10 +1435,10 @@ private:
 		return i;
 	}
 
-	inline b3_index iFind(b3_knot q) const
+	inline unsigned iFind(b3_knot q) const
 	{
-		b3_index i;
-		b3_count max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
+		unsigned i;
+		unsigned max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
 
 		for (i = 0; i < max; i++)
 		{

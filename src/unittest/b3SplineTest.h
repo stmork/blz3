@@ -31,7 +31,7 @@ template<class SPLINE> class b3SplineTest : public CppUnit::TestFixture
 {
 	SPLINE a;
 	SPLINE b;
-	b3_knot knots[B3_MAX_KNOTS];
+	b3Spline::b3_knot knots[b3Spline::B3_MAX_KNOTS];
 
 	CPPUNIT_TEST_SUITE(b3SplineTest<SPLINE>);
 	CPPUNIT_TEST(testInit);

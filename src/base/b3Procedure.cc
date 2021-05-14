@@ -120,7 +120,7 @@ b3Noise::b3Noise()
 
 	if (m_NoiseTable == nullptr)
 	{
-		b3_count i, max = NOISEDIM * NOISESIZE;
+		unsigned i, max = NOISEDIM * NOISESIZE;
 
 		m_NoiseTable = b3MemAccess::b3TypedAlloc<b3_noisetype>(max);
 		if (m_NoiseTable == nullptr)

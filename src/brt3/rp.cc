@@ -223,14 +223,15 @@ private:
 
 	void b3CreateControls(
 		b3SplineShape * shape,
-		b3_count       start,
-		b3_count       end,
-		b3_count       step,
-		b3_index       index  = 0,
-		b3_bool        invert = false)
+		b3_count        start,
+		b3_count        end,
+		b3_count        step,
+		b3_index        index  = 0,
+		b3_bool         invert = false)
 	{
-		b3_count xp, xo, xi, x, i;
+		b3_count xp, xo, xi, x;
 		b3_index pos;
+		unsigned i;
 
 		for (i = 0; i < shape->m_Spline[0].m_KnotNum; i++)
 		{
@@ -244,7 +245,7 @@ private:
 		shape->m_Spline[1].m_Knots[i - 1] = shape->m_Spline[1].m_Knots[i - 2];
 
 		index *= shape->m_Spline[1].m_Offset;
-		for (i = start; i < end; i += step)
+		for (b3_count c = start; c < end; c += step)
 		{
 			for (xp = 0; xp < 4; xp++)
 			{
@@ -256,11 +257,11 @@ private:
 						pos = xp * 4 + xi;
 						if (invert)
 						{
-							shape->m_Controls[x + index] = m_Vertices[m_Patches[i - xo + 3].m_Indices[15 - pos] - 1];
+							shape->m_Controls[x + index] = m_Vertices[m_Patches[c - xo + 3].m_Indices[15 - pos] - 1];
 						}
 						else
 						{
-							shape->m_Controls[x + index] = m_Vertices[m_Patches[i + xo].m_Indices[pos] - 1];
+							shape->m_Controls[x + index] = m_Vertices[m_Patches[c + xo].m_Indices[pos] - 1];
 						}
 						x++;
 					}
@@ -274,7 +275,7 @@ private:
 	void b3CreateObject()
 	{
 		b3SplineShape * shape;
-		b3_count       i, x, y;
+		b3_count       i;
 		b3_index       index, pos;
 
 		m_BBox = new b3BBox(BBOX);
@@ -290,9 +291,9 @@ private:
 
 			index = 0;
 			pos   = 0;
-			for (y = 0; y < shape->m_Spline[1].m_ControlNum; y++)
+			for (unsigned y = 0; y < shape->m_Spline[1].m_ControlNum; y++)
 			{
-				for (x = 0; x < shape->m_Spline[0].m_ControlNum; x += shape->m_Spline[0].m_Offset)
+				for (unsigned x = 0; x < shape->m_Spline[0].m_ControlNum; x += shape->m_Spline[0].m_Offset)
 				{
 					shape->m_Controls[x + index] = m_Vertices[m_Patches[i].m_Indices[pos++] - 1];
 				}

@@ -86,8 +86,8 @@ public:
 	b3_s32           m_JitterEdge;   //!< The sampling size for soft light sources.
 	b3_vector        m_Direction;    //!< Light direction for spot lights.
 	b3Spline         m_Spline;       //!< The spline describing the light distribution curve.
-	b3_f32           m_Knots[B3_MAX_KNOTS];       //!< The knot vector of the light distribution curve.
-	b3_vector        m_Controls[B3_MAX_CONTROLS]; //!< The control points of the light distribution curve.
+	b3_f32           m_Knots[b3Spline::B3_MAX_KNOTS];       //!< The knot vector of the light distribution curve.
+	b3_vector        m_Controls[b3Spline::B3_MAX_CONTROLS]; //!< The control points of the light distribution curve.
 	bool             m_LightActive;               //!< Activation flag of the light source.
 	bool             m_SoftShadow;                //!< A flag signalling soft lights.
 	bool             m_SpotActive;                //!< A flag signalling directional spot lights.

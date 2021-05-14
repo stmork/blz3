@@ -1027,15 +1027,15 @@ protected:
  */
 class B3_PLUGIN b3SplineRotShape : public b3TriangleShape
 {
-	b3_count         m_xSubDiv;
-	b3_count         m_ySubDiv;
+	b3_count                  m_xSubDiv;
+	b3_count                  m_ySubDiv;
 
 public:
-	b3_line          m_Axis;                //!< The rotation axis.
-	b3_s32           m_rSubDiv;             //!< The rotation sub division.
-	b3Spline         m_Spline;              //!< The outline spline curve rotated around the rotation axis.
-	b3_knot_vector   m_Knots;               //!< The knot vector vector of the outline spline curve.
-	b3_vector    *   m_Controls;            //!< The control points of the outline spline curve.
+	b3_line                   m_Axis;       //!< The rotation axis.
+	b3_u32                    m_rSubDiv;    //!< The rotation sub division.
+	b3Spline                  m_Spline;     //!< The outline spline curve rotated around the rotation axis.
+	b3Spline::b3_knot_vector  m_Knots;      //!< The knot vector vector of the outline spline curve.
+	b3_vector        *        m_Controls;   //!< The control points of the outline spline curve.
 
 public:
 	B3_ITEM_INIT(b3SplineRotShape); //!< This constructor handles default initialization.
@@ -1081,7 +1081,7 @@ protected:
 
 public:
 	b3Spline         m_Spline[2];  //!< The two spline representations.
-	b3_knot_vector   m_Knots[2];   //!< The two knot vectors.
+	b3Spline::b3_knot_vector   m_Knots[2];   //!< The two knot vectors.
 	b3_vector    *   m_Controls;   //!< The control point grid.
 
 protected:
