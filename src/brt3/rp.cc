@@ -48,7 +48,7 @@ class b3Patch
 	b3BBox       *      m_BBox;
 
 public:
-	b3Patch(const char * filename)
+	explicit b3Patch(const char * filename)
 	{
 		FILE  *  patchfile;
 		char     line[1024];
@@ -307,7 +307,7 @@ int main(int argc, char * argv[])
 {
 	if (argc == 3)
 	{
-		b3Patch patch = argv[1];
+		b3Patch patch(argv[1]);
 
 		patch.b3Create();
 		patch.b3SaveObject(argv[2]);

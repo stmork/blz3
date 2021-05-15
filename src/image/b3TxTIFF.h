@@ -158,9 +158,10 @@ class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 	long                offset;	// offset of this header (= 0)
 
 public:
-	b3TIFF(struct b3HeaderTIFF * header);
+	explicit b3TIFF(struct b3HeaderTIFF * header);
 	b3TIFF();
-	~b3TIFF();
+	virtual~b3TIFF();
+
 	long  b3DirCount();
 	void  b3Remove(b3TIFF *);
 	void  b3Append(b3TIFF *);

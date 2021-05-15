@@ -36,7 +36,7 @@ static b3TxPool texture_pool;
 class b3ImageRow : public b3Row
 {
 public:
-	b3ImageRow(const b3_res xSize) : b3Row(0, xSize)
+	explicit b3ImageRow(const b3_res xSize) : b3Row(0, xSize)
 	{
 	}
 

@@ -62,8 +62,9 @@ class b3BHDParser
 	b3_f64             m_Scale;
 
 private:
-	b3BHDParser(const char * filename);
-	~b3BHDParser();
+	explicit b3BHDParser(const char * filename);
+	virtual~b3BHDParser();
+
 	b3_bhd_token    b3ReadLine();
 	void            b3CheckToken(b3_bhd_token token);
 	void            b3ParseHouse();
