@@ -57,8 +57,8 @@ protected:
 	static constexpr double RADIUS = 10.0;
 
 	b3Nurbs           m_Nurbs;
-	b3Spline::b3_knot m_Knots[b3Spline::B3_MAX_KNOTS];
-	b3_vector4D       m_Controls[b3Spline::B3_MAX_CONTROLS];
+	b3Spline::b3_knot m_Knots[b3Nurbs::B3_MAX_KNOTS];
+	b3_vector4D       m_Controls[b3Nurbs::B3_MAX_CONTROLS];
 
 	virtual void b3InitControlPoints();
 	virtual void b3InitKnotVector() = 0;
@@ -101,6 +101,28 @@ public:
 	void setUp() override;
 
 	void testCircle() override;
+};
+
+
+class b3NurbsSurfaceTest : public CppUnit::TestFixture
+{
+	static constexpr double RADIUS = 10.0;
+
+	b3Nurbs           m_Horizontal;
+	b3Nurbs           m_Vertical;
+	b3Spline::b3_knot m_HorizontalKnots[b3Nurbs::B3_MAX_KNOTS];
+	b3Spline::b3_knot m_VerticalKnots[b3Nurbs::B3_MAX_KNOTS];
+	b3_vector4D       m_Controls[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
+
+	CPPUNIT_TEST_SUITE(b3NurbsSurfaceTest);
+	CPPUNIT_TEST(testSphere);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void setUp() override;
+	void tearDown() override;
+
+	void testSphere();
 };
 
 #endif

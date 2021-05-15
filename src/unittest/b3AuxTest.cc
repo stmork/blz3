@@ -38,6 +38,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(b3AuxTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsClosedCurveTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsOpenedCurveTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsSurfaceTest);
 
 void b3AuxTest::setUp()
 {
@@ -377,6 +378,49 @@ void b3NurbsOpenedCurveTest::testCircle()
 		CPPUNIT_ASSERT_LESSEQUAL(    m_Nurbs.b3LastKnot(),  b3Nurbs::b3_knot(q));
 	}
 	b3PrintF(B3LOG_DEBUG, "%p\n", radius);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Unit test for NURBS surfaces                  **
+**                                                                      **
+*************************************************************************/
+
+void b3NurbsSurfaceTest::setUp()
+{
+	m_Horizontal.m_Knots    = m_HorizontalKnots;
+	m_Horizontal.m_Controls = m_Controls;
+	m_Horizontal.b3InitCurve(2, 8, true);
+
+	m_Vertical.m_Knots      = m_VerticalKnots;
+	m_Vertical.m_Controls   = m_Controls;
+	m_Vertical.b3InitCurve(2, 5, false);
+	m_Vertical.m_Offset     = m_Horizontal.m_ControlNum;
+
+	for (unsigned i = 0; i < m_Horizontal.m_KnotNum; i++)
+	{
+		m_HorizontalKnots[i] = std::ceil(i * 0.5);
+	}
+	for (unsigned i = 0; i < m_Vertical.m_KnotNum; i++)
+	{
+		m_VerticalKnots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
+	}
+
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+}
+
+void b3NurbsSurfaceTest::tearDown()
+{
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+}
+
+void b3NurbsSurfaceTest::testSphere()
+{
+	const b3_f64   x_range = m_Horizontal.b3KnotRange();
+	const b3_f64   y_range = m_Vertical.b3KnotRange();
+
+	CPPUNIT_ASSERT_EQUAL(4.0, x_range);
+	CPPUNIT_ASSERT_EQUAL(2.0, y_range);
 }
 
 #endif
