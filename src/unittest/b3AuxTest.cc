@@ -29,7 +29,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Unit test skeleton                            **
+**                        Unit test for some auxiliary compation jobs   **
 **                                                                      **
 *************************************************************************/
 
@@ -37,6 +37,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3AuxTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineControlClosedTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineControlOpenedTest);
 
 void b3AuxTest::setUp()
 {
@@ -186,6 +187,12 @@ void b3AuxTest::testStrCaseCmp()
 	CPPUNIT_ASSERT(b3StringTool::b3CaseCompare("AA", "A") > 0);
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Unit tests for closed NURBS                   **
+**                                                                      **
+*************************************************************************/
+
 void b3SplineControlClosedTest::setUp()
 {
 	m_Nurbs.m_Knots    = m_Knots;
@@ -204,7 +211,8 @@ void b3SplineControlClosedTest::setUp()
 
 	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
 	{
-		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
+//		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
+		m_Knots[i] = std::ceil(i * 0.5);
 	}
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
@@ -217,19 +225,118 @@ void b3SplineControlClosedTest::tearDown()
 
 void b3SplineControlClosedTest::test()
 {
-	b3_vector4D p[m_Nurbs.m_SubDiv + 1];
-	b3_f64      r[m_Nurbs.m_SubDiv + 1];
+	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
 
 	bzero(p, sizeof(p));
+	bzero(r, sizeof(r));
 	const unsigned count = m_Nurbs.b3DeBoor(p);
 
 	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
 	for (unsigned i = 0; i < count; i++)
 	{
-		const double radius = sqrt(p[i].x * p[i].x + p[i].y * p[i].y);
+		const b3_f64 radius = sqrt(p[i].x * p[i].x + p[i].y * p[i].y);
 
 		r[i] = radius;
-//		CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Spline::B3_BSPLINE_EPSILON);
+	}
+	b3PrintF(B3LOG_DEBUG, "%p\n", r);
+	//	CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Spline::B3_BSPLINE_EPSILON);
+}
+
+void b3SplineControlClosedTest::testMansfield()
+{
+	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV];
+	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV];
+	b3_f64      it[b3Nurbs::B3_MAX_DEGREE];
+	b3_f64      range = m_Nurbs.b3KnotRange();
+
+	CPPUNIT_ASSERT_EQUAL(4.0, range);
+	for (unsigned s = 0; s < m_Nurbs.m_SubDiv; s++)
+	{
+		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
+		const unsigned i = m_Nurbs.b3Mansfield(it, q);
+
+		m_Nurbs.b3MansfieldVector(&p[s], it, i, 0);
+
+		const b3_f64   radius = sqrt(p[s].x * p[s].x + p[s].y * p[s].y);
+		r[s] = radius;
+	}
+	b3PrintF(B3LOG_DEBUG, "%p\n", r);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Unit test for opened NURBS                    **
+**                                                                      **
+*************************************************************************/
+
+void b3SplineControlOpenedTest::setUp()
+{
+	m_Nurbs.m_Knots    = m_Knots;
+	m_Nurbs.m_Controls = m_Controls;
+	m_Nurbs.b3InitCurve(2, 8, false);
+
+	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
+	{
+		const double angle = i * 2.0 * M_PI;
+
+		m_Controls[i].x = round(cos(angle / m_Nurbs.m_ControlNum)) * RADIUS;
+		m_Controls[i].y = round(sin(angle / m_Nurbs.m_ControlNum)) * RADIUS;
+		m_Controls[i].z = 0;
+		m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
+	}
+
+	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
+	{
+		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
+//		m_Knots[i] = std::ceil(i * 0.5);
+	}
+
+	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
+}
+
+void b3SplineControlOpenedTest::tearDown()
+{
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+}
+
+void b3SplineControlOpenedTest::test()
+{
+	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
+
+	bzero(p, sizeof(p));
+	bzero(r, sizeof(r));
+	const unsigned count = m_Nurbs.b3DeBoor(p);
+
+	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
+	for (unsigned i = 0; i < count; i++)
+	{
+		const b3_f64 radius = sqrt(p[i].x * p[i].x + p[i].y * p[i].y);
+
+		r[i] = radius;
+	}
+	b3PrintF(B3LOG_DEBUG, "%p\n", r);
+//	CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Spline::B3_BSPLINE_EPSILON);
+}
+
+void b3SplineControlOpenedTest::testMansfield()
+{
+	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64      it[b3Nurbs::B3_MAX_DEGREE];
+	b3_f64      range = m_Nurbs.b3KnotRange();
+
+	CPPUNIT_ASSERT_EQUAL(3.0, range);
+	for (unsigned s = 0; s <= m_Nurbs.m_SubDiv; s++)
+	{
+		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
+		const unsigned i = m_Nurbs.b3Mansfield(it, q);
+
+		m_Nurbs.b3MansfieldVector(&p[s], it, i, 0);
+
+		const b3_f64   radius = sqrt(p[s].x * p[s].x + p[s].y * p[s].y);
+		r[s] = radius;
 	}
 	b3PrintF(B3LOG_DEBUG, "%p\n", r);
 }

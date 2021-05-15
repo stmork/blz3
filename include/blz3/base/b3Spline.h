@@ -424,14 +424,28 @@ public:
 		return result * scale;
 	}
 
+	/**
+	 * This method initializes the fundamental values of the spline. The method
+	 * does some range checks return false on error and sets the @c bspline_errno
+	 * error variable. It initializes the knot vector which means that the
+	 * knot vector pointer m_Knots must be valid prior call to this method. For
+	 * an open spline the b3ThroughEndControl() method is called to move the
+	 * endpoints of the open spline curve through the boundary control points.
+	 * The sub division is also computed to get a proper value.
+	 *
+	 * @param Degree The degree of the spline. @note The order is the degree + 1.
+	 * @param ControlNum The number of used control points.
+	 * @param Closed If it should be an open or a closed spline.
+	 * @param Offset The offset used for spline surfaces to jump between
+	 * lanes of control points.
+	 * @return True on success
+	 */
 	b3_bool b3InitCurve(
 		const unsigned Degree,
 		const unsigned ControlNum,
 		const b3_bool  Closed,
 		const b3_count Offset = 1)
 	{
-		unsigned i;
-
 		// Make some checks
 		if ((Degree <= 0) || (ControlNum <= 0))
 		{
@@ -465,7 +479,7 @@ public:
 		m_Offset     = Offset;
 
 		// Create knot vector
-		for (i = 0; i < m_KnotMax; i++)
+		for (unsigned i = 0; i < m_KnotMax; i++)
 		{
 			m_Knots[i] = (b3_f32)i;
 		}
@@ -633,15 +647,58 @@ public:
 		return true;
 	}
 
-	unsigned  b3DeBoor(VECTOR * point, b3_index index = 0) const
+	/**
+	 * This method returns the reference to the first knot element which
+	 * may differ between closed and opened splines.
+	 *
+	 * @return The reference to the first knot vector value.
+	 */
+	inline const b3_knot & b3FirstKnot() const
 	{
-		b3_knot	 q, qStep;
+		return m_Closed ? m_Knots[0] : m_Knots[m_Degree];
+	}
+
+	/**
+	 * This method returns the reference to the last knot element.
+	 *
+	 * @return The reference to the lst knot vector value.
+	 */
+	inline const b3_knot & b3LastKnot() const
+	{
+		return m_Knots[m_ControlNum];
+	}
+
+	/**
+	 * This method returns the value range of the knot vector.
+	 *
+	 * @return The value range of the knot vector.
+	 */
+	inline b3_knot b3KnotRange() const
+	{
+		return b3LastKnot() - b3FirstKnot();
+	}
+
+	/**
+	* This method subdivides a curve into points reflecting the open/closed
+	* definition and the @c m_SubDiv member variable. This calls the
+	* b3DeBoorOpened() or b3DeBootClosed() methods to compute a singe value
+	* within the valid knot range.
+	*
+	* @param point The point array where the computed points are stored.
+	* @param index The start index to use. Using two splines decribing surfaces
+	* this is the start index and the @c m_Offset member variable contains the
+	* vertical control point offset. In one dimandional curves this should
+	* be @c 0.
+	*/
+	unsigned  b3DeBoor(VECTOR * point, const b3_index index = 0) const
+	{
+		b3_f64	 q, qStep;
 		unsigned i = 0;
 
 		if (m_Closed)
 		{
 			q     =  m_Knots[0];
-			qStep = (m_Knots[m_ControlNum] - q - B3_BSPLINE_EPSILON) / (b3_knot)m_SubDiv;
+			qStep = (m_Knots[m_ControlNum] - q) / m_SubDiv;
 
 			for (i = 0; i <= m_SubDiv; i++)
 			{
@@ -652,7 +709,7 @@ public:
 		else
 		{
 			q     =  m_Knots[m_Degree];
-			qStep = (m_Knots[m_ControlNum] - q - B3_BSPLINE_EPSILON) / (b3_knot)m_SubDiv;
+			qStep = (m_Knots[m_ControlNum] - q) / m_SubDiv;
 
 			for (i = 0; i <= m_SubDiv; i++)
 			{
@@ -695,16 +752,17 @@ public:
 	 * @param it     Array where to store the basis function coefficents
 	 * @param qStart Parameter value inside the curve
 	 */
-	b3_index  b3Mansfield(b3_f64 * it, b3_f64 qStart) const
+	b3_index  b3Mansfield(b3_f64 * it, const b3_f64 qStart) const
 	{
 		unsigned  i, j, l;
-		b3_index  k;
-		b3_knot	  r, denom, q, diff;
+		b3_f64	  r, denom, q;
 
 		if (m_Closed)
 		{
-			diff    = m_Knots[m_ControlNum] - m_Knots[0];
-			if ((i = iFind(qStart)) >= m_ControlNum)
+			const b3_f64 diff = m_Knots[m_ControlNum] - m_Knots[0];
+
+			i    = iFind(qStart);
+			if (i >= m_ControlNum)
 			{
 				i -= m_ControlNum;
 			}
@@ -712,9 +770,10 @@ public:
 			it[0]  = 1;
 			for (l = 1; l <= m_Degree; l++)
 			{
+				b3_index k = i;
+
 				it[l]  = 0;
 				q      = qStart;
-				k      = i;
 				for (j = 0; j < l; j++)
 				{
 					denom          = m_Knots[k + l] - m_Knots[k];
@@ -750,9 +809,20 @@ public:
 
 	/**
 	 * This routine computes the real curve point according to the basis
-	 * coefficients computed by Mansfield(). The value "i" is the knot
+	 * coefficients computed by Mansfield(). The value @c i is the knot
 	 * index returned by b3Mansfield(). The start index is like the b3DeBoor-
 	 * routines.
+	 *
+	 * Example:
+	b3Nurbs     nurbs; // Has to be proper initiazed!
+	...
+	b3_f64      it[b3Nurbs::B3_MAX_CONTROLS];
+	b3_vector4D point;
+
+	const unsigned i = nurbs.b3Mansfield(it, 1.5);
+	nurbs.b3MansfieldVector(&point, it, i);
+	 * @code
+	 @endcode
 	 *
 	 * @param point  Where to store the curve point
 	 * @param it     Basis coefficients computed by b3Mansfield()
@@ -763,7 +833,7 @@ public:
 		VECTOR  * point,
 		b3_f64  * it,
 		b3_index  i,
-		b3_index  index) const
+		b3_index  index = 0) const
 	{
 		b3_index  l, j;
 		VECTOR  * ctrls;
@@ -825,8 +895,8 @@ public:
 
 	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
 	{
-		const b3_knot diff    = m_Knots[m_ControlNum] - m_Knots[0];
-		unsigned      i= iFind(qStart);
+		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
+		unsigned      i     = iFind(qStart);
 		b3_knot       q;
 		b3_knot       it[m_Degree + 1];
 
@@ -852,7 +922,7 @@ public:
 				if (--k < 0) /* check underflow of knots */
 				{
 					k += m_ControlNum;
-					q += diff;
+					q += range;
 				}
 			}
 		}
@@ -1432,6 +1502,12 @@ private:
 		return i;
 	}
 
+	/**
+	 * This method finds an index i of a knot vector K and value q where is
+	 * K_i <= q < K_i+1.
+	 *
+	 * @param q The value to find in the knot vector.
+	 */
 	inline unsigned iFind(b3_knot q) const
 	{
 		unsigned i;

@@ -51,16 +51,21 @@ public:
 	void testStrCaseCmp();
 };
 
-class b3SplineControlClosedTest : public CppUnit::TestFixture
+class b3SplineControlTest : public CppUnit::TestFixture
 {
-	static constexpr double RADIUS = 10.0;
+protected:
+	static constexpr double RADIUS = 1.0;
 
 	b3Nurbs           m_Nurbs;
 	b3Spline::b3_knot m_Knots[b3Spline::B3_MAX_KNOTS];
 	b3_vector4D       m_Controls[b3Spline::B3_MAX_CONTROLS];
+};
 
+class b3SplineControlClosedTest : public b3SplineControlTest
+{
 	CPPUNIT_TEST_SUITE(b3SplineControlClosedTest);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testMansfield);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -68,6 +73,22 @@ public:
 	void tearDown() override;
 
 	void test();
+	void testMansfield();
+};
+
+class b3SplineControlOpenedTest : public b3SplineControlTest
+{
+	CPPUNIT_TEST_SUITE(b3SplineControlOpenedTest);
+	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testMansfield);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void setUp() override;
+	void tearDown() override;
+
+	void test();
+	void testMansfield();
 };
 
 #endif
