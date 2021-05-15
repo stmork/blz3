@@ -61,7 +61,7 @@ public:
 
 tsize_t b3Tx::b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 {
-	b3MemTiffInfo * value = (b3MemTiffInfo *)fd;
+	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcRead: ");
@@ -78,7 +78,7 @@ tsize_t b3Tx::b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 
 tsize_t b3Tx::b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 {
-	b3MemTiffInfo * value = (b3MemTiffInfo *)fd;
+	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcWrte: ");
@@ -95,7 +95,7 @@ tsize_t b3Tx::b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 
 toff_t b3Tx::b3SeekProc(thandle_t fd, toff_t off, int whence)
 {
-	b3MemTiffInfo * value  = (b3MemTiffInfo *)fd;
+	b3MemTiffInfo * value  = static_cast<b3MemTiffInfo *>(fd);
 	toff_t                  offset = value->pos;
 
 #ifdef _DEBUG
@@ -139,7 +139,7 @@ int b3Tx::b3CloseProc(B3_UNUSED thandle_t fd)
 
 toff_t b3Tx::b3SizeProc(thandle_t fd)
 {
-	b3MemTiffInfo * value = (b3MemTiffInfo *)fd;
+	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcSize: %ld\n", value->size);
@@ -149,7 +149,7 @@ toff_t b3Tx::b3SizeProc(thandle_t fd)
 
 int b3Tx::b3MMapProc(thandle_t fd, tdata_t * pbase, toff_t * psize)
 {
-	b3MemTiffInfo * value = (b3MemTiffInfo *)fd;
+	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
 
 	*pbase = value->ptr;
 	*psize = value->size;

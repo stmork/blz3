@@ -646,7 +646,6 @@ void b3RenderObject::b3UpdateMaterial()
 #ifdef BLZ3_USE_OPENGL
 	if (!glMaterialComputed)
 	{
-		b3Tx  *  tx;
 		b3Color  black, white;
 		b3Color  ambient, diffuse, specular;
 		b3_res   xRep, yRep;
@@ -667,7 +666,7 @@ void b3RenderObject::b3UpdateMaterial()
 			b3_f64 xScale = 1;
 			b3_f64 yScale = 1;
 
-			tx = b3GetTexture(glTextureTransX, glTextureTransY, xScale, yScale);
+			b3Tx * tx = b3GetTexture(glTextureTransX, glTextureTransY, xScale, yScale);
 			if ((tx != nullptr) && (tx->b3IsLoaded()))
 			{
 				glTextureScaleX = 1.0 / xScale;

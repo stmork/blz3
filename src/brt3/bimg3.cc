@@ -46,12 +46,12 @@ public:
 	}
 };
 
-static void display(b3Tx * tx)
+static void displayTx(b3Tx * tx)
 {
-	b3Display  * display;
-
 	if (tx->b3IsLoaded())
 	{
+		b3Display  * display;
+
 		b3PrintF(B3LOG_NORMAL, "%s: %dx%d\n",
 			tx->b3Name(), tx->xSize, tx->ySize);
 		display = new b3DisplayView(tx->xSize, tx->ySize, tx->b3Name());
@@ -92,11 +92,11 @@ int main(int argc, char * argv[])
 	b3Path       pictures;
 	b3FileList   list;
 	b3FileEntry * entry;
-	b3Tx    *    tx;
-	int          i;
 
 	if (argc > 1)
 	{
+		b3Tx * tx;
+
 		if (HOME != nullptr)
 		{
 			b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
@@ -108,7 +108,7 @@ int main(int argc, char * argv[])
 			texture_pool.b3AddPath(BLZ3_PICTURES);
 		}
 
-		for (i = 1; i < argc; i++)
+		for (int i = 1; i < argc; i++)
 		{
 			if (argv[i][0] == '-')
 			{
@@ -148,7 +148,7 @@ int main(int argc, char * argv[])
 
 		B3_FOR_BASE(texture_pool.b3GetTxHead(), tx)
 		{
-			display(tx);
+			displayTx(tx);
 		}
 	}
 	else

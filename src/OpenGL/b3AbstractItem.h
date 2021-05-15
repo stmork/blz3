@@ -75,7 +75,7 @@ public:
 	{
 		const QModelIndexList & list = match(model, item);
 
-		return list.isEmpty() ? nullptr : (QB3AbstractItem<T> *)model->itemFromIndex(list.first());
+		return list.isEmpty() ? nullptr : static_cast<QB3AbstractItem<T> *>(model->itemFromIndex(list.first()));
 	}
 };
 
