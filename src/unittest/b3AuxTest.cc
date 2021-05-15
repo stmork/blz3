@@ -406,6 +406,25 @@ void b3NurbsSurfaceTest::setUp()
 		m_VerticalKnots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
 	}
 
+	unsigned i = 0;
+	for (unsigned y = 0; y < m_Vertical.m_ControlNum; y++)
+	{
+		const double y_angle = y * M_PI / (m_Vertical.m_ControlNum - 1);
+		const double height = sin(y_angle);
+
+		for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
+		{
+			const double x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
+
+			m_Controls[i].x = cos(x_angle) * height * RADIUS;
+			m_Controls[i].y = sin(x_angle) * height * RADIUS;
+			m_Controls[i].z = -cos(y_angle) * RADIUS;
+			m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
+
+			i++;
+		}
+	}
+
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
@@ -421,6 +440,17 @@ void b3NurbsSurfaceTest::testSphere()
 
 	CPPUNIT_ASSERT_EQUAL(4.0, x_range);
 	CPPUNIT_ASSERT_EQUAL(2.0, y_range);
+
+#if 0
+	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
+	unsigned    count;
+
+	count = m_Horizontal.b3DeBoor(deboor);
+	CPPUNIT_ASSERT_EQUAL(m_Horizontal.m_SubDiv + 1, count);
+
+	count = m_Vertical.b3DeBoor(deboor);
+	CPPUNIT_ASSERT_EQUAL(m_Vertical.m_SubDiv + 1, count);
+#endif
 }
 
 #endif
