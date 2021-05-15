@@ -233,8 +233,6 @@ void b3NurbsCurveTest::testInsertValidation()
 	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXKNOTS, m_Nurbs.bspline_errno);
 }
 
-#include "blz3/base/b3Random.h"
-
 void b3NurbsCurveTest::testInsertion()
 {
 	const b3_f64 quarter = b3Math::b3Mix(m_Nurbs.b3FirstKnot(), m_Nurbs.b3LastKnot(), 0.25f);
