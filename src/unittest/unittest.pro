@@ -32,6 +32,7 @@ HEADERS += b3SkeletonTest.h \
 	b3MatrixTest.h \
 	b3MemoryTest.h \
 	b3MovieTest.h \
+	b3NurbsTest.h \
 	b3OpTest.h \
 	b3PathTest.h \
 	b3PickTest.h \
@@ -71,6 +72,7 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3MatrixTest.cc \
 	b3MemoryTest.cc \
 	b3MovieTest.cc \
+	b3NurbsTest.cc \
 	b3OpTest.cc \
 	b3PathTest.cc \
 	b3PickTest.cc \
