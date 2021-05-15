@@ -63,8 +63,7 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 	// Copy control points
 	control_count = m_Spline[0].m_ControlMax * m_Spline[1].m_ControlMax;
 	m_Controls    = b3Item::b3TypedAlloc<b3_vector>(control_count);
-	m_Spline[0].m_Controls =
-		m_Spline[1].m_Controls = m_Controls;
+	m_Spline[0].m_Controls = m_Spline[1].m_Controls = m_Controls;
 	for (i = 0; i < control_count; i++)
 	{
 		b3InitVector(&m_Controls[i]);
@@ -159,11 +158,11 @@ void b3SplineShape::b3GetCount(
 void b3SplineShape::b3ComputeGridVertices()
 {
 	b3_gl_vertex * Vector = *glVertexElements;
-	b3_vector     SplVector[b3Spline::B3_MAX_SUBDIV + 1];
-	b3_vector     ControlArray[b3Spline::B3_MAX_CONTROLS * b3Spline::B3_MAX_CONTROLS];
-	b3_count      CurveNum, Points = 0;
-	b3_index      x, y, t;
-	b3Spline      MySpline;
+	b3_vector      SplVector[b3Spline::B3_MAX_SUBDIV + 1];
+	b3_vector      ControlArray[b3Spline::B3_MAX_CONTROLS * b3Spline::B3_MAX_CONTROLS];
+	b3_count       CurveNum, Points = 0;
+	b3_index       x, y, t;
+	b3Spline       MySpline;
 
 	m_Spline[0].m_Controls =  m_Controls;
 	m_Spline[1].m_Controls =  m_Controls;

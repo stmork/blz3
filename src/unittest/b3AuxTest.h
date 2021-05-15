@@ -60,7 +60,13 @@ protected:
 	b3Spline::b3_knot m_Knots[b3Nurbs::B3_MAX_KNOTS];
 	b3_vector4D       m_Controls[b3Nurbs::B3_MAX_CONTROLS];
 
-	virtual void b3InitControlPoints();
+	b3_vector4D       m_Deboor[b3Nurbs::B3_MAX_SUBDIV];
+	b3_vector4D       m_Mansfield[b3Nurbs::B3_MAX_SUBDIV];
+	b3_f64            m_Radius[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64            m_BasisCoeff[b3Nurbs::B3_MAX_DEGREE];
+
+	void b3InitArrays();
+	void b3InitControlPoints();
 	virtual void b3InitKnotVector() = 0;
 
 public:
@@ -114,15 +120,22 @@ class b3NurbsSurfaceTest : public CppUnit::TestFixture
 	b3Spline::b3_knot m_VerticalKnots[b3Nurbs::B3_MAX_KNOTS];
 	b3_vector4D       m_Controls[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
 
+	b3_vector4D       m_Deboor[b3Nurbs::B3_MAX_SUBDIV];
+	b3_vector4D       m_Mansfield[b3Nurbs::B3_MAX_SUBDIV];
+	b3_f64            m_Radius[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64            m_BasisCoeff[b3Nurbs::B3_MAX_DEGREE];
+
 	CPPUNIT_TEST_SUITE(b3NurbsSurfaceTest);
-	CPPUNIT_TEST(testSphere);
+	CPPUNIT_TEST(testSphereHorizontally);
+	CPPUNIT_TEST(testSphereVertically);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
 
-	void testSphere();
+	void testSphereHorizontally();
+	void testSphereVertically();
 };
 
 #endif
