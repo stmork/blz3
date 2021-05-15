@@ -264,8 +264,8 @@ void b3SplineControlClosedTest::testMansfield()
 		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i, 0);
 
 		const b3_f64   radius = sqrt(
-					mansfield[s].x * mansfield[s].x +
-					mansfield[s].y * mansfield[s].y);
+				mansfield[s].x * mansfield[s].x +
+				mansfield[s].y * mansfield[s].y);
 		r[s] = radius;
 
 		// Compare De Boor computed values agains Mansfield computed ones
@@ -358,8 +358,8 @@ void b3SplineControlOpenedTest::testMansfield()
 		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i, 0);
 
 		const b3_f64   radius = sqrt(
-					mansfield[s].x * mansfield[s].x +
-					mansfield[s].y * mansfield[s].y);
+				mansfield[s].x * mansfield[s].x +
+				mansfield[s].y * mansfield[s].y);
 		r[s] = radius;
 
 		// Compare De Boor computed values agains Mansfield computed ones

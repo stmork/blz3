@@ -721,9 +721,87 @@ public:
 		return i;
 	}
 
-	b3_index  b3DeBoorControl(VECTOR * point, b3_index index) const
+	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
 	{
-		b3_index  i;
+		const unsigned  i = iFind(q);
+		b3_knot         it[m_Degree + 1];
+
+		it[0]  = 1;
+		for (unsigned l = 1; l <= m_Degree; l++)
+		{
+			it[l]  = 0;
+			for (unsigned j = 0; j < l; j++)
+			{
+				const b3_knot denom = m_Knots[i - j + l] - m_Knots[i - j];
+				const b3_knot r     = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
+
+				it[l - j]     += r * it[l - j - 1];
+				it[l - j - 1] *= (1 - r);
+			}
+		}
+
+		b3SplineVector::b3Clear(point);
+		b3_index j = i * m_Offset + index;
+		for (b3_index l = m_Degree; l >= 0; l--)
+		{
+			b3SplineVector::b3AddScaled(it[l], &m_Controls[j], point);
+			j -= m_Offset;
+		}
+		b3SplineVector::b3Homogenize(point);
+		return i;
+	}
+
+	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
+	{
+		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
+		unsigned      i     = iFind(qStart);
+		b3_knot       q;
+		b3_knot       it[m_Degree + 1];
+
+		if (i >= m_ControlNum)
+		{
+			i -= m_ControlNum;
+		}
+
+		it[0]  = 1;
+		for (unsigned l = 1; l <= m_Degree; l++)
+		{
+			b3_index k = i;
+
+			it[l]  = 0;
+			q      = qStart;
+			for (unsigned j = 0; j < l; j++)
+			{
+				const b3_knot denom = m_Knots[k + l] - m_Knots[k];
+				const b3_knot r     = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
+
+				it[l - j]     += r * it[l - j - 1];
+				it[l - j - 1] *= (1 - r);
+				if (--k < 0) /* check underflow of knots */
+				{
+					k += m_ControlNum;
+					q += range;
+				}
+			}
+		}
+
+		b3SplineVector::b3Clear(point);
+		b3_index j = i;
+		for (b3_index l = m_Degree; l >= 0; l--)
+		{
+			b3SplineVector::b3AddScaled(it[l], &m_Controls[j * m_Offset + index], point);
+			if (--j < 0)
+			{
+				j += m_ControlNum;
+			}
+		}
+		b3SplineVector::b3Homogenize(point);
+		return i;
+	}
+
+	unsigned  b3DeBoorCurveControl(VECTOR * point, const unsigned index) const
+	{
+		unsigned  i;
 
 		if (m_Closed)
 		{
@@ -741,6 +819,37 @@ public:
 			}
 			return m_ControlNum - m_Degree + 1;
 		}
+	}
+
+	static unsigned b3DeBoorSurfaceControl(
+		b3SplineTemplate<VECTOR> * controlSpline,
+		b3SplineTemplate<VECTOR> * curveSpline,
+		VECTOR          *          point)
+	{
+		b3_knots  knot_ptr;
+		b3_index  i, end, index;
+		b3_count  ControlNum;
+		b3_f64    it[B3_MAX_DEGREE + 1];
+
+		ControlNum = curveSpline->b3GetSegmentKnotCount();
+		knot_ptr   = curveSpline->m_Knots;
+		end        = curveSpline->m_ControlNum;
+		if (!curveSpline->m_Closed)
+		{
+			end++;
+		}
+
+		for (i = (curveSpline->m_Closed ? 0 : curveSpline->m_Degree); i < end; i++)
+		{
+			index = curveSpline->b3Mansfield(it, knot_ptr[i]);
+			for (unsigned x = 0; x < controlSpline->m_ControlNum; x++)
+			{
+				curveSpline->b3MansfieldVector(&point[x * ControlNum], it,
+					index, x * controlSpline->m_Offset);
+			}
+			point++;
+		}
+		return ControlNum;
 	}
 
 	/**
@@ -830,7 +939,7 @@ public:
 	 * @param index  Start index of control points
 	 */
 	void b3MansfieldVector(
-		VECTOR  *       point,
+		VECTOR     *    point,
 		const b3_f64  * it,
 		const unsigned  i,
 		const b3_index  index = 0) const
@@ -861,115 +970,6 @@ public:
 			}
 		}
 		b3SplineVector::b3Homogenize(point);
-	}
-
-	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
-	{
-		const unsigned  i = iFind(q);
-		b3_knot         it[m_Degree + 1];
-
-		it[0]  = 1;
-		for (unsigned l = 1; l <= m_Degree; l++)
-		{
-			it[l]  = 0;
-			for (unsigned j = 0; j < l; j++)
-			{
-				const b3_knot denom = m_Knots[i - j + l] - m_Knots[i - j];
-				const b3_knot r     = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
-
-				it[l - j]     += r * it[l - j - 1];
-				it[l - j - 1] *= (1 - r);
-			}
-		}
-
-		b3SplineVector::b3Clear(point);
-		b3_index j = i * m_Offset + index;
-		for (b3_index l = m_Degree; l >= 0; l--)
-		{
-			b3SplineVector::b3AddScaled(it[l], &m_Controls[j], point);
-			j -= m_Offset;
-		}
-		b3SplineVector::b3Homogenize(point);
-		return i;
-	}
-
-	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
-	{
-		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
-		unsigned      i     = iFind(qStart);
-		b3_knot       q;
-		b3_knot       it[m_Degree + 1];
-
-		if (i >= m_ControlNum)
-		{
-			i -= m_ControlNum;
-		}
-
-		it[0]  = 1;
-		for (unsigned l = 1; l <= m_Degree; l++)
-		{
-			b3_index k = i;
-
-			it[l]  = 0;
-			q      = qStart;
-			for (unsigned j = 0; j < l; j++)
-			{
-				const b3_knot denom = m_Knots[k + l] - m_Knots[k];
-				const b3_knot r     = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
-
-				it[l - j]     += r * it[l - j - 1];
-				it[l - j - 1] *= (1 - r);
-				if (--k < 0) /* check underflow of knots */
-				{
-					k += m_ControlNum;
-					q += range;
-				}
-			}
-		}
-
-		b3SplineVector::b3Clear(point);
-		b3_index j = i;
-		for (b3_index l = m_Degree; l >= 0; l--)
-		{
-			b3SplineVector::b3AddScaled(it[l], &m_Controls[j * m_Offset + index], point);
-			if (--j < 0)
-			{
-				j += m_ControlNum;
-			}
-		}
-		b3SplineVector::b3Homogenize(point);
-		return i;
-	}
-
-	static b3_count b3DeBoorSurfaceControl(
-		b3SplineTemplate<VECTOR> * controlSpline,
-		b3SplineTemplate<VECTOR> * curveSpline,
-		VECTOR          *          point)
-	{
-		b3_knots  knot_ptr;
-		b3_index  i, end, index;
-		b3_count  ControlNum;
-		b3_f64    it[B3_MAX_DEGREE + 1];
-
-		ControlNum = curveSpline->b3GetSegmentKnotCount();
-		knot_ptr   = curveSpline->m_Knots;
-		end        = curveSpline->m_ControlNum;
-		if (!curveSpline->m_Closed)
-		{
-			end++;
-		}
-
-		for (i = (curveSpline->m_Closed ? 0 : curveSpline->m_Degree); i < end; i++)
-		{
-			index = curveSpline->b3Mansfield(it, knot_ptr[i]);
-			for (unsigned x = 0; x < controlSpline->m_ControlNum; x++)
-			{
-				curveSpline->b3MansfieldVector(&point[x * ControlNum], it,
-					index, x * controlSpline->m_Offset);
-			}
-			point++;
-		}
-		return ControlNum;
 	}
 
 	b3_bool b3InsertCurveControl(
