@@ -752,7 +752,7 @@ public:
 	 * @param it     Array where to store the basis function coefficents
 	 * @param qStart Parameter value inside the curve
 	 */
-	b3_index  b3Mansfield(b3_f64 * it, const b3_f64 qStart) const
+	unsigned b3Mansfield(b3_f64 * it, const b3_f64 qStart) const
 	{
 		unsigned  i, j, l;
 		b3_f64	  r, denom, q;
@@ -830,10 +830,10 @@ public:
 	 * @param index  Start index of control points
 	 */
 	void b3MansfieldVector(
-		VECTOR  * point,
-		b3_f64  * it,
-		b3_index  i,
-		b3_index  index = 0) const
+		VECTOR  *       point,
+		const b3_f64  * it,
+		const unsigned  i,
+		const b3_index  index = 0) const
 	{
 		b3_index  l, j;
 		VECTOR  * ctrls;

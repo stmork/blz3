@@ -245,21 +245,38 @@ void b3SplineControlClosedTest::test()
 
 void b3SplineControlClosedTest::testMansfield()
 {
-	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV];
+	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
+	b3_vector4D mansfield[b3Nurbs::B3_MAX_SUBDIV];
 	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV];
 	b3_f64      it[b3Nurbs::B3_MAX_DEGREE];
-	b3_f64      range = m_Nurbs.b3KnotRange();
 
+	const b3_f64   range = m_Nurbs.b3KnotRange();
 	CPPUNIT_ASSERT_EQUAL(4.0, range);
+
+	const unsigned count = m_Nurbs.b3DeBoor(deboor);
+	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
+
 	for (unsigned s = 0; s < m_Nurbs.m_SubDiv; s++)
 	{
 		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
 		const unsigned i = m_Nurbs.b3Mansfield(it, q);
 
-		m_Nurbs.b3MansfieldVector(&p[s], it, i, 0);
+		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i, 0);
 
-		const b3_f64   radius = sqrt(p[s].x * p[s].x + p[s].y * p[s].y);
+		const b3_f64   radius = sqrt(
+					mansfield[s].x * mansfield[s].x +
+					mansfield[s].y * mansfield[s].y);
 		r[s] = radius;
+
+		// Compare De Boor computed values agains Mansfield computed ones
+		CPPUNIT_ASSERT_EQUAL(deboor[s].x, mansfield[s].x);
+		CPPUNIT_ASSERT_EQUAL(deboor[s].y, mansfield[s].y);
+		CPPUNIT_ASSERT_EQUAL(deboor[s].z, mansfield[s].z);
+		CPPUNIT_ASSERT_EQUAL(deboor[s].w, mansfield[s].w);
+
+		// Validate if q is inside range.
+		CPPUNIT_ASSERT_GREATEREQUAL( m_Nurbs.b3FirstKnot(), b3Nurbs::b3_knot(q));
+		CPPUNIT_ASSERT_LESSEQUAL(    m_Nurbs.b3LastKnot(),  b3Nurbs::b3_knot(q));
 	}
 	b3PrintF(B3LOG_DEBUG, "%p\n", r);
 }
@@ -322,21 +339,38 @@ void b3SplineControlOpenedTest::test()
 
 void b3SplineControlOpenedTest::testMansfield()
 {
-	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
+	b3_vector4D mansfield[b3Nurbs::B3_MAX_SUBDIV];
 	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
 	b3_f64      it[b3Nurbs::B3_MAX_DEGREE];
-	b3_f64      range = m_Nurbs.b3KnotRange();
 
+	const b3_f64   range = m_Nurbs.b3KnotRange();
 	CPPUNIT_ASSERT_EQUAL(3.0, range);
+
+	const unsigned count = m_Nurbs.b3DeBoor(deboor);
+	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
+
 	for (unsigned s = 0; s <= m_Nurbs.m_SubDiv; s++)
 	{
 		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
 		const unsigned i = m_Nurbs.b3Mansfield(it, q);
 
-		m_Nurbs.b3MansfieldVector(&p[s], it, i, 0);
+		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i, 0);
 
-		const b3_f64   radius = sqrt(p[s].x * p[s].x + p[s].y * p[s].y);
+		const b3_f64   radius = sqrt(
+					mansfield[s].x * mansfield[s].x +
+					mansfield[s].y * mansfield[s].y);
 		r[s] = radius;
+
+		// Compare De Boor computed values agains Mansfield computed ones
+		CPPUNIT_ASSERT_EQUAL(deboor[s].x, mansfield[s].x);
+		CPPUNIT_ASSERT_EQUAL(deboor[s].y, mansfield[s].y);
+		CPPUNIT_ASSERT_EQUAL(deboor[s].z, mansfield[s].z);
+		CPPUNIT_ASSERT_EQUAL(deboor[s].w, mansfield[s].w);
+
+		// Validate if q is inside range.
+		CPPUNIT_ASSERT_GREATEREQUAL( m_Nurbs.b3FirstKnot(), b3Nurbs::b3_knot(q));
+		CPPUNIT_ASSERT_LESSEQUAL(    m_Nurbs.b3LastKnot(),  b3Nurbs::b3_knot(q));
 	}
 	b3PrintF(B3LOG_DEBUG, "%p\n", r);
 }
