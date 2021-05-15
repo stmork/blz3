@@ -220,12 +220,29 @@ void b3NurbsSurfaceTest::setUp()
 
 		for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
 		{
-			const double x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
+			const double   x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
+			const unsigned level   = (x & 1) + (y & 1);
 
-			m_Controls[i].x =  cos(x_angle) * height * RADIUS;
-			m_Controls[i].y =  sin(x_angle) * height * RADIUS;
+			m_Controls[i].x =  cos(x_angle) * RADIUS * height;
+			m_Controls[i].y =  sin(x_angle) * RADIUS * height;
 			m_Controls[i].z = -cos(y_angle) * RADIUS;
-			m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
+
+			switch(level)
+			{
+			case 0:
+				m_Controls[i].w = 1;
+				break;
+			case 1:
+				m_Controls[i].w = sqrt(2.0) * 0.5;
+				break;
+			case 2:
+				m_Controls[i].w = 0.5;
+				break;
+
+			default:
+				// Intentionally do nothing
+				break;
+			}
 
 			i++;
 		}
@@ -288,7 +305,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 					m_Mansfield[s].y * m_Mansfield[s].y +
 					m_Mansfield[s].z * m_Mansfield[s].z);
 #if 0
-			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius[s], b3Spline::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, m_Radius[s], b3Nurbs::epsilon);
 #else
 			b3PrintF(B3LOG_FULL, "Radius: %p\n", m_Radius);
 #endif
@@ -340,7 +357,7 @@ void b3NurbsSurfaceTest::testSphereVertically()
 					m_Mansfield[s].y * m_Mansfield[s].y +
 					m_Mansfield[s].z * m_Mansfield[s].z);
 #if 0
-			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius[s], b3Spline::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, m_Radius[s], b3Nurbs::epsilon);
 #else
 			b3PrintF(B3LOG_FULL, "Radius: %p\n", m_Radius);
 #endif
