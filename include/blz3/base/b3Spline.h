@@ -739,7 +739,7 @@ public:
 	unsigned b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
 	{
 		const unsigned  i = iFind(q);
-		b3_knot         it[m_Degree + 1];
+		b3_f64          it[m_Degree + 1];
 
 		it[0]  = 1;
 		for (unsigned l = 1; l <= m_Degree; l++)
@@ -747,8 +747,8 @@ public:
 			it[l]  = 0;
 			for (unsigned j = 0; j < l; j++)
 			{
-				const b3_knot denom = m_Knots[i - j + l] - m_Knots[i - j];
-				const b3_knot r     = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
+				const b3_f64 denom = m_Knots[i - j + l] - m_Knots[i - j];
+				const b3_f64 r     = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
 
 				it[l - j]     += r * it[l - j - 1];
 				it[l - j - 1] *= (1 - r);
@@ -770,8 +770,8 @@ public:
 	{
 		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
 		unsigned      i     = iFind(qStart);
-		b3_knot       q;
-		b3_knot       it[m_Degree + 1];
+		b3_f64        q;
+		b3_f64        it[m_Degree + 1];
 
 		if (i >= m_ControlNum)
 		{
@@ -787,8 +787,8 @@ public:
 			q      = qStart;
 			for (unsigned j = 0; j < l; j++)
 			{
-				const b3_knot denom = m_Knots[k + l] - m_Knots[k];
-				const b3_knot r     = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
+				const b3_f64 denom = m_Knots[k + l] - m_Knots[k];
+				const b3_f64 r     = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
 
 				it[l - j]     += r * it[l - j - 1];
 				it[l - j - 1] *= (1 - r);
@@ -988,13 +988,14 @@ public:
 		b3SplineVector::b3Homogenize(point);
 	}
 
-	b3_bool b3InsertCurveControl(
+	bool b3InsertCurveControl(
 		b3_knot    q,
-		b3_count   Mult,
-		b3_index   index)
+		unsigned   Mult  = 1,
+		b3_index   index = 0)
 	{
-		b3_index l, m, i;
-		b3_count KnotNum, Count;
+		unsigned m;
+		unsigned l, i;
+		unsigned KnotNum;
 		b3_knot  start, end;
 		VECTOR   o[B3_MAX_CONTROLS + 1]; /* buffer for knot insertion */
 
@@ -1007,24 +1008,24 @@ public:
 		m        =  m_ControlNum;
 		KnotNum  =  m_KnotNum;
 
-		if ((m + Mult) > m_ControlMax)
-		{
-			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
-			return false;
-		}
 		if ((KnotNum + Mult) > m_KnotMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
+		if ((m + Mult) > m_ControlMax)
+		{
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
+			return false;
+		}
 		bspline_errno = B3_BSPLINE_OK;
 
-		if (m_Closed) for (Count = 0; Count < Mult; Count++)
+		if (m_Closed) for (unsigned Count = 0; Count < Mult; Count++)
 			{
 				start = m_Knots[0];
 				end   = m_Knots[m];
 
-				b3InsertDeBoorClosed(o, index, q);
+				i = b3InsertDeBoorClosed(o, index, q);
 
 				// insert new knot
 				for (l = KnotNum; l > i; l--)
@@ -1050,7 +1051,7 @@ public:
 					m_Controls[((l + m) % m) * m_Offset] = o[(l + (m - 1)) % (m - 1)];
 				}
 			}
-		else for (Count = 0; Count < Mult; Count++)
+		else for (unsigned Count = 0; Count < Mult; Count++)
 			{
 				i = b3InsertDeBoorOpened(o, index, q);
 
@@ -1414,13 +1415,14 @@ private:
 	 * @param index Start index of curve
 	 * @param q     Curve parameter to be inserted into knot (later)
 	 */
-	inline b3_index b3InsertDeBoorOpened(
+	[[nodiscard]]
+	inline unsigned b3InsertDeBoorOpened(
 		VECTOR  * ins,
 		b3_index  index,
 		b3_knot   q)
 	{
-		b3_index  l, i, j;
-		b3_knot   r;
+		unsigned  l, i, j;
+		b3_f64    r;
 		b3_f64    Denom;
 		VECTOR    it[B3_MAX_DEGREE + 1];
 
@@ -1461,12 +1463,14 @@ private:
 	 * @param index Start index of curve
 	 * @param q Curve parameter to be inserted into knot (later)
 	 */
-	inline b3_index b3InsertDeBoorClosed(
+	[[nodiscard]]
+	inline unsigned b3InsertDeBoorClosed(
 		VECTOR  * ins,
 		b3_index  index,
 		b3_knot   qStart)
 	{
-		b3_index  l, i, j, m;
+		unsigned  l, i, m;
+		b3_index  j;
 		b3_knot   r, q, diff;
 		b3_f64    Denom;
 		VECTOR    it[B3_MAX_DEGREE + 1];
@@ -1524,10 +1528,11 @@ private:
 	 *
 	 * @param q The value to find in the knot vector.
 	 */
-	inline unsigned iFind(b3_knot q) const
+	[[nodiscard]]
+	inline unsigned iFind(const b3_knot q) const
 	{
-		unsigned i;
-		unsigned max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
+		const unsigned max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
+		unsigned       i;
 
 		for (i = 0; i < max; i++)
 		{

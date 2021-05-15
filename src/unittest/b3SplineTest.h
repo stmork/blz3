@@ -67,6 +67,7 @@ public:
 
 		CPPUNIT_ASSERT(!b.b3InitCurve(3, 10, false));
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_MISSING_KNOTS, b.bspline_errno);
+
 		b = a;
 		CPPUNIT_ASSERT(b.b3InitCurve(3, 10, false));
 

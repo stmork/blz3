@@ -36,8 +36,8 @@
 #ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3AuxTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsClosedTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsOpenedTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsClosedCurveTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsOpenedCurveTest);
 
 void b3AuxTest::setUp()
 {
@@ -193,6 +193,11 @@ void b3AuxTest::testStrCaseCmp()
 **                                                                      **
 *************************************************************************/
 
+void b3NurbsCurveTest::tearDown()
+{
+	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+}
+
 /**
  * This initializes the control points for a circled NURBS. Against most
  * articles in the internet they are not located on a square but rather on
@@ -201,7 +206,7 @@ void b3AuxTest::testStrCaseCmp()
  *
  * @see "Computer Graphics - Principals and Practice", 2nd edition, page 504.
  */
-void b3NurbsTest::b3InitControlPoints()
+void b3NurbsCurveTest::b3InitControlPoints()
 {
 	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
 	{
@@ -214,13 +219,43 @@ void b3NurbsTest::b3InitControlPoints()
 	}
 }
 
+void b3NurbsCurveTest::testInsertValidation()
+{
+	const b3_f64 half = (m_Nurbs.b3FirstKnot() + m_Nurbs.b3LastKnot()) * 0.5;
+
+	CPPUNIT_ASSERT(!m_Nurbs.b3InsertCurveControl(half, 0));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_LOW_MULTIPLICATION, m_Nurbs.bspline_errno);
+
+	CPPUNIT_ASSERT(!m_Nurbs.b3InsertCurveControl(half, b3Nurbs::B3_MAX_CONTROLS));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXCONTROLS, m_Nurbs.bspline_errno);
+
+	CPPUNIT_ASSERT(!m_Nurbs.b3InsertCurveControl(half, b3Nurbs::B3_MAX_KNOTS));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXKNOTS, m_Nurbs.bspline_errno);
+}
+
+#include "blz3/base/b3Random.h"
+
+void b3NurbsCurveTest::testInsertion()
+{
+	const b3_f64 quarter = b3Math::b3Mix(m_Nurbs.b3FirstKnot(), m_Nurbs.b3LastKnot(), 0.25f);
+	const b3_f64 half    = b3Math::b3Mix(m_Nurbs.b3FirstKnot(), m_Nurbs.b3LastKnot(), 0.5f);
+
+	CPPUNIT_ASSERT(m_Nurbs.b3InsertCurveControl(half));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, m_Nurbs.bspline_errno);
+
+	CPPUNIT_ASSERT(m_Nurbs.b3InsertCurveControl(quarter, 2));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, m_Nurbs.bspline_errno);
+
+	testCircle();
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Unit tests for closed NURBS                   **
 **                                                                      **
 *************************************************************************/
 
-void b3NurbsClosedTest::b3InitKnotVector()
+void b3NurbsClosedCurveTest::b3InitKnotVector()
 {
 	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
 	{
@@ -228,7 +263,7 @@ void b3NurbsClosedTest::b3InitKnotVector()
 	}
 }
 
-void b3NurbsClosedTest::setUp()
+void b3NurbsClosedCurveTest::setUp()
 {
 	m_Nurbs.m_Knots    = m_Knots;
 	m_Nurbs.m_Controls = m_Controls;
@@ -240,12 +275,7 @@ void b3NurbsClosedTest::setUp()
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
-void b3NurbsClosedTest::tearDown()
-{
-	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
-}
-
-void b3NurbsClosedTest::testCircle()
+void b3NurbsClosedCurveTest::testCircle()
 {
 	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
 	b3_vector4D mansfield[b3Nurbs::B3_MAX_SUBDIV];
@@ -291,7 +321,7 @@ void b3NurbsClosedTest::testCircle()
 **                                                                      **
 *************************************************************************/
 
-void b3NurbsOpenedTest::b3InitKnotVector()
+void b3NurbsOpenedCurveTest::b3InitKnotVector()
 {
 	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
 	{
@@ -299,7 +329,7 @@ void b3NurbsOpenedTest::b3InitKnotVector()
 	}
 }
 
-void b3NurbsOpenedTest::setUp()
+void b3NurbsOpenedCurveTest::setUp()
 {
 	m_Nurbs.m_Knots    = m_Knots;
 	m_Nurbs.m_Controls = m_Controls;
@@ -311,12 +341,7 @@ void b3NurbsOpenedTest::setUp()
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
-void b3NurbsOpenedTest::tearDown()
-{
-	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
-}
-
-void b3NurbsOpenedTest::testCircle()
+void b3NurbsOpenedCurveTest::testCircle()
 {
 	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
 	b3_vector4D mansfield[b3Nurbs::B3_MAX_SUBDIV];

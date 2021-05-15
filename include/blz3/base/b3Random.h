@@ -41,7 +41,8 @@
 template<class T>class B3_PLUGIN b3Random
 {
 public:
-	b3Random<T>() {}
+	b3Random<T>() = default;
+
 	virtual T b3Rand() = 0;
 	virtual T b3Rand(const T mult) = 0;
 };
