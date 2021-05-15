@@ -185,8 +185,6 @@ const char * b3AnimElement::b3GetName() const
 void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 {
 	b3AnimControl * ctrl = (b3AnimControl *)m_Heads[0].First;
-	b3_f64          q, qStart, ratio;
-	b3_index        pos;
 	b3_f64          coeffs[b3Spline::B3_MAX_DEGREE + 1];
 
 	if (ctrl != nullptr)
@@ -195,13 +193,14 @@ void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 		ctrl->b3InitNurbs(m_Param);
 
 		// compute predefined values
-		qStart = m_Knots[m_Param.m_Closed ? 0 : m_Param.m_Degree];
-		q      = m_Knots[m_Param.m_ControlNum] - qStart;
+		const b3_f64 qStart = m_Param.b3FirstKnot();
+		const b3_f64 q      = m_Param.b3LastKnot() - qStart;
 
 		// compute position at time t
-		ratio = (t - m_Start) / (m_End - m_Start);
-		pos = m_Param.b3Mansfield(coeffs, qStart + q * ratio);
-		m_Param.b3MansfieldVector(position, coeffs, pos, 0);
+		const b3_f64   ratio = (t - m_Start) / (m_End - m_Start);
+		const unsigned pos   = m_Param.b3Mansfield(coeffs, qStart + q * ratio);
+
+		m_Param.b3MansfieldVector(position, coeffs, pos);
 	}
 }
 

@@ -329,7 +329,7 @@ public:
 	static const     unsigned B3_MAX_SUBDIV      = 64;
 	static const     unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
 	static const     unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
-	static constexpr b3_knot  B3_BSPLINE_EPSILON = 1.0 / 16384;
+	static constexpr b3_knot  epsilon = 1.0 / 16384;
 
 	typedef          b3_knot  b3_knot_vector[B3_MAX_KNOTS];
 
@@ -377,29 +377,41 @@ public:
 		m_Closed     = src.m_Closed;
 	}
 
+	/**
+	 * This method returns the number of segments inside this spline.
+	 *
+	 * @return The number of segments.
+	 */
+	[[nodiscard]]
 	inline b3_count b3GetSegmentCount() const
 	{
 		return m_Closed ? m_ControlNum : m_ControlNum - m_Degree;
 	}
 
+	/**
+	 * This method returns the number of segment knots used inside this spline.
+	 *
+	 * @return The number of segment knots used.
+	 */
+	[[nodiscard]]
 	inline b3_count b3GetSegmentKnotCount() const
 	{
 		return m_Closed ? m_ControlNum : m_ControlNum - m_Degree + 1;
 	}
 
 	inline b3_f64 b3ArcLengthParameter(
-		b3_count n,
-		b3_f64   scale = 1) const
+		const b3_count n,
+		const b3_f64   scale = 1) const
 	{
 		B3_ASSERT(!m_Closed);
 		return b3ArcLengthParameter(n, m_Degree, m_ControlNum, scale);
 	}
 
 	static inline b3_f64 b3ArcLengthParameter(
-		b3_count n,
-		b3_count Degree,
-		b3_count ControlNum,
-		b3_f64   scale = 1)
+		const b3_count n,
+		const b3_count Degree,
+		const b3_count ControlNum,
+		const b3_f64   scale = 1)
 	{
 		b3_f64 result;
 		b3_u32 back;
@@ -653,6 +665,7 @@ public:
 	 *
 	 * @return The reference to the first knot vector value.
 	 */
+	[[nodiscard]]
 	inline const b3_knot & b3FirstKnot() const
 	{
 		return m_Closed ? m_Knots[0] : m_Knots[m_Degree];
@@ -663,6 +676,7 @@ public:
 	 *
 	 * @return The reference to the lst knot vector value.
 	 */
+	[[nodiscard]]
 	inline const b3_knot & b3LastKnot() const
 	{
 		return m_Knots[m_ControlNum];
@@ -673,6 +687,7 @@ public:
 	 *
 	 * @return The value range of the knot vector.
 	 */
+	[[nodiscard]]
 	inline b3_knot b3KnotRange() const
 	{
 		return b3LastKnot() - b3FirstKnot();
@@ -721,7 +736,7 @@ public:
 		return i;
 	}
 
-	b3_index b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
+	unsigned b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
 	{
 		const unsigned  i = iFind(q);
 		b3_knot         it[m_Degree + 1];
@@ -751,7 +766,7 @@ public:
 		return i;
 	}
 
-	b3_index  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
+	unsigned  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
 	{
 		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
 		unsigned      i     = iFind(qStart);
@@ -861,6 +876,7 @@ public:
 	 * @param it     Array where to store the basis function coefficents
 	 * @param qStart Parameter value inside the curve
 	 */
+	[[nodiscard]]
 	unsigned b3Mansfield(b3_f64 * it, const b3_f64 qStart) const
 	{
 		unsigned  i, j, l;

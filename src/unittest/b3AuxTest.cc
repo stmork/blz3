@@ -36,8 +36,8 @@
 #ifdef HAVE_LIBCPPUNIT
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3AuxTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineControlClosedTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineControlOpenedTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsClosedTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(b3NurbsOpenedTest);
 
 void b3AuxTest::setUp()
 {
@@ -189,65 +189,67 @@ void b3AuxTest::testStrCaseCmp()
 
 /*************************************************************************
 **                                                                      **
+**                        Init methods for NURBS testing                **
+**                                                                      **
+*************************************************************************/
+
+/**
+ * This initializes the control points for a circled NURBS. Against most
+ * articles in the internet they are not located on a square but rather on
+ * a circle. The rational weights are 1.0 on the bounding boxes edges and
+ * 1.0 / sqrt(2.0) on the corners as everywhere stated.
+ *
+ * @see "Computer Graphics - Principals and Practice", 2nd edition, page 504.
+ */
+void b3NurbsTest::b3InitControlPoints()
+{
+	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
+	{
+		const double angle = i * 2.0 * M_PI;
+
+		m_Controls[i].x = cos(angle / m_Nurbs.m_ControlNum) * RADIUS;
+		m_Controls[i].y = sin(angle / m_Nurbs.m_ControlNum) * RADIUS;
+		m_Controls[i].z = 0;
+		m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
+	}
+}
+
+/*************************************************************************
+**                                                                      **
 **                        Unit tests for closed NURBS                   **
 **                                                                      **
 *************************************************************************/
 
-void b3SplineControlClosedTest::setUp()
+void b3NurbsClosedTest::b3InitKnotVector()
+{
+	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
+	{
+		m_Knots[i] = std::ceil(i * 0.5);
+	}
+}
+
+void b3NurbsClosedTest::setUp()
 {
 	m_Nurbs.m_Knots    = m_Knots;
 	m_Nurbs.m_Controls = m_Controls;
 	m_Nurbs.b3InitCurve(2, 8, true);
 
-	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
-	{
-		const double angle = i * 2.0 * M_PI;
-
-		m_Controls[i].x = round(cos(angle / m_Nurbs.m_ControlNum)) * RADIUS;
-		m_Controls[i].y = round(sin(angle / m_Nurbs.m_ControlNum)) * RADIUS;
-		m_Controls[i].z = 0;
-		m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
-	}
-
-	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
-	{
-//		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
-		m_Knots[i] = std::ceil(i * 0.5);
-	}
+	b3InitControlPoints();
+	b3InitKnotVector();
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
-void b3SplineControlClosedTest::tearDown()
+void b3NurbsClosedTest::tearDown()
 {
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3SplineControlClosedTest::test()
-{
-	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV + 1];
-	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
-
-	bzero(p, sizeof(p));
-	bzero(r, sizeof(r));
-	const unsigned count = m_Nurbs.b3DeBoor(p);
-
-	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
-	for (unsigned i = 0; i < count; i++)
-	{
-		const b3_f64 radius = sqrt(p[i].x * p[i].x + p[i].y * p[i].y);
-
-		r[i] = radius;
-	}
-	b3PrintF(B3LOG_DEBUG, "%p\n", r);
-	//	CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Spline::B3_BSPLINE_EPSILON);
-}
-
-void b3SplineControlClosedTest::testMansfield()
+void b3NurbsClosedTest::testCircle()
 {
 	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
 	b3_vector4D mansfield[b3Nurbs::B3_MAX_SUBDIV];
-	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV];
+	b3_f64      radius[b3Nurbs::B3_MAX_SUBDIV];
 	b3_f64      it[b3Nurbs::B3_MAX_DEGREE];
 
 	const b3_f64   range = m_Nurbs.b3KnotRange();
@@ -261,12 +263,7 @@ void b3SplineControlClosedTest::testMansfield()
 		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
 		const unsigned i = m_Nurbs.b3Mansfield(it, q);
 
-		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i, 0);
-
-		const b3_f64   radius = sqrt(
-				mansfield[s].x * mansfield[s].x +
-				mansfield[s].y * mansfield[s].y);
-		r[s] = radius;
+		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i);
 
 		// Compare De Boor computed values agains Mansfield computed ones
 		CPPUNIT_ASSERT_EQUAL(deboor[s].x, mansfield[s].x);
@@ -274,11 +271,18 @@ void b3SplineControlClosedTest::testMansfield()
 		CPPUNIT_ASSERT_EQUAL(deboor[s].z, mansfield[s].z);
 		CPPUNIT_ASSERT_EQUAL(deboor[s].w, mansfield[s].w);
 
+		// Validate radius agains circle.
+		radius[s] = sqrt(
+				mansfield[s].x * mansfield[s].x +
+				mansfield[s].y * mansfield[s].y +
+				mansfield[s].z * mansfield[s].z);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius[s], b3Spline::epsilon);
+
 		// Validate if q is inside range.
 		CPPUNIT_ASSERT_GREATEREQUAL( m_Nurbs.b3FirstKnot(), b3Nurbs::b3_knot(q));
 		CPPUNIT_ASSERT_LESSEQUAL(    m_Nurbs.b3LastKnot(),  b3Nurbs::b3_knot(q));
 	}
-	b3PrintF(B3LOG_DEBUG, "%p\n", r);
+	b3PrintF(B3LOG_DEBUG, "%p\n", radius);
 }
 
 /*************************************************************************
@@ -287,61 +291,36 @@ void b3SplineControlClosedTest::testMansfield()
 **                                                                      **
 *************************************************************************/
 
-void b3SplineControlOpenedTest::setUp()
+void b3NurbsOpenedTest::b3InitKnotVector()
+{
+	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
+	{
+		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
+	}
+}
+
+void b3NurbsOpenedTest::setUp()
 {
 	m_Nurbs.m_Knots    = m_Knots;
 	m_Nurbs.m_Controls = m_Controls;
 	m_Nurbs.b3InitCurve(2, 8, false);
 
-	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
-	{
-		const double angle = i * 2.0 * M_PI;
-
-		m_Controls[i].x = round(cos(angle / m_Nurbs.m_ControlNum)) * RADIUS;
-		m_Controls[i].y = round(sin(angle / m_Nurbs.m_ControlNum)) * RADIUS;
-		m_Controls[i].z = 0;
-		m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
-	}
-
-	for (unsigned i = 0; i < m_Nurbs.m_KnotNum; i++)
-	{
-		m_Knots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
-//		m_Knots[i] = std::ceil(i * 0.5);
-	}
+	b3InitControlPoints();
+	b3InitKnotVector();
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
-void b3SplineControlOpenedTest::tearDown()
+void b3NurbsOpenedTest::tearDown()
 {
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3SplineControlOpenedTest::test()
-{
-	b3_vector4D p[b3Nurbs::B3_MAX_SUBDIV + 1];
-	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
-
-	bzero(p, sizeof(p));
-	bzero(r, sizeof(r));
-	const unsigned count = m_Nurbs.b3DeBoor(p);
-
-	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_SubDiv + 1, count);
-	for (unsigned i = 0; i < count; i++)
-	{
-		const b3_f64 radius = sqrt(p[i].x * p[i].x + p[i].y * p[i].y);
-
-		r[i] = radius;
-	}
-	b3PrintF(B3LOG_DEBUG, "%p\n", r);
-//	CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Spline::B3_BSPLINE_EPSILON);
-}
-
-void b3SplineControlOpenedTest::testMansfield()
+void b3NurbsOpenedTest::testCircle()
 {
 	b3_vector4D deboor[b3Nurbs::B3_MAX_SUBDIV];
 	b3_vector4D mansfield[b3Nurbs::B3_MAX_SUBDIV];
-	b3_f64      r[b3Nurbs::B3_MAX_SUBDIV + 1];
+	b3_f64      radius[b3Nurbs::B3_MAX_SUBDIV + 1];
 	b3_f64      it[b3Nurbs::B3_MAX_DEGREE];
 
 	const b3_f64   range = m_Nurbs.b3KnotRange();
@@ -355,12 +334,7 @@ void b3SplineControlOpenedTest::testMansfield()
 		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
 		const unsigned i = m_Nurbs.b3Mansfield(it, q);
 
-		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i, 0);
-
-		const b3_f64   radius = sqrt(
-				mansfield[s].x * mansfield[s].x +
-				mansfield[s].y * mansfield[s].y);
-		r[s] = radius;
+		m_Nurbs.b3MansfieldVector(&mansfield[s], it, i);
 
 		// Compare De Boor computed values agains Mansfield computed ones
 		CPPUNIT_ASSERT_EQUAL(deboor[s].x, mansfield[s].x);
@@ -368,11 +342,18 @@ void b3SplineControlOpenedTest::testMansfield()
 		CPPUNIT_ASSERT_EQUAL(deboor[s].z, mansfield[s].z);
 		CPPUNIT_ASSERT_EQUAL(deboor[s].w, mansfield[s].w);
 
+		// Validate radius agains circle.
+		radius[s] = sqrt(
+				mansfield[s].x * mansfield[s].x +
+				mansfield[s].y * mansfield[s].y +
+				mansfield[s].z * mansfield[s].z);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius[s], b3Spline::epsilon);
+
 		// Validate if q is inside range.
 		CPPUNIT_ASSERT_GREATEREQUAL( m_Nurbs.b3FirstKnot(), b3Nurbs::b3_knot(q));
 		CPPUNIT_ASSERT_LESSEQUAL(    m_Nurbs.b3LastKnot(),  b3Nurbs::b3_knot(q));
 	}
-	b3PrintF(B3LOG_DEBUG, "%p\n", r);
+	b3PrintF(B3LOG_DEBUG, "%p\n", radius);
 }
 
 #endif

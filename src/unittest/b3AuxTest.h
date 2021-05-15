@@ -51,44 +51,47 @@ public:
 	void testStrCaseCmp();
 };
 
-class b3SplineControlTest : public CppUnit::TestFixture
+class b3NurbsTest : public CppUnit::TestFixture
 {
 protected:
-	static constexpr double RADIUS = 1.0;
+	static constexpr double RADIUS = 10.0;
 
 	b3Nurbs           m_Nurbs;
 	b3Spline::b3_knot m_Knots[b3Spline::B3_MAX_KNOTS];
 	b3_vector4D       m_Controls[b3Spline::B3_MAX_CONTROLS];
+
+	void b3InitControlPoints();
+	virtual void b3InitKnotVector() = 0;
 };
 
-class b3SplineControlClosedTest : public b3SplineControlTest
+class b3NurbsClosedTest : public b3NurbsTest
 {
-	CPPUNIT_TEST_SUITE(b3SplineControlClosedTest);
-	CPPUNIT_TEST(test);
-	CPPUNIT_TEST(testMansfield);
+	CPPUNIT_TEST_SUITE(b3NurbsClosedTest);
+	CPPUNIT_TEST(testCircle);
 	CPPUNIT_TEST_SUITE_END();
+
+	virtual void b3InitKnotVector() override;
 
 public:
 	void setUp() override;
 	void tearDown() override;
 
-	void test();
-	void testMansfield();
+	void testCircle();
 };
 
-class b3SplineControlOpenedTest : public b3SplineControlTest
+class b3NurbsOpenedTest : public b3NurbsTest
 {
-	CPPUNIT_TEST_SUITE(b3SplineControlOpenedTest);
-	CPPUNIT_TEST(test);
-	CPPUNIT_TEST(testMansfield);
+	CPPUNIT_TEST_SUITE(b3NurbsOpenedTest);
+	CPPUNIT_TEST(testCircle);
 	CPPUNIT_TEST_SUITE_END();
+
+	virtual void b3InitKnotVector() override;
 
 public:
 	void setUp() override;
 	void tearDown() override;
 
-	void test();
-	void testMansfield();
+	void testCircle();
 };
 
 #endif

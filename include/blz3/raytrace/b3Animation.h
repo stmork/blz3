@@ -127,7 +127,7 @@ public:
 	b3_index            m_TrackIndex;              //!< Start track number
 	bool                m_CurveUse;                //!< Number of curves used
 	b3Nurbs             m_Param;                   //!< Param. curves
-	b3_f32              m_Knots[b3Spline::B3_MAX_KNOTS]; //!< Knot vector
+	b3_f32              m_Knots[b3Nurbs::B3_MAX_KNOTS];  //!< Knot vector
 	char                m_Name[B3_ANIMSTRINGLEN];        //!< Element name
 	char                m_Object[B3_BOXSTRINGLEN];       //!< Name of destination object
 
