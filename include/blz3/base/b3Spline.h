@@ -939,6 +939,7 @@ public:
 	 * routines.
 	 *
 	 * Example:
+	 * @code
 	b3Nurbs     nurbs; // Has to be proper initiazed!
 	...
 	b3_f64      it[b3Nurbs::B3_MAX_CONTROLS];
@@ -946,7 +947,6 @@ public:
 
 	const unsigned i = nurbs.b3Mansfield(it, 1.5);
 	nurbs.b3MansfieldVector(&point, it, i);
-	 * @code
 	 @endcode
 	 *
 	 * @param point  Where to store the curve point
