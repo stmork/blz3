@@ -415,7 +415,6 @@ b3_index b3Tx::b3ComputeThreshold(
 	b3_f64   ratio = input;
 	b3_count limit, count = 0, max;
 	b3_index i, threshold = 0;
-	bool     compute_threshold = true;
 
 	if (histogramme == nullptr)
 	{
@@ -424,6 +423,8 @@ b3_index b3Tx::b3ComputeThreshold(
 	}
 	else
 	{
+		bool     compute_threshold = true;
+
 		// Compute threshold;
 		max = 1 << (depth <= B3_TX_MAX_HISTGRM_DEPTH ? depth : B3_TX_MAX_HISTGRM_DEPTH);
 		switch (mode)

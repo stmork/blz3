@@ -469,20 +469,16 @@ void b3BBox::b3Activate(bool activate, bool recurse)
 
 b3Base<b3Item> * b3Scene::b3FindBBoxHead(b3BBox * bbox) const
 {
-	b3Item     *     item;
-	b3BBox     *     inc_bbox;
-	b3Base<b3Item> * base, *result;
+	b3Base<b3Item> * base = b3GetBBoxHead();
 
-	base = b3GetBBoxHead();
-	B3_FOR_BASE(base, item)
+	B3_FOR_TYPED_BASE(b3BBox, base, inc_bbox)
 	{
-		if (item == bbox)
+		if (inc_bbox == bbox)
 		{
 			return base;
 		}
 
-		inc_bbox = (b3BBox *)item;
-		result   = inc_bbox->b3FindBBoxHead(bbox);
+		b3Base<b3Item> * result = inc_bbox->b3FindBBoxHead(bbox);
 		if (result != nullptr)
 		{
 			return result;
@@ -549,11 +545,10 @@ void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> * array, bool activation)
 
 b3BBox * b3Scene::b3FindParentBBox(b3Shape * shape) const
 {
-	b3BBox * result;
-
 	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
-		result = bbox->b3FindParentBBox(shape);
+		b3BBox * result = bbox->b3FindParentBBox(shape);
+
 		if (result != nullptr)
 		{
 			return result;
@@ -614,8 +609,6 @@ bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 
 bool b3BBox::b3BacktraceRecompute(b3BBox * search)
 {
-	bool  result;
-
 	// Found?
 	if (search == this)
 	{
@@ -626,7 +619,8 @@ bool b3BBox::b3BacktraceRecompute(b3BBox * search)
 	// Search children
 	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
-		result = bbox->b3BacktraceRecompute(search);
+		const bool result = bbox->b3BacktraceRecompute(search);
+
 		if (result)
 		{
 			bbox->b3Recompute();

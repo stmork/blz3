@@ -56,7 +56,7 @@ class b3BHDParser
 	b3Array<b3_door>    m_Openings;
 	char                m_Line[1024];
 	b3_size             m_Pos    = 0;
-	FILE       *        m_BHD    = nullptr;
+	FILE        *       m_BHD    = nullptr;
 	b3Scene      *      m_Scene  = nullptr;
 	b3_count            m_LineNo = 0;
 	b3_f64              m_Scale  = 0.0;

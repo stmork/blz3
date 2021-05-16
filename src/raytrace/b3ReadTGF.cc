@@ -233,15 +233,16 @@ b3_bool b3TGFReader::b3ParseShapes(
 	b3Array<b3_vertex>   &   vertices,
 	b3Array<b3_tgf_facette> & facettes)
 {
-	b3Triangles * shape;
-	b3_index     i, facStart, facEnd;
-	b3_count     numFac, count;
-	b3_index     matIndex;
+	b3_index  i, facStart, facEnd;
+	b3_count  numFac, count;
+	b3_index  matIndex;
 
 	facStart = 0;
 	numFac  = facettes.b3GetCount();
 	for (i = 0; i < numFac; i += count)
 	{
+		b3Triangles * shape;
+
 		matIndex = facettes[i].m_MatIndex;
 		facStart = i;
 		for (
@@ -390,14 +391,13 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 	b3BBox   *  bbox  = new b3BBox(BBOX);
 	b3_count    cameras = 0;
 	b3_size     pos = 0;
-	b3_tgf_tag  tag;
-	b3_u32      tagSize;
 	b3_bool     error = false;
 
 	while ((pos < size) && (!error))
 	{
-		tag     = (b3_tgf_tag)b3Endian::b3GetIntel16(&ptr[0]);
-		tagSize = b3Endian::b3GetIntel32(&ptr[2]);
+		const b3_tgf_tag tag     = (b3_tgf_tag)b3Endian::b3GetIntel16(&ptr[0]);
+		const b3_u32     tagSize = b3Endian::b3GetIntel32(&ptr[2]);
+
 		ptr += 6;
 		pos += 6;
 
@@ -498,7 +498,6 @@ b3BBox * b3TGFReader::b3Parse(char * ptr, b3_size size, const char * filename)
 b3Scene * b3TGFReader::b3ReadTGFScene(const char * tgffile)
 {
 	b3Scene   *  scene = new b3Scene(TRACEPHOTO_MORK);
-	b3BBox   *   bbox;
 	b3TGFReader  reader;
 	b3File       file;
 	char    *    buffer;
@@ -508,7 +507,8 @@ b3Scene * b3TGFReader::b3ReadTGFScene(const char * tgffile)
 	buffer = (char *)file.b3ReadBuffer(tgffile, size);
 	if (buffer != nullptr)
 	{
-		bbox = reader.b3Parse(buffer, size, tgffile);
+		b3BBox * bbox = reader.b3Parse(buffer, size, tgffile);
+
 		if (bbox != nullptr)
 		{
 			b3ModellerInfo * info;

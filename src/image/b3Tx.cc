@@ -297,7 +297,6 @@ inline void b3Tx::b3CopyILBMtoVGA(
 	b3_u08  * row,
 	b3_coord  y) const
 {
-	b3_u08  * Data;
 	b3_u08    dstBit = 1, Bit;
 	b3_coord  x, d;
 	b3_count  xBytes, xRest, index, BytesPerLine;
@@ -305,9 +304,10 @@ inline void b3Tx::b3CopyILBMtoVGA(
 	BytesPerLine = TX_BWA(xSize);
 	if ((palette != nullptr) && (depth < 8))
 	{
+		b3_u08 * Data   = &data[y * BytesPerLine * depth];
+
 		xBytes = xSize >> 3;
 		xRest  = xSize  & 7;
-		Data   = &data[y * BytesPerLine * depth];
 		for (d = 0; d < depth; d++)
 		{
 			index = 0;
@@ -389,7 +389,6 @@ inline void b3Tx::b3CopyILBMtoRGB8(
 	b3_pkd_color * row,
 	b3_coord       y) const
 {
-	b3_u08    *   Data;
 	b3_coord      x, d, BytesPerLine;
 	b3_pkd_color  Color, Bit;
 
@@ -398,7 +397,8 @@ inline void b3Tx::b3CopyILBMtoRGB8(
 	{
 		for (x = 0; x < xSize; x++)
 		{
-			Data   = data;
+			b3_u08 * Data   = data;
+
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
 			Color  = 0;
 			Bit    = 128 >> (x & 7);
@@ -423,7 +423,6 @@ inline void b3Tx::b3CopyILBMtoFloat(
 	b3_color * row,
 	b3_coord   y) const
 {
-	b3_u08    *   Data;
 	b3_coord      x, d, BytesPerLine;
 	b3_pkd_color  Color, Bit;
 
@@ -432,7 +431,8 @@ inline void b3Tx::b3CopyILBMtoFloat(
 	{
 		for (x = 0; x < xSize; x++)
 		{
-			Data   = data;
+			b3_u08 * Data   = data;
+
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
 			Color  = 0;
 			Bit    = 128 >> (x & 7);

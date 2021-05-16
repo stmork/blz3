@@ -456,7 +456,7 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 {
 	b3_vector  *  control;
 	b3_index      offset;
-	unsigned      x, y, start;
+	unsigned      x, y;
 
 	control = m_Spline[0].m_Controls;
 	offset  = m_Spline[0].m_Offset;
@@ -474,7 +474,8 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 	// Compute horizontal grid lines
 	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
-		start = y * m_Spline[0].m_ControlNum;
+		const unsigned start = y * m_Spline[0].m_ControlNum;
+
 		for (x = 1; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddLine(

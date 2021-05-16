@@ -87,7 +87,6 @@ void b3TIFF::b3ChangeTag(
 {
 	short * Short;
 	char  * Data = (char *)PtrTIFF;
-	long  * Long;
 	long    i, TagSize;
 
 	b3Endian::b3ChangeEndian16(&DataTag->Code);
@@ -127,8 +126,9 @@ void b3TIFF::b3ChangeTag(
 		b3Endian::b3ChangeEndian32(&DataTag->Data[1]);
 		if (TagSize > b3GetTIFFSize(DataTag))
 		{
+			long * Long = (long *)Data;
+
 			Data += DataTag->Data[1];
-			Long = (long *)Data;
 			for (i = 0; i < TagSize; i++)
 			{
 				b3Endian::b3ChangeEndian32(Long);

@@ -255,7 +255,6 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 {
 	b3_ray        ray;
 	b3_res        x;
-	bool          add;
 	b3_vector64   dir;
 	b3_f64        fxLeft, fxRight, fyUp, fyDown;
 	bool          do_refine_succ = false;
@@ -277,7 +276,8 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 
 	for (x = 0; x < m_xSize; x++)
 	{
-		add = (x > 0 ? b3Test(x) : false);
+		const bool add = (x > 0 ? b3Test(x) : false);
+
 		if (m_Debug)
 		{
 			if (x > 0)
@@ -312,7 +312,7 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 
 			m_ThisResult[x]  = (m_ThisResult[x] + b3Shade(&ray, fxLeft, fyDown)) * 0.25f;
 
-			ray.dir = *b3Vector::b3Add(&m_Scene->m_xHalfDir, &dir);
+//			ray.dir = *b3Vector::b3Add(&m_Scene->m_xHalfDir, &dir);
 		}
 		ray.dir    = *b3Vector::b3Add(&m_Scene->m_xStepDir, &dir);
 		fxRight   += m_fxStep;

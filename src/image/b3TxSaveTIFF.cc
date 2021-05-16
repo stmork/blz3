@@ -70,7 +70,7 @@ void b3Tx::b3GetSampleValues(
 
 b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 {
-	b3_u08   *   cPtr, *pPtr;
+	b3_u08   *   cPtr;
 	b3_u16       r[256], g[256], b[256];
 	b3_coord     y;
 	b3_res       max;
@@ -109,7 +109,8 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 	cPtr = (b3_u08 *)data;
 	for (y = 0; y < ySize; y++)
 	{
-		pPtr = cPtr;	// to be changed for every bit depth...
+		b3_u08 * pPtr = cPtr;	// to be changed for every bit depth...
+
 		if (!TIFFWriteScanline(tiff, pPtr, y, 0))
 		{
 			y      = ySize;

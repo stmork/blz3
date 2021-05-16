@@ -179,20 +179,19 @@ b3InfoJPEG::b3InfoJPEG(b3Tx * tx, const char * filename, b3_u32 quality) :
 
 void b3InfoJPEG::b3Write()
 {
-	b3_u08    *   line;
-	b3_coord      x, y, xMax;
-
-	for (y = 0; y < m_Tx->ySize; y++)
+	for (b3_coord y = 0; y < m_Tx->ySize; y++)
 	{
-		line = (b3_u08 *)JPEGrow_pointer[JPEGline++];
+		b3_u08 * line = (b3_u08 *)JPEGrow_pointer[JPEGline++];
+
 		if (JPEGline >= JPEG_ROWS)
 		{
 			JPEGline = 0;
 		}
 
-		xMax = m_Tx->xSize;
+		const b3_coord xMax = m_Tx->xSize;
+
 		m_Tx->b3GetRow(m_ThisRow, y);
-		for (x = 0; x < xMax; x++)
+		for (b3_coord x = 0; x < xMax; x++)
 		{
 			*line++ = (m_ThisRow[x] & 0xff0000) >> 16;
 			*line++ = (m_ThisRow[x] & 0x00ff00) >>  8;
@@ -208,9 +207,6 @@ void b3InfoJPEG::b3Write()
 
 b3InfoJPEG::~b3InfoJPEG()
 {
-	b3_u08  * line;
-	b3_coord  x, y;
-
 	if (JPEGline != 0)
 	{
 		jpeg_write_scanlines(&JPEGcinfo, JPEGrow_pointer, JPEGline);
@@ -219,14 +215,15 @@ b3InfoJPEG::~b3InfoJPEG()
 
 	if (JPEGwritten < (JDIMENSION)m_Tx->ySize)
 	{
-		line = (b3_u08 *)JPEGrow_pointer[0];
-		for (x = 0; x < m_Tx->xSize; x++)
+		b3_u08 * line = (b3_u08 *)JPEGrow_pointer[0];
+
+		for (b3_coord x = 0; x < m_Tx->xSize; x++)
 		{
 			*line++ = 0;
 			*line++ = 0;
 			*line++ = 0;
 		}
-		for (y = JPEGwritten; y < m_Tx->ySize; y++)
+		for (b3_coord y = JPEGwritten; y < m_Tx->ySize; y++)
 		{
 			jpeg_write_scanlines(&JPEGcinfo, JPEGrow_pointer, 1);
 		}

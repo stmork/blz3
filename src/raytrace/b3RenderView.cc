@@ -269,11 +269,10 @@ b3_bool b3RenderView::b3ViewStackNotEmpty() const
 
 void b3RenderView::b3PopView()
 {
-	b3RenderViewItem * item;
-
 	if (m_ViewMode != B3_VIEW_3D)
 	{
-		item = m_ViewStack[m_ViewMode].Last;
+		b3RenderViewItem * item = m_ViewStack[m_ViewMode].Last;
+
 		B3_ASSERT(item != nullptr);
 		if (item != m_ViewStack[m_ViewMode].First)
 		{

@@ -1101,8 +1101,7 @@ bool b3CSGCylinder::b3Intersect(
 	b3_shape_intervals * interval,
 	b3_line64      *     BTLine)
 {
-	double l1, l2, z, Discriminant, a, p, x, y;
-	bool   check;
+	double Discriminant, a, p;
 
 	interval->m_Count = 0;
 
@@ -1119,9 +1118,11 @@ bool b3CSGCylinder::b3Intersect(
 					BTLine->pos.x * BTLine->pos.x +
 					BTLine->pos.y * BTLine->pos.y - 1) * a) >= 0)
 	{
-		z  = sqrt(Discriminant);
-		l1 = -p - z;
-		l2 = -p + z;
+		double x, y;
+		double z  = sqrt(Discriminant);
+		double l1 = -p - z;
+		double l2 = -p + z;
+		bool   check;
 
 		// check near intersection
 		z = BTLine->pos.z + l1 * BTLine->dir.z;
@@ -1729,13 +1730,13 @@ b3Shape * b3Scene::b3IsObscured(
 
 void b3BBox::b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array)
 {
-	b3Base<b3Item> * Shapes;
 	b3_polar         polar;
 
 	if (b3Intersect(ray, false))
 	{
 		// Is any shape hit?
-		Shapes = b3GetShapeHead();
+		b3Base<b3Item> * Shapes = b3GetShapeHead();
+
 		switch (Shapes->b3GetClass())
 		{
 		case CLASS_SHAPE:

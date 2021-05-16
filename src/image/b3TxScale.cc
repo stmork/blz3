@@ -1886,7 +1886,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 			{
 				rx    = rIndex[x];
 				bit   = m_Bits[rx & 7];
-				value = pal[bData[num + (rx >> 3)] & bit ? 1 : 0];
+				value = pal[(bData[num + (rx >> 3)] & bit) != 0 ? 1 : 0];
 
 				data[index++] = (b3_u08)value;
 			}
@@ -1905,7 +1905,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 				rx  = rIndex[x];
 				bit = m_Bits[rx & 7];
 
-				value = tx_pal[bData[num + (rx >> 3)] & bit ? 1 : 0];
+				value = tx_pal[(bData[num + (rx >> 3)] & bit) != 0 ? 1 : 0];
 
 				lData[index++] = value;
 			}

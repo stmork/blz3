@@ -33,7 +33,6 @@
 
 b3_result b3Tx::b3ParseTGA(const b3_u08 * buffer)
 {
-	b3_pkd_color * srcPtr;
 	b3_count      DataSize, depth1, depth2;
 	b3_index      t, dNext, xk, count, Inc = 1;
 	b3_pkd_color  Color;
@@ -46,11 +45,11 @@ b3_result b3Tx::b3ParseTGA(const b3_u08 * buffer)
 		(const char *)image_name);
 	if (b3AllocTx(xNewSize, yNewSize, 24))
 	{
-		DataSize = xSize * ySize;
-		srcPtr = (b3_pkd_color *)data;
-		FileType = FT_TGA;
+		b3_pkd_color * srcPtr = data;
 
-		depth2 = (4 - (depth1 = buffer[16] >> 3)) << 3;  /* Farbtiefe */
+		DataSize = xSize * ySize;
+		FileType = FT_TGA;
+		depth2   = (4 - (depth1 = buffer[16] >> 3)) << 3;  /* Farbtiefe */
 
 		if (buffer[17] & 0x20)
 		{

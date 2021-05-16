@@ -455,13 +455,13 @@ inline const b3Shape * b3Light::b3CheckSinglePoint(
 
 b3_f64 b3Light::b3ComputeSpotExponent() const
 {
-	b3_index i, max = 20;
-	b3_f64   p     = 0, angle;
-	bool     loop  = true;
+	b3_index max = 20;
+	b3_f64   p   = 0, angle;
 
 	if (m_SpotActive)
 	{
-		i = 0;
+		bool     loop  = true;
+		b3_index i     = 0;
 
 		do
 		{

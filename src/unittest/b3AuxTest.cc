@@ -227,7 +227,7 @@ void b3NurbsSurfaceTest::setUp()
 			m_Controls[i].y =  sin(x_angle) * RADIUS * height;
 			m_Controls[i].z = -cos(y_angle) * RADIUS;
 
-			switch(level)
+			switch (level)
 			{
 			case 0:
 				m_Controls[i].w = 1;

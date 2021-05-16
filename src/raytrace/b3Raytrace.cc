@@ -438,10 +438,11 @@ void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 	b3_res      xSize, ySize;
 	b3_count    CPUs, i;
 	b3_f64      fy, fyStep;
-	bool        isMotionBlur = false;
 
 	try
 	{
+		bool        isMotionBlur = false;
+
 		b3UpdateCamera();
 
 		// What resolution to use

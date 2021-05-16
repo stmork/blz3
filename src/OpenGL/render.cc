@@ -298,9 +298,9 @@ static void b3Banner(const char * command)
 int main(int argc, char * argv[])
 {
 	b3Scene  * scene;
-	char    *  BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
-	char    *  BLZ3_BIN     = getenv("BLZ3_BIN");
-	char    *  HOME         = getenv("HOME");
+	char   *   BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
+	char   *   BLZ3_BIN     = getenv("BLZ3_BIN");
+	char   *   HOME         = getenv("HOME");
 	b3Path     textures;
 	b3Path     pictures;
 	b3Path     data;

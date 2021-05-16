@@ -126,7 +126,6 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	{
 		static const std::regex  regex(R"(P([1-6])\n(\d+)\s+(\d+)\n.*)");
 		std::smatch              matcher;
-		unsigned                 ppm_type;
 
 		// Init.
 		x        = 0;
@@ -143,6 +142,8 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 		const std::string        parse((const char *)buffer, pos);
 		if (std::regex_match(parse, matcher, regex))
 		{
+			unsigned                 ppm_type;
+
 			ppm_type = std::stoul(matcher[1]);
 			x        = std::stol(matcher[2]);
 			y        = std::stol(matcher[3]);
@@ -287,15 +288,14 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 b3_result b3Tx::b3LoadImage(const char * name, bool throw_exception)
 {
 	b3File     file;
-	b3_u08  *  buffer;
 	b3_size    size;
 	b3_result  error_code = B3_ERROR;
 
 	try
 	{
 		b3Name(name);
-		buffer     = file.b3ReadBuffer(name, size);
-		error_code = b3LoadImage(buffer, size);
+		b3_u08 * buffer = file.b3ReadBuffer(name, size);
+		error_code      = b3LoadImage(buffer, size);
 		if (error_code != B3_OK)
 		{
 			B3_THROW(b3TxException, B3_TX_ERROR);

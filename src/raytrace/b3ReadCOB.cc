@@ -391,9 +391,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	const char * name)
 {
 	b3Triangles   *  TriaShape;
-	b3BBox     *     BBox;
 	b3_vertex    *   vert;
-	b3_triangle   *  tria;
 	b3_vector        pos;
 	b3_matrix        transform;
 	char             line[MAX_LINE];
@@ -413,7 +411,8 @@ b3_size b3COBReader::b3COB_ParsePolH(
 
 	if (parent == 0)
 	{
-		BBox = new b3BBox(BBOX);
+		b3BBox * BBox = new b3BBox(BBOX);
+
 		if (BBox != nullptr)
 		{
 			b3Mem::b3StrCpy(BBox->m_BoxName, name, sizeof(BBox->m_BoxName));
@@ -508,6 +507,8 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		}
 		else
 		{
+			b3_triangle   *  tria;
+
 			vert = (b3_vertex *)TriaShape->m_Vertices;
 			tria = (b3_triangle *)TriaShape->m_Triangles;
 
@@ -627,7 +628,6 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 {
 	b3MatNormal * Mat;
 	char         line[MAX_LINE];
-	char         name[B3_FILESTRINGLEN];
 	b3_count     ver, rev;
 	b3_cob_id    id, parent;
 	b3_f32       ambient = 0, specular = 0, alpha, r, g, b;
@@ -647,6 +647,8 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 	Mat = new b3MatNormal(NORMAL_MATERIAL);
 	if (Mat != nullptr)
 	{
+		char         name[B3_FILESTRINGLEN];
+
 		name[0] = 0;
 		if (!b3COB_AllocObject(Mat, id, parent, COB_MAT1))
 		{

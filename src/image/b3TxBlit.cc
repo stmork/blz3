@@ -127,7 +127,7 @@ void b3Tx::b3Blit(const b3Tx   *  srcTx,
 			for (x = 0; x < xMax; x++)
 			{
 
-				*lDst++ = srcTx->palette[cSrc[ind] & bit ? 1 : 0];
+				*lDst++ = srcTx->palette[(cSrc[ind] & bit) != 0 ? 1 : 0];
 				bit     = bit >> 1;
 				if (bit == 0)
 				{

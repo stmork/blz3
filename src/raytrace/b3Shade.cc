@@ -126,8 +126,6 @@ b3_bool b3Shader::b3Shade(
 	b3_ray  * ray,
 	b3_count  depth_count)
 {
-	const b3BBox  * bbox;
-	const b3Shape * shape;
 	b3_surface      surface;
 	b3_bool         finite;
 
@@ -136,8 +134,9 @@ b3_bool b3Shader::b3Shade(
 
 	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, depth_count == 0))
 	{
-		bbox  = ray->bbox;
-		shape = ray->shape;
+		const b3BBox  * bbox  = ray->bbox;
+		const b3Shape * shape = ray->shape;
+
 		surface.m_Incoming = ray;
 
 		// Compute intersection point

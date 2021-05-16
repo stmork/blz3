@@ -348,7 +348,7 @@ int main(int argc, char * argv[])
 							}
 						}
 
-						b3Display    * display = b3AllocDisplay(scene, force_no_display, size);
+						b3Display   *  display = b3AllocDisplay(scene, force_no_display, size);
 						b3CameraPart * camera;
 
 						if ((camera = scene->b3GetFirstCamera(false)) != nullptr)

@@ -50,11 +50,11 @@ class b3_tx_yuv_table
 	inline b3_tx_yuv_table()
 	{
 		long				 i;
-		double				 Rad;
 
 		for (i = 0; i < 256; i++)
 		{
-			Rad = (i - 128.0) * 0.8588;
+			double Rad = (i - 128.0) * 0.8588;
+
 			MultRV[i] = 256 + (long)(Rad *  1.587);  /*  = 156 / 112 *  1.14  */
 			MultGU[i] = 128 + (long)(Rad * -0.394);  /*  = 112 / 112 * -0.394 */
 			MultGV[i] = 128 + (long)(Rad * -0.8092); /*  = 156 / 112 * -0.581 */
@@ -332,7 +332,6 @@ void b3Tx::b3ConvertILBMLine(
 
 void b3Tx::b3HamPalette(bool HAM8)
 {
-	b3_u32  *  LData;
 	b3_u08  *  OldData;
 	b3_u16  *  NewData;
 	b3_u16  *  sData;
@@ -370,7 +369,8 @@ void b3Tx::b3HamPalette(bool HAM8)
 	offset  = (((xSize + 15) & 0x7fffff0) >> 3) * depth;
 	if (HAM8)
 	{
-		LData  = (b3_u32 *)NewData;
+		b3_u32 * LData  = (b3_u32 *)NewData;
+
 		for (y = 0; y < ySize; y++)
 		{
 			b3ConvertILBMLine(Line, OldData, xSize, depth);
