@@ -28,6 +28,12 @@
 
 #include "blz3/base/b3Spline.h"
 
+/*************************************************************************
+**                                                                      **
+**                        Init methods for NURBS testing                **
+**                                                                      **
+*************************************************************************/
+
 class b3NurbsCurveTest : public CppUnit::TestFixture
 {
 protected:
@@ -54,6 +60,12 @@ public:
 	void testInsertion();
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Unit tests for closed NURBS                   **
+**                                                                      **
+*************************************************************************/
+
 class b3NurbsClosedCurveTest : public b3NurbsCurveTest
 {
 	CPPUNIT_TEST_SUITE(b3NurbsClosedCurveTest);
@@ -70,12 +82,19 @@ public:
 	void testCircle() override;
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Unit test for opened NURBS                    **
+**                                                                      **
+*************************************************************************/
+
 class b3NurbsOpenedCurveTest : public b3NurbsCurveTest
 {
 	CPPUNIT_TEST_SUITE(b3NurbsOpenedCurveTest);
 	CPPUNIT_TEST(testCircle);
 	CPPUNIT_TEST(testInsertValidation);
 	CPPUNIT_TEST(testInsertion);
+	CPPUNIT_TEST(test);
 	CPPUNIT_TEST_SUITE_END();
 
 	virtual void b3InitKnotVector() override;
@@ -84,7 +103,14 @@ public:
 	void setUp() override;
 
 	void testCircle() override;
+	void test();
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Unit test for NURBS surfaces                  **
+**                                                                      **
+*************************************************************************/
 
 class b3NurbsSurfaceTest : public CppUnit::TestFixture
 {

@@ -717,7 +717,7 @@ public:
 
 			for (i = 0; i <= m_SubDiv; i++)
 			{
-				b3DeBoorClosed(point++, index, q);
+				b3DeBoorClosed(point++, q, index);
 				q += qStep;
 			}
 		}
@@ -728,7 +728,7 @@ public:
 
 			for (i = 0; i <= m_SubDiv; i++)
 			{
-				b3DeBoorOpened(point++, index, q);
+				b3DeBoorOpened(point++, q, index);
 				q += qStep;
 			}
 		}
@@ -736,7 +736,7 @@ public:
 		return i;
 	}
 
-	unsigned b3DeBoorOpened(VECTOR * point, b3_index index, b3_knot q) const
+	unsigned b3DeBoorOpened(VECTOR * point, b3_knot q, b3_index index = 0) const
 	{
 		const unsigned  i = iFind(q);
 		b3_f64          it[m_Degree + 1];
@@ -766,7 +766,7 @@ public:
 		return i;
 	}
 
-	unsigned  b3DeBoorClosed(VECTOR * point, b3_index index, b3_knot qStart) const
+	unsigned  b3DeBoorClosed(VECTOR * point, b3_knot qStart, b3_index index = 0) const
 	{
 		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
 		unsigned      i     = iFind(qStart);
@@ -822,7 +822,7 @@ public:
 		{
 			for (i = 0; i < m_ControlNum; i++)
 			{
-				b3DeBoorClosed(point++, index, m_Knots[i]);
+				b3DeBoorClosed(point++, m_Knots[i], index);
 			}
 			return m_ControlNum;
 		}
@@ -830,7 +830,7 @@ public:
 		{
 			for (i = m_Degree; i <= m_ControlNum; i++)
 			{
-				b3DeBoorOpened(point++, index, m_Knots[i]);
+				b3DeBoorOpened(point++, m_Knots[i], index);
 			}
 			return m_ControlNum - m_Degree + 1;
 		}
@@ -905,6 +905,7 @@ public:
 					r              = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
 					it[l - j]     += r * it[l - j - 1];
 					it[l - j - 1] *= (1 - r);
+
 					if (--k < 0) /* check underflow of knots */
 					{
 						k += m_ControlNum;
@@ -1020,7 +1021,9 @@ public:
 		}
 		bspline_errno = B3_BSPLINE_OK;
 
-		if (m_Closed) for (unsigned Count = 0; Count < Mult; Count++)
+		if (m_Closed)
+		{
+			for (unsigned Count = 0; Count < Mult; Count++)
 			{
 				start = m_Knots[0];
 				end   = m_Knots[m];
@@ -1051,7 +1054,10 @@ public:
 					m_Controls[((l + m) % m) * m_Offset] = o[(l + (m - 1)) % (m - 1)];
 				}
 			}
-		else for (unsigned Count = 0; Count < Mult; Count++)
+		}
+		else
+		{
+			for (unsigned Count = 0; Count < Mult; Count++)
 			{
 				i = b3InsertDeBoorOpened(o, index, q);
 
@@ -1076,6 +1082,7 @@ public:
 
 				m_ControlNum = ++m;
 			}
+		}
 		return true;
 	}
 
@@ -1127,7 +1134,9 @@ public:
 		}
 		bspline_errno = B3_BSPLINE_OK;
 
-		if (m_Closed) for (Count = 0; Count < Mult; Count++)
+		if (m_Closed)
+		{
+			for (Count = 0; Count < Mult; Count++)
 			{
 				start = m_Knots[0];
 				end   = m_Knots[m];
@@ -1164,7 +1173,10 @@ public:
 					m_Knots[l + m] = m_Knots[l] - start + end;
 				}
 			}
-		else for (Count = 0; Count < Mult; Count++)
+		}
+		else
+		{
+			for (Count = 0; Count < Mult; Count++)
 			{
 				for (y = 0; y < yLines; y++)
 				{
@@ -1195,6 +1207,7 @@ public:
 				m_KnotNum    = ++KnotNum;
 				m_ControlNum = ++m;
 			}
+		}
 		return true;
 	}
 

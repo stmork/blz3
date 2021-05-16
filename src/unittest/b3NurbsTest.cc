@@ -228,6 +228,63 @@ void b3NurbsOpenedCurveTest::testCircle()
 	b3PrintF(B3LOG_DEBUG, "%p\n", m_Radius);
 }
 
+#include "blz3/base/b3Vector.h"
+
+void b3NurbsOpenedCurveTest::test()
+{
+	static const b3_f32 corner = sqrt(2.0) * 0.5;
+
+	static b3_vector4D controls[]
+	{
+		{  1,  0, 0, 1 },
+		{  1,  1, 0, corner },
+		{  0,  1, 0, 1 },
+		{ -1,  1, 0, corner },
+		{ -1,  0, 0, 1 },
+		{ -1, -1, 0, corner },
+		{  0, -1, 0, 1 },
+		{  1, -1, 0, corner },
+		{  1,  0, 0, 1 }
+	};
+
+	static b3Nurbs::b3_knot knots[]
+	{
+		0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4
+	};
+
+	const unsigned control_count = sizeof(controls) / sizeof(controls[0]);
+	const unsigned knot_count    = sizeof(knots) / sizeof(knots[0]);
+	const unsigned degree        = 2;
+
+	CPPUNIT_ASSERT_EQUAL(control_count + degree + 1, knot_count);
+
+	b3Nurbs nurbs;
+
+	nurbs.m_Controls   = controls;
+	nurbs.m_ControlMax = control_count;
+	nurbs.m_Knots      = knots;
+	nurbs.m_KnotMax    = knot_count;
+	CPPUNIT_ASSERT(nurbs.b3InitCurve(degree, control_count, false));
+	CPPUNIT_ASSERT_EQUAL(control_count, nurbs.m_ControlNum);
+	CPPUNIT_ASSERT_EQUAL(knot_count,    nurbs.m_KnotNum);
+	CPPUNIT_ASSERT_EQUAL(degree,        nurbs.m_Degree);
+
+	for (unsigned i = degree; i < control_count - degree; i++)
+	{
+		const float q = knots[i] * 0.75 + knots[i + 1] * 0.25;
+
+		if (q > knots[i])
+		{
+			b3_vector4D point;
+
+			nurbs.b3DeBoorOpened(&point, q);
+
+			const double radius = sqrt(point.x * point.x + point.y * point.y);
+			CPPUNIT_ASSERT_GREATER(0.0, radius);
+		}
+	}
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Unit test for NURBS surfaces                  **

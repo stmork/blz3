@@ -285,7 +285,7 @@ inline bool b3Light::b3PointIllumination(
 			q = (SpotAngle >= 1 ? b3Math::epsilon : acos(SpotAngle) * 2.0 / M_PI);
 		}
 
-		m_Spline.b3DeBoorOpened(&point, 0, q);
+		m_Spline.b3DeBoorOpened(&point, q);
 		Jit.m_LightFrac = m_Distance * RecLightDist * point.y;
 	}
 	else
@@ -345,7 +345,7 @@ inline bool b3Light::b3AreaIllumination(
 			q = (Factor >= 1 ? b3Math::epsilon : acos(Factor) * 2.0 / M_PI);
 		}
 
-		m_Spline.b3DeBoorOpened(&point, 0, q);
+		m_Spline.b3DeBoorOpened(&point, q);
 		Jit.m_LightFrac = denomLightDist * m_Distance * point.y;
 	}
 	else

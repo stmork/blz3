@@ -556,7 +556,7 @@ inline void b3Noise::b3MarbleCurve(
 	knots = Spline->m_Knots;
 	q =        x  * knots[Spline->m_Degree] +
 		(1.0 - x) * knots[Spline->m_ControlNum];
-	Spline->b3DeBoorOpened(result, 0, q);
+	Spline->b3DeBoorOpened(result, q);
 }
 
 b3_f64 b3Noise::b3Marble(const b3_vector * d)
@@ -646,7 +646,7 @@ b3_f64 b3Noise::b3Wave(const b3_vector * point)
 
 	n = b3ImprovedNoise(point->x * 0.5, point->y, point->z);
 	q = b3Math::b3Frac(point->x * 0.5 + n, (b3_f64)m_WaveSpline.m_ControlMax);
-	m_WaveSpline.b3DeBoorClosed(&v, 0, q);
+	m_WaveSpline.b3DeBoorClosed(&v, q);
 
 	return mSin(point->y * 10 + v.z * 2);
 }
@@ -657,7 +657,7 @@ void b3Noise::b3AnimThinFilm(const b3_f64 t, b3_vector * result)
 
 	div = (b3_f64)m_WaveSpline.m_ControlNum;
 	q   = b3Math::b3Frac(t * 0.05f, div);
-	m_WaveSpline.b3DeBoorClosed(result, 0, q);
+	m_WaveSpline.b3DeBoorClosed(result, q);
 }
 
 b3_f64 b3Noise::b3Granite(const b3_vector * point, const b3_count octaves)
