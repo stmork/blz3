@@ -27,6 +27,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "blz3/base/b3Spline.h"
+#include "blz3/base/b3Vector.h"
 
 /*************************************************************************
 **                                                                      **
@@ -56,6 +57,7 @@ public:
 	virtual void tearDown() override;
 	virtual void testCircle() = 0;
 
+	void testFind();
 	void testInsertValidation();
 	void testInsertion();
 };
@@ -70,6 +72,7 @@ class b3NurbsClosedCurveTest : public b3NurbsCurveTest
 {
 	CPPUNIT_TEST_SUITE(b3NurbsClosedCurveTest);
 	CPPUNIT_TEST(testCircle);
+	CPPUNIT_TEST(testFind);
 	CPPUNIT_TEST(testInsertValidation);
 	CPPUNIT_TEST(testInsertion);
 	CPPUNIT_TEST_SUITE_END();
@@ -92,6 +95,7 @@ class b3NurbsOpenedCurveTest : public b3NurbsCurveTest
 {
 	CPPUNIT_TEST_SUITE(b3NurbsOpenedCurveTest);
 	CPPUNIT_TEST(testCircle);
+	CPPUNIT_TEST(testFind);
 	CPPUNIT_TEST(testInsertValidation);
 	CPPUNIT_TEST(testInsertion);
 	CPPUNIT_TEST(test);
@@ -104,6 +108,12 @@ public:
 
 	void testCircle() override;
 	void test();
+
+private:
+	b3Vector32 tinyNurbsDeBoor(
+		const b3Nurbs  &  nurbs,
+		const unsigned    i,
+		const b3_f64      q);
 };
 
 /*************************************************************************

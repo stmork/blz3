@@ -1418,6 +1418,36 @@ public:
 		b3PrintF(level, "  Knots: %p\n", m_Knots);
 	}
 
+	/**
+	 * This method finds an index i of a knot vector K and value q where is
+	 * K_i <= q < K_i+1.
+	 *
+	 * @param q The value to find in the knot vector.
+	 */
+	[[nodiscard]]
+	inline unsigned iFind(const b3_knot q) const
+	{
+		const unsigned max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
+		unsigned       i;
+
+		for (i = 0; i < max; i++)
+		{
+			if ((m_Knots[i] <= q) && (q < m_Knots[i + 1]))
+			{
+				return i;
+			}
+		}
+		if (!m_Closed)
+		{
+			i--;
+			while (m_Knots[i - 1] == m_Knots[i])
+			{
+				i--;
+			}
+		}
+		return i;
+	}
+
 private:
 	/**
 	 * This routine computes the first level of the de Boor algorithm. The
@@ -1532,36 +1562,6 @@ private:
 			}
 		}
 
-		return i;
-	}
-
-	/**
-	 * This method finds an index i of a knot vector K and value q where is
-	 * K_i <= q < K_i+1.
-	 *
-	 * @param q The value to find in the knot vector.
-	 */
-	[[nodiscard]]
-	inline unsigned iFind(const b3_knot q) const
-	{
-		const unsigned max = (m_Closed ? m_ControlNum : m_KnotNum) - 1;
-		unsigned       i;
-
-		for (i = 0; i < max; i++)
-		{
-			if ((m_Knots[i] <= q) && (q < m_Knots[i + 1]))
-			{
-				return i;
-			}
-		}
-		if (!m_Closed)
-		{
-			i--;
-			while (m_Knots[i - 1] == m_Knots[i])
-			{
-				i--;
-			}
-		}
 		return i;
 	}
 };

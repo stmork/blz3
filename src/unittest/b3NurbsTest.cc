@@ -76,6 +76,32 @@ void b3NurbsCurveTest::b3InitControlPoints()
 	}
 }
 
+void b3NurbsCurveTest::testFind()
+{
+	const b3_f64 scale = 8.0;
+
+	m_Nurbs.m_KnotNum = 20;
+	for (unsigned j = 0; j < 100; j++)
+	{
+		for (unsigned k = 0; k < m_Nurbs.m_KnotNum; k++)
+		{
+			m_Nurbs.m_Knots[k] = B3_IRAN(m_Nurbs.m_KnotNum * 3 / 4);
+		}
+		std::sort(m_Nurbs.m_Knots, m_Nurbs.m_Knots + m_Nurbs.m_KnotNum);
+
+		const b3_f64 range = m_Nurbs.b3KnotRange();
+
+		for (unsigned k = 0; k < 100; k++)
+		{
+			const b3Nurbs::b3_knot q = m_Nurbs.b3FirstKnot() + B3_IRAN(range * scale) / scale;
+			const unsigned         i = m_Nurbs.iFind(q);
+
+			CPPUNIT_ASSERT_GREATEREQUAL(m_Nurbs.m_Knots[i], q);
+			CPPUNIT_ASSERT_LESS(m_Nurbs.m_Knots[i + 1], q);
+		}
+	}
+}
+
 void b3NurbsCurveTest::testInsertValidation()
 {
 	const b3_f64 half = (m_Nurbs.b3FirstKnot() + m_Nurbs.b3LastKnot()) * 0.5;
@@ -228,8 +254,6 @@ void b3NurbsOpenedCurveTest::testCircle()
 	b3PrintF(B3LOG_DEBUG, "%p\n", m_Radius);
 }
 
-#include "blz3/base/b3Vector.h"
-
 void b3NurbsOpenedCurveTest::test()
 {
 	static const b3_f32 corner = sqrt(2.0) * 0.5;
@@ -275,15 +299,79 @@ void b3NurbsOpenedCurveTest::test()
 
 		if (q > knots[i])
 		{
-			b3_vector4D point;
+			b3_vector4D b3_result;
 
-			nurbs.b3DeBoorOpened(&point, q);
+			nurbs.b3DeBoorOpened(&b3_result, q);
 
-			const double radius = sqrt(point.x * point.x + point.y * point.y);
-			CPPUNIT_ASSERT_GREATER(0.0, radius);
+			const double b3_radius = sqrt(b3_result.x * b3_result.x + b3_result.y * b3_result.y);
+			CPPUNIT_ASSERT_GREATER(0.0, b3_radius);
+
+			b3Vector32 db_result   = tinyNurbsDeBoor(nurbs, i, q);
+			db_result[b3_vector_index::W] = 0;
+			const b3_f64 db_radius = db_result.b3Length();
+
+			CPPUNIT_ASSERT_GREATER(0.0, db_radius);
+
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::X], b3_result.x, b3Nurbs::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::Y], b3_result.y, b3Nurbs::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::Z], b3_result.z, b3Nurbs::epsilon);
 		}
 	}
 }
+
+b3Vector32 b3NurbsOpenedCurveTest::tinyNurbsDeBoor(
+	const b3Nurbs  &  nurbs,
+	const unsigned    i,
+	const b3_f64      q)
+{
+	/*
+	 * Compute basis functions.
+	 *
+	 * Idea from:
+	 * https://github.com/pradeep-pyro/tinynurbs/blob/master/include/tinynurbs/core/basis.h
+	 */
+	std::vector<b3_f64> N(    nurbs.m_Degree + 1, 0.0);
+	std::vector<b3_f64> left( nurbs.m_Degree + 1, 0.0);
+	std::vector<b3_f64> right(nurbs.m_Degree + 1, 0.0);
+	b3_f64              saved = 0.0;
+
+	N[0] = 1.0;
+	for (unsigned j = 1; j <= nurbs.m_Degree; j++)
+	{
+		left[j]  = (q - nurbs.m_Knots[i + 1 - j]);
+		right[j] = nurbs.m_Knots[i + j] - q;
+		saved    = 0.0;
+
+		for (unsigned r = 0; r < j; r++)
+		{
+			const b3_f64 temp = N[r] / (right[r + 1] + left[j - r]);
+
+			N[r]  = saved + right[r + 1] * temp;
+			saved = left[j - r] * temp;
+		}
+		N[j] = saved;
+	}
+
+	/*
+	 * Evaluate basis funtions into point:
+	 *
+	 * Idea from:
+	 * https://github.com/pradeep-pyro/tinynurbs/blob/master/include/tinynurbs/core/evaluate.h
+	 */
+	b3Vector32 db_result(0);
+
+	for (unsigned j = 0; j <= nurbs.m_Degree; j++)
+	{
+		db_result += b3Vector32(nurbs.m_Controls[i - nurbs.m_Degree + j]) * N[j];
+	}
+
+	const b3_f64 w = db_result[b3_vector_index::W];
+
+	db_result /= w;
+
+	return db_result;
+}
+
 
 /*************************************************************************
 **                                                                      **
