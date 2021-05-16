@@ -51,13 +51,14 @@ public:
 	explicit b3Patch(const char * filename)
 	{
 		FILE  *  patchfile;
-		char     line[1024];
 		b3_count count, i;
 
 		m_BBox = nullptr;
 		patchfile = fopen(filename, B3_TREAD);
 		if (patchfile != nullptr)
 		{
+			char     line[1024];
+
 			b3PrintF(B3LOG_NORMAL, "Reading %s...\n", filename);
 			if (b3ReadLine(line, sizeof(line), patchfile))
 			{
@@ -274,7 +275,6 @@ private:
 
 	void b3CreateObject()
 	{
-		b3SplineShape * shape;
 		b3_count       i;
 		b3_index       index, pos;
 
@@ -283,7 +283,8 @@ private:
 		b3PrintF(B3LOG_NORMAL, "Creating object...\n");
 		for (i = 0; i < m_Patches.b3GetCount(); i++)
 		{
-			shape = new b3SplineShape(SPLINES_AREA);
+			b3SplineShape * shape = new b3SplineShape(SPLINES_AREA);
+
 			shape->b3Init(3, 3, 4, 4);
 			shape->m_Spline[0].b3ToBezier();
 			shape->m_Spline[1].b3ToBezier();

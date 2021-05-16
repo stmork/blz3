@@ -75,6 +75,7 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 		if (fgets(m_Line, sizeof(m_Line), m_BHD) != nullptr)
 		{
 			len = strlen(m_Line);
+
 			while (isspace(m_Line[m_Pos]) && (m_Pos < len))
 			{
 				m_Pos++;
@@ -354,14 +355,11 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 
 void b3BHDParser::b3AddWall(b3BBox * room)
 {
-	b3Item   *   item;
-	b3Shape   *  shape;
-	b3MatNormal * material;
 
-	B3_FOR_BASE(room->b3GetShapeHead(), item)
+	B3_FOR_TYPED_BASE(b3Shape, room->b3GetShapeHead(), shape)
 	{
-		shape = (b3Shape *)item;
-		material = new b3MatNormal(NORMAL_MATERIAL);
+		b3MatNormal * material = new b3MatNormal(NORMAL_MATERIAL);
+
 		material->m_Diffuse.b3Init(1, 1, 1);
 		material->m_Ambient.b3Init(0.2, 0.2, 0.2);
 		material->m_Specular.b3Init(1, 1, 1);
@@ -557,13 +555,11 @@ b3Scene * b3BHDParser::b3Parse(const char * filename)
 
 int main(int argc, char * argv[])
 {
-	int i;
-
 	if (argc > 1)
 	{
 		b3Log::b3SetLevel(B3LOG_FULL);
 		b3RaytracingItems::b3Register();
-		for (i = 1; i < argc; i++)
+		for (int i = 1; i < argc; i++)
 		{
 			b3BHDParser::b3Parse(argv[i]);
 		}

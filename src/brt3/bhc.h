@@ -49,17 +49,17 @@ class b3BHDParser
 		TKN_ROOM,
 		TKN_WINDOW,
 		TKN_DOOR
-	} m_Token;
+	} m_Token = TKN_UNKNOWN;
 
 	static const char * m_TokenNames[];
-	b3Array<b3Point>   m_Points;
-	b3Array<b3_door>   m_Openings;
-	b3_size            m_Pos;
-	char               m_Line[1024];
-	FILE       *       m_BHD;
-	b3Scene      *     m_Scene;
-	b3_count           m_LineNo;
-	b3_f64             m_Scale;
+	b3Array<b3Point>    m_Points;
+	b3Array<b3_door>    m_Openings;
+	char                m_Line[1024];
+	b3_size             m_Pos    = 0;
+	FILE       *        m_BHD    = nullptr;
+	b3Scene      *      m_Scene  = nullptr;
+	b3_count            m_LineNo = 0;
+	b3_f64              m_Scale  = 0.0;
 
 private:
 	explicit b3BHDParser(const char * filename);

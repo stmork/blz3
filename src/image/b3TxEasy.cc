@@ -153,7 +153,6 @@ b3_result b3Tx::b3ParseRAW(
 	b3_res   y,
 	b3_s32   ppm_type)
 {
-	b3_u08    *   newCData;
 	b3_count      i, Max;
 
 	b3PrintF(B3LOG_FULL, "IMG RAW  # b3ParseRAW(%s)\n",
@@ -167,7 +166,7 @@ b3_result b3Tx::b3ParseRAW(
 			b3_count xSrcBytes = TX_BBA(x);
 			b3_count xDstBytes = TX_BWA(x);
 
-			newCData = data;
+			b3_u08 * newCData = data;
 			for (y = 0; y < ySize; y++)
 			{
 				memcpy(newCData, buffer, xSrcBytes);
@@ -429,7 +428,6 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 
 b3_result b3Tx::b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u08    *   gray;
 	b3_coord      x, y;
 	b3_res        xNewSize, yNewSize;
 	b3_count      lSize;
@@ -445,8 +443,9 @@ b3_result b3Tx::b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size)
 	case 2 :
 		if (b3AllocTx(xNewSize, yNewSize, 8))
 		{
+			b3_u08 * gray    = data;
+
 			buffer += buffer_size;
-			gray    = data;
 			for (y = 0; y < ySize; y++)
 			{
 				buffer -= xSize;

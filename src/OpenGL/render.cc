@@ -134,12 +134,12 @@ static void b3PlayAnimation()
 
 static void b3NextCamera(b3Scene * scene)
 {
-	b3CameraPart * camera, *act;
+	b3CameraPart * act = scene->b3GetActualCamera();
 
-	act = scene->b3GetActualCamera();
 	if (act != nullptr)
 	{
-		camera = scene->b3GetNextCamera(act);
+		b3CameraPart * camera = scene->b3GetNextCamera(act);
+
 		if (camera == nullptr)
 		{
 			// Take first camera
@@ -297,17 +297,15 @@ static void b3Banner(const char * command)
 
 int main(int argc, char * argv[])
 {
-	const char   *  filename;
-	b3Item     *    item;
-	b3Scene    *    scene;
-	char      *     BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
-	char      *     BLZ3_BIN     = getenv("BLZ3_BIN");
-	char      *     HOME         = getenv("HOME");
-	b3Path          textures;
-	b3Path          pictures;
-	b3Path          data;
-	b3Loader        loader;
-	b3_index        i;
+	b3Scene  * scene;
+	char    *  BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
+	char    *  BLZ3_BIN     = getenv("BLZ3_BIN");
+	char    *  HOME         = getenv("HOME");
+	b3Path     textures;
+	b3Path     pictures;
+	b3Path     data;
+	b3Loader   loader;
+	b3_index   i;
 
 	if (argc <= 1)
 	{
@@ -343,6 +341,9 @@ int main(int argc, char * argv[])
 
 	try
 	{
+		const char   *  filename = (const char *)argv[i];
+		b3Item     *    item;
+
 		b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
 		b3Dir::b3LinkFileName(textures, HOME, "Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures, HOME, "Blizzard/Pictures");

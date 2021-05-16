@@ -1232,9 +1232,9 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context B3_UNUS
 		glGridElements->b3GetCount());
 #endif
 
-	GLenum error = glGetError();
 	glVertexElements->b3Draw();
-	error = glGetError();
+
+	GLenum error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
 		glGridElements->b3Draw();
@@ -1252,10 +1252,9 @@ void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext * context B3_UNU
 		glPolygonElements->b3GetCount());
 #endif
 
-	GLenum error = glGetError();
 	glVertexElements->b3Draw();
 
-	error = glGetError();
+	GLenum error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
 		glPolygonElements->b3Draw();

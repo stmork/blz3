@@ -185,11 +185,8 @@ int main(int argc, char * argv[])
 {
 	b3ShapeRenderContext  context;
 	b3World       *       world;
-	b3Display      *      display;
 	b3Scene       *       scene;
 	b3Animation     *     animation;
-	b3CameraPart     *    camera;
-	b3Item        *       item;
 	b3_vector             lower, upper;
 	const char      *     BLZ3_DATA        = getenv("BLZ3_DATA");
 	const char      *     BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
@@ -258,10 +255,10 @@ int main(int argc, char * argv[])
 
 		for (i = 1; i < argc; i++)
 		{
-			char    number[1024];
-
 			if (argv[i][0] == '-')
 			{
+				char    number[1024];
+
 				switch (argv[i][1])
 				{
 				case 'd' :
@@ -329,7 +326,7 @@ int main(int argc, char * argv[])
 				try
 				{
 					world->b3Read(argv[i]);
-					for (item  = world->b3GetFirst();
+					for (b3Item * item  = world->b3GetFirst();
 						item != nullptr;
 						item  = scene->Succ)
 					{
@@ -351,7 +348,9 @@ int main(int argc, char * argv[])
 							}
 						}
 
-						display = b3AllocDisplay(scene, force_no_display, size);
+						b3Display    * display = b3AllocDisplay(scene, force_no_display, size);
+						b3CameraPart * camera;
+
 						if ((camera = scene->b3GetFirstCamera(false)) != nullptr)
 						{
 							do
