@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
-SUBDIRS  = system_unix system base image raytrace unittest brt3 benc3 bimg3 render qrender
+SUBDIRS += system_unix system base image raytrace brt3 benc3 bimg3 render qrender
+SUBDIRS += unittest longtest
 CONFIG  += ordered
 
 include(common.pri)
@@ -11,24 +12,27 @@ system.file      = system/system.pro
 base.file        = base/base.pro
 image.file       = image/image.pro
 raytrace.file    = raytrace/raytrace.pro
-unittest.file    = unittest/unittest.pro
 brt3.file        = brt3/brt3.pro
 benc3.file       = brt3/benc3.pro
 bimg3.file       = brt3/bimg3.pro
 render.file      = OpenGL/render.pro
 qrender.file     = OpenGL/qrender.pro
+unittest.file    = unittest/unittest.pro
+longtest.file    = unittest/longtest.pro
 
 system.depends   = system_unix
 base.depends     = system
 image.depends    = base
 raytrace.depends = system base image
-unittest.depends = system base image
 
-brt3.depends     = raytrace
 benc3.depends    = image
 bimg3.depends    = image
+brt3.depends     = raytrace
 render.depends   = raytrace
 qrender.depends  = raytrace
+
+unittest.depends = system base image
+longtest.depends = system base image
 
 #####################################################################
 #

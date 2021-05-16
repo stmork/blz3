@@ -127,12 +127,6 @@
 /* Define to 1 if you have the `X11' library (-lX11). */
 #undef HAVE_LIBX11
 
-/* Define to 1 if you have the `x264' library (-lx264). */
-#undef HAVE_LIBX264
-
-/* Define to 1 if you have the `x265' library (-lx265). */
-#undef HAVE_LIBX265
-
 /* Define to 1 if you have the `Xmu' library (-lXmu). */
 #undef HAVE_LIBXMU
 

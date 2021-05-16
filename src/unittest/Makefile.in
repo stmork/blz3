@@ -16,7 +16,7 @@ LINK.o			= $(LINK.cc)
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE		= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= basetest
+PRGS			= unittest longtest
 
 BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3AlignTest.cc\
@@ -58,7 +58,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3VectorTest.cc\
 	b3WorldTest.cc
 
-BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
+UNITTEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3AlignTest.o\
 	b3ArrayTest.o\
 	b3AuxTest.o\
@@ -72,31 +72,33 @@ BASETEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3ErrorTest.o\
 	b3ExceptionTest.o\
 	b3FactoryTest.o\
-	b3FFTTest.o\
 	b3FileListTest.o\
 	b3FileTest.o\
 	b3FilterTest.o\
-	b3ImageSetup.o\
-	b3ImageTest.o\
 	b3ListTest.o\
 	b3LocaleTest.o\
-	b3MaterialTest.o\
 	b3MathTest.o\
 	b3MatrixTest.o\
 	b3MemoryTest.o\
-	b3MovieTest.o\
 	b3NurbsTest.o\
 	b3OpTest.o\
 	b3PathTest.o\
 	b3PickTest.o\
 	b3RandomTest.o\
-	b3SamplerTest.o\
 	b3SearchPathTest.o\
 	b3SelfTestSuite.o\
 	b3SplineTest.o\
 	b3TimeTest.o\
 	b3VectorTest.o\
 	b3WorldTest.o
+
+LONGTEST_OBJS	= basetest.o b3SkeletonTest.o\
+	b3FFTTest.o\
+	b3ImageSetup.o\
+	b3ImageTest.o\
+	b3MaterialTest.o\
+	b3MovieTest.o\
+	b3SamplerTest.o
 
 TEST_FILES = Config.tst *.jpg test1.bwd test2.bwd
 
@@ -114,9 +116,14 @@ clean:	cleantest
 cleantest:
 	rm -f $(TEST_FILES)
 
-basetest:	$(BASETEST_OBJS) $(B3_LIB_BASE) $(B3_LIB_RAYTRACE)
+unittest:	$(UNITTEST_OBJS) $(B3_LIB_BASE) $(B3_LIB_RAYTRACE)
+	$(LINK.cc) -o $@ $^ $(LDLIBS)
 
-test:	basetest
-	time ./basetest
+longtest:	$(LONGTEST_OBJS) $(B3_LIB_BASE) $(B3_LIB_RAYTRACE)
+	$(LINK.cc) -o $@ $^ $(LDLIBS)
+
+test:	unittest longtest
+	./unittest
+	./longtest
 
 -include .dep

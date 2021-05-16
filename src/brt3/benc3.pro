@@ -15,7 +15,7 @@ SOURCES     += benc3.cc
 
 LIBS        += -lb3System -lb3SystemUnix -lb3Base -lb3Image
 
-QMAKE_CLEAN +=  *.mp4 *.hevc
+QMAKE_CLEAN +=  *.mp4 *.mov *.hevc
 
 #####################################################################
 #

@@ -42,12 +42,13 @@ int main(int argc, char * argv[])
 {
 	char hostname[_SC_HOST_NAME_MAX];
 
-	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
-	b3PrintF(B3LOG_NORMAL, "Compiler:     %s\n", b3Runtime::b3GetCompiler());
+	b3PrintF(B3LOG_NORMAL, "Type of tests: %s\n", argv[0]);
+	b3PrintF(B3LOG_NORMAL, "Compile date:  %s %s\n", __DATE__, __TIME__);
+	b3PrintF(B3LOG_NORMAL, "Compiler:      %s\n", b3Runtime::b3GetCompiler());
 
 	if (b3Runtime::b3Hostname(hostname, sizeof(hostname)))
 	{
-		b3PrintF(B3LOG_NORMAL, "Hostname:     %s\n", hostname);
+		b3PrintF(B3LOG_NORMAL, "Hostname:      %s\n", hostname);
 	}
 
 #ifdef BLZ3_USE_SSE
@@ -83,11 +84,13 @@ int main(int argc, char * argv[])
 #endif
 
 #ifdef HAVE_LIBCPPUNIT
-	ofstream xml("test-results.xml");
+	std::string results_xml(argv[0]);
 
-	CppUnit::TextUi::TestRunner   runner;
+	ofstream xml(results_xml + "-results.xml");
+
+	CppUnit::TextUi::TestRunner    runner;
 	CppUnit::TestFactoryRegistry & registry  = CppUnit::TestFactoryRegistry::getRegistry();
-	CppUnit::XmlOutputter    *    outputter = new CppUnit::XmlOutputter(&runner.result(), xml);
+	CppUnit::XmlOutputter     *    outputter = new CppUnit::XmlOutputter(&runner.result(), xml);
 
 	b3RaytracingItems::b3Register();
 	b3Log::b3SetLevel(B3LOG_NONE);

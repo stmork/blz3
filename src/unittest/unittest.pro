@@ -1,9 +1,11 @@
-# Blizzard III basic unittests.
+# Blizzard III basic unit tests.
 
 QT       -= gui core
 TEMPLATE  = app
 
 include(../common.pri)
+
+message("*** Blizzard III quick running unit tests $$VERSION ***")
 
 HEADERS += b3SkeletonTest.h \
 	b3AlignTest.h \
@@ -19,25 +21,19 @@ HEADERS += b3SkeletonTest.h \
 	b3ErrorTest.h \
 	b3ExceptionTest.h \
 	b3FactoryTest.h \
-	b3FFTTest.h \
 	b3FileListTest.h \
 	b3FileTest.h \
 	b3FilterTest.h \
-	b3ImaheSetup.h \
-	b3ImageTest.h \
 	b3ListTest.h \
 	b3LocaleTest.h \
-	b3MaterialTest.h \
 	b3MathTest.h \
 	b3MatrixTest.h \
 	b3MemoryTest.h \
-	b3MovieTest.h \
 	b3NurbsTest.h \
 	b3OpTest.h \
 	b3PathTest.h \
 	b3PickTest.h \
 	b3RandomTest.h \
-	b3SamplerTest.h \
 	b3SearchPathTest.h \
 	b3SelfTestSuite.h \
 	b3SplineTest.h \
@@ -59,25 +55,19 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3ErrorTest.cc \
 	b3ExceptionTest.cc \
 	b3FactoryTest.cc \
-	b3FFTTest.cc \
 	b3FileListTest.cc \
 	b3FileTest.cc \
 	b3FilterTest.cc \
-	b3ImageSetup.cc \
-	b3ImageTest.cc \
 	b3ListTest.cc \
 	b3LocaleTest.cc \
-	b3MaterialTest.cc \
 	b3MathTest.cc \
 	b3MatrixTest.cc \
 	b3MemoryTest.cc \
-	b3MovieTest.cc \
 	b3NurbsTest.cc \
 	b3OpTest.cc \
 	b3PathTest.cc \
 	b3PickTest.cc \
 	b3RandomTest.cc \
-	b3SamplerTest.cc \
 	b3SearchPathTest.cc \
 	b3SelfTestSuite.cc \
 	b3SplineTest.cc \
@@ -104,7 +94,7 @@ valgrind.commands = valgrind\
 	--tool=memcheck --leak-check=full\
 	--show-reachable=no --undef-value-errors=no --track-origins=no\
 	--child-silent-after-fork=no --trace-children=no --gen-suppressions=no\
-	--xml=yes --xml-file=valgrind.xml ./unittest
+	--xml=yes --xml-file=valgrind-unittest.xml ./unittest
 
 QMAKE_EXTRA_TARGETS += valgrind
-QMAKE_CLEAN         += valgrind.xml
+QMAKE_CLEAN         += valgrind-unittest.xml

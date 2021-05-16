@@ -26,6 +26,7 @@ make cppcheck
 bin/brt3 -n -s 512 data/*
 cd src/unittest
 make -j ${JOBS} valgrind
+make -j ${JOBS} -f Makefile.longtest valgrind
 cd ../..
 
 make lcov
