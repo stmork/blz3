@@ -40,9 +40,9 @@ inline void b3Tx::b3UnpackSGI(
 	b3_count     bytes,
 	b3_offset    offset)
 {
-	b3_u16 * sBuffer;
-	b3_u08 * bBuffer;
-	b3_u16   pixel;
+	b3_u16 *   sBuffer;
+	b3_u08 *   bBuffer;
+	b3_u16     pixel;
 
 	switch (bytes)
 	{
