@@ -147,9 +147,6 @@ b3InfoJPEG::b3InfoJPEG(
 	b3_coord i;
 
 	JPEGrow_stride = tx->xSize * 3;
-	JPEGline       = 0;
-	JPEGwritten    = 0;
-
 	JPEGrow        = b3TypedAlloc<b3_u08>(JPEGrow_stride * JPEG_ROWS);
 	if (JPEGrow == nullptr)
 	{
