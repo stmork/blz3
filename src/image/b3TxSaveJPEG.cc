@@ -46,15 +46,11 @@
 
 
 /* Expanded data destination object for stdio output */
-struct my_destination_mgr
+struct b3_jpeg_dest_mgr : jpeg_destination_mgr
 {
-	struct jpeg_destination_mgr pub; /* public fields */
-
 	b3File * outfile; // target stream
 	JOCTET * buffer; // start of buffer
 };
-
-typedef my_destination_mgr * my_dest_ptr;
 
 class b3InfoJPEG : protected b3TxSaveInfo
 {
@@ -80,19 +76,19 @@ private:
 
 void b3InfoJPEG::b3InitDestination(j_compress_ptr cinfo)
 {
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
+	b3_jpeg_dest_mgr * dest = static_cast<b3_jpeg_dest_mgr *>(cinfo->dest);
 
 	/* Allocate the output buffer --- it will be released when done with image */
 	dest->buffer = (JOCTET *)(*cinfo->mem->alloc_small)((j_common_ptr) cinfo, JPOOL_IMAGE,
 			OUTPUT_BUF_SIZE * sizeof(JOCTET));
 
-	dest->pub.next_output_byte = dest->buffer;
-	dest->pub.free_in_buffer   = OUTPUT_BUF_SIZE;
+	dest->next_output_byte = dest->buffer;
+	dest->free_in_buffer   = OUTPUT_BUF_SIZE;
 }
 
 boolean b3InfoJPEG::b3EmptyOutputBuffer(j_compress_ptr cinfo)
 {
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
+	b3_jpeg_dest_mgr * dest = static_cast<b3_jpeg_dest_mgr *>(cinfo->dest);
 
 	if (dest->outfile->b3Write(dest->buffer, OUTPUT_BUF_SIZE) !=
 		(size_t) OUTPUT_BUF_SIZE)
@@ -100,16 +96,16 @@ boolean b3InfoJPEG::b3EmptyOutputBuffer(j_compress_ptr cinfo)
 		ERREXIT(cinfo, JERR_FILE_WRITE);
 	}
 
-	dest->pub.next_output_byte = dest->buffer;
-	dest->pub.free_in_buffer = OUTPUT_BUF_SIZE;
+	dest->next_output_byte = dest->buffer;
+	dest->free_in_buffer = OUTPUT_BUF_SIZE;
 
 	return true;
 }
 
 void b3InfoJPEG::b3TermDestination(j_compress_ptr cinfo)
 {
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
-	size_t datacount = OUTPUT_BUF_SIZE - dest->pub.free_in_buffer;
+	b3_jpeg_dest_mgr * dest      = static_cast<b3_jpeg_dest_mgr *>(cinfo->dest);
+	size_t             datacount = OUTPUT_BUF_SIZE - dest->free_in_buffer;
 
 	/* Write any data remaining in the buffer */
 	if (datacount > 0)
@@ -124,20 +120,20 @@ void b3InfoJPEG::b3TermDestination(j_compress_ptr cinfo)
 
 void b3InfoJPEG::b3JpegStdioDestPrivate(j_compress_ptr  cinfo)
 {
-	my_dest_ptr dest;
+	b3_jpeg_dest_mgr * dest;
 
 	if (cinfo->dest == nullptr)
 	{
 		/* first time for this JPEG object? */
 		cinfo->dest = (struct jpeg_destination_mgr *)
 			(*cinfo->mem->alloc_small)((j_common_ptr) cinfo, JPOOL_PERMANENT,
-				sizeof(my_destination_mgr));
+				sizeof(b3_jpeg_dest_mgr));
 	}
 
-	dest = (my_dest_ptr) cinfo->dest;
-	dest->pub.init_destination    = b3InitDestination;
-	dest->pub.empty_output_buffer = b3EmptyOutputBuffer;
-	dest->pub.term_destination    = b3TermDestination;
+	dest = static_cast<b3_jpeg_dest_mgr *>(cinfo->dest);
+	dest->init_destination    = b3InitDestination;
+	dest->empty_output_buffer = b3EmptyOutputBuffer;
+	dest->term_destination    = b3TermDestination;
 	dest->outfile                 = &m_File;
 }
 

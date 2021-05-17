@@ -1,13 +1,13 @@
 /*
 **
-**      $Filename:      b3TxSGI.h $
-**      $Release:       Dortmund 2005 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3TxSGI.h $
+**	$Release:       Dortmund 2005 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - SGI classes
+**	Blizzard III - SGI classes
 **
 **      (C) Copyright 2005 Steffen A. Mork
 **          All Rights Reserved

@@ -1,13 +1,13 @@
 /*
 **
-**      $Filename:      b3TxTIFF.h $
-**      $Release:       Dortmund 2005 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3TxTIFF.h $
+**	$Release:       Dortmund 2005 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - TIFF classes
+**	Blizzard III - TIFF classes
 **
 **      (C) Copyright 2005 Steffen A. Mork
 **          All Rights Reserved
@@ -40,13 +40,11 @@ enum b3_tiff_endian
 /**
  * This structure defines a TIFF format header.
  */
-#pragma pack(2)
 struct b3HeaderTIFF
 {
 	b3_u16         TypeCPU;     //!< The endian version (MM or II).
 	b3_u16         VersionTIFF; //!< The version (always 0x2a).
 	b3_u32         FirstTag;    //!< The offset to the first TIFF directory.
 };
-#pragma pack()
 
 #endif
