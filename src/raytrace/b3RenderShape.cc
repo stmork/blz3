@@ -770,7 +770,6 @@ void b3Shape::b3ComputeCylinderVertices(
 		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
 		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
 		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
-		Vector++;
 
 		glVertexCount += 2;
 		xSize++;

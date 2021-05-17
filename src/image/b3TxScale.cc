@@ -605,7 +605,7 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 					sx++)
 				{
 					byte   = src[num];
-					value += tx_pal[byte & bit ? 1 : 0];
+					value += tx_pal[(byte & bit) != 0 ? 1 : 0];
 					bit    = bit >> 1;
 					if (bit == 0)
 					{

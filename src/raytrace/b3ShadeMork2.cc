@@ -80,10 +80,8 @@ void b3ShaderMork2::b3ShadeLight(
 	else
 	{
 		b3_surface  obsSurface;
-		b3Material * obsMat;
 
 		obsSurface.m_Incoming = Jit;
-		obsMat = Jit->shape->b3GetSurfaceValues(&obsSurface);
 		if (obsSurface.m_Refraction > 0)
 		{
 			Jit->m_DiffuseSum += (

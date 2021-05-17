@@ -588,8 +588,6 @@ b3BBox * b3BBox::b3FindParentBBox(b3Shape * shape)
 
 bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 {
-	bool  result;
-
 	B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 	{
 		if (bbox == search)
@@ -598,7 +596,9 @@ bool b3Scene::b3BacktraceRecompute(b3BBox * search)
 			return true;
 		}
 
-		if ((result = bbox->b3BacktraceRecompute(search)) != 0)
+		const bool result = bbox->b3BacktraceRecompute(search) != 0;
+
+		if (result)
 		{
 			bbox->b3Recompute();
 			return result;
