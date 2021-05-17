@@ -559,7 +559,7 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 	b3_coord         x, y, sx, sy, ix, iy, rx, cy;
 	b3_res           xSize, yMin, yMax;
 
-	RectInfo = (b3_rect_info *)ptr;
+	RectInfo = static_cast<b3_rect_info *>(ptr);
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;

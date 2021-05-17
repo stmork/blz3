@@ -33,18 +33,6 @@
 #error "Need at least C++17 standard!"
 #endif
 
-#if defined(__ICC)
-#	define B3_SSE1
-#	define B3_SSE2
-#elif defined(_WIN32)
-#	define B3_SSE1
-#	define B3_SSE2
-#endif
-
-#if defined(__ICC) || defined(_WIN32)
-#	include <xmmintrin.h>
-#endif
-
 #ifdef __GNUC__
 #define B3_UNUSED __attribute__((unused))
 #else

@@ -32,11 +32,9 @@
 
 b3_bool b3BaseTransformation::b3Prepare()
 {
-	b3_f64  denom;
-	b3_bool is_zero_volume;
+	const b3_f64  denom          = b3Matrix::b3Det3(&m_Dir1, &m_Dir2, &m_Dir3);
+	const b3_bool is_zero_volume = denom == 0;
 
-	denom = b3Matrix::b3Det3(&m_Dir1, &m_Dir2, &m_Dir3);
-	is_zero_volume = denom == 0;
 	if (!is_zero_volume)
 	{
 		m_Denom = 1.0 / denom;

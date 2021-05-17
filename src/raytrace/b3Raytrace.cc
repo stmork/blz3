@@ -48,7 +48,7 @@ b3_s32   b3Scene::m_RenderPriority = -2;
 
 bool b3Scene::b3RaytraceThread(void * ptr)
 {
-	b3_rt_info * info  = (b3_rt_info *)ptr;
+	b3_rt_info * info  = static_cast<b3_rt_info *>(ptr);
 	b3Scene   *  scene = info->m_Scene;
 	b3RayRow  *  row;
 
@@ -80,7 +80,7 @@ bool b3Scene::b3RaytraceThread(void * ptr)
 
 bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 {
-	b3_rt_info * info  = (b3_rt_info *)ptr;
+	b3_rt_info * info  = static_cast<b3_rt_info *>(ptr);
 	b3Scene   *  scene = info->m_Scene;
 	b3RayRow  *  row;
 

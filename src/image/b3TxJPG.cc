@@ -61,11 +61,11 @@ public:
 	void    b3Deinit();
 
 private:
-	static void b3ErrorHandler(j_common_ptr cinfo);
-	static void b3JpegInitSource(j_decompress_ptr cinfo);
+	static void    b3ErrorHandler(j_common_ptr cinfo);
+	static void    b3JpegInitSource(j_decompress_ptr cinfo);
 	static boolean b3JpegFillInputBuffer(j_decompress_ptr cinfo);
-	static void b3JpegSkipInputData(j_decompress_ptr cinfo, long num_bytes);
-	static void b3JpegTermSource(j_decompress_ptr cinfo);
+	static void    b3JpegSkipInputData(j_decompress_ptr cinfo, long num_bytes);
+	static void    b3JpegTermSource(j_decompress_ptr cinfo);
 };
 
 /*************************************************************************

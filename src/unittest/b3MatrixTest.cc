@@ -107,19 +107,19 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(&bs,     b3Vector::b3Init(&bs, 2.0, -1.0, -2.0));
 	CPPUNIT_ASSERT_EQUAL(-6.0f,   b3Vector::b3SMul(&as, &bs));
 	CPPUNIT_ASSERT_EQUAL(-6.0,    b3Vector::b3SMul(&ad, &bs));
-	CPPUNIT_ASSERT_EQUAL(3.0f,   b3Vector::b3Length(&bs));
-	CPPUNIT_ASSERT_EQUAL(9.0f,   b3Vector::b3QuadLength(&bs));
-	CPPUNIT_ASSERT_EQUAL(3.0f,   b3Vector::b3Normalize(&bs));
-	CPPUNIT_ASSERT_EQUAL(1.0f,   b3Vector::b3Length(&bs));
-	CPPUNIT_ASSERT_EQUAL(1.0f,   b3Vector::b3Normalize(&bs, 6.0));
-	CPPUNIT_ASSERT_EQUAL(6.0f,   b3Vector::b3Length(&bs));
+	CPPUNIT_ASSERT_EQUAL( 3.0f,   b3Vector::b3Length(&bs));
+	CPPUNIT_ASSERT_EQUAL( 9.0f,   b3Vector::b3QuadLength(&bs));
+	CPPUNIT_ASSERT_EQUAL( 3.0f,   b3Vector::b3Normalize(&bs));
+	CPPUNIT_ASSERT_EQUAL( 1.0f,   b3Vector::b3Length(&bs));
+	CPPUNIT_ASSERT_EQUAL( 1.0f,   b3Vector::b3Normalize(&bs, 6.0));
+	CPPUNIT_ASSERT_EQUAL( 6.0f,   b3Vector::b3Length(&bs));
 
 	CPPUNIT_ASSERT_EQUAL(&bd,   b3Vector::b3Init(&bd, 2.0, -1.0, -2.0));
 	CPPUNIT_ASSERT_EQUAL(-6.0,  b3Vector::b3SMul(&ad, &bd));
 	CPPUNIT_ASSERT_EQUAL(-6.0,  b3Vector::b3SMul(&as, &bd));
-	CPPUNIT_ASSERT_EQUAL(3.0,  b3Vector::b3Length(&bd));
-	CPPUNIT_ASSERT_EQUAL(9.0,  b3Vector::b3QuadLength(&bd));
-	CPPUNIT_ASSERT_EQUAL(3.0,  b3Vector::b3Normalize(&bd));
+	CPPUNIT_ASSERT_EQUAL( 3.0,  b3Vector::b3Length(&bd));
+	CPPUNIT_ASSERT_EQUAL( 9.0,  b3Vector::b3QuadLength(&bd));
+	CPPUNIT_ASSERT_EQUAL( 3.0,  b3Vector::b3Normalize(&bd));
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,  b3Vector::b3Length(&bd), DELTA);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,  b3Vector::b3Normalize(&bd, 6.0), DELTA);
 	CPPUNIT_ASSERT_EQUAL(6.0,  b3Vector::b3Length(&bd));

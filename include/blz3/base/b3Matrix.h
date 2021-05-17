@@ -317,18 +317,19 @@ public:
 		const b3_f64  length = 1.0)
 	{
 #ifdef B3_SSE2
-		b3_f64 * v = &vector->x;
-		b3_f64   denom = 0;
+		b3_f64 * v      = &vector->x;
+		b3_f64   denom  = 0;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
 			denom += v[i] * v[i];
 		}
 
-		const b3_f64 quotient  = length / sqrt(denom);
+		const b3_f64 result    = sqrt(denom);
+		const b3_f64 quotient  = length / result;
 		for (b3_loop i = 0; i < 3; i++)
 		{
-			v[i] *= quotient;
+			v[i]   *= quotient;
 		}
 #else
 		b3_f64 x        = vector->x;
