@@ -64,33 +64,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        SGI RLE structures                            **
-**                                                                      **
-*************************************************************************/
-
-/**
- * This structure defines the SGI image file format header.
- */
-struct b3HeaderSGI
-{
-	b3_u16	imagic;		/* stuff saved on disk . . */
-	b3_u16 	type;
-	b3_u16 	dim;
-	b3_u16 	xsize;
-	b3_u16 	ysize;
-	b3_u16 	zsize;
-	b3_u32 	min;
-	b3_u32 	max;
-	b3_u32	wastebytes;
-	char 	name[80];
-	b3_u32	colormap;
-};
-
-#define IMAGIC1 	0x01da
-#define IMAGIC2 	0xda01
-
-/*************************************************************************
-**                                                                      **
 **                        Imaging structures, classes and defines       **
 **                                                                      **
 *************************************************************************/
@@ -345,6 +318,7 @@ public:
 *************************************************************************/
 
 class b3TxAlgorithms;
+class b3HeaderSGI;
 
 /**
  * This big class represents one image in its best representation.

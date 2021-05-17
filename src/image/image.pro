@@ -24,7 +24,9 @@ HEADERS += \
 	b3EncoderStream.h \
 	b3TxAlgorithms.h \
 	b3TxIFF.h \
-	b3TxSaveInfo.h
+	b3TxSaveInfo.h \
+	b3TxSGI.h \
+	b3TxTIFF.h
 
 SOURCES += \
 	b3Encoder.cc \

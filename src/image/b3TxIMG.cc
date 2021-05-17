@@ -25,6 +25,8 @@
 
 #include "b3TxInclude.h"
 
+#include "b3TxSGI.h"
+
 /*************************************************************************
 **                                                                      **
 **                        SGI RLE image format                          **

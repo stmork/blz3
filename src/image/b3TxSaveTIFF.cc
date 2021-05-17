@@ -62,6 +62,8 @@ void b3Tx::b3GetSampleValues(
 	case B3_TX_RGB8 :
 		bpp = 8;
 		spp = 3;
+
+		B3_FALLTHROUGH;
 	default :
 		bpp = 8;
 		spp = 1;

@@ -31,6 +31,7 @@
 #include "blz3/image/b3Tx.h"
 
 #include "b3TxIFF.h"
+#include "b3TxSGI.h"
 #include "b3TxTIFF.h"
 
 #include <regex>
