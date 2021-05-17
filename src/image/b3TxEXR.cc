@@ -43,16 +43,16 @@ using namespace Iex;
 
 class b3ExrInputStream: public IStream
 {
-	b3_u08  * m_Buffer;
-	b3_size   m_Size;
-	b3_index  m_Index;
+	b3_u08  * m_Buffer = nullptr;
+	b3_size   m_Size   = 0;
+	b3_index  m_Index  = 0;
 
 public:
-	b3ExrInputStream(b3_u08 * buffer, b3_size size, const char * filename) : IStream(filename)
+	b3ExrInputStream(b3_u08 * buffer, b3_size size, const char * filename) :
+		IStream(filename),
+		m_Buffer(buffer),
+		m_Size(size)
 	{
-		m_Buffer = buffer;
-		m_Size   = size;
-		m_Index  = 0;
 	}
 
 	virtual bool read(char c[/*n*/], int n)

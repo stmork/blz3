@@ -46,16 +46,15 @@
 class b3MemTiffInfo
 {
 public:
-	b3_u08 * ptr;
-	tsize_t  size;
-	toff_t   pos;
+	b3_u08 * m_Ptr  = nullptr;
+	tsize_t  m_Size = 0;
+	toff_t   m_Pos  = 0;
 
 public:
-	b3MemTiffInfo(const b3_u08 * InitBuffer, tsize_t InitSize)
+	b3MemTiffInfo(const b3_u08 * InitBuffer, tsize_t InitSize) :
+		m_Ptr(const_cast<b3_u08 *>(InitBuffer)),
+		m_Size(InitSize)
 	{
-		ptr  = (b3_u08 *)InitBuffer;
-		size = InitSize;
-		pos  = 0;
 	}
 };
 
@@ -67,11 +66,11 @@ tsize_t b3Tx::b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcRead: ");
 #endif
 
-	memcpy(buf, &value->ptr[value->pos], size);
-	value->pos += size;
+	memcpy(buf, &value->m_Ptr[value->m_Pos], size);
+	value->m_Pos += size;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "%p %9ld %9ld\n", value->ptr, value->pos, value->size);
+	b3PrintF(B3LOG_FULL, "%p %9ld %9ld\n", value->m_Ptr, value->m_Pos, value->m_Size);
 #endif
 	return size;
 }
@@ -84,11 +83,11 @@ tsize_t b3Tx::b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcWrte: ");
 #endif
 
-	memcpy(&value->ptr[value->pos], buf, size);
-	value->pos += size;
+	memcpy(&value->m_Ptr[value->m_Pos], buf, size);
+	value->m_Pos += size;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "%p %9ld %9ld\n", value->ptr, value->pos, value->size);
+	b3PrintF(B3LOG_FULL, "%p %9ld %9ld\n", value->m_Ptr, value->m_Pos, value->m_Size);
 #endif
 	return size;
 }
@@ -96,7 +95,7 @@ tsize_t b3Tx::b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 toff_t b3Tx::b3SeekProc(thandle_t fd, toff_t off, int whence)
 {
 	b3MemTiffInfo * value  = static_cast<b3MemTiffInfo *>(fd);
-	toff_t                  offset = value->pos;
+	toff_t                  offset = value->m_Pos;
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcSeek: ");
@@ -105,24 +104,24 @@ toff_t b3Tx::b3SeekProc(thandle_t fd, toff_t off, int whence)
 	switch (whence)
 	{
 	case SEEK_SET :
-		value->pos  = off;
+		value->m_Pos  = off;
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "%p %9ld %9ld S\n",
-			value->ptr, value->pos, value->size);
+			value->m_Ptr, value->m_Pos, value->m_Size);
 #endif
 		break;
 
 	case SEEK_CUR :
-		value->pos += off;
+		value->m_Pos += off;
 #ifdef _DEBUG
-		b3PrintF(B3LOG_FULL, "%p %9ld %9ld C\n", value->ptr, value->pos, value->size);
+		b3PrintF(B3LOG_FULL, "%p %9ld %9ld C\n", value->m_Ptr, value->m_Pos, value->m_Size);
 #endif
 		break;
 
 	case SEEK_END :
-		value->pos  = value->size + off;
+		value->m_Pos  = value->m_Size + off;
 #ifdef _DEBUG
-		b3PrintF(B3LOG_FULL, "%p %9ld %9ld E\n", value->ptr, value->pos, value->size);
+		b3PrintF(B3LOG_FULL, "%p %9ld %9ld E\n", value->m_Ptr, value->m_Pos, value->m_Size);
 #endif
 		break;
 	}
@@ -142,17 +141,17 @@ toff_t b3Tx::b3SizeProc(thandle_t fd)
 	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcSize: %ld\n", value->size);
+	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcSize: %ld\n", value->m_Size);
 #endif
-	return value->size;
+	return value->m_Size;
 }
 
 int b3Tx::b3MMapProc(thandle_t fd, tdata_t * pbase, toff_t * psize)
 {
-	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
+	b3MemTiffInfo * tiff_info = static_cast<b3MemTiffInfo *>(fd);
 
-	*pbase = value->ptr;
-	*psize = value->size;
+	*pbase = tiff_info->m_Ptr;
+	*psize = tiff_info->m_Size;
 
 	return 1;
 }

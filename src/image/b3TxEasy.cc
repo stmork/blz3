@@ -236,26 +236,26 @@ b3_result b3Tx::b3ParseRAW(
 
 b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 {
-	b3HeaderBMP  * bmp = (b3HeaderBMP *)buffer;
-	b3_pkd_color * lPtr;
-	b3_u08    *    cPtr;
-	b3_res         xNewSize, yNewSize;
-	b3_coord       x, y;
-	b3_count       numPlanes, numColors;
-	b3_count       i, offset, value;
+	const b3HeaderBMP  * header_bmp = reinterpret_cast<const b3HeaderBMP *>(buffer);
+	b3_pkd_color    *    lPtr;
+	b3_u08       *       cPtr;
+	b3_res               xNewSize, yNewSize;
+	b3_coord             x, y;
+	b3_count             numPlanes, numColors;
+	b3_count             i, offset, value;
 
 	B3_ASSERT(offsetof(b3HeaderBMP, biSize) == 14);
 	B3_ASSERT(sizeof(b3HeaderBMP) == 54);
 
-	xNewSize  = b3Endian::b3GetIntel32(&bmp->biWidth);
-	yNewSize  = b3Endian::b3GetIntel32(&bmp->biHeight);
-	numPlanes = b3Endian::b3GetIntel16(&bmp->biBitCount);
-	numColors = b3Endian::b3GetIntel32(&bmp->biClrUsed);
+	xNewSize  = b3Endian::b3GetIntel32(&header_bmp->biWidth);
+	yNewSize  = b3Endian::b3GetIntel32(&header_bmp->biHeight);
+	numPlanes = b3Endian::b3GetIntel16(&header_bmp->biBitCount);
+	numColors = b3Endian::b3GetIntel32(&header_bmp->biClrUsed);
 
 	b3PrintF(B3LOG_FULL, "IMG BMP  # b3ParseBMP(%s)\n",
 		(const char *)image_name);
 
-	if (bmp->biCompression != 0)
+	if (header_bmp->biCompression != 0)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL, "IMG BMP  # Unsupported packing:\n");
@@ -264,7 +264,7 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 
 	if (numColors == 0)
 	{
-		numColors = (bmp->bfOffBits - sizeof(b3HeaderBMP)) >> 2;
+		numColors = (header_bmp->bfOffBits - sizeof(b3HeaderBMP)) >> 2;
 	}
 
 	if (!b3AllocTx(xNewSize, yNewSize, numPlanes))
@@ -279,7 +279,7 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 	{
 		if (numColors > 0)
 		{
-			const b3_u08 * color_ptr = &buffer[bmp->bfOffBits - numColors * 4];
+			const b3_u08 * color_ptr = &buffer[header_bmp->bfOffBits - numColors * 4];
 
 			for (i = 0; i < numColors; i++)
 			{
@@ -305,7 +305,7 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 
 
 	/* checking bits per pixel */
-	buffer += bmp->bfOffBits;
+	buffer += header_bmp->bfOffBits;
 	switch (numPlanes)
 	{
 	case  1 :

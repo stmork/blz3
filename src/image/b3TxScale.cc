@@ -570,6 +570,7 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 	xSize    = RectInfo->xSizeDst;
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes = RectInfo->xSizeDst;
+	tx_pal   = RectInfo->new_palette;
 
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # %s(%5d - %5d)\n",
 		__FUNCTION__, yMin, yMax);

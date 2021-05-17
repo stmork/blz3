@@ -38,16 +38,11 @@ class b3GifDecoder
 	static const b3_res m_GifMask[13];
 
 public:
-	b3_size bitsleft, availbytes, currbyte;
+	b3_size bitsleft   = 0;
+	b3_size availbytes = 0;
+	b3_size currbyte   = 0;
 
 public:
-	b3GifDecoder()
-	{
-		bitsleft   = 0;
-		availbytes = 0;
-		currbyte   = 0;
-	}
-
 	b3_u32 b3GetNextGifCode(const b3_u08 ** Data, b3_size currsize)
 	{
 		b3_size code;

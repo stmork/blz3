@@ -132,7 +132,6 @@ b3_bool b3TGFReader::b3ParseLight(char * ptr)
 		b3Endian::b3GetIntelFloat(&ptr[0]),
 		b3Endian::b3GetIntelFloat(&ptr[4]),
 		b3Endian::b3GetIntelFloat(&ptr[8]));
-	ptr += 12;
 
 	switch (type)
 	{
@@ -363,8 +362,6 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 #endif
 		lPtr += 6;
 	}
-	ptr  += skip;
-	pos  += skip;
 
 	return b3ParseShapes(bbox, vertices, facettes);
 }
