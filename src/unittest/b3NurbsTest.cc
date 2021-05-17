@@ -229,8 +229,15 @@ void b3NurbsOpenedCurveTest::testCircle()
 
 	for (unsigned s = 0; s <= m_Nurbs.m_SubDiv; s++)
 	{
-		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
-		const unsigned i = m_Nurbs.b3Mansfield(m_BasisCoeff, q);
+		const b3_f64   q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
+		const unsigned i   = m_Nurbs.b3Mansfield(m_BasisCoeff, q);
+		b3_f64         sum = 0.0;
+
+		for (unsigned d = 0; d <= m_Nurbs.m_Degree; d++)
+		{
+			sum += m_BasisCoeff[d];
+		}
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
 
 		m_Nurbs.b3MansfieldVector(&m_Mansfield[s], m_BasisCoeff, i);
 
@@ -301,11 +308,30 @@ void b3NurbsOpenedCurveTest::test()
 		{
 			b3_vector4D b3_result;
 
+			/****** Test using De Boor algorithm (blz3 implementation) ******/
 			nurbs.b3DeBoorOpened(&b3_result, q);
 
 			const double b3_radius = sqrt(b3_result.x * b3_result.x + b3_result.y * b3_result.y);
 			CPPUNIT_ASSERT_GREATER(0.0, b3_radius);
 
+			/****** Test using Mansfield algorithm (blz3 implementation) ******/
+			const unsigned idx = nurbs.b3Mansfield(m_BasisCoeff, q);
+			b3_f64         sum = 0.0;
+			b3_vector4D    mf_result;
+
+			for (unsigned d = 0; d <= nurbs.m_Degree; d++)
+			{
+				sum += m_BasisCoeff[d];
+			}
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
+
+			nurbs.b3MansfieldVector(&mf_result, m_BasisCoeff, idx);
+
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.x, b3_result.x, b3Nurbs::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.y, b3_result.y, b3Nurbs::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.z, b3_result.z, b3Nurbs::epsilon);
+
+			/****** Test using De Boor algorithm (tinynurbs implementation) ******/
 			b3Vector32 db_result   = tinyNurbsDeBoor(nurbs, i, q);
 			db_result[b3_vector_index::W] = 0;
 			const b3_f64 db_radius = db_result.b3Length();
@@ -330,17 +356,19 @@ b3Vector32 b3NurbsOpenedCurveTest::tinyNurbsDeBoor(
 	 * Idea from:
 	 * https://github.com/pradeep-pyro/tinynurbs/blob/master/include/tinynurbs/core/basis.h
 	 */
-	std::vector<b3_f64> N(    nurbs.m_Degree + 1, 0.0);
-	std::vector<b3_f64> left( nurbs.m_Degree + 1, 0.0);
-	std::vector<b3_f64> right(nurbs.m_Degree + 1, 0.0);
-	b3_f64              saved = 0.0;
+	b3_f64  N[nurbs.m_Degree + 1];
+	b3_f64  left[nurbs.m_Degree + 1];
+	b3_f64  right[nurbs.m_Degree + 1];
 
-	N[0] = 1.0;
+	N[0]     = 1.0; // Definitely needed.
+	left[0]  = 0.0; // Not needed, only nice output.
+	right[0] = 0.0; // Not needed, only nice output.
 	for (unsigned j = 1; j <= nurbs.m_Degree; j++)
 	{
+		b3_f64  saved = 0.0;
+
 		left[j]  = (q - nurbs.m_Knots[i + 1 - j]);
 		right[j] = nurbs.m_Knots[i + j] - q;
-		saved    = 0.0;
 
 		for (unsigned r = 0; r < j; r++)
 		{
@@ -360,10 +388,14 @@ b3Vector32 b3NurbsOpenedCurveTest::tinyNurbsDeBoor(
 	 */
 	b3Vector32 db_result(0);
 
+	b3_f64 sum = 0.0;
 	for (unsigned j = 0; j <= nurbs.m_Degree; j++)
 	{
+		sum += N[j];
 		db_result += b3Vector32(nurbs.m_Controls[i - nurbs.m_Degree + j]) * N[j];
 	}
+
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
 
 	const b3_f64 w = db_result[b3_vector_index::W];
 
