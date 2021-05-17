@@ -402,7 +402,7 @@ bool b3Tx::b3ScaleBW2Grey(void * ptr)
 		b3_res     dstSize);
 
 	// ... and some values
-	RectInfo = (b3_rect_info *)ptr;
+	RectInfo = static_cast<b3_rect_info *>(ptr);
 
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
@@ -804,7 +804,7 @@ bool b3Tx::b3RGB8ScaleToRGB8(void * ptr)
 		b3_res               dstSize);
 
 	// ... and some values
-	RectInfo = (b3_rect_info *)ptr;
+	RectInfo = static_cast<b3_rect_info *>(ptr);
 
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
@@ -1219,7 +1219,7 @@ bool b3Tx::b3FloatScaleToRGB8(void * ptr)
 		b3_res     dstSize);
 
 	// ... and some values
-	RectInfo = (b3_rect_info *)ptr;
+	RectInfo = static_cast<b3_rect_info *>(ptr);
 
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
@@ -1790,7 +1790,7 @@ bool b3Tx::b3ScaleBW2BW(void * ptr)
 	b3_count       dstBytes, srcBytes, num;
 	b3_index       index;
 
-	RectInfo = (b3_rect_info *)ptr;
+	RectInfo = static_cast<b3_rect_info *>(ptr);
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;

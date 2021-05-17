@@ -31,16 +31,6 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef USE_JPEGLIB_LOAD
-
-#ifdef GLOBAL
-#undef GLOBAL /* ausser JPEG brauchen wir sowieso nur noch ANSI-C */
-#endif
-
-#ifdef FAR
-#undef FAR
-#endif
-
 #ifdef HAVE_LIBJPEG
 #include <jpeglib.h>
 #include <setjmp.h>
@@ -248,6 +238,5 @@ b3_result b3Tx::b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size)
 	B3_THROW(b3TxException, B3_TX_UNSUPP);
 }
 
-#endif
 #endif
 

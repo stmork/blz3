@@ -29,6 +29,15 @@
 *************************************************************************/
 
 /**
+ * This enumeration lists the possible endian version.
+ */
+enum b3_tiff_sgi
+{
+	IMAGIC1 = 0x01da, // Intel little endian.
+	IMAGIC2 = 0xda01  // Motorola big endian.
+};
+
+/**
  * This structure defines the SGI image file format header.
  */
 struct b3HeaderSGI
@@ -45,8 +54,5 @@ struct b3HeaderSGI
 	char 	name[80];
 	b3_u32	colormap;
 };
-
-#define IMAGIC1 	0x01da
-#define IMAGIC2 	0xda01
 
 #endif

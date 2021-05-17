@@ -48,17 +48,17 @@
 
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u32    *    LongData;
-	b3HeaderTIFF * header;
-	b3HeaderSGI  * b3HeaderSGI;
-	b3_size        pos;
-	b3_coord       x, y;
-	b3_size        i;
+	const b3_u32    *    LongData;
+	const b3HeaderTIFF * header_tiff;
+	const b3HeaderSGI  * header_sgi;
+	b3_size              pos;
+	b3_coord             x, y;
+	b3_size              i;
 
 	b3FreeTx();
 
 	// Check for small buffer
-	LongData = (b3_u32 *)buffer;
+	LongData = reinterpret_cast<const b3_u32 *>(buffer);
 	if (buffer_size < 4)
 	{
 		B3_THROW(b3TxException, B3_TX_ERR_HEADER);
@@ -103,21 +103,10 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 #ifdef HAVE_LIBTIFF
 	// TIFF
-	header = (b3HeaderTIFF *)buffer;
-	if ((header->TypeCPU == B3_BIG_ENDIAN) || (header->TypeCPU == B3_LITTLE_ENDIAN))
+	header_tiff = reinterpret_cast<const b3HeaderTIFF *>(buffer);
+	if ((header_tiff->TypeCPU == B3_BIG_ENDIAN) || (header_tiff->TypeCPU == B3_LITTLE_ENDIAN))
 	{
-#ifndef USE_TIFFLIB_LOAD
-		if (TIFF->VersionTIFF == 0x2a00)
-		{
-			ChangeTIFF(TIFF);
-		}
-		if (TIFF->VersionTIFF == 0x002a)
-		{
-			return b3ParseTIFF(TIFF, buffer_size);
-		}
-#else
 		return b3LoadTIFF(b3Name(), buffer, buffer_size);
-#endif
 	}
 #endif
 
@@ -248,8 +237,8 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	}
 
 	// SGI RLE
-	b3HeaderSGI = (struct b3HeaderSGI *)buffer;
-	if ((b3HeaderSGI->imagic == IMAGIC1) || (b3HeaderSGI->imagic == IMAGIC2))
+	header_sgi = reinterpret_cast<const b3HeaderSGI *>(buffer);
+	if ((header_sgi->imagic == IMAGIC1) || (header_sgi->imagic == IMAGIC2))
 	{
 		return b3ParseSGI(buffer);
 	}

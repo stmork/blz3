@@ -69,12 +69,6 @@
 #	endif
 #endif
 
-#define USE_JPEGLIB_LOAD
-#define USE_JPEGLIB_SAVE
-
-#define USE_TIFFLIB_LOAD
-#define USE_TIFFLIB_SAVE
-
 #define B3_PLUGIN
 
 #if defined(HAVE_LIBSWSCALE) && defined(HAVE_LIBAVCODEC) && defined(HAVE_LIBAVFORMAT) && defined(HAVE_LIBAVUTIL)
