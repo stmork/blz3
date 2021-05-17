@@ -36,8 +36,7 @@ LIB_SOURCE		=\
 	b3TxSaveTGA.cc\
 	b3TxSaveTIFF.cc\
 	b3TxScale.cc\
-	b3TxTGA.cc\
-	b3TxTIFF.cc
+	b3TxTGA.cc
 
 LIB_OBJ			=\
 	b3Encoder.o\
@@ -67,8 +66,7 @@ LIB_OBJ			=\
 	b3TxSaveTGA.o\
 	b3TxSaveTIFF.o\
 	b3TxScale.o\
-	b3TxTGA.o\
-	b3TxTIFF.o
+	b3TxTGA.o
 
 all:	$(LIBS)
 

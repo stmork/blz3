@@ -295,6 +295,7 @@ void b3NurbsOpenedCurveTest::test()
 	nurbs.m_ControlMax = control_count;
 	nurbs.m_Knots      = knots;
 	nurbs.m_KnotMax    = knot_count;
+
 	CPPUNIT_ASSERT(nurbs.b3InitCurve(degree, control_count, false));
 	CPPUNIT_ASSERT_EQUAL(control_count, nurbs.m_ControlNum);
 	CPPUNIT_ASSERT_EQUAL(knot_count,    nurbs.m_KnotNum);

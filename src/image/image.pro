@@ -24,8 +24,7 @@ HEADERS += \
 	b3EncoderStream.h \
 	b3TxAlgorithms.h \
 	b3TxIFF.h \
-	b3TxSaveInfo.h \
-	b3TxTIFF.h
+	b3TxSaveInfo.h
 
 SOURCES += \
 	b3Encoder.cc \
@@ -55,8 +54,7 @@ SOURCES += \
 	b3TxSaveTGA.cc \
 	b3TxSaveTIFF.cc \
 	b3TxScale.cc \
-	b3TxTGA.cc \
-	b3TxTIFF.cc
+	b3TxTGA.cc
 
 LIBS       += -L$$BLZ3_LIB
 LIBS       += -lb3Base
