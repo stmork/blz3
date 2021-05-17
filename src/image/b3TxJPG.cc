@@ -84,7 +84,7 @@ b3_bool b3JPEG::b3Init(const b3_u08 * buffer, b3_size buffer_size)
 {
 	int row_stride;
 
-	m_Decompress.err                     = jpeg_std_error(&m_Error.m_ErrorMgr);
+	m_Decompress.err              = jpeg_std_error(&m_Error.m_ErrorMgr);
 	m_Error.m_ErrorMgr.error_exit = b3ErrorHandler;
 
 	if (setjmp(m_Error.m_SetjmpBuffer) != 0)

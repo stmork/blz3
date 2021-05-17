@@ -46,10 +46,11 @@ const char * b3BHDParser::m_TokenNames[] =
 b3BHDParser::b3BHDParser(const char * filename)
 {
 	b3PrintF(B3LOG_DEBUG, "Parsing file %s\n", filename);
-	m_Scene = nullptr;
+	m_Scene  = nullptr;
 	m_LineNo = 0;
-	m_BHD   = fopen(filename, B3_TREAD);
-	m_Scale = 1;
+	m_BHD    = fopen(filename, B3_TREAD);
+	m_Scale  = 1;
+	bzero(m_Line, sizeof(m_Line));
 	if (m_BHD == nullptr)
 	{
 		throw b3ParseException("File not found");
