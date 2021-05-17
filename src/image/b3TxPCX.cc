@@ -65,8 +65,6 @@ struct b3HeaderPCX
 
 b3_result b3Tx::b3ParsePCX8(const b3_u08 * buffer)
 {
-	const b3_u08 * srcPtr;
-	b3_u08    *    dstPtr, Col;
 	b3_pkd_color   t;
 	b3_res         xNewSize, yNewSize;
 	b3_size        i = 0;
@@ -78,12 +76,13 @@ b3_result b3Tx::b3ParsePCX8(const b3_u08 * buffer)
 	yNewSize = b3Endian::b3GetIntel16(&buffer[10]) + 1;
 	if (b3AllocTx(xNewSize, yNewSize, 8))
 	{
+		const b3_u08 * srcPtr = &buffer[128];
+		b3_u08    *    dstPtr = data;
+
 		FileType = FT_PCX8;
-		srcPtr   = &buffer[128];
-		dstPtr   = data;
 		while (i < dSize)
 		{
-			Col = *srcPtr++;
+			b3_u08 Col = *srcPtr++;
 
 			if ((Col & 192) == 192)
 			{
@@ -124,8 +123,7 @@ b3_result b3Tx::b3ParsePCX8(const b3_u08 * buffer)
 
 b3_result b3Tx::b3ParsePCX4(const b3_u08 * buffer)
 {
-	b3_u08    *   srcPtr;
-	b3_u08    *   dstPtr, Col;
+	b3_u08        Col;
 	b3_count      u, xSrcBytes;
 	b3_pkd_color  t;
 	b3_size       i, DataSize;
@@ -147,7 +145,7 @@ b3_result b3Tx::b3ParsePCX4(const b3_u08 * buffer)
 		FileType  = FT_PCX4;
 		xSrcBytes = buffer[66];
 
-		srcPtr   = (b3_u08 *)&buffer[128];
+		const b3_u08 * srcPtr = &buffer[128];
 		DataSize = ySize * xSrcBytes * depth;
 
 		u = 16;
@@ -159,7 +157,7 @@ b3_result b3Tx::b3ParsePCX4(const b3_u08 * buffer)
 			palette[i] = t;
 		}
 
-		dstPtr = (b3_u08 *)data;
+		b3_u08 * dstPtr = data;
 
 		i = 0;
 		while (i < DataSize)

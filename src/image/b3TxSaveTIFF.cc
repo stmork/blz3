@@ -54,16 +54,18 @@ void b3Tx::b3GetSampleValues(
 			spp = 1;
 		}
 		break;
+
 	case B3_TX_VGA :
 		bpp = depth;
 		spp = 1;
 		break;
+
 	case B3_TX_RGB4 :
 	case B3_TX_RGB8 :
 		bpp = 8;
 		spp = 3;
+		break;
 
-		B3_FALLTHROUGH;
 	default :
 		bpp = 8;
 		spp = 1;

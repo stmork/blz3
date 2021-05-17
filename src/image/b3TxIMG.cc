@@ -40,7 +40,6 @@ inline void b3Tx::b3UnpackSGI(
 	b3_count     bytes,
 	b3_offset    offset)
 {
-	b3_u16 * sBuffer;
 	b3_u08 * bBuffer;
 	b3_u16   pixel;
 
@@ -100,7 +99,8 @@ inline void b3Tx::b3UnpackSGI(
 		}
 		else
 		{
-			sBuffer  = (b3_u16 *)inPtr;
+			b3_u16 * sBuffer  = (b3_u16 *)inPtr;
+
 			sBuffer += offset;
 			do
 			{
@@ -158,8 +158,7 @@ void b3Tx::b3ParseSGI3(
 	b3_u08    *    line;
 	b3_u08    *    cPtr;
 	b3_res         zSize = depth >> 3;
-	long           x, y, z;
-	long           rle, bytes, block;
+	b3_count       rle, bytes, block;
 
 	bytes =   HeaderSGI->type & 0x00ff; /* check bytes per pixel */
 	rle   = ((HeaderSGI->type & 0xff00) == 0x0100) ? 0 : xSize; /* check RLE */
@@ -181,7 +180,9 @@ void b3Tx::b3ParseSGI3(
 	{
 		if (rle <= 0) /* RLE data */
 		{
-			for (y = 0; y < ySize; y++) for (z = 0; z < zSize; z++)
+			for (b3_count y = 0; y < ySize; y++)
+			{
+				for (b3_count z = 0; z < zSize; z++)
 				{
 					b3Endian::b3ChangeEndian32(&lineTable[y + z * ySize]);
 					b3Endian::b3ChangeEndian32(&lineSizes[y + z * ySize]);
@@ -189,14 +190,18 @@ void b3Tx::b3ParseSGI3(
 						lineTable[y + z * ySize],
 						lineSizes[y + z * ySize], bytes);
 				}
+			}
 		}
 		else /* raw (VERBATIM) data */
 		{
-			for (y = 0; y < ySize; y++) for (z = 0; z < zSize; z++)
+			for (b3_count y = 0; y < ySize; y++)
+			{
+				for (b3_count z = 0; z < zSize; z++)
 				{
 					b3ConvertSGILine((b3_u16 *)buffer,
 						256 + y * xSize * zSize + z * xSize, xSize, bytes);
 				}
+			}
 		}
 	}
 
@@ -205,7 +210,7 @@ void b3Tx::b3ParseSGI3(
 	case B3_TX_RGB8 :
 		lPtr  = (b3_pkd_color *)data;
 		block = xSize * ySize;
-		for (y = ySize - 1; y >= 0; y--)
+		for (b3_count y = ySize - 1; y >= 0; y--)
 		{
 			if (rle > 0) /* read raw data */
 			{
@@ -219,7 +224,7 @@ void b3Tx::b3ParseSGI3(
 				b3UnpackSGI(&line[xSize],         buffer, rle, bytes, lineTable[y + ySize]);
 				b3UnpackSGI(&line[xSize + xSize], buffer, rle, bytes, lineTable[y + ySize + ySize]);
 			}
-			for (x = 0; x < xSize; x++)
+			for (b3_count x = 0; x < xSize; x++)
 			{
 				value   = line[x];
 				value   = (value << 8) | line[x + xSize];
@@ -230,7 +235,7 @@ void b3Tx::b3ParseSGI3(
 
 	case B3_TX_VGA :
 		cPtr = data;
-		for (y = ySize - 1; y >= 0; y--)
+		for (b3_count y = ySize - 1; y >= 0; y--)
 		{
 			if (rle > 0)
 			{
