@@ -54,17 +54,18 @@ struct b3_jpeg_dest_mgr : jpeg_destination_mgr
 
 class b3InfoJPEG : protected b3TxSaveInfo
 {
-	b3_u08           *           JPEGrow;
 	struct jpeg_compress_struct  JPEGcinfo;
 	struct jpeg_error_mgr        JPEGjerr;
-	JDIMENSION                   JPEGline;
-	JDIMENSION                   JPEGwritten;
 	JSAMPROW                     JPEGrow_pointer[JPEG_ROWS];
-	int                          JPEGrow_stride;
+	b3_u08           *           JPEGrow        = nullptr;
+	JDIMENSION                   JPEGline       = 0;
+	JDIMENSION                   JPEGwritten    = 0;
+	int                          JPEGrow_stride = 0;
 
 public:
-	b3InfoJPEG(b3Tx * tx, const char * filename, b3_u32 quality = 75);
-	~b3InfoJPEG();
+	b3InfoJPEG(b3Tx * tx, const char * filename, const b3_u32 quality = 85);
+	virtual ~b3InfoJPEG();
+
 	void  b3Write();
 
 private:
@@ -137,7 +138,10 @@ void b3InfoJPEG::b3JpegStdioDestPrivate(j_compress_ptr  cinfo)
 	dest->outfile                 = &m_File;
 }
 
-b3InfoJPEG::b3InfoJPEG(b3Tx * tx, const char * filename, b3_u32 quality) :
+b3InfoJPEG::b3InfoJPEG(
+		b3Tx *       tx,
+		const char * filename,
+		const b3_u32 quality) :
 	b3TxSaveInfo(tx, filename)
 {
 	b3_coord i;
