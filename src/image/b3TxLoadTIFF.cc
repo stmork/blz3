@@ -285,7 +285,7 @@ long b3Tx::b3TIFFDecode(
 		b3_index  pos;
 		b3_u32    bit;
 		b3_u08  * lPtr;
-		b3_u08  * cPtr, cVal;
+		b3_u08    cVal;
 
 		max = TIFFScanlineSize(tiff);
 		switch (PlanarConfig)
@@ -294,7 +294,8 @@ long b3Tx::b3TIFFDecode(
 			lPtr = b3TypedAlloc<b3_u08>(max);
 			if (lPtr != nullptr)
 			{
-				cPtr = data;
+				b3_u08 * cPtr = data;
+
 				for (y = 0; y < ySize; y++)
 				{
 					if (TIFFReadScanline(tiff, lPtr, y, 0) != 1)
@@ -419,13 +420,13 @@ long b3Tx::b3TIFFDecode(
 b3_result b3Tx::b3LoadTIFF(const char * tiff_name)
 {
 	b3File     tiff_file;
-	b3_u08  *  buffer;
 	b3_size    size;
 	b3_result  error_code = B3_OK;
 
 	try
 	{
-		buffer     = tiff_file.b3ReadBuffer(tiff_name, size);
+		b3_u08 * buffer = tiff_file.b3ReadBuffer(tiff_name, size);
+
 		error_code = b3LoadTIFF(tiff_name, buffer, size);
 	}
 	catch (b3FileException & e)

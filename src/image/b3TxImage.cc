@@ -50,19 +50,21 @@ b3_count b3Tx::b3BuildRLE(
 	b3_count     count, num;
 	b3_index     i, x;
 	b3_pkd_color bit;
-	bool         last, act;
+	bool         last;
 
 	// building RLE code
 	bit   = 128;
 	i     = 0;
 	last  = true;	// true = last bit set/false = last bit cleared
+
 	// So: We start with black block!
 	count = 0;
 	num   = 0;
 	for (x = 0; x < xSize; x++)
 	{
 		// get RLE code, starting with black code
-		act = (cPtr[i] & bit) != 0;
+		bool act = (cPtr[i] & bit) != 0;
+
 		if (act != last)
 		{
 			// Here an equal block ends and we have
@@ -390,7 +392,6 @@ void b3Tx::b3RemoveBlackBorder()
 	for (y = 0; y < ySize; y++)
 	{
 		// remove left black border
-		loop = true;
 		x    = 0;
 		do
 		{
@@ -405,7 +406,6 @@ void b3Tx::b3RemoveBlackBorder()
 		while (loop);
 
 		// remove right border
-		loop    = true;
 		x       = xEnd;
 		do
 		{
@@ -493,14 +493,14 @@ bool b3Tx::b3Negate()
 	b3_color   *   cPtr;
 	b3_pkd_color * lPtr;
 	b3_u16    *    sPtr;
-	b3_u08    *    bPtr;
 	b3_count       xBytes, max;
 	b3_index       i;
 
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Negate()\n");
 	if (b3IsBW())
 	{
-		bPtr   = data;
+		b3_u08 * bPtr = data;
+
 		xBytes = TX_BWA(xSize);
 		max    = xBytes * ySize;
 		for (i = 0; i < max; i++)

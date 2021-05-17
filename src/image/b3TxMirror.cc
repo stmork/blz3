@@ -33,10 +33,10 @@ void b3Tx::b3MirrorHorizontal()
 {
 	b3_tx_data     ptr(data);
 	b3_coord       x, y, xHalf = xSize >> 1;
-	b3_color   *   ctPtr, *cbPtr, cColor;
-	b3_pkd_color * ltPtr, *lbPtr, lColor;
-	b3_u16    *    stPtr, *sbPtr, sColor;
-	b3_u08    *    btPtr, *bbPtr, bColor;
+	b3_color   *   cbPtr, cColor;
+	b3_pkd_color * lbPtr, lColor;
+	b3_u16    *    sbPtr, sColor;
+	b3_u08    *    bbPtr, bColor;
 
 	// Untested, yet.
 	switch (type)
@@ -45,7 +45,8 @@ void b3Tx::b3MirrorHorizontal()
 		cbPtr = ptr;
 		for (y = 0; y < ySize; y++)
 		{
-			ctPtr = &cbPtr[xSize];
+			b3_color * ctPtr = &cbPtr[xSize];
+
 			for (x = 0; x < xHalf; x++)
 			{
 				ctPtr--;
@@ -61,7 +62,8 @@ void b3Tx::b3MirrorHorizontal()
 		lbPtr = ptr;
 		for (y = 0; y < ySize; y++)
 		{
-			ltPtr = &lbPtr[xSize];
+			b3_pkd_color * ltPtr = &lbPtr[xSize];
+
 			for (x = 0; x < xHalf; x++)
 			{
 				ltPtr--;
@@ -77,7 +79,8 @@ void b3Tx::b3MirrorHorizontal()
 		sbPtr = ptr;
 		for (y = 0; y < ySize; y++)
 		{
-			stPtr = &sbPtr[xSize];
+			b3_u16 * stPtr = &sbPtr[xSize];
+
 			for (x = 0; x < xHalf; x++)
 			{
 				stPtr--;
@@ -93,7 +96,8 @@ void b3Tx::b3MirrorHorizontal()
 		bbPtr = data;
 		for (y = 0; y < ySize; y++)
 		{
-			btPtr = &bbPtr[xSize];
+			b3_u08 * btPtr = &bbPtr[xSize];
+
 			for (x = 0; x < xHalf; x++)
 			{
 				btPtr--;
