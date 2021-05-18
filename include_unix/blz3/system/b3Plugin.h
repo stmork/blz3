@@ -30,7 +30,7 @@
 class b3Loader : public b3LoaderBase
 {
 protected:
-	b3_bool       b3IsPlugin(b3Path & library) override;
+	b3_bool        b3IsPlugin(b3Path & library) override;
 	b3PluginBase * b3CreatePlugin(b3Path & library) override;
 };
 

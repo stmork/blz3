@@ -1509,7 +1509,7 @@ void b3Tx::b3ColorGrid()
 	}
 
 	// Allocate grid
-	grid = new b3ColorIndices[B3_MAX_GRID];
+	grid = new (std::nothrow) b3ColorIndices[B3_MAX_GRID];
 	if (grid == nullptr)
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
