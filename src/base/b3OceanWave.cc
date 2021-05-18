@@ -58,10 +58,7 @@ b3OceanWave::b3OceanWave()
 
 b3OceanWave::~b3OceanWave()
 {
-	if (m_Phillips != nullptr)
-	{
-		delete [] m_Phillips;
-	}
+	delete [] m_Phillips;
 }
 
 void b3OceanWave::b3Modified(bool modified)
@@ -200,7 +197,7 @@ void b3OceanWave::b3ComputePhillipsSpectrum()
 	{
 		b3_size size = m_fftDiff * m_fftDiff;
 
-		m_Phillips = new b3Complex64[size];
+		m_Phillips = new (std::nothrow) b3Complex64[size];
 		if (m_Phillips == nullptr)
 		{
 			B3_THROW(b3FFTException, B3_FFT_NO_MEMORY);

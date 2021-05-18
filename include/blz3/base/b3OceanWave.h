@@ -117,7 +117,7 @@ public:
 	 *
 	 * @return The height field.
 	 */
-	inline b3Complex64 * b3GetBuffer()
+	inline b3Complex64 * b3GetBuffer() const
 	{
 		return m_FFT.b3GetBuffer();
 	}

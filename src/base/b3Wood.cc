@@ -161,10 +161,7 @@ b3OakPlank::b3OakPlank()
 
 b3OakPlank::~b3OakPlank()
 {
-	if (m_Planks != nullptr)
-	{
-		delete [] m_Planks;
-	}
+	delete [] m_Planks;
 }
 
 void b3OakPlank::b3InitOakPlank()
@@ -189,6 +186,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	if (m_Planks != nullptr)
 	{
 		delete [] m_Planks;
+		m_Planks = nullptr;
 	}
 	m_PlankCount = m_xTimes * m_yTimes;
 	m_Planks     = new b3Wood[m_PlankCount];

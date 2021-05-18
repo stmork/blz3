@@ -128,7 +128,7 @@ bool b3FileList::b3Add(const char * name)
 		entry = new b3FileEntry(name);
 		list.b3Append(entry);
 	}
-	catch (...)
+	catch (std::bad_alloc & e)
 	{
 		entry = nullptr;
 	}

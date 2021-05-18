@@ -139,9 +139,9 @@ void b3InfoJPEG::b3JpegStdioDestPrivate(j_compress_ptr  cinfo)
 }
 
 b3InfoJPEG::b3InfoJPEG(
-		b3Tx *       tx,
-		const char * filename,
-		const b3_u32 quality) :
+	b3Tx    *    tx,
+	const char * filename,
+	const b3_u32 quality) :
 	b3TxSaveInfo(tx, filename)
 {
 	b3_coord i;

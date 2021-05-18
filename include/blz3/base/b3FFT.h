@@ -116,7 +116,7 @@ public:
 	}
 
 	bool      b3GetBuffer(b3Tx * tx, b3_f64 amp) const;
-	bool      b3GetSpectrum(b3Tx * tx, b3_f64 amp);
+	bool      b3GetSpectrum(b3Tx * tx, b3_f64 amp) const;
 
 	inline b3Complex64 * b3GetBuffer() const
 	{

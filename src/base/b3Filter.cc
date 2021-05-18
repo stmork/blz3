@@ -36,13 +36,13 @@ b3Filter * b3Filter::b3New(b3_filter filter)
 	switch (filter)
 	{
 	case B3_FILTER_BOX:
-		return new b3BoxFilter();
+		return new (std::nothrow) b3BoxFilter();
 
 	case B3_FILTER_GAUSS:
-		return new b3GaussFilter();
+		return new (std::nothrow) b3GaussFilter();
 
 	case B3_FILTER_SHUTTER:
-		return new b3ShutterFilter();
+		return new (std::nothrow) b3ShutterFilter();
 	}
 	return nullptr;
 }

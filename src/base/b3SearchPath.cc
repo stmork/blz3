@@ -43,11 +43,14 @@ void b3SearchPath::b3AddPath(const char * path)
 {
 	if (b3Dir::b3Exists(path) == B3_TYPE_DIR)
 	{
-		b3PathEntry * path_item = new b3PathEntry(path);
+		b3PathEntry * path_item = new (std::nothrow) b3PathEntry(path);
 
-		b3PrintF(B3LOG_DEBUG, "Adding search path \"%s\"\n",
-			(const char *)*path_item);
-		m_SearchPath.b3Append(path_item);
+		if (path_item != nullptr)
+		{
+			b3PrintF(B3LOG_DEBUG, "Adding search path \"%s\"\n",
+				(const char *)*path_item);
+			m_SearchPath.b3Append(path_item);
+		}
 	}
 #ifdef _DEBUG
 	else

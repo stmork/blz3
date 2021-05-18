@@ -67,18 +67,10 @@ b3RenderObject::b3RenderObject()
 
 b3RenderObject::~b3RenderObject()
 {
-	if (glVertexElements != nullptr)
-	{
-		delete glVertexElements;
-	}
-	if (glGridElements != nullptr)
-	{
-		delete glGridElements;
-	}
-	if (glPolygonElements != nullptr)
-	{
-		delete glPolygonElements;
-	}
+	delete glVertexElements;
+	delete glGridElements;
+	delete glPolygonElements;
+
 	b3CreateTexture(nullptr, 0);
 	b3DeleteDisplayList();
 }
@@ -230,29 +222,32 @@ void b3RenderObject::b3PreAlloc()
 			if (b3VectorBufferObjects::b3AllowVBO())
 			{
 #if 0
-				glVertexElements  = new b3VboVertexElements();
-				glGridElements    = new b3VboGridElements();
-				glPolygonElements = new b3VboPolygonElements();
+				glVertexElements  = new (std::nothrow) b3VboVertexElements();
+				glGridElements    = new (std::nothrow) b3VboGridElements();
+				glPolygonElements = new (std::nothrow) b3VboPolygonElements();
 #else
-				glVertexElements  = new b3VboStaticVertexElements();
-				glGridElements    = new b3VboStaticGridElements();
-				glPolygonElements = new b3VboStaticPolygonElements();
+				glVertexElements  = new (std::nothrow) b3VboStaticVertexElements();
+				glGridElements    = new (std::nothrow) b3VboStaticGridElements();
+				glPolygonElements = new (std::nothrow) b3VboStaticPolygonElements();
 #endif
 			}
 			else
 			{
-				glVertexElements  = new b3ArrayVertexElements();
-				glGridElements    = new b3ArrayGridElements();
-				glPolygonElements = new b3ArrayPolygonElements();
+				glVertexElements  = new (std::nothrow) b3ArrayVertexElements();
+				glGridElements    = new (std::nothrow) b3ArrayGridElements();
+				glPolygonElements = new (std::nothrow) b3ArrayPolygonElements();
 			}
 		}
 		else
 		{
-			glVertexElements  = new b3SimpleVertexElements();
-			glGridElements    = new b3SimpleGridElements();
-			glPolygonElements = new b3SimplePolygonElements();
+			glVertexElements  = new (std::nothrow) b3SimpleVertexElements();
+			glGridElements    = new (std::nothrow) b3SimpleGridElements();
+			glPolygonElements = new (std::nothrow) b3SimplePolygonElements();
 		}
-		glInit = true;
+		glInit =
+			(glVertexElements  != nullptr) &&
+			(glGridElements    != nullptr) &&
+			(glPolygonElements != nullptr);
 	}
 }
 

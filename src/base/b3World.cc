@@ -154,7 +154,7 @@ b3Item * b3World::b3AllocNode(b3_u32 * buffer, const bool throw_exception)
 		}
 		else
 		{
-			item = new b3Item(buffer);
+			item = new (std::nothrow) b3Item(buffer);
 		}
 	}
 	return item;
@@ -505,7 +505,7 @@ void b3World::b3CloneBase(
 			}
 			else
 			{
-				dstItem = new b3Item(srcItem->m_StoreBuffer);
+				dstItem = new (std::nothrow) b3Item(srcItem->m_StoreBuffer);
 			}
 		}
 
@@ -540,7 +540,7 @@ b3Item * b3World::b3Clone(b3Item * original, const bool throw_exception)
 		}
 		else
 		{
-			item = new b3Item(original->m_StoreBuffer);
+			item = new (std::nothrow) b3Item(original->m_StoreBuffer);
 		}
 	}
 

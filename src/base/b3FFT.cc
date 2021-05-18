@@ -82,8 +82,7 @@ bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 	b3_res size = b3Math::b3PowOf2(new_size);
 
 	b3PrintF(B3LOG_FULL, ">b3Fourier::b3AllocBuffer(%d)\n", size);
-	m_xOrig  =
-		m_yOrig  = new_size;
+	m_xOrig  = m_yOrig  = new_size;
 	m_xStart = (size - m_xOrig) >> 1;
 	m_yStart = (size - m_yOrig) >> 1;
 
@@ -95,8 +94,7 @@ bool b3Fourier::b3AllocBuffer(const b3_res new_size)
 	}
 	b3FreeBuffer();
 
-	m_xSize  =
-		m_ySize  = size;
+	m_xSize  = m_ySize  = size;
 	if (!b3ReallocBuffer())
 	{
 		b3FreeBuffer();
@@ -161,9 +159,9 @@ bool b3Fourier::b3ReallocBuffer()
 	m_xDim   = b3Math::b3Log2(m_xSize);
 	m_yDim   = b3Math::b3Log2(m_ySize);
 
-	m_Buffer = new b3Complex64[m_xSize * m_ySize];
-	m_Lines  = new b3Complex64 *[m_ySize];
-	m_Aux    = new b3Complex64[m_ySize * m_CPUs];
+	m_Buffer = new (std::nothrow) b3Complex64[m_xSize * m_ySize];
+	m_Lines  = new (std::nothrow) b3Complex64 *[m_ySize];
+	m_Aux    = new (std::nothrow) b3Complex64[m_ySize * m_CPUs];
 
 	if ((m_Buffer == nullptr) || (m_Lines == nullptr) || (m_Aux == nullptr))
 	{
@@ -460,7 +458,7 @@ bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp) const
 	return true;
 }
 
-bool b3Fourier::b3GetSpectrum(b3Tx * tx, b3_f64 amp)
+bool b3Fourier::b3GetSpectrum(b3Tx * tx, b3_f64 amp) const
 {
 	b3_u08    *    cPtr;
 	b3_f64         result;

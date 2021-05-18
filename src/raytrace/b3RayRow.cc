@@ -368,10 +368,6 @@ b3DistributedRayRow::b3DistributedRayRow(
 	m_yHalfDir = &scene->m_yHalfDir;
 }
 
-b3DistributedRayRow::~b3DistributedRayRow()
-{
-}
-
 void b3DistributedRayRow::b3Raytrace()
 {
 	b3_ray        ray;
@@ -428,14 +424,15 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 {
 	b3_coord x;
 
-	m_Color = new b3Color[m_xSize];
-	for (x = 0; x < m_xSize; x++)
-	{
-		m_Color[x].b3Init();
-	}
+	m_Color = new (std::nothrow) b3Color[m_xSize];
 	if (m_Color == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
+	}
+
+	for (x = 0; x < m_xSize; x++)
+	{
+		m_Color[x].b3Init();
 	}
 
 	m_TimeIndex = &m_Distr->m_TimeIndex[0];

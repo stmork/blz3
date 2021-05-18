@@ -42,7 +42,7 @@ void b3Item::b3Register(
 {
 	b3ItemRegisterEntry * entry;
 
-	entry = new b3ItemRegisterEntry(init_func, load_func, class_type, is_class);
+	entry = new (std::nothrow) b3ItemRegisterEntry(init_func, load_func, class_type, is_class);
 	if (entry == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);

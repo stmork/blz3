@@ -982,7 +982,7 @@ public:
 	/**
 	 * This destructor deinitializes this row instance.
 	 */
-	virtual        ~b3DistributedRayRow();
+	virtual        ~b3DistributedRayRow() = default;
 
 	virtual void    b3Raytrace() override;
 };
