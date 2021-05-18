@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
+#include "blz3/raytrace/b3BBox.h"
 #include "b3ReadCOB.h"
 #include "b3ReadTGF.h"
 

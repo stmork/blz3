@@ -22,9 +22,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
 #include "blz3/base/b3Aux.h"
 #include "blz3/raytrace/b3PickInfo.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **

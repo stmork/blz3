@@ -22,8 +22,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
 #include "blz3/raytrace/b3Factory.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 
 /*************************************************************************
 **                                                                      **

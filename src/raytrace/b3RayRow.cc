@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
+#include "blz3/raytrace/b3Raytrace.h"
 
 #define DEBUG_SS4
 

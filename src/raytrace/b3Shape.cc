@@ -22,7 +22,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
+#include "blz3/raytrace/b3Bump.h"
+#include "blz3/raytrace/b3Condition.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **

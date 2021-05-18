@@ -22,8 +22,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
 #include "blz3/image/b3Sampler.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 
 /*************************************************************************
 **                                                                      **

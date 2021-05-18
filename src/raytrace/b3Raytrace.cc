@@ -22,10 +22,18 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
 #include "blz3/system/b3Display.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Shade.h"
+#include "blz3/raytrace/b3Scene.h"
 
 #define no_DEBUG_SS4
+
+/*************************************************************************
+**                                                                      **
+**                        Computation structure                         **
+**                                                                      **
+*************************************************************************/
 
 struct b3_rt_info
 {

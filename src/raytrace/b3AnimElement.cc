@@ -22,8 +22,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3RaytraceInclude.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Special.h"
 
 /*************************************************************************
 **                                                                      **
