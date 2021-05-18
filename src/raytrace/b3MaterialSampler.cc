@@ -53,9 +53,9 @@ void b3MaterialSampler::b3SetMaterial(b3Material * material)
 b3SampleInfo * b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 {
 	b3SampleInfo * info = new b3SampleInfo[CPUs];
-	b3_loop       i;
-	b3_res        yStart, yEnd;
-	b3_color   *  data = m_Data;
+	b3_color   *   data = m_Data;
+	b3_loop        i;
+	b3_res         yStart, yEnd;
 
 	B3_ASSERT(m_Material != nullptr);
 	m_Material->b3Prepare(this);

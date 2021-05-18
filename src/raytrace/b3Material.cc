@@ -1041,15 +1041,11 @@ bool b3MatOakPlank::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 	b3PrepareOakPlank(&m_Scale);
 	b3PrepareScaling();
 
-	if (m_DarkMaterials != nullptr)
-	{
-		delete [] m_DarkMaterials;
-	}
+	delete [] m_DarkMaterials;
+	delete [] m_LightMaterials;
 
-	if (m_LightMaterials != nullptr)
-	{
-		delete [] m_LightMaterials;
-	}
+	m_DarkMaterials  = nullptr;
+	m_LightMaterials = nullptr;
 
 	m_DarkMaterials  = new b3_material[m_PlankCount];
 	m_LightMaterials = new b3_material[m_PlankCount];
