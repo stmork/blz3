@@ -224,8 +224,8 @@ public:
 	static inline void b3LinearCombine(
 		const b3_f64 * a,
 		const b3_f64 * b,
-		const b3_f64  factor,
-		b3_f64    *   result)
+		const b3_f64   factor,
+		b3_f64    *    result)
 	{
 		*result = *a + factor * *b;
 	}
