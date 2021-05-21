@@ -43,8 +43,8 @@ namespace mouseselect_events
 	class SctEvent
 	{
 	public:
-		SctEvent(MouseSelectEventName n_name) : name(n_name) {}
-		virtual ~SctEvent() {}
+		explicit SctEvent(MouseSelectEventName n_name) : name(n_name) {};
+		virtual ~SctEvent() = default;
 		const MouseSelectEventName name;
 
 	};
@@ -53,40 +53,39 @@ namespace mouseselect_events
 	class TypedSctEvent : public SctEvent
 	{
 	public:
-		TypedSctEvent(MouseSelectEventName n_name, T n_value) :
+		explicit TypedSctEvent(MouseSelectEventName n_name, T n_value) :
 			SctEvent(n_name),
-			value(n_value)
-		{}
-		virtual ~TypedSctEvent() {}
+			value(n_value) {};
+		virtual ~TypedSctEvent() = default;
 		const T value;
 	};
 
 	class SctEvent_Gui_onSelect : public SctEvent
 	{
 	public:
-		SctEvent_Gui_onSelect(MouseSelectEventName n_name) : SctEvent(n_name) {};
+		explicit SctEvent_Gui_onSelect(MouseSelectEventName n_name) : SctEvent(n_name) {};
 	};
 	class SctEvent_Gui_onDisable : public SctEvent
 	{
 	public:
-		SctEvent_Gui_onDisable(MouseSelectEventName n_name) : SctEvent(n_name) {};
+		explicit SctEvent_Gui_onDisable(MouseSelectEventName n_name) : SctEvent(n_name) {};
 	};
 	class SctEvent_Gui_mouseDown : public TypedSctEvent<SCT_point>
 	{
 	public:
-		SctEvent_Gui_mouseDown(MouseSelectEventName n_name, SCT_point n_value) :
+		explicit SctEvent_Gui_mouseDown(MouseSelectEventName n_name, SCT_point n_value) :
 			TypedSctEvent(n_name, n_value) {};
 	};
 	class SctEvent_Gui_mouseMove : public TypedSctEvent<SCT_point>
 	{
 	public:
-		SctEvent_Gui_mouseMove(MouseSelectEventName n_name, SCT_point n_value) :
+		explicit SctEvent_Gui_mouseMove(MouseSelectEventName n_name, SCT_point n_value) :
 			TypedSctEvent(n_name, n_value) {};
 	};
 	class SctEvent_Gui_mouseUp : public TypedSctEvent<SCT_point>
 	{
 	public:
-		SctEvent_Gui_mouseUp(MouseSelectEventName n_name, SCT_point n_value) :
+		explicit SctEvent_Gui_mouseUp(MouseSelectEventName n_name, SCT_point n_value) :
 			TypedSctEvent(n_name, n_value) {};
 	};
 
@@ -124,7 +123,7 @@ public:
 	class Gui
 	{
 	public:
-		Gui(MouseSelect * parent);
+		explicit Gui(MouseSelect * parent);
 
 		/*! Raises the in event 'onSelect' that is defined in the interface scope 'gui'. */
 		void raiseOnSelect();
@@ -207,7 +206,7 @@ public:
 	class View
 	{
 	public:
-		View(MouseSelect * n_parent);
+		explicit View(MouseSelect * n_parent);
 
 
 
