@@ -50,6 +50,9 @@ template<typename T> class B3_PLUGIN b3Complex
 
 public:
 
+	/** The used template parameter type. */
+	using type = T;
+
 	/*************************************************************************
 	**                                                                      **
 	**                        Constructors                                  **

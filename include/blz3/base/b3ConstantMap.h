@@ -52,6 +52,9 @@
 template<class T> class b3ConstantMap : public std::unordered_map<T, std::string>
 {
 public:
+	/** The used template parameter type. */
+	using type = T;
+
 	/**
 	 * This alias is a short cut to the containing key/value pairs.
 	 */

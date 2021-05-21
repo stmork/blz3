@@ -239,13 +239,13 @@ public:
 	static inline b3_vector b3LinearCombine(
 		const b3_vector & aVec,
 		const b3_vector & bVec,
-		const b3_f64      b)
+		const b3_f64      f)
 	{
 		b3_vector result;
 
-		result.x = aVec.x + b * bVec.x;
-		result.y = aVec.y + b * bVec.y;
-		result.z = aVec.z + b * bVec.z;
+		result.x = aVec.x + f * bVec.x;
+		result.y = aVec.y + f * bVec.y;
+		result.z = aVec.z + f * bVec.z;
 
 		return result;
 	}
@@ -335,9 +335,13 @@ public:
 template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 {
 public:
+	/** The type of the knot vector elements. */
 	typedef b3_f32    b3_knot;
+
+	/** The type of the knot vector itself. */
 	typedef b3_knot * b3_knots;
 
+	/** The used template parameter type. */
 	using   type = VECTOR;
 
 	static b3_bspline_error bspline_errno;

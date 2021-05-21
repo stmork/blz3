@@ -183,10 +183,20 @@ protected:
 	b3_u32  Class; //!< The class specifier.
 
 public:
-	T   *   First; //!< The first list element.
-	T   *   Last;  //!< The last list element.
+	/** The used template parameter type. */
+	using type = T;
+
+	/** The first list element. */
+	T   *   First;
+
+	/** The last list element. */
+	T   *   Last;
 
 public:
+	/**
+	 * This template class represents the iterator base class of the
+	 * surrounding b3Base class.
+	 */
 	template<class I> struct b3Iterator
 	{
 		using iterator_category = std::bidirectional_iterator_tag;
@@ -249,6 +259,10 @@ public:
 		T  * m_Item    = nullptr;
 	};
 
+	/**
+	 * This template class represents the forward iterator of the
+	 * surrounding b3Base class.
+	 */
 	struct b3ForwardIterator : b3Iterator<b3ForwardIterator>
 	{
 		using b3Iterator<b3ForwardIterator>::m_Item;
@@ -273,6 +287,10 @@ public:
 		}
 	};
 
+	/**
+	 * This template class represents the backward iterator of the
+	 * surrounding b3Base class.
+	 */
 	struct b3BackwardIterator : b3Iterator<b3BackwardIterator>
 	{
 		using b3Iterator<b3BackwardIterator>::m_Item;
