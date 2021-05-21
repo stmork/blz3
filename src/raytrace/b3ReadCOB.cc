@@ -669,7 +669,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 				&ior);
 			Mat->m_SpecularExp = exp;
 			Mat->m_Ior         = ior;
-			sscanf(line, "texture: %s", name);
+			sscanf(line, "texture: %64s", name);
 			Mat->m_Diffuse.b3Init(r, g, b);
 		}
 		if ((Mat->m_Ior == 0) || (Mat->m_Ior == 1))

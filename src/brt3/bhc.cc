@@ -123,7 +123,7 @@ void b3BHDParser::b3ParseHouse()
 	b3CheckToken(TKN_HOUSE);
 
 	m_Scene = new b3Scene(TRACEPHOTO_MORK);
-	if (sscanf(&m_Line[m_Pos], "%*s %s %lf\n", (char *)name, &m_Scale) < 1)
+	if (sscanf(&m_Line[m_Pos], "%*s %64s %lf\n", (char *)name, &m_Scale) < 1)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -167,7 +167,7 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 	b3BBox    *   level = new b3BBox(BBOX);
 	b3_f64        base, height;
 
-	if (sscanf(&m_Line[m_Pos], "%*s %s %lf %lf %lf\n", level->m_BoxName, &base, &height, &scale) < 3)
+	if (sscanf(&m_Line[m_Pos], "%*s %127s %lf %lf %lf\n", level->m_BoxName, &base, &height, &scale) < 3)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -231,7 +231,7 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 	b3_count         args;
 	b3_vector        normal;
 
-	args = sscanf(&m_Line[m_Pos], "%*s %s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+	args = sscanf(&m_Line[m_Pos], "%*s %127s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 			room->m_BoxName,
 			&index[ 0], &index[ 1], &index[ 2], &index[ 3], &index[ 4],
 			&index[ 5], &index[ 6], &index[ 7], &index[ 8], &index[ 9],
