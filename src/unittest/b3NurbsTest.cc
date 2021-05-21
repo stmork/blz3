@@ -261,6 +261,95 @@ void b3NurbsOpenedCurveTest::testCircle()
 	b3PrintF(B3LOG_DEBUG, "%p\n", m_Radius);
 }
 
+void b3NurbsOpenedCurveTest::testBezier()
+{
+	CPPUNIT_ASSERT(m_Nurbs.b3InitCurve(2, 5, false));
+	CPPUNIT_ASSERT(m_Nurbs.b3ToBezier());
+
+	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_ControlNum * 2, m_Nurbs.m_KnotNum);
+	for (unsigned i = 1; i < m_Nurbs.m_ControlNum; i++)
+	{
+		CPPUNIT_ASSERT_EQUAL(
+			m_Nurbs.m_Knots[i - 1],
+			m_Nurbs.m_Knots[i]);
+		CPPUNIT_ASSERT_EQUAL(
+			m_Nurbs.m_Knots[m_Nurbs.m_ControlNum - i],
+			m_Nurbs.m_Knots[m_Nurbs.m_ControlNum - i - 1]);
+	}
+
+	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_Knots[0], m_Nurbs.b3FirstKnot());
+	CPPUNIT_ASSERT_EQUAL(
+		m_Nurbs.m_Knots[m_Nurbs.m_KnotNum - 1],
+		m_Nurbs.b3LastKnot());
+	CPPUNIT_ASSERT_EQUAL(
+		m_Nurbs.m_Knots[m_Nurbs.m_KnotNum - 1] - m_Nurbs.m_Knots[0],
+		m_Nurbs.b3KnotRange());
+
+	m_Controls[1].x =  RADIUS;
+	m_Controls[1].y =  RADIUS;
+	m_Controls[3].x = -RADIUS;
+	m_Controls[3].y =  RADIUS;
+
+	b3_vector4D a, b, c, r;
+	a = b3SplineVector::b3Mix(r, &m_Controls[0], &m_Controls[1], 0.5);
+	b = b3SplineVector::b3Mix(r, &m_Controls[1], &m_Controls[2], 0.5);
+	c = b3SplineVector::b3Mix(r, &a, &b, 0.5);
+	b3SplineVector::b3Homogenize(&r);
+
+	CPPUNIT_ASSERT_EQUAL(c.w, r.w);
+	for (b3_f64 q = m_Nurbs.b3FirstKnot();
+		q <= m_Nurbs.b3LastKnot();
+		q += m_Nurbs.b3KnotRange() * 0.125)
+	{
+		b3_vector4D point;
+
+		m_Nurbs.b3DeBoorOpened(&point, q);
+
+		const b3_f64 radius = sqrt(
+				point.x * point.x +
+				point.y * point.y +
+				point.z * point.z);
+		CPPUNIT_ASSERT_GREATER(0.0, radius);
+	}
+}
+
+void b3NurbsOpenedCurveTest::testArc()
+{
+	m_Nurbs.b3InitCurve(2, 4, false);
+
+	m_Controls[0].x =  1;
+	m_Controls[0].y =  0;
+	m_Controls[0].w =  1;
+	m_Controls[1].x =  1;
+	m_Controls[1].y =  1;
+	m_Controls[1].w =  0.5;
+	m_Controls[2].x = -1;
+	m_Controls[2].y =  1;
+	m_Controls[2].w =  0.5;
+	m_Controls[3].x = -1;
+	m_Controls[3].y =  0;
+	m_Controls[3].w =  1;
+
+	m_Knots[0] = m_Knots[1] = m_Knots[2] = 0;
+	m_Knots[3] = 1;
+	m_Knots[4] = m_Knots[5] = m_Knots[6] = 2;
+
+	for (b3_f64 q = m_Nurbs.b3FirstKnot();
+		q <= m_Nurbs.b3LastKnot();
+		q += m_Nurbs.b3KnotRange() * 0.125)
+	{
+		b3_vector4D point;
+
+		m_Nurbs.b3DeBoorOpened(&point, q);
+
+		const b3_f64 radius = sqrt(
+				point.x * point.x +
+				point.y * point.y +
+				point.z * point.z);
+		CPPUNIT_ASSERT_GREATER(0.0, radius);
+	}
+}
+
 void b3NurbsOpenedCurveTest::test()
 {
 	static const b3_f32 corner = sqrt(2.0) * 0.5;
@@ -342,6 +431,19 @@ void b3NurbsOpenedCurveTest::test()
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::X], b3_result.x, b3Nurbs::epsilon);
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::Y], b3_result.y, b3Nurbs::epsilon);
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::Z], b3_result.z, b3Nurbs::epsilon);
+
+			/****** Test using recursive De Boor algorithm ******/
+			b3_vector4D rc_result = recursiveDeBoor(nurbs, nurbs.m_Degree, i, q);
+
+			b3SplineVector::b3Homogenize(&rc_result);
+			const b3_f64        rc_radius =
+					sqrt(rc_result.x * rc_result.x + rc_result.y * rc_result.y);
+
+			CPPUNIT_ASSERT_GREATER(0.0, rc_radius);
+
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(rc_result.x, b3_result.x, b3Nurbs::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(rc_result.y, b3_result.y, b3Nurbs::epsilon);
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(rc_result.z, b3_result.z, b3Nurbs::epsilon);
 		}
 	}
 }
@@ -403,6 +505,34 @@ b3Vector32 b3NurbsOpenedCurveTest::tinyNurbsDeBoor(
 	db_result /= w;
 
 	return db_result;
+}
+
+b3_vector4D b3NurbsOpenedCurveTest::recursiveDeBoor(
+	const b3Nurbs & nurbs,
+	const unsigned  k,
+	const unsigned  i,
+	const b3_f64    q)
+{
+	/**
+	 * Idea from:
+	 * https://chi3x10.wordpress.com/2009/10/18/de-boor-algorithm-in-c/
+	 */
+	if ( k == 0)
+	{
+		return nurbs.m_Controls[i];
+	}
+	else
+	{
+		const b3_f64 alpha =
+			(q - nurbs.m_Knots[i]) /
+			(nurbs.m_Knots[i + nurbs.m_Degree + 1 - k] - nurbs.m_Knots[i]);
+
+		const b3_vector4D & aVec = recursiveDeBoor(nurbs, k - 1, i - 1, q);
+		const b3_vector4D & bVec = recursiveDeBoor(nurbs, k - 1, i,     q);
+		b3_vector4D         result;
+
+		return b3SplineVector::b3Mix(result, &aVec, &bVec, alpha);
+	}
 }
 
 

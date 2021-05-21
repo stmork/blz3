@@ -99,6 +99,8 @@ class b3NurbsOpenedCurveTest : public b3NurbsCurveTest
 	CPPUNIT_TEST(testInsertValidation);
 	CPPUNIT_TEST(testInsertion);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testBezier);
+	CPPUNIT_TEST(testArc);
 	CPPUNIT_TEST_SUITE_END();
 
 	virtual void b3InitKnotVector() override;
@@ -108,10 +110,18 @@ public:
 
 	void testCircle() override;
 	void test();
+	void testBezier();
+	void testArc();
 
 private:
 	b3Vector32 tinyNurbsDeBoor(
 		const b3Nurbs  &  nurbs,
+		const unsigned    i,
+		const b3_f64      q);
+
+	b3_vector32_4D recursiveDeBoor(
+		const b3Nurbs  &  nurbs,
+		const unsigned    k,
 		const unsigned    i,
 		const b3_f64      q);
 };

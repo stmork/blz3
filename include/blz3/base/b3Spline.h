@@ -264,28 +264,32 @@ public:
 #endif
 	}
 
-	static inline void b3Mix(
-		b3_f64    *    result,
+	static inline b3_f64 b3Mix(
+		b3_f64    &    result,
 		const b3_f64 * a,
 		const b3_f64 * b,
 		const b3_f64   f)
 	{
-		*result = *a + f * (*b - *a);
+		result = *a + f * (*b - *a);
+
+		return result;
 	}
 
-	static inline void b3Mix(
-		b3_vector    *    result,
+	static inline b3_vector b3Mix(
+		b3_vector    &    result,
 		const b3_vector * aVec,
 		const b3_vector * bVec,
-		const b3_f32      f)
+		const b3_f64      f)
 	{
-		result->x = aVec->x + f * (bVec->x - aVec->x);
-		result->y = aVec->y + f * (bVec->y - aVec->y);
-		result->z = aVec->z + f * (bVec->z - aVec->z);
+		result.x = aVec->x + f * (bVec->x - aVec->x);
+		result.y = aVec->y + f * (bVec->y - aVec->y);
+		result.z = aVec->z + f * (bVec->z - aVec->z);
+
+		return result;
 	}
 
-	static inline void b3Mix(
-		b3_vector4D    *    result,
+	static inline b3_vector4D b3Mix(
+		b3_vector4D    &    result,
 		const b3_vector4D * aVec,
 		const b3_vector4D * bVec,
 		const b3_f32        f)
@@ -293,18 +297,18 @@ public:
 #ifdef B3_SSE1
 		const b3_f32 * a = &aVec->x;
 		const b3_f32 * b = &bVec->x;
-		b3_f32    *    r = &result->x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
 			r[i] = a[i] + f * (b[i] - a[i]);
 		}
 #else
-		result->x = aVec->x + f * (bVec->x - aVec->x);
-		result->y = aVec->y + f * (bVec->y - aVec->y);
-		result->z = aVec->z + f * (bVec->z - aVec->z);
-		result->w = aVec->w + f * (bVec->w - aVec->w);
+		result.x = aVec->x + f * (bVec->x - aVec->x);
+		result.y = aVec->y + f * (bVec->y - aVec->y);
+		result.z = aVec->z + f * (bVec->z - aVec->z);
+		result.w = aVec->w + f * (bVec->w - aVec->w);
 #endif
+		return result;
 	}
 };
 
@@ -452,7 +456,7 @@ public:
 	 * lanes of control points.
 	 * @return True on success
 	 */
-	b3_bool b3InitCurve(
+	bool b3InitCurve(
 		const unsigned Degree,
 		const unsigned ControlNum,
 		const b3_bool  Closed,
@@ -553,7 +557,7 @@ public:
 		return true;
 	}
 
-	b3_bool b3ToBezier()
+	bool b3ToBezier()
 	{
 		unsigned i;
 
@@ -1490,7 +1494,7 @@ private:
 			{
 				r =      0;
 			}
-			b3SplineVector::b3Mix(&it[l], &it[l + 1], &it[l], r);
+			b3SplineVector::b3Mix(it[l], &it[l + 1], &it[l], r);
 			*ins-- = it[l];
 			j--;
 		}
@@ -1552,7 +1556,7 @@ private:
 			{
 				r =      0;
 			}
-			b3SplineVector::b3Mix(&it[l], &it[l + 1], &it[l], r);
+			b3SplineVector::b3Mix(it[l], &it[l + 1], &it[l], r);
 			*ins--  = it[l];
 			if (--j < 0) /* j = i-l; */
 			{
