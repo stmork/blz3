@@ -1,0 +1,11 @@
+<project name="SCT generator" default="generate">
+	<property file="${user.home}/.sct.properties" />
+	<property name="eclipse.home" value="/opt/eclipse/oxygen-jee"/>
+
+	<target name="generate">
+		<echo message="Using Eclipse: ${eclipse.home}"/>
+		<exec executable="${eclipse.home}/eclipse" dir="." failonerror="yes">
+			<arg value="--launcher.ini"/><arg value="${eclipse.home}/headless.ini"/>
+		</exec>
+	</target>
+</project>

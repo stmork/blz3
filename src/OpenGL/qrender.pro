@@ -42,3 +42,14 @@ LIBS  += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace
 
 RESOURCES += \
 	icons.qrc
+
+#####################################################################
+#
+# Extra YAKINDU SCT generate target
+#
+#####################################################################
+
+generate.commands = ant
+generate.depends  = MouseSelect.ysc qrender.sgen
+
+QMAKE_EXTRA_TARGETS += generate
