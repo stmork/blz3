@@ -165,7 +165,7 @@ private:
 		{
 			b3_vector point;
 
-			m_Spline.b3DeBoorOpened(&point, angle);
+			m_Spline.b3DeBoorOpened(point, angle);
 			return point.y;
 		}
 		else

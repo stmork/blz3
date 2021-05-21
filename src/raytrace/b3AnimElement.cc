@@ -202,7 +202,7 @@ void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 		const b3_f64   ratio = (t - m_Start) / (m_End - m_Start);
 		const unsigned pos   = m_Param.b3Mansfield(coeffs, qStart + q * ratio);
 
-		m_Param.b3MansfieldVector(position, coeffs, pos);
+		m_Param.b3MansfieldVector(*position, coeffs, pos);
 	}
 }
 

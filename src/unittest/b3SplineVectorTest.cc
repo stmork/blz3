@@ -42,7 +42,7 @@ template<> void b3SplineVectorTest<b3_f64>::setUp()
 {
 	a = 3.0;
 	b = 2.0;
-	b3SplineVector::b3Clear(&result);
+	b3SplineVector::b3Clear(result);
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
@@ -56,7 +56,7 @@ template<> void b3SplineVectorTest<b3_vector>::setUp()
 	b.y = 2.0;
 	b.z = 1.0;
 
-	b3SplineVector::b3Clear(&result);
+	b3SplineVector::b3Clear(result);
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
@@ -72,7 +72,7 @@ template<> void b3SplineVectorTest<b3_vector4D>::setUp()
 	b.z = 1.0;
 	b.w = 1.5;
 
-	b3SplineVector::b3Clear(&result);
+	b3SplineVector::b3Clear(result);
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
 
@@ -80,19 +80,19 @@ template<> void b3SplineVectorTest<b3_f64>::test()
 {
 	CPPUNIT_ASSERT_EQUAL(0.0, result);
 
-	b3SplineVector::b3Sub(&a, &b, &result);
+	result = b3SplineVector::b3Sub(a, b);
 	CPPUNIT_ASSERT_EQUAL(1.0, result);
 
-	b3SplineVector::b3Homogenize(&result);
+	b3SplineVector::b3Homogenize(result);
 	CPPUNIT_ASSERT_EQUAL(1.0, result);
 
-	b3SplineVector::b3AddScaled(2.5, &a, &result);
+	b3SplineVector::b3AddScaled(2.5, a, result);
 	CPPUNIT_ASSERT_EQUAL(8.5, result);
 
-	b3SplineVector::b3LinearCombine(&a, &b, 2.5, &result);
+	result = b3SplineVector::b3LinearCombine(a, b, 2.5);
 	CPPUNIT_ASSERT_EQUAL(8.0, result);
 
-	b3SplineVector::b3Mix(result, &a, &b, 0.25);
+	result = b3SplineVector::b3Mix(a, b, 0.25);
 	CPPUNIT_ASSERT_EQUAL(2.75, result);
 }
 
@@ -102,27 +102,27 @@ template<> void b3SplineVectorTest<b3_vector>::test()
 	CPPUNIT_ASSERT_EQUAL(0.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL(0.0f, result.z);
 
-	b3SplineVector::b3Sub(&a, &b, &result);
+	result = b3SplineVector::b3Sub(a, b);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.x);
 	CPPUNIT_ASSERT_EQUAL(-2.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.z);
 
-	b3SplineVector::b3Homogenize(&result);
+	b3SplineVector::b3Homogenize(result);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.x);
 	CPPUNIT_ASSERT_EQUAL(-2.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.z);
 
-	b3SplineVector::b3AddScaled(2.5, &a, &result);
+	b3SplineVector::b3AddScaled(2.5, a, result);
 	CPPUNIT_ASSERT_EQUAL(10.5f, result.x);
 	CPPUNIT_ASSERT_EQUAL(-2.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL(13.0f, result.z);
 
-	b3SplineVector::b3LinearCombine(&a, &b, 2.5, &result);
+	result = b3SplineVector::b3LinearCombine(a, b, 2.5);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.x);
 	CPPUNIT_ASSERT_EQUAL( 5.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL( 6.5f, result.z);
 
-	b3SplineVector::b3Mix(result, &a, &b, 0.25);
+	result = b3SplineVector::b3Mix(a, b, 0.25);
 	CPPUNIT_ASSERT_EQUAL( 2.25f, result.x);
 	CPPUNIT_ASSERT_EQUAL( 0.5f,  result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.25f, result.z);
@@ -135,31 +135,31 @@ template<> void b3SplineVectorTest<b3_vector4D>::test()
 	CPPUNIT_ASSERT_EQUAL(0.0f, result.z);
 	CPPUNIT_ASSERT_EQUAL(0.0f, result.w);
 
-	b3SplineVector::b3Sub(&a, &b, &result);
+	result = b3SplineVector::b3Sub(a, b);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.x);
 	CPPUNIT_ASSERT_EQUAL(-2.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.0f, result.z);
 	CPPUNIT_ASSERT_EQUAL(-0.5f, result.w);
 
-	b3SplineVector::b3Homogenize(&result);
+	b3SplineVector::b3Homogenize(result);
 	CPPUNIT_ASSERT_EQUAL(-6.0f, result.x);
 	CPPUNIT_ASSERT_EQUAL( 4.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL(-6.0f, result.z);
 	CPPUNIT_ASSERT_EQUAL(-0.5f, result.w);
 
-	b3SplineVector::b3AddScaled(2.5, &a, &result);
+	b3SplineVector::b3AddScaled(2.5, a, result);
 	CPPUNIT_ASSERT_EQUAL( 1.5f, result.x);
 	CPPUNIT_ASSERT_EQUAL( 4.0f, result.y);
 	CPPUNIT_ASSERT_EQUAL( 4.0f, result.z);
 	CPPUNIT_ASSERT_EQUAL( 2.0f, result.w);
 
-	b3SplineVector::b3LinearCombine(&a, &b, 2.5, &result);
+	result = b3SplineVector::b3LinearCombine(a, b, 2.5);
 	CPPUNIT_ASSERT_EQUAL( 3.0f,  result.x);
 	CPPUNIT_ASSERT_EQUAL( 5.0f,  result.y);
 	CPPUNIT_ASSERT_EQUAL( 6.5f,  result.z);
 	CPPUNIT_ASSERT_EQUAL( 4.75f, result.w);
 
-	b3SplineVector::b3Mix(result, &a, &b, 0.25);
+	result = b3SplineVector::b3Mix(a, b, 0.25);
 	CPPUNIT_ASSERT_EQUAL( 2.25f,  result.x);
 	CPPUNIT_ASSERT_EQUAL( 0.5f,   result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.25f,  result.z);

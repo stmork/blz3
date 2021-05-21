@@ -71,38 +71,38 @@ public:
 	/**
 	 * This method initializes the given scalar to 0.
 	 */
-	static inline void b3Clear(b3_f64 * scalar)
+	static inline void b3Clear(b3_f64 & scalar)
 	{
-		*scalar = 0;
+		scalar = 0;
 	}
 
 	/**
 	 * This method initializes the given vector to 0.
 	 */
-	static inline void b3Clear(b3_vector * vector)
+	static inline void b3Clear(b3_vector & vector)
 	{
-		vector->x = vector->y = vector->z = 0;
+		vector.x = vector.y = vector.z = 0;
 	}
 
 	/**
 	 * This method initializes the given vector to 0.
 	 */
-	static inline void b3Clear(b3_vector4D * vector)
+	static inline void b3Clear(b3_vector4D & vector)
 	{
-		vector->x = vector->y = vector->z = vector->w = 0;
+		vector.x = vector.y = vector.z = vector.w = 0;
 	}
 
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(b3_f64 * vector B3_UNUSED)
+	static inline void b3Homogenize(b3_f64 & vector B3_UNUSED)
 	{
 	}
 
 	/**
 	 * This method does nothing.
 	 */
-	static inline void b3Homogenize(b3_vector * vector B3_UNUSED)
+	static inline void b3Homogenize(b3_vector & vector B3_UNUSED)
 	{
 	}
 
@@ -111,99 +111,105 @@ public:
 	 *
 	 * @param vector The vector to homogenize.
 	 */
-	static inline void b3Homogenize(b3_vector4D * vector)
+	static inline void b3Homogenize(b3_vector4D & vector)
 	{
-		const b3_f32 w = vector->w;
+		const b3_f32 w = vector.w;
 
 		B3_ASSERT(w != 0);
-		vector->x /= w;
-		vector->y /= w;
-		vector->z /= w;
+		vector.x /= w;
+		vector.y /= w;
+		vector.z /= w;
 	}
 
-	static inline void b3Sub(
-		const b3_f64 * aVec,
-		const b3_f64 * bVec,
-		b3_f64    *    result)
+	static inline b3_f64 b3Sub(
+		const b3_f64 a,
+		const b3_f64 b)
 	{
-		*result = *aVec - *bVec;
+		return a - b;
 	}
 
-	static inline void b3Sub(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		b3_vector    *    result)
+	static inline b3_vector b3Sub(
+		const b3_vector & aVec,
+		const b3_vector & bVec)
 	{
+		b3_vector result;
+
 #ifdef B3_SSE
 		const b3_f32 * a = &aVec->x;
 		const b3_f32 * b = &bVec->x;
-		b3_f32 * r = &result->x;
+		b3_f32 *       r = &result.x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
 			r[i] = a[i] - b[i];
 		}
 #else
-		result->x = aVec->x - bVec->x;
-		result->y = aVec->y - bVec->y;
-		result->z = aVec->z - bVec->z;
+		result.x = aVec.x - bVec.x;
+		result.y = aVec.y - bVec.y;
+		result.z = aVec.z - bVec.z;
 #endif
+		return result;
 	}
 
-	static inline void b3Sub(
-		const b3_vector4D * aVec,
-		const b3_vector4D * bVec,
-		b3_vector4D    *    result)
+	static inline b3_vector4D b3Sub(
+		const b3_vector4D & aVec,
+		const b3_vector4D & bVec)
 	{
+		b3_vector4D result;
+
 #ifdef B3_SSE1
-		const b3_f32 * a = &aVec->x;
-		const b3_f32 * b = &bVec->x;
-		b3_f32    *    r = &result->x;
+		const b3_f32 * a = &aVec.x;
+		const b3_f32 * b = &bVec.x;
+		b3_f32    *    r = &result.x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
 			r[i] = a[i] - b[i];
 		}
 #else
-		result->x = aVec->x - bVec->x;
-		result->y = aVec->y - bVec->y;
-		result->z = aVec->z - bVec->z;
-		result->w = aVec->w - bVec->w;
+		result.x = aVec.x - bVec.x;
+		result.y = aVec.y - bVec.y;
+		result.z = aVec.z - bVec.z;
+		result.w = aVec.w - bVec.w;
 #endif
+		return result;
 	}
 
-	static inline void b3AddScaled(
-		const b3_f32   factor,
-		const b3_f64 * offset,
-		b3_f64    *    vector)
+	static inline b3_f64 b3AddScaled(
+		const b3_f64 factor,
+		const b3_f64 offset,
+		b3_f64    &  vector)
 	{
-		*vector = *vector + factor * *offset;
+		vector += factor * offset;
+
+		return vector;
 	}
 
-	static inline void b3AddScaled(
-		const b3_f32      factor,
-		const b3_vector * offset,
-		b3_vector    *    vector)
+	static inline b3_vector & b3AddScaled(
+		const b3_f64      factor,
+		const b3_vector & offset,
+		b3_vector    &    vector)
 	{
 #ifdef B3_SSE
-		const b3_f32 * o = &offset->x;
-		b3_f32    *    v = &vector->x;
+		const b3_f32 * o = &offset.x;
+		b3_f32    *    v = &vector.x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
-			v[i] = v[i] + factor * o[i];
+			v[i] += factor * o[i];
 		}
 #else
-		vector->x = (b3_f32)(vector->x + factor * offset->x);
-		vector->y = (b3_f32)(vector->y + factor * offset->y);
-		vector->z = (b3_f32)(vector->z + factor * offset->z);
+		vector.x += factor * offset.x;
+		vector.y += factor * offset.y;
+		vector.z += factor * offset.z;
 #endif
+		return vector;
 	}
 
-	static inline void b3AddScaled(
+	static inline b3_vector4D & b3AddScaled(
 		const b3_f32        factor,
-		const b3_vector4D * offset,
-		b3_vector4D    *    vector)
+		const b3_vector4D & offset,
+		b3_vector4D    &    vector)
 	{
 #ifdef B3_SSE1
 		const b3_f32 * o = &offset->x;
@@ -214,99 +220,104 @@ public:
 			v[i] = v[i] + factor * o[i];
 		}
 #else
-		vector->x = (b3_f32)(vector->x + factor * offset->x);
-		vector->y = (b3_f32)(vector->y + factor * offset->y);
-		vector->z = (b3_f32)(vector->z + factor * offset->z);
-		vector->w = (b3_f32)(vector->w + factor * offset->w);
+		vector.x += factor * offset.x;
+		vector.y += factor * offset.y;
+		vector.z += factor * offset.z;
+		vector.w += factor * offset.w;
 #endif
+		return vector;
 	}
 
-	static inline void b3LinearCombine(
-		const b3_f64 * a,
-		const b3_f64 * b,
-		const b3_f64   factor,
-		b3_f64    *    result)
+	static inline b3_f64 b3LinearCombine(
+		const b3_f64 a,
+		const b3_f64 b,
+		const b3_f64 factor)
 	{
-		*result = *a + factor * *b;
+		return a + factor * b;
 	}
 
-	static inline void b3LinearCombine(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		const b3_f32      b,
-		b3_vector    *    result)
+	static inline b3_vector b3LinearCombine(
+		const b3_vector & aVec,
+		const b3_vector & bVec,
+		const b3_f64      b)
 	{
-		result->x = (b3_f32)(aVec->x + b * bVec->x);
-		result->y = (b3_f32)(aVec->y + b * bVec->y);
-		result->z = (b3_f32)(aVec->z + b * bVec->z);
+		b3_vector result;
+
+		result.x = aVec.x + b * bVec.x;
+		result.y = aVec.y + b * bVec.y;
+		result.z = aVec.z + b * bVec.z;
+
+		return result;
 	}
 
-	static inline void b3LinearCombine(
-		const b3_vector4D * aVec,
-		const b3_vector4D * bVec,
-		const b3_f32        f,
-		b3_vector4D    *    result)
+	static inline b3_vector4D b3LinearCombine(
+		const b3_vector4D & aVec,
+		const b3_vector4D & bVec,
+		const b3_f64        f)
 	{
+		b3_vector4D result;
+
 #ifdef B3_SSE1
-		const b3_f32 * a = &aVec->x;
-		const b3_f32 * b = &bVec->x;
-		b3_f32    *    r = &result->x;
+		const b3_f32 * a = &aVec.x;
+		const b3_f32 * b = &bVec.x;
+		b3_f32    *    r = &result.x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
 			r[i] = a[i] + f * b[i];
 		}
 #else
-		result->x = (b3_f32)(aVec->x + f * bVec->x);
-		result->y = (b3_f32)(aVec->y + f * bVec->y);
-		result->z = (b3_f32)(aVec->z + f * bVec->z);
-		result->w = (b3_f32)(aVec->w + f * bVec->w);
+		result.x = aVec.x + f * bVec.x;
+		result.y = aVec.y + f * bVec.y;
+		result.z = aVec.z + f * bVec.z;
+		result.w = aVec.w + f * bVec.w;
 #endif
-	}
-
-	static inline b3_f64 b3Mix(
-		b3_f64    &    result,
-		const b3_f64 * a,
-		const b3_f64 * b,
-		const b3_f64   f)
-	{
-		result = *a + f * (*b - *a);
-
 		return result;
 	}
 
+	static inline b3_f64 b3Mix(
+		const b3_f64 a,
+		const b3_f64 b,
+		const b3_f64 f)
+	{
+		return a + f * (b - a);
+	}
+
 	static inline b3_vector b3Mix(
-		b3_vector    &    result,
-		const b3_vector * aVec,
-		const b3_vector * bVec,
+		const b3_vector & aVec,
+		const b3_vector & bVec,
 		const b3_f64      f)
 	{
-		result.x = aVec->x + f * (bVec->x - aVec->x);
-		result.y = aVec->y + f * (bVec->y - aVec->y);
-		result.z = aVec->z + f * (bVec->z - aVec->z);
+		b3_vector result;
+
+		result.x = aVec.x + f * (bVec.x - aVec.x);
+		result.y = aVec.y + f * (bVec.y - aVec.y);
+		result.z = aVec.z + f * (bVec.z - aVec.z);
 
 		return result;
 	}
 
 	static inline b3_vector4D b3Mix(
-		b3_vector4D    &    result,
-		const b3_vector4D * aVec,
-		const b3_vector4D * bVec,
-		const b3_f32        f)
+		const b3_vector4D & aVec,
+		const b3_vector4D & bVec,
+		const b3_f64        f)
 	{
+		b3_vector4D result;
+
 #ifdef B3_SSE1
-		const b3_f32 * a = &aVec->x;
-		const b3_f32 * b = &bVec->x;
+		const b3_f32 * a = &aVec.x;
+		const b3_f32 * b = &bVec.x;
+		b3_f32    *    r = &result.x;
 
 		for (b3_loop i = 0; i < 4; i++)
 		{
 			r[i] = a[i] + f * (b[i] - a[i]);
 		}
 #else
-		result.x = aVec->x + f * (bVec->x - aVec->x);
-		result.y = aVec->y + f * (bVec->y - aVec->y);
-		result.z = aVec->z + f * (bVec->z - aVec->z);
-		result.w = aVec->w + f * (bVec->w - aVec->w);
+		result.x = aVec.x + f * (bVec.x - aVec.x);
+		result.y = aVec.y + f * (bVec.y - aVec.y);
+		result.z = aVec.z + f * (bVec.z - aVec.z);
+		result.w = aVec.w + f * (bVec.w - aVec.w);
 #endif
 		return result;
 	}
@@ -326,6 +337,8 @@ template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 public:
 	typedef b3_f32    b3_knot;
 	typedef b3_knot * b3_knots;
+
+	using   type = VECTOR;
 
 	static b3_bspline_error bspline_errno;
 
@@ -721,7 +734,7 @@ public:
 
 			for (i = 0; i <= m_SubDiv; i++)
 			{
-				b3DeBoorClosed(point++, q, index);
+				b3DeBoorClosed(*point++, q, index);
 				q += qStep;
 			}
 		}
@@ -732,7 +745,7 @@ public:
 
 			for (i = 0; i <= m_SubDiv; i++)
 			{
-				b3DeBoorOpened(point++, q, index);
+				b3DeBoorOpened(*point++, q, index);
 				q += qStep;
 			}
 		}
@@ -740,7 +753,7 @@ public:
 		return i;
 	}
 
-	unsigned b3DeBoorOpened(VECTOR * point, b3_knot q, b3_index index = 0) const
+	unsigned b3DeBoorOpened(VECTOR & point, b3_knot q, b3_index index = 0) const
 	{
 		const unsigned  i = iFind(q);
 		b3_f64          it[m_Degree + 1];
@@ -763,14 +776,14 @@ public:
 		b3_index j = i * m_Offset + index;
 		for (b3_index l = m_Degree; l >= 0; l--)
 		{
-			b3SplineVector::b3AddScaled(it[l], &m_Controls[j], point);
+			b3SplineVector::b3AddScaled(it[l], m_Controls[j], point);
 			j -= m_Offset;
 		}
 		b3SplineVector::b3Homogenize(point);
 		return i;
 	}
 
-	unsigned  b3DeBoorClosed(VECTOR * point, b3_knot qStart, b3_index index = 0) const
+	unsigned  b3DeBoorClosed(VECTOR & point, b3_knot qStart, b3_index index = 0) const
 	{
 		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
 		unsigned      i     = iFind(qStart);
@@ -808,7 +821,7 @@ public:
 		b3_index j = i;
 		for (b3_index l = m_Degree; l >= 0; l--)
 		{
-			b3SplineVector::b3AddScaled(it[l], &m_Controls[j * m_Offset + index], point);
+			b3SplineVector::b3AddScaled(it[l], m_Controls[j * m_Offset + index], point);
 			if (--j < 0)
 			{
 				j += m_ControlNum;
@@ -863,7 +876,7 @@ public:
 			index = curveSpline->b3Mansfield(it, knot_ptr[i]);
 			for (unsigned x = 0; x < controlSpline->m_ControlNum; x++)
 			{
-				curveSpline->b3MansfieldVector(&point[x * ControlNum], it,
+				curveSpline->b3MansfieldVector(point[x * ControlNum], it,
 					index, x * controlSpline->m_Offset);
 			}
 			point++;
@@ -960,7 +973,7 @@ public:
 	 * @param index  Start index of control points
 	 */
 	void b3MansfieldVector(
-		VECTOR     *    point,
+		VECTOR     &    point,
 		const b3_f64  * it,
 		const unsigned  i,
 		const b3_index  index = 0) const
@@ -974,7 +987,7 @@ public:
 			j = i;
 			for (l = m_Degree; l >= 0; l--)
 			{
-				b3SplineVector::b3AddScaled(it[l], &m_Controls[j * m_Offset + index], point);
+				b3SplineVector::b3AddScaled(it[l], m_Controls[j * m_Offset + index], point);
 				if (--j < 0)
 				{
 					j += m_ControlNum;
@@ -986,7 +999,7 @@ public:
 			ctrls = &m_Controls[i * m_Offset + index];
 			for (l = m_Degree; l >= 0; l--)
 			{
-				b3SplineVector::b3AddScaled(it[l], ctrls, point);
+				b3SplineVector::b3AddScaled(it[l], *ctrls, point);
 				ctrls -= m_Offset;
 			}
 		}
@@ -1494,7 +1507,7 @@ private:
 			{
 				r =      0;
 			}
-			b3SplineVector::b3Mix(it[l], &it[l + 1], &it[l], r);
+			it[l] = b3SplineVector::b3Mix(it[l + 1], it[l], r);
 			*ins-- = it[l];
 			j--;
 		}
@@ -1556,7 +1569,7 @@ private:
 			{
 				r =      0;
 			}
-			b3SplineVector::b3Mix(it[l], &it[l + 1], &it[l], r);
+			it[l] = b3SplineVector::b3Mix(it[l + 1], it[l], r);
 			*ins--  = it[l];
 			if (--j < 0) /* j = i-l; */
 			{

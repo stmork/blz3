@@ -68,7 +68,7 @@ void b3Animation::b3SetAnimElement(b3AnimElement * Element)
 
 void b3Animation::b3GetNeutralPosition(
 	b3AnimElement * Element,
-	b3_vector   *  neutral)
+	b3_vector   *   neutral)
 {
 	Element->b3GetPosition(neutral, m_Neutral);
 }

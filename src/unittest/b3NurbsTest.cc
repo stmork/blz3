@@ -170,7 +170,7 @@ void b3NurbsClosedCurveTest::testCircle()
 		const b3_f64 q   = m_Nurbs.b3FirstKnot() + s * range / m_Nurbs.m_SubDiv;
 		const unsigned i = m_Nurbs.b3Mansfield(m_BasisCoeff, q);
 
-		m_Nurbs.b3MansfieldVector(&m_Mansfield[s], m_BasisCoeff, i);
+		m_Nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i);
 
 		// Compare De Boor computed values agains Mansfield computed ones
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
@@ -239,7 +239,7 @@ void b3NurbsOpenedCurveTest::testCircle()
 		}
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
 
-		m_Nurbs.b3MansfieldVector(&m_Mansfield[s], m_BasisCoeff, i);
+		m_Nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i);
 
 		// Compare De Boor computed values agains Mansfield computed ones
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
@@ -291,10 +291,10 @@ void b3NurbsOpenedCurveTest::testBezier()
 	m_Controls[3].y =  RADIUS;
 
 	b3_vector4D a, b, c, r;
-	a = b3SplineVector::b3Mix(r, &m_Controls[0], &m_Controls[1], 0.5);
-	b = b3SplineVector::b3Mix(r, &m_Controls[1], &m_Controls[2], 0.5);
-	c = b3SplineVector::b3Mix(r, &a, &b, 0.5);
-	b3SplineVector::b3Homogenize(&r);
+	a = b3SplineVector::b3Mix(m_Controls[0], m_Controls[1], 0.5);
+	b = b3SplineVector::b3Mix(m_Controls[1], m_Controls[2], 0.5);
+	c = b3SplineVector::b3Mix(a, b, 0.5);
+	b3SplineVector::b3Homogenize(r = c);
 
 	CPPUNIT_ASSERT_EQUAL(c.w, r.w);
 	for (b3_f64 q = m_Nurbs.b3FirstKnot();
@@ -303,7 +303,7 @@ void b3NurbsOpenedCurveTest::testBezier()
 	{
 		b3_vector4D point;
 
-		m_Nurbs.b3DeBoorOpened(&point, q);
+		m_Nurbs.b3DeBoorOpened(point, q);
 
 		const b3_f64 radius = sqrt(
 				point.x * point.x +
@@ -338,9 +338,9 @@ void b3NurbsOpenedCurveTest::testArc()
 		q <= m_Nurbs.b3LastKnot();
 		q += m_Nurbs.b3KnotRange() * 0.125)
 	{
-		b3_vector4D point;
+		b3Nurbs::type point;
 
-		m_Nurbs.b3DeBoorOpened(&point, q);
+		m_Nurbs.b3DeBoorOpened(point, q);
 
 		const b3_f64 radius = sqrt(
 				point.x * point.x +
@@ -396,10 +396,10 @@ void b3NurbsOpenedCurveTest::test()
 
 		if (q > knots[i])
 		{
-			b3_vector4D b3_result;
+			b3Nurbs::type b3_result;
 
 			/****** Test using De Boor algorithm (blz3 implementation) ******/
-			nurbs.b3DeBoorOpened(&b3_result, q);
+			nurbs.b3DeBoorOpened(b3_result, q);
 
 			const double b3_radius = sqrt(b3_result.x * b3_result.x + b3_result.y * b3_result.y);
 			CPPUNIT_ASSERT_GREATER(0.0, b3_radius);
@@ -407,7 +407,7 @@ void b3NurbsOpenedCurveTest::test()
 			/****** Test using Mansfield algorithm (blz3 implementation) ******/
 			const unsigned idx = nurbs.b3Mansfield(m_BasisCoeff, q);
 			b3_f64         sum = 0.0;
-			b3_vector4D    mf_result;
+			b3Nurbs::type  mf_result;
 
 			for (unsigned d = 0; d <= nurbs.m_Degree; d++)
 			{
@@ -415,7 +415,7 @@ void b3NurbsOpenedCurveTest::test()
 			}
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
 
-			nurbs.b3MansfieldVector(&mf_result, m_BasisCoeff, idx);
+			nurbs.b3MansfieldVector(mf_result, m_BasisCoeff, idx);
 
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.x, b3_result.x, b3Nurbs::epsilon);
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.y, b3_result.y, b3Nurbs::epsilon);
@@ -433,9 +433,9 @@ void b3NurbsOpenedCurveTest::test()
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(db_result[b3_vector_index::Z], b3_result.z, b3Nurbs::epsilon);
 
 			/****** Test using recursive De Boor algorithm ******/
-			b3_vector4D rc_result = recursiveDeBoor(nurbs, nurbs.m_Degree, i, q);
+			b3Nurbs::type rc_result = recursiveDeBoor(nurbs, nurbs.m_Degree, i, q);
 
-			b3SplineVector::b3Homogenize(&rc_result);
+			b3SplineVector::b3Homogenize(rc_result);
 			const b3_f64        rc_radius =
 					sqrt(rc_result.x * rc_result.x + rc_result.y * rc_result.y);
 
@@ -507,7 +507,7 @@ b3Vector32 b3NurbsOpenedCurveTest::tinyNurbsDeBoor(
 	return db_result;
 }
 
-b3_vector4D b3NurbsOpenedCurveTest::recursiveDeBoor(
+b3Nurbs::type b3NurbsOpenedCurveTest::recursiveDeBoor(
 	const b3Nurbs & nurbs,
 	const unsigned  k,
 	const unsigned  i,
@@ -527,11 +527,10 @@ b3_vector4D b3NurbsOpenedCurveTest::recursiveDeBoor(
 			(q - nurbs.m_Knots[i]) /
 			(nurbs.m_Knots[i + nurbs.m_Degree + 1 - k] - nurbs.m_Knots[i]);
 
-		const b3_vector4D & aVec = recursiveDeBoor(nurbs, k - 1, i - 1, q);
-		const b3_vector4D & bVec = recursiveDeBoor(nurbs, k - 1, i,     q);
-		b3_vector4D         result;
+		const b3Nurbs::type & aVec = recursiveDeBoor(nurbs, k - 1, i - 1, q);
+		const b3Nurbs::type & bVec = recursiveDeBoor(nurbs, k - 1, i,     q);
 
-		return b3SplineVector::b3Mix(result, &aVec, &bVec, alpha);
+		return b3SplineVector::b3Mix(aVec, bVec, alpha);
 	}
 }
 
@@ -641,7 +640,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 			const b3_f64 q   = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
 			const unsigned i = aux_nurbs.b3Mansfield(m_BasisCoeff, q);
 
-			aux_nurbs.b3MansfieldVector(&m_Mansfield[s], m_BasisCoeff, i, y);
+			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, y);
 
 			// Compare De Boor computed values agains Mansfield computed ones
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
@@ -693,7 +692,7 @@ void b3NurbsSurfaceTest::testSphereVertically()
 			const b3_f64 q   = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
 			const unsigned i = aux_nurbs.b3Mansfield(m_BasisCoeff, q);
 
-			aux_nurbs.b3MansfieldVector(&m_Mansfield[s], m_BasisCoeff, i, y);
+			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, y);
 
 			// Compare De Boor computed values agains Mansfield computed ones
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
