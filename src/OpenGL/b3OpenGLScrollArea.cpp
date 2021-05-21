@@ -25,7 +25,7 @@
 *************************************************************************/
 
 QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
-	QScrollArea(parent), MouseSelect::Gui(this), MouseSelect::View(this)
+	QScrollArea(parent), MouseSelect::View(this), MouseSelect::Gui(this)
 {
 #if 0
 	QB3BarInfo test;

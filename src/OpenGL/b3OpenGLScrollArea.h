@@ -50,8 +50,8 @@ struct QB3BarInfo
 class QB3OpenGLScrollArea :
 	public QScrollArea,
 	protected MouseSelect,
-	protected MouseSelect::Gui,
 	protected MouseSelect::View,
+	protected MouseSelect::Gui,
 	protected MouseSelect::Gui::OperationCallback,
 	protected sc::rx::SingleSubscriptionObserver<void>
 {
