@@ -810,7 +810,8 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 {
 	b3_index     gx, gy, gz;
 	b3_index     sx, sy, sz, index;
-	b3_f64       start, end, tn, tf, m, result = -1;
+	b3_f64       start, end, tn, tf, m;
+	b3_f64       result = -1;
 	b3_vector64  pos;
 	b3_vector64  d;
 	b3_vector64  denom;
@@ -856,7 +857,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	}
 	if (start > end)
 	{
-		return result;
+		return -1;
 	}
 
 	denom.z = 1.0 / ray->dir.z;
@@ -877,12 +878,12 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray * ray, b3_polar * polar)
 	}
 	if (start > end)
 	{
-		return result;
+		return -2;
 	}
 
 	if ((end   < 0) || (start > ray->Q))
 	{
-		return result;
+		return -3;
 	}
 
 	if (start < 0)

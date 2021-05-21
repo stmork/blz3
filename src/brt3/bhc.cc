@@ -77,7 +77,7 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 		{
 			len = strlen(m_Line);
 
-			while (isspace(m_Line[m_Pos]) && (m_Pos < len))
+			while ((m_Pos < len) && isspace(m_Line[m_Pos]))
 			{
 				m_Pos++;
 			}

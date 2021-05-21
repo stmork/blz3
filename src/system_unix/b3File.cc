@@ -243,6 +243,7 @@ bool b3File::b3Flush()
 		m_Index = 0;
 	}
 
+	// cppcheck-suppress knownConditionTrueFalse
 	return m_Index == 0;
 }
 

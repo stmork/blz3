@@ -166,13 +166,13 @@ public:
 	{
 		b3PrintF(B3LOG_NORMAL, "Saving Blizzard object %s...\n", filename);
 
-		b3Dir::b3SplitFileName(filename, nullptr, m_BBox->m_BoxName);
-		b3Dir::b3RemoveExt(m_BBox->m_BoxName);
-
 		if (m_BBox != nullptr)
 		{
 			b3World world;
 			b3File  file(filename, B_WRITE);
+
+			b3Dir::b3SplitFileName(filename, nullptr, m_BBox->m_BoxName);
+			b3Dir::b3RemoveExt(m_BBox->m_BoxName);
 
 			world.b3SetFirst(m_BBox);
 			b3BBox::b3Recount(world.b3GetHead());

@@ -106,6 +106,8 @@ inline void b3Tx::b3UnpackSGI(
 			{
 				pixel = *sBuffer++;
 				count = (pixel & 0x7f);
+
+				// cppcheck-suppress knownConditionTrueFalse
 				if (count == 0)
 				{
 					return;

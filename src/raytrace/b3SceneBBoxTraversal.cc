@@ -668,7 +668,7 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 			{
 				mask |= CLIP_RIGHT;
 			}
-			else if (out.x >= 0)
+			else
 			{
 				mask |= CLIP_LEFT;
 			}
@@ -676,7 +676,7 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 			{
 				mask |= CLIP_TOP;
 			}
-			else if (out.y >= 0)
+			else
 			{
 				mask |= CLIP_BOTTOM;
 			}

@@ -189,14 +189,12 @@ void init_vbo()
 			(glBufferDataARB != nullptr) &&
 			(glMapBufferARB  != nullptr) &&
 			(glUnmapBufferARB != nullptr);
-		if (!has_vbo)
-		{
-			printf("glGenBuffersARB  = %p\n", glGenBuffersARB);
-			printf("glBindBufferARB  = %p\n", glBindBufferARB);
-			printf("glBufferDataARB  = %p\n", glBufferDataARB);
-			printf("glMapBufferARB   = %p\n", glMapBufferARB);
-			printf("glUnmapBufferARB = %p\n", glUnmapBufferARB);
-		}
+
+		printf("glGenBuffersARB  = %p\n", glGenBuffersARB);
+		printf("glBindBufferARB  = %p\n", glBindBufferARB);
+		printf("glBufferDataARB  = %p\n", glBufferDataARB);
+		printf("glMapBufferARB   = %p\n", glMapBufferARB);
+		printf("glUnmapBufferARB = %p\n", glUnmapBufferARB);
 	}
 	else
 	{
