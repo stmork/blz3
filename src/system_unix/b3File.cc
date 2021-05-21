@@ -223,27 +223,24 @@ bool b3File::b3Flush()
 	}
 
 	// Write buffer contents
-	if (m_Index > 0)
+	written = write(m_File, m_Cache, m_Index);
+
+	// Handle case that not the whole buffer was written
+	if (written < (b3_size)m_Index)
 	{
-		written = write(m_File, m_Cache, m_Index);
+		k     = written;
+		size  = m_Index - written;
 
-		// Handle case that not the whole buffer was written
-		if (written < (b3_size)m_Index)
+		// Copy data to front of buffer
+		for (i = 0; i < size; i++)
 		{
-			k     = written;
-			size  = m_Index - written;
-
-			// Copy data to front of buffer
-			for (i = 0; i < size; i++)
-			{
-				m_Cache[i] = m_Cache[k++];
-			}
-			m_Index = size;
+			m_Cache[i] = m_Cache[k++];
 		}
-		else
-		{
-			m_Index = 0;
-		}
+		m_Index = size;
+	}
+	else
+	{
+		m_Index = 0;
 	}
 
 	return m_Index == 0;
