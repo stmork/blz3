@@ -312,9 +312,10 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 
 			m_ThisResult[x]  = (m_ThisResult[x] + b3Shade(&ray, fxLeft, fyDown)) * 0.25f;
 
-			ray.dir = *b3Vector::b3Add(&m_Scene->m_xHalfDir, &dir);
+			b3Vector::b3Add(&m_Scene->m_xHalfDir, &dir);
 		}
-		ray.dir    = *b3Vector::b3Add(&m_Scene->m_xStepDir, &dir);
+		b3Vector::b3Add(&m_Scene->m_xStepDir, &dir);
+		ray.dir    = dir;
 		fxRight   += m_fxStep;
 		fxLeft    += m_fxStep;
 
