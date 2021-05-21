@@ -9,10 +9,10 @@ file _$HOME/.sct.properties_ to your eclipse installation folder. Then you
 can generate by simply caling
 ```
 ant
-```.
+```
 
 ## Generating using Qt
 If you have _ant_ running you can also generate by simple calling
 ```
-make generate.
+make generate
 ```
