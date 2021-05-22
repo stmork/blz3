@@ -468,18 +468,19 @@ public:
 	/**
 	* This method subdivides a curve into points reflecting the open/closed
 	* definition and the @c m_SubDiv member variable. This calls the
-	* b3DeBoorOpened() or b3DeBootClosed() methods to compute a singe value
+	* b3DeBoorOpened() or b3DeBoorClosed() methods to compute a singe value
 	* within the valid knot range.
 	*
-	* @note Important: In case using NURBS the control points have to be in
-	* the form Ci = [wx, wy, wz, w]. After using this method the result
-	* vector is homogenized using the b3Homogenize() method and has the form
-	* R = [ x, y, z, w].
+	* @note Important: In case you are using NURBS the control points have to
+	* be in the form Ci = [wx, wy, wz, w]. After using this method the result
+	* vector is homogenized using the b3SplineVector::b3Homogenize() method and
+	* has the form R = [ x, y, z, w] for further usage.
 	*
-	* @note Most control point examples concerning rational splines are in the
-	* form Ci = [x, y, z, w]. If you plan to use those examples you have to
-	* transform the control points into the form Ci = [wx, wy, wz, w] using the
-	* b3SplineVector::b3WeightInit() or b3SplineVector::b3WeightSelf() methods.
+	* @note Most control point examples in the internet concerning rational
+	* splines are in the form Ci = [x, y, z, w]. If you plan to use those
+	* examples you have to transform the control points into the form
+	* Ci = [wx, wy, wz, w] using the b3SplineVector::b3WeightInit() or
+	* b3SplineVector::b3WeightSelf() methods.
 	*
 	* @param point The point array where the computed points are stored.
 	* @param index The start index to use. Using two splines decribing surfaces
@@ -513,22 +514,54 @@ public:
 		return i;
 	}
 
+	/**
+	 * This method computes one single point on an open spline. The value
+	 * @c q has between the valid range of the knot vector. You can determine
+	 * the valid range using the b3FirstKnot(), b3LastKnot() and b3KnotRange()
+	 * methods.
+	 *
+	 * The @c index parameter is used for spline surfaces and is the start
+	 * index access the control point array. Since the control point array is
+	 * used for both horizontal and vertical splines it is not two dimensional
+	 * but uses the @c m_Offset member to access the correct control points.
+	 *
+	 * @note Important: In case you are using NURBS the control points have to
+	 * be in the form Ci = [wx, wy, wz, w]. After using this method the result
+	 * vector is homogenized using the b3SplineVector::b3Homogenize() method and
+	 * has the form R = [ x, y, z, w] for further usage.
+	 *
+	 * @note Most control point examples in the internet concerning rational
+	 * splines are in the form Ci = [x, y, z, w]. If you plan to use those
+	 * examples you have to transform the control points into the form
+	 * Ci = [wx, wy, wz, w] using the b3SplineVector::b3WeightInit() or
+	 * b3SplineVector::b3WeightSelf() methods.
+	 *
+	 * @param point The point array where the computed points are stored.
+	 * @param q The value with the valid knot vector range.
+	 * @param index The start index to use. Using two splines decribing surfaces
+	 * this is the start index and the @c m_Offset member variable contains the
+	 * vertical control point offset. In one dimensional curves this should
+	 * be @c 0.
+	 * @return The found knot vector index using the iFind() method.
+	 */
 	unsigned b3DeBoorOpened(VECTOR & point, b3_knot q, b3_index index = 0) const
 	{
 		const unsigned  i = iFind(q);
-		b3_f64          it[m_Degree + 1];
+		b3_f64          basis[m_Degree + 1];
 
-		it[0]  = 1;
+		B3_ASSERT(!m_Closed);
+
+		basis[0]  = 1;
 		for (unsigned l = 1; l <= m_Degree; l++)
 		{
-			it[l]  = 0;
+			basis[l]  = 0;
 			for (unsigned j = 0; j < l; j++)
 			{
 				const b3_f64 denom = m_Knots[i - j + l] - m_Knots[i - j];
 				const b3_f64 r     = (denom != 0 ? (q - m_Knots[i - j]) / denom : 0);
 
-				it[l - j]     += r * it[l - j - 1];
-				it[l - j - 1] *= (1 - r);
+				basis[l - j]     += r * basis[l - j - 1];
+				basis[l - j - 1] *= (1 - r);
 			}
 		}
 
@@ -536,39 +569,71 @@ public:
 		b3_index j = i * m_Offset + index;
 		for (b3_index l = m_Degree; l >= 0; l--)
 		{
-			b3SplineVector::b3AddScaled(it[l], m_Controls[j], point);
+			b3SplineVector::b3AddScaled(basis[l], m_Controls[j], point);
 			j -= m_Offset;
 		}
 		b3SplineVector::b3Homogenize(point);
 		return i;
 	}
 
+	/**
+	 * This method computes one single point on an closed spline. The value
+	 * @c q has between the valid range of the knot vector. You can determine
+	 * the valid range using the b3FirstKnot(), b3LastKnot() and b3KnotRange()
+	 * methods.
+	 *
+	 * The @c index parameter is used for spline surfaces and is the start
+	 * index access the control point array. Since the control point array is
+	 * used for both horizontal and vertical splines it is not two dimensional
+	 * but uses the @c m_Offset member to access the correct control points.
+	 *
+	 * @note Important: In case you are using NURBS the control points have to
+	 * be in the form Ci = [wx, wy, wz, w]. After using this method the result
+	 * vector is homogenized using the b3SplineVector::b3Homogenize() method and
+	 * has the form R = [ x, y, z, w] for further usage.
+	 *
+	 * @note Most control point examples in the internet concerning rational
+	 * splines are in the form Ci = [x, y, z, w]. If you plan to use those
+	 * examples you have to transform the control points into the form
+	 * Ci = [wx, wy, wz, w] using the b3SplineVector::b3WeightInit() or
+	 * b3SplineVector::b3WeightSelf() methods.
+	 *
+	 * @param point The point array where the computed points are stored.
+	 * @param q The value with the valid knot vector range.
+	 * @param index The start index to use. Using two splines decribing surfaces
+	 * this is the start index and the @c m_Offset member variable contains the
+	 * vertical control point offset. In one dimensional curves this should
+	 * be @c 0.
+	 * @return The found knot vector index using the iFind() method.
+	 */
 	unsigned  b3DeBoorClosed(VECTOR & point, b3_knot qStart, b3_index index = 0) const
 	{
 		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
 		unsigned      i     = iFind(qStart);
 		b3_f64        q;
-		b3_f64        it[m_Degree + 1];
+		b3_f64        basis[m_Degree + 1];
+
+		B3_ASSERT(m_Closed);
 
 		if (i >= m_ControlNum)
 		{
 			i -= m_ControlNum;
 		}
 
-		it[0]  = 1;
+		basis[0]  = 1;
 		for (unsigned l = 1; l <= m_Degree; l++)
 		{
 			b3_index k = i;
 
-			it[l]  = 0;
+			basis[l]  = 0;
 			q      = qStart;
 			for (unsigned j = 0; j < l; j++)
 			{
 				const b3_f64 denom = m_Knots[k + l] - m_Knots[k];
 				const b3_f64 r     = (denom != 0 ? (q - m_Knots[k]) / denom : 0);
 
-				it[l - j]     += r * it[l - j - 1];
-				it[l - j - 1] *= (1 - r);
+				basis[l - j]     += r * basis[l - j - 1];
+				basis[l - j - 1] *= (1 - r);
 				if (--k < 0) /* check underflow of knots */
 				{
 					k += m_ControlNum;
@@ -581,7 +646,7 @@ public:
 		b3_index j = i;
 		for (b3_index l = m_Degree; l >= 0; l--)
 		{
-			b3SplineVector::b3AddScaled(it[l], m_Controls[j * m_Offset + index], point);
+			b3SplineVector::b3AddScaled(basis[l], m_Controls[j * m_Offset + index], point);
 			if (--j < 0)
 			{
 				j += m_ControlNum;
