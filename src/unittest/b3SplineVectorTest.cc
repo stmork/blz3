@@ -94,6 +94,9 @@ template<> void b3SplineVectorTest<b3_f64>::test()
 
 	result = b3SplineVector::b3Mix(a, b, 0.25);
 	CPPUNIT_ASSERT_EQUAL(2.75, result);
+
+	result = b3SplineVector::b3WeightInit(a, 0.75);
+	CPPUNIT_ASSERT_EQUAL( 3.0, result);
 }
 
 template<> void b3SplineVectorTest<b3_vector>::test()
@@ -126,6 +129,11 @@ template<> void b3SplineVectorTest<b3_vector>::test()
 	CPPUNIT_ASSERT_EQUAL( 2.25f, result.x);
 	CPPUNIT_ASSERT_EQUAL( 0.5f,  result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.25f, result.z);
+
+	result = b3SplineVector::b3WeightInit(a, 0.75);
+	CPPUNIT_ASSERT_EQUAL( 3.0f, result.x);
+	CPPUNIT_ASSERT_EQUAL( 0.0f, result.y);
+	CPPUNIT_ASSERT_EQUAL( 4.0f, result.z);
 }
 
 template<> void b3SplineVectorTest<b3_vector4D>::test()
@@ -164,6 +172,24 @@ template<> void b3SplineVectorTest<b3_vector4D>::test()
 	CPPUNIT_ASSERT_EQUAL( 0.5f,   result.y);
 	CPPUNIT_ASSERT_EQUAL( 3.25f,  result.z);
 	CPPUNIT_ASSERT_EQUAL( 1.125f, result.w);
+
+	result = b3SplineVector::b3WeightInit(a, 0.75);
+	CPPUNIT_ASSERT_EQUAL( 2.25f, result.x);
+	CPPUNIT_ASSERT_EQUAL( 0.0f,  result.y);
+	CPPUNIT_ASSERT_EQUAL( 3.0f,  result.z);
+	CPPUNIT_ASSERT_EQUAL( 0.75f, result.w);
+
+	b3SplineVector::b3Homogenize(result);
+	CPPUNIT_ASSERT_EQUAL( 3.0f,  result.x);
+	CPPUNIT_ASSERT_EQUAL( 0.0f,  result.y);
+	CPPUNIT_ASSERT_EQUAL( 4.0f,  result.z);
+	CPPUNIT_ASSERT_EQUAL( 0.75f, result.w);
+
+	result = b3SplineVector::b3WeightSelf(result);
+	CPPUNIT_ASSERT_EQUAL( 2.25f, result.x);
+	CPPUNIT_ASSERT_EQUAL( 0.0f,  result.y);
+	CPPUNIT_ASSERT_EQUAL( 3.0f,  result.z);
+	CPPUNIT_ASSERT_EQUAL( 0.75f, result.w);
 }
 
 #endif

@@ -23,10 +23,11 @@
 #include "blz3/b3Config.h"
 
 #ifdef HAVE_LIBCPPUNIT
+
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <blz3/base/b3Spline.h>
+#include <blz3/base/b3SplineVector.h>
 
 template<class VECTOR> class b3SplineVectorTest : public CppUnit::TestFixture
 {
@@ -42,9 +43,9 @@ template<class VECTOR> class b3SplineVectorTest : public CppUnit::TestFixture
 public:
 	void setUp() override;
 	void tearDown() override
-{
-	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
-}
+	{
+		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
+	}
 
 	void test();
 };

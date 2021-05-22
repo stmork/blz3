@@ -70,3 +70,6 @@ lcov.commands += genhtml coverage.info --legend --title=\"Blizzard III base libr
 
 QMAKE_EXTRA_TARGETS += lcov
 QMAKE_CLEAN         += $$BLZ3_LCOV
+
+HEADERS += \
+	../include/blz3/base/b3SplineVector.h

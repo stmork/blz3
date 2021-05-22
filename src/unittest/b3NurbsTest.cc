@@ -263,7 +263,7 @@ void b3NurbsOpenedCurveTest::testCircle()
 
 void b3NurbsOpenedCurveTest::testBezier()
 {
-	CPPUNIT_ASSERT(m_Nurbs.b3InitCurve(2, 5, false));
+	CPPUNIT_ASSERT(m_Nurbs.b3InitCurve(2, 3, false));
 	CPPUNIT_ASSERT(m_Nurbs.b3ToBezier());
 
 	CPPUNIT_ASSERT_EQUAL(m_Nurbs.m_ControlNum * 2, m_Nurbs.m_KnotNum);
@@ -287,14 +287,22 @@ void b3NurbsOpenedCurveTest::testBezier()
 
 	m_Controls[1].x =  RADIUS;
 	m_Controls[1].y =  RADIUS;
+	b3SplineVector::b3WeightSelf(m_Controls[1]);
+
 	m_Controls[3].x = -RADIUS;
 	m_Controls[3].y =  RADIUS;
+	b3SplineVector::b3WeightSelf(m_Controls[3]);
 
-	b3_vector4D a, b, c, r;
-	a = b3SplineVector::b3Mix(m_Controls[0], m_Controls[1], 0.5);
-	b = b3SplineVector::b3Mix(m_Controls[1], m_Controls[2], 0.5);
-	c = b3SplineVector::b3Mix(a, b, 0.5);
+	b3_vector4D r;
+	b3_f64      basis[m_Nurbs.m_Degree + 1];
+	const b3_vector4D & a = b3SplineVector::b3Mix(m_Controls[0], m_Controls[1], 0.5);
+	const b3_vector4D & b = b3SplineVector::b3Mix(m_Controls[1], m_Controls[2], 0.5);
+	const b3_vector4D & c = b3SplineVector::b3Mix(a, b, 0.5);
 	b3SplineVector::b3Homogenize(r = c);
+
+	bzero(basis, sizeof(basis));
+	const unsigned i = m_Nurbs.b3Mansfield(basis, 0.5);
+	m_Nurbs.b3MansfieldVector(r, basis, i);
 
 	CPPUNIT_ASSERT_EQUAL(c.w, r.w);
 	for (b3_f64 q = m_Nurbs.b3FirstKnot();
@@ -310,6 +318,7 @@ void b3NurbsOpenedCurveTest::testBezier()
 				point.y * point.y +
 				point.z * point.z);
 		CPPUNIT_ASSERT_GREATER(0.0, radius);
+		CPPUNIT_ASSERT_EQUAL(RADIUS, radius);
 	}
 }
 
@@ -437,7 +446,7 @@ void b3NurbsOpenedCurveTest::test()
 
 			b3SplineVector::b3Homogenize(rc_result);
 			const b3_f64        rc_radius =
-					sqrt(rc_result.x * rc_result.x + rc_result.y * rc_result.y);
+				sqrt(rc_result.x * rc_result.x + rc_result.y * rc_result.y);
 
 			CPPUNIT_ASSERT_GREATER(0.0, rc_radius);
 
