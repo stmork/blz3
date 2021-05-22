@@ -453,6 +453,16 @@ public:
 	* b3DeBoorOpened() or b3DeBootClosed() methods to compute a singe value
 	* within the valid knot range.
 	*
+	* @note Important: In case using NURBS the control points have to be in
+	* the form Ci = [wx, wy, wz, w]. After using this method the result
+	* vector is homogenized using the b3Homogenize() method and has the form
+	* R = [ x, y, z, w].
+	*
+	* @note Most control point examples concerning rational splines are in the
+	* form Ci = [x, y, z, w]. If you plan to use those examples you have to
+	* transform the control points into the form Ci = [wx, wy, wz, w] using the
+	* b3SplineVector::b3WeightInit() or b3SplineVector::b3WeightSelf() methods.
+	*
 	* @param point The point array where the computed points are stored.
 	* @param index The start index to use. Using two splines decribing surfaces
 	* this is the start index and the @c m_Offset member variable contains the
