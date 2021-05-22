@@ -572,6 +572,13 @@ b3Nurbs::type b3NurbsOpenedCurveTest::recursiveDeBoor(
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This setups the control points and knot vectors for a spherical NURBS
+ * surface.
+ *
+ * Look at:
+ * https://download.blender.org/documentation/htmlI/ch09s02.html
+ */
 void b3NurbsSurfaceTest::setUp()
 {
 	m_Horizontal.m_Knots    = m_HorizontalKnots;
@@ -761,22 +768,24 @@ void b3NurbsSurfaceTest::testSphereVertically()
 void b3NurbsSurfaceTest::test()
 {
 	b3Nurbs         aux_spline;
-	b3_f64          fx, fxStep;
-	b3_f64          fy, fyStep;
-	unsigned        index;
-	b3Nurbs::type * Aux;
-	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
+	b3Nurbs::type * aux_ptr;
 	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_SUBDIV + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
+	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
 
 	// Reduce tesselation for test purposes.
 	m_Horizontal.m_SubDiv = 8;
 	m_Vertical.m_SubDiv   = 4;
 
-	// Building horizontal BSplines
-	Aux    = aux_control_points;
-	for (unsigned x = 0; x <= m_Horizontal.m_SubDiv; x++)
+	// Building vertical splines
+	aux_ptr    = aux_control_points;
+	for (unsigned x = 0; x < m_Horizontal.m_SubDiv; x++)
 	{
-		Aux += m_Vertical.b3DeBoor(Aux, x * m_Horizontal.m_Offset);
+		const unsigned count = m_Vertical.b3DeBoor(aux_ptr, x * m_Horizontal.m_Offset);
+
+		for (unsigned i = 0; i < count; i++)
+		{
+			b3SplineVector::b3WeightSelf(*aux_ptr++);
+		}
 	}
 
 	// Create aux BSpline
@@ -784,27 +793,23 @@ void b3NurbsSurfaceTest::test()
 	aux_spline.m_Offset   = m_Vertical.m_SubDiv + 1;
 	aux_spline.m_Controls = aux_control_points;
 
-	index  = 0;
-	fy     = 0;
-	fyStep = 1.0 / m_Vertical.m_SubDiv;
 	for (unsigned y = 0; y < m_Vertical.m_SubDiv; y++)
 	{
 		const unsigned count   = aux_spline.b3DeBoor(result, y);
-		index  += count;
 
-		fx = 0;
-		fxStep = 1.0 / (b3_f64)count;
 		for (unsigned x = 0; x < count; x++)
 		{
 			const b3_f64 radius = sqrt(
 						result[x].x * result[x].x +
 						result[x].y * result[x].y +
 						result[x].z * result[x].z);
-			fx += fxStep;
 
+			m_Radius[x] = radius;
 			CPPUNIT_ASSERT_GREATER(0.0, radius);
+#if 0
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Nurbs::epsilon);
+#endif
 		}
-		fy += fyStep;
 	}
 }
 
