@@ -99,7 +99,7 @@ b3BBox::b3BBox(b3_u32 * src) : b3Item(src)
 	else
 	{
 		b3InitString(m_BoxName, B3_BOXSTRINGLEN);
-		b3InitString(m_BoxURL, B3_BOXSTRINGLEN);
+		b3InitString(m_BoxURL,  B3_BOXSTRINGLEN);
 	}
 
 	m_CSGIntersectionCount = 0;

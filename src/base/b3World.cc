@@ -138,8 +138,8 @@ b3Item * b3World::b3AllocNode(b3_u32 class_value, const bool throw_exception)
 b3Item * b3World::b3AllocNode(b3_u32 * buffer, const bool throw_exception)
 {
 	b3ItemRegisterEntry * entry;
-	b3Item       *       item;
-	b3_u32               class_type = buffer[B3_NODE_IDX_CLASSTYPE];
+	b3Item        *       item;
+	b3_u32                class_type = buffer[B3_NODE_IDX_CLASSTYPE];
 
 	entry = b3ItemRegister::b3Instance().b3Find(class_type);
 	if (entry != nullptr)

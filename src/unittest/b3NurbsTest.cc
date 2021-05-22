@@ -409,8 +409,8 @@ void b3NurbsOpenedCurveTest::test()
 	}
 
 	for (b3_f64 q = nurbs.b3FirstKnot();
-		 q <= nurbs.b3LastKnot() - nurbs.epsilon;
-		 q += nurbs.b3KnotRange() * 0.125)
+		q <= nurbs.b3LastKnot() - nurbs.epsilon;
+		q += nurbs.b3KnotRange() * 0.125)
 	{
 		const unsigned i = nurbs.iFind(q);
 
@@ -420,9 +420,9 @@ void b3NurbsOpenedCurveTest::test()
 		nurbs.b3DeBoorOpened(b3_result, q);
 
 		const b3_f64 b3_radius = sqrt(
-					b3_result.x * b3_result.x +
-					b3_result.y * b3_result.y +
-					b3_result.z * b3_result.z);
+				b3_result.x * b3_result.x +
+				b3_result.y * b3_result.y +
+				b3_result.z * b3_result.z);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, b3_radius, b3Nurbs::epsilon);
 
 		/****** Test using Mansfield algorithm (blz3 implementation) ******/
@@ -443,9 +443,9 @@ void b3NurbsOpenedCurveTest::test()
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.z, b3_result.z, b3Nurbs::epsilon);
 
 		const b3_f64 mf_radius = sqrt(
-					mf_result.x * mf_result.x +
-					mf_result.y * mf_result.y +
-					mf_result.z * mf_result.z);
+				mf_result.x * mf_result.x +
+				mf_result.y * mf_result.y +
+				mf_result.z * mf_result.z);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, mf_radius, b3Nurbs::epsilon);
 
 		/****** Test using De Boor algorithm (tinynurbs implementation) ******/
@@ -464,9 +464,9 @@ void b3NurbsOpenedCurveTest::test()
 
 		b3SplineVector::b3Homogenize(rc_result);
 		const b3_f64        rc_radius = sqrt(
-					rc_result.x * rc_result.x +
-					rc_result.y * rc_result.y +
-					rc_result.z * rc_result.z);
+				rc_result.x * rc_result.x +
+				rc_result.y * rc_result.y +
+				rc_result.z * rc_result.z);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, rc_radius, b3Nurbs::epsilon);
 
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(rc_result.x, b3_result.x, b3Nurbs::epsilon);

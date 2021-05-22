@@ -142,7 +142,7 @@ b3AnimElement::b3AnimElement(b3_u32 * src) : b3Item(src)
 		m_Knots[i] = b3InitFloat();
 	}
 
-	b3InitString(m_Name,  B3_ANIMSTRINGLEN);
+	b3InitString(m_Name,   B3_ANIMSTRINGLEN);
 	b3InitString(m_Object, B3_BOXSTRINGLEN);
 }
 

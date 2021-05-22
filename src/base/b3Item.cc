@@ -426,16 +426,18 @@ void b3Item::b3InitColor(b3Color & col)
 
 void b3Item::b3InitString(char * name, b3_size len)
 {
-	b3_u32  pos = m_ParseIndex << 2;
-	b3_u32  new_size;
+	const char * buffer_src = (const char *)&m_Buffer[m_ParseIndex];
+	b3_u32       new_size;
+	b3_u32       pos        = m_ParseIndex << 2;
 
 	B3_ASSERT_INDEX;
 
 	new_size = pos + len > m_ItemSize ? m_ItemSize - pos : len;
-	b3Locale::b3IsoToLocale((const char *)&m_Buffer[m_ParseIndex], name, new_size);
+
+	b3Locale::b3IsoToLocale(buffer_src, name, new_size);
 	if (new_size < len)
 	{
-		name[new_size] = 0;
+		name[new_size - 1] = 0;
 	}
 	m_ParseIndex += ((b3_u32)(len + 3) >> 2);
 }
