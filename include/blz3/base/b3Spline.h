@@ -68,35 +68,39 @@ enum b3_bspline_error
 template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 {
 public:
+	static const     unsigned B3_MAX_CONTROLS    = 32;
+	static const     unsigned B3_MAX_SUBDIV      = 64;
+	static const     unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
+	static const     unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
+
 	/** The type of the knot vector elements. */
 	typedef b3_f32    b3_knot;
 
 	/** The type of the knot vector itself. */
 	typedef b3_knot * b3_knots;
 
+	/** The type of knot vector. */
+	typedef           b3_knot  b3_knot_vector[B3_MAX_KNOTS];
+
 	/** The used template parameter type. */
-	using   type = VECTOR;
+	using             type = VECTOR;
 
-	static b3_bspline_error bspline_errno;
+	/** The allowed numerical error. */
+	static constexpr b3_knot          epsilon = 1.0 / 16384;
 
-	static const     unsigned B3_MAX_CONTROLS    = 32;
-	static const     unsigned B3_MAX_SUBDIV      = 64;
-	static const     unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
-	static const     unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
-	static constexpr b3_knot  epsilon = 1.0 / 16384;
+	/** The spline handling error code. */
+	static           b3_bspline_error bspline_errno;
 
-	typedef          b3_knot  b3_knot_vector[B3_MAX_KNOTS];
-
-	VECTOR     *    m_Controls;           // control point sequence.
-	b3_knots        m_Knots;              // knot sequence.
-	unsigned        m_ControlNum;         // used number of controls.
-	unsigned        m_KnotNum;            // used number of knots.
-	unsigned        m_Degree;             // spline degree.
-	unsigned        m_SubDiv;             // Sub division for triangulation.
-	unsigned        m_ControlMax;         // max. available control points.
-	unsigned        m_KnotMax;            // max. available knots.
-	b3_index        m_Offset;             // index offset between each control
-	bool            m_Closed;             // open/closed curve.
+	VECTOR     *    m_Controls;       //!< control point sequence.
+	b3_knots        m_Knots;          //!< knot sequence.
+	unsigned        m_ControlNum;     //!< used number of controls.
+	unsigned        m_KnotNum;        //!< used number of knots.
+	unsigned        m_Degree;         //!< spline degree.
+	unsigned        m_SubDiv;         //!< Sub division for triangulation.
+	unsigned        m_ControlMax;     //!< max. available control points.
+	unsigned        m_KnotMax;        //!< max. available knots.
+	b3_index        m_Offset;         //!< index offset between each control
+	bool            m_Closed;         //!< open/closed curve.
 
 public:
 	b3SplineTemplate<VECTOR>()
@@ -414,15 +418,29 @@ public:
 	}
 
 	/**
+	 * This method returns the index of the first knot element which
+	 * may differ between closed and opened splines.
+	 *
+	 * @return The index of the first knot vector value.
+	 * @see b3FirstKnot()
+	 */
+	[[nodiscard]]
+	inline unsigned b3FirstKnotIndex() const
+	{
+		return m_Closed ? 0 : m_Degree;
+	}
+
+	/**
 	 * This method returns the reference to the first knot element which
 	 * may differ between closed and opened splines.
 	 *
 	 * @return The reference to the first knot vector value.
+	 * @see b3FirstKnotIndex()
 	 */
 	[[nodiscard]]
 	inline const b3_knot & b3FirstKnot() const
 	{
-		return m_Closed ? m_Knots[0] : m_Knots[m_Degree];
+		return m_Knots[b3FirstKnotIndex()];
 	}
 
 	/**
@@ -466,19 +484,17 @@ public:
 	* @param point The point array where the computed points are stored.
 	* @param index The start index to use. Using two splines decribing surfaces
 	* this is the start index and the @c m_Offset member variable contains the
-	* vertical control point offset. In one dimandional curves this should
+	* vertical control point offset. In one dimensional curves this should
 	* be @c 0.
 	*/
 	unsigned  b3DeBoor(VECTOR * point, const b3_index index = 0) const
 	{
-		b3_f64	 q, qStep;
-		unsigned i = 0;
+		const b3_f64 qStep = b3KnotRange() / m_SubDiv;
+		b3_f64	     q     = b3FirstKnot();
+		unsigned     i;
 
 		if (m_Closed)
 		{
-			q     =  m_Knots[0];
-			qStep = (m_Knots[m_ControlNum] - q) / m_SubDiv;
-
 			for (i = 0; i <= m_SubDiv; i++)
 			{
 				b3DeBoorClosed(*point++, q, index);
@@ -487,9 +503,6 @@ public:
 		}
 		else
 		{
-			q     =  m_Knots[m_Degree];
-			qStep = (m_Knots[m_ControlNum] - q) / m_SubDiv;
-
 			for (i = 0; i <= m_SubDiv; i++)
 			{
 				b3DeBoorOpened(*point++, q, index);
@@ -605,30 +618,28 @@ public:
 		b3SplineTemplate<VECTOR> * curveSpline,
 		VECTOR          *          point)
 	{
-		b3_knots  knot_ptr;
-		b3_index  i, end, index;
-		b3_count  ControlNum;
-		b3_f64    it[B3_MAX_DEGREE + 1];
+		const unsigned segment_count = curveSpline->b3GetSegmentKnotCount();
+		const b3_knots knot_ptr      = curveSpline->m_Knots;
+		unsigned       end           = curveSpline->m_ControlNum;
+		b3_f64         basis[B3_MAX_DEGREE + 1];
 
-		ControlNum = curveSpline->b3GetSegmentKnotCount();
-		knot_ptr   = curveSpline->m_Knots;
-		end        = curveSpline->m_ControlNum;
 		if (!curveSpline->m_Closed)
 		{
 			end++;
 		}
 
-		for (i = (curveSpline->m_Closed ? 0 : curveSpline->m_Degree); i < end; i++)
+		for (unsigned i = curveSpline->b3FirstKnotIndex(); i < end; i++)
 		{
-			index = curveSpline->b3Mansfield(it, knot_ptr[i]);
+			const unsigned index = curveSpline->b3Mansfield(basis, knot_ptr[i]);
+
 			for (unsigned x = 0; x < controlSpline->m_ControlNum; x++)
 			{
-				curveSpline->b3MansfieldVector(point[x * ControlNum], it,
+				curveSpline->b3MansfieldVector(point[x * segment_count], basis,
 					index, x * controlSpline->m_Offset);
 			}
 			point++;
 		}
-		return ControlNum;
+		return segment_count;
 	}
 
 	/**

@@ -242,9 +242,9 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3_vector      SplVector[b3Spline::B3_MAX_SUBDIV + 1];
 	b3_vector      aux_control_points[(b3Spline::B3_MAX_SUBDIV + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
 
-	// Building horizontal BSplines
+	// Building a series of vertical splines.
 	aux_ptr    = aux_control_points;
-	for (unsigned x = 0; x <= m_Spline[0].m_SubDiv; x++)
+	for (unsigned x = 0; x <= m_Spline[0].m_ControlNum; x++)
 	{
 		aux_ptr += m_Spline[1].b3DeBoor(aux_ptr, x * m_Spline[0].m_Offset);
 	}

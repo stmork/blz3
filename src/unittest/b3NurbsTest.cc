@@ -67,12 +67,16 @@ void b3NurbsCurveTest::b3InitControlPoints()
 {
 	for (unsigned i = 0; i < m_Nurbs.m_ControlNum; i++)
 	{
-		const double angle = i * 2.0 * M_PI;
+		const double angle = i * 2.0 * M_PI / m_Nurbs.m_ControlNum;
 
-		m_Controls[i].x = cos(angle / m_Nurbs.m_ControlNum) * RADIUS;
-		m_Controls[i].y = sin(angle / m_Nurbs.m_ControlNum) * RADIUS;
+		// This is the representation often found in the internet.
+		m_Controls[i].x = std::round(cos(angle)) * RADIUS;
+		m_Controls[i].y = std::round(sin(angle)) * RADIUS;
 		m_Controls[i].z = 0;
 		m_Controls[i].w = i & 1 ? sqrt(2.0) * 0.5 : 1.0;
+
+		// This is the representation needed by De Boor's algorithm.
+		b3SplineVector::b3WeightSelf(m_Controls[i]);
 	}
 }
 
@@ -678,8 +682,6 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 		const unsigned count = aux_nurbs.b3DeBoor(m_Deboor, y);
 		const b3_f64   range = aux_nurbs.b3KnotRange();
 
-		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
-
 		for (unsigned s = 0; s <= aux_nurbs.m_SubDiv; s++)
 		{
 			const b3_f64   q = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
@@ -706,6 +708,8 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, m_Radius[s], b3Nurbs::epsilon);
 #endif
 		}
+
+		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 	}
 }
 
@@ -734,8 +738,6 @@ void b3NurbsSurfaceTest::testSphereVertically()
 		const unsigned count = aux_nurbs.b3DeBoor(m_Deboor, x);
 		const b3_f64 range = aux_nurbs.b3KnotRange();
 
-		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
-
 		for (unsigned s = 0; s <= aux_nurbs.m_SubDiv; s++)
 		{
 			const b3_f64   q = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
@@ -762,23 +764,25 @@ void b3NurbsSurfaceTest::testSphereVertically()
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, m_Radius[s], b3Nurbs::epsilon);
 #endif
 		}
+
+		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 	}
 }
 
 void b3NurbsSurfaceTest::test()
 {
-	b3Nurbs         aux_spline;
+	b3Nurbs         aux_nurbs;
 	b3Nurbs::type * aux_ptr;
-	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_SUBDIV + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
+	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_CONTROLS + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
 	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
 
 	// Reduce tesselation for test purposes.
-	m_Horizontal.m_SubDiv = 8;
+//	m_Horizontal.m_SubDiv = 8;
 	m_Vertical.m_SubDiv   = 4;
 
-	// Building vertical splines
+	// Building a series of vertical splines.
 	aux_ptr    = aux_control_points;
-	for (unsigned x = 0; x < m_Horizontal.m_SubDiv; x++)
+	for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
 	{
 		const unsigned count = m_Vertical.b3DeBoor(aux_ptr, x * m_Horizontal.m_Offset);
 
@@ -789,13 +793,15 @@ void b3NurbsSurfaceTest::test()
 	}
 
 	// Create aux BSpline
-	aux_spline            = m_Horizontal;
-	aux_spline.m_Offset   = m_Vertical.m_SubDiv + 1;
-	aux_spline.m_Controls = aux_control_points;
+	aux_nurbs            = m_Horizontal;
+	aux_nurbs.m_Offset   = m_Vertical.m_SubDiv + 1;
+	aux_nurbs.m_Controls = aux_control_points;
+	aux_nurbs.m_SubDiv   = 8;
 
-	for (unsigned y = 0; y < m_Vertical.m_SubDiv; y++)
+	// For every sub division of vertical spline compute horizontal spline.
+	for (unsigned y = 0; y <= m_Vertical.m_SubDiv; y++)
 	{
-		const unsigned count   = aux_spline.b3DeBoor(result, y);
+		const unsigned count = aux_nurbs.b3DeBoor(result, y);
 
 		for (unsigned x = 0; x < count; x++)
 		{
@@ -810,6 +816,8 @@ void b3NurbsSurfaceTest::test()
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Nurbs::epsilon);
 #endif
 		}
+
+		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 	}
 }
 
