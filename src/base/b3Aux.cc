@@ -112,7 +112,7 @@ int b3StringTool::b3CaseCompare(
 
 		return diff;
 	}
-	catch(std::range_error & e)
+	catch (std::range_error & e)
 	{
 		return left.compare(right);
 	}

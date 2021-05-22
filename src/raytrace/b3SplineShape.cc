@@ -238,7 +238,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3_count       index;
 	b3_gl_vertex * Vector;
 	b3_gl_vertex * glVertex = *glVertexElements;
-	b3_vector  *   aux_ptr;
+	b3_vector   *  aux_ptr;
 	b3_vector      SplVector[b3Spline::B3_MAX_SUBDIV + 1];
 	b3_vector      aux_control_points[(b3Spline::B3_MAX_SUBDIV + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
 

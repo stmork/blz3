@@ -806,9 +806,9 @@ void b3NurbsSurfaceTest::test()
 		for (unsigned x = 0; x < count; x++)
 		{
 			const b3_f64 radius = sqrt(
-						result[x].x * result[x].x +
-						result[x].y * result[x].y +
-						result[x].z * result[x].z);
+					result[x].x * result[x].x +
+					result[x].y * result[x].y +
+					result[x].z * result[x].z);
 
 			m_Radius[x] = radius;
 			CPPUNIT_ASSERT_GREATER(0.0, radius);
