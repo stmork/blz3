@@ -384,8 +384,9 @@ void MainWindow::on_itemChanged(QStandardItem * item)
 {
 	b3BBox * bbox = item->data().value<b3BBox *>();
 
+	// FIXME: Change only if text changed.
 	bbox->b3Expand(ui->treeView->isExpanded(item->index()));
-	bbox->b3SetName(item->text().toLatin1().constData());
+	bbox->b3SetName(item->text().toUtf8().constData());
 }
 
 void MainWindow::on_actionOpenScene_triggered()
