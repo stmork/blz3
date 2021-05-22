@@ -473,8 +473,8 @@ public:
 	*
 	* @note Important: In case you are using NURBS the control points have to
 	* be in the form Ci = [wx, wy, wz, w]. After using this method the result
-	* vector is homogenized using the b3SplineVector::b3Homogenize() method and
-	* has the form R = [ x, y, z, w] for further usage.
+	* point is homogenized using the b3SplineVector::b3Homogenize() method and
+	* has the form R = [x, y, z, w] for further usage.
 	*
 	* @note Most control point examples in the internet concerning rational
 	* splines are in the form Ci = [x, y, z, w]. If you plan to use those
@@ -527,8 +527,8 @@ public:
 	 *
 	 * @note Important: In case you are using NURBS the control points have to
 	 * be in the form Ci = [wx, wy, wz, w]. After using this method the result
-	 * vector is homogenized using the b3SplineVector::b3Homogenize() method and
-	 * has the form R = [ x, y, z, w] for further usage.
+	 * point is homogenized using the b3SplineVector::b3Homogenize() method and
+	 * has the form R = [x, y, z, w] for further usage.
 	 *
 	 * @note Most control point examples in the internet concerning rational
 	 * splines are in the form Ci = [x, y, z, w]. If you plan to use those
