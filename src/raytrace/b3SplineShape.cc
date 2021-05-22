@@ -160,7 +160,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3_gl_vertex * Vector = *glVertexElements;
 	b3_vector      SplVector[b3Spline::B3_MAX_SUBDIV + 1];
 	b3_vector      aux_control_points[b3Spline::B3_MAX_CONTROLS * b3Spline::B3_MAX_CONTROLS];
-	b3_count       CurveNum, Points = 0;
+	b3_count       count = 0;
 	b3_index       x, y, t;
 	b3Spline       aux_spline;
 
@@ -169,11 +169,11 @@ void b3SplineShape::b3ComputeGridVertices()
 	m_Spline[0].m_Knots    = &m_Knots[0][0];
 	m_Spline[1].m_Knots    = &m_Knots[1][0];
 
-	// building horizontal splines
-	// first create controls for segments of vertical spline...
+	// Building horizontal splines
+	// First create controls for segments of vertical spline...
 	b3Spline::b3DeBoorSurfaceControl(&m_Spline[0], &m_Spline[1], aux_control_points);
 	aux_spline            = m_Spline[0];
-	aux_spline.m_Offset   = CurveNum = m_Spline[1].b3GetSegmentKnotCount();
+	aux_spline.m_Offset   = m_Spline[1].b3GetSegmentKnotCount();
 	aux_spline.m_Controls = aux_control_points;
 
 	// ... then create real horizontal spline curve.
@@ -181,13 +181,13 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: horizontal\n");
 	m_Spline[0].b3Dump();
 #endif
-	for (y = 0; y < CurveNum; y++)
+	for (y = 0; y < aux_spline.m_Offset; y++)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     y: %d\n", y);
 #endif
-		Points = aux_spline.b3DeBoor(SplVector, y);
-		for (t = 0; t < Points; t++)
+		count = aux_spline.b3DeBoor(SplVector, y);
+		for (t = 0; t < count; t++)
 		{
 			Vector->v.x = SplVector[t].x;
 			Vector->v.y = SplVector[t].y;
@@ -199,11 +199,11 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: horizontal done\n");
 #endif
 
-	// building vertical splines
-	// first create controls for segments of horizontal spline...
+	// Building vertical splines
+	// First create controls for segments of horizontal spline...
 	b3Spline::b3DeBoorSurfaceControl(&m_Spline[1], &m_Spline[0], aux_control_points);
 	aux_spline            = m_Spline[1];
-	aux_spline.m_Offset   = CurveNum = m_Spline[0].b3GetSegmentKnotCount();
+	aux_spline.m_Offset   = m_Spline[0].b3GetSegmentKnotCount();
 	aux_spline.m_Controls = aux_control_points;
 
 	// ... then create real vertical spline curve.
@@ -211,13 +211,13 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: vertical\n");
 	m_Spline[1].b3Dump();
 #endif
-	for (x = 0; x < CurveNum; x++)
+	for (x = 0; x < aux_spline.m_Offset; x++)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     x: %d\n", x);
 #endif
-		Points = aux_spline.b3DeBoor(SplVector, x);
-		for (t = 0; t < Points; t++)
+		count = aux_spline.b3DeBoor(SplVector, x);
+		for (t = 0; t < count; t++)
 		{
 			Vector->v.x = SplVector[t].x;
 			Vector->v.y = SplVector[t].y;

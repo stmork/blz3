@@ -580,8 +580,7 @@ void b3NurbsSurfaceTest::setUp()
 
 	m_Vertical.m_Knots      = m_VerticalKnots;
 	m_Vertical.m_Controls   = m_Controls;
-	m_Vertical.b3InitCurve(2, 5, false);
-	m_Vertical.m_Offset     = m_Horizontal.m_ControlMax;
+	m_Vertical.b3InitCurve(2, 5, false, m_Horizontal.m_ControlMax);
 
 	for (unsigned i = 0; i < m_Horizontal.m_KnotNum; i++)
 	{
@@ -658,8 +657,8 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 	b3Nurbs::type aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
 	b3Nurbs       aux_nurbs;
 
-	// building horizontal splines
-	// first create controls for segments of vertical spline...
+	// Building horizontal splines
+	// First create controls for segments of vertical spline...
 	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(&m_Horizontal, &m_Vertical, aux_control_points);
 	aux_nurbs            = m_Horizontal;
@@ -670,15 +669,16 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 	for (b3_index y = 0; y < aux_nurbs.m_Offset; y++)
 	{
 		const unsigned count = aux_nurbs.b3DeBoor(m_Deboor, y);
-		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
+		const b3_f64   range = aux_nurbs.b3KnotRange();
 
-		const b3_f64 range = aux_nurbs.b3KnotRange();
+		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 
 		for (unsigned s = 0; s <= aux_nurbs.m_SubDiv; s++)
 		{
-			const b3_f64 q   = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
+			const b3_f64   q = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
 			const unsigned i = aux_nurbs.b3Mansfield(m_BasisCoeff, q);
 
+			// Do Mansfield computation just for test purposes.
 			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, y);
 			b3SplineVector::b3Homogenize(m_Mansfield[s]);
 
@@ -713,8 +713,8 @@ void b3NurbsSurfaceTest::testSphereVertically()
 	b3Nurbs::type aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
 	b3Nurbs       aux_nurbs;
 
-	// building horizontal splines
-	// first create controls for segments of vertical spline...
+	// Building vertical splines
+	// First create controls for segments of horizontal spline...
 	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(&m_Vertical, &m_Horizontal, aux_control_points);
 	aux_nurbs            = m_Vertical;
@@ -722,19 +722,20 @@ void b3NurbsSurfaceTest::testSphereVertically()
 	aux_nurbs.m_Controls = aux_control_points;
 	aux_nurbs.m_SubDiv   = 4;
 
-	for (b3_index y = 0; y < aux_nurbs.m_Offset; y++)
+	for (b3_index x = 0; x < aux_nurbs.m_Offset; x++)
 	{
-		const unsigned count = aux_nurbs.b3DeBoor(m_Deboor, y);
-		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
-
+		const unsigned count = aux_nurbs.b3DeBoor(m_Deboor, x);
 		const b3_f64 range = aux_nurbs.b3KnotRange();
+
+		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 
 		for (unsigned s = 0; s <= aux_nurbs.m_SubDiv; s++)
 		{
-			const b3_f64 q   = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
+			const b3_f64   q = aux_nurbs.b3FirstKnot() + s * range / aux_nurbs.m_SubDiv;
 			const unsigned i = aux_nurbs.b3Mansfield(m_BasisCoeff, q);
 
-			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, y);
+			// Do Mansfield computation just for test purposes.
+			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, x);
 			b3SplineVector::b3Homogenize(m_Mansfield[s]);
 
 			// Compare De Boor computed values agains Mansfield computed ones
