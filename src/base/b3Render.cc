@@ -1230,7 +1230,7 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context B3_UNUS
 	glGetError();
 	glVertexElements->b3Draw();
 
-	Glenum error = glGetError();
+	GLenum error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
 		glGridElements->b3Draw();
