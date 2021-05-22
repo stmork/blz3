@@ -585,46 +585,51 @@ void b3NurbsSurfaceTest::setUp()
 
 	for (unsigned i = 0; i < m_Horizontal.m_KnotNum; i++)
 	{
-		m_HorizontalKnots[i] = std::ceil(i * 0.5);
+		m_HorizontalKnots[i] = std::max(std::ceil(i * 0.5 - 1.0), 0.0);
 	}
 	for (unsigned i = 0; i < m_Vertical.m_KnotNum; i++)
 	{
 		m_VerticalKnots[i] = std::max(0.0, std::ceil(i * 0.5 - 1.0));
 	}
+	m_Vertical.b3ThroughEndControl();
 
+	bzero(m_Controls, sizeof(m_Controls));
 	for (unsigned y = 0; y < m_Vertical.m_ControlNum; y++)
 	{
 		const double y_angle = y * M_PI / (m_Vertical.m_ControlNum - 1);
-		const double height = sin(y_angle);
-		unsigned i = y * m_Horizontal.m_ControlMax;
+		const double height  = sin(y_angle);
+		unsigned     i       = y * m_Horizontal.m_ControlMax;
 
 		for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
 		{
-			const double   x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
-			const unsigned level   = height < b3Math::epsilon ? 0 : (x & 1) + (y & 1);
+			b3Nurbs::type point;
 
-			m_Controls[i].x =  std::ceil(cos(x_angle) * height) * RADIUS;
-			m_Controls[i].y =  std::ceil(sin(x_angle) * height) * RADIUS;
-			m_Controls[i].z = -std::ceil(cos(y_angle)) * RADIUS;
+			const double   x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
+			const unsigned level   = height < b3Math::epsilon ? 0 :
+				(x & 1) | ((y & 1) << 1);
+
+			point.x =  std::round(cos(x_angle) * std::round(height)) * RADIUS;
+			point.y =  std::round(sin(x_angle) * std::round(height)) * RADIUS;
+			point.z = -std::round(cos(y_angle)) * RADIUS;
 
 			switch (level)
 			{
-			case 0:
-				m_Controls[i].w = 1;
-				break;
 			case 1:
-				m_Controls[i].w = sqrt(2.0) * 0.5;
+				point.w = sqrt(2.0) * 0.25;
 				break;
 			case 2:
-				m_Controls[i].w = 0.5;
+				point.w = sqrt(2.0) * 0.5;
+				break;
+			case 3:
+				point.w = 0.25;
 				break;
 
 			default:
-				// Intentionally do nothing
+				point.w = 1;
 				break;
 			}
 
-			b3SplineVector::b3WeightSelf(m_Controls[i]);
+			m_Controls[i] = b3SplineVector::b3WeightSelf(point);
 			i++;
 		}
 	}
@@ -647,7 +652,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 	const b3_f64   x_range = m_Horizontal.b3KnotRange();
 	const b3_f64   y_range = m_Vertical.b3KnotRange();
 
-	CPPUNIT_ASSERT_EQUAL(4.0, x_range);
+	CPPUNIT_ASSERT_EQUAL(3.0, x_range);
 	CPPUNIT_ASSERT_EQUAL(2.0, y_range);
 
 	b3Nurbs::type aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
@@ -655,10 +660,12 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
+	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(&m_Horizontal, &m_Vertical, aux_control_points);
 	aux_nurbs            = m_Horizontal;
 	aux_nurbs.m_Offset   = m_Vertical.b3GetSegmentKnotCount();
 	aux_nurbs.m_Controls = aux_control_points;
+	aux_nurbs.m_SubDiv   = 8;
 
 	for (b3_index y = 0; y < aux_nurbs.m_Offset; y++)
 	{
@@ -700,7 +707,7 @@ void b3NurbsSurfaceTest::testSphereVertically()
 	const b3_f64   x_range = m_Horizontal.b3KnotRange();
 	const b3_f64   y_range = m_Vertical.b3KnotRange();
 
-	CPPUNIT_ASSERT_EQUAL(4.0, x_range);
+	CPPUNIT_ASSERT_EQUAL(3.0, x_range);
 	CPPUNIT_ASSERT_EQUAL(2.0, y_range);
 
 	b3Nurbs::type aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
@@ -708,10 +715,12 @@ void b3NurbsSurfaceTest::testSphereVertically()
 
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
+	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(&m_Vertical, &m_Horizontal, aux_control_points);
 	aux_nurbs            = m_Vertical;
 	aux_nurbs.m_Offset   = m_Horizontal.b3GetSegmentKnotCount();
 	aux_nurbs.m_Controls = aux_control_points;
+	aux_nurbs.m_SubDiv   = 4;
 
 	for (b3_index y = 0; y < aux_nurbs.m_Offset; y++)
 	{
@@ -739,12 +748,62 @@ void b3NurbsSurfaceTest::testSphereVertically()
 					m_Mansfield[s].x * m_Mansfield[s].x +
 					m_Mansfield[s].y * m_Mansfield[s].y +
 					m_Mansfield[s].z * m_Mansfield[s].z);
-#if 0
+
+			CPPUNIT_ASSERT_GREATER(0.0, m_Radius[s]);
+#if 1
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, m_Radius[s], b3Nurbs::epsilon);
-#else
-			b3PrintF(B3LOG_FULL, "Radius: %p\n", m_Radius);
 #endif
 		}
+	}
+}
+
+void b3NurbsSurfaceTest::test()
+{
+	b3Nurbs         aux_spline;
+	b3_f64          fx, fxStep;
+	b3_f64          fy, fyStep;
+	unsigned        index;
+	b3Nurbs::type * Aux;
+	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
+	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_SUBDIV + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
+
+	// Reduce tesselation for test purposes.
+	m_Horizontal.m_SubDiv = 8;
+	m_Vertical.m_SubDiv   = 4;
+
+	// Building horizontal BSplines
+	Aux    = aux_control_points;
+	for (unsigned x = 0; x <= m_Horizontal.m_SubDiv; x++)
+	{
+		Aux += m_Vertical.b3DeBoor(Aux, x * m_Horizontal.m_Offset);
+	}
+
+	// Create aux BSpline
+	aux_spline            = m_Horizontal;
+	aux_spline.m_Offset   = m_Vertical.m_SubDiv + 1;
+	aux_spline.m_Controls = aux_control_points;
+
+	index  = 0;
+	fy     = 0;
+	fyStep = 1.0 / m_Vertical.m_SubDiv;
+	for (unsigned y = 0; y < m_Vertical.m_SubDiv; y++)
+	{
+		const unsigned count   = aux_spline.b3DeBoor(result, y);
+		index  += count;
+
+		fx = 0;
+		fxStep = 1.0 / (b3_f64)count;
+		for (unsigned x = 0; x < count; x++)
+		{
+			const b3_f64 radius = sqrt(
+						result[x].x * result[x].x +
+						result[x].y * result[x].y +
+						result[x].z * result[x].z);
+			fx += fxStep;
+
+			CPPUNIT_ASSERT_GREATER(0.0, radius);
+		}
+		fy += fyStep;
 	}
 }
 

@@ -711,8 +711,12 @@ public:
 	b3_vector4D point;
 
 	const unsigned i = nurbs.b3Mansfield(it, 1.5);
-	nurbs.b3MansfieldVector(&point, it, i);
+	nurbs.b3MansfieldVector(point, it, i);
+	b3SplineVector::b3Homogenize(point);
 	 @endcode
+	 *
+	 * @note In the case you are using NURBS You have to homogenize the
+	 * resulting point by hand using the b3SplineVector::b3Homogenize() method.
 	 *
 	 * @param point  Where to store the curve point
 	 * @param it     Basis coefficients computed by b3Mansfield()
