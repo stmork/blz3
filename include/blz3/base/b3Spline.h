@@ -750,7 +750,6 @@ public:
 				ctrls -= m_Offset;
 			}
 		}
-		b3SplineVector::b3Homogenize(point);
 	}
 
 	bool b3InsertCurveControl(

@@ -116,7 +116,33 @@ public:
 	}
 
 	/**
-	 * This method is the oposite to b3Homogenize(). It scales the components
+	 * This method is the opposite to b3Homogenize(). Since a simple scalar
+	 * is not rational this method intentionally does nothing
+	 *
+	 * @param scale The non rational scalar not to be weighted.
+	 * @return The resulting scalar.
+	 * @see b3Homogenize()
+	 */
+	static inline b3_f64 b3WeightSelf(const b3_f64 scale)
+	{
+		return scale;
+	}
+
+	/**
+	 * This method is the opposite to b3Homogenize(). Since a 3d vector
+	 * is not rational this method intentionally does nothing
+	 *
+	 * @param scale The non rational 3d vector not to be weighted.
+	 * @return The resulting vector.
+	 * @see b3Homogenize()
+	 */
+	static inline b3_vector b3WeightSelf(const b3_vector & scale)
+	{
+		return scale;
+	}
+
+	/**
+	 * This method is the opposite to b3Homogenize(). It scales the components
 	 * x, y and z by its weight component w.
 	 *
 	 * @param scale The rational vector to scale.

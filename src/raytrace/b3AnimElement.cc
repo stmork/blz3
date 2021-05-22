@@ -203,6 +203,7 @@ void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 		const unsigned pos   = m_Param.b3Mansfield(coeffs, qStart + q * ratio);
 
 		m_Param.b3MansfieldVector(*position, coeffs, pos);
+		b3SplineVector::b3Homogenize(*position);
 	}
 }
 

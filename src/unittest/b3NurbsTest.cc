@@ -171,6 +171,7 @@ void b3NurbsClosedCurveTest::testCircle()
 		const unsigned i = m_Nurbs.b3Mansfield(m_BasisCoeff, q);
 
 		m_Nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i);
+		b3SplineVector::b3Homogenize(m_Mansfield[s]);
 
 		// Compare De Boor computed values agains Mansfield computed ones
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
@@ -240,6 +241,7 @@ void b3NurbsOpenedCurveTest::testCircle()
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
 
 		m_Nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i);
+		b3SplineVector::b3Homogenize(m_Mansfield[s]);
 
 		// Compare De Boor computed values agains Mansfield computed ones
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
@@ -301,6 +303,7 @@ void b3NurbsOpenedCurveTest::testBezier()
 
 	const unsigned i = m_Nurbs.b3Mansfield(m_BasisCoeff, 0.5);
 	m_Nurbs.b3MansfieldVector(r, m_BasisCoeff, i);
+	b3SplineVector::b3Homogenize(r);
 
 	CPPUNIT_ASSERT_EQUAL(c.w, r.w);
 	for (b3_f64 q = m_Nurbs.b3FirstKnot();
@@ -437,6 +440,7 @@ void b3NurbsOpenedCurveTest::test()
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, sum, b3Nurbs::epsilon);
 
 		nurbs.b3MansfieldVector(mf_result, m_BasisCoeff, idx);
+		b3SplineVector::b3Homogenize(mf_result);
 
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.x, b3_result.x, b3Nurbs::epsilon);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(mf_result.y, b3_result.y, b3Nurbs::epsilon);
@@ -597,11 +601,11 @@ void b3NurbsSurfaceTest::setUp()
 		for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
 		{
 			const double   x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
-			const unsigned level   = (x & 1) + (y & 1);
+			const unsigned level   = height < b3Math::epsilon ? 0 : (x & 1) + (y & 1);
 
-			m_Controls[i].x =  cos(x_angle) * RADIUS * height;
-			m_Controls[i].y =  sin(x_angle) * RADIUS * height;
-			m_Controls[i].z = -cos(y_angle) * RADIUS;
+			m_Controls[i].x =  std::ceil(cos(x_angle) * height) * RADIUS;
+			m_Controls[i].y =  std::ceil(sin(x_angle) * height) * RADIUS;
+			m_Controls[i].z = -std::ceil(cos(y_angle)) * RADIUS;
 
 			switch (level)
 			{
@@ -620,6 +624,7 @@ void b3NurbsSurfaceTest::setUp()
 				break;
 			}
 
+			b3SplineVector::b3WeightSelf(m_Controls[i]);
 			i++;
 		}
 	}
@@ -668,6 +673,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 			const unsigned i = aux_nurbs.b3Mansfield(m_BasisCoeff, q);
 
 			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, y);
+			b3SplineVector::b3Homogenize(m_Mansfield[s]);
 
 			// Compare De Boor computed values agains Mansfield computed ones
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
@@ -680,10 +686,10 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 					m_Mansfield[s].x * m_Mansfield[s].x +
 					m_Mansfield[s].y * m_Mansfield[s].y +
 					m_Mansfield[s].z * m_Mansfield[s].z);
+
+			CPPUNIT_ASSERT_GREATER(0.0, m_Radius[s]);
 #if 0
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, m_Radius[s], b3Nurbs::epsilon);
-#else
-			b3PrintF(B3LOG_FULL, "Radius: %p\n", m_Radius);
 #endif
 		}
 	}
@@ -720,6 +726,7 @@ void b3NurbsSurfaceTest::testSphereVertically()
 			const unsigned i = aux_nurbs.b3Mansfield(m_BasisCoeff, q);
 
 			aux_nurbs.b3MansfieldVector(m_Mansfield[s], m_BasisCoeff, i, y);
+			b3SplineVector::b3Homogenize(m_Mansfield[s]);
 
 			// Compare De Boor computed values agains Mansfield computed ones
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(m_Deboor[s].x, m_Mansfield[s].x, b3Nurbs::epsilon);
