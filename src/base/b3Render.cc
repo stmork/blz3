@@ -1221,15 +1221,18 @@ void b3RenderObject::b3DrawFilledGeometry(B3_UNUSED const b3RenderContext * cont
 void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context B3_UNUSED)
 {
 #ifdef BLZ3_USE_OPENGL
+	GLenum error;
+
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "       b3Draw lined:  %d vertices, %d lines\n",
 		glVertexElements->b3GetCount(),
 		glGridElements->b3GetCount());
 #endif
 
+	error = glGetError();
 	glVertexElements->b3Draw();
 
-	GLenum error = glGetError();
+	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
 		glGridElements->b3Draw();
@@ -1241,15 +1244,18 @@ void b3RenderObject::b3DrawLinedGeometry(const b3RenderContext * context B3_UNUS
 void b3RenderObject::b3DrawFilledGeometry(const b3RenderContext * context B3_UNUSED)
 {
 #ifdef BLZ3_USE_OPENGL
+	GLenum error;
+
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "       b3Draw filled: %d vertices, %d polygons\n",
 		glVertexElements->b3GetCount(),
 		glPolygonElements->b3GetCount());
 #endif
 
+	error = glGetError();
 	glVertexElements->b3Draw();
 
-	GLenum error = glGetError();
+	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
 		glPolygonElements->b3Draw();
