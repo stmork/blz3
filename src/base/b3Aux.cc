@@ -90,26 +90,32 @@ int b3StringTool::b3CaseCompare(
 	const std::string & left,
 	const std::string & right)
 {
-	b3Locale     locale;
-	std::wstring u16_left  = locale.b3FromBytes(left);
-	std::wstring u16_right = locale.b3FromBytes(right);
-	b3_index     i = 0;
-	int          diff;
-
-	i = 0;
-	do
+	try
 	{
-		diff = std::tolower(u16_left[i], locale) - std::tolower(u16_right[i], locale);
-		if ((u16_left[i] == 0) || (u16_right[i] == 0))
+		b3Locale     locale;
+		std::wstring u16_left  = locale.b3FromBytes(left);
+		std::wstring u16_right = locale.b3FromBytes(right);
+		b3_index     i = 0;
+		int          diff;
+
+		i = 0;
+		do
 		{
-			return diff;
+			diff = std::tolower(u16_left[i], locale) - std::tolower(u16_right[i], locale);
+			if ((u16_left[i] == 0) || (u16_right[i] == 0))
+			{
+				return diff;
+			}
+			i++;
 		}
-		i++;
+		while (diff == 0);
+
+		return diff;
 	}
-	while (diff == 0);
-
-	return diff;
-
+	catch(std::range_error & e)
+	{
+		return left.compare(right);
+	}
 }
 
 std::string b3StringTool::b3ToLower(const std::string & input)
