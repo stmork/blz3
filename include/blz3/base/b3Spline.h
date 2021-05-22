@@ -679,31 +679,39 @@ public:
 	}
 
 	static unsigned b3DeBoorSurfaceControl(
-		b3SplineTemplate<VECTOR> * controlSpline,
-		b3SplineTemplate<VECTOR> * curveSpline,
-		VECTOR          *          point)
+		const b3SplineTemplate<VECTOR> & control_spline,
+		const b3SplineTemplate<VECTOR> & curve_spline,
+		b3SplineTemplate<VECTOR>    &    loop_spline,
+		VECTOR             *             point)
 	{
-		const unsigned segment_count = curveSpline->b3GetSegmentKnotCount();
-		const b3_knots knot_ptr      = curveSpline->m_Knots;
-		unsigned       end           = curveSpline->m_ControlNum;
+		const unsigned segment_count = curve_spline.b3GetSegmentKnotCount();
+		const b3_knots knot_ptr      = curve_spline.m_Knots;
+		unsigned       end           = curve_spline.m_ControlNum;
 		b3_f64         basis[B3_MAX_DEGREE + 1];
 
-		if (!curveSpline->m_Closed)
+		// Init auxiliary loop spline
+		loop_spline            = control_spline;
+		loop_spline.m_SubDiv   = control_spline.b3GetSegmentKnotCount();
+		loop_spline.m_Offset   = curve_spline.b3GetSegmentKnotCount();
+		loop_spline.m_Controls = point;
+
+		if (!curve_spline.m_Closed)
 		{
 			end++;
 		}
 
-		for (unsigned i = curveSpline->b3FirstKnotIndex(); i < end; i++)
+		for (unsigned i = curve_spline.b3FirstKnotIndex(); i < end; i++)
 		{
-			const unsigned index = curveSpline->b3Mansfield(basis, knot_ptr[i]);
+			const unsigned index = curve_spline.b3Mansfield(basis, knot_ptr[i]);
 
-			for (unsigned x = 0; x < controlSpline->m_ControlNum; x++)
+			for (unsigned x = 0; x < control_spline.m_ControlNum; x++)
 			{
-				curveSpline->b3MansfieldVector(point[x * segment_count], basis,
-					index, x * controlSpline->m_Offset);
+				curve_spline.b3MansfieldVector(point[x * segment_count], basis,
+					index, x * control_spline.m_Offset);
 			}
 			point++;
 		}
+
 		return segment_count;
 	}
 

@@ -171,10 +171,7 @@ void b3SplineShape::b3ComputeGridVertices()
 
 	// Building horizontal splines
 	// First create controls for segments of vertical spline...
-	b3Spline::b3DeBoorSurfaceControl(&m_Spline[0], &m_Spline[1], aux_control_points);
-	aux_spline            = m_Spline[0];
-	aux_spline.m_Offset   = m_Spline[1].b3GetSegmentKnotCount();
-	aux_spline.m_Controls = aux_control_points;
+	b3Spline::b3DeBoorSurfaceControl(m_Spline[0], m_Spline[1], aux_spline, aux_control_points);
 
 	// ... then create real horizontal spline curve.
 #ifdef _DEBUG
@@ -201,10 +198,7 @@ void b3SplineShape::b3ComputeGridVertices()
 
 	// Building vertical splines
 	// First create controls for segments of horizontal spline...
-	b3Spline::b3DeBoorSurfaceControl(&m_Spline[1], &m_Spline[0], aux_control_points);
-	aux_spline            = m_Spline[1];
-	aux_spline.m_Offset   = m_Spline[0].b3GetSegmentKnotCount();
-	aux_spline.m_Controls = aux_control_points;
+	b3Spline::b3DeBoorSurfaceControl(m_Spline[1], m_Spline[0], aux_spline, aux_control_points);
 
 	// ... then create real vertical spline curve.
 #ifdef _DEBUG

@@ -671,11 +671,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 	// Building horizontal splines
 	// First create controls for segments of vertical spline...
 	bzero(aux_control_points, sizeof(aux_control_points));
-	b3Nurbs::b3DeBoorSurfaceControl(&m_Horizontal, &m_Vertical, aux_control_points);
-	aux_nurbs            = m_Horizontal;
-	aux_nurbs.m_Offset   = m_Vertical.b3GetSegmentKnotCount();
-	aux_nurbs.m_Controls = aux_control_points;
-	aux_nurbs.m_SubDiv   = 8;
+	b3Nurbs::b3DeBoorSurfaceControl(m_Horizontal, m_Vertical, aux_nurbs, aux_control_points);
 
 	for (b3_index y = 0; y < aux_nurbs.m_Offset; y++)
 	{
@@ -727,16 +723,12 @@ void b3NurbsSurfaceTest::testSphereVertically()
 	// Building vertical splines
 	// First create controls for segments of horizontal spline...
 	bzero(aux_control_points, sizeof(aux_control_points));
-	b3Nurbs::b3DeBoorSurfaceControl(&m_Vertical, &m_Horizontal, aux_control_points);
-	aux_nurbs            = m_Vertical;
-	aux_nurbs.m_Offset   = m_Horizontal.b3GetSegmentKnotCount();
-	aux_nurbs.m_Controls = aux_control_points;
-	aux_nurbs.m_SubDiv   = 4;
+	b3Nurbs::b3DeBoorSurfaceControl(m_Vertical, m_Horizontal, aux_nurbs, aux_control_points);
 
 	for (b3_index x = 0; x < aux_nurbs.m_Offset; x++)
 	{
 		const unsigned count = aux_nurbs.b3DeBoor(m_Deboor, x);
-		const b3_f64 range = aux_nurbs.b3KnotRange();
+		const b3_f64   range = aux_nurbs.b3KnotRange();
 
 		for (unsigned s = 0; s <= aux_nurbs.m_SubDiv; s++)
 		{
@@ -777,7 +769,6 @@ void b3NurbsSurfaceTest::test()
 	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
 
 	// Reduce tesselation for test purposes.
-//	m_Horizontal.m_SubDiv = 8;
 	m_Vertical.m_SubDiv   = 4;
 
 	// Building a series of vertical splines.
