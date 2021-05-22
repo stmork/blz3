@@ -457,7 +457,7 @@ void b3BBox::b3Activate(bool activate, bool recurse)
 	{
 		B3_FOR_TYPED_BASE(b3BBox, b3GetBBoxHead(), bbox)
 		{
-			bbox->b3Activate(activate);
+			bbox->b3Activate(activate, recurse);
 		}
 	}
 }
