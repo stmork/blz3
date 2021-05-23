@@ -595,7 +595,7 @@ void b3NurbsSurfaceTest::setUp()
 
 	for (unsigned i = 0; i < m_Horizontal.m_KnotNum; i++)
 	{
-		m_HorizontalKnots[i] = std::max(std::ceil(i * 0.5 - 1.0), 0.0);
+		m_HorizontalKnots[i] = std::ceil(i * 0.5);
 	}
 	for (unsigned i = 0; i < m_Vertical.m_KnotNum; i++)
 	{
@@ -615,8 +615,7 @@ void b3NurbsSurfaceTest::setUp()
 			b3Nurbs::type point;
 
 			const double   x_angle = x * 2.0 * M_PI / m_Horizontal.m_ControlNum;
-			const unsigned level   = height < b3Math::epsilon ? 0 :
-				(x & 1) | ((y & 1) << 1);
+			const unsigned level   = height < b3Math::epsilon ? 0 : (x & 1) | ((y & 1) << 1);
 
 			point.x =  std::round(cos(x_angle) * std::round(height)) * RADIUS;
 			point.y =  std::round(sin(x_angle) * std::round(height)) * RADIUS;
@@ -659,14 +658,13 @@ void b3NurbsSurfaceTest::tearDown()
 
 void b3NurbsSurfaceTest::testSphereHorizontally()
 {
+	b3Nurbs::type  aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
+	b3Nurbs        aux_nurbs;
 	const b3_f64   x_range = m_Horizontal.b3KnotRange();
 	const b3_f64   y_range = m_Vertical.b3KnotRange();
 
-	CPPUNIT_ASSERT_EQUAL(3.0, x_range);
+	CPPUNIT_ASSERT_EQUAL(4.0, x_range);
 	CPPUNIT_ASSERT_EQUAL(2.0, y_range);
-
-	b3Nurbs::type aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
-	b3Nurbs       aux_nurbs;
 
 	// Building horizontal splines
 	// First create controls for segments of vertical spline...
@@ -712,14 +710,13 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 
 void b3NurbsSurfaceTest::testSphereVertically()
 {
+	b3Nurbs::type  aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
+	b3Nurbs        aux_nurbs;
 	const b3_f64   x_range = m_Horizontal.b3KnotRange();
 	const b3_f64   y_range = m_Vertical.b3KnotRange();
 
-	CPPUNIT_ASSERT_EQUAL(3.0, x_range);
+	CPPUNIT_ASSERT_EQUAL(4.0, x_range);
 	CPPUNIT_ASSERT_EQUAL(2.0, y_range);
-
-	b3Nurbs::type aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
-	b3Nurbs       aux_nurbs;
 
 	// Building vertical splines
 	// First create controls for segments of horizontal spline...
@@ -768,10 +765,10 @@ void b3NurbsSurfaceTest::test()
 	b3Nurbs         aux_nurbs;
 	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_CONTROLS + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
 	b3Nurbs::type * aux_ptr = aux_control_points;
-	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
+	b3Nurbs::type   aux_result[b3Spline::B3_MAX_SUBDIV + 1];
 
 	// Reduce tesselation for test purposes.
-	m_Vertical.m_SubDiv   = 8;
+	m_Vertical.m_SubDiv = 4;
 
 	// Building a series of vertical splines.
 	for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
@@ -794,14 +791,14 @@ void b3NurbsSurfaceTest::test()
 	// For every sub division of vertical spline compute horizontal spline.
 	for (unsigned y = 0; y <= m_Vertical.m_SubDiv; y++)
 	{
-		const unsigned count = aux_nurbs.b3DeBoor(result, y);
+		const unsigned count = aux_nurbs.b3DeBoor(aux_result, y);
 
 		for (unsigned x = 0; x < count; x++)
 		{
 			const b3_f64 radius = sqrt(
-					result[x].x * result[x].x +
-					result[x].y * result[x].y +
-					result[x].z * result[x].z);
+					aux_result[x].x * aux_result[x].x +
+					aux_result[x].y * aux_result[x].y +
+					aux_result[x].z * aux_result[x].z);
 
 			m_Radius[x] = radius;
 			CPPUNIT_ASSERT_GREATER(0.0, radius);
@@ -811,13 +808,11 @@ void b3NurbsSurfaceTest::test()
 #endif
 		}
 
-#if 0
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(result[0].x, result[count - 1].x, b3Nurbs::epsilon);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(result[0].y, result[count - 1].y, b3Nurbs::epsilon);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(result[0].z, result[count - 1].z, b3Nurbs::epsilon);
-#endif
-
 		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
+
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].x, aux_result[count - 1].x, b3Nurbs::epsilon);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].y, aux_result[count - 1].y, b3Nurbs::epsilon);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].z, aux_result[count - 1].z, b3Nurbs::epsilon);
 	}
 }
 

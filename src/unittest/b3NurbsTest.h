@@ -44,7 +44,7 @@ protected:
 	b3Nurbs::b3_knot  m_Knots[b3Nurbs::B3_MAX_KNOTS];
 	b3Nurbs::type     m_Controls[b3Nurbs::B3_MAX_CONTROLS];
 
-	b3Nurbs::type     m_Deboor[b3Nurbs::B3_MAX_SUBDIV];
+	b3Nurbs::type     m_Deboor[b3Nurbs::B3_MAX_SUBDIV + 1];
 	b3Nurbs::type     m_Mansfield[b3Nurbs::B3_MAX_SUBDIV];
 	b3_f64            m_Radius[b3Nurbs::B3_MAX_SUBDIV + 1];
 	b3_f64            m_BasisCoeff[b3Nurbs::B3_MAX_DEGREE];
