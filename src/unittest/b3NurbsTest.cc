@@ -764,55 +764,69 @@ void b3NurbsSurfaceTest::test()
 {
 	b3Nurbs         aux_nurbs;
 	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_CONTROLS + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
-	b3Nurbs::type * aux_ptr = aux_control_points;
 	b3Nurbs::type   aux_result[b3Spline::B3_MAX_SUBDIV + 1];
 
 	// Reduce tesselation for test purposes.
-	m_Vertical.m_SubDiv = 4;
+//	m_Vertical.m_SubDiv = 4;
 
+#if 1
 	// Building a series of vertical splines.
-	for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
-	{
-		const unsigned count = m_Vertical.b3DeBoor(aux_ptr, x * m_Horizontal.m_Offset);
+	const unsigned  segment_count = m_Horizontal.b3GetSegmentKnotCount();
+	unsigned        end           = m_Horizontal.m_ControlNum;
+	b3Nurbs::type * aux_ptr       = aux_control_points;
 
-		for (unsigned i = 0; i < count; i++)
+	if (!m_Horizontal.m_Closed)
+	{
+		end++;
+	}
+	for (unsigned i = m_Horizontal.b3FirstKnotIndex(); i < end; i++)
+	{
+		const unsigned index = m_Horizontal.b3Mansfield(m_BasisCoeff, m_Horizontal.m_Knots[i]);
+
+		for (unsigned x = 0; x < m_Vertical.m_ControlNum; x++)
 		{
-			b3SplineVector::b3WeightSelf(aux_ptr[x]);
+			m_Horizontal.b3MansfieldVector(aux_ptr[x * segment_count], m_BasisCoeff,
+				index, x * m_Vertical.m_Offset);
 		}
-		aux_ptr += count;
+		aux_ptr++;
 	}
 
 	// Create aux BSpline
-	aux_nurbs            = m_Horizontal;
-	aux_nurbs.m_Offset   = m_Vertical.m_SubDiv + 1;
+	aux_nurbs            = m_Vertical;
+	aux_nurbs.m_Offset   = segment_count;
 	aux_nurbs.m_Controls = aux_control_points;
-	aux_nurbs.m_SubDiv   = 12;
+#else
+	b3Nurbs::b3DeBoorSurfaceControl(m_Vertical, m_Horizontal, aux_nurbs, aux_control_points);
+#endif
+	aux_nurbs.m_SubDiv   = m_Vertical.b3GetSegmentKnotCount() * 2;
 
 	// For every sub division of vertical spline compute horizontal spline.
-	for (unsigned y = 0; y <= m_Vertical.m_SubDiv; y++)
+	for (b3_index x = 0; x < aux_nurbs.m_Offset; x++)
 	{
-		const unsigned count = aux_nurbs.b3DeBoor(aux_result, y);
+		const unsigned count = aux_nurbs.b3DeBoor(aux_result, x);
 
-		for (unsigned x = 0; x < count; x++)
+		for (unsigned c = 0; c < count; c++)
 		{
 			const b3_f64 radius = sqrt(
-					aux_result[x].x * aux_result[x].x +
-					aux_result[x].y * aux_result[x].y +
-					aux_result[x].z * aux_result[x].z);
+					aux_result[c].x * aux_result[c].x +
+					aux_result[c].y * aux_result[c].y +
+					aux_result[c].z * aux_result[c].z);
 
-			m_Radius[x] = radius;
+			m_Radius[c] = radius;
 			CPPUNIT_ASSERT_GREATER(0.0, radius);
 
-#if 0
+#if 1
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Nurbs::epsilon);
 #endif
 		}
 
 		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 
+#if 0
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].x, aux_result[count - 1].x, b3Nurbs::epsilon);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].y, aux_result[count - 1].y, b3Nurbs::epsilon);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].z, aux_result[count - 1].z, b3Nurbs::epsilon);
+#endif
 	}
 }
 

@@ -681,7 +681,6 @@ public:
 		VECTOR             *             point)
 	{
 		const unsigned segment_count = curve_spline.b3GetSegmentKnotCount();
-		const b3_knots knot_ptr      = curve_spline.m_Knots;
 		unsigned       end           = curve_spline.m_ControlNum;
 		b3_f64         basis[B3_MAX_DEGREE + 1];
 
@@ -697,7 +696,7 @@ public:
 
 		for (unsigned i = curve_spline.b3FirstKnotIndex(); i < end; i++)
 		{
-			const unsigned index = curve_spline.b3Mansfield(basis, knot_ptr[i]);
+			const unsigned index = curve_spline.b3Mansfield(basis, curve_spline.m_Knots[i]);
 
 			for (unsigned x = 0; x < control_spline.m_ControlNum; x++)
 			{
