@@ -760,11 +760,12 @@ void b3NurbsSurfaceTest::testSphereVertically()
 	}
 }
 
-void b3NurbsSurfaceTest::test()
+void b3NurbsSurfaceTest::testTesselate()
 {
 	b3Nurbs         aux_nurbs;
 	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_CONTROLS + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
 	b3Nurbs::type   aux_result[b3Spline::B3_MAX_SUBDIV + 1];
+	b3Nurbs::type   aux_compare[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
 
 	// Building a series of vertical splines.
 	const unsigned  segment_count = m_Horizontal.b3GetSegmentKnotCount();
@@ -796,6 +797,8 @@ void b3NurbsSurfaceTest::test()
 	aux_nurbs.m_Controls = aux_control_points;
 	aux_nurbs.m_SubDiv   = m_Vertical.b3GetSegmentKnotCount() * 2;
 
+	b3Nurbs::type aux_doit[aux_nurbs.m_Offset * (aux_nurbs.m_SubDiv + 1)];
+
 	// For every sub division of vertical spline compute horizontal spline.
 	for (b3_index x = 0; x < aux_nurbs.m_Offset; x++)
 	{
@@ -817,13 +820,22 @@ void b3NurbsSurfaceTest::test()
 		}
 
 		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
-
+		memcpy(&aux_doit[x * sizeof(b3Nurbs::type) * count], aux_result, sizeof(b3Nurbs::type) * count);
 #if 0
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].x, aux_result[count - 1].x, b3Nurbs::epsilon);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].y, aux_result[count - 1].y, b3Nurbs::epsilon);
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].z, aux_result[count - 1].z, b3Nurbs::epsilon);
 #endif
 	}
+
+	b3Nurbs::b3DeBoorSurfaceTesselate(m_Horizontal, m_Vertical, aux_compare);
+}
+
+void b3NurbsSurfaceTest::test()
+{
+	b3Nurbs::type   aux_result[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
+
+	b3Nurbs::b3DeBoorSurfaceTesselate(m_Horizontal, m_Vertical, aux_result);
 }
 
 #endif

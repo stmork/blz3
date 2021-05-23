@@ -709,7 +709,7 @@ public:
 		return segment_count;
 	}
 
-	static unsigned b3DeBoorSurfaceTessalate(
+	static unsigned b3DeBoorSurfaceTesselate(
 			b3SplineTemplate<VECTOR> & horizontal,
 			b3SplineTemplate<VECTOR> & vertical,
 			type     *                 aux_result)
