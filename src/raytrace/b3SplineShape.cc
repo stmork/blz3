@@ -161,8 +161,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3Spline::type aux_result[b3Spline::B3_MAX_SUBDIV + 1];
 	b3Spline::type aux_control_points[b3Spline::B3_MAX_CONTROLS * b3Spline::B3_MAX_CONTROLS];
 	b3_gl_vertex * gl_vertex = *glVertexElements;
-	b3_count       count     = 0;
-	b3_index       x, y, t;
+	b3_index       x, y;
 
 	m_Spline[0].m_Controls =  m_Controls;
 	m_Spline[1].m_Controls =  m_Controls;
@@ -183,8 +182,9 @@ void b3SplineShape::b3ComputeGridVertices()
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     y: %d\n", y);
 #endif
-		count = aux_spline.b3DeBoor(aux_result, y);
-		for (t = 0; t < count; t++)
+		const unsigned count = aux_spline.b3DeBoor(aux_result, y);
+
+		for (unsigned t = 0; t < count; t++)
 		{
 			gl_vertex->v.x = aux_result[t].x;
 			gl_vertex->v.y = aux_result[t].y;
@@ -210,8 +210,9 @@ void b3SplineShape::b3ComputeGridVertices()
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     x: %d\n", x);
 #endif
-		count = aux_spline.b3DeBoor(aux_result, x);
-		for (t = 0; t < count; t++)
+		const unsigned count = aux_spline.b3DeBoor(aux_result, x);
+
+		for (unsigned t = 0; t < count; t++)
 		{
 			gl_vertex->v.x = aux_result[t].x;
 			gl_vertex->v.y = aux_result[t].y;
@@ -229,18 +230,20 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3Spline         aux_spline;
 	b3Spline::type   aux_result[b3Spline::B3_MAX_SUBDIV + 1];
 	b3Spline::type   aux_control_points[m_Spline[0].m_ControlNum * (m_Spline[1].m_SubDiv + 1)];
-	b3Spline::type * aux_ptr;
-	b3_gl_vertex  *  gl_vertex;
+	b3Spline::type * aux_ptr     = aux_control_points;
 	b3_gl_vertex  *  gl_vertices = *glVertexElements;
-	b3_f64           fx, fxStep;
-	b3_f64           fy, fyStep;
-	b3_count         index;
+	b3_gl_vertex  *  gl_vertex;
 
 	// Building a series of vertical splines.
-	aux_ptr = aux_control_points;
 	for (unsigned x = 0; x < m_Spline[0].m_ControlNum; x++)
 	{
-		aux_ptr += m_Spline[1].b3DeBoor(aux_ptr, x * m_Spline[0].m_Offset);
+		const unsigned count = m_Spline[1].b3DeBoor(aux_ptr, x * m_Spline[0].m_Offset);
+
+		for (unsigned i = 0; i < count; i++)
+		{
+			b3SplineVector::b3WeightSelf(aux_ptr[x]);
+		}
+		aux_ptr += count;
 	}
 
 	// Create aux BSpline
@@ -248,17 +251,20 @@ void b3SplineShape::b3ComputeSolidVertices()
 	aux_spline.m_Offset   = m_Spline[1].m_SubDiv + 1;
 	aux_spline.m_Controls = aux_control_points;
 
+	// Init loop variables
+	const b3_f64 fyStep = 1.0 / m_ySubDiv;
+	b3_f64       fy     = 0.0;
+	b3_count     index  = 0;
+
 	gl_vertex = &gl_vertices[m_GridVertexCount];
-	index  = 0;
-	fy     = 0;
-	fyStep = 1.0 / (b3_f64)m_ySubDiv;
 	for (b3_count y = 0; y < m_ySubDiv; y++)
 	{
-		const unsigned count   = aux_spline.b3DeBoor(aux_result, y);
+		const unsigned count  = aux_spline.b3DeBoor(aux_result, y);
+		const b3_f64   fxStep = 1.0 / count;
+		b3_f64         fx     = 0;
 
 		index  += count;
 		fx      = 0;
-		fxStep  = 1.0 / (b3_f64)count;
 		for (unsigned x = 0; x < count; x++)
 		{
 			gl_vertex->t.s = fx;

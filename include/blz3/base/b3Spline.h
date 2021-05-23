@@ -608,17 +608,12 @@ public:
 	 */
 	unsigned  b3DeBoorClosed(VECTOR & point, b3_knot qStart, b3_index index = 0) const
 	{
-		const b3_knot range = m_Knots[m_ControlNum] - m_Knots[0];
-		unsigned      i     = iFind(qStart);
-		b3_f64        q;
-		b3_f64        basis[m_Degree + 1];
+		const b3_knot  range = m_Knots[m_ControlNum] - m_Knots[0];
+		const unsigned i     = iFind(qStart) % m_ControlNum;
+		b3_f64         q;
+		b3_f64         basis[m_Degree + 1];
 
 		B3_ASSERT(m_Closed);
-
-		if (i >= m_ControlNum)
-		{
-			i -= m_ControlNum;
-		}
 
 		basis[0]  = 1;
 		for (unsigned l = 1; l <= m_Degree; l++)
@@ -642,8 +637,9 @@ public:
 			}
 		}
 
-		b3SplineVector::b3Clear(point);
 		b3_index j = i;
+
+		b3SplineVector::b3Clear(point);
 		for (b3_index l = m_Degree; l >= 0; l--)
 		{
 			b3SplineVector::b3AddScaled(basis[l], m_Controls[j * m_Offset + index], point);
@@ -691,7 +687,6 @@ public:
 
 		// Init auxiliary loop spline
 		loop_spline            = control_spline;
-		loop_spline.m_SubDiv   = control_spline.b3GetSegmentKnotCount();
 		loop_spline.m_Offset   = curve_spline.b3GetSegmentKnotCount();
 		loop_spline.m_Controls = point;
 

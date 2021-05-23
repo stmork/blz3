@@ -672,6 +672,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 	// First create controls for segments of vertical spline...
 	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(m_Horizontal, m_Vertical, aux_nurbs, aux_control_points);
+	aux_nurbs.m_SubDiv = m_Horizontal.b3GetSegmentKnotCount() * 2;
 
 	for (b3_index y = 0; y < aux_nurbs.m_Offset; y++)
 	{
@@ -724,6 +725,7 @@ void b3NurbsSurfaceTest::testSphereVertically()
 	// First create controls for segments of horizontal spline...
 	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(m_Vertical, m_Horizontal, aux_nurbs, aux_control_points);
+	aux_nurbs.m_SubDiv = m_Vertical.b3GetSegmentKnotCount() * 2;
 
 	for (b3_index x = 0; x < aux_nurbs.m_Offset; x++)
 	{
@@ -764,30 +766,30 @@ void b3NurbsSurfaceTest::testSphereVertically()
 void b3NurbsSurfaceTest::test()
 {
 	b3Nurbs         aux_nurbs;
-	b3Nurbs::type * aux_ptr;
 	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_CONTROLS + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
+	b3Nurbs::type * aux_ptr = aux_control_points;
 	b3Nurbs::type   result[b3Spline::B3_MAX_SUBDIV + 1];
 
 	// Reduce tesselation for test purposes.
-	m_Vertical.m_SubDiv   = 4;
+	m_Vertical.m_SubDiv   = 8;
 
 	// Building a series of vertical splines.
-	aux_ptr    = aux_control_points;
 	for (unsigned x = 0; x < m_Horizontal.m_ControlNum; x++)
 	{
 		const unsigned count = m_Vertical.b3DeBoor(aux_ptr, x * m_Horizontal.m_Offset);
 
 		for (unsigned i = 0; i < count; i++)
 		{
-			b3SplineVector::b3WeightSelf(*aux_ptr++);
+			b3SplineVector::b3WeightSelf(aux_ptr[x]);
 		}
+		aux_ptr += count;
 	}
 
 	// Create aux BSpline
 	aux_nurbs            = m_Horizontal;
 	aux_nurbs.m_Offset   = m_Vertical.m_SubDiv + 1;
 	aux_nurbs.m_Controls = aux_control_points;
-	aux_nurbs.m_SubDiv   = 8;
+	aux_nurbs.m_SubDiv   = 12;
 
 	// For every sub division of vertical spline compute horizontal spline.
 	for (unsigned y = 0; y <= m_Vertical.m_SubDiv; y++)
@@ -803,10 +805,17 @@ void b3NurbsSurfaceTest::test()
 
 			m_Radius[x] = radius;
 			CPPUNIT_ASSERT_GREATER(0.0, radius);
+
 #if 0
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Nurbs::epsilon);
 #endif
 		}
+
+#if 0
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(result[0].x, result[count - 1].x, b3Nurbs::epsilon);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(result[0].y, result[count - 1].y, b3Nurbs::epsilon);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(result[0].z, result[count - 1].z, b3Nurbs::epsilon);
+#endif
 
 		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 	}
