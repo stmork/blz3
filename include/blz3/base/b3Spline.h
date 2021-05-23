@@ -687,7 +687,7 @@ public:
 
 		// Init auxiliary loop spline
 		loop_spline            = control_spline;
-		loop_spline.m_Offset   = curve_spline.b3GetSegmentKnotCount();
+		loop_spline.m_Offset   = segment_count;
 		loop_spline.m_Controls = point;
 
 		if (!curve_spline.m_Closed)
