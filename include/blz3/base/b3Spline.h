@@ -709,6 +709,57 @@ public:
 		return segment_count;
 	}
 
+	static unsigned b3DeBoorSurfaceTessalate(
+			b3SplineTemplate<VECTOR> & horizontal,
+			b3SplineTemplate<VECTOR> & vertical,
+			type     *                 aux_result)
+	{
+		b3SplineTemplate<VECTOR>  aux_spline;
+		type                      aux_control_points[(B3_MAX_CONTROLS + 1) * (B3_MAX_SUBDIV + 1)];
+		type *                    aux_ptr       = aux_control_points;
+
+		// Building a series of vertical splines.
+		const unsigned  segment_count = horizontal.b3GetSegmentKnotCount();
+		unsigned        end           = horizontal.m_ControlNum;
+
+		if (!horizontal.m_Closed)
+		{
+			end++;
+		}
+
+		// @see b3Spline::b3DeBoorSurfaceControl()
+		for (unsigned i = horizontal.b3FirstKnotIndex(); i < end; i++)
+		{
+			b3_f64 basis[B3_MAX_DEGREE + 1];
+
+			const b3_f64   q     = horizontal.m_Knots[i];
+			const unsigned index = horizontal.b3Mansfield(basis, q);
+
+			for (unsigned x = 0; x < vertical.m_ControlNum; x++)
+			{
+				horizontal.b3MansfieldVector(aux_ptr[x * segment_count], basis,
+					index, x * vertical.m_Offset);
+			}
+			aux_ptr++;
+		}
+
+		// Create aux BSpline
+		aux_spline            = vertical;
+		aux_spline.m_Offset   = segment_count;
+		aux_spline.m_Controls = aux_control_points;
+		aux_spline.m_SubDiv   = vertical.b3GetSegmentKnotCount() * 2;
+
+		// For every sub division of vertical spline compute horizontal spline.
+		for (b3_index x = 0; x < aux_spline.m_Offset; x++)
+		{
+			const unsigned count = aux_spline.b3DeBoor(aux_result, x);
+
+			aux_result += count;
+		}
+
+		return aux_spline.m_Offset * (aux_spline.m_SubDiv + 1);
+	}
+
 	/**
 	 * The routine Mansfield computes the basis coefficents for the
 	 * appropriate control points and returns the highest index of
