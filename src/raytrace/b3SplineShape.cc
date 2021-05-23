@@ -161,7 +161,6 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3Spline::type aux_result[b3Spline::B3_MAX_SUBDIV + 1];
 	b3Spline::type aux_control_points[b3Spline::B3_MAX_CONTROLS * b3Spline::B3_MAX_CONTROLS];
 	b3_gl_vertex * gl_vertex = *glVertexElements;
-	b3_index       x, y;
 
 	m_Spline[0].m_Controls =  m_Controls;
 	m_Spline[1].m_Controls =  m_Controls;
@@ -177,7 +176,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: horizontal\n");
 	m_Spline[0].b3Dump();
 #endif
-	for (y = 0; y < aux_spline.m_Offset; y++)
+	for (b3_index y = 0; y < aux_spline.m_Offset; y++)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     y: %d\n", y);
@@ -205,7 +204,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3PrintF(B3LOG_FULL, "SplineShape: vertical\n");
 	m_Spline[1].b3Dump();
 #endif
-	for (x = 0; x < aux_spline.m_Offset; x++)
+	for (b3_index x = 0; x < aux_spline.m_Offset; x++)
 	{
 #ifdef _DEBUG
 		b3PrintF(B3LOG_FULL, "     x: %d\n", x);
