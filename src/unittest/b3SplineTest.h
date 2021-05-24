@@ -112,6 +112,9 @@ public:
 		CPPUNIT_ASSERT(b.m_Controls != nullptr);
 		CPPUNIT_ASSERT(b.b3InitCurve(3, 10, false));
 
+		unsigned knot_num    = b.m_KnotNum;
+		unsigned control_num = b.m_ControlNum;
+
 		CPPUNIT_ASSERT(b.b3ThroughEndControl());
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
 
@@ -133,14 +136,20 @@ public:
 
 		CPPUNIT_ASSERT(b.m_Knots != nullptr);
 		CPPUNIT_ASSERT(b.m_Controls != nullptr);
+		CPPUNIT_ASSERT_EQUAL(knot_num,    b.m_KnotNum);
+		CPPUNIT_ASSERT_EQUAL(control_num, b.m_ControlNum);
 
 		q = b.b3LastKnot() + 1;
 		CPPUNIT_ASSERT(b.b3AppendCurveControl(true, q, 1, 0));
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
+		CPPUNIT_ASSERT_EQUAL(++knot_num,    b.m_KnotNum);
+		CPPUNIT_ASSERT_EQUAL(++control_num, b.m_ControlNum);
 
 		q = b.b3FirstKnot() - 1;
 		CPPUNIT_ASSERT(b.b3AppendCurveControl(false, q, 1, 0));
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
+		CPPUNIT_ASSERT_EQUAL(++knot_num,    b.m_KnotNum);
+		CPPUNIT_ASSERT_EQUAL(++control_num, b.m_ControlNum);
 
 		CPPUNIT_ASSERT(b.b3ToBezier());
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
