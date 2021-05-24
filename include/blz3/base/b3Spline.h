@@ -25,6 +25,8 @@
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3SplineVector.h"
 
+#include <functional>
+
 /*************************************************************************
 **                                                                      **
 **                        Some basic defines                            **
@@ -709,30 +711,99 @@ public:
 		return segment_count;
 	}
 
+	/**
+	 * This type definition declares a function that computes a @c q value
+	 * from its index i.
+	 *
+	 * @see b3DeBoorSurfaceTesselate()
+	 */
+	typedef std::function<b3_f64(
+		const b3SplineTemplate<VECTOR> &,
+		const unsigned)> b3_eval_function;
+
+	/**
+	 * This method computes a @c q value from its subdivision index @c i and
+	 * is used as callback by b3DeBoorSurfaceTesselate(). The range of @c i
+	 * must inside [0, m_SubDiv]. The @c q value is equal spaced between the
+	 * range given by b3FirstKnot() and b3LastKnot().
+	 *
+	 * @param spline The spline needed for computation.
+	 * @param i The subdivision index.
+	 * @return The computed @c q.
+	 */
+	static inline b3_f64 b3FuncSubdivision(
+		const b3SplineTemplate<VECTOR> & spline,
+		const unsigned                   i)
+	{
+		return spline.b3FirstKnot() + spline.b3KnotRange() * i / spline.m_SubDiv;
+	}
+
+	/**
+	 * @brief b3FuncKnot
+	 * @param spline
+	 * @param i
+	 * @return
+	 */
+	static b3_f64 b3FuncKnot(
+		const b3SplineTemplate<VECTOR> & spline,
+		const unsigned                   i)
+	{
+		return spline.m_Knots[spline.b3FirstKnotIndex() + i];
+	}
+
+	/**
+	 * This method tesselates a surface given by the spline descriptions
+	 * @c horizontal and @c vertical. The result is put into the array @c result.
+	 * You can control the computation behavior by adding an evaluation function
+	 * for control point subdivison.
+	 *
+	 * The default behaviour is that the horizontal subdivision is using the
+	 * horizontal.m_SubDiv value to equal spaced @c q. So you can simply call
+	 * b3DeBoorSurfaceTesselate() with three parameters to get a tesselation e.g.
+	 * for triangulating the surface.
+	 *
+	 * If you want to subdivide horizontally that every @c q corresponds to its
+	 * knot value you have to initialize the subdivision by the segment count.
+	 *
+	 * Example:
+	 * @code
+	b3Nurbs::type result[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
+
+	horizontal.m_SubDiv = horizontal.b3GetSegmentKnotCount();
+
+	const unsigned point_count = b3Nurbs::b3DeBoorSurfaceTesselate(
+			horizontal, vertical, result, b3Nurbs::b3FuncKnot);
+	@endcode
+	 *
+	 * @param horizontal The horizontal spline description.
+	 * @param vertical The vertical spline description.
+	 * @param result The resulting homogenized points.
+	 * @param func An evaluation function to compute @c q for control point mesh.
+	 */
 	static unsigned b3DeBoorSurfaceTesselate(
 		b3SplineTemplate<VECTOR> & horizontal,
 		b3SplineTemplate<VECTOR> & vertical,
-		type           *           aux_result)
+		type           *           result,
+		b3_eval_function           func = b3FuncSubdivision)
 	{
 		b3SplineTemplate<VECTOR>  aux_spline;
 		type                      aux_control_points[(B3_MAX_CONTROLS + 1) * (B3_MAX_SUBDIV + 1)];
 		type           *          aux_ptr       = aux_control_points;
 
 		// Building a series of vertical splines.
-		const unsigned  segment_count = horizontal.b3GetSegmentKnotCount();
-		unsigned        end           = horizontal.m_ControlNum;
+		unsigned  segment_count = horizontal.m_SubDiv;
 
 		if (!horizontal.m_Closed)
 		{
-			end++;
+			segment_count++;
 		}
 
 		// @see b3Spline::b3DeBoorSurfaceControl()
-		for (unsigned i = horizontal.b3FirstKnotIndex(); i < end; i++)
+		for (unsigned i = 0; i < segment_count; i++)
 		{
+			b3_f64 q = func(horizontal, i);
 			b3_f64 basis[B3_MAX_DEGREE + 1];
 
-			const b3_f64   q     = horizontal.m_Knots[i];
 			const unsigned index = horizontal.b3Mansfield(basis, q);
 
 			for (unsigned x = 0; x < vertical.m_ControlNum; x++)
@@ -752,9 +823,9 @@ public:
 		unsigned point_count = 0;
 		for (b3_index x = 0; x < aux_spline.m_Offset; x++)
 		{
-			const unsigned count = aux_spline.b3DeBoor(aux_result, x);
+			const unsigned count = aux_spline.b3DeBoor(result, x);
 
-			aux_result  += count;
+			result  += count;
 			point_count += count;
 		}
 

@@ -766,21 +766,23 @@ void b3NurbsSurfaceTest::testTesselate()
 	b3Nurbs::type   aux_control_points[(b3Spline::B3_MAX_CONTROLS + 1) * (b3Spline::B3_MAX_SUBDIV + 1)];
 	b3Nurbs::type   aux_result[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
 	b3Nurbs::type   aux_compare[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
+	b3Nurbs::type * aux_ptr = aux_control_points;
+
+	m_Horizontal.m_SubDiv = m_Horizontal.b3GetSegmentKnotCount() * 2;
+	m_Vertical.m_SubDiv   = m_Vertical.b3GetSegmentKnotCount() * 2;
 
 	// Building a series of vertical splines.
-	const unsigned  segment_count = m_Horizontal.b3GetSegmentKnotCount();
-	unsigned        end           = m_Horizontal.m_ControlNum;
-	b3Nurbs::type * aux_ptr       = aux_control_points;
+	unsigned  segment_count = m_Horizontal.m_SubDiv;
 
 	if (!m_Horizontal.m_Closed)
 	{
-		end++;
+		segment_count++;
 	}
 
 	// @see b3Spline::b3DeBoorSurfaceControl()
-	for (unsigned i = m_Horizontal.b3FirstKnotIndex(); i < end; i++)
+	for (unsigned i = 0; i < segment_count; i++)
 	{
-		const b3_f64   q     = m_Horizontal.m_Knots[i];
+		const b3_f64   q     = b3Nurbs::b3FuncSubdivision(m_Horizontal, i);
 		const unsigned index = m_Horizontal.b3Mansfield(m_BasisCoeff, q);
 
 		for (unsigned x = 0; x < m_Vertical.m_ControlNum; x++)
@@ -805,26 +807,16 @@ void b3NurbsSurfaceTest::testTesselate()
 		for (unsigned c = 0; c < count; c++)
 		{
 			const b3_f64 radius = sqrt(
-					aux_result[c].x * aux_result[c].x +
-					aux_result[c].y * aux_result[c].y +
-					aux_result[c].z * aux_result[c].z);
+					aux_ptr[c].x * aux_ptr[c].x +
+					aux_ptr[c].y * aux_ptr[c].y +
+					aux_ptr[c].z * aux_ptr[c].z);
 
 			m_Radius[c] = radius;
 			CPPUNIT_ASSERT_GREATER(0.0, radius);
-
-#if 1
-			CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Nurbs::epsilon);
-#endif
 		}
 
 		CPPUNIT_ASSERT_EQUAL(aux_nurbs.m_SubDiv + 1, count);
 		aux_ptr += count;
-
-#if 0
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].x, aux_result[count - 1].x, b3Nurbs::epsilon);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].y, aux_result[count - 1].y, b3Nurbs::epsilon);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(aux_result[0].z, aux_result[count - 1].z, b3Nurbs::epsilon);
-#endif
 	}
 
 	// Finally compare against standard implementation.
@@ -832,9 +824,35 @@ void b3NurbsSurfaceTest::testTesselate()
 			m_Horizontal, m_Vertical, aux_compare);
 
 	CPPUNIT_ASSERT_EQUAL(
-		m_Horizontal.b3GetSegmentKnotCount() * (m_Vertical.m_SubDiv + 1),
+		segment_count * (m_Vertical.m_SubDiv + 1),
 		point_count);
 	CPPUNIT_ASSERT(std::equal(aux_compare, aux_compare + point_count, aux_result));
+}
+
+void b3NurbsSurfaceTest::testRadius()
+{
+	b3Nurbs::type   aux_compare[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
+
+	// Stepping for knot distance.
+	m_Horizontal.m_SubDiv = m_Horizontal.b3GetSegmentKnotCount();
+
+	const unsigned point_count = b3Nurbs::b3DeBoorSurfaceTesselate(
+			m_Horizontal, m_Vertical, aux_compare, b3Nurbs::b3FuncKnot);
+
+	CPPUNIT_ASSERT_EQUAL(
+		m_Horizontal.m_SubDiv * (m_Vertical.m_SubDiv + 1),
+		point_count);
+
+	// Comparing radiuses
+	for (unsigned i = 0; i < point_count; i++)
+	{
+		const b3_f64 radius = sqrt(
+				aux_compare[i].x * aux_compare[i].x +
+				aux_compare[i].y * aux_compare[i].y +
+				aux_compare[i].z * aux_compare[i].z);
+
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Nurbs::epsilon);
+	}
 }
 
 #endif
