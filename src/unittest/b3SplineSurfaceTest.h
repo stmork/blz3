@@ -39,13 +39,15 @@ class b3SplineSurfaceTest : public CppUnit::TestFixture
 	b3_f64            m_yControls[b3Spline::B3_MAX_CONTROLS];
 
 	CPPUNIT_TEST_SUITE(b3SplineSurfaceTest);
-	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testExtension);
+	CPPUNIT_TEST(testValidation);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void test();
+	void testExtension();
+	void testValidation();
 
 private:
 	static void b3InitControls(const b3Spline & spline, b3_f64 * controls);

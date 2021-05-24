@@ -38,6 +38,7 @@ template<class SPLINE> class b3SplineTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testInit);
 	CPPUNIT_TEST(testClosed);
 	CPPUNIT_TEST(testOpened);
+	CPPUNIT_TEST(testValidation);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -156,6 +157,21 @@ public:
 
 		CPPUNIT_ASSERT(b.b3Degree(2));
 		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OK, b.bspline_errno);
+	}
+
+	void testValidation()
+	{
+		b3_f64 q = a.b3FirstKnot();
+
+		a.m_KnotMax    = a.m_KnotNum;
+		a.m_ControlMax = b3Spline::B3_MAX_CONTROLS;
+		CPPUNIT_ASSERT(!a.b3AppendCurveControl(true, q, 1, 0));
+		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXKNOTS, a.bspline_errno);
+
+		a.m_KnotMax    = b3Spline::B3_MAX_KNOTS;
+		a.m_ControlMax = a.m_ControlNum;
+		CPPUNIT_ASSERT(!a.b3AppendCurveControl(true, q, a.m_Degree + 2, 0));
+		CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXCONTROLS, a.bspline_errno);
 	}
 };
 

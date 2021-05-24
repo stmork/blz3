@@ -524,7 +524,9 @@ protected:
 
 	/**
 	 * This method returns the used vertex range. The default implementation
-	 * returns a range between 0 and the number of allocated vertices.
+	 * returns a range between 0 and the number of allocated vertices. The first
+	 * range from [0, start[ is the range for grid vertices. The range from
+	 * [stert, end [ is the range for triangle vertices.
 	 *
 	 * @param start The start index including.
 	 * @param end The end index excluding.
@@ -545,7 +547,7 @@ protected:
 	 * @see b3VectorBufferObjects
 	 * @see b3VertexBuffer
 	 */
-	virtual void      b3AllocVertexMemory(b3RenderContext * context);
+	virtual void            b3AllocVertexMemory(b3RenderContext * context);
 
 	/**
 	 * The implementation of this method computes the vertices. The vertex buffer is
@@ -668,7 +670,7 @@ protected:
 	 * @param transformation The transformation matrix.
 	 * @param isAffine If false the normals must be recomputed.
 	 */
-	void b3TransformVertices(b3_matrix * transformation, bool isAffine);
+	void            b3TransformVertices(b3_matrix * transformation, bool isAffine);
 
 private:
 	void            b3DefineTexture();

@@ -69,7 +69,7 @@ void b3SplineSurfaceTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3SplineSurfaceTest::test()
+void b3SplineSurfaceTest::testExtension()
 {
 	b3_f64 q;
 
@@ -90,6 +90,49 @@ void b3SplineSurfaceTest::test()
 
 	q = m_Vertical.b3FirstKnot() - 1;
 	CPPUNIT_ASSERT(m_Vertical.b3AppendSurfaceControl(false, q, 1, m_Horizontal.m_Offset, m_Horizontal.m_ControlMax));
+}
+
+void b3SplineSurfaceTest::testValidation()
+{
+	b3_f64 q;
+
+	q = m_Horizontal.b3LastKnot();
+	CPPUNIT_ASSERT(!m_Horizontal.b3AppendSurfaceControl(false, q, 1,
+			m_Vertical.m_Offset, m_Vertical.m_ControlMax));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OUT_OF_RANGE, m_Horizontal.bspline_errno);
+
+	q = m_Horizontal.b3FirstKnot();
+	CPPUNIT_ASSERT(!m_Horizontal.b3AppendSurfaceControl(true, q, 1,
+			m_Vertical.m_Offset, m_Vertical.m_ControlMax));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_OUT_OF_RANGE, m_Horizontal.bspline_errno);
+
+	m_Horizontal.m_KnotMax    = m_Horizontal.m_KnotNum;
+	m_Horizontal.m_ControlMax = b3Spline::B3_MAX_CONTROLS;
+	CPPUNIT_ASSERT(!m_Horizontal.b3AppendSurfaceControl(true, q, 1,
+			m_Vertical.m_Offset, m_Vertical.m_ControlMax));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXKNOTS, m_Horizontal.bspline_errno);
+
+	m_Horizontal.m_KnotMax    = b3Spline::B3_MAX_KNOTS;
+	m_Horizontal.m_ControlMax = m_Horizontal.m_ControlNum;
+	CPPUNIT_ASSERT(!m_Horizontal.b3AppendSurfaceControl(
+			true, q, m_Horizontal.m_Degree + 2,
+			m_Vertical.m_Offset, m_Vertical.m_ControlMax));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXCONTROLS, m_Horizontal.bspline_errno);
+
+	q = m_Horizontal.b3FirstKnot() + m_Horizontal.b3KnotRange() * 0.25;
+
+	m_Horizontal.m_KnotMax    = m_Horizontal.m_KnotNum;
+	m_Horizontal.m_ControlMax = b3Spline::B3_MAX_CONTROLS;
+	CPPUNIT_ASSERT(!m_Horizontal.b3InsertSurfaceControl(q, 1,
+			m_Vertical.m_Offset, m_Vertical.m_ControlMax));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXKNOTS, m_Horizontal.bspline_errno);
+
+	m_Horizontal.m_KnotMax    = b3Spline::B3_MAX_KNOTS;
+	m_Horizontal.m_ControlMax = m_Horizontal.m_ControlNum;
+	CPPUNIT_ASSERT(!m_Horizontal.b3InsertSurfaceControl(
+			q, m_Horizontal.m_Degree + 2,
+			m_Vertical.m_Offset, m_Vertical.m_ControlMax));
+	CPPUNIT_ASSERT_EQUAL(B3_BSPLINE_TOO_FEW_MAXCONTROLS, m_Horizontal.bspline_errno);
 }
 
 void b3SplineSurfaceTest::b3InitControls(const b3Spline & spline, b3_f64 * controls)
