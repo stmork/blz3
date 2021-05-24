@@ -51,11 +51,12 @@ enum b3_bspline_error
 	B3_BSPLINE_TOO_MUCH_CONTROLS,      //!< Not enough memory for spline control points.
 	B3_BSPLINE_TOO_FEW_CONTROLS,       //!< Too few controls for the given spline degree.
 	B3_BSPLINE_TOO_FEW_MAXKNOTS,       //!< Too few knots for the goven spline degree.
-	B3_BSPLINE_TOO_FEW_MAXCONTROLS,
-	B3_BSPLINE_MISSING_KNOTS,
-	B3_BSPLINE_CLOSED,
-	B3_BSPLINE_TOO_LOW_MULTIPLICATION,
-	B3_BSPLINE_INVALID_ARGUMENT         //!< The input parameter are illegal.
+	B3_BSPLINE_TOO_FEW_MAXCONTROLS,    //!< Too few space for more control points.
+	B3_BSPLINE_MISSING_KNOTS,          //!< No memory for knot vector defined.
+	B3_BSPLINE_CLOSED,                 //!< Algorith works only on open splines.
+	B3_BSPLINE_TOO_LOW_MULTIPLICATION, //!< Knot multiplicity is 1 minimum.
+	B3_BSPLINE_INVALID_ARGUMENT,       //!< The input parameter are illegal.
+	B3_BSPLINE_OUT_OF_RANGE            //!< The q parameter is out of range.
 };
 
 /*************************************************************************
@@ -1179,41 +1180,39 @@ public:
 		return true;
 	}
 
-	b3_bool b3AppendCurveControl(
-		b3_bool    append,
+	bool b3AppendCurveControl(
+		bool      append,
 		b3_knot    q,
-		b3_count   Mult,
+		unsigned   mult,
 		b3_index   index)
 	{
-		VECTOR  * Controls;
+		VECTOR  * controls;
 		VECTOR    start, diff;
-		b3_index  m, i;
-		b3_count  KnotNum;
+		unsigned  m;
 
 		if (m_Closed)
 		{
 			bspline_errno = B3_BSPLINE_CLOSED;
 			return false;
 		}
-		if (Mult < 1)
+		if (mult < 1)
 		{
 			bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
 			return false;
 		}
 
 		m        = m_ControlNum;
-		KnotNum  = m_KnotNum;
-		if (Mult > (m_Degree + 1))
+		if (mult > (m_Degree + 1))
 		{
-			Mult = m_Degree + 1;
+			mult = m_Degree + 1;
 		}
 
-		if ((m + Mult) > m_ControlMax)
+		if ((m + mult) > m_ControlMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
-		if ((KnotNum + Mult) > m_KnotMax)
+		if ((m_KnotNum + mult) > m_KnotMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
@@ -1222,90 +1221,92 @@ public:
 
 		if (append)
 		{
-			if (q <= m_Knots[KnotNum - 1])
+			if (q <= m_Knots[m_KnotNum - 1])
 			{
+				bspline_errno = B3_BSPLINE_OUT_OF_RANGE;
 				return false;
 			}
-			for (i = 0; i < Mult; i++)
+			for (unsigned i = 0; i < mult; i++)
 			{
-				m_Knots[KnotNum + i] = q;
+				m_Knots[m_KnotNum + i] = q;
 			}
 
-			Controls = &m_Controls[index];
-			start    = Controls[(m - 1) * m_Offset];
-			b3SplineVector::b3Sub(&start, &Controls[(m - 2) * m_Offset], &diff);
-			for (i = 0; i < Mult; i++)
+			controls = &m_Controls[index];
+			start    = controls[(m - 1) * m_Offset];
+			diff     = b3SplineVector::b3Sub(start, controls[(m - 2) * m_Offset]);
+			for (unsigned i = 0; i < mult; i++)
 			{
-				b3SplineVector::b3LinearCombine(&start, i + 1, &diff, &Controls[(m + i) * m_Offset]);
+				controls[(m + i) * m_Offset] =
+					b3SplineVector::b3LinearCombine(start, diff, i + 1);
 			}
 		}
 		else
 		{
 			if (q >= m_Knots[0])
 			{
+				bspline_errno = B3_BSPLINE_OUT_OF_RANGE;
 				return false;
 			}
-			for (i = KnotNum - 1; i >= 0; i--)
+			for (b3_index i = m_KnotNum - 1; i >= 0; i--)
 			{
-				m_Knots[i + Mult] = m_Knots[i];
+				m_Knots[i + mult] = m_Knots[i];
 			}
 
-			Controls = &m_Controls[index];
-			start = Controls[0];
-			b3SplineVector::b3Sub(&start, &Controls[m_Offset], &diff);
+			controls = &m_Controls[index];
+			start = controls[0];
+			diff  = b3SplineVector::b3Sub(start, controls[m_Offset]);
 
-			for (i = m - 1; i >= 0; i--)
+			for (b3_index i = m - 1; i >= 0; i--)
 			{
-				Controls[(i + Mult) * m_Offset] = Controls[i * m_Offset];
+				controls[(i + mult) * m_Offset] = controls[i * m_Offset];
 			}
 
-			for (i = 0; i < Mult; i++)
+			for (unsigned i = 0; i < mult; i++)
 			{
 				m_Knots[i] = q;
-				b3SplineVector::b3LinearCombine(&start, &diff, Mult - i, &Controls[i * m_Offset]);
+				controls[i * m_Offset] =
+					b3SplineVector::b3LinearCombine(start, diff, mult - i);
 			}
 		}
-		m_KnotNum    += Mult;
-		m_ControlNum += Mult;
+		m_KnotNum    += mult;
+		m_ControlNum += mult;
 		return true;
 	}
 
-	b3_bool b3AppendSurfaceControl(
-		b3_bool    append,
+	bool b3AppendSurfaceControl(
+		bool       append,
 		b3_knot    q,
-		b3_count   Mult,
-		b3_index   skipOffset,
-		b3_index   lines)
+		unsigned   mult,
+		unsigned   skip_offset,
+		unsigned   yLines)
 	{
-		VECTOR  * Controls;
+		VECTOR  * controls;
 		VECTOR    start, diff;
-		b3_index  m, i, y;
-		b3_count  KnotNum;
+		unsigned  m, y;
 
 		if (m_Closed)
 		{
 			bspline_errno = B3_BSPLINE_CLOSED;
 			return false;
 		}
-		if (Mult < 1)
+		if (mult < 1)
 		{
 			bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
 			return false;
 		}
 
 		m        = m_ControlNum;
-		KnotNum  = m_KnotNum;
-		if (Mult > (m_Degree + 1))
+		if (mult > (m_Degree + 1))
 		{
-			Mult = m_Degree + 1;
+			mult = m_Degree + 1;
 		}
 
-		if ((m       + Mult) > m_ControlMax)
+		if ((m       + mult) > m_ControlMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
-		if ((KnotNum + Mult) > m_KnotMax)
+		if ((m_KnotNum + mult) > m_KnotMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
@@ -1314,62 +1315,66 @@ public:
 
 		if (append)
 		{
-			if (q <= m_Knots[KnotNum - 1])
+			if (q <= m_Knots[m_KnotNum - 1])
 			{
+				bspline_errno = B3_BSPLINE_OUT_OF_RANGE;
 				return false;
 			}
-			for (i = 0; i < Mult; i++)
+			for (unsigned i = 0; i < mult; i++)
 			{
-				m_Knots[KnotNum + i] = q;
+				m_Knots[m_KnotNum + i] = q;
 			}
 
-			Controls = m_Controls;
-			for (y = 0; y < lines; y++)
+			controls = m_Controls;
+			for (y = 0; y < yLines; y++)
 			{
-				start = Controls[(m - 1) * m_Offset];
-				b3SplineVector::b3Sub(&start, &Controls[(m - 2) * m_Offset], &diff);
-				for (i = 0; i < Mult; i++)
+				start = controls[(m - 1) * m_Offset];
+				diff = b3SplineVector::b3Sub(start, controls[(m - 2) * m_Offset]);
+				for (unsigned i = 0; i < mult; i++)
 				{
-					b3SplineVector::b3LinearCombine(&start, &diff, i + 1, &Controls[(m + i) * m_Offset]);
+					controls[(m + i) * m_Offset] =
+						b3SplineVector::b3LinearCombine(start, diff, i + 1);
 				}
-				Controls += skipOffset;
+				controls += skip_offset;
 			}
 		}
 		else
 		{
 			if (q >= m_Knots[0])
 			{
+				bspline_errno = B3_BSPLINE_OUT_OF_RANGE;
 				return false;
 			}
 
-			for (i = KnotNum - 1; i >= 0; i--)
+			for (b3_index i = m_KnotNum - 1; i >= 0; i--)
 			{
-				m_Knots[i + Mult] = m_Knots[i];
+				m_Knots[i + mult] = m_Knots[i];
 			}
-			for (i = 0; i <  Mult; i++)
+			for (unsigned i = 0; i <  mult; i++)
 			{
 				m_Knots[i] = q;
 			}
 
-			Controls = m_Controls;
-			for (y = 0;  y <  lines; y++)
+			controls = m_Controls;
+			for (y = 0;  y <  yLines; y++)
 			{
-				start = Controls[0];
-				b3SplineVector::b3Sub(&start, &Controls[m_Offset], &diff);
-				for (i = m - 1; i >= 0; i--)
+				start = controls[0];
+				diff = b3SplineVector::b3Sub(start, controls[m_Offset]);
+				for (b3_index i = m - 1; i >= 0; i--)
 				{
-					Controls[(i + Mult) * m_Offset] = Controls[i * m_Offset];
+					controls[(i + mult) * m_Offset] = controls[i * m_Offset];
 				}
 
-				for (i = 0; i < Mult; i++)
+				for (unsigned i = 0; i < mult; i++)
 				{
-					b3SplineVector::b3LinearCombine(&start, &diff, Mult - i, &Controls[i * m_Offset]);
+					controls[i * m_Offset] =
+						b3SplineVector::b3LinearCombine(start, diff, mult - i);
 				}
-				Controls += skipOffset;
+				controls += skip_offset;
 			}
 		}
-		m_KnotNum    += Mult;
-		m_ControlNum += Mult;
+		m_KnotNum    += mult;
+		m_ControlNum += mult;
 		return true;
 	}
 

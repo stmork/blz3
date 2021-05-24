@@ -37,22 +37,26 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineTest<b3Nurbs>);
 
 template <> void b3SplineTest<b3Curve>::setUp()
 {
-	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
-
 	a.m_Knots    = knots;
 	a.m_Controls = curve_controls;
+
+	b3PrintF(B3LOG_DEBUG, "Setup scalar spline curve: %s\n", __FILE__);
 }
 
 template <> void b3SplineTest<b3Spline>::setUp()
 {
 	a.m_Knots    = knots;
 	a.m_Controls = spline_controls;
+
+	b3PrintF(B3LOG_DEBUG, "Setup vector spline curve: %s\n", __FILE__);
 }
 
 template <> void b3SplineTest<b3Nurbs>::setUp()
 {
 	a.m_Knots    = knots;
 	a.m_Controls = nurbs_controls;
+
+	b3PrintF(B3LOG_DEBUG, "Setup NURBS curve: %s\n", __FILE__);
 }
 
 #endif
