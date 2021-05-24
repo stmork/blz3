@@ -796,7 +796,7 @@ public:
 		{
 			const unsigned count = aux_spline.b3DeBoor(result, x);
 
-			result  += count;
+			result      += count;
 			point_count += count;
 		}
 
