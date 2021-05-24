@@ -152,6 +152,7 @@ class b3NurbsSurfaceTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testSphereVertically);
 	CPPUNIT_TEST(testTesselate);
 	CPPUNIT_TEST(testRadius);
+	CPPUNIT_TEST(testInsertSurface);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -162,6 +163,7 @@ public:
 	void testSphereVertically();
 	void testTesselate();
 	void testRadius();
+	void testInsertSurface();
 };
 
 #endif

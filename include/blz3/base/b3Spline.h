@@ -1065,37 +1065,36 @@ public:
 	 * @param ControlOffset Distance between to curves
 	 * @param yLines       How many curves where to insert knots
 	 */
-	b3_bool b3InsertSurfaceControl(
+	bool b3InsertSurfaceControl(
 		b3_knot    q,
-		b3_count   Mult,
-		b3_index   ControlOffset,
+		unsigned   mult,
+		b3_index   control_offset,
 		b3_count   yLines)
 	{
-		b3_index  l, m, i = 0, index, y;
-		b3_count  KnotNum, Count;
+		unsigned  i = 0;
+		b3_index  m, index, y;
 		b3_knot	  start, end;
-		VECTOR  * Controls;
+		VECTOR  * controls;
 		VECTOR    o[B3_MAX_CONTROLS + 1]; /* buffer for knot insertion */
 
 		bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
-		if (Mult < 1)
+		if (mult < 1)
 		{
 			return false;
 		}
 
 		m        =  m_ControlNum;
-		KnotNum  =  m_KnotNum;
-		if (Mult > (m_Degree + 1))
+		if (mult > (m_Degree + 1))
 		{
-			Mult = m_Degree + 1;
+			mult = m_Degree + 1;
 		}
 
-		if ((m + Mult) > m_ControlMax)
+		if ((m + mult) > m_ControlMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
-		if ((KnotNum + Mult) > m_KnotMax)
+		if ((m_KnotNum + mult) > m_KnotMax)
 		{
 			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
@@ -1104,39 +1103,40 @@ public:
 
 		if (m_Closed)
 		{
-			for (Count = 0; Count < Mult; Count++)
+			for (unsigned count = 0; count < mult; count++)
 			{
 				start = m_Knots[0];
 				end   = m_Knots[m];
 
 				for (y = 0; y < yLines; y++)
 				{
-					index = y * ControlOffset;
+					index = y * control_offset;
 					i = b3InsertDeBoorClosed(o, index, q);
 					m++;
 
-					Controls = &m_Controls[index];
+					controls = &m_Controls[index];
 
 					/* insert o[x] into control points */
-					for (l = m - 1; l > i; l--)
+					for (unsigned l = m - 1; l > i; l--)
 					{
-						Controls[l * m_Offset] = Controls[(l - 1) * m_Offset];
+						controls[l * m_Offset] = controls[(l - 1) * m_Offset];
 					}
-					for (l = i - m_Degree + 1; l <= i; l++)
+					for (unsigned l = i - m_Degree + 1; l <= i; l++)
 					{
-						Controls[((l + m) % m) * m_Offset] = o[(l + (m - 1)) % (m - 1)];
+						controls[((l + m) % m) * m_Offset] = o[(l + (m - 1)) % (m - 1)];
 					}
 					m--;
 				}
+
 				/* insert new knot */
-				for (l = KnotNum; l > i; l--)
+				for (unsigned l = m_KnotNum; l > i; l--)
 				{
 					m_Knots[l] = m_Knots[l - 1];
 				}
 				m_Knots[i + 1] = q;
-				m_KnotNum     = ++KnotNum;
+				m_KnotNum++;
 				m_ControlNum  = ++m;
-				for (l = 0; l <= m_Degree; l++)
+				for (unsigned l = 0; l <= m_Degree; l++)
 				{
 					m_Knots[l + m] = m_Knots[l] - start + end;
 				}
@@ -1144,35 +1144,35 @@ public:
 		}
 		else
 		{
-			for (Count = 0; Count < Mult; Count++)
+			for (unsigned count = 0; count < mult; count++)
 			{
 				for (y = 0; y < yLines; y++)
 				{
-					index = y * ControlOffset;
+					index = y * control_offset;
 					i = b3InsertDeBoorOpened(o, index, q);
 					m++;
 
 					// insert o[x] into control points
-					Controls = &m_Controls[index];
-					for (l = m; l > i; l--)
+					controls = &m_Controls[index];
+					for (unsigned l = m; l > i; l--)
 					{
-						Controls[l * m_Offset] = Controls[(l - 1) * m_Offset];
+						controls[l * m_Offset] = controls[(l - 1) * m_Offset];
 					}
 
-					for (l = i - m_Degree + 1; l <= i; l++)
+					for (unsigned l = i - m_Degree + 1; l <= i; l++)
 					{
-						Controls[l * m_Offset] = o[l];
+						controls[l * m_Offset] = o[l];
 					}
 					m--;
 				}
 
 				/* insert new knot */
-				for (l = KnotNum; l > i; l--)
+				for (unsigned l = m_KnotNum; l > i; l--)
 				{
 					m_Knots[l + 1] = m_Knots[l];
 				}
 				m_Knots[i + 1]  = q;
-				m_KnotNum    = ++KnotNum;
+				m_KnotNum++;
 				m_ControlNum = ++m;
 			}
 		}
