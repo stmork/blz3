@@ -76,6 +76,9 @@ public:
 	static const     unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
 	static const     unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
 
+	/** The used template parameter type. */
+	using             type = VECTOR;
+
 	/** The type of the knot vector elements. */
 	typedef b3_f32    b3_knot;
 
@@ -85,14 +88,21 @@ public:
 	/** The type of knot vector. */
 	typedef           b3_knot  b3_knot_vector[B3_MAX_KNOTS];
 
-	/** The used template parameter type. */
-	using             type = VECTOR;
+	/**
+	 * This type definition declares a function that computes a @c q value
+	 * from its index i.
+	 *
+	 * @see b3DeBoorSurfaceTesselate()
+	 */
+	typedef std::function<b3_f64(
+		const b3SplineTemplate<VECTOR> &,
+		const unsigned)> b3_eval_function;
 
 	/** The allowed numerical error. */
-	static constexpr b3_knot          epsilon = 1.0 / 16384;
+	static constexpr  b3_knot          epsilon = 1.0 / 16384;
 
 	/** The spline handling error code. */
-	static           b3_bspline_error bspline_errno;
+	static            b3_bspline_error bspline_errno;
 
 	VECTOR     *    m_Controls;       //!< control point sequence.
 	b3_knots        m_Knots;          //!< knot sequence.
@@ -710,46 +720,6 @@ public:
 		}
 
 		return segment_count;
-	}
-
-	/**
-	 * This type definition declares a function that computes a @c q value
-	 * from its index i.
-	 *
-	 * @see b3DeBoorSurfaceTesselate()
-	 */
-	typedef std::function<b3_f64(
-		const b3SplineTemplate<VECTOR> &,
-		const unsigned)> b3_eval_function;
-
-	/**
-	 * This method computes a @c q value from its subdivision index @c i and
-	 * is used as callback by b3DeBoorSurfaceTesselate(). The range of @c i
-	 * must inside [0, m_SubDiv]. The @c q value is equal spaced between the
-	 * range given by b3FirstKnot() and b3LastKnot().
-	 *
-	 * @param spline The spline needed for computation.
-	 * @param i The subdivision index.
-	 * @return The computed @c q.
-	 */
-	static inline b3_f64 b3FuncSubdivision(
-		const b3SplineTemplate<VECTOR> & spline,
-		const unsigned                   i)
-	{
-		return spline.b3FirstKnot() + spline.b3KnotRange() * i / spline.m_SubDiv;
-	}
-
-	/**
-	 * @brief b3FuncKnot
-	 * @param spline
-	 * @param i
-	 * @return
-	 */
-	static b3_f64 b3FuncKnot(
-		const b3SplineTemplate<VECTOR> & spline,
-		const unsigned                   i)
-	{
-		return spline.m_Knots[spline.b3FirstKnotIndex() + i];
 	}
 
 	/**
@@ -1419,6 +1389,36 @@ public:
 			}
 		}
 		return i;
+	}
+
+	/**
+	 * This method computes a @c q value from its subdivision index @c i and
+	 * is used as callback by b3DeBoorSurfaceTesselate(). The range of @c i
+	 * must inside [0, m_SubDiv]. The @c q value is equal spaced between the
+	 * range given by b3FirstKnot() and b3LastKnot().
+	 *
+	 * @param spline The spline needed for computation.
+	 * @param i The subdivision index.
+	 * @return The computed @c q.
+	 */
+	static inline b3_f64 b3FuncSubdivision(
+		const b3SplineTemplate<VECTOR> & spline,
+		const unsigned                   i)
+	{
+		return spline.b3FirstKnot() + spline.b3KnotRange() * i / spline.m_SubDiv;
+	}
+
+	/**
+	 * @brief b3FuncKnot
+	 * @param spline
+	 * @param i
+	 * @return
+	 */
+	static b3_f64 b3FuncKnot(
+		const b3SplineTemplate<VECTOR> & spline,
+		const unsigned                   i)
+	{
+		return spline.m_Knots[spline.b3FirstKnotIndex() + i];
 	}
 
 private:
