@@ -288,18 +288,19 @@ void b3SplineShape::b3ComputeSolidVertices()
 		fy += fyStep;
 		B3_ASSERT(count == (m_Spline[0].m_SubDiv + 1));
 	}
+
+	B3_ASSERT(index == m_SolidVertexCount);
 #else
 	b3Spline::type   aux_result[m_SolidVertexCount];
 	b3_gl_vertex  *  gl_vertices = *glVertexElements;
 	b3_gl_vertex  *  gl_vertex   = &gl_vertices[m_GridVertexCount];
 	b3_f64           fx          = 0;
-	b3_count         index       = 0;
 
 	const b3_f64           fxStep = 1.0 / m_xSubDiv;
 	const b3_f64           fyStep = 1.0 / m_ySubDiv;
 	const b3Spline::type * ptr    = aux_result;
-	const b3_count         count  = b3Spline::b3DeBoorSurfaceTesselate(
-			m_Spline[0], m_Spline[1], aux_result);
+
+	b3Spline::b3DeBoorSurfaceTesselate(m_Spline[0], m_Spline[1], aux_result);
 
 	for (unsigned x = 0; x < m_xSubDiv; x++)
 	{
@@ -314,16 +315,13 @@ void b3SplineShape::b3ComputeSolidVertices()
 			gl_vertex->v.z = ptr->z;
 			gl_vertex++;
 			ptr++;
-			index++;
 
 			fy += fyStep;
 		}
 		fx += fxStep;
 	}
 
-	B3_ASSERT(index == count);
 #endif
-	B3_ASSERT(index == m_SolidVertexCount);
 }
 
 void b3SplineShape::b3ComputeVertices()
