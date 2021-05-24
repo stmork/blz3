@@ -710,13 +710,13 @@ public:
 	}
 
 	static unsigned b3DeBoorSurfaceTesselate(
-			b3SplineTemplate<VECTOR> & horizontal,
-			b3SplineTemplate<VECTOR> & vertical,
-			type     *                 aux_result)
+		b3SplineTemplate<VECTOR> & horizontal,
+		b3SplineTemplate<VECTOR> & vertical,
+		type           *           aux_result)
 	{
 		b3SplineTemplate<VECTOR>  aux_spline;
 		type                      aux_control_points[(B3_MAX_CONTROLS + 1) * (B3_MAX_SUBDIV + 1)];
-		type *                    aux_ptr       = aux_control_points;
+		type           *          aux_ptr       = aux_control_points;
 
 		// Building a series of vertical splines.
 		const unsigned  segment_count = horizontal.b3GetSegmentKnotCount();
@@ -747,17 +747,18 @@ public:
 		aux_spline            = vertical;
 		aux_spline.m_Offset   = segment_count;
 		aux_spline.m_Controls = aux_control_points;
-		aux_spline.m_SubDiv   = vertical.b3GetSegmentKnotCount() * 2;
 
 		// For every sub division of vertical spline compute horizontal spline.
+		unsigned point_count = 0;
 		for (b3_index x = 0; x < aux_spline.m_Offset; x++)
 		{
 			const unsigned count = aux_spline.b3DeBoor(aux_result, x);
 
-			aux_result += count;
+			aux_result  += count;
+			point_count += count;
 		}
 
-		return aux_spline.m_Offset * (aux_spline.m_SubDiv + 1);
+		return point_count;
 	}
 
 	/**

@@ -87,6 +87,11 @@ template<typename T> struct alignas(sizeof(T) * 4) b3_vector_3D_base
 	T             x; //!< The x component.
 	T             y; //!< The y component.
 	T             z; //!< The z component.
+
+	inline bool operator==(const b3_vector_3D_base & other)
+	{
+		return (x == other.x) && (y == other.y) && (z == other.z);
+	}
 };
 
 // Some vectors
@@ -111,6 +116,11 @@ template<typename T> struct alignas(sizeof(T) * 4) b3_vector_4D_base
 	T             y; //!< The y component.
 	T             z; //!< The z component.
 	T             w; //!< The w component.
+
+	inline bool operator==(const b3_vector_4D_base & other)
+	{
+		return (x == other.x) && (y == other.y) && (z == other.z) && (w == other.w);
+	}
 };
 
 /**
