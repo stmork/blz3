@@ -379,8 +379,6 @@ void b3SplineShape::b3ComputeSolidIndices()
 	b3_gl_polygon * pPtr;
 	const unsigned  xSubDiv = m_Spline[0].m_SubDiv;
 	const unsigned  ySubDiv = m_Spline[1].m_SubDiv;
-	const unsigned  xModulo = m_Spline[0].m_Closed ? xSubDiv : xSubDiv + 1;
-	const unsigned  yModulo = m_Spline[1].m_Closed ? ySubDiv : ySubDiv + 1;
 	const unsigned  xOffset = m_Spline[0].m_SubDiv + 1;
 
 	pPtr = *glPolygonElements;
@@ -389,14 +387,14 @@ void b3SplineShape::b3ComputeSolidIndices()
 		for (unsigned x = 0; x < xSubDiv; x++)
 		{
 			B3_GL_PINIT(pPtr,
-				m_GridVertexCount +  x                + xOffset *   y,
-				m_GridVertexCount + (x + 1) % xModulo + xOffset *   y,
-				m_GridVertexCount +  x                + xOffset * ((y + 1) % yModulo));
+				m_GridVertexCount +  x                  + xOffset *   y,
+				m_GridVertexCount + (x + 1) % m_xSubDiv + xOffset *   y,
+				m_GridVertexCount +  x                  + xOffset * ((y + 1) % m_ySubDiv));
 
 			B3_GL_PINIT(pPtr,
-				m_GridVertexCount + (x + 1) % xModulo + xOffset * ((y + 1) % yModulo),
-				m_GridVertexCount +  x                + xOffset * ((y + 1) % yModulo),
-				m_GridVertexCount + (x + 1) % xModulo + xOffset *   y);
+				m_GridVertexCount + (x + 1) % m_xSubDiv + xOffset * ((y + 1) % m_ySubDiv),
+				m_GridVertexCount +  x                  + xOffset * ((y + 1) % m_ySubDiv),
+				m_GridVertexCount + (x + 1) % m_xSubDiv + xOffset *   y);
 		}
 	}
 	glPolygonElements->b3SetCount(xSubDiv * ySubDiv * 2);
