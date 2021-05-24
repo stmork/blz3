@@ -24,6 +24,8 @@
 
 #include "blz3/raytrace/b3Shape.h"
 
+#define X_OVER_Y
+
 /*************************************************************************
 **                                                                      **
 **                        BSpline shapes                                **
@@ -145,14 +147,24 @@ void b3SplineShape::b3GetCount(
 	{
 		m_ySubDiv++;
 	}
-	m_SolidVertexCount = (m_xSubDiv + 1) * (m_ySubDiv * 1);
+
+#ifdef X_OVER_Y
+	m_SolidVertexCount = m_ySubDiv * (m_Spline[0].m_SubDiv + 1);
+#else
+	m_SolidVertexCount = m_xSubDiv * (m_Spline[1].m_SubDiv + 1);
+#endif
 
 	// Get enough memory
 	vertCount = m_GridVertexCount + m_SolidVertexCount;
 	gridCount =
 		B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]) * m_Spline[0].m_SubDiv +
 		B3_BSPLINE_SEGMENTKNOTS(&m_Spline[0]) * m_Spline[1].m_SubDiv;
+
+#ifdef X_OVER_Y
 	polyCount = m_Spline[0].m_SubDiv * m_Spline[1].m_SubDiv * 2;
+#else
+	polyCount = m_xSubDiv * m_ySubDiv * 2;
+#endif
 }
 
 void b3SplineShape::b3ComputeGridVertices()
@@ -226,7 +238,7 @@ void b3SplineShape::b3ComputeGridVertices()
 
 void b3SplineShape::b3ComputeSolidVertices()
 {
-#if 1
+#ifdef X_OVER_Y
 	b3Spline         aux_spline;
 	b3Spline::type   aux_result[b3Spline::B3_MAX_SUBDIV + 1];
 	b3Spline::type   aux_control_points[m_Spline[0].m_ControlNum * (m_Spline[1].m_SubDiv + 1)];
@@ -257,7 +269,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3_count     index  = 0;
 
 	gl_vertex = &gl_vertices[m_GridVertexCount];
-	for (b3_count y = 0; y < m_ySubDiv; y++)
+	for (unsigned y = 0; y < m_ySubDiv; y++)
 	{
 		const unsigned count  = aux_spline.b3DeBoor(aux_result, y);
 		const b3_f64   fxStep = 1.0 / count;
@@ -275,6 +287,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 			fx += fxStep;
 		}
 		fy += fyStep;
+		B3_ASSERT(count == (m_Spline[0].m_SubDiv + 1));
 	}
 #else
 	b3Spline::type   aux_result[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
@@ -290,18 +303,21 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3_count     index  = 0;
 
 	gl_vertex = &gl_vertices[m_GridVertexCount];
-	for (b3_count y = 0; y < m_ySubDiv; y++)
+	for (unsigned y = 0; y <= m_Spline[1].m_SubDiv; y++)
 	{
 		b3_f64 fx = 0;
 
-		for (b3_count x = 0; x < m_xSubDiv; x++)
+		for (unsigned x = 0; x < m_xSubDiv; x++)
 		{
+			const b3Spline::type * ptr = &aux_result[y + x  * (m_Spline[1].m_SubDiv + 1)];
+
 			gl_vertex->t.s = fx;
 			gl_vertex->t.t = fy;
-			gl_vertex->v.x = aux_result[x].x;
-			gl_vertex->v.y = aux_result[x].y;
-			gl_vertex->v.z = aux_result[x].z;
+			gl_vertex->v.x = ptr->x;
+			gl_vertex->v.y = ptr->y;
+			gl_vertex->v.z = ptr->z;
 			gl_vertex++;
+			index++;
 			fx += fxStep;
 		}
 		fy += fyStep;
@@ -309,7 +325,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 
 	B3_ASSERT(index == count);
 #endif
-	B3_ASSERT(index <= m_SolidVertexCount);
+	B3_ASSERT(index == m_SolidVertexCount);
 }
 
 void b3SplineShape::b3ComputeVertices()
@@ -361,26 +377,25 @@ void b3SplineShape::b3ComputeGridIndices()
 void b3SplineShape::b3ComputeSolidIndices()
 {
 	b3_gl_polygon * pPtr;
-	b3_index       x, y;
-	b3_count       xSubDiv = m_Spline[0].m_SubDiv, xModulo, xOffset;
-	b3_count       ySubDiv = m_Spline[1].m_SubDiv, yModulo;
+	const unsigned  xSubDiv = m_Spline[0].m_SubDiv;
+	const unsigned  ySubDiv = m_Spline[1].m_SubDiv;
+	const unsigned  xModulo = m_Spline[0].m_Closed ? xSubDiv : xSubDiv + 1;
+	const unsigned  yModulo = m_Spline[1].m_Closed ? ySubDiv : ySubDiv + 1;
+	const unsigned  xOffset = m_Spline[0].m_SubDiv + 1;
 
 	pPtr = *glPolygonElements;
-	xModulo = m_Spline[0].m_Closed ? xSubDiv : xSubDiv + 1;
-	yModulo = m_Spline[1].m_Closed ? ySubDiv : ySubDiv + 1;
-	xOffset = m_Spline[0].m_SubDiv + 1;
-	for (y = 0; y < ySubDiv; y++)
+	for (unsigned y = 0; y < ySubDiv; y++)
 	{
-		for (x = 0; x < xSubDiv; x++)
+		for (unsigned x = 0; x < xSubDiv; x++)
 		{
 			B3_GL_PINIT(pPtr,
-				m_GridVertexCount +  x              + xOffset *   y,
+				m_GridVertexCount +  x                + xOffset *   y,
 				m_GridVertexCount + (x + 1) % xModulo + xOffset *   y,
-				m_GridVertexCount +  x              + xOffset * ((y + 1) % yModulo));
+				m_GridVertexCount +  x                + xOffset * ((y + 1) % yModulo));
 
 			B3_GL_PINIT(pPtr,
 				m_GridVertexCount + (x + 1) % xModulo + xOffset * ((y + 1) % yModulo),
-				m_GridVertexCount +  x              + xOffset * ((y + 1) % yModulo),
+				m_GridVertexCount +  x                + xOffset * ((y + 1) % yModulo),
 				m_GridVertexCount + (x + 1) % xModulo + xOffset *   y);
 		}
 	}

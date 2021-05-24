@@ -1073,10 +1073,10 @@ protected:
  */
 class B3_PLUGIN b3SplineShape : public b3TriangleShape
 {
-	b3_count         m_xSubDiv, m_ySubDiv;
+	unsigned         m_xSubDiv, m_ySubDiv;
 
 protected:
-	b3_count         m_GridVertexCount;  //!< The computed vertex count for fireframe shading.
+	b3_count         m_GridVertexCount;  //!< The computed vertex count for wireframe shading.
 	b3_count         m_SolidVertexCount; //!< The computed vertex count for solid shading.
 
 public:
