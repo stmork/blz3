@@ -298,8 +298,8 @@ void b3SplineShape::b3ComputeSolidVertices()
 	const b3_f64           fxStep = 1.0 / m_xSubDiv;
 	const b3_f64           fyStep = 1.0 / m_ySubDiv;
 	const b3Spline::type * ptr    = aux_result;
-	const b3_count         count  = b3Spline::b3DeBoorSurfaceTesselate(
-			m_Spline[0], m_Spline[1], aux_result);
+
+	b3Spline::b3DeBoorSurfaceTesselate(m_Spline[0], m_Spline[1], aux_result);
 
 	for (unsigned x = 0; x < m_xSubDiv; x++)
 	{
