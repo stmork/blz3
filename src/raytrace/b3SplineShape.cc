@@ -24,7 +24,7 @@
 
 #include "blz3/raytrace/b3Shape.h"
 
-#define X_OVER_Y
+#define Y_OVER_X
 
 /*************************************************************************
 **                                                                      **
@@ -66,6 +66,7 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 	control_count = m_Spline[0].m_ControlMax * m_Spline[1].m_ControlMax;
 	m_Controls    = b3Item::b3TypedAlloc<b3_vector>(control_count);
 	m_Spline[0].m_Controls = m_Spline[1].m_Controls = m_Controls;
+
 	for (i = 0; i < control_count; i++)
 	{
 		b3InitVector(&m_Controls[i]);
@@ -132,7 +133,9 @@ void b3SplineShape::b3GetCount(
 	b3_count     &    polyCount)
 {
 	// Compute number of grid vertices
-	m_GridVertexCount = (b3Spline::B3_MAX_CONTROLS + b3Spline::B3_MAX_CONTROLS) * (b3Spline::B3_MAX_SUBDIV + 1);
+	m_GridVertexCount =
+		(b3Spline::B3_MAX_CONTROLS + b3Spline::B3_MAX_CONTROLS) *
+		(b3Spline::B3_MAX_SUBDIV + 1);
 
 	// Compute number of solid vertices. That
 	// are usually much more.
@@ -286,18 +289,17 @@ void b3SplineShape::b3ComputeSolidVertices()
 		B3_ASSERT(count == (m_Spline[0].m_SubDiv + 1));
 	}
 #else
-	b3Spline::type   aux_result[(b3Nurbs::B3_MAX_SUBDIV + 1) * (b3Nurbs::B3_MAX_SUBDIV + 1)];
+	b3Spline::type   aux_result[m_SolidVertexCount];
 	b3_gl_vertex  *  gl_vertices = *glVertexElements;
+	b3_gl_vertex  *  gl_vertex   = &gl_vertices[m_GridVertexCount];
+	b3_f64           fx          = 0;
+	b3_count         index       = 0;
 
-	const b3_count count = b3Spline::b3DeBoorSurfaceTesselate(
+	const b3_f64           fxStep = 1.0 / m_xSubDiv;
+	const b3_f64           fyStep = 1.0 / m_ySubDiv;
+	const b3Spline::type * ptr    = aux_result;
+	const b3_count         count  = b3Spline::b3DeBoorSurfaceTesselate(
 			m_Spline[0], m_Spline[1], aux_result);
-
-	const b3_f64 fxStep = 1.0 / m_xSubDiv;
-	const b3_f64 fyStep = 1.0 / m_ySubDiv;
-	b3_f64       fx     = 0;
-	b3_count     index  = 0;
-	b3_gl_vertex *         gl_vertex = &gl_vertices[m_GridVertexCount];
-	const b3Spline::type * ptr = aux_result;
 
 	for (unsigned x = 0; x < m_xSubDiv; x++)
 	{
@@ -311,8 +313,9 @@ void b3SplineShape::b3ComputeSolidVertices()
 			gl_vertex->v.y = ptr->y;
 			gl_vertex->v.z = ptr->z;
 			gl_vertex++;
-			index++;
 			ptr++;
+			index++;
+
 			fy += fyStep;
 		}
 		fx += fxStep;
@@ -419,7 +422,7 @@ void b3SplineShape::b3ComputeIndices()
 void b3SplineShape::b3GetVertexRange(b3_index & start, b3_index & end)
 {
 	start = m_GridVertexCount;
-	end   = m_GridVertexCount + m_ySubDiv * (m_Spline[0].m_SubDiv + 1);
+	end   = m_GridVertexCount + m_SolidVertexCount;
 }
 
 #ifdef GLU_NURBS
@@ -619,13 +622,13 @@ bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 	{
 		for (unsigned x = 0; x < m_Spline[0].m_SubDiv; x++)
 		{
-			Triangle->P1  =  x            + xSize *  y;
+			Triangle->P1  =  x              + xSize *  y;
 			Triangle->P2  = (x + 1) % xSize + xSize *  y;
-			Triangle->P3  =  x            + xSize * ((y + 1) % ySize);
+			Triangle->P3  =  x              + xSize * ((y + 1) % ySize);
 			Triangle++;
 
 			Triangle->P1  = (x + 1) % xSize + xSize * ((y + 1) % ySize);
-			Triangle->P2  =  x            + xSize * ((y + 1) % ySize);
+			Triangle->P2  =  x              + xSize * ((y + 1) % ySize);
 			Triangle->P3  = (x + 1) % xSize + xSize *  y;
 			Triangle++;
 		}

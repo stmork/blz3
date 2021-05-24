@@ -398,14 +398,14 @@ void b3RenderObject::b3ComputeNormals(bool normalize)
 	b3PrintF(B3LOG_FULL, "        >b3RenderObject::b3ComputeNormals()\n");
 #endif
 
-	b3_gl_vector   normal;
-	b3_gl_vector   xDir, yDir;
-	b3_gl_vertex * glVertex      = *glVertexElements;
+	b3_gl_vector    normal;
+	b3_gl_vector    xDir, yDir;
+	b3_gl_vertex  * glVertex      = *glVertexElements;
 	b3_gl_polygon * glPolygons    = *glPolygonElements;
-	b3_count       glVertexCount =  glVertexElements->b3GetCount();
-	b3_count       glGridCount   =  glGridElements->b3GetCount();
-	b3_count       glPolyCount   =  glPolygonElements->b3GetCount();
-	b3_index       i, start, end, v1, v2, v3;
+	b3_count        glVertexCount =  glVertexElements->b3GetCount();
+	b3_count        glGridCount   =  glGridElements->b3GetCount();
+	b3_count        glPolyCount   =  glPolygonElements->b3GetCount();
+	b3_index        i, start, end, v1, v2, v3;
 
 #ifdef VERBOSE
 	b3_gl_line  *  glGrids    = *glGridElements;
@@ -425,9 +425,7 @@ void b3RenderObject::b3ComputeNormals(bool normalize)
 	b3GetVertexRange(start, end);
 	for (i = start; i < end; i++)
 	{
-		glVertex[i].n.x =
-			glVertex[i].n.y =
-				glVertex[i].n.z = 0;
+		glVertex[i].n.x = glVertex[i].n.y = glVertex[i].n.z = 0;
 	}
 
 	// Collect normals
@@ -450,7 +448,7 @@ void b3RenderObject::b3ComputeNormals(bool normalize)
 			b3Vector::b3Sub(&glVertex[v2].v, &glVertex[v1].v, &xDir);
 			b3Vector::b3Sub(&glVertex[v3].v, &glVertex[v1].v, &yDir);
 			b3Vector::b3CrossProduct(&xDir, &yDir, &normal);
-			if (b3Vector::b3Normalize(&normal) > 1e-5)
+			if (b3Vector::b3Normalize(&normal) > b3Math::epsilon)
 			{
 				b3Vector::b3Add(&normal, &glVertex[v1].n);
 				b3Vector::b3Add(&normal, &glVertex[v2].n);

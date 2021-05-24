@@ -752,10 +752,10 @@ public:
 	 * @param func An evaluation function to compute @c q for control point mesh.
 	 */
 	static unsigned b3DeBoorSurfaceTesselate(
-		b3SplineTemplate<VECTOR> & horizontal,
-		b3SplineTemplate<VECTOR> & vertical,
-		type           *           result,
-		b3_eval_function           func = b3FuncSubdivision)
+		const b3SplineTemplate<VECTOR> & horizontal,
+		const b3SplineTemplate<VECTOR> & vertical,
+		type              *              result,
+		b3_eval_function                 func = b3FuncSubdivision)
 	{
 		b3SplineTemplate<VECTOR>  aux_spline;
 		type                      aux_control_points[(B3_MAX_CONTROLS + 1) * (B3_MAX_SUBDIV + 1)];
