@@ -38,6 +38,10 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
 	m_Scene->b3PrepareScene(xSize, ySize);
 	m_Scene->b3ResetAnimation();
 
+	// Reset bounds.
+	m_View.b3SetBounds(m_Scene);
+
+	// Reset camera.
 	m_CameraVolume = volume;
 	m_CameraVolume->b3SetupVertexMemory(&m_Context);
 
@@ -171,11 +175,11 @@ void QB3OpenGLWidget::paintGL()
 	B3_METHOD;
 
 	m_Scene->b3ComputeBounds(&m_Lower, &m_Upper);
-	m_CameraVolume->b3ComputeBounds(&m_Lower, &m_Upper);
+//	m_CameraVolume->b3ComputeBounds(&m_Lower, &m_Upper);
 
 	m_Context.b3StartDrawing();
-	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetBounds(&m_Lower, &m_Upper);
+	m_View.b3SetCamera(m_Scene);
 	m_View.b3SetupView(m_xWinSize, m_yWinSize);
 	m_Scene->b3Draw(&m_Context);
 	if (!m_View.b3IsViewMode(B3_VIEW_3D))

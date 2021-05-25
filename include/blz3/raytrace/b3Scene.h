@@ -453,7 +453,10 @@ public:
 	b3_count        b3GetBBoxCount() const;
 
 	/**
-	 * This method recursively recomputes the scenes bounding box.
+	 * This method recursively recomputes the scenes bounding box. Before
+	 * traversing the bounding boxes the lower and upper bounds are initialized
+	 * to get definitely a correct bounding box. So this method has to be called
+	 * first before any other method readjusting the lower and upper bound.
 	 *
 	 * @param lower The resulting lower corner of the scene bounding box.
 	 * @param upper The resulting upper corner of the scene bounding box.

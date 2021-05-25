@@ -1028,11 +1028,11 @@ void b3RenderObject::b3CheckGeometry(
 	b3MapVertices(B3_MAP_VBO_R);
 	b3MapIndices(B3_MAP_VBO_R);
 
-	b3_gl_vertex * glVertex   = *glVertexElements;
+	b3_gl_vertex  * glVertex   = *glVertexElements;
 #ifdef _DEBUG
-	b3_gl_line  *  glGrids    = *glGridElements;
+	b3_gl_line   *  glGrids    = *glGridElements;
 	b3_gl_polygon * glPolygons = *glPolygonElements;
-	b3_index       i;
+	b3_index        i;
 #endif
 
 #ifdef VERBOSE

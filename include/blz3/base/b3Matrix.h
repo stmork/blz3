@@ -1742,12 +1742,8 @@ public:
 		b3_vector * lower,
 		b3_vector * upper)
 	{
-		lower->x =
-			lower->y =
-				lower->z =  FLT_MAX;
-		upper->x =
-			upper->y =
-				upper->z = -FLT_MAX;
+		lower->x = lower->y = lower->z =  FLT_MAX;
+		upper->x = upper->y = upper->z = -FLT_MAX;
 	}
 
 	/**

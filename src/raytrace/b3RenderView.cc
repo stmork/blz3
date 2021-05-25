@@ -151,11 +151,10 @@ void b3RenderView::b3SetCamera(b3Scene * scene)
 	m_Height    = scene->m_Height;
 }
 
-b3_bool b3RenderView::b3SetBounds(b3Scene * scene)
+bool b3RenderView::b3SetBounds(b3Scene * scene)
 {
-	b3_bool result;
+	const bool result = scene->b3ComputeBounds(&m_Lower, &m_Upper);
 
-	result = scene->b3ComputeBounds(&m_Lower, &m_Upper);
 	if (result)
 	{
 		b3_index i;
@@ -168,9 +167,9 @@ b3_bool b3RenderView::b3SetBounds(b3Scene * scene)
 	return result;
 }
 
-b3_bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const
+bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const
 {
-	b3_bool success = true;
+	bool success = true;
 
 	switch (m_ViewMode)
 	{
@@ -255,14 +254,13 @@ void b3RenderView::b3SetBounds(const b3_vector * lower, const b3_vector * upper)
 	m_Upper = *upper;
 }
 
-b3_bool b3RenderView::b3ViewStackNotEmpty() const
+bool b3RenderView::b3ViewStackNotEmpty() const
 {
 	b3_bool result = false;
 
 	if (m_ViewMode != B3_VIEW_3D)
 	{
-		result =
-			m_ViewStack[m_ViewMode].First != m_ViewStack[m_ViewMode].Last;
+		result = m_ViewStack[m_ViewMode].First != m_ViewStack[m_ViewMode].Last;
 	}
 	return result;
 }

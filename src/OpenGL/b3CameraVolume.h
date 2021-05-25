@@ -37,9 +37,9 @@ public:
 	void     b3Update(b3CameraPart * camera);
 	void     b3GetCount(
 		b3RenderContext * ctx,
-		b3_count & vertCount,
-		b3_count & gridCount,
-		b3_count & polyCount) override;
+		b3_count     &    vertCount,
+		b3_count     &    gridCount,
+		b3_count     &    polyCount) override;
 	void     b3ComputeVertices() override;
 	void     b3ComputeIndices() override;
 	void     b3Draw(b3RenderContext * context) override;

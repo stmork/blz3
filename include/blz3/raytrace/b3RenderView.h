@@ -191,7 +191,7 @@ public:
 	 * @param scene The scene to use.
 	 * @return True on success.
 	 */
-	b3_bool           b3SetBounds(b3Scene * scene);
+	bool b3SetBounds(b3Scene * scene);
 
 	/**
 	 * This method sets the view section to the given bounds.
@@ -209,7 +209,7 @@ public:
 	 * @param ySize The view height in world coordinates.
 	 * @return True on success.
 	 */
-	b3_bool           b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const;
+	bool              b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const;
 
 	b3_bool           b3GetView(b3_view_info & view_info) const;
 
@@ -224,7 +224,7 @@ public:
 	 *
 	 * @return True if the actual view stack is not empty.
 	 */
-	b3_bool           b3ViewStackNotEmpty() const;
+	bool              b3ViewStackNotEmpty() const;
 
 	/**
 	 * This method empties the actual view stack and put a new one

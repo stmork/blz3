@@ -131,6 +131,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::free()
 {
+	m_CameraVolume.b3FreeVertexMemory();
+
 	camera_model->clear();
 	light_model->clear();
 	bbox_model->clear();
