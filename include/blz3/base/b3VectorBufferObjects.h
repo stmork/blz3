@@ -29,7 +29,7 @@
  */
 class B3_PLUGIN b3VectorBufferObjects
 {
-	static b3_bool                   glHasVBO;
+	static bool        glHasVBO;
 
 #ifdef BLZ3_USE_OPENGL
 protected:
@@ -43,7 +43,7 @@ protected:
 #endif
 
 public:
-	static b3_bool                   glAllowVBO; //!< This flags shows if VBOs are allowed to use.
+	static bool        glAllowVBO; //!< This flags shows if VBOs are allowed to use.
 
 public:
 	/**
@@ -51,14 +51,14 @@ public:
 	 *
 	 * @param extension The OpenGL extension string.
 	 */
-	static        void    b3Init(const char * extension);
+	static void        b3Init(const char * extension);
 
 	/**
 	 * This method returns true if VBOs are available.
 	 *
 	 * @return True if VBOs are available.
 	 */
-	static inline b3_bool b3HasVBO()
+	static inline bool b3HasVBO()
 	{
 		return glHasVBO;
 	}
@@ -68,7 +68,7 @@ public:
 	 *
 	 * @return True if VBOs may be usable.
 	 */
-	static inline b3_bool b3AllowVBO()
+	static inline bool b3AllowVBO()
 	{
 		return glHasVBO && glAllowVBO;
 	}

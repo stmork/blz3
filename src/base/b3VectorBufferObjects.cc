@@ -34,8 +34,8 @@
 **                                                                      **
 *************************************************************************/
 
-b3_bool                   b3VectorBufferObjects::glHasVBO   = false;
-b3_bool                   b3VectorBufferObjects::glAllowVBO = true;
+bool                      b3VectorBufferObjects::glHasVBO   = false;
+bool                      b3VectorBufferObjects::glAllowVBO = true;
 
 #ifdef BLZ3_USE_OPENGL
 PFNGLGENBUFFERSARBPROC    b3VectorBufferObjects::glGenBuffersARB;
@@ -66,9 +66,9 @@ void b3VectorBufferObjects::b3Init(const char * extensions)
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 #ifdef USE_VBOS
-	b3_bool is_not_ati = strncmp(vendor, "ATI", 3) != 0;
-	b3_bool driver_has_vbo = strstr(extensions, "ARB_vertex_buffer_object") != 0;
-	b3_bool methods_not_null =
+	bool is_not_ati       = strncmp(vendor, "ATI", 3) != 0;
+	bool driver_has_vbo   = strstr(extensions, "ARB_vertex_buffer_object") != 0;
+	bool methods_not_null =
 		(glGenBuffersARB != nullptr) &&
 		(glDeleteBuffersARB != nullptr) &&
 		(glBindBufferARB != nullptr) &&

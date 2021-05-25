@@ -115,12 +115,20 @@ MainWindow::MainWindow(QWidget * parent) :
 		bbox_model, &QStandardItemModel::itemChanged,
 		this, &MainWindow::on_itemChanged);
 
+#ifdef _DEBUG
+	// Since OpenGL is not initialized yet we have to disable VBOs completely.
+	// Maybe there will be a way to load a scene automatically after OpenGL
+	// is initialized properly. There is a problem mixing VBOs and non VBO
+	// objects so we have to decide this while starting up the app and OpenGL.
+	b3VectorBufferObjects::glAllowVBO = false;
+
 	m_World.b3Read("FlippAmiga.bwd");
 	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
 	m_Scene->b3SetFilename("FlippAmiga");
 	m_Animation = m_Scene->b3GetAnimation();
 	ui->glView->b3Prepare(m_Scene, &m_CameraVolume);
 	prepareUI();
+#endif
 }
 
 MainWindow::~MainWindow()

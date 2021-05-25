@@ -280,9 +280,24 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext * context)
 
 void b3RenderObject::b3FreeVertexMemory()
 {
-	glVertexElements->b3FreeVertexMemory();
-	glGridElements->b3FreeVertexMemory();
-	glPolygonElements->b3FreeVertexMemory();
+	glInit = false;
+	if (glVertexElements != nullptr)
+	{
+		glVertexElements->b3FreeVertexMemory();
+		glVertexElements = nullptr;
+	}
+
+	if (glGridElements != nullptr)
+	{
+		glGridElements->b3FreeVertexMemory();
+		glGridElements = nullptr;
+	}
+
+	if (glPolygonElements != nullptr)
+	{
+		glPolygonElements->b3FreeVertexMemory();
+		glPolygonElements = nullptr;
+	}
 }
 
 #define B3_UPDATE_INDICES  1
