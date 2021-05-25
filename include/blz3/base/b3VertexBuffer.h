@@ -115,7 +115,7 @@ public:
 	 *
 	 * @return The amount of VBOs.
 	 */
-	inline b3_count b3GetCount()
+	inline b3_count b3GetCount() const
 	{
 		return glElementCount;
 	}
@@ -137,7 +137,7 @@ public:
 	 *
 	 * @return True if not element is allocated.
 	 */
-	inline b3_bool b3IsEmpty()
+	inline bool b3IsEmpty() const
 	{
 		return glElementCount <= 0;
 	}
@@ -159,7 +159,7 @@ public:
 	 *
 	 * @return True if thie instance uses custom data elements.
 	 */
-	inline b3_bool b3IsCustom()
+	inline bool b3IsCustom() const
 	{
 		return glCustom;
 	}
@@ -177,7 +177,7 @@ public:
 	 *
 	 * @return True if the data is actual.
 	 */
-	inline b3_bool b3IsComputed()
+	inline bool b3IsComputed() const
 	{
 		return glComputed;
 	}
@@ -225,7 +225,7 @@ public:
 	/**
 	 * This cast operator returns a pointer to the vertex data.
 	 */
-	inline operator b3_gl_vertex * ()
+	inline operator b3_gl_vertex * () const
 	{
 		return glVertex;
 	}
@@ -260,7 +260,7 @@ public:
 	/**
 	 * This cast operator returns a pointer to the line index data.
 	 */
-	inline operator b3_gl_line * ()
+	inline operator b3_gl_line * () const
 	{
 		return glGrids;
 	}
@@ -298,7 +298,7 @@ public:
 	/**
 	 * This cast operator returns a pointer to the polygon index data.
 	 */
-	inline operator b3_gl_polygon * ()
+	inline operator b3_gl_polygon * () const
 	{
 		return glPolygons;
 	}
