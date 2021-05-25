@@ -62,3 +62,15 @@ b3_count b3Math::b3Log2(b3_u32 value)
 	}
 	return count;
 }
+
+b3_count b3Math::b3Log3(b3_u32 value)
+{
+	b3_count result = -1;
+
+	while (value > 0)
+	{
+		value = (value + value) / 3;
+		result++;
+	}
+	return result;
+}

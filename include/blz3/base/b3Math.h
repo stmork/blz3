@@ -53,6 +53,14 @@ public:
 	static b3_count b3Log2(b3_u32 value);
 
 	/**
+	 * This method returns the log of the given value.
+	 *
+	 * @param value The value to compute the log3 from.
+	 * @return The resulting log3 value.
+	 */
+	static b3_count b3Log3(b3_u32 value);
+
+	/**
 	 * This method squares a value.
 	 *
 	 * \param value The value to square.
