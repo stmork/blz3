@@ -114,8 +114,8 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 	b3_count      m_Overhead, m_Heights, m_Widths;
 
 protected:
-	b3_count         m_xVertices;  //!< The horizontal count of vertex subdivision.
-	b3_count         m_yVertices;  //!< The vertical count of vertex subdivision.
+	unsigned         m_xVertices;  //!< The horizontal count of vertex subdivision.
+	unsigned         m_yVertices;  //!< The vertical count of vertex subdivision.
 	b3_stencil_limit m_Limit;      //!< The 2D bounding box of this shape in surface coordinates.
 
 	b3_gl_line   *   GridsCyl;  //!< The cylinder line indices.
@@ -905,13 +905,13 @@ public:
 	 * @param ySize     The vertical vertex distribution for texture mapping.
 	 * @return True on success.
 	 */
-	bool    b3Init(b3_count vertCount, b3_count triaCount, b3_res xSize, b3_res ySize);
-	b3_f64  b3Intersect(b3_ray * ray, b3_polar * polar) override;
-	void    b3Normal(b3_ray * ray) const override;
+	bool            b3Init(b3_count vertCount, b3_count triaCount, b3_res xSize, b3_res ySize);
+	b3_f64          b3Intersect(b3_ray * ray, b3_polar * polar) override;
+	void            b3Normal(b3_ray * ray) const override;
 	virtual bool    b3Prepare(b3_preparation_info * prep_info) override;
 	virtual void    b3Transform(b3_matrix * transformation, bool isAffine) override;
 
-	inline  bool    b3GetFlag(b3_u32 flag)
+	inline  bool    b3GetFlag(b3_u32 flag) const
 	{
 		return (m_Flags & flag) != 0;
 	}
@@ -925,7 +925,7 @@ protected:
 	/**
 	 * This method frees all prepared triangle references.
 	 */
-	void    b3FreeTriaRefs();
+	void     b3FreeTriaRefs();
 
 private:
 	b3_f64   b3IntersectTriangleList(
@@ -934,14 +934,14 @@ private:
 		const b3_index   grid_index);
 
 	void     b3Clear();
-	void     b3PrepareGridList();
+	void     b3PrepareGridList() const;
 
 	void     b3SubdivideIntoGrid(
 		b3_vector * P1,
 		b3_vector * P2,
 		b3_vector * P3,
-		b3_index   triangle,
-		b3_count   max);
+		b3_index    triangle,
+		b3_count    max) const;
 
 	inline b3_index b3GridDistance(b3_f32 v1, b3_f32 v2, b3_f32 v3) const
 	{
@@ -985,9 +985,6 @@ private:
 			m_GridList[grid].b3Add(triangle);
 		}
 	}
-
-	static b3_count b3IntLog2(b3_count value);
-	static b3_count b3IntLog3(b3_count value);
 };
 
 /*************************************************************************

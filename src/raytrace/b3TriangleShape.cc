@@ -95,11 +95,10 @@ bool b3TriangleShape::b3Init(
 
 void b3TriangleShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
-	b3_index   i;
 	b3_vertex * ptr = m_Vertices;
 
 	m_GridComputed = false;
-	for (i = 0; i < m_VertexCount; i++)
+	for (b3_index i = 0; i < m_VertexCount; i++)
 	{
 		b3Vector::b3MatrixMul4D(transformation, &ptr->Point);
 		ptr++;
@@ -107,36 +106,12 @@ void b3TriangleShape::b3Transform(b3_matrix * transformation, bool is_affine)
 	b3TransformVertices(transformation, is_affine);
 }
 
-b3_count b3TriangleShape::b3IntLog2(b3_count value)
-{
-	b3_count result = -1;
-
-	while (value > 0)
-	{
-		value = value >> 1;
-		result++;
-	}
-	return result;
-}
-
-b3_count b3TriangleShape::b3IntLog3(b3_count value)
-{
-	b3_count result = -1;
-
-	while (value > 0)
-	{
-		value = (value + value) / 3;
-		result++;
-	}
-	return result;
-}
-
 void b3TriangleShape::b3SubdivideIntoGrid(
 	b3_vector * P1,
 	b3_vector * P2,
 	b3_vector * P3,
-	b3_index   triangle,
-	b3_count   max)
+	b3_index    triangle,
+	b3_count    max) const
 {
 	b3_index i1 = b3GetGrid(P1);
 	b3_index i2 = b3GetGrid(P2);
@@ -192,7 +167,7 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	}
 }
 
-void b3TriangleShape::b3PrepareGridList()
+void b3TriangleShape::b3PrepareGridList() const
 {
 	b3_index  i, MaxRec;
 	b3_count  max;
@@ -202,7 +177,7 @@ void b3TriangleShape::b3PrepareGridList()
 #endif
 
 	max    = m_GridSize * m_GridSize * m_GridSize;
-	MaxRec = b3IntLog2(m_GridSize) + 1;
+	MaxRec = b3Math::b3Log2(m_GridSize) + 1;
 
 	if (max > 1)
 	{

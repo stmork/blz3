@@ -126,7 +126,7 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 
 	// computing vertices
 	MySpline.m_Offset = 1;
-	for (b3_count x = 0; x < m_xVertices; x++)
+	for (unsigned x = 0; x < m_xVertices; x++)
 	{
 		b3Matrix::b3RotateVector(nullptr, &Matrix, &m_Axis, M_PI * 2.0 * x / m_xVertices);
 		for (unsigned y = 0; y < MySpline.m_ControlNum; y++)
@@ -135,7 +135,7 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 		}
 
 		MySpline.b3DeBoor(VertexField, 0);
-		for (b3_count y = 0; y < m_yVertices; y++)
+		for (unsigned y = 0; y < m_yVertices; y++)
 		{
 			m_Vertices[y * m_xVertices + x].Point.x = VertexField[y].x;
 			m_Vertices[y * m_xVertices + x].Point.y = VertexField[y].y;
@@ -148,7 +148,7 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 	Triangle = m_Triangles;
 	for (unsigned y = 0; y < MySpline.m_SubDiv; y++)
 	{
-		for (b3_count x = 0; x < m_xVertices; x++)
+		for (unsigned x = 0; x < m_xVertices; x++)
 		{
 			Triangle->P1 =  x              + m_xVertices *  y;
 			Triangle->P2 = (x + 1) % m_xVertices + m_xVertices *  y;

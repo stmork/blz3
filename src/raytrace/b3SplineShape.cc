@@ -556,9 +556,15 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 
 bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 {
+	b3Spline         aux_spline;
+	b3Spline::type   aux_result[b3Spline::B3_MAX_SUBDIV + 1];
+	b3Spline::type   aux_control_points[(m_Spline[0].m_SubDiv + 1) * (m_Spline[1].m_SubDiv + 1)];
+	b3Spline::type * aux_ptr = aux_control_points;
+
 	/**
 	 *  These members have the same intention as the m_xSubDiv and m_ySubDiv
-	 *  around the OpenGL rendering environment.
+	 *  around the OpenGL rendering environment. Here we are in the raytracing
+	 *  environment!
 	 */
 	m_xVertices = m_Spline[0].m_SubDiv;
 	m_yVertices = m_Spline[1].m_SubDiv;
@@ -572,8 +578,11 @@ bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 		m_yVertices++;
 	}
 
-	const b3_count tria_count   = m_xVertices * m_yVertices * 2;
+	// Always smooth surfaces.
+	m_Flags     = B3_PHONG;
+
 	const b3_count vertex_count = m_xVertices * m_yVertices;
+	const b3_count tria_count   = m_xVertices * m_yVertices * 2;
 
 	// Reallocating new tria shape
 	if (!b3TriangleShape::b3Init(
@@ -585,49 +594,33 @@ bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
 	}
 
-#if 1
-	b3_vertex  *  vertex;
-	b3_triangle * triangle;
-	b3_vector  *  vector;
-	b3_vector  *  aux_result;
-	b3Spline      aux_spline;
-	b3_count      SubDiv;
-	b3_vector     VertexField[b3Spline::B3_MAX_SUBDIV + 1];
 
-	aux_result = b3Item::b3TypedAlloc<b3_vector>((b3Spline::B3_MAX_SUBDIV + 1) * (b3Spline::B3_MAX_SUBDIV + 1));
-	if (aux_result == nullptr)
+	// Building horizontal splines of vertices.
+	for (unsigned x = 0; x <= m_Spline[0].m_SubDiv; x++)
 	{
-		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
-	}
-
-	m_Flags = B3_PHONG;
-
-	// building horizontal splines
-	vector = aux_result;
-	SubDiv = m_Spline[0].m_SubDiv + 1;
-	for (b3_count x = 0; x < SubDiv; x++)
-	{
-		vector += m_Spline[1].b3DeBoor(vector, x * m_Spline[0].m_Offset);
+		aux_ptr += m_Spline[1].b3DeBoor(aux_ptr, x * m_Spline[0].m_Offset);
 	}
 
 	aux_spline            = m_Spline[0];
 	aux_spline.m_Offset   = m_Spline[1].m_SubDiv + 1;
-	aux_spline.m_Controls = aux_result;
+	aux_spline.m_Controls = aux_control_points;
 
-	vertex = m_Vertices;
-	for (b3_count y = 0; y < m_yVertices; y++)
+
+	// Copying vertices into right place.
+	b3_vertex  * vertex = m_Vertices;
+	for (unsigned y = 0; y < m_yVertices; y++)
 	{
-		aux_spline.b3DeBoor(VertexField, y);
-		for (b3_count x = 0; x < m_xVertices; x++)
+		aux_spline.b3DeBoor(aux_result, y);
+		for (unsigned x = 0; x < m_xVertices; x++)
 		{
-			vertex->Point.x = VertexField[x].x;
-			vertex->Point.y = VertexField[x].y;
-			vertex->Point.z = VertexField[x].z;
+			vertex->Point = aux_result[x];
 			vertex++;
 		}
 	}
 
-	triangle = m_Triangles;
+
+	// Computing triangle to vertex indices.
+	b3_triangle * triangle = m_Triangles;
 	for (unsigned y = 0; y < m_Spline[1].m_SubDiv; y++)
 	{
 		for (unsigned x = 0; x < m_Spline[0].m_SubDiv; x++)
@@ -646,50 +639,6 @@ bool b3SplineShape::b3Prepare(b3_preparation_info * prep_info)
 			triangle++;
 		}
 	}
-
-	b3Item::b3Free(aux_result);
-#else
-	const unsigned   temp = m_xVertices * (m_Spline[1].m_SubDiv + 1);
-	b3Spline::type   aux_result[temp];
-	b3Spline::type * aux_ptr = aux_result;
-	b3_vertex    *   vertex  = m_Vertices;
-	const unsigned   xOffset = 1;
-	const unsigned   yOffset = m_yTxSubDiv + 1;
-
-	const unsigned   count   = b3Spline::b3DeBoorSurfaceTesselate(
-			m_Spline[0], m_Spline[1], aux_result);
-
-	B3_ASSERT(count == temp);
-	for (unsigned i = 0; i < count; i++)
-	{
-		vertex->Point.x = aux_ptr->x;
-		vertex->Point.y = aux_ptr->y;
-		vertex->Point.z = aux_ptr->z;
-		vertex++;
-		aux_ptr++;
-	}
-
-	b3_triangle  *  triangle = m_Triangles;
-	for (b3_index x = 0; x < m_xTxSubDiv; x++)
-	{
-		for (b3_index y = 0; y < m_yTxSubDiv; y++)
-		{
-			const unsigned x_inc_mod = (x + 1) % m_xVertices;
-			const unsigned y_inc_mod = (y + 1) % m_yVertices;
-
-			triangle->P1  = yOffset * x         + xOffset * y;
-			triangle->P2  = yOffset * x_inc_mod + xOffset * y;
-			triangle->P3  = yOffset * x         + xOffset * y_inc_mod;
-			triangle++;
-
-			triangle->P1  = yOffset * x_inc_mod + xOffset * y_inc_mod;
-			triangle->P2  = yOffset * x         + xOffset * y_inc_mod;
-			triangle->P3  = yOffset * x_inc_mod + xOffset * y;
-			triangle++;
-		}
-	}
-
-#endif
 
 	return b3TriangleShape::b3Prepare(prep_info);
 }
