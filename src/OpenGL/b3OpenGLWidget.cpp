@@ -34,8 +34,8 @@ void QB3OpenGLWidget::b3Prepare(b3Scene * first, b3CameraVolume * volume)
 	m_Scene = first;
 	m_Scene->b3Reorg();
 	m_Scene->b3GetDisplaySize(xSize, ySize);
-	m_Scene->b3PrepareScene(xSize, ySize);
 	m_Scene->b3SetupVertexMemory(&m_Context);
+	m_Scene->b3PrepareScene(xSize, ySize);
 	m_Scene->b3ResetAnimation();
 
 	m_CameraVolume = volume;

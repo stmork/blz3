@@ -19,7 +19,7 @@ QB3CameraItem::QB3CameraItem(b3CameraPart * camera) :
 {
 	setCheckable(true);
 	setCheckState(camera->b3IsActive() ? Qt::Checked : Qt::Unchecked);
-	setText(QString::fromLatin1(camera->b3GetName()));
+	setText(QString::fromUtf8(camera->b3GetName()));
 }
 
 bool QB3CameraItem::check()

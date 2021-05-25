@@ -18,7 +18,7 @@ QB3LightItem::QB3LightItem(b3Light * light) : QB3AbstractItem(light, B3_TYPE_LIG
 {
 	setCheckable(true);
 	setCheckState(light->b3IsActive() ? Qt::Checked : Qt::Unchecked);
-	setText(QString::fromLatin1(light->b3GetName()));
+	setText(QString::fromUtf8(light->b3GetName()));
 }
 
 bool QB3LightItem::check()
