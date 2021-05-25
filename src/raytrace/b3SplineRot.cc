@@ -107,15 +107,15 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 	MySpline            = m_Spline;
 	MySpline.m_Controls = Between;
 
-	xSize       = m_rSubDiv;
-	ySize       = MySpline.m_SubDiv;
-	TriaCount = xSize * ySize * 2;
+	m_xVertices       = m_rSubDiv;
+	m_yVertices       = MySpline.m_SubDiv;
+	TriaCount = m_xVertices * m_yVertices * 2;
 
 	if (!MySpline.m_Closed)
 	{
-		ySize++;
+		m_yVertices++;
 	}
-	VertexCount = xSize * ySize;
+	VertexCount = m_xVertices * m_yVertices;
 
 	// Reallocating new tria shape
 	if (!b3TriangleShape::b3Init(VertexCount, TriaCount, m_rSubDiv, MySpline.m_SubDiv))
@@ -126,20 +126,20 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 
 	// computing vertices
 	MySpline.m_Offset = 1;
-	for (b3_count x = 0; x < xSize; x++)
+	for (b3_count x = 0; x < m_xVertices; x++)
 	{
-		b3Matrix::b3RotateVector(nullptr, &Matrix, &m_Axis, M_PI * 2.0 * x / xSize);
+		b3Matrix::b3RotateVector(nullptr, &Matrix, &m_Axis, M_PI * 2.0 * x / m_xVertices);
 		for (unsigned y = 0; y < MySpline.m_ControlNum; y++)
 		{
 			b3Matrix::b3VMul(&Matrix, &m_Controls[y], &Between[y], true);
 		}
 
 		MySpline.b3DeBoor(VertexField, 0);
-		for (b3_count y = 0; y < ySize; y++)
+		for (b3_count y = 0; y < m_yVertices; y++)
 		{
-			m_Vertices[y * xSize + x].Point.x = VertexField[y].x;
-			m_Vertices[y * xSize + x].Point.y = VertexField[y].y;
-			m_Vertices[y * xSize + x].Point.z = VertexField[y].z;
+			m_Vertices[y * m_xVertices + x].Point.x = VertexField[y].x;
+			m_Vertices[y * m_xVertices + x].Point.y = VertexField[y].y;
+			m_Vertices[y * m_xVertices + x].Point.z = VertexField[y].z;
 		}
 	}
 
@@ -148,24 +148,24 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 	Triangle = m_Triangles;
 	for (unsigned y = 0; y < MySpline.m_SubDiv; y++)
 	{
-		for (b3_count x = 0; x < xSize; x++)
+		for (b3_count x = 0; x < m_xVertices; x++)
 		{
-			Triangle->P1 =  x              + xSize *  y;
-			Triangle->P2 = (x + 1) % xSize + xSize *  y;
-			Triangle->P3 =  x              + xSize * ((y + 1) % ySize);
+			Triangle->P1 =  x              + m_xVertices *  y;
+			Triangle->P2 = (x + 1) % m_xVertices + m_xVertices *  y;
+			Triangle->P3 =  x              + m_xVertices * ((y + 1) % m_yVertices);
 			Triangle++;
 
-			Triangle->P1 = (x + 1) % xSize + xSize * ((y + 1) % ySize);
-			Triangle->P2 =  x              + xSize * ((y + 1) % ySize);
-			Triangle->P3 = (x + 1) % xSize + xSize *  y;
+			Triangle->P1 = (x + 1) % m_xVertices + m_xVertices * ((y + 1) % m_yVertices);
+			Triangle->P2 =  x              + m_xVertices * ((y + 1) % m_yVertices);
+			Triangle->P3 = (x + 1) % m_xVertices + m_xVertices *  y;
 			Triangle++;
 		}
 	}
 
 
 	/* initializing values */
-	m_xSize = xSize;
-	m_ySize = MySpline.m_SubDiv;
+	m_xTxSubDiv = m_xVertices;
+	m_yTxSubDiv = MySpline.m_SubDiv;
 	m_Flags = B3_PHONG;
 
 	return b3TriangleShape::b3Prepare(prep_info);
@@ -303,8 +303,8 @@ void b3SplineRotShape::b3ComputeVertices()
 		}
 	}
 
-	xSize  = m_rSubDiv;
-	ySize  = AuxSpline.m_SubDiv;
+	m_xVertices  = m_rSubDiv;
+	m_yVertices  = AuxSpline.m_SubDiv;
 }
 
 void b3SplineRotShape::b3ComputeIndices()

@@ -733,7 +733,7 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList(
 	b3_polar    *    polar,
 	const b3_index   grid_index)
 {
-	const b3_res dxSize   = m_xSize << 1;
+	const b3_res dxSize   = m_xTxSubDiv << 1;
 	b3_f64       OldValue = -1;
 
 	B3_ASSERT(grid_index < m_GridCount);
@@ -775,16 +775,16 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList(
 					if (tria_index & 1)
 					{
 						polar->m_Polar.x =
-							((((tria_index % dxSize) >> 1) + 1) - aValue) / m_xSize;
+							((((tria_index % dxSize) >> 1) + 1) - aValue) / m_xTxSubDiv;
 						polar->m_Polar.y =
-							((tria_index / dxSize          + 1) - bValue) / m_ySize;
+							((tria_index / dxSize          + 1) - bValue) / m_yTxSubDiv;
 					}
 					else
 					{
 						polar->m_Polar.x =
-							(((tria_index % dxSize) >> 1) + aValue) / m_xSize;
+							(((tria_index % dxSize) >> 1) + aValue) / m_xTxSubDiv;
 						polar->m_Polar.y =
-							(tria_index / dxSize          + bValue) / m_ySize;
+							(tria_index / dxSize          + bValue) / m_yTxSubDiv;
 					}
 
 					// Last check if stencil

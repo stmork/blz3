@@ -66,8 +66,8 @@ void b3Disk::b3ComputeVertices()
 	end   = m_Limit.x2 * SinCosSteps;
 	i     = (b3_index)ceil(start);
 	iMax  = (b3_count)floor(end);
-	xSize = 0;
-	ySize = 1;
+	m_xVertices = 0;
+	m_yVertices = 1;
 
 	// This is a ring formed disk
 	if ((i - start) > b3Math::epsilon)
@@ -92,7 +92,7 @@ void b3Disk::b3ComputeVertices()
 		Vector++;
 
 		vertex_count += 2;
-		xSize++;
+		m_xVertices++;
 	}
 
 	for (; i <= iMax; i++)
@@ -120,7 +120,7 @@ void b3Disk::b3ComputeVertices()
 		Vector++;
 
 		vertex_count += 2;
-		xSize++;
+		m_xVertices++;
 	}
 
 	if ((end - iMax) > b3Math::epsilon)
@@ -144,7 +144,7 @@ void b3Disk::b3ComputeVertices()
 		Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 
 		vertex_count += 2;
-		xSize++;
+		m_xVertices++;
 	}
 
 	glVertexElements->b3SetCount(vertex_count);

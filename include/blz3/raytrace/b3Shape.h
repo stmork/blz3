@@ -114,9 +114,9 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 	b3_count      m_Overhead, m_Heights, m_Widths;
 
 protected:
-	b3_count         xSize;     //!< The horizontal count of vertex subdivision.
-	b3_count         ySize;     //!< The vertical count of vertex subdivision.
-	b3_stencil_limit m_Limit;   //!< The 2D bounding box of this shape in surface coordinates.
+	b3_count         m_xVertices;  //!< The horizontal count of vertex subdivision.
+	b3_count         m_yVertices;  //!< The vertical count of vertex subdivision.
+	b3_stencil_limit m_Limit;      //!< The 2D bounding box of this shape in surface coordinates.
 
 	b3_gl_line   *   GridsCyl;  //!< The cylinder line indices.
 	b3_gl_polygon  * PolysCyl;  //!< The cylinder triangle indices.
@@ -869,8 +869,8 @@ public:
 	b3_vertex  *  m_Vertices    = nullptr;  //!< Pointer to vertices.
 	b3_triangle * m_Triangles   = nullptr;  //!< Pointer to triangle index list.
 	b3_u32        m_Flags       = 0;        //!< Interpolation flags.
-	b3_res        m_xSize       = 0;        //!< Horizontal vertex distribution for texture mapping.
-	b3_res        m_ySize       = 0;        //!< Vertical vertex distribution for texture mapping.
+	b3_res        m_xTxSubDiv   = 0;        //!< Horizontal vertex distribution for texture mapping.
+	b3_res        m_yTxSubDiv   = 0;        //!< Vertical vertex distribution for texture mapping.
 
 	/**
 	 * This enumeration lists the bit position of the triangle interpolation flags.
@@ -1076,13 +1076,13 @@ class B3_PLUGIN b3SplineShape : public b3TriangleShape
 	unsigned         m_xSubDiv, m_ySubDiv;
 
 protected:
-	b3_count         m_GridVertexCount;  //!< The computed vertex count for wireframe shading.
-	b3_count         m_SolidVertexCount; //!< The computed vertex count for solid shading.
+	b3_count         m_GridVertexCount  = 0;  //!< The computed vertex count for wireframe shading.
+	b3_count         m_SolidVertexCount = 0;  //!< The computed vertex count for solid shading.
 
 public:
-	b3Spline         m_Spline[2];  //!< The two spline representations.
-	b3Spline::b3_knot_vector   m_Knots[2];   //!< The two knot vectors.
-	b3_vector    *   m_Controls;   //!< The control point grid.
+	b3Spline                  m_Spline[2];           //!< The two spline representations.
+	b3Spline::b3_knot_vector  m_Knots[2];            //!< The two knot vectors.
+	b3_vector        *        m_Controls = nullptr;  //!< The control point grid.
 
 protected:
 	B3_ITEM_BASE(b3SplineShape); //!< This is a base class deserialization constructor.
@@ -1118,7 +1118,7 @@ private:
 	void b3ComputeGridIndices();
 	void b3ComputeSolidIndices();
 
-	bool    b3Prepare(b3_preparation_info * prep_info) override;
+	bool b3Prepare(b3_preparation_info * prep_info) override;
 };
 
 /*************************************************************************

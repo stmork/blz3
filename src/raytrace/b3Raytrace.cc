@@ -421,7 +421,7 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	// Init geometry
 	b3PrintF(B3LOG_FULL, "  preparing geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if (!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info))
+	if (!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread, info, false))
 	{
 		b3PrintF(B3LOG_NORMAL, "Geometry preparation didn't succeed!\n");
 		return false;

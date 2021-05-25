@@ -63,8 +63,8 @@ void b3TriangleShape::b3Clear()
 	m_GridSize     = 0;
 	m_VertexCount  = 0;
 	m_TriaCount    = 0;
-	m_xSize        = 0;
-	m_ySize        = 0;
+	m_xTxSubDiv    = 0;
+	m_yTxSubDiv    = 0;
 	m_Flags        = 0;
 }
 
@@ -87,8 +87,8 @@ bool b3TriangleShape::b3Init(
 		m_TriaCount = tria_count;
 		m_Triangles = b3Item::b3TypedAlloc<b3_triangle>(m_TriaCount);
 	}
-	m_xSize = new_xSize;
-	m_ySize = new_ySize;
+	m_xTxSubDiv = new_xSize;
+	m_yTxSubDiv = new_ySize;
 
 	return (m_Vertices != nullptr) && (m_Triangles != nullptr);
 }
@@ -266,15 +266,15 @@ bool b3TriangleShape::b3Prepare(b3_preparation_info * prep_info)
 	b3_f64      Denom;
 	b3_triainfo info;
 
-	if ((m_xSize < 1) || (m_ySize < 1))
+	if ((m_xTxSubDiv < 1) || (m_yTxSubDiv < 1))
 	{
-		if (m_xSize < 1)
+		if (m_xTxSubDiv < 1)
 		{
-			m_xSize = 1;
+			m_xTxSubDiv = 1;
 		}
-		if (m_ySize < 1)
+		if (m_yTxSubDiv < 1)
 		{
-			m_ySize = 1;
+			m_yTxSubDiv = 1;
 		}
 		B3_ASSERT(b3GetConditionHead()->First == nullptr);
 	}

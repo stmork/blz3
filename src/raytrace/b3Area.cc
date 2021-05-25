@@ -107,8 +107,8 @@ void b3Area::b3ComputeVertices()
 	Vector->v.y = (b3_f32)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
 
-	xSize = 1;
-	ySize = 1;
+	m_xVertices = 1;
+	m_yVertices = 1;
 }
 
 void b3Area::b3ComputeIndices()

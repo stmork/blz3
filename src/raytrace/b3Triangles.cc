@@ -45,8 +45,8 @@ b3Triangles::b3Triangles(b3_u32 * src) : b3TriangleShape(src)
 	m_GridSize    = b3InitInt();
 	m_TriaCount   = b3InitInt();
 	m_VertexCount = b3InitInt();
-	m_xSize       = b3InitInt();
-	m_ySize       = b3InitInt();
+	m_xTxSubDiv       = b3InitInt();
+	m_yTxSubDiv       = b3InitInt();
 	m_Flags       = b3InitInt();
 	b3InitNOP();
 	b3InitNOP();
@@ -87,8 +87,8 @@ void b3Triangles::b3StoreShape()
 	b3StoreRes(m_GridSize);
 	b3StoreCount(m_TriaCount);
 	b3StoreCount(m_VertexCount);
-	b3StoreRes(m_xSize);
-	b3StoreRes(m_ySize);
+	b3StoreRes(m_xTxSubDiv);
+	b3StoreRes(m_yTxSubDiv);
 	b3StoreInt(m_Flags);
 	b3StoreNOP(); // This is IndexHit
 	b3StoreNOP(); // This is aValue
@@ -148,7 +148,7 @@ void b3Triangles::b3ComputeVertices()
 		}
 
 		// Copy texture coordinates if usable
-		if ((m_xSize > 0) && (m_ySize > 0) && (((m_xSize + 1) * (m_ySize + 1)) == m_VertexCount))
+		if ((m_xTxSubDiv > 0) && (m_yTxSubDiv > 0) && (((m_xTxSubDiv + 1) * (m_yTxSubDiv + 1)) == m_VertexCount))
 		{
 			b3_index x, y;
 			b3_f64   fx, fxStep;
@@ -156,12 +156,12 @@ void b3Triangles::b3ComputeVertices()
 
 			Vector = *glVertexElements;
 			fy     = 0;
-			fxStep = 1.0 / m_xSize;
-			fyStep = 1.0 / m_ySize;
-			for (y = 0; y <= m_ySize; y++)
+			fxStep = 1.0 / m_xTxSubDiv;
+			fyStep = 1.0 / m_yTxSubDiv;
+			for (y = 0; y <= m_yTxSubDiv; y++)
 			{
 				fx = 0;
-				for (x = 0; x <= m_xSize; x++)
+				for (x = 0; x <= m_xTxSubDiv; x++)
 				{
 					Vector->t.s = fx;
 					Vector->t.t = fy;
@@ -197,7 +197,7 @@ void b3Triangles::b3ComputeVertices()
 		}
 
 		// Copy texture coordinates if usable
-		if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize * m_ySize * 2) == m_TriaCount))
+		if ((m_xTxSubDiv > 0) && (m_yTxSubDiv > 0) && ((m_xTxSubDiv * m_yTxSubDiv * 2) == m_TriaCount))
 		{
 			b3_index x, y;
 			b3_f64   fx, fxStep;
@@ -205,12 +205,12 @@ void b3Triangles::b3ComputeVertices()
 
 			Vector = *glVertexElements;
 			fy     = 0;
-			fxStep = 1.0 / m_xSize;
-			fyStep = 1.0 / m_ySize;
-			for (y = 0; y < m_ySize; y++)
+			fxStep = 1.0 / m_xTxSubDiv;
+			fyStep = 1.0 / m_yTxSubDiv;
+			for (y = 0; y < m_yTxSubDiv; y++)
 			{
 				fx = 0;
-				for (x = 0; x < m_xSize; x++)
+				for (x = 0; x < m_xTxSubDiv; x++)
 				{
 					// First quad triangle
 					Vector->t.s = fx;

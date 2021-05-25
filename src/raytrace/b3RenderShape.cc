@@ -615,8 +615,8 @@ void b3Shape::b3ComputeSphereVertices(
 	Dir3.y = 0;
 	Dir3.z = Rad;
 	Circles = (SinCosSteps >> 1) + 1;
-	xSize   = SinCosSteps + 1;
-	ySize   = Circles;
+	m_xVertices   = SinCosSteps + 1;
+	m_yVertices   = Circles;
 
 	a = 2.0 / SinCosSteps;
 	for (j = 0 ; j < Circles; j++)
@@ -702,8 +702,8 @@ void b3Shape::b3ComputeCylinderVertices(
 	end      = m_Limit.x2 * SinCosSteps;
 	i        = (b3_index)ceil(start);
 	iMax     = (b3_count)floor(end);
-	xSize    = 0;
-	ySize    = 2;
+	m_xVertices    = 0;
+	m_yVertices    = 2;
 
 	if ((i - start) > b3Math::epsilon)
 	{
@@ -726,7 +726,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		Vector++;
 
 		glVertexCount += 2;
-		xSize++;
+		m_xVertices++;
 	}
 
 	for (; i <= iMax; i++)
@@ -751,7 +751,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		Vector++;
 
 		glVertexCount += 2;
-		xSize++;
+		m_xVertices++;
 	}
 
 	if ((end - iMax) > b3Math::epsilon)
@@ -774,7 +774,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 
 		glVertexCount += 2;
-		xSize++;
+		m_xVertices++;
 	}
 
 	glVertexElements->b3SetCount(glVertexCount);
@@ -832,12 +832,12 @@ void b3Shape::b3ComputeConeVertices(
 	end    = m_Limit.x2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	xSize  = 0;
-	ySize  = 1;
+	m_xVertices  = 0;
+	m_yVertices  = 1;
 
 	if (m_Limit.y2 < 1)
 	{
-		ySize++;
+		m_yVertices++;
 		if ((i - start) > b3Math::epsilon)
 		{
 			a = m_Limit.x1 * M_PI * 2;
@@ -860,7 +860,7 @@ void b3Shape::b3ComputeConeVertices(
 			Vector++;
 
 			glVertexCount += 2;
-			xSize++;
+			m_xVertices++;
 		}
 
 		for (; i <= iMax; i++)
@@ -886,7 +886,7 @@ void b3Shape::b3ComputeConeVertices(
 			Vector++;
 
 			glVertexCount += 2;
-			xSize++;
+			m_xVertices++;
 		}
 
 		if ((end - iMax) > b3Math::epsilon)
@@ -911,7 +911,7 @@ void b3Shape::b3ComputeConeVertices(
 			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 
 			glVertexCount += 2;
-			xSize++;
+			m_xVertices++;
 		}
 	}
 	else
@@ -938,7 +938,7 @@ void b3Shape::b3ComputeConeVertices(
 			Vector++;
 
 			glVertexCount++;
-			xSize++;
+			m_xVertices++;
 		}
 
 		for (; i <= iMax; i++)
@@ -954,7 +954,7 @@ void b3Shape::b3ComputeConeVertices(
 			Vector++;
 
 			glVertexCount++;
-			xSize++;
+			m_xVertices++;
 		}
 
 		if ((end - iMax) > b3Math::epsilon)
@@ -970,7 +970,7 @@ void b3Shape::b3ComputeConeVertices(
 			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 
 			glVertexCount++;
-			xSize++;
+			m_xVertices++;
 		}
 	}
 	glVertexElements->b3SetCount(glVertexCount);
@@ -1064,8 +1064,8 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	end    = m_Limit.x2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	xSize = 0;
-	ySize = Circles;
+	m_xVertices = 0;
+	m_yVertices = Circles;
 
 	if ((i - start) > b3Math::epsilon)
 	{
@@ -1086,7 +1086,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 			Vector++;
 		}
 		glVertexCount += Circles;
-		xSize++;
+		m_xVertices++;
 	}
 
 	for (; i <= iMax; i++)
@@ -1107,7 +1107,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 			Vector++;
 		}
 		glVertexCount += Circles;
-		xSize++;
+		m_xVertices++;
 	}
 
 	if ((end - iMax) > b3Math::epsilon)
@@ -1129,7 +1129,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 			Vector++;
 		}
 		glVertexCount += Circles;
-		xSize++;
+		m_xVertices++;
 	}
 
 	glVertexElements->b3SetCount(glVertexCount);
@@ -1320,7 +1320,7 @@ void b3Shape::b3ComputeBoxVertices(
 	glVertex[7].v.y = (Aux.y -= Dir1.y);
 	glVertex[7].v.z = (Aux.z -= Dir1.z);
 
-	xSize = ySize = 1;
+	m_xVertices = m_yVertices = 1;
 
 	for (i = 0; i < 8; i++)
 	{
@@ -1383,8 +1383,8 @@ void b3Shape::b3ComputeTorusVertices(
 		LocalSin[Circles] = m_Limit.y2;
 		Circles++;
 	}
-	xSize = 0;
-	ySize = Circles;
+	m_xVertices = 0;
+	m_yVertices = Circles;
 
 	for (j = 0; j < Circles; j++)		/* Calculate Values */
 	{
@@ -1419,7 +1419,7 @@ void b3Shape::b3ComputeTorusVertices(
 			Vector++;
 		}
 		glVertexCount += Circles;
-		xSize++;
+		m_xVertices++;
 	}
 
 	for (; i <= iMax; i++)
@@ -1443,7 +1443,7 @@ void b3Shape::b3ComputeTorusVertices(
 			Vector++;
 		}
 		glVertexCount += Circles;
-		xSize++;
+		m_xVertices++;
 	}
 
 	if ((end - iMax) > b3Math::epsilon)
@@ -1468,7 +1468,7 @@ void b3Shape::b3ComputeTorusVertices(
 			Vector++;
 		}
 		glVertexCount += Circles;
-		xSize++;
+		m_xVertices++;
 	}
 
 	glVertexElements->b3SetCount(glVertexCount);
