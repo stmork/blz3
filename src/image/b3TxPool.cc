@@ -50,22 +50,20 @@ b3Base<b3Tx> * b3TxPool::b3GetTxHead()
 
 b3_bool b3TxPool::b3ReloadTexture(b3Tx * tx, const char * Name)
 {
-	b3Path    FullName;
-	b3_bool   result = false;
-
-	result = b3IsValid(Name, FullName);
+	b3Path  fullname;
+	bool    result = b3IsValid(Name, fullname);
 
 	// Check result of texture load
 	if (result)
 	{
-		result = (tx->b3LoadImage(FullName) == B3_OK);
+		result = (tx->b3LoadImage(fullname) == B3_OK);
 		b3PrintF(B3LOG_DEBUG, "IMG POOL # Image \"%s\" %sloaded.\n",
 			tx->b3Name(), result ? "" : "not ");
 	}
 	else
 	{
 		tx->b3Name(Name);
-		b3PrintF(B3LOG_DEBUG, "IMG POOL # Image \"%s\" available!\n",
+		b3PrintF(B3LOG_DEBUG, "IMG POOL # Image \"%s\" not available!\n",
 			tx->b3Name());
 	}
 	return result;
