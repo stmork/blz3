@@ -73,8 +73,8 @@ void b3SimpleVertexElements::b3AllocVertexMemory(
 
 		if (new_amount > 0)
 		{
+			glVertex = b3MemAccess::b3TypedAlloc<b3_gl_vertex>(new_amount);
 			glElementCount = new_amount;
-			glVertex = b3MemAccess::b3TypedAlloc<b3_gl_vertex>(glElementCount);
 		}
 		glComputed = false;
 	}
@@ -111,8 +111,8 @@ void b3SimpleGridElements::b3AllocVertexMemory(
 
 		if (new_amount > 0)
 		{
+			glGrids = b3MemAccess::b3TypedAlloc<b3_gl_line>(new_amount);
 			glElementCount = new_amount;
-			glGrids = b3MemAccess::b3TypedAlloc<b3_gl_line>(glElementCount);
 		}
 		glComputed = false;
 	}
@@ -149,8 +149,8 @@ void b3SimplePolygonElements::b3AllocVertexMemory(
 
 		if (new_amount > 0)
 		{
+			glPolygons = b3MemAccess::b3TypedAlloc<b3_gl_polygon>(new_amount);
 			glElementCount = new_amount;
-			glPolygons = b3MemAccess::b3TypedAlloc<b3_gl_polygon>(glElementCount);
 		}
 		glComputed = false;
 	}

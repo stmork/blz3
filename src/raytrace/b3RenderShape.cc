@@ -453,11 +453,11 @@ bool b3Shape::b3GetImage(b3Tx * image) const
 
 	if (result)
 	{
-		b3PrintT(">b3GetImage()");
+		B3_METHOD;
+
 		b3RenderImageSampler sampler(this, image);
 
 		sampler.b3Sample();
-		b3PrintT("<b3GetImage()");
 	}
 	return result;
 }

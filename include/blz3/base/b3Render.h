@@ -380,13 +380,13 @@ class B3_PLUGIN b3RenderObject
 	static b3Tx         glTextureBuffer;
 	static b3Mutex      glTextureMutex;
 
-	bool                glMaterialComputed;
-	bool                glInit;
+	bool                glMaterialComputed = false;
+	bool                glInit             = false;
 
 protected:
-	b3VertexElements  * glVertexElements  = nullptr;  //!< The vertex data.
-	b3GridElements   *  glGridElements    = nullptr;  //!< The line index data.
-	b3PolygonElements * glPolygonElements = nullptr;  //!< The triangle index data.
+	b3VertexElements  * glVertexElements   = nullptr;  //!< The vertex data.
+	b3GridElements   *  glGridElements     = nullptr;  //!< The line index data.
+	b3PolygonElements * glPolygonElements  = nullptr;  //!< The triangle index data.
 
 #ifdef BLZ3_USE_OPENGL
 	GLuint              glDisplayList;            //!< The display list for defining material properties.

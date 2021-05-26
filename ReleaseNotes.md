@@ -45,6 +45,6 @@ Version 3.1.3
 * Structural improvements.
 * More tests.
 
-Version 3.14
+Version 3.1.4
 * Spline/NURBS improvements and more unit tests.
 * Refactorings.

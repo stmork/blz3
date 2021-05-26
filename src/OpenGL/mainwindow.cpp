@@ -122,7 +122,7 @@ MainWindow::MainWindow(QWidget * parent) :
 	// objects so we have to decide this while starting up the app and OpenGL.
 	b3VectorBufferObjects::glAllowVBO = false;
 
-	m_World.b3Read("FlippAmiga.bwd");
+	m_World.b3Read("/home/sm/C-Sources/blz3/data/Condition.bwd");
 	m_Scene     = static_cast<b3Scene *>(m_World.b3GetFirst());
 	m_Scene->b3SetFilename("FlippAmiga");
 	m_Animation = m_Scene->b3GetAnimation();

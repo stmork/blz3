@@ -284,19 +284,16 @@ void b3RenderObject::b3FreeVertexMemory()
 	if (glVertexElements != nullptr)
 	{
 		glVertexElements->b3FreeVertexMemory();
-		glVertexElements = nullptr;
 	}
 
 	if (glGridElements != nullptr)
 	{
 		glGridElements->b3FreeVertexMemory();
-		glGridElements = nullptr;
 	}
 
 	if (glPolygonElements != nullptr)
 	{
 		glPolygonElements->b3FreeVertexMemory();
-		glPolygonElements = nullptr;
 	}
 }
 
