@@ -41,6 +41,7 @@ class b3ImageTest : public CppUnit::TestFixture, protected b3ImageSetup
 	std::unordered_map<b3_res, const b3Tx *>  m_TxMap;
 
 	CPPUNIT_TEST_SUITE(b3ImageTest);
+	CPPUNIT_TEST(testPattern);
 	CPPUNIT_TEST(testTxData);
 	CPPUNIT_TEST(testColor);
 	CPPUNIT_TEST(testPixel);
@@ -91,6 +92,7 @@ public:
 		b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 	}
 
+	void testPattern();
 	void testTxData();
 	void testColor();
 	void testPixel();

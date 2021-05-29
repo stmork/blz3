@@ -92,6 +92,15 @@ void b3ImageTest::setUp()
 	m_TxMap.emplace(128, &m_TxRealColor);
 }
 
+void b3ImageTest::testPattern()
+{
+	m_TxBW.b3SaveImage("img_pattern_01.jpg");
+	m_TxPallColor.b3SaveImage("img_pattern_08.jpg");
+	m_TxHighColor.b3SaveImage("img_pattern_10.jpg");
+	m_TxTrueColor.b3SaveImage("img_pattern_20.jpg");
+	m_TxRealColor.b3SaveImage("img_pattern_80.jpg");
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Unit tests for basic data type handling       **

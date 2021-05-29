@@ -266,6 +266,74 @@ void b3Tx::b3FreeTx()
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
+void b3Tx::b3TestPattern()
+{
+	b3Color       row[xSize];
+	const b3_res  width = xSize >> 3;
+
+	for (b3_res x = 0; x < xSize; x++)
+	{
+		b3_f32   r, g, b, value;
+		b3_index idx = x / width;
+
+		value = (b3_f32)(x % width) / width;
+		b = idx & 1 ? value : 0.0;
+		r = idx & 2 ? value : 0.0;
+		g = idx & 4 ? value : 0.0;
+		row[x].b3Init(r, g, b);
+	}
+
+	if ((palette != nullptr) && (depth > 1))
+	{
+		for (b3_index i = 0; i < (1 << depth); i++)
+		{
+			palette[i] = b3Tx::b3IndexToColor(i);
+		}
+	}
+
+	switch (type)
+	{
+	case B3_TX_FLOAT:
+		b3TxAlgorithms::b3SetRow<b3_color>(row, this);
+		break;
+
+	case B3_TX_RGB8:
+		b3TxAlgorithms::b3SetRow<b3_pkd_color>(row, this);
+		break;
+
+	case B3_TX_RGB4:
+		b3TxAlgorithms::b3SetRow<b3_u16>(row, this);
+		break;
+
+	case B3_TX_VGA:
+		b3TxAlgorithms::b3SetRow<b3_u08>(row, this, &b3Tx::b3ColorToIndex);
+		break;
+
+	case B3_TX_ILBM:
+		if (depth == 1)
+		{
+			uint8_t * ptr = data;
+
+			for (b3_res y = 0; y < ySize; y++)
+			{
+				for (b3_res x = 0; x < xSize; x += 16)
+				{
+					*ptr++ = (y & 2) ? 0xcc : 0x33;
+					*ptr++ = (y & 2) ? 0x00 : 0xff;
+				}
+			}
+		}
+		else
+		{
+			B3_THROW(b3TxException, B3_TX_UNSUPP);
+		}
+		break;
+
+	default:
+		B3_THROW(b3TxException, B3_TX_UNSUPP);
+	}
+}
+
 bool b3Tx::b3IsGreyPalette() const noexcept
 {
 	b3_loop      i, max;

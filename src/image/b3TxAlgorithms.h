@@ -42,6 +42,25 @@ struct B3_PLUGIN b3TxAlgorithms
 		}
 	}
 
+	template<class DST> static void b3SetRow(
+		const b3Color * row,
+		b3Tx * tx,
+		std::function<DST(const b3Color &)> convert = [] (const b3Color & src)
+	{
+		return src;
+	})
+	{
+		DST * ptr = tx->data;
+
+		for (b3_res y = 0; y < tx->ySize; y++)
+		{
+			for (b3_res x = 0; x < tx->xSize; x++)
+			{
+				*ptr++ = convert(row[x]);
+			}
+		}
+	}
+
 	template<class DST> static void b3TurnLeft(b3Tx * tx)
 	{
 		const b3_res xNewSize = tx->ySize;

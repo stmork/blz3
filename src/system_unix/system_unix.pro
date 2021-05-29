@@ -14,13 +14,13 @@ message("*** Blizzard III system abstraction library $$VERSION ***")
 
 SOURCES += \
 	b3CPU.cc \
-	b3Config.cc \
 	b3Dir.cc \
 	b3DisplayView.cc \
 	b3Error.cc \
 	b3File.cc \
 	b3Log.cc \
 	b3Plugin.cc \
+	b3Runtime.cc \
 	b3Thread.cc \
 	b3Time.cc
 

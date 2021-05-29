@@ -232,7 +232,7 @@ b3MovieEncoder::b3MovieEncoder(
 #ifdef B3_VERSION
 	av_dict_set(&m_FormatContext->metadata, "Version", B3_VERSION, 0);
 #endif
-	av_dict_set(&m_FormatContext->metadata, "Author", "Steffen A. Mork", 0);
+	av_dict_set(&m_FormatContext->metadata, "Author",  b3Runtime::b3GetUserName(), 0);
 	av_dict_set(&m_FormatContext->metadata, "comment", b3Runtime::b3GetProduct(), 0);
 
 	error = avformat_write_header(m_FormatContext, nullptr);

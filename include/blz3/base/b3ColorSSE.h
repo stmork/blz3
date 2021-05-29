@@ -662,9 +662,9 @@ public:
 
 	inline operator b3_u16 () const
 	{
-		const b3_pkd_color px      = operator b3_pkd_color();
-		b3_pkd_color mask    = 0xf0000000;
-		b3_pkd_color result  = 0;
+		const b3_pkd_color px = operator b3_pkd_color();
+		b3_pkd_color mask     = 0xf0000000;
+		b3_pkd_color result   = 0;
 
 		while (mask != 0)
 		{

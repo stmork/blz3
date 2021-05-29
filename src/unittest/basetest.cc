@@ -45,6 +45,7 @@ int main(int argc, char * argv[])
 	b3PrintF(B3LOG_NORMAL, "Type of tests: %s\n", argv[0]);
 	b3PrintF(B3LOG_NORMAL, "Compile date:  %s %s\n", __DATE__, __TIME__);
 	b3PrintF(B3LOG_NORMAL, "Compiler:      %s\n", b3Runtime::b3GetCompiler());
+	b3PrintF(B3LOG_NORMAL, "Users name:    %s\n", b3Runtime::b3GetUserName());
 
 	if (b3Runtime::b3Hostname(hostname, sizeof(hostname)))
 	{

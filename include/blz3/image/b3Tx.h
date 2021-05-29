@@ -408,6 +408,13 @@ public:
 	void           b3FreeTx();
 
 	/**
+	 * This method fills in a test pattern into the pre allocated image buffer.
+	 *
+	 * @see b3AllocTx()
+	 */
+	void           b3TestPattern();
+
+	/**
 	 * This method returns the palette data if any.
 	 *
 	 * @return The palette data.

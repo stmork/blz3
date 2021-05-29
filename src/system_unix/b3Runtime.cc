@@ -1,6 +1,6 @@
 /*
 **
-**      $Filename:      b3Config.c $
+**      $Filename:      b3Runtime.c $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
@@ -26,6 +26,7 @@
 
 #include <unistd.h>
 #include <dlfcn.h>
+#include <pwd.h>
 #include <locale.h>
 
 /*************************************************************************
@@ -80,6 +81,8 @@ b3Runtime::b3Runtime()
 #else
 	strncpy(m_Product, B3_NAME, sizeof(m_Product));
 #endif
+
+	bzero(m_UserName, sizeof(m_UserName));
 }
 
 b3_bool b3Runtime::b3Hostname(char * hostname, const b3_size buffer_size)
@@ -95,6 +98,23 @@ const char * b3Runtime::b3GetCompiler()
 const char * b3Runtime::b3GetProduct()
 {
 	return b3Instance().m_Product;
+}
+
+const char * b3Runtime::b3GetUserName()
+{
+	b3Runtime & runtime = b3Instance();
+	const uid_t uid = geteuid ();
+	const struct passwd  * pw = getpwuid (uid);
+
+	if (pw != nullptr)
+	{
+		const std::string gecos(pw->pw_gecos);
+		const size_t idx = gecos.find_first_of(',');
+
+		strcpy(runtime.m_UserName,
+			gecos.substr(0, std::min(idx, sizeof(m_UserName) - 1)).c_str());
+	}
+	return runtime.m_UserName;
 }
 
 void * b3Runtime::b3GetOpenGLExtension(const char * procedure_name)
