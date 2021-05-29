@@ -20,6 +20,7 @@ HEADERS += b3SkeletonTest.h \
 	b3EndianTest.h \
 	b3ErrorTest.h \
 	b3ExceptionTest.h \
+	b3ExifTest.h \
 	b3FactoryTest.h \
 	b3FileListTest.h \
 	b3FileTest.h \
@@ -56,6 +57,7 @@ SOURCES += basetest.cc b3SkeletonTest.cc \
 	b3EndianTest.cc \
 	b3ErrorTest.cc \
 	b3ExceptionTest.cc \
+	b3ExifTest.cc \
 	b3FactoryTest.cc \
 	b3FileListTest.cc \
 	b3FileTest.cc \
