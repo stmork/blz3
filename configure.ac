@@ -234,6 +234,7 @@ AC_CHECK_LIB([avcodec], [main])
 # Check for image io libraries
 AC_CHECK_LIB([tiff], [main])
 AC_CHECK_LIB([jpeg], [main])
+AC_CHECK_LIB([exif], [main])
 
 # Check for system libraries
 AC_CHECK_LIB([dl], [main])
