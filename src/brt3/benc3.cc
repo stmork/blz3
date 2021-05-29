@@ -18,7 +18,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "blz3/system/b3Runtime.h"
 
 #ifdef HAVE_VIDEO_ENCODER
 #include "blz3/image/b3Tx.h"

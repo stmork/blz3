@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/system/b3Runtime.h"
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
 

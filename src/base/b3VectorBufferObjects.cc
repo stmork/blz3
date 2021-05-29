@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3BaseInclude.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/base/b3VectorBufferObjects.h"
 
 #define USE_VBOS

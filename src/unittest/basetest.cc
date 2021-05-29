@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/raytrace/b3Factory.h"
 
 #ifdef HAVE_LIBCPPUNIT

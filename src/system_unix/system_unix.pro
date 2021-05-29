@@ -34,5 +34,6 @@ HEADERS += \
 	../../include_unix/blz3/system/b3Log.h \
 	../../include_unix/blz3/system/b3Mem.h \
 	../../include_unix/blz3/system/b3Plugin.h \
+	../../include_unix/blz3/system/b3Runtime.h \
 	../../include_unix/blz3/system/b3Thread.h \
 	../../include_unix/blz3/system/b3Time.h

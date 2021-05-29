@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/system/b3DisplayView.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3TxPool.h"
 

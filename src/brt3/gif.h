@@ -20,6 +20,7 @@
 #ifndef GIF_H
 #define GIF_H
 
+#include "blz3/system/b3Runtime.h"
 #include "blz3/system/b3File.h"
 
 struct Extension

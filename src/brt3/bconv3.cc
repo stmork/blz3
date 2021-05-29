@@ -23,6 +23,7 @@
 *************************************************************************/
 
 #include "blz3/system/b3Dir.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/image/b3Tx.h"
 
 static void convert_tiff(

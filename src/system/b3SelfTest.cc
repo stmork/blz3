@@ -27,6 +27,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/system/b3Mem.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/system/b3SelfTest.h"
 #include "blz3/base/b3FileMem.h"
 

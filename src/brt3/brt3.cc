@@ -20,14 +20,14 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Plugin.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/image/b3TxPool.h"
 #include "blz3/image/b3Encoder.h"
 
+#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderLight.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Aux.h"

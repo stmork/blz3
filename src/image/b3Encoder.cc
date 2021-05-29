@@ -23,6 +23,7 @@
 
 #include "blz3/image/b3Encoder.h"
 #include "blz3/system/b3LogBase.h"
+#include "blz3/system/b3Runtime.h"
 
 #ifdef HAVE_VIDEO_ENCODER
 

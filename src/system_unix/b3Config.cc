@@ -22,6 +22,8 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Runtime.h"
+
 #include <unistd.h>
 #include <dlfcn.h>
 #include <locale.h>
