@@ -199,7 +199,9 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	void              b3SetBounds(const b3_vector * lower, const b3_vector * upper);
+	void              b3SetBounds(
+		const b3_vector * lower,
+		const b3_vector * upper);
 
 	/**
 	 * This method returns the dimensions of the view section in world
@@ -221,7 +223,9 @@ public:
 	bool              b3GetView(b3_view_info & view_info) const;
 
 	/**
-	 * This method pops the actual view item from the actual view mode.
+	 * This method pops the actual orthogonal view item from the actual view
+	 * mode. In case of perspective view mode or the view stack is empty this
+	 * method does nothing.
 	 */
 	void              b3PopView();
 
@@ -229,7 +233,8 @@ public:
 	 * This method returns true if there are any view items in the actual
 	 * view stack.
 	 *
-	 * @return True if the actual view stack is not empty.
+	 * @return True if the actual view stack is not empty or false if the actual
+	 * view mode is perspective or empty in orthogonal case.
 	 */
 	bool              b3ViewStackNotEmpty() const;
 

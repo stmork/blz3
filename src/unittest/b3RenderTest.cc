@@ -71,7 +71,7 @@ void b3RenderTest::test()
 		item != nullptr;
 		item  = item->Succ)
 	{
-		b3Scene *  scene = (b3Scene *)item;
+		b3Scene  * scene = (b3Scene *)item;
 		b3_vector  eye;
 		b3_res     xSize, ySize;
 
@@ -157,9 +157,9 @@ void b3RenderTest::testView(b3RenderView & view, const b3_view_mode view_mode)
 }
 
 bool b3RenderTest::testViewInfo(
-		const b3_view_info & first,
-		const b3_view_info & second,
-		const b3_view_mode   view_mode)
+	const b3_view_info & first,
+	const b3_view_info & second,
+	const b3_view_mode   view_mode)
 {
 	CPPUNIT_ASSERT_EQUAL(view_mode, first.m_ViewMode);
 	CPPUNIT_ASSERT_EQUAL(view_mode, second.m_ViewMode);
