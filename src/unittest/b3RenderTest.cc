@@ -176,6 +176,9 @@ bool b3RenderTest::testViewInfo(
 
 	if (view_mode != B3_VIEW_3D)
 	{
+		CPPUNIT_ASSERT_GREATER(0.0, first.m_AspectRatio);
+		CPPUNIT_ASSERT_GREATER(0.0, second.m_AspectRatio);
+
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(first.m_AspectRatio,  second.m_AspectRatio,  b3Math::epsilon);
 
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(first.m_Scene.left,   second.m_Scene.left,   b3Math::epsilon);
