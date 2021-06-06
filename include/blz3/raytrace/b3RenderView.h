@@ -211,7 +211,14 @@ public:
 	 */
 	bool              b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const;
 
-	b3_bool           b3GetView(b3_view_info & view_info) const;
+	/**
+	 * This method fills in the b3_view_info structure with information about
+	 * the viewed volume. Note that only orthogonal views are supported.
+	 *
+	 * @param view_info The view info to fill in.
+	 * @return True on orthogonal viewmodes and false on perspective view mode.
+	 */
+	bool              b3GetView(b3_view_info & view_info) const;
 
 	/**
 	 * This method pops the actual view item from the actual view mode.

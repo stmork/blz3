@@ -27,6 +27,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "blz3/base/b3SearchPath.h"
+#include "blz3/raytrace/b3RenderView.h"
 
 class b3RenderTest : public CppUnit::TestFixture
 {
@@ -40,6 +41,10 @@ public:
 	void setUp() override;
 	void tearDown() override;
 	void test();
+
+private:
+	void testView(b3RenderView & view, const b3_view_mode view_mode);
+	bool testViewInfo(const b3_view_info & first, const b3_view_info & second, const b3_view_mode view_mode);
 };
 
 #endif

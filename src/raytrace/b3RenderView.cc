@@ -198,7 +198,7 @@ bool b3RenderView::b3GetDimension(b3_f64 & xSize, b3_f64 & ySize) const
 	return success;
 }
 
-b3_bool b3RenderView::b3GetView(b3_view_info & view_info) const
+bool b3RenderView::b3GetView(b3_view_info & view_info) const
 {
 	view_info.m_ViewMode = m_ViewMode;
 
