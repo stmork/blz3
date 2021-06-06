@@ -34,15 +34,20 @@ class b3RenderTest : public CppUnit::TestFixture
 	b3SearchPath search_path;
 
 	CPPUNIT_TEST_SUITE(b3RenderTest);
-	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testShapes);
+	CPPUNIT_TEST(testMaterial);
+	CPPUNIT_TEST(testAllShapes);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void test();
+	void testShapes();
+	void testMaterial();
+	void testAllShapes();
 
 private:
+	bool testScene(b3World & world);
 	void testView(b3RenderView & view, const b3_view_mode view_mode);
 	bool testViewInfo(const b3_view_info & first, const b3_view_info & second, const b3_view_mode view_mode);
 	bool testStepper(const b3RenderView & view, const b3_action_mode action_mode, const b3_f64 step = 0.5);

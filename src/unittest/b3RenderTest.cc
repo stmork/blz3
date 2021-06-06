@@ -57,23 +57,48 @@ void b3RenderTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3RenderTest::test()
+void b3RenderTest::testShapes()
 {
-	b3Path                full_path;
-	b3World               world;
-	b3ShapeRenderContext  context;
-	b3RenderView          view;
+	b3Path   full_path;
+	b3World  world;
 
 	CPPUNIT_ASSERT(search_path.b3IsValid("Shapes.bwd", full_path));
 	CPPUNIT_ASSERT(world.b3Read(full_path, false));
+	CPPUNIT_ASSERT(testScene(world));
+}
+
+void b3RenderTest::testMaterial()
+{
+	b3Path   full_path;
+	b3World  world;
+
+	CPPUNIT_ASSERT(search_path.b3IsValid("Material.bwd", full_path));
+	CPPUNIT_ASSERT(world.b3Read(full_path, false));
+	CPPUNIT_ASSERT(testScene(world));
+}
+
+void b3RenderTest::testAllShapes()
+{
+	b3Path   full_path;
+	b3World  world;
+
+	CPPUNIT_ASSERT(search_path.b3IsValid("AllShapes.bwd", full_path));
+	CPPUNIT_ASSERT(world.b3Read(full_path, false));
+	CPPUNIT_ASSERT(testScene(world));
+}
+
+bool b3RenderTest::testScene(b3World & world)
+{
+	b3ShapeRenderContext  context;
+	b3RenderView          view;
+	b3_vector             eye;
+	b3_res                xSize, ySize;
 
 	for (b3Item * item  = world.b3GetFirst();
 		item != nullptr;
 		item  = item->Succ)
 	{
-		b3Scene  * scene = (b3Scene *)item;
-		b3_vector  eye;
-		b3_res     xSize, ySize;
+		b3Scene * scene = static_cast<b3Scene *>(item);
 
 		CPPUNIT_ASSERT(scene != nullptr);
 		CPPUNIT_ASSERT_NO_THROW(scene->b3Reorg());
@@ -103,6 +128,8 @@ void b3RenderTest::test()
 		testView(view, B3_VIEW_LEFT);
 		testView(view, B3_VIEW_BACK);
 	}
+
+	return true;
 }
 
 void b3RenderTest::testView(b3RenderView & view, const b3_view_mode view_mode)
