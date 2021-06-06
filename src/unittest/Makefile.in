@@ -51,6 +51,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3PickTest.cc\
 	b3MatrixTest.cc\
 	b3RandomTest.cc\
+	b3RenderTest.cc\
 	b3SamplerTest.cc\
 	b3SearchPathTest.cc\
 	b3SelfTestSuite.cc\
@@ -89,6 +90,7 @@ UNITTEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3PathTest.o\
 	b3PickTest.o\
 	b3RandomTest.o\
+	b3RenderTest..o\
 	b3SearchPathTest.o\
 	b3SelfTestSuite.o\
 	b3SplineTest.o\
