@@ -25,6 +25,7 @@
 #include "b3TestMacros.h"
 
 #include "blz3/base/b3World.h"
+#include "blz3/raytrace/b3RenderView.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3ShapeRenderContext.h"
 
@@ -62,6 +63,7 @@ void b3RenderTest::test()
 	b3Path                full_path;
 	b3World               world;
 	b3ShapeRenderContext  context;
+	b3RenderView          view;
 
 	CPPUNIT_ASSERT(search_path.b3IsValid("Shapes.bwd", full_path));
 	CPPUNIT_ASSERT(world.b3Read(full_path, false));
@@ -79,6 +81,31 @@ void b3RenderTest::test()
 		CPPUNIT_ASSERT_NO_THROW(scene->b3SetupVertexMemory(&context));
 		CPPUNIT_ASSERT(scene->b3PrepareScene(xSize, ySize));
 		CPPUNIT_ASSERT_NO_THROW(scene->b3ResetAnimation());
+
+		b3CameraPart * camera = scene->b3GetFirstCamera(false);
+		CPPUNIT_ASSERT(camera != nullptr);
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetCamera(scene));
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetCamera(camera));
+		CPPUNIT_ASSERT(view.b3SetBounds(scene));
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(B3_VIEW_3D));
+		CPPUNIT_ASSERT(view.b3IsViewMode(B3_VIEW_3D));
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(B3_VIEW_TOP));
+		CPPUNIT_ASSERT(view.b3IsViewMode(B3_VIEW_TOP));
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(B3_VIEW_RIGHT));
+		CPPUNIT_ASSERT(view.b3IsViewMode(B3_VIEW_RIGHT));
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(B3_VIEW_FRONT));
+		CPPUNIT_ASSERT(view.b3IsViewMode(B3_VIEW_FRONT));
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(B3_VIEW_LEFT));
+		CPPUNIT_ASSERT(view.b3IsViewMode(B3_VIEW_LEFT));
+
+		CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(B3_VIEW_BACK));
+		CPPUNIT_ASSERT(view.b3IsViewMode(B3_VIEW_BACK));
 	}
 }
 
