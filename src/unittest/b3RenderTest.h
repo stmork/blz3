@@ -45,6 +45,8 @@ public:
 private:
 	void testView(b3RenderView & view, const b3_view_mode view_mode);
 	bool testViewInfo(const b3_view_info & first, const b3_view_info & second, const b3_view_mode view_mode);
+	bool testStepper(const b3RenderView & view, const b3_action_mode action_mode, const b3_f64 step = 0.5);
+	b3_count testMover(const b3_f64 mover, const b3_f64 step);
 };
 
 #endif

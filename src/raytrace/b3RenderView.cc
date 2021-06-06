@@ -424,7 +424,7 @@ b3_f64 b3RenderView::b3GetPositionAngle(
 void b3RenderView::b3SetTranslationStepper(
 	b3_vector   *   steps,
 	b3_vector   *   mover,
-	b3_action_mode  mode)
+	b3_action_mode  mode) const
 {
 	b3Vector::b3Init(mover);
 	switch (m_ViewMode)

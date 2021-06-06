@@ -112,6 +112,7 @@ void b3RenderTest::testView(b3RenderView & view, const b3_view_mode view_mode)
 	b3_view_info info_after1;
 	b3_view_info info_after2;
 	b3_view_info info_after3;
+	b3_f64       width = 0, height = 0;
 
 	// Set view mode and compare.
 	CPPUNIT_ASSERT_NO_THROW(view.b3SetViewMode(view_mode));
@@ -150,10 +151,19 @@ void b3RenderTest::testView(b3RenderView & view, const b3_view_mode view_mode)
 	CPPUNIT_ASSERT_NO_THROW(view.b3Original());
 	CPPUNIT_ASSERT(!view.b3ViewStackNotEmpty());
 	CPPUNIT_ASSERT_EQUAL(view_mode != B3_VIEW_3D, view.b3GetView(info_after3));
+	CPPUNIT_ASSERT(view.b3GetDimension(width, height));
+	CPPUNIT_ASSERT_GREATER(0.0, width);
+	CPPUNIT_ASSERT_GREATER(0.0, height);
 
+	// Compare view infos.
 	CPPUNIT_ASSERT(testViewInfo(info_before, info_after1, view_mode));
 	CPPUNIT_ASSERT(testViewInfo(info_before, info_after2, view_mode));
 	CPPUNIT_ASSERT(testViewInfo(info_before, info_after3, view_mode));
+
+	CPPUNIT_ASSERT(testStepper(view, B3_ACTION_MOVE_UP));
+	CPPUNIT_ASSERT(testStepper(view, B3_ACTION_MOVE_RIGHT));
+	CPPUNIT_ASSERT(testStepper(view, B3_ACTION_MOVE_DOWN));
+	CPPUNIT_ASSERT(testStepper(view, B3_ACTION_MOVE_LEFT));
 }
 
 bool b3RenderTest::testViewInfo(
@@ -180,6 +190,45 @@ bool b3RenderTest::testViewInfo(
 	}
 
 	return true;
+}
+
+bool b3RenderTest::testStepper(
+	const b3RenderView  &  view,
+	const b3_action_mode   action_mode,
+	const b3_f64           step)
+{
+	b3_vector steps;
+	b3_vector mover;
+	b3_count  count = 0;
+
+	b3Vector::b3Init(&steps, step, step, step);
+	CPPUNIT_ASSERT_NO_THROW(view.b3SetTranslationStepper(&steps, &mover, action_mode));
+
+	if (view.b3IsViewMode(B3_VIEW_3D))
+	{
+		CPPUNIT_ASSERT_EQUAL(0.0f, mover.x);
+		CPPUNIT_ASSERT_EQUAL(0.0f, mover.y);
+		CPPUNIT_ASSERT_EQUAL(0.0f, mover.z);
+	}
+	else
+	{
+		count += testMover(mover.x, step);
+		count += testMover(mover.y, step);
+		count += testMover(mover.z, step);
+
+		CPPUNIT_ASSERT_EQUAL(1, count);
+	}
+	return true;
+}
+
+b3_count b3RenderTest::testMover(const b3_f64 mover, const b3_f64 step)
+{
+	if (mover != 0)
+	{
+		CPPUNIT_ASSERT_EQUAL(step, std::fabs(mover));
+		return 1;
+	}
+	return 0;
 }
 
 #endif

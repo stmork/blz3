@@ -331,7 +331,7 @@ public:
 	 * @param mover The resulting mover.
 	 * @param mode The view mode to use.
 	 */
-	void              b3SetTranslationStepper(b3_vector * steps, b3_vector * mover, b3_action_mode mode);
+	void              b3SetTranslationStepper(b3_vector * steps, b3_vector * mover, b3_action_mode mode) const;
 
 	/**
 	 * This method initializes a rotation axis and a step vector which contains
