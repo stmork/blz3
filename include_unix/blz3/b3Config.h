@@ -62,9 +62,12 @@
 #		include <emmintrin.h>
 #		ifdef HAVE_SSE3
 #			include <pmmintrin.h>
-#			ifdef HAVE_SSSE3
-#				include <tmmintrin.h>
-#			endif
+#		endif
+#		ifdef HAVE_SSSE3
+#			include <tmmintrin.h>
+#		endif
+#		ifdef HAVE_SSE4
+#			include <smmintrin.h>
 #		endif
 #	endif
 #endif

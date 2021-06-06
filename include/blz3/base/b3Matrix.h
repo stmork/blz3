@@ -21,6 +21,7 @@
 #define B3_BASE_MATRIX_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Math.h"
 
 #include <float.h>
 #include <string>
@@ -210,11 +211,11 @@ public:
 		const b3_vector * vec1,
 		const b3_vector * vec2)
 	{
-		b3_f32 x = vec2->x - vec1->x;
-		b3_f32 y = vec2->y - vec1->y;
-		b3_f32 z = vec2->z - vec1->z;
+		const b3_f64 x = vec2->x - vec1->x;
+		const b3_f64 y = vec2->y - vec1->y;
+		const b3_f64 z = vec2->z - vec1->z;
 
-		return (x * x + y * y + z * z) < 0.0001;
+		return (x * x + y * y + z * z) < b3Math::epsilon;
 	}
 
 	/**
@@ -228,11 +229,11 @@ public:
 		const b3_vector64 * vec1,
 		const b3_vector64 * vec2)
 	{
-		b3_f64 x = vec2->x - vec1->x;
-		b3_f64 y = vec2->y - vec1->y;
-		b3_f64 z = vec2->z - vec1->z;
+		const b3_f64 x = vec2->x - vec1->x;
+		const b3_f64 y = vec2->y - vec1->y;
+		const b3_f64 z = vec2->z - vec1->z;
 
-		return (x * x + y * y + z * z) < 0.0001;
+		return (x * x + y * y + z * z) < b3Math::epsilon;
 	}
 
 	/**
@@ -332,11 +333,11 @@ public:
 			v[i]   *= quotient;
 		}
 #else
-		b3_f64 x        = vector->x;
-		b3_f64 y        = vector->y;
-		b3_f64 z        = vector->z;
-		b3_f64 result   = sqrt(x * x + y * y + z * z);
-		b3_f64 quotient = length / result;
+		const b3_f64 x        = vector->x;
+		const b3_f64 y        = vector->y;
+		const b3_f64 z        = vector->z;
+		const b3_f64 result   = sqrt(x * x + y * y + z * z);
+		const b3_f64 quotient = length / result;
 
 		vector->x *= quotient;
 		vector->y *= quotient;
@@ -356,11 +357,11 @@ public:
 		b3_gl_vector * vector,
 		const b3_f32   length = 1.0)
 	{
-		b3_f32 x        = vector->x;
-		b3_f32 y        = vector->y;
-		b3_f32 z        = vector->z;
-		b3_f32 result   = sqrt(x * x + y * y + z * z);
-		b3_f32 quotient = length / result;
+		const b3_f64 x        = vector->x;
+		const b3_f64 y        = vector->y;
+		const b3_f64 z        = vector->z;
+		const b3_f64 result   = sqrt(x * x + y * y + z * z);
+		const b3_f64 quotient = length / result;
 
 		vector->x *= quotient;
 		vector->y *= quotient;
@@ -380,10 +381,17 @@ public:
 		const b3_vector * aVec,
 		const b3_vector * bVec)
 	{
+#ifdef BLZ3_USE_SSE41
+		return _mm_cvtss_f32(
+				_mm_dp_ps(
+					_mm_load_ps(&aVec->x),
+					_mm_load_ps(&bVec->x), 0x71));
+#else
 		return
 			aVec->x * bVec->x +
 			aVec->y * bVec->y +
 			aVec->z * bVec->z;
+#endif
 	}
 
 	/**
@@ -565,10 +573,14 @@ public:
 		const b3_gl_vector * bVec,
 		b3_gl_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&result->x,
+			_mm_add_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
+#else
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
 		result->z = aVec->z + bVec->z;
-
+#endif
 		return result;
 	}
 
@@ -630,9 +642,14 @@ public:
 		const b3_vector * bVec,
 		b3_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&result->x,
+			_mm_sub_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
+#else
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
+#endif
 
 		return result;
 	}
@@ -763,9 +780,14 @@ public:
 		const b3_vector * bVec,
 		b3_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&result->x,
+			_mm_mul_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
+#else
 		result->x = aVec->x * bVec->x;
 		result->y = aVec->y * bVec->y;
 		result->z = aVec->z * bVec->z;
+#endif
 
 		return result;
 	}
@@ -833,10 +855,20 @@ public:
 		const b3_vector * bVec,
 		b3_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		const int    s1 = _MM_SHUFFLE(3, 0, 2, 1);
+		const int    s2 = _MM_SHUFFLE(3, 1, 0, 2);
+		const __m128 l  = _mm_load_ps(&aVec->x);
+		const __m128 r  = _mm_load_ps(&bVec->x);
+
+		_mm_store_ps(&result->x, _mm_sub_ps(
+				_mm_mul_ps(_mm_shuffle_ps(l, l, s1), _mm_shuffle_ps(r, r, s2)),
+				_mm_mul_ps(_mm_shuffle_ps(l, l, s2), _mm_shuffle_ps(r, r, s1))));
+#else
 		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
 		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
 		result->z = aVec->x * bVec->y - aVec->y * bVec->x;
-
+#endif
 		return result;
 	}
 
