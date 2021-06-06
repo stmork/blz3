@@ -328,7 +328,7 @@ int main(int argc, char * argv[])
 					world->b3Read(argv[i]);
 					for (b3Item * item  = world->b3GetFirst();
 						item != nullptr;
-						item  = scene->Succ)
+						item  = item->Succ)
 					{
 						scene = (b3Scene *)item;
 						scene->b3Reorg();
