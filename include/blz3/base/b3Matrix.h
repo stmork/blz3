@@ -293,7 +293,7 @@ public:
 		b3_vector  *  vector,
 		const b3_f64  length = 1.0)
 	{
-#ifdef BLZ3_USE_SSE
+#ifdef BLZ3_USE_SSE41
 		const __m128 v     = _mm_load_ps(&vector->x);
 		const __m128 denom = _mm_sqrt_ps(_mm_dp_ps(v, v, 0x77));
 
