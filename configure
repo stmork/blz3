@@ -648,11 +648,13 @@ BLZ3_HOME
 SSE_ALIGNED
 HAVE_X264_PARAMETER_DEFINITION
 HAVE_X264_DELAYED_FRAMES
+HAVE_SSE41
 HAVE_SSE3
 HAVE_SSE2
 HAVE_SSE
 HAVE_LIBCPPUNIT
 BLZ3_USE_X264
+BLZ3_USE_SSE41
 BLZ3_USE_SSE3
 BLZ3_USE_SSE2
 BLZ3_USE_SSE
@@ -4764,6 +4766,8 @@ BUILD=${BUILD_NUMBER:-0}
 
 
 
+
+
 BLZ3_HOME="$PWD"
 
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"
@@ -7239,8 +7243,8 @@ if test "x$ac_cv_header_emmintrin_h" = xyes; then :
 
 $as_echo "#define HAVE_SSE2 2" >>confdefs.h
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE2" >&5
-$as_echo_n "checking for SSE2... " >&6; }
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE 2" >&5
+$as_echo_n "checking for SSE 2... " >&6; }
 	if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -7292,8 +7296,8 @@ if test "x$ac_cv_header_pmmintrin_h" = xyes; then :
 
 $as_echo "#define HAVE_SSE3 3" >>confdefs.h
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE3" >&5
-$as_echo_n "checking for SSE3... " >&6; }
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE 3" >&5
+$as_echo_n "checking for SSE 3... " >&6; }
 	if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -7346,8 +7350,8 @@ if test "x$ac_cv_header_tmmintrin_h" = xyes; then :
 
 $as_echo "#define HAVE_SSSE3 3" >>confdefs.h
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSSE3" >&5
-$as_echo_n "checking for SSSE3... " >&6; }
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSSE 3" >&5
+$as_echo_n "checking for SSSE 3... " >&6; }
 	if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -7377,6 +7381,58 @@ _ACEOF
 if ac_fn_cxx_try_run "$LINENO"; then :
 
 $as_echo "#define BLZ3_USE_SSSE3 3" >>confdefs.h
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+
+fi
+
+
+
+ac_fn_cxx_check_header_mongrel "$LINENO" "smmintrin.h" "ac_cv_header_smmintrin_h" "$ac_includes_default"
+if test "x$ac_cv_header_smmintrin_h" = xyes; then :
+
+
+$as_echo "#define HAVE_SSE41 41" >>confdefs.h
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SSE 4.1" >&5
+$as_echo_n "checking for SSE 4.1... " >&6; }
+	if test "$cross_compiling" = yes; then :
+  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot run test program while cross compiling
+See \`config.log' for more details" "$LINENO" 5; }
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdio.h>
+#include <smmintrin.h>
+__m128 a,b,r;
+int
+main ()
+{
+
+char result[128];
+a = _mm_set1_ps(1);
+b = _mm_set1_ps(1);
+r = _mm_dp_ps(a,b,0x71);
+// printf ("SSE 4.1 %p %p\n", &a, &b);
+sprintf(result,"%lf\n",*((float *)&r));
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_run "$LINENO"; then :
+
+$as_echo "#define BLZ3_USE_SSE41 41" >>confdefs.h
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else

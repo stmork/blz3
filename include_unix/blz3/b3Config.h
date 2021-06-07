@@ -66,7 +66,7 @@
 #		ifdef HAVE_SSSE3
 #			include <tmmintrin.h>
 #		endif
-#		ifdef HAVE_SSE4
+#		ifdef HAVE_SSE41
 #			include <smmintrin.h>
 #		endif
 #	endif

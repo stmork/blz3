@@ -293,6 +293,16 @@ public:
 		b3_vector  *  vector,
 		const b3_f64  length = 1.0)
 	{
+#ifdef BLZ3_USE_SSE
+		const __m128 v     = _mm_load_ps(&vector->x);
+		const __m128 denom = _mm_sqrt_ps(_mm_dp_ps(v, v, 0x77));
+
+		_mm_store_ps(&vector->x,
+			_mm_mul_ps(v, _mm_div_ps(
+					_mm_set1_ps(length), denom)));
+
+		return _mm_cvtss_f32(denom);
+#else
 		const b3_f64 x        = vector->x;
 		const b3_f64 y        = vector->y;
 		const b3_f64 z        = vector->z;
@@ -304,6 +314,7 @@ public:
 		vector->z *= quotient;
 
 		return denom;
+#endif
 	}
 
 	/**
@@ -458,9 +469,14 @@ public:
 		const b3_vector * aVec,
 		b3_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&result->x,
+			_mm_add_ps(_mm_load_ps(&result->x), _mm_load_ps(&aVec->x)));
+#else
 		result->x += aVec->x;
 		result->y += aVec->y;
 		result->z += aVec->z;
+#endif
 
 		return result;
 	}
@@ -523,9 +539,14 @@ public:
 		const b3_vector * bVec,
 		b3_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&result->x,
+			_mm_add_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
+#else
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
 		result->z = aVec->z + bVec->z;
+#endif
 
 		return result;
 	}
@@ -595,10 +616,14 @@ public:
 		const b3_vector * aVec,
 		b3_vector    *    result)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&result->x,
+			_mm_sub_ps(_mm_load_ps(&result->x), _mm_load_ps(&aVec->x)));
+#else
 		result->x -= aVec->x;
 		result->y -= aVec->y;
 		result->z -= aVec->z;
-
+#endif
 		return result;
 	}
 
@@ -956,10 +981,16 @@ public:
 	 */
 	static inline b3_f32 b3Length(const b3_vector * vector)
 	{
+#ifdef BLZ3_USE_SSE41
+		const __m128 v = _mm_load_ps(&vector->x);
+
+		return _mm_cvtss_f32(_mm_sqrt_ss(_mm_dp_ps(v, v, 0x71)));
+#else
 		return sqrt(
 				vector->x * vector->x +
 				vector->y * vector->y +
 				vector->z * vector->z);
+#endif
 	}
 
 	/**
@@ -984,10 +1015,16 @@ public:
 	 */
 	static inline b3_f32 b3QuadLength(const b3_vector * vector)
 	{
+#ifdef BLZ3_USE_SSE41
+		const __m128 v = _mm_load_ps(&vector->x);
+
+		return _mm_cvtss_f32(_mm_dp_ps(v, v, 0x71));
+#else
 		return
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z;
+#endif
 	}
 
 	/**
@@ -1788,6 +1825,12 @@ public:
 		b3_vector * vector,
 		b3_f32      min)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&vector->x,
+			_mm_max_ps(
+				_mm_load_ps(&vector->x),
+				_mm_set1_ps(min)));
+#else
 		b3_f32 m = (b3_f32)min;
 
 		if (vector->x < m)
@@ -1802,35 +1845,9 @@ public:
 		{
 			vector->z = m;
 		}
+#endif
 
 		return vector;
-	}
-
-	/**
-	 * This method adjusts a lower corner with the values of this instance.
-	 * It's a min() function for each component.
-	 *
-	 * @param lower The lower corner to adjust.
-	 * @param point The point to compare to.
-	 */
-	static inline b3_vector * b3CheckLowerBound(
-		b3_vector    *    lower,
-		const b3_vector * point)
-	{
-		if (point->x < lower->x)
-		{
-			lower->x = point->x;
-		}
-		if (point->y < lower->y)
-		{
-			lower->y = point->y;
-		}
-		if (point->z < lower->z)
-		{
-			lower->z = point->z;
-		}
-
-		return lower;
 	}
 
 	/**
@@ -1843,6 +1860,12 @@ public:
 		b3_vector * vector,
 		b3_f32      max)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&vector->x,
+			_mm_min_ps(
+				_mm_load_ps(&vector->x),
+				_mm_set1_ps(max)));
+#else
 		b3_f32 m = (b3_f32)max;
 
 		if (vector->x > m)
@@ -1857,8 +1880,41 @@ public:
 		{
 			vector->z = m;
 		}
-
+#endif
 		return vector;
+	}
+
+	/**
+	 * This method adjusts a lower corner with the values of this instance.
+	 * It's a min() function for each component.
+	 *
+	 * @param lower The lower corner to adjust.
+	 * @param point The point to compare to.
+	 */
+	static inline b3_vector * b3CheckLowerBound(
+		b3_vector    *    lower,
+		const b3_vector * point)
+	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&lower->x,
+			_mm_min_ps(
+				_mm_load_ps(&lower->x),
+				_mm_load_ps(&point->x)));
+#else
+		if (point->x < lower->x)
+		{
+			lower->x = point->x;
+		}
+		if (point->y < lower->y)
+		{
+			lower->y = point->y;
+		}
+		if (point->z < lower->z)
+		{
+			lower->z = point->z;
+		}
+#endif
+		return lower;
 	}
 
 	/**
@@ -1872,6 +1928,12 @@ public:
 		b3_vector    *    upper,
 		const b3_vector * point)
 	{
+#ifdef BLZ3_USE_SSE
+		_mm_store_ps(&upper->x,
+			_mm_max_ps(
+				_mm_load_ps(&upper->x),
+				_mm_load_ps(&point->x)));
+#else
 		if (point->x > upper->x)
 		{
 			upper->x = point->x;
@@ -1884,6 +1946,7 @@ public:
 		{
 			upper->z = point->z;
 		}
+#endif
 
 		return upper;
 	}
@@ -1963,7 +2026,7 @@ public:
 	 * @param Dst The destination matrix.
 	 * @return The result (= Dst).
 	 */
-	static b3_matrix * b3Transport(const b3_matrix * Src, b3_matrix * Dst);
+	static b3_matrix * b3Copy(const b3_matrix * Src, b3_matrix * Dst);
 
 	/**
 	 * This method creates a translation transformation, multiplies it with an input matrix and stores the

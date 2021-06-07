@@ -34,11 +34,13 @@ AC_SUBST(BLZ3_USE_OPENGL)
 AC_SUBST(BLZ3_USE_SSE)
 AC_SUBST(BLZ3_USE_SSE2)
 AC_SUBST(BLZ3_USE_SSE3)
+AC_SUBST(BLZ3_USE_SSE41)
 AC_SUBST(BLZ3_USE_X264)
 AC_SUBST(HAVE_LIBCPPUNIT)
 AC_SUBST(HAVE_SSE)
 AC_SUBST(HAVE_SSE2)
 AC_SUBST(HAVE_SSE3)
+AC_SUBST(HAVE_SSE41)
 AC_SUBST(HAVE_X264_DELAYED_FRAMES)
 AC_SUBST(HAVE_X264_PARAMETER_DEFINITION)
 AC_SUBST(SSE_ALIGNED)
@@ -95,8 +97,8 @@ sprintf(result,"%f\n",*((float *)&r));
 ])
 
 AC_CHECK_HEADER([emmintrin.h],[
-	AC_DEFINE([HAVE_SSE2], [2], [Is SSE2 available?])
-	AC_MSG_CHECKING([for SSE2])
+	AC_DEFINE([HAVE_SSE2], [2], [Is SSE 2 available?])
+	AC_MSG_CHECKING([for SSE 2])
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
 __m128d a;
@@ -108,13 +110,13 @@ r = _mm_add_pd(a,b);
 // printf ("SSE2 %p %p\n", &a, &b);
 sprintf(result,"%lf\n",*((double *)&r));
 	])],
-	[AC_DEFINE([BLZ3_USE_SSE2], [2], [Does Blizzard use SSE2?]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([BLZ3_USE_SSE2], [2], [Does Blizzard use SSE 2?]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
 AC_CHECK_HEADER([pmmintrin.h],[
-	AC_DEFINE([HAVE_SSE3], [3], [Is SSE3 available?])
-	AC_MSG_CHECKING([for SSE3])
+	AC_DEFINE([HAVE_SSE3], [3], [Is SSE 3 available?])
+	AC_MSG_CHECKING([for SSE 3])
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <emmintrin.h>
 #include <pmmintrin.h>
@@ -127,13 +129,13 @@ r = _mm_hadd_pd(a,b);
 // printf ("SSE3 %p %p\n", &a, &b);
 sprintf(result,"%lf\n",*((double *)&r));
 	])],
-	[AC_DEFINE([BLZ3_USE_SSE3], [3], [Does Blizzard use SSE3?]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([BLZ3_USE_SSE3], [3], [Does Blizzard use SSE 3?]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 
 AC_CHECK_HEADER([tmmintrin.h],[
-	AC_DEFINE([HAVE_SSSE3], [3], [Is SSSE3 available?])
-	AC_MSG_CHECKING([for SSSE3])
+	AC_DEFINE([HAVE_SSSE3], [3], [Is SSSE 3 available?])
+	AC_MSG_CHECKING([for SSSE 3])
 	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
 #include <tmmintrin.h>
 __m128i input   = _mm_set1_epi32(0x19121968);
@@ -144,7 +146,24 @@ __m128i shuffle = _mm_set_epi8(
 					0x80, 0x80, 0x80, 0x03);
 __m128i sse = _mm_shuffle_epi8(input, shuffle);
 	])],
-	[AC_DEFINE([BLZ3_USE_SSSE3], [3], [Does Blizzard use SSSE3?]) AC_MSG_RESULT(yes)],
+	[AC_DEFINE([BLZ3_USE_SSSE3], [3], [Does Blizzard use SSSE 3?]) AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
+])
+
+AC_CHECK_HEADER([smmintrin.h],[
+	AC_DEFINE([HAVE_SSE41], [41], [Is SSE 4.1 available?])
+	AC_MSG_CHECKING([for SSE 4.1])
+	AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>
+#include <smmintrin.h>
+__m128 a,b,r;],[
+char result[[128]];
+a = _mm_set1_ps(1);
+b = _mm_set1_ps(1);
+r = _mm_dp_ps(a,b,0x71);
+// printf ("SSE 4.1 %p %p\n", &a, &b);
+sprintf(result,"%lf\n",*((float *)&r));
+	])],
+	[AC_DEFINE([BLZ3_USE_SSE41], [41], [Does Blizzard use SSE 4.1?]) AC_MSG_RESULT(yes)],
 	[AC_MSG_RESULT(no)])
 ])
 

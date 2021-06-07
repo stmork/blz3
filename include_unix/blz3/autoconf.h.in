@@ -18,13 +18,16 @@
 /* Does Blizzard use SSE? */
 #undef BLZ3_USE_SSE
 
-/* Does Blizzard use SSE2? */
+/* Does Blizzard use SSE 2? */
 #undef BLZ3_USE_SSE2
 
-/* Does Blizzard use SSE3? */
+/* Does Blizzard use SSE 3? */
 #undef BLZ3_USE_SSE3
 
-/* Does Blizzard use SSSE3? */
+/* Does Blizzard use SSE 4.1? */
+#undef BLZ3_USE_SSE41
+
+/* Does Blizzard use SSSE 3? */
 #undef BLZ3_USE_SSSE3
 
 /* Define to 1 if the `closedir' function returns void instead of `int'. */
@@ -176,13 +179,16 @@
 /* Is SSE available? */
 #undef HAVE_SSE
 
-/* Is SSE2 available? */
+/* Is SSE 2 available? */
 #undef HAVE_SSE2
 
-/* Is SSE3 available? */
+/* Is SSE 3 available? */
 #undef HAVE_SSE3
 
-/* Is SSSE3 available? */
+/* Is SSE 4.1 available? */
+#undef HAVE_SSE41
+
+/* Is SSSE 3 available? */
 #undef HAVE_SSSE3
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the

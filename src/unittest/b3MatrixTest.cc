@@ -296,22 +296,27 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(2.0f, bs.x);
 	CPPUNIT_ASSERT_EQUAL(1.5f, bs.y);
 	CPPUNIT_ASSERT_EQUAL(4.0f, bs.z);
+
 	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3SetMinimum(&as, 0.5));
 	CPPUNIT_ASSERT_EQUAL(1.0f, as.x);
 	CPPUNIT_ASSERT_EQUAL(0.5f, as.y);
 	CPPUNIT_ASSERT_EQUAL(2.0f, as.z);
+
 	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3CheckLowerBound(&as, &bs));
 	CPPUNIT_ASSERT_EQUAL(1.0f, as.x);
 	CPPUNIT_ASSERT_EQUAL(0.5f, as.y);
 	CPPUNIT_ASSERT_EQUAL(2.0f, as.z);
+
 	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3SetMaximum(&as, 1.5));
 	CPPUNIT_ASSERT_EQUAL(1.0f, as.x);
 	CPPUNIT_ASSERT_EQUAL(0.5f, as.y);
 	CPPUNIT_ASSERT_EQUAL(1.5f, as.z);
+
 	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3CheckUpperBound(&as, &bs));
 	CPPUNIT_ASSERT_EQUAL(2.0f, as.x);
 	CPPUNIT_ASSERT_EQUAL(1.5f, as.y);
 	CPPUNIT_ASSERT_EQUAL(4.0f, as.z);
+
 	b3Vector::b3AdjustBound(&as, &cs, &ds);
 	CPPUNIT_ASSERT_EQUAL(1.0f, cs.x);
 	CPPUNIT_ASSERT_EQUAL(1.5f, cs.y);
@@ -346,7 +351,7 @@ void b3MatrixTest::testMatrix()
 	CPPUNIT_ASSERT_EQUAL(&bm, b3Matrix::b3Inverse(&am, &bm));
 	am.m11 = 0;
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_matrix *, nullptr, b3Matrix::b3Inverse(&am, &cm));
-	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Transport(&am, &dm));
+	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Copy(&am, &dm));
 	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Move(nullptr, &dm, &as));
 	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3Move(nullptr, &dm, 1, 2, 3));
 	CPPUNIT_ASSERT_EQUAL(&dm, b3Matrix::b3MoveNegative(nullptr, &dm, &bs));

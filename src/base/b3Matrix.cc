@@ -156,7 +156,7 @@ b3_matrix * b3Matrix::b3Unit(b3_matrix * Matrix)
 	return Matrix;
 }
 
-b3_matrix * b3Matrix::b3Transport(
+b3_matrix * b3Matrix::b3Copy(
 	const b3_matrix * From,
 	b3_matrix    *    To)
 {
