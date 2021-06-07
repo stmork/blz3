@@ -57,15 +57,19 @@ int main(int argc, char * argv[])
 #endif
 
 #ifdef BLZ3_USE_SSE2
-	b3PrintF(B3LOG_NORMAL, "Using SSE2 intrinsics.\n");
+	b3PrintF(B3LOG_NORMAL, "Using SSE 2 intrinsics.\n");
 #endif
 
 #ifdef BLZ3_USE_SSE3
-	b3PrintF(B3LOG_NORMAL, "Using SSE3 intrinsics.\n");
+	b3PrintF(B3LOG_NORMAL, "Using SSE 3 intrinsics.\n");
 #endif
 
 #ifdef BLZ3_USE_SSSE3
-	b3PrintF(B3LOG_NORMAL, "Using Supplemental SSE3 intrinsics.\n");
+	b3PrintF(B3LOG_NORMAL, "Using Supplemental SSE 3 intrinsics.\n");
+#endif
+
+#ifdef BLZ3_USE_SSE41
+	b3PrintF(B3LOG_NORMAL, "Using SSE 4.1 intrinsics.\n");
 #endif
 
 #ifdef SSE_ALIGNED

@@ -37,15 +37,16 @@
 
 const std::unordered_map<b3_vector_unit, const char *> b3Runtime::m_VectorMap
 {
-	{ B3_VU_FPU, "FPU" },
-	{ B3_VU_MMX, "MMX" },
-	{ B3_VU_SSE, "SSE" },
-	{ B3_VU_SSE2, "SSE2" },
-	{ B3_VU_SSE3, "SSE3" },
-	{ B3_VU_SSSE3, "Supplemental SSE3" },
-	{ B3_VU_3DNOW, "3DNow!" },
+	{ B3_VU_FPU,     "FPU" },
+	{ B3_VU_MMX,     "MMX" },
+	{ B3_VU_SSE,     "SSE" },
+	{ B3_VU_SSE2,    "SSE 2" },
+	{ B3_VU_SSE3,    "SSE 3" },
+	{ B3_VU_SSSE3,   "Supplemental SSE 3" },
+	{ B3_VU_SSE41,   "SSE 4.1" },
+	{ B3_VU_3DNOW,   "3DNow!" },
 	{ B3_VU_ALTIVEC, "AltiVec" },
-	{ B3_VU_NEON, "NEON" }
+	{ B3_VU_NEON,    "NEON" }
 };
 
 b3Runtime::b3Runtime()

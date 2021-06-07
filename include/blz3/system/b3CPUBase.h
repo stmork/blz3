@@ -40,9 +40,10 @@ enum b3_vector_unit
 	B3_VU_FPU,     //!< No vectorization unit.
 	B3_VU_MMX,     //!< MMX
 	B3_VU_SSE,     //!< SSE
-	B3_VU_SSE2,    //!< SSE2
-	B3_VU_SSE3,    //!< SSE3
-	B3_VU_SSSE3,   //!< Supplemental SSE3
+	B3_VU_SSE2,    //!< SSE 2
+	B3_VU_SSE3,    //!< SSE 3
+	B3_VU_SSSE3,   //!< Supplemental SSE 3
+	B3_VU_SSE41,   //!< SSE 4.1
 	B3_VU_3DNOW,   //!< AMD 3DNow
 	B3_VU_ALTIVEC, //!< PowerPC AltiVec/Velocity Engine
 	B3_VU_NEON     //!< ARM vector unit.
@@ -70,7 +71,9 @@ protected:
 	 */
 	static inline b3_vector_unit b3GetVectorUnit()
 	{
-#if   defined(BLZ3_USE_SSSE3)
+#if   defined(BLZ3_USE_SSE41)
+		return B3_VU_SSE41;
+#elif defined(BLZ3_USE_SSSE3)
 		return B3_VU_SSSE3;
 #elif defined(BLZ3_USE_SSE3)
 		return B3_VU_SSE3;
