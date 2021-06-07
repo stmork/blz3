@@ -254,6 +254,7 @@ AC_CHECK_LIB([avcodec], [main])
 AC_CHECK_LIB([tiff], [main])
 AC_CHECK_LIB([jpeg], [main])
 AC_CHECK_LIB([exif], [main])
+AC_CHECK_LIB([exiv2], [main])
 
 # Check for system libraries
 AC_CHECK_LIB([dl], [main])
