@@ -73,7 +73,7 @@ void b3ExifTest::testSimple()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename));
 
 	exif_data["Exif.Image.Model"] = b3Runtime::b3GetProduct();
-//	exif_data["Exif.Image.Author"] = b3Runtime::b3GetUserName();
+	CPPUNIT_ASSERT_THROW(exif_data["Exif.Image.Author"] = b3Runtime::b3GetUserName(), std::exception);
 	exif_data["Exif.Image.SamplesPerPixel"] = uint16_t(3);
 	exif_data["Exif.Image.XResolution"] = 100;
 	exif_data["Exif.Image.YResolution"] = 100;
@@ -104,18 +104,26 @@ void b3ExifTest::testRaytrace()
 
 		CPPUNIT_ASSERT(scene != nullptr);
 		b3Animation *     animation = scene->b3GetAnimation(true);
-		b3Special *       special   = scene->b3GetModellerInfo();
+		b3ModellerInfo *  info      = scene->b3GetModellerInfo();
 		b3CameraPart *    camera    = scene->b3GetActualCamera();
 		Exiv2::ExifData   exif_data;
 		b3Display         display(scene->m_xSize, scene->m_ySize);
 		b3Path            image_filename;
-		b3_vector            lower, upper;
+		b3_vector         lower, upper;
 
 		CPPUNIT_ASSERT(animation != nullptr);
-		CPPUNIT_ASSERT(special != nullptr);
+		CPPUNIT_ASSERT(info    != nullptr);
 		CPPUNIT_ASSERT(camera != nullptr);
 
+		const b3_f64 width  = b3Vector::b3Length(&camera->m_Width)  * 2.0;
+		const b3_f64 height = b3Vector::b3Length(&camera->m_Height) * 2.0;
+		const int    x_dpi  = std::round(width  / info   ->b3Scale(width,  B3_UNIT_IN));
+		const int    y_dpi  = std::round(height / info   ->b3Scale(height, B3_UNIT_IN));
+
 		exif_data["Exif.Image.Model"] = b3Runtime::b3GetProduct();
+		exif_data["Exif.Image.SamplesPerPixel"] = uint16_t(3);
+		exif_data["Exif.Image.XResolution"] = x_dpi;
+		exif_data["Exif.Image.YResolution"] = y_dpi;
 
 		scene->b3Reorg();
 		scene->b3SetupVertexMemory(&context);
