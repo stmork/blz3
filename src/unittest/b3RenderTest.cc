@@ -40,14 +40,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3RenderTest);
 
 void b3RenderTest::setUp()
 {
-	b3Path WORKSPACE(getenv("BLZ3_HOME"));
+	b3Path WORKSPACE(getenv("WORKSPACE"));
 	b3Path BLZ3_HOME(getenv("BLZ3_HOME"));
 
 	WORKSPACE.b3Append("data");
 	BLZ3_HOME.b3Append("data");
-	search_path.b3AddPath(WORKSPACE);
-	search_path.b3AddPath(BLZ3_HOME);
-	search_path.b3AddPath("../../data");
+	m_SearchPath.b3AddPath(WORKSPACE);
+	m_SearchPath.b3AddPath(BLZ3_HOME);
+	m_SearchPath.b3AddPath("../../data");
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
@@ -62,7 +62,7 @@ void b3RenderTest::testShapes()
 	b3Path   full_path;
 	b3World  world;
 
-	CPPUNIT_ASSERT(search_path.b3IsValid("Shapes.bwd", full_path));
+	CPPUNIT_ASSERT(m_SearchPath.b3IsValid("Shapes.bwd", full_path));
 	CPPUNIT_ASSERT(world.b3Read(full_path, false));
 	CPPUNIT_ASSERT(testScene(world));
 }
@@ -72,7 +72,7 @@ void b3RenderTest::testMaterial()
 	b3Path   full_path;
 	b3World  world;
 
-	CPPUNIT_ASSERT(search_path.b3IsValid("Material.bwd", full_path));
+	CPPUNIT_ASSERT(m_SearchPath.b3IsValid("Material.bwd", full_path));
 	CPPUNIT_ASSERT(world.b3Read(full_path, false));
 	CPPUNIT_ASSERT(testScene(world));
 }
@@ -82,7 +82,7 @@ void b3RenderTest::testAllShapes()
 	b3Path   full_path;
 	b3World  world;
 
-	CPPUNIT_ASSERT(search_path.b3IsValid("AllShapes.bwd", full_path));
+	CPPUNIT_ASSERT(m_SearchPath.b3IsValid("AllShapes.bwd", full_path));
 	CPPUNIT_ASSERT(world.b3Read(full_path, false));
 	CPPUNIT_ASSERT(testScene(world));
 }

@@ -399,12 +399,8 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_Center.x         = 0;
 	m_Center.y         = 0;
 	m_Center.z         = 0;
-	m_StepMove.x       =
-		m_StepMove.y       =
-			m_StepMove.z       = 10;
-	m_StepRotate.x     =
-		m_StepRotate.y     =
-			m_StepRotate.z     = 15;
+	m_StepMove.x       = m_StepMove.y   = m_StepMove.z   = 10;
+	m_StepRotate.x     = m_StepRotate.y = m_StepRotate.z = 15;
 	m_Unit             = B3_UNIT_CM;
 	m_Measure          = B3_MEASURE_100;
 	m_ResizeFlag       = true; // Not used in Blizzard III
@@ -430,13 +426,10 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 * src) :
 	m_GridActive   = b3InitBool();
 	m_CameraActive = b3InitBool();
 	m_AngleGrid    = B3_ANGLE_GRID_OBJECT;
-	m_StepMove.x   =
-		m_StepMove.y   =
-			m_StepMove.z   = 10;
-	m_StepRotate.x =
-		m_StepRotate.y =
-			m_StepRotate.z = 15;
+	m_StepMove.x   = m_StepMove.y   = m_StepMove.z   = 10;
+	m_StepRotate.x = m_StepRotate.y = m_StepRotate.z = 15;
 	m_Flags        = 0;
+
 	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Flags    = b3InitInt();
@@ -450,8 +443,8 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 * src) :
 	}
 	m_AngleGridObjects = (m_AngleGrid & B3_ANGLE_GRID_OBJECT) != 0;
 	m_AngleGridCamera  = (m_AngleGrid & B3_ANGLE_GRID_CAMERA) != 0;
-	m_Unit           = (b3_unit)((m_Flags & B3_UNIT_MASK)           >> B3_UNIT_SHIFT);
-	m_Measure        = (b3_measure)((m_Flags & B3_MEASURE_MASK)        >> B3_MEASURE_SHIFT);
+	m_Unit           = (b3_unit)(   (m_Flags & B3_UNIT_MASK)    >> B3_UNIT_SHIFT);
+	m_Measure        = (b3_measure)((m_Flags & B3_MEASURE_MASK) >> B3_MEASURE_SHIFT);
 	m_CustomMeasure  = (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
 	m_UseSceneLights = (m_Flags & B3_USE_SCENE_LIGHTS) != 0;
 

@@ -31,7 +31,7 @@
 
 class b3RenderTest : public CppUnit::TestFixture
 {
-	b3SearchPath search_path;
+	b3SearchPath m_SearchPath;
 
 	CPPUNIT_TEST_SUITE(b3RenderTest);
 	CPPUNIT_TEST(testShapes);

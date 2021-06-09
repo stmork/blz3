@@ -21,6 +21,7 @@
 #define B3_EXIF_TEST_H
 
 #include "blz3/image/b3Tx.h"
+#include "blz3/raytrace/b3Scene.h"
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
@@ -28,16 +29,20 @@
 
 class b3ExifTest : public CppUnit::TestFixture
 {
-	b3Tx m_Tx;
+	b3SearchPath m_SearchPath;
+	b3Tx         m_Tx;
+	b3World      m_World;
 
 	CPPUNIT_TEST_SUITE(b3ExifTest);
-	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testSimple);
+	CPPUNIT_TEST(testRaytrace);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void test();
+	void testSimple();
+	void testRaytrace();
 };
 
 #endif
