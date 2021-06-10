@@ -119,7 +119,7 @@ struct tm * b3Date::b3TM(struct tm * time_tm)
 
 void b3Date::b3LocalTime()
 {
-	struct tm * now;
+	const struct tm * now;
 
 	now       = localtime(&time_code);
 	mode      = B3_DT_LOCAL;
@@ -195,7 +195,7 @@ void b3Date::b3DiffTime()
 
 void b3Date::b3Dump(const long code)
 {
-	b3PrintF(B3LOG_DEBUG, "### Y2K - %02u.%02u.%04lu: %c%c%c %c%c%c %c%c (%s)\n",
+	b3PrintF(B3LOG_DEBUG, "### Y2K - %02u.%02u.%04u: %c%c%c %c%c%c %c%c (%s)\n",
 		day, month, year,
 		(code &   1) ? '*' : '-',
 		(code &   2) ? '*' : '-',
@@ -209,16 +209,16 @@ void b3Date::b3Dump(const long code)
 }
 
 long b3Date::b3Check(
-	unsigned short t_hour,
-	unsigned short t_min,
-	unsigned short t_sec,
-	unsigned short t_day,
-	b3_month       t_month,
-	unsigned long  t_year,
-	b3_week_day    t_wday,
-	bool           t_dls)
+	unsigned     t_hour,
+	unsigned     t_min,
+	unsigned     t_sec,
+	unsigned     t_day,
+	b3_month     t_month,
+	signed       t_year,
+	b3_week_day  t_wday,
+	bool         t_dls)
 {
-	long code = 0;
+	unsigned code = 0;
 
 	// If we are in summer time we have one hour later.
 	// So do it so!
@@ -227,14 +227,14 @@ long b3Date::b3Check(
 		t_hour++;
 	}
 
-	code |= ((long)(hour  != t_hour)  << 0);
-	code |= ((long)(min   != t_min)   << 1);
-	code |= ((long)(sec   != t_sec)   << 2);
-	code |= ((long)(day   != t_day)   << 3);
-	code |= ((long)(month != t_month) << 4);
-	code |= ((long)(year  != t_year)  << 5);
-	code |= ((long)(wday  != t_wday)  << 6);
-	code |= ((long)(dls   != t_dls)   << 7);
+	code |= ((unsigned)(hour  != t_hour)  << 0);
+	code |= ((unsigned)(min   != t_min)   << 1);
+	code |= ((unsigned)(sec   != t_sec)   << 2);
+	code |= ((unsigned)(day   != t_day)   << 3);
+	code |= ((unsigned)(month != t_month) << 4);
+	code |= ((unsigned)(year  != t_year)  << 5);
+	code |= ((unsigned)(wday  != t_wday)  << 6);
+	code |= ((unsigned)(dls   != t_dls)   << 7);
 
 	return code;
 }
@@ -348,7 +348,7 @@ bool b3Date::b3Y2K_Selftest()
 	b3GMTime();
 	b3PrintF(B3LOG_DEBUG, "### Y2K\n");
 	b3PrintF(B3LOG_DEBUG, "### Y2K - The last possible time code is at:\n");
-	b3PrintF(B3LOG_DEBUG, "### Y2K - %02d:%02d:%02d - %02d.%02d.%ld GMT\n",
+	b3PrintF(B3LOG_DEBUG, "### Y2K - %02u:%02u:%02u - %02u.%02u.%d GMT\n",
 		hour, min, sec, day, month, year);
 
 	// Set previous mode;
@@ -456,11 +456,6 @@ bool b3Date::b3SetTime(
 		result = false;
 	}
 	return result;
-}
-
-time_t b3Date::operator()()
-{
-	return time_code;
 }
 
 b3Date b3Date::operator+(const b3Date & b)

@@ -85,16 +85,16 @@ class B3_PLUGIN b3Date
 
 public:
 	// date
-	unsigned long  year;     //!< The year.
+	signed         year;     //!< The year.
 	b3_month       month;    //!< The month.
-	unsigned short day;      //!< The day of month.
+	unsigned       day;      //!< The day of month.
 	b3_week_day    wday;     //!< The day of week.
 
 	// time
-	unsigned short hour;     //!< The hour.
-	unsigned short min;      //!< The minute.
-	unsigned short sec;      //!< The second.
-	unsigned long  microsec; //!< The microseconds
+	unsigned       hour;     //!< The hour.
+	unsigned       min;      //!< The minute.
+	unsigned       sec;      //!< The second.
+	unsigned       microsec; //!< The microseconds
 
 	bool           dls;      //!< Daylight saving time.
 
@@ -222,7 +222,10 @@ public:
 	 *
 	 * @return The date as time_t.
 	 */
-	time_t   operator()();
+	inline operator time_t () const
+	{
+		return time_code;
+	}
 
 	/////////////////////////////// Comparisons
 	/**
@@ -279,9 +282,10 @@ private:
 	void b3LocalTime();
 	void b3GMTime();
 	void b3DiffTime();
-	long b3Check(unsigned short, unsigned short, unsigned short,
-		unsigned short, b3_month, unsigned long,
-		b3_week_day, bool);
+	long b3Check(
+		unsigned h, unsigned m, unsigned s,
+		unsigned day, b3_month, signed year,
+		b3_week_day w, bool dls);
 
 	void b3Dump(const long code);
 };
