@@ -338,7 +338,7 @@ enum b3_angle_grid
 class B3_PLUGIN b3ModellerInfo : public b3Special
 {
 	static const b3_f64   m_UnitScaleTable[B3_UNIT_MAX];
-	static const char *   m_UnitDescrTable[B3_UNIT_MAX];
+	static const char  *  m_UnitDescrTable[B3_UNIT_MAX];
 	static const b3_u32   m_MeasureTable[B3_MEASURE_MAX - 1];
 
 	b3_u32           m_Flags;
@@ -410,7 +410,7 @@ public:
 	 * @param unit The desired unit to scale into.
 	 * @return The scaled value in the desired unit.
 	 */
-	b3_f64       b3Scale(const b3_f64 value, const b3_unit unit) const
+	b3_f64       b3Scale(const b3_f64 value, const b3_unit unit = B3_UNIT_MM) const
 	{
 		return value * m_UnitScaleTable[m_Unit] / m_UnitScaleTable[unit];
 	}

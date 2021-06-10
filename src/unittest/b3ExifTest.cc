@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Skeleton for unit tests.
+**	Blizzard III - Tests for EXIF.
 **
 **      (C) Copyright 2001 - 2021  Steffen A. Mork
 **          All Rights Reserved
@@ -34,10 +34,6 @@
 *************************************************************************/
 
 #ifdef HAVE_LIBCPPUNIT
-
-#ifdef HAVE_LIBEXIV2
-#include <exiv2/exiv2.hpp>
-#endif
 
 CPPUNIT_TEST_SUITE_REGISTRATION(b3ExifTest);
 
@@ -67,17 +63,17 @@ void b3ExifTest::tearDown()
 void b3ExifTest::testSimple()
 {
 #ifdef HAVE_LIBEXIV2
-	const char *    image_filename = "img_exif1_20.jpg";
-	Exiv2::ExifData exif_data;
+	const char   *  image_filename = "img_exif1_20.jpg";
 
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename));
+	Exiv2::Image::AutoPtr image     = Exiv2::ImageFactory::open(image_filename);
 
-	exif_data["Exif.Image.Model"] = b3Runtime::b3GetProduct();
+	image->readMetadata();
+	Exiv2::ExifData &     exif_data = image->exifData();
+
 	CPPUNIT_ASSERT_THROW(exif_data["Exif.Image.Author"] = b3Runtime::b3GetUserName(), std::exception);
-	exif_data["Exif.Image.SamplesPerPixel"] = uint16_t(3);
-	exif_data["Exif.Image.XResolution"] = 100;
-	exif_data["Exif.Image.YResolution"] = 100;
-	Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(image_filename);
+
+	fill(exif_data);
 
 	CPPUNIT_ASSERT(image.get() != 0);
 
@@ -103,27 +99,10 @@ void b3ExifTest::testRaytrace()
 		b3Scene * scene = static_cast<b3Scene *>(item);
 
 		CPPUNIT_ASSERT(scene != nullptr);
-		b3Animation *     animation = scene->b3GetAnimation(true);
-		b3ModellerInfo *  info      = scene->b3GetModellerInfo();
-		b3CameraPart *    camera    = scene->b3GetActualCamera();
-		Exiv2::ExifData   exif_data;
+
 		b3Display         display(scene->m_xSize, scene->m_ySize);
 		b3Path            image_filename;
 		b3_vector         lower, upper;
-
-		CPPUNIT_ASSERT(animation != nullptr);
-		CPPUNIT_ASSERT(info    != nullptr);
-		CPPUNIT_ASSERT(camera != nullptr);
-
-		const b3_f64 width  = b3Vector::b3Length(&camera->m_Width)  * 2.0;
-		const b3_f64 height = b3Vector::b3Length(&camera->m_Height) * 2.0;
-		const int    x_dpi  = std::round(width  / info   ->b3Scale(width,  B3_UNIT_IN));
-		const int    y_dpi  = std::round(height / info   ->b3Scale(height, B3_UNIT_IN));
-
-		exif_data["Exif.Image.Model"] = b3Runtime::b3GetProduct();
-		exif_data["Exif.Image.SamplesPerPixel"] = uint16_t(3);
-		exif_data["Exif.Image.XResolution"] = x_dpi;
-		exif_data["Exif.Image.YResolution"] = y_dpi;
 
 		scene->b3Reorg();
 		scene->b3SetupVertexMemory(&context);
@@ -135,12 +114,65 @@ void b3ExifTest::testRaytrace()
 		CPPUNIT_ASSERT(display.b3SaveImage(image_filename));
 		Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(image_filename);
 
+		image->readMetadata();
+		Exiv2::ExifData & exif_data = image->exifData();
+
+		CPPUNIT_ASSERT_NO_THROW(fill(exif_data, scene));
 		CPPUNIT_ASSERT(image.get() != 0);
 
 		image->setExifData(exif_data);
 		image->writeMetadata();
 	}
 #endif
+}
+
+bool b3ExifTest::fill(Exiv2::ExifData & exif_data, b3Scene * scene)
+{
+	char              hostname[32];
+
+	b3Runtime::b3Hostname(hostname, sizeof(hostname));
+	CPPUNIT_ASSERT(strlen(hostname) > 0);
+	CPPUNIT_ASSERT(strlen(hostname) < sizeof(hostname));
+
+
+	exif_data["Exif.Image.Make"]            = "MORKNet";
+	exif_data["Exif.Image.Model"]           = b3Runtime::b3GetProduct();
+	exif_data["Exif.Image.Software"]        = b3Runtime::b3GetProduct();
+	exif_data["Exif.Image.Artist"]          = b3Runtime::b3GetUserName();
+	exif_data["Exif.Image.HostComputer"]    = hostname;
+
+	if (scene != nullptr)
+	{
+		b3Animation   *   animation = scene->b3GetAnimation(false);
+		b3ModellerInfo  * info      = scene->b3GetModellerInfo();
+		b3CameraPart   *  camera    = scene->b3GetActualCamera();
+
+		exif_data["Exif.Image.ImageWidth"]      = scene->m_xSize;
+		exif_data["Exif.Image.ImageLength"]     = scene->m_ySize;
+
+		CPPUNIT_ASSERT(info != nullptr);
+		if (camera != nullptr)
+		{
+			const b3_f64 focal  = camera->b3GetFocalLength();
+			const b3_f64 width  = b3Vector::b3Length(&camera->m_Width)  * 2.0;
+			const b3_f64 height = b3Vector::b3Length(&camera->m_Height) * 2.0;
+			const int    x_dpi  = std::round(width  / info->b3Scale(width,  B3_UNIT_IN));
+			const int    y_dpi  = std::round(height / info->b3Scale(height, B3_UNIT_IN));
+
+			exif_data["Exif.Image.SamplesPerPixel"] = uint16_t(3);
+			exif_data["Exif.Image.Orientation"]     = uint16_t(1);
+			exif_data["Exif.Image.XResolution"]     = x_dpi;
+			exif_data["Exif.Image.YResolution"]     = y_dpi;
+			exif_data["Exif.Image.ResolutionUnit"]  = uint16_t(2);
+			exif_data["Exif.Image.FocalLength"]     =  Exiv2::Rational(info->b3Scale(focal, B3_UNIT_MM), 1);
+		}
+
+		if (animation != nullptr)
+		{
+//			exif_data["Exif.Image.FrameRate"]  = Exiv2::Rational(animation->m_FramesPerSecond, 1);
+		}
+	}
+	return true;
 }
 
 #endif
