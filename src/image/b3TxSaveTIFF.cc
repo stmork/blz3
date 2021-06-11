@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
+#include "blz3/image/b3TxExif.h"
 
 #include <math.h>
 
@@ -354,7 +355,7 @@ b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3SaveTIFF(const char * nameTx)
+b3_result b3Tx::b3SaveTIFF(const char * nameTx, b3TxExif * exif)
 {
 	TIFF    *    tiff;
 	b3_tx_error  result = B3_TX_OK;
@@ -417,6 +418,10 @@ b3_result b3Tx::b3SaveTIFF(const char * nameTx)
 	if (result != B3_TX_OK)
 	{
 		B3_THROW(b3TxException, result);
+	}
+	else if (exif != nullptr)
+	{
+		exif->b3Write(image_name);
 	}
 	return B3_OK;
 }

@@ -70,7 +70,7 @@ void b3ExifTest::testSimple()
 	Exiv2::Image::AutoPtr image     = Exiv2::ImageFactory::open(image_filename);
 
 	image->readMetadata();
-	Exiv2::ExifData &     exif_data = image->exifData();
+	Exiv2::ExifData   &   exif_data = image->exifData();
 
 	CPPUNIT_ASSERT_THROW(exif_data["Exif.Image.Author"] = b3Runtime::b3GetUserName(), std::exception);
 
@@ -140,13 +140,20 @@ bool b3ExifTest::fill(Exiv2::ExifData & exif_data, b3Scene * scene)
 
 	snprintf(copyright, sizeof(copyright), "Copyright (C) %s, %u", b3Runtime::b3GetUserName(), now.year);
 	snprintf(date_time, sizeof(date_time), "%04d:%02u:%02u %02u:%02u:%02u",
-			 now.year, now.month, now.day, now.hour, now.min, now.sec);
-	exif_data["Exif.Image.Make"]            = "MORKNet";
-	exif_data["Exif.Image.Model"]           = b3Runtime::b3GetProduct();
-	exif_data["Exif.Image.Software"]        = b3Runtime::b3GetProduct();
-	exif_data["Exif.Image.Artist"]          = b3Runtime::b3GetUserName();
-	exif_data["Exif.Image.HostComputer"]    = hostname;
-	exif_data["Exif.Image.Copyright"]       = copyright;
+		now.year, now.month, now.day, now.hour, now.min, now.sec);
+	exif_data["Exif.Image.Make"]             = "MORKNet";
+	exif_data["Exif.Image.Model"]            = b3Runtime::b3GetProduct();
+	exif_data["Exif.Image.Software"]         = b3Runtime::b3GetProduct();
+	exif_data["Exif.Image.Artist"]           = b3Runtime::b3GetUserName();
+	exif_data["Exif.Image.HostComputer"]     = hostname;
+	exif_data["Exif.Image.Copyright"]        = copyright;
+	exif_data["Exif.Image.SamplesPerPixel"]  = uint16_t(3);
+	exif_data["Exif.Image.Orientation"]      = uint16_t(1);
+	exif_data["Exif.Image.DateTime"]         = date_time;
+	exif_data["Exif.Image.DateTimeOriginal"] = date_time;
+	exif_data["Exif.Image.TimeZoneOffset"]   = short(1 + now.dls);
+	exif_data["Exif.Photo.DateTimeOriginal"] = date_time;
+	exif_data["Exif.Photo.ColorSpace"]       = 1;
 
 	if (scene != nullptr)
 	{
@@ -156,25 +163,18 @@ bool b3ExifTest::fill(Exiv2::ExifData & exif_data, b3Scene * scene)
 
 		exif_data["Exif.Image.ImageWidth"]  = scene->m_xSize;
 		exif_data["Exif.Image.ImageLength"] = scene->m_ySize;
-		exif_data["Exif.Image.DateTime"]    = date_time;
-		exif_data["Exif.Image.DateTimeOriginal"]    = date_time;
-		exif_data["Exif.Image.TimeZoneOffset"] = short(1 + now.dls);
-
-		exif_data["Exif.Photo.DateTimeOriginal"]    = date_time;
 
 		CPPUNIT_ASSERT(info != nullptr);
 		if (camera != nullptr)
 		{
-			const b3_f64 focal  = camera->b3GetFocalLength();
+			const b3_f64 focal    = camera->b3GetFocalLength();
 			const b3_f64 focal_mm = info->b3Scale(focal, B3_UNIT_MM);
-			const b3_f64 width  = b3Vector::b3Length(&camera->m_Width)  * 2.0;
-			const b3_f64 height = b3Vector::b3Length(&camera->m_Height) * 2.0;
-			const int    x_dpi  = std::round(width  / info->b3Scale(width,  B3_UNIT_IN));
-			const int    y_dpi  = std::round(height / info->b3Scale(height, B3_UNIT_IN));
+			const b3_f64 width    = b3Vector::b3Length(&camera->m_Width)  * 2.0;
+			const b3_f64 height   = b3Vector::b3Length(&camera->m_Height) * 2.0;
+			const int    x_dpi    = std::round(width  / info->b3Scale(width,  B3_UNIT_IN));
+			const int    y_dpi    = std::round(height / info->b3Scale(height, B3_UNIT_IN));
 			const b3_f64 focal_scale = 35.0 / info->b3Scale(width, B3_UNIT_MM);
 
-			exif_data["Exif.Image.SamplesPerPixel"] = uint16_t(3);
-			exif_data["Exif.Image.Orientation"]     = uint16_t(1);
 			exif_data["Exif.Image.XResolution"]     = x_dpi;
 			exif_data["Exif.Image.YResolution"]     = y_dpi;
 			exif_data["Exif.Image.ResolutionUnit"]  = uint16_t(2);
@@ -182,15 +182,16 @@ bool b3ExifTest::fill(Exiv2::ExifData & exif_data, b3Scene * scene)
 
 			exif_data["Exif.Photo.FocalPlaneXResolution"]    = x_dpi;
 			exif_data["Exif.Photo.FocalPlaneYResolution"]    = y_dpi;
-			exif_data["Exif.Photo.FocalPlaneResolutionUnit"]  = uint16_t(2);
-			exif_data["Exif.Photo.FocalLength"]     = Exiv2::Rational(focal_mm, 1);
-			exif_data["Exif.Photo.FocalLengthIn35mmFilm"] = Exiv2::Rational(focal_mm * focal_scale, 1);
+			exif_data["Exif.Photo.FocalPlaneResolutionUnit"] = uint16_t(2);
+			exif_data["Exif.Photo.FocalLength"]              = Exiv2::Rational(focal_mm, 1);
+			exif_data["Exif.Photo.FocalLengthIn35mmFilm"]    = Exiv2::Rational(focal_mm * focal_scale, 1);
+			exif_data["Exif.Photo.SceneCaptureType"]         = width > height ? 1 : 2;
 		}
 
 		if (animation != nullptr)
 		{
-//			exif_data["Exif.Image.FrameRate"]  = Exiv2::Rational(animation->m_FramesPerSecond, 1);
-			exif_data["Exif.Photo.ExposureTime"]     = Exiv2::Rational(1, animation->m_FramesPerSecond);
+//			exif_data["Exif.Image.FrameRate"]    = Exiv2::Rational(animation->m_FramesPerSecond, 1);
+			exif_data["Exif.Photo.ExposureTime"] = Exiv2::Rational(1, animation->m_FramesPerSecond);
 		}
 	}
 	return true;

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "b3TxInclude.h"
+#include "blz3/image/b3TxExif.h"
 
 /*************************************************************************
 **                                                                      **
@@ -230,12 +231,20 @@ b3InfoJPEG::~b3InfoJPEG()
 	jpeg_destroy_compress(&JPEGcinfo);
 }
 
-b3_result b3Tx::b3SaveJPEG(const char * filename, b3_u32 quality)
+b3_result b3Tx::b3SaveJPEG(
+	const char   *   filename,
+	const b3_u32     quality,
+	b3TxExif    *    exif)
 {
 	b3PrintF(B3LOG_FULL, "Saving JPEG: %s, quality %u\n", filename, quality);
 
 	b3InfoJPEG info(this, filename, quality);
+
 	info.b3Write();
+	if (exif != nullptr)
+	{
+		exif->b3Write(filename);
+	}
 	return B3_OK;
 }
 #endif

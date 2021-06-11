@@ -72,4 +72,8 @@ QMAKE_EXTRA_TARGETS += lcov
 QMAKE_CLEAN         += $$BLZ3_LCOV
 
 HEADERS += \
-	../include/blz3/base/b3SplineVector.h
+	../include/blz3/base/b3SplineVector.h \
+	../include/blz3/image/b3TxExif.h
+
+SOURCES += \
+	../include/blz3/image/b3TxExif.cc

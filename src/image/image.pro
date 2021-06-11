@@ -19,6 +19,7 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/image/b3EncoderBuffer.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Sampler.h \
 	$$BLZ3_INCLUDE/blz3/image/b3Tx.h \
+	$$BLZ3_INCLUDE/blz3/image/b3TxExif.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxMeasure.h \
 	$$BLZ3_INCLUDE/blz3/image/b3TxPool.h \
 	b3EncoderStream.h \
@@ -35,6 +36,7 @@ SOURCES += \
 	b3Sampler.cc \
 	b3Tx.cc \
 	b3TxBlit.cc \
+	b3TxExif.cc \
 	b3TxEXR.cc \
 	b3TxEasy.cc \
 	b3TxGIF.cc \

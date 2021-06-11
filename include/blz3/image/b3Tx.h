@@ -318,6 +318,7 @@ public:
 *************************************************************************/
 
 class b3TxAlgorithms;
+class b3TxExif;
 class b3HeaderSGI;
 
 /**
@@ -1080,7 +1081,9 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result b3SaveTIFF(const char * ImageName);
+	b3_result b3SaveTIFF(
+		const char   *   ImageName,
+		b3TxExif    *    exif = nullptr);
 
 	// b3TxSaveXXX.cc
 
@@ -1092,7 +1095,10 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result b3SaveJPEG(const char * ImageName, b3_u32 quality = B3_JPG_QUALITY);
+	b3_result b3SaveJPEG(
+		const char   *   ImageName,
+		const b3_u32     quality = B3_JPG_QUALITY,
+		b3TxExif    *    exif = nullptr);
 
 	/**
 	 * This method saves the image as PostScript file.
