@@ -4,7 +4,7 @@ Section: libdevel
 Priority: optional
 Architecture: %ARCH%
 Depends: gcc, g++, binutils, manpages-dev, xorg-dev, make,
- cppunit-dev, libexif-dev,
+ cppunit-dev, libexiv2-dev,
  libjpeg8-dev, libtiff-dev, libopenexr-dev, libx264-dev, libx265-dev,
  libavutil-dev, libavcodec-dev, libavformat-dev, libswscale-dev
 Maintainer: "Steffen A. Mork" <linux-dev@morknet.de>
