@@ -21,8 +21,12 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxInclude.h"
+#include "blz3/system/b3File.h"
+#include "blz3/system/b3Memory.h"
+#include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxExif.h"
+
+#include "b3TxSaveInfo.h"
 
 /*************************************************************************
 **                                                                      **
@@ -70,7 +74,7 @@ public:
 	void  b3Write();
 
 private:
-	void    b3JpegStdioDestPrivate(j_compress_ptr cinfo);
+	void           b3JpegStdioDestPrivate(j_compress_ptr cinfo);
 	static void    b3InitDestination(j_compress_ptr cinfo);
 	static boolean b3EmptyOutputBuffer(j_compress_ptr cinfo);
 	static void    b3TermDestination(j_compress_ptr cinfo);
@@ -136,7 +140,7 @@ void b3InfoJPEG::b3JpegStdioDestPrivate(j_compress_ptr  cinfo)
 	dest->init_destination    = b3InitDestination;
 	dest->empty_output_buffer = b3EmptyOutputBuffer;
 	dest->term_destination    = b3TermDestination;
-	dest->outfile                 = &m_File;
+	dest->outfile             = &m_File;
 }
 
 b3InfoJPEG::b3InfoJPEG(

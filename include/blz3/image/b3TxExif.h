@@ -33,6 +33,7 @@ class b3TxExif
 {
 protected:
 	static const char * m_DateTimeFormat;
+	char                m_Hostname[32];
 
 #ifdef HAVE_LIBEXIV2
 	Exiv2::ExifData     m_ExifData;

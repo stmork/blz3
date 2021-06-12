@@ -27,6 +27,7 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3Tx.h"
+#include "blz3/image/b3TxExif.h"
 
 /*************************************************************************
 **                                                                      **
@@ -44,8 +45,9 @@ enum op
 
 int main(int argc, char * argv[])
 {
-	int i;
-	op  operation = NOP;
+	int  i;
+	op   operation = NOP;
+	bool remove_geo = false;
 
 	for (i = 1; i < argc; i++)
 	{
@@ -64,12 +66,22 @@ int main(int argc, char * argv[])
 		{
 			operation = LEFT;
 		}
+		else if (strcmp(argv[i], "-g") == 0)
+		{
+			remove_geo = false;
+		}
+		else if (strcmp(argv[i], "-G") == 0)
+		{
+			remove_geo = true;
+		}
 		else
 		{
 			try
 			{
 				if (image.b3LoadImage(argv[i]) == B3_OK)
 				{
+					b3TxExif exif(argv[i]);
+
 					switch (operation)
 					{
 					case RIGHT:
@@ -89,9 +101,14 @@ int main(int argc, char * argv[])
 					ySize = (image.ySize >> 1);
 					if (half.b3AllocTx(xSize, ySize, 24))
 					{
+						if (remove_geo)
+						{
+							exif.b3RemoveGpsData();
+						}
+						exif.b3Update();
 						half.b3ScaleToGrey(&image);
 #ifdef HAVE_LIBJPEG
-						half.b3SaveJPEG(argv[i]);
+						half.b3SaveJPEG(argv[i], B3_JPG_QUALITY, &exif);
 #else
 						// TODO: Save as TGA image instead!
 #endif

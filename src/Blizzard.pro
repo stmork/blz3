@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
-SUBDIRS += system_unix system base image raytrace brt3 benc3 bimg3 render qrender
+SUBDIRS += system_unix system base image raytrace
+SUBDIRS += brt3 benc3 bimg3 half render qrender
 SUBDIRS += unittest longtest
 CONFIG  += ordered
 
@@ -15,6 +16,7 @@ raytrace.file    = raytrace/raytrace.pro
 brt3.file        = brt3/brt3.pro
 benc3.file       = brt3/benc3.pro
 bimg3.file       = brt3/bimg3.pro
+half.file        = tools/half.pro
 render.file      = OpenGL/render.pro
 qrender.file     = OpenGL/qrender.pro
 unittest.file    = unittest/unittest.pro
@@ -22,11 +24,12 @@ longtest.file    = unittest/longtest.pro
 
 system.depends   = system_unix
 base.depends     = system
-image.depends    = base
+image.depends    = system base
 raytrace.depends = system base image
 
 benc3.depends    = image
 bimg3.depends    = image
+half.depends     = image
 brt3.depends     = raytrace
 render.depends   = raytrace
 qrender.depends  = raytrace
@@ -70,10 +73,3 @@ lcov.commands += genhtml coverage.info --legend --title=\"Blizzard III base libr
 
 QMAKE_EXTRA_TARGETS += lcov
 QMAKE_CLEAN         += $$BLZ3_LCOV
-
-HEADERS += \
-	../include/blz3/base/b3SplineVector.h \
-	../include/blz3/image/b3TxExif.h
-
-SOURCES += \
-	../include/blz3/image/b3TxExif.cc

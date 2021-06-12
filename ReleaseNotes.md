@@ -48,3 +48,6 @@ Version 3.1.3
 Version 3.1.4
 * Spline/NURBS improvements and more unit tests.
 * Refactorings.
+
+Version 3.1.5
+* EXIF support.

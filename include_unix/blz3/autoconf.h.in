@@ -103,9 +103,6 @@
 /* Define to 1 if you have the `dl' library (-ldl). */
 #undef HAVE_LIBDL
 
-/* Define to 1 if you have the `exif' library (-lexif). */
-#undef HAVE_LIBEXIF
-
 /* Define to 1 if you have the `exiv2' library (-lexiv2). */
 #undef HAVE_LIBEXIV2
 

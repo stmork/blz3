@@ -52,11 +52,9 @@ b3TxExif::b3TxExif()
 {
 #ifdef HAVE_LIBEXIV2
 	b3Date now;
-	char   hostname[32];
 	char   copyright[128];
 	char   date_time[64];
 
-	b3Runtime::b3Hostname(hostname, sizeof(hostname));
 	b3PrepareDate(date_time, sizeof(date_time));
 	snprintf(copyright, sizeof(copyright), "Copyright (C) %s, %u",
 		b3Runtime::b3GetUserName(), now.year);
@@ -64,8 +62,6 @@ b3TxExif::b3TxExif()
 	m_ExifData["Exif.Image.Make"]             = b3Runtime::b3GetVendor();
 	m_ExifData["Exif.Image.Model"]            = b3Runtime::b3GetProduct();
 	m_ExifData["Exif.Image.Software"]         = b3Runtime::b3GetProduct();
-	m_ExifData["Exif.Image.Artist"]           = b3Runtime::b3GetUserName();
-	m_ExifData["Exif.Image.HostComputer"]     = hostname;
 	m_ExifData["Exif.Image.Copyright"]        = copyright;
 	m_ExifData["Exif.Image.Orientation"]      = uint16_t(1);
 	m_ExifData["Exif.Image.DateTimeOriginal"] = date_time;
@@ -82,8 +78,12 @@ void b3TxExif::b3Update()
 	char date_time[64];
 
 	b3PrepareDate(date_time, sizeof(date_time));
+	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
 
-	m_ExifData["Exif.Image.DateTime"] = date_time;
+	m_ExifData["Exif.Image.HostComputer"] = m_Hostname;
+	m_ExifData["Exif.Image.Software"]     = b3Runtime::b3GetProduct();
+	m_ExifData["Exif.Image.Artist"]       = b3Runtime::b3GetUserName();
+	m_ExifData["Exif.Image.DateTime"]     = date_time;
 #endif
 }
 
