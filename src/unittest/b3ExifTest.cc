@@ -127,6 +127,7 @@ void b3ExifTest::testRemoveGps()
 
 	b3TxExif copy(exif);
 
+	copy.b3GetResolution(m_Tx.xDPI, m_Tx.yDPI);
 	CPPUNIT_ASSERT_NO_THROW(copy.b3Update());
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG("img_exif3_20.jpg", 85, &copy));
 }

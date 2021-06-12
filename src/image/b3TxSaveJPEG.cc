@@ -249,7 +249,17 @@ b3_result b3Tx::b3SaveJPEG(
 	}
 	if (exif != nullptr)
 	{
+		exif->b3SetResolution(xDPI, yDPI);
+		exif->b3SetQuality(quality);
 		exif->b3Write(filename);
+	}
+	else
+	{
+		b3TxExif default_exif;
+
+		default_exif.b3SetResolution(xDPI, yDPI);
+		default_exif.b3SetQuality(quality);
+		default_exif.b3Write(filename);
 	}
 	return B3_OK;
 }

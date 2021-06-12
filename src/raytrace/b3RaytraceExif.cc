@@ -56,26 +56,20 @@ void b3RaytraceExif::b3AddValues(b3Scene * scene)
 			const b3_f64 height   = b3Vector::b3Length(&camera->m_Height) * 2.0;
 			const b3_f64 focal_scale = 35.0 / info->b3Scale(width, B3_UNIT_MM);
 
-			m_xDPI = std::round(width  / info->b3Scale(width,  B3_UNIT_IN));
-			m_yDPI = std::round(height / info->b3Scale(height, B3_UNIT_IN));
+			b3SetResolution(
+				std::round(width  / info->b3Scale(width,  B3_UNIT_IN)),
+				std::round(height / info->b3Scale(height, B3_UNIT_IN)));
 
-			m_ExifData["Exif.Image.XResolution"]     = m_xDPI;
-			m_ExifData["Exif.Image.YResolution"]     = m_yDPI;
-			m_ExifData["Exif.Image.ResolutionUnit"]  = uint16_t(2);
-			m_ExifData["Exif.Image.FocalLength"]     = Exiv2::Rational(focal_mm, 1);
-
-			m_ExifData["Exif.Photo.FocalPlaneXResolution"]    = m_xDPI;
-			m_ExifData["Exif.Photo.FocalPlaneYResolution"]    = m_yDPI;
-			m_ExifData["Exif.Photo.FocalPlaneResolutionUnit"] = uint16_t(2);
-			m_ExifData["Exif.Photo.FocalLength"]              = Exiv2::Rational(focal_mm, 1);
-			m_ExifData["Exif.Photo.FocalLengthIn35mmFilm"]    = Exiv2::Rational(focal_mm * focal_scale, 1);
-			m_ExifData["Exif.Photo.SceneCaptureType"]         = width > height ? 1 : 2;
+			m_ExifData["Exif.Image.FocalLength"]           = Exiv2::URational(focal_mm, 1);
+			m_ExifData["Exif.Photo.FocalLength"]           = Exiv2::URational(focal_mm, 1);
+			m_ExifData["Exif.Photo.FocalLengthIn35mmFilm"] = Exiv2::URational(focal_mm * focal_scale, 1);
+			m_ExifData["Exif.Photo.SceneCaptureType"]      = uint16_t(width > height ? 1 : 2);
 		}
 
 		if (animation != nullptr)
 		{
-//			exif_data["Exif.Image.FrameRate"]    = Exiv2::Rational(animation->m_FramesPerSecond, 1);
-			m_ExifData["Exif.Photo.ExposureTime"] = Exiv2::Rational(1, animation->m_FramesPerSecond);
+//			m_ExifData["Exif.Image.FrameRate"]    = Exiv2::URational(animation->m_FramesPerSecond, 1);
+			m_ExifData["Exif.Photo.ExposureTime"] = Exiv2::URational(1, animation->m_FramesPerSecond);
 		}
 	}
 #endif

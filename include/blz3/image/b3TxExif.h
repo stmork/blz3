@@ -34,6 +34,9 @@ class b3TxExif
 protected:
 	static const char * m_DateTimeFormat;
 	char                m_Hostname[32];
+	b3_res              m_xDPI      = 72;
+	b3_res              m_yDPI      = 72;
+	signed              m_UtcOffset =  0;
 
 #ifdef HAVE_LIBEXIV2
 	Exiv2::ExifData     m_ExifData;
@@ -64,6 +67,33 @@ public:
 	 * This method updates the processing date and time.
 	 */
 	void b3Update();
+
+	/**
+	 * This method returns the pixel density in pixel per inch in horizontal
+	 * and vertical direction.
+	 *
+	 * @param xDPI The horizontal pixel per inch.
+	 * @param yDPI The vertical pixel per inch.
+	 */
+	void b3GetResolution(b3_res & xDPI, b3_res & yDPI) const;
+
+	/**
+	 * This method sets the horizontal and vertical pixel density in pixel
+	 * per inch.
+	 *
+	 * @param xDPI The horizontal pixel per inch to set.
+	 * @param yDPI The vertical pixel per inch to set.
+	 */
+	void b3SetResolution(const b3_res xDPI, const b3_res yDPI);
+
+	/**
+	 * This sets the image compression quality for JPEG images. @note This
+	 * value has only informational character since the real image quality is
+	 * set during the b3Tx::b3SaveJPEG() method.
+	 *
+	 * @param quality The compression quality to set.
+	 */
+	void b3SetQuality(const unsigned quality);
 
 	/**
 	 * This method removes all geotagging related information from the EXIF

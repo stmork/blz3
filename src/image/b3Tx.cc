@@ -93,16 +93,10 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 	FileType    = FT_UNKNOWN;
 	dSize       = 0;
 	pSize       = 0;
-
-	xSize       = 0;
-	ySize       = 0;
-	depth       = 0;
 	ScanLines   = 0;
 
 	image_name.b3Empty();
 	white_ratio  = 0.025;
-	xDPI        = 1;
-	yDPI        = 1;
 
 	// set TIFF error und warning handler
 	if (!m_ErrorHandlerInstalled)

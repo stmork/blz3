@@ -30,9 +30,6 @@ class b3Scene;
  */
 class b3RaytraceExif : public b3TxExif
 {
-	unsigned m_xDPI = 72;
-	unsigned m_yDPI = 72;
-
 public:
 	explicit b3RaytraceExif(const char * filename);
 	b3RaytraceExif();

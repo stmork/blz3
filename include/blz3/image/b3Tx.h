@@ -336,25 +336,25 @@ class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 
 private:
 	b3Path            image_name;
-	b3_pkd_color   *  palette;
-	b3_count     *    histogramme;
-	b3ColorIndices  * grid;
+	b3_pkd_color   *  palette     = nullptr;
+	b3_count     *    histogramme = nullptr;
+	b3ColorIndices  * grid        = nullptr;
 	b3_tx_data        data;
 	b3_f64            white_ratio;
-	b3_size           dSize, pSize;
-	b3_tx_type        type;
-	b3_tx_filetype    FileType;
+	b3_size           dSize = 0, pSize = 0;
+	b3_tx_type        type     = B3_TX_UNDEFINED;
+	b3_tx_filetype    FileType = FT_UNKNOWN;
 
 	static const b3_count B3_TX_MAX_HISTGRM_DEPTH  = 8;
 	static const b3_count B3_TX_MAX_HISTGRM        = (1 << B3_TX_MAX_HISTGRM_DEPTH);
 
 public:
-	b3_res            xSize;       //!< The image width;
-	b3_res            ySize;       //!< The image height;
-	b3_res            depth;       //!< The image depth in bit;
+	b3_res            xSize = 0;   //!< The image width;
+	b3_res            ySize = 0;   //!< The image height;
+	b3_res            depth = 0;   //!< The image depth in bit;
+	b3_res            xDPI = 72;   //!< The pixel density in x direction.
+	b3_res            yDPI = 72;   //!< The pixel density in y direction.
 	b3_count          ScanLines;   //!< Number of row to process during scanning.
-	b3_res            xDPI;        //!< The pixel density in x direction.
-	b3_res            yDPI;        //!< The pixel density in y direction.
 
 	/**
 	 * This constructor initializes an empty image.
