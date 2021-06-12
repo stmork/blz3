@@ -31,7 +31,6 @@ class b3Scene;
 class b3RaytraceExif : public b3TxExif
 {
 public:
-	explicit b3RaytraceExif(const char * filename);
 	b3RaytraceExif();
 
 	/**

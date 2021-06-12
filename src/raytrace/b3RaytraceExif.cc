@@ -30,10 +30,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3RaytraceExif::b3RaytraceExif(const char * filename) : b3TxExif(filename)
-{
-}
-
 b3RaytraceExif::b3RaytraceExif() : b3TxExif()
 {
 }
