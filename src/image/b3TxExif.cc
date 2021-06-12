@@ -52,11 +52,10 @@ b3TxExif::b3TxExif()
 	char   date_time[64];
 
 	b3Runtime::b3Hostname(hostname, sizeof(hostname));
-
+	b3PrepareDate(date_time, sizeof(date_time));
 	snprintf(copyright, sizeof(copyright), "Copyright (C) %s, %u",
 		b3Runtime::b3GetUserName(), now.year);
-	snprintf(date_time, sizeof(date_time), m_DateTimeFormat,
-		now.year, now.month, now.day, now.hour, now.min, now.sec);
+
 	m_ExifData["Exif.Image.Make"]             = b3Runtime::b3GetVendor();
 	m_ExifData["Exif.Image.Model"]            = b3Runtime::b3GetProduct();
 	m_ExifData["Exif.Image.Software"]         = b3Runtime::b3GetProduct();
@@ -65,12 +64,26 @@ b3TxExif::b3TxExif()
 	m_ExifData["Exif.Image.Copyright"]        = copyright;
 	m_ExifData["Exif.Image.SamplesPerPixel"]  = uint16_t(3);
 	m_ExifData["Exif.Image.Orientation"]      = uint16_t(1);
-	m_ExifData["Exif.Image.DateTime"]         = date_time;
 	m_ExifData["Exif.Image.DateTimeOriginal"] = date_time;
 	m_ExifData["Exif.Image.TimeZoneOffset"]   = short(1 + now.dls);
 	m_ExifData["Exif.Photo.DateTimeOriginal"] = date_time;
 	m_ExifData["Exif.Photo.ColorSpace"]       = 1;
 #endif
+	b3Update();
+}
+
+void b3TxExif::b3Update()
+{
+	char date_time[64];
+
+	b3PrepareDate(date_time, sizeof(date_time));
+
+	m_ExifData["Exif.Image.DateTime"] = date_time;
+}
+
+void b3TxExif::b3RemoveGpsData()
+{
+
 }
 
 void b3TxExif::b3Write(const char * filename)
@@ -81,4 +94,14 @@ void b3TxExif::b3Write(const char * filename)
 	image->setExifData(m_ExifData);
 	image->writeMetadata();
 #endif
+}
+
+const char * b3TxExif::b3PrepareDate(char * date_time, const size_t size)
+{
+	b3Date now;
+
+	snprintf(date_time, size, m_DateTimeFormat,
+		now.year, now.month, now.day, now.hour, now.min, now.sec);
+
+	return date_time;
 }

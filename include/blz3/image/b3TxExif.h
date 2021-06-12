@@ -39,7 +39,12 @@ public:
 	explicit b3TxExif(const char * filename);
 	b3TxExif();
 
+	void b3Update();
+	void b3RemoveGpsData();
 	void b3Write(const char * filename);
+
+private:
+	const char * b3PrepareDate(char * date_time, const size_t size);
 };
 
 #endif // B3TXEXIF_H
