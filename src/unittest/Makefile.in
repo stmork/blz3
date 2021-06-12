@@ -90,7 +90,7 @@ UNITTEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3PathTest.o\
 	b3PickTest.o\
 	b3RandomTest.o\
-	b3RenderTest..o\
+	b3RenderTest.o\
 	b3SearchPathTest.o\
 	b3SelfTestSuite.o\
 	b3SplineTest.o\
