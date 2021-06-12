@@ -26,6 +26,9 @@
 #include <exiv2/exiv2.hpp>
 #endif
 
+/**
+ * This class maintains EXIF related data.
+ */
 class b3TxExif
 {
 protected:

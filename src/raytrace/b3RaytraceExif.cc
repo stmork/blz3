@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3RaytraceExif.h $
+**	$Filename:	b3RaytraceExif.cc $
 **	$Release:	Dortmund 20021 $
 **	$Revision$
 **	$Date$
@@ -23,6 +23,12 @@
 
 #include "blz3/raytrace/b3RaytraceExif.h"
 #include "blz3/raytrace/b3Scene.h"
+
+/*************************************************************************
+**                                                                      **
+**                        b3RaytraceExif implementation                 **
+**                                                                      **
+*************************************************************************/
 
 b3RaytraceExif::b3RaytraceExif(const char * filename) : b3TxExif(filename)
 {

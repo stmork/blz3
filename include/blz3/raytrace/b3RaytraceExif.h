@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3TxExif.h $
+**	$Filename:	b3RaytraceExif.h $
 **	$Release:	Dortmund 20021 $
 **	$Revision$
 **	$Date$
@@ -24,6 +24,10 @@
 
 class b3Scene;
 
+/**
+ * This class maintains EXIF related data and expands the functionality by
+ * processing camera and animation data.
+ */
 class b3RaytraceExif : public b3TxExif
 {
 	unsigned m_xDPI = 72;
@@ -33,6 +37,12 @@ public:
 	explicit b3RaytraceExif(const char * filename);
 	b3RaytraceExif();
 
+	/**
+	 * This method adds camera and animation related information to the EXIF
+	 * data.
+	 *
+	 * @param scene The b3Scene instance containing further information.
+	 */
 	void b3AddValues(b3Scene * scene);
 };
 

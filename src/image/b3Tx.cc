@@ -77,6 +77,12 @@ void b3Tx::b3TIFFWarnHandler(
 }
 #endif
 
+/*************************************************************************
+**                                                                      **
+**                        b3Tx implementation                           **
+**                                                                      **
+*************************************************************************/
+
 b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 {
 	data        = nullptr;
