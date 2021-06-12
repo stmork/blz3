@@ -24,11 +24,12 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3Runtime.h"
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/raytrace/b3RenderLight.h"
-#include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Aux.h"
 #include "blz3/base/b3SearchPath.h"
+#include "blz3/raytrace/b3RenderLight.h"
+#include "blz3/raytrace/b3RenderView.h"
+#include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 
 /*************************************************************************
 **                                                                      **

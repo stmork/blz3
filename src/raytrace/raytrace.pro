@@ -28,7 +28,6 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3MaterialSampler.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3PickInfo.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3PrepareInfo.h \
-	$$BLZ3_INCLUDE/blz3/raytrace/b3Raytrace.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3RaytraceExif.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3RenderLight.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3RenderView.h \

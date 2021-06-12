@@ -19,7 +19,11 @@
 #ifndef B3_READTGF_H
 #define B3_READTGF_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Array.h"
+#include "blz3/base/b3List.h"
+#include "blz3/base/b3World.h"
+#include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shape.h"
 
 enum b3_tgf_tag
 {
@@ -73,20 +77,21 @@ class b3TGFReader
 
 	b3TGFReader();
 	~b3TGFReader();
-	b3BBox   *   b3Parse(char * buffer, b3_size size, const char * filename);
-	b3_bool      b3ParseCamera(char * ptr);
-	b3_bool      b3ParseLight(char * ptr);
-	b3_bool      b3ParseMaterial(char * tr);
-	b3_bool      b3ParseGeometry(b3BBox * bbox, char * ptr);
-	b3_bool      b3ParseShapes(b3BBox * bbox, b3Array<b3_vertex> & vertices, b3Array<b3_tgf_facette> & facettes);
-	b3Triangles * b3ProcessOneShape(b3Array<b3_vertex> & vertices, b3Array<b3_tgf_facette> & facettes, b3_index facStart, b3_index facEnd);
-	b3_bool      b3ProcessMaterial(b3Shape * shape, b3_index matIndex);
+
+	b3BBox   *     b3Parse(char * buffer, b3_size size, const char * filename);
+	b3_bool        b3ParseCamera(char * ptr);
+	b3_bool        b3ParseLight(char * ptr);
+	b3_bool        b3ParseMaterial(char * tr);
+	b3_bool        b3ParseGeometry(b3BBox * bbox, char * ptr);
+	b3_bool        b3ParseShapes(b3BBox * bbox, b3Array<b3_vertex> & vertices, b3Array<b3_tgf_facette> & facettes);
+	b3Triangles  * b3ProcessOneShape(b3Array<b3_vertex> & vertices, b3Array<b3_tgf_facette> & facettes, b3_index facStart, b3_index facEnd);
+	b3_bool        b3ProcessMaterial(b3Shape * shape, b3_index matIndex);
 
 	static b3_size b3StrCpy(char * dst, const char * src, b3_size dstSize, b3_size srcSize);
 
 public:
 	static b3Scene * b3ReadTGFScene(const char * filename);
-	static b3BBox * b3ReadTGFBBox(const char * filename);
+	static b3BBox *  b3ReadTGFBBox(const char * filename);
 };
 
 #endif

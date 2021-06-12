@@ -29,6 +29,7 @@
 #include "b3ReadCOB.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Material.h"
 
 /*************************************************************************
 **                                                                      **

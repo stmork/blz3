@@ -24,6 +24,7 @@
 
 #include "b3ReadTGF.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Shade.h"
 #include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************

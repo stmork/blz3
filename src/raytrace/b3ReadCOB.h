@@ -19,7 +19,10 @@
 #ifndef B3_READCOB_H
 #define B3_READCOB_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3List.h"
+#include "blz3/base/b3World.h"
+#include "blz3/image/b3Tx.h"
+#include "blz3/raytrace/b3BBox.h"
 
 typedef int b3_cob_id;
 

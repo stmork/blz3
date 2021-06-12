@@ -32,6 +32,7 @@
 #include "blz3/base/b3Endian.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Material.h"
 
 /*************************************************************************
 **                                                                      **
