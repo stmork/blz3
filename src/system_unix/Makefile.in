@@ -1,15 +1,12 @@
-# Beispiel Makefile
-
-CC		= @CC@
-CXX		= @CXX@
-LD		= @LD@
-CFLAGS		= @CFLAGS@
-CXXFLAGS	= @CXXFLAGS@
-CPPFLAGS	= @CPPFLAGS@
-
-# Optionen
+CC       = @CC@
+CXX      = @CXX@
+LD       = @LD@
+CFLAGS   = @CFLAGS@
+CXXFLAGS = @CXXFLAGS@ -DB3_VERSION=\"@PACKAGE_VERSION@\"
+CPPFLAGS = @CPPFLAGS@
 
 LIBS		= libB3System.o
+
 LIB_SOURCE	=\
 	b3CPU.cc\
 	b3Dir.cc\
