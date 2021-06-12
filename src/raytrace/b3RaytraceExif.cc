@@ -41,9 +41,6 @@ void b3RaytraceExif::b3AddValues(b3Scene * scene)
 		b3ModellerInfo  * info      = scene->b3GetModellerInfo();
 		b3CameraPart   *  camera    = scene->b3GetActualCamera();
 
-		m_ExifData["Exif.Image.ImageWidth"]  = scene->m_xSize;
-		m_ExifData["Exif.Image.ImageLength"] = scene->m_ySize;
-
 		B3_ASSERT(info != nullptr);
 		if (camera != nullptr)
 		{

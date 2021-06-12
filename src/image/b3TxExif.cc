@@ -43,6 +43,11 @@ b3TxExif::b3TxExif(const char * filename)
 #endif
 }
 
+b3TxExif::b3TxExif(const b3TxExif & other)
+{
+	m_ExifData = other.m_ExifData;
+}
+
 b3TxExif::b3TxExif()
 {
 #ifdef HAVE_LIBEXIV2
@@ -62,7 +67,6 @@ b3TxExif::b3TxExif()
 	m_ExifData["Exif.Image.Artist"]           = b3Runtime::b3GetUserName();
 	m_ExifData["Exif.Image.HostComputer"]     = hostname;
 	m_ExifData["Exif.Image.Copyright"]        = copyright;
-	m_ExifData["Exif.Image.SamplesPerPixel"]  = uint16_t(3);
 	m_ExifData["Exif.Image.Orientation"]      = uint16_t(1);
 	m_ExifData["Exif.Image.DateTimeOriginal"] = date_time;
 	m_ExifData["Exif.Image.TimeZoneOffset"]   = short(1 + now.dls);
@@ -74,16 +78,53 @@ b3TxExif::b3TxExif()
 
 void b3TxExif::b3Update()
 {
+#ifdef HAVE_LIBEXIV2
 	char date_time[64];
 
 	b3PrepareDate(date_time, sizeof(date_time));
 
 	m_ExifData["Exif.Image.DateTime"] = date_time;
+#endif
 }
 
 void b3TxExif::b3RemoveGpsData()
 {
+#ifdef HAVE_LIBEXIV2
+	Exiv2::ExifData::iterator it = m_ExifData.begin();
 
+	while (it != m_ExifData.end())
+	{
+		const Exiv2::Exifdatum & datum = *it;
+		const std::string & group = datum.groupName();
+
+		if (group == "GPSInfo")
+		{
+			it = m_ExifData.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+#endif
+}
+
+bool b3TxExif::b3HasGpsData() const
+{
+#ifdef HAVE_LIBEXIV2
+	b3_count gps_count = 0;
+
+	for (const Exiv2::Exifdatum & datum : m_ExifData)
+	{
+		if (datum.groupName() == "GPSInfo")
+		{
+			gps_count++;
+		}
+	}
+	return gps_count > 0;
+#else
+	return false;
+#endif
 }
 
 void b3TxExif::b3Write(const char * filename)

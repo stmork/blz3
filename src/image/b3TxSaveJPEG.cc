@@ -238,9 +238,11 @@ b3_result b3Tx::b3SaveJPEG(
 {
 	b3PrintF(B3LOG_FULL, "Saving JPEG: %s, quality %u\n", filename, quality);
 
-	b3InfoJPEG info(this, filename, quality);
+	{
+		b3InfoJPEG info(this, filename, quality);
 
-	info.b3Write();
+		info.b3Write();
+	}
 	if (exif != nullptr)
 	{
 		exif->b3Write(filename);

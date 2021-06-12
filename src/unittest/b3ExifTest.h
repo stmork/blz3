@@ -34,15 +34,19 @@ class b3ExifTest : public CppUnit::TestFixture
 	b3World      m_World;
 
 	CPPUNIT_TEST_SUITE(b3ExifTest);
-	CPPUNIT_TEST(testSimple);
+	CPPUNIT_TEST(testSimpleJpeg);
+	CPPUNIT_TEST(testSimpleTiff);
 	CPPUNIT_TEST(testRaytrace);
+	CPPUNIT_TEST(testRemoveGps);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
-	void testSimple();
+	void testSimpleJpeg();
+	void testSimpleTiff();
 	void testRaytrace();
+	void testRemoveGps();
 };
 
 #endif

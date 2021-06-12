@@ -62,12 +62,23 @@ void b3ExifTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3ExifTest::testSimple()
+void b3ExifTest::testSimpleJpeg()
 {
 	const char   *  image_filename = "img_exif1_20.jpg";
 	b3TxExif        exif;
 
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename));
+	CPPUNIT_ASSERT(!exif.b3HasGpsData());
+	CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
+}
+
+void b3ExifTest::testSimpleTiff()
+{
+	const char   *  image_filename = "img_exif1_20.tif";
+	b3TxExif        exif;
+
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveTIFF(image_filename));
+	CPPUNIT_ASSERT(!exif.b3HasGpsData());
 	CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
 }
 
@@ -104,6 +115,20 @@ void b3ExifTest::testRaytrace()
 		CPPUNIT_ASSERT_NO_THROW(exif.b3AddValues(scene));
 		CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
 	}
+}
+
+void b3ExifTest::testRemoveGps()
+{
+	b3TxExif exif("IMG_1344.jpeg");
+
+	CPPUNIT_ASSERT(exif.b3HasGpsData());
+	CPPUNIT_ASSERT_NO_THROW(exif.b3RemoveGpsData());
+	CPPUNIT_ASSERT(!exif.b3HasGpsData());
+
+	b3TxExif copy(exif);
+
+	CPPUNIT_ASSERT_NO_THROW(copy.b3Update());
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG("img_exif3_20.jpg", 85, &copy));
 }
 
 #endif

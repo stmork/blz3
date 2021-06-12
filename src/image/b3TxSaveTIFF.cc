@@ -380,10 +380,11 @@ b3_result b3Tx::b3SaveTIFF(const char * nameTx, b3TxExif * exif)
 	}
 
 	tiff = TIFFOpen(image_name, "w");
-	if (tiff)
+	if (tiff != nullptr)
 	{
 		b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx:  # saving TIFF (%s)\n",
 			(char *)image_name);
+
 		// Now select the saving version we need.
 		if (depth == 1)
 		{
@@ -409,6 +410,10 @@ b3_result b3Tx::b3SaveTIFF(const char * nameTx, b3TxExif * exif)
 		}
 
 		TIFFClose(tiff);
+		if (exif != nullptr)
+		{
+			exif->b3Write(image_name);
+		}
 	}
 	else
 	{
@@ -419,11 +424,10 @@ b3_result b3Tx::b3SaveTIFF(const char * nameTx, b3TxExif * exif)
 	{
 		B3_THROW(b3TxException, result);
 	}
-	else if (exif != nullptr)
+	else
 	{
-		exif->b3Write(image_name);
+		return B3_OK;
 	}
-	return B3_OK;
 }
 #endif
 
