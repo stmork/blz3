@@ -78,7 +78,7 @@ class b3TGFReader
 	b3TGFReader();
 	~b3TGFReader();
 
-	b3BBox   *     b3Parse(char * buffer, b3_size size, const char * filename);
+	b3BBox    *    b3Parse(char * buffer, b3_size size, const char * filename);
 	b3_bool        b3ParseCamera(char * ptr);
 	b3_bool        b3ParseLight(char * ptr);
 	b3_bool        b3ParseMaterial(char * tr);
@@ -91,7 +91,7 @@ class b3TGFReader
 
 public:
 	static b3Scene * b3ReadTGFScene(const char * filename);
-	static b3BBox *  b3ReadTGFBBox(const char * filename);
+	static b3BBox  * b3ReadTGFBBox(const char * filename);
 };
 
 #endif

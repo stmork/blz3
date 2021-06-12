@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxInclude.h"
 #include "blz3/system/b3Runtime.h"
+#include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxExif.h"
 
 #include <math.h>

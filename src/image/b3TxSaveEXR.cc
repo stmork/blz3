@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxInclude.h"
+#include "blz3/image/b3Tx.h"
 
 #ifdef BLZ3_USE_OPENEXR
 #include <ImfOutputFile.h>

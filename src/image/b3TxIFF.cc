@@ -23,10 +23,11 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxInclude.h"
+#include "blz3/base/b3Endian.h"
+#include "blz3/base/b3Math.h"
+#include "blz3/image/b3Tx.h"
 
 #include "b3TxIFF.h"
-#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **

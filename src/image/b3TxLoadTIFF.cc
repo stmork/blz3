@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxInclude.h"
 #include "blz3/system/b3File.h"
+#include "blz3/image/b3Tx.h"
 
 #include "b3TxTIFF.h"
 

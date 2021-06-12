@@ -23,9 +23,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3TxInclude.h"
 #include <blz3/base/b3Color.h>
 #include <blz3/base/b3Math.h>
+#include "blz3/image/b3Tx.h"
 
 #include "b3TxAlgorithms.h"
 
