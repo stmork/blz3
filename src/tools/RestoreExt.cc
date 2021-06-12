@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Bump.h"
+#include "blz3/raytrace/b3Material.h"
 
 /*************************************************************************
 **                                                                      **

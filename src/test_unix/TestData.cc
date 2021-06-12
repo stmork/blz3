@@ -23,7 +23,6 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3FileList.h"
-#include "blz3/raytrace/b3Raytrace.h"
 
 /*************************************************************************
 **                                                                      **

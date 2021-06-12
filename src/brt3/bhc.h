@@ -19,8 +19,11 @@
 #ifndef BHC_H
 #define BHC_H
 
-#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3Scene.h"
 
 #include <stdexcept>
 
