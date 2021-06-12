@@ -86,6 +86,11 @@ b3Runtime::b3Runtime()
 	bzero(m_UserName, sizeof(m_UserName));
 }
 
+const char * b3Runtime::b3GetVendor()
+{
+	return B3_VENDOR;
+}
+
 b3_bool b3Runtime::b3Hostname(char * hostname, const b3_size buffer_size)
 {
 	return gethostname(hostname, buffer_size) == 0;

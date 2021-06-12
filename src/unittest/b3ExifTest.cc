@@ -27,6 +27,7 @@
 #include "blz3/system/b3Date.h"
 #include "blz3/system/b3Runtime.h"
 #include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "blz3/raytrace/b3RaytraceExif.h"
 
 /*************************************************************************
 **                                                                      **
@@ -63,32 +64,18 @@ void b3ExifTest::tearDown()
 
 void b3ExifTest::testSimple()
 {
-#ifdef HAVE_LIBEXIV2
 	const char   *  image_filename = "img_exif1_20.jpg";
+	b3TxExif        exif;
 
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename));
-	Exiv2::Image::AutoPtr image     = Exiv2::ImageFactory::open(image_filename);
-
-	image->readMetadata();
-	Exiv2::ExifData   &   exif_data = image->exifData();
-
-	CPPUNIT_ASSERT_THROW(exif_data["Exif.Image.Author"] = b3Runtime::b3GetUserName(), std::exception);
-
-	fill(exif_data);
-
-	CPPUNIT_ASSERT(image.get() != 0);
-
-	image->setExifData(exif_data);
-	image->writeMetadata();
-#endif
+	CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
 }
 
 void b3ExifTest::testRaytrace()
 {
-#ifdef HAVE_LIBEXIV2
-	b3Path   full_path;
-	unsigned i = 0;
 	b3ShapeRenderContext context;
+	b3Path               full_path;
+	unsigned             i = 0;
 
 	CPPUNIT_ASSERT(m_SearchPath.b3IsValid("Data1.bwd", full_path));
 	CPPUNIT_ASSERT(m_World.b3Read(full_path, false));
@@ -103,6 +90,7 @@ void b3ExifTest::testRaytrace()
 
 		b3Display         display(scene->m_xSize, scene->m_ySize);
 		b3Path            image_filename;
+		b3RaytraceExif    exif;
 		b3_vector         lower, upper;
 
 		scene->b3Reorg();
@@ -113,6 +101,9 @@ void b3ExifTest::testRaytrace()
 		image_filename.b3Format("img_exif2_%02u_20.jpg", i++);
 
 		CPPUNIT_ASSERT(display.b3SaveImage(image_filename));
+
+#if 0
+#ifdef HAVE_LIBEXIV2
 		Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(image_filename);
 
 		image->readMetadata();
@@ -123,8 +114,12 @@ void b3ExifTest::testRaytrace()
 
 		image->setExifData(exif_data);
 		image->writeMetadata();
-	}
 #endif
+#else
+		CPPUNIT_ASSERT_NO_THROW(exif.b3AddValues(scene));
+		CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
+#endif
+	}
 }
 
 bool b3ExifTest::fill(Exiv2::ExifData & exif_data, b3Scene * scene)

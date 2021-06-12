@@ -33,6 +33,16 @@
 
 const char * b3TxExif::m_DateTimeFormat = "%04d:%02u:%02u %02u:%02u:%02u";
 
+b3TxExif::b3TxExif(const char * filename)
+{
+#ifdef HAVE_LIBEXIV2
+	Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filename);
+
+	image->readMetadata();
+	m_ExifData = image->exifData();
+#endif
+}
+
 b3TxExif::b3TxExif()
 {
 #ifdef HAVE_LIBEXIV2
@@ -43,10 +53,11 @@ b3TxExif::b3TxExif()
 
 	b3Runtime::b3Hostname(hostname, sizeof(hostname));
 
-	snprintf(copyright, sizeof(copyright), "Copyright (C) %s, %u", b3Runtime::b3GetUserName(), now.year);
+	snprintf(copyright, sizeof(copyright), "Copyright (C) %s, %u",
+		b3Runtime::b3GetUserName(), now.year);
 	snprintf(date_time, sizeof(date_time), m_DateTimeFormat,
 		now.year, now.month, now.day, now.hour, now.min, now.sec);
-	m_ExifData["Exif.Image.Make"]             = "MORKNet";
+	m_ExifData["Exif.Image.Make"]             = b3Runtime::b3GetVendor();
 	m_ExifData["Exif.Image.Model"]            = b3Runtime::b3GetProduct();
 	m_ExifData["Exif.Image.Software"]         = b3Runtime::b3GetProduct();
 	m_ExifData["Exif.Image.Artist"]           = b3Runtime::b3GetUserName();

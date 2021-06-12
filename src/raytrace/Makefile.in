@@ -42,6 +42,7 @@ PRG_SOURCE	=\
 	b3PrepareInfo.cc\
 	b3RayRow.cc\
 	b3Raytrace.cc\
+	b3RaytraceExif.cc\
 	b3ReadCOB.cc\
 	b3ReadTGF.cc\
 	b3RenderLight.cc\
@@ -100,6 +101,7 @@ PRG_OBJ			=\
 	b3PrepareInfo.o\
 	b3RayRow.o\
 	b3Raytrace.o\
+	b3RaytraceExif.o\
 	b3ReadCOB.o\
 	b3ReadTGF.o\
 	b3RenderLight.o\

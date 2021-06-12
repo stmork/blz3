@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3TxExif.cc $
+**	$Filename:	b3TxExif.h $
 **	$Release:	Dortmund 20021 $
 **	$Revision$
 **	$Date$
@@ -36,6 +36,7 @@ protected:
 #endif
 
 public:
+	explicit b3TxExif(const char * filename);
 	b3TxExif();
 	void b3Write(const char * filename);
 };

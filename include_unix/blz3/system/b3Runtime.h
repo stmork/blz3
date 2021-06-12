@@ -26,6 +26,7 @@
 
 #include <unordered_map>
 
+#define B3_VENDOR     "MORKNet"
 #define B3_NAME       "Blizzard III"
 
 /**
@@ -99,6 +100,13 @@ public:
 	 * This method returns information about the used compiler.
 	 */
 	static const char * b3GetCompiler();
+
+	/**
+	 * This method returns the vendor name.
+	 *
+	 * @return The vendor name.
+	 */
+	static const char * b3GetVendor();
 
 	/**
 	 * This method returns information about this software framework.

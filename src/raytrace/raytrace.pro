@@ -29,6 +29,7 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3PickInfo.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3PrepareInfo.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3Raytrace.h \
+	$$BLZ3_INCLUDE/blz3/raytrace/b3RaytraceExif.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3RenderLight.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3RenderView.h \
 	$$BLZ3_INCLUDE/blz3/raytrace/b3Scaling.h \
@@ -74,6 +75,7 @@ SOURCES += \
 	b3PrepareInfo.cc \
 	b3RayRow.cc \
 	b3Raytrace.cc \
+	b3RaytraceExif.cc \
 	b3ReadCOB.cc \
 	b3ReadTGF.cc \
 	b3RenderLight.cc \
