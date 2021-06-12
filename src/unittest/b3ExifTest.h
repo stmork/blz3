@@ -27,10 +27,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#ifdef HAVE_LIBEXIV2
-#include <exiv2/exiv2.hpp>
-#endif
-
 class b3ExifTest : public CppUnit::TestFixture
 {
 	b3SearchPath m_SearchPath;
@@ -47,9 +43,6 @@ public:
 	void tearDown() override;
 	void testSimple();
 	void testRaytrace();
-
-private:
-	bool fill(Exiv2::ExifData & exif_data, b3Scene * scene = nullptr);
 };
 
 #endif

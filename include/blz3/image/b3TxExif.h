@@ -38,6 +38,7 @@ protected:
 public:
 	explicit b3TxExif(const char * filename);
 	b3TxExif();
+
 	void b3Write(const char * filename);
 };
 
