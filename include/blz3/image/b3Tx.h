@@ -1024,7 +1024,9 @@ public:
 	 * @return The result code of image saving.
 	 * @see b3_result.
 	 */
-	b3_result                    b3SaveImage(const char * filename);
+	b3_result                    b3SaveImage(
+		const char * filename,
+		b3TxExif  *  exif = nullptr);
 
 	// b3TxScale.cc
 	/**

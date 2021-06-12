@@ -43,13 +43,13 @@ b3TxExif::b3TxExif(const char * filename)
 	m_xDPI     = m_ExifData["Exif.Image.XResolution"].toRational().first;
 	m_yDPI     = m_ExifData["Exif.Image.YResolution"].toRational().first;
 #endif
+
+	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
 }
 
 b3TxExif::b3TxExif(const b3TxExif & other)
 {
-	m_ExifData = other.m_ExifData;
-	m_xDPI     = m_ExifData["Exif.Image.XResolution"].toRational().first;
-	m_yDPI     = m_ExifData["Exif.Image.YResolution"].toRational().first;
+	operator=(other);
 }
 
 b3TxExif::b3TxExif()
@@ -78,6 +78,19 @@ b3TxExif::b3TxExif()
 	b3Update();
 }
 
+b3TxExif & b3TxExif::operator=(const b3TxExif & other)
+{
+#ifdef HAVE_LIBEXIV2
+	m_ExifData = other.m_ExifData;
+	m_xDPI     = m_ExifData["Exif.Image.XResolution"].toRational().first;
+	m_yDPI     = m_ExifData["Exif.Image.YResolution"].toRational().first;
+#endif
+
+	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
+
+	return *this;
+}
+
 void b3TxExif::b3Update()
 {
 #ifdef HAVE_LIBEXIV2
@@ -104,6 +117,7 @@ void b3TxExif::b3SetResolution(const b3_res xDPI, const b3_res yDPI)
 	m_xDPI = xDPI;
 	m_yDPI = yDPI;
 
+#ifdef HAVE_LIBEXIV2
 	m_ExifData["Exif.Image.XResolution"]    = Exiv2::URational(m_xDPI, 1);
 	m_ExifData["Exif.Image.YResolution"]    = Exiv2::URational(m_yDPI, 1);
 	m_ExifData["Exif.Image.ResolutionUnit"] = uint16_t(2);
@@ -111,11 +125,14 @@ void b3TxExif::b3SetResolution(const b3_res xDPI, const b3_res yDPI)
 	m_ExifData["Exif.Photo.FocalPlaneXResolution"]    = Exiv2::URational(m_xDPI, 1);;
 	m_ExifData["Exif.Photo.FocalPlaneYResolution"]    = Exiv2::URational(m_yDPI, 1);;
 	m_ExifData["Exif.Photo.FocalPlaneResolutionUnit"] = uint16_t(2);
+#endif
 }
 
 void b3TxExif::b3SetQuality(const unsigned quality)
 {
+#ifdef HAVE_LIBEXIV2
 	m_ExifData["Exif.Image.BestQualityScale"] = Exiv2::URational(quality, 100);
+#endif
 }
 
 void b3TxExif::b3RemoveGpsData()

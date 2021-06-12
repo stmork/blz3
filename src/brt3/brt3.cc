@@ -24,14 +24,18 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3Runtime.h"
+
+#include "blz3/base/b3Aux.h"
+#include "blz3/base/b3SearchPath.h"
+
 #include "blz3/image/b3TxPool.h"
 #include "blz3/image/b3Encoder.h"
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3RaytraceExif.h"
 #include "blz3/raytrace/b3RenderLight.h"
 #include "blz3/raytrace/b3RenderView.h"
-#include "blz3/base/b3Aux.h"
-#include "blz3/base/b3SearchPath.h"
+#include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 
 /*************************************************************************
 **                                                                      **
@@ -44,7 +48,8 @@ static char BLZ3_EXTENSION[16] = ".jpg";
 static b3_bool b3SaveRaytracedImage(
 	b3Display  * display,
 	const char * picture_home,
-	const char * camera_name)
+	const char * camera_name,
+	b3TxExif  &  exif)
 {
 	b3Path imagename;
 	b3Path filename;
@@ -59,7 +64,8 @@ static b3_bool b3SaveRaytracedImage(
 	{
 		imagename.b3Format("%s%s", (const char *)filename, BLZ3_EXTENSION);
 	}
-	return display->b3SaveImage(imagename);
+	exif.b3Update();
+	return display->b3SaveImage(imagename, &exif);
 }
 
 static b3Display * b3AllocDisplay(
@@ -330,7 +336,10 @@ int main(int argc, char * argv[])
 						item != nullptr;
 						item  = item->Succ)
 					{
+						b3RaytraceExif exif;
+
 						scene = (b3Scene *)item;
+
 						scene->b3Reorg();
 						scene->b3SetupVertexMemory(&context);
 						scene->b3SetFilename(argv[i]);
@@ -390,9 +399,10 @@ int main(int argc, char * argv[])
 #else
 											img_name.b3Format("%s_%04d", camera->b3GetName(), count++);
 
+											exif.b3AddValues(scene);
 											b3SaveRaytracedImage(
 												display,
-												BLZ3_PICTURES, img_name);
+												BLZ3_PICTURES, img_name, exif);
 #endif
 										}
 									}
@@ -400,9 +410,11 @@ int main(int argc, char * argv[])
 									{
 										scene->b3ComputeBounds(&lower, &upper);
 										scene->b3Raytrace(display, multi_threaded);
+
+										exif.b3AddValues(scene);
 										b3SaveRaytracedImage(
 											display,
-											BLZ3_PICTURES, camera->b3GetName());
+											BLZ3_PICTURES, camera->b3GetName(), exif);
 									}
 								}
 								else
@@ -421,9 +433,11 @@ int main(int argc, char * argv[])
 							b3PrintF(B3LOG_NORMAL, "Rendering default camera...\n");
 							scene->b3ComputeBounds(&lower, &upper);
 							scene->b3Raytrace(display, multi_threaded);
+
+							exif.b3AddValues(scene);
 							if (!b3SaveRaytracedImage(
 									display,
-									BLZ3_PICTURES, scene->b3GetName()))
+									BLZ3_PICTURES, scene->b3GetName(), exif))
 							{
 								b3PrintF(B3LOG_NORMAL, "Cannot save image %s!\n", scene->b3GetName());
 							}

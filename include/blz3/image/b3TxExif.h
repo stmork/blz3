@@ -63,6 +63,8 @@ public:
 	 */
 	b3TxExif();
 
+	b3TxExif & operator=(const b3TxExif & other);
+
 	/**
 	 * This method updates the processing date and time.
 	 */

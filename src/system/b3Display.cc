@@ -135,7 +135,7 @@ void b3Display::b3PutTx(b3Tx * tx)
 	}
 }
 
-b3_bool b3Display::b3SaveImage(const char * filename)
+b3_bool b3Display::b3SaveImage(const char * filename, b3TxExif * exif)
 {
-	return m_Tx->b3SaveImage(filename) == B3_OK;
+	return m_Tx->b3SaveImage(filename, exif) == B3_OK;
 }

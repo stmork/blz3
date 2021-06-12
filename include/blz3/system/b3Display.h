@@ -51,6 +51,7 @@ enum b3_display_error
 typedef b3Exception<b3_display_error, 0x445350> b3DisplayException;
 
 class b3Tx;
+class b3TxExif;
 
 /**
  * This class handles one single display row.
@@ -227,10 +228,13 @@ public:
 	/**
 	 * This method safes the display content to the given file name.
 	 *
-	 * \param *filename The image file name.
-	 * \return True on success.
+	 * @param filename The image file name.
+	 * @param exif The EXIF information base.
+	 * @return True on success.
 	 */
-	virtual b3_bool       b3SaveImage(const char * filename);
+	virtual b3_bool       b3SaveImage(
+		const char * filename,
+		b3TxExif  *  exif = nullptr);
 
 	inline operator b3Tx * () const
 	{

@@ -29,6 +29,7 @@
 #include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Endian.h"
 #include "blz3/image/b3Tx.h"
+#include "blz3/image/b3TxExif.h"
 
 #include "b3TxIFF.h"
 #include "b3TxSGI.h"
@@ -472,10 +473,15 @@ const char * b3Tx::b3GetExt(b3_tx_filetype type)
 	return nullptr;
 }
 
-b3_result b3Tx::b3SaveImage(const char * filename)
+b3_result b3Tx::b3SaveImage(const char * filename, b3TxExif * exif)
 {
 	b3Path         ext;
 	b3_tx_filetype filetype;
+
+	if (exif != nullptr)
+	{
+		exif->b3GetResolution(xDPI, yDPI);
+	}
 
 	if (b3IsLoaded())
 	{
@@ -486,11 +492,11 @@ b3_result b3Tx::b3SaveImage(const char * filename)
 		{
 #ifdef HAVE_LIBJPEG
 		case FT_JPEG:
-			return b3SaveJPEG(filename);
+			return b3SaveJPEG(filename, B3_JPG_QUALITY, exif);
 #endif
 #ifdef HAVE_LIBTIFF
 		case FT_TIFF:
-			return b3SaveTIFF(filename);
+			return b3SaveTIFF(filename, exif);
 #endif
 		case FT_TGA:
 			return b3SaveTGA(filename);
