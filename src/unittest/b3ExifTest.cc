@@ -74,7 +74,7 @@ void b3ExifTest::testSimpleJpeg()
 
 void b3ExifTest::testSimpleTiff()
 {
-	const char   *  image_filename = "img_exif1_20.tif";
+	const char   *  image_filename = "img_exif1_20.tiff";
 	b3TxExif        exif;
 
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveTIFF(image_filename));

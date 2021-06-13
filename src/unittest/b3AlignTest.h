@@ -1,14 +1,14 @@
 /*
 **
-**	$Filename:	b3ListTest.h $
+**	$Filename:	b3AlignTest.h $
 **	$Release:	Dortmund 2006, 2016 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Unit tests for doubly linked lists.
+**	Blizzard III - Alignment unit tests.
 **
-**      (C) Copyright 2006  Steffen A. Mork
+**      (C) Copyright 2021  Steffen A. Mork
 **          All Rights Reserved
 **
 **

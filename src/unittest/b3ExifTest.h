@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Skeleton for unit tests.
+**	Blizzard III - Tests for EXIF.
 **
 **      (C) Copyright 2001 - 2021  Steffen A. Mork
 **          All Rights Reserved
@@ -44,6 +44,7 @@ class b3ExifTest : public CppUnit::TestFixture
 public:
 	void setUp() override;
 	void tearDown() override;
+
 	void testSimpleJpeg();
 	void testSimpleTiff();
 	void testRaytrace();

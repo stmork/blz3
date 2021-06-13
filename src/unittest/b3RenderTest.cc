@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Skeleton for unit tests.
+**	Blizzard III - Render preparation unit tests.
 **
 **      (C) Copyright 2001 - 2021  Steffen A. Mork
 **          All Rights Reserved

@@ -6,9 +6,9 @@
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - Skeleton for unit tests.
+**	Blizzard III - Time handling unit tests.
 **
-**      (C) Copyright 2006  Steffen A. Mork
+**      (C) Copyright 2006 - 2021  Steffen A. Mork
 **          All Rights Reserved
 **
 **
