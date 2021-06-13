@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/system/b3Date.h"
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Runtime.h"
 #include "blz3/base/b3FileList.h"
@@ -154,8 +155,10 @@ int main(int argc, char * argv[])
 	}
 	else
 	{
-		b3PrintF(B3LOG_NORMAL, "Blizzard III Simple image viewer\n");
-		b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2007\n");
+		const b3Date now;
+
+		b3PrintF(B3LOG_NORMAL, "%s Simple image viewer\n", b3Runtime::b3GetProduct());
+		b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-%d\n", now.year);
 		b3PrintF(B3LOG_NORMAL, "\n");
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s [-f][-d] {Image files}\n", argv[0]);

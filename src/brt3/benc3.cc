@@ -18,6 +18,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/system/b3Date.h"
 #include "blz3/system/b3Runtime.h"
 
 #ifdef HAVE_VIDEO_ENCODER
@@ -34,8 +35,10 @@
 
 static void b3Banner(const char * command)
 {
-	b3PrintF(B3LOG_NORMAL, "Blizzard III movie maker\n");
-	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2021\n");
+	const b3Date now;
+
+	b3PrintF(B3LOG_NORMAL, "%s Movie maker\n", b3Runtime::b3GetProduct());
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-%d\n", now.year);
 	b3PrintF(B3LOG_NORMAL, "\n");
 
 	if (command != nullptr)
