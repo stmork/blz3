@@ -21,9 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "blz3/system/b3Date.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3Tx.h"
@@ -43,11 +44,45 @@ enum op
 	LEFT
 };
 
+static void b3Banner(const char * command)
+{
+	const b3Date now;
+
+	b3PrintF(B3LOG_NORMAL, "%s Image half scaler\n", b3Runtime::b3GetProduct());
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-%d\n", now.year);
+	b3PrintF(B3LOG_NORMAL, "\n");
+
+	if (command != nullptr)
+	{
+#ifdef HAVE_VIDEO_ENCODER
+		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
+		b3PrintF(B3LOG_NORMAL, "%s Video-File [-f][-d] {frame images}\n", command);
+		b3PrintF(B3LOG_NORMAL, "\n");
+		b3PrintF(B3LOG_NORMAL, "  -r        turn image right.\n");
+		b3PrintF(B3LOG_NORMAL, "  -l        turn image left.\n");
+		b3PrintF(B3LOG_NORMAL, "  -t        turn image upside down.\n");
+		b3PrintF(B3LOG_NORMAL, "  -g        leave geo tagging.\n");
+		b3PrintF(B3LOG_NORMAL, "  -G        remove geo tagging.\n");
+		b3PrintF(B3LOG_NORMAL, "\n");
+#else
+		b3PrintF(B3LOG_NORMAL, "%s has no video encoding support!\n", command);
+#endif
+	}
+	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
+	b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
+}
+
 int main(int argc, char * argv[])
 {
 	int  i;
 	op   operation = NOP;
 	bool remove_geo = false;
+
+	if (argc <= 1)
+	{
+		b3Banner(argv[0]);
+		exit(EXIT_SUCCESS);
+	}
 
 	for (i = 1; i < argc; i++)
 	{

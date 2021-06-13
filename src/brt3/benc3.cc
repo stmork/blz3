@@ -47,8 +47,8 @@ static void b3Banner(const char * command)
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
 		b3PrintF(B3LOG_NORMAL, "%s Video-File [-f][-d] {frame images}\n", command);
 		b3PrintF(B3LOG_NORMAL, "\n");
-		b3PrintF(B3LOG_NORMAL, "  -d        debug level output\n");
-		b3PrintF(B3LOG_NORMAL, "  -f        verbose level output\n");
+		b3PrintF(B3LOG_NORMAL, "  -d        debug level output.\n");
+		b3PrintF(B3LOG_NORMAL, "  -f        verbose level output.\n");
 		b3PrintF(B3LOG_NORMAL, "\n");
 #else
 		b3PrintF(B3LOG_NORMAL, "%s has no video encoding support!\n", command);

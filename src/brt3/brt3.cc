@@ -161,28 +161,28 @@ static void b3Banner(const char * command)
 #endif
 		);
 		b3PrintF(B3LOG_NORMAL, "\n");
-		b3PrintF(B3LOG_NORMAL, "  -d        debug level output\n");
-		b3PrintF(B3LOG_NORMAL, "  -f        verbose level output\n");
+		b3PrintF(B3LOG_NORMAL, "  -d        debug level output.\n");
+		b3PrintF(B3LOG_NORMAL, "  -f        verbose level output.\n");
 		b3PrintF(B3LOG_NORMAL, "\n");
-		b3PrintF(B3LOG_NORMAL, "  -a        disable animation\n");
-		b3PrintF(B3LOG_NORMAL, "  -n        disable display\n");
-		b3PrintF(B3LOG_NORMAL, "  -w        nowait after display output\n");
-		b3PrintF(B3LOG_NORMAL, "  -S        force one raytracing thread\n");
-		b3PrintF(B3LOG_NORMAL, "  -M        use multithreading for raytracing using all CPU cores\n");
+		b3PrintF(B3LOG_NORMAL, "  -a        disable animation.\n");
+		b3PrintF(B3LOG_NORMAL, "  -n        disable display.\n");
+		b3PrintF(B3LOG_NORMAL, "  -w        no wait after display output.\n");
+		b3PrintF(B3LOG_NORMAL, "  -S        force one raytracing thread.\n");
+		b3PrintF(B3LOG_NORMAL, "  -M        use multithreading for raytracing using all CPU cores.\n");
 		b3PrintF(B3LOG_NORMAL, "\n");
-		b3PrintF(B3LOG_NORMAL, "  -s size   image size definition\n");
+		b3PrintF(B3LOG_NORMAL, "  -s size   image size definition.\n");
 		b3PrintF(B3LOG_NORMAL, "\n");
-		b3PrintF(B3LOG_NORMAL, "  -g        TGA image saving\n");
+		b3PrintF(B3LOG_NORMAL, "  -g        TGA image saving.\n");
 #ifdef HAVE_LIBTIFF
-		b3PrintF(B3LOG_NORMAL, "  -i        TIFF image saving\n");
+		b3PrintF(B3LOG_NORMAL, "  -i        TIFF image saving.\n");
 #endif
 #ifdef HAVE_LIBJPEG
-		b3PrintF(B3LOG_NORMAL, "  -j        JPEG image saving (default)\n");
+		b3PrintF(B3LOG_NORMAL, "  -j        JPEG image saving (default).\n");
 #endif
-		b3PrintF(B3LOG_NORMAL, "  -r        RGB8 image saving\n");
-		b3PrintF(B3LOG_NORMAL, "  -p        PostScript image saving\n");
+		b3PrintF(B3LOG_NORMAL, "  -r        RGB8 image saving.\n");
+		b3PrintF(B3LOG_NORMAL, "  -p        PostScript image saving.\n");
 #ifdef BLZ3_USE_OPENEXR
-		b3PrintF(B3LOG_NORMAL, "  -x        OpenEXR image saving\n");
+		b3PrintF(B3LOG_NORMAL, "  -x        OpenEXR image saving.\n");
 #endif
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
