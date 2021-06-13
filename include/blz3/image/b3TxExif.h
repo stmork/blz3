@@ -119,8 +119,36 @@ public:
 	 */
 	void b3Write(const char * filename);
 
+	/**
+	 * This method computes the quotient of the given rational. In case the
+	 * denominator is @c 0 the default value is returned to prevent an
+	 * division by zero error.
+	 *
+	 * @param rational The rational value.
+	 * @param default_value The value in case of a prevented division by zero.
+	 */
+	static b3_f64 b3Quotient(
+		const Exiv2::Rational & rational,
+		const b3_f64            default_value = 1);
+
+	/**
+	 * This method computes the rounded quotient of the given rational. In case
+	 * the denominator is @c 0 the default value is returned to prevent an
+	 * division by zero error. The resulting quotient is rounded nearest.
+	 *
+	 * @param rational The rounded rational integer value.
+	 * @param default_value The value in case of a prevented division by zero.
+	 */
+	static signed b3RoundedQuotient(
+		const Exiv2::Rational & rational,
+		const b3_f64            default_value = 1);
+
 private:
 	const char * b3PrepareDate(char * date_time, const size_t size);
+
+	static signed b3RoundedQuotient(
+		const Exiv2::Exifdatum & datum,
+		const b3_f64             default_value);
 };
 
 #endif // B3TXEXIF_H

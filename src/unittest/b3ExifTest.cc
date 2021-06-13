@@ -132,4 +132,28 @@ void b3ExifTest::testRemoveGps()
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG("img_exif3_20.jpg", 85, &copy));
 }
 
+void b3ExifTest::testRational()
+{
+	Exiv2::Rational  a( 7,  2);
+	Exiv2::Rational  b(-7,  4);
+	Exiv2::Rational  c( 5, -2);
+	Exiv2::URational d( 5, -2);
+	Exiv2::URational e( 9, -4);
+	Exiv2::URational f( 1,  0);
+
+	CPPUNIT_ASSERT_EQUAL( 3.5,  b3TxExif::b3Quotient(a));
+	CPPUNIT_ASSERT_EQUAL(-1.75, b3TxExif::b3Quotient(b));
+	CPPUNIT_ASSERT_EQUAL(-2.5,  b3TxExif::b3Quotient(c));
+	CPPUNIT_ASSERT_EQUAL(-2.5,  b3TxExif::b3Quotient(d));
+	CPPUNIT_ASSERT_EQUAL(-2.25, b3TxExif::b3Quotient(e));
+	CPPUNIT_ASSERT_EQUAL( 42.0, b3TxExif::b3Quotient(f, 42));
+
+	CPPUNIT_ASSERT_EQUAL( 4,  b3TxExif::b3RoundedQuotient(a));
+	CPPUNIT_ASSERT_EQUAL(-2,  b3TxExif::b3RoundedQuotient(b));
+	CPPUNIT_ASSERT_EQUAL(-3,  b3TxExif::b3RoundedQuotient(c));
+	CPPUNIT_ASSERT_EQUAL(-3,  b3TxExif::b3RoundedQuotient(d));
+	CPPUNIT_ASSERT_EQUAL(-2,  b3TxExif::b3RoundedQuotient(e));
+	CPPUNIT_ASSERT_EQUAL(19,  b3TxExif::b3RoundedQuotient(f, 19));
+}
+
 #endif

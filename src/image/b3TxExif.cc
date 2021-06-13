@@ -40,8 +40,8 @@ b3TxExif::b3TxExif(const char * filename)
 
 	image->readMetadata();
 	m_ExifData = image->exifData();
-	m_xDPI     = m_ExifData["Exif.Image.XResolution"].toRational().first;
-	m_yDPI     = m_ExifData["Exif.Image.YResolution"].toRational().first;
+	m_xDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.XResolution"], 72);
+	m_yDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.YResolution"], 72);
 #endif
 
 	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
@@ -82,8 +82,8 @@ b3TxExif & b3TxExif::operator=(const b3TxExif & other)
 {
 #ifdef HAVE_LIBEXIV2
 	m_ExifData = other.m_ExifData;
-	m_xDPI     = m_ExifData["Exif.Image.XResolution"].toRational().first;
-	m_yDPI     = m_ExifData["Exif.Image.YResolution"].toRational().first;
+	m_xDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.XResolution"], 72);
+	m_yDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.YResolution"], 72);
 #endif
 
 	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
@@ -185,6 +185,23 @@ void b3TxExif::b3Write(const char * filename)
 #endif
 }
 
+b3_f64 b3TxExif::b3Quotient(
+	const Exiv2::Rational & rational,
+	const b3_f64            default_value)
+{
+	const double numerator   = rational.first;
+	const double denominator = rational.second;
+
+	return denominator != 0.0 ? numerator / denominator : default_value;
+}
+
+signed b3TxExif::b3RoundedQuotient(
+	const Exiv2::Rational & rational,
+	const b3_f64            default_value)
+{
+	return std::round(b3Quotient(rational, default_value));
+}
+
 const char * b3TxExif::b3PrepareDate(char * date_time, const size_t size)
 {
 	const std::time_t      current_time = std::time(nullptr);
@@ -197,4 +214,11 @@ const char * b3TxExif::b3PrepareDate(char * date_time, const size_t size)
 		now.year, now.month, now.day, now.hour, now.min, now.sec);
 
 	return date_time;
+}
+
+signed b3TxExif::b3RoundedQuotient(
+	const Exiv2::Exifdatum & datum,
+	const b3_f64             default_value)
+{
+	return b3RoundedQuotient(datum.toRational(), default_value);
 }

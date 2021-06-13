@@ -38,6 +38,7 @@ class b3ExifTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testSimpleTiff);
 	CPPUNIT_TEST(testRaytrace);
 	CPPUNIT_TEST(testRemoveGps);
+	CPPUNIT_TEST(testRational);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -47,6 +48,7 @@ public:
 	void testSimpleTiff();
 	void testRaytrace();
 	void testRemoveGps();
+	void testRational();
 };
 
 #endif
