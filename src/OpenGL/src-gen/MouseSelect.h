@@ -12,11 +12,11 @@
 class MouseSelect;
 
 
-#include "../point.h"
+#include "point.h"
 #include <deque>
-#include "../src-lib/sc_types.h"
-#include "../src-lib/sc_rxcpp.h"
-#include "../src-lib/sc_statemachine.h"
+#include "sc_types.h"
+#include "sc_rxcpp.h"
+#include "sc_statemachine.h"
 
 /*! \file Header of the state machine 'MouseSelect'.
 */

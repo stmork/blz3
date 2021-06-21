@@ -263,6 +263,7 @@ AC_CHECK_LIB([pthread], [main])
 AC_CHECK_LIB([z], [main])
 AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT], [1], [Is CppUnit available?]) CPPUNITLIBS="-lcppunit"])
 AC_CHECK_LIB([gtest], [main], [AC_DEFINE([HAVE_LIBGTEST], [1], [Is Google Test available?]) GTESTLIBS="-lgtest -lgtest_main"])
+AC_CHECK_LIB([gtest_main], [main])
 
 AC_LANG_POP(C++)
 

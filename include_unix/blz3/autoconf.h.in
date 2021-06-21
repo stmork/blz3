@@ -106,6 +106,12 @@
 /* Define to 1 if you have the `exiv2' library (-lexiv2). */
 #undef HAVE_LIBEXIV2
 
+/* Is Google Test available? */
+#undef HAVE_LIBGTEST
+
+/* Define to 1 if you have the `gtest_main' library (-lgtest_main). */
+#undef HAVE_LIBGTEST_MAIN
+
 /* Define to 1 if you have the `Half' library (-lHalf). */
 #undef HAVE_LIBHALF
 
