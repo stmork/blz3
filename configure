@@ -636,6 +636,7 @@ GREP
 CXXCPP
 HAVE_CXX17
 BUILD
+GTESTLIBS
 CPPUNITLIBS
 X264LIBS
 GLUTLIBS
@@ -652,6 +653,7 @@ HAVE_SSE41
 HAVE_SSE3
 HAVE_SSE2
 HAVE_SSE
+HAVE_LIBGTEST
 HAVE_LIBCPPUNIT
 BLZ3_USE_X264
 BLZ3_USE_SSE41
@@ -4768,6 +4770,7 @@ BUILD=${BUILD_NUMBER:-0}
 
 
 
+
 BLZ3_HOME="$PWD"
 
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"
@@ -4779,6 +4782,7 @@ BLZ3_LIB="$BLZ3_HOME/lib"
 BLZ3_BIN="$BLZ3_HOME/bin"
 
 BLZ3_DOC="$BLZ3_DOC"
+
 
 
 
@@ -9232,7 +9236,43 @@ $as_echo "$ac_cv_lib_cppunit_main" >&6; }
 if test "x$ac_cv_lib_cppunit_main" = xyes; then :
 
 $as_echo "#define HAVE_LIBCPPUNIT 1" >>confdefs.h
- CPPUNITLIBS="$CPPUNITLIBS -lcppunit"
+ CPPUNITLIBS="-lcppunit"
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lgtest" >&5
+$as_echo_n "checking for main in -lgtest... " >&6; }
+if ${ac_cv_lib_gtest_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lgtest  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_gtest_main=yes
+else
+  ac_cv_lib_gtest_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gtest_main" >&5
+$as_echo "$ac_cv_lib_gtest_main" >&6; }
+if test "x$ac_cv_lib_gtest_main" = xyes; then :
+
+$as_echo "#define HAVE_LIBGTEST 1" >>confdefs.h
+ GTESTLIBS="-lgtest -lgtest_main"
 fi
 
 
