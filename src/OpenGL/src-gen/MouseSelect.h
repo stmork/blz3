@@ -43,7 +43,7 @@ namespace mouseselect_events
 	class SctEvent
 	{
 	public:
-		SctEvent(MouseSelectEventName n_name) : name(n_name) {}
+		explicit SctEvent(MouseSelectEventName n_name) : name(n_name) {}
 		virtual ~SctEvent() {}
 		const MouseSelectEventName name;
 
@@ -64,12 +64,12 @@ namespace mouseselect_events
 	class SctEvent_Gui_onSelect : public SctEvent
 	{
 	public:
-		SctEvent_Gui_onSelect(MouseSelectEventName n_name) : SctEvent(n_name) {};
+		explicit SctEvent_Gui_onSelect(MouseSelectEventName n_name) : SctEvent(n_name) {};
 	};
 	class SctEvent_Gui_onDisable : public SctEvent
 	{
 	public:
-		SctEvent_Gui_onDisable(MouseSelectEventName n_name) : SctEvent(n_name) {};
+		explicit SctEvent_Gui_onDisable(MouseSelectEventName n_name) : SctEvent(n_name) {};
 	};
 	class SctEvent_Gui_mouseDown : public TypedSctEvent<SCT_point>
 	{
@@ -124,7 +124,7 @@ public:
 	class Gui
 	{
 	public:
-		Gui(MouseSelect * n_parent);
+		explicit Gui(MouseSelect * n_parent);
 
 		/*! Raises the in event 'onSelect' that is defined in the interface scope 'gui'. */
 		void raiseOnSelect();
@@ -210,7 +210,7 @@ public:
 	class View
 	{
 	public:
-		View(MouseSelect * n_parent);
+		explicit View(MouseSelect * n_parent);
 
 
 

@@ -277,9 +277,9 @@ void b3Tx::b3TestPattern()
 		b3_index idx = x / width;
 
 		value = (b3_f32)(x % width) / width;
-		b = idx & 1 ? value : 0.0;
-		r = idx & 2 ? value : 0.0;
-		g = idx & 4 ? value : 0.0;
+		b = (idx & 1) ? value : 0.0;
+		r = (idx & 2) ? value : 0.0;
+		g = (idx & 4) ? value : 0.0;
 		row[x].b3Init(r, g, b);
 	}
 
