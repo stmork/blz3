@@ -1,0 +1,171 @@
+testclass MouseSelect for statechart MouseSelect
+{
+	@Test
+	operation testSimple()
+	{
+		enter
+		assert is_active
+		assert active(main_region.Normal)
+
+		exit
+		assert !is_active
+	}
+
+	@Test
+	operation testSelectionCancel()
+	{
+		mock view.is3D returns (false)
+
+		enter
+		raise gui.onSelect
+		assert active(main_region.Selection)
+
+		raise gui.onDisable
+		assert active(main_region.Normal)
+	}
+
+	@Test
+	operation testSelectionDisallowed()
+	{
+		mock view.is3D returns (true)
+	
+		enter
+		assert active(main_region.Normal)
+
+		raise gui.onSelect
+
+		gui.selectionEnd
+		assert active(main_region.Normal)
+	}
+
+	@Test
+	operation testSelectingWithoutMove()
+	{
+		mock view.is3D returns (false)
+		mock view.show
+		mock view.hide
+
+		var point : SCT_point
+
+		enter
+		raise gui.onSelect
+		assert active(main_region.Selection)
+
+		point.x = 100
+		point.y = 100
+		raise gui.mouseDown : point
+		assert called view.show()
+		assert called view.setRectangle()
+		assert active(main_region.Moving)
+
+		raise gui.mouseUp : point
+		assert called view.setRectangle()
+		gui.selectionEnd
+		assert called view.hide()
+		assert called view.select()
+		assert active(main_region.Normal)
+	}
+
+	@Test
+	operation testSelectingWithMove()
+	{
+		mock view.is3D returns (false)
+
+		var point : SCT_point
+
+		enter
+		raise gui.onSelect
+		assert active(main_region.Selection)
+
+		point.x = 100
+		point.y = 100
+		raise gui.mouseDown : point
+		assert called view.show()
+		assert called view.setRectangle()
+		assert active(main_region.Moving)
+
+		point.x = 110
+		point.y = 120
+		raise gui.mouseMove() : point
+
+		raise gui.mouseUp : point
+		assert called view.setRectangle()
+		gui.selectionEnd
+		assert called view.hide()
+		assert called view.select()
+		assert active(main_region.Normal)
+	}
+
+	@Test
+	operation testPanningWithoutMove()
+	{
+		mock view.is3D returns (false)
+
+		var point : SCT_point
+
+		enter
+		assert active(main_region.Normal)
+
+		point.x = 100
+		point.y = 100
+		raise gui.mouseDown : point
+		assert called view.cursorPanning
+		assert active(main_region.Panning)
+
+		raise gui.mouseUp : point
+		assert called view.cursorArrow()
+		assert called gui.updateScrolling()
+		assert active(main_region.Normal)
+	}
+
+	@Test
+	operation testPanningWithMove()
+	{
+		mock view.is3D returns (false)
+
+		var point : SCT_point
+
+		enter
+		assert active(main_region.Normal)
+
+		point.x = 100
+		point.y = 100
+		raise gui.mouseDown : point
+		assert called view.cursorPanning
+		assert active(main_region.Panning)
+
+		point.x = 110
+		point.y = 120
+		raise gui.mouseMove() : point
+		assert called view.move()
+
+		raise gui.mouseUp : point
+		assert called view.cursorArrow()
+		assert called gui.updateScrolling()
+		assert active(main_region.Normal)
+	}
+	
+	@Test
+	operation testMouseMove()
+	{
+		mock view.is3D returns (true)
+
+		var point : SCT_point
+
+		enter
+		assert active(main_region.Normal)
+
+		point.x = 100
+		point.y = 100
+		raise gui.mouseDown : point
+		assert active(main_region.Normal)
+
+		point.x = 110
+		point.y = 120
+		raise gui.mouseMove() : point
+		assert active(main_region.Normal)
+
+		raise gui.mouseUp : point
+		assert active(main_region.Normal)
+	}
+}

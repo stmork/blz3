@@ -20,5 +20,5 @@ SOURCES += \
 
 INCLUDEPATH += src-gen/
 INCLUDEPATH += src-lib/
-
 LIBS        += -lgtest -lgtest_main
+QMAKE_CLEAN += test*.xml qrender-sct

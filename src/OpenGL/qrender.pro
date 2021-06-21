@@ -42,8 +42,8 @@ RESOURCES += \
 	icons.qrc
 
 INCLUDEPATH += src-lib
-
 LIBS        += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace
+QMAKE_CLEAN += qrender
 
 #####################################################################
 #
