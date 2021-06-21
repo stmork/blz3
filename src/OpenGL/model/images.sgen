@@ -1,0 +1,19 @@
+GeneratorModel for yakindu::images
+{
+	const PROJECT : string = "OpenGL"
+	const FOLDER  : string = "images"
+
+	statechart MouseSelect
+	{
+		feature Outlet
+		{
+			targetProject = PROJECT
+			targetFolder  = FOLDER
+		}
+
+		feature Renderer
+		{
+			format = "png"
+		}
+	}
+}

@@ -1,0 +1,23 @@
+GeneratorModel for sctunit::cpp 
+{
+	const PROJECT : string = "OpenGL"
+	const FOLDER  : string = "src-test"
+
+	test MouseSelect
+	{
+		feature Outlet 
+		{
+			targetProject = PROJECT
+			targetFolder  = FOLDER
+		}
+
+		feature LicenseHeader
+		{
+			licenseText =
+			"Generated with YAKINDU statechart tools\n" +
+			" *\n" +
+			" *   (C) Copyright  2001 - 2021  Steffen A. Mork\n" +
+			" *               All rights reserved\n"
+		}
+	}
+}

@@ -21,5 +21,11 @@ GeneratorModel for yakindu::cpp
 			" *   (C) Copyright  2001 - 2021  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
+		
+		feature OutEventAPI
+		{
+			observables = true
+			getters = true
+		}
 	}
 }

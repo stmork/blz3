@@ -24,6 +24,11 @@ make install
 make cppcheck
 
 bin/brt3 -n -s 512 data/*
+
+cd src/OpenGL
+./qrender-sct --gtest_output=xml
+cd ../..
+
 cd src/unittest
 make -j ${JOBS} valgrind
 make -j ${JOBS} -f Makefile.longtest valgrind
