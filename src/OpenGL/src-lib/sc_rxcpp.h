@@ -23,7 +23,9 @@ namespace sc
 		class Observer
 		{
 		public:
-			virtual ~Observer() = default;
+			virtual ~Observer()
+			{
+			}
 			virtual void next(T value) = 0;
 		};
 
@@ -31,7 +33,9 @@ namespace sc
 		class Observer<void>
 		{
 		public:
-			virtual ~Observer() = default;
+			virtual ~Observer()
+			{
+			}
 			virtual void next() = 0;
 		};
 
@@ -62,7 +66,7 @@ namespace sc
 		struct subscription
 		{
 
-			explicit subscription(Observer<T> * o) :
+			subscription(Observer<T> * o) :
 				observer(o), next(sc_null)
 			{
 			}
