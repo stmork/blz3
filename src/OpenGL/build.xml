@@ -6,6 +6,7 @@
 		<echo message="Using Eclipse: ${eclipse.home}"/>
 		<exec executable="${eclipse.home}/eclipse" dir=".." failonerror="yes">
 			<arg value="--launcher.ini"/><arg value="${eclipse.home}/headless.ini"/>
+			<arg value="-m"/><arg value="OpenGL/model/MouseSelect.ysc,OpenGL/model/MouseSelect.sctunit,OpenGL/model/sctunit.sgen,OpenGL/model/qrender.sgen"/>
 		</exec>
 	</target>
 </project>
