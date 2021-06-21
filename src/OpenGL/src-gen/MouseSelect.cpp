@@ -31,7 +31,7 @@ MouseSelect::~MouseSelect()
 {
 }
 
-MouseSelect::Gui::Gui(MouseSelect* parent) :
+MouseSelect::Gui::Gui(MouseSelect* n_parent) :
 onSelect_raised(false),
 onDisable_raised(false),
 mouseDown_raised(false),
@@ -41,13 +41,13 @@ mouseMove_value(),
 mouseUp_raised(false),
 mouseUp_value(),
 selectionEnd_raised(false),
-parent(parent),
+parent(n_parent),
 ifaceGuiOperationCallback(sc_null)
 {
 }
 
-MouseSelect::View::View(MouseSelect* parent) :
-parent(parent),
+MouseSelect::View::View(MouseSelect* n_parent) :
+parent(n_parent),
 ifaceViewOperationCallback(sc_null)
 {
 }
