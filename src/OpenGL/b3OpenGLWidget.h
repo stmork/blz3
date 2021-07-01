@@ -59,10 +59,12 @@ public:
 	void b3PreviousView(b3_view_info & view_info);
 
 protected:
+	// QOpenGLWidget overrides
 	void initializeGL() override;
 	void resizeGL(int width, int height) override;
 	void paintGL() override;
 
+	// Statemachine view interface overrides
 	void show() override;
 	void hide() override;
 	void cursorPanning() override;
