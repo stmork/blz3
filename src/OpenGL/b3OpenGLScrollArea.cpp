@@ -25,7 +25,7 @@
 *************************************************************************/
 
 QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
-	QScrollArea(parent), MouseSelect::View(this), MouseSelect::Gui(this)
+	QScrollArea(parent)
 {
 #if 0
 	QB3BarInfo test;
@@ -68,7 +68,7 @@ void QB3OpenGLScrollArea::onSelect(bool checked)
 {
 	if (child != nullptr)
 	{
-		checked ? raiseOnSelect() : raiseOnDisable();
+		checked ? gui()->raiseOnSelect() : gui()->raiseOnDisable();
 	}
 }
 
@@ -162,12 +162,12 @@ void QB3OpenGLScrollArea::b3PreviousView()
 
 void QB3OpenGLScrollArea::mousePressEvent(QMouseEvent * event)
 {
-	raiseMouseDown(SCT_point{ event->x(), event->y() });
+	gui()->raiseMouseDown(SCT_point{ event->x(), event->y() });
 }
 
 void QB3OpenGLScrollArea::mouseMoveEvent(QMouseEvent * event)
 {
-	raiseMouseMove(SCT_point{ event->x(), event->y() });
+	gui()->raiseMouseMove(SCT_point{ event->x(), event->y() });
 }
 
 void QB3OpenGLScrollArea::next()
@@ -177,7 +177,7 @@ void QB3OpenGLScrollArea::next()
 
 void QB3OpenGLScrollArea::mouseReleaseEvent(QMouseEvent * event)
 {
-	raiseMouseUp(SCT_point{ event->x(), event->y() });
+	gui()->raiseMouseUp(SCT_point{ event->x(), event->y() });
 }
 
 
