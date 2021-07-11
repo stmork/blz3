@@ -55,7 +55,22 @@ b3Date::b3Date()
 
 b3Date::b3Date(const b3Date & other)
 {
-	*this = other;
+	microsec  = other.microsec;
+	sec       = other.sec;
+	min       = other.min;
+	hour      = other.hour;
+	day       = other.day;
+	month     = other.month;
+	year      = other.year;
+	mode      = other.mode;
+	offset    = other.offset;
+	dls       = other.dls;
+	time_code = other.time_code;
+
+	if (!b3Update())
+	{
+		B3_THROW(b3DateException, B3_DATE_ILLEGAL);
+	}
 }
 
 b3Date::b3Date(
@@ -440,9 +455,9 @@ bool b3Date::b3Update()
 }
 
 // Comparisons
-bool b3Date::operator<(const b3Date & comp) const
+bool b3Date::operator<(const b3Date & other) const
 {
-	return time_code < comp.time_code;
+	return time_code < other.time_code;
 }
 
 bool b3Date::operator <=(const b3Date & comp) const

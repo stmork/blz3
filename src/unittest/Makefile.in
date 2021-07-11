@@ -27,6 +27,7 @@ BASETEST_SOURCE	= basetest.cc b3SkeletonTest.cc\
 	b3ComplexTest.cc\
 	b3ConstantMapTest.cc\
 	b3DataSizeTest.cc\
+	b3DateTest.cc\
 	b3DirTest.cc\
 	b3EndianTest.cc\
 	b3ErrorTest.cc\
@@ -71,6 +72,7 @@ UNITTEST_OBJS	= basetest.o b3SkeletonTest.o\
 	b3ComplexTest.o\
 	b3ConstantMapTest.o\
 	b3DataSizeTest.o\
+	b3DateTest.o\
 	b3DirTest.o\
 	b3EndianTest.o\
 	b3ErrorTest.o\
