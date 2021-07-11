@@ -97,6 +97,7 @@ public:
 	unsigned       microsec; //!< The microseconds
 
 	bool           dls;      //!< Daylight saving time.
+	signed         offset;   //!< The time zone offset including daylight saving time.
 
 public:
 	/**
@@ -314,12 +315,12 @@ private:
 	void b3LocalTime();
 	void b3GMTime();
 	void b3DiffTime();
-	long b3Check(
+	unsigned b3Check(
 		unsigned h, unsigned m, unsigned s,
 		unsigned day, b3_month, signed year,
-		b3_week_day w, bool dls);
+		b3_week_day w, bool dls, signed offset);
 
-	void b3Dump(const long code);
+	void b3Dump(const unsigned code);
 };
 
 #endif

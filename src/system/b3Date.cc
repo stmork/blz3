@@ -104,15 +104,16 @@ struct std::tm * b3Date::b3TM(struct std::tm * time_tm)
 {
 	if (time_tm != nullptr)
 	{
-		time_tm->tm_year  = year  - 1900;
-		time_tm->tm_mon   = month - 1;
-		time_tm->tm_mday  = day;
-		time_tm->tm_wday  = wday;
+		time_tm->tm_year   = year  - 1900;
+		time_tm->tm_mon    = month - 1;
+		time_tm->tm_mday   = day;
+		time_tm->tm_wday   = wday;
 
-		time_tm->tm_hour  = hour;
-		time_tm->tm_min   = min;
-		time_tm->tm_sec   = sec;
-		time_tm->tm_isdst = dls;
+		time_tm->tm_hour   = hour;
+		time_tm->tm_min    = min;
+		time_tm->tm_sec    = sec;
+		time_tm->tm_isdst  = dls;
+		time_tm->tm_gmtoff = offset * 60;
 	}
 	return time_tm;
 }
@@ -136,6 +137,7 @@ void b3Date::b3LocalTime()
 	sec       = (unsigned short) now->tm_sec;
 	microsec  = 0;
 	dls       = now->tm_isdst != 0;
+	offset    = now->tm_gmtoff / 60;
 }
 
 void b3Date::b3GMTime()
@@ -168,6 +170,7 @@ void b3Date::b3GMTime()
 	sec       = (unsigned short)now->tm_sec;
 	microsec  = 0;
 	dls       = now->tm_isdst != 0;
+	offset    = now->tm_gmtoff / 60;
 }
 
 void b3Date::b3DiffTime()
@@ -190,12 +193,13 @@ void b3Date::b3DiffTime()
 	min       = (unsigned short)(rest / TICKS_MIN);
 	sec       = (unsigned short)(rest % TICKS_MIN);
 	microsec  = 0;
-	dls       = 0;
+	dls       = false;
+	offset    = 0;
 }
 
-void b3Date::b3Dump(const long code)
+void b3Date::b3Dump(const unsigned code)
 {
-	b3PrintF(B3LOG_DEBUG, "### Y2K - %02u.%02u.%04u: %c%c%c %c%c%c %c%c (%s)\n",
+	b3PrintF(B3LOG_DEBUG, "### Y2K - %02u.%02u.%04u: %c%c%c %c%c%c %c%c%c (%s)\n",
 		day, month, year,
 		(code &   1) ? '*' : '-',
 		(code &   2) ? '*' : '-',
@@ -205,18 +209,19 @@ void b3Date::b3Dump(const long code)
 		(code &  32) ? '*' : '-',
 		(code &  64) ? '*' : '-',
 		(code & 128) ? '*' : '-',
+		(code & 256) ? '*' : '-',
 		(code ==  0) ? "OK" : "ERROR");
 }
 
-long b3Date::b3Check(
-	unsigned     t_hour,
+unsigned b3Date::b3Check(unsigned     t_hour,
 	unsigned     t_min,
 	unsigned     t_sec,
 	unsigned     t_day,
 	b3_month     t_month,
 	signed       t_year,
 	b3_week_day  t_wday,
-	bool         t_dls)
+	bool         t_dls,
+	signed       t_offset)
 {
 	unsigned code = 0;
 
@@ -227,14 +232,15 @@ long b3Date::b3Check(
 		t_hour++;
 	}
 
-	code |= ((unsigned)(hour  != t_hour)  << 0);
-	code |= ((unsigned)(min   != t_min)   << 1);
-	code |= ((unsigned)(sec   != t_sec)   << 2);
-	code |= ((unsigned)(day   != t_day)   << 3);
-	code |= ((unsigned)(month != t_month) << 4);
-	code |= ((unsigned)(year  != t_year)  << 5);
-	code |= ((unsigned)(wday  != t_wday)  << 6);
-	code |= ((unsigned)(dls   != t_dls)   << 7);
+	code |= ((unsigned)(hour   != t_hour)   << 0);
+	code |= ((unsigned)(min    != t_min)    << 1);
+	code |= ((unsigned)(sec    != t_sec)    << 2);
+	code |= ((unsigned)(day    != t_day)    << 3);
+	code |= ((unsigned)(month  != t_month)  << 4);
+	code |= ((unsigned)(year   != t_year)   << 5);
+	code |= ((unsigned)(wday   != t_wday)   << 6);
+	code |= ((unsigned)(dls    != t_dls)    << 7);
+	code |= ((unsigned)(offset != t_offset) << 7);
 
 	return code;
 }
@@ -247,15 +253,16 @@ bool b3Date::b3Y2K_Selftest()
 
 	b3PrintF(B3LOG_DEBUG, "\n");
 	b3PrintF(B3LOG_DEBUG, "### Blizzard III YEAR 2000 Check ###\n");
-	b3PrintF(B3LOG_DEBUG, "###                   +--------- hour\n");
-	b3PrintF(B3LOG_DEBUG, "###                   |+-------- minute\n");
-	b3PrintF(B3LOG_DEBUG, "###                   ||+------- second\n");
-	b3PrintF(B3LOG_DEBUG, "###                   ||| +----- day\n");
-	b3PrintF(B3LOG_DEBUG, "###                   ||| |+---- month\n");
-	b3PrintF(B3LOG_DEBUG, "###                   ||| ||+--- year\n");
-	b3PrintF(B3LOG_DEBUG, "###                   ||| ||| +- week day\n");
-	b3PrintF(B3LOG_DEBUG, "###                   ||| ||| |+ daylight saving\n");
-	b3PrintF(B3LOG_DEBUG, "### Y2K - Check code: hms dmy wl (OK = \"-\" |  Error = \"*\")\n");
+	b3PrintF(B3LOG_DEBUG, "###                   +---------- hour\n");
+	b3PrintF(B3LOG_DEBUG, "###                   |+--------- minute\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||+-------- second\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||| +------ day\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||| |+----- month\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||| ||+---- year\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||| ||| +-- week day\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||| ||| |+- daylight saving\n");
+	b3PrintF(B3LOG_DEBUG, "###                   ||| ||| ||+ time zone offset\n");
+	b3PrintF(B3LOG_DEBUG, "### Y2K - Check code: hms dmy wlo (OK = \"-\" |  Error = \"*\")\n");
 
 	time_code = 12 * TICKS_HOUR;
 	b3LocalTime();
@@ -265,7 +272,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_000000_09091999 - diff;
 	b3LocalTime();
-	code = b3Check(0, 0, 0, 9, B3_SEPTEMBER, 1999, B3_THURSDAY, true);
+	code = b3Check(0, 0, 0, 9, B3_SEPTEMBER, 1999, B3_THURSDAY, true, 120);
 	if (code != 0)
 	{
 		success = false;
@@ -274,7 +281,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_000000_10091999 - diff;
 	b3LocalTime();
-	code = b3Check(0, 0, 0, 10, B3_SEPTEMBER, 1999, B3_FRIDAY, true);
+	code = b3Check(0, 0, 0, 10, B3_SEPTEMBER, 1999, B3_FRIDAY, true, 120);
 	if (code != 0)
 	{
 		success = false;
@@ -283,7 +290,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_000000_31121999 - diff;
 	b3LocalTime();
-	code = b3Check(0, 0, 0, 31, B3_DECEMBER, 1999, B3_FRIDAY, false);
+	code = b3Check(0, 0, 0, 31, B3_DECEMBER, 1999, B3_FRIDAY, false,  60);
 	if (code != 0)
 	{
 		success = false;
@@ -292,7 +299,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_000000_01012000 - diff;
 	b3LocalTime();
-	code = b3Check(0, 0, 0, 1, B3_JANUARY, 2000, B3_SATURDAY, false);
+	code = b3Check(0, 0, 0, 1, B3_JANUARY, 2000, B3_SATURDAY, false,  60);
 	if (code != 0)
 	{
 		success = false;
@@ -301,7 +308,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_000000_29022000 - diff;
 	b3LocalTime();
-	code = b3Check(0, 0, 0, 29, B3_FEBRUARY, 2000, B3_TUESDAY, false);
+	code = b3Check(0, 0, 0, 29, B3_FEBRUARY, 2000, B3_TUESDAY, false,  60);
 	if (code != 0)
 	{
 		success = false;
@@ -310,7 +317,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_120000_01042001 - diff;
 	b3LocalTime();
-	code = b3Check(12, 0, 0, 1, B3_APRIL, 2001, B3_SUNDAY, true);
+	code = b3Check(12, 0, 0, 1, B3_APRIL, 2001, B3_SUNDAY, true, 120);
 	if (code != 0)
 	{
 		success = false;
@@ -319,7 +326,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_120000_08042001 - diff;
 	b3LocalTime();
-	code = b3Check(12, 0, 0, 8, B3_APRIL, 2001, B3_SUNDAY, true);
+	code = b3Check(12, 0, 0, 8, B3_APRIL, 2001, B3_SUNDAY, true, 120);
 	if (code != 0)
 	{
 		success = false;
@@ -328,7 +335,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_120000_19122018 - diff;
 	b3LocalTime();
-	code = b3Check(12, 0, 0, 19, B3_DECEMBER, 2018, B3_WEDNESDAY, false);
+	code = b3Check(12, 0, 0, 19, B3_DECEMBER, 2018, B3_WEDNESDAY, false,  60);
 	if (code != 0)
 	{
 		success = false;
@@ -337,7 +344,7 @@ bool b3Date::b3Y2K_Selftest()
 
 	time_code = DATE_120000_23032021 - diff;
 	b3LocalTime();
-	code = b3Check(12, 0, 0, 23, B3_MARCH, 2021, B3_TUESDAY, false);
+	code = b3Check(12, 0, 0, 23, B3_MARCH, 2021, B3_TUESDAY, false, 60);
 	if (code != 0)
 	{
 		success = false;
