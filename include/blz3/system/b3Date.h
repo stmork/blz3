@@ -23,37 +23,6 @@
 #include <time.h>
 #include "blz3/system/b3Exception.h"
 
-// week days
-enum b3_week_day
-{
-	B3_SUNDAY = 0,
-	B3_MONDAY,
-	B3_TUESDAY,
-	B3_WEDNESDAY,
-	B3_THURSDAY,
-	B3_FRIDAY,
-	B3_SATURDAY,
-	B3_WEEKDAY_COUNT
-};
-
-// months
-enum b3_month
-{
-	B3_NONE = 0,
-	B3_JANUARY = 1,
-	B3_FEBRUARY,
-	B3_MARCH,
-	B3_APRIL,
-	B3_MAY,
-	B3_JUNE,
-	B3_JULY,
-	B3_AUGUST,
-	B3_SEPTEMBER,
-	B3_OCTOBER,
-	B3_NOVEMBER,
-	B3_DECEMBER
-};
-
 enum b3_daytime
 {
 	B3_DT_GM = 0,
@@ -83,10 +52,44 @@ class B3_PLUGIN b3Date
 	b3_daytime     mode      = B3_DT_GM;
 
 public:
+	// week days
+	enum b3_week_day
+	{
+		B3_SUNDAY = 0,
+		B3_MONDAY,
+		B3_TUESDAY,
+		B3_WEDNESDAY,
+		B3_THURSDAY,
+		B3_FRIDAY,
+		B3_SATURDAY,
+		B3_WEEKDAY_COUNT
+	};
+
+	// months
+	enum b3_month
+	{
+		B3_NONE = 0,
+		B3_JANUARY = 1,
+		B3_FEBRUARY,
+		B3_MARCH,
+		B3_APRIL,
+		B3_MAY,
+		B3_JUNE,
+		B3_JULY,
+		B3_AUGUST,
+		B3_SEPTEMBER,
+		B3_OCTOBER,
+		B3_NOVEMBER,
+		B3_DECEMBER
+	};
+
+	typedef signed   b3_year;
+	typedef unsigned b3_day;
+
 	// date
-	signed         year;     //!< The year.
+	b3_year        year;     //!< The year.
 	b3_month       month;    //!< The month.
-	unsigned       day;      //!< The day of month.
+	b3_day         day;      //!< The day of month.
 	b3_week_day    wday;     //!< The day of week.
 
 	// time
@@ -99,6 +102,7 @@ public:
 	signed         offset;   //!< The time zone offset including daylight saving time.
 
 public:
+
 	/**
 	 * This constructor initializes this instance.
 	 */

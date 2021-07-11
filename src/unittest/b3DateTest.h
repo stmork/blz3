@@ -26,20 +26,29 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "blz3/system/b3Date.h"
+
 class b3DateTest : public CppUnit::TestFixture
 {
+	static const b3Date::b3_day   TEST_DAY;
+	static const b3Date::b3_month TEST_MONTH;
+	static const b3Date::b3_year  TEST_YEAR;
+
 	CPPUNIT_TEST_SUITE(b3DateTest);
 	CPPUNIT_TEST(testNow);
 	CPPUNIT_TEST(testDate);
 	CPPUNIT_TEST(testEqual);
+	CPPUNIT_TEST(testUtc);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void setUp() override;
 	void tearDown() override;
+
 	void testNow();
 	void testDate();
 	void testEqual();
+	void testUtc();
 };
 
 #endif
