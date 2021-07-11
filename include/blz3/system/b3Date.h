@@ -57,8 +57,7 @@ enum b3_month
 enum b3_daytime
 {
 	B3_DT_GM = 0,
-	B3_DT_LOCAL,
-	B3_DT_DIFF
+	B3_DT_LOCAL
 };
 
 /**
@@ -205,20 +204,6 @@ public:
 
 
 	/////////////////////////////// Operators
-	/**
-	 * This operator subtract the given date from this instance.
-	 *
-	 * @param date The date to subtract.
-	 */
-	void     operator-=(const b3Date & date);
-
-	/**
-	 * This operator adds the given date to this instance.
-	 *
-	 * @param date The date to add.
-	 * @throws b3DateException
-	 */
-	void     operator+=(const b3Date & date);
 
 	/**
 	 * This operator assigns a given date to this instance.
@@ -236,22 +221,6 @@ public:
 	b3Date & operator =(const std::time_t & time_point);
 
 	/**
-	 * This operator adds a given Date to this instance and results in a new date.
-	 *
-	 * @param date The date to add.
-	 * @return The resulting date.
-	 */
-	b3Date   operator+(const b3Date & date);
-
-	/**
-	 * This operator subtracts a given Date from this instance and results in a new date.
-	 *
-	 * @param date The date to subtract.
-	 * @return The resulting date.
-	 */
-	b3Date   operator-(const b3Date & date);
-
-	/**
 	 * This operator returns the date of this instance as @c std::time_t value.
 	 *
 	 * @return The date as @c std::time_t.
@@ -267,42 +236,42 @@ public:
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator <(const b3Date & date);
+	bool operator <(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is smaller or equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator<=(const b3Date & date);
+	bool operator<=(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator ==(const b3Date & date);
+	bool operator ==(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is not equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator!=(const b3Date & date);
+	bool operator!=(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is greater or equal than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator >=(const b3Date & date);
+	bool operator >=(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is greater than the given date.
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator>(const b3Date & date);
+	bool operator>(const b3Date & date) const;
 
 	/////////////////////////////// Special case...
 	/**
@@ -315,7 +284,6 @@ public:
 private:
 	void b3LocalTime();
 	void b3GMTime();
-	void b3DiffTime();
 	unsigned b3Check(
 		unsigned h, unsigned m, unsigned s,
 		unsigned day, b3_month, signed year,

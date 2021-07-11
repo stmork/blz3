@@ -88,10 +88,6 @@ void b3Date::b3SetMode(const b3_daytime new_mode)
 	case B3_DT_LOCAL :
 		b3LocalTime();
 		break;
-
-	case B3_DT_DIFF :
-		b3DiffTime();
-		break;
 	}
 }
 
@@ -171,30 +167,6 @@ void b3Date::b3GMTime()
 	microsec  = 0;
 	dls       = now->tm_isdst != 0;
 	offset    = now->tm_gmtoff / 60;
-}
-
-void b3Date::b3DiffTime()
-{
-	unsigned long rest;
-
-	mode      = B3_DT_DIFF;
-
-	// Setup date...
-	year      = 0;
-	month     = B3_NONE;
-	day       = (unsigned short)(time_code / TICKS_DAY);
-	rest      = (unsigned short)(time_code - TICKS_DAY * day);
-	wday      = B3_SUNDAY;
-
-	// .. and time
-	hour      = (unsigned short)(rest / TICKS_HOUR);
-	rest      =                  rest - TICKS_HOUR * hour;
-
-	min       = (unsigned short)(rest / TICKS_MIN);
-	sec       = (unsigned short)(rest % TICKS_MIN);
-	microsec  = 0;
-	dls       = false;
-	offset    = 0;
 }
 
 void b3Date::b3Dump(const unsigned code)
@@ -377,38 +349,6 @@ bool b3Date::b3Y2K_Selftest()
 	return success;
 }
 
-void b3Date::operator-=(const b3Date & diff)
-{
-	if (time_code < diff.time_code)
-	{
-		time_code  = diff.time_code - time_code;
-	}
-	else
-	{
-		time_code -= diff.time_code;
-	}
-
-	b3SetMode(B3_DT_DIFF);
-}
-
-void b3Date::operator+=(const b3Date & diff)
-{
-	if ((diff.mode != B3_DT_DIFF) && (mode != B3_DT_DIFF))
-	{
-		// It doen's make sense to add a date to another
-		// date. But it make sense to add a difference
-		// to a date or another difference. The result
-		// is:
-		// 1) date  = date + diff
-		// 2) diff  = diff + diff
-		// 3) ERROR = date + date
-		// 4) ERROR = diff + date
-		B3_THROW(b3DateException, B3_DATE_ILLEGAL_MODE);
-	}
-	time_code += diff.time_code;
-	b3SetMode(mode);
-}
-
 b3Date & b3Date::operator=(const b3Date & eq)
 {
 	time_code = eq.time_code;
@@ -420,7 +360,7 @@ b3Date & b3Date::operator=(const b3Date & eq)
 b3Date & b3Date::operator=(const std::time_t & eq)
 {
 	time_code = eq;
-	b3SetMode(mode == B3_DT_DIFF ? B3_DT_LOCAL : mode);
+	b3SetMode(mode);
 
 	return *this;
 }
@@ -499,53 +439,33 @@ bool b3Date::b3Update()
 	return time_code != -1;
 }
 
-b3Date b3Date::operator+(const b3Date & b)
-{
-	b3Date a;
-
-	a  = *this;
-	a += b;
-
-	return a;
-}
-
-b3Date b3Date::operator-(const b3Date & b)
-{
-	b3Date a;
-
-	a  = *this;
-	a -= b;
-
-	return a;
-}
-
 // Comparisons
-bool b3Date::operator<(const b3Date & comp)
+bool b3Date::operator<(const b3Date & comp) const
 {
 	return time_code < comp.time_code;
 }
 
-bool b3Date::operator <=(const b3Date & comp)
+bool b3Date::operator <=(const b3Date & comp) const
 {
 	return time_code <= comp.time_code;
 }
 
-bool b3Date::operator==(const b3Date & comp)
+bool b3Date::operator==(const b3Date & comp) const
 {
 	return time_code == comp.time_code;
 }
 
-bool b3Date::operator !=(const b3Date & comp)
+bool b3Date::operator !=(const b3Date & comp) const
 {
 	return time_code != comp.time_code;
 }
 
-bool b3Date::operator>=(const b3Date & comp)
+bool b3Date::operator>=(const b3Date & comp) const
 {
 	return time_code >= comp.time_code;
 }
 
-bool b3Date::operator >(const b3Date & comp)
+bool b3Date::operator >(const b3Date & comp) const
 {
 	return time_code > comp.time_code;
 }
