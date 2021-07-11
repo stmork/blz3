@@ -202,7 +202,6 @@ public:
 	 */
 	tm * b3TM(struct std::tm * time_tm);
 
-
 	/////////////////////////////// Operators
 
 	/**
@@ -228,6 +227,26 @@ public:
 	inline operator std::time_t () const
 	{
 		return time_code;
+	}
+
+	inline operator struct timeval () const
+	{
+		struct timeval time_value;
+
+		time_value.tv_sec = time_code;
+		time_value.tv_usec = microsec;
+
+		return time_value;
+	}
+
+	inline operator struct timespec () const
+	{
+		struct timespec time_value;
+
+		time_value.tv_sec  = time_code;
+		time_value.tv_nsec = microsec * 1000;
+
+		return time_value;
 	}
 
 	/////////////////////////////// Comparisons

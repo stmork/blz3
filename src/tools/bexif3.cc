@@ -122,11 +122,8 @@ int main(int argc, char * argv[])
 				{
 					b3Date date = exif;
 
-					file_attributes.st_ctim.tv_nsec = date.microsec * 1000;
-					file_attributes.st_ctim.tv_sec  = date;
-
-					file_attributes.st_mtim.tv_nsec = date.microsec * 1000;
-					file_attributes.st_mtim.tv_sec  = date;
+					file_attributes.st_ctim = date;
+					file_attributes.st_mtim = date;
 				}
 
 				if (count > 0)
