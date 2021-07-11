@@ -21,6 +21,7 @@
 #define B3_TXEXIF_H
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Date.h"
 
 #ifdef HAVE_LIBEXIV2
 #include <exiv2/exiv2.hpp>
@@ -143,8 +144,10 @@ public:
 		const Exiv2::Rational & rational,
 		const b3_f64            default_value = 1);
 
+	operator b3Date ();
+
 private:
-	const char * b3PrepareDate(char * date_time, const size_t size);
+	const char * b3PrepareDate(const b3Date & date, char * date_time, const size_t size);
 
 	static signed b3RoundedQuotient(
 		const Exiv2::Exifdatum & datum,

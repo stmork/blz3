@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS += system_unix system base image raytrace
-SUBDIRS += brt3 benc3 bimg3 half render qrender qrender-sct
+SUBDIRS += brt3 benc3 bimg3 half bexif3 render qrender qrender-sct
 SUBDIRS += unittest longtest
 CONFIG  += ordered
 
@@ -17,6 +17,7 @@ brt3.file        = brt3/brt3.pro
 benc3.file       = brt3/benc3.pro
 bimg3.file       = brt3/bimg3.pro
 half.file        = tools/half.pro
+bexif3.file      = tools/bexif3.pro
 render.file      = OpenGL/render.pro
 qrender.file     = OpenGL/qrender.pro
 qrender-sct.file = OpenGL/qrender-sct.pro
@@ -31,6 +32,7 @@ raytrace.depends = system base image
 benc3.depends       = image
 bimg3.depends       = image
 half.depends        = image
+bexif3.depends      = image
 brt3.depends        = raytrace
 render.depends      = raytrace
 qrender.depends     = raytrace

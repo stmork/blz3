@@ -100,7 +100,7 @@ long b3Date::b3GetMode()
 	return mode;
 }
 
-struct tm * b3Date::b3TM(struct tm * time_tm)
+struct std::tm * b3Date::b3TM(struct std::tm * time_tm)
 {
 	if (time_tm != nullptr)
 	{
@@ -141,7 +141,7 @@ void b3Date::b3LocalTime()
 void b3Date::b3GMTime()
 {
 	struct tm * now;
-	time_t     mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
+	time_t      mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
 
 	do
 	{
@@ -417,45 +417,77 @@ b3Date & b3Date::operator=(const time_t & eq)
 }
 
 bool b3Date::b3SetDate(
-	unsigned short newDay,
-	b3_month       newMonth,
-	unsigned long  newYear)
+	const unsigned short new_day,
+	const b3_month       new_month,
+	const unsigned long  new_year)
 {
-	struct tm date;
+	month = new_month;
+	day   = new_day;
+	year  = new_year;
 
-	month = newMonth;
-	day   = newDay;
-	year  = newYear;
-	b3TM(&date);
-
-	time_code = mktime(&date);
-	return time_code != -1;
+	return b3Update();
 }
 
 bool b3Date::b3SetTime(
-	unsigned short newHour,
-	unsigned short newMin,
-	unsigned short newSec)
+	const unsigned short new_hour,
+	const unsigned short new_min,
+	const unsigned short new_sec)
 {
-	struct tm date;
 	bool      result;
 
-	if ((newHour < 24) && (newMin < 60) && (newSec < 60))
+	if ((new_hour < 24) && (new_min < 60) && (new_sec < 60))
 	{
-		hour     = newHour;
-		min      = newMin;
-		sec      = newSec;
+		hour     = new_hour;
+		min      = new_min;
+		sec      = new_sec;
 		microsec = 0;
 
-		b3TM(&date);
-		time_code = mktime(&date);
-		result    = (time_code != -1);
+		result   = b3Update();
 	}
 	else
 	{
 		result = false;
 	}
 	return result;
+}
+
+bool b3Date::b3SetDateTime(
+	const unsigned short new_day,
+	const b3_month       new_month,
+	const unsigned long  new_year,
+	const unsigned short new_hour,
+	const unsigned short new_min,
+	const unsigned short new_sec)
+{
+	bool      result;
+
+	if ((new_hour < 24) && (new_min < 60) && (new_sec < 60))
+	{
+		month    = new_month;
+		day      = new_day;
+		year     = new_year;
+		hour     = new_hour;
+		min      = new_min;
+		sec      = new_sec;
+		microsec = 0;
+
+		result   = b3Update();
+	}
+	else
+	{
+		result = false;
+	}
+	return result;
+}
+
+bool b3Date::b3Update()
+{
+	struct tm date;
+
+	b3TM(&date);
+	time_code = mktime(&date);
+
+	return time_code != -1;
 }
 
 b3Date b3Date::operator+(const b3Date & b)

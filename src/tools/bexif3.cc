@@ -1,15 +1,15 @@
 /*
 **
-**	$Filename:	half.cc $
-**	$Release:	Dortmund 2003 $
+**	$Filename:	bexif3.cc $
+**	$Release:	Dortmund 2021 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Halfs an image
+**	Blizzard III - EXIF image preparation
 **
-**	(C) Copyright 2003  Steffen A. Mork
+**	(C) Copyright 2021  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -30,38 +30,34 @@
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxExif.h"
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+
 /*************************************************************************
 **                                                                      **
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
 
-enum op
-{
-	NOP = 0,
-	RIGHT,
-	TURN,
-	LEFT
-};
-
 static void b3Banner(const char * command)
 {
 	const b3Date now;
 
-	b3PrintF(B3LOG_NORMAL, "%s Image half scaler\n", b3Runtime::b3GetProduct());
+	b3PrintF(B3LOG_NORMAL, "%s EXIF image manipulator\n", b3Runtime::b3GetProduct());
 	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-%d\n", now.year);
 	b3PrintF(B3LOG_NORMAL, "\n");
 
 	if (command != nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "USAGE:\n");
-		b3PrintF(B3LOG_NORMAL, "%s [-r][-l][-t][-g|-G] {frame images}\n", command);
+		b3PrintF(B3LOG_NORMAL, "%s [-g][-G][-p][-k][-x] {images}\n", command);
 		b3PrintF(B3LOG_NORMAL, "\n");
-		b3PrintF(B3LOG_NORMAL, "  -r        turn image right.\n");
-		b3PrintF(B3LOG_NORMAL, "  -l        turn image left.\n");
-		b3PrintF(B3LOG_NORMAL, "  -t        turn image upside down.\n");
 		b3PrintF(B3LOG_NORMAL, "  -g        leave geo tagging.\n");
 		b3PrintF(B3LOG_NORMAL, "  -G        remove geo tagging.\n");
+		b3PrintF(B3LOG_NORMAL, "  -p        update product info.\n");
+		b3PrintF(B3LOG_NORMAL, "  -k        keep filesystem date.\n");
+		b3PrintF(B3LOG_NORMAL, "  -x        update filesystem date from EXIF.\n");
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
@@ -70,8 +66,10 @@ static void b3Banner(const char * command)
 
 int main(int argc, char * argv[])
 {
-	op   operation  = NOP;
-	bool remove_geo = false;
+	bool remove_geo         = false;
+	bool update_productinfo = false;
+	bool keep_timestamp     = false;
+	bool extract_timestamp  = false;
 
 	if (argc <= 1)
 	{
@@ -81,22 +79,7 @@ int main(int argc, char * argv[])
 
 	for (int i = 1; i < argc; i++)
 	{
-		b3Tx   image, half;
-		b3_res xSize, ySize;
-
-		if (strcmp(argv[i], "-r") == 0)
-		{
-			operation = RIGHT;
-		}
-		else if (strcmp(argv[i], "-t") == 0)
-		{
-			operation = TURN;
-		}
-		else if (strcmp(argv[i], "-l") == 0)
-		{
-			operation = LEFT;
-		}
-		else if (strcmp(argv[i], "-g") == 0)
+		if (strcmp(argv[i], "-g") == 0)
 		{
 			remove_geo = false;
 		}
@@ -104,45 +87,63 @@ int main(int argc, char * argv[])
 		{
 			remove_geo = true;
 		}
+		else if (strcmp(argv[i], "-p") == 0)
+		{
+			update_productinfo = true;
+		}
+		else if (strcmp(argv[i], "-k") == 0)
+		{
+			keep_timestamp = true;
+		}
+		else if (strcmp(argv[i], "-x") == 0)
+		{
+			extract_timestamp = true;
+		}
 		else
 		{
 			try
 			{
-				if (image.b3LoadImage(argv[i]) == B3_OK)
+				struct stat file_attributes;
+				b3TxExif    exif(argv[i]);
+				int         success = stat(argv[i], &file_attributes);
+				b3_count    count   = 0;
+
+				if (remove_geo)
 				{
-					b3TxExif exif(argv[i]);
+					exif.b3RemoveGpsData();
+					count++;
+				}
+				if (update_productinfo)
+				{
+					exif.b3Update();
+					count++;
+				}
+				if (extract_timestamp)
+				{
+					b3Date date = exif;
 
-					switch (operation)
-					{
-					case RIGHT:
-						image.b3TurnRight();
-						break;
-					case LEFT:
-						image.b3TurnLeft();
-						break;
-					case TURN:
-						image.b3Turn();
-						break;
-					case NOP:
-						break;
-					}
+					file_attributes.st_ctim.tv_nsec = date.microsec * 1000;
+					file_attributes.st_ctim.tv_sec  = date;
 
-					xSize = (image.xSize >> 1);
-					ySize = (image.ySize >> 1);
-					if (half.b3AllocTx(xSize, ySize, 24))
-					{
-						if (remove_geo)
-						{
-							exif.b3RemoveGpsData();
-						}
-						exif.b3Update();
-						half.b3ScaleToGrey(&image);
-#ifdef HAVE_LIBJPEG
-						half.b3SaveJPEG(argv[i], B3_JPG_QUALITY, &exif);
-#else
-						// TODO: Save as TGA image instead!
-#endif
-					}
+					file_attributes.st_mtim.tv_nsec = date.microsec * 1000;
+					file_attributes.st_mtim.tv_sec  = date;
+				}
+
+				if (count > 0)
+				{
+					exif.b3Write(argv[i]);
+				}
+
+				if ((keep_timestamp || extract_timestamp) && (success == 0))
+				{
+					struct timeval times[2];
+
+					times[0].tv_sec  = file_attributes.st_atim.tv_sec;
+					times[0].tv_usec = file_attributes.st_atim.tv_nsec / 1000;
+					times[1].tv_sec  = file_attributes.st_mtim.tv_sec;
+					times[1].tv_usec = file_attributes.st_mtim.tv_nsec / 1000;
+
+					utimes(argv[i], times);
 				}
 			}
 			catch (b3TxException & t)
@@ -150,7 +151,6 @@ int main(int argc, char * argv[])
 				b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
 				b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
 			}
-			operation = NOP;
 		}
 	}
 	return EXIT_SUCCESS;

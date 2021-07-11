@@ -156,4 +156,12 @@ void b3ExifTest::testRational()
 	CPPUNIT_ASSERT_EQUAL(19,  b3TxExif::b3RoundedQuotient(f, 19));
 }
 
+void b3ExifTest::testParseDate()
+{
+	b3TxExif exif("IMG_1344.jpeg");
+	b3Date   date;
+
+	CPPUNIT_ASSERT_NO_THROW(date = exif);
+}
+
 #endif

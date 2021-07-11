@@ -59,7 +59,7 @@ b3TxExif::b3TxExif()
 	char   copyright[128];
 	char   date_time[64];
 
-	b3PrepareDate(date_time, sizeof(date_time));
+	b3PrepareDate(now, date_time, sizeof(date_time));
 	snprintf(copyright, sizeof(copyright), "Copyright (C) %s, %d",
 		b3Runtime::b3GetUserName(), now.year);
 
@@ -94,9 +94,10 @@ b3TxExif & b3TxExif::operator=(const b3TxExif & other)
 void b3TxExif::b3Update()
 {
 #ifdef HAVE_LIBEXIV2
-	char date_time[64];
+	const b3Date now;
+	char         date_time[64];
 
-	b3PrepareDate(date_time, sizeof(date_time));
+	b3PrepareDate(now, date_time, sizeof(date_time));
 	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
 
 	m_ExifData["Exif.Image.HostComputer"] = m_Hostname;
@@ -202,16 +203,44 @@ signed b3TxExif::b3RoundedQuotient(
 	return std::round(b3Quotient(rational, default_value));
 }
 
-const char * b3TxExif::b3PrepareDate(char * date_time, const size_t size)
+b3TxExif::operator b3Date()
+{
+	b3Date date;
+
+	const Exiv2::ExifKey            key("Exif.Photo.DateTimeOriginal");
+	const Exiv2::ExifData::iterator datum_it = m_ExifData.findKey(key);
+
+	if (datum_it != m_ExifData.end())
+	{
+		const std::string  & date_time = datum_it->toString();
+
+		sscanf(date_time.c_str(), m_DateTimeFormat,
+			&date.year, &date.month, &date.day,
+			&date.hour, &date.min, &date.sec);
+		date.microsec = 0;
+		date.dls      = false;
+
+		if (date.b3Update())
+		{
+			date.b3SetMode(B3_DT_LOCAL);
+		}
+	}
+	return date;
+}
+
+const char * b3TxExif::b3PrepareDate(
+	const b3Date & date,
+	char     *     date_time,
+	const size_t   size)
 {
 	const std::time_t      current_time = std::time(nullptr);
 	const struct std::tm * timeinfo     = std::localtime(&current_time);
-	const b3Date           now;
 
 	m_UtcOffset = timeinfo->tm_gmtoff / 60;
 
 	snprintf(date_time, size, m_DateTimeFormat,
-		now.year, now.month, now.day, now.hour, now.min, now.sec);
+		date.year, date.month, date.day,
+		date.hour, date.min,   date.sec);
 
 	return date_time;
 }

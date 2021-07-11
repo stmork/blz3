@@ -129,24 +129,56 @@ public:
 	void       b3Now();
 
 	/**
-	 * This sets the date values to the day/month/year values.
+	 * This sets the date values to the day/month/year values and updates the
+	 * time code value.
 	 *
 	 * @param day   The day to set.
 	 * @param month The month to set.
 	 * @param year  The year to set.
 	 * @return Success.
 	 */
-	bool       b3SetDate(unsigned short day, b3_month month, unsigned long year);
+	bool       b3SetDate(
+		const unsigned short day,
+		const b3_month       month,
+		const unsigned long  year);
 
 	/**
-	 * This method sets the date values to the days time point.
+	 * This method sets the date values to the days time point and updates the
+	 * time code value.
 	 *
 	 * @param hour   The hours to set.
 	 * @param minute The minuts to set.
 	 * @param second The seconds to set.
 	 * @return Success.
 	 */
-	bool       b3SetTime(unsigned short hour = 0, unsigned short minute = 0, unsigned short second = 0);
+	bool       b3SetTime(
+		const unsigned short hour = 0,
+		const unsigned short minute = 0,
+		const unsigned short second = 0);
+
+	/**
+	 * This sets the date and time values and updates the
+	 * time code value.
+	 *
+	 * @param day   The day to set.
+	 * @param month The month to set.
+	 * @param year  The year to set.
+	 * @param hour   The hours to set.
+	 * @param minute The minuts to set.
+	 * @param second The seconds to set.
+	 * @return Success.
+	 */
+	bool       b3SetDateTime(
+		const unsigned short day, const b3_month month, const unsigned long year,
+		const unsigned short hour = 0, const unsigned short minute = 0, const unsigned short second = 0);
+
+	/**
+	 * This method updates the time code value.
+	 *
+	 * @return True on success.
+	 */
+	[[nodiscard]]
+	bool       b3Update();
 
 	/**
 	 * This method sets the time zone.
@@ -168,7 +200,7 @@ public:
 	 * @param time_tm The tm structure to fill.
 	 * @return The given tm structure.
 	 */
-	struct tm * b3TM(struct tm * time_tm);
+	tm * b3TM(struct tm * time_tm);
 
 
 	/////////////////////////////// Operators

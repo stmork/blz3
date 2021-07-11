@@ -1,41 +1,43 @@
 # Beispiel Makefile
 
-BLZ3_LIB		= @BLZ3_LIB@
-BLZ3_BIN		= @BLZ3_BIN@
-CC			= @CC@
-CXX			= @CXX@
-LD			= @LD@
-CFLAGS			= @CFLAGS@
-CXXFLAGS		= @CXXFLAGS@
-CPPFLAGS		= @CPPFLAGS@
-LDFLAGS			= @LDFLAGS@
-LDLIBS			= @LIBS@
-prefix			= @prefix@
-exec_prefix		= @exec_prefix@
+BLZ3_LIB        = @BLZ3_LIB@
+BLZ3_BIN        = @BLZ3_BIN@
+CC              = @CC@
+CXX             = @CXX@
+LD              = @LD@
+CFLAGS          = @CFLAGS@
+CXXFLAGS        = @CXXFLAGS@
+CPPFLAGS        = @CPPFLAGS@
+LDFLAGS         = @LDFLAGS@
+LDLIBS          = @LIBS@
+prefix          = @prefix@
+exec_prefix     = @exec_prefix@
 
-LINK.o			= $(LINK.cc)
+LINK.o          = $(LINK.cc)
 
-PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc\
-	testimg.cc half.cc pw.cc reduce.cc BodThumb.cc RemCR.cc big.cc
+PRG_SOURCE      = RestoreExt.cc CleanRes.cc scale.cc calibrate.cc\
+	testimg.cc half.cc pw.cc reduce.cc BodThumb.cc RemCR.cc big.cc\
+	bexif3.cc
 
-RESTOREEXT_OBJS	= RestoreExt.o
-CLEANRES_OBJS	= CleanRes.o
-SCALE_OBJS		= scale.o
-HALF_OBJS		= half.o
-CALIBRATE_OBJS	= calibrate.o
-TESTIMG_OBJS	= testimg.o
-PW_OBJS			= pw.o
-REDUCE_OBJS		= reduce.o
-BOD_THUMB_OBJS	= BodThumb.o
-REM_CR_OBJS		= RemCR.o
-BIG_OBJS		= big.o
+RESTOREEXT_OBJS = RestoreExt.o
+CLEANRES_OBJS   = CleanRes.o
+SCALE_OBJS      = scale.o
+HALF_OBJS       = half.o
+BEXIF3_OBJS     = bexif3.o
+CALIBRATE_OBJS  = calibrate.o
+TESTIMG_OBJS    = testimg.o
+PW_OBJS         = pw.o
+REDUCE_OBJS     = reduce.o
+BOD_THUMB_OBJS  = BodThumb.o
+REM_CR_OBJS     = RemCR.o
+BIG_OBJS        = big.o
 
-B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
-B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
-B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
+B3_LIB_SYSTEM   = $(BLZ3_LIB)/libB3System.a
+B3_LIB_BASE     = $(BLZ3_LIB)/libB3Base.a
+B3_LIB_RAYTRACE = $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce BodThumb RemCR big
-INSTALL_PRGS	= half
+PRGS            = RestoreExt CleanRes testimg scale calibrate half bexif3 pw reduce BodThumb RemCR big
+INSTALL_PRGS    = half bexif3
 
 all:	$(PRGS)
 
@@ -61,6 +63,8 @@ CleanRes:	$(CLEANRES_OBJS) $(B3_LIB_BASE)
 scale:	$(SCALE_OBJS) $(B3_LIB_BASE)
 
 half:	$(HALF_OBJS) $(B3_LIB_BASE)
+
+bexif3:	$(BEXIF3_OBJS) $(B3_LIB_BASE)
 
 pw:	$(PW_OBJS) $(B3_LIB_BASE)
 
