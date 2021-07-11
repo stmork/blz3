@@ -10,13 +10,13 @@
  */
 
 SctUnitRunner::SctUnitRunner(
-		sc::StatemachineInterface * statemachine,
-		bool event_driven,
-		sc_integer cycle_period
+		sc::StatemachineInterface * p_statemachine,
+		bool p_event_driven,
+		sc_integer p_cycle_period
 		) :
-		statemachine(statemachine),
-		event_driven(event_driven),
-		cycle_period(event_driven ? -1 : cycle_period),
+		statemachine(p_statemachine),
+		event_driven(p_event_driven),
+		cycle_period(p_event_driven ? -1 : p_cycle_period),
 		current_time_ms(0),
 		timer_queue()
 {
@@ -120,18 +120,18 @@ void SctUnitRunner::insert_timer(SctTimer timer)
 }
 
 SctUnitRunner::SctTimer::SctTimer(
-		sc_integer time_ms,
-		bool periodic,
-		sc_eventid evid,
-		sc_integer priority,
-		sc_boolean is_runcycle
+		sc_integer p_time_ms,
+		bool p_periodic,
+		sc_eventid p_evid,
+		sc_integer p_priority,
+		sc_boolean p_is_runcycle
 		) :
-		rel_time_ms(time_ms),
+		rel_time_ms(p_time_ms),
 		abs_time_ms(0),
-		periodic(periodic),
-		pt_evid(evid),
-		priority(priority),
-		is_runcycle(is_runcycle)
+		periodic(p_periodic),
+		pt_evid(p_evid),
+		priority(p_priority),
+		is_runcycle(p_is_runcycle)
 {}
 
 sc_integer SctUnitRunner::SctTimer::compare(SctTimer * other)
