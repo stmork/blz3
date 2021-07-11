@@ -528,7 +528,7 @@ namespace
 	class MockGui : public MouseSelect::Gui::OperationCallback
 	{
 	public:
-		void updateScrolling()
+		void updateScrolling() override
 		{
 			guiUpdateScrollingMock->updateScrolling();
 		}
@@ -536,37 +536,37 @@ namespace
 	class MockView : public MouseSelect::View::OperationCallback
 	{
 	public:
-		sc_boolean is3D()
+		sc_boolean is3D() override
 		{
 			return (viewIs3DMock->*(viewIs3DMock->getBehavior()))();
 		}
-		void show()
+		void show() override
 		{
 			viewShowMock->show();
 			return (viewShowMock->*(viewShowMock->getBehavior()))();
 		}
-		void hide()
+		void hide() override
 		{
 			viewHideMock->hide();
 			return (viewHideMock->*(viewHideMock->getBehavior()))();
 		}
-		void cursorPanning()
+		void cursorPanning() override
 		{
 			viewCursorPanningMock->cursorPanning();
 		}
-		void cursorArrow()
+		void cursorArrow() override
 		{
 			viewCursorArrowMock->cursorArrow();
 		}
-		void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+		void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override
 		{
 			viewSetRectangleMock->setRectangle(x1, y1, x2, y2);
 		}
-		void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
+		void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override
 		{
 			viewSelectMock->select(x1, y1, x2, y2);
 		}
-		void move(int32_t dx, int32_t dy)
+		void move(int32_t dx, int32_t dy) override
 		{
 			viewMoveMock->move(dx, dy);
 		}
@@ -578,7 +578,7 @@ namespace
 	class MouseSelectTest : public ::testing::Test
 	{
 	protected:
-		virtual void SetUp()
+		virtual void SetUp() override
 		{
 			statechart = new MouseSelect();
 			runner = new SctUnitRunner(
@@ -587,7 +587,7 @@ namespace
 				200
 			);
 		}
-		virtual void TearDown()
+		virtual void TearDown() override
 		{
 			delete statechart;
 			delete runner;
