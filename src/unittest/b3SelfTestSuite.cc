@@ -24,7 +24,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3SelfTestSuite);
 void b3SelfTestSuite::test()
 {
 	CPPUNIT_ASSERT(b3SelfTest::b3TestDataSize());
-	CPPUNIT_ASSERT(b3SelfTest::b3TestDate());
 	CPPUNIT_ASSERT(b3SelfTest::b3TestMemory());
 	CPPUNIT_ASSERT(b3SelfTest::b3TestIO());
 }

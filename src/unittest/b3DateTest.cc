@@ -172,4 +172,73 @@ void b3DateTest::testDateTime()
 	CPPUNIT_ASSERT(date_time.dls);
 }
 
+void b3DateTest::testDates()
+{
+	b3Date date;
+	std::time_t diff = 0;
+
+	date = 12 * b3Date::TICKS_HOUR;
+	diff = date.offset * b3Date::TICKS_MIN;
+
+	date = DATE_000000_09091999 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 0, 0, 0, 9, b3Date::B3_SEPTEMBER, 1999, b3Date::B3_THURSDAY, true, 120);
+
+	date = DATE_000000_10091999 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 0, 0, 0, 10, b3Date::B3_SEPTEMBER, 1999, b3Date::B3_FRIDAY, true, 120);
+
+	date = DATE_000000_31121999 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 0, 0, 0, 31, b3Date::B3_DECEMBER, 1999, b3Date::B3_FRIDAY, false,  60);
+
+	date = DATE_000000_01012000 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 0, 0, 0, 1, b3Date::B3_JANUARY, 2000, b3Date::B3_SATURDAY, false,  60);
+
+	date = DATE_000000_29022000 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 0, 0, 0, 29, b3Date::B3_FEBRUARY, 2000, b3Date::B3_TUESDAY, false,  60);
+
+	date = DATE_120000_01042001 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 12, 0, 0, 1, b3Date::B3_APRIL, 2001, b3Date::B3_SUNDAY, true, 120);
+
+	date = DATE_120000_08042001 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 12, 0, 0, 8, b3Date::B3_APRIL, 2001, b3Date::B3_SUNDAY, true, 120);
+
+	date = DATE_120000_19122018 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 12, 0, 0, 19, b3Date::B3_DECEMBER, 2018, b3Date::B3_WEDNESDAY, false,  60);
+
+	date = DATE_120000_23032021 - diff;
+	date.b3SetMode(B3_DT_LOCAL);
+	b3Check(date, 12, 0, 0, 23, b3Date::B3_MARCH, 2021, b3Date::B3_TUESDAY, false, 60);
+}
+
+void b3DateTest::b3Check(
+	const b3Date       &      date,
+	const unsigned            h,
+	const unsigned            m,
+	const unsigned            s,
+	const b3Date::b3_day      day,
+	const b3Date::b3_month    month,
+	const b3Date::b3_year     year,
+	const b3Date::b3_week_day w,
+	const bool                dls,
+	const signed              offset)
+{
+	CPPUNIT_ASSERT_EQUAL(0u,               date.microsec);
+	CPPUNIT_ASSERT_EQUAL(s,                date.sec);
+	CPPUNIT_ASSERT_EQUAL(m,                date.min);
+	CPPUNIT_ASSERT_EQUAL(h + (dls ? 1 : 0), date.hour);
+	CPPUNIT_ASSERT_EQUAL(day,              date.day);
+	CPPUNIT_ASSERT_EQUAL(month,            date.month);
+	CPPUNIT_ASSERT_EQUAL(year,             date.year);
+	CPPUNIT_ASSERT_EQUAL(w,                date.wday);
+	CPPUNIT_ASSERT_EQUAL(dls,              date.dls);
+	CPPUNIT_ASSERT_EQUAL(offset,           date.offset);
+}
+
 #endif

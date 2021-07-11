@@ -48,10 +48,16 @@ typedef b3Exception<b3_date_error, 0x444154> b3DateException;
  */
 class B3_PLUGIN b3Date
 {
-	std::time_t    time_code = 0;
-	b3_daytime     mode      = B3_DT_GM;
+	std::time_t    time_code  = 0;
+	b3_daytime     mode       = B3_DT_GM;
 
 public:
+	static const unsigned TICKS_SEC  =  1;
+	static const unsigned TICKS_MIN  = 60;
+	static const unsigned TICKS_HOUR = TICKS_MIN  *  60;
+	static const unsigned TICKS_DAY  = TICKS_HOUR *  24;
+	static const unsigned TICKS_YEAR = TICKS_DAY  * 365;
+
 	// week days
 	enum b3_week_day
 	{
@@ -300,23 +306,9 @@ public:
 	 */
 	bool operator>(const b3Date & date) const;
 
-	/////////////////////////////// Special case...
-	/**
-	 * This is a self test for Y2K purposes.
-	 *
-	 * @return Success (= correct Y2K handling).
-	 */
-	bool b3Y2K_Selftest();
-
 private:
 	void b3LocalTime();
 	void b3GMTime();
-	unsigned b3Check(
-		unsigned h, unsigned m, unsigned s,
-		unsigned day, b3_month, signed year,
-		b3_week_day w, bool dls, signed offset);
-
-	void b3Dump(const unsigned code);
 };
 
 #endif

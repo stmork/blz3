@@ -46,13 +46,6 @@ public:
 	static b3_bool b3TestMemory();
 
 	/**
-	 * This method checks for correct data handling.
-	 *
-	 * \return Correct data handling.
-	 */
-	static b3_bool b3TestDate();
-
-	/**
 	 * This method checks for correct IO handling.
 	 *
 	 * \return Correct IO handling.

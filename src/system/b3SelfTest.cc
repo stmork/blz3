@@ -203,14 +203,6 @@ b3_bool b3SelfTest::b3TestMemory()
 	return result;
 }
 
-b3_bool b3SelfTest::b3TestDate()
-{
-	b3Date date;
-
-	b3PrintF(B3LOG_NORMAL, "\ntesting date handling...\n");
-	return date.b3Y2K_Selftest();
-}
-
 b3_bool b3SelfTest::b3TestDir()
 {
 	b3Dir        dir;
