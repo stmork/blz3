@@ -30,15 +30,21 @@
 
 class b3DateTest : public CppUnit::TestFixture
 {
-	static const b3Date::b3_day   TEST_DAY;
-	static const b3Date::b3_month TEST_MONTH;
-	static const b3Date::b3_year  TEST_YEAR;
+	const b3Date::b3_day   TEST_DAY   =  28;
+	const b3Date::b3_month TEST_MONTH = b3Date::B3_JUNE;
+	const b3Date::b3_year  TEST_YEAR  = 1964;
+
+	const unsigned         TEST_HOUR  = 12;
+	const unsigned         TEST_MIN   = 34;
+	const unsigned         TEST_SEC   = 56;
 
 	CPPUNIT_TEST_SUITE(b3DateTest);
 	CPPUNIT_TEST(testNow);
 	CPPUNIT_TEST(testDate);
 	CPPUNIT_TEST(testEqual);
 	CPPUNIT_TEST(testUtc);
+	CPPUNIT_TEST(testTimeValSpec);
+	CPPUNIT_TEST(testDateTime);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -49,6 +55,8 @@ public:
 	void testDate();
 	void testEqual();
 	void testUtc();
+	void testTimeValSpec();
+	void testDateTime();
 };
 
 #endif

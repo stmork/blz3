@@ -74,12 +74,12 @@ b3Date::b3Date(const b3Date & other)
 }
 
 b3Date::b3Date(
-	unsigned short newDay,
-	b3_month       newMonth,
-	unsigned long  newYear)
+	b3_day    new_day,
+	b3_month  new_month,
+	b3_year   new_year)
 {
 	b3Now();
-	if (!b3SetDate(newDay, newMonth, newYear))
+	if (!b3SetDate(new_day, new_month, new_year))
 	{
 		B3_THROW(b3DateException, B3_DATE_ILLEGAL);
 	}
@@ -381,9 +381,9 @@ b3Date & b3Date::operator=(const std::time_t & eq)
 }
 
 bool b3Date::b3SetDate(
-	const unsigned short new_day,
-	const b3_month       new_month,
-	const unsigned long  new_year)
+	const b3_day   new_day,
+	const b3_month new_month,
+	const b3_year  new_year)
 {
 	month = new_month;
 	day   = new_day;
@@ -393,11 +393,11 @@ bool b3Date::b3SetDate(
 }
 
 bool b3Date::b3SetTime(
-	const unsigned short new_hour,
-	const unsigned short new_min,
-	const unsigned short new_sec)
+	const unsigned new_hour,
+	const unsigned new_min,
+	const unsigned new_sec)
 {
-	bool      result;
+	bool result;
 
 	if ((new_hour < 24) && (new_min < 60) && (new_sec < 60))
 	{
@@ -416,12 +416,12 @@ bool b3Date::b3SetTime(
 }
 
 bool b3Date::b3SetDateTime(
-	const unsigned short new_day,
-	const b3_month       new_month,
-	const unsigned long  new_year,
-	const unsigned short new_hour,
-	const unsigned short new_min,
-	const unsigned short new_sec)
+	const b3_day   new_day,
+	const b3_month new_month,
+	const b3_year  new_year,
+	const unsigned new_hour,
+	const unsigned new_min,
+	const unsigned new_sec)
 {
 	bool      result;
 

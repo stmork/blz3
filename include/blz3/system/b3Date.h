@@ -125,7 +125,7 @@ public:
 	 * @param year  The year to set.
 	 * @throws b3DateException
 	 */
-	b3Date(unsigned short day, b3_month month, unsigned long year);
+	b3Date(b3_day day, b3_month month, b3_year year);
 
 	/**
 	 * This method sets the date values to the actual time point.
@@ -142,9 +142,9 @@ public:
 	 * @return Success.
 	 */
 	bool       b3SetDate(
-		const unsigned short day,
-		const b3_month       month,
-		const unsigned long  year);
+		const b3_day   day,
+		const b3_month month,
+		const b3_year  year);
 
 	/**
 	 * This method sets the date values to the days time point and updates the
@@ -156,9 +156,9 @@ public:
 	 * @return Success.
 	 */
 	bool       b3SetTime(
-		const unsigned short hour = 0,
-		const unsigned short minute = 0,
-		const unsigned short second = 0);
+		const unsigned hour   = 0,
+		const unsigned minute = 0,
+		const unsigned second = 0);
 
 	/**
 	 * This sets the date and time values and updates the
@@ -173,8 +173,12 @@ public:
 	 * @return Success.
 	 */
 	bool       b3SetDateTime(
-		const unsigned short day, const b3_month month, const unsigned long year,
-		const unsigned short hour = 0, const unsigned short minute = 0, const unsigned short second = 0);
+		const b3_day   day,
+		const b3_month month,
+		const b3_year  year,
+		const unsigned hour   = 0,
+		const unsigned minute = 0,
+		const unsigned second = 0);
 
 	/**
 	 * This method updates the time code value.
