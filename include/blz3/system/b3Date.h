@@ -81,7 +81,7 @@ typedef b3Exception<b3_date_error, 0x444154> b3DateException;
 class B3_PLUGIN b3Date
 {
 	std::time_t    time_code = 0;
-	long           mode      = 0;
+	b3_daytime     mode      = B3_DT_GM;
 
 public:
 	// date
@@ -186,14 +186,14 @@ public:
 	 *
 	 * @param mode New time zone.
 	 */
-	void       b3SetMode(long mode);
+	void       b3SetMode(const b3_daytime mode);
 
 	/**
 	 * This method gets the time zone mode.
 	 *
 	 * @return Used time zone.
 	 */
-	long       b3GetMode();
+	b3_daytime b3GetMode() const;
 
 	/**
 	 * This fills a <code>tm</code> struct with the values of this instance.

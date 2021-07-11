@@ -77,7 +77,7 @@ void b3Date::b3Now()
 	b3LocalTime();
 }
 
-void b3Date::b3SetMode(long new_mode)
+void b3Date::b3SetMode(const b3_daytime new_mode)
 {
 	switch (new_mode)
 	{
@@ -95,7 +95,7 @@ void b3Date::b3SetMode(long new_mode)
 	}
 }
 
-long b3Date::b3GetMode()
+b3_daytime b3Date::b3GetMode() const
 {
 	return mode;
 }
@@ -120,7 +120,7 @@ struct std::tm * b3Date::b3TM(struct std::tm * time_tm)
 
 void b3Date::b3LocalTime()
 {
-	const struct tm * now;
+	const struct std::tm * now;
 
 	now       = localtime(&time_code);
 	mode      = B3_DT_LOCAL;
@@ -213,7 +213,8 @@ void b3Date::b3Dump(const unsigned code)
 		(code ==  0) ? "OK" : "ERROR");
 }
 
-unsigned b3Date::b3Check(unsigned     t_hour,
+unsigned b3Date::b3Check(
+	unsigned     t_hour,
 	unsigned     t_min,
 	unsigned     t_sec,
 	unsigned     t_day,
@@ -224,6 +225,7 @@ unsigned b3Date::b3Check(unsigned     t_hour,
 	signed       t_offset)
 {
 	unsigned code = 0;
+	unsigned bit  = 0;
 
 	// If we are in summer time we have one hour later.
 	// So do it so!
@@ -232,15 +234,15 @@ unsigned b3Date::b3Check(unsigned     t_hour,
 		t_hour++;
 	}
 
-	code |= ((unsigned)(hour   != t_hour)   << 0);
-	code |= ((unsigned)(min    != t_min)    << 1);
-	code |= ((unsigned)(sec    != t_sec)    << 2);
-	code |= ((unsigned)(day    != t_day)    << 3);
-	code |= ((unsigned)(month  != t_month)  << 4);
-	code |= ((unsigned)(year   != t_year)   << 5);
-	code |= ((unsigned)(wday   != t_wday)   << 6);
-	code |= ((unsigned)(dls    != t_dls)    << 7);
-	code |= ((unsigned)(offset != t_offset) << 7);
+	code |= ((unsigned)(hour   != t_hour)   << bit++);
+	code |= ((unsigned)(min    != t_min)    << bit++);
+	code |= ((unsigned)(sec    != t_sec)    << bit++);
+	code |= ((unsigned)(day    != t_day)    << bit++);
+	code |= ((unsigned)(month  != t_month)  << bit++);
+	code |= ((unsigned)(year   != t_year)   << bit++);
+	code |= ((unsigned)(wday   != t_wday)   << bit++);
+	code |= ((unsigned)(dls    != t_dls)    << bit++);
+	code |= ((unsigned)(offset != t_offset) << bit++);
 
 	return code;
 }
@@ -418,7 +420,7 @@ b3Date & b3Date::operator=(const b3Date & eq)
 b3Date & b3Date::operator=(const std::time_t & eq)
 {
 	time_code = eq;
-	b3SetMode(B3_DT_LOCAL);
+	b3SetMode(mode == B3_DT_DIFF ? B3_DT_LOCAL : mode);
 
 	return *this;
 }
