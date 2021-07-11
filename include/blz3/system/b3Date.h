@@ -80,7 +80,7 @@ typedef b3Exception<b3_date_error, 0x444154> b3DateException;
  */
 class B3_PLUGIN b3Date
 {
-	time_t         time_code = 0;
+	std::time_t    time_code = 0;
 	long           mode      = 0;
 
 public:
@@ -201,7 +201,7 @@ public:
 	 * @param time_tm The tm structure to fill.
 	 * @return The given tm structure.
 	 */
-	tm * b3TM(struct tm * time_tm);
+	tm * b3TM(struct std::tm * time_tm);
 
 
 	/////////////////////////////// Operators
@@ -228,11 +228,12 @@ public:
 	b3Date & operator=(const b3Date & date);
 
 	/**
-	 * This operator assigns a given date as <code>time_t</code> to this instance.
+	 * This operator assigns a given date as @c std::time_t to this
+	 * instance.
 	 *
 	 * @param time_point The time value to assign.
 	 */
-	b3Date & operator =(const time_t & time_point);
+	b3Date & operator =(const std::time_t & time_point);
 
 	/**
 	 * This operator adds a given Date to this instance and results in a new date.
@@ -251,11 +252,11 @@ public:
 	b3Date   operator-(const b3Date & date);
 
 	/**
-	 * This operator returns the date of this instance as <code>time_t</code> value.
+	 * This operator returns the date of this instance as @c std::time_t value.
 	 *
-	 * @return The date as time_t.
+	 * @return The date as @c std::time_t.
 	 */
-	inline operator time_t () const
+	inline operator std::time_t () const
 	{
 		return time_code;
 	}

@@ -142,8 +142,8 @@ void b3Date::b3LocalTime()
 
 void b3Date::b3GMTime()
 {
-	struct tm * now;
-	time_t      mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
+	struct std::tm * now;
+	std::time_t      mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
 
 	do
 	{
@@ -247,9 +247,9 @@ unsigned b3Date::b3Check(unsigned     t_hour,
 
 bool b3Date::b3Y2K_Selftest()
 {
-	long   code, diff, aux;
-	bool   success = true;
-	time_t actual  = time_code;
+	long        code, diff, aux;
+	bool        success = true;
+	std::time_t actual  = time_code;
 
 	b3PrintF(B3LOG_DEBUG, "\n");
 	b3PrintF(B3LOG_DEBUG, "### Blizzard III YEAR 2000 Check ###\n");
@@ -351,7 +351,7 @@ bool b3Date::b3Y2K_Selftest()
 	}
 	b3Dump(code);
 
-	time_code = -1 ^ ((time_t)1 << (sizeof(time_t) * 8 - 1));
+	time_code = -1 ^ ((std::time_t)1 << (sizeof(std::time_t) * 8 - 1));
 	b3GMTime();
 	b3PrintF(B3LOG_DEBUG, "### Y2K\n");
 	b3PrintF(B3LOG_DEBUG, "### Y2K - The last possible time code is at:\n");
@@ -407,7 +407,7 @@ void b3Date::operator+=(const b3Date & diff)
 	b3SetMode(mode);
 }
 
-b3Date & b3Date::operator =(const b3Date & eq)
+b3Date & b3Date::operator=(const b3Date & eq)
 {
 	time_code = eq.time_code;
 	b3SetMode(eq.mode);
@@ -415,7 +415,7 @@ b3Date & b3Date::operator =(const b3Date & eq)
 	return *this;
 }
 
-b3Date & b3Date::operator=(const time_t & eq)
+b3Date & b3Date::operator=(const std::time_t & eq)
 {
 	time_code = eq;
 	b3SetMode(B3_DT_LOCAL);
