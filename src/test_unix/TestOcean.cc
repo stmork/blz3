@@ -43,7 +43,7 @@ class b3OceanWaveSampler : public b3ImageSampler, public b3OceanWave
 	b3_f64  m_Amplitude;
 	b3_f64  m_Time;
 
-	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y)
+	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y) override
 	{
 		b3_vector pos;
 		b3_vector n;

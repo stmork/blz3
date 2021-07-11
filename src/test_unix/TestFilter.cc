@@ -33,7 +33,7 @@
 #define TEST_MIN  -1.2
 #define TEST_MAX   (1.2 + (TEST_STEP * 0.5))
 
-int main(int argc, char * argv[])
+int main()
 {
 	b3Log::b3SetLevel(B3LOG_FULL);
 

@@ -56,7 +56,7 @@ public:
 	}
 
 protected:
-	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y)
+	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y) override
 	{
 		b3_vector sample;
 		b3Color   result;
@@ -106,7 +106,7 @@ public:
 	}
 
 protected:
-	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y)
+	inline b3_color b3SamplePixel(const b3_coord x, const b3_coord y) override
 	{
 		b3_vector sample;
 		b3Color   result;

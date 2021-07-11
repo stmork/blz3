@@ -25,6 +25,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Complex64.h"
 
@@ -38,8 +39,8 @@
 struct mandel_info
 {
 	b3Display * display;
-	b3_count   iter;
-	b3_res     xSize;
+	b3_count    iter;
+	b3_res      xSize;
 };
 
 typedef b3Complex64 b3Cmplx;
@@ -62,7 +63,7 @@ class b3MandelRow : public b3Row
 
 	b3_count iter;
 	b3_u64   cnt;
-	b3_f64   fx, fy, xStep;
+	b3_f64   m_fx, m_fy, m_xStep;
 
 public:
 	b3MandelRow(
@@ -73,11 +74,11 @@ public:
 		b3_f64   fy,
 		b3_count iterations) : b3Row(y, xSize)
 	{
-		iter        = iterations;
-		cnt         = 0;
-		this->fx    = xStart;
-		this->fy    = fy;
-		this->xStep = xStep;
+		iter    = iterations;
+		cnt     = 0;
+		m_fx    = xStart;
+		m_fy    = fy;
+		m_xStep = xStep;
 	}
 
 	// This computes the whole row!
@@ -85,10 +86,9 @@ public:
 	{
 		b3_coord           x;
 		b3_count           count;
-		b3_pkd_color       color;
 
 		b3Cmplx  a = 0;
-		b3Cmplx  f = b3Cmplx(fx, fy);
+		b3Cmplx  f = b3Cmplx(m_fx, m_fy);
 
 		for (x = 0; x < m_xSize; x++)
 		{
@@ -109,7 +109,7 @@ public:
 
 			// Fill in color
 			m_buffer[x] = b3Color(count >= iter ? B3_BLACK : iter_color[count & 0x3f]);
-			f += xStep;
+			f   += m_xStep;
 			cnt += count;
 		}
 	}
@@ -117,7 +117,7 @@ public:
 public:
 	inline static void b3InitColor()
 	{
-		b3_pkd_color color;
+		b3_pkd_color color = B3_BLACK;
 
 		for (b3_loop i = 0; i < 64; i++)
 		{
@@ -153,11 +153,7 @@ public:
 	{
 		mandel_info * info = (mandel_info *)ptr;
 		b3MandelRow * row;
-		b3_res       xSize;
-		b3_count     iter;
 
-		xSize = info->xSize;
-		iter  = info->iter;
 		do
 		{
 			// Enter critical section

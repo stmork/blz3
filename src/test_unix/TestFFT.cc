@@ -30,15 +30,7 @@
 **                                                                      **
 *************************************************************************/
 
-static void save(b3Tx * tx, const char * name, int num)
-{
-	char filename[B3_FILESTRINGLEN];
-
-	snprintf(filename, sizeof(filename), "/tmp/%s_%03d.jpg", name, num);
-	tx->b3SaveJPEG(name);
-}
-
-int main(int argc, char * argv[])
+int main()
 {
 	b3Fourier       fft2;
 	b3Tx            tx;

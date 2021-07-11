@@ -269,7 +269,7 @@ static void b3TestThreadStart2()
 	b3PrintF(B3LOG_NORMAL, "Done.\n\n");
 }
 
-int main(int argc, char * argv[])
+int main()
 {
 	TestUnit * ptr;
 

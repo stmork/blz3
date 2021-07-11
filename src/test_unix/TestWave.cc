@@ -33,7 +33,7 @@
 **                                                                      **
 *************************************************************************/
 
-int main(int argc, char * argv[])
+int main()
 {
 	b3Display  * display;
 	b3OceanWave  wave;
