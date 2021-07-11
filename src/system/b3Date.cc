@@ -82,7 +82,7 @@ b3Date::b3Date(
 void b3Date::b3Now()
 {
 	// Get time via standard routines...
-	time_code = time(&time_code);
+	time_code = std::time(&time_code);
 	b3LocalTime();
 }
 
@@ -127,7 +127,7 @@ void b3Date::b3LocalTime()
 {
 	const struct std::tm * now;
 
-	now       = localtime(&time_code);
+	now       = std::localtime(&time_code);
 	mode      = B3_DT_LOCAL;
 
 	// ... copy date...
@@ -152,7 +152,7 @@ void b3Date::b3GMTime()
 
 	do
 	{
-		now = gmtime(&time_code);
+		now = std::gmtime(&time_code);
 		if (now == nullptr)
 		{
 			time_code &= (mask ^ bit);
@@ -263,7 +263,7 @@ bool b3Date::b3Update()
 	struct tm date;
 
 	b3TM(&date);
-	time_code = mktime(&date);
+	time_code = std::mktime(&date);
 
 	return time_code != -1;
 }
