@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3TxJPG.cc $
-**	$Release:	Dortmund 2001 $
+**	$Filename:	b3TxPNG.cc $
+**	$Release:	Dortmund 2021 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Loading JPEG images
+**	Blizzard III - Loading PNG images
 **
 **	(C) Copyright 2001 - 2021  Steffen A. Mork
 **	    All Rights Reserved
@@ -27,7 +27,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        handle JPEG's (JFIF)                          **
+**                        handle PNG's                                  **
 **                                                                      **
 *************************************************************************/
 
@@ -35,6 +35,12 @@
 
 #include <png.h>
 #include <setjmp.h>
+
+/*************************************************************************
+**                                                                      **
+**                        b3PNG class definition                        **
+**                                                                      **
+*************************************************************************/
 
 class b3PNG
 {
@@ -105,7 +111,7 @@ void b3PNG::ReadDataFromInputStream(
 
 /*************************************************************************
 **                                                                      **
-**                        b3JPEG class definition                       **
+**                        PNG parsing                                   **
 **                                                                      **
 *************************************************************************/
 
@@ -231,7 +237,7 @@ b3_result b3Tx::b3ParsePNG(const b3_u08 * buffer, b3_size buffer_size)
 
 #else
 
-b3_result b3Tx::b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size)
+b3_result b3Tx::b3ParsePNG(const b3_u08 * buffer, b3_size buffer_size)
 {
 	b3FreeTx();
 	b3PrintF(B3LOG_NORMAL, "IMG PNG  # Missing PNG support:\n");
