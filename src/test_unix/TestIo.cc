@@ -25,6 +25,7 @@
 #include "blz3/base/b3World.h"
 #include "blz3/raytrace/b3Activation.h"
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/system/b3Runtime.h"
 #include "blz3/system/b3SelfTest.h"
 
 /*************************************************************************
@@ -47,7 +48,6 @@ int main(int argc, char * argv[])
 	{
 		success =
 			b3SelfTest::b3TestDataSize() &&
-			b3SelfTest::b3TestDate() &&
 			b3SelfTest::b3TestMemory() &&
 			b3SelfTest::b3TestIO();
 	}

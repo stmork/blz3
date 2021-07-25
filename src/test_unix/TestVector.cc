@@ -94,7 +94,7 @@ public:
 	{
 	}
 
-	inline b3_f64 b3Length()
+	inline b3_f64 b3Length() override
 	{
 		b3_f64 length = 0;
 
@@ -105,7 +105,7 @@ public:
 		return length;
 	}
 
-	inline b3_f64 b3Test()
+	inline b3_f64 b3Test() override
 	{
 		b3_vector aux;
 		int       k, max;
@@ -203,7 +203,7 @@ public:
 	{
 	}
 
-	inline b3_f64 b3Length()
+	inline b3_f64 b3Length() override
 	{
 		b3_f64 length = 0;
 
@@ -214,7 +214,7 @@ public:
 		return length;
 	}
 
-	inline b3_f64 b3Test()
+	inline b3_f64 b3Test() override
 	{
 		int k, max;
 
@@ -280,7 +280,7 @@ public:
 	}
 };
 
-int main(int argc, char * argv[])
+int main()
 {
 	b3VectorStruct vStruct;
 	b3VectorArray  vArray(vStruct);

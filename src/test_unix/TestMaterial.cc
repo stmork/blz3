@@ -23,6 +23,9 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 
 /*************************************************************************
 **                                                                      **
@@ -168,7 +171,7 @@ static void b3SaveGranite()
 	world.b3Write(name);
 }
 
-int main(int argc, char * argv[])
+int main()
 {
 	b3Color gold    = b3Color(0.79, 0.65, 0.2);
 	b3Color messing = b3Color(0.79, 0.54, 0.2);
