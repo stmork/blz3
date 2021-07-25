@@ -137,7 +137,7 @@ int main(int argc, char * argv[])
 						}
 						exif.b3Update();
 						half.b3ScaleToGrey(&image);
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
 						half.b3SaveJPEG(argv[i], B3_JPG_QUALITY, &exif);
 #else
 						// TODO: Save as TGA image instead!

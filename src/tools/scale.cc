@@ -175,7 +175,7 @@ private:
 		}
 		else
 		{
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
 			if (image->b3SaveJPEG(full_normal) != B3_OK)
 			{
 				return false;
@@ -220,7 +220,7 @@ private:
 					try
 					{
 						small.b3ScaleToGrey(&normal);
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
 						result = small.b3SaveJPEG(full_small) == B3_OK;
 #else
 						result = false;

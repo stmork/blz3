@@ -31,7 +31,8 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
+
 #include <jpeglib.h>
 #include <setjmp.h>
 

@@ -8808,6 +8808,44 @@ fi
 
 fi
 
+for ac_header in jpeglib.h
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "jpeglib.h" "ac_cv_header_jpeglib_h" "$ac_includes_default"
+if test "x$ac_cv_header_jpeglib_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_JPEGLIB_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in png.h
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "png.h" "ac_cv_header_png_h" "$ac_includes_default"
+if test "x$ac_cv_header_png_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_PNG_H 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in tiff.h tiffio.h
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_cxx_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+
+done
+
+
 # Check for video encoder
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lswscale" >&5
 $as_echo_n "checking for main in -lswscale... " >&6; }

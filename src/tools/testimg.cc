@@ -131,7 +131,7 @@ int main(int argc, char * argv[])
 	create(img);
 	if (imgname != nullptr)
 	{
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
 		img.b3SaveJPEG(imgname);
 #endif
 	}

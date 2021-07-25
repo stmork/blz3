@@ -40,7 +40,7 @@
 #include <ImfVersion.h>
 #endif
 
-#ifdef HAVE_LIBPNG
+#ifdef HAVE_PNG_H
 #include <png.h>
 #endif
 
@@ -89,6 +89,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	}
 
 
+#ifdef HAVE_JPEGLIB_H
 	// JPEG
 	for (i = 0; i < std::min<b3_size>(256, buffer_size - 2); i++)
 	{
@@ -97,6 +98,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 			return b3ParseJPEG(&buffer[i], buffer_size - i);
 		}
 	}
+#endif
 
 
 	// GIF
@@ -106,7 +108,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	}
 
 
-#ifdef HAVE_LIBPNG
+#ifdef HAVE_PNG_H
 	// PNG
 	if (png_sig_cmp(buffer, 0, 8) == 0)
 	{

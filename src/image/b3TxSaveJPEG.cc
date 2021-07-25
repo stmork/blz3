@@ -34,7 +34,7 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
 #ifdef GLOBAL
 #undef GLOBAL /* ausser JPEG brauchen wir sowieso nur noch ANSI-C */
 #endif

@@ -246,6 +246,10 @@ if test "x$BLZ3_USE_OPENEXR" != "x"; then
 	AC_CHECK_LIB([IlmImf], [main])
 fi
 
+AC_CHECK_HEADERS([jpeglib.h])
+AC_CHECK_HEADERS([png.h])
+AC_CHECK_HEADERS([tiff.h tiffio.h])
+
 # Check for video encoder
 AC_CHECK_LIB([swscale], [main])
 AC_CHECK_LIB([avutil], [main])

@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef HAVE_LIBPNG
+#ifdef HAVE_PNG_H
 
 #include <png.h>
 #include <setjmp.h>
@@ -126,8 +126,8 @@ b3_result b3Tx::b3ParsePNG(const b3_u08 * buffer, b3_size buffer_size)
 	png_set_strip_16(png);
 	png_set_interlace_handling(png);
 
-	const png_byte    color_type       = png_get_color_type(png, png);
-	const png_uint_32 bytesPerRow      = png_get_rowbytes(png, png);
+	const png_byte    color_type  = png_get_color_type(png, png);
+	const png_uint_32 bytesPerRow = png_get_rowbytes(png, png);
 
 	xSize = png_get_image_width(png, png);
 	ySize = png_get_image_height(png, png);
