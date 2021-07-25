@@ -103,14 +103,10 @@ b3_result b3Tx::b3ParsePCX8(const b3_u08 * buffer)
 		}
 
 		srcPtr++;      /* Zeiger auf Palette */
-
 		for (i = 0; i < 256; i++)
 		{
-			t  = ((b3_pkd_color)srcPtr[0] << 16);
-			t += ((b3_pkd_color)srcPtr[1] <<  8);
-			t += (b3_pkd_color)srcPtr[2];
+			palette[i] = b3Color::b3MakePkdColor(srcPtr[0], srcPtr[1], srcPtr[2]);
 			srcPtr += 3;
-			palette[i] = t;
 		}
 	}
 	else

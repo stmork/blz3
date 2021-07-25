@@ -1413,6 +1413,9 @@ private:
 	// b3TxJPG.cc
 	b3_result      b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size);
 
+	// b3TxPNG.cc
+	b3_result      b3ParsePNG(const b3_u08 * buffer, b3_size buffer_size);
+
 	friend class b3TxAlgorithms;
 };
 

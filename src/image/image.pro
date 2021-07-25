@@ -42,13 +42,14 @@ SOURCES += \
 	b3TxGIF.cc \
 	b3TxHist.cc \
 	b3TxIFF.cc \
-	b3TxIMG.cc \
 	b3TxImage.cc \
+	b3TxIMG.cc \
 	b3TxJPG.cc \
 	b3TxLoadImage.cc \
 	b3TxLoadTIFF.cc \
 	b3TxMirror.cc \
 	b3TxPCX.cc \
+	b3TxPNG.cc \
 	b3TxPool.cc \
 	b3TxSaveEXR.cc \
 	b3TxSaveInfo.cc \

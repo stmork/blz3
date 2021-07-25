@@ -40,6 +40,10 @@
 #include <ImfVersion.h>
 #endif
 
+#ifdef HAVE_LIBPNG
+#include <png.h>
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Image loading
@@ -101,6 +105,16 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 		return b3ParseGIF(buffer);
 	}
 
+
+#ifdef HAVE_LIBPNG
+	// PNG
+	if (png_sig_cmp(buffer, 0, 8) == 0)
+	{
+		return b3ParsePNG(buffer, buffer_size);
+	}
+#endif
+
+
 #ifdef HAVE_LIBTIFF
 	// TIFF
 	header_tiff = reinterpret_cast<const b3HeaderTIFF *>(buffer);
@@ -109,6 +123,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 		return b3LoadTIFF(b3Name(), buffer, buffer_size);
 	}
 #endif
+
 
 	// PPM types 4, 5 and 6 binary non ASCII.
 	// Use https://regex101.com/

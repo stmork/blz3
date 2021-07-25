@@ -70,7 +70,7 @@ private:
 
 /*************************************************************************
 **                                                                      **
-**                        b3JPEG implementaion                          **
+**                        b3JPEG implementation                         **
 **                                                                      **
 *************************************************************************/
 
@@ -133,10 +133,7 @@ b3_bool b3JPEG::b3Decompress(b3Tx * tx)
 			line = (b3_u08 *)m_SampleArray[0];
 			for (x = 0; x < (b3_coord)m_Decompress.output_width; x++)
 			{
-				*out++ =
-					((b3_pkd_color)line[0] << 16) |
-					((b3_pkd_color)line[1] <<  8) |
-					(b3_pkd_color)line[2];
+				*out++ = b3Color::b3MakePkdColor(line[0], line[1], line[2]);
 				line += 3;
 			}
 		}
