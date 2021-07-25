@@ -55,6 +55,7 @@ AC_SUBST(GLUTLIBS)
 AC_SUBST(X264LIBS)
 AC_SUBST(CPPUNITLIBS)
 AC_SUBST(GTESTLIBS)
+AC_SUBST(PKG_LIST)
 AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
 
 AC_LANG_PUSH(C++)
@@ -227,24 +228,15 @@ AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL], [1], [Do we can use GLU
 AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG], [1], [Do we have Cg header?])])
 AC_CHECK_LIB([CgGL], [main])
 
-# Check for OpenEXR
-AC_ARG_WITH(openexr, [AC_HELP_STRING([--with-openexr],[OpenEXR include path])], OPENEXR=$withval)
-if test "x$OPENEXR" = "x"; then
-  OPENEXR=/usr/include/OpenEXR
-fi
+PKG_CHECK_MODULES([OPENEXR], [OpenEXR], PKG_LIST="$PKG_LIST OpenEXR")
 
-save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -I$OPENEXR"
-AC_CHECK_HEADER(ImfRgbaFile.h, [AC_DEFINE([BLZ3_USE_OPENEXR], [1], [Can we use OpenEXR?])], NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS")
-# END OpenEXR
+AC_CHECK_HEADERS([ImfInputFile.h ImathBox.h ImfHeader.h ImfIO.h])
+AC_CHECK_HEADERS([ImfOutputFile.h ImfChannelList.h ImfHeader.h ImfIO.h])
 
-# Check for OpenEXR
-if test "x$BLZ3_USE_OPENEXR" != "x"; then
-	AC_CHECK_LIB([Half], [main])
-	AC_CHECK_LIB([Iex], [main])
-	AC_CHECK_LIB([Imath], [main])
-	AC_CHECK_LIB([IlmImf], [main])
-fi
+AC_CHECK_LIB([Half], [main])
+AC_CHECK_LIB([Iex], [main])
+AC_CHECK_LIB([Imath], [main])
+AC_CHECK_LIB([IlmImf], [main])
 
 AC_CHECK_HEADERS([jpeglib.h])
 AC_CHECK_HEADERS([png.h])

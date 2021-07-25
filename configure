@@ -626,6 +626,11 @@ ac_func_list=
 ac_header_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+OPENEXR_LIBS
+OPENEXR_CFLAGS
+PKG_CONFIG_LIBDIR
+PKG_CONFIG_PATH
+PKG_CONFIG
 X_EXTRA_LIBS
 X_LIBS
 X_PRE_LIBS
@@ -636,6 +641,7 @@ GREP
 CXXCPP
 HAVE_CXX17
 BUILD
+PKG_LIST
 GTESTLIBS
 CPPUNITLIBS
 X264LIBS
@@ -726,7 +732,6 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_x
-with_openexr
 '
       ac_precious_vars='build_alias
 host_alias
@@ -741,7 +746,12 @@ CC
 CFLAGS
 CPP
 CXXCPP
-XMKMF'
+XMKMF
+PKG_CONFIG
+PKG_CONFIG_PATH
+PKG_CONFIG_LIBDIR
+OPENEXR_CFLAGS
+OPENEXR_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1366,7 +1376,6 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-x                use the X Window System
-  --with-openexr          OpenEXR include path
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -1381,6 +1390,15 @@ Some influential environment variables:
   CPP         C preprocessor
   CXXCPP      C++ preprocessor
   XMKMF       Path to xmkmf, Makefile generator for X Window System
+  PKG_CONFIG  path to pkg-config utility
+  PKG_CONFIG_PATH
+              directories to add to pkg-config's search path
+  PKG_CONFIG_LIBDIR
+              path overriding pkg-config's built-in search path
+  OPENEXR_CFLAGS
+              C compiler flags for OPENEXR, overriding pkg-config
+  OPENEXR_LIBS
+              linker flags for OPENEXR, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -4782,6 +4800,7 @@ BLZ3_LIB="$BLZ3_HOME/lib"
 BLZ3_BIN="$BLZ3_HOME/bin"
 
 BLZ3_DOC="$BLZ3_DOC"
+
 
 
 
@@ -8623,34 +8642,246 @@ _ACEOF
 fi
 
 
-# Check for OpenEXR
 
-# Check whether --with-openexr was given.
-if test "${with_openexr+set}" = set; then :
-  withval=$with_openexr; OPENEXR=$withval
-fi
 
-if test "x$OPENEXR" = "x"; then
-  OPENEXR=/usr/include/OpenEXR
-fi
 
-save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -I$OPENEXR"
-ac_fn_cxx_check_header_mongrel "$LINENO" "ImfRgbaFile.h" "ac_cv_header_ImfRgbaFile_h" "$ac_includes_default"
-if test "x$ac_cv_header_ImfRgbaFile_h" = xyes; then :
 
-$as_echo "#define BLZ3_USE_OPENEXR 1" >>confdefs.h
 
+
+
+if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+	if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+set dummy ${ac_tool_prefix}pkg-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_PKG_CONFIG+:} false; then :
+  $as_echo_n "(cached) " >&6
 else
-  NOT_FOUND="$NOT_FOUND OpenEXR" CPPFLAGS="$save_CPPFLAGS"
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+if test -n "$PKG_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PKG_CONFIG" >&5
+$as_echo "$PKG_CONFIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
 fi
 
 
-# END OpenEXR
+fi
+if test -z "$ac_cv_path_PKG_CONFIG"; then
+  ac_pt_PKG_CONFIG=$PKG_CONFIG
+  # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_ac_pt_PKG_CONFIG+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $ac_pt_PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_PKG_CONFIG="$ac_pt_PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_ac_pt_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
 
-# Check for OpenEXR
-if test "x$BLZ3_USE_OPENEXR" != "x"; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lHalf" >&5
+  ;;
+esac
+fi
+ac_pt_PKG_CONFIG=$ac_cv_path_ac_pt_PKG_CONFIG
+if test -n "$ac_pt_PKG_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_pt_PKG_CONFIG" >&5
+$as_echo "$ac_pt_PKG_CONFIG" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_pt_PKG_CONFIG" = x; then
+    PKG_CONFIG=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    PKG_CONFIG=$ac_pt_PKG_CONFIG
+  fi
+else
+  PKG_CONFIG="$ac_cv_path_PKG_CONFIG"
+fi
+
+fi
+if test -n "$PKG_CONFIG"; then
+	_pkg_min_version=0.9.0
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config is at least version $_pkg_min_version" >&5
+$as_echo_n "checking pkg-config is at least version $_pkg_min_version... " >&6; }
+	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	else
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+		PKG_CONFIG=""
+	fi
+fi
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for OPENEXR" >&5
+$as_echo_n "checking for OPENEXR... " >&6; }
+
+if test -n "$OPENEXR_CFLAGS"; then
+    pkg_cv_OPENEXR_CFLAGS="$OPENEXR_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"OpenEXR\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "OpenEXR") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_OPENEXR_CFLAGS=`$PKG_CONFIG --cflags "OpenEXR" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$OPENEXR_LIBS"; then
+    pkg_cv_OPENEXR_LIBS="$OPENEXR_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"OpenEXR\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "OpenEXR") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_OPENEXR_LIBS=`$PKG_CONFIG --libs "OpenEXR" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        OPENEXR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "OpenEXR" 2>&1`
+        else
+	        OPENEXR_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "OpenEXR" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$OPENEXR_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (OpenEXR) were not met:
+
+$OPENEXR_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables OPENEXR_CFLAGS
+and OPENEXR_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables OPENEXR_CFLAGS
+and OPENEXR_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	OPENEXR_CFLAGS=$pkg_cv_OPENEXR_CFLAGS
+	OPENEXR_LIBS=$pkg_cv_OPENEXR_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	PKG_LIST="$PKG_LIST OpenEXR"
+fi
+
+for ac_header in ImfInputFile.h ImathBox.h ImfHeader.h ImfIO.h
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_cxx_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+
+done
+
+for ac_header in ImfOutputFile.h ImfChannelList.h ImfHeader.h ImfIO.h
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_cxx_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+
+done
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lHalf" >&5
 $as_echo_n "checking for main in -lHalf... " >&6; }
 if ${ac_cv_lib_Half_main+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -8689,7 +8920,7 @@ _ACEOF
 
 fi
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lIex" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lIex" >&5
 $as_echo_n "checking for main in -lIex... " >&6; }
 if ${ac_cv_lib_Iex_main+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -8728,7 +8959,7 @@ _ACEOF
 
 fi
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lImath" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lImath" >&5
 $as_echo_n "checking for main in -lImath... " >&6; }
 if ${ac_cv_lib_Imath_main+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -8767,7 +8998,7 @@ _ACEOF
 
 fi
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lIlmImf" >&5
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lIlmImf" >&5
 $as_echo_n "checking for main in -lIlmImf... " >&6; }
 if ${ac_cv_lib_IlmImf_main+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -8806,7 +9037,6 @@ _ACEOF
 
 fi
 
-fi
 
 for ac_header in jpeglib.h
 do :

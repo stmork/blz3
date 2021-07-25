@@ -9,9 +9,6 @@
 /* Do we can use GLUT? */
 #undef BLZ3_USE_GLUT
 
-/* Can we use OpenEXR? */
-#undef BLZ3_USE_OPENEXR
-
 /* Do we can use GLU? */
 #undef BLZ3_USE_OPENGL
 
@@ -81,6 +78,24 @@
 
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the <ImathBox.h> header file. */
+#undef HAVE_IMATHBOX_H
+
+/* Define to 1 if you have the <ImfChannelList.h> header file. */
+#undef HAVE_IMFCHANNELLIST_H
+
+/* Define to 1 if you have the <ImfHeader.h> header file. */
+#undef HAVE_IMFHEADER_H
+
+/* Define to 1 if you have the <ImfInputFile.h> header file. */
+#undef HAVE_IMFINPUTFILE_H
+
+/* Define to 1 if you have the <ImfIO.h> header file. */
+#undef HAVE_IMFIO_H
+
+/* Define to 1 if you have the <ImfOutputFile.h> header file. */
+#undef HAVE_IMFOUTPUTFILE_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H

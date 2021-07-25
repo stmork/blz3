@@ -1,4 +1,4 @@
-CONFIG  += c++17
+CONFIG  += c++17 link_pkgconfig
 
 BLZ3_HOME = $$(BLZ3_HOME)
 
