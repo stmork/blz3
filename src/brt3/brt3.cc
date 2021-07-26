@@ -44,7 +44,13 @@
 **                                                                      **
 *************************************************************************/
 
+#if defined(HAVE_PNG_H)
+static char BLZ3_EXTENSION[16] = ".png";
+#elif defined(HAVE_JPEGLIB_H)
 static char BLZ3_EXTENSION[16] = ".jpg";
+#else
+static char BLZ3_EXTENSION[16] = ".tga";
+#endif
 
 static b3_bool b3SaveRaytracedImage(
 	b3Display  * display,
@@ -176,8 +182,11 @@ static void b3Banner(const char * command)
 #ifdef HAVE_LIBTIFF
 		b3PrintF(B3LOG_NORMAL, "  -i        TIFF image saving.\n");
 #endif
-#ifdef HAVE_LIBJPEG
-		b3PrintF(B3LOG_NORMAL, "  -j        JPEG image saving (default).\n");
+#ifdef HAVE_JPEGLIB_H
+		b3PrintF(B3LOG_NORMAL, "  -j        JPEG image saving.\n");
+#endif
+#ifdef HAVE_PNG_H
+		b3PrintF(B3LOG_NORMAL, "  -o        PNG image saving (default).\n");
 #endif
 		b3PrintF(B3LOG_NORMAL, "  -r        RGB8 image saving.\n");
 		b3PrintF(B3LOG_NORMAL, "  -p        PostScript image saving.\n");
