@@ -35,45 +35,6 @@
 **                                                                      **
 *************************************************************************/
 
-// These methods save the image associated with this instance as a TIFF.
-// Look at the TIFF programming manual for understanding this. Be happy
-// with this piece of code.
-void b3Tx::b3GetSampleValues(
-	long & bpp,
-	long & spp)
-{
-	switch (type)
-	{
-	case B3_TX_ILBM :
-		if (depth > 8)	// true color
-		{
-			bpp = 8;
-			spp = 3;
-		}
-		else
-		{
-			bpp = depth;
-			spp = 1;
-		}
-		break;
-
-	case B3_TX_VGA :
-		bpp = depth;
-		spp = 1;
-		break;
-
-	case B3_TX_RGB4 :
-	case B3_TX_RGB8 :
-		bpp = 8;
-		spp = 3;
-		break;
-
-	default :
-		bpp = 8;
-		spp = 1;
-	}
-}
-
 b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 {
 	b3_u08   *   cPtr;

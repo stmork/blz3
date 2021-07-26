@@ -54,6 +54,7 @@ SOURCES += \
 	b3TxSaveEXR.cc \
 	b3TxSaveInfo.cc \
 	b3TxSaveJPEG.cc \
+	b3TxSavePNG.cc \
 	b3TxSavePS.cc \
 	b3TxSaveRGB8.cc \
 	b3TxSaveTGA.cc \

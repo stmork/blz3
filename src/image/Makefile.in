@@ -33,6 +33,7 @@ LIB_SOURCE		=\
 	b3TxSaveEXR.cc\
 	b3TxSaveInfo.cc\
 	b3TxSaveJPEG.cc\
+	b3TxSavePNG.cc\
 	b3TxSavePS.cc\
 	b3TxSaveRGB8.cc\
 	b3TxSaveTGA.cc\
@@ -65,6 +66,7 @@ LIB_OBJ			=\
 	b3TxSaveEXR.o\
 	b3TxSaveInfo.o\
 	b3TxSaveJPEG.o\
+	b3TxSavePNG.o\
 	b3TxSavePS.o\
 	b3TxSaveRGB8.o\
 	b3TxSaveTGA.o\

@@ -119,26 +119,20 @@ b3InfoRGB8::~b3InfoRGB8()
 	m_SaveBuffer[13] = 'M';
 	m_SaveBuffer[14] = 'H';
 	m_SaveBuffer[15] = 'D';
-	m_SaveBuffer[16] =
-		m_SaveBuffer[17] =
-			m_SaveBuffer[18] =  0;
+	m_SaveBuffer[16] = m_SaveBuffer[17] = m_SaveBuffer[18] =  0;
 	m_SaveBuffer[19] = 20;
 	m_SaveBuffer[20] = m_Tx->xSize >> 8;
 	m_SaveBuffer[21] = m_Tx->xSize & 255;
 	m_SaveBuffer[22] = m_Tx->ySize >> 8;
 	m_SaveBuffer[23] = m_Tx->ySize & 255;
-	m_SaveBuffer[24] =
-		m_SaveBuffer[25] =
-			m_SaveBuffer[26] =
-				m_SaveBuffer[27] =  0;
+	m_SaveBuffer[24] = m_SaveBuffer[25] = m_SaveBuffer[26] = m_SaveBuffer[27] =  0;
 	m_SaveBuffer[28] = 24;								/* Anzahl Farben */
 	m_SaveBuffer[29] =  0;
 	m_SaveBuffer[30] =  4;								/* Packmodus */
 	m_SaveBuffer[31] =  0;
 	m_SaveBuffer[32] =  0;
 	m_SaveBuffer[33] =  0;
-	m_SaveBuffer[34] =									/* Aspect Ratio */
-		m_SaveBuffer[35] =  1;
+	m_SaveBuffer[34] = m_SaveBuffer[35] =  1; /* Aspect Ratio */
 	m_SaveBuffer[36] = m_Tx->xSize >> 8;
 	m_SaveBuffer[37] = m_Tx->xSize & 255;
 	m_SaveBuffer[38] = m_Tx->ySize >> 8;

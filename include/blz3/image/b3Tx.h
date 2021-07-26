@@ -118,7 +118,8 @@ enum b3_tx_filetype
 	FT_JPEG,                //!< Joint Pictures Expert Group.
 	FT_BMF,                 //!< BMF format.
 	FT_PS,                  //!< PostScript.
-	FT_EXR                  //!< OpenEXR (high dynamice range).
+	FT_EXR,                 //!< OpenEXR (high dynamice range).
+	FT_PNG                  //!< PNG.
 };
 
 /**
@@ -1074,8 +1075,6 @@ public:
 	 */
 	void                         b3Deskew();
 
-	// b3TxSaveTIFF.cc, b3TxLoadTIFF.cc
-
 	/**
 	 * This method saves the image as TIFF file.
 	 *
@@ -1086,8 +1085,6 @@ public:
 	b3_result b3SaveTIFF(
 		const char   *   ImageName,
 		b3TxExif    *    exif = nullptr);
-
-	// b3TxSaveXXX.cc
 
 	/**
 	 * This method saves the image as JPEG file.
@@ -1130,6 +1127,15 @@ public:
 	 * @see b3_result.
 	 */
 	b3_result b3SaveRGB8(const char * ImageName);
+
+	/**
+	 * This method saves the image as RGB8 file.
+	 *
+	 * @param ImageName The file name to save into.
+	 * @return The result code.
+	 * @see b3_result.
+	 */
+	b3_result b3SavePNG(const char * ImageName);
 
 	/**
 	 * This method saves the image as TGA file.
@@ -1345,7 +1351,6 @@ private:
 	long           b3TIFFAlloc();
 
 	// b3TxSaveTIFF.cc
-	void           b3GetSampleValues(long & BitsPerPixel, long & SamplesPerPixel);
 	b3_result      b3SaveTIFFFax(TIFF * handle);
 	b3_result      b3SaveTIFFPalette(TIFF * handle);
 	b3_result      b3SaveTIFFTrueColor(TIFF * handle);

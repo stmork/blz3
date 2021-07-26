@@ -100,7 +100,7 @@ void b3InfoPS::b3Write()
 		for (x = 0; x < m_Tx->xSize; x++)
 		{
 			r = (m_ThisRow[x] & 0xff0000) >> 16;
-			g = (m_ThisRow[x] & 0x00f000) >>  8;
+			g = (m_ThisRow[x] & 0x00ff00) >>  8;
 			b = (m_ThisRow[x] & 0x0000ff);
 
 			fprintf(m_FileHandle, "%02x",

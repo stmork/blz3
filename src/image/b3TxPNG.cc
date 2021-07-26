@@ -51,7 +51,6 @@ class b3PNG
 	const b3_size  m_Size;
 	b3_size        m_Index = 0;
 
-
 public:
 	b3PNG(const b3_u08 * buffer, const b3_size size);
 	~b3PNG();
@@ -66,7 +65,8 @@ public:
 		return info_ptr;
 	}
 
-	static void ReadDataFromInputStream(
+private:
+	static void b3Read(
 		png_structp png_ptr,
 		png_bytep   outBytes,
 		png_size_t  byteCountToRead);
@@ -76,20 +76,20 @@ b3PNG::b3PNG(const b3_u08 * buffer, const b3_size size) :
 	m_Buffer(buffer), m_Size(size)
 {
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-	if (png_ptr == nullptr)
+	if (png_ptr != nullptr)
 	{
-		b3PrintF(B3LOG_NORMAL, "IMG PNG  # png_create_read_struct failed!");
-		B3_THROW(b3TxException, B3_TX_MEMORY);
+		info_ptr = png_create_info_struct(png_ptr);
+		if (info_ptr != nullptr)
+		{
+			// Everything is fine.
+			png_set_read_fn(png_ptr, this, b3PNG::b3Read);
+			return;
+		}
 	}
 
-	info_ptr = png_create_info_struct(png_ptr);
-	if (info_ptr == nullptr)
-	{
-		b3PrintF(B3LOG_NORMAL, "IMG PNG  # png_create_info_struct failed!");
-		B3_THROW(b3TxException, B3_TX_MEMORY);
-	}
-
-	png_set_read_fn(png_ptr, this, b3PNG::ReadDataFromInputStream);
+	png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+	b3PrintF(B3LOG_NORMAL, "IMG PNG  # Initialization failed!");
+	B3_THROW(b3TxException, B3_TX_MEMORY);
 }
 
 b3PNG::~b3PNG()
@@ -97,7 +97,7 @@ b3PNG::~b3PNG()
 	png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 }
 
-void b3PNG::ReadDataFromInputStream(
+void b3PNG::b3Read(
 	png_structp png_ptr,
 	png_bytep   outBytes,
 	png_size_t  byteCountToRead)
@@ -143,7 +143,7 @@ b3_result b3Tx::b3ParsePNG(const b3_u08 * buffer, b3_size buffer_size)
 	/* read file */
 	if (setjmp(png_jmpbuf(png)))
 	{
-		b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during read_image!");
+		b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during read image!");
 		B3_THROW(b3TxException, B3_TX_ERROR);
 	}
 

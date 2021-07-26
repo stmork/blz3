@@ -449,18 +449,6 @@ void b3ImageTest::testReadGIF()
 //	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.gif"));
 }
 
-void b3ImageTest::testWriteTIFF()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK,        m_TxBW.b3SaveImage("img_test_01.tiff"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tiff"));
-//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tiff"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tiff"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tiff"));
-
-	compareImages(m_TxPallColor);
-	compareImages(m_TxTrueColor);
-}
-
 void b3ImageTest::testWriteJPEG()
 {
 	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.jpg"));
@@ -470,6 +458,41 @@ void b3ImageTest::testWriteJPEG()
 
 	// No data comparison because JPEG is not lossless.
 	compareImages(m_TxTrueColor, true, false);
+}
+
+void b3ImageTest::testWritePNG()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.png"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.png"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.png"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.png"));
+
+	// No meta data comparison because TGA stores always in true color.
+	compareImages(m_TxPallColor, false);
+	compareImages(m_TxHighColor, false);
+	compareImages(m_TxTrueColor);
+	compareImages(m_TxRealColor, false, true);
+}
+
+void b3ImageTest::testWritePS()
+{
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.ps"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
+}
+
+void b3ImageTest::testWriteRGB8()
+{
+	b3Tx tx;
+
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.rgb8"));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.rgb4"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.rgb8"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.rgb8"));
+
+//	compareImages(m_TxPallColor);
+//	compareImages(m_TxTrueColor);
 }
 
 void b3ImageTest::testWriteTGA()
@@ -486,25 +509,16 @@ void b3ImageTest::testWriteTGA()
 	compareImages(m_TxRealColor, false, true);
 }
 
-void b3ImageTest::testWriteRGB8()
+void b3ImageTest::testWriteTIFF()
 {
-	b3Tx tx;
+	CPPUNIT_ASSERT_EQUAL(B3_OK,        m_TxBW.b3SaveImage("img_test_01.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.tiff"));
+//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.tiff"));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.tiff"));
 
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.rgb8"));
-//	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.rgb4"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.rgb8"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.rgb8"));
-
-//	compareImages(m_TxPallColor);
-//	compareImages(m_TxTrueColor);
-}
-
-void b3ImageTest::testWritePS()
-{
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxPallColor.b3SaveImage("img_test_08.ps"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxHighColor.b3SaveImage("img_test_10.ps"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxTrueColor.b3SaveImage("img_test_20.ps"));
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_TxRealColor.b3SaveImage("img_test_80.ps"));
+	compareImages(m_TxPallColor);
+	compareImages(m_TxTrueColor);
 }
 
 #ifdef BLZ3_USE_OPENEXR

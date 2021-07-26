@@ -413,6 +413,10 @@ b3_tx_filetype b3Tx::b3GetFileType(const char * ext)
 	{
 		return FT_EXR;
 	}
+	if (b3StringTool::b3CaseCompare(ext, "png")   == 0)
+	{
+		return FT_PNG;
+	}
 
 	return FT_UNKNOWN;
 }
@@ -483,6 +487,9 @@ const char * b3Tx::b3GetExt(b3_tx_filetype type)
 	case FT_EXR:
 		return "exr";
 
+	case FT_PNG:
+		return "png";
+
 	default:
 		return nullptr;
 	}
@@ -506,10 +513,16 @@ b3_result b3Tx::b3SaveImage(const char * filename, b3TxExif * exif)
 
 		switch (filetype)
 		{
-#ifdef HAVE_LIBJPEG
+#ifdef HAVE_JPEGLIB_H
 		case FT_JPEG:
 			return b3SaveJPEG(filename, B3_JPG_QUALITY, exif);
 #endif
+
+#ifdef HAVE_PNG_H
+		case FT_PNG:
+			return b3SavePNG(filename);
+#endif
+
 #ifdef HAVE_LIBTIFF
 		case FT_TIFF:
 			return b3SaveTIFF(filename, exif);
