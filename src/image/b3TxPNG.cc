@@ -104,6 +104,8 @@ void b3PNG::b3Read(
 {
 	b3PNG * png = (b3PNG *)png_get_io_ptr(png_ptr);
 
+	B3_ASSERT(png != nullptr);
+
 	const b3_size size = std::min(byteCountToRead, png->m_Size - png->m_Index);
 	memcpy(outBytes, &png->m_Buffer[png->m_Index], size);
 	png->m_Index += size;

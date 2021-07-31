@@ -95,12 +95,16 @@ void b3InfoPNG::b3Write(
 {
 	b3InfoPNG * png = (b3InfoPNG *)png_get_io_ptr(png_ptr);
 
+	B3_ASSERT(png != nullptr);
+
 	png->m_File.b3Write(buffer, size);
 }
 
 void b3InfoPNG::b3Flush(png_structp png_ptr)
 {
 	b3InfoPNG * png = (b3InfoPNG *)png_get_io_ptr(png_ptr);
+
+	B3_ASSERT(png != nullptr);
 
 	png->m_File.b3Flush();
 }

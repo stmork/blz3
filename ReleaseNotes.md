@@ -53,4 +53,4 @@ Version 3.1.5
 * EXIF support.
 
 Version 3.1.6
-* Added PNG read support.
+* Added PNG read and write support.
