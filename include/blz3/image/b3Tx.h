@@ -1022,6 +1022,7 @@ public:
 	 * - A file IO error occured.
 	 *
 	 * @param filename The image file name.
+	 * @param exif The optional EXIF description to write if it is not nullptr.
 	 * @return The result code of image saving.
 	 * @see b3_result.
 	 */
@@ -1079,6 +1080,7 @@ public:
 	 * This method saves the image as TIFF file.
 	 *
 	 * @param ImageName The file name to save into.
+	 * @param exif The optional EXIF description to write if it is not nullptr.
 	 * @return The result code.
 	 * @see b3_result.
 	 */
@@ -1091,6 +1093,7 @@ public:
 	 *
 	 * @param ImageName The file name to save into.
 	 * @param quality The JPEG quality level.
+	 * @param exif The optional EXIF description to write if it is not nullptr.
 	 * @return The result code.
 	 * @see b3_result.
 	 */

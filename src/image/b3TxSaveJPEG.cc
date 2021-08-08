@@ -21,12 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3File.h"
-#include "blz3/system/b3Memory.h"
-#include "blz3/image/b3Tx.h"
-#include "blz3/image/b3TxExif.h"
-
 #include "b3TxSaveInfo.h"
+#include "blz3/image/b3TxExif.h"
 
 /*************************************************************************
 **                                                                      **
