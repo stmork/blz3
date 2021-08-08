@@ -31,6 +31,7 @@
 #include "blz3/image/b3TxExif.h"
 
 #include <fcntl.h>
+#include <utime.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 

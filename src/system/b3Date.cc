@@ -58,7 +58,7 @@ b3Date::b3Date(const b3Date & other)
 	year      = other.year;
 	mode      = other.mode;
 	offset    = other.offset;
-	dls       = other.dls;
+	dst       = other.dst;
 	time_code = other.time_code;
 
 	if (!b3Update())
@@ -73,7 +73,11 @@ b3Date::b3Date(
 	b3_year   new_year)
 {
 	b3Now();
-	if (!b3SetDate(new_day, new_month, new_year))
+	if (b3SetDate(new_day, new_month, new_year))
+	{
+		b3SetMode(mode);
+	}
+	else
 	{
 		B3_THROW(b3DateException, B3_DATE_ILLEGAL);
 	}
@@ -105,7 +109,7 @@ b3_daytime b3Date::b3GetMode() const
 	return mode;
 }
 
-struct std::tm * b3Date::b3TM(struct std::tm * time_tm)
+struct std::tm * b3Date::b3TM(struct std::tm * time_tm) const
 {
 	if (time_tm != nullptr)
 	{
@@ -117,7 +121,7 @@ struct std::tm * b3Date::b3TM(struct std::tm * time_tm)
 		time_tm->tm_hour   = hour;
 		time_tm->tm_min    = min;
 		time_tm->tm_sec    = sec;
-		time_tm->tm_isdst  = dls;
+		time_tm->tm_isdst  = dst;
 		time_tm->tm_gmtoff = offset * 60;
 	}
 	return time_tm;
@@ -125,9 +129,9 @@ struct std::tm * b3Date::b3TM(struct std::tm * time_tm)
 
 void b3Date::b3LocalTime()
 {
-	const struct std::tm * now;
+	struct std::tm         buffer;
+	const struct std::tm * now = localtime_r(&time_code, &buffer);
 
-	now       = std::localtime(&time_code);
 	mode      = B3_DT_LOCAL;
 
 	// ... copy date...
@@ -141,18 +145,19 @@ void b3Date::b3LocalTime()
 	min       = (unsigned short) now->tm_min;
 	sec       = (unsigned short) now->tm_sec;
 	microsec  = 0;
-	dls       = now->tm_isdst != 0;
+	dst       = now->tm_isdst > 0;
 	offset    = now->tm_gmtoff / 60;
 }
 
 void b3Date::b3GMTime()
 {
-	struct std::tm * now;
-	std::time_t      mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
+	struct std::tm         buffer;
+	const struct std::tm * now;
+	std::time_t            mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
 
 	do
 	{
-		now = std::gmtime(&time_code);
+		now = gmtime_r(&time_code, &buffer);
 		if (now == nullptr)
 		{
 			time_code &= (mask ^ bit);
@@ -174,7 +179,7 @@ void b3Date::b3GMTime()
 	min       = (unsigned short)now->tm_min;
 	sec       = (unsigned short)now->tm_sec;
 	microsec  = 0;
-	dls       = now->tm_isdst != 0;
+	dst       = now->tm_isdst > 0;
 	offset    = now->tm_gmtoff / 60;
 }
 
@@ -248,6 +253,8 @@ bool b3Date::b3SetDateTime(
 		min      = new_min;
 		sec      = new_sec;
 		microsec = 0;
+		dst      = false;
+		offset   = 0;
 
 		result   = b3Update();
 	}
@@ -260,9 +267,18 @@ bool b3Date::b3SetDateTime(
 
 bool b3Date::b3Update()
 {
-	struct tm date;
+	struct tm date{};
 
 	b3TM(&date);
+
+	// Repair DST
+	date.tm_isdst = -1; // Unknown.
+	std::mktime(&date);
+
+	// Copy corrected DST
+	dst       = date.tm_isdst > 0;
+
+	// Get real time_t
 	time_code = std::mktime(&date);
 
 	return time_code != -1;

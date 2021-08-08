@@ -30,9 +30,13 @@
 
 class b3DateTest : public CppUnit::TestFixture
 {
-	const b3Date::b3_day   TEST_DAY   =  28;
-	const b3Date::b3_month TEST_MONTH = b3Date::B3_JUNE;
-	const b3Date::b3_year  TEST_YEAR  = 1964;
+	const b3Date::b3_day   SUMMER_TEST_DAY   =   28;
+	const b3Date::b3_month SUMMER_TEST_MONTH = b3Date::B3_JUNE;
+	const b3Date::b3_year  SUMMER_TEST_YEAR  = 2001;
+
+	const b3Date::b3_day   WINTER_TEST_DAY   =    8;
+	const b3Date::b3_month WINTER_TEST_MONTH = b3Date::B3_JANUARY;
+	const b3Date::b3_year  WINTER_TEST_YEAR  = 2001;
 
 	const unsigned         TEST_HOUR  = 12;
 	const unsigned         TEST_MIN   = 34;
@@ -51,12 +55,15 @@ class b3DateTest : public CppUnit::TestFixture
 
 	CPPUNIT_TEST_SUITE(b3DateTest);
 	CPPUNIT_TEST(testNow);
-	CPPUNIT_TEST(testDate);
+	CPPUNIT_TEST(testWinterDate);
+	CPPUNIT_TEST(testSummerDate);
 	CPPUNIT_TEST(testEqual);
 	CPPUNIT_TEST(testUtc);
 	CPPUNIT_TEST(testTimeValSpec);
-	CPPUNIT_TEST(testDateTime);
+	CPPUNIT_TEST(testWinterDateTime);
+	CPPUNIT_TEST(testSummerDateTime);
 	CPPUNIT_TEST(testDates);
+	CPPUNIT_TEST(testDst);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -64,12 +71,15 @@ public:
 	void tearDown() override;
 
 	void testNow();
-	void testDate();
+	void testWinterDate();
+	void testSummerDate();
 	void testEqual();
 	void testUtc();
 	void testTimeValSpec();
-	void testDateTime();
+	void testWinterDateTime();
+	void testSummerDateTime();
 	void testDates();
+	void testDst();
 
 private:
 	void b3Check(const b3Date & date,

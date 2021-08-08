@@ -218,7 +218,8 @@ b3TxExif::operator b3Date()
 			&date.year, &date.month, &date.day,
 			&date.hour, &date.min, &date.sec);
 		date.microsec = 0;
-		date.dls      = false;
+		date.dst      = true;
+		date.offset   = 0;
 
 		if (date.b3Update())
 		{

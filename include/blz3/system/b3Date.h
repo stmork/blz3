@@ -104,7 +104,7 @@ public:
 	unsigned       sec;      //!< The second.
 	unsigned       microsec; //!< The microseconds
 
-	bool           dls;      //!< Daylight saving time.
+	bool           dst;      //!< Daylight saving time.
 	signed         offset;   //!< The time zone offset including daylight saving time.
 
 public:
@@ -214,7 +214,7 @@ public:
 	 * @param time_tm The tm structure to fill.
 	 * @return The given tm structure.
 	 */
-	tm * b3TM(struct std::tm * time_tm);
+	tm * b3TM(struct std::tm * time_tm) const;
 
 	/////////////////////////////// Operators
 
