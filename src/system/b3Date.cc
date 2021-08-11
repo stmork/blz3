@@ -267,7 +267,7 @@ bool b3Date::b3SetDateTime(
 
 bool b3Date::b3Update()
 {
-	struct tm date{};
+	struct tm date {};
 
 	b3TM(&date);
 

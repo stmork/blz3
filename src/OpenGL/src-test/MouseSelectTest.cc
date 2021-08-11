@@ -8,6 +8,8 @@
 #include "sc_runner.h"
 #include "sc_types.h"
 
+#define SC_UNUSED(P) (void)P
+
 namespace
 {
 
