@@ -67,7 +67,7 @@ void b3ExifTest::testSimpleJpeg()
 	const char   *  image_filename = "img_exif1_20.jpg";
 	b3TxExif        exif;
 
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename, B3_JPG_QUALITY, &exif));
 	CPPUNIT_ASSERT(!exif.b3HasGpsData());
 	CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
 }
@@ -77,7 +77,7 @@ void b3ExifTest::testSimpleTiff()
 	const char   *  image_filename = "img_exif1_20.tiff";
 	b3TxExif        exif;
 
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveTIFF(image_filename));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveTIFF(image_filename, &exif));
 	CPPUNIT_ASSERT(!exif.b3HasGpsData());
 	CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
 }
@@ -129,7 +129,7 @@ void b3ExifTest::testRemoveGps()
 
 	copy.b3GetResolution(m_Tx.xDPI, m_Tx.yDPI);
 	CPPUNIT_ASSERT_NO_THROW(copy.b3Update());
-	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG("img_exif3_20.jpg", 85, &copy));
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG("img_exif3_20.jpg", B3_JPG_QUALITY, &copy));
 }
 
 void b3ExifTest::testRational()
@@ -162,6 +162,16 @@ void b3ExifTest::testParseDate()
 	b3Date   date;
 
 	CPPUNIT_ASSERT_NO_THROW(date = exif);
+}
+
+void b3ExifTest::testDpi()
+{
+	const char   *  image_filename = "img_exif4_20.jpg";
+	b3TxExif        exif;
+
+	CPPUNIT_ASSERT_EQUAL(B3_OK, m_Tx.b3SaveJPEG(image_filename, B3_JPG_QUALITY, &exif));
+	CPPUNIT_ASSERT_NO_THROW(exif.b3SetResolution(300, 300));
+	CPPUNIT_ASSERT_NO_THROW(exif.b3Write(image_filename));
 }
 
 #endif

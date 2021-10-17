@@ -40,6 +40,7 @@ class b3ExifTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testRemoveGps);
 	CPPUNIT_TEST(testRational);
 	CPPUNIT_TEST(testParseDate);
+	CPPUNIT_TEST(testDpi);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -52,6 +53,7 @@ public:
 	void testRemoveGps();
 	void testRational();
 	void testParseDate();
+	void testDpi();
 };
 
 #endif

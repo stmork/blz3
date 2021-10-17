@@ -54,3 +54,6 @@ Version 3.1.5
 
 Version 3.1.6
 * Added PNG read and write support.
+
+Version 3.1.7
+* bexif3 is able to set DPI.

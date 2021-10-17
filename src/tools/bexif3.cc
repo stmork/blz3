@@ -58,6 +58,7 @@ static void b3Banner(const char * command)
 		b3PrintF(B3LOG_NORMAL, "  -G        remove geo tagging.\n");
 		b3PrintF(B3LOG_NORMAL, "  -p        update product info.\n");
 		b3PrintF(B3LOG_NORMAL, "  -k        keep filesystem date.\n");
+		b3PrintF(B3LOG_NORMAL, "  -r <DPI>  set DPI.\n");
 		b3PrintF(B3LOG_NORMAL, "  -x        update filesystem date from EXIF.\n");
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
@@ -67,10 +68,11 @@ static void b3Banner(const char * command)
 
 int main(int argc, char * argv[])
 {
-	bool remove_geo         = false;
-	bool update_productinfo = false;
-	bool keep_timestamp     = false;
-	bool extract_timestamp  = false;
+	bool     remove_geo         = false;
+	bool     update_productinfo = false;
+	bool     keep_timestamp     = false;
+	bool     extract_timestamp  = false;
+	unsigned dpi                = 0;
 
 	if (argc <= 1)
 	{
@@ -100,6 +102,30 @@ int main(int argc, char * argv[])
 		{
 			extract_timestamp = true;
 		}
+		else if (strcmp(argv[i], "-r") == 0)
+		{
+			const char * number;
+
+			if (strlen(argv[i]) > 2)
+			{
+				number = argv[i] + 2;
+			}
+			else
+			{
+				i++;
+				number = i < argc ? argv[i] : nullptr;
+			}
+
+			if (number != nullptr)
+			{
+				const int result = atoi(number);
+
+				if (result > 0)
+				{
+					dpi = result;
+				}
+			}
+		}
 		else
 		{
 			try
@@ -127,6 +153,12 @@ int main(int argc, char * argv[])
 					file_attributes.st_mtim = date;
 				}
 
+				if (dpi > 0)
+				{
+					exif.b3SetResolution(dpi, dpi);
+					count++;
+				}
+
 				if (count > 0)
 				{
 					exif.b3Write(argv[i]);
@@ -148,6 +180,10 @@ int main(int argc, char * argv[])
 			{
 				b3PrintF(B3LOG_NORMAL, "Error code: %d\n", t.b3GetError());
 				b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", t.b3GetErrorMsg());
+			}
+			catch (std::exception & e)
+			{
+				b3PrintF(B3LOG_NORMAL, "Error msg:  %s\n", e.what());
 			}
 		}
 	}
