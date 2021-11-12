@@ -71,10 +71,7 @@ public:
 	 */
 	inline b3VectorTemplate<F, dim>(const b3VectorTemplate<F, dim> & src)
 	{
-		for (b3_loop i = 0; i < dim; i++)
-		{
-			v[i] = src.v[i];
-		}
+		operator=(src);
 	}
 
 	/**
@@ -235,6 +232,23 @@ public:
 		{
 			v[i] = static_cast<F>(param[i]);
 		}
+	}
+
+	/**
+	 * The assignment constructor copies explicitely the contents of the
+	 * b3VectorTemplate class template.
+	 *
+	 * @param src The instance to copy from.
+	 * @return This instance.
+	 */
+	inline b3VectorTemplate<F, dim> & operator=(const b3VectorTemplate<F, dim> & src)
+	{
+		for (b3_loop i = 0; i < dim; i++)
+		{
+			v[i] = src.v[i];
+		}
+
+		return *this;
 	}
 
 	/**

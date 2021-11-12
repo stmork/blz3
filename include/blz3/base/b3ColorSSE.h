@@ -721,6 +721,13 @@ public:
 	}
 
 	/**
+	 * @brief operator =
+	 * @param color
+	 * @return
+	 */
+	inline b3Color & operator=(const b3Color & color) = default;
+
+	/**
 	 * This cast operator returns the color channels as ::b3_color.
 	 *
 	 * @return The color channels as ::b3_color.

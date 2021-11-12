@@ -132,9 +132,14 @@ public:
 
 	b3SplineTemplate<VECTOR>(const b3SplineTemplate<VECTOR> & src)
 	{
+		operator=(src);
+	}
+
+	inline b3SplineTemplate<VECTOR> & operator=(const b3SplineTemplate<VECTOR> & src)
+	{
 		B3_ASSERT(src.m_ControlNum < B3_MAX_CONTROLS);
 		B3_ASSERT(src.m_KnotNum < B3_MAX_KNOTS);
-		B3_ASSERT(src.m_SubDiv < B3_MAX_SUBDIV);
+		B3_ASSERT(src.m_SubDiv <= B3_MAX_SUBDIV);
 
 		m_ControlMax = B3_MAX_CONTROLS;
 		m_KnotMax    = B3_MAX_KNOTS;
@@ -146,7 +151,10 @@ public:
 		m_Knots      = src.m_Knots;
 		m_SubDiv     = src.m_SubDiv;
 		m_Closed     = src.m_Closed;
+
+		return *this;
 	}
+
 
 	/**
 	 * This method returns the number of segments inside this spline.

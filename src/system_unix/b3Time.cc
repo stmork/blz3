@@ -35,7 +35,7 @@
 
 void b3TimeSpan::b3Start()
 {
-	ftime(&m_RealTime);
+	gettimeofday(&m_RealTime, 0);
 	getrusage(RUSAGE_SELF, &m_UsageTime);
 #ifdef VERBOSE
 	b3PrintF(B3LOG_NORMAL, "Thread time start: %9d,%06d\n",
@@ -46,11 +46,11 @@ void b3TimeSpan::b3Start()
 
 void b3TimeSpan::b3Stop()
 {
-	struct rusage usage_stop;
-	struct timeb  real_stop;
+	struct rusage  usage_stop;
+	struct timeval real_stop;
 
 	getrusage(RUSAGE_SELF, &usage_stop);
-	ftime(&real_stop);
+	gettimeofday(&real_stop, 0);
 #ifdef VERBOSE
 	b3PrintF(B3LOG_NORMAL, "Thread time stop:  %9d,%06d\n",
 		usage_stop.ru_utime.tv_sec,
@@ -58,16 +58,16 @@ void b3TimeSpan::b3Stop()
 #endif
 
 	m_uTime += (
-			usage_stop.ru_utime.tv_sec + (b3_f64)usage_stop.ru_utime.tv_usec  / 1000000.0 -
+			usage_stop.ru_utime.tv_sec  + (b3_f64)usage_stop.ru_utime.tv_usec  / 1000000.0 -
 			m_UsageTime.ru_utime.tv_sec - (b3_f64)m_UsageTime.ru_utime.tv_usec / 1000000.0);
 
 	m_sTime += (
-			usage_stop.ru_stime.tv_sec + (b3_f64)usage_stop.ru_stime.tv_usec  / 1000000.0 -
+			usage_stop.ru_stime.tv_sec  + (b3_f64)usage_stop.ru_stime.tv_usec  / 1000000.0 -
 			m_UsageTime.ru_stime.tv_sec - (b3_f64)m_UsageTime.ru_stime.tv_usec / 1000000.0);
 
 	m_rTime += (
-			real_stop.time  + (b3_f64)real_stop.millitm  / 1000.0  -
-			m_RealTime.time - (b3_f64)m_RealTime.millitm / 1000.0);
+			real_stop.tv_sec  + (b3_f64)real_stop.tv_usec  / 1000000.0  -
+			m_RealTime.tv_sec - (b3_f64)m_RealTime.tv_usec / 1000000.0);
 }
 
 /*************************************************************************

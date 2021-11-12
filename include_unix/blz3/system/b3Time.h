@@ -29,8 +29,8 @@
  */
 class b3TimeSpan : public b3TimeSpanAbstract
 {
-	struct rusage m_UsageTime;
-	struct timeb  m_RealTime;
+	struct rusage  m_UsageTime;
+	struct timeval m_RealTime;
 
 public:
 	void    b3Start() override;
