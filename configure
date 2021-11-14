@@ -8272,7 +8272,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_swscale_main" >&5
 $as_echo "$ac_cv_lib_swscale_main" >&6; }
 if test "x$ac_cv_lib_swscale_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSWSCALE 1
+_ACEOF
+
+  LIBS="-lswscale $LIBS"
+
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lavutil" >&5
@@ -8306,7 +8311,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avutil_main" >&5
 $as_echo "$ac_cv_lib_avutil_main" >&6; }
 if test "x$ac_cv_lib_avutil_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVUTIL 1
+_ACEOF
+
+  LIBS="-lavutil $LIBS"
+
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lavformat" >&5
@@ -8340,7 +8350,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avformat_main" >&5
 $as_echo "$ac_cv_lib_avformat_main" >&6; }
 if test "x$ac_cv_lib_avformat_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVFORMAT 1
+_ACEOF
+
+  LIBS="-lavformat $LIBS"
+
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lavcodec" >&5
@@ -8374,7 +8389,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_avcodec_main" >&5
 $as_echo "$ac_cv_lib_avcodec_main" >&6; }
 if test "x$ac_cv_lib_avcodec_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBAVCODEC 1
+_ACEOF
+
+  LIBS="-lavcodec $LIBS"
+
 fi
 
 
@@ -8410,7 +8430,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_tiff_main" >&5
 $as_echo "$ac_cv_lib_tiff_main" >&6; }
 if test "x$ac_cv_lib_tiff_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libtiff5"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBTIFF 1
+_ACEOF
+
+  LIBS="-ltiff $LIBS"
+
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -ljpeg" >&5
@@ -8444,7 +8469,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_jpeg_main" >&5
 $as_echo "$ac_cv_lib_jpeg_main" >&6; }
 if test "x$ac_cv_lib_jpeg_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBJPEG 1
+_ACEOF
+
+  LIBS="-ljpeg $LIBS"
+
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lpng" >&5
@@ -8478,7 +8508,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_png_main" >&5
 $as_echo "$ac_cv_lib_png_main" >&6; }
 if test "x$ac_cv_lib_png_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBPNG 1
+_ACEOF
+
+  LIBS="-lpng $LIBS"
+
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lexiv2" >&5
@@ -8512,7 +8547,12 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_exiv2_main" >&5
 $as_echo "$ac_cv_lib_exiv2_main" >&6; }
 if test "x$ac_cv_lib_exiv2_main" = xyes; then :
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libexiv2-14|libexiv2-22|libexiv2-27"
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBEXIV2 1
+_ACEOF
+
+  LIBS="-lexiv2 $LIBS"
+
 fi
 
 

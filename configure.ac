@@ -244,16 +244,16 @@ AC_CHECK_HEADERS([png.h])
 AC_CHECK_HEADERS([tiff.h tiffio.h])
 
 # Check for video encoder
-AC_CHECK_LIB([swscale], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"])
-AC_CHECK_LIB([avutil], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"])
-AC_CHECK_LIB([avformat], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"])
-AC_CHECK_LIB([avcodec], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"])
+AC_CHECK_LIB([swscale], [main])
+AC_CHECK_LIB([avutil], [main])
+AC_CHECK_LIB([avformat], [main])
+AC_CHECK_LIB([avcodec], [main])
 
 # Check for image io libraries
-AC_CHECK_LIB([tiff], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libtiff5"])
-AC_CHECK_LIB([jpeg], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"])
-AC_CHECK_LIB([png], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"])
-AC_CHECK_LIB([exiv2], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libexiv2-14|libexiv2-22|libexiv2-27"])
+AC_CHECK_LIB([tiff], [main])
+AC_CHECK_LIB([jpeg], [main])
+AC_CHECK_LIB([png], [main])
+AC_CHECK_LIB([exiv2], [main])
 
 # Check for system libraries
 AC_CHECK_LIB([dl], [main])
