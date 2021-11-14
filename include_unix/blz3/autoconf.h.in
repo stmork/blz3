@@ -58,6 +58,9 @@
 /* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
 #undef HAVE_DOPRNT
 
+/* Define to 1 if you have the <exiv2/exiv2.hpp> header file. */
+#undef HAVE_EXIV2_EXIV2_HPP
+
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
@@ -82,24 +85,6 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
-/* Define to 1 if you have the <ImathBox.h> header file. */
-#undef HAVE_IMATHBOX_H
-
-/* Define to 1 if you have the <ImfChannelList.h> header file. */
-#undef HAVE_IMFCHANNELLIST_H
-
-/* Define to 1 if you have the <ImfHeader.h> header file. */
-#undef HAVE_IMFHEADER_H
-
-/* Define to 1 if you have the <ImfInputFile.h> header file. */
-#undef HAVE_IMFINPUTFILE_H
-
-/* Define to 1 if you have the <ImfIO.h> header file. */
-#undef HAVE_IMFIO_H
-
-/* Define to 1 if you have the <ImfOutputFile.h> header file. */
-#undef HAVE_IMFOUTPUTFILE_H
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
@@ -109,11 +94,20 @@
 /* Define to 1 if you have the `avcodec' library (-lavcodec). */
 #undef HAVE_LIBAVCODEC
 
+/* Define to 1 if you have the <libavcodec/avcodec.h> header file. */
+#undef HAVE_LIBAVCODEC_AVCODEC_H
+
 /* Define to 1 if you have the `avformat' library (-lavformat). */
 #undef HAVE_LIBAVFORMAT
 
+/* Define to 1 if you have the <libavformat/avformat.h> header file. */
+#undef HAVE_LIBAVFORMAT_AVFORMAT_H
+
 /* Define to 1 if you have the `avutil' library (-lavutil). */
 #undef HAVE_LIBAVUTIL
+
+/* Define to 1 if you have the <libavutil/opt.h> header file. */
+#undef HAVE_LIBAVUTIL_OPT_H
 
 /* Define to 1 if you have the `CgGL' library (-lCgGL). */
 #undef HAVE_LIBCGGL
@@ -157,6 +151,9 @@
 /* Define to 1 if you have the `swscale' library (-lswscale). */
 #undef HAVE_LIBSWSCALE
 
+/* Define to 1 if you have the <libswscale/swscale.h> header file. */
+#undef HAVE_LIBSWSCALE_SWSCALE_H
+
 /* Define to 1 if you have the `tiff' library (-ltiff). */
 #undef HAVE_LIBTIFF
 
@@ -199,6 +196,9 @@
 
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
+
+/* Define to 1 if you have the <OpenEXR/ImfInputFile.h> header file. */
+#undef HAVE_OPENEXR_IMFINPUTFILE_H
 
 /* Define to 1 if you have the <png.h> header file. */
 #undef HAVE_PNG_H
@@ -274,9 +274,6 @@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
-
-/* Define to 1 if you have the <tiffio.h> header file. */
-#undef HAVE_TIFFIO_H
 
 /* Define to 1 if you have the <tiff.h> header file. */
 #undef HAVE_TIFF_H

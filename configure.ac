@@ -231,7 +231,9 @@ AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL], [1], [Do we can use GLU
 AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG], [1], [Do we have Cg header?])])
 AC_CHECK_LIB([CgGL], [main])
 
-PKG_CHECK_MODULES([OPENEXR], [OpenEXR],
+PKG_CHECK_MODULES([OPENEXR], [OpenEXR])
+
+AC_CHECK_HEADERS([OpenEXR/ImfInputFile.h],
 	[
 		AC_DEFINE([BLZ3_USE_OPENEXR], [1], [Do we can use OpenEXR?])
 		EXRFLAGS="-Wno-deprecated-copy -Wno-suggest-override"
@@ -239,29 +241,35 @@ PKG_CHECK_MODULES([OPENEXR], [OpenEXR],
 		DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24"
 	])
 
-AC_CHECK_HEADERS([ImfInputFile.h ImathBox.h ImfHeader.h ImfIO.h])
-AC_CHECK_HEADERS([ImfOutputFile.h ImfChannelList.h ImfHeader.h ImfIO.h])
+#AC_CHECK_HEADERS([OpenEXR/ImathBox.h OpenEXR/ImfHeader.h OpenEXR/ImfIO.h])
+#AC_CHECK_HEADERS([OpenEXR/ImfOutputFile.h OpenEXR/ImfChannelList.h OpenEXR/ImfHeader.h OpenEXR/ImfIO.h])
 
 AC_CHECK_LIB([Half], [main])
 AC_CHECK_LIB([Iex], [main])
 AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
 
-AC_CHECK_HEADERS([jpeglib.h])
-AC_CHECK_HEADERS([png.h])
-AC_CHECK_HEADERS([tiff.h tiffio.h])
+AC_CHECK_HEADERS([jpeglib.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"])
+AC_CHECK_HEADERS([png.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"])
+AC_CHECK_HEADERS([tiff.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libtiff5"])
+AC_CHECK_HEADERS([exiv2/exiv2.hpp], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libexiv2-14|libexiv2-22|libexiv2-27"])
+
+# Check for image io libraries
+AC_CHECK_LIB([jpeg], [main])
+AC_CHECK_LIB([png], [main])
+AC_CHECK_LIB([tiff], [main])
+AC_CHECK_LIB([exiv2], [main])
+
+AC_CHECK_HEADERS([libswscale/swscale.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"])
+AC_CHECK_HEADERS([libavutil/opt.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"])
+AC_CHECK_HEADERS([libavformat/avformat.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"])
+AC_CHECK_HEADERS([libavcodec/avcodec.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"])
 
 # Check for video encoder
 AC_CHECK_LIB([swscale], [main])
 AC_CHECK_LIB([avutil], [main])
 AC_CHECK_LIB([avformat], [main])
 AC_CHECK_LIB([avcodec], [main])
-
-# Check for image io libraries
-AC_CHECK_LIB([tiff], [main])
-AC_CHECK_LIB([jpeg], [main])
-AC_CHECK_LIB([png], [main])
-AC_CHECK_LIB([exiv2], [main])
 
 # Check for system libraries
 AC_CHECK_LIB([dl], [main])
@@ -270,16 +278,6 @@ AC_CHECK_LIB([z], [main])
 AC_CHECK_LIB([cppunit], [main], [AC_DEFINE([HAVE_LIBCPPUNIT], [1], [Is CppUnit available?]) CPPUNITLIBS="-lcppunit"])
 AC_CHECK_LIB([gtest], [main], [AC_DEFINE([HAVE_LIBGTEST], [1], [Is Google Test available?]) GTESTLIBS="-lgtest -lgtest_main"])
 AC_CHECK_LIB([gtest_main], [main])
-
-AM_CONDITIONAL([HAVE_LIBTIFF], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libtiff5"])
-AM_CONDITIONAL([HAVE_LIBJPEG], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"])
-AM_CONDITIONAL([HAVE_LIBPNG], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"])
-AM_CONDITIONAL([HAVE_LIBEXIV2], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libexiv2-14|libexiv2-22|libexiv2-27"])
-
-AM_CONDITIONAL([HAVE_LIBSWSCALE], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"])
-AM_CONDITIONAL([HAVE_LIBAVUTIL], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"])
-AM_CONDITIONAL([HAVE_LIBAVFORMAT], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"])
-AM_CONDITIONAL([HAVE_LIBAVCODEC], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"])
 
 AC_LANG_POP(C++)
 
