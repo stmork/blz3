@@ -26,6 +26,7 @@
 #include "blz3/image/b3Tx.h"
 
 #ifdef BLZ3_USE_OPENEXR
+
 #include <ImfIO.h>
 #include <ImfInputFile.h>
 #include <ImfHeader.h>
@@ -41,7 +42,7 @@ using namespace Iex;
 **                                                                      **
 *************************************************************************/
 
-class b3ExrInputStream: public IStream
+class b3ExrInputStream : public IStream
 {
 	const b3_u08  * m_Buffer = nullptr;
 	b3_size   m_Size   = 0;

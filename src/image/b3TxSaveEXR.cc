@@ -24,6 +24,7 @@
 #include "blz3/image/b3Tx.h"
 
 #ifdef BLZ3_USE_OPENEXR
+
 #include "b3TxSaveInfo.h"
 
 #include <ImfOutputFile.h>
@@ -31,7 +32,6 @@
 #include <ImfHeader.h>
 #include <ImfIO.h>
 
-using namespace std;
 using namespace Imf;
 using namespace Imath;
 
@@ -54,6 +54,8 @@ public:
 		}
 		b3PrintF(B3LOG_FULL, "  b3InfoEXR initialized.\n");
 	}
+
+	virtual ~b3InfoEXR() = default;
 
 	virtual void        write(const char c[/*n*/], int n) override
 	{
@@ -103,10 +105,6 @@ public:
 			b3PrintF(B3LOG_NORMAL, "Error writing OpenEXR file %s\n", e.what());
 			B3_THROW(b3TxException, B3_TX_NOT_SAVED);
 		}
-	}
-
-	virtual ~b3InfoEXR()
-	{
 	}
 };
 
