@@ -36,7 +36,7 @@
 
 b3Error::b3Error()
 {
-	b3RetrieveError();
+	b3Error::b3RetrieveError();
 }
 
 int b3Error::b3GetError()

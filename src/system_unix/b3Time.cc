@@ -78,12 +78,11 @@ void b3TimeSpan::b3Stop()
 
 b3Time::b3Time()
 {
-	b3Now();
+	b3Time::b3Now();
 }
 
-b3Time::b3Time(const b3Time & orig)
+b3Time::b3Time(const b3Time & orig) : m_TimePoint(orig.m_TimePoint)
 {
-	m_TimePoint = orig.m_TimePoint;
 }
 
 b3_f64 b3Time::b3Now()
@@ -106,12 +105,6 @@ std::chrono::microseconds b3Time::b3GetStdTime() const
 }
 
 b3Time & b3Time::operator=(const b3Time & orig)
-{
-	m_TimePoint = orig.m_TimePoint;
-	return *this;
-}
-
-b3Time & b3Time::operator=(b3Time & orig)
 {
 	m_TimePoint = orig.m_TimePoint;
 	return *this;

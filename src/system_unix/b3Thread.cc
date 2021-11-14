@@ -115,12 +115,12 @@ static b3_count   threadError;
 
 b3Thread::b3Thread(const char * task_name)
 {
-	m_Name      = task_name;
+	m_Name = task_name;
 }
 
 b3Thread::~b3Thread()
 {
-	b3Stop();
+	b3Thread::b3Stop();
 }
 
 void b3Thread::b3Inc()

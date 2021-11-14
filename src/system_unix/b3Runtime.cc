@@ -86,6 +86,14 @@ b3Runtime::b3Runtime()
 	bzero(m_UserName, sizeof(m_UserName));
 }
 
+void b3Runtime::b3SetUserName(const std::string & gecos)
+{
+	const size_t idx = gecos.find_first_of(',');
+
+	strcpy(m_UserName,
+		gecos.substr(0, std::min(idx, sizeof(m_UserName) - 1)).c_str());
+}
+
 const char * b3Runtime::b3GetVendor()
 {
 	return B3_VENDOR;
@@ -108,17 +116,15 @@ const char * b3Runtime::b3GetProduct()
 
 const char * b3Runtime::b3GetUserName()
 {
-	b3Runtime & runtime = b3Instance();
-	const uid_t uid = geteuid ();
-	const struct passwd  * pw = getpwuid (uid);
+	b3Runtime      &      runtime = b3Instance();
+	const uid_t           uid     = geteuid ();
+	const struct passwd * pw      = getpwuid (uid);
 
 	if (pw != nullptr)
 	{
 		const std::string gecos(pw->pw_gecos);
-		const size_t idx = gecos.find_first_of(',');
 
-		strcpy(runtime.m_UserName,
-			gecos.substr(0, std::min(idx, sizeof(m_UserName) - 1)).c_str());
+		runtime.b3SetUserName(gecos);
 	}
 	return runtime.m_UserName;
 }

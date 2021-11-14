@@ -47,7 +47,8 @@ b3Date::b3Date()
 	b3Now();
 }
 
-b3Date::b3Date(const b3Date & other)
+b3Date::b3Date(const b3Date & other) :
+	time_code(other.time_code)
 {
 	microsec  = other.microsec;
 	sec       = other.sec;
@@ -59,7 +60,7 @@ b3Date::b3Date(const b3Date & other)
 	mode      = other.mode;
 	offset    = other.offset;
 	dst       = other.dst;
-	time_code = other.time_code;
+	wday      = other.wday;
 
 	if (!b3Update())
 	{
@@ -155,16 +156,11 @@ void b3Date::b3GMTime()
 	const struct std::tm * now;
 	std::time_t            mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
 
-	do
+	while ((now = gmtime_r(&time_code, &buffer)) == nullptr)
 	{
-		now = gmtime_r(&time_code, &buffer);
-		if (now == nullptr)
-		{
-			time_code &= (mask ^ bit);
-			bit = bit >> 1;
-		}
+		time_code &= (mask ^ bit);
+		bit = bit >> 1;
 	}
-	while (now == nullptr);
 
 	mode      = B3_DT_GM;
 

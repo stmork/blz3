@@ -42,6 +42,8 @@ b3TxExif::b3TxExif(const char * filename)
 	m_ExifData = image->exifData();
 	m_xDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.XResolution"], 72);
 	m_yDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.YResolution"], 72);
+#else
+	(void)filename;
 #endif
 
 	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
@@ -84,6 +86,8 @@ b3TxExif & b3TxExif::operator=(const b3TxExif & other)
 	m_ExifData = other.m_ExifData;
 	m_xDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.XResolution"], 72);
 	m_yDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.YResolution"], 72);
+#else
+	(void)other;
 #endif
 
 	b3Runtime::b3Hostname(m_Hostname, sizeof(m_Hostname));
@@ -133,6 +137,8 @@ void b3TxExif::b3SetQuality(const unsigned quality)
 {
 #ifdef HAVE_LIBEXIV2
 	m_ExifData["Exif.Image.BestQualityScale"] = Exiv2::URational(quality, 100);
+#else
+	(void)quality;
 #endif
 }
 
@@ -183,8 +189,12 @@ void b3TxExif::b3Write(const char * filename)
 
 	image->setExifData(m_ExifData);
 	image->writeMetadata();
+#else
+	(void)filename;
 #endif
 }
+
+#ifdef HAVE_LIBEXIV2
 
 b3_f64 b3TxExif::b3Quotient(
 	const Exiv2::Rational & rational,
@@ -252,3 +262,5 @@ signed b3TxExif::b3RoundedQuotient(
 {
 	return b3RoundedQuotient(datum.toRational(), default_value);
 }
+
+#endif

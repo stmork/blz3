@@ -41,8 +41,6 @@ class B3_PLUGIN b3Runtime : public b3CPU
 
 	static const std::unordered_map<b3_vector_unit, const char *> m_VectorMap;
 
-	b3Runtime();
-
 public:
 	/**
 	 * This method returns the singleton instance of the runtime description.
@@ -137,6 +135,12 @@ public:
 	 * @return The next index to process.
 	 */
 	static int         b3ParseOption(int argc, char * argv[], int index, char * option, size_t size);
+
+private:
+	b3Runtime();
+
+	void b3SetUserName(const std::string & gecos);
+
 };
 
 #endif

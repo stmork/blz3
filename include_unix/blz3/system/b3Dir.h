@@ -201,7 +201,7 @@ public:
 class b3Dir : public b3DirAbstract, public b3Mem, public b3Path
 {
 protected:
-	DIR         *        dir;
+	DIR         *        m_Dir = nullptr;
 
 public:
 	/**

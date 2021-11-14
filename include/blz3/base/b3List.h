@@ -744,7 +744,7 @@ public:
 	inline void b3Sort(int (*func)(const T *, const T *))
 	{
 		b3Base    Right;
-		T    *    start, *end;
+		T    *    first, *last;
 		b3_count  i = 0;
 
 		// We don't need to sort one or zero element.
@@ -759,19 +759,19 @@ public:
 		// the middle of the list.
 		//
 		// NOTE: This is the inefficient part of this algorithm because it is O(n).
-		start = First;
-		end   = Last;
-		while (start->Succ != end)
+		first = First;
+		last   = Last;
+		while (first->Succ != last)
 		{
 			if (i & 1)
 			{
 				// One backwards
-				end   = end->Prev;
+				last   = last->Prev;
 			}
 			else
 			{
 				// One forwards
-				start = start->Succ;
+				first = first->Succ;
 			}
 			i++;
 		}
@@ -781,11 +781,11 @@ public:
 		//
 		// NOTE: This is very efficient: O(1)
 		Right.Class = Class;
-		Right.First = end;
+		Right.First = last;
 		Right.Last  = Last;
-		Last        = start;
-		end->Prev   = nullptr;
-		start->Succ = nullptr;
+		Last        = first;
+		last->Prev   = nullptr;
+		first->Succ = nullptr;
 
 
 		// & CONQUER
@@ -795,24 +795,24 @@ public:
 
 		// Now we have to merge two sorted list into
 		// one sorted list.
-		start = First;
-		end   = Right.First;
-		while ((start != nullptr) && (end != nullptr))
+		first = First;
+		last   = Right.First;
+		while ((first != nullptr) && (last != nullptr))
 		{
 			// Here is the comparison function. If the node
 			// of the first list is lower we leave the node
 			// at its place and use the following node.
 			// Else we remove the node from the second list
 			// an insert it before the node of the first list.
-			if (func(start, end) > 0)
+			if (func(first, last) > 0)
 			{
-				Right.b3Remove(end);
-				b3Insert(start->Prev, end);
-				end   = Right.First;
+				Right.b3Remove(last);
+				b3Insert(first->Prev, last);
+				last   = Right.First;
 			}
 			else
 			{
-				start = start->Succ;	/* start <= end */
+				first = first->Succ;	/* start <= end */
 			}
 		}
 
@@ -820,17 +820,17 @@ public:
 		// to at the end of the first list.
 		//
 		// NOTE: This is even more efficient: O(1)
-		if (end) /* append right list to left list */
+		if (last) /* append right list to left list */
 		{
-			start = Last;
-			end->Prev = start;
-			if (start)
+			first = Last;
+			last->Prev = first;
+			if (first)
 			{
-				start->Succ = end;
+				first->Succ = last;
 			}
 			else
 			{
-				First = end;
+				First = last;
 			}
 			Last = Right.Last;
 		}

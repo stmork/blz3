@@ -83,15 +83,15 @@ bool b3Dir::b3RmDir(const char * dir)
 
 b3Dir::b3Dir()
 {
-	dir = nullptr;
+	m_Dir = nullptr;
 	b3Empty();
 }
 
 // This constructor opens a dir entry directly when
 // instantiated
-b3Dir::b3Dir(const char * path)
+b3Dir::b3Dir(const char * dirname)
 {
-	if (!b3OpenDir(path))
+	if (!b3Dir::b3OpenDir(dirname))
 	{
 		B3_THROW(b3DirException, B3_DIR_NOT_FOUND);
 	}
@@ -100,17 +100,17 @@ b3Dir::b3Dir(const char * path)
 // The destructor deinitializes the dir entry if necessary
 b3Dir::~b3Dir()
 {
-	b3CloseDir();
+	b3Dir::b3CloseDir();
 }
 
 // Open a directory list
-b3_bool b3Dir::b3OpenDir(const char * open_path)
+b3_bool b3Dir::b3OpenDir(const char * dirname)
 {
-	if ((dir = opendir(open_path)) != nullptr)
+	if ((m_Dir = opendir(dirname)) != nullptr)
 	{
-		strcpy(m_Path, open_path);
+		strncpy(m_Path, dirname, sizeof(m_Path));
 	}
-	return dir != nullptr;
+	return m_Dir != nullptr;
 }
 
 b3_path_type b3Dir::b3DirNext(char * name)
@@ -126,7 +126,7 @@ b3_path_type b3Dir::b3DirNext(char * name)
 
 		loop = false;
 		type = B3_NOT_EXISTANT;
-		if ((entry = readdir(dir)) != nullptr)
+		if ((entry = readdir(m_Dir)) != nullptr)
 		{
 			b3Mem::b3StrCpy(name, entry->d_name, B3_FILESTRINGLEN);
 			b3LinkFileName(filename, m_Path, name);
@@ -151,10 +151,10 @@ b3_path_type b3Dir::b3DirNext(char * name)
 
 void b3Dir::b3CloseDir()
 {
-	if (dir != nullptr)
+	if (m_Dir != nullptr)
 	{
-		closedir(dir);
-		dir = nullptr;
+		closedir(m_Dir);
+		m_Dir = nullptr;
 		b3Empty();
 	}
 }
@@ -304,7 +304,6 @@ void b3Path::b3SplitFileName(
 	char    *    FileName)
 {
 	b3_size Length, i;
-	b3_bool Dir = false;
 
 	if (File == nullptr)
 	{
@@ -327,37 +326,27 @@ void b3Path::b3SplitFileName(
 	Length = strlen(File);
 	if (FileName != nullptr)
 	{
-		if (Dir)
+		i = Length;
+		while ((i > 0) &&
+			(File[i - 1] != DIR_DELIMITER) && (File[i - 1] != '~'))
 		{
-			FileName[0] = 0;
+			i--;
 		}
-		else
-		{
-			i = Length;
-			while ((i > 0) &&
-				(File[i - 1] != DIR_DELIMITER) && (File[i - 1] != '~'))
-			{
-				i--;
-			}
-			b3Mem::b3StrCpy(FileName, &File[i], B3_FILESTRINGLEN);
-		}
+		b3Mem::b3StrCpy(FileName, &File[i], B3_FILESTRINGLEN);
 	}
 	if (FilePath != nullptr)
 	{
 		b3Mem::b3StrCpy(FilePath, File, B3_FILESTRINGLEN);
-		if (!Dir)
+		i = Length;
+		while ((i > 0) && (File[i - 1] != DIR_DELIMITER) && (File[i - 1] != '~'))
 		{
-			i = Length;
-			while ((i > 0) && (File[i - 1] != DIR_DELIMITER) && (File[i - 1] != '~'))
-			{
-				i--;
-			}
-			if (i > 1)
-			{
-				i--;
-			}
-			FilePath[i] = 0;
+			i--;
 		}
+		if (i > 1)
+		{
+			i--;
+		}
+		FilePath[i] = 0;
 	}
 }
 

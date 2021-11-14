@@ -42,13 +42,12 @@ b3ExceptionBase::b3ExceptionBase(
 	const b3_errno  ErrNo,
 	const b3_excno  ExcNo,
 	const b3_count  lineno,
-	const char   *  filename)
+	const char   *  filename) :
+	m_ExceptionType(ExcNo),
+	m_ErrorCode(ErrNo),
+	m_LineNo(lineno),
+	m_FileName(filename)
 {
-	m_ErrorCode     = ErrNo;
-	m_ExceptionType = ExcNo;
-	m_LineNo        = lineno;
-	m_FileName      = filename;
-
 	if (m_Logger == nullptr)
 	{
 		b3SetLogger(nullptr);

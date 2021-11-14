@@ -41,6 +41,7 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef HAVE_LIBEXIV2
 static void b3Banner(const char * command)
 {
 	const b3Date now;
@@ -65,9 +66,11 @@ static void b3Banner(const char * command)
 	b3PrintF(B3LOG_NORMAL, "Compile date: %s %s\n", __DATE__, __TIME__);
 	b3PrintF(B3LOG_NORMAL, "%s\n", b3Runtime::b3GetCompiler());
 }
+#endif
 
 int main(int argc, char * argv[])
 {
+#ifdef HAVE_LIBEXIV2
 	bool     remove_geo         = false;
 	bool     update_productinfo = false;
 	bool     keep_timestamp     = false;
@@ -187,5 +190,11 @@ int main(int argc, char * argv[])
 			}
 		}
 	}
+#else
+	(void)argc;
+	(void)argv;
+
+	b3PrintF(B3LOG_NORMAL, "Missing EXIF support!\n");
+#endif
 	return EXIT_SUCCESS;
 }

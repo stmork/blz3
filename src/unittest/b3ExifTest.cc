@@ -134,6 +134,7 @@ void b3ExifTest::testRemoveGps()
 
 void b3ExifTest::testRational()
 {
+#ifdef HAVE_LIBEXIV2
 	Exiv2::Rational  a( 7,  2);
 	Exiv2::Rational  b(-7,  4);
 	Exiv2::Rational  c( 5, -2);
@@ -154,14 +155,17 @@ void b3ExifTest::testRational()
 	CPPUNIT_ASSERT_EQUAL(-3,  b3TxExif::b3RoundedQuotient(d));
 	CPPUNIT_ASSERT_EQUAL(-2,  b3TxExif::b3RoundedQuotient(e));
 	CPPUNIT_ASSERT_EQUAL(19,  b3TxExif::b3RoundedQuotient(f, 19));
+#endif
 }
 
 void b3ExifTest::testParseDate()
 {
+#ifdef HAVE_LIBEXIV2
 	b3TxExif exif("IMG_1344.jpeg");
 	b3Date   date;
 
 	CPPUNIT_ASSERT_NO_THROW(date = exif);
+#endif
 }
 
 void b3ExifTest::testDpi()

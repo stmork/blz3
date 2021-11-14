@@ -62,11 +62,6 @@ public:
 	 * This assignment operator copies the time from another instance.
 	 */
 	b3Time & operator=(const b3Time & orig);
-
-	/**
-	 * This assignment operator copies the time from another instance.
-	 */
-	b3Time & operator=(b3Time & orig);
 };
 
 #endif

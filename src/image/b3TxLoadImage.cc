@@ -53,7 +53,9 @@
 b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 {
 	const b3_u32    *    LongData;
+#ifdef HAVE_LIBTIFF
 	const b3HeaderTIFF * header_tiff;
+#endif
 	const b3HeaderSGI  * header_sgi;
 	b3_size              pos;
 	b3_coord             x, y;

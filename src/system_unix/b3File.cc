@@ -45,7 +45,7 @@ b3File::b3File(
 	const char      *     Name,
 	const b3_access_mode  AccessMode)
 {
-	if (!b3Open(Name, AccessMode))
+	if (!b3File::b3Open(Name, AccessMode))
 	{
 		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
 	}
@@ -53,7 +53,7 @@ b3File::b3File(
 
 b3File::~b3File()
 {
-	b3Close();
+	b3File::b3Close();
 }
 
 // Open a file for reading, writing or appending

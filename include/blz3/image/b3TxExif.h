@@ -120,6 +120,7 @@ public:
 	 */
 	void b3Write(const char * filename);
 
+#ifdef HAVE_LIBEXIV2
 	/**
 	 * This method computes the quotient of the given rational. In case the
 	 * denominator is @c 0 the default value is returned to prevent an
@@ -152,6 +153,7 @@ private:
 	static signed b3RoundedQuotient(
 		const Exiv2::Exifdatum & datum,
 		const b3_f64             default_value);
+#endif
 };
 
 #endif // B3TXEXIF_H
