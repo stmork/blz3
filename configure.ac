@@ -56,6 +56,7 @@ AC_SUBST(X264LIBS)
 AC_SUBST(CPPUNITLIBS)
 AC_SUBST(GTESTLIBS)
 AC_SUBST(PKG_LIST)
+AC_SUBST(DEB_DEPENDENCIES)
 AC_SUBST(BUILD, "$BUILD", [The Jenkins build number])
 
 AC_LANG_PUSH(C++)
@@ -228,7 +229,7 @@ AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL], [1], [Do we can use GLU
 AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG], [1], [Do we have Cg header?])])
 AC_CHECK_LIB([CgGL], [main])
 
-PKG_CHECK_MODULES([OPENEXR], [OpenEXR], PKG_LIST="$PKG_LIST OpenEXR")
+PKG_CHECK_MODULES([OPENEXR], [OpenEXR], [PKG_LIST="$PKG_LIST OpenEXR" DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24"])
 
 AC_CHECK_HEADERS([ImfInputFile.h ImathBox.h ImfHeader.h ImfIO.h])
 AC_CHECK_HEADERS([ImfOutputFile.h ImfChannelList.h ImfHeader.h ImfIO.h])
@@ -243,16 +244,16 @@ AC_CHECK_HEADERS([png.h])
 AC_CHECK_HEADERS([tiff.h tiffio.h])
 
 # Check for video encoder
-AC_CHECK_LIB([swscale], [main])
-AC_CHECK_LIB([avutil], [main])
-AC_CHECK_LIB([avformat], [main])
-AC_CHECK_LIB([avcodec], [main])
+AC_CHECK_LIB([swscale], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"])
+AC_CHECK_LIB([avutil], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"])
+AC_CHECK_LIB([avformat], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"])
+AC_CHECK_LIB([avcodec], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"])
 
 # Check for image io libraries
-AC_CHECK_LIB([tiff], [main])
-AC_CHECK_LIB([jpeg], [main])
-AC_CHECK_LIB([png], [main])
-AC_CHECK_LIB([exiv2], [main])
+AC_CHECK_LIB([tiff], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libtiff5"])
+AC_CHECK_LIB([jpeg], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"])
+AC_CHECK_LIB([png], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"])
+AC_CHECK_LIB([exiv2], [main], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libexiv2-14|libexiv2-22|libexiv2-27"])
 
 # Check for system libraries
 AC_CHECK_LIB([dl], [main])
