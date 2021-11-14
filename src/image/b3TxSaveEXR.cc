@@ -34,7 +34,6 @@
 using namespace std;
 using namespace Imf;
 using namespace Imath;
-#endif
 
 /*************************************************************************
 **                                                                      **
@@ -42,7 +41,6 @@ using namespace Imath;
 **                                                                      **
 *************************************************************************/
 
-#ifdef BLZ3_USE_OPENEXR
 class b3InfoEXR : protected b3TxSaveInfo, protected OStream
 {
 public:
@@ -111,9 +109,7 @@ public:
 	{
 	}
 };
-#endif
 
-#ifdef BLZ3_USE_OPENEXR
 b3_result b3Tx::b3SaveEXR(const char * filename B3_UNUSED)
 {
 	b3PrintF(B3LOG_FULL, "Saving EXR: %s\n", filename);
@@ -122,4 +118,5 @@ b3_result b3Tx::b3SaveEXR(const char * filename B3_UNUSED)
 	info.b3Write();
 	return B3_OK;
 }
+
 #endif
