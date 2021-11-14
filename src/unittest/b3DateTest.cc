@@ -79,6 +79,10 @@ void b3DateTest::testEqual()
 	CPPUNIT_ASSERT_EQUAL(date, copy);
 	CPPUNIT_ASSERT_GREATEREQUAL(date, copy);
 
+	CPPUNIT_ASSERT(date <= copy);
+	CPPUNIT_ASSERT(date == copy);
+	CPPUNIT_ASSERT(date >= copy);
+
 	CPPUNIT_ASSERT_EQUAL(date.day,      copy.day);
 	CPPUNIT_ASSERT_EQUAL(date.month,    copy.month);
 	CPPUNIT_ASSERT_EQUAL(date.year,     copy.year);

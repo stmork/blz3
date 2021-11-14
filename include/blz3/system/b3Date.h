@@ -269,7 +269,7 @@ public:
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator <(const b3Date & date) const;
+	bool operator<(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is smaller or equal than the given date.
@@ -283,7 +283,7 @@ public:
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator ==(const b3Date & date) const;
+	bool operator==(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is not equal than the given date.
@@ -297,7 +297,7 @@ public:
 	 *
 	 * @param date The right hand date to compare to.
 	 */
-	bool operator >=(const b3Date & date) const;
+	bool operator>=(const b3Date & date) const;
 
 	/**
 	 * This operator returns a non zero value if this instance is greater than the given date.

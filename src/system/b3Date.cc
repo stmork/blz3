@@ -153,14 +153,7 @@ void b3Date::b3LocalTime()
 void b3Date::b3GMTime()
 {
 	struct std::tm         buffer;
-	const struct std::tm * now;
-	std::time_t            mask = -1, bit = 1L << (sizeof(time_code) * 8 - 1);
-
-	while ((now = gmtime_r(&time_code, &buffer)) == nullptr)
-	{
-		time_code &= (mask ^ bit);
-		bit = bit >> 1;
-	}
+	const struct std::tm * now = gmtime_r(&time_code, &buffer);
 
 	mode      = B3_DT_GM;
 
@@ -286,7 +279,7 @@ bool b3Date::operator<(const b3Date & other) const
 	return time_code < other.time_code;
 }
 
-bool b3Date::operator <=(const b3Date & comp) const
+bool b3Date::operator<=(const b3Date & comp) const
 {
 	return time_code <= comp.time_code;
 }
@@ -306,7 +299,7 @@ bool b3Date::operator>=(const b3Date & comp) const
 	return time_code >= comp.time_code;
 }
 
-bool b3Date::operator >(const b3Date & comp) const
+bool b3Date::operator>(const b3Date & comp) const
 {
 	return time_code > comp.time_code;
 }
