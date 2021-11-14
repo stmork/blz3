@@ -330,7 +330,7 @@ int main(int argc, char * argv[])
 					break;
 #ifdef BLZ3_USE_OPENEXR
 				case 'x':
-					strlcpy(BLZ3_EXTENSION, ".exr", sizeof(BLZ3_EXTENSION));
+					b3Mem::b3StrCpy(BLZ3_EXTENSION, ".exr", sizeof(BLZ3_EXTENSION));
 					break;
 #endif
 

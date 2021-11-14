@@ -9,6 +9,9 @@
 /* Do we can use GLUT? */
 #undef BLZ3_USE_GLUT
 
+/* Do we can use OpenEXR? */
+#undef BLZ3_USE_OPENEXR
+
 /* Do we can use GLU? */
 #undef BLZ3_USE_OPENGL
 

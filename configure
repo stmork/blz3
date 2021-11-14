@@ -683,10 +683,12 @@ BLZ3_USE_SSE41
 BLZ3_USE_SSE3
 BLZ3_USE_SSE2
 BLZ3_USE_SSE
+BLZ3_USE_OPENEXR
 BLZ3_USE_OPENGL
 BLZ3_USE_GLUT
 BLZ3_USE_CG
 BLZ3_IS_LINUX
+EXRFLAGS
 STDFLAGS
 MFLAGS
 QHELPGEN
@@ -4806,6 +4808,8 @@ BUILD=${BUILD_NUMBER:-0}
 
 
 
+
+
 BLZ3_HOME="$PWD"
 
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"
@@ -8015,7 +8019,14 @@ else
 	OPENEXR_LIBS=$pkg_cv_OPENEXR_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	PKG_LIST="$PKG_LIST OpenEXR" DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24"
+
+
+$as_echo "#define BLZ3_USE_OPENEXR 1" >>confdefs.h
+
+		EXRFLAGS="-Wno-deprecated-copy -Wno-suggest-override"
+		PKG_LIST="$PKG_LIST OpenEXR"
+		DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24"
+
 fi
 
 for ac_header in ImfInputFile.h ImathBox.h ImfHeader.h ImfIO.h

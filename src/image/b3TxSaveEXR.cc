@@ -24,6 +24,8 @@
 #include "blz3/image/b3Tx.h"
 
 #ifdef BLZ3_USE_OPENEXR
+#include "b3TxSaveInfo.h"
+
 #include <ImfOutputFile.h>
 #include <ImfChannelList.h>
 #include <ImfHeader.h>
@@ -55,7 +57,7 @@ public:
 		b3PrintF(B3LOG_FULL, "  b3InfoEXR initialized.\n");
 	}
 
-	virtual void        write(const char c[/*n*/], int n)
+	virtual void        write(const char c[/*n*/], int n) override
 	{
 		clearerr(m_FileHandle);
 
@@ -65,12 +67,12 @@ public:
 		}
 	}
 
-	virtual Int64       tellp()
+	virtual Int64       tellp() override
 	{
 		return ftell(m_FileHandle);
 	}
 
-	virtual void        seekp(Int64 pos)
+	virtual void        seekp(Int64 pos) override
 	{
 		clearerr(m_FileHandle);
 		fseek(m_FileHandle, pos, SEEK_SET);

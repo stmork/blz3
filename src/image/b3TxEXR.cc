@@ -43,19 +43,19 @@ using namespace Iex;
 
 class b3ExrInputStream: public IStream
 {
-	b3_u08  * m_Buffer = nullptr;
+	const b3_u08  * m_Buffer = nullptr;
 	b3_size   m_Size   = 0;
 	b3_index  m_Index  = 0;
 
 public:
-	b3ExrInputStream(b3_u08 * buffer, b3_size size, const char * filename) :
+	b3ExrInputStream(const b3_u08 * buffer, b3_size size, const char * filename) :
 		IStream(filename),
 		m_Buffer(buffer),
 		m_Size(size)
 	{
 	}
 
-	virtual bool read(char c[/*n*/], int n)
+	virtual bool read(char c[/*n*/], int n) override
 	{
 		b3_size max = m_Index + n;
 
@@ -70,12 +70,12 @@ public:
 		return m_Index < static_cast<b3_index>(m_Size);
 	}
 
-	virtual Int64 tellg()
+	virtual Int64 tellg() override
 	{
 		return m_Index;
 	}
 
-	virtual void seekg(Int64 pos)
+	virtual void seekg(Int64 pos) override
 	{
 		if (pos >= m_Size)
 		{
@@ -84,13 +84,13 @@ public:
 		m_Index = pos;
 	}
 
-	virtual void clear()
+	virtual void clear() override
 	{
 		// We know now error state since everything is already in memory.
 	}
 };
 
-b3_result b3Tx::b3ParseOpenEXR(b3_u08 * buffer, b3_size size)
+b3_result b3Tx::b3ParseOpenEXR(const b3_u08 * buffer, b3_size size)
 {
 	b3_result result = B3_ERROR;
 
