@@ -8,9 +8,11 @@ include(../common.pri)
 
 target.path = $$BLZ3_LIB
 
-TARGET      = b3Image
-PKGCONFIG   = OpenEXR
-INSTALLS   += target
+TARGET          = b3Image
+PKGCONFIG       = @PKG_LIST@
+INSTALLS       += target
+
+QMAKE_CXXFLAGS += @EXRFLAGS@
 
 message("*** Blizzard III image processing library $$VERSION ***")
 

@@ -312,6 +312,7 @@ AC_CONFIG_FILES([
 	src/system/Makefile
 	src/base/Makefile
 	src/image/Makefile
+	src/image/image.pro
 	src/raytrace/Makefile
 	src/test_unix/Makefile
 	src/OpenGL/Makefile
