@@ -626,6 +626,22 @@ ac_func_list=
 ac_header_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+HAVE_LIBAVCODEC_FALSE
+HAVE_LIBAVCODEC_TRUE
+HAVE_LIBAVFORMAT_FALSE
+HAVE_LIBAVFORMAT_TRUE
+HAVE_LIBAVUTIL_FALSE
+HAVE_LIBAVUTIL_TRUE
+HAVE_LIBSWSCALE_FALSE
+HAVE_LIBSWSCALE_TRUE
+HAVE_LIBEXIV2_FALSE
+HAVE_LIBEXIV2_TRUE
+HAVE_LIBPNG_FALSE
+HAVE_LIBPNG_TRUE
+HAVE_LIBJPEG_FALSE
+HAVE_LIBJPEG_TRUE
+HAVE_LIBTIFF_FALSE
+HAVE_LIBTIFF_TRUE
 OPENEXR_LIBS
 OPENEXR_CFLAGS
 PKG_CONFIG_LIBDIR
@@ -8730,6 +8746,72 @@ _ACEOF
 fi
 
 
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libtiff5"; then
+  HAVE_LIBTIFF_TRUE=
+  HAVE_LIBTIFF_FALSE='#'
+else
+  HAVE_LIBTIFF_TRUE='#'
+  HAVE_LIBTIFF_FALSE=
+fi
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"; then
+  HAVE_LIBJPEG_TRUE=
+  HAVE_LIBJPEG_FALSE='#'
+else
+  HAVE_LIBJPEG_TRUE='#'
+  HAVE_LIBJPEG_FALSE=
+fi
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"; then
+  HAVE_LIBPNG_TRUE=
+  HAVE_LIBPNG_FALSE='#'
+else
+  HAVE_LIBPNG_TRUE='#'
+  HAVE_LIBPNG_FALSE=
+fi
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libexiv2-14|libexiv2-22|libexiv2-27"; then
+  HAVE_LIBEXIV2_TRUE=
+  HAVE_LIBEXIV2_FALSE='#'
+else
+  HAVE_LIBEXIV2_TRUE='#'
+  HAVE_LIBEXIV2_FALSE=
+fi
+
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"; then
+  HAVE_LIBSWSCALE_TRUE=
+  HAVE_LIBSWSCALE_FALSE='#'
+else
+  HAVE_LIBSWSCALE_TRUE='#'
+  HAVE_LIBSWSCALE_FALSE=
+fi
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"; then
+  HAVE_LIBAVUTIL_TRUE=
+  HAVE_LIBAVUTIL_FALSE='#'
+else
+  HAVE_LIBAVUTIL_TRUE='#'
+  HAVE_LIBAVUTIL_FALSE=
+fi
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"; then
+  HAVE_LIBAVFORMAT_TRUE=
+  HAVE_LIBAVFORMAT_FALSE='#'
+else
+  HAVE_LIBAVFORMAT_TRUE='#'
+  HAVE_LIBAVFORMAT_FALSE=
+fi
+
+ if DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"; then
+  HAVE_LIBAVCODEC_TRUE=
+  HAVE_LIBAVCODEC_FALSE='#'
+else
+  HAVE_LIBAVCODEC_TRUE='#'
+  HAVE_LIBAVCODEC_FALSE=
+fi
+
+
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -9715,6 +9797,38 @@ LIBOBJS=$ac_libobjs
 LTLIBOBJS=$ac_ltlibobjs
 
 
+if test -z "${HAVE_LIBTIFF_TRUE}" && test -z "${HAVE_LIBTIFF_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBTIFF\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBJPEG_TRUE}" && test -z "${HAVE_LIBJPEG_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBJPEG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBPNG_TRUE}" && test -z "${HAVE_LIBPNG_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBPNG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBEXIV2_TRUE}" && test -z "${HAVE_LIBEXIV2_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBEXIV2\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBSWSCALE_TRUE}" && test -z "${HAVE_LIBSWSCALE_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBSWSCALE\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBAVUTIL_TRUE}" && test -z "${HAVE_LIBAVUTIL_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBAVUTIL\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBAVFORMAT_TRUE}" && test -z "${HAVE_LIBAVFORMAT_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBAVFORMAT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBAVCODEC_TRUE}" && test -z "${HAVE_LIBAVCODEC_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBAVCODEC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 
 : "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0
