@@ -273,6 +273,8 @@ bool b3Date::b3Update()
 	return time_code != -1;
 }
 
+#ifndef __cpp_impl_three_way_comparison
+
 // Comparisons
 bool b3Date::operator<(const b3Date & other) const
 {
@@ -289,17 +291,19 @@ bool b3Date::operator==(const b3Date & comp) const
 	return time_code == comp.time_code;
 }
 
-bool b3Date::operator !=(const b3Date & comp) const
+bool b3Date::operator!=(const b3Date & comp) const
 {
-	return time_code != comp.time_code;
+	return !operator==(comp);
 }
 
 bool b3Date::operator>=(const b3Date & comp) const
 {
-	return time_code >= comp.time_code;
+	return comp.operator<=(*this);
 }
 
 bool b3Date::operator>(const b3Date & comp) const
 {
-	return time_code > comp.time_code;
+	return comp.operator<(*this);
 }
+
+#endif

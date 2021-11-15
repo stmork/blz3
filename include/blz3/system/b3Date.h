@@ -20,6 +20,10 @@
 #ifndef B3_SYSTEM_DATE_H
 #define B3_SYSTEM_DATE_H
 
+#ifdef __cpp_impl_three_way_comparison
+#include <compare>
+#endif
+
 #include <time.h>
 #include "blz3/system/b3Exception.h"
 
@@ -264,6 +268,13 @@ public:
 	}
 
 	/////////////////////////////// Comparisons
+
+#ifdef __cpp_impl_three_way_comparison
+	inline std::strong_odering operator<=>(const b3Date & date) const
+	{
+		return time_code - date.time_code;
+	}
+#else
 	/**
 	 * This operator returns a non zero value if this instance is smaller than the given date.
 	 *
@@ -305,6 +316,7 @@ public:
 	 * @param date The right hand date to compare to.
 	 */
 	bool operator>(const b3Date & date) const;
+#endif
 
 private:
 	void b3LocalTime();
