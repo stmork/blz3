@@ -270,7 +270,7 @@ public:
 	/////////////////////////////// Comparisons
 
 #ifdef __cpp_impl_three_way_comparison
-	inline std::strong_odering operator<=>(const b3Date & date) const
+	inline std::strong_ordering operator<=>(const b3Date & date) const
 	{
 		return time_code - date.time_code;
 	}
