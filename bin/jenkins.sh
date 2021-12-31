@@ -20,8 +20,9 @@ mkdir -p ${BLZ3_DEBIAN_DEV}/usr/include
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/lib
 mkdir -p ${BLZ3_DEBIAN_DEV}/DEBIAN
 
-export CXXFLAGS="-O3 -s"
-CFLAGS="${CXXFLAGS}"
+export OFLAGS="-O3 -s"
+export CFLAGS="${OFLAGS}"
+export CXXFLAGS="${OFLAGS}"
 unset CPPFLAGS
 
 set -e

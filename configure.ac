@@ -68,7 +68,7 @@ AX_CHECK_COMPILE_FLAG([-Wall], [CXXFLAGS="$CXXFLAGS -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wextra], [CXXFLAGS="$CXXFLAGS -Wextra"])
 AX_CHECK_COMPILE_FLAG([-Wshadow], [CXXFLAGS="$CXXFLAGS -Wshadow"])
 AX_CHECK_COMPILE_FLAG([-Wsuggest-override], [CXXFLAGS="$CXXFLAGS -Wsuggest-override"])
-AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
+# AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
 AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
 AX_CHECK_COMPILE_FLAG([-std=gnu++1z], [STDFLAGS="$STDFLAGS -std=gnu++1z"])
 CFLAGS="$CFLAGS $MFLAGS"
