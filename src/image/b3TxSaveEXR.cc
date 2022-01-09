@@ -85,7 +85,7 @@ public:
 			b3_color  *  data = m_Tx->b3GetHdrData();
 			Header       header(m_Tx->xSize, m_Tx->ySize);
 
-			header.compression() = ZIP_COMPRESSION;
+			header.compression() = PIZ_COMPRESSION;
 			header.channels().insert("R", Channel(FLOAT));
 			header.channels().insert("G", Channel(FLOAT));
 			header.channels().insert("B", Channel(FLOAT));
@@ -93,6 +93,14 @@ public:
 			OutputFile   file(*this, header);
 			FrameBuffer  fb;
 
+#if 0
+			std::for_each(data, data + m_Tx->xSize * m_Tx->ySize, [](b3_color & color)
+			{
+				color.r = pow(color.r, 2.2);
+				color.g = pow(color.g, 2.2);
+				color.b = pow(color.b, 2.2);
+			});
+#endif
 			fb.insert("R", Slice(FLOAT, (char *)&data->r, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
 			fb.insert("G", Slice(FLOAT, (char *)&data->g, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
 			fb.insert("B", Slice(FLOAT, (char *)&data->b, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
