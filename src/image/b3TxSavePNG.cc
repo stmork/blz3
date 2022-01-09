@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSavePNG.cc $
-**	$Release:	Dortmund 2021 $
+**	$Release:	Dortmund 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -22,6 +22,13 @@
 *************************************************************************/
 
 #include "b3TxSaveInfo.h"
+#include "blz3/image/b3TxExif.h"
+
+/*************************************************************************
+**                                                                      **
+**                        PNG                                           **
+**                                                                      **
+*************************************************************************/
 
 #ifdef HAVE_PNG_H
 
@@ -109,53 +116,61 @@ void b3InfoPNG::b3Flush(png_structp png_ptr)
 	png->m_File.b3Flush();
 }
 
-b3_result b3Tx::b3SavePNG(const char * filename)
+b3_result b3Tx::b3SavePNG(
+	const char * filename,
+	b3TxExif  *  exif)
 {
-	b3InfoPNG png(this, filename);
+	b3PrintF(B3LOG_FULL, "Saving PNG: %s\n", filename);
 
-	/* write header */
-	if (setjmp(png_jmpbuf(png)))
 	{
-		b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during write image header!");
-		B3_THROW(b3TxException, B3_TX_ERROR);
-	}
+		b3InfoPNG png(this, filename);
 
-	png_set_IHDR(png, png, xSize, ySize, 8,
-		PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
-		PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-	png_write_info(png, png);
-	const size_t channels = png_get_channels(png, png);
-
-	/* write bytes */
-	if (setjmp(png_jmpbuf(png)))
-	{
-		b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during write image data!");
-		B3_THROW(b3TxException, B3_TX_ERROR);
-	}
-
-	for (b3_res y = 0; y < ySize; y++)
-	{
-		b3_pkd_color row[xSize];
-		png_byte     bytes[xSize * channels];
-		png_bytep    ptr = bytes;
-
-		b3GetRow(row, y);
-		for (b3_res x = 0; x < xSize; x++)
+		/* write header */
+		if (setjmp(png_jmpbuf(png)))
 		{
-			png.b3Convert(row[x], ptr);
-			ptr += channels;
+			b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during write image header!");
+			B3_THROW(b3TxException, B3_TX_ERROR);
 		}
-		png_write_row(png, bytes);
-	}
 
-	/* end write */
-	if (setjmp(png_jmpbuf(png)))
-	{
-		b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during finalizing image data!");
-		B3_THROW(b3TxException, B3_TX_ERROR);
-	}
+		png_set_IHDR(png, png, xSize, ySize, 8,
+			PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE,
+			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+		png_write_info(png, png);
+		const size_t channels = png_get_channels(png, png);
 
-	png_write_end(png, png);
+		/* write bytes */
+		if (setjmp(png_jmpbuf(png)))
+		{
+			b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during write image data!");
+			B3_THROW(b3TxException, B3_TX_ERROR);
+		}
+
+		for (b3_res y = 0; y < ySize; y++)
+		{
+			b3_pkd_color row[xSize];
+			png_byte     bytes[xSize * channels];
+			png_bytep    ptr = bytes;
+
+			b3GetRow(row, y);
+			for (b3_res x = 0; x < xSize; x++)
+			{
+				png.b3Convert(row[x], ptr);
+				ptr += channels;
+			}
+			png_write_row(png, bytes);
+		}
+
+		/* end write */
+		if (setjmp(png_jmpbuf(png)))
+		{
+			b3PrintF(B3LOG_NORMAL, "IMG PNG  # Error during finalizing image data!");
+			B3_THROW(b3TxException, B3_TX_ERROR);
+		}
+
+		png_write_end(png, png);
+	}
+	b3SaveExif(filename, exif);
+
 	return B3_OK;
 }
 

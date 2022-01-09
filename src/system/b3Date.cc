@@ -298,12 +298,12 @@ bool b3Date::operator!=(const b3Date & comp) const
 
 bool b3Date::operator>=(const b3Date & comp) const
 {
-	return comp.operator<=(*this);
+	return comp.operator <= (*this);
 }
 
 bool b3Date::operator>(const b3Date & comp) const
 {
-	return comp.operator<(*this);
+	return comp.operator < (*this);
 }
 
 #endif
