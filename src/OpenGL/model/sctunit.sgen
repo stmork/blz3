@@ -1,4 +1,4 @@
-GeneratorModel for sctunit::cpp 
+GeneratorModel for sctunit::cpp
 {
 	const PROJECT : string = "OpenGL"
 	const FOLDER  : string = "src-test"
@@ -16,7 +16,7 @@ GeneratorModel for sctunit::cpp
 			licenseText =
 			"Generated with YAKINDU statechart tools\n" +
 			" *\n" +
-			" *   (C) Copyright  2001 - 2021  Steffen A. Mork\n" +
+			" *   (C) Copyright  2001 - 2022  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
 	}
