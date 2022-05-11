@@ -144,7 +144,7 @@ testclass MouseSelect for statechart MouseSelect
 		assert called gui.updateScrolling()
 		assert active(main_region.Normal)
 	}
-	
+
 	@Test
 	operation testMouseMove()
 	{

@@ -12,17 +12,16 @@
 **
 */
 
-#pragma once
+#ifndef POINT_H_
+#define POINT_H_
 
-#ifndef POINT_H
-#define POINT_H
+#include <cstdint>
+#include "sc_types.h"
 
-#include <stdint.h>
-
-typedef struct sct_point
+typedef struct
 {
-	int x;
-	int y;
+	sc::integer x;
+	sc::integer y;
 } SCT_point;
 
 #endif
