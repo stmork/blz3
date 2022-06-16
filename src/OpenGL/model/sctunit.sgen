@@ -22,9 +22,9 @@ GeneratorModel for sctunit::cpp
 
 		feature IdentifierSettings
 		{
+			testFilenameExtension = "cpp"
 			sourceFilenameExtension = "cpp"
 			headerFilenameExtension = "h"
-			testFilenameExtension = "cpp"
 		}
 	}
 }
