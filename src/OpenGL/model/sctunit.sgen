@@ -19,5 +19,12 @@ GeneratorModel for sctunit::cpp
 			" *   (C) Copyright  2001 - 2022  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
+
+		feature IdentifierSettings
+		{
+			sourceFilenameExtension = "cpp"
+			headerFilenameExtension = "h"
+			testFilenameExtension = "cpp"
+		}
 	}
 }

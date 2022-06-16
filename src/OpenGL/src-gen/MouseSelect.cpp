@@ -1,27 +1,28 @@
 /* Generated with YAKINDU statechart tools
  *
- *   (C) Copyright  2001 - 2021  Steffen A. Mork
+ *   (C) Copyright  2001 - 2022  Steffen A. Mork
  *               All rights reserved */
 
 #include "MouseSelect.h"
 
-/*! \file Implementation of the state machine 'MouseSelect'
+/*! \file
+Implementation of the state machine 'MouseSelect'
 */
 
 
 
 
-MouseSelect::MouseSelect()  :
-p1(),
-p2(),
-ifaceGui(sc_null),
-ifaceView(sc_null),
-isExecuting(false)
+MouseSelect::MouseSelect() :
+	p1(),
+	p2(),
+	ifaceGui(sc_null),
+	ifaceView(sc_null),
+	isExecuting(false)
 {
 	this->ifaceGui.parent = this;
 	this->ifaceView.parent = this;
-	for (sc_ushort i = 0; i < maxOrthogonalStates; ++i)
-		stateConfVector[i] = MouseSelect_last_state;
+	for (sc_ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
+		stateConfVector[state_vec_pos] = MouseSelect_last_state;
 	
 	clearInEvents();
 	clearOutEvents();
@@ -31,24 +32,24 @@ MouseSelect::~MouseSelect()
 {
 }
 
-MouseSelect::Gui::Gui(MouseSelect* n_parent) :
-onSelect_raised(false),
-onDisable_raised(false),
-mouseDown_raised(false),
-mouseDown_value(),
-mouseMove_raised(false),
-mouseMove_value(),
-mouseUp_raised(false),
-mouseUp_value(),
-selectionEnd_raised(false),
-parent(n_parent),
-ifaceGuiOperationCallback(sc_null)
+MouseSelect::Gui::Gui(MouseSelect* parent_) :
+	onSelect_raised(false),
+	onDisable_raised(false),
+	mouseDown_raised(false),
+	mouseDown_value(),
+	mouseMove_raised(false),
+	mouseMove_value(),
+	mouseUp_raised(false),
+	mouseUp_value(),
+	selectionEnd_raised(false),
+	parent(parent_),
+	ifaceGuiOperationCallback(sc_null)
 {
 }
 
-MouseSelect::View::View(MouseSelect* n_parent) :
-parent(n_parent),
-ifaceViewOperationCallback(sc_null)
+MouseSelect::View::View(MouseSelect* parent_) :
+	parent(parent_),
+	ifaceViewOperationCallback(sc_null)
 {
 }
 
@@ -84,6 +85,7 @@ void MouseSelect::dispatch_event(SctEvent * event)
 			break;
 		}
 		default:
+			/* do nothing */
 			break;
 	}
 	delete event;
@@ -128,6 +130,7 @@ void MouseSelect::Gui::dispatch_event(SctEvent * event)
 			break;
 		}
 		default:
+			/* do nothing */
 			break;
 	}
 }
@@ -136,6 +139,7 @@ void MouseSelect::View::dispatch_event(SctEvent * event)
 	switch(event->name)
 	{
 		default:
+			/* do nothing */
 			break;
 	}
 }
@@ -144,6 +148,7 @@ void MouseSelect::internal_dispatch_event(SctEvent * event)
 	switch(event->name)
 	{
 		default:
+			/* do nothing */
 			break;
 	}
 }
@@ -177,19 +182,32 @@ sc_boolean MouseSelect::isStateActive(MouseSelectStates state) const
 {
 	switch (state)
 	{
-		case main_region_Normal : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_NORMAL] == main_region_Normal
-			);
-		case main_region_Selection : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_SELECTION] == main_region_Selection
-			);
-		case main_region_Moving : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_MOVING] == main_region_Moving
-			);
-		case main_region_Panning : 
-			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_PANNING] == main_region_Panning
-			);
-		default: return false;
+		case main_region_Normal :
+		{
+			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_NORMAL] == main_region_Normal);
+			break;
+		}
+		case main_region_Selection :
+		{
+			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_SELECTION] == main_region_Selection);
+			break;
+		}
+		case main_region_Moving :
+		{
+			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_MOVING] == main_region_Moving);
+			break;
+		}
+		case main_region_Panning :
+		{
+			return (sc_boolean) (stateConfVector[SCVI_MAIN_REGION_PANNING] == main_region_Panning);
+			break;
+		}
+		default:
+		{
+			/* State is not active*/
+			return false;
+			break;
+		}
 	}
 }
 
@@ -201,7 +219,7 @@ MouseSelect::Gui* MouseSelect::gui()
 void MouseSelect::Gui::raiseOnSelect()
 {
 	parent->inEventQueue.push_back(new SctEvent_Gui_onSelect(Gui_onSelect));
-	parent->runCycle();
+        parent->runCycle();
 }
 void MouseSelect::Gui::internal_raiseOnSelect()
 {
@@ -211,43 +229,43 @@ void MouseSelect::Gui::internal_raiseOnSelect()
 void MouseSelect::Gui::raiseOnDisable()
 {
 	parent->inEventQueue.push_back(new SctEvent_Gui_onDisable(Gui_onDisable));
-	parent->runCycle();
+        parent->runCycle();
 }
 void MouseSelect::Gui::internal_raiseOnDisable()
 {
 	onDisable_raised = true;
 }
 /* Functions for event mouseDown in interface Gui */
-void MouseSelect::Gui::raiseMouseDown(SCT_point value)
+void MouseSelect::Gui::raiseMouseDown(SCT_point mouseDown_)
 {
-	parent->inEventQueue.push_back(new SctEvent_Gui_mouseDown(Gui_mouseDown, value));
-	parent->runCycle();
+	parent->inEventQueue.push_back(new SctEvent_Gui_mouseDown(Gui_mouseDown, mouseDown_));
+        parent->runCycle();
 }
-void MouseSelect::Gui::internal_raiseMouseDown(SCT_point value)
+void MouseSelect::Gui::internal_raiseMouseDown(SCT_point mouseDown_)
 {
-	mouseDown_value = value;
+	mouseDown_value = mouseDown_;
 	mouseDown_raised = true;
 }
 /* Functions for event mouseMove in interface Gui */
-void MouseSelect::Gui::raiseMouseMove(SCT_point value)
+void MouseSelect::Gui::raiseMouseMove(SCT_point mouseMove_)
 {
-	parent->inEventQueue.push_back(new SctEvent_Gui_mouseMove(Gui_mouseMove, value));
-	parent->runCycle();
+	parent->inEventQueue.push_back(new SctEvent_Gui_mouseMove(Gui_mouseMove, mouseMove_));
+        parent->runCycle();
 }
-void MouseSelect::Gui::internal_raiseMouseMove(SCT_point value)
+void MouseSelect::Gui::internal_raiseMouseMove(SCT_point mouseMove_)
 {
-	mouseMove_value = value;
+	mouseMove_value = mouseMove_;
 	mouseMove_raised = true;
 }
 /* Functions for event mouseUp in interface Gui */
-void MouseSelect::Gui::raiseMouseUp(SCT_point value)
+void MouseSelect::Gui::raiseMouseUp(SCT_point mouseUp_)
 {
-	parent->inEventQueue.push_back(new SctEvent_Gui_mouseUp(Gui_mouseUp, value));
-	parent->runCycle();
+	parent->inEventQueue.push_back(new SctEvent_Gui_mouseUp(Gui_mouseUp, mouseUp_));
+        parent->runCycle();
 }
-void MouseSelect::Gui::internal_raiseMouseUp(SCT_point value)
+void MouseSelect::Gui::internal_raiseMouseUp(SCT_point mouseUp_)
 {
-	mouseUp_value = value;
+	mouseUp_value = mouseUp_;
 	mouseUp_raised = true;
 }
 /* Functions for event selectionEnd in interface Gui */
@@ -271,29 +289,8 @@ void MouseSelect::View::setOperationCallback(OperationCallback* operationCallbac
 {
 	ifaceViewOperationCallback = operationCallback;
 }
-SCT_point MouseSelect::getP1() const
-{
-	return p1;
-}
-
-void MouseSelect::setP1(SCT_point value)
-{
-	this->p1 = value;
-}
-
-SCT_point MouseSelect::getP2() const
-{
-	return p2;
-}
-
-void MouseSelect::setP2(SCT_point value)
-{
-	this->p2 = value;
-}
-
 
 // implementations of all internal functions
-
 /* Entry action for state 'Moving'. */
 void MouseSelect::enact_main_region_Moving()
 {
@@ -408,7 +405,9 @@ void MouseSelect::exseq_main_region()
 			exseq_main_region_Panning();
 			break;
 		}
-		default: break;
+		default:
+			/* do nothing */
+			break;
 	}
 }
 
@@ -604,7 +603,9 @@ void MouseSelect::microStep() {
 			main_region_Panning_react(-1);
 			break;
 		}
-		default: break;
+		default:
+			/* do nothing */
+			break;
 	}
 }
 
@@ -650,5 +651,8 @@ void MouseSelect::exit() {
 	isExecuting = false;
 }
 
-
+/* Can be used by the client code to trigger a run to completion step without raising an event. */
+void MouseSelect::triggerWithoutEvent() {
+	runCycle();
+}
 
