@@ -5,7 +5,7 @@
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**      (C) Copyright 2001 - 2022  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -18,7 +18,7 @@
 #include <cstdint>
 #include "sc_types.h"
 
-typedef struct
+typedef struct sct_point
 {
 	sc::integer x;
 	sc::integer y;

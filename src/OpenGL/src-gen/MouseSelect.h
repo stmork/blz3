@@ -12,7 +12,7 @@ Forward declaration for the MouseSelect state machine.
 class MouseSelect;
 
 
-#include "point.h"
+#include <point.h>
 #include <deque>
 #include "sc_types.h"
 #include "sc_rxcpp.h"
