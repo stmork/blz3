@@ -15,7 +15,7 @@ HEADERS += \
 
 SOURCES += \
 	src-gen/MouseSelect.cpp \
-	src-test/MouseSelectTest.cc \
+	src-test/MouseSelectTest.cpp \
 	src-test/sc_runner.cpp
 
 INCLUDEPATH += src-gen

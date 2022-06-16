@@ -21,9 +21,9 @@ MouseSelect::MouseSelect() :
 {
 	this->ifaceGui.parent = this;
 	this->ifaceView.parent = this;
-	for (sc::ushort i = 0; i < maxOrthogonalStates; ++i)
+	for (sc::ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
 	{
-		stateConfVector[i] = MouseSelect::State::NO_STATE;
+		stateConfVector[state_vec_pos] = MouseSelect::State::NO_STATE;
 	}
 
 	clearInEvents();
@@ -34,7 +34,7 @@ MouseSelect::~MouseSelect()
 {
 }
 
-MouseSelect::Gui::Gui(MouseSelect * parent) :
+MouseSelect::Gui::Gui(MouseSelect * parent_) :
 	onSelect_raised(false),
 	onDisable_raised(false),
 	mouseDown_raised(false),
@@ -44,13 +44,13 @@ MouseSelect::Gui::Gui(MouseSelect * parent) :
 	mouseUp_raised(false),
 	mouseUp_value(),
 	selectionEnd_raised(false),
-	parent(parent),
+	parent(parent_),
 	ifaceGuiOperationCallback(nullptr)
 {
 }
 
-MouseSelect::View::View(MouseSelect * parent) :
-	parent(parent),
+MouseSelect::View::View(MouseSelect * parent_) :
+	parent(parent_),
 	ifaceViewOperationCallback(nullptr)
 {
 }
@@ -124,16 +124,10 @@ void MouseSelect::dispatchEvent(MouseSelect::EventInstance * event)
 		}
 
 	default:
+		/* do nothing */
 		break;
 	}
 	delete event;
-}
-
-
-/*! Can be used by the client code to trigger a run to completion step without raising an event. */
-void MouseSelect::triggerWithoutEvent()
-{
-	runCycle();
 }
 
 
@@ -191,6 +185,7 @@ bool MouseSelect::isStateActive(State state) const
 		}
 	default:
 		{
+			/* State is not active*/
 			return false;
 			break;
 		}
@@ -220,23 +215,23 @@ void MouseSelect::Gui::raiseOnDisable()
 }
 
 
-void MouseSelect::Gui::raiseMouseDown(SCT_point value)
+void MouseSelect::Gui::raiseMouseDown(SCT_point mouseDown_)
 {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseDown, value));
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseDown, mouseDown_));
 	parent->runCycle();
 }
 
 
-void MouseSelect::Gui::raiseMouseMove(SCT_point value)
+void MouseSelect::Gui::raiseMouseMove(SCT_point mouseMove_)
 {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseMove, value));
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseMove, mouseMove_));
 	parent->runCycle();
 }
 
 
-void MouseSelect::Gui::raiseMouseUp(SCT_point value)
+void MouseSelect::Gui::raiseMouseUp(SCT_point mouseUp_)
 {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseUp, value));
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseUp, mouseUp_));
 	parent->runCycle();
 }
 
@@ -262,7 +257,6 @@ void MouseSelect::View::setOperationCallback(OperationCallback * operationCallba
 }
 
 // implementations of all internal functions
-
 /* Entry action for state 'Moving'. */
 void MouseSelect::enact_main_region_Moving()
 {
@@ -378,6 +372,7 @@ void MouseSelect::exseq_main_region()
 			break;
 		}
 	default:
+		/* do nothing */
 		break;
 	}
 }
@@ -588,6 +583,7 @@ void MouseSelect::microStep()
 			break;
 		}
 	default:
+		/* do nothing */
 		break;
 	}
 }
@@ -638,5 +634,9 @@ void MouseSelect::exit()
 	isExecuting = false;
 }
 
-
+/* Can be used by the client code to trigger a run to completion step without raising an event. */
+void MouseSelect::triggerWithoutEvent()
+{
+	runCycle();
+}
 

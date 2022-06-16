@@ -100,11 +100,11 @@ public:
 		/*! Raises the in event 'onDisable' of interface scope 'gui'. */
 		void raiseOnDisable();
 		/*! Raises the in event 'mouseDown' of interface scope 'gui'. */
-		void raiseMouseDown(SCT_point value);
+		void raiseMouseDown(SCT_point mouseDown_);
 		/*! Raises the in event 'mouseMove' of interface scope 'gui'. */
-		void raiseMouseMove(SCT_point value);
+		void raiseMouseMove(SCT_point mouseMove_);
 		/*! Raises the in event 'mouseUp' of interface scope 'gui'. */
-		void raiseMouseUp(SCT_point value);
+		void raiseMouseUp(SCT_point mouseUp_);
 		/*! Check if event 'selectionEnd' of interface scope 'gui' is raised. */
 		bool isRaisedSelectionEnd();
 		/*! Get observable for event 'selectionEnd' of interface scope 'gui'. */
