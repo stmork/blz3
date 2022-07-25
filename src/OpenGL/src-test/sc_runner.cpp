@@ -20,7 +20,8 @@ SctUnitRunner::SctUnitRunner(
 		current_time_ms(0),
 		timer_queue()
 {
-	if(!event_driven) {
+	if (!event_driven)
+	{
 		SctTimer runCycle(
 			cycle_period,
 			true,
@@ -37,28 +38,33 @@ void SctUnitRunner::proceed_time(sc::integer time_ms)
 	sc::integer stop_time_ms = current_time_ms + time_ms;
 	bool processed_timer = false;
 
-	do {
-		
+	do
+	{
+
 		// first assume we won't process a timer
 		processed_timer = false;
 
 		// and then check if there is a timer to process
-		if( ! timer_queue.empty()) {
+		if ( ! timer_queue.empty())
+		{
 			SctTimer next = timer_queue.front();
 
-			if(next.abs_time_ms <= stop_time_ms) {
+			if (next.abs_time_ms <= stop_time_ms)
+			{
 				timer_queue.pop_front();
 				current_time_ms = next.abs_time_ms;
 
 				/* Repeat and reinsert timer? */
-				if(next.periodic) {
+				if (next.periodic)
+				{
 					insert_timer(next);
 				}
 				processed_timer = true;
 			}
 		}
 
-	} while ( processed_timer );
+	}
+	while ( processed_timer );
 
 	// As a postcondition the current time is the time after proceeding the specified period.
 	current_time_ms = stop_time_ms;
@@ -73,15 +79,16 @@ void SctUnitRunner::proceed_cycles(sc::integer cycles)
 			return;
 		}
 		SctTimer next = timer_queue.front();
-		
+
 		timer_queue.pop_front();
-		
+
 		current_time_ms = next.abs_time_ms;
-		
+
 		std::list<SctTimer>::iterator i_timer;
-		
+
 		/* Repeat and reinsert timer? */
-		if(next.periodic) {
+		if (next.periodic)
+		{
 			insert_timer(next);
 		}
 	}
@@ -90,31 +97,35 @@ void SctUnitRunner::proceed_cycles(sc::integer cycles)
 void SctUnitRunner::cancel()
 {
 	std::list<SctTimer>::iterator i_timer = timer_queue.begin();
-	while(i_timer != timer_queue.end()) {
+	while (i_timer != timer_queue.end())
+	{
 		i_timer = timer_queue.erase(i_timer);
 	}
 }
-void SctUnitRunner::insert_timer(SctTimer timer) 
+void SctUnitRunner::insert_timer(SctTimer timer)
 {
 	timer.abs_time_ms = current_time_ms + timer.rel_time_ms;
-	
+
 	std::list<SctTimer>::iterator i_timer;
-	
+
 	/* Either the list is empty, so we put the new timer in directly... */
-	if(timer_queue.empty()) {
+	if (timer_queue.empty())
+	{
 		timer_queue.push_front(timer);
 		return;
 	}
-	
-	
+
+
 	/* Or we put it before some other timer that needs to be raised after this one */
-	for(i_timer = timer_queue.begin(); i_timer != timer_queue.end(); ++i_timer) {
-		if(timer.compare(&(*i_timer)) < 0) {
+	for (i_timer = timer_queue.begin(); i_timer != timer_queue.end(); ++i_timer)
+	{
+		if (timer.compare(&(*i_timer)) < 0)
+		{
 			timer_queue.insert(i_timer, timer);
 			return;
 		}
 	}
-	
+
 	/* Or it gets put into the back of the list. */
 	timer_queue.push_back(timer);
 }
@@ -132,6 +143,7 @@ SctUnitRunner::SctTimer::SctTimer(
 		pt_evid(evid),
 		priority(timer_priority),
 		is_runcycle(timer_is_runcycle)
+
 {}
 
 sc::integer SctUnitRunner::SctTimer::compare(SctTimer * other)
@@ -139,7 +151,9 @@ sc::integer SctUnitRunner::SctTimer::compare(SctTimer * other)
 	sc::integer result = abs_time_ms - other->abs_time_ms;
 	if(result != 0) {
 		return result;
-	} else {
+	}
+	else
+	{
 		// bigger priority needs to be raised first
 		result = other->priority - priority;
 		return result;
