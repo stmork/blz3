@@ -22,9 +22,8 @@ MouseSelect::MouseSelect() :
 	this->ifaceGui.parent = this;
 	this->ifaceView.parent = this;
 	for (sc::ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
-	{
 		stateConfVector[state_vec_pos] = MouseSelect::State::NO_STATE;
-	}
+	
 	clearInEvents();
 	clearOutEvents();
 }
@@ -44,7 +43,7 @@ MouseSelect::Gui::Gui(MouseSelect* parent_) :
 	mouseUp_value(),
 	selectionEnd_raised(false),
 	parent(parent_),
-	ifaceGuiOperationCallback(nullptr)
+	ifaceGuiOperationCallback()
 {
 }
 
@@ -64,7 +63,7 @@ MouseSelect::EventInstance* MouseSelect::getNextEvent()
 		nextEvent = incomingEventQueue.front();
 		incomingEventQueue.pop_front();
 	}
-
+	
 	return nextEvent;
 	
 }					
@@ -131,13 +130,12 @@ bool MouseSelect::isActive() const
 	return stateConfVector[0] != MouseSelect::State::NO_STATE;
 }
 
-/*
+/* 
  * Always returns 'false' since this state machine can never become final.
  */
 bool MouseSelect::isFinal() const
 {
-	return false;
-}
+   return false;}
 
 bool MouseSelect::check() const {
 	if (this->ifaceGui.ifaceGuiOperationCallback == nullptr) {
@@ -183,7 +181,7 @@ bool MouseSelect::isStateActive(State state) const
 	}
 }
 
-MouseSelect::Gui * MouseSelect::gui()
+MouseSelect::Gui* MouseSelect::gui()
 {
 	return &ifaceGui;
 }
@@ -235,7 +233,7 @@ MouseSelect::View* MouseSelect::view()
 {
 	return &ifaceView;
 }
-void MouseSelect::View::setOperationCallback(OperationCallback * operationCallback)
+void MouseSelect::View::setOperationCallback(OperationCallback* operationCallback)
 {
 	ifaceViewOperationCallback = operationCallback;
 }
@@ -333,7 +331,7 @@ void MouseSelect::exseq_main_region()
 {
 	/* Default exit sequence for region main region */
 	/* Handle exit of all possible states (of MouseSelect.main_region) at position 0... */
-	switch (stateConfVector[ 0 ])
+	switch(stateConfVector[ 0 ])
 	{
 		case MouseSelect::State::main_region_Normal :
 		{
@@ -377,44 +375,42 @@ sc::integer MouseSelect::main_region_Normal_react(const sc::integer transitioned
 	/* The reactions of state Normal. */
 	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
-	{
+	{ 
 		if (((ifaceGui.onSelect_raised)) && ((!ifaceView.ifaceViewOperationCallback->is3D())))
-		{
+		{ 
 			exseq_main_region_Normal();
 			enseq_main_region_Selection_default();
 			react(0);
 			transitioned_after = 0;
-		}
-		else
+		}  else
 		{
 			if (((ifaceGui.onSelect_raised)) && ((ifaceView.ifaceViewOperationCallback->is3D())))
-			{
+			{ 
 				exseq_main_region_Normal();
 				ifaceGui.selectionEnd_observable.next();
 				ifaceGui.selectionEnd_raised = true;
 				enseq_main_region_Normal_default();
 				react(0);
 				transitioned_after = 0;
-			}
-			else
+			}  else
 			{
 				if (((ifaceGui.mouseDown_raised)) && ((!ifaceView.ifaceViewOperationCallback->is3D())))
-				{
+				{ 
 					exseq_main_region_Normal();
 					p2 = ifaceGui.mouseDown_value;
 					ifaceView.ifaceViewOperationCallback->cursorPanning();
 					enseq_main_region_Panning_default();
 					react(0);
 					transitioned_after = 0;
-				}
+				} 
 			}
 		}
-	}
+	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
-	{
+	{ 
 		transitioned_after = react(transitioned_before);
-	}
+	} 
 	return transitioned_after;
 }
 
@@ -422,18 +418,17 @@ sc::integer MouseSelect::main_region_Selection_react(const sc::integer transitio
 	/* The reactions of state Selection. */
 	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
-	{
+	{ 
 		if (ifaceGui.onDisable_raised)
-		{
+		{ 
 			exseq_main_region_Selection();
 			enseq_main_region_Normal_default();
 			react(0);
 			transitioned_after = 0;
-		}
-		else
+		}  else
 		{
 			if (ifaceGui.mouseDown_raised)
-			{
+			{ 
 				exseq_main_region_Selection();
 				p1 = ifaceGui.mouseDown_value;
 				p2 = ifaceGui.mouseDown_value;
@@ -441,14 +436,14 @@ sc::integer MouseSelect::main_region_Selection_react(const sc::integer transitio
 				enseq_main_region_Moving_default();
 				react(0);
 				transitioned_after = 0;
-			}
+			} 
 		}
-	}
+	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
-	{
+	{ 
 		transitioned_after = react(transitioned_before);
-	}
+	} 
 	return transitioned_after;
 }
 
@@ -456,9 +451,9 @@ sc::integer MouseSelect::main_region_Moving_react(const sc::integer transitioned
 	/* The reactions of state Moving. */
 	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
-	{
+	{ 
 		if (ifaceGui.mouseUp_raised)
-		{
+		{ 
 			exseq_main_region_Moving();
 			ifaceGui.selectionEnd_observable.next();
 			ifaceGui.selectionEnd_raised = true;
@@ -467,24 +462,23 @@ sc::integer MouseSelect::main_region_Moving_react(const sc::integer transitioned
 			enseq_main_region_Normal_default();
 			react(0);
 			transitioned_after = 0;
-		}
-		else
+		}  else
 		{
 			if (ifaceGui.mouseMove_raised)
-			{
+			{ 
 				exseq_main_region_Moving();
 				p2 = ifaceGui.mouseMove_value;
 				enseq_main_region_Moving_default();
 				react(0);
 				transitioned_after = 0;
-			}
+			} 
 		}
-	}
+	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
-	{
+	{ 
 		transitioned_after = react(transitioned_before);
-	}
+	} 
 	return transitioned_after;
 }
 
@@ -492,44 +486,41 @@ sc::integer MouseSelect::main_region_Panning_react(const sc::integer transitione
 	/* The reactions of state Panning. */
 	sc::integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
-	{
+	{ 
 		if (ifaceGui.mouseMove_raised)
-		{
+		{ 
 			exseq_main_region_Panning();
 			p2 = ifaceGui.mouseMove_value;
 			ifaceView.ifaceViewOperationCallback->move((p2.x - p1.x), (p2.y - p1.y));
 			enseq_main_region_Panning_default();
 			react(0);
 			transitioned_after = 0;
-		}
-		else
+		}  else
 		{
 			if (ifaceGui.mouseUp_raised)
-			{
+			{ 
 				exseq_main_region_Panning();
 				ifaceView.ifaceViewOperationCallback->cursorArrow();
 				ifaceGui.ifaceGuiOperationCallback->updateScrolling();
 				enseq_main_region_Normal_default();
 				react(0);
 				transitioned_after = 0;
-			}
+			} 
 		}
-	}
+	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
-	{
+	{ 
 		transitioned_after = react(transitioned_before);
-	}
+	} 
 	return transitioned_after;
 }
 
-void MouseSelect::clearOutEvents()
-{
+void MouseSelect::clearOutEvents() {
 	ifaceGui.selectionEnd_raised = false;
 }
 
-void MouseSelect::clearInEvents()
-{
+void MouseSelect::clearInEvents() {
 	ifaceGui.onSelect_raised = false;
 	ifaceGui.onDisable_raised = false;
 	ifaceGui.mouseDown_raised = false;
@@ -537,9 +528,8 @@ void MouseSelect::clearInEvents()
 	ifaceGui.mouseUp_raised = false;
 }
 
-void MouseSelect::microStep()
-{
-	switch (stateConfVector[ 0 ])
+void MouseSelect::microStep() {
+	switch(stateConfVector[ 0 ])
 	{
 		case MouseSelect::State::main_region_Normal :
 		{
@@ -567,18 +557,17 @@ void MouseSelect::microStep()
 	}
 }
 
-void MouseSelect::runCycle()
-{
+void MouseSelect::runCycle() {
 	/* Performs a 'run to completion' step. */
 	if (isExecuting)
-	{
+	{ 
 		return;
-	}
+	} 
 	isExecuting = true;
 	clearOutEvents();
 	dispatchEvent(getNextEvent());
 	do
-	{
+	{ 
 		microStep();
 		clearInEvents();
 		dispatchEvent(getNextEvent());
@@ -586,26 +575,24 @@ void MouseSelect::runCycle()
 	isExecuting = false;
 }
 
-void MouseSelect::enter()
-{
+void MouseSelect::enter() {
 	/* Activates the state machine. */
 	if (isExecuting)
-	{
+	{ 
 		return;
-	}
+	} 
 	isExecuting = true;
 	/* Default enter sequence for statechart MouseSelect */
 	enseq_main_region_default();
 	isExecuting = false;
 }
 
-void MouseSelect::exit()
-{
+void MouseSelect::exit() {
 	/* Deactivates the state machine. */
 	if (isExecuting)
-	{
+	{ 
 		return;
-	}
+	} 
 	isExecuting = true;
 	/* Default exit sequence for statechart MouseSelect */
 	exseq_main_region();
