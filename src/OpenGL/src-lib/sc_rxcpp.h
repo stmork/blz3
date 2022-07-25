@@ -67,7 +67,7 @@ namespace sc
 		{
 
 			subscription(Observer<T> * o) :
-				observer(o), next(sc_null)
+				observer(o), next(nullptr)
 			{
 			}
 
@@ -79,16 +79,16 @@ namespace sc
 		{
 		public:
 			ObservableBase() :
-				subscriptions(sc_null)
+				subscriptions(nullptr)
 			{
 			}
 
 			bool subscribe(subscription<T> * s)
 			{
-				if (s != sc_null && s->observer != sc_null && s->next == sc_null)
+				if (s != nullptr && s->observer != nullptr && s->next == nullptr)
 				{
 					subscription<T> * currentSub = this->subscriptions;
-					s->next = (currentSub != sc_null) ? currentSub : s;
+					s->next = (currentSub != nullptr) ? currentSub : s;
 					this->subscriptions = s;
 					return true;
 				}
@@ -97,18 +97,18 @@ namespace sc
 
 			bool unsubscribe(subscription<T> * s)
 			{
-				if (s != sc_null && this->subscriptions != sc_null)
+				if (s != nullptr && this->subscriptions != nullptr)
 				{
 					if (this->subscriptions == s)
 					{
-						this->subscriptions = (s->next != s) ? s->next : sc_null;
-						s->next = sc_null;
+						this->subscriptions = (s->next != s) ? s->next : nullptr;
+						s->next = nullptr;
 
 						return true;
 					}
 
 					sc::rx::subscription<T> * sub = this->subscriptions;
-					while (sub != sc_null)
+					while (sub != nullptr)
 					{
 						if (sub->next != sub && sub->next == s)
 						{
@@ -116,7 +116,7 @@ namespace sc
 							return true;
 						}
 
-						sub = (sub->next != sub) ? sub->next : sc_null;
+						sub = (sub->next != sub) ? sub->next : nullptr;
 					}
 				}
 				return false;
@@ -136,13 +136,13 @@ namespace sc
 			void next(T value)
 			{
 				subscription<T> * sub = this->subscriptions;
-				while (sub != sc_null)
+				while (sub != nullptr)
 				{
-					if (sub->observer != sc_null)
+					if (sub->observer != nullptr)
 					{
 						sub->observer->next(value);
 					}
-					sub = (sub->next != sub) ? sub->next : sc_null;
+					sub = (sub->next != sub) ? sub->next : nullptr;
 				}
 			}
 
@@ -156,13 +156,13 @@ namespace sc
 			void next()
 			{
 				subscription<void> * sub = this->subscriptions;
-				while (sub != sc_null)
+				while (sub != nullptr)
 				{
-					if (sub->observer != sc_null)
+					if (sub->observer != nullptr)
 					{
 						sub->observer->next();
 					}
-					sub = (sub->next != sub) ? sub->next : sc_null;
+					sub = (sub->next != sub) ? sub->next : nullptr;
 				}
 			}
 

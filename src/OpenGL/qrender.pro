@@ -20,7 +20,7 @@ SOURCES += \
 	qrender.cpp \
 	mainwindow.cpp
 
-HEADERS += point.h \
+HEADERS += model/point.h \
 	src-gen/MouseSelect.h \
 	src-lib/sc_statemachine.h \
 	src-lib/sc_types.h \
@@ -41,7 +41,7 @@ FORMS += \
 RESOURCES += \
 	icons.qrc
 
-INCLUDEPATH += src-lib
+INCLUDEPATH += src-lib model
 LIBS        += -lb3SystemUnix -lb3System -lb3Image -lb3Base -lb3Raytrace
 QMAKE_CLEAN += qrender
 

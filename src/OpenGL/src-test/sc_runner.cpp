@@ -10,15 +10,15 @@
  */
 
 SctUnitRunner::SctUnitRunner(
-	sc::StatemachineInterface * statemachine_,
-	bool event_driven_,
-	sc_integer cycle_period_
-) :
-	statemachine(statemachine_),
-	event_driven(event_driven_),
-	cycle_period(event_driven_ ? -1 : cycle_period_),
-	current_time_ms(0),
-	timer_queue()
+		sc::StatemachineInterface * statemachine_,
+		bool event_driven_,
+		sc::integer cycle_period_
+		) :
+		statemachine(statemachine_),
+		event_driven(event_driven_),
+		cycle_period(event_driven_ ? -1 : cycle_period_),
+		current_time_ms(0),
+		timer_queue()
 {
 	if (!event_driven)
 	{
@@ -33,9 +33,9 @@ SctUnitRunner::SctUnitRunner(
 	}
 }
 
-void SctUnitRunner::proceed_time(sc_integer time_ms)
+void SctUnitRunner::proceed_time(sc::integer time_ms)
 {
-	sc_integer stop_time_ms = current_time_ms + time_ms;
+	sc::integer stop_time_ms = current_time_ms + time_ms;
 	bool processed_timer = false;
 
 	do
@@ -70,14 +70,12 @@ void SctUnitRunner::proceed_time(sc_integer time_ms)
 	current_time_ms = stop_time_ms;
 }
 
-void SctUnitRunner::proceed_cycles(sc_integer cycles)
+void SctUnitRunner::proceed_cycles(sc::integer cycles)
 {
-	sc_integer elapsed_cycles = 0;
-
-	while (elapsed_cycles < cycles)
-	{
-		if (timer_queue.empty())
-		{
+	sc::integer elapsed_cycles = 0;
+		
+	while(elapsed_cycles < cycles) {
+		if(timer_queue.empty()) {
 			return;
 		}
 		SctTimer next = timer_queue.front();
@@ -133,25 +131,25 @@ void SctUnitRunner::insert_timer(SctTimer timer)
 }
 
 SctUnitRunner::SctTimer::SctTimer(
-	sc_integer time_ms,
-	bool timer_periodic,
-	sc_eventid evid,
-	sc_integer timer_priority,
-	sc_boolean timer_is_runcycle
-) :
-	rel_time_ms(time_ms),
-	abs_time_ms(0),
-	periodic(timer_periodic),
-	pt_evid(evid),
-	priority(timer_priority),
-	is_runcycle(timer_is_runcycle)
+		sc::integer time_ms,
+		bool timer_periodic,
+		sc::eventid evid,
+		sc::integer timer_priority,
+		bool timer_is_runcycle
+		) :
+		rel_time_ms(time_ms),
+		abs_time_ms(0),
+		periodic(timer_periodic),
+		pt_evid(evid),
+		priority(timer_priority),
+		is_runcycle(timer_is_runcycle)
+
 {}
 
-sc_integer SctUnitRunner::SctTimer::compare(SctTimer * other)
+sc::integer SctUnitRunner::SctTimer::compare(SctTimer * other)
 {
-	sc_integer result = abs_time_ms - other->abs_time_ms;
-	if (result != 0)
-	{
+	sc::integer result = abs_time_ms - other->abs_time_ms;
+	if(result != 0) {
 		return result;
 	}
 	else

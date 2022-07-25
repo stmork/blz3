@@ -12,7 +12,7 @@ Forward declaration for the MouseSelect state machine.
 class MouseSelect;
 
 
-#include "point.h"
+#include <point.h>
 #include <deque>
 #include "sc_types.h"
 #include "sc_rxcpp.h"
@@ -23,85 +23,6 @@ Header of the state machine 'MouseSelect'.
 */
 
 
-#ifndef SCT_EVENTS_MOUSESELECT_H
-#define SCT_EVENTS_MOUSESELECT_H
-#ifndef SC_INVALID_EVENT_VALUE
-#define SC_INVALID_EVENT_VALUE 0
-#endif
-
-namespace mouseselect_events
-{
-	typedef enum
-	{
-		invalid_event = SC_INVALID_EVENT_VALUE,
-		Gui_onSelect,
-		Gui_onDisable,
-		Gui_mouseDown,
-		Gui_mouseMove,
-		Gui_mouseUp
-	} MouseSelectEventName;
-
-	class SctEvent
-	{
-	public:
-		SctEvent(MouseSelectEventName name_) : name(name_) {}
-		virtual ~SctEvent() {}
-		const MouseSelectEventName name;
-
-	};
-
-	template <typename T>
-	class TypedSctEvent : public SctEvent
-	{
-	public:
-		TypedSctEvent(MouseSelectEventName name_, T value_) :
-			SctEvent(name_),
-			value(value_)
-		{}
-		virtual ~TypedSctEvent() {}
-		const T value;
-	};
-
-	class SctEvent_Gui_onSelect : public SctEvent
-	{
-	public:
-		SctEvent_Gui_onSelect(MouseSelectEventName name_) : SctEvent(name_) {};
-	};
-	class SctEvent_Gui_onDisable : public SctEvent
-	{
-	public:
-		SctEvent_Gui_onDisable(MouseSelectEventName name_) : SctEvent(name_) {};
-	};
-	class SctEvent_Gui_mouseDown : public TypedSctEvent<SCT_point>
-	{
-	public:
-		SctEvent_Gui_mouseDown(MouseSelectEventName name_, SCT_point value_) :
-			TypedSctEvent(name_, value_) {};
-	};
-	class SctEvent_Gui_mouseMove : public TypedSctEvent<SCT_point>
-	{
-	public:
-		SctEvent_Gui_mouseMove(MouseSelectEventName name_, SCT_point value_) :
-			TypedSctEvent(name_, value_) {};
-	};
-	class SctEvent_Gui_mouseUp : public TypedSctEvent<SCT_point>
-	{
-	public:
-		SctEvent_Gui_mouseUp(MouseSelectEventName name_, SCT_point value_) :
-			TypedSctEvent(name_, value_) {};
-	};
-
-}
-#endif /* SCT_EVENTS_MOUSESELECT_H */
-
-
-/*! Define indices of states in the StateConfVector */
-#define SCVI_MAIN_REGION_NORMAL 0
-#define SCVI_MAIN_REGION_SELECTION 0
-#define SCVI_MAIN_REGION_MOVING 0
-#define SCVI_MAIN_REGION_PANNING 0
-
-
 class MouseSelect : public sc::StatemachineInterface
 {
 public:
@@ -109,18 +30,57 @@ public:
 
 	virtual ~MouseSelect();
 
-	/*! Enumeration of all states */
-	typedef enum
+
+
+	/*! Enumeration of all states. */
+	enum class State
 	{
-		MouseSelect_last_state,
+		NO_STATE,
 		main_region_Normal,
 		main_region_Selection,
 		main_region_Moving,
 		main_region_Panning
-	} MouseSelectStates;
+	};
 
-	static const sc_integer numStates = 4;
+	/*! The number of states. */
+	static const sc::integer numStates = 4;
+	static const sc::integer scvi_main_region_Normal = 0;
+	static const sc::integer scvi_main_region_Selection = 0;
+	static const sc::integer scvi_main_region_Moving = 0;
+	static const sc::integer scvi_main_region_Panning = 0;
 
+	/*! Enumeration of all events which are consumed. */
+	enum class Event
+	{
+		NO_EVENT,
+		Gui_onSelect,
+		Gui_onDisable,
+		Gui_mouseDown,
+		Gui_mouseMove,
+		Gui_mouseUp
+	};
+
+	class EventInstance
+	{
+	public:
+		explicit EventInstance(Event id) : eventId(id) {}
+		virtual ~EventInstance() = default;
+		const Event eventId;
+	};
+	template <typename T>
+	class EventInstanceWithValue : public EventInstance
+	{
+	public:
+		explicit EventInstanceWithValue(Event id, T val) :
+			EventInstance(id),
+			value(val)
+		{}
+		virtual ~EventInstanceWithValue() = default;
+		const T value;
+	};
+
+	/*! Can be used by the client code to trigger a run to completion step without raising an event. */
+	void triggerWithoutEvent();
 
 	//! Inner class for gui interface scope.
 	class Gui
@@ -128,34 +88,27 @@ public:
 	public:
 		Gui(MouseSelect * parent);
 
-		/*! Raises the in event 'onSelect' that is defined in the interface scope 'gui'. */
+
+
+
+
+
+
+
+		/*! Raises the in event 'onSelect' of interface scope 'gui'. */
 		void raiseOnSelect();
-
-
-		/*! Raises the in event 'onDisable' that is defined in the interface scope 'gui'. */
+		/*! Raises the in event 'onDisable' of interface scope 'gui'. */
 		void raiseOnDisable();
-
-
-		/*! Raises the in event 'mouseDown' that is defined in the interface scope 'gui'. */
+		/*! Raises the in event 'mouseDown' of interface scope 'gui'. */
 		void raiseMouseDown(SCT_point mouseDown_);
-
-
-		/*! Raises the in event 'mouseMove' that is defined in the interface scope 'gui'. */
+		/*! Raises the in event 'mouseMove' of interface scope 'gui'. */
 		void raiseMouseMove(SCT_point mouseMove_);
-
-
-		/*! Raises the in event 'mouseUp' that is defined in the interface scope 'gui'. */
+		/*! Raises the in event 'mouseUp' of interface scope 'gui'. */
 		void raiseMouseUp(SCT_point mouseUp_);
-
-
-		/*! Checks if the out event 'selectionEnd' that is defined in the interface scope 'gui' has been raised. */
-		sc_boolean isRaisedSelectionEnd() const;
-
-		/*! Gets the observable of the out event 'selectionEnd' that is defined in the interface scope 'gui'. */
+		/*! Check if event 'selectionEnd' of interface scope 'gui' is raised. */
+		bool isRaisedSelectionEnd();
+		/*! Get observable for event 'selectionEnd' of interface scope 'gui'. */
 		sc::rx::Observable<void> * getSelectionEnd();
-
-
-
 
 		//! Inner class for gui interface scope operation callbacks.
 		class OperationCallback
@@ -175,27 +128,26 @@ public:
 	private:
 		friend class MouseSelect;
 
-		/*! Raises the in event 'onSelect' that is defined in the interface scope 'gui'. */
-		void internal_raiseOnSelect();
-		sc_boolean onSelect_raised;
-		/*! Raises the in event 'onDisable' that is defined in the interface scope 'gui'. */
-		void internal_raiseOnDisable();
-		sc_boolean onDisable_raised;
-		/*! Raises the in event 'mouseDown' that is defined in the interface scope 'gui'. */
-		void internal_raiseMouseDown(SCT_point mouseDown_);
-		sc_boolean mouseDown_raised;
+		/*! Indicates event 'onSelect' of interface scope 'gui' is active. */
+		bool onSelect_raised;
+		/*! Indicates event 'onDisable' of interface scope 'gui' is active. */
+		bool onDisable_raised;
+		/*! Indicates event 'mouseDown' of interface scope 'gui' is active. */
+		bool mouseDown_raised;
+		/*! Value of event 'mouseDown' of interface scope 'gui'. */
 		SCT_point mouseDown_value;
-		/*! Raises the in event 'mouseMove' that is defined in the interface scope 'gui'. */
-		void internal_raiseMouseMove(SCT_point mouseMove_);
-		sc_boolean mouseMove_raised;
+		/*! Indicates event 'mouseMove' of interface scope 'gui' is active. */
+		bool mouseMove_raised;
+		/*! Value of event 'mouseMove' of interface scope 'gui'. */
 		SCT_point mouseMove_value;
-		/*! Raises the in event 'mouseUp' that is defined in the interface scope 'gui'. */
-		void internal_raiseMouseUp(SCT_point mouseUp_);
-		sc_boolean mouseUp_raised;
+		/*! Indicates event 'mouseUp' of interface scope 'gui' is active. */
+		bool mouseUp_raised;
+		/*! Value of event 'mouseUp' of interface scope 'gui'. */
 		SCT_point mouseUp_value;
+		/*! Indicates event 'selectionEnd' of interface scope 'gui' is active. */
+		bool selectionEnd_raised;
+		/*! Observable for event 'selectionEnd' of interface scope 'gui'. */
 		sc::rx::Observable<void> selectionEnd_observable;
-		sc_boolean selectionEnd_raised;
-		void dispatch_event(mouseselect_events::SctEvent * event);
 
 		MouseSelect * parent;
 
@@ -230,7 +182,7 @@ public:
 		public:
 			virtual ~OperationCallback() = 0;
 
-			virtual sc_boolean is3D() = 0;
+			virtual bool is3D() = 0;
 
 			virtual void show() = 0;
 
@@ -256,7 +208,6 @@ public:
 	private:
 		friend class MouseSelect;
 
-		void dispatch_event(mouseselect_events::SctEvent * event);
 
 		MouseSelect * parent;
 
@@ -276,35 +227,43 @@ public:
 	/*
 	 * Functions inherited from StatemachineInterface
 	 */
-	virtual void enter() override;
+	void enter() override;
 
-	virtual void exit() override;
+	void exit() override;
 
 	/*!
 	 * Checks if the state machine is active (until 2.4.1 this method was used for states).
 	 * A state machine is active if it has been entered. It is inactive if it has not been entered at all or if it has been exited.
 	 */
-	virtual sc_boolean isActive() const override;
+	bool isActive() const override;
 
 
 	/*!
 	* Checks if all active states are final.
 	* If there are no active states then the state machine is considered being inactive. In this case this method returns false.
 	*/
-	virtual sc_boolean isFinal() const override;
+	bool isFinal() const override;
 
 	/*!
 	 * Checks if member of the state machine must be set. For example an operation callback.
 	 */
-	sc_boolean check();
+	bool check() const;
 
 
 	/*! Checks if the specified state is active (until 2.4.1 the used method for states was calles isActive()). */
-	sc_boolean isStateActive(MouseSelectStates state) const;
+	bool isStateActive(State state) const;
 
 
 
 protected:
+
+
+	std::deque<EventInstance *> incomingEventQueue;
+
+	EventInstance * getNextEvent();
+
+	void dispatchEvent(EventInstance * event);
+
 
 
 private:
@@ -313,22 +272,21 @@ private:
 
 	SCT_point p1;
 	SCT_point p2;
-	void internal_dispatch_event(mouseselect_events::SctEvent * event);
 
 
 	//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
-	static const sc_ushort maxOrthogonalStates = 1;
+	static const sc::ushort maxOrthogonalStates = 1;
 
 
 
-	MouseSelectStates stateConfVector[maxOrthogonalStates];
+	State stateConfVector[maxOrthogonalStates];
 
 
 	Gui ifaceGui;
 	View ifaceView;
 
 
-	sc_boolean isExecuting;
+	bool isExecuting;
 
 
 	// prototypes of all internal functions
@@ -347,20 +305,19 @@ private:
 	void exseq_main_region_Panning();
 	void exseq_main_region();
 	void react_main_region__entry_Default();
-	sc_integer react(const sc_integer transitioned_before);
-	sc_integer main_region_Normal_react(const sc_integer transitioned_before);
-	sc_integer main_region_Selection_react(const sc_integer transitioned_before);
-	sc_integer main_region_Moving_react(const sc_integer transitioned_before);
-	sc_integer main_region_Panning_react(const sc_integer transitioned_before);
+	sc::integer react(const sc::integer transitioned_before);
+	sc::integer main_region_Normal_react(const sc::integer transitioned_before);
+	sc::integer main_region_Selection_react(const sc::integer transitioned_before);
+	sc::integer main_region_Moving_react(const sc::integer transitioned_before);
+	sc::integer main_region_Panning_react(const sc::integer transitioned_before);
 	void clearOutEvents();
 	void clearInEvents();
 	void microStep();
 	void runCycle();
 
 
-	mouseselect_events::SctEvent * getNextEvent();
-	void dispatch_event(mouseselect_events::SctEvent * event);
-	std::deque<mouseselect_events::SctEvent *> inEventQueue;
+
+
 
 
 };

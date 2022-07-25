@@ -32,13 +32,13 @@ namespace sc
 		Checks whether the state machine is active.
 		A state machine is active if it has been entered. It is inactive if it has not been entered at all or if it has been exited.
 		*/
-		virtual	sc_boolean isActive() const = 0;
+		virtual	bool isActive() const = 0;
 
 		/*!
 		Checks if all active states are final.
 		If there are no active states then the state machine is considered being inactive. In this case this method returns false.
 		*/
-		virtual sc_boolean isFinal() const = 0;
+		virtual bool isFinal() const = 0;
 	};
 
 	inline StatemachineInterface::~StatemachineInterface() {}
