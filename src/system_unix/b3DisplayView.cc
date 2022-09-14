@@ -118,10 +118,10 @@ protected:
 
 const b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
 {
-	{  0, 8, 1, 9 },
-	{ 12, 4, 13, 5 },
-	{  3, 11, 2, 10 },
-	{ 15, 7, 14, 6 }
+	{  0,  8,  1,  9 },
+	{ 12,  4, 13,  5 },
+	{  3, 11,  2, 10 },
+	{ 15,  7, 14,  6 }
 };
 
 const b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
@@ -313,7 +313,7 @@ b3DisplayView::~b3DisplayView()
 }
 
 void b3DisplayView::b3PutPixel(
-	const b3_coord  x,
+	const b3_coord   x,
 	const b3_coord   y,
 	const b3_color & Color)
 {
@@ -328,6 +328,10 @@ void b3DisplayView::b3PutPixel(
 		XDrawPoint(m_Display, m_Window, m_GC, x, y);
 		XDrawPoint(m_Display, m_Image, m_GC, x, y);
 	}
+#else
+	(void)x;
+	(void)y;
+	(void)Color;
 #endif
 }
 
@@ -705,6 +709,8 @@ void b3DisplayView::b3PutRow(const b3Row * row)
 		b3RefreshRow(y);
 		XCopyArea(m_Display, m_Image, m_Window, m_GC, 0, y, m_xs, 1, 0, y);
 	}
+#else
+	(void)row;
 #endif
 }
 
@@ -721,6 +727,8 @@ void b3DisplayView::b3PutTx(b3Tx * tx)
 		b3RefreshRow(y);
 	}
 	XCopyArea(m_Display, m_Image, m_Window, m_GC, 0, 0, m_xs, m_ys, 0, 0);
+#else
+	(void)tx;
 #endif
 }
 
