@@ -347,7 +347,7 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 	}
 
 	b3PrintF(B3LOG_DEBUG, "###############################################\n");
-	b3PrintF(B3LOG_DEBUG, "%-20.20s ==== t=%2.03f pts: %6ld %p\n",
+	b3PrintF(B3LOG_DEBUG, "%-20.20s ==== t=%2.03f pts: %6" PRIi64 " %p\n",
 		m_MediaMap.b3Get(media_type).c_str(), t, pts, frame);
 
 	int error = avcodec_send_frame(*stream, frame);
@@ -363,7 +363,7 @@ int b3MovieEncoder::b3SendFrame(b3EncoderStream * stream, AVFrame * frame)
 		{
 			pkt->stream_index = stream->b3GetIndex();
 			stream->b3Rescale(pkt);
-			b3PrintF(B3LOG_DEBUG, "========================= no.: %4ld pts: %6ld  dts: %6ld  flags: %02x\n",
+			b3PrintF(B3LOG_DEBUG, "========================= no.: %4" PRIi64 " pts: %6" PRIi64 "  dts: %6" PRIi64 "  flags: %02x\n",
 				frame_no, pkt->pts, pkt->dts, pkt->flags);
 			error = av_interleaved_write_frame(m_FormatContext, pkt);
 			b3PrintErr("Packet write", error, true);
