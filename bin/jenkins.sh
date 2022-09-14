@@ -36,7 +36,7 @@ make -j ${JOBS} test
 
 COPYRIGHT=${BLZ3_HOME}/copyright
 echo "Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/" > ${COPYRIGHT}
-echo "Upstream-Name: $PACKAGE" >> ${COPYRIGHT}
+echo "Upstream-Name: blz3" >> ${COPYRIGHT}
 echo "Source: https://github.com/stmork/blz3" >> ${COPYRIGHT}
 echo "" >> ${COPYRIGHT}
 echo "Files: *" >> ${COPYRIGHT}
@@ -59,7 +59,7 @@ sed\
 VERSION=`grep Version ${BLZ3_DEBIAN_DEV}/DEBIAN/control | cut -d" " -f2`
 rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
-cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib
+cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib/
 cp -a ${COPYRIGHT} ${BLZ3_DEBIAN_DEV}/usr/share/doc/libblz3-dev/
 
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
