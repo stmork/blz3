@@ -230,7 +230,7 @@ bool b3Tx::b3AllocTx(
 		}
 	}
 	FileType  = FT_UNKNOWN;
-	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3AllocTx(%dx%d, %d bits) this=%p type=%d, %ld bytes)\n",
+	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3AllocTx(%dx%d, %d bits) this=%p type=%d, %zu bytes)\n",
 		xSize, ySize, depth, this, type, dSize);
 	return true;
 }
