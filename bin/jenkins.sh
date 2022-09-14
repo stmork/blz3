@@ -39,8 +39,8 @@ echo "Upstream-Name: $PACKAGE" >> ${COPYRIGHT}
 echo "Source: https://github.com/stmork/blz3" >> ${COPYRIGHT}
 echo "" >> ${COPYRIGHT}
 echo "Files: *" >> ${COPYRIGHT}
-echo "Copyright: 2005-`date +'%Y'` (C) Steffen A. Mork" >> ${COPYRIGHT}
-echo "License: MIT" >> ${COPYRIGHT}
+echo "Copyright: 2001-`date +'%Y'` (C) Steffen A. Mork" >> ${COPYRIGHT}
+echo "License: BSD-3-Clause" >> ${COPYRIGHT}
 sed -e 's/^$/\./g' -e 's/^/ /g' LICENSE.md >> ${COPYRIGHT}
 
 cp -a ${COPYRIGHT} ${BLZ3_DEBIAN}/usr/share/doc/blz3/
