@@ -39,7 +39,7 @@ add the ```--host=<TARGET_ARCH>``` option to the configure script.
 
 Example:
 ```
-export CXXFLAGS="-O3 --sysroot=/opt/rootfs/armhf/atmel/buster"
+export CXXFLAGS="-O3 --sysroot=/opt/rootfs/armhf/develop/focal"
 ./configure --host=arm-linux-gnueabihf
 ```
 
