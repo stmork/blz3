@@ -78,11 +78,50 @@ public:
 	 */
 	inline b3Color(const b3Color & color)
 	{
+		operator=(color);
+	}
+
+	/**
+	 * This move constructor moves another b3Color instance into
+	 * this instance.
+	 *
+	 * @param color The other b3Color instance to copy.
+	 */
+	inline b3Color(b3Color && color)
+	{
+		operator=(color);
+	}
+
+	/**
+	 * This copy operator copies another b3Color instance into
+	 * this instance.
+	 *
+	 * @param color The other b3Color instance to copy.
+	 */
+	b3Color & operator=(const b3Color & color)
+	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = color.v[i];
 		}
+		return *this;
 	}
+
+	/**
+	 * This copy operator moves another b3Color instance into
+	 * this instance.
+	 *
+	 * @param color The other b3Color instance to copy.
+	 */
+	b3Color & operator=(b3Color && color)
+	{
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			v[i] = color.v[i];
+		}
+		return *this;
+	}
+
 
 	/**
 	 * This constructor initializes this instance from a ::b3_color structure.
