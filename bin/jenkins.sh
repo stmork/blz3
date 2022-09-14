@@ -33,8 +33,18 @@ make depend
 make -j ${JOBS}
 make install documentation
 make -j ${JOBS} test
-cp -a LICENSE.md ${BLZ3_DEBIAN}/usr/share/doc/blz3/copyright
 
+COPYRIGHT=${BLZ3_HOME}/copyright
+echo "Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/" > ${COPYRIGHT}
+echo "Upstream-Name: $PACKAGE" >> ${COPYRIGHT}
+echo "Source: https://github.com/stmork/blz3" >> ${COPYRIGHT}
+echo "" >> ${COPYRIGHT}
+echo "Files: *" >> ${COPYRIGHT}
+echo "Copyright: 2005-`date +'%Y'` (C) Steffen A. Mork" >> ${COPYRIGHT}
+echo "License: MIT" >> ${COPYRIGHT}
+sed -e 's/^$/\./g' -e 's/^/ /g' LICENSE.md >> ${COPYRIGHT}
+
+cp -a ${COPYRIGHT} ${BLZ3_DEBIAN}/usr/share/doc/blz3/
 sed\
 	-e "s/%ARCH%/${ARCH}/g"\
 	-e "s/%BUILD%/$BUILD_NUMBER/g"\
@@ -50,7 +60,7 @@ VERSION=`grep Version ${BLZ3_DEBIAN_DEV}/DEBIAN/control | cut -d" " -f2`
 rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib
-cp -a LICENSE.md ${BLZ3_DEBIAN_DEV}/usr/share/doc/libblz3-dev/copyright
+cp -a ${COPYRIGHT} ${BLZ3_DEBIAN_DEV}/usr/share/doc/libblz3-dev/
 
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
 fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} libblz3-dev_${VERSION}_${ARCH}.deb
