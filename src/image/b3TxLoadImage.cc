@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxLoadImage.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001 - 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -522,7 +522,7 @@ b3_result b3Tx::b3SaveImage(const char * filename, b3TxExif * exif)
 
 #ifdef HAVE_PNG_H
 		case FT_PNG:
-			return b3SavePNG(filename);
+			return b3SavePNG(filename, exif);
 #endif
 
 #ifdef HAVE_LIBTIFF
@@ -549,4 +549,25 @@ b3_result b3Tx::b3SaveImage(const char * filename, b3TxExif * exif)
 	}
 
 	return B3_ERROR;
+}
+
+void b3Tx::b3SaveExif(
+	const char  *  filename,
+	b3TxExif   *   exif,
+	const b3_u32   quality)
+{
+	if (exif != nullptr)
+	{
+		exif->b3SetResolution(xDPI, yDPI);
+		exif->b3SetQuality(quality);
+		exif->b3Write(filename);
+	}
+	else
+	{
+		b3TxExif default_exif;
+
+		default_exif.b3SetResolution(xDPI, yDPI);
+		default_exif.b3SetQuality(quality);
+		default_exif.b3Write(filename);
+	}
 }

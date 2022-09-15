@@ -25,7 +25,7 @@
 struct B3_PLUGIN b3TxAlgorithms
 {
 	template<class SRC, class DST> static void b3GetRow(
-		DST   *   Line,
+		DST      *     Line,
 		const b3Tx  *  tx,
 		const b3_coord y,
 		std::function<DST(const SRC)> convert = [] (const SRC data)
@@ -44,7 +44,7 @@ struct B3_PLUGIN b3TxAlgorithms
 
 	template<class DST> static void b3SetRow(
 		const b3Color * row,
-		b3Tx * tx,
+		b3Tx      *     tx,
 		std::function<DST(const b3Color &)> convert = [] (const b3Color & src)
 	{
 		return src;

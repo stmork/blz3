@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Date.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001 - 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$

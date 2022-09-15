@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Tx.cc $
-**	$Release:	Dortmund 2001, 2016 $
+**	$Release:	Dortmund 2001 - 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$

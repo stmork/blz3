@@ -1,4 +1,4 @@
-GeneratorModel for yakindu::cpp
+GeneratorModel for yakindu::cpp11
 {
 	const PROJECT : string = "OpenGL"
 	const SRC_GEN : string = "src-gen"
@@ -18,10 +18,16 @@ GeneratorModel for yakindu::cpp
 			licenseText =
 			"       Generated with YAKINDU statechart tools\n" +
 			" *\n" +
-			" *   (C) Copyright  2001 - 2021  Steffen A. Mork\n" +
+			" *   (C) Copyright  2001 - 2022  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
-		
+
+		feature IdentifierSettings
+		{
+			sourceFilenameExtension = "cpp"
+			headerFilenameExtension = "h"
+		}
+
 		feature OutEventAPI
 		{
 			observables = true

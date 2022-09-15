@@ -15,10 +15,10 @@ HEADERS += \
 
 SOURCES += \
 	src-gen/MouseSelect.cpp \
-	src-test/MouseSelectTest.cc \
+	src-test/MouseSelectTest.cpp \
 	src-test/sc_runner.cpp
 
-INCLUDEPATH += src-gen/
-INCLUDEPATH += src-lib/
+INCLUDEPATH += src-gen
+INCLUDEPATH += src-lib model
 LIBS        += -lgtest -lgtest_main
 QMAKE_CLEAN += test*.xml qrender-sct

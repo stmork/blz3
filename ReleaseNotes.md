@@ -58,3 +58,7 @@ Version 3.1.6
 Version 3.1.7
 * bexif3 is able to set DPI.
 * Improved integration of OpenEXR.
+
+Version 3.1.8
+* EXIF support for PNG.
+* Migration to SCT 4.1 code generator.

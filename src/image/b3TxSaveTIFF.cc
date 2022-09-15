@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveTIFF.cc $
-**	$Release:	Dortmund 2001, 2016 $
+**	$Release:	Dortmund 2001 - 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -360,10 +360,7 @@ b3_result b3Tx::b3SaveTIFF(const char * nameTx, b3TxExif * exif)
 		}
 
 		TIFFClose(tiff);
-		if (exif != nullptr)
-		{
-			exif->b3Write(image_name);
-		}
+		b3SaveExif(nameTx, exif);
 	}
 	else
 	{

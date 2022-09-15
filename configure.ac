@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.69)
-AC_INIT(blz3, 3.1.7, linux-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 3.1.8, linux-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -68,7 +68,7 @@ AX_CHECK_COMPILE_FLAG([-Wall], [CXXFLAGS="$CXXFLAGS -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wextra], [CXXFLAGS="$CXXFLAGS -Wextra"])
 AX_CHECK_COMPILE_FLAG([-Wshadow], [CXXFLAGS="$CXXFLAGS -Wshadow"])
 AX_CHECK_COMPILE_FLAG([-Wsuggest-override], [CXXFLAGS="$CXXFLAGS -Wsuggest-override"])
-AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
+# AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
 AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
 AX_CHECK_COMPILE_FLAG([-std=gnu++1z], [STDFLAGS="$STDFLAGS -std=gnu++1z"])
 CFLAGS="$CFLAGS $MFLAGS"

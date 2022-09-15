@@ -10,13 +10,13 @@
  */
 
 SctUnitRunner::SctUnitRunner(
-		sc::StatemachineInterface * p_statemachine,
-		bool p_event_driven,
-		sc_integer p_cycle_period
+		sc::StatemachineInterface * statemachine_,
+		bool event_driven_,
+		sc::integer cycle_period_
 		) :
-		statemachine(p_statemachine),
-		event_driven(p_event_driven),
-		cycle_period(p_event_driven ? -1 : p_cycle_period),
+		statemachine(statemachine_),
+		event_driven(event_driven_),
+		cycle_period(event_driven_ ? -1 : cycle_period_),
 		current_time_ms(0),
 		timer_queue()
 {
@@ -32,9 +32,9 @@ SctUnitRunner::SctUnitRunner(
 	}
 }
 
-void SctUnitRunner::proceed_time(sc_integer time_ms)
+void SctUnitRunner::proceed_time(sc::integer time_ms)
 {
-	sc_integer stop_time_ms = current_time_ms + time_ms;
+	sc::integer stop_time_ms = current_time_ms + time_ms;
 	bool processed_timer = false;
 
 	do {
@@ -64,9 +64,9 @@ void SctUnitRunner::proceed_time(sc_integer time_ms)
 	current_time_ms = stop_time_ms;
 }
 
-void SctUnitRunner::proceed_cycles(sc_integer cycles)
+void SctUnitRunner::proceed_cycles(sc::integer cycles)
 {
-	sc_integer elapsed_cycles = 0;
+	sc::integer elapsed_cycles = 0;
 		
 	while(elapsed_cycles < cycles) {
 		if(timer_queue.empty()) {
@@ -120,23 +120,23 @@ void SctUnitRunner::insert_timer(SctTimer timer)
 }
 
 SctUnitRunner::SctTimer::SctTimer(
-		sc_integer p_time_ms,
-		bool p_periodic,
-		sc_eventid p_evid,
-		sc_integer p_priority,
-		sc_boolean p_is_runcycle
+		sc::integer time_ms,
+		bool timer_periodic,
+		sc::eventid evid,
+		sc::integer timer_priority,
+		bool timer_is_runcycle
 		) :
-		rel_time_ms(p_time_ms),
+		rel_time_ms(time_ms),
 		abs_time_ms(0),
-		periodic(p_periodic),
-		pt_evid(p_evid),
-		priority(p_priority),
-		is_runcycle(p_is_runcycle)
+		periodic(timer_periodic),
+		pt_evid(evid),
+		priority(timer_priority),
+		is_runcycle(timer_is_runcycle)
 {}
 
-sc_integer SctUnitRunner::SctTimer::compare(SctTimer * other)
+sc::integer SctUnitRunner::SctTimer::compare(SctTimer * other)
 {
-	sc_integer result = abs_time_ms - other->abs_time_ms;
+	sc::integer result = abs_time_ms - other->abs_time_ms;
 	if(result != 0) {
 		return result;
 	} else {

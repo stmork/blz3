@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Tx.h $
-**	$Release:	Dortmund 2011, 2016 $
+**	$Release:	Dortmund 2011 - 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -1138,7 +1138,7 @@ public:
 	 * @return The result code.
 	 * @see b3_result.
 	 */
-	b3_result b3SavePNG(const char * ImageName);
+	b3_result b3SavePNG(const char * ImageName, b3TxExif * exif);
 
 	/**
 	 * This method saves the image as TGA file.
@@ -1148,6 +1148,21 @@ public:
 	 * @see b3_result.
 	 */
 	b3_result b3SaveTGA(const char * ImageName);
+
+	/**
+	 * This method saved EXIF matadata into the named image file.
+	 *
+	 * @note The image file has to be closed!
+	 *
+	 * @param filename The image file to add EXIF metadata.
+	 * @param exif The pointer to an instance. @c nullptr allows to store
+	 * default values.
+	 * @param quality The image quality.
+	 */
+	void      b3SaveExif(
+		const char * filename,
+		b3TxExif  *  exif    = nullptr,
+		const b3_u32 quality = 100);
 
 	static inline b3_f32 b3ToGrey(const b3_pkd_color input)
 	{

@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3TxSaveJPEG.cc $
-**	$Release:	Dortmund 2001, 2016 $
+**	$Release:	Dortmund 2001 - 2022 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -244,20 +244,8 @@ b3_result b3Tx::b3SaveJPEG(
 
 		info.b3Write();
 	}
-	if (exif != nullptr)
-	{
-		exif->b3SetResolution(xDPI, yDPI);
-		exif->b3SetQuality(quality);
-		exif->b3Write(filename);
-	}
-	else
-	{
-		b3TxExif default_exif;
+	b3SaveExif(filename, exif, quality);
 
-		default_exif.b3SetResolution(xDPI, yDPI);
-		default_exif.b3SetQuality(quality);
-		default_exif.b3Write(filename);
-	}
 	return B3_OK;
 }
 #endif
