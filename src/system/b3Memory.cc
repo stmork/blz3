@@ -172,10 +172,7 @@ size_t b3Mem::b3StrCpy(char * dst, const char * src, const size_t len)
 		{
 			const size_t max = std::min(strlen(src), len - 1);
 
-			for (size_t i = 0; i < max; i++)
-			{
-				dst[i] = src[i];
-			}
+			std::copy(src, src + max, dst);
 			dst[max] = 0;
 		}
 
