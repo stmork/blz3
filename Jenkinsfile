@@ -109,7 +109,7 @@ pipeline
 					{
 						xunit checksName: '', tools: [
 							CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: false),
-							Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: false)]
+							Valgrind(excludesPattern: '', pattern: 'src/*/valgrind-*.xml', stopProcessingIfError: false)]
 					}
 				}
 			}
