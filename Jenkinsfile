@@ -4,6 +4,9 @@ pipeline
 
 	environment
 	{
+		BLZ3_HOME=$WORKSPACE
+		LD_LIBRARY_PATH=$BLZ3_HOME/lib
+
 		OFLAGS='-O3'
 		CFLAGS=''
 		CXXFLAGS=''
