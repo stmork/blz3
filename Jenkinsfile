@@ -28,7 +28,26 @@ pipeline
 		{
 			steps
 			{
-				sh 'pwd'
+				sh '''
+				make -j `nproc`
+				make install
+				'''
+			}
+		}
+
+		stage ('cppcheck')
+		{
+			steps
+			{
+				sh 'make cppcheck'
+			}
+		}
+
+		stage ('Coverage')
+		{
+			steps
+			{
+				sh 'make lcov'
 			}
 		}
 	}
@@ -38,7 +57,7 @@ pipeline
 		always
 		{
 			chuckNorris()
-			step([$class: 'Mailer', recipients: 'linux-dev@morknet.de'])
+			step([$class: 'Mailer', recipients: 'blz3-dev@morknet.de'])
 		}
 	}
 }
