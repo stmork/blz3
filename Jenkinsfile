@@ -1,9 +1,6 @@
 pipeline
 {
-	agent
-	{
-		label 'QT'
-	}
+	agent any
 
 	environment
 	{
