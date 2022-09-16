@@ -57,9 +57,10 @@ pipeline
 			steps
 			{
 				sh '''
-				src/OpenGL/qrender-sct --gtest_output=xml
+				cd src/OpenGL
+				./qrender-sct --gtest_output=xml
 				'''
-				xunit([GoogleTest(pattern: 'gtest-results.xml', stopProcessingIfError: true)])
+				xunit([GoogleTest(pattern: 'src/*/test-*.xml', stopProcessingIfError: false)])
 			}
 		}
 
@@ -72,8 +73,8 @@ pipeline
 				make -j `nproc` valgrind
 				'''
 				xunit checksName: '', tools: [
-					CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: true),
-					Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: true)]
+					CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: false),
+					Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: false)]
 			}
 		}
 
