@@ -94,6 +94,8 @@ pipeline
 					{
 						anyOf
 						{
+							branch 'develop';
+							branch 'master';
 							branch 'origin/develop';
 							branch 'origin/master'
 						}
