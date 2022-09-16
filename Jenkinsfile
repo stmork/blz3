@@ -58,8 +58,8 @@ pipeline
 			{
 				sh '''
 				src/OpenGL/qrender-sct --gtest_output=xml
-				xunit([GoogleTest(pattern: 'gtest-results.xml', stopProcessingIfError: true)])
 				'''
+				xunit([GoogleTest(pattern: 'gtest-results.xml', stopProcessingIfError: true)])
 			}
 		}
 
