@@ -122,10 +122,11 @@ pipeline
 				publishHTML([
 					allowMissing: false,
 					alwaysLinkToLastBuild: false,
-					keepAll: false, reportDir: 'doc',
+					keepAll: false,
+					reportDir: 'doc',
 					reportFiles: 'index.html',
-					reportName: '',
-					reportTitles: 'Blizzard III Doxygen'])
+					reportName: 'Blizzard III Doxygen',
+					reportTitles: ''])
 			}
 		}
 
@@ -140,8 +141,8 @@ pipeline
 					keepAll: false,
 					reportDir: 'lcov-out',
 					reportFiles: 'index.html',
-					reportName: '',
-					reportTitles: 'Coverage Report Blizzard III'])
+					reportName: 'Blizzard III Coverage Report',
+					reportTitles: ''])
 			}
 		}
 	}
