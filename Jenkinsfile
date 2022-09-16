@@ -141,10 +141,12 @@ pipeline
 
 	post
 	{
+		/*
 		success
 		{
 			archiveArtifacts artifacts: 'doc/*.qch', followSymlinks: false
 		}
+		*/
 		always
 		{
 			chuckNorris()
