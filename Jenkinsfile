@@ -19,6 +19,7 @@ pipeline
 		{
 			steps
 			{
+				echo "Blizzard III home: $BLZ3_HOME"
 				sh 'make config depend'
 			}
 		}
@@ -35,7 +36,7 @@ pipeline
 			}
 		}
 
-		stage ('build')
+		stage ('Build')
 		{
 			steps
 			{
@@ -55,7 +56,7 @@ pipeline
 			}
 		}
 
-		stage ('SCT-Unit')
+		stage ('SCT tests')
 		{
 			steps
 			{
@@ -67,22 +68,22 @@ pipeline
 			}
 		}
 
-		stage ('Unittests')
+		stage ('Unit tests')
 		{
 			stages
 			{
-				stage ('short tests')
+				stage ('Short tests')
 				{
 					steps
 					{
-						echo "Quick unit tests"
+						echo "Short unit tests"
 						sh '''
 						cd src/unittest
 						make -j `nproc` valgrind
 						'''
 					}
 				}
-				stage ('long tests')
+				stage ('Long tests')
 				{
 					when
 					{
@@ -94,13 +95,11 @@ pipeline
 					}
 					steps
 					{
-						echo "Slow unit tests"
-/*
+						echo "Long unit tests"
 						sh '''
 						cd src/unittest
 						make -j `nproc` -f Makefile.longtest valgrind
 						'''
-*/
 					}
 				}
 				stage ('Reporting')
@@ -153,4 +152,3 @@ pipeline
 		}
 	}
 }
-qmake CONFIG+=debug CONFIG+=gcov -r
