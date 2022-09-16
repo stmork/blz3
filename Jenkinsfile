@@ -115,6 +115,13 @@ pipeline
 			}
 		}
 
+		stage ('Doxygen')
+		{
+			steps
+			{
+				sh 'doxygen'
+			}
+		}
 
 		stage ('Coverage')
 		{
@@ -135,6 +142,10 @@ pipeline
 
 	post
 	{
+		success
+		{
+			archiveArtifacts artifacts:: 'doc/*.qch', followSymlinks: false
+		}
 		always
 		{
 			chuckNorris()
