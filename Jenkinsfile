@@ -143,7 +143,7 @@ pipeline
 	{
 		success
 		{
-			archiveArtifacts artifacts:: 'doc/*.qch', followSymlinks: false
+			archiveArtifacts artifacts: 'doc/*.qch', followSymlinks: false
 		}
 		always
 		{
