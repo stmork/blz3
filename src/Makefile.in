@@ -2,19 +2,20 @@
 # basic makefile to create Blizzard III
 #
 
-BLZ3_HOME	= @BLZ3_HOME@
-BLZ3_LIB	= @BLZ3_LIB@
-BLZ3_BIN	= @BLZ3_BIN@
+BLZ3_HOME    = @BLZ3_HOME@
+BLZ3_INCLUDE = @BLZ3_INCLUDE@
+BLZ3_LIB     = @BLZ3_LIB@
+BLZ3_BIN     = @BLZ3_BIN@
 
-CC		= @CC@
-CXX		= @CXX@
-CFLAGS		= @CFLAGS@
-CXXFLAGS	= @CXXFLAGS@
-CPPFLAGS	= @CPPFLAGS@
-DOS2UNIX	= @DOS2UNIX@
-LDFLAGS		= @LDFLAGS@
-AR		= @AR@
-RANLIB		= @RANLIB@
+CC           = @CC@
+CXX          = @CXX@
+CFLAGS       = @CFLAGS@
+CXXFLAGS     = @CXXFLAGS@
+CPPFLAGS     = @CPPFLAGS@
+DOS2UNIX     = @DOS2UNIX@
+LDFLAGS      = @LDFLAGS@
+AR           = @AR@
+RANLIB       = @RANLIB@
 
 SUB_DIRS +=\
 	system_unix\
@@ -39,6 +40,22 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 		echo "Building "$$i"..."; \
 		make -C $$i; \
 	done
+
+cppcheck:
+	cppcheck \
+	--enable=style,warning,performance,portability \
+	--inline-suppr \
+	--suppress=preprocessorErrorDirective \
+	--suppress=syntaxError \
+	--suppress=unusedStructMember \
+	--suppress=useStlAlgorithm \
+	--suppress=noCopyConstructor \
+	--suppress=noOperatorEq \
+	-I$(BLZ3_INCLUDE) -I$(BLZ3_HOME)/include_unix \
+	--language=c++ --std=c++14 \
+	--xml-version=2 --force -q -j 8 \
+	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc \
+	OpenGL/*.c* OpenGL/*.h brt3/*.cc 2>cppcheck.xml
 
 clean:	remdepend $(BLZ3_LIB)
 	echo "Cleaning up..."
