@@ -69,17 +69,52 @@ pipeline
 
 		stage ('Unittests')
 		{
+			stages
+			{
+				stage ('short tests')
+				{
+					steps
+					{
+						echo "Quick unit tests"
+						sh '''
+						cd src/unittest
+						make -j `nproc` valgrind
+						'''
+					}
+				}
+				stage ('long tests')
+				{
+					when
+					{
+						branches
+						{
+							anyOf
+							{
+								"*/develop",
+								"*/master"
+							}
+						}
+					}
+					steps
+					{
+						echo "Slow unit tests"
+/*
+						sh '''
+						cd src/unittest
+						make -j `nproc` -f Makefile.longtest valgrind
+						'''
+*/
+					}
+				}
+			}
 			steps
 			{
-				sh '''
-				cd src/unittest
-				make -j `nproc` valgrind
-				'''
 				xunit checksName: '', tools: [
 					CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: false),
 					Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: false)]
 			}
 		}
+
 
 		stage ('Coverage')
 		{
