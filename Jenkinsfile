@@ -23,7 +23,9 @@ pipeline
 			steps
 			{
 				echo "Blizzard III home: $BLZ3_HOME"
-				echo "Branch name: " + env.BRANCH_NAME
+				echo "Node name: ${env.NODE_NAME}"
+				echo "Branch name: ${env.BRANCH_NAME}"
+				sh 'printenv'
 				sh 'make config depend'
 			}
 		}
