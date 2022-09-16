@@ -122,6 +122,13 @@ pipeline
 			steps
 			{
 				sh 'make documentation'
+				publishHTML([
+					allowMissing: false,
+					alwaysLinkToLastBuild: false,
+					keepAll: false, reportDir: 'doc',
+					reportFiles: 'index.html',
+					reportName: '',
+					reportTitles: 'Blizzard III Doxygen'])
 			}
 		}
 
