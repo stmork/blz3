@@ -2,6 +2,14 @@ pipeline
 {
 	agent any
 
+	environment
+	{
+		OFLAGS='-O3'
+		CFLAGS=''
+		CXXFLAGS=''
+		CPPFLAGS=''
+	}
+
 	stages
 	{
 		stage ('Configure')
@@ -29,8 +37,8 @@ pipeline
 			steps
 			{
 				sh '''
+				make -j `nproc` install
 				make -j `nproc`
-				make install
 				'''
 			}
 		}
@@ -40,6 +48,32 @@ pipeline
 			steps
 			{
 				sh 'make cppcheck'
+				publishCppcheck pattern: 'cppcheck.xml'
+			}
+		}
+
+		stage ('SCT-Unit')
+		{
+			steps
+			{
+				sh '''
+				src/OpenGL/qrender-sct --gtest_output=xml
+				xunit([GoogleTest(pattern: 'gtest-results.xml', stopProcessingIfError: true)])
+				'''
+			}
+		}
+
+		stage ('Unittests')
+		{
+			steps
+			{
+				sh '''
+				cd src/unittest
+				make -j `nproc` valgrind
+				'''
+				xunit checksName: '', tools: [
+					CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: true),
+					Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: true)]
 			}
 		}
 
@@ -48,6 +82,14 @@ pipeline
 			steps
 			{
 				sh 'make lcov'
+				publishHTML([
+					allowMissing: false,
+					alwaysLinkToLastBuild: false,
+					keepAll: false,
+					reportDir: 'lcov-out',
+					reportFiles: 'index.html',
+					reportName: '',
+					reportTitles: 'Coverage Report Blizzard III'])
 			}
 		}
 	}
