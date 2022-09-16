@@ -92,8 +92,8 @@ pipeline
 					{
 						anyOf
 						{
-							branch '*/develop';
-							branch '*/master'
+							branch 'develop';
+							branch 'master'
 						}
 					}
 					steps
