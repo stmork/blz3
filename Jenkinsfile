@@ -126,7 +126,7 @@ pipeline
 					allowMissing: false,
 					alwaysLinkToLastBuild: false,
 					keepAll: false,
-					reportDir: 'doc',
+					reportDir: 'doc/html',
 					reportFiles: 'index.html',
 					reportName: 'Blizzard III Doxygen',
 					reportTitles: ''])
