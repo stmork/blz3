@@ -4,8 +4,8 @@ pipeline
 
 	environment
 	{
-		BLZ3_HOME=$WORKSPACE
-		LD_LIBRARY_PATH=$BLZ3_HOME/lib
+		BLZ3_HOME="$WORKSPACE"
+		LD_LIBRARY_PATH="$BLZ3_HOME/lib"
 
 		OFLAGS='-O3'
 		CFLAGS=''
@@ -103,12 +103,15 @@ pipeline
 */
 					}
 				}
-			}
-			steps
-			{
-				xunit checksName: '', tools: [
-					CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: false),
-					Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: false)]
+				stage ('Reporting')
+				{
+					steps
+					{
+						xunit checksName: '', tools: [
+							CppUnit(excludesPattern: '', pattern: 'src/*/*test-results.xml', stopProcessingIfError: false),
+							Valgrind(excludesPattern: '', pattern: 'src/*/valgrind_*.xml', stopProcessingIfError: false)]
+					}
+				}
 			}
 		}
 
