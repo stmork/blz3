@@ -1,6 +1,9 @@
 pipeline
 {
-	agent any
+	agent
+	{
+		label 'QT'
+	}
 
 	environment
 	{
@@ -118,7 +121,7 @@ pipeline
 		{
 			steps
 			{
-				sh 'doxygen'
+				sh 'make doxygen'
 			}
 		}
 
