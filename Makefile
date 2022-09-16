@@ -48,7 +48,7 @@ astyle:
 	+astyle src/OpenGL/*.cpp
 
 cppcheck:
-	+make -j `nproc` -C src $@
+	+make -C src $@
 
 lcov:
 	+make -C src $@

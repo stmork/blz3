@@ -55,7 +55,7 @@ pipeline
 			steps
 			{
 				sh 'make cppcheck'
-				publishCppcheck pattern: 'cppcheck.xml'
+				publishCppcheck pattern: 'src/cppcheck.xml'
 			}
 		}
 
@@ -144,12 +144,10 @@ pipeline
 
 	post
 	{
-		/*
 		success
 		{
 			archiveArtifacts artifacts: 'doc/*.qch', followSymlinks: false
 		}
-		*/
 		always
 		{
 			chuckNorris()
