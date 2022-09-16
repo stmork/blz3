@@ -23,6 +23,7 @@ pipeline
 			steps
 			{
 				echo "Blizzard III home: $BLZ3_HOME"
+				echo "Branch name: " + env.BRANCH_NAME
 				sh 'make config depend'
 			}
 		}
