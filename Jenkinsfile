@@ -121,7 +121,7 @@ pipeline
 		{
 			steps
 			{
-				sh 'make doxygen'
+				sh 'make documentation'
 			}
 		}
 
