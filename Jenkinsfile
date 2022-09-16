@@ -94,10 +94,8 @@ pipeline
 					{
 						anyOf
 						{
-							branch 'develop';
-							branch 'master';
-							branch 'origin/develop';
-							branch 'origin/master'
+							expression{env.GIT_BRANCH == 'origin/master'}
+							expression{env.GIT_BRANCH == 'origin/develop'}
 						}
 					}
 					steps
