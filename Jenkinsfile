@@ -86,13 +86,10 @@ pipeline
 				{
 					when
 					{
-						branches
+						anyOf
 						{
-							anyOf
-							{
-								"*/develop",
-								"*/master"
-							}
+							branch '*/develop';
+							branch '*/master'
 						}
 					}
 					steps
