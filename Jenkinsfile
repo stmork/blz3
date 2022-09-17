@@ -25,7 +25,8 @@ pipeline
 				echo "Blizzard III home: $BLZ3_HOME"
 				echo "Node name: $NODE_NAME"
 				echo "Branch name: $GIT_BRANCH"
-				sh 'make config depend'
+				sh 'bin/clobber.sh'
+				sh 'make clean config depend'
 			}
 		}
 
