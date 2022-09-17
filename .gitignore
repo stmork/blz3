@@ -1,13 +1,14 @@
 *.o
 *.so*
 *.a
+*.pro.user
+*.bak
 moc_*.*
 ui_*.*
 qrc_*.*
 .dep
 .metadata
 .settings
-*.pro.user
 src/Makefile
 src/*/Makefile
 Doxyfile
@@ -16,6 +17,7 @@ control-libblz3-dev
 aclocal.m4
 config.log
 config.status
+cppcheck.xml
 include_unix/blz3/autoconf.h
 src/flags.pri
 src/icc.make
