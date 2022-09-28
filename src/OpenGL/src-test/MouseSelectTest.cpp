@@ -1,6 +1,7 @@
 /** Generated with YAKINDU statechart tools
  *
- *   (C) Copyright  2001 - 2022  Steffen A. Mork
+ * SPDX-License-Identifier: BSD-3-Clause
+ * SPDX-FileCopyrightText:  Copyright (C)  2022  Steffen A. Mork
  *               All rights reserved */
 #include <string>
 #include "gtest/gtest.h"

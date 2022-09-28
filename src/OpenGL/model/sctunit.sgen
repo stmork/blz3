@@ -16,7 +16,8 @@ GeneratorModel for sctunit::cpp11
 			licenseText =
 			"Generated with YAKINDU statechart tools\n" +
 			" *\n" +
-			" *   (C) Copyright  2001 - 2022  Steffen A. Mork\n" +
+			" * SPDX-License-Identifier: BSD-3-Clause\n" +
+			" * SPDX-FileCopyrightText:  Copyright (C)  2022  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
 
