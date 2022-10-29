@@ -25,7 +25,10 @@ pipeline
 				echo "Blizzard III home: $BLZ3_HOME"
 				echo "Node name: $NODE_NAME"
 				echo "Branch name: $GIT_BRANCH"
-				sh 'make clean config depend'
+				sh '''
+				test -f src/Makefile && make clean
+				make config depend
+				'''
 			}
 		}
 
