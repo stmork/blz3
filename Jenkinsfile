@@ -72,7 +72,7 @@ pipeline
 				cd src/OpenGL
 				./qrender-sct --gtest_output=xml
 				'''
-				xunit([GoogleTest(pattern: 'src/*/test_*.xml', stopProcessingIfError: false)])
+				xunit checksName: '', tools: [GoogleTest(excludesPattern: '', pattern: 'src/*/test_*.xml', stopProcessingIfError: false)]
 			}
 		}
 
