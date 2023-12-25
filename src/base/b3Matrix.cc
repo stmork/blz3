@@ -238,10 +238,16 @@ b3_matrix * b3Matrix::b3MMul(
 #if 1
 	b3_matrix t;
 
+	/*
+	 * Transposing one matrix to multiply with another matrix is a trick.
+	 * Normally multiplying two matrices are done by multiplying a row with
+	 * a column. If you transpose one matrix it can be done row by row which
+	 * is better for caching.
+	 */
 	b3Transpose(B, &t);
 
-	const b3_f32 * a = &A->m11;
-	b3_f32 * dst = &C->m11;
+	const b3_f32 * a   = &A->m11;
+	b3_f32 *       dst = &C->m11;
 
 	for (b3_loop k = 0; k < 4; k++)
 	{
@@ -249,13 +255,17 @@ b3_matrix * b3Matrix::b3MMul(
 
 		for (b3_loop j = 0; j < 4; j++)
 		{
-			alignas(16) b3_f32  cell[4];
-			b3_f32             sum = 0;
+			b3_f32  cell[4];
+			b3_f32  sum = 0;
 
+			// The optimizer may reduce this to a mulps SSE instruction.
 			for (b3_loop i = 0; i < 4; i++)
 			{
 				cell[i] = a[i] * b[i];
 			}
+
+			// The optimizer may reduce this to two haddps SSE3 instructions.
+			// Caveat: This instruction is very slow!
 			for (b3_loop i = 0; i < 4; i++)
 			{
 				sum += cell[i];
