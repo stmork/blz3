@@ -108,7 +108,7 @@ b3_bool b3Dir::b3OpenDir(const char * dirname)
 {
 	if ((m_Dir = opendir(dirname)) != nullptr)
 	{
-		strncpy(m_Path, dirname, sizeof(m_Path));
+		b3StrCpy(m_Path, dirname, sizeof(m_Path));
 	}
 	return m_Dir != nullptr;
 }

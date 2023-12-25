@@ -62,3 +62,6 @@ Version 3.1.7
 Version 3.1.8
 * EXIF support for PNG.
 * Migration to SCT 4.1 code generator.
+
+Version 3.1.9
+* Better 32-Bit support.

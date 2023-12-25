@@ -1,16 +1,19 @@
-#!/bin/tcsh
+#!/bin/bash
 
-set BLZ3_HOME=$1
+BLZ3_HOME=${1:-$PWD}
 
-test $BLZ3_HOME || exit 1
+test -d $BLZ3_HOME || exit 1
 
+echo "BLZ3_HOME: $BLZ3_HOME"
 cd $BLZ3_HOME
 
 echo "Cleaning files..."
-if ( -f src/Makefile ) then
-  make -C src clean
-  rm -rf `find src -name Makefile` config.*
-endif
+if [ -f src/Makefile ]
+then
+	make -C src clean
+	rm -rf `find src -name Makefile` config.*
+fi
+
 test -f include_unix/blz3/autoconf.h && rm -f include_unix/blz3/autoconf.h
 test -f configure      && rm  -f configure
 test -d autom4te.cache && rm -rf autom4te.cache
@@ -34,14 +37,15 @@ test -d $BLZ3_HOME/Release-SSE  && rm -rf $BLZ3_HOME/Release-SSE
 test -d $BLZ3_HOME/Release-SSE2 && rm -rf $BLZ3_HOME/Release-SSE2
 
 echo "Removing install files..."
-if ( -d "Installer/Lines III" ) then
-  cd "Installer/Lines III"
-  test -d Debug         && rm -rf Debug
-  test -d Release       && rm -rf Release
-  test -d Release\ SSE  && rm -rf Release\ SSE
-  test -d Release\ SSE2 && rm -rf Release\ SSE2
-  cd ../..
-endif
+if [ -d "Installer/Lines III" ]
+then
+	cd "Installer/Lines III"
+	test -d Debug         && rm -rf Debug
+	test -d Release       && rm -rf Release
+	test -d Release\ SSE  && rm -rf Release\ SSE
+	test -d Release\ SSE2 && rm -rf Release\ SSE2
+	cd ../..
+fi
 
 find bin -name "AppLines*" -exec rm -f {} \;
 
