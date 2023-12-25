@@ -1,7 +1,7 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2022  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2023  Steffen A. Mork
  *               All rights reserved */
 
 #include "MouseSelect.h"

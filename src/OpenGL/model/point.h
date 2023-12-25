@@ -5,7 +5,7 @@
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001 - 2022  Steffen A. Mork
+**      (C) Copyright 2001 - 2023  Steffen A. Mork
 **          All Rights Reserved
 **
 **
