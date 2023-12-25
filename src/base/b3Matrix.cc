@@ -235,6 +235,37 @@ b3_matrix * b3Matrix::b3MMul(
 	const b3_matrix	* A,
 	b3_matrix    *    C)
 {
+#if 1
+	b3_matrix t;
+
+	b3Transpose(B, &t);
+
+	const b3_f32 * a = &A->m11;
+	b3_f32 * dst = &C->m11;
+
+	for (b3_loop k = 0; k < 4; k++)
+	{
+		const b3_f32 * b = &t.m11;
+
+		for (b3_loop j = 0; j < 4; j++)
+		{
+			alignas(16) b3_f32  cell[4];
+			b3_f32             sum = 0;
+
+			for (b3_loop i = 0; i < 4; i++)
+			{
+				cell[i] = a[i] * b[i];
+			}
+			for (b3_loop i = 0; i < 4; i++)
+			{
+				sum += cell[i];
+			}
+			*dst++ = sum;
+			b += 4;
+		}
+		a += 4;
+	}
+#else
 	C->m11 = A->m11 * B->m11 + A->m12 * B->m21 + A->m13 * B->m31 + A->m14 * B->m41;
 	C->m12 = A->m11 * B->m12 + A->m12 * B->m22 + A->m13 * B->m32 + A->m14 * B->m42;
 	C->m13 = A->m11 * B->m13 + A->m12 * B->m23 + A->m13 * B->m33 + A->m14 * B->m43;
@@ -254,7 +285,7 @@ b3_matrix * b3Matrix::b3MMul(
 	C->m42 = A->m41 * B->m12 + A->m42 * B->m22 + A->m43 * B->m32 + A->m44 * B->m42;
 	C->m43 = A->m41 * B->m13 + A->m42 * B->m23 + A->m43 * B->m33 + A->m44 * B->m43;
 	C->m44 = A->m41 * B->m14 + A->m42 * B->m24 + A->m43 * B->m34 + A->m44 * B->m44;
-
+#endif
 	return C;
 }
 
