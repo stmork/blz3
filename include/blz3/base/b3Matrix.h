@@ -1994,8 +1994,8 @@ public:
  */
 class B3_PLUGIN b3Matrix
 {
-	static b3_matrix m_UnitMatrix;
-	static b3_vector m_EmptyVector;
+	static const b3_matrix m_UnitMatrix;
+	static const b3_vector m_EmptyVector;
 
 	static bool       b3NormalizeCol(b3_matrix * Dst, b3_index col_num);
 	static bool       b3NormalizeRow(b3_matrix * Dst, b3_index row_num);
@@ -2278,15 +2278,29 @@ public:
 		const bool    future);
 
 	/**
-	 * This method multiplies matrix A and B and stores the result. The result pointer may be equal to
-	 * The matrices A or B.
+	 * This method transposes a matrix Src and stores it into the given result
+	 * pointer.
+	 *
+	 * @param Src The matrix to transpose.
+	 * @param Dst The transposed matrix.
+	 *
+	 * @return The transposed matrix equal to Dst.
+	 */
+	static b3_matrix * b3Transpose(const b3_matrix * Src, b3_matrix * Dst);
+
+	/**
+	 * This method multiplies matrix A and B and stores the result. The result
+	 * pointer may be equal to the matrices A or B.
 	 *
 	 * @param A The first matrix.
 	 * @param B The second matrix.
 	 * @param Result The resulting matrix.
 	 * @return The result matrix pointer.
 	 */
-	static b3_matrix * b3MMul(const b3_matrix * A,  const b3_matrix * B,  b3_matrix * Result);
+	static b3_matrix * b3MMul(
+		const b3_matrix * A,
+		const b3_matrix * B,
+		b3_matrix    *    Result);
 
 	/**
 	 * This method adds matrix A and B and stores the result. The result pointer may be equal to
@@ -2297,7 +2311,10 @@ public:
 	 * @param Result The resulting matrix.
 	 * @return The result matrix pointer.
 	 */
-	static b3_matrix * b3MAdd(b3_matrix * A,  b3_matrix * B,  b3_matrix * Result);
+	static b3_matrix * b3MAdd(
+		const b3_matrix * A,
+		const b3_matrix * B,
+		b3_matrix    *    Result);
 
 	/**
 	 * This method prints the content of the specified matrix with an additional comment.
@@ -2317,10 +2334,10 @@ public:
 	 * @param A The matrix to test.
 	 * @return True if the given matrix is a unit matrix.
 	 */
-	static inline bool       b3IsUnitMatrix(b3_matrix * A)
+	static inline bool       b3IsUnitMatrix(const b3_matrix * A)
 	{
-		b3_f32 * ptr1 = &A->m11;
-		b3_f32 * ptr2 = &m_UnitMatrix.m11;
+		const b3_f32 * ptr1 = &A->m11;
+		const b3_f32 * ptr2 = &m_UnitMatrix.m11;
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -2338,7 +2355,7 @@ public:
 	 * @param a The input component.
 	 * @return The resulting 1d determinand.
 	 */
-	static inline b3_f64 b3Det1(b3_f64 a)
+	static inline b3_f64 b3Det1(const b3_f64 a)
 	{
 		return a;
 	}
@@ -2353,7 +2370,11 @@ public:
 	 * @param d The lower right component.
 	 * @return The resulting determinand.
 	 */
-	static inline b3_f64     b3Det2(b3_f64 a, b3_f64 b, b3_f64 c, b3_f64 d)
+	static inline b3_f64     b3Det2(
+		const b3_f64 a,
+		const b3_f64 b,
+		const b3_f64 c,
+		const b3_f64 d)
 	{
 		return a * d - b * c;
 	}
@@ -2366,7 +2387,10 @@ public:
 	 * @param c The third column.
 	 * @return The resulting determinand.
 	 */
-	static inline b3_f64     b3Det3(b3_vector * a, b3_vector * b, b3_vector * c)
+	static inline b3_f64     b3Det3(
+		const b3_vector * a,
+		const b3_vector * b,
+		const b3_vector * c)
 	{
 		return
 			a->x * b->y * c->z -
@@ -2386,7 +2410,10 @@ public:
 	 * @param c The third column.
 	 * @return The resulting determinand.
 	 */
-	static inline b3_f64     b3Det3(b3_vector64 * a, b3_vector64 * b, b3_vector64 * c)
+	static inline b3_f64     b3Det3(
+		const b3_vector64 * a,
+		const b3_vector64 * b,
+		const b3_vector64 * c)
 	{
 		return
 			a->x * b->y * c->z -
