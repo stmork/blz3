@@ -24,8 +24,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-
 class b3MatrixTest : public CppUnit::TestFixture
 {
 	b3_vector    as, bs, cs, ds;
@@ -41,6 +39,7 @@ class b3MatrixTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(b3MatrixTest);
 	CPPUNIT_TEST(testVector);
 	CPPUNIT_TEST(testMatrix);
+	CPPUNIT_TEST(testMatrixTranspose);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -48,6 +47,7 @@ public:
 	void tearDown() override;
 	void testVector();
 	void testMatrix();
+	void testMatrixTranspose();
 };
 
 #endif

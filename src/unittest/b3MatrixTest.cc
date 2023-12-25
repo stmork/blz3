@@ -386,9 +386,9 @@ void b3MatrixTest::testMatrix()
 
 	CPPUNIT_ASSERT_EQUAL(&ad, b3Vector::b3Init(&ad, 2.0, -2.0, 1.0));
 	CPPUNIT_ASSERT_EQUAL(&bd, b3Matrix::b3VMul(&am, &ad, &bd, false));
-	CPPUNIT_ASSERT_EQUAL(2.0, bd.x);
+	CPPUNIT_ASSERT_EQUAL( 2.0, bd.x);
 	CPPUNIT_ASSERT_EQUAL(-2.0, bd.y);
-	CPPUNIT_ASSERT_EQUAL(1.0, bd.z);
+	CPPUNIT_ASSERT_EQUAL( 1.0, bd.z);
 	CPPUNIT_ASSERT_EQUAL(&bd, b3Matrix::b3VMul(&am, &ad, &bd, true));
 	CPPUNIT_ASSERT_EQUAL(3.0, bd.x);
 	CPPUNIT_ASSERT_EQUAL(0.0, bd.y);
@@ -397,6 +397,51 @@ void b3MatrixTest::testMatrix()
 	CPPUNIT_ASSERT_TYPED_EQUAL(const b3_matrix *, &am, b3Matrix::b3Dump(&am));
 	CPPUNIT_ASSERT_TYPED_EQUAL(const b3_matrix *, &bm,
 		b3Matrix::b3Dump(&bm, "Matrix unit test"));
+}
+
+void b3MatrixTest::testMatrixTranspose()
+{
+	b3_matrix a, result;
+	b3_f32  * aPtr = &a.m11, val = 1;
+
+	for (b3_loop y = 0; y < 4; y++)
+	{
+		for (b3_loop x = 0; x < 4; x++)
+		{
+			const b3_f32 expected = y * 4 + x + 1;
+
+			CPPUNIT_ASSERT_EQUAL(expected, val);
+			*aPtr++ = val++;
+		}
+	}
+
+	CPPUNIT_ASSERT_EQUAL( 1.0f, a.m11);
+	CPPUNIT_ASSERT_EQUAL( 4.0f, a.m14);
+	CPPUNIT_ASSERT_EQUAL( 5.0f, a.m21);
+	CPPUNIT_ASSERT_EQUAL( 6.0f, a.m22);
+	CPPUNIT_ASSERT_EQUAL(13.0f, a.m41);
+	CPPUNIT_ASSERT_EQUAL(16.0f, a.m44);
+
+	CPPUNIT_ASSERT_EQUAL(&result, b3Matrix::b3Transpose(&a, &result));
+
+	const b3_f32 * rPtr = &result.m11;
+
+	for (b3_loop y = 0; y < 4; y++)
+	{
+		for (b3_loop x = 0; x < 4; x++)
+		{
+			const b3_f32 expected = x * 4 + y + 1;
+
+			CPPUNIT_ASSERT_EQUAL(expected, *rPtr++);
+		}
+	}
+
+	CPPUNIT_ASSERT_EQUAL( 1.0f, result.m11);
+	CPPUNIT_ASSERT_EQUAL( 5.0f, result.m12);
+	CPPUNIT_ASSERT_EQUAL(13.0f, result.m14);
+	CPPUNIT_ASSERT_EQUAL( 6.0f, result.m22);
+	CPPUNIT_ASSERT_EQUAL( 4.0f, result.m41);
+	CPPUNIT_ASSERT_EQUAL(16.0f, result.m44);
 }
 
 #endif

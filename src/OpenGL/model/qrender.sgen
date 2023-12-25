@@ -19,7 +19,7 @@ GeneratorModel for yakindu::cpp11
 			"Generated with YAKINDU statechart tools\n" +
 			" *\n" +
 			" * SPDX-License-Identifier: BSD-3-Clause\n" +
-			" * SPDX-FileCopyrightText:  Copyright (C)  2022  Steffen A. Mork\n" +
+			" * SPDX-FileCopyrightText:  Copyright (C)  2023  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
 
