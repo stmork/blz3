@@ -123,7 +123,7 @@ bool b3Matrix::b3NormalizeRow(
 b3_f64 b3Matrix::b3Det4(const b3_matrix * Matrix)
 {
 	b3_vector64 Row1, Row2, Row3, Row4;
-	b3_f64    Result;
+	b3_f64      Result;
 
 	Row1.x  = Matrix->m21;
 	Row1.y  = Matrix->m31;
@@ -146,7 +146,7 @@ b3_f64 b3Matrix::b3Det4(const b3_matrix * Matrix)
 	Result += Matrix->m13 * b3Det3(&Row1, &Row2, &Row4);
 	Result -= Matrix->m14 * b3Det3(&Row1, &Row2, &Row3);
 
-	return (Result);
+	return Result;
 }
 
 b3_matrix * b3Matrix::b3Unit(b3_matrix * Matrix)
@@ -163,6 +163,24 @@ b3_matrix * b3Matrix::b3Copy(
 	memcpy(To, From, sizeof(b3_matrix));
 
 	return To;
+}
+
+b3_matrix * b3Matrix::b3Transpose(const b3_matrix * Src, b3_matrix * Dst)
+{
+	// Astonishing! The gcc is able to reduce these two loops into 20
+	// SSE instructions!
+	const b3_f32 * src = &Src->m11;
+	b3_f32    *    dst = &Dst->m11;
+
+	for (b3_loop x = 0; x < 4; ++x)
+	{
+		for (b3_loop y = 0; y < 4; ++y)
+		{
+			*dst++ = src[y * 4 + x];
+		}
+	}
+
+	return Dst;
 }
 
 b3_matrix * b3Matrix::b3Inverse(
@@ -235,7 +253,6 @@ b3_matrix * b3Matrix::b3MMul(
 	const b3_matrix	* A,
 	b3_matrix    *    C)
 {
-#if 1
 	b3_matrix t;
 
 	/*
@@ -255,17 +272,19 @@ b3_matrix * b3Matrix::b3MMul(
 
 		for (b3_loop j = 0; j < 4; j++)
 		{
+			// The body of the inner loop is in fact a dot product. This may be
+			// reduced to one SSE4 @c dpps instruction.
 			b3_f32  cell[4];
 			b3_f32  sum = 0;
 
-			// The optimizer may reduce this to a mulps SSE instruction.
+			// The optimizer may reduce this to a @c mulps SSE instruction.
 			for (b3_loop i = 0; i < 4; i++)
 			{
 				cell[i] = a[i] * b[i];
 			}
 
-			// The optimizer may reduce this to two haddps SSE3 instructions.
-			// Caveat: This instruction is very slow!
+			// These vector operation can be reduced to two @c haddps
+			// instructions which are unfortunately very slow.
 			for (b3_loop i = 0; i < 4; i++)
 			{
 				sum += cell[i];
@@ -275,27 +294,7 @@ b3_matrix * b3Matrix::b3MMul(
 		}
 		a += 4;
 	}
-#else
-	C->m11 = A->m11 * B->m11 + A->m12 * B->m21 + A->m13 * B->m31 + A->m14 * B->m41;
-	C->m12 = A->m11 * B->m12 + A->m12 * B->m22 + A->m13 * B->m32 + A->m14 * B->m42;
-	C->m13 = A->m11 * B->m13 + A->m12 * B->m23 + A->m13 * B->m33 + A->m14 * B->m43;
-	C->m14 = A->m11 * B->m14 + A->m12 * B->m24 + A->m13 * B->m34 + A->m14 * B->m44;
 
-	C->m21 = A->m21 * B->m11 + A->m22 * B->m21 + A->m23 * B->m31 + A->m24 * B->m41;
-	C->m22 = A->m21 * B->m12 + A->m22 * B->m22 + A->m23 * B->m32 + A->m24 * B->m42;
-	C->m23 = A->m21 * B->m13 + A->m22 * B->m23 + A->m23 * B->m33 + A->m24 * B->m43;
-	C->m24 = A->m21 * B->m14 + A->m22 * B->m24 + A->m23 * B->m34 + A->m24 * B->m44;
-
-	C->m31 = A->m31 * B->m11 + A->m32 * B->m21 + A->m33 * B->m31 + A->m34 * B->m41;
-	C->m32 = A->m31 * B->m12 + A->m32 * B->m22 + A->m33 * B->m32 + A->m34 * B->m42;
-	C->m33 = A->m31 * B->m13 + A->m32 * B->m23 + A->m33 * B->m33 + A->m34 * B->m43;
-	C->m34 = A->m31 * B->m14 + A->m32 * B->m24 + A->m33 * B->m34 + A->m34 * B->m44;
-
-	C->m41 = A->m41 * B->m11 + A->m42 * B->m21 + A->m43 * B->m31 + A->m44 * B->m41;
-	C->m42 = A->m41 * B->m12 + A->m42 * B->m22 + A->m43 * B->m32 + A->m44 * B->m42;
-	C->m43 = A->m41 * B->m13 + A->m42 * B->m23 + A->m43 * B->m33 + A->m44 * B->m43;
-	C->m44 = A->m41 * B->m14 + A->m42 * B->m24 + A->m43 * B->m34 + A->m44 * B->m44;
-#endif
 	return C;
 }
 
@@ -783,22 +782,6 @@ b3_matrix * b3Matrix::b3Dress(
 	// "undo" from transformation, "do" to transformation
 	b3MMul(prev, &orientation, transform);
 	return transform;
-}
-
-b3_matrix * b3Matrix::b3Transpose(const b3_matrix * Src, b3_matrix * Dst)
-{
-	const b3_f32 * src = &Src->m11;
-	b3_f32    *    dst = &Dst->m11;
-
-	for (b3_loop x = 0; x < 4; x++)
-	{
-		for (b3_loop y = 0; y < 4; y++)
-		{
-			*dst++ = src[y * 4 + x];
-		}
-	}
-
-	return Dst;
 }
 
 const b3_matrix * b3Matrix::b3Dump(const b3_matrix * m, const char * title)
