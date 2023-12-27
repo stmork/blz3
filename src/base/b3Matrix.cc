@@ -249,10 +249,11 @@ b3_matrix * b3Matrix::b3Inverse(
 }
 
 b3_matrix * b3Matrix::b3MMul(
-	const b3_matrix	* B,
 	const b3_matrix	* A,
+	const b3_matrix	* B,
 	b3_matrix    *    C)
 {
+	b3_matrix aux;
 	b3_matrix t;
 
 	/*
@@ -261,9 +262,15 @@ b3_matrix * b3Matrix::b3MMul(
 	 * a column. If you transpose one matrix it can be done row by row which
 	 * is better for caching.
 	 */
-	b3Transpose(B, &t);
+	b3Transpose(A, &t);
 
-	const b3_f32 * a   = &A->m11;
+	if (B == C)
+	{
+		// Make secure copy if both pointers are equal.
+		aux = *B;
+	}
+
+	const b3_f32 * a   = B == C ? &aux.m11 : &B->m11;
 	b3_f32 *       dst = &C->m11;
 
 	for (b3_loop k = 0; k < 4; k++)

@@ -40,6 +40,7 @@ class b3MatrixTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testVector);
 	CPPUNIT_TEST(testMatrix);
 	CPPUNIT_TEST(testMatrixTranspose);
+	CPPUNIT_TEST(testMatrixMul);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -48,6 +49,10 @@ public:
 	void testVector();
 	void testMatrix();
 	void testMatrixTranspose();
+	void testMatrixMul();
+
+private:
+	void init(b3_matrix & m, const b3_f32 factor = 1.0f);
 };
 
 #endif
