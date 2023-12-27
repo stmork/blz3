@@ -2011,6 +2011,17 @@ public:
 	static b3_matrix * b3Unit(b3_matrix * Dst);
 
 	/**
+	 * This method transposes a matrix Src and stores it into the given result
+	 * pointer.
+	 *
+	 * @param Src The matrix to transpose.
+	 * @param Dst The transposed matrix.
+	 *
+	 * @return The transposed matrix equal to Dst.
+	 */
+	static b3_matrix * b3Transpose(const b3_matrix * Src, b3_matrix * Dst);
+
+	/**
 	 * This method computes the inverse transformation from an input matrix.
 	 *
 	 * @param Src The source matrix.
@@ -2278,17 +2289,6 @@ public:
 		const bool    future);
 
 	/**
-	 * This method transposes a matrix Src and stores it into the given result
-	 * pointer.
-	 *
-	 * @param Src The matrix to transpose.
-	 * @param Dst The transposed matrix.
-	 *
-	 * @return The transposed matrix equal to Dst.
-	 */
-	static b3_matrix * b3Transpose(const b3_matrix * Src, b3_matrix * Dst);
-
-	/**
 	 * This method multiplies matrix A and B and stores the result. The result
 	 * pointer may be equal to the matrices A or B.
 	 *
@@ -2333,20 +2333,29 @@ public:
 	 *
 	 * @param A The matrix to test.
 	 * @return True if the given matrix is a unit matrix.
+	 * @see b3IsEqual()
 	 */
 	static inline bool       b3IsUnitMatrix(const b3_matrix * A)
 	{
-		const b3_f32 * ptr1 = &A->m11;
-		const b3_f32 * ptr2 = &m_UnitMatrix.m11;
+		return b3IsEqual(A, &m_UnitMatrix);
+	}
 
-		for (int i = 0; i < 16; i++)
+	/**
+	 * This method tests if the given matrices are nearly equal.
+	 *
+	 * @param A The first matrix to compare.
+	 * @param B The second matrix to compare.
+	 * @return True if the given matrix is a unit matrix.
+	 */
+	static inline bool b3IsEqual(const b3_matrix * A, const b3_matrix * B)
+	{
+		const b3_f32 * ptr1 = &A->m11;
+		const b3_f32 * ptr2 = &B->m11;
+
+		return std::equal(ptr1, ptr1 + 16, ptr2, ptr2 + 16, [] (const b3_f32 l, const b3_f32 r)
 		{
-			if (fabs(*ptr1++ - *ptr2++) > 0.001f)
-			{
-				return false;
-			}
-		}
-		return true;
+			return fabs(l - r) <= 0.001f;
+		});
 	}
 
 	/**
