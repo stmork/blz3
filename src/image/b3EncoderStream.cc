@@ -25,8 +25,6 @@
 
 #ifdef HAVE_VIDEO_ENCODER
 
-#include "blz3/image/b3EncoderBuffer.h"
-
 /*************************************************************************
 **                                                                      **
 **                        AV stream/codec implementation                **
@@ -85,7 +83,7 @@ int64_t b3EncoderStream::b3FrameNo(const unsigned increment)
 	return frame_no;
 }
 
-void b3EncoderStream::b3Rescale(AVPacket * packet) const
+void b3EncoderStream::b3Rescale(const b3CodecPacket & packet) const
 {
 	av_packet_rescale_ts(packet, m_CodecContext->time_base, m_Stream->time_base);
 }

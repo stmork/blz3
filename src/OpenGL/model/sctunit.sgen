@@ -2,23 +2,30 @@ GeneratorModel for sctunit::cpp11
 {
 	const PROJECT : string = "OpenGL"
 	const FOLDER  : string = "src-test"
+	const SRC_LIB : string = "src-lib"
 
-	test MouseSelect
+	test MouseSelectTest
 	{
-		feature Outlet 
-		{
-			targetProject = PROJECT
-			targetFolder  = FOLDER
-		}
-
 		feature LicenseHeader
 		{
 			licenseText =
 			"Generated with YAKINDU statechart tools\n" +
 			" *\n" +
 			" * SPDX-License-Identifier: BSD-3-Clause\n" +
-			" * SPDX-FileCopyrightText:  Copyright (C)  2023  Steffen A. Mork\n" +
+			" * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
+		}
+
+		feature GeneratorOptions
+		{
+			smartPointers = false
+		}
+
+		feature Outlet 
+		{
+			targetProject       = PROJECT
+			targetFolder        = FOLDER
+			libraryTargetFolder = SRC_LIB
 		}
 
 		feature IdentifierSettings

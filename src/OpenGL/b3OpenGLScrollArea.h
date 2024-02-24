@@ -90,8 +90,9 @@ private:
 		QB3BarInfo     &     horizontal,
 		QB3BarInfo     &     vertical);
 
-	QB3OpenGLWidget * child = nullptr;
-	QB3BarInfo        h, v;
+	sc::rx::subscription<void> subscription;
+	QB3OpenGLWidget      *     child = nullptr;
+	QB3BarInfo                 h, v;
 };
 
 #endif // QB3OPENGLSCROLLAREA_H

@@ -78,16 +78,16 @@ b3CodecFrame::~b3CodecFrame()
 **                                                                      **
 *************************************************************************/
 
-b3CodecPacket::b3CodecPacket()
+b3CodecPacket::b3CodecPacket() :
+	m_Packet(av_packet_alloc())
 {
-	av_init_packet(&m_Packet);
-	m_Packet.data = nullptr;
-	m_Packet.size = 0;
+	B3_ASSERT(m_Packet->data == nullptr);
+	B3_ASSERT(m_Packet->size == 0);
 }
 
 b3CodecPacket::~b3CodecPacket()
 {
-	av_packet_unref(&m_Packet);
+	av_packet_free(&m_Packet);
 }
 
 #endif

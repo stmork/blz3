@@ -271,7 +271,7 @@ b3_matrix * b3Matrix::b3MMul(
 	}
 
 	const b3_f32 * a   = B == C ? &aux.m11 : &B->m11;
-	b3_f32 *       dst = &C->m11;
+	b3_f32    *    dst = &C->m11;
 
 	for (b3_loop k = 0; k < 4; k++)
 	{

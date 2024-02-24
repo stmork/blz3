@@ -86,13 +86,15 @@ public:
  */
 class b3CodecPacket
 {
-	AVPacket  m_Packet;
+	AVPacket * m_Packet;
 
 public:
 	/**
 	 * The constructor initializes the AV packet for further usage.
 	 */
 	b3CodecPacket();
+	b3CodecPacket(const b3CodecPacket & other) = delete;
+	b3CodecPacket(b3CodecPacket && other) = delete;
 
 	/**
 	 * The destructor frees references to this AV packet.
@@ -102,18 +104,21 @@ public:
 	/**
 	 * This cast operator simply returns a AV packet pointer for convenience.
 	 */
-	inline operator AVPacket * ()
+	inline operator AVPacket * () const noexcept
 	{
-		return &m_Packet;
+		return m_Packet;
 	}
 
 	/**
 	 * This cast operator simply dereferences a AV frame pointer for convenience.
 	 */
-	inline AVPacket * operator -> ()
+	inline AVPacket * operator -> () const noexcept
 	{
-		return &m_Packet;
+		return m_Packet;
 	}
+
+	b3CodecPacket & operator=(const b3CodecPacket & other) = delete;
+	b3CodecPacket & operator=(b3CodecPacket && other) = delete;
 };
 
 #endif

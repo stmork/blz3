@@ -25,6 +25,7 @@
 #ifdef HAVE_VIDEO_ENCODER
 
 #include "blz3/image/b3Tx.h"
+#include "blz3/image/b3EncoderBuffer.h"
 
 extern "C"
 {
@@ -97,7 +98,7 @@ public:
 	 *
 	 * @param packet The packet to rescale.
 	 */
-	void b3Rescale(AVPacket * packet) const;
+	void b3Rescale(const b3CodecPacket & packet) const;
 
 	/**
 	 * This method computes the streams PTS using the av_rescale_q()

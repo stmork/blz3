@@ -1,3 +1,10 @@
+# Generated with YAKINDU statechart tools
+#
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
+#               All rights reserved */
+#
+
 TEMPLATE = subdirs
 SUBDIRS += system_unix system base image raytrace
 SUBDIRS += brt3 benc3 bimg3 half bexif3 render qrender qrender-sct

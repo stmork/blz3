@@ -198,8 +198,10 @@ long b3Tx::b3TIFFPalette(
 
 	if ((depth > 1) && (depth <= 8))
 	{
-		uint16 * r, *g, *b;
-		long i, step, max, color;
+		uint16_t * r;
+		uint16_t * g;
+		uint16_t * b;
+		int        i, step, max, color;
 
 		max  =          1 << depth;
 		step = 0x01010100 >> depth;
@@ -341,12 +343,13 @@ long b3Tx::b3TIFFDecode(
 
 	if ((depth > 8) && (depth <= 32) && (type != B3_TX_UNDEFINED))
 	{
-		uint32     *    fPtr, *bPtr;
+		uint32_t    *   fPtr;
+		uint32_t    *   bPtr;
 		b3_pkd_color    fSwp, bSwp;
 		b3_count        max;
 
 		max  = xSize * ySize;
-		fPtr = (uint32 *)b3GetTrueColorData();
+		fPtr = (uint32_t *)b3GetTrueColorData();
 		bPtr = fPtr + max;
 		max  = ySize >> 1;
 
@@ -384,8 +387,8 @@ long b3Tx::b3TIFFDecode(
 
 		if (rPtr != nullptr)
 		{
-			uint16 * gPtr = rPtr + xSize;
-			uint16 * bPtr = gPtr + xSize;
+			uint16_t * gPtr = rPtr + xSize;
+			uint16_t * bPtr = gPtr + xSize;
 
 			ScanLines = ySize;
 			for (y = 0; y < ySize; y++)
