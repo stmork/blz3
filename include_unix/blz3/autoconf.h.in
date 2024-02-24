@@ -30,7 +30,7 @@
 /* Does Blizzard use SSSE 3? */
 #undef BLZ3_USE_SSSE3
 
-/* Define to 1 if the `closedir' function returns void instead of `int'. */
+/* Define to 1 if the `closedir' function returns void instead of int. */
 #undef CLOSEDIR_VOID
 
 /* Define to 1 if you have the `alarm' function. */
@@ -47,6 +47,9 @@
 
 /* Define to 1 if you have the `ceil' function. */
 #undef HAVE_CEIL
+
+/* Define to 1 if you have the <cstdint> header file. */
+#undef HAVE_CSTDINT
 
 /* define if the compiler supports basic C++17 syntax */
 #undef HAVE_CXX17
@@ -234,6 +237,9 @@
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
+
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
@@ -306,17 +312,13 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
-
 /* The compilation is SSE memory aligned */
 #undef SSE_ALIGNED
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
-
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #undef X_DISPLAY_MISSING
