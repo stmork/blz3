@@ -1,14 +1,14 @@
 /*
 **
 **  $Filename:  b3Encoder.cc $
-**  $Release:   Dortmund 2021 $
+**  $Release:   Dortmund 2024 $
 **  $Revision$
 **  $Date$
 **  $Developer:     Steffen A. Mork $
 **
 **  Blizzard III - Implementation of a MP4/h.264 video encoder.
 **
-**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**      (C) Copyright 2001 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -322,7 +322,7 @@ bool b3MovieEncoder::b3AddAudioFrame()
 		return false;
 	}
 
-	bzero(m_AudioFrame->data[0], m_AudioFrame->linesize[0]);
+	memset(m_AudioFrame->data[0], 0, m_AudioFrame->linesize[0]);
 	int error = b3SendFrame(m_AudioStream, m_AudioFrame);
 
 	b3PrintErr("Audio frame writing", error, false);

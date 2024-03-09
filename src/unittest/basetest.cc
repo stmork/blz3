@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	unittest.cc $
-**	$Release:	Dortmund 2006 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Base and system unit tests
 **
-**      (C) Copyright 2006  Steffen A. Mork
+**      (C) Copyright 2006 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **

@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3ImageTest.cc $
-**	$Release:	Dortmund 2011 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Unit tests for file access classes.
 **
-**      (C) Copyright 2011  Steffen A. Mork
+**      (C) Copyright 2011 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **

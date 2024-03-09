@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3ImageSetup.h $
-**	$Release:	Dortmund 2021 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Unit tests for file access classes.
 **
-**      (C) Copyright 2021  Steffen A. Mork
+**      (C) Copyright 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **

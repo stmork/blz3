@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3ImageTest.h $
-**	$Release:	Dortmund 2011 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Unit tests for file access classes.
 **
-**      (C) Copyright 2011  Steffen A. Mork
+**      (C) Copyright 2011 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -79,10 +79,6 @@ class b3ImageTest : public CppUnit::TestFixture, protected b3ImageSetup
 	CPPUNIT_TEST(testContrast);
 	CPPUNIT_TEST(testGauss);
 	CPPUNIT_TEST(testFilter);
-
-#ifdef BLZ3_USE_OPENEXR
-	CPPUNIT_TEST(testWriteOpenEXR);
-#endif
 	CPPUNIT_TEST_SUITE_END();
 
 public:

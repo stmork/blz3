@@ -107,5 +107,8 @@ valgrind.commands = valgrind\
 	--child-silent-after-fork=no --trace-children=no --gen-suppressions=no\
 	--xml=yes --xml-file=valgrind-unittest.xml ./unittest
 
+# NOTE: If you want to create suppression reports, you have to change the
+# --xml and --gen-suppressions.
+
 QMAKE_EXTRA_TARGETS += valgrind
 QMAKE_CLEAN         += valgrind-unittest.xml

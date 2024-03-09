@@ -1,0 +1,9 @@
+{
+   openexr_write_thread_leak
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:_Znwm
+   fun:_ZN13IlmThread_2_310ThreadPoolC1Ej
+   fun:_ZN13IlmThread_2_310ThreadPool16globalThreadPoolEv
+   fun:_ZN7Imf_2_317globalThreadCountEv
+}
