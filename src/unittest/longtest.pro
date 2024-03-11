@@ -29,7 +29,7 @@ SOURCES += \
 LIBS        += -L$$BLZ3_LIB
 LIBS        += -lb3Raytrace -lb3Base -lb3Image -lb3SystemUnix -lb3System
 LIBS        += $$LIBS_CPPUNIT
-QMAKE_CLEAN += *.jpg *.ps *.tiff *.tga *.rgb8 *.exr
+QMAKE_CLEAN += *.jpg *.png *.ps *.tiff *.tga *.rgb8 *.exr
 QMAKE_CLEAN += *.avi *.mp4 *.mpg *.mov *.hevc *.mkv *.m2v *.webm
 QMAKE_CLEAN += *test-results.xml test*.bwd longtest
 
@@ -54,4 +54,4 @@ valgrind.commands = valgrind\
 # --xml and --gen-suppressions.
 
 QMAKE_EXTRA_TARGETS += valgrind
-QMAKE_CLEAN         += valgrind.xml
+QMAKE_CLEAN         += valgrind-longtest.xml
