@@ -29,13 +29,25 @@ class B3_PLUGIN b3Cubic
 {
 public:
 	/**
+	 * This method checks a real number if it is near zero.
+	 *
+	 * @param x The real number to check against zero.
+	 * @return True if the real number can be assumed as zero.
+	 */
+	template<typename T>
+	static inline bool b3IsZero(const T x)
+	{
+		return std::fabs(x) < 4.656613e-10;
+	}
+
+	/**
 	 * This method solves a quadratic equation.
 	 *
 	 * \param *Coeffs The three coefficents.
 	 * \param *x The result set.
 	 * \return The number of solutions.
 	 */
-	static b3_count b3SolveOrd2(b3_f64 * Coeffs, b3_f64 * x);
+	static b3_count b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x);
 
 	/**
 	 * This method solves a cubic equation.
@@ -44,7 +56,7 @@ public:
 	 * \param *x The result set.
 	 * \return The number of solutions.
 	 */
-	static b3_count b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x);
+	static b3_count b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x);
 
 	/**
 	 * This method solves a quartic equation.
@@ -53,7 +65,7 @@ public:
 	 * \param *x The result set.
 	 * \return The number of solutions.
 	 */
-	static b3_count b3SolveOrd4(b3_f64 * Coeffs, b3_f64 * x);
+	static b3_count b3SolveOrd4(const b3_f64 * Coeffs, b3_f64 * x);
 };
 
 #endif

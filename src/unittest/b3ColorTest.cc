@@ -90,16 +90,16 @@ void b3ColorTest::testColor()
 	color = b3Color(0.25f, 0.75f);
 	testColor(0.25f, 0.25f, 0.25f, 0.75f);
 
-	color = B3_WHITE;
+	color = b3Color::B3_WHITE;
 	testColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-	color = B3_RED;
+	color = b3Color::B3_RED;
 	testColor(1.0f, 0.0f, 0.0f, 0.0f);
 
-	color = B3_GREEN;
+	color = b3Color::B3_GREEN;
 	testColor(0.0f, 1.0f, 0.0f, 0.0f);
 
-	color = B3_BLUE;
+	color = b3Color::B3_BLUE;
 	testColor(0.0f, 0.0f, 1.0f, 0.0f);
 
 	color = static_cast<b3_u16>(0x0f0f);
@@ -121,15 +121,15 @@ void b3ColorTest::testColor()
 	testColor(0.25f, 0.5f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-			b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f64>(0.25));
+			b3Color(b3Color::B3_WHITE), b3Color(b3Color::B3_RED), static_cast<b3_f64>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-			b3Color(B3_WHITE), b3Color(B3_RED), static_cast<b3_f32>(0.25));
+			b3Color(b3Color::B3_WHITE), b3Color(b3Color::B3_RED), static_cast<b3_f32>(0.25));
 	testColor(1.0f, 0.75f, 0.75f, 0.0f);
 
 	color = b3Color::b3Mix(
-			b3Color(B3_WHITE), b3Color(B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
+			b3Color(b3Color::B3_WHITE), b3Color(b3Color::B3_RED), b3Color(0.25, 0.5, 1.0, 0.0));
 	testColor(1.0f, 0.5f, 0.0f, 0.0f);
 
 	color.b3Init(1.0f, 2.0f, 3.0f, 4.0f);
@@ -218,19 +218,19 @@ void b3ColorTest::testColor()
 
 void b3ColorTest::testPkdColor()
 {
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_WHITE,       b3Color::b3MakePkdColor(0xff, 0xff, 0xff));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_LIGHT_GREY,  b3Color::b3MakePkdColor(0xc0, 0xc0, 0xc0));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_GREY,        b3Color::b3MakePkdColor(0x80, 0x80, 0x80));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_DARK_GREY,   b3Color::b3MakePkdColor(0x40, 0x40, 0x40));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_BLACK,       b3Color::b3MakePkdColor(0x00, 0x00, 0x00));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_RED,         b3Color::b3MakePkdColor(0xff, 0x00, 0x00));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_GREEN,       b3Color::b3MakePkdColor(0x00, 0xff, 0x00));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_BLUE,        b3Color::b3MakePkdColor(0x00, 0x00, 0xff));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_YELLOW,      b3Color::b3MakePkdColor(0xff, 0xff, 0x00));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_MAGENTA,     b3Color::b3MakePkdColor(0xff, 0x00, 0xff));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_CYAN,        b3Color::b3MakePkdColor(0x00, 0xff, 0xff));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_MARKER,      b3Color::b3MakePkdColor(0xff, 0x11, 0x44));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_TRANSPARENT, b3Color::b3MakePkdColor(0x00, 0x00, 0x00, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_WHITE,       b3Color::b3MakePkdColor(0xff, 0xff, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_LIGHT_GREY,  b3Color::b3MakePkdColor(0xc0, 0xc0, 0xc0));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_GREY,        b3Color::b3MakePkdColor(0x80, 0x80, 0x80));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_DARK_GREY,   b3Color::b3MakePkdColor(0x40, 0x40, 0x40));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_BLACK,       b3Color::b3MakePkdColor(0x00, 0x00, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_RED,         b3Color::b3MakePkdColor(0xff, 0x00, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_GREEN,       b3Color::b3MakePkdColor(0x00, 0xff, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_BLUE,        b3Color::b3MakePkdColor(0x00, 0x00, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_YELLOW,      b3Color::b3MakePkdColor(0xff, 0xff, 0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_MAGENTA,     b3Color::b3MakePkdColor(0xff, 0x00, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_CYAN,        b3Color::b3MakePkdColor(0x00, 0xff, 0xff));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_MARKER,      b3Color::b3MakePkdColor(0xff, 0x11, 0x44));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_TRANSPARENT, b3Color::b3MakePkdColor(0x00, 0x00, 0x00, 0xff));
 }
 
 void b3ColorTest::testOpenGlColor()

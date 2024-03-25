@@ -133,9 +133,9 @@ public:
 	 */
 	virtual inline bool    b3GetSurfaceValues(b3_surface * surface) const
 	{
-		surface->m_Diffuse     = B3_LIGHT_BLUE;
+		surface->m_Diffuse     = b3Color::B3_LIGHT_BLUE;
 		surface->m_Ambient     = surface->m_Diffuse * 0.2;
-		surface->m_Specular    = B3_GREY;
+		surface->m_Specular    = b3Color::B3_GREY;
 		surface->m_Reflection  =      0.0;
 		surface->m_Refraction  =      0.0;
 		surface->m_Ior         =      1.5;

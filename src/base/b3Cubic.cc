@@ -28,22 +28,17 @@
 #include "blz3/base/b3Cubic.h"
 #include "blz3/base/b3Math.h"
 
-#define b3IsZero(x) (fabs(x) < 4.656613e-10)
-
 /*************************************************************************
 **                                                                      **
 **                        b3Cubic implementation                        **
 **                                                                      **
 *************************************************************************/
 
-b3_count b3Cubic::b3SolveOrd2(b3_f64 * Coeffs, b3_f64 * x)
+b3_count b3Cubic::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 {
-	b3_f64 p, q, D;
+	const b3_f64 p = Coeffs[1] * 0.5;
+	const b3_f64 D = p * p - Coeffs[0];
 
-	p = Coeffs[1] * 0.5;
-	q = Coeffs[0];
-
-	D = p * p - q;
 	if (b3IsZero(D))
 	{
 		x[0] = -p;
@@ -51,7 +46,8 @@ b3_count b3Cubic::b3SolveOrd2(b3_f64 * Coeffs, b3_f64 * x)
 	}
 	else if (D > 0)
 	{
-		q = sqrt(D);
+		const b3_f64 q = sqrt(D);
+
 		x[0] = -q - p;
 		x[1] =  q - p;
 		return 2;
@@ -62,7 +58,7 @@ b3_count b3Cubic::b3SolveOrd2(b3_f64 * Coeffs, b3_f64 * x)
 	}
 }
 
-b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
+b3_count b3Cubic::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 {
 	b3_count i, NumOfX;
 	b3_f64   Sub, A, B, C;
@@ -120,7 +116,7 @@ b3_count b3Cubic::b3SolveOrd3(b3_f64 * Coeffs, b3_f64 * x)
 	return NumOfX;
 }
 
-b3_count b3Cubic::b3SolveOrd4(b3_f64 * c, b3_f64 * x)
+b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 {
 	b3_f64	 Coeffs[4];
 	b3_f64	 Sub, B, C, D, A;

@@ -116,9 +116,9 @@ void b3MatNormal::b3Write()
 
 void b3MatNormal::b3Init()
 {
-	m_Diffuse     = B3_BLUE;
+	m_Diffuse     = b3Color::B3_BLUE;
 	m_Ambient     = m_Diffuse * 0.2;
-	m_Specular    = B3_GREY;
+	m_Specular    = b3Color::B3_GREY;
 	m_Reflection  =    0;
 	m_Refraction  =    0;
 	m_Ior         =    1.5;
@@ -143,13 +143,13 @@ bool b3MatNormal::b3GetSurfaceValues(b3_surface * surface) const
 
 b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess), class_type)
 {
-	m_Material[BLACK].m_Ambient  = B3_BLACK;
-	m_Material[BLACK].m_Diffuse  = B3_BLACK;
-	m_Material[BLACK].m_Specular = B3_GREY;
+	m_Material[BLACK].m_Ambient  = b3Color::B3_BLACK;
+	m_Material[BLACK].m_Diffuse  = b3Color::B3_BLACK;
+	m_Material[BLACK].m_Specular = b3Color::B3_GREY;
 
-	m_Material[WHITE].m_Ambient  = B3_GREY;
-	m_Material[WHITE].m_Diffuse  = B3_WHITE;
-	m_Material[WHITE].m_Specular = B3_GREY;
+	m_Material[WHITE].m_Ambient  = b3Color::B3_GREY;
+	m_Material[WHITE].m_Diffuse  = b3Color::B3_WHITE;
+	m_Material[WHITE].m_Specular = b3Color::B3_GREY;
 
 	m_Material[BLACK].m_Reflection  = m_Material[WHITE].m_Reflection  =    0;
 	m_Material[BLACK].m_Refraction  = m_Material[WHITE].m_Refraction  =    0;
@@ -477,13 +477,13 @@ bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface * surface) const
 
 b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide), class_type)
 {
-	m_Material[0].m_Diffuse  = B3_RED;
+	m_Material[0].m_Diffuse  = b3Color::B3_RED;
 	m_Material[0].m_Ambient  = m_Material[0].m_Diffuse * 0.2;
-	m_Material[0].m_Specular = B3_GREY;
+	m_Material[0].m_Specular = b3Color::B3_GREY;
 
-	m_Material[1].m_Diffuse  = B3_GREEN;
+	m_Material[1].m_Diffuse  = b3Color::B3_GREEN;
 	m_Material[1].m_Ambient  = m_Material[1].m_Diffuse * 0.2;
-	m_Material[1].m_Specular = B3_GREY;
+	m_Material[1].m_Specular = b3Color::B3_GREY;
 
 	m_Material[0].m_Reflection  = m_Material[1].m_Reflection  =    0;
 	m_Material[0].m_Refraction  = m_Material[1].m_Refraction  =    0;
@@ -609,17 +609,17 @@ bool b3MatSlide::b3GetSurfaceValues(b3_surface * surface) const
 
 b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble), class_type)
 {
-	m_LightMaterial.m_Diffuse     = B3_LIGHT_GREY;
+	m_LightMaterial.m_Diffuse     = b3Color::B3_LIGHT_GREY;
 	m_LightMaterial.m_Ambient     = m_LightMaterial.m_Diffuse * 0.2;
-	m_LightMaterial.m_Specular    = B3_GREY;
+	m_LightMaterial.m_Specular    = b3Color::B3_GREY;
 	m_LightMaterial.m_Reflection  =    0;
 	m_LightMaterial.m_Refraction  =    0;
 	m_LightMaterial.m_Ior         =    1;
 	m_LightMaterial.m_SpecularExp = 1000;
 
-	m_DarkMaterial.m_Diffuse     = B3_BLACK;
-	m_DarkMaterial.m_Ambient     = B3_BLACK;
-	m_DarkMaterial.m_Specular    = B3_GREY;
+	m_DarkMaterial.m_Diffuse     = b3Color::B3_BLACK;
+	m_DarkMaterial.m_Ambient     = b3Color::B3_BLACK;
+	m_DarkMaterial.m_Specular    = b3Color::B3_GREY;
 	m_DarkMaterial.m_Reflection  =    0;
 	m_DarkMaterial.m_Refraction  =    0;
 	m_DarkMaterial.m_Ior         =    1.5;
@@ -662,7 +662,7 @@ b3MatMarble::b3MatMarble(b3_u32 * src) : b3Material(src)
 	{
 		m_DarkMaterial           = m_LightMaterial;
 		m_DarkMaterial.m_Diffuse =
-			m_DarkMaterial.m_Ambient = B3_BLACK;
+			m_DarkMaterial.m_Ambient = b3Color::B3_BLACK;
 	}
 }
 
@@ -734,11 +734,11 @@ void b3MaterialWooden::b3Init()
 {
 	m_LightMaterial.m_Diffuse.b3Init(0.5f, 0.2f, 0.067f);
 	m_LightMaterial.m_Ambient  = m_LightMaterial.m_Diffuse * 0.2;
-	m_LightMaterial.m_Specular = B3_LIGHT_GREY;
+	m_LightMaterial.m_Specular = b3Color::B3_LIGHT_GREY;
 
 	m_DarkMaterial.m_Diffuse   = m_LightMaterial.m_Diffuse * 0.7;
 	m_DarkMaterial.m_Ambient   = m_DarkMaterial.m_Diffuse * 0.2;
-	m_DarkMaterial.m_Specular  = B3_LIGHT_GREY;
+	m_DarkMaterial.m_Specular  = b3Color::B3_LIGHT_GREY;
 
 	m_DarkMaterial.m_Reflection  =   0;
 	m_DarkMaterial.m_Refraction  =   0;
@@ -810,9 +810,9 @@ b3MatWood::b3MatWood(b3_u32 * src) : b3MaterialWooden(src)
 		else
 		{
 			m_LightMaterial.m_Ambient  = m_LightMaterial.m_Diffuse * 0.2;
-			m_LightMaterial.m_Specular = B3_GREY;
+			m_LightMaterial.m_Specular = b3Color::B3_GREY;
 			m_DarkMaterial.m_Ambient   = m_DarkMaterial.m_Diffuse * 0.2;
-			m_DarkMaterial.m_Specular  = B3_GREY;
+			m_DarkMaterial.m_Specular  = b3Color::B3_GREY;
 
 			// light material surface values copied earlier.
 		}
@@ -1230,12 +1230,12 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite), class_type)
 {
-	m_DarkMaterial.m_Diffuse      = B3_BLACK;
+	m_DarkMaterial.m_Diffuse      = b3Color::B3_BLACK;
 	m_LightMaterial.m_Diffuse     = b3_pkd_color(0xd0dde0);
 	m_DarkMaterial.m_Ambient      = m_DarkMaterial.m_Diffuse * 0.2;
 	m_LightMaterial.m_Ambient     = m_LightMaterial.m_Diffuse * 0.2;
-	m_DarkMaterial.m_Specular     = B3_GREY;
-	m_LightMaterial.m_Specular    = B3_GREY;
+	m_DarkMaterial.m_Specular     = b3Color::B3_GREY;
+	m_LightMaterial.m_Specular    = b3Color::B3_GREY;
 	m_DarkMaterial.m_Reflection   =
 		m_LightMaterial.m_Reflection  =   0.0;
 	m_DarkMaterial.m_Refraction   =
@@ -1334,8 +1334,8 @@ bool b3MatGranite::b3GetSurfaceValues(b3_surface * surface) const
 
 b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPaint), class_type)
 {
-	m_Parallel.m_Diffuse     = B3_BLUE;
-	m_Parallel.m_Specular    = B3_GREY;
+	m_Parallel.m_Diffuse     = b3Color::B3_BLUE;
+	m_Parallel.m_Specular    = b3Color::B3_GREY;
 	m_Parallel.m_Ambient     = m_Parallel.m_Diffuse * 0.2;
 	m_Parallel.m_Reflection  =   0.16;
 	m_Parallel.m_Refraction  =   0.0;
@@ -1498,9 +1498,9 @@ b3_vector b3MatThinFilm::m_ScaleTime =
 
 b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm), class_type)
 {
-	m_Diffuse     = B3_PEARL;
+	m_Diffuse     = b3Color::B3_PEARL;
 	m_Ambient     = m_Diffuse * 0.2;
-	m_Specular    = B3_GREY;
+	m_Specular    = b3Color::B3_GREY;
 	m_Intensity.b3Init(0.2f);
 	m_Reflection  =    0.2;
 	m_Refraction  =    0.2;

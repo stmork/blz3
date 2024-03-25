@@ -289,9 +289,9 @@ void b3RenderContext::b3LightDefault(b3_pkd_color ambient)
 	b3_render_light_info info;
 
 	// Colors
-	b3PkdColorToGL(B3_BLACK, info.gl_ambient);
-	b3PkdColorToGL(B3_WHITE, info.gl_diffuse);
-	b3PkdColorToGL(B3_WHITE, info.gl_specular);
+	b3PkdColorToGL(b3Color::B3_BLACK, info.gl_ambient);
+	b3PkdColorToGL(b3Color::B3_WHITE, info.gl_diffuse);
+	b3PkdColorToGL(b3Color::B3_WHITE, info.gl_specular);
 
 	// Geometry
 	b3VectorToDirectionalGL(&glSimpleLightPosition,  info.gl_position);

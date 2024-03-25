@@ -631,7 +631,7 @@ void b3RenderObject::b3DefineTexture()
 #ifdef BLZ3_USE_OPENGL
 	GLfloat blend[4];
 
-	b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE, blend);
+	b3RenderContext::b3PkdColorToGL(b3Color::B3_TRANSPARENT | b3Color::B3_WHITE, blend);
 
 	// Set texture parameter
 	glTexEnvi( GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE,  GL_BLEND);
@@ -718,17 +718,17 @@ void b3RenderObject::b3UpdateMaterial()
 			b3DefineTexture();
 
 			// Set material parameter
-			b3RenderContext::b3PkdColorToGL(B3_WHITE, glAmbient);
-			b3RenderContext::b3PkdColorToGL(B3_WHITE, glDiffuse);
-			b3RenderContext::b3PkdColorToGL(B3_WHITE, glSpecular);
+			b3RenderContext::b3PkdColorToGL(b3Color::B3_WHITE, glAmbient);
+			b3RenderContext::b3PkdColorToGL(b3Color::B3_WHITE, glDiffuse);
+			b3RenderContext::b3PkdColorToGL(b3Color::B3_WHITE, glSpecular);
 		}
 		else
 		{
 #if 0
-			ambient = specular = diffuse;
+			ambient  = specular = diffuse;
 #else
-			ambient = diffuse;
-			specular = B3_WHITE;
+			ambient  = diffuse;
+			specular = b3Color::B3_WHITE;
 #endif
 
 			b3RenderContext::b3ColorToGL(ambient, glAmbient);

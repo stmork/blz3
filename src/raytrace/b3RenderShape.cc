@@ -416,7 +416,7 @@ private:
 							ray.polar.m_BBoxOriginal.x =
 								ray.ipoint.x = fx;
 
-				color = B3_BLACK;
+				color = b3Color::B3_BLACK;
 				loop  = true;
 				for (material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
 					(material != nullptr) && loop;

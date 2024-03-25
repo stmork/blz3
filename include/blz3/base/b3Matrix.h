@@ -2286,7 +2286,7 @@ public:
 		const b3_vector * Center,
 		const b3_vector * Dir1,
 		const b3_vector * Dir2,
-		const bool    future);
+		const bool        future);
 
 	/**
 	 * This method multiplies matrix A and B and stores the result. The result

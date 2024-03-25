@@ -47,7 +47,7 @@ public:
 		b3Color avrg;
 		b3Color scale;
 		b3Color diff;
-		b3Color white(B3_WHITE);
+		b3Color white(b3Color::B3_WHITE);
 		b3_coord x, y;
 		b3_f64   fxSize = source.xSize;
 		b3_f64   size   = source.ySize * fxSize;
@@ -137,8 +137,8 @@ public:
 		b3PrintF(B3LOG_NORMAL, "%s\n", image.b3Name());
 
 		b3_pkd_color * ptr = image.b3GetTrueColorData();
-		b3_coord      x, y;
-		b3Color       result, scale(B3_WHITE), offset(B3_BLACK);
+		b3_coord       x, y;
+		b3Color        result, scale(b3Color::B3_WHITE), offset(b3Color::B3_BLACK);
 
 		for (y = 0; y < image.ySize; y++)
 		{

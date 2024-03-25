@@ -86,9 +86,9 @@ void b3RenderLight::b3SetupLight(b3RenderContext * context)
 				b3_render_light_info info;
 
 				// Color
-				b3RenderContext::b3PkdColorToGL(B3_BLACK,    info.gl_ambient);
-				b3RenderContext::b3ColorToGL(light->m_Color, info.gl_diffuse);
-				b3RenderContext::b3PkdColorToGL(B3_WHITE,    info.gl_specular);
+				b3RenderContext::b3PkdColorToGL(b3Color::B3_BLACK, info.gl_ambient);
+				b3RenderContext::b3ColorToGL(light->m_Color,       info.gl_diffuse);
+				b3RenderContext::b3PkdColorToGL(b3Color::B3_WHITE, info.gl_specular);
 
 				// Geometry
 				b3RenderContext::b3VectorToGL(&light->m_Position, info.gl_position);

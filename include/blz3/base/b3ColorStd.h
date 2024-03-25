@@ -34,7 +34,7 @@
  */
 class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 {
-	b3_f32 v[4];            //!< These are the color channels of a b3Color instance.
+	b3_f32 v[4] {};           //!< These are the color channels of a b3Color instance.
 
 public:
 	/*************************************************************************
@@ -61,7 +61,7 @@ public:
 	 * @param b The new blue channel.
 	 * @param a The new alpha channel.
 	 */
-	inline b3Color(
+	constexpr b3Color(
 		const b3_f32 r,
 		const b3_f32 g,
 		const b3_f32 b,
@@ -76,7 +76,7 @@ public:
 	 *
 	 * @param color The other b3Color instance to copy.
 	 */
-	inline b3Color(const b3Color & color)
+	constexpr b3Color(const b3Color & color)
 	{
 		operator=(color);
 	}
@@ -98,7 +98,7 @@ public:
 	 *
 	 * @param color The other b3Color instance to copy.
 	 */
-	b3Color & operator=(const b3Color & color)
+	constexpr b3Color & operator=(const b3Color & color)
 	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -113,7 +113,7 @@ public:
 	 *
 	 * @param color The other b3Color instance to copy.
 	 */
-	b3Color & operator=(b3Color && color)
+	constexpr b3Color & operator=(b3Color && color)
 	{
 		for (b3_loop i = 0; i < 4; i++)
 		{
@@ -128,7 +128,7 @@ public:
 	 *
 	 * @param color The other ::b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color & color)
+	constexpr b3Color(const b3_color & color)
 	{
 		b3Init(color.r, color.g, color.b, color.a);
 	}
@@ -138,7 +138,7 @@ public:
 	 *
 	 * @param color The other ::b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color * color)
+	constexpr b3Color(const b3_color * color)
 	{
 		b3Init(color->r, color->g, color->b, color->a);
 	}
@@ -150,7 +150,7 @@ public:
 	 * @param rgb The equal color components.
 	 * @param a The alpha component.
 	 */
-	inline b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
+	constexpr b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
 	{
 		b3Init(rgb, a);
 	}
@@ -160,24 +160,23 @@ public:
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
 	 */
-	inline b3Color(const b3_u16 input)
+	constexpr b3Color(const b3_u16 input)
 	{
 		b3_u16             color = input;
-		alignas(16) b3_s32 c[4];
-		b3_loop            i;
+		alignas(16) b3_s32 c[4] {};
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			c[3 - i] = color & 0xf;
 			color  = color >> 4;
 		}
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= 15.0;
 		}
@@ -188,24 +187,23 @@ public:
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
 	 */
-	inline b3Color(const b3_pkd_color input)
+	constexpr b3Color(const b3_pkd_color input)
 	{
 		b3_pkd_color       color = input;
-		alignas(16) b3_s32 c[4];
-		b3_loop            i;
+		alignas(16) b3_s32 c[4] {};
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			c[3 - i] = color & 0xff;
 			color  = color >> 8;
 		}
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= 255.0;
 		}
@@ -227,7 +225,7 @@ public:
 	 * @param a The alpha channel byte.
 	 * @return The packed unsigned integer value.
 	 */
-	static inline b3_pkd_color b3MakePkdColor(
+	static constexpr b3_pkd_color b3MakePkdColor(
 		const b3_u08 r,
 		const b3_u08 g,
 		const b3_u08 b,
@@ -307,7 +305,7 @@ public:
 	 * @param b The new blue channel.
 	 * @param a The new alpha channel.
 	 */
-	inline void b3Init(
+	constexpr void b3Init(
 		b3_f32 r,
 		b3_f32 g,
 		b3_f32 b,
@@ -793,11 +791,11 @@ public:
 	 *
 	 * @return The color channels as @c b3_u16 high color.
 	 */
-	inline operator b3_u16 () const
+	constexpr operator b3_u16 () const
 	{
-		const b3_pkd_color px      = operator b3_pkd_color();
-		b3_pkd_color mask    = 0xf0000000;
-		b3_pkd_color result  = 0;
+		const b3_pkd_color px     = operator b3_pkd_color();
+		b3_pkd_color       mask   = 0xf0000000;
+		b3_pkd_color       result = 0;
 
 		while (mask != 0)
 		{
@@ -815,14 +813,13 @@ public:
 	 *
 	 * @return The color channels as @c ::b3_pkd_color.
 	 */
-	inline operator b3_pkd_color() const
+	constexpr operator b3_pkd_color() const
 	{
 		b3_pkd_color       result = 0;
-		b3_loop            i;
-		alignas(16) b3_s32 c[4];
-		alignas(16) b3_f32 sat[4];
+		alignas(16) b3_s32 c[4]{};
+		alignas(16) b3_f32 sat[4]{};
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			sat[i] = v[i];
 			if (sat[i] < 0.0)
@@ -836,12 +833,12 @@ public:
 			sat[i] *= 255.0;
 		}
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			c[i] = (b3_s32)round(sat[i]);
 		}
 
-		for (i = 0; i < 4; i++)
+		for (b3_loop i = 0; i < 4; i++)
 		{
 			result = (result << 8) | c[i];
 		}
@@ -853,15 +850,15 @@ public:
 	 *
 	 * @return The color channels as ::b3_color.
 	 */
-	inline operator b3_color() const
+	constexpr operator b3_color() const
 	{
-		b3_color result;
-
-		result.r = v[R];
-		result.g = v[G];
-		result.b = v[B];
-		result.a = v[A];
-		return result;
+		return b3_color
+		{
+			.a = v[A],
+			.r = v[R],
+			.g = v[G],
+			.b = v[B]
+		};
 	}
 
 	inline operator std::string() const

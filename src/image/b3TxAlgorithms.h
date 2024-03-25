@@ -156,8 +156,8 @@ struct B3_PLUGIN b3TxAlgorithms
 	}
 
 	template<class DST> static void b3Transform(
-		const b3Tx     *    srcTx,
-		b3Tx        *       dstTx,
+		const b3Tx     *     srcTx,
+		b3Tx        *        dstTx,
 		const b3_pkd_color * rTable,
 		const b3_pkd_color * gTable,
 		const b3_pkd_color * bTable)

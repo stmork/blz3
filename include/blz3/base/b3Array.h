@@ -42,8 +42,8 @@ typedef b3Exception<b3_array_error, 0x415252> b3ArrayException;
  */
 template <class T> class B3_PLUGIN b3Array
 {
-	static const b3_count B3_ARRAY_DEFAULT_INCREMENT = 128;
-	static const b3_count B3_ARRAY_INITIAL           =  16;
+	static constexpr b3_count B3_ARRAY_DEFAULT_INCREMENT = 128;
+	static constexpr b3_count B3_ARRAY_INITIAL           =  16;
 
 	std::vector<T> elements;
 
@@ -75,11 +75,20 @@ public:
 	 * This method adds one element and increases the buffer if necessary.
 	 *
 	 * @param element The new element to add.
-	 * @throws b3ArrayException
 	 */
 	inline void b3Add(const T & element)
 	{
 		elements.push_back(element);
+	}
+
+	/**
+	 * This method adds one element and increases the buffer if necessary.
+	 *
+	 * @param element The new element to add.
+	 */
+	inline void b3Add(T && element)
+	{
+		elements.emplace_back(element);
 	}
 
 	/**
@@ -169,23 +178,6 @@ public:
 	{
 		std::sort(elements.begin(), elements.end());
 	}
-
-#if 0
-	/**
-	 * This method sorts the array using a comparator class.
-	 *
-	 * @param comparator A comparator class which can compare elements
-	 *                   of this template class.
-	 * @see b3Comparator
-	 */
-	inline void b3Sort(b3Comparator<T> & comparator)
-	{
-		std::sort(elements.begin(), elements.end(), [&](T a, T b)
-		{
-			return comparator.b3Sort(&a, &b) < 0;
-		});
-	}
-#endif
 };
 
 #endif

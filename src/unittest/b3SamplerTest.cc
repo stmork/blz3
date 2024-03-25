@@ -146,8 +146,8 @@ public:
 		b3_f64    scalar = 200.0 / SAMPLE_RESOLUTION;
 
 		m_Translate = SAMPLE_RESOLUTION >> 1;
-		m_Dark      = B3_BLACK;
-		m_Light     = B3_WHITE;
+		m_Dark      = b3Color::B3_BLACK;
+		m_Light     = b3Color::B3_WHITE;
 
 		b3InitWood();
 		b3Vector::b3Init(&scale_vector, scalar, scalar, scalar);
@@ -184,8 +184,8 @@ public:
 		b3_f64    scalar = 10;
 
 		m_Scale     = 1.0 / SAMPLE_RESOLUTION;
-		m_Dark      = B3_BLACK;
-		m_Light     = B3_WHITE;
+		m_Dark      = b3Color::B3_BLACK;
+		m_Light     = b3Color::B3_WHITE;
 
 		b3InitOakPlank();
 #ifdef CREATE_ICON

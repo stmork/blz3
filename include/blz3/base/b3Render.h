@@ -158,7 +158,7 @@ public:
 	 *
 	 * @param color The ambient color.
 	 */
-	static  void     b3LightReset(const b3_pkd_color color = B3_DARK_GREY);
+	static  void     b3LightReset(const b3_pkd_color color = b3Color::B3_DARK_GREY);
 
 	/**
 	 * This method resets the lighting with the specified color as ambient color
@@ -167,7 +167,7 @@ public:
 	 *
 	 * @param color The ambient color.
 	 */
-	void     b3LightDefault(const b3_pkd_color color = B3_DARK_GREY);
+	void     b3LightDefault(const b3_pkd_color color = b3Color::B3_DARK_GREY);
 
 	/**
 	 * This method verifies the given light index if the index can be handled by OpenGL.
