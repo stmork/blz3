@@ -84,7 +84,8 @@ public:
 	 *
 	 * @param other The other std::complex instance to copy from.
 	 */
-	constexpr b3Complex<T>(const std::complex<T> & other)
+	template<typename F>
+	constexpr b3Complex<T>(const std::complex<F> & other)
 	{
 		v[Re] = other.real();
 		v[Im] = other.imag();
@@ -114,7 +115,8 @@ public:
 	 *
 	 * @param value The real component to initialize.
 	 */
-	constexpr b3Complex<T> & operator=(const T value)
+	template<typename F>
+	constexpr b3Complex<T> & operator=(const F value)
 	{
 		v[Re] = value;
 		v[Im] = 0;
@@ -127,7 +129,8 @@ public:
 	 *
 	 * @param other The instance to copy from.
 	 */
-	constexpr b3Complex<T> & operator=(const std::complex<T> & other)
+	template<typename F>
+	constexpr b3Complex<T> & operator=(const std::complex<F> & other)
 	{
 		v[Re] = other.real();
 		v[Im] = other.imag();
@@ -156,7 +159,8 @@ public:
 	 *
 	 * @param other The instance to copy from.
 	 */
-	template<class O> constexpr b3Complex<T> & operator=(b3Complex<O> & other)
+	template<class F>
+	constexpr b3Complex<T> & operator=(b3Complex<F> & other)
 	{
 		v[Re] = other.b3Real();
 		v[Im] = other.b3Imag();

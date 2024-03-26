@@ -485,25 +485,8 @@ public:
 	 * @param value The color filter value.
 	 * @return A reference to this color.
 	 */
-	inline b3Color & operator*=(const b3_f32 value)
-	{
-		b3Color prod;
-
-		prod.b3InitFactor(value);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			v[i] *= prod.v[i];
-		}
-		return *this;
-	}
-
-	/**
-	 * This operator filters this instance with a specified value.
-	 *
-	 * @param value The color filter value.
-	 * @return A reference to this color.
-	 */
-	inline b3Color & operator*=(const b3_f64 value)
+	template<typename F>
+	inline b3Color & operator*=(const F value)
 	{
 		b3Color prod;
 
@@ -521,25 +504,8 @@ public:
 	 * @param value The color filter value.
 	 * @return The new b3Color instance.
 	 */
-	inline b3Color operator*(const b3_f32 value) const
-	{
-		b3Color result, multiplicator;
-
-		multiplicator.b3InitFactor(value);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = v[i] * multiplicator.v[i];
-		}
-		return result;
-	}
-
-	/**
-	 * This operator filters this instance with a specified value resulting in a new instance.
-	 *
-	 * @param value The color filter value.
-	 * @return The new b3Color instance.
-	 */
-	inline b3Color operator*(const b3_f64 value) const
+	template<typename F>
+	inline b3Color operator*(const F value) const
 	{
 		b3Color result, multiplicator;
 
@@ -557,12 +523,13 @@ public:
 	 * @param value The divisor.
 	 * @return A reference to this instance.
 	 */
-	inline b3Color & operator/=(const b3_f32 value)
+	template<typename F>
+	inline b3Color & operator/=(const F value)
 	{
 		b3Color prod;
 
 		B3_ASSERT(value != 0);
-		prod.b3InitFactor(value);
+		prod.b3InitFactor((b3_f32)value);
 		for (b3_loop i = 0; i < 4; i++)
 		{
 			v[i] /= prod.v[i];
@@ -571,88 +538,13 @@ public:
 	}
 
 	/**
-	 * This operator divides the color channels by a given scalar.
-	 *
-	 * @param value The divisor.
-	 * @return A reference to this instance.
-	 */
-	inline b3Color & operator/=(const b3_f64 value)
-	{
-		b3Color prod;
-
-		B3_ASSERT(value != 0);
-		prod.b3InitFactor(value);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			v[i] /= prod.v[i];
-		}
-		return *this;
-	}
-
-	/**
-	 * This operator divides the color channels by a given scalar.
-	 *
-	 * @param value The divisor.
-	 * @return A reference to this instance.
-	 */
-	inline b3Color & operator/=(const b3_count value)
-	{
-		b3Color divisor;
-
-		B3_ASSERT(value != 0);
-		divisor.b3InitFactor((b3_f32)value);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			v[i] /= divisor.v[i];
-		}
-		return *this;
-	}
-
-	/**
 	 * This operator divides the color channels by a given scalar resulting in a new b3Color instance.
 	 *
 	 * @param value The divisor.
 	 * @return The resulting color.
 	 */
-	inline b3Color operator/(const b3_f32 value) const
-	{
-		b3Color result, divisor;
-
-		B3_ASSERT(value != 0);
-		divisor.b3InitFactor(value);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = v[i] / divisor.v[i];
-		}
-		return result;
-	}
-
-	/**
-	 * This operator divides the color channels by a given scalar resulting in a new b3Color instance.
-	 *
-	 * @param value The divisor.
-	 * @return The resulting color.
-	 */
-	inline b3Color operator/(const b3_f64 value) const
-	{
-		b3Color result, divisor;
-
-		B3_ASSERT(value != 0);
-		divisor.b3InitFactor(value);
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			result.v[i] = v[i] / divisor.v[i];
-		}
-		return result;
-	}
-
-	/**
-	 * This operator divides the color channels by a given scalar resulting in a new b3Color instance.
-	 *
-	 * @param value The divisor.
-	 * @return The resulting color.
-	 */
-	inline b3Color operator/(const b3_count value) const
+	template<typename F>
+	inline b3Color operator/(const F value) const
 	{
 		b3Color result, divisor;
 
@@ -816,8 +708,8 @@ public:
 	constexpr operator b3_pkd_color() const
 	{
 		b3_pkd_color       result = 0;
-		alignas(16) b3_s32 c[4]{};
-		alignas(16) b3_f32 sat[4]{};
+		alignas(16) b3_s32 c[4] {};
+		alignas(16) b3_f32 sat[4] {};
 
 		for (b3_loop i = 0; i < 4; i++)
 		{

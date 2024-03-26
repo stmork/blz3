@@ -278,6 +278,11 @@ public:
 		return b3_tx_data(m_Bytes + sum);
 	}
 
+	inline b3_tx_data operator++() noexcept
+	{
+		return ++m_Bytes;
+	}
+
 	inline b3_tx_data operator++(int) noexcept
 	{
 		b3_tx_data actual(m_Bytes);

@@ -42,9 +42,8 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 	 *
 	 * @param color The color vector in SSE representation.
 	 */
-	inline b3Color(const __m128 input)
+	inline b3Color(const __m128 input) : v(input)
 	{
-		v = input;
 	}
 
 #else
@@ -104,9 +103,9 @@ public:
 	 *
 	 * @param color The other b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color & color)
+	inline b3Color(const b3_color & color) :
+		v(_mm_load_ps(&color.a))
 	{
-		v = _mm_load_ps(&color.a);
 	}
 
 	/**
@@ -114,9 +113,9 @@ public:
 	 *
 	 * @param color The other b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color * color)
+	inline b3Color(const b3_color * color) :
+		v(_mm_load_ps(&color->a))
 	{
-		v = _mm_load_ps(&color->a);
 	}
 
 	/**
