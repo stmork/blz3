@@ -55,6 +55,6 @@ struct Repeator
 
 #define VAL2(a) ((long)(((long)(a)[1] << 8) | (a)[0]))
 
-b3_size WriteGIF(b3File & out, b3_u08 * buffer, b3_u08 * data, b3_size  index);
+b3_size WriteGIF(b3File & out, const b3_u08 * buffer, const b3_u08 * data, const b3_size  index);
 
 #endif

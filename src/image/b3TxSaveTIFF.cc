@@ -259,7 +259,7 @@ b3_result b3Tx::b3SaveTIFFRealColor(TIFF * tiff)
 		// resample row
 		for (x = 0; x < xSize; x++)
 		{
-			b3Color color = lPtr[x];
+			b3Color color(lPtr[x]);
 
 			color.b3Sat();
 			rPtr[x]  = (b3_u16)(color[b3Color::R] * 65535.0);

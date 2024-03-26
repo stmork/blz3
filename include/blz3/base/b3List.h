@@ -68,13 +68,13 @@ enum b3_link_state
 template <class T> class B3_PLUGIN alignas(16) b3Link
 {
 public:
-	T     *    Succ; //!< The next list element or nullptr if this is the last one.
-	T     *    Prev; //!< The previous list element or nullptr if this is the first one.
+	T     *    Succ = nullptr; //!< The next list element or nullptr if this is the last one.
+	T     *    Prev = nullptr; //!< The previous list element or nullptr if this is the first one.
 
 protected:
-	b3_u32     ClassType; //!< The class and type of thie element instance.
-	b3_size    Size;      //!< The size in bytes of this instance.
-	b3_offset  Offset;    //!< The offset to the instance text for serializing.
+	b3_u32     ClassType;   //!< The class and type of thie element instance.
+	b3_size    Size;        //!< The size in bytes of this instance.
+	b3_offset  Offset = 0;  //!< The offset to the instance text for serializing.
 
 public:
 	/**
@@ -83,13 +83,9 @@ public:
 	 * @param new_size The class instance size.
 	 * @param new_class The class type for this list item.
 	 */
-	explicit b3Link(const b3_size new_size, const b3_u32 new_class = 0)
+	explicit b3Link(const b3_size new_size, const b3_u32 new_class = 0) :
+		ClassType(new_class), Size(new_size)
 	{
-		Succ      = nullptr;
-		Prev      = nullptr;
-		Size      = new_size;
-		Offset    = 0;
-		ClassType = new_class;
 	}
 
 	virtual ~b3Link()

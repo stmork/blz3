@@ -234,7 +234,7 @@ struct B3_PLUGIN b3TxAlgorithms
 		const b3_f64   slope,
 		std::function<b3Color(const SRC)> convert = [] (const SRC data)
 	{
-		return data;
+		return b3Color(data);
 	})
 	{
 		const b3_f64   denom = -2.0 * sigma * sigma;

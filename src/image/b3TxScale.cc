@@ -2342,7 +2342,7 @@ void b3Tx::b3TransToGrey()
 		{
 			for (x = 0; x < xSize; x++)
 			{
-				*cPtr++ = b3ToGrey(*fPtr++) * 255;
+				*cPtr++ = b3ToGrey(b3Color(*fPtr++)) * 255;
 			}
 		}
 		b3Free(old);

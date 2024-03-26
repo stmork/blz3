@@ -162,7 +162,7 @@ b3_bool b3TGFReader::b3ProcessMaterial(b3Shape * shape, b3_index index)
 		{
 			b3MatNormal * material = new b3MatNormal(NORMAL_MATERIAL);
 
-			material->m_Diffuse = m_Materials[i].m_Color;
+			material->m_Diffuse = b3Color(m_Materials[i].m_Color);
 			shape->b3GetMaterialHead()->b3Append(material);
 			return true;
 		}

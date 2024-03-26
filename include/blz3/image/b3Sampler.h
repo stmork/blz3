@@ -32,13 +32,13 @@ class b3Sampler;
  */
 struct b3SampleInfo
 {
-	b3Sampler  *  m_Sampler;       //!< The hosting sampler.
-	b3_res        m_yStart;        //!< The vertical strip start coordinate.
-	b3_res        m_yEnd;          //!< The vertical strip end coordinate.
-	b3_res        m_xMax;          //!< The strip width.
-	b3_res        m_yMax;          //!< The overall sampling height.
-	b3_tx_data    m_Data;          //!< The resulting strip data.
-	const void  * m_Ptr;           //!< A pointer to custom information.
+	b3Sampler  *  m_Sampler = nullptr;  //!< The hosting sampler.
+	b3_res        m_yStart  = 0;        //!< The vertical strip start coordinate.
+	b3_res        m_yEnd    = 0;        //!< The vertical strip end coordinate.
+	b3_res        m_xMax    = 0;        //!< The strip width.
+	b3_res        m_yMax    = 0;        //!< The overall sampling height.
+	b3_tx_data    m_Data{};             //!< The resulting strip data.
+	const void  * m_Ptr     = nullptr;  //!< A pointer to custom information.
 };
 
 /**

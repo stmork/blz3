@@ -60,7 +60,6 @@ cppcheck.commands = cppcheck\
 	--suppress=preprocessorErrorDirective\
 	--suppress=syntaxError\
 	--suppress=unusedStructMember\
-	--suppress=useStlAlgorithm\
 	--suppress=noCopyConstructor\
 	--suppress=noOperatorEq\
 	-I$$[QT_INSTALL_HEADERS]\

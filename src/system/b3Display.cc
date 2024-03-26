@@ -41,11 +41,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3Display::b3Display(b3Tx * tx)
+b3Display::b3Display(b3Tx * tx) :
+	m_xMax(tx->xSize),
+	m_yMax(tx->ySize),
+	m_depth(tx->depth)
 {
-	m_xMax   = tx->xSize;
-	m_yMax   = tx->ySize;
-	m_depth  = tx->depth;
 	m_Buffer = tx->b3GetHdrData();
 	m_Tx     = tx;
 	m_OwnTx  = false;

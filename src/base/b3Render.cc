@@ -728,7 +728,7 @@ void b3RenderObject::b3UpdateMaterial()
 			ambient  = specular = diffuse;
 #else
 			ambient  = diffuse;
-			specular = b3Color::B3_WHITE;
+			specular = b3Color(b3Color::B3_WHITE);
 #endif
 
 			b3RenderContext::b3ColorToGL(ambient, glAmbient);

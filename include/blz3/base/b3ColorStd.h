@@ -46,7 +46,7 @@ public:
 	/**
 	 * This constructor does simply nothing.
 	 */
-	inline b3Color()
+	explicit inline b3Color()
 	{
 #ifdef _DEBUG
 		b3Init(1.0f, 0.125f, 0.25f);
@@ -61,7 +61,7 @@ public:
 	 * @param b The new blue channel.
 	 * @param a The new alpha channel.
 	 */
-	constexpr b3Color(
+	explicit constexpr b3Color(
 		const b3_f32 r,
 		const b3_f32 g,
 		const b3_f32 b,
@@ -93,6 +93,83 @@ public:
 	}
 
 	/**
+	 * This constructor initializes this instance from a ::b3_color structure.
+	 *
+	 * @param color The other ::b3_color instance to copy.
+	 */
+	constexpr b3Color(const b3_color & color)
+	{
+		b3Init(color.r, color.g, color.b, color.a);
+	}
+
+	/**
+	 * This constructor initializes this instance from a ::b3_color structure.
+	 *
+	 * @param color The other ::b3_color instance to copy.
+	 */
+	explicit constexpr b3Color(const b3_color * color)
+	{
+		b3Init(color->r, color->g, color->b, color->a);
+	}
+
+	/**
+	 * This constructor initializes this instance with equal color values
+	 * and a different alpha value.
+	 *
+	 * @param rgb The equal color components.
+	 * @param a The alpha component.
+	 */
+	explicit constexpr b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
+	{
+		b3Init(rgb, a);
+	}
+
+	/**
+	 * This constructor initializes this instance from a ::b3_pkd_color
+	 * structure.
+	 *
+	 * @param input The other ::b3_pkd_color instance to copy.
+	 */
+	explicit constexpr b3Color(const b3_u16 input)
+	{
+		b3_u16             color = input;
+		alignas(16) b3_s32 c[4] {};
+
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			c[3 - i] = color & 0xf;
+			color    = color >> 4;
+		}
+
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			v[i] = (b3_f32)c[i];
+		}
+
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			v[i] /= 15.0;
+		}
+	}
+
+	/**
+	 * This constructor initializes this instance from a ::b3_pkd_color
+	 * structure.
+	 *
+	 * @param input The other ::b3_pkd_color instance to copy.
+	 */
+	constexpr b3Color(const b3_pkd_color input)
+	{
+		operator=(input);
+	}
+
+	/*************************************************************************
+	**                                                                      **
+	**                        Assignment operators                          **
+	**                                                                      **
+	*************************************************************************/
+
+	/**
 	 * This copy operator copies another b3Color instance into
 	 * this instance.
 	 *
@@ -108,7 +185,7 @@ public:
 	}
 
 	/**
-	 * This copy operator moves another b3Color instance into
+	 * This move operator moves another b3Color instance into
 	 * this instance.
 	 *
 	 * @param color The other b3Color instance to copy.
@@ -122,72 +199,25 @@ public:
 		return *this;
 	}
 
-
 	/**
-	 * This constructor initializes this instance from a ::b3_color structure.
+	 * This copy operator copies another b3_color instance into
+	 * this instance.
 	 *
-	 * @param color The other ::b3_color instance to copy.
+	 * @param color The other b3Color instance to copy.
 	 */
-	constexpr b3Color(const b3_color & color)
+	inline b3Color & operator=(const b3_color & color)
 	{
 		b3Init(color.r, color.g, color.b, color.a);
-	}
 
-	/**
-	 * This constructor initializes this instance from a ::b3_color structure.
-	 *
-	 * @param color The other ::b3_color instance to copy.
-	 */
-	constexpr b3Color(const b3_color * color)
-	{
-		b3Init(color->r, color->g, color->b, color->a);
+		return *this;
 	}
-
 	/**
-	 * This constructor initializes this instance with equal color values
-	 * and a different alpha value.
-	 *
-	 * @param rgb The equal color components.
-	 * @param a The alpha component.
-	 */
-	constexpr b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
-	{
-		b3Init(rgb, a);
-	}
-
-	/**
-	 * This constructor initializes this instance from a ::b3_pkd_color structure.
+	 * This assignment operator initializes this instance from a ::b3_pkd_color
+	 * structure.
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
 	 */
-	constexpr b3Color(const b3_u16 input)
-	{
-		b3_u16             color = input;
-		alignas(16) b3_s32 c[4] {};
-
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			c[3 - i] = color & 0xf;
-			color  = color >> 4;
-		}
-
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			v[i] = (b3_f32)c[i];
-		}
-
-		for (b3_loop i = 0; i < 4; i++)
-		{
-			v[i] /= 15.0;
-		}
-	}
-
-	/**
-	 * This constructor initializes this instance from a ::b3_pkd_color structure.
-	 *
-	 * @param input The other ::b3_pkd_color instance to copy.
-	 */
-	constexpr b3Color(const b3_pkd_color input)
+	constexpr b3Color & operator=(const b3_pkd_color input)
 	{
 		b3_pkd_color       color = input;
 		alignas(16) b3_s32 c[4] {};
@@ -207,6 +237,8 @@ public:
 		{
 			v[i] /= 255.0;
 		}
+
+		return *this;
 	}
 
 	/*************************************************************************

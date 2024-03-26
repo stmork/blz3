@@ -102,7 +102,7 @@ void b3ColorTest::testColor()
 	color = b3Color::B3_BLUE;
 	testColor(0.0f, 0.0f, 1.0f, 0.0f);
 
-	color = static_cast<b3_u16>(0x0f0f);
+	color = b3Color(static_cast<b3_u16>(0x0f0f));
 	testColor(1.0f, 0.0f, 1.0f, 0.0f);
 
 	color.b3Init();
@@ -291,11 +291,11 @@ void b3ColorTest::testColor(
 	b3_f32 tg = color[b3Color::G];
 	b3_f32 tb = color[b3Color::B];
 
-	CPPUNIT_ASSERT_EQUAL(b3Color(r, g, b, a), color);
 	CPPUNIT_ASSERT_EQUAL(a, ta);
 	CPPUNIT_ASSERT_EQUAL(r, tr);
 	CPPUNIT_ASSERT_EQUAL(g, tg);
 	CPPUNIT_ASSERT_EQUAL(b, tb);
+	CPPUNIT_ASSERT_EQUAL(b3Color(r, g, b, a), color);
 }
 
 #endif

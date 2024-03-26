@@ -193,12 +193,11 @@ b3MovieEncoder::b3MovieEncoder(
 	const b3_res   frames_per_second,
 	const bool     use_audio) :
 	m_RgbFrame(tx, m_SrcFormat),
-	m_YuvFrame(tx, m_DstFormat)
+	m_YuvFrame(tx, m_DstFormat),
+	m_xSize(tx->xSize),
+	m_ySize(tx->ySize)
 {
 	int error = 0;
-
-	m_xSize = tx->xSize;
-	m_ySize = tx->ySize;
 
 	m_SwsCtx = sws_getContext(
 			m_xSize, m_ySize, m_SrcFormat,
