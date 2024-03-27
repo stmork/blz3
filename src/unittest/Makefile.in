@@ -122,6 +122,7 @@ clean:	cleantest
 	rm -f *.avi *.mp4 *.mpg *.mov *.hevc *.mkv *.m2v *.webm
 	rm -f *.jpg *.ps *.tiff *.tga *.rgb8 *.exr
 	rm -f test*.xml test*.bwd
+	rm -f unittest-results.xml
 
 cleantest:
 	rm -f $(TEST_FILES)

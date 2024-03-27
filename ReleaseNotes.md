@@ -65,3 +65,10 @@ Version 3.1.8
 
 Version 3.1.9
 * Better 32-Bit support.
+
+Version 3.1.10
+* Optimized matrix multiplication.
+
+Version 3.1.11
+* Migration to SCT 5.1 code generator.
+* Optimized code quality.

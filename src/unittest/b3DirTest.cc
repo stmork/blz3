@@ -64,7 +64,7 @@ void b3DirTest::test()
 	CPPUNIT_ASSERT(!b3Dir::b3ChDir("/blz3"));
 	CPPUNIT_ASSERT(b3Dir::b3ChDir(work_dir));
 
-	CPPUNIT_ASSERT(!b3Dir::b3MkDir("/blz3"));
+	CPPUNIT_ASSERT(!b3Dir::b3MkDir("/not/blz3"));
 	CPPUNIT_ASSERT(b3Dir::b3MkDir(test_dir));
 	CPPUNIT_ASSERT(b3Dir::b3MkDir(test_dir));
 	CPPUNIT_ASSERT(b3Dir::b3RmDir(test_dir));
