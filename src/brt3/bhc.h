@@ -86,17 +86,17 @@ public:
 class b3ParseException : public std::exception
 {
 public:
-	char m_Message[1024];
+	char m_Message[2048];
 
 public:
 	explicit b3ParseException(const char * text)
 	{
-		strcpy(m_Message, text);
+		strncpy(m_Message, text, sizeof(m_Message));
 	}
 
-	explicit b3ParseException(const char * text, b3_count line)
+	explicit b3ParseException(const char * text, const b3_count line)
 	{
-		sprintf(m_Message, "%s (line: %d)", text, line);
+		snprintf(m_Message, sizeof(m_Message), "%s (line: %d)", text, line);
 	}
 
 	inline const char * what() const noexcept override
