@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.69)
-AC_INIT(blz3, 3.1.10, linux-dev@morknet.de, blz3.tar.gz)
+AC_PREREQ([2.69])
+AC_INIT([blz3],[3.1.11],[linux-dev@morknet.de],[blz3.tar.gz])
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
-AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
+AC_CONFIG_HEADERS([include_unix/blz3/autoconf.h])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -78,11 +78,11 @@ CXXFLAGS="$CXXFLAGS $MFLAGS"
 AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strchr strerror strstr])
 
 AC_MSG_CHECKING([wether we compile on Linux])
-AC_TRY_LINK([#include <stdio.h>],[
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>]], [[
 #ifndef __linux__
 #error "This is not Linux!"
 #endif
-],[AC_DEFINE([BLZ3_IS_LINUX], [1], [Is Blizzard running on Linux]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+]])],[AC_DEFINE([BLZ3_IS_LINUX], [1], [Is Blizzard running on Linux]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 AC_CHECK_HEADER([xmmintrin.h],[
 	AC_DEFINE([HAVE_SSE], [1], [Is SSE available?])
@@ -205,18 +205,17 @@ sprintf(result,"%f %d\n",*((float *)&r), str->q);
 ])
 
 AC_MSG_CHECKING([for memalign])
-AC_TRY_LINK([#include <malloc.h>],[
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <malloc.h>]], [[
 memalign(16,10240);
-],[AC_DEFINE([HAVE_MEMALIGN], [1], [Is memalign() available?]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+]])],[AC_DEFINE([HAVE_MEMALIGN], [1], [Is memalign() available?]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 AC_PATH_XTRA
 
 # Checks for header files.
 AC_HEADER_DIRENT
-AC_HEADER_STDC
+AC_PROG_EGREP
 
-AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h filesystem])
-
+AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h filesystem cstdint])
 
 # Check for OpenGL
 AC_CHECK_HEADER([GL/glut.h],
@@ -295,7 +294,6 @@ AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
-AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
 
