@@ -1173,13 +1173,15 @@ public:
 	 * @param vector The direction vector to transform.
 	 * @return The vector as result.
 	 */
-	static inline b3_vector * b3MatrixMul3D(const b3_matrix * A, b3_vector * vector)
+	static inline b3_vector * b3MatrixMul3D(
+		const b3_matrix * A,
+		b3_vector    *    vector)
 	{
-#ifdef B3_SSE2
+// #ifdef B3_SSE2
+#if 1
 		const b3_f32    *    m = &A->m11;
 		b3_f32       *       v = &vector->x;
 		alignas(16) b3_f32   aux[4];
-		b3_f32               result;
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
@@ -1189,7 +1191,8 @@ public:
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
-			result = 0;
+			b3_f32 result = 0;
+
 			for (b3_loop i = 0; i < 4; i++)
 			{
 				result += m[i] * aux[i];
@@ -1198,11 +1201,10 @@ public:
 			m    += 4;
 		}
 #else
-		b3_f32 x, y, z;
+		const b3_f32 x = vector->x;
+		const b3_f32 y = vector->y;
+		const b3_f32 z = vector->z;
 
-		x = vector->x;
-		y = vector->y;
-		z = vector->z;
 		vector->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13);
 		vector->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23);
 		vector->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33);
@@ -1219,13 +1221,15 @@ public:
 	 * @param vector The position vector to transform.
 	 * @return The vector as result.
 	 */
-	static inline b3_vector * b3MatrixMul4D(const b3_matrix * A, b3_vector * vector)
+	static inline b3_vector * b3MatrixMul4D(
+		const b3_matrix * A,
+		b3_vector    *    vector)
 	{
-#ifdef B3_SSE2
+// #ifdef B3_SSE2
+#if 1
 		const b3_f32     *    m = &A->m11;
 		b3_f32        *       v = &vector->x;
 		alignas(16) b3_f32    aux[4];
-		b3_f32                result;
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
@@ -1235,7 +1239,8 @@ public:
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
-			result = 0;
+			b3_f32 result = 0;
+
 			for (b3_loop i = 0; i < 4; i++)
 			{
 				result += m[i] * aux[i];
@@ -1244,14 +1249,16 @@ public:
 			m    += 4;
 		}
 #else
-		b3_f64 x, y, z;
+		alignas(16) b3_f32    aux[4];
 
-		x = vector->x;
-		y = vector->y;
-		z = vector->z;
-		vector->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
-		vector->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
-		vector->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33 + A->m34);
+		aux[0] = vector->x;
+		aux[1] = vector->y;
+		aux[2] = vector->z;
+		aux[3] = 1.0f;
+
+		vector->x = (b3_f32)(aux[0] * A->m11 + aux[1] * A->m12 + aux[2] * A->m13 + aux[3] * A->m14);
+		vector->y = (b3_f32)(aux[0] * A->m21 + aux[1] * A->m22 + aux[2] * A->m23 + aux[3] * A->m24);
+		vector->z = (b3_f32)(aux[0] * A->m31 + aux[1] * A->m32 + aux[2] * A->m33 + aux[3] * A->m34);
 #endif
 		return vector;
 	}
