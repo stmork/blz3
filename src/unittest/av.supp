@@ -1,0 +1,25 @@
+# https://trac.ffmpeg.org/ticket/7251
+{
+   avcodec_open2_leak
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   fun:x264_encoder_open_163
+   obj:/usr/lib/x86_64-linux-gnu/libavcodec.so.58.134.100
+   fun:avcodec_open2
+}
+
+{
+   avcodec_send_frame_invalid_read
+   Memcheck:Addr16
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   obj:/usr/lib/x86_64-linux-gnu/libx264.so.163
+   fun:start_thread
+   fun:clone
+}

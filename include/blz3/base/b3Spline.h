@@ -365,7 +365,6 @@ public:
 	b3_bool b3Degree(const unsigned newDegree)
 	{
 		b3_knot	  start, end;
-		unsigned  i;
 
 		bspline_errno = B3_BSPLINE_OK;
 		if (m_Degree == newDegree)
@@ -388,11 +387,11 @@ public:
 			unsigned diff = m_Degree - newDegree;
 
 			end = m_Knots[m_ControlNum];
-			for (i = 0; i <  diff; i++)
+			for (unsigned i = 0; i <  diff; i++)
 			{
 				m_Knots[m_ControlNum + i] = end + i;
 			}
-			for (i = 0; i <= m_ControlNum; i++)
+			for (unsigned i = 0; i <= m_ControlNum; i++)
 			{
 				m_Knots[i + newDegree] = m_Knots[i + m_Degree];
 			}
@@ -400,12 +399,12 @@ public:
 			{
 				start = m_Knots[newDegree];
 				end   = m_Knots[m_ControlNum + newDegree];
-				for (i = 0; i < newDegree; i++)
+				for (unsigned i = 0; i < newDegree; i++)
 				{
 					m_Knots[i] = m_Knots[m_ControlNum + i] - end + start;
 				}
 				start = -m_Knots[0];
-				for (i = newDegree + m_ControlNum; i >= 0; i--)
+				for (int i = newDegree + m_ControlNum; i >= 0; i--)
 				{
 					m_Knots[i] += start;
 				}
@@ -413,7 +412,7 @@ public:
 		}
 		else                             /* increasing degree */
 		{
-			for (i = m_ControlNum; i >= 0; i--)
+			for (int i = m_ControlNum; i >= 0; i--)
 			{
 				m_Knots[i + newDegree] = m_Knots[i + m_Degree];
 			}
@@ -421,12 +420,12 @@ public:
 			{
 				start = m_Knots[newDegree];
 				end   = m_Knots[m_ControlNum + newDegree];
-				for (i = 0; i < newDegree; i++)
+				for (unsigned i = 0; i < newDegree; i++)
 				{
 					m_Knots[i] = m_Knots[m_ControlNum + i] - end + start;
 				}
 				start = -m_Knots[0];
-				for (i = newDegree + m_ControlNum; i >= 0; i--)
+				for (int i = newDegree + m_ControlNum; i >= 0; i--)
 				{
 					m_Knots[i] += start;
 				}

@@ -1,7 +1,7 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2023  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
  *               All rights reserved */
 
 #ifndef MOUSESELECT_H_
@@ -18,16 +18,18 @@ class MouseSelect;
 #include "sc_types.h"
 #include "sc_rxcpp.h"
 #include "sc_statemachine.h"
+#include "sc_eventdriven.h"
+#include <string.h>
 
 /*! \file
 Header of the state machine 'MouseSelect'.
 */
 
 
-class MouseSelect : public sc::StatemachineInterface
+class MouseSelect : public sc::EventDrivenInterface
 {
 public:
-	MouseSelect();
+	MouseSelect() noexcept;
 
 	virtual ~MouseSelect();
 
@@ -44,11 +46,11 @@ public:
 	};
 
 	/*! The number of states. */
-	static const sc::integer numStates = 4;
-	static const sc::integer scvi_main_region_Normal = 0;
-	static const sc::integer scvi_main_region_Selection = 0;
-	static const sc::integer scvi_main_region_Moving = 0;
-	static const sc::integer scvi_main_region_Panning = 0;
+	static constexpr const sc::integer numStates {4};
+	static constexpr const sc::integer scvi_main_region_Normal {0};
+	static constexpr const sc::integer scvi_main_region_Selection {0};
+	static constexpr const sc::integer scvi_main_region_Moving {0};
+	static constexpr const sc::integer scvi_main_region_Panning {0};
 
 	/*! Enumeration of all events which are consumed. */
 	enum class Event
@@ -64,7 +66,7 @@ public:
 	class EventInstance
 	{
 	public:
-		explicit EventInstance(Event id) : eventId(id) {}
+		explicit  EventInstance(Event id) noexcept : eventId(id) {}
 		virtual ~EventInstance() = default;
 		const Event eventId;
 	};
@@ -72,7 +74,7 @@ public:
 	class EventInstanceWithValue : public EventInstance
 	{
 	public:
-		explicit EventInstanceWithValue(Event id, T val) :
+		explicit  EventInstanceWithValue(Event id, T val) noexcept :
 			EventInstance(id),
 			value(val)
 		{}
@@ -80,14 +82,11 @@ public:
 		const T value;
 	};
 
-	/*! Can be used by the client code to trigger a run to completion step without raising an event. */
-	void triggerWithoutEvent();
-
 	//! Inner class for gui interface scope.
 	class Gui
 	{
 	public:
-		Gui(MouseSelect * parent);
+		explicit Gui(MouseSelect * parent) noexcept;
 
 
 
@@ -107,9 +106,9 @@ public:
 		/*! Raises the in event 'mouseUp' of interface scope 'gui'. */
 		void raiseMouseUp(SCT_point mouseUp_);
 		/*! Check if event 'selectionEnd' of interface scope 'gui' is raised. */
-		bool isRaisedSelectionEnd();
+		bool isRaisedSelectionEnd() noexcept;
 		/*! Get observable for event 'selectionEnd' of interface scope 'gui'. */
-		sc::rx::Observable<void> * getSelectionEnd();
+		sc::rx::Observable<void> & getSelectionEnd() noexcept;
 
 		//! Inner class for gui interface scope operation callbacks.
 		class OperationCallback
@@ -123,32 +122,32 @@ public:
 		};
 
 		/*! Set the working instance of the operation callback interface 'OperationCallback'. */
-		void setOperationCallback(OperationCallback * operationCallback);
+		void setOperationCallback(OperationCallback * operationCallback) noexcept;
 
 
 	private:
 		friend class MouseSelect;
 
 		/*! Indicates event 'onSelect' of interface scope 'gui' is active. */
-		bool onSelect_raised;
+		bool onSelect_raised {false};
 		/*! Indicates event 'onDisable' of interface scope 'gui' is active. */
-		bool onDisable_raised;
+		bool onDisable_raised {false};
 		/*! Indicates event 'mouseDown' of interface scope 'gui' is active. */
-		bool mouseDown_raised;
+		bool mouseDown_raised {false};
 		/*! Value of event 'mouseDown' of interface scope 'gui'. */
-		SCT_point mouseDown_value;
+		SCT_point mouseDown_value {};
 		/*! Indicates event 'mouseMove' of interface scope 'gui' is active. */
-		bool mouseMove_raised;
+		bool mouseMove_raised {false};
 		/*! Value of event 'mouseMove' of interface scope 'gui'. */
-		SCT_point mouseMove_value;
+		SCT_point mouseMove_value {};
 		/*! Indicates event 'mouseUp' of interface scope 'gui' is active. */
-		bool mouseUp_raised;
+		bool mouseUp_raised {false};
 		/*! Value of event 'mouseUp' of interface scope 'gui'. */
-		SCT_point mouseUp_value;
+		SCT_point mouseUp_value {};
 		/*! Indicates event 'selectionEnd' of interface scope 'gui' is active. */
-		bool selectionEnd_raised;
+		bool selectionEnd_raised {false};
 		/*! Observable for event 'selectionEnd' of interface scope 'gui'. */
-		sc::rx::Observable<void> selectionEnd_observable;
+		sc::rx::Observable<void> selectionEnd_observable = sc::rx::Observable<void> {};
 
 		MouseSelect * parent;
 
@@ -160,13 +159,13 @@ public:
 	};
 
 	/*! Returns an instance of the interface class 'Gui'. */
-	Gui * gui();
+	Gui & gui() noexcept;
 
 	//! Inner class for view interface scope.
 	class View
 	{
 	public:
-		View(MouseSelect * parent);
+		explicit View(MouseSelect * parent) noexcept;
 
 
 
@@ -203,7 +202,7 @@ public:
 		};
 
 		/*! Set the working instance of the operation callback interface 'OperationCallback'. */
-		void setOperationCallback(OperationCallback * operationCallback);
+		void setOperationCallback(OperationCallback * operationCallback) noexcept;
 
 
 	private:
@@ -220,9 +219,11 @@ public:
 	};
 
 	/*! Returns an instance of the interface class 'View'. */
-	View * view();
+	View & view() noexcept;
 
 
+	/*! Can be used by the client code to trigger a run to completion step without raising an event. */
+	void triggerWithoutEvent() override;
 	/*
 	 * Functions inherited from StatemachineInterface
 	 */
@@ -234,23 +235,23 @@ public:
 	 * Checks if the state machine is active (until 2.4.1 this method was used for states).
 	 * A state machine is active if it has been entered. It is inactive if it has not been entered at all or if it has been exited.
 	 */
-	bool isActive() const override;
+	bool isActive() const noexcept override;
 
 
 	/*!
 	* Checks if all active states are final.
 	* If there are no active states then the state machine is considered being inactive. In this case this method returns false.
 	*/
-	bool isFinal() const override;
+	bool isFinal() const noexcept override;
 
 	/*!
 	 * Checks if member of the state machine must be set. For example an operation callback.
 	 */
-	bool check() const;
+	bool check() const noexcept;
 
 
 	/*! Checks if the specified state is active (until 2.4.1 the used method for states was calles isActive()). */
-	bool isStateActive(State state) const;
+	bool isStateActive(State state) const noexcept;
 
 
 
@@ -259,9 +260,9 @@ protected:
 
 	std::deque<EventInstance *> incomingEventQueue;
 
-	EventInstance * getNextEvent();
+	EventInstance * getNextEvent() noexcept;
 
-	void dispatchEvent(EventInstance * event);
+	bool dispatchEvent(EventInstance * event) noexcept;
 
 
 
@@ -269,23 +270,25 @@ private:
 	MouseSelect(const MouseSelect & rhs);
 	MouseSelect & operator=(const MouseSelect &);
 
-	SCT_point p1;
-	SCT_point p2;
+	SCT_point p1 {};
+	SCT_point p2 {};
+
 
 
 	//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
-	static const sc::ushort maxOrthogonalStates = 1;
+	static const sc::ushort maxOrthogonalStates {1};
 
 
 
 	State stateConfVector[maxOrthogonalStates];
 
 
-	Gui ifaceGui;
-	View ifaceView;
+	Gui ifaceGui {Gui{nullptr}};
+	View ifaceView {View{nullptr}};
 
 
-	bool isExecuting;
+	bool isExecuting {false};
+
 
 
 	// prototypes of all internal functions
@@ -309,13 +312,16 @@ private:
 	sc::integer main_region_Selection_react(const sc::integer transitioned_before);
 	sc::integer main_region_Moving_react(const sc::integer transitioned_before);
 	sc::integer main_region_Panning_react(const sc::integer transitioned_before);
-	void clearOutEvents();
-	void clearInEvents();
+	void clearOutEvents() noexcept;
+	void clearInEvents() noexcept;
 	void microStep();
 	void runCycle();
 
 
-
+	/*! Sets the value of the variable 'p1' that is defined in the internal scope. */
+	void setP1(SCT_point p1) noexcept;
+	/*! Sets the value of the variable 'p2' that is defined in the internal scope. */
+	void setP2(SCT_point p2) noexcept;
 
 
 

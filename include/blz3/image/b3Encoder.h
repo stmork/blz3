@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3MovieTest.cc $
-**	$Release:	Dortmund 2021 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **  Blizzard III - Implementation of a MP4/h.264 video encoder.
 **
-**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**      (C) Copyright 2001 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -112,7 +112,8 @@ public:
 	 * @param frames_per_second The frames per second to encode.
 	 * @param use_audio True if an silent audio stream should be included.
 	 */
-	explicit b3MovieEncoder(const char * filename,
+	explicit b3MovieEncoder(
+		const char * filename,
 		const b3Tx * tx,
 		const b3_res frames_per_second = 25,
 		const bool   use_audio         = false);
@@ -192,7 +193,8 @@ private:
 	 * @param error The error code of that action.
 	 * @param throw_exception If an exception should be thrown in failed state.
 	 */
-	void b3PrintErr(const char * description,
+	void b3PrintErr(
+		const char * description,
 		const int    error,
 		const bool   throw_exception = true);
 };

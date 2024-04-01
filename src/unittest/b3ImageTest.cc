@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3ImageTest.cc $
-**	$Release:	Dortmund 2011 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Unit tests for file access classes.
 **
-**      (C) Copyright 2011  Steffen A. Mork
+**      (C) Copyright 2011 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -50,8 +50,18 @@ const b3_res b3ImageTest::m_TestDepth[]
 
 b3_pkd_color b3ImageTest::data_u32[]
 {
-	B3_BLACK, B3_DARK_GREY, B3_GREY, B3_LIGHT_GREY, B3_WHITE,
-	B3_YELLOW, B3_GREEN, B3_CYAN, B3_RED, B3_MAGENTA, B3_BLUE
+	b3Color::B3_BLACK,
+	b3Color::B3_DARK_GREY,
+	b3Color::B3_GREY,
+	b3Color::B3_LIGHT_GREY,
+
+	b3Color::B3_WHITE,
+	b3Color::B3_YELLOW,
+	b3Color::B3_GREEN,
+	b3Color::B3_CYAN,
+	b3Color::B3_RED,
+	b3Color::B3_MAGENTA,
+	b3Color::B3_BLUE
 };
 
 b3_u16       b3ImageTest::data_u16[]
@@ -141,19 +151,19 @@ void b3ImageTest::testTxData()
 
 void b3ImageTest::testColor()
 {
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0,  b3Tx::b3ToGrey(B3_BLACK), b3Math::epsilon);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,  b3Tx::b3ToGrey(B3_WHITE), b3Math::epsilon);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.35, b3Tx::b3ToGrey(B3_RED),   b3Math::epsilon);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.51, b3Tx::b3ToGrey(B3_GREEN), b3Math::epsilon);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.14, b3Tx::b3ToGrey(B3_BLUE),  b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0,  b3Tx::b3ToGrey(b3Color::B3_BLACK), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,  b3Tx::b3ToGrey(b3Color::B3_WHITE), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.35, b3Tx::b3ToGrey(b3Color::B3_RED),   b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.51, b3Tx::b3ToGrey(b3Color::B3_GREEN), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.14, b3Tx::b3ToGrey(b3Color::B3_BLUE),  b3Math::epsilon);
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x00,  b3Tx::b3ColorToIndex(B3_BLACK));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xff,  b3Tx::b3ColorToIndex(B3_WHITE));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xe0,  b3Tx::b3ColorToIndex(B3_RED));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x1c,  b3Tx::b3ColorToIndex(B3_GREEN));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x03,  b3Tx::b3ColorToIndex(B3_BLUE));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x00,  b3Tx::b3ColorToIndex(b3Color::B3_BLACK));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xff,  b3Tx::b3ColorToIndex(b3Color::B3_WHITE));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0xe0,  b3Tx::b3ColorToIndex(b3Color::B3_RED));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x1c,  b3Tx::b3ColorToIndex(b3Color::B3_GREEN));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_index, 0x03,  b3Tx::b3ColorToIndex(b3Color::B3_BLUE));
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, B3_BLACK, b3Tx::b3IndexToColor(0x00));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, b3Color::B3_BLACK, b3Tx::b3IndexToColor(0x00));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xe0e0c0, b3Tx::b3IndexToColor(0xff));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xe00000, b3Tx::b3IndexToColor(0xe0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x00e000, b3Tx::b3IndexToColor(0x1c));
@@ -186,10 +196,10 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT(!bw.b3IsHighColor());
 	CPPUNIT_ASSERT(!bw.b3IsTrueColor());
 	CPPUNIT_ASSERT(!bw.b3IsHdr());
-	CPPUNIT_ASSERT_EQUAL(B3_BLACK, bw.b3GetValue(0, 0));
-	CPPUNIT_ASSERT_EQUAL(B3_WHITE, bw.b3GetValue(1, 0));
-	CPPUNIT_ASSERT_EQUAL(B3_BLACK, bw.b3GetValue(2, 0));
-	CPPUNIT_ASSERT_EQUAL(B3_WHITE, bw.b3GetValue(3, 0));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B3_BLACK, bw.b3GetValue(0, 0));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B3_WHITE, bw.b3GetValue(1, 0));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B3_BLACK, bw.b3GetValue(2, 0));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B3_WHITE, bw.b3GetValue(3, 0));
 
 	CPPUNIT_ASSERT(bw.b3GetPalette() != nullptr);
 	CPPUNIT_ASSERT_NO_THROW(bw.b3GetIndexData());
@@ -231,11 +241,11 @@ void b3ImageTest::testPixel()
 	CPPUNIT_ASSERT_THROW(high.b3GetTrueColorData(), b3TxException);
 	CPPUNIT_ASSERT_THROW(high.b3GetHdrData(), b3TxException);
 
-	CPPUNIT_ASSERT_EQUAL(B3_BLACK, high.b3GetValue(0, 0));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B3_BLACK, high.b3GetValue(0, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x444444, high.b3GetValue(1, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x888888, high.b3GetValue(2, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0xcccccc, high.b3GetValue(3, 0));
-	CPPUNIT_ASSERT_EQUAL(B3_WHITE, high.b3GetValue(4, 0));
+	CPPUNIT_ASSERT_EQUAL(b3Color::B3_WHITE, high.b3GetValue(4, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x990000, high.b3GetValue(5, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x009900, high.b3GetValue(6, 0));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_pkd_color, 0x000099, high.b3GetValue(7, 0));

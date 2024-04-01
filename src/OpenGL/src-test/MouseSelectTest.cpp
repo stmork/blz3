@@ -1,9 +1,11 @@
 /** Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2023  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
  *               All rights reserved */
 #include <string>
+#include <list>
+#include <algorithm>
 #include "gtest/gtest.h"
 #include "MouseSelect.h"
 #include "sc_runner.h"
@@ -432,36 +434,36 @@ static ViewMoveMock* viewMoveMock;
 
 class MockGui : public MouseSelect::Gui::OperationCallback {
 	public:
-	void updateScrolling() override {
+	void updateScrolling() {
 		guiUpdateScrollingMock->updateScrolling();
 	}
 };
 class MockView : public MouseSelect::View::OperationCallback {
 	public:
-	bool is3D() override {
+	bool is3D() {
 		return (viewIs3DMock->*(viewIs3DMock->getBehavior()))();
 	}
-	void show() override {
+	void show() {
 		viewShowMock->show();
 		return (viewShowMock->*(viewShowMock->getBehavior()))();
 	}
-	void hide() override {
+	void hide() {
 		viewHideMock->hide();
 		return (viewHideMock->*(viewHideMock->getBehavior()))();
 	}
-	void cursorPanning() override {
+	void cursorPanning() {
 		viewCursorPanningMock->cursorPanning();
 	}
-	void cursorArrow() override {
+	void cursorArrow() {
 		viewCursorArrowMock->cursorArrow();
 	}
-	void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override {
+	void setRectangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
 		viewSetRectangleMock->setRectangle(x1, y1, x2, y2);
 	}
-	void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override {
+	void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
 		viewSelectMock->select(x1, y1, x2, y2);
 	}
-	void move(int32_t dx, int32_t dy) override {
+	void move(int32_t dx, int32_t dy) {
 		viewMoveMock->move(dx, dy);
 	}
 };
@@ -471,15 +473,37 @@ static SctUnitRunner * runner;
 
 class MouseSelectTest : public ::testing::Test{
 	protected:
-	virtual void SetUp() override {
+	MockGui guiMock;
+	MockView viewMock;
+	virtual void SetUp() {
 		statechart = new MouseSelect();
 		runner = new SctUnitRunner(
-			statechart,
-			true,
-			200
 		);
+		viewIs3DMock = new ViewIs3DMock();
+		viewIs3DMock->initializeBehavior();
+		viewShowMock = new ViewShowMock();
+		viewShowMock->initializeBehavior();
+		viewHideMock = new ViewHideMock();
+		viewHideMock->initializeBehavior();
+		viewSetRectangleMock = new ViewSetRectangleMock();
+		viewSelectMock = new ViewSelectMock();
+		viewCursorPanningMock = new ViewCursorPanningMock();
+		viewCursorArrowMock = new ViewCursorArrowMock();
+		guiUpdateScrollingMock = new GuiUpdateScrollingMock();
+		viewMoveMock = new ViewMoveMock();
+		statechart->gui().setOperationCallback(&guiMock);
+		statechart->view().setOperationCallback(&viewMock);
 	}
-	virtual void TearDown() override {
+	virtual void TearDown() {
+		delete viewMoveMock;
+		delete guiUpdateScrollingMock;
+		delete viewCursorArrowMock;
+		delete viewCursorPanningMock;
+		delete viewSelectMock;
+		delete viewSetRectangleMock;
+		delete viewHideMock;
+		delete viewShowMock;
+		delete viewIs3DMock;
 		delete statechart;
 		delete runner;
 	}
@@ -487,11 +511,6 @@ class MouseSelectTest : public ::testing::Test{
 
 
 TEST_F(MouseSelectTest, testSimple) {
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	statechart->enter();
 	
 	EXPECT_TRUE(statechart->isActive());
@@ -502,41 +521,24 @@ TEST_F(MouseSelectTest, testSimple) {
 	
 	EXPECT_TRUE(!statechart->isActive());
 	
-	
 }
 TEST_F(MouseSelectTest, testSelectionCancel) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D1);
 	
 	statechart->enter();
 	
 	statechart->gui
-	()->raiseOnSelect();
+	().raiseOnSelect();
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Selection));
 	
 	statechart->gui
-	()->raiseOnDisable();
+	().raiseOnDisable();
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
 }
 TEST_F(MouseSelectTest, testSelectionDisallowed) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D2);
 	
 	statechart->enter();
@@ -544,30 +546,15 @@ TEST_F(MouseSelectTest, testSelectionDisallowed) {
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
 	statechart->gui
-	()->raiseOnSelect();
+	().raiseOnSelect();
 	
 	statechart->gui
-	()->isRaisedSelectionEnd();
+	().isRaisedSelectionEnd();
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
 }
 TEST_F(MouseSelectTest, testSelectingWithoutMove) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	viewShowMock = new ViewShowMock();
-	viewShowMock->initializeBehavior();
-	viewHideMock = new ViewHideMock();
-	viewHideMock->initializeBehavior();
-	viewSetRectangleMock = new ViewSetRectangleMock();
-	viewSelectMock = new ViewSelectMock();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D1);
 	
 	
@@ -577,7 +564,7 @@ TEST_F(MouseSelectTest, testSelectingWithoutMove) {
 	statechart->enter();
 	
 	statechart->gui
-	()->raiseOnSelect();
+	().raiseOnSelect();
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Selection));
 	
@@ -586,7 +573,7 @@ TEST_F(MouseSelectTest, testSelectingWithoutMove) {
 	point.y = 100;
 	
 	statechart->gui
-	()->raiseMouseDown(point);
+	().raiseMouseDown(point);
 	
 	EXPECT_TRUE(viewShowMock->calledAtLeastOnce());
 	
@@ -595,12 +582,12 @@ TEST_F(MouseSelectTest, testSelectingWithoutMove) {
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Moving));
 	
 	statechart->gui
-	()->raiseMouseUp(point);
+	().raiseMouseUp(point);
 	
 	EXPECT_TRUE(viewSetRectangleMock->calledAtLeastOnce());
 	
 	statechart->gui
-	()->isRaisedSelectionEnd();
+	().isRaisedSelectionEnd();
 	
 	EXPECT_TRUE(viewHideMock->calledAtLeastOnce());
 	
@@ -608,27 +595,8 @@ TEST_F(MouseSelectTest, testSelectingWithoutMove) {
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
-	viewShowMock->reset();
-	viewHideMock->reset();
-	viewSetRectangleMock->reset();
-	viewSelectMock->reset();
 }
 TEST_F(MouseSelectTest, testSelectingWithMove) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	viewShowMock = new ViewShowMock();
-	viewShowMock->initializeBehavior();
-	viewSetRectangleMock = new ViewSetRectangleMock();
-	viewHideMock = new ViewHideMock();
-	viewHideMock->initializeBehavior();
-	viewSelectMock = new ViewSelectMock();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D1);
 	
 	SCT_point point;
@@ -636,7 +604,7 @@ TEST_F(MouseSelectTest, testSelectingWithMove) {
 	statechart->enter();
 	
 	statechart->gui
-	()->raiseOnSelect();
+	().raiseOnSelect();
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Selection));
 	
@@ -645,7 +613,7 @@ TEST_F(MouseSelectTest, testSelectingWithMove) {
 	point.y = 100;
 	
 	statechart->gui
-	()->raiseMouseDown(point);
+	().raiseMouseDown(point);
 	
 	EXPECT_TRUE(viewShowMock->calledAtLeastOnce());
 	
@@ -658,15 +626,15 @@ TEST_F(MouseSelectTest, testSelectingWithMove) {
 	point.y = 120;
 	
 	statechart->gui
-	()->raiseMouseMove(point);
+	().raiseMouseMove(point);
 	
 	statechart->gui
-	()->raiseMouseUp(point);
+	().raiseMouseUp(point);
 	
 	EXPECT_TRUE(viewSetRectangleMock->calledAtLeastOnce());
 	
 	statechart->gui
-	()->isRaisedSelectionEnd();
+	().isRaisedSelectionEnd();
 	
 	EXPECT_TRUE(viewHideMock->calledAtLeastOnce());
 	
@@ -674,24 +642,8 @@ TEST_F(MouseSelectTest, testSelectingWithMove) {
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
-	viewShowMock->reset();
-	viewSetRectangleMock->reset();
-	viewHideMock->reset();
-	viewSelectMock->reset();
 }
 TEST_F(MouseSelectTest, testPanningWithoutMove) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	viewCursorPanningMock = new ViewCursorPanningMock();
-	viewCursorArrowMock = new ViewCursorArrowMock();
-	guiUpdateScrollingMock = new GuiUpdateScrollingMock();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D1);
 	
 	SCT_point point;
@@ -705,14 +657,14 @@ TEST_F(MouseSelectTest, testPanningWithoutMove) {
 	point.y = 100;
 	
 	statechart->gui
-	()->raiseMouseDown(point);
+	().raiseMouseDown(point);
 	
 	EXPECT_TRUE(viewCursorPanningMock->calledAtLeastOnce());
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Panning));
 	
 	statechart->gui
-	()->raiseMouseUp(point);
+	().raiseMouseUp(point);
 	
 	EXPECT_TRUE(viewCursorArrowMock->calledAtLeastOnce());
 	
@@ -720,24 +672,8 @@ TEST_F(MouseSelectTest, testPanningWithoutMove) {
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
-	viewCursorPanningMock->reset();
-	viewCursorArrowMock->reset();
-	guiUpdateScrollingMock->reset();
 }
 TEST_F(MouseSelectTest, testPanningWithMove) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	viewCursorPanningMock = new ViewCursorPanningMock();
-	viewMoveMock = new ViewMoveMock();
-	viewCursorArrowMock = new ViewCursorArrowMock();
-	guiUpdateScrollingMock = new GuiUpdateScrollingMock();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D1);
 	
 	SCT_point point;
@@ -751,7 +687,7 @@ TEST_F(MouseSelectTest, testPanningWithMove) {
 	point.y = 100;
 	
 	statechart->gui
-	()->raiseMouseDown(point);
+	().raiseMouseDown(point);
 	
 	EXPECT_TRUE(viewCursorPanningMock->calledAtLeastOnce());
 	
@@ -762,12 +698,12 @@ TEST_F(MouseSelectTest, testPanningWithMove) {
 	point.y = 120;
 	
 	statechart->gui
-	()->raiseMouseMove(point);
+	().raiseMouseMove(point);
 	
 	EXPECT_TRUE(viewMoveMock->calledAtLeastOnce());
 	
 	statechart->gui
-	()->raiseMouseUp(point);
+	().raiseMouseUp(point);
 	
 	EXPECT_TRUE(viewCursorArrowMock->calledAtLeastOnce());
 	
@@ -775,21 +711,8 @@ TEST_F(MouseSelectTest, testPanningWithMove) {
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
-	viewCursorPanningMock->reset();
-	viewMoveMock->reset();
-	viewCursorArrowMock->reset();
-	guiUpdateScrollingMock->reset();
 }
 TEST_F(MouseSelectTest, testMouseMove) {
-	viewIs3DMock = new ViewIs3DMock();
-	viewIs3DMock->initializeBehavior();
-	
-	MockGui guiMock;
-	MockView viewMock;
-	statechart->gui()->setOperationCallback(&guiMock);
-	statechart->view()->setOperationCallback(&viewMock);
 	viewIs3DMock->setDefaultBehavior(&ViewIs3DMock::is3D2);
 	
 	SCT_point point;
@@ -803,7 +726,7 @@ TEST_F(MouseSelectTest, testMouseMove) {
 	point.y = 100;
 	
 	statechart->gui
-	()->raiseMouseDown(point);
+	().raiseMouseDown(point);
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
@@ -812,17 +735,15 @@ TEST_F(MouseSelectTest, testMouseMove) {
 	point.y = 120;
 	
 	statechart->gui
-	()->raiseMouseMove(point);
+	().raiseMouseMove(point);
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
 	statechart->gui
-	()->raiseMouseUp(point);
+	().raiseMouseUp(point);
 	
 	EXPECT_TRUE(statechart->isStateActive(MouseSelect::State::main_region_Normal));
 	
-	
-	viewIs3DMock->reset();
 }
 
 }

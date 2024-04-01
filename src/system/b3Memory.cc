@@ -70,6 +70,7 @@ void * b3Mem::b3Realloc(void * old_ptr, const b3_size new_size)
 			for (b3_mem_info & info : m_Slots)
 			{
 				if (info.m_Ptr == old_ptr)
+					// cppcheck-suppress useStlAlgorithm
 				{
 					if (info.m_Size >= new_size)
 					{
@@ -103,6 +104,7 @@ b3_bool b3Mem::b3Free(void * ptr) noexcept
 	for (b3_mem_info & info : m_Slots)
 	{
 		if (info.m_Ptr == ptr)
+			// cppcheck-suppress useStlAlgorithm
 		{
 			b3CriticalSection lock(*this);
 

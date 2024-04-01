@@ -32,10 +32,10 @@
 *************************************************************************/
 
 b3_size WriteGIF(
-	b3File & out,
-	b3_u08 * buffer,
-	b3_u08 * data,
-	b3_size  index)
+	b3File    &    out,
+	const b3_u08 * buffer,
+	const b3_u08 * data,
+	const b3_size  index)
 {
 	b3_size size;
 
@@ -45,6 +45,5 @@ b3_size WriteGIF(
 		return index;
 	}
 	out.b3Write(&buffer[index], size);
-	index = data - buffer;
-	return index;
+	return data - buffer;
 }

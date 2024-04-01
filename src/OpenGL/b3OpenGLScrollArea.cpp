@@ -37,7 +37,8 @@ QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
 
 	b3PrintF(B3LOG_FULL, "%d %d %lf\n", rel, pos, value);
 #endif
-	gui()->setOperationCallback(this);
+	setSubscription(subscription);
+	gui().setOperationCallback(this);
 }
 
 void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
@@ -51,8 +52,8 @@ void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	dumpObjectTree();
-	view()->setOperationCallback(glWidget);
-	subscribe(gui()->getSelectionEnd());
+	view().setOperationCallback(glWidget);
+	subscribe(gui().getSelectionEnd());
 
 #if 1
 	connect(horizontalScrollBar(), &QScrollBar::valueChanged,
@@ -61,6 +62,7 @@ void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
 		this, &QB3OpenGLScrollArea::yValueChanged);
 #endif
 
+	assert (check());
 	enter();
 }
 
@@ -68,7 +70,7 @@ void QB3OpenGLScrollArea::onSelect(bool checked)
 {
 	if (child != nullptr)
 	{
-		checked ? gui()->raiseOnSelect() : gui()->raiseOnDisable();
+		checked ? gui().raiseOnSelect() : gui().raiseOnDisable();
 	}
 }
 
@@ -162,12 +164,12 @@ void QB3OpenGLScrollArea::b3PreviousView()
 
 void QB3OpenGLScrollArea::mousePressEvent(QMouseEvent * event)
 {
-	gui()->raiseMouseDown(SCT_point{ event->x(), event->y() });
+	gui().raiseMouseDown(SCT_point{ event->x(), event->y() });
 }
 
 void QB3OpenGLScrollArea::mouseMoveEvent(QMouseEvent * event)
 {
-	gui()->raiseMouseMove(SCT_point{ event->x(), event->y() });
+	gui().raiseMouseMove(SCT_point{ event->x(), event->y() });
 }
 
 void QB3OpenGLScrollArea::next()
@@ -177,7 +179,7 @@ void QB3OpenGLScrollArea::next()
 
 void QB3OpenGLScrollArea::mouseReleaseEvent(QMouseEvent * event)
 {
-	gui()->raiseMouseUp(SCT_point{ event->x(), event->y() });
+	gui().raiseMouseUp(SCT_point{ event->x(), event->y() });
 }
 
 

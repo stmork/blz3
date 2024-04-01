@@ -1,4 +1,4 @@
-testclass MouseSelect for statechart MouseSelect
+testclass MouseSelectTest for statechart MouseSelect
 {
 	@Test
 	operation testSimple()

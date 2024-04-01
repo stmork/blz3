@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Runtime.h $
-**	$Release:	Dortmund 2021 $
+**	$Release:	Dortmund 2024 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Runtime environment
 **
-**	(C) Copyright 2021  Steffen A. Mork
+**	(C) Copyright 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -24,6 +24,7 @@
 
 #include "blz3/b3Config.h"
 
+#include <string>
 #include <unordered_map>
 
 #define B3_VENDOR     "MORKNet"
@@ -140,7 +141,6 @@ private:
 	b3Runtime();
 
 	void b3SetUserName(const std::string & gecos);
-
 };
 
 #endif

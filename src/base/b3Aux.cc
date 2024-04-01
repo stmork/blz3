@@ -43,16 +43,6 @@ b3Rect::b3Rect(
 	m_y2 = y2;
 }
 
-b3_res b3Rect::b3Width() const
-{
-	return m_x2 - m_x1;
-}
-
-b3_res b3Rect::b3Height() const
-{
-	return m_y2 - m_y1;
-}
-
 bool b3Rect::b3UpdateBound(b3Rect * rect)
 {
 	bool changed = false;
@@ -95,7 +85,7 @@ int b3StringTool::b3CaseCompare(
 		b3Locale     locale;
 		std::wstring u16_left  = locale.b3FromBytes(left);
 		std::wstring u16_right = locale.b3FromBytes(right);
-		b3_index     i = 0;
+		b3_size      i = 0;
 		int          diff;
 
 		i = 0;
@@ -123,7 +113,7 @@ std::string b3StringTool::b3ToLower(const std::string & input)
 	b3Locale     locale;
 	std::wstring result = locale.b3FromBytes(input);
 
-	for (unsigned i = 0; i < result.size(); i++)
+	for (b3_size i = 0; i < result.size(); i++)
 	{
 		result[i] = std::tolower(result[i], locale);
 	}
@@ -136,7 +126,7 @@ std::string b3StringTool::b3ToUpper(const std::string & input)
 	b3Locale     locale;
 	std::wstring result = locale.b3FromBytes(input);
 
-	for (unsigned i = 0; i < result.size(); i++)
+	for (b3_size i = 0; i < result.size(); i++)
 	{
 		result[i] = std::toupper(result[i], locale);
 	}

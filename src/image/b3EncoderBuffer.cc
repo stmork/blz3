@@ -1,14 +1,14 @@
 /*
 **
 **  $Filename:  b3EncoderBuffer.cc $
-**  $Release:   Dortmund 2021 $
+**  $Release:   Dortmund 2024 $
 **  $Revision$
 **  $Date$
 **  $Developer:     Steffen A. Mork $
 **
 **  Blizzard III - Implementation of an encoder buffer/packet.
 **
-**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**      (C) Copyright 2001 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -52,8 +52,8 @@ void b3CodecFrame::b3InitAudio(
 			codec_context->sample_fmt, 1);
 	m_SampleSize = av_get_bytes_per_sample (codec_context->sample_fmt);
 
-	av_frame_get_buffer(m_Frame, 1);
-	bzero(m_Frame->data[0], m_Frame->linesize[0]);
+	av_frame_get_buffer(m_Frame, 0);
+	memset(m_Frame->data[0], 0, m_Frame->linesize[0]);
 }
 
 b3CodecFrame::b3CodecFrame(const b3Tx * tx, int format)
@@ -64,7 +64,6 @@ b3CodecFrame::b3CodecFrame(const b3Tx * tx, int format)
 	m_Frame->height = tx->ySize;
 	av_frame_get_buffer(m_Frame, 0);
 	m_Frame->extended_data = m_Frame->data;
-
 }
 
 b3CodecFrame::~b3CodecFrame()
@@ -78,16 +77,16 @@ b3CodecFrame::~b3CodecFrame()
 **                                                                      **
 *************************************************************************/
 
-b3CodecPacket::b3CodecPacket()
+b3CodecPacket::b3CodecPacket() :
+	m_Packet(av_packet_alloc())
 {
-	av_init_packet(&m_Packet);
-	m_Packet.data = nullptr;
-	m_Packet.size = 0;
+	B3_ASSERT(m_Packet->data == nullptr);
+	B3_ASSERT(m_Packet->size == 0);
 }
 
 b3CodecPacket::~b3CodecPacket()
 {
-	av_packet_unref(&m_Packet);
+	av_packet_free(&m_Packet);
 }
 
 #endif

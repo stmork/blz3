@@ -1,14 +1,14 @@
 /*
 **
 **  $Filename:  b3Encoder.cc $
-**  $Release:   Dortmund 2021 $
+**  $Release:   Dortmund 2024 $
 **  $Revision$
 **  $Date$
 **  $Developer:     Steffen A. Mork $
 **
 **  Blizzard III - Implementation of an encoder streams.
 **
-**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**      (C) Copyright 2001 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -24,8 +24,6 @@
 #include "b3EncoderStream.h"
 
 #ifdef HAVE_VIDEO_ENCODER
-
-#include "blz3/image/b3EncoderBuffer.h"
 
 /*************************************************************************
 **                                                                      **
@@ -85,7 +83,7 @@ int64_t b3EncoderStream::b3FrameNo(const unsigned increment)
 	return frame_no;
 }
 
-void b3EncoderStream::b3Rescale(AVPacket * packet) const
+void b3EncoderStream::b3Rescale(const b3CodecPacket & packet) const
 {
 	av_packet_rescale_ts(packet, m_CodecContext->time_base, m_Stream->time_base);
 }

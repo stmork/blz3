@@ -1,3 +1,20 @@
+/*
+**
+**  $Filename:  b3ImageSetup.cc $
+**  $Release:   Dortmund 2024 $
+**  $Revision$
+**  $Date$
+**  $Developer:     Steffen A. Mork $
+**
+**  Blizzard III - Setting up image creation for unit tests.
+**
+**      (C) Copyright 2001 - 2024  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
 #include "b3ImageSetup.h"
 
 void b3ImageSetup::b3SetupImages()

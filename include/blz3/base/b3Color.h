@@ -24,30 +24,6 @@
 
 #include "blz3/b3Config.h"
 
-#define B3_WHITE       ((b3_pkd_color)0x00ffffff)
-#define B3_LIGHT_GREY  ((b3_pkd_color)0x00c0c0c0)
-#define B3_GREY        ((b3_pkd_color)0x00808080)
-#define B3_DARK_GREY   ((b3_pkd_color)0x00404040)
-#define B3_BLACK       ((b3_pkd_color)0x00000000)
-#define B3_DARK_RED    ((b3_pkd_color)0x00800000)
-#define B3_RED         ((b3_pkd_color)0x00ff0000)
-#define B3_LIGHT_RED   ((b3_pkd_color)0x00ff4040)
-#define B3_DARK_GREEN  ((b3_pkd_color)0x00008000)
-#define B3_GREEN       ((b3_pkd_color)0x0000ff00)
-#define B3_LIGHT_GREEN ((b3_pkd_color)0x0040ff40)
-#define B3_DARK_BLUE   ((b3_pkd_color)0x00000080)
-#define B3_BLUE        ((b3_pkd_color)0x000000ff)
-#define B3_LIGHT_BLUE  ((b3_pkd_color)0x004040ff)
-#define B3_YELLOW      ((b3_pkd_color)0x00ffff00)
-#define B3_MAGENTA     ((b3_pkd_color)0x00ff00ff)
-#define B3_CYAN        ((b3_pkd_color)0x0000ffff)
-#define B3_PEARL       ((b3_pkd_color)0x00a4aeb7)
-#define B3_MARKER      ((b3_pkd_color)0x00ff1144)
-#define B3_TRANSPARENT ((b3_pkd_color)0xff000000)
-
-#define COLOR_TOP_NIBBLE   15.0
-#define COLOR_TOP_BYTE    255.0
-
 /**
  * This class provides color handling. It uses modern command sets
  * like SSE if the compiler can generate this and the underlying cpu
@@ -56,6 +32,30 @@
 class B3_PLUGIN b3ColorBase
 {
 public:
+	static constexpr b3_pkd_color B3_WHITE       = 0x00ffffff;
+	static constexpr b3_pkd_color B3_BLACK       = 0x00000000;
+	static constexpr b3_pkd_color B3_LIGHT_GREY  = 0x00c0c0c0;
+	static constexpr b3_pkd_color B3_GREY        = 0x00808080;
+	static constexpr b3_pkd_color B3_DARK_GREY   = 0x00404040;
+	static constexpr b3_pkd_color B3_DARK_RED    = 0x00800000;
+	static constexpr b3_pkd_color B3_RED         = 0x00ff0000;
+	static constexpr b3_pkd_color B3_LIGHT_RED   = 0x00ff4040;
+	static constexpr b3_pkd_color B3_DARK_GREEN  = 0x00008000;
+	static constexpr b3_pkd_color B3_GREEN       = 0x0000ff00;
+	static constexpr b3_pkd_color B3_LIGHT_GREEN = 0x0040ff40;
+	static constexpr b3_pkd_color B3_DARK_BLUE   = 0x00000080;
+	static constexpr b3_pkd_color B3_BLUE        = 0x000000ff;
+	static constexpr b3_pkd_color B3_LIGHT_BLUE  = 0x004040ff;
+	static constexpr b3_pkd_color B3_YELLOW      = 0x00ffff00;
+	static constexpr b3_pkd_color B3_MAGENTA     = 0x00ff00ff;
+	static constexpr b3_pkd_color B3_CYAN        = 0x0000ffff;
+	static constexpr b3_pkd_color B3_PEARL       = 0x00a4aeb7;
+	static constexpr b3_pkd_color B3_MARKER      = 0x00ff1144;
+	static constexpr b3_pkd_color B3_TRANSPARENT = 0xff000000;
+
+	static constexpr b3_f32 COLOR_TOP_NIBBLE     =  15.0;
+	static constexpr b3_f32 COLOR_TOP_BYTE       = 255.0;
+
 	/**
 	 * This enum references the seperate color channels.
 	 */
@@ -77,7 +77,7 @@ public:
 	 * @param a The new alpha channel.
 	 * @return The b3_color instance pointer.
 	 */
-	inline static b3_color * b3Init(b3_color * color,
+	constexpr static b3_color * b3Init(b3_color * color,
 		b3_f32 r = 0,
 		b3_f32 g = 0,
 		b3_f32 b = 0,

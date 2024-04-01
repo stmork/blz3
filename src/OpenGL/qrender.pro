@@ -22,6 +22,7 @@ SOURCES += \
 
 HEADERS += model/point.h \
 	src-gen/MouseSelect.h \
+	src-lib/sc_eventdriven.h \
 	src-lib/sc_statemachine.h \
 	src-lib/sc_types.h \
 	src-lib/sc_rxcpp.h \

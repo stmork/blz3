@@ -61,7 +61,6 @@ static void b3Banner(const char * command)
 int main(int argc, char * argv[])
 {
 #ifdef HAVE_VIDEO_ENCODER
-	const char   *  filename = "test-movie.mp4";
 	b3FileList      list;
 	b3FileEntry  *  entry;
 
@@ -72,10 +71,7 @@ int main(int argc, char * argv[])
 		exit(EXIT_SUCCESS);
 	}
 
-	if (argc >= 2)
-	{
-		filename = argv[1];
-	}
+	const char * filename = argv[1];
 
 	b3CodecRegister::b3Instance().b3PrepareCodecs();
 	b3CodecRegister::b3Instance().b3PrepareOutputFormats();

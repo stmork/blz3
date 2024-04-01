@@ -241,7 +241,7 @@ inline void b3SupersamplingRayRow::b3Convert()
 	{
 		for (x = 0; x < m_xSize; x++)
 		{
-			m_buffer[x] = b3Color(B3_BLUE);
+			m_buffer[x] = b3Color(b3Color::B3_BLUE);
 		}
 	}
 
@@ -259,7 +259,7 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 	b3_vector64   dir;
 	b3_f64        fxLeft, fxRight, fyUp, fyDown;
 	bool          do_refine_succ = false;
-	b3_pkd_color  result = B3_BLACK;
+	b3_pkd_color  result = b3Color::B3_BLACK;
 
 	B3_ASSERT(m_RowState != B3_STATE_READY);
 
@@ -285,13 +285,13 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 			{
 				result = (add ?
 						(this_row ?
-							B3_GREEN :
-							B3_RED) :
-						B3_GREY);
+							b3Color::B3_GREEN :
+							b3Color::B3_RED) :
+						b3Color::B3_GREY);
 			}
 			else
 			{
-				result = B3_BLUE;
+				result = b3Color::B3_BLUE;
 			}
 		}
 

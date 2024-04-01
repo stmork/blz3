@@ -9,7 +9,7 @@
 **
 **	Blizzard III - imaging routines
 **
-**	(C) Copyright 2001 - 2021  Steffen A. Mork
+**	(C) Copyright 2001 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -688,7 +688,7 @@ const b3Color b3Tx::b3GetHdrValue(const b3_coord x, const b3_coord y) const
 	switch (type)
 	{
 	case B3_TX_VGA:
-		return b3Color(palette == nullptr ? B3_BLACK : palette[b3Get<b3_u08>(x, y)]);
+		return b3Color(palette == nullptr ? b3Color::B3_BLACK : palette[b3Get<b3_u08>(x, y)]);
 
 	case B3_TX_RGB4:
 		return b3Color(b3Get<b3_u16>(x, y));
@@ -724,13 +724,13 @@ b3_pkd_color b3Tx::b3GetValue(
 		return b3Get<b3_pkd_color>(x, y);
 
 	case B3_TX_VGA:
-		return palette == nullptr ? B3_BLACK : palette[b3Get<b3_u08>(x, y)];
+		return palette == nullptr ? b3Color::B3_BLACK : palette[b3Get<b3_u08>(x, y)];
 
 	case B3_TX_FLOAT:
 		return b3Color(b3Get<b3_color>(x, y));
 
 	case B3_TX_UNDEFINED :
-		return B3_BLACK;
+		return b3Color::B3_BLACK;
 
 	default :
 		B3_THROW(b3TxException, B3_TX_UNKNOWN_DATATYPE);
@@ -912,7 +912,7 @@ void b3Tx::b3GetRow(
 		}
 		else
 		{
-			const b3_color black = b3Color(B3_BLACK);
+			const b3_color black = b3Color(b3Color::B3_BLACK);
 
 			for (b3_coord x = 0; x < xSize; x++)
 			{

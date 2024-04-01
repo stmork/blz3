@@ -73,6 +73,8 @@ private:
 b3InfoPNG::b3InfoPNG(b3Tx * tx, const char * filename) :
 	b3TxSaveInfo(tx, filename)
 {
+	// For better readability:
+	// cppcheck-suppress useInitializationList
 	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if (png_ptr != nullptr)
 	{
@@ -100,7 +102,7 @@ void b3InfoPNG::b3Write(
 	png_bytep   buffer,
 	png_size_t  size)
 {
-	b3InfoPNG * png = (b3InfoPNG *)png_get_io_ptr(png_ptr);
+	b3InfoPNG * png = static_cast<b3InfoPNG *>(png_get_io_ptr(png_ptr));
 
 	B3_ASSERT(png != nullptr);
 
@@ -109,7 +111,7 @@ void b3InfoPNG::b3Write(
 
 void b3InfoPNG::b3Flush(png_structp png_ptr)
 {
-	b3InfoPNG * png = (b3InfoPNG *)png_get_io_ptr(png_ptr);
+	b3InfoPNG * png = static_cast<b3InfoPNG *>(png_get_io_ptr(png_ptr));
 
 	B3_ASSERT(png != nullptr);
 

@@ -42,9 +42,9 @@ class B3_PLUGIN alignas(16) b3Color : public b3ColorBase
 	 *
 	 * @param color The color vector in SSE representation.
 	 */
-	inline b3Color(const __m128 input)
+	// cppcheck-suppress noExplicitConstructor
+	inline b3Color(const __m128 input) : v(input)
 	{
-		v = input;
 	}
 
 #else
@@ -94,9 +94,8 @@ public:
 	 *
 	 * @param color The other b3Color instance to copy.
 	 */
-	inline b3Color(const b3Color & color)
+	inline b3Color(const b3Color & color) : v(color.v)
 	{
-		v = color.v;
 	}
 
 	/**
@@ -104,9 +103,9 @@ public:
 	 *
 	 * @param color The other b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color & color)
+	explicit inline b3Color(const b3_color & color) :
+		v(_mm_load_ps(&color.a))
 	{
-		v = _mm_load_ps(&color.a);
 	}
 
 	/**
@@ -114,9 +113,9 @@ public:
 	 *
 	 * @param color The other b3_color instance to copy.
 	 */
-	inline b3Color(const b3_color * color)
+	explicit inline b3Color(const b3_color * color) :
+		v(_mm_load_ps(&color->a))
 	{
-		v = _mm_load_ps(&color->a);
 	}
 
 	/**
@@ -126,7 +125,7 @@ public:
 	 * @param rgb The equal color components.
 	 * @param a The alpha component.
 	 */
-	inline b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
+	explicit inline b3Color(const b3_f32 rgb, const b3_f32 a = 0.0)
 	{
 		b3Init(rgb, a);
 	}
@@ -136,7 +135,7 @@ public:
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
 	 */
-	inline b3Color(const b3_u16 input)
+	explicit inline b3Color(const b3_u16 input)
 	{
 		b3_u16             color = input;
 		alignas(16) b3_s32 c[4];
@@ -160,6 +159,7 @@ public:
 	 *
 	 * @param input The other ::b3_pkd_color instance to copy.
 	 */
+	// cppcheck-suppress noExplicitConstructor
 	inline b3Color(const b3_pkd_color input)
 	{
 #ifdef BLZ3_USE_SSE2
@@ -726,6 +726,12 @@ public:
 	 * @return
 	 */
 	inline b3Color & operator=(const b3Color & color) = default;
+	inline b3Color & operator=(const b3_color & color)
+	{
+		v = _mm_load_ps(&color.a);
+
+		return *this;
+	}
 
 	/**
 	 * This cast operator returns the color channels as ::b3_color.

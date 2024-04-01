@@ -167,16 +167,12 @@ void b3TxExif::b3RemoveGpsData()
 bool b3TxExif::b3HasGpsData() const
 {
 #ifdef HAVE_LIBEXIV2
-	b3_count gps_count = 0;
-
-	for (const Exiv2::Exifdatum & datum : m_ExifData)
+	return std::any_of(
+			m_ExifData.begin(), m_ExifData.end(),
+			[](const Exiv2::Exifdatum & datum)
 	{
-		if (datum.groupName() == "GPSInfo")
-		{
-			gps_count++;
-		}
-	}
-	return gps_count > 0;
+		return datum.groupName() == "GPSInfo";
+	});
 #else
 	return false;
 #endif

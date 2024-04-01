@@ -1,13 +1,16 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2022  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
  *               All rights reserved */
 
 #ifndef SC_RXCPP_H_
 #define SC_RXCPP_H_
 
 #include "sc_types.h"
+#include <vector>
+#include <algorithm>
+#include <functional>
 
 namespace sc
 {
@@ -16,7 +19,7 @@ namespace sc
 
 		template<class T> class Observer;
 		template<> class Observer<void> ;
-		template<class T> struct subscription;
+		template<class T> class subscription;
 		template<class T> class Observable;
 		template<> class Observable<void> ;
 
@@ -44,66 +47,109 @@ namespace sc
 		class SingleSubscriptionObserver: public Observer<T>
 		{
 		public:
-			SingleSubscriptionObserver() :
-				subscription(this)
+			SingleSubscriptionObserver() noexcept
 			{
 			}
 
-			bool subscribe(sc::rx::Observable<T> * o)
+			bool subscribe(sc::rx::Observable<T> & o) noexcept
 			{
-				return o->subscribe(&subscription);
+				return o.subscribe(*subscription);
 			}
 
-			bool unsubscribe(sc::rx::Observable<T> * o)
+			bool unsubscribe(sc::rx::Observable<T> & o) noexcept
 			{
-				return o->unsubscribe(&subscription);
+				return o.unsubscribe(*subscription);
 			}
+
+			void setSubscription(sc::rx::subscription<T> & s) noexcept
+			{
+				subscription = &s;
+			}
+
+			virtual ~SingleSubscriptionObserver() = default;
+
 
 		protected:
-			sc::rx::subscription<T> subscription;
+			sc::rx::subscription<T> * subscription;
 		};
 
-		template<class T>
-		struct subscription
-		{
+		template<class T> class ObservableBase;
 
-			subscription(Observer<T> * o) :
-				observer(o), next(nullptr)
+		template<class T>
+		class subscription
+		{
+		protected:
+			Observer<T> * observer;
+			subscription<T> * next;
+			friend class ObservableBase<T>;
+			friend class Observable<T>;
+		public:
+			subscription()  noexcept :
+				observer(nullptr), next(nullptr)
 			{
 			}
 
-			Observer<T> * observer;
-			subscription<T> * next;
+			subscription(Observer<T> & o) noexcept :
+				observer(&o), next(nullptr)
+			{
+			}
+
+			bool operator==(const subscription & other) const  noexcept
+			{
+				return this == &other;
+			}
+
+			bool operator!=(const subscription & other) const  noexcept
+			{
+				return !(*this == other);
+			}
+
+			Observer<T> & operator*() const  noexcept
+			{
+				return *observer;
+			}
+
+			Observer<T> * operator->() const  noexcept
+			{
+				return observer;
+			}
+
+			operator bool() const  noexcept
+			{
+				return observer != nullptr;
+			}
+
+			virtual ~subscription() = default;
 		};
 
 		template<class T> class ObservableBase
 		{
 		public:
-			ObservableBase() :
+			ObservableBase()  noexcept :
 				subscriptions(nullptr)
 			{
 			}
 
-			bool subscribe(subscription<T> * s)
+			bool subscribe(subscription<T> & s) noexcept
 			{
-				if (s != nullptr && s->observer != nullptr && s->next == nullptr)
+				if (s && s.next == nullptr)
 				{
 					subscription<T> * currentSub = this->subscriptions;
-					s->next = (currentSub != nullptr) ? currentSub : s;
-					this->subscriptions = s;
+					s.next = (currentSub != nullptr) ? currentSub : &s;
+					this->subscriptions = &s;
 					return true;
 				}
 				return false;
 			}
 
-			bool unsubscribe(subscription<T> * s)
+			bool unsubscribe(subscription<T> & s) noexcept
 			{
-				if (s != nullptr && this->subscriptions != nullptr)
+				if (this->subscriptions != nullptr)
 				{
-					if (this->subscriptions == s)
+					if (*(this->subscriptions) == s)
 					{
-						this->subscriptions = (s->next != s) ? s->next : nullptr;
-						s->next = nullptr;
+						this->subscriptions = (*(s.next) != s) ? s.next : nullptr;
+						s.next = nullptr;
 
 						return true;
 					}
@@ -111,9 +157,9 @@ namespace sc
 					sc::rx::subscription<T> * sub = this->subscriptions;
 					while (sub != nullptr)
 					{
-						if (sub->next != sub && sub->next == s)
+						if (sub->next != sub && *(sub->next) == s)
 						{
-							sub->next = (s->next != s) ? s->next : sub;
+							sub->next = (*(s.next) != s) ? s.next : sub;
 							return true;
 						}
 
@@ -122,6 +168,8 @@ namespace sc
 				}
 				return false;
 			}
+
+			virtual ~ObservableBase() = default;
 
 		protected:
 			subscription<T> * subscriptions;
@@ -139,13 +187,15 @@ namespace sc
 				subscription<T> * sub = this->subscriptions;
 				while (sub != nullptr)
 				{
-					if (sub->observer != nullptr)
+					if (*sub)
 					{
-						sub->observer->next(value);
+						(*sub)->next(value);
 					}
 					sub = (sub->next != sub) ? sub->next : nullptr;
 				}
 			}
+
+			virtual ~Observable() = default;
 
 		};
 
@@ -159,13 +209,15 @@ namespace sc
 				subscription<void> * sub = this->subscriptions;
 				while (sub != nullptr)
 				{
-					if (sub->observer != nullptr)
+					if (*sub)
 					{
-						sub->observer->next();
+						(*sub)->next();
 					}
 					sub = (sub->next != sub) ? sub->next : nullptr;
 				}
 			}
+
+			virtual ~Observable() = default;
 
 		};
 

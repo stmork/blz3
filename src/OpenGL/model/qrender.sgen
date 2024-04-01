@@ -6,6 +6,16 @@ GeneratorModel for yakindu::cpp11
 
 	statechart MouseSelect
 	{
+		feature LicenseHeader
+		{
+			licenseText =
+			"Generated with YAKINDU statechart tools\n" +
+			" *\n" +
+			" * SPDX-License-Identifier: BSD-3-Clause\n" +
+			" * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork\n" +
+			" *               All rights reserved\n"
+		}
+
 		feature Outlet
 		{
 			targetProject       = PROJECT
@@ -13,14 +23,14 @@ GeneratorModel for yakindu::cpp11
 			libraryTargetFolder = SRC_LIB
 		}
 
-		feature LicenseHeader
+		feature GeneralFeatures
 		{
-			licenseText =
-			"Generated with YAKINDU statechart tools\n" +
-			" *\n" +
-			" * SPDX-License-Identifier: BSD-3-Clause\n" +
-			" * SPDX-FileCopyrightText:  Copyright (C)  2023  Steffen A. Mork\n" +
-			" *               All rights reserved\n"
+			timerService = false
+		}
+
+		feature GeneratorOptions
+		{
+			smartPointers = false
 		}
 
 		feature IdentifierSettings

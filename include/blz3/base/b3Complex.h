@@ -36,6 +36,7 @@
  */
 template<typename T> class B3_PLUGIN b3Complex
 {
+protected:
 	enum b3_complex_index
 	{
 		Re = 0, //!< Index of real part of complex number
@@ -46,7 +47,7 @@ template<typename T> class B3_PLUGIN b3Complex
 	/**
 	 * The value array. We advise to use b3_f64 as template class.
 	 */
-	alignas(16) T v[Max];
+	alignas(16) T v[Max] {};
 
 public:
 
@@ -62,14 +63,14 @@ public:
 	/**
 	 * Simple constructor which does nothing.
 	 */
-	inline b3Complex<T>() = default;
+	constexpr b3Complex<T>() = default;
 
 	/**
 	 * Copy constructor.
 	 *
 	 * @param other The complex number we have to copy.
 	 */
-	inline b3Complex<T>(const b3Complex<T> & other)
+	constexpr b3Complex<T>(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < Max; i++)
 		{
@@ -83,7 +84,8 @@ public:
 	 *
 	 * @param other The other std::complex instance to copy from.
 	 */
-	inline b3Complex<T>(const std::complex<T> & other)
+	template<typename F>
+	constexpr b3Complex<T>(const std::complex<F> & other)
 	{
 		v[Re] = other.real();
 		v[Im] = other.imag();
@@ -96,7 +98,7 @@ public:
 	 * @param re Real part of complex number.
 	 * @param im Imaginary part of the complex number.
 	 */
-	inline b3Complex<T>(const T re, const T im = 0)
+	constexpr b3Complex<T>(const T re, const T im = 0)
 	{
 		v[Re] = re;
 		v[Im] = im;
@@ -113,7 +115,8 @@ public:
 	 *
 	 * @param value The real component to initialize.
 	 */
-	inline b3Complex<T> & operator=(const T value)
+	template<typename F>
+	constexpr b3Complex<T> & operator=(const F value)
 	{
 		v[Re] = value;
 		v[Im] = 0;
@@ -126,7 +129,8 @@ public:
 	 *
 	 * @param other The instance to copy from.
 	 */
-	inline b3Complex<T> & operator=(const std::complex<T> & other)
+	template<typename F>
+	constexpr b3Complex<T> & operator=(const std::complex<F> & other)
 	{
 		v[Re] = other.real();
 		v[Im] = other.imag();
@@ -139,12 +143,27 @@ public:
 	 *
 	 * @param other The instance to copy from.
 	 */
-	inline b3Complex<T> & operator=(const b3Complex<T> & other)
+	constexpr b3Complex<T> & operator=(const b3Complex<T> & other)
 	{
 		for (b3_loop i = 0; i < Max; i++)
 		{
 			v[i] = other.v[i];
 		}
+
+		return *this;
+	}
+
+	/**
+	 * This operator assigns a b3Complex instance of another template type to
+	 * this instance.
+	 *
+	 * @param other The instance to copy from.
+	 */
+	template<class F>
+	constexpr b3Complex<T> & operator=(b3Complex<F> & other)
+	{
+		v[Re] = other.b3Real();
+		v[Im] = other.b3Imag();
 
 		return *this;
 	}
@@ -158,7 +177,7 @@ public:
 	/**
 	 * This returns a @c std::complex instance from this complex representation.
 	 */
-	inline operator std::complex<T>() const
+	constexpr operator std::complex<T>() const
 	{
 		return std::complex<T>(v[Re], v[Im]);
 	}
@@ -416,11 +435,32 @@ public:
 	*************************************************************************/
 
 	/**
+	 * This method squares its components.
+	 *
+	 * @return This as squared result.
+	 */
+	constexpr b3Complex<T> & b3Square()
+	{
+		alignas(16) T val[Max]
+		{
+			v[Re] * v[Re] - v[Im] * v[Im],
+			v[Im] * v[Re] + v[Re] * v[Im]
+		};
+
+		for (b3_loop i = 0; i < Max; i++)
+		{
+			v[i] = val[i];
+		}
+
+		return *this;
+	}
+
+	/**
 	 * This method computes the length as square of this complex number.
 	 *
 	 * @return Squared length of this complex number.
 	 */
-	inline T b3SquareLength() const
+	constexpr T b3SquareLength() const
 	{
 		alignas(16) T val[Max];
 
@@ -436,7 +476,7 @@ public:
 	 *
 	 * @return Length of this complex number.
 	 */
-	inline T b3Length() const
+	constexpr T b3Length() const
 	{
 		return sqrt(b3SquareLength());
 	}
@@ -474,7 +514,7 @@ public:
 	 *
 	 * @return Phase of this complex number.
 	 */
-	inline T b3Phase() const
+	constexpr T b3Phase() const
 	{
 		return atan2(v[Im], v[Re]);
 	}
@@ -485,7 +525,7 @@ public:
 	 *
 	 * @return The reference to the real part.
 	 */
-	inline T & b3Real()
+	constexpr T & b3Real()
 	{
 		return v[Re];
 	}
@@ -496,7 +536,7 @@ public:
 	 *
 	 * @return The reference to the imaginary part.
 	 */
-	inline T & b3Imag()
+	constexpr T & b3Imag()
 	{
 		return v[Im];
 	}
@@ -510,7 +550,7 @@ public:
 	{
 		b3Complex<T> result;
 
-		if ((a.v[0] < 0) || (a.v[1] < 0))
+		if ((a.v[Re] < 0) || (a.v[Im] < 0))
 		{
 			throw std::domain_error("negative component for sqrt()");
 		}
@@ -555,10 +595,10 @@ public:
 	 */
 	inline static void b3Swap(b3Complex<T> & a, b3Complex<T> & b)
 	{
-		const b3Complex<T> aux(a);
-
-		a = b;
-		b = aux;
+		for (b3_loop i = 0; i < Max; i++)
+		{
+			std::swap(a.v[i], b.v[i]);
+		}
 	}
 
 	/**

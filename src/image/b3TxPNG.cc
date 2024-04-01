@@ -52,6 +52,7 @@ class b3PNG
 	b3_size        m_Index = 0;
 
 public:
+	b3PNG() = delete;
 	b3PNG(const b3_u08 * buffer, const b3_size size);
 	~b3PNG();
 
@@ -73,8 +74,11 @@ private:
 };
 
 b3PNG::b3PNG(const b3_u08 * buffer, const b3_size size) :
-	m_Buffer(buffer), m_Size(size)
+	m_Buffer(buffer),
+	m_Size(size)
 {
+	// For better readability:
+	// cppcheck-suppress useInitializationList
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if (png_ptr != nullptr)
 	{
@@ -102,7 +106,7 @@ void b3PNG::b3Read(
 	png_bytep   outBytes,
 	png_size_t  byteCountToRead)
 {
-	b3PNG * png = (b3PNG *)png_get_io_ptr(png_ptr);
+	b3PNG * png = static_cast<b3PNG *>(png_get_io_ptr(png_ptr));
 
 	B3_ASSERT(png != nullptr);
 

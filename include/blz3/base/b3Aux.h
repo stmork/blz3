@@ -128,7 +128,10 @@ public:
 	 *
 	 * @return The rectangle width.
 	 */
-	b3_res  b3Width() const;
+	inline b3_res b3Width() const
+	{
+		return m_x2 - m_x1;
+	}
 
 	/**
 	 * This method returns the rectangle height. This value may
@@ -136,7 +139,10 @@ public:
 	 *
 	 * @return The rectangle height.
 	 */
-	b3_res  b3Height() const;
+	inline b3_res b3Height() const
+	{
+		return m_y2 - m_y1;
+	}
 
 	/**
 	 * This method adjusts the rectangle of this bound so that the

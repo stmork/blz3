@@ -62,7 +62,7 @@ void b3Sampler::b3Sample()
 
 bool b3Sampler::b3SampleThread(void * ptr)
 {
-	b3SampleInfo * info    = (b3SampleInfo *)ptr;
+	b3SampleInfo * info    = static_cast<b3SampleInfo *>(ptr);
 	b3Sampler   *  sampler = info->m_Sampler;
 
 	sampler->b3SampleTask(info);
