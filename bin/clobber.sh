@@ -11,7 +11,7 @@ echo "Cleaning files..."
 if [ -f src/Makefile ]
 then
 	make -C src clean
-	rm -rf `find src -name Makefile` config.*
+	rm -rf `find src -name Makefile` config.log config.status
 fi
 
 test -f include_unix/blz3/autoconf.h && rm -f include_unix/blz3/autoconf.h

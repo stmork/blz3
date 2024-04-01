@@ -526,9 +526,8 @@ void b3RenderObject::b3TransformVertices(
 
 		b3MapVertices(B3_MAP_VBO_RW);
 
-		b3_count      glVertexCount =  glVertexElements->b3GetCount();
+		b3_count       glVertexCount =  glVertexElements->b3GetCount();
 		b3_gl_vertex * glVertex      = *glVertexElements;
-		b3_count      i;
 
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "       %5d vertices: %p - %s\n",
@@ -538,6 +537,8 @@ void b3RenderObject::b3TransformVertices(
 
 		if (glVertex != nullptr)
 		{
+			b3_count       i;
+
 			glVertexElements->b3Recompute();
 			if (is_affine)
 			{
