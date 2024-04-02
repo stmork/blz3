@@ -23,7 +23,8 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Math.h"
 
-#include <float.h>
+#include <type_traits>
+#include <cfloat>
 #include <string>
 
 /**
@@ -56,53 +57,19 @@ public:
 	 * @param z The new z component.
 	 * @return  The vec input parameter.
 	 */
-	static inline b3_vector * b3Init(
-		b3_vector  *  vec,
+	template<class V>
+	static inline V * b3Init(
+		V      *      vec,
 		const b3_f64  x = 0,
 		const b3_f64  y = 0,
 		const b3_f64  z = 0)
 	{
-		vec->x   = (b3_f32)x;
-		vec->y   = (b3_f32)y;
-		vec->z   = (b3_f32)z;
+		using F = decltype(V::x);
 
-		return vec;
-	}
+		vec->x = F(x);
+		vec->y = F(y);
+		vec->z = F(z);
 
-	/**
-	 * This method initializes a b3_vector structure.
-	 *
-	 * @param vec The b3_vector pointer.
-	 * @param x The new x component.
-	 * @param y The new y component.
-	 * @param z The new z component.
-	 * @return  The vec input parameter.
-	 */
-	static inline b3_vector64 * b3Init(
-		b3_vector64 * vec,
-		const b3_f64  x = 0,
-		const b3_f64  y = 0,
-		const b3_f64  z = 0)
-	{
-		vec->x   = x;
-		vec->y   = y;
-		vec->z   = z;
-
-		return vec;
-	}
-
-	/**
-	 * This method copies a b3_vector.
-	 *
-	 * @param vec The destination vector.
-	 * @param src The source vector.
-	 * @return The result (= vec input).
-	 */
-	static inline b3_vector	* b3Init(
-		b3_vector    *    vec,
-		const b3_vector * src)
-	{
-		*vec = *src;
 		return vec;
 	}
 
@@ -113,54 +80,21 @@ public:
 	 * @param src The source vector.
 	 * @return The result (= vec input).
 	 */
-	static inline b3_vector * b3Init(
-		b3_vector     *     vec,
-		const b3_vector64 * src)
+	template<class S, class D>
+	static inline D * b3Init(
+		D    *    vec,
+		const S * src)
 	{
-		const b3_f64 * s = &src->x;
-		b3_f32    *    d = &vec->x;
+		using Fs = decltype(S::x);
+		using Fd = decltype(D::x);
+
+		const Fs * s = &src->x;
+		Fd    *    d = &vec->x;
 
 		for (b3_loop i = 0; i < 3; i++)
 		{
-			d[i] = (b3_f32)s[i];
+			d[i] = Fd(s[i]);
 		}
-		return vec;
-	}
-
-	/**
-	 * This method copies a vector.
-	 *
-	 * @param vec The destination vector.
-	 * @param src The source vector.
-	 * @return The result (= vec input).
-	 */
-	static inline b3_vector64 * b3Init(
-		b3_vector64    *   vec,
-		const b3_vector  * src)
-	{
-		const b3_f32 * s = &src->x;
-		b3_f64    *    d = &vec->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			d[i] = s[i];
-		}
-		return vec;
-	}
-
-	/**
-	 * This method copies a vector.
-	 *
-	 * @param vec The destination vector.
-	 * @param src The source vector.
-	 * @return The result (= vec input).
-	 */
-	static inline b3_vector64 * b3Init(
-		b3_vector64    *    vec,
-		const b3_vector64 * src)
-	{
-		*vec = *src;
-
 		return vec;
 	}
 
@@ -172,31 +106,15 @@ public:
 	 * @param dir  The direction vector.
 	 * @return The result (= line input).
 	 */
-	static inline b3_line64 * b3Init(
-		b3_line64     *     line,
-		const b3_vector64 * base,
-		const b3_vector64 * dir)
+	template<class L, class V>
+	static inline L * b3Init(
+		L     *     line,
+		const V * base,
+		const V * dir)
 	{
-		line->pos = *base;
-		line->dir = *dir;
-		return line;
-	}
+		b3Init(&line->pos, base);
+		b3Init(&line->dir, dir);
 
-	/**
-	 * This method initializes a b3_line structure.
-	 *
-	 * @param line The b3_line structure to initialize.
-	 * @param base The base position.
-	 * @param dir  The direction vector.
-	 * @return The result (= line input).
-	 */
-	static inline b3_line * b3Init(
-		b3_line     *     line,
-		const b3_vector * base,
-		const b3_vector * dir)
-	{
-		line->pos = *base;
-		line->dir = *dir;
 		return line;
 	}
 
@@ -207,28 +125,15 @@ public:
 	 * @param vec2 The second vector.
 	 * @return True if both vectors are equal.
 	 */
+	template<class V>
 	static inline bool    b3IsEqual(
-		const b3_vector * vec1,
-		const b3_vector * vec2)
+		const V * vec1,
+		const V * vec2)
 	{
-		const b3_f64 x = vec2->x - vec1->x;
-		const b3_f64 y = vec2->y - vec1->y;
-		const b3_f64 z = vec2->z - vec1->z;
+		using F = decltype(V::x);
 
-		return (x * x + y * y + z * z) < b3Math::epsilon;
-	}
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
 
-	/**
-	 * This method compares two vectors.
-	 *
-	 * @param vec1 The first vector.
-	 * @param vec2 The second vector.
-	 * @return True if both vectors are equal.
-	 */
-	static inline bool    b3IsEqual(
-		const b3_vector64 * vec1,
-		const b3_vector64 * vec2)
-	{
 		const b3_f64 x = vec2->x - vec1->x;
 		const b3_f64 y = vec2->y - vec1->y;
 		const b3_f64 z = vec2->z - vec1->z;
@@ -242,43 +147,13 @@ public:
 	 * @param negate The vector to negate.
 	 * @return The input param negate.
 	 */
-	static inline b3_vector * b3Negate(b3_vector * negate)
+	template<class V>
+	static inline V * b3Negate(V * negate)
 	{
-#ifdef B3_SSE1
-		b3_f32 * n = &negate->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			n[i] = -n[i];
-		}
-#else
 		negate->x   = -negate->x;
 		negate->y   = -negate->y;
 		negate->z   = -negate->z;
-#endif
-		return negate;
-	}
 
-	/**
-	 * This method negates a vector.
-	 *
-	 * @param negate The vector to negate.
-	 * @return The input param negate.
-	 */
-	static inline b3_vector64 * b3Negate(b3_vector64 * negate)
-	{
-#ifdef B3_SSE2
-		b3_f64 * n = &negate->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			n[i] = -n[i];
-		}
-#else
-		negate->x   = -negate->x;
-		negate->y   = -negate->y;
-		negate->z   = -negate->z;
-#endif
 		return negate;
 	}
 
@@ -412,9 +287,10 @@ public:
 	 * @param bVec The second vector.
 	 * @return The resulting dot product.
 	 */
+	template<class L, class R>
 	static inline b3_f64 b3SMul(
-		const b3_vector  *  aVec,
-		const b3_vector64 * bVec)
+		const L * aVec,
+		const R * bVec)
 	{
 		return
 			aVec->x * bVec->x +
@@ -422,42 +298,6 @@ public:
 			aVec->z * bVec->z;
 	}
 
-	static inline b3_f64 b3SMul(
-		const b3_vector64 * aVec,
-		const b3_vector  *  bVec)
-	{
-		return b3SMul(bVec, aVec);
-	}
-
-	/**
-	 * This method computes the dot product of two vectors.
-	 *
-	 * @param aVec The first vector.
-	 * @param bVec The second vector.
-	 * @return The resulting dot product.
-	 */
-	static inline b3_f64 b3SMul(
-		const b3_vector64 * aVec,
-		const b3_vector64 * bVec)
-	{
-#ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		const b3_f64  * b = &bVec->x;
-		b3_f64          result = 0;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			result += a[i] * b[i];
-		}
-		return result;
-#else
-		return
-			aVec->x * bVec->x +
-			aVec->y * bVec->y +
-			aVec->z * bVec->z;
-#endif
-	}
-
 	/**
 	 * This method adds a vector to a given one: <code>result += aVec</code>.
 	 *
@@ -465,60 +305,15 @@ public:
 	 * @param result The resulting vector.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3Add(
-		const b3_vector * aVec,
-		b3_vector    *    result)
+	template<class V>
+	static inline V * b3Add(
+		const V * aVec,
+		V    *    result)
 	{
-#ifdef BLZ3_USE_SSE
-		_mm_store_ps(&result->x,
-			_mm_add_ps(_mm_load_ps(&result->x), _mm_load_ps(&aVec->x)));
-#else
-		result->x += aVec->x;
-		result->y += aVec->y;
-		result->z += aVec->z;
-#endif
+		using F = decltype(V::x);
 
-		return result;
-	}
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
 
-	/**
-	 * This method adds a vector to a given one: <code>result += aVec</code>.
-	 *
-	 * @param aVec The summand.
-	 * @param result The resulting vector.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3Add(
-		const b3_vector64 * aVec,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		b3_f64  * r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] += a[i];
-		}
-#else
-		result->x += aVec->x;
-		result->y += aVec->y;
-		result->z += aVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method adds a vector to a given one: <code>result += aVec</code>.
-	 *
-	 * @param aVec The summand.
-	 * @param result The resulting vector.
-	 * @return The result.
-	 */
-	static inline b3_gl_vector * b3Add(
-		const b3_gl_vector * aVec,
-		b3_gl_vector    *    result)
-	{
 		result->x += aVec->x;
 		result->y += aVec->y;
 		result->z += aVec->z;
@@ -534,74 +329,20 @@ public:
 	 * @param result The sum of both vectors.
 	 * @return The result (= result input parameter)
 	 */
-	static inline b3_vector * b3Add(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		b3_vector    *    result)
+	template<class V>
+	static inline V * b3Add(
+		const V * aVec,
+		const V * bVec,
+		V    *    result)
 	{
-#ifdef BLZ3_USE_SSE
-		_mm_store_ps(&result->x,
-			_mm_add_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
-#else
+		using F = decltype(V::x);
+
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
 		result->x = aVec->x + bVec->x;
 		result->y = aVec->y + bVec->y;
 		result->z = aVec->z + bVec->z;
-#endif
 
-		return result;
-	}
-
-	/**
-	 * This method adds two vectors to a resulting one: <code>result = aVec + bVec</code>
-	 *
-	 * @param aVec The first summand.
-	 * @param bVec The second summand.
-	 * @param result The sum of both vectors.
-	 * @return The result (= result input parameter)
-	 */
-	static inline b3_vector64 * b3Add(
-		const b3_vector64 * aVec,
-		const b3_vector64 * bVec,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64 * a = &aVec->x;
-		const b3_f64 * b = &bVec->x;
-		b3_f64    *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = a[i] + b[i];
-		}
-#else
-		result->x = aVec->x + bVec->x;
-		result->y = aVec->y + bVec->y;
-		result->z = aVec->z + bVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method adds two vectors to a resulting one: <code>result = aVec + bVec</code>
-	 *
-	 * @param aVec The first summand.
-	 * @param bVec The second summand.
-	 * @param result The sum of both vectors.
-	 * @return The result (= result input parameter)
-	 */
-	static inline b3_gl_vector * b3Add(
-		const b3_gl_vector * aVec,
-		const b3_gl_vector * bVec,
-		b3_gl_vector    *    result)
-	{
-#ifdef BLZ3_USE_SSE
-		_mm_store_ps(&result->x,
-			_mm_add_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
-#else
-		result->x = aVec->x + bVec->x;
-		result->y = aVec->y + bVec->y;
-		result->z = aVec->z + bVec->z;
-#endif
 		return result;
 	}
 
@@ -612,69 +353,18 @@ public:
 	 * @param result The resulting vector.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3Sub(
-		const b3_vector * aVec,
-		b3_vector    *    result)
+	template<class V>
+	static inline V * b3Sub(
+		const V * aVec,
+		V    *    result)
 	{
-#ifdef BLZ3_USE_SSE
-		_mm_store_ps(&result->x,
-			_mm_sub_ps(_mm_load_ps(&result->x), _mm_load_ps(&aVec->x)));
-#else
+		using F = decltype(V::x);
+
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
 		result->x -= aVec->x;
 		result->y -= aVec->y;
 		result->z -= aVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method subtracts a vector from a given one: <code>result -= aVec</code>.
-	 *
-	 * @param aVec The minuend.
-	 * @param result The resulting vector.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3Sub(
-		const b3_vector64 * aVec,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64 * a = &aVec->x;
-		b3_f64    *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] -= a[i];
-		}
-#else
-		result->x -= aVec->x;
-		result->y -= aVec->y;
-		result->z -= aVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method subtracts two vectors to a resulting one: <code>result = aVec - bVec</code>
-	 *
-	 * @param aVec The subtrahend.
-	 * @param bVec The minuend.
-	 * @param result The difference of both vectors.
-	 * @return The result (= result input parameter)
-	 */
-	static inline b3_vector * b3Sub(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		b3_vector    *    result)
-	{
-#ifdef BLZ3_USE_SSE
-		_mm_store_ps(&result->x,
-			_mm_sub_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
-#else
-		result->x = aVec->x - bVec->x;
-		result->y = aVec->y - bVec->y;
-		result->z = aVec->z - bVec->z;
-#endif
 
 		return result;
 	}
@@ -687,62 +377,19 @@ public:
 	 * @param result The difference of both vectors.
 	 * @return The result (= result input parameter)
 	 */
-	static inline b3_vector64 * b3Sub(
-		const b3_vector64 * aVec,
-		const b3_vector64 * bVec,
-		b3_vector64    *    result)
+	template<class V>
+	static inline V * b3Sub(
+		const V * aVec,
+		const V * bVec,
+		V    *    result)
 	{
-#ifdef B3_SSE2
-		const b3_f64 * a = &aVec->x;
-		const b3_f64 * b = &bVec->x;
-		b3_f64    *    r = &result->x;
+		using F = decltype(V::x);
 
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = a[i] - b[i];
-		}
-#else
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method subtracts two vectors to a resulting one: <code>result = aVec - bVec</code>
-	 *
-	 * @param aVec The subtrahend.
-	 * @param bVec The minuend.
-	 * @param result The difference of both vectors.
-	 * @return The result (= result input parameter)
-	 */
-	static inline b3_gl_vector * b3Sub(
-		const b3_gl_vector * aVec,
-		const b3_gl_vector * bVec,
-		b3_gl_vector    *    result)
-	{
-		result->x = aVec->x - bVec->x;
-		result->y = aVec->y - bVec->y;
-		result->z = aVec->z - bVec->z;
-
-		return result;
-	}
-
-	/**
-	 * This method multiplies a vector to a given one: <code>result *= aVec</code>.
-	 *
-	 * @param aVec The factors.
-	 * @param result The resulting vector.
-	 * @return The result.
-	 */
-	static inline b3_vector * b3Mul(
-		const b3_vector * aVec,
-		b3_vector    *    result)
-	{
-		result->x *= aVec->x;
-		result->y *= aVec->y;
-		result->z *= aVec->z;
 
 		return result;
 	}
@@ -754,37 +401,15 @@ public:
 	 * @param result The resulting vector.
 	 * @return The result.
 	 */
-	static inline b3_vector64 * b3Mul(
-		const b3_vector64 * aVec,
-		b3_vector64    *    result)
+	template<class V>
+	static inline V * b3Mul(
+		const V * aVec,
+		V    *    result)
 	{
-#ifdef B3_SSE2
-		const b3_f64 * a = &aVec->x;
-		b3_f64    *    r = &result->x;
+		using F = decltype(V::x);
 
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] *= a[i];
-		}
-#else
-		result->x *= aVec->x;
-		result->y *= aVec->y;
-		result->z *= aVec->z;
-#endif
-		return result;
-	}
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
 
-	/**
-	 * This method multiplies a vector to a given one: <code>result += aVec</code>.
-	 *
-	 * @param aVec The multiplicand.
-	 * @param result The resulting vector.
-	 * @return The result.
-	 */
-	static inline b3_gl_vector * b3Mul(
-		const b3_gl_vector * aVec,
-		b3_gl_vector    *    result)
-	{
 		result->x *= aVec->x;
 		result->y *= aVec->y;
 		result->z *= aVec->z;
@@ -800,66 +425,16 @@ public:
 	 * @param result The sum of both vectors.
 	 * @return The result (= result input parameter)
 	 */
-	static inline b3_vector * b3Mul(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		b3_vector    *    result)
+	template<class V>
+	static inline V * b3Mul(
+		const V * aVec,
+		const V * bVec,
+		V    *    result)
 	{
-#ifdef BLZ3_USE_SSE
-		_mm_store_ps(&result->x,
-			_mm_mul_ps(_mm_load_ps(&aVec->x), _mm_load_ps(&bVec->x)));
-#else
-		result->x = aVec->x * bVec->x;
-		result->y = aVec->y * bVec->y;
-		result->z = aVec->z * bVec->z;
-#endif
+		using F = decltype(V::x);
 
-		return result;
-	}
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
 
-	/**
-	 * This method multiplies two vectors to a resulting one: <code>result = aVec + bVec</code>
-	 *
-	 * @param aVec The first multiplicand.
-	 * @param bVec The second multiplicand.
-	 * @param result The sum of both vectors.
-	 * @return The result (= result input parameter)
-	 */
-	static inline b3_vector64 * b3Mul(
-		const b3_vector64 * aVec,
-		const b3_vector64 * bVec,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64 * a = &aVec->x;
-		const b3_f64 * b = &bVec->x;
-		b3_f64    *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = a[i] * b[i];
-		}
-#else
-		result->x = aVec->x * bVec->x;
-		result->y = aVec->y * bVec->y;
-		result->z = aVec->z * bVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method multiplies two vectors to a resulting one: <code>result = aVec + bVec</code>
-	 *
-	 * @param aVec The first multiplicand.
-	 * @param bVec The second multiplicand.
-	 * @param result The sum of both vectors.
-	 * @return The result (= result input parameter)
-	 */
-	static inline b3_gl_vector * b3Mul(
-		const b3_gl_vector * aVec,
-		const b3_gl_vector * bVec,
-		b3_gl_vector    *    result)
-	{
 		result->x = aVec->x * bVec->x;
 		result->y = aVec->y * bVec->y;
 		result->z = aVec->z * bVec->z;
@@ -979,27 +554,8 @@ public:
 	 * @param vector The input vector.
 	 * @return The resulting vector length.
 	 */
-	static inline b3_f32 b3Length(const b3_vector * vector)
-	{
-#ifdef BLZ3_USE_SSE41
-		const __m128 v = _mm_load_ps(&vector->x);
-
-		return _mm_cvtss_f32(_mm_sqrt_ss(_mm_dp_ps(v, v, 0x71)));
-#else
-		return sqrt(
-				vector->x * vector->x +
-				vector->y * vector->y +
-				vector->z * vector->z);
-#endif
-	}
-
-	/**
-	 * The method computes the length of the given vector.
-	 *
-	 * @param vector The input vector.
-	 * @return The resulting vector length.
-	 */
-	static inline b3_f64 b3Length(const b3_vector64 * vector)
+	template<class V>
+	static inline decltype(V::x) b3Length(const V * vector)
 	{
 		return sqrt(
 				vector->x * vector->x +
@@ -1013,43 +569,13 @@ public:
 	 * @param vector The input vector.
 	 * @return The resulting squared vector length.
 	 */
-	static inline b3_f32 b3QuadLength(const b3_vector * vector)
+	template<class V>
+	static inline decltype(V::x) b3QuadLength(const V * vector)
 	{
-#ifdef BLZ3_USE_SSE41
-		const __m128 v = _mm_load_ps(&vector->x);
-
-		return _mm_cvtss_f32(_mm_dp_ps(v, v, 0x71));
-#else
 		return
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z;
-#endif
-	}
-
-	/**
-	 * The method computes the squared length of the given vector.
-	 *
-	 * @param vector The input vector.
-	 * @return The resulting squared vector length.
-	 */
-	static inline b3_f64 b3QuadLength(const b3_vector64 * vector)
-	{
-#ifdef B3_SSE2
-		const b3_f64 * v = &vector->x;
-		b3_f64         result = 0;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			result += v[i] * v[i];
-		}
-		return result;
-#else
-		return
-			vector->x * vector->x +
-			vector->y * vector->y +
-			vector->z * vector->z;
-#endif
 	}
 
 	/**
@@ -1077,10 +603,15 @@ public:
 	 * @param vector The vector to scale.
 	 * @param factor The scale factor.
 	 */
-	static inline b3_vector * b3Scale(
-		b3_vector  * vector,
-		const b3_f32 factor)
+	template<class V>
+	static inline V * b3Scale(
+		V           *          vector,
+		const decltype(V::x)   factor)
 	{
+		using F = decltype(V::x);
+
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
 		vector->x *= factor;
 		vector->y *= factor;
 		vector->z *= factor;
@@ -1097,70 +628,20 @@ public:
 	 * @param factor The scale factor.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3Scale(
-		const b3_vector * vector,
-		b3_vector    *    result,
-		const b3_f32      factor)
+	template<class V>
+	static inline V * b3Scale(
+		const V        *       vector,
+		V           *          result,
+		const decltype(V::x)   factor)
 	{
+		using F = decltype(V::x);
+
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
 		result->x = vector->x * factor;
 		result->y = vector->y * factor;
 		result->z = vector->z * factor;
 
-		return result;
-	}
-
-	/**
-	 * This method scales a vector by the given factor.
-	 *
-	 * @param vector The vector to scale.
-	 * @param factor The scale factor.
-	 */
-	static inline b3_vector64 * b3Scale(
-		b3_vector64 * vector,
-		const b3_f64  factor)
-	{
-#ifdef B3_SSE2
-		b3_f64 * v = &vector->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			v[i] *= factor;
-		}
-#else
-		vector->x *= factor;
-		vector->y *= factor;
-		vector->z *= factor;
-#endif
-		return vector;
-	}
-
-	/**
-	 * This method scales a given vector with a given factor and
-	 * stores the result in a different location.
-	 *
-	 * @param result The result vector.
-	 * @param vector The source vector to scale.
-	 * @param factor The scale factor.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3Scale(
-		const b3_vector64 * vector,
-		b3_vector64    *    result,
-		const b3_f64        factor)
-	{
-#ifdef B3_SSE2
-		const b3_f64 * v = &vector->x;
-		b3_f64    *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = v[i] * factor;
-		}
-#else
-		result->x = vector->x * factor;
-		result->y = vector->y * factor;
-		result->z = vector->z * factor;
-#endif
 		return result;
 	}
 
@@ -1177,39 +658,7 @@ public:
 		const b3_matrix * A,
 		b3_vector    *    vector)
 	{
-// #ifdef B3_SSE2
-#if 1
-		const b3_f32    *    m = &A->m11;
-		b3_f32       *       v = &vector->x;
-		alignas(16) b3_f32   aux[4];
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			aux[o] = v[o];
-		}
-		aux[3] = 0;
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			b3_f32 result = 0;
-
-			for (b3_loop i = 0; i < 4; i++)
-			{
-				result += m[i] * aux[i];
-			}
-			v[o]  = result;
-			m    += 4;
-		}
-#else
-		const b3_f32 x = vector->x;
-		const b3_f32 y = vector->y;
-		const b3_f32 z = vector->z;
-
-		vector->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13);
-		vector->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23);
-		vector->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33);
-#endif
-		return vector;
+		return b3MatrixMul(A, vector, 0.0f);
 	}
 
 	/**
@@ -1225,42 +674,7 @@ public:
 		const b3_matrix * A,
 		b3_vector    *    vector)
 	{
-// #ifdef B3_SSE2
-#if 1
-		const b3_f32     *    m = &A->m11;
-		b3_f32        *       v = &vector->x;
-		alignas(16) b3_f32    aux[4];
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			aux[o] = v[o];
-		}
-		aux[3] = 1;
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			b3_f32 result = 0;
-
-			for (b3_loop i = 0; i < 4; i++)
-			{
-				result += m[i] * aux[i];
-			}
-			v[o]  = result;
-			m    += 4;
-		}
-#else
-		alignas(16) b3_f32    aux[4];
-
-		aux[0] = vector->x;
-		aux[1] = vector->y;
-		aux[2] = vector->z;
-		aux[3] = 1.0f;
-
-		vector->x = (b3_f32)(aux[0] * A->m11 + aux[1] * A->m12 + aux[2] * A->m13 + aux[3] * A->m14);
-		vector->y = (b3_f32)(aux[0] * A->m21 + aux[1] * A->m22 + aux[2] * A->m23 + aux[3] * A->m24);
-		vector->z = (b3_f32)(aux[0] * A->m31 + aux[1] * A->m32 + aux[2] * A->m33 + aux[3] * A->m34);
-#endif
-		return vector;
+		return b3MatrixMul(A, vector, 1.0f);
 	}
 
 	/**
@@ -1270,9 +684,10 @@ public:
 	 * @param Vector2 The second vector.
 	 * @return The resulting angle.
 	 */
-	template<typename T> static inline T b3AngleOfVectors(
-		const b3_vector_3D_base<T> * Vector1,
-		const b3_vector_3D_base<T> * Vector2)
+	template<class V>
+	static inline decltype(V::x) b3AngleOfVectors(
+		const V * Vector1,
+		const V * Vector2)
 	{
 		b3_f64 Denom = b3Length(Vector1) * b3Length(Vector2);
 
@@ -1291,12 +706,13 @@ public:
 	 * @param point2 The second point which defines the second direction.
 	 * @return The resulting angle.
 	 */
-	static inline b3_f32 b3AngleOfPoints(
-		const b3_vector * base,
-		const b3_vector * point1,
-		const b3_vector * point2)
+	template<class V>
+	static inline decltype(V::x) b3AngleOfPoints(
+		const V * base,
+		const V * point1,
+		const V * point2)
 	{
-		b3_vector a, b;
+		V a, b;
 
 		a.x = point1->x - base->x;
 		a.y = point1->y - base->y;
@@ -1319,11 +735,12 @@ public:
 	 * @param result The mixer result.
 	 * @return The resulting mixed vector.
 	 */
-	template<typename T> inline static b3_vector_3D_base<T> * b3Mix(
-		const b3_vector_3D_base<T> * low,
-		const b3_vector_3D_base<T> * high,
-		const T                      mix,
-		b3_vector_3D_base<T>    *    result)
+	template<class V>
+	inline static V * b3Mix(
+		const V        *       low,
+		const V        *       high,
+		const decltype(V::x)   mix,
+		V           *          result)
 	{
 		result->x = low->x + mix * (high->x - low->x);
 		result->y = low->y + mix * (high->y - low->y);
@@ -1342,68 +759,19 @@ public:
 	 * @param result The resulting linear combination.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3LinearCombine(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		const b3_f32      factor,
-		b3_vector    *    result)
+	template<class V, class R>
+	static inline R * b3LinearCombine(
+		const V        *       aVec,
+		const V        *       bVec,
+		const decltype(V::x)   factor,
+		R           *          result)
 	{
-		result->x = aVec->x + factor * bVec->x;
-		result->y = aVec->y + factor * bVec->y;
-		result->z = aVec->z + factor * bVec->z;
+		using Fv = decltype(V::x);
+		using Fr = decltype(R::x);
 
-		return result;
-	}
+		static_assert(std::is_floating_point<Fv>(), "Expect float as input vector member type!");
+		static_assert(std::is_floating_point<Fr>(), "Expect float as result vector member type!");
 
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = aVec + factor * bVec</code>.
-	 *
-	 * @param aVec The first vector of order 0.
-	 * @param bVec The second vector of order 1.
-	 * @param factor The factor for the bVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3LinearCombine(
-		const b3_vector64 * aVec,
-		const b3_vector64 * bVec,
-		const b3_f64        factor,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64  * a = &aVec->x;
-		const b3_f64  * b = &bVec->x;
-		b3_f64     *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = a[i] + factor * b[i];
-		}
-#else
-		result->x = aVec->x + factor * bVec->x;
-		result->y = aVec->y + factor * bVec->y;
-		result->z = aVec->z + factor * bVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = aVec + factor * bVec</code>.
-	 *
-	 * @param aVec The first vector of order 0.
-	 * @param bVec The second vector of order 1.
-	 * @param factor The factor for the bVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_gl_vector * b3LinearCombine(
-		const b3_vector  *  aVec,
-		const b3_vector  *  bVec,
-		const b3_f32        factor,
-		b3_gl_vector    *   result)
-	{
 		result->x = aVec->x + factor * bVec->x;
 		result->y = aVec->y + factor * bVec->y;
 		result->z = aVec->z + factor * bVec->z;
@@ -1422,13 +790,20 @@ public:
 	 * @param result The resulting linear combination.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3LinearCombine(
-		const b3_vector * bVec,
-		const b3_vector * cVec,
-		const b3_f32      x,
-		const b3_f32      y,
-		b3_vector    *    result)
+	template<class V, class R>
+	static inline R * b3LinearCombine(
+		const V        *       bVec,
+		const V        *       cVec,
+		const decltype(V::x)   x,
+		const decltype(V::y)   y,
+		R           *          result)
 	{
+		using Fv = decltype(V::x);
+		using Fr = decltype(R::x);
+
+		static_assert(std::is_floating_point<Fv>(), "Expect float as input vector member type!");
+		static_assert(std::is_floating_point<Fr>(), "Expect float as result vector member type!");
+
 		result->x = x * bVec->x + y * cVec->x;
 		result->y = x * bVec->y + y * cVec->y;
 		result->z = x * bVec->z + y * cVec->z;
@@ -1438,66 +813,6 @@ public:
 
 	/**
 	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = x * bVec + y * cVec</code>.
-	 *
-	 * @param bVec The first vector.
-	 * @param cVec The second vector.
-	 * @param x The factor for the bVec parameter.
-	 * @param y The factor for the cVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3LinearCombine(
-		const b3_vector  * bVec,
-		const b3_vector  * cVec,
-		const b3_f32       x,
-		const b3_f32       y,
-		b3_vector64    *   result)
-	{
-		result->x = x * bVec->x + y * cVec->x;
-		result->y = x * bVec->y + y * cVec->y;
-		result->z = x * bVec->z + y * cVec->z;
-
-		return result;
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = x * bVec + y * cVec</code>.
-	 *
-	 * @param bVec The first vector.
-	 * @param cVec The second vector.
-	 * @param x The factor for the bVec parameter.
-	 * @param y The factor for the cVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3LinearCombine(
-		const b3_vector64 * bVec,
-		const b3_vector64 * cVec,
-		const b3_f64        x,
-		const b3_f64        y,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64  * b = &bVec->x;
-		const b3_f64  * c = &cVec->x;
-		b3_f64     *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = x * b[i] + y * c[i];
-		}
-#else
-		result->x = x * bVec->x + y * cVec->x;
-		result->y = x * bVec->y + y * cVec->y;
-		result->z = x * bVec->z + y * cVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
 	 * <code>result = aVec + x * bVec + y * cVec</code>.
 	 *
 	 * @param aVec The first vector.
@@ -1508,134 +823,24 @@ public:
 	 * @param result The resulting linear combination.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3LinearCombine(
-		const b3_vector * aVec,
-		const b3_vector * bVec,
-		const b3_vector * cVec,
-		const b3_f32      x,
-		const b3_f32      y,
-		b3_vector    *    result)
+	template<class V, class R>
+	static inline R * b3LinearCombine(
+		const V        *       aVec,
+		const V        *       bVec,
+		const V        *       cVec,
+		const decltype(V::x)   x,
+		const decltype(V::y)   y,
+		R           *          result)
 	{
+		using Fv = decltype(V::x);
+		using Fr = decltype(R::x);
+
+		static_assert(std::is_floating_point<Fv>(), "Expect float as input vector member type!");
+		static_assert(std::is_floating_point<Fr>(), "Expect float as result vector member type!");
+
 		result->x = aVec->x + x * bVec->x + y * cVec->x;
 		result->y = aVec->y + x * bVec->y + y * cVec->y;
 		result->z = aVec->z + x * bVec->z + y * cVec->z;
-
-		return result;
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = aVec + x * bVec + y * cVec</code>.
-	 *
-	 * @param aVec The first vector.
-	 * @param bVec The second vector.
-	 * @param cVec The third vector.
-	 * @param x The factor for the bVec parameter.
-	 * @param y The factor for the cVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3LinearCombine(
-		const b3_vector64 * aVec,
-		const b3_vector64 * bVec,
-		const b3_vector64 * cVec,
-		const b3_f64        x,
-		const b3_f64        y,
-		b3_vector64    *    result)
-	{
-#ifdef B3_SSE2
-		const b3_f64 * a = &aVec->x;
-		const b3_f64 * b = &bVec->x;
-		const b3_f64 * c = &cVec->x;
-		b3_f64    *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = a[i] + x * b[i] + y * c[i];
-		}
-#else
-		result->x = aVec->x + x * bVec->x + y * cVec->x;
-		result->y = aVec->y + x * bVec->y + y * cVec->y;
-		result->z = aVec->z + x * bVec->z + y * cVec->z;
-#endif
-		return result;
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = aVec + x * bVec + y * cVec</code>.
-	 *
-	 * @param aVec The first vector.
-	 * @param bVec The second vector.
-	 * @param cVec The third vector.
-	 * @param x The factor for the bVec parameter.
-	 * @param y The factor for the cVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3LinearCombine(
-		const b3_vector  * aVec,
-		const b3_vector  * bVec,
-		const b3_vector  * cVec,
-		const b3_f32       x,
-		const b3_f32       y,
-		b3_vector64    *   result)
-	{
-		result->x = aVec->x + x * bVec->x + y * cVec->x;
-		result->y = aVec->y + x * bVec->y + y * cVec->y;
-		result->z = aVec->z + x * bVec->z + y * cVec->z;
-
-		return result;
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = aVec + x * bVec + y * cVec</code>.
-	 *
-	 * @param aVec The first vector.
-	 * @param bVec The second vector.
-	 * @param cVec The third vector.
-	 * @param x The factor for the bVec parameter.
-	 * @param y The factor for the cVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_gl_vector * b3LinearCombine(
-		const b3_vector  *  aVec,
-		const b3_vector  *  bVec,
-		const b3_vector  *  cVec,
-		const b3_f32        x,
-		const b3_f32        y,
-		b3_gl_vector    *   result)
-	{
-		return (b3_gl_vector *)b3LinearCombine(aVec, bVec, cVec, x, y, (b3_vector *)result);
-	}
-
-	/**
-	 * This method computes the linear combination of the given input parameters:
-	 * <code>result = x * aVec + y * bVec + z * cVec</code>.
-	 *
-	 * @param aVec The first vector.
-	 * @param bVec The second vector.
-	 * @param cVec The third vector.
-	 * @param x The factor for the aVec parameter.
-	 * @param y The factor for the bVec parameter.
-	 * @param z The factor for the cVec parameter.
-	 * @param result The resulting linear combination.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3LinearCombine(
-		const b3_vector  * aVec,
-		const b3_vector  * bVec,
-		const b3_vector  * cVec,
-		const b3_f32       x,
-		const b3_f32       y,
-		const b3_f32       z,
-		b3_vector64    *   result)
-	{
-		result->x = x * aVec->x + y * bVec->x + z * cVec->x;
-		result->y = x * aVec->y + y * bVec->y + z * cVec->y;
-		result->z = x * aVec->z + y * bVec->z + z * cVec->z;
 
 		return result;
 	}
@@ -1653,15 +858,22 @@ public:
 	 * @param result The resulting linear combination.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3LinearCombine(
-		const b3_vector  * aVec,
-		const b3_vector  * bVec,
-		const b3_vector  * cVec,
-		const b3_f32       x,
-		const b3_f32       y,
-		const b3_f32       z,
-		b3_vector     *    result)
+	template<class V, class R>
+	static inline R * b3LinearCombine(
+		const V        *       aVec,
+		const V        *       bVec,
+		const V        *       cVec,
+		const decltype(V::x)   x,
+		const decltype(V::y)   y,
+		const decltype(V::z)   z,
+		R           *          result)
 	{
+		using Fv = decltype(V::x);
+		using Fr = decltype(R::x);
+
+		static_assert(std::is_floating_point<Fv>(), "Expect float as input vector member type!");
+		static_assert(std::is_floating_point<Fr>(), "Expect float as result vector member type!");
+
 		result->x = x * aVec->x + y * bVec->x + z * cVec->x;
 		result->y = x * aVec->y + y * bVec->y + z * cVec->y;
 		result->z = x * aVec->z + y * bVec->z + z * cVec->z;
@@ -1679,24 +891,14 @@ public:
 	 * @return The result.
 	 */
 	static inline b3_vector64 * b3LinearCombine(
-		const b3_line64  * line,
-		const b3_f64       l,
-		b3_vector64 * result)
+		const b3_line64 * line,
+		const b3_f64      l,
+		b3_vector64   *   result)
 	{
-#ifdef B3_SSE2
-		const b3_f64 * p = &line->pos.x;
-		const b3_f64 * d = &line->dir.x;
-		b3_f64    *    r = &result->x;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			r[i] = p[i] + l * d[i];
-		}
-#else
 		result->x = line->pos.x + l * line->dir.x;
 		result->y = line->pos.y + l * line->dir.y;
 		result->z = line->pos.z + l * line->dir.z;
-#endif
+
 		return result;
 	}
 
@@ -1730,81 +932,25 @@ public:
 	 * @param lower The sorted lower vector.
 	 * @param upper The sorted upper vector.
 	 */
+	template<class V>
 	static inline void b3Sort(
-		b3_vector * lower,
-		b3_vector * upper)
+		V * lower,
+		V * upper)
 	{
-		b3_f32 aux;
-
 		if (lower->x > upper->x)
 		{
-			aux = lower->x;
-			lower->x = upper->x;
-			upper->x = aux;
+			std::swap(lower->x, upper->x);
 		}
 
 		if (lower->y > upper->y)
 		{
-			aux = lower->y;
-			lower->y = upper->y;
-			upper->y = aux;
+			std::swap(lower->y, upper->y);
 		}
 
 		if (lower->z > upper->z)
 		{
-			aux = lower->z;
-			lower->z = upper->z;
-			upper->z = aux;
+			std::swap(lower->z, upper->z);
 		}
-	}
-
-	/**
-	 * This method takes two vectors and sorts each component into
-	 * their lower and upper value.
-	 *
-	 * @param lower The sorted lower vector.
-	 * @param upper The sorted upper vector.
-	 */
-	static inline void b3Sort(b3_vector64 * lower, b3_vector64 * upper)
-	{
-#ifdef B3_SSE2
-		b3_f64 * l = &lower->x;
-		b3_f64 * u = &upper->x;
-		b3_f64   aux;
-
-		for (b3_loop i = 0; i < 3; i++)
-		{
-			if (l[i] > u[i])
-			{
-				aux  = l[i];
-				l[i] = u[i];
-				u[i] = aux;
-			}
-		}
-#else
-		b3_f64 aux;
-
-		if (lower->x > upper->x)
-		{
-			aux = lower->x;
-			lower->x = upper->x;
-			upper->x = aux;
-		}
-
-		if (lower->y > upper->y)
-		{
-			aux = lower->y;
-			lower->y = upper->y;
-			upper->y = aux;
-		}
-
-		if (lower->z > upper->z)
-		{
-			aux = lower->z;
-			lower->z = upper->z;
-			upper->z = aux;
-		}
-#endif
 	}
 
 	/**
@@ -1994,6 +1140,13 @@ public:
 		b3CheckLowerBound(lower, &test);
 		b3CheckUpperBound(upper, &test);
 	}
+
+private:
+
+	static b3_vector * b3MatrixMul(
+		const b3_matrix * A,
+		b3_vector    *    vector,
+		const b3_f32      w);
 };
 
 /**
@@ -2403,11 +1556,16 @@ public:
 	 * @param c The third column.
 	 * @return The resulting determinand.
 	 */
+	template<class V>
 	static inline b3_f64     b3Det3(
-		const b3_vector * a,
-		const b3_vector * b,
-		const b3_vector * c)
+		const V * a,
+		const V * b,
+		const V * c)
 	{
+		using F = decltype(V::x);
+
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
 		return
 			a->x * b->y * c->z -
 			c->x * b->y * a->z +
@@ -2418,58 +1576,40 @@ public:
 	}
 
 	/**
-	 * This method computes the 3d determinand from three input vectors. The
-	 * vectors are of double precision type.
-	 *
-	 * @param a The first column.
-	 * @param b The second column.
-	 * @param c The third column.
-	 * @return The resulting determinand.
-	 */
-	static inline b3_f64     b3Det3(
-		const b3_vector64 * a,
-		const b3_vector64 * b,
-		const b3_vector64 * c)
-	{
-		return
-			a->x * b->y * c->z -
-			c->x * b->y * a->z +
-			b->x * c->y * a->z -
-			b->x * a->y * c->z +
-			c->x * a->y * b->z -
-			a->x * c->y * b->z;
-	}
-
-	/**
-	 * This method computes a transformation on an input vector and stores the result into
-	 * a given result buffer.
+	 * This method computes a transformation on an input vector and stores the
+	 * result into a given result buffer.
 	 *
 	 * @param A The transformation matrix.
 	 * @param Src The vector to transform.
 	 * @param Dst The result vector.
-	 * @param Use4D If true the input vector is a position. Otherwise it is a direction.
+	 * @param Use4D If true the input vector is a position. Otherwise it is a
+	 * direction.
 	 * @return The result.
 	 */
-	static inline b3_vector * b3VMul(
+	template<class V>
+	static inline V * b3VMul(
 		const b3_matrix * A,
-		const b3_vector * Src, b3_vector * Dst,
+		const V     *     Src, V * Dst,
 		const bool        Use4D)
 	{
-#ifdef B3_SSE2
-		const b3_f32    *   m = &A->m11;
-		const b3_f32    *   s = &Src->x;
-		b3_f32       *      d = &Dst->x;
-		alignas(16) b3_f32  aux[4];
+		using F = decltype(V::x);
+
+		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
+
+		alignas(16) const F aux[4]
+		{
+			Src->x,
+			Src->y,
+			Src->z,
+			Use4D ? 1.0f : 0.0f
+		};
+
+		const b3_f32 * m = &A->m11;
+		F       *      d = &Dst->x;
 
 		for (b3_loop o = 0; o < 3; o++)
 		{
-			aux[o] = s[o];
-		}
-		aux[3] = Use4D ? 1 : 0;
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			alignas(16) b3_f32 prod[4];
+			alignas(16) F prod[4];
 
 			for (b3_loop i = 0; i < 4; i++)
 			{
@@ -2481,84 +1621,9 @@ public:
 			{
 				d[o] += prod[i];
 			}
-			m    += 4;
+			m += 4;
 		}
-#else
-		b3_f32 x, y, z;
 
-		x = Src->x;
-		y = Src->y;
-		z = Src->z;
-		if (Use4D)
-		{
-			Dst->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
-			Dst->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
-			Dst->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33 + A->m34);
-		}
-		else
-		{
-			Dst->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13);
-			Dst->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23);
-			Dst->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33);
-		}
-#endif
-		return Dst;
-	}
-
-	/**
-	 * This method computes a transformation on an input vector and stores the result into
-	 * a given result buffer.
-	 *
-	 * @param A The transformation matrix.
-	 * @param Src The vector to transform.
-	 * @param Dst The result vector.
-	 * @param Use4D If true the input vector is a position. Otherwise it is a direction.
-	 * @return The result.
-	 */
-	static inline b3_vector64 * b3VMul(
-		const b3_matrix * A,
-		const b3_vector64 * Src, b3_vector64 * Dst, const bool Use4D)
-	{
-#ifdef B3_SSE2
-		const b3_f32    *   m = &A->m11;
-		const b3_f64    *   s = &Src->x;
-		b3_f64       *      d = &Dst->x;
-		alignas(16) b3_f64  aux[4];
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			aux[o] = s[o];
-		}
-		aux[3] = Use4D ? 1 : 0;
-
-		for (b3_loop o = 0; o < 3; o++)
-		{
-			d[o] = 0;
-			for (b3_loop i = 0; i < 4; i++)
-			{
-				d[o] += m[i] * aux[i];
-			}
-			m    += 4;
-		}
-#else
-		b3_f64 x, y, z;
-
-		x = Src->x;
-		y = Src->y;
-		z = Src->z;
-		if (Use4D)
-		{
-			Dst->x = (b3_f64)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
-			Dst->y = (b3_f64)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
-			Dst->z = (b3_f64)(x * A->m31 + y * A->m32 + z * A->m33 + A->m34);
-		}
-		else
-		{
-			Dst->x = (b3_f64)(x * A->m11 + y * A->m12 + z * A->m13);
-			Dst->y = (b3_f64)(x * A->m21 + y * A->m22 + z * A->m23);
-			Dst->z = (b3_f64)(x * A->m31 + y * A->m32 + z * A->m33);
-		}
-#endif
 		return Dst;
 	}
 };

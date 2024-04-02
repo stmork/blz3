@@ -48,6 +48,7 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Water.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Wood.h \
 	$$BLZ3_INCLUDE/blz3/base/b3World.h \
+	$$BLZ3_INCLUDE/blz3/base/b3SplineVector.h \
 	b3ItemRegister.h
 
 SOURCES += \
