@@ -36,6 +36,10 @@ template<typename T, b3_loop dim> class b3VectorTest : public CppUnit::TestFixtu
 
 	CPPUNIT_TEST_SUITE(b3VectorTest);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testNegate);
+	CPPUNIT_TEST(testSMul);
+	CPPUNIT_TEST(testArithmetics);
+	CPPUNIT_TEST(testSort);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -68,6 +72,12 @@ public:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 1.0, as[X]);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 2.0, as[Y]);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 3.0, as[Z]);
+	}
+
+	void testNegate()
+	{
+		b3PrintF(B3LOG_FULL, "b3Init()\n");
+		as.b3Init(1.0, 2.0, 3.0);
 
 		b3PrintF(B3LOG_FULL, "assign\n");
 		bs = as;
@@ -88,8 +98,12 @@ public:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.0, bs[X]);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, -2.0, bs[Y]);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  1.0, bs[Z]);
+	}
 
+	void testSMul()
+	{
 		b3PrintF(B3LOG_FULL, "b3Init()\n");
+		as.b3Init(-3.0, 2.0, -1.0);
 		bs.b3Init(2.0, -1.0, -2.0);
 
 		b3PrintF(B3LOG_FULL, "b3SMul()\n");
@@ -112,7 +126,10 @@ public:
 
 		b3PrintF(B3LOG_FULL, "b3Length()\n");
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(6.0,   bs.b3Length(), DELTA);
+	}
 
+	void testArithmetics()
+	{
 		b3PrintF(B3LOG_FULL, "b3Init()\n");
 		as.b3Init(1.0, -3.0, -4.0);
 
@@ -178,7 +195,10 @@ public:
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  2.0, bs[X]);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.0, bs[Y]);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  8.0, bs[Z]);
+	}
 
+	void testSort()
+	{
 		b3PrintF(B3LOG_FULL, "b3Init()\n");
 		as.b3Init(1.0, -1.0, 2.0);
 

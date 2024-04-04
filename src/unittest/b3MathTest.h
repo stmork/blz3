@@ -30,8 +30,14 @@ class b3MathTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(b3MathTest);
 	CPPUNIT_TEST(test);
+	CPPUNIT_TEST(testIsZero);
+	CPPUNIT_TEST(testSolveOrd2);
+	CPPUNIT_TEST(testSolveOrd3);
+	CPPUNIT_TEST(testSolveOrd4);
 	CPPUNIT_TEST(testRound);
 	CPPUNIT_TEST(testLogPow);
+	CPPUNIT_TEST(testAsin);
+	CPPUNIT_TEST(testAcos);
 	CPPUNIT_TEST(testSmoothStep1);
 	CPPUNIT_TEST(testSmoothStep2);
 	CPPUNIT_TEST_SUITE_END();
@@ -54,12 +60,22 @@ public:
 	void setUp() override;
 	void tearDown() override;
 	void test();
+	void testIsZero();
+	void testSolveOrd2();
+	void testSolveOrd3();
+	void testSolveOrd4();
 	void testRound();
 	void testLogPow();
+	void testAsin();
+	void testAcos();
 	void testSmoothStep1();
 	void testSmoothStep2();
 
 private:
+	static b3_count verifyQuadric(const b3_f64 * coeffs, b3_f64 * result);
+	static b3_count verifyCubic(const b3_f64 * coeffs, b3_f64 * result);
+	static b3_count verifyQuartic(const b3_f64 * coeffs, b3_f64 * result);
+
 	template<typename T> static inline T epsilon(unsigned & loops)
 	{
 		T        epsilon = 1.0;

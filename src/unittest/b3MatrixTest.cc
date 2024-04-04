@@ -44,7 +44,7 @@ void b3MatrixTest::tearDown()
 	b3PrintF(B3LOG_DEBUG, "Tear down: %s\n", __FILE__);
 }
 
-void b3MatrixTest::testVector()
+void b3MatrixTest::testVectorInit()
 {
 	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3Init(&as));
 	CPPUNIT_ASSERT_EQUAL(0.0f, as.x);
@@ -103,8 +103,13 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(3.0, bd.x);
 	CPPUNIT_ASSERT_EQUAL(-2.0, bd.y);
 	CPPUNIT_ASSERT_EQUAL(1.0, bd.z);
+}
 
-	CPPUNIT_ASSERT_EQUAL(&bs,     b3Vector::b3Init(&bs, 2.0, -1.0, -2.0));
+void b3MatrixTest::testVectorSMul()
+{
+	CPPUNIT_ASSERT_EQUAL(&as,     b3Vector::b3Init(&as, -3.0,  2.0, -1.0));
+	CPPUNIT_ASSERT_EQUAL(&ad,     b3Vector::b3Init(&ad, &as));
+	CPPUNIT_ASSERT_EQUAL(&bs,     b3Vector::b3Init(&bs,  2.0, -1.0, -2.0));
 	CPPUNIT_ASSERT_EQUAL(-6.0f,   b3Vector::b3SMul(&as, &bs));
 	CPPUNIT_ASSERT_EQUAL(-6.0,    b3Vector::b3SMul(&ad, &bs));
 	CPPUNIT_ASSERT_EQUAL( 3.0f,   b3Vector::b3Length(&bs));
@@ -233,7 +238,10 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(-4.5f, ds.x);
 	CPPUNIT_ASSERT_EQUAL(-13.5f, ds.y);
 	CPPUNIT_ASSERT_EQUAL(-9.0f, ds.z);
+}
 
+void b3MatrixTest::testVectorLinearCombine()
+{
 	CPPUNIT_ASSERT_EQUAL(&ad,  b3Vector::b3Init(&ad, 1.0, -1.0, 2.0));
 	CPPUNIT_ASSERT_EQUAL(&bd,  b3Vector::b3Init(&bd, 2.0,  1.0, 4.0));
 	CPPUNIT_ASSERT_EQUAL(3.0,  b3Vector::b3Distance(&ad, &bd));
@@ -257,6 +265,9 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(-1.5, cd.x);
 	CPPUNIT_ASSERT_EQUAL(-4.5, cd.y);
 	CPPUNIT_ASSERT_EQUAL(-3.0, cd.z);
+	CPPUNIT_ASSERT_EQUAL(&as,  b3Vector::b3Init(&as, &ad));
+	CPPUNIT_ASSERT_EQUAL(&bs,  b3Vector::b3Init(&bs, &bd));
+	CPPUNIT_ASSERT_EQUAL(&cs,  b3Vector::b3Init(&cs, &cd));
 	CPPUNIT_ASSERT_EQUAL(&cd,  b3Vector::b3LinearCombine(&as, &bs, 2.5, -2.0, &cd));
 	CPPUNIT_ASSERT_EQUAL(-1.5, cd.x);
 	CPPUNIT_ASSERT_EQUAL(-4.5, cd.y);
@@ -284,7 +295,10 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(1.5,  dd.y);
 	CPPUNIT_ASSERT_EQUAL(12.0,  dd.z);
 	CPPUNIT_ASSERT_EQUAL(&dd,  b3Vector::b3LinearCombine(&ld, 2.5, &dd));
+}
 
+void b3MatrixTest::testVectorBounds()
+{
 	CPPUNIT_ASSERT_EQUAL(&as,  b3Vector::b3Init(&as, 1.0,  1.5, 4.0));
 	CPPUNIT_ASSERT_EQUAL(&bs,  b3Vector::b3Init(&bs, 2.0, -1.0, 2.0));
 	CPPUNIT_ASSERT_EQUAL(&cs,  b3Vector::b3Init(&cs, &as));
@@ -336,6 +350,61 @@ void b3MatrixTest::testVector()
 	CPPUNIT_ASSERT_EQUAL(3.0f, bs.x);
 	CPPUNIT_ASSERT_EQUAL(0.0f, bs.y);
 	CPPUNIT_ASSERT_EQUAL(4.0f, bs.z);
+}
+
+void b3MatrixTest::testVectorMix()
+{
+	CPPUNIT_ASSERT_EQUAL(&as, b3Vector::b3Init(&as,  1.0,  2.0, -4.0));
+	CPPUNIT_ASSERT_EQUAL(&bs, b3Vector::b3Init(&bs, -1.0, -4.0,  2.0));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&as, &bs));
+
+	CPPUNIT_ASSERT_EQUAL(&cs, b3Vector::b3Mix(&as, &bs, 0.0, &cs));
+	CPPUNIT_ASSERT( b3Vector::b3IsEqual(&as, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&bs, &cs));
+
+	CPPUNIT_ASSERT_EQUAL(&cs, b3Vector::b3Mix(&as, &bs, 1.0, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&as, &cs));
+	CPPUNIT_ASSERT( b3Vector::b3IsEqual(&bs, &cs));
+
+	CPPUNIT_ASSERT_EQUAL(&cs, b3Vector::b3Mix(&as, &bs, 0.2, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&as, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&bs, &cs));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.6, cs.x, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.8, cs.y, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-2.8, cs.z, b3Math::epsilon);
+
+	CPPUNIT_ASSERT_EQUAL(&cs, b3Vector::b3Mix(&as, &bs, 0.5, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&as, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&bs, &cs));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, cs.x, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.0, cs.y, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.0, cs.z, b3Math::epsilon);
+
+	CPPUNIT_ASSERT_EQUAL(&cs, b3Vector::b3Mix(&as, &bs, 0.8, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&as, &cs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&bs, &cs));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-0.6, cs.x, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-2.8, cs.y, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.8, cs.z, b3Math::epsilon);
+
+	CPPUNIT_ASSERT_EQUAL(&ad, b3Vector::b3Init(&ad, &as));
+	CPPUNIT_ASSERT_EQUAL(&bd, b3Vector::b3Init(&bd, &bs));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&ad, &bd));
+
+	CPPUNIT_ASSERT_EQUAL(&cd, b3Vector::b3Mix(&ad, &bd, 0.0, &cd));
+	CPPUNIT_ASSERT( b3Vector::b3IsEqual(&ad, &cd));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&bd, &cd));
+
+	CPPUNIT_ASSERT_EQUAL(&cd, b3Vector::b3Mix(&ad, &bd, 1.0, &cd));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&ad, &cd));
+	CPPUNIT_ASSERT( b3Vector::b3IsEqual(&bd, &cd));
+
+	CPPUNIT_ASSERT_EQUAL(&cd, b3Vector::b3Mix(&ad, &bd, 0.5, &cd));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&ad, &cd));
+	CPPUNIT_ASSERT(!b3Vector::b3IsEqual(&bd, &cd));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, cd.x, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.0, cd.y, b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.0, cd.z, b3Math::epsilon);
 }
 
 void b3MatrixTest::testMatrix()

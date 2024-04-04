@@ -685,7 +685,7 @@ public:
 	 * @return The resulting angle.
 	 */
 	template<class V>
-	static inline decltype(V::x) b3AngleOfVectors(
+	static inline b3_f64 b3AngleOfVectors(
 		const V * Vector1,
 		const V * Vector2)
 	{
@@ -707,7 +707,7 @@ public:
 	 * @return The resulting angle.
 	 */
 	template<class V>
-	static inline decltype(V::x) b3AngleOfPoints(
+	static inline b3_f64 b3AngleOfPoints(
 		const V * base,
 		const V * point1,
 		const V * point2)
