@@ -460,18 +460,14 @@ void b3SplineShape::b3Draw()
 
 void b3SplineShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
-	b3_vector * control;
-	b3_index    offset;
-	unsigned    x, y;
-
-	control = m_Spline[0].m_Controls;
-	offset  = m_Spline[0].m_Offset;
+	const b3_index offset = m_Spline[0].m_Offset;
 
 	// Transform control points
-	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (unsigned y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
-		control  = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
-		for (x = 0; x < m_Spline[0].m_ControlNum; x++)
+		b3_vector * control = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
+
+		for (unsigned x = 0; x < m_Spline[0].m_ControlNum; x++)
 		{
 			b3Vector::b3MatrixMul4D(transformation, control);
 			control += offset;
@@ -482,18 +478,14 @@ void b3SplineShape::b3Transform(b3_matrix * transformation, bool is_affine)
 
 void b3SplineShape::b3SetupPicking(b3PickInfo * info)
 {
-	b3_vector  *  control;
-	b3_index      offset;
-	unsigned      x, y;
-
-	control = m_Spline[0].m_Controls;
-	offset  = m_Spline[0].m_Offset;
+	const b3_index offset = m_Spline[0].m_Offset;
 
 	// Transform control points
-	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (unsigned y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
-		control  = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
-		for (x = 0; x < m_Spline[0].m_ControlNum; x++)
+		b3_vector * control = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
+
+		for (unsigned x = 0; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddPickPoint(control);
 			control += offset;
@@ -503,29 +495,26 @@ void b3SplineShape::b3SetupPicking(b3PickInfo * info)
 
 void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 {
-	b3_vector  *  control;
-	b3_index      offset;
-	unsigned      x, y;
-
-	control = m_Spline[0].m_Controls;
-	offset  = m_Spline[0].m_Offset;
+	b3_index offset = m_Spline[0].m_Offset;
 
 	// Transform control points
-	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (unsigned y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
-		control  = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
-		for (x = 0; x < m_Spline[0].m_ControlNum; x++)
+		b3_vector * control = &m_Spline[0].m_Controls[y * m_Spline[1].m_Offset];
+
+		for (unsigned x = 0; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddVertex(control);
 			control += offset;
 		}
 	}
+
 	// Compute horizontal grid lines
-	for (y = 0; y < m_Spline[1].m_ControlNum; y++)
+	for (unsigned y = 0; y < m_Spline[1].m_ControlNum; y++)
 	{
 		const unsigned start = y * m_Spline[0].m_ControlNum;
 
-		for (x = 1; x < m_Spline[0].m_ControlNum; x++)
+		for (unsigned x = 1; x < m_Spline[0].m_ControlNum; x++)
 		{
 			info->b3AddLine(
 				start + x - 1,
@@ -539,9 +528,9 @@ void b3SplineShape::b3SetupGrid(b3PickInfo * info)
 
 	// Compute vertical grid lines
 	offset = m_Spline[0].m_ControlNum;
-	for (x = 0; x < m_Spline[0].m_ControlNum; x++)
+	for (unsigned x = 0; x < m_Spline[0].m_ControlNum; x++)
 	{
-		for (y = 1; y < m_Spline[1].m_ControlNum; y++)
+		for (unsigned y = 1; y < m_Spline[1].m_ControlNum; y++)
 		{
 			info->b3AddLine(
 				x + (y - 1) * offset,

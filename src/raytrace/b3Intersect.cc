@@ -684,10 +684,12 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 	{
 		if ((x[i] > b3Math::epsilon) && (x[i] < ray->Q))
 		{
+			// coefficient valid.
 			i++;
 		}
 		else
 		{
+			// Swap with last coefficient and reduce amount.
 			x[i] = x[--num_solutions];
 		}
 	}
@@ -696,6 +698,7 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 	{
 		b3_f64 lValue = x[i];
 
+		// Find smallest coefficient from rest.
 		for (b3_loop k = num_solutions - 1; k > i; k--)
 		{
 			if (x[k] < lValue)
@@ -1435,7 +1438,7 @@ bool b3CSGTorus::b3Intersect(
 	b3_line64      *     BTLine)
 {
 	alignas(16) b3_f64  x[4];
-	alignas(16) b3_f64  Coeff[5];
+	alignas(16) b3_f64  Coeff[4];
 	b3_index            t = 0;
 
 	interval->m_Count = 0;
@@ -1450,11 +1453,10 @@ bool b3CSGTorus::b3Intersect(
 		BTLine->pos.x * BTLine->dir.x +
 		BTLine->pos.y * BTLine->dir.y + pdQuad;
 
-	Coeff[4] = 1;
-	Coeff[3] = 4 *  Val2;
-	Coeff[2] = 2 * (Val1        + 2 * Val2  * Val2 + 2 * m_aQuad * dQuad);
-	Coeff[1] = 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
 	Coeff[0] =      Val1 * Val1 + 4 * m_aQuad * (pQuad - m_bQuad);
+	Coeff[1] = 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
+	Coeff[2] = 2 * (Val1        + 2 * Val2  * Val2 + 2 * m_aQuad * dQuad);
+	Coeff[3] = 4 *  Val2;
 
 	b3_loop num_solutions = b3Cubic::b3SolveOrd4(Coeff, x);
 	if ((num_solutions == 2) || (num_solutions == 4))

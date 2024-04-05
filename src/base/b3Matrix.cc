@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_matrix b3Matrix::m_UnitMatrix =
+const b3_matrix b3Matrix::m_UnitMatrix
 {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
@@ -39,10 +39,46 @@ const b3_matrix b3Matrix::m_UnitMatrix =
 	0, 0, 0, 1
 };
 
-const b3_vector b3Matrix::m_EmptyVector =
+const b3_vector b3Matrix::m_EmptyVector
 {
 	0, 0, 0
 };
+
+b3_vector * b3Vector::b3MatrixMul(
+	const b3_matrix * A,
+	b3_vector    *    vector,
+	const b3_f32      w)
+{
+	alignas(16) const b3_f32 aux[4]
+	{
+		vector->x,
+		vector->y,
+		vector->z,
+		w
+	};
+
+	const b3_f32 * m = &A->m11;
+	b3_f32    *    v = &vector->x;
+
+	for (b3_loop o = 0; o < 3; o++)
+	{
+		alignas(16) b3_f32 prod[4];
+
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			prod[i] = m[i] * aux[i];
+		}
+
+		v[o] = 0;
+		for (b3_loop i = 0; i < 4; i++)
+		{
+			v[o] += prod[i];
+		}
+		m += 4;
+	}
+
+	return vector;
+}
 
 bool b3Matrix::b3NormalizeCol(
 	b3_matrix * Matrix,

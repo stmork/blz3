@@ -36,8 +36,10 @@
 
 b3_count b3Cubic::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 {
-	const b3_f64 p = Coeffs[1] * 0.5;
-	const b3_f64 D = p * p - Coeffs[0];
+	const b3_f64 p = Coeffs[O2_X1] * 0.5;    // x^1
+	const b3_f64 D = p * p - Coeffs[O2_X0];  // x^0
+
+	/* normal form: x^2 + px + q = 0 */
 
 	if (b3IsZero(D))
 	{
@@ -46,10 +48,10 @@ b3_count b3Cubic::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 	}
 	else if (D > 0)
 	{
-		const b3_f64 q = sqrt(D);
+		const b3_f64 r = sqrt(D);
 
-		x[0] = -q - p;
-		x[1] =  q - p;
+		x[0] = -r - p;
+		x[1] =  r - p;
 		return 2;
 	}
 	else
@@ -58,96 +60,99 @@ b3_count b3Cubic::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 	}
 }
 
+// https://www.e-education.psu.edu/png520/m11_p6.html
 b3_count b3Cubic::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 {
-	b3_count i, NumOfX;
-	b3_f64   Sub, A, B, C;
-	b3_f64   sq_A, p, q;
-	b3_f64   cb_P, D;
+	b3_count NumOfX = 0;
 
-	A = Coeffs[2];
-	B = Coeffs[1];
-	C = Coeffs[0];
+	/* normal form: x^3 + Ax^2 + Bx + C = 0 */
 
-	sq_A = A * A;
-	p = 1.0 / 3 * (- 1.0 / 3  * sq_A     + B);
-	q = 0.5   * (2.0 / 27 * sq_A * A - 1.0 / 3 * A * B + C);
+	const b3_f64 A   = Coeffs[O3_X2]; // x^2
+	const b3_f64 B   = Coeffs[O3_X1]; // x^1
+	const b3_f64 C   = Coeffs[O3_X0]; // x^0
 
-	cb_P = p * p * p;
-	D    = q * q + cb_P;
+	const b3_f64 AA  = A * A;
+	const b3_f64 Q   = (AA - 3 * B) / 9.0;
+	const b3_f64 R   = (2.0 * AA * A - 9 * A * B + 27.0 * C) / 54.0;
 
-	if (b3IsZero(D))
+	const b3_f64 QQQ = Q * Q * Q;
+	const b3_f64 M   = R * R - QQQ;
+
+	if (b3IsZero(M))
 	{
-		if (b3IsZero(q))
+		if (b3IsZero(R))
 		{
-			NumOfX = 0;
+			x[NumOfX++] = 0;
 		}
 		else
 		{
-			Sub  = cbrt(-q);
-			x[0] = 2 * Sub;
-			x[1] =   - Sub;
-			NumOfX = 2;
+			const b3_f64 cbrt_q  = cbrt(-R);
+
+			x[NumOfX++] = 2 * cbrt_q;
+			x[NumOfX++] =   - cbrt_q;
 		}
 	}
-	else if (D < 0)
+	else if (M > 0)
 	{
-		Sub = 1.0 / 3 * acos(-q / sqrt(-cb_P));
-		C = 2 * sqrt(-p);
+		const b3_f64 sqrt_M = sqrt(M);
 
-		x[0] = C *  cos(Sub);
-		x[1] = C * -cos(Sub + M_PI / 3);
-		x[2] = C * -cos(Sub - M_PI / 3);
-		NumOfX = 3;
+		x[NumOfX++] = cbrt(- R + sqrt_M) + cbrt(-R - sqrt_M);
 	}
 	else
 	{
-		Sub    = sqrt(D);
-		x[0]   = cbrt(Sub - q) - cbrt(Sub + q);
-		NumOfX = 1;
+		const b3_f64 theta = acos(R / sqrt(QQQ)) / 3.0;
+		const b3_f64 aux   = 2.0 * sqrt(Q);
+
+		x[NumOfX++] = aux * -cos(theta + 2.0 * M_PI / 3.0);
+		x[NumOfX++] = aux * -cos(theta - 2.0 * M_PI / 3.0);
+		x[NumOfX++] = aux * -cos(theta);
 	}
 
-	Sub = 1.0 / 3 * A;
-	for (i = 0; i < NumOfX; ++i)
+	const b3_f64 aux = A / 3.0;
+	for (b3_loop i = 0; i < NumOfX; ++i)
 	{
-		x[i] -= Sub;
+		x[i] -= aux;
 	}
 
 	return NumOfX;
 }
 
+// https://www.desmos.com/calculator?lang=de
 b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 {
 	b3_f64	 Coeffs[4];
-	b3_f64	 Sub, B, C, D, A;
-	b3_f64	 sq_A, p, q, r;
-	b3_count i, NumOfX;
+	b3_f64	 D, C, B, A;
+	b3_count NumOfX;
 
 	/* normal form: x^4 + Ax^3 + Bx^2 + Cx + D = 0 */
 
-	A = c[3];
-	B = c[2];
-	C = c[1];
-	D = c[0];
+	D = c[O4_X0]; // x^0
+	C = c[O4_X1]; // x^1
+	B = c[O4_X2]; // x^2
+	A = c[O4_X3]; // x^3
 
-	sq_A = A * A;
-	p    = -0.375   * sq_A + B;
-	q    =  0.125   * sq_A *    A - 0.5    *    A * B + C;
-	r    = -3.0 / 256 * sq_A * sq_A + 0.0625 * sq_A * B - 0.25 * A * C + D;
+	const b3_f64 AA = A * A;
+	const b3_f64 p  = B  -  0.375 * AA;
+	const b3_f64 q  =  0.125 * AA * A  -  0.5 * A * B   + C;
+	const b3_f64 r  = -3.0 * AA * AA / 256.0 + 0.0625 * AA * B - 0.25 * A * C + D;
 
 	if (b3IsZero(r))
 	{
-		Coeffs[0] = q;
-		Coeffs[1] = p;
-		Coeffs[2] = 0;
+		Coeffs[O3_X0] = q;
+		Coeffs[O3_X1] = p;
+		Coeffs[O3_X2] = 0;
 
 		NumOfX = b3SolveOrd3(Coeffs, x);
+		if (NumOfX < 3)
+		{
+			x[NumOfX++] = 0;
+		}
 	}
 	else
 	{
-		Coeffs[0] =  0.5 * r * p - 0.125 * q * q;
-		Coeffs[1] = -r;
-		Coeffs[2] = -0.5 * p;
+		Coeffs[O3_X0] =  0.5 * r * p - 0.125 * q * q;
+		Coeffs[O3_X1] = -r;
+		Coeffs[O3_X2] = -0.5 * p;
 
 		b3SolveOrd3(Coeffs, x);
 
@@ -181,20 +186,34 @@ b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 			return 0;
 		}
 
-		Coeffs[0]  = B;
-		Coeffs[0] -= C;		/* Compilerfehler Aztec 3.6a ! */
-		Coeffs[1]  = q < 0 ? -D : D;
-		NumOfX     = b3SolveOrd2(Coeffs, x);
+		Coeffs[O2_X0]  = B - C;
+		Coeffs[O2_X1]  = q < 0 ? -D : D;
+		NumOfX         = b3SolveOrd2(Coeffs, x);
 
-		Coeffs[0]  = B + C;
-		Coeffs[1]  = q < 0 ? D : -D;
-		NumOfX    += b3SolveOrd2(Coeffs, &x[NumOfX]);
+		Coeffs[O2_X0]  = B + C;
+		Coeffs[O2_X1]  = q < 0 ? D : -D;
+		NumOfX        += b3SolveOrd2(Coeffs, &x[NumOfX]);
+
 	}
 
-	Sub = 0.25 * A;
-	for (i = 0; i < NumOfX; ++i)
+	// Make unique.
+	for (int l = NumOfX - 1; l > 0; --l)
 	{
-		x[i] -= Sub;
+		const b3_f64 v = x[l];
+		for (int k = l - 1; k >= 0; --k)
+		{
+			if (v == x[k])
+			{
+				x[k] = x[--NumOfX];
+				break;
+			}
+		}
+	}
+
+	const b3_f64 aux = 0.25 * A;
+	for (b3_loop i = 0; i < NumOfX; ++i)
+	{
+		x[i] -= aux;
 	}
 	return NumOfX;
 }

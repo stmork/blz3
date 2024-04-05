@@ -392,7 +392,9 @@ void b3DistributedRayRow::b3Raytrace()
 			sx = *samples++;
 			sy = *samples++;
 
-			b3Vector::b3LinearCombine(&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir, sx, sy, &ray.dir);
+			b3Vector::b3LinearCombine(
+				&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir,
+				sx, sy, &ray.dir);
 			ray.inside = false;
 
 			result += b3Shade(&ray, fx + sx, m_fy + sy);
@@ -478,7 +480,9 @@ void b3MotionBlurRayRow::b3Raytrace()
 				sx = *samples++;
 				sy = *samples++;
 
-				b3Vector::b3LinearCombine(&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir, sx, sy, &ray.dir);
+				b3Vector::b3LinearCombine(
+					&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir,
+					sx, sy, &ray.dir);
 				ray.inside = false;
 
 				m_Color[x]  += b3Shade(&ray, fx + sx, m_fy + sy);

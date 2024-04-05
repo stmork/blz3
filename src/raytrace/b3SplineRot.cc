@@ -173,61 +173,48 @@ bool b3SplineRotShape::b3Prepare(b3_preparation_info * prep_info)
 
 void b3SplineRotShape::b3Transform(b3_matrix * transformation, bool is_affine)
 {
-	b3_vector * control;
-	b3_index    offset;
-	unsigned    x;
-
-	control = m_Spline.m_Controls;
-	offset  = m_Spline.m_Offset;
+	b3_vector * control = m_Spline.m_Controls;
 
 	// Transform rotation axis
 	b3Matrix::b3VMul(transformation, &m_Axis.pos, &m_Axis.pos, true);
 	b3Matrix::b3VMul(transformation, &m_Axis.dir, &m_Axis.dir, false);
 
 	// Transform control points
-	for (x = 0; x < m_Spline.m_ControlNum; x++)
+	for (unsigned x = 0; x < m_Spline.m_ControlNum; x++)
 	{
 		b3Vector::b3MatrixMul4D(transformation, control);
-		control += offset;
+		control += m_Spline.m_Offset;
 	}
 	b3TriangleShape::b3Transform(transformation, is_affine);
 }
 
 void b3SplineRotShape::b3SetupPicking(b3PickInfo * info)
 {
-	b3_vector * control;
-	b3_index    offset;
-	unsigned    x;
+	b3_vector * control = m_Spline.m_Controls;
 
 	info->b3AddPickPoint(&m_Axis.pos, "b");
 	info->b3AddPickDir(&m_Axis.pos, &m_Axis.dir, "d");
 
-	control = m_Spline.m_Controls;
-	offset  = m_Spline.m_Offset;
-	for (x = 0; x < m_Spline.m_ControlNum; x++)
+	for (unsigned x = 0; x < m_Spline.m_ControlNum; x++)
 	{
 		info->b3AddPickPoint(control);
 		info->b3AddVertex(control);
-		control += offset;
+		control += m_Spline.m_Offset;
 	}
 }
 
 void b3SplineRotShape::b3SetupGrid(b3PickInfo * info)
 {
-	b3_vector * control;
-	b3_index    offset;
-	unsigned    x;
+	b3_vector * control = m_Spline.m_Controls;
 
-	control = m_Spline.m_Controls;
-	offset  = m_Spline.m_Offset;
-	for (x = 0; x < m_Spline.m_ControlNum; x++)
+	for (unsigned x = 0; x < m_Spline.m_ControlNum; x++)
 	{
 		info->b3AddPickPoint(control);
 		info->b3AddVertex(control);
-		control += offset;
+		control += m_Spline.m_Offset;
 	}
 
-	for (x = (m_Spline.m_Closed ? 0 : 1); x < m_Spline.m_ControlNum; x++)
+	for (unsigned x = (m_Spline.m_Closed ? 0 : 1); x < m_Spline.m_ControlNum; x++)
 	{
 		info->b3AddLine(x, (x + m_Spline.m_ControlNum - 1) % m_Spline.m_ControlNum);
 	}

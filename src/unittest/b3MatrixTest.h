@@ -37,7 +37,11 @@ class b3MatrixTest : public CppUnit::TestFixture
 	constexpr static double DELTA = 0.0000001;
 
 	CPPUNIT_TEST_SUITE(b3MatrixTest);
-	CPPUNIT_TEST(testVector);
+	CPPUNIT_TEST(testVectorInit);
+	CPPUNIT_TEST(testVectorSMul);
+	CPPUNIT_TEST(testVectorLinearCombine);
+	CPPUNIT_TEST(testVectorBounds);
+	CPPUNIT_TEST(testVectorMix);
 	CPPUNIT_TEST(testMatrix);
 	CPPUNIT_TEST(testMatrixTranspose);
 	CPPUNIT_TEST(testMatrixMul);
@@ -46,7 +50,11 @@ class b3MatrixTest : public CppUnit::TestFixture
 public:
 	void setUp() override;
 	void tearDown() override;
-	void testVector();
+	void testVectorInit();
+	void testVectorSMul();
+	void testVectorLinearCombine();
+	void testVectorBounds();
+	void testVectorMix();
 	void testMatrix();
 	void testMatrixTranspose();
 	void testMatrixMul();
