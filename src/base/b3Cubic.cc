@@ -9,7 +9,7 @@
 **
 **	Blizzard III - vector and matrix methods
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -25,6 +25,7 @@
 *************************************************************************/
 
 #include "b3BaseInclude.h"
+#include "blz3/base/b3Array.h"
 #include "blz3/base/b3Cubic.h"
 #include "blz3/base/b3Math.h"
 
@@ -196,19 +197,7 @@ b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 
 	}
 
-	// Make unique.
-	for (int l = NumOfX - 1; l > 0; --l)
-	{
-		const b3_f64 v = x[l];
-		for (int k = l - 1; k >= 0; --k)
-		{
-			if (v == x[k])
-			{
-				x[k] = x[--NumOfX];
-				break;
-			}
-		}
-	}
+	NumOfX = b3MakeUnique<b3_f64>(x, NumOfX);
 
 	const b3_f64 aux = 0.25 * A;
 	for (b3_loop i = 0; i < NumOfX; ++i)

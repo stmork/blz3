@@ -67,7 +67,7 @@ public:
 	 * in ascending order. So there is:
 	 * x^2 + Coeffs[1] * x^1 + Coeffs[0] = 0
 	 *
-	 * @note Use the Ord2 enumeration for correct indexing!
+	 * @note Use the b3Cubic::Ord2 enumeration for correct indexing!
 	 *
 	 * @param *Coeffs The two coefficents.
 	 * @param *x The result set up to two elements.
@@ -80,7 +80,7 @@ public:
 	 * in ascending order. So there is:
 	 * x^3 + Coeffs[2] * x^2 + Coeffs[1] * x^1 + Coeffs[0] = 0
 	 *
-	 * @note Use the Ord3 enumeration for correct indexing!
+	 * @note Use the b3Cubic::Ord3 enumeration for correct indexing!
 	 *
 	 * @param *Coeffs The three coefficents.
 	 * @param *x The result set up to three elements.
@@ -93,7 +93,7 @@ public:
 	 * in ascending order. So there is:
 	 * x^4 + Coeffs[3] * x^3 + Coeffs[2] * x^2 + Coeffs[1] * x^1 + Coeffs[0] = 0
 	 *
-	 * @note Use the Ord4 enumeration for correct indexing!
+	 * @note Use the b3Cubic::Ord4 enumeration for correct indexing!
 	 *
 	 * @param *Coeffs The four coefficents.
 	 * @param *x The result set up to four elements.

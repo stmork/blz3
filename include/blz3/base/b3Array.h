@@ -37,10 +37,37 @@ enum b3_array_error
 typedef b3Exception<b3_array_error, 0x415252> b3ArrayException;
 
 /**
+ * This method reduces an array in which every element occurs only once.
+ *
+ * @param ptr The array start.
+ * @param len The initial amount of containing elements.
+ * @return The resulting amount of unique elements.
+ */
+template<class T>
+inline b3_count B3_PLUGIN b3MakeUnique(T * ptr, b3_count len)
+{
+	for (int l = len - 1; l > 0; --l)
+	{
+		const T v = ptr[l];
+
+		for (int k = l - 1; k >= 0; --k)
+		{
+			if (v == ptr[k])
+			{
+				ptr[k] = ptr[--len];
+				break;
+			}
+		}
+	}
+	return len;
+}
+
+/**
  * This class implements a dynamic sized array of elements. It includes
  * a base amount of elements to avoid dynamic memory allocation.
  */
-template <class T> class B3_PLUGIN b3Array
+template <class T>
+class B3_PLUGIN b3Array
 {
 	static constexpr b3_count B3_ARRAY_DEFAULT_INCREMENT = 128;
 	static constexpr b3_count B3_ARRAY_INITIAL           =  16;
