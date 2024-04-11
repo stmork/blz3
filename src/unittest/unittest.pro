@@ -7,6 +7,8 @@ include(../common.pri)
 
 message("*** Blizzard III quick running unit tests $$VERSION ***")
 
+QMAKE_CXXFLAGS += -Wno-deprecated-declarations
+
 HEADERS += b3SkeletonTest.h \
 	b3AlignTest.h \
 	b3ArrayTest.h \

@@ -80,7 +80,7 @@ void b3OceanWave::b3PrepareOceanWave(const b3_f64 t)
 {
 	b3PrintF(B3LOG_FULL, "  preparing ocean waves...\n");
 
-	m_Dim = b3Math::b3Clamp<b3_count>(m_Dim, 5, 11);
+	m_Dim = std::clamp<b3_count>(m_Dim, 5, 11);
 
 	// Grid values
 	m_fftMax         =  1 << (m_Dim - 1);

@@ -581,7 +581,7 @@ public:
 	 */
 	inline b3_f64   b3ClipTimePoint(const b3_f64 val)
 	{
-		return b3Math::b3Clamp(val, m_Start, m_End);
+		return std::clamp(val, m_Start, m_End);
 	}
 
 	/**

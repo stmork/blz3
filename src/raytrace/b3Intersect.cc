@@ -640,8 +640,8 @@ b3_f64 b3Box::b3Intersect(b3_ray * ray, b3_polar * polar)
 	}
 
 	const b3_f64 n_epsilon = 1.0 - b3Math::epsilon;
-	const b3_f64 x = b3Math::b3Clamp(BTLine.pos.x + l1 * BTLine.dir.x, 0.0, n_epsilon);
-	const b3_f64 y = b3Math::b3Clamp(BTLine.pos.y + l1 * BTLine.dir.y, 0.0, n_epsilon);
+	const b3_f64 x = std::clamp(BTLine.pos.x + l1 * BTLine.dir.x, 0.0, n_epsilon);
+	const b3_f64 y = std::clamp(BTLine.pos.y + l1 * BTLine.dir.y, 0.0, n_epsilon);
 
 	polar->m_Polar.x     = polar->m_ObjectPolar.x = x;
 	polar->m_Polar.y     = polar->m_ObjectPolar.y = y;

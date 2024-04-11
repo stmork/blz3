@@ -119,7 +119,7 @@ void b3Animation::b3RecomputeCenter(const b3AnimElement * Element,
 		// compute rotation center if necessary
 		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
-			tClipped = b3Math::b3Clamp(t, Anim->m_Start, Anim->m_End);
+			tClipped = std::clamp(t, Anim->m_Start, Anim->m_End);
 			Anim->b3GetPosition(center, tClipped);
 		}
 	}
@@ -141,7 +141,7 @@ void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 		Anim->m_Center = m_AnimCenter;
 		if (Anim == Element)
 		{
-			t = b3Math::b3Clamp(m_Neutral, Anim->m_Start, Anim->m_End);
+			t = std::clamp(m_Neutral, Anim->m_Start, Anim->m_End);
 			b3Matrix::b3Unit(&Anim->m_NeutralInverse);
 			Anim->b3ComputeTransformationMatrix(this, &resetMatrix, t);
 			b3Matrix::b3Inverse(&resetMatrix, &Anim->m_NeutralInverse);
@@ -151,7 +151,7 @@ void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 		// compute rotation center if necessary
 		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
-			t = b3Math::b3Clamp(m_Neutral, Anim->m_Start, Anim->m_End);
+			t = std::clamp(m_Neutral, Anim->m_Start, Anim->m_End);
 			Anim->b3GetPosition(&m_AnimCenter, t);
 		}
 	}
@@ -270,7 +270,7 @@ void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 		Anim->m_Center = m_AnimCenter;
 		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{
-			tClipped = b3Math::b3Clamp(t, Anim->m_Start, Anim->m_End);
+			tClipped = std::clamp(t, Anim->m_Start, Anim->m_End);
 			Anim->b3ComputeTransformationMatrix(this, &Anim->m_Actual, tClipped);
 			b3ApplyTransformation(Global, Anim, &Anim->m_Actual, t);
 

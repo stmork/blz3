@@ -9,7 +9,7 @@
 **
 **	Blizzard III - some math convenience methods...
 **
-**	(C) Copyright 2004  Steffen A. Mork
+**	(C) Copyright 2004 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -66,7 +66,8 @@ public:
 	 * \param value The value to square.
 	 * \return The squared value.
 	 */
-	static inline b3_f64 b3Sqr(const b3_f64 value)
+	template<typename T>
+	static constexpr T b3Sqr(const T value)
 	{
 		return value * value;
 	}
@@ -78,7 +79,7 @@ public:
 	 * @return True if the real number can be assumed as zero.
 	 */
 	template<typename T>
-	static inline bool b3IsZero(const T x)
+	static constexpr bool b3IsZero(const T x)
 	{
 		return std::fabs(x) < 4.656613e-10;
 	}
@@ -89,7 +90,8 @@ public:
 	 * \param F0
 	 * \return The computed Fresnel term.
 	 */
-	template<typename T> static inline T b3GetMu(const T F0)
+	template<typename T>
+	static constexpr T b3GetMu(const T F0)
 	{
 		const b3_f64 sF0 = sqrt(F0);
 
@@ -104,7 +106,8 @@ public:
 	 * \param mu
 	 * \return The fresnel computed value.
 	 */
-	template<typename T> static inline T b3GetFresnel(b3_f64 phi, const T mu)
+	template<typename T>
+	static constexpr T b3GetFresnel(b3_f64 phi, const T mu)
 	{
 		const b3_f64 theta = asin(sin(phi) / mu);
 		const b3_f64 a     = b3Sqr(sin(phi - theta));
@@ -125,14 +128,14 @@ public:
 	 * \param max The upper limit.
 	 * \return The bound value.
 	 */
-	template<typename T> inline static T b3Clamp(
+	template<typename T>
+	[[deprecated("Use std::clamp() instead.")]]
+	static constexpr T b3Clamp(
 		const T input,
 		const T min,
 		const T max)
 	{
-		const T & r = input < min ? min : input;
-
-		return r > max ? max : r;
+		return std::clamp(input, min, max);
 	}
 
 	/**
@@ -142,7 +145,8 @@ public:
 	 * \param rnd The precision.
 	 * \return The rounded value.
 	 */
-	template<typename T> static inline T b3Round(const T x, const T rnd)
+	template<typename T>
+	static constexpr T b3Round(const T x, const T rnd)
 	{
 		const T mul    = std::round(0.5 / rnd);
 		const T result = std::round(x * mul) / mul;
@@ -158,27 +162,11 @@ public:
 	 * \param b The divisor.
 	 * \return The fractional part.
 	 */
-	static inline b3_f64 b3Frac(b3_f64 a, b3_f64 b)
+	static constexpr b3_f64 b3Frac(b3_f64 a, b3_f64 b)
 	{
-#if 0
-		b3_f64 n;
-
-		if (a < 0)
-		{
-			a = -a;
-			n = floor(a / b);
-			return b - a + n * b;
-		}
-		else
-		{
-			n = floor(a / b);
-			return a - n * b;
-		}
-#else
 		b3_f64 remainder = fmod(a, b);
 
 		return remainder < 0 ? remainder + b : remainder;
-#endif
 	}
 
 	/**
@@ -187,7 +175,7 @@ public:
 	 * \param a The complete floating point number.
 	 * \return The fractional part of a float.
 	 */
-	static inline b3_f64 b3FracOne(const b3_f64 a)
+	static constexpr b3_f64 b3FracOne(const b3_f64 a)
 	{
 		return a - floor(a);
 	}
@@ -202,7 +190,8 @@ public:
 	 * \param x The mixer in range [0..1].
 	 * \return The mixed value.
 	 */
-	template<typename T> static inline T b3Mix(const T a, const T b, const	T x)
+	template<typename T>
+	static constexpr T b3Mix(const T a, const T b, const	T x)
 	{
 		B3_ASSERT(x >= 0);
 		B3_ASSERT(x <= 1);
@@ -217,7 +206,9 @@ public:
 	 * \param b Another value.
 	 * \return The lower value of both given values.
 	 */
-	template<typename T> static inline T b3Min(const T a, const T b)
+	template<typename T>
+	[[deprecated("Use std::min() instead.")]]
+	static constexpr T b3Min(const T a, const T b)
 	{
 		return a < b ? a : b;
 	}
@@ -229,12 +220,14 @@ public:
 	 * \param b Another value.
 	 * \return The greater value of both given values.
 	 */
-	template<typename T> static inline T b3Max(const T a, const T b)
+	template<typename T>
+	[[deprecated("Use std::max() instead.")]]
+	static constexpr T b3Max(const T a, const T b)
 	{
 		return a > b ? a : b;
 	}
 
-	static inline b3_f64 b3Hermite(
+	static constexpr b3_f64 b3Hermite(
 		const b3_f64 t1,
 		const b3_f64 s0,
 		const b3_f64 s1)
@@ -257,7 +250,8 @@ public:
 	 * \param x The value to interpolate.
 	 * \return The hermite interpolation.
 	 */
-	template<typename T> static inline T b3Smoothstep(
+	template<typename T>
+	static constexpr T b3Smoothstep(
 		const T s,
 		const T e,
 		const T x)
@@ -283,7 +277,8 @@ public:
 	 * \param t The input value.
 	 * \return The hermite interpolation.
 	 */
-	template<typename T> static inline T b3Smoothstep(const T t)
+	template<typename T>
+	static constexpr T b3Smoothstep(const T t)
 	{
 		if (t < 0)
 		{
@@ -297,7 +292,7 @@ public:
 		return (3 - 2 * t) * t * t;
 	}
 
-	static inline b3_f64 b3SmoothPulse(
+	static constexpr b3_f64 b3SmoothPulse(
 		const b3_f64 e0,
 		const b3_f64 e1,
 		const b3_f64 e2,
@@ -307,7 +302,7 @@ public:
 		return b3Smoothstep(e0, e1, x) - b3Smoothstep(e2, e3, x);
 	}
 
-	static inline b3_f64 b3SmoothPulseTrain(
+	static constexpr b3_f64 b3SmoothPulseTrain(
 		const b3_f64 e0,
 		const b3_f64 e1,
 		const b3_f64 e2,
@@ -323,7 +318,8 @@ public:
 	 * \param t
 	 * \return
 	 */
-	template<typename T> static inline T b3Fade(const T t)
+	template<typename T>
+	static constexpr T b3Fade(const T t)
 	{
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
@@ -335,7 +331,7 @@ public:
 	 * \param exponent The exponent.
 	 * \return The power of x with integer exponent exponent.
 	 */
-	static inline b3_f64 b3FastPow(const b3_f64 x, b3_u32 exponent)
+	static constexpr b3_f64 b3FastPow(const b3_f64 x, b3_u32 exponent)
 	{
 		b3_f64 result = 1;
 		b3_f64 factor = x;
@@ -358,7 +354,7 @@ public:
 	 * \param x The sine value.
 	 * \return The arc sine value.
 	 */
-	static inline b3_f64 b3Asin(const b3_f64 x)
+	static constexpr b3_f64 b3Asin(const b3_f64 x)
 	{
 		if (x <= -1)
 		{
@@ -377,7 +373,7 @@ public:
 	 * \param x The cosine value.
 	 * \return The arc cosine value.
 	 */
-	static inline b3_f64 b3Acos(const b3_f64 x)
+	static constexpr b3_f64 b3Acos(const b3_f64 x)
 	{
 		if (x <= -1)
 		{
@@ -390,17 +386,17 @@ public:
 		return acos(x);
 	}
 
-	static inline b3_f64 b3ArcAngleOfScalars(const b3_f64 u, const b3_f64 v)
+	static constexpr b3_f64 b3ArcAngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) + (v < 0 ? (M_PI * 2.0) : 0);
 	}
 
-	static inline b3_f64 b3RelAngleOfScalars(const b3_f64 u, const b3_f64 v)
+	static constexpr b3_f64 b3RelAngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) * 0.5 / M_PI + (v < 0 ?   1.0 : 0);
 	}
 
-	static inline b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
+	static constexpr b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) * 180.0 / M_PI + (v < 0 ? 360.0 : 0);
 	}
@@ -411,8 +407,8 @@ public:
 	 * \param x The value to compute the cubic root from.
 	 * \return The cubic root.
 	 */
-	[[deprecated]]
-	static inline b3_f64 b3Cbrt(const b3_f64 x)
+	[[deprecated("Use std::cbrt() instead!")]]
+	static constexpr b3_f64 b3Cbrt(const b3_f64 x)
 	{
 		return cbrt(x);
 	}

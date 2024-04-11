@@ -450,7 +450,7 @@ bool b3Fourier::b3GetBuffer(b3Tx * tx, b3_f64 amp) const
 			{
 				cMax = c;
 			}
-			*cPtr++ = (b3_u08)floor(b3Math::b3Clamp(c * 0.5 + 0.5, 0.0, 1.0) * 255);
+			*cPtr++ = (b3_u08)floor(std::clamp(c * 0.5 + 0.5, 0.0, 1.0) * 255);
 		}
 	}
 	b3PrintF(B3LOG_FULL, "<b3Fourier::b3GetBuffer(...) [%1.4f - %1.4f]\n",

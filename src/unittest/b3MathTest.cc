@@ -330,6 +330,7 @@ void b3MathTest::testLogPow()
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 3, b3Math::b3Log2(8));
 	CPPUNIT_ASSERT_TYPED_EQUAL(b3_count, 3, b3Math::b3Log2(9));
 
+	CPPUNIT_ASSERT_EQUAL(  1, b3Math::b3PowOf2(0));
 	CPPUNIT_ASSERT_EQUAL(  1, b3Math::b3PowOf2(1));
 	CPPUNIT_ASSERT_EQUAL(  2, b3Math::b3PowOf2(2));
 	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3PowOf2(3));

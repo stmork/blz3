@@ -1209,7 +1209,7 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 				b3Math::b3GetFresnel(phi, m_Mu[b3Color::G]),
 				b3Math::b3GetFresnel(phi, m_Mu[b3Color::B])) * Rs;
 
-		jit->m_DiffuseSum  += m_Rd * b3Math::b3Clamp(nl, 0.0, 1.0);
+		jit->m_DiffuseSum  += m_Rd * std::clamp(nl, 0.0, 1.0);
 		jit->m_SpecularSum += Rf * m_ks;
 #else
 		b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
@@ -1460,7 +1460,7 @@ bool b3MatCarPaint::b3Illuminate(b3_surface * surface, b3_light_info * jit) cons
 			rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
 		}
 
-		jit->m_DiffuseSum  += surface->m_Diffuse  * b3Math::b3Clamp(nl, 0.0, 1.0) * jit->m_LightFrac;
+		jit->m_DiffuseSum  += surface->m_Diffuse  * std::clamp(nl, 0.0, 1.0) * jit->m_LightFrac;
 		jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl), (b3_u32)surface->m_SpecularExp);
 #else
 		const b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir, &L);
