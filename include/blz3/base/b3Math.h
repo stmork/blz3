@@ -72,6 +72,18 @@ public:
 	}
 
 	/**
+	 * This method checks a real number if it is near zero.
+	 *
+	 * @param x The real number to check against zero.
+	 * @return True if the real number can be assumed as zero.
+	 */
+	template<typename T>
+	static inline bool b3IsZero(const T x)
+	{
+		return std::fabs(x) < 4.656613e-10;
+	}
+
+	/**
 	 * This computes a Fresnel term from an input value.
 	 *
 	 * \param F0

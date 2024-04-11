@@ -26,7 +26,7 @@
 
 #include "b3BaseInclude.h"
 #include "blz3/base/b3Array.h"
-#include "blz3/base/b3Cubic.h"
+#include "blz3/base/b3Polynom.h"
 #include "blz3/base/b3Math.h"
 
 /*************************************************************************
@@ -35,14 +35,20 @@
 **                                                                      **
 *************************************************************************/
 
-b3_count b3Cubic::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
+enum Ord2 : int
+{
+	O2_X0 = 0,
+	O2_X1
+};
+
+b3_count b3Polynom::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 {
 	const b3_f64 p = Coeffs[O2_X1] * 0.5;    // x^1
 	const b3_f64 D = p * p - Coeffs[O2_X0];  // x^0
 
 	/* normal form: x^2 + px + q = 0 */
 
-	if (b3IsZero(D))
+	if (b3Math::b3IsZero(D))
 	{
 		x[0] = -p;
 		return 1;
@@ -61,8 +67,15 @@ b3_count b3Cubic::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 	}
 }
 
+enum Ord3 : int
+{
+	O3_X0 = 0,
+	O3_X1,
+	O3_X2
+};
+
 // https://www.e-education.psu.edu/png520/m11_p6.html
-b3_count b3Cubic::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
+b3_count b3Polynom::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 {
 	b3_count NumOfX = 0;
 
@@ -79,9 +92,9 @@ b3_count b3Cubic::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 	const b3_f64 QQQ = Q * Q * Q;
 	const b3_f64 M   = R * R - QQQ;
 
-	if (b3IsZero(M))
+	if (b3Math::b3IsZero(M))
 	{
-		if (b3IsZero(R))
+		if (b3Math::b3IsZero(R))
 		{
 			x[NumOfX++] = 0;
 		}
@@ -118,8 +131,16 @@ b3_count b3Cubic::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 	return NumOfX;
 }
 
+enum Ord4 : int
+{
+	O4_X0 = 0,
+	O4_X1,
+	O4_X2,
+	O4_X3
+};
+
 // https://www.desmos.com/calculator?lang=de
-b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
+b3_count b3Polynom::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 {
 	b3_f64	 Coeffs[4];
 	b3_f64	 D, C, B, A;
@@ -137,7 +158,7 @@ b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 	const b3_f64 q  =  0.125 * AA * A  -  0.5 * A * B   + C;
 	const b3_f64 r  = -3.0 * AA * AA / 256.0 + 0.0625 * AA * B - 0.25 * A * C + D;
 
-	if (b3IsZero(r))
+	if (b3Math::b3IsZero(r))
 	{
 		Coeffs[O3_X0] = q;
 		Coeffs[O3_X1] = p;
@@ -161,7 +182,7 @@ b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 		C = B * B - r;
 		D = 2 * B - p;
 
-		if (b3IsZero(C))
+		if (b3Math::b3IsZero(C))
 		{
 			C = 0;
 		}
@@ -174,7 +195,7 @@ b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 			return 0;
 		}
 
-		if (b3IsZero(D))
+		if (b3Math::b3IsZero(D))
 		{
 			D = 0;
 		}
@@ -205,4 +226,20 @@ b3_count b3Cubic::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 		x[i] -= aux;
 	}
 	return NumOfX;
+}
+
+b3_f64 b3Polynom::b3Horner(
+	const b3_f64 * Coeffs,
+	const b3_f64   x,
+	const b3_count ord)
+{
+	b3_count o      = ord;
+	b3_f64   result = 1;
+
+	while (--o >= 0)
+	{
+		result *= x;
+		result += Coeffs[o];
+	}
+	return result;
 }

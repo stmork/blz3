@@ -24,7 +24,7 @@
 #include "b3MathTest.h"
 #include "b3TestMacros.h"
 #include <blz3/base/b3FFT.h>
-#include <blz3/base/b3Cubic.h>
+#include <blz3/base/b3Polynom.h>
 
 /*************************************************************************
 **                                                                      **
@@ -94,9 +94,9 @@ void b3MathTest::test()
 
 void b3MathTest::testIsZero()
 {
-	CPPUNIT_ASSERT( b3Cubic::b3IsZero(0.0));
-	CPPUNIT_ASSERT(!b3Cubic::b3IsZero(b3Math::epsilon));
-	CPPUNIT_ASSERT(!b3Cubic::b3IsZero(0.1));
+	CPPUNIT_ASSERT( b3Math::b3IsZero(0.0));
+	CPPUNIT_ASSERT(!b3Math::b3IsZero(b3Math::epsilon));
+	CPPUNIT_ASSERT(!b3Math::b3IsZero(0.1));
 }
 
 void b3MathTest::testSolveOrd2()
@@ -265,6 +265,30 @@ void b3MathTest::testSolveOrd4()
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(  2.0, result[3], b3Math::epsilon);
 }
 
+void b3MathTest::testHorner()
+{
+	static constexpr b3_f64 coeffs[]
+	{
+		// x^0, x^1, x^2, x^3
+		5.0, -4.0, 3.0, -2.0
+	};
+
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(57.0, b3Polynom::b3Horner(coeffs, -2.0, std::size(coeffs)), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(15.0, b3Polynom::b3Horner(coeffs, -1.0, std::size(coeffs)), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 5.0, b3Polynom::b3Horner(coeffs,  0.0, std::size(coeffs)), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 3.0, b3Polynom::b3Horner(coeffs,  1.0, std::size(coeffs)), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 9.0, b3Polynom::b3Horner(coeffs,  2.0, std::size(coeffs)), b3Math::epsilon);
+
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Polynom::b3Horner(coeffs,  0.0, 0), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.0, b3Polynom::b3Horner(coeffs,  2.0, 0), b3Math::epsilon);
+
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 3.0, b3Polynom::b3Horner(coeffs, -2.0, 1), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 4.0, b3Polynom::b3Horner(coeffs, -1.0, 1), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 5.0, b3Polynom::b3Horner(coeffs,  0.0, 1), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 6.0, b3Polynom::b3Horner(coeffs,  1.0, 1), b3Math::epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL( 7.0, b3Polynom::b3Horner(coeffs,  2.0, 1), b3Math::epsilon);
+}
+
 void b3MathTest::testRound()
 {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0, b3Math::b3Round(  0.0,   0.25), b3Math::epsilon);
@@ -367,49 +391,40 @@ void b3MathTest::testSmoothStep2()
 
 b3_count b3MathTest::verifyQuadric(const b3_f64 * coeffs, b3_f64 * result)
 {
-	const b3_count num = b3Cubic::b3SolveOrd2(coeffs, result);
+	const b3_count num = b3Polynom::b3SolveOrd2(coeffs, result);
 
 	return std::count_if(result, result + num, [&coeffs](const b3_f64 x)
 	{
 		// Horner's method
-		const b3_f64 fx = (
-				x + coeffs[b3Cubic::O2_X1]) *
-			x + coeffs[b3Cubic::O2_X0];
+		const b3_f64 fx = b3Polynom::b3Horner(coeffs, x, 2);
 
-		return b3Cubic::b3IsZero(fx);
+		return b3Math::b3IsZero(fx);
 	});
 }
 
 b3_count b3MathTest::verifyCubic(const b3_f64 * coeffs, b3_f64 * result)
 {
-	const b3_count num = b3Cubic::b3SolveOrd3(coeffs, result);
+	const b3_count num = b3Polynom::b3SolveOrd3(coeffs, result);
 
 	return std::count_if(result, result + num, [&coeffs](const b3_f64 x)
 	{
 		// Horner's method
-		const b3_f64 fx = ((
-					x + coeffs[b3Cubic::O3_X2]) *
-				x + coeffs[b3Cubic::O3_X1]) *
-			x + coeffs[b3Cubic::O3_X0];
+		const b3_f64 fx = b3Polynom::b3Horner(coeffs, x, 3);
 
-		return b3Cubic::b3IsZero(fx);
+		return b3Math::b3IsZero(fx);
 	});
 }
 
 b3_count b3MathTest::verifyQuartic(const b3_f64 * coeffs, b3_f64 * result)
 {
-	const b3_count num = b3Cubic::b3SolveOrd4(coeffs, result);
+	const b3_count num = b3Polynom::b3SolveOrd4(coeffs, result);
 
 	return std::count_if(result, result + num, [&coeffs](const b3_f64 x)
 	{
 		// Horner's method
-		const b3_f64 fx = (((
-						x + coeffs[b3Cubic::O4_X3]) *
-					x + coeffs[b3Cubic::O4_X2]) *
-				x + coeffs[b3Cubic::O4_X1]) *
-			x + coeffs[b3Cubic::O4_X0];
+		const b3_f64 fx = b3Polynom::b3Horner(coeffs, x, 4);
 
-		return b3Cubic::b3IsZero(fx);
+		return b3Math::b3IsZero(fx);
 	});
 }
 

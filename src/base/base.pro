@@ -23,7 +23,6 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3Complex.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Complex64.h \
 	$$BLZ3_INCLUDE/blz3/base/b3ConstantMap.h \
-	$$BLZ3_INCLUDE/blz3/base/b3Cubic.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Endian.h \
 	$$BLZ3_INCLUDE/blz3/base/b3FFT.h \
 	$$BLZ3_INCLUDE/blz3/base/b3FileList.h \
@@ -35,6 +34,7 @@ HEADERS += \
 	$$BLZ3_INCLUDE/blz3/base/b3MultiSample.h \
 	$$BLZ3_INCLUDE/blz3/base/b3OceanWave.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Pick.h \
+	$$BLZ3_INCLUDE/blz3/base/b3Polynom.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Procedure.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Random.h \
 	$$BLZ3_INCLUDE/blz3/base/b3Render.h \
@@ -55,7 +55,6 @@ SOURCES += \
 	b3Aux.cc \
 	b3Clouds.cc \
 	b3Color.cc \
-	b3Cubic.cc \
 	b3Endian.cc \
 	b3FFT.cc \
 	b3FileList.cc \
@@ -69,6 +68,7 @@ SOURCES += \
 	b3MultiSample.cc \
 	b3OceanWave.cc \
 	b3Pick.cc \
+	b3Polynom.cc \
 	b3Procedure.cc \
 	b3Render.cc \
 	b3RenderContext.cc \

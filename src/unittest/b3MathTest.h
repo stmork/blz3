@@ -34,6 +34,7 @@ class b3MathTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testSolveOrd2);
 	CPPUNIT_TEST(testSolveOrd3);
 	CPPUNIT_TEST(testSolveOrd4);
+	CPPUNIT_TEST(testHorner);
 	CPPUNIT_TEST(testRound);
 	CPPUNIT_TEST(testLogPow);
 	CPPUNIT_TEST(testAsin);
@@ -64,6 +65,7 @@ public:
 	void testSolveOrd2();
 	void testSolveOrd3();
 	void testSolveOrd4();
+	void testHorner();
 	void testRound();
 	void testLogPow();
 	void testAsin();

@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Cubic.h
+**	$Filename:	b3Polynom.h
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -17,51 +17,17 @@
 
 #pragma once
 
-#ifndef B3_BASE_CUBIC_H
-#define B3_BASE_CUBIC_H
+#ifndef B3_BASE_POLYNOM_H
+#define B3_BASE_POLYNOM_H
 
 #include "blz3/b3Types.h"
 
 /**
  * This class provides some methods for solving equations.
  */
-class B3_PLUGIN b3Cubic
+class B3_PLUGIN b3Polynom
 {
 public:
-	enum Ord2 : int
-	{
-		O2_X0 = 0,
-		O2_X1
-	};
-
-
-	enum Ord3 : int
-	{
-		O3_X0 = 0,
-		O3_X1,
-		O3_X2
-	};
-
-	enum Ord4 : int
-	{
-		O4_X0 = 0,
-		O4_X1,
-		O4_X2,
-		O4_X3
-	};
-
-	/**
-	 * This method checks a real number if it is near zero.
-	 *
-	 * @param x The real number to check against zero.
-	 * @return True if the real number can be assumed as zero.
-	 */
-	template<typename T>
-	static inline bool b3IsZero(const T x)
-	{
-		return std::fabs(x) < 4.656613e-10;
-	}
-
 	/**
 	 * This method solves a quadratic equation. The coefficents are sorted
 	 * in ascending order. So there is:
@@ -100,6 +66,23 @@ public:
 	 * @return The number of solutions in the range of [0..4].
 	 */
 	static b3_count b3SolveOrd4(const b3_f64 * Coeffs, b3_f64 * x);
+
+	/**
+	 * Compute a polynom using Horner's scheme.
+	 *
+	 * @note The highest power does have the coefficient 1.0. So there are
+	 * not ord + 1 coefficients but only ord. The order is like the other
+	 * methods of this class.
+	 *
+	 * @param Coeffs The coefficients.
+	 * @param x The input value of the polynom.
+	 * @param ord The degree of the polynom.
+	 * @return The result.
+	 */
+	static b3_f64 b3Horner(
+		const b3_f64 * Coeffs,
+		const b3_f64   x,
+		const b3_count ord);
 };
 
 #endif

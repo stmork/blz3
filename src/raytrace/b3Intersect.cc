@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3Cubic.h"
+#include "blz3/base/b3Polynom.h"
 #include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
@@ -675,7 +675,7 @@ b3_f64 b3Torus::b3Intersect(b3_ray * ray, b3_polar * polar)
 	Coeff[1]	= 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
 	Coeff[0]	=      Val1 * Val1 + 4 * m_aQuad * (pQuad - m_bQuad);
 
-	b3_loop num_solutions = b3Cubic::b3SolveOrd4(Coeff, x);
+	b3_loop num_solutions = b3Polynom::b3SolveOrd4(Coeff, x);
 	if (num_solutions == 0)
 	{
 		return -1;
@@ -1458,7 +1458,7 @@ bool b3CSGTorus::b3Intersect(
 	Coeff[2] = 2 * (Val1        + 2 * Val2  * Val2 + 2 * m_aQuad * dQuad);
 	Coeff[3] = 4 *  Val2;
 
-	b3_loop num_solutions = b3Cubic::b3SolveOrd4(Coeff, x);
+	b3_loop num_solutions = b3Polynom::b3SolveOrd4(Coeff, x);
 	if ((num_solutions == 2) || (num_solutions == 4))
 	{
 		// Insert sorted
