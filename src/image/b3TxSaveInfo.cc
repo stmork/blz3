@@ -31,11 +31,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_mode)
+b3TxSaveInfo::b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_mode) :
+	m_SaveBuffer{}
 {
 	m_Tx = tx;
 	m_Tx->b3Name(filename);
-	bzero(m_SaveBuffer, sizeof(m_SaveBuffer));
 
 	m_ThisRow = b3TypedAlloc<b3_pkd_color>(tx->xSize);
 	if (m_ThisRow == nullptr)

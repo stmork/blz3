@@ -58,7 +58,7 @@ void b3Locale::b3IsoToLocale(
 		// Convert from ISO to UTF-8
 		b3_size i = 0;
 
-		bzero(dst, len);
+		std::fill(dst, dst + len, 0);
 		while ((*src) && (i < len))
 		{
 			b3_u08 c = *src;

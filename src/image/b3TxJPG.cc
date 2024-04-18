@@ -75,11 +75,9 @@ private:
 **                                                                      **
 *************************************************************************/
 
-b3JPEG::b3JPEG()
+b3JPEG::b3JPEG() :
+	m_Decompress{}, m_SourceMgr{}, m_Error{}, m_SampleArray{}
 {
-	bzero(&m_Decompress, sizeof(m_Decompress));
-	bzero(&m_SourceMgr,  sizeof(m_SourceMgr));
-	bzero(&m_Error,      sizeof(m_Error));
 }
 
 b3_bool b3JPEG::b3Init(const b3_u08 * buffer, b3_size buffer_size)

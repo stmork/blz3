@@ -70,16 +70,15 @@ enum b3DefineMode
 
 class b3Define : public b3Link<b3Define>
 {
-	FILE     *    m_File;
-	char          m_Define[1024];
+	FILE     *    m_File  = nullptr;
 	int           m_Value = 0;
 	int           m_Type  = 0;
 	b3DefineMode  m_Mode  = DM_NOP;
+	char          m_Define[1024] {};
 
 public:
 	b3Define(const b3_bool start) : b3Link<b3Define>(sizeof(b3Define))
 	{
-		bzero(m_Define, sizeof(m_Define));
 		m_Mode = (start ? DM_START : DM_END);
 		m_File = stdout;
 	}

@@ -36,9 +36,9 @@
  */
 class B3_PLUGIN b3Runtime : public b3CPU
 {
-	char               m_Compiler[256];
-	char               m_Product[256];
-	char               m_UserName[256];
+	char               m_Compiler[256] {};
+	char               m_Product[256] {};
+	char               m_UserName[256] {};
 
 	static const std::unordered_map<b3_vector_unit, const char *> m_VectorMap;
 

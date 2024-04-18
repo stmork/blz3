@@ -57,10 +57,12 @@ void b3NurbsCurveTest::tearDown()
  */
 void b3NurbsCurveTest::b3InitArrays()
 {
-	bzero(m_Deboor,     sizeof(m_Deboor));
-	bzero(m_Mansfield,  sizeof(m_Mansfield));
-	bzero(m_Radius,     sizeof(m_Radius));
-	bzero(m_BasisCoeff, sizeof(m_BasisCoeff));
+	static const b3Nurbs::type zero{};
+
+	std::fill(std::begin(m_Deboor),     std::end(m_Deboor),    zero);
+	std::fill(std::begin(m_Mansfield),  std::end(m_Mansfield), zero);
+	std::fill(std::begin(m_Radius),     std::end(m_Radius),     0.0);
+	std::fill(std::begin(m_BasisCoeff), std::end(m_BasisCoeff), 0.0);
 }
 
 void b3NurbsCurveTest::b3InitControlPoints()
@@ -585,6 +587,8 @@ b3Nurbs::type b3NurbsOpenedCurveTest::recursiveDeBoor(
  */
 void b3NurbsSurfaceTest::setUp()
 {
+	static const b3_vector4D zero{};
+
 	m_Horizontal.m_Knots    = m_HorizontalKnots;
 	m_Horizontal.m_Controls = m_Controls;
 	m_Horizontal.b3InitCurve(2, 8, true);
@@ -603,7 +607,7 @@ void b3NurbsSurfaceTest::setUp()
 	}
 	m_Vertical.b3ThroughEndControl();
 
-	bzero(m_Controls, sizeof(m_Controls));
+	std::fill(std::begin(m_Controls), std::end(m_Controls), zero);
 	for (unsigned y = 0; y < m_Vertical.m_ControlNum; y++)
 	{
 		const double y_angle = y * M_PI / (m_Vertical.m_ControlNum - 1);
@@ -643,10 +647,10 @@ void b3NurbsSurfaceTest::setUp()
 		}
 	}
 
-	bzero(m_Deboor,     sizeof(m_Deboor));
-	bzero(m_Mansfield,  sizeof(m_Mansfield));
-	bzero(m_Radius,     sizeof(m_Radius));
-	bzero(m_BasisCoeff, sizeof(m_BasisCoeff));
+	std::fill(std::begin(m_Deboor),     std::end(m_Deboor),    zero);
+	std::fill(std::begin(m_Mansfield),  std::end(m_Mansfield), zero);
+	std::fill(std::begin(m_Radius),     std::end(m_Radius),     0.0);
+	std::fill(std::begin(m_BasisCoeff), std::end(m_BasisCoeff), 0.0);
 
 	b3PrintF(B3LOG_DEBUG, "Setup: %s\n", __FILE__);
 }
@@ -658,7 +662,7 @@ void b3NurbsSurfaceTest::tearDown()
 
 void b3NurbsSurfaceTest::testSphereHorizontally()
 {
-	b3Nurbs::type  aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
+	b3Nurbs::type  aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS] {};
 	b3Nurbs        aux_nurbs;
 	const b3_f64   x_range = m_Horizontal.b3KnotRange();
 	const b3_f64   y_range = m_Vertical.b3KnotRange();
@@ -668,7 +672,6 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 
 	// Building horizontal splines
 	// First create controls for segments of vertical spline...
-	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(m_Horizontal, m_Vertical, aux_nurbs, aux_control_points);
 	aux_nurbs.m_SubDiv = m_Horizontal.b3GetSegmentKnotCount() * 2;
 
@@ -710,7 +713,7 @@ void b3NurbsSurfaceTest::testSphereHorizontally()
 
 void b3NurbsSurfaceTest::testSphereVertically()
 {
-	b3Nurbs::type  aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS];
+	b3Nurbs::type  aux_control_points[b3Nurbs::B3_MAX_CONTROLS * b3Nurbs::B3_MAX_CONTROLS] {};
 	b3Nurbs        aux_nurbs;
 	const b3_f64   x_range = m_Horizontal.b3KnotRange();
 	const b3_f64   y_range = m_Vertical.b3KnotRange();
@@ -720,7 +723,6 @@ void b3NurbsSurfaceTest::testSphereVertically()
 
 	// Building vertical splines
 	// First create controls for segments of horizontal spline...
-	bzero(aux_control_points, sizeof(aux_control_points));
 	b3Nurbs::b3DeBoorSurfaceControl(m_Vertical, m_Horizontal, aux_nurbs, aux_control_points);
 	aux_nurbs.m_SubDiv = m_Vertical.b3GetSegmentKnotCount() * 2;
 

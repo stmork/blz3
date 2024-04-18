@@ -36,6 +36,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(b3SplineSurfaceTest);
 
 void b3SplineSurfaceTest::setUp()
 {
+	static const b3Spline::type zero{};
+
 	m_Horizontal.m_Knots    = m_HorizontalKnots;
 	m_Horizontal.m_Controls = m_Controls;
 	m_Horizontal.b3InitCurve(2, 8, false);
@@ -47,7 +49,7 @@ void b3SplineSurfaceTest::setUp()
 	b3InitControls(m_Horizontal, m_xControls);
 	b3InitControls(m_Vertical,   m_yControls);
 
-	bzero(m_Controls, sizeof(m_Controls));
+	std::fill(std::begin(m_Controls), std::end(m_Controls), zero);
 	for (unsigned y = 0; y < m_Vertical.m_ControlNum; y++)
 	{
 		unsigned idx = y * m_Vertical.m_Offset;

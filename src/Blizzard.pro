@@ -65,7 +65,7 @@ cppcheck.commands = cppcheck\
 	-I$$[QT_INSTALL_HEADERS]\
 	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\
 	--language=c++ --std=c++14\
-	--xml-version=2 --force -q -j 8\
+	--xml-version=2 --force -q -j `nproc`\
 	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc\
 	OpenGL/*.c* OpenGL/*.h brt3/*.cc 2>cppcheck.xml
 
