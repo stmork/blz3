@@ -25,7 +25,7 @@
 *************************************************************************/
 
 QB3OpenGLScrollArea::QB3OpenGLScrollArea(QWidget * parent) :
-	QScrollArea(parent)
+	QScrollArea(parent), subscription(*this)
 {
 #if 0
 	QB3BarInfo test;
@@ -53,7 +53,7 @@ void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	dumpObjectTree();
 	view().setOperationCallback(glWidget);
-	subscribe(gui().getSelectionEnd());
+	assert(subscribe(gui().getSelectionEnd()));
 
 #if 1
 	connect(horizontalScrollBar(), &QScrollBar::valueChanged,
