@@ -88,10 +88,7 @@ void b3Runtime::b3SetUserName(const std::string & gecos)
 {
 	const size_t idx = gecos.find_first_of(',');
 
-	strncpy(
-		m_UserName,
-		gecos.substr(0, std::min(idx, sizeof(m_UserName) - 1)).c_str(),
-		sizeof(m_UserName));
+	snprintf(m_UserName, sizeof(m_UserName), "%s", gecos.substr(0, idx).c_str());
 }
 
 const char * b3Runtime::b3GetVendor()
