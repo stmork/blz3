@@ -74,36 +74,6 @@ void QB3OpenGLScrollArea::onSelect(bool checked)
 	}
 }
 
-void QB3OpenGLScrollArea::b3SetViewMode(const b3_view_mode mode)
-{
-	b3_view_info view_info;
-
-	child->b3SetViewMode(mode, view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
-}
-
-void QB3OpenGLScrollArea::b3MoveView(const b3_f64 dx, const b3_f64 dy)
-{
-	b3_view_info view_info;
-
-	child->b3MoveView(dx, dy, view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
-}
-
-void QB3OpenGLScrollArea::b3ScaleView(const b3_f64 factor)
-{
-	b3_view_info view_info;
-
-	child->b3ScaleView(factor, view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(),   v);
-}
-
 void QB3OpenGLScrollArea::xValueChanged(int value)
 {
 	const int diff = value - h.bar_pos;
@@ -140,6 +110,36 @@ void QB3OpenGLScrollArea::updateScrolling()
 	b3GetBarInfo(view_info, h, v);
 	update(horizontalScrollBar(), h);
 	update(verticalScrollBar(), v);
+}
+
+void QB3OpenGLScrollArea::b3SetViewMode(const b3_view_mode mode)
+{
+	b3_view_info view_info;
+
+	child->b3SetViewMode(mode, view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(), v);
+}
+
+void QB3OpenGLScrollArea::b3MoveView(const b3_f64 dx, const b3_f64 dy)
+{
+	b3_view_info view_info;
+
+	child->b3MoveView(dx, dy, view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(), v);
+}
+
+void QB3OpenGLScrollArea::b3ScaleView(const b3_f64 factor)
+{
+	b3_view_info view_info;
+
+	child->b3ScaleView(factor, view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(),   v);
 }
 
 void QB3OpenGLScrollArea::b3FullView()

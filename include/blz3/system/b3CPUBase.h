@@ -69,7 +69,7 @@ protected:
 	 *
 	 * @return Used vector unit.
 	 */
-	static inline b3_vector_unit b3GetVectorUnit()
+	static constexpr b3_vector_unit b3GetVectorUnit()
 	{
 #if   defined(BLZ3_USE_SSE41)
 		return B3_VU_SSE41;

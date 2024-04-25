@@ -382,8 +382,9 @@ public:
 			return false;
 		}
 
-		if (newDegree < m_Degree)     /* decreasing degree */
+		if (newDegree < m_Degree)
 		{
+			// decreasing degree
 			unsigned diff = m_Degree - newDegree;
 
 			end = m_Knots[m_ControlNum];
@@ -410,8 +411,9 @@ public:
 				}
 			}
 		}
-		else                             /* increasing degree */
+		else
 		{
+			// increasing degree
 			for (int i = m_ControlNum; i >= 0; i--)
 			{
 				m_Knots[i + newDegree] = m_Knots[i + m_Degree];
