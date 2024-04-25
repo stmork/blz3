@@ -12,7 +12,6 @@ LIB_SOURCE =\
 	b3Aux.cc\
 	b3Clouds.cc\
 	b3Color.cc\
-	b3Cubic.cc\
 	b3Endian.cc\
 	b3FFT.cc\
 	b3FileList.cc\
@@ -26,6 +25,7 @@ LIB_SOURCE =\
 	b3MultiSample.cc\
 	b3OceanWave.cc\
 	b3Pick.cc\
+	b3Polynom.cc\
 	b3Procedure.cc\
 	b3Render.cc\
 	b3RenderContext.cc\
@@ -41,7 +41,6 @@ LIB_OBJ	=\
 	b3Aux.o\
 	b3Clouds.o\
 	b3Color.o\
-	b3Cubic.o\
 	b3Endian.o\
 	b3FFT.o\
 	b3FileList.o\
@@ -55,6 +54,7 @@ LIB_OBJ	=\
 	b3MultiSample.o\
 	b3OceanWave.o\
 	b3Pick.o\
+	b3Polynom.o\
 	b3Procedure.o\
 	b3Render.o\
 	b3RenderContext.o\
