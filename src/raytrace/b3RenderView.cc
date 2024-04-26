@@ -609,6 +609,14 @@ void b3RenderView::b3Project(
 #endif
 }
 
+void b3RenderView::b3Print(const b3_view_info & info)
+{
+	b3PrintF(B3LOG_DEBUG, " %d:  S: %f,%f - %f,%f  V: %f,%f - %f,%f\n",
+		info.m_ViewMode,
+		info.m_Scene.left, info.m_Scene.top, info.m_Scene.right, info.m_Scene.bottom,
+		info.m_View.left,  info.m_View.top,  info.m_View.right,  info.m_View.bottom);
+}
+
 void b3RenderView::b3UnprojectInternal(
 	const b3_f64 x,
 	const b3_f64 y,

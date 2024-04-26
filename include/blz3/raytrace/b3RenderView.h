@@ -449,6 +449,8 @@ public:
 			zRelParam, point);
 	}
 
+	static void b3Print(const b3_view_info & info);
+
 private:
 	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = nullptr);
 	b3_f64             b3ComputeFarClippingPlane() const;

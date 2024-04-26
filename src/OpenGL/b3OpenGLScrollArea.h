@@ -83,6 +83,7 @@ protected:
 	void next() override;
 
 private:
+	void update(const std::function<void(b3_view_info &)> & prepare);
 	void update();
 	void update(QScrollBar * bar, QB3BarInfo & info);
 	static void b3GetBarInfo(
@@ -93,6 +94,7 @@ private:
 	sc::rx::subscription<void> subscription;
 	QB3OpenGLWidget      *     child = nullptr;
 	QB3BarInfo                 h, v;
+	bool                       is_interactive = true;
 };
 
 #endif // QB3OPENGLSCROLLAREA_H

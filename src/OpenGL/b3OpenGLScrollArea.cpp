@@ -78,7 +78,7 @@ void QB3OpenGLScrollArea::xValueChanged(int value)
 {
 	const int diff = value - h.bar_pos;
 
-	if (diff != 0)
+	if ((diff != 0) && (is_interactive))
 	{
 		const b3_f64 rel = h.relFromBar(diff);
 		b3_view_info view_info;
@@ -92,7 +92,7 @@ void QB3OpenGLScrollArea::yValueChanged(int value)
 {
 	const int diff = value - v.bar_pos;
 
-	if (diff != 0)
+	if ((diff != 0) && (is_interactive))
 	{
 		const b3_f64 rel = v.relFromBar(diff);
 		b3_view_info view_info;
@@ -104,67 +104,70 @@ void QB3OpenGLScrollArea::yValueChanged(int value)
 
 void QB3OpenGLScrollArea::updateScrolling()
 {
-	b3_view_info view_info;
-
-	child->m_View.b3GetView(view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update([this](b3_view_info & view_info)
+	{
+		child->m_View.b3GetView(view_info);
+	});
 }
 
 void QB3OpenGLScrollArea::b3SetViewMode(const b3_view_mode mode)
 {
-	b3_view_info view_info;
-
-	child->b3SetViewMode(mode, view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update([this, mode](b3_view_info & view_info)
+	{
+		child->b3SetViewMode(mode, view_info);
+	});
 }
 
 void QB3OpenGLScrollArea::b3MoveView(const b3_f64 dx, const b3_f64 dy)
 {
-	b3_view_info view_info;
-
-	child->b3MoveView(dx, dy, view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(), v);
+	update([this, dx, dy](b3_view_info & view_info)
+	{
+		child->b3MoveView(dx, dy, view_info);
+	});
 }
 
 void QB3OpenGLScrollArea::b3ScaleView(const b3_f64 factor)
 {
-	b3_view_info view_info;
-
-	child->b3ScaleView(factor, view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(),   v);
+	update([this, factor](b3_view_info & view_info)
+	{
+		child->b3ScaleView(factor, view_info);
+	});
 }
 
 void QB3OpenGLScrollArea::b3FullView()
 {
-	b3_view_info view_info;
-
-	child->b3FullView(view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(),   v);
+	update([this](b3_view_info & view_info)
+	{
+		child->b3FullView(view_info);
+	});
 }
 
 void QB3OpenGLScrollArea::b3PreviousView()
 {
-	b3_view_info view_info;
-
-	child->b3PreviousView(view_info);
-	b3GetBarInfo(view_info, h, v);
-	update(horizontalScrollBar(), h);
-	update(verticalScrollBar(),   v);
+	update([this](b3_view_info & view_info)
+	{
+		child->b3PreviousView(view_info);
+	});
 }
 
 void QB3OpenGLScrollArea::mousePressEvent(QMouseEvent * event)
 {
 	gui().raiseMouseDown(SCT_point{ event->x(), event->y() });
+}
+
+void QB3OpenGLScrollArea::update(
+	const std::function<void(b3_view_info &)> & prepare)
+{
+	b3_view_info view_info;
+
+	is_interactive = false;
+
+	prepare(view_info);
+	b3GetBarInfo(view_info, h, v);
+	update(horizontalScrollBar(), h);
+	update(verticalScrollBar(), v);
+
+	is_interactive = true;
 }
 
 void QB3OpenGLScrollArea::mouseMoveEvent(QMouseEvent * event)
@@ -182,7 +185,6 @@ void QB3OpenGLScrollArea::mouseReleaseEvent(QMouseEvent * event)
 	gui().raiseMouseUp(SCT_point{ event->x(), event->y() });
 }
 
-
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
 void QB3OpenGLScrollArea::resizeEvent(QResizeEvent * event)
 {
@@ -192,7 +194,6 @@ void QB3OpenGLScrollArea::resizeEvent(QResizeEvent * event)
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea
 void QB3OpenGLScrollArea::paintEvent(QPaintEvent * event)
 {
-
 	child->paintEvent(event);
 }
 
@@ -249,6 +250,7 @@ void QB3OpenGLScrollArea::b3GetBarInfo(
 		v_inverse = false;
 	}
 
+	b3RenderView::b3Print(info);
 	horizontal.set(
 		h_inverse,
 		info.m_Scene.left, info.m_Scene.right,
@@ -274,8 +276,8 @@ void QB3BarInfo::set(
 {
 	min       = std::min(scene_lower, view_lower);
 	max       = std::max(scene_upper, view_upper);
-	page_size = ceil(view_upper) - floor(view_lower);
-	range     = ceil(max)        - floor(min);
+	page_size = std::ceil(view_upper) - std::floor(view_lower);
+	range     = std::ceil(max)        - std::floor(min);
 
 	bar_inv       = inverse;
 	bar_page_size = page_size;
