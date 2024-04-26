@@ -479,6 +479,7 @@ sc::integer MouseSelect::main_region_Moving_react(const sc::integer transitioned
 			ifaceGui.selectionEnd_observable.next();
 			ifaceView.ifaceViewOperationCallback->hide();
 			ifaceView.ifaceViewOperationCallback->select(p1.x, p1.y, p2.x, p2.y);
+			ifaceGui.ifaceGuiOperationCallback->updateScrolling();
 			enseq_main_region_Normal_default();
 			react(0);
 			transitioned_after = 0;
