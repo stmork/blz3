@@ -30,6 +30,8 @@
 class b3MutexAbstract
 {
 public:
+	virtual ~b3MutexAbstract() = default;
+
 	/**
 	 * This method locks a critical section for exclusive use.
 	 */

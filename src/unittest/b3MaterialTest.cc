@@ -134,7 +134,7 @@ private:
 		size.y   =  upper.y - lower.y;
 		size.z   =  upper.z - lower.z;
 
-		camera->b3Overview(&center, &size, B3_RAD(xAngle), B3_RAD(yAngle));
+		camera->b3Overview(&center, &size, b3Math::b3Rad(xAngle), b3Math::b3Rad(yAngle));
 		return camera;
 	}
 

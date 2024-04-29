@@ -36,6 +36,8 @@
  */
 template<typename T> class B3_PLUGIN b3Complex
 {
+	static_assert(std::is_floating_point<T>(), "Complex numbers should be floating point!");
+
 protected:
 	enum b3_complex_index
 	{
@@ -248,10 +250,11 @@ public:
 	 */
 	inline b3Complex<T> & operator*=(const b3Complex<T> & other)
 	{
-		alignas(16) T val[Max];
-
-		val[Re] = v[Re] * other.v[Re] - v[Im] * other.v[Im];
-		val[Im] = v[Im] * other.v[Re] + v[Re] * other.v[Im];
+		alignas(16) T val[Max]
+		{
+			v[Re] * other.v[Re] - v[Im] * other.v[Im],
+			v[Im] * other.v[Re] + v[Re] * other.v[Im]
+		};
 
 		for (b3_loop i = 0; i < Max; i++)
 		{

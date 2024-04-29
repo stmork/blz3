@@ -20,6 +20,7 @@
 
 #include "blz3/base/b3Complex.h"
 #include "blz3/base/b3Complex64.h"
+#include "blz3/base/b3Math.h"
 
 #ifdef HAVE_LIBCPPUNIT
 #include <cppunit/TestFixture.h>
@@ -158,13 +159,13 @@ private:
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.8001,   b3_cpx.b3Phase(), 0.0001);
 
 		b3_cpx = 1;
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, b3Math::b3Degree(b3_cpx.b3Phase()), 0.0001);
 
 		b3_cpx = C(2, 2);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(45.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(45.0, b3Math::b3Degree(b3_cpx.b3Phase()), 0.0001);
 
 		b3_cpx = C(0, 3);
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(90.0, B3_DEGREE(b3_cpx.b3Phase()), 0.0001);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(90.0, b3Math::b3Degree(b3_cpx.b3Phase()), 0.0001);
 
 		b3_cpx = C(10.5) / C(3.0);
 		CPPUNIT_ASSERT_TYPED_EQUAL(T,  3.5, b3_cpx.b3Real());

@@ -23,9 +23,10 @@
 #define B3_TYPES_H
 
 #include <sys/types.h>
-#include <math.h>
+#include <cmath>
 #include <cstdint>
 #include <algorithm>
+#include <numbers>
 
 #include "blz3/b3PluginDef.h"
 
@@ -256,10 +257,7 @@ struct b3_gl_vector
 
 // Some definitions
 #ifndef M_PI
-#error "Pi is undefined"
+#error "Pi is undefined!"
 #endif
-
-#define B3_RAD(a)           ((a) * M_PI / 180.0)
-#define B3_DEGREE(a)        ((a) * 180.0 / M_PI)
 
 #endif

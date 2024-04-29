@@ -36,12 +36,13 @@
 **                                                                      **
 *************************************************************************/
 
-#define B3_RANDOM_DEFAULT_SEED 0x4711
-
 template<class T>class B3_PLUGIN b3Random
 {
+protected:
+	static constexpr int B3_RANDOM_DEFAULT_SEED = 0x4711;
+
 public:
-	b3Random<T>() = default;
+	constexpr b3Random<T>() = default;
 
 	virtual T b3Rand() = 0;
 	virtual T b3Rand(const T mult) = 0;
@@ -52,12 +53,13 @@ template<class T>class B3_PLUGIN b3PseudoRandom : public b3Random<T>
 	long int m_Seed;
 
 public:
-	inline b3PseudoRandom<T>(const int seed = B3_RANDOM_DEFAULT_SEED) : b3Random<T>()
+	inline b3PseudoRandom<T>(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED) :
+		b3Random<T>()
 	{
 		m_Seed = seed;
 	}
 
-	inline void b3SetSeed(const int seed = B3_RANDOM_DEFAULT_SEED)
+	inline void b3SetSeed(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED)
 	{
 		m_Seed = seed;
 	}
@@ -77,22 +79,26 @@ public:
 	}
 };
 
-#define __rand_C 16807
-#define __rand_A 2147483647.0
+//#define __rand_C 16807
+//#define __rand_A 2147483647.0
 
 template<class T> class B3_PLUGIN b3Rand48 : public b3Random<T>
 {
+	static constexpr b3_u32 __rand_C =      16807;
+	static constexpr b3_f64 __rand_A = 2147483647.0;
+
 	b3_f64 m_Seed;
 
 public:
-	inline b3Rand48<T>(const int seed = B3_RANDOM_DEFAULT_SEED) : b3Random<T>()
+	constexpr b3Rand48<T>(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED) :
+		b3Random<T>()
 	{
 		unsigned short conv = seed & 0xffff;
 
 		b3Seed48(&conv);
 	}
 
-	inline void b3SetSeed(const int seed = B3_RANDOM_DEFAULT_SEED)
+	constexpr void b3SetSeed(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED)
 	{
 		unsigned short conv = seed & 0xffff;
 
@@ -110,16 +116,15 @@ public:
 	}
 
 private:
-	inline b3_f64 b3DRand48()
+	constexpr b3_f64 b3DRand48()
 	{
-		b3_u32 ki;
+		const b3_u32 ki = static_cast<b3_u32>((__rand_C * m_Seed) / __rand_A);
 
-		ki     = static_cast<b3_u32>((__rand_C * m_Seed) / __rand_A);
 		m_Seed = __rand_C * m_Seed - ki * __rand_A;
 		return m_Seed / (__rand_A - 1);
 	}
 
-	inline void b3Seed48(unsigned short * seed)
+	constexpr void b3Seed48(unsigned short * seed)
 	{
 		B3_ASSERT(*seed != 0);
 		m_Seed = *seed;

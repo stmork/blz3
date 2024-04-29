@@ -116,7 +116,7 @@ public:
 	bool            m_Closed;         //!< open/closed curve.
 
 public:
-	b3SplineTemplate<VECTOR>()
+	constexpr b3SplineTemplate<VECTOR>()
 	{
 		m_ControlMax = B3_MAX_CONTROLS;
 		m_KnotMax    = B3_MAX_KNOTS;
@@ -130,12 +130,12 @@ public:
 		m_Closed     = false;
 	}
 
-	b3SplineTemplate<VECTOR>(const b3SplineTemplate<VECTOR> & src)
+	explicit constexpr b3SplineTemplate<VECTOR>(const b3SplineTemplate<VECTOR> & src)
 	{
 		operator=(src);
 	}
 
-	inline b3SplineTemplate<VECTOR> & operator=(const b3SplineTemplate<VECTOR> & src)
+	constexpr b3SplineTemplate<VECTOR> & operator=(const b3SplineTemplate<VECTOR> & src)
 	{
 		B3_ASSERT(src.m_ControlNum < B3_MAX_CONTROLS);
 		B3_ASSERT(src.m_KnotNum < B3_MAX_KNOTS);

@@ -125,7 +125,7 @@ b3Item::b3Item(b3_u32 * src) :
 		m_Heads = b3TypedAlloc<b3Base<b3Item>>(m_HeadCount);
 		if (m_Heads != nullptr)
 		{
-			k = B3_NODE_IDX_FIRSTHEAD_CLASS + B3_HEAD_IDX_CLASS;
+			k = b3_u32(B3_NODE_IDX_FIRSTHEAD_CLASS) + b3_u32(B3_HEAD_IDX_CLASS);
 			for (i = 0; i < m_HeadCount; i++)
 			{
 				m_Heads[i].b3InitBase(m_Buffer[k]);

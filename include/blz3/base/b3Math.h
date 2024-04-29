@@ -314,9 +314,9 @@ public:
 	}
 
 	/**
-	 *
-	 * \param t
-	 * \return
+	 * This method computes the Hermite polynoms from a value.
+	 * @param t
+	 * @return
 	 */
 	template<typename T>
 	static constexpr T b3Fade(const T t)
@@ -399,6 +399,30 @@ public:
 	static constexpr b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) * 180.0 / M_PI + (v < 0 ? 360.0 : 0);
+	}
+
+	/**
+	 * This method converts an angle in degrees into an angle of radians.
+	 *
+	 * @param a The angle in degree.
+	 * @return The angle in radians.
+	 */
+	template<typename F>
+	static constexpr F b3Rad(F a)
+	{
+		return a * M_PI / 180.0;
+	}
+
+	/**
+	 * This method converts an angle in radians into an angle of degrees.
+	 *
+	 * @param a The angle in radians.
+	 * @return The angle in degrees.
+	 */
+	template<typename F>
+	static constexpr F b3Degree(F a)
+	{
+		return a * 180.0 / M_PI;
 	}
 
 	/**
