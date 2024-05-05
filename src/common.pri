@@ -14,6 +14,7 @@ BLZ3_LCOV    = $$BLZ3_HOME/lcov-out
 
 include(flags.pri)
 
+DEFINES                += QT_DISABLE_DEPRECATED_UP_TO=0x050f00
 DEFINES                += B3_VERSION=\"\\\"$$VERSION\\\"\"
 
 QMAKE_CXXFLAGS         += -Wextra -Wshadow -Wsuggest-override

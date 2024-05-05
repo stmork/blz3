@@ -72,3 +72,6 @@ Version 3.1.10
 Version 3.1.11
 * Migration to SCT 5.1 code generator.
 * Optimized code quality.
+
+Version 3.1.12
+* Optimized code quality.
