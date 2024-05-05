@@ -70,10 +70,9 @@ AX_CHECK_COMPILE_FLAG([-Wshadow], [CXXFLAGS="$CXXFLAGS -Wshadow"])
 AX_CHECK_COMPILE_FLAG([-Wsuggest-override], [CXXFLAGS="$CXXFLAGS -Wsuggest-override"])
 # AX_CHECK_COMPILE_FLAG([-march=native], [MFLAGS="$MFLAGS -march=native"])
 AX_CHECK_COMPILE_FLAG([-ftree-vectorize], [MFLAGS="$MFLAGS -ftree-vectorize"])
-AX_CHECK_COMPILE_FLAG([-std=gnu++1z], [STDFLAGS="$STDFLAGS -std=gnu++1z"])
+AX_CHECK_COMPILE_FLAG([-std=c++20], [STDFLAGS="$STDFLAGS -std=c++20"])
 CFLAGS="$CFLAGS $MFLAGS"
-CXXFLAGS="$CXXFLAGS $MFLAGS"
-# CPPFLAGS="$CPPFLAGS $STDFLAGS"
+CXXFLAGS="$CXXFLAGS $MFLAGS $STDFLAGS"
 
 AC_CHECK_FUNCS([floor ceil ftime gethostname gettimeofday memset mkdir munmap pow sqrt cbrt strchr strerror strstr])
 
