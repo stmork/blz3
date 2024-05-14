@@ -9,7 +9,7 @@
 **
 **	Blizzard III - logging routines
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -24,7 +24,7 @@
 *************************************************************************/
 
 #include <sys/time.h>
-#include <stdarg.h>
+#include <cstdarg>
 #include <pwd.h>
 #include <unistd.h>
 

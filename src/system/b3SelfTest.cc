@@ -96,13 +96,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF(B3LOG_NORMAL, "\ntesting memory handling...\n");
 	for (int i = 0; i < MEM_MIN; i++)
 	{
-		int v;
-#if 1
-		v         = B3_IRAN(256);
-#else
-		v         = i;
-#endif
-		buffer[i] = (b3_u08)(v & 0xff);
+		buffer[i] = drand48() * 255;
 	}
 	mem.b3Dump();
 
@@ -189,7 +183,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	v1 = 1;
 	v2 = 2;
 	b3PrintF(B3LOG_NORMAL, "SWAP:  i=%u k=%u\n", v1, v2);
-	B3_SWAP(v1, v2);
+	std::swap(v1, v2);
 	b3PrintF(B3LOG_NORMAL, "       i=%u k=%u\n", v1, v2);
 	result &= ((v1 == 2) && (v2 == 1));
 

@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Assertion
 **
-**	(C) Copyright 2006  Steffen A. Mork
+**	(C) Copyright 2006 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -23,7 +23,7 @@
 #define B3_SYSTEM_ASSERT_H
 
 #ifdef _DEBUG
-#include <assert.h>
+#include <cassert>
 
 #define B3_ASSERT(a) assert(a)
 #else

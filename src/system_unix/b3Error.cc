@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Maintain system error code and error string
 **
-**	(C) Copyright 2005  Steffen A. Mork
+**	(C) Copyright 2005 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -24,9 +24,9 @@
 #include "blz3/system/b3Error.h"
 #include "blz3/b3Config.h"
 
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
+#include <cerrno>
+#include <cstring>
+#include <cstdio>
 
 /*************************************************************************
 **                                                                      **

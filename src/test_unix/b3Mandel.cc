@@ -31,8 +31,8 @@
 
 #include "b3Mandel.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <atomic>
 
 // This struct is transfered to the thread procedure

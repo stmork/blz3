@@ -136,7 +136,12 @@ public:
 	 * @param width The new projection width. This value is a half value noted from the center to the horizontal border.
 	 * @param height The new projection height.This value is a half value noted from the center to the vertical border.
 	 */
-	void     b3Orientate(b3_vector * eye, b3_vector * view, b3_f64 focalLength, b3_f64 width, b3_f64 height);
+	void     b3Orientate(
+		const b3_vector * eye,
+		b3_vector    *    view,
+		const b3_f64      focal_length,
+		const b3_f64      width,
+		const b3_f64      height);
 
 	/**
 	 * This method orientates the camera around a center point. The eye point is computed
@@ -148,7 +153,11 @@ public:
 	 * @param xAngle The longitude.
 	 * @param yAngle The latitide.
 	 */
-	void     b3Overview(b3_vector * center, b3_vector * size, b3_f64 xAngle, b3_f64 yAngle);
+	void     b3Overview(
+		b3_vector    *    center,
+		const b3_vector * size,
+		const b3_f64      xAngle,
+		const b3_f64      yAngle);
 
 	/**
 	 * This method converts the camera in longitude and latitude. These values are computed
@@ -166,7 +175,7 @@ public:
 	 *
 	 * @param focalLength The new focal length.
 	 */
-	void     b3ComputeFocalLength(b3_f64 focalLength);
+	void     b3ComputeFocalLength(const b3_f64 focalLength);
 
 	/**
 	 * This method returns the distance between the eye point and the view point. This
@@ -188,14 +197,14 @@ public:
 	 *
 	 * @param twirl The new twirl.
 	 */
-	void     b3SetTwirl(b3_f64 twirl);
+	void     b3SetTwirl(const b3_f64 twirl);
 
 	/**
 	 * This method scales the focal length.
 	 *
 	 * @param factor The scaling factor for the focal length.
 	 */
-	void     b3ScaleFocalLength(b3_f64 factor);
+	void     b3ScaleFocalLength(const b3_f64 factor);
 
 	/**
 	 * This method transforms the camera with the given transformation matrix.
@@ -230,7 +239,7 @@ public:
 	 *
 	 * @param activate The new activation state.
 	 */
-	void     b3Activate(bool activate = true);
+	void     b3Activate(const bool activate = true);
 };
 
 #define CAMERA_TITLE  1

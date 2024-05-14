@@ -24,6 +24,8 @@
 #include "b3NurbsTest.h"
 #include "b3TestMacros.h"
 
+#include "blz3/base/b3Random.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Unit test skeleton                            **
@@ -324,8 +326,9 @@ void b3NurbsOpenedCurveTest::testBezier()
 				point.x * point.x +
 				point.y * point.y +
 				point.z * point.z);
+
 		CPPUNIT_ASSERT_GREATER(0.0, radius);
-		CPPUNIT_ASSERT_EQUAL(RADIUS, radius);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(RADIUS, radius, b3Math::epsilon);
 	}
 }
 

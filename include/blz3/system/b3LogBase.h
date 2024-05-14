@@ -20,8 +20,8 @@
 #ifndef B3_SYSTEM_LOGBASE_H
 #define B3_SYSTEM_LOGBASE_H
 
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
 #include <chrono>
 
 #include "blz3/b3Types.h"

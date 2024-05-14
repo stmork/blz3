@@ -9,7 +9,7 @@
 **
 **      Blizzard III - basic platform configuration
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2001 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -24,10 +24,10 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Runtime.h"
 
+#include <clocale>
 #include <unistd.h>
 #include <dlfcn.h>
 #include <pwd.h>
-#include <locale.h>
 
 /*************************************************************************
 **                                                                      **

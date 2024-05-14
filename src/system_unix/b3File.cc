@@ -9,7 +9,7 @@
 **
 **	Blizzard III - file access routines
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -22,10 +22,10 @@
 *************************************************************************/
 
 #include <sys/stat.h>
+#include <cstdio>
+#include <cstring>
 #include <fcntl.h>
-#include <stdio.h>
 #include <unistd.h>
-#include <string.h>
 
 #include "blz3/system/b3Error.h"
 #include "blz3/system/b3File.h"

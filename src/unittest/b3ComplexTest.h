@@ -8,7 +8,7 @@
 **
 **	Blizzard III - Complex number unit test.
 **
-**      (C) Copyright 2006  Steffen A. Mork
+**      (C) Copyright 2006 - 2024  Steffen A. Mork
 **          All Rights Reserved
 **
 **

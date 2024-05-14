@@ -36,6 +36,15 @@
 **                                                                      **
 *************************************************************************/
 
+// TODO: Reimplement as a class.
+template<typename T> inline T b3SimpleRandom(const T x)
+{
+	return T(x * drand48());
+}
+
+#define B3_IRAN(x) b3SimpleRandom<long>(x)
+#define B3_FRAN(x) b3SimpleRandom<double>(x)
+
 template<class T>class B3_PLUGIN b3Random
 {
 protected:

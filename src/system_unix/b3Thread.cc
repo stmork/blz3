@@ -9,7 +9,7 @@
 **
 **	Blizzard III multi threading support
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -24,9 +24,9 @@
 #include "blz3/system/b3Thread.h"
 #include "blz3/system/b3Log.h"
 
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cstdio>
+#include <cstring>
 #include <unistd.h>
 
 /*************************************************************************

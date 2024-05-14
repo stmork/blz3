@@ -24,6 +24,7 @@
 #include "b3MemoryTest.h"
 #include "b3TestMacros.h"
 
+#include "blz3/base/b3Random.h"
 #include "blz3/system/b3Memory.h"
 
 /*************************************************************************

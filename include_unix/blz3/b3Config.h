@@ -22,16 +22,15 @@
 #ifndef B3_CONFIG_H
 #define B3_CONFIG_H
 
-#include <ctype.h>
 #include <fcntl.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <limits.h>
+#include <cmath>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <climits>
 
 #include <unordered_map>
 
@@ -77,10 +76,6 @@
 #if defined(HAVE_LIBSWSCALE) && defined(HAVE_LIBAVCODEC) && defined(HAVE_LIBAVFORMAT) && defined(HAVE_LIBAVUTIL)
 #	define HAVE_VIDEO_ENCODER
 #endif
-
-#define B3_FRAN(x)          ((double)(x)        * drand48())
-#define B3_IRAN(x)          ((long)((double)(x) * drand48()))
-#define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
 
 #define B3_BREAD      "r"
 #define B3_BWRITE     "w"

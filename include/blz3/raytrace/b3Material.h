@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Scaling.h"
 #include "blz3/base/b3Math.h"
+#include "blz3/base/b3Random.h"
 #include "blz3/base/b3Wood.h"
 #include "blz3/image/b3Tx.h"
 
@@ -612,7 +613,11 @@ protected:
 	bool    b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b3_f64 refraction) const override;
 
 private:
-	static inline void b3Randomize(const b3_vector64 * src, b3_vector64 * dst, b3_f64 scale, b3_f64 half)
+	static inline void b3Randomize(
+		const b3_vector64 * src,
+		b3_vector64    *    dst,
+		const b3_f64        scale,
+		const b3_f64        half)
 	{
 		dst->x = src->x + B3_FRAN(scale) - half;
 		dst->y = src->y + B3_FRAN(scale) - half;

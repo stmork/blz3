@@ -9,7 +9,7 @@
 **
 **	Blizzard III directory routines
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -25,7 +25,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <assert.h>
+#include <cassert>
 
 /*************************************************************************
 **                                                                      **

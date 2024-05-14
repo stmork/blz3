@@ -23,6 +23,7 @@
 *************************************************************************/
 
 #include "blz3/base/b3Aux.h"
+#include "blz3/base/b3Random.h"
 #include "blz3/raytrace/b3Animation.h"
 #include "blz3/raytrace/b3Special.h"
 
@@ -137,10 +138,10 @@ void b3SuperSample::b3Activate(bool flag)
 b3CameraPart::b3CameraPart(b3_u32 class_type) :
 	b3Special(sizeof(b3CameraPart), class_type)
 {
-	b3Vector::b3Init(&m_EyePoint, 0, -200,  0);
-	b3Vector::b3Init(&m_ViewPoint, 0, -100,  0);
-	b3Vector::b3Init(&m_Width,   50,   0,  0);
-	b3Vector::b3Init(&m_Height,   0,  37.5, 0);
+	b3Vector::b3Init(&m_EyePoint,  0, -200,   0);
+	b3Vector::b3Init(&m_ViewPoint, 0, -100,   0);
+	b3Vector::b3Init(&m_Width,    50,    0,   0);
+	b3Vector::b3Init(&m_Height,    0,   37.5, 0);
 	m_Flags = CAMERA_ACTIVE;
 	m_CameraName[0] = 0;
 }
@@ -171,7 +172,7 @@ bool b3CameraPart::b3IsActive() const
 	return (m_Flags & CAMERA_ACTIVE) != 0;
 }
 
-void b3CameraPart::b3Activate(bool activate)
+void b3CameraPart::b3Activate(const bool activate)
 {
 	if (activate)
 	{
@@ -183,7 +184,7 @@ void b3CameraPart::b3Activate(bool activate)
 	}
 }
 
-void b3CameraPart::b3ComputeFocalLength(b3_f64 focal_length)
+void b3CameraPart::b3ComputeFocalLength(const b3_f64 focal_length)
 {
 	b3_vector  dir;
 
@@ -192,7 +193,7 @@ void b3CameraPart::b3ComputeFocalLength(b3_f64 focal_length)
 	b3Vector::b3Add(&m_EyePoint, &dir, &m_ViewPoint);
 }
 
-void b3CameraPart::b3ScaleFocalLength(b3_f64 factor)
+void b3CameraPart::b3ScaleFocalLength(const b3_f64 factor)
 {
 	b3_vector  dir;
 
@@ -202,11 +203,11 @@ void b3CameraPart::b3ScaleFocalLength(b3_f64 factor)
 }
 
 void b3CameraPart::b3Orientate(
-	b3_vector * eye,
-	b3_vector * view,
-	b3_f64     focal_length,
-	b3_f64     width,
-	b3_f64     height)
+	const b3_vector * eye,
+	b3_vector    *    view,
+	const b3_f64      focal_length,
+	const b3_f64      width,
+	const b3_f64      height)
 {
 	b3_vector  up;
 	b3_vector  dir;
@@ -242,15 +243,14 @@ void b3CameraPart::b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle) const
 }
 
 void b3CameraPart::b3Overview(
-	b3_vector * center,
-	b3_vector * size,
-	b3_f64      xAngle,
-	b3_f64      yAngle)
+	b3_vector    *    center,
+	const b3_vector * size,
+	const b3_f64      xAngle,
+	const b3_f64      yAngle)
 {
-	b3_vector eye;
-	b3_f64    rad;
+	const b3_f64    rad = 0.4 * b3Vector::b3Length(size);
+	b3_vector       eye;
 
-	rad    = 0.4 * b3Vector::b3Length(size);
 	eye.x  = center->x + 8.0 * rad * cos(xAngle) * cos(yAngle);
 	eye.y  = center->y + 8.0 * rad * sin(xAngle) * cos(yAngle);
 	eye.z  = center->z + 8.0 * rad * sin(yAngle);
@@ -260,10 +260,10 @@ void b3CameraPart::b3Overview(
 
 void b3CameraPart::b3Transform(b3_matrix * transformation)
 {
-	b3Matrix::b3VMul(transformation, &m_EyePoint,  &m_EyePoint, true);
+	b3Matrix::b3VMul(transformation, &m_EyePoint,  &m_EyePoint,  true);
 	b3Matrix::b3VMul(transformation, &m_ViewPoint, &m_ViewPoint, true);
-	b3Matrix::b3VMul(transformation, &m_Width,     &m_Width,    false);
-	b3Matrix::b3VMul(transformation, &m_Height,    &m_Height,   false);
+	b3Matrix::b3VMul(transformation, &m_Width,     &m_Width,     false);
+	b3Matrix::b3VMul(transformation, &m_Height,    &m_Height,    false);
 }
 
 const char * b3CameraPart::b3GetName() const
@@ -320,7 +320,7 @@ b3_f64 b3CameraPart::b3GetTwirl() const
 			(b3Vector::b3Length(&m_Width) * b3Vector::b3Length(&Vup)));
 }
 
-void b3CameraPart::b3SetTwirl(b3_f64 twirl)
+void b3CameraPart::b3SetTwirl(const b3_f64 twirl)
 {
 	b3_line   RotLine;
 	b3_matrix RotMatrix;

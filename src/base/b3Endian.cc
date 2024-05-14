@@ -58,21 +58,21 @@ public:
 
 	inline void b3Change16()
 	{
-		B3_SWAP(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[1]);
+		std::swap(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[1]);
 	}
 
 	inline void b3Change32()
 	{
-		B3_SWAP(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[3]);
-		B3_SWAP(m_Changer.m_iBuffer[1], m_Changer.m_iBuffer[2]);
+		std::swap(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[3]);
+		std::swap(m_Changer.m_iBuffer[1], m_Changer.m_iBuffer[2]);
 	}
 
 	inline void b3Change64()
 	{
-		B3_SWAP(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[3]);
-		B3_SWAP(m_Changer.m_iBuffer[1], m_Changer.m_iBuffer[2]);
-		B3_SWAP(m_Changer.m_iBuffer[4], m_Changer.m_iBuffer[7]);
-		B3_SWAP(m_Changer.m_iBuffer[5], m_Changer.m_iBuffer[6]);
+		std::swap(m_Changer.m_iBuffer[0], m_Changer.m_iBuffer[3]);
+		std::swap(m_Changer.m_iBuffer[1], m_Changer.m_iBuffer[2]);
+		std::swap(m_Changer.m_iBuffer[4], m_Changer.m_iBuffer[7]);
+		std::swap(m_Changer.m_iBuffer[5], m_Changer.m_iBuffer[6]);
 	}
 
 	inline b3_bool b3IsIntel() const
@@ -262,7 +262,7 @@ b3_size b3Endian::b3ChangeEndian16(void * Ptr)
 {
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 
-	B3_SWAP(Pointer[0], Pointer[1]);
+	std::swap(Pointer[0], Pointer[1]);
 	return 2;
 }
 
@@ -270,8 +270,8 @@ b3_size b3Endian::b3ChangeEndian32(void * Ptr)
 {
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 
-	B3_SWAP(Pointer[0], Pointer[3]);
-	B3_SWAP(Pointer[1], Pointer[2]);
+	std::swap(Pointer[0], Pointer[3]);
+	std::swap(Pointer[1], Pointer[2]);
 	return 4;
 }
 

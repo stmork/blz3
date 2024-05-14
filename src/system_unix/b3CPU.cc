@@ -9,7 +9,7 @@
 **
 **	Blizzard III CPU info
 **
-**	(C) Copyright 2005  Steffen A. Mork
+**	(C) Copyright 2005 - 2024  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -23,7 +23,7 @@
 
 #include "blz3/system/b3Thread.h"
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <thread>
 
 #ifdef __linux__
@@ -46,7 +46,7 @@ b3CPU::b3CPU()
 
 #ifdef __linux__
 		struct utsname uinfo;
-		int            a, b, c;
+		int            a = 0, b = 0, c = 0;
 
 		if (uname(&uinfo) == 0)
 		{
@@ -58,7 +58,8 @@ b3CPU::b3CPU()
 
 		if (!m_CorrectRUsage)
 		{
-			b3PrintF(B3LOG_NORMAL, "Found Linux kernel %d.%d.%d with wrong resource usage measurement.\n",
+			b3PrintF(B3LOG_NORMAL,
+				"Found Linux kernel %d.%d.%d with wrong resource usage measurement.\n",
 				a, b, c);
 		}
 #endif
