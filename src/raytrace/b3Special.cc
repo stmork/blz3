@@ -503,7 +503,7 @@ void b3ModellerInfo::b3SnapToObjectAngle(b3_f64 & angle) const
 	b3Snap(angle, m_AngleGridObjects);
 }
 
-void b3ModellerInfo::b3Snap(b3_f64 & angle, bool activation) const
+void b3ModellerInfo::b3Snap(b3_f64 & angle, const bool activation) const
 {
 	if (activation)
 	{
@@ -524,18 +524,18 @@ const char * b3ModellerInfo::b3GetUnitDescr() const
 	return m_UnitDescrTable[m_Unit];
 }
 
-b3_u32 b3ModellerInfo::b3GetMeasure(bool force_custom_value) const
+b3_u32 b3ModellerInfo::b3GetMeasure(const bool force_custom_value) const
 {
 	return ((m_Measure == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
 		m_CustomMeasure : m_MeasureTable[m_Measure];
 }
 
-void b3ModellerInfo::b3SetMeasure(b3_measure measure)
+void b3ModellerInfo::b3SetMeasure(const b3_measure measure)
 {
 	m_Measure = measure;
 }
 
-void b3ModellerInfo::b3SetMeasure(b3_u32 measure)
+void b3ModellerInfo::b3SetMeasure(const b3_u32 measure)
 {
 	m_CustomMeasure = measure;
 	m_Measure       = B3_MEASURE_CUSTOM;

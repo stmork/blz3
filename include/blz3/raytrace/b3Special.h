@@ -430,7 +430,7 @@ public:
 	 * @param measure The new custom measuring unit.
 	 * @see b3_measure.
 	 */
-	void        b3SetMeasure(b3_u32 measure);
+	void        b3SetMeasure(const b3_u32 measure);
 
 	/**
 	 * This method sets a new rpedefined measuring unit.
@@ -438,7 +438,7 @@ public:
 	 * @param measure The new measuring unit.
 	 * @see b3_measure.
 	 */
-	void        b3SetMeasure(b3_measure measure);
+	void        b3SetMeasure(const b3_measure measure);
 
 	/**
 	 * This method returns the configured measing unit. If the
@@ -450,10 +450,10 @@ public:
 	 * @return The measuring unit as value.
 	 * @see b3_measure
 	 */
-	b3_u32      b3GetMeasure(bool forceCustomValue = true) const;
+	b3_u32      b3GetMeasure(const bool forceCustomValue = true) const;
 
 private:
-	void        b3Snap(b3_f64 & angle, bool activation) const;
+	void        b3Snap(b3_f64 & angle, const bool activation) const;
 };
 
 #define B3_UNIT_MASK           0x0000f

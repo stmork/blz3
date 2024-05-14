@@ -293,6 +293,10 @@ public:
 
 	void    b3Write() override;
 	bool    b3GetSurfaceValues(b3_surface * surface) const override;
+
+private:
+	b3_index b3ChessIndex(const b3_f64 x, const b3_f64 y) const;
+
 };
 
 /*************************************************************************

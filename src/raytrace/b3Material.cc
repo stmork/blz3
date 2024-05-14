@@ -203,12 +203,17 @@ void b3MatChess::b3Write()
 	b3StoreCount(m_yTimes);
 }
 
-#define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
+inline b3_index b3MatChess::b3ChessIndex(const b3_f64 x, const b3_f64 y) const
+{
+	return (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1);
+}
 
 bool b3MatChess::b3GetSurfaceValues(b3_surface * surface) const
 {
-	b3_material * dst = surface;
-	b3_index     index = CHESS_INDEX(surface->m_Incoming->polar.m_Polar.x, surface->m_Incoming->polar.m_Polar.y);
+	b3_material * dst   = surface;
+	b3_index      index = b3ChessIndex(
+			surface->m_Incoming->polar.m_Polar.x,
+			surface->m_Incoming->polar.m_Polar.y);
 
 	*dst = m_Material[index];
 
