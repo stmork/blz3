@@ -270,7 +270,8 @@ public:
 	/////////////////////////////// Comparisons
 
 #ifdef __cpp_impl_three_way_comparison
-	constexpr int operator<= > (const b3Date & date) const
+	// NOTE: astyle < v3.2 reformats this operator!
+	constexpr int operator<=> (const b3Date & date) const
 	{
 		return time_code - date.time_code;
 	}
