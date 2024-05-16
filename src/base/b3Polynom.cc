@@ -87,7 +87,7 @@ b3_count b3Polynom::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 
 	const b3_f64 AA  = A * A;
 	const b3_f64 Q   = (AA - 3 * B) / 9.0;
-	const b3_f64 R   = (2.0 * AA * A - 9 * A * B + 27.0 * C) / 54.0;
+	const b3_f64 R   = (2.0 * AA * A - 9.0 * A * B + 27.0 * C) / 54.0;
 
 	const b3_f64 QQQ = Q * Q * Q;
 	const b3_f64 M   = R * R - QQQ;
@@ -156,7 +156,7 @@ b3_count b3Polynom::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 	const b3_f64 AA = A * A;
 	const b3_f64 p  = B  -  0.375 * AA;
 	const b3_f64 q  =  0.125 * AA * A  -  0.5 * A * B   + C;
-	const b3_f64 r  = -3.0 * AA * AA / 256.0 + 0.0625 * AA * B - 0.25 * A * C + D;
+	const b3_f64 r  = -3.0 * AA * AA / 256.0 + AA * B / 16.0 - A * C / 4.0 + D;
 
 	if (b3Math::b3IsZero(r))
 	{

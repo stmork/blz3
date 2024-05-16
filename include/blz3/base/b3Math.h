@@ -22,6 +22,8 @@
 
 #include "blz3/b3Config.h"
 
+#include <climits>
+
 /**
  * This class provides useful math helper methods.
  */
@@ -40,7 +42,8 @@ public:
 	 * and greater or equal to the given number.
 	 *
 	 * @param value The value to compute the power of 2 number from.
-	 * @return The value which is a power of two number and greater or equal to the given number.
+	 * @return The value which is a power of two number and greater or equal to
+	 * the given number.
 	 */
 	static b3_loop  b3PowOf2(const b3_loop value);
 
@@ -81,7 +84,7 @@ public:
 	template<typename T>
 	static constexpr bool b3IsZero(const T x)
 	{
-		return std::fabs(x) < 4.656613e-10;
+		return std::fabs(x) < std::numeric_limits<b3_f32>::epsilon();
 	}
 
 	/**
