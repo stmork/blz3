@@ -59,9 +59,6 @@ void b3MathTest::tearDown()
 
 void b3MathTest::test()
 {
-	b3_f64 base;
-	b3_u32 exp;
-
 	CPPUNIT_ASSERT_EQUAL(1.0,   b3Math::b3Frac( 4.0, 3.0));
 	CPPUNIT_ASSERT_EQUAL(2.0,   b3Math::b3Frac(-4.0, 3.0));
 	CPPUNIT_ASSERT_EQUAL(0.0,   b3Math::b3Frac( 4.0, 1.0));
@@ -83,11 +80,14 @@ void b3MathTest::test()
 	CPPUNIT_ASSERT_EQUAL(2.5,   b3Math::b3Clamp(2.5, 1.0, 4.0));
 	CPPUNIT_ASSERT_EQUAL(4.0,   b3Math::b3Clamp(4.5, 1.0, 4.0));
 
-	for (base = 0; base < 13; base++)
+	for (b3_u32 base = 0; base < 13; base++)
 	{
-		for (exp = 0; exp < 16; exp++)
+		for (b3_u32 exp = 0; exp < 16; exp++)
 		{
-			CPPUNIT_ASSERT_EQUAL(pow(base, static_cast<double>(exp)), b3Math::b3FastPow(base, exp));
+			const b3_f64 f_base(base);
+			const b3_f64 f_exp(exp);
+
+			CPPUNIT_ASSERT_EQUAL(pow(f_base, f_exp), b3Math::b3FastPow(f_base, exp));
 		}
 	}
 }
