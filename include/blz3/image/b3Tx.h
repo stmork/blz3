@@ -1097,7 +1097,7 @@ public:
 	 * This method saves the image as JPEG file.
 	 *
 	 * @param ImageName The file name to save into.
-	 * @param quality The JPEG quality level.
+	 * @param quality The JPEG quality level in range of [0..100].
 	 * @param exif The optional EXIF description to write if it is not nullptr.
 	 * @return The result code.
 	 * @see b3_result.

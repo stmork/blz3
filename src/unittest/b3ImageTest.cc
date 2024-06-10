@@ -540,6 +540,27 @@ void b3ImageTest::testWriteOpenEXR()
 }
 #endif
 
+void b3ImageTest::testWriteBomb()
+{
+	b3Tx   tx;
+	b3_res res = 2048;
+
+	while (res <= 32768)
+	{
+		char filename[B3_FILESTRINGLEN];
+
+		snprintf(filename, sizeof(filename), "image_bomb_%02dk", res / 1024);
+
+		CPPUNIT_ASSERT_NO_THROW(tx.b3AllocTx(res, res, 24));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3SaveJPEG((std::string(filename) + ".jpg").c_str(), 1));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3SavePNG( (std::string(filename) + ".png").c_str(), nullptr));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3SaveTIFF((std::string(filename) + ".tiff").c_str()));
+		CPPUNIT_ASSERT_NO_THROW(tx.b3SaveTGA( (std::string(filename) + ".tga").c_str()));
+
+		res *= 2;
+	}
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Unit tests for image manipulation             **

@@ -60,6 +60,7 @@ class b3ImageTest : public CppUnit::TestFixture, protected b3ImageSetup
 	CPPUNIT_TEST(testWriteRGB8);
 	CPPUNIT_TEST(testWriteTGA);
 	CPPUNIT_TEST(testWriteTIFF);
+	CPPUNIT_TEST(testWriteBomb);
 
 	CPPUNIT_TEST(testScaleUnfiltered);
 	CPPUNIT_TEST(testScaleFiltered);
@@ -108,6 +109,7 @@ public:
 	void testWriteRGB8();
 	void testWriteTGA();
 	void testWriteTIFF();
+	void testWriteBomb();
 
 	void testScaleUnfiltered();
 	void testScaleFiltered();

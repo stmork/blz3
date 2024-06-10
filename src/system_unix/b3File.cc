@@ -89,7 +89,7 @@ bool b3File::b3Open(
 		if (m_File != -1)
 		{
 			m_OpenFiles++;
-			b3Buffer(DEFAULT_CACHESIZE);
+			b3File::b3Buffer(DEFAULT_CACHESIZE);
 			return true;
 		}
 		else
@@ -109,7 +109,7 @@ bool b3File::b3Open(
 		if (m_File != -1)
 		{
 			m_OpenFiles++;
-			b3Buffer(DEFAULT_CACHESIZE);
+			b3File::b3Buffer(DEFAULT_CACHESIZE);
 			return true;
 		}
 		else
@@ -293,7 +293,7 @@ b3_offset b3File::b3Size()
 bool b3File::b3Buffer(b3_size size)
 {
 	// Flush old buffer
-	if (!b3Flush())
+	if (!b3File::b3Flush())
 	{
 		return false;
 	}
@@ -318,7 +318,7 @@ bool b3File::b3Buffer(b3_size size)
 void b3File::b3Close()
 {
 	// Close file;
-	b3Buffer(0);
+	b3File::b3Buffer(0);
 	if (m_File != -1)
 	{
 		close(m_File);
