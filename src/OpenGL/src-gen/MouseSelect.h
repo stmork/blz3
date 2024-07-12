@@ -82,6 +82,7 @@ public:
 		const T value;
 	};
 
+
 	//! Inner class for gui interface scope.
 	class Gui
 	{
@@ -127,6 +128,7 @@ public:
 
 	private:
 		friend class MouseSelect;
+
 
 		/*! Indicates event 'onSelect' of interface scope 'gui' is active. */
 		bool onSelect_raised {false};
@@ -209,6 +211,7 @@ public:
 		friend class MouseSelect;
 
 
+
 		MouseSelect * parent;
 
 
@@ -224,6 +227,7 @@ public:
 
 	/*! Can be used by the client code to trigger a run to completion step without raising an event. */
 	void triggerWithoutEvent() override;
+
 	/*
 	 * Functions inherited from StatemachineInterface
 	 */

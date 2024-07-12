@@ -618,6 +618,7 @@ void MouseSelect::exit() {
 	isExecuting = true;
 	/* Default exit sequence for statechart MouseSelect */
 	exseq_main_region();
+	stateConfVector[0] = MouseSelect::State::NO_STATE;
 	isExecuting = false;
 }
 
@@ -625,4 +626,5 @@ void MouseSelect::exit() {
 void MouseSelect::triggerWithoutEvent() {
 	runCycle();
 }
+
 
