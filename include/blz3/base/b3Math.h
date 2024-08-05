@@ -328,6 +328,25 @@ public:
 	}
 
 	/**
+	 * This method aligns a value to an upper border of a given power of two.
+	 *
+	 * @example b3AlignUpper(0,2) = 0
+	 * @example b3AlignUpper(1,2) = 4
+	 *
+	 * @param value The value to align up.
+	 * @param bits The alignment as power of two.
+	 * @return The upper aligned value.
+	 */
+	template<typename T>
+	static constexpr T b3AlignUpper(const T value, const T bits)
+	{
+		const T mask  = (1 << bits) - 1;
+		const T upper = value + mask;
+
+		return upper & (~mask);
+	}
+
+	/**
 	 * This funtion is a fast pow() version for high integer exponents.
 	 *
 	 * \param x The base.

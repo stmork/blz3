@@ -91,7 +91,9 @@ class b3MovieEncoder
 	b3CodecFrame               m_YuvFrame;
 	b3CodecFrame               m_AudioFrame;
 
-	static const unsigned      m_kbit_rate = 900;
+	static constexpr unsigned  m_kbit_rate = 900;
+	static constexpr b3_res    m_Alignment =   4;
+
 	static const AVPixelFormat m_SrcFormat;
 	static const AVPixelFormat m_DstFormat;
 

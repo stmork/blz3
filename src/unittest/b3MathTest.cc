@@ -342,6 +342,20 @@ void b3MathTest::testLogPow()
 	CPPUNIT_ASSERT_EQUAL( 16, b3Math::b3PowOf2(9));
 }
 
+void b3MathTest::testAlignUpper()
+{
+	CPPUNIT_ASSERT_EQUAL(  0, b3Math::b3AlignUpper(  0, 0));
+	CPPUNIT_ASSERT_EQUAL(  0, b3Math::b3AlignUpper(  0, 2));
+	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3AlignUpper(  1, 2));
+	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3AlignUpper(  2, 2));
+	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3AlignUpper(  3, 2));
+	CPPUNIT_ASSERT_EQUAL(  4, b3Math::b3AlignUpper(  4, 2));
+	CPPUNIT_ASSERT_EQUAL(  8, b3Math::b3AlignUpper(  5, 2));
+	CPPUNIT_ASSERT_EQUAL(  0, b3Math::b3AlignUpper(  0, 4));
+	CPPUNIT_ASSERT_EQUAL( 16, b3Math::b3AlignUpper(  5, 4));
+	CPPUNIT_ASSERT_EQUAL( 16, b3Math::b3AlignUpper( 16, 4));
+}
+
 void b3MathTest::testAsin()
 {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(-M_PI * 0.5, b3Math::b3Asin(-1.0), b3Math::epsilon);

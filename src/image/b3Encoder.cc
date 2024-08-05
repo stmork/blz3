@@ -21,6 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/base/b3Math.h"
 #include "blz3/image/b3Encoder.h"
 #include "blz3/system/b3LogBase.h"
 #include "blz3/system/b3Runtime.h"
@@ -194,7 +195,7 @@ b3MovieEncoder::b3MovieEncoder(
 	const bool     use_audio) :
 	m_RgbFrame(tx, m_SrcFormat),
 	m_YuvFrame(tx, m_DstFormat),
-	m_xSize(tx->xSize),
+	m_xSize(b3Math::b3AlignUpper(tx->xSize, m_Alignment)),
 	m_ySize(tx->ySize)
 {
 	int error = 0;
@@ -288,7 +289,8 @@ void b3MovieEncoder::b3PrepareStream(b3EncoderStream * stream)
 
 bool b3MovieEncoder::b3AddVideoFrame(const b3Tx * tx)
 {
-	if ((tx->xSize != m_xSize) || (tx->ySize != m_ySize) || (m_YuvFrame == nullptr))
+	if ((b3Math::b3AlignUpper(tx->xSize, m_Alignment) != m_xSize) ||
+		(tx->ySize != m_ySize) || (m_YuvFrame == nullptr))
 	{
 		return false;
 	}

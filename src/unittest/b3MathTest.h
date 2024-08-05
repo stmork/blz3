@@ -37,6 +37,7 @@ class b3MathTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testHorner);
 	CPPUNIT_TEST(testRound);
 	CPPUNIT_TEST(testLogPow);
+	CPPUNIT_TEST(testAlignUpper);
 	CPPUNIT_TEST(testAsin);
 	CPPUNIT_TEST(testAcos);
 	CPPUNIT_TEST(testSmoothStep1);
@@ -68,6 +69,7 @@ public:
 	void testHorner();
 	void testRound();
 	void testLogPow();
+	void testAlignUpper();
 	void testAsin();
 	void testAcos();
 	void testSmoothStep1();
