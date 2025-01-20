@@ -132,6 +132,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	{
 		if (surface->m_Ior == 1)
 		{
+			[[unlikely]]
 			surface->m_RefrRay.inside = false;
 			surface->m_ReflRay.inside = false;
 		}
@@ -158,10 +159,12 @@ void b3ShaderMork2::b3ShadeSurface(
 	// Reflection
 	if (refl > 0)
 	{
+		[[likely]]
 		b3Shade(&surface->m_ReflRay, depth_count);
 	}
 	else
 	{
+		[[unlikely]]
 		refl = 0;
 		surface->m_ReflRay.color.b3Init();
 	}

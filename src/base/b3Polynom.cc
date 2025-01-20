@@ -50,6 +50,7 @@ b3_count b3Polynom::b3SolveOrd2(const b3_f64 * Coeffs, b3_f64 * x)
 
 	if (b3Math::b3IsZero(D))
 	{
+		[[unlikely]]
 		x[0] = -p;
 		return 1;
 	}
@@ -94,8 +95,10 @@ b3_count b3Polynom::b3SolveOrd3(const b3_f64 * Coeffs, b3_f64 * x)
 
 	if (b3Math::b3IsZero(M))
 	{
+		[[unlikely]]
 		if (b3Math::b3IsZero(R))
 		{
+			[[unlikely]]
 			x[NumOfX++] = 0;
 		}
 		else
@@ -160,6 +163,7 @@ b3_count b3Polynom::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 
 	if (b3Math::b3IsZero(r))
 	{
+		[[unlikely]]
 		Coeffs[O3_X0] = q;
 		Coeffs[O3_X1] = p;
 		Coeffs[O3_X2] = 0;
@@ -184,6 +188,7 @@ b3_count b3Polynom::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 
 		if (b3Math::b3IsZero(C))
 		{
+			[[unlikely]]
 			C = 0;
 		}
 		else if (C > 0)
@@ -197,6 +202,7 @@ b3_count b3Polynom::b3SolveOrd4(const b3_f64 * c, b3_f64 * x)
 
 		if (b3Math::b3IsZero(D))
 		{
+			[[unlikely]]
 			D = 0;
 		}
 		else if (D > 0)

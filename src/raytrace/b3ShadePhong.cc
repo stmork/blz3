@@ -88,6 +88,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	{
 		if (surface->m_Ior == 1)
 		{
+			[[unlikely]]
 			surface->m_RefrRay.inside = false;
 			surface->m_ReflRay.inside = false;
 		}

@@ -165,7 +165,7 @@ public:
 	 * \param b The divisor.
 	 * \return The fractional part.
 	 */
-	static constexpr b3_f64 b3Frac(b3_f64 a, b3_f64 b)
+	inline static constexpr b3_f64 b3Frac(b3_f64 a, b3_f64 b)
 	{
 		b3_f64 remainder = fmod(a, b);
 
@@ -178,7 +178,7 @@ public:
 	 * \param a The complete floating point number.
 	 * \return The fractional part of a float.
 	 */
-	static constexpr b3_f64 b3FracOne(const b3_f64 a)
+	inline static constexpr b3_f64 b3FracOne(const b3_f64 a)
 	{
 		return a - floor(a);
 	}
@@ -194,7 +194,7 @@ public:
 	 * \return The mixed value.
 	 */
 	template<typename T>
-	static constexpr T b3Mix(const T a, const T b, const	T x)
+	inline static constexpr T b3Mix(const T a, const T b, const	T x)
 	{
 		B3_ASSERT(x >= 0);
 		B3_ASSERT(x <= 1);
@@ -211,9 +211,9 @@ public:
 	 */
 	template<typename T>
 	[[deprecated("Use std::min() instead.")]]
-	static constexpr T b3Min(const T a, const T b)
+	inline static constexpr T b3Min(const T a, const T b)
 	{
-		return a < b ? a : b;
+		return std::min(a, b);
 	}
 
 	/**
@@ -225,12 +225,12 @@ public:
 	 */
 	template<typename T>
 	[[deprecated("Use std::max() instead.")]]
-	static constexpr T b3Max(const T a, const T b)
+	inline static constexpr T b3Max(const T a, const T b)
 	{
-		return a > b ? a : b;
+		return std::max(a, b);
 	}
 
-	static constexpr b3_f64 b3Hermite(
+	inline static constexpr b3_f64 b3Hermite(
 		const b3_f64 t1,
 		const b3_f64 s0,
 		const b3_f64 s1)
@@ -246,7 +246,8 @@ public:
 	}
 
 	/**
-	 * This method is a smooth hermite ramp inside the range [s..e]
+	 * This method is a smooth hermite ramp inside the range [s..e]. Values
+	 * outside this range are clamped accordingly.
 	 *
 	 * \param s The start value of the ramp.
 	 * \param e The end value of the ramp.
@@ -254,48 +255,33 @@ public:
 	 * \return The hermite interpolation.
 	 */
 	template<typename T>
-	static constexpr T b3Smoothstep(
+	inline static constexpr T b3Smoothstep(
 		const T s,
 		const T e,
 		const T x)
 	{
-		if (x < s)
-		{
-			return 0;
-		}
-		else if (x > e)
-		{
-			return 1;
-		}
-
-		const b3_f64 t = (x - s) / (e - s);
+		const T t = (std::clamp(x, s, e) - s) / (e - s);
 
 		return (3 - 2 * t) * t * t;
 	}
 
 
 	/**
-	 * This method is a smooth hermite ramp inside the range [0..1]
+	 * This method is a smooth hermite ramp inside the range [0..1]. Values
+	 * outside this range are clamped accordingly.
 	 *
 	 * \param t The input value.
 	 * \return The hermite interpolation.
 	 */
 	template<typename T>
-	static constexpr T b3Smoothstep(const T t)
+	inline static constexpr T b3Smoothstep(const T t)
 	{
-		if (t < 0)
-		{
-			return 0;
-		}
-		else if (t > 1)
-		{
-			return 1;
-		}
+		const T c = std::clamp(t, 0.0, 1.0);
 
-		return (3 - 2 * t) * t * t;
+		return (3 - 2 * c) * c * c;
 	}
 
-	static constexpr b3_f64 b3SmoothPulse(
+	inline static constexpr b3_f64 b3SmoothPulse(
 		const b3_f64 e0,
 		const b3_f64 e1,
 		const b3_f64 e2,
@@ -305,7 +291,7 @@ public:
 		return b3Smoothstep(e0, e1, x) - b3Smoothstep(e2, e3, x);
 	}
 
-	static constexpr b3_f64 b3SmoothPulseTrain(
+	inline static constexpr b3_f64 b3SmoothPulseTrain(
 		const b3_f64 e0,
 		const b3_f64 e1,
 		const b3_f64 e2,
@@ -322,7 +308,7 @@ public:
 	 * @return
 	 */
 	template<typename T>
-	static constexpr T b3Fade(const T t)
+	inline static constexpr T b3Fade(const T t)
 	{
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
@@ -338,7 +324,7 @@ public:
 	 * @return The upper aligned value.
 	 */
 	template<typename T>
-	static constexpr T b3AlignUpper(const T value, const T bits)
+	inline static constexpr T b3AlignUpper(const T value, const T bits)
 	{
 		const T mask  = (1 << bits) - 1;
 		const T upper = value + mask;
@@ -353,7 +339,7 @@ public:
 	 * \param exponent The exponent.
 	 * \return The power of x with integer exponent exponent.
 	 */
-	static constexpr b3_f64 b3FastPow(const b3_f64 x, b3_u32 exponent)
+	inline static constexpr b3_f64 b3FastPow(const b3_f64 x, b3_u32 exponent)
 	{
 		b3_f64 result = 1;
 		b3_f64 factor = x;
@@ -376,14 +362,16 @@ public:
 	 * \param x The sine value.
 	 * \return The arc sine value.
 	 */
-	static constexpr b3_f64 b3Asin(const b3_f64 x)
+	inline static constexpr b3_f64 b3Asin(const b3_f64 x)
 	{
 		if (x <= -1)
 		{
+			[[unlikely]]
 			return -M_PI * 0.5;
 		}
 		else if (x >= 1)
 		{
+			[[unlikely]]
 			return M_PI * 0.5;
 		}
 		return asin(x);
@@ -395,30 +383,32 @@ public:
 	 * \param x The cosine value.
 	 * \return The arc cosine value.
 	 */
-	static constexpr b3_f64 b3Acos(const b3_f64 x)
+	inline static constexpr b3_f64 b3Acos(const b3_f64 x)
 	{
 		if (x <= -1)
 		{
+			[[unlikely]]
 			return M_PI;
 		}
 		else if (x >= 1)
 		{
+			[[unlikely]]
 			return 0;
 		}
 		return acos(x);
 	}
 
-	static constexpr b3_f64 b3ArcAngleOfScalars(const b3_f64 u, const b3_f64 v)
+	inline static constexpr b3_f64 b3ArcAngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) + (v < 0 ? (M_PI * 2.0) : 0);
 	}
 
-	static constexpr b3_f64 b3RelAngleOfScalars(const b3_f64 u, const b3_f64 v)
+	inline static constexpr b3_f64 b3RelAngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) * 0.5 / M_PI + (v < 0 ?   1.0 : 0);
 	}
 
-	static constexpr b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
+	inline static constexpr b3_f64 b3AngleOfScalars(const b3_f64 u, const b3_f64 v)
 	{
 		return atan2(v, u) * 180.0 / M_PI + (v < 0 ? 360.0 : 0);
 	}
@@ -430,7 +420,7 @@ public:
 	 * @return The angle in radians.
 	 */
 	template<typename F>
-	static constexpr F b3Rad(F a)
+	inline static constexpr F b3Rad(const F a)
 	{
 		return a * M_PI / 180.0;
 	}
@@ -442,7 +432,7 @@ public:
 	 * @return The angle in degrees.
 	 */
 	template<typename F>
-	static constexpr F b3Degree(F a)
+	inline static constexpr F b3Degree(const F a)
 	{
 		return a * 180.0 / M_PI;
 	}
@@ -454,7 +444,7 @@ public:
 	 * \return The cubic root.
 	 */
 	[[deprecated("Use std::cbrt() instead!")]]
-	static constexpr b3_f64 b3Cbrt(const b3_f64 x)
+	inline static constexpr b3_f64 b3Cbrt(const b3_f64 x)
 	{
 		return cbrt(x);
 	}
