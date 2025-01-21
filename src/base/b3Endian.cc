@@ -26,15 +26,6 @@
 #include "blz3/system/b3Runtime.h"
 #include "blz3/base/b3Endian.h"
 
-union b3_change_buffer
-{
-	b3_u08   m_iBuffer[8];
-	b3_u16   m_sBuffer[4];
-	b3_u32   m_lBuffer[2];
-	b3_f32   m_fBuffer[2];
-	b3_f64   m_dBuffer[1];
-};
-
 /*************************************************************************
 **                                                                      **
 **                        b3EndianChanger class                         **
@@ -43,7 +34,14 @@ union b3_change_buffer
 
 class b3EndianChanger
 {
-	b3_change_buffer m_Changer;
+	union b3_change_buffer
+	{
+		b3_u08   m_iBuffer[8];
+		b3_u16   m_sBuffer[4];
+		b3_u32   m_lBuffer[2];
+		b3_f32   m_fBuffer[2];
+		b3_f64   m_dBuffer[1];
+	}  m_Changer;
 
 public:
 	b3EndianChanger(const void * ptr, b3_size size)
@@ -75,12 +73,12 @@ public:
 		std::swap(m_Changer.m_iBuffer[5], m_Changer.m_iBuffer[6]);
 	}
 
-	inline b3_bool b3IsIntel() const
+	inline static constexpr b3_bool b3IsIntel()
 	{
 		return b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN;
 	}
 
-	inline b3_bool b3IsMotorola() const
+	inline static constexpr b3_bool b3IsMotorola()
 	{
 		return b3Runtime::b3GetCPUType() == B3_BIG_ENDIAN;
 	}
@@ -105,52 +103,6 @@ public:
 		return m_Changer.m_dBuffer[0];
 	}
 };
-
-/*************************************************************************
-**                                                                      **
-**                        get data types in processor manner.           **
-**                                                                      **
-*************************************************************************/
-
-b3_u16 b3Endian::b3Get16(const void * Ptr)
-{
-	b3_u08 * Pointer = (b3_u08 *)Ptr;
-	b3_u16   Value;
-
-	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
-	{
-		Value = (long)Pointer[1];
-		Value = (Value << 8) | (long)Pointer[0];
-	}
-	else
-	{
-		Value = (long)Pointer[0];
-		Value = (Value << 8) | (long)Pointer[1];
-	}
-	return Value;
-}
-
-b3_u32 b3Endian::b3Get32(const void * Ptr)
-{
-	b3_u08 * Pointer = (b3_u08 *)Ptr;
-	b3_u32   Value;
-
-	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
-	{
-		Value = (b3_u32)Pointer[3];
-		Value = (Value << 8) | (b3_u32)Pointer[2];
-		Value = (Value << 8) | (b3_u32)Pointer[1];
-		Value = (Value << 8) | (b3_u32)Pointer[0];
-	}
-	else
-	{
-		Value = (b3_u32)Pointer[0];
-		Value = (Value << 8) | (b3_u32)Pointer[1];
-		Value = (Value << 8) | (b3_u32)Pointer[2];
-		Value = (Value << 8) | (b3_u32)Pointer[3];
-	}
-	return Value;
-}
 
 /*************************************************************************
 **                                                                      **
@@ -263,7 +215,7 @@ b3_size b3Endian::b3ChangeEndian16(void * Ptr)
 	b3_u08 * Pointer = (b3_u08 *)Ptr;
 
 	std::swap(Pointer[0], Pointer[1]);
-	return 2;
+	return sizeof(b3_u16);
 }
 
 b3_size b3Endian::b3ChangeEndian32(void * Ptr)
@@ -272,7 +224,7 @@ b3_size b3Endian::b3ChangeEndian32(void * Ptr)
 
 	std::swap(Pointer[0], Pointer[3]);
 	std::swap(Pointer[1], Pointer[2]);
-	return 4;
+	return sizeof(b3_u32);
 }
 
 b3_size b3Endian::b3ChangeEndian64(void * Ptr)
@@ -281,5 +233,5 @@ b3_size b3Endian::b3ChangeEndian64(void * Ptr)
 
 	b3ChangeEndian32(&Pointer[0]);
 	b3ChangeEndian32(&Pointer[4]);
-	return 8;
+	return sizeof(b3_u64);
 }

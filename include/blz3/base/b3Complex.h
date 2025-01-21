@@ -598,10 +598,7 @@ public:
 	 */
 	inline static void b3Swap(b3Complex<T> & a, b3Complex<T> & b)
 	{
-		for (b3_loop i = 0; i < Max; i++)
-		{
-			std::swap(a.v[i], b.v[i]);
-		}
+		std::swap(a, b);
 	}
 
 	/**

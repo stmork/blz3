@@ -29,14 +29,3 @@
 **                        CPU info base class                           **
 **                                                                      **
 *************************************************************************/
-
-b3CPUBase::b3CPUBase()
-{
-	if (cpu_type == B3_UNKNOWN_ENDIAN)
-	{
-		volatile b3_u32   value = (((b3_u32)B3_BIG_ENDIAN) << 16) | B3_LITTLE_ENDIAN;
-		volatile b3_u16 * ptr   = (b3_u16 *)&value;
-
-		cpu_type = (b3_cpu_type)ptr[0];
-	}
-}

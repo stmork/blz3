@@ -51,8 +51,8 @@ void b3EndianTest::test()
 	std::array<b3_u08, sizeof(b3_u16)> word = m_Word;
 	std::array<b3_u08, sizeof(b3_u32)> quad = m_Quad;
 
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u16,     0x2211, b3Endian::b3Get16(word.data()));
-	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u32, 0x44332211, b3Endian::b3Get32(quad.data()));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u16,     0x2211, b3Endian::b3Get<b3_u16>(word.data()));
+	CPPUNIT_ASSERT_TYPED_EQUAL(b3_u32, 0x44332211, b3Endian::b3Get<b3_u32>(quad.data()));
 }
 
 void b3EndianTest::testLittleEndian()

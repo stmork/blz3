@@ -305,10 +305,7 @@ public:
 
 	inline static void b3Swap(b3Complex64 & a, b3Complex64 & b)
 	{
-		const __m128d aux = a.v;
-
-		a.v = b.v;
-		b.v = aux;
+		std::swap(a, b);
 	}
 
 	inline void b3Dump(

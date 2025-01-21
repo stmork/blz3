@@ -342,9 +342,7 @@ public:
 		b3InitBase(new_class);
 	}
 
-	virtual ~b3Base()
-	{
-	}
+	virtual ~b3Base() = default;
 
 	/**
 	 * This method initializes the list with the specified class.

@@ -265,8 +265,8 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	// Targa
 	if ((buffer[2] == 2) || (buffer[2] == 10))
 	{
-		if ((b3Endian::b3Get32(&buffer[4]) == 0) &&
-			(b3Endian::b3Get32(&buffer[8]) == 0))
+		if ((b3Endian::b3Get<b3_u32>(&buffer[4]) == 0) &&
+			(b3Endian::b3Get<b3_u32>(&buffer[8]) == 0))
 		{
 			if ((buffer[16] == 32) || (buffer[16] == 24))
 			{

@@ -66,27 +66,6 @@ public:
 	}
 
 	/**
-	 * This method returns the used endian type of the CPU.
-	 *
-	 * @return The CPUs endian.
-	 */
-	static inline b3_cpu_type b3GetCPUType()
-	{
-		return b3Instance().cpu_type;
-	}
-
-	/**
-	 * This method returns the CPU's bit count. This is the size of
-	 * a pointer in bits.
-	 *
-	 * @return The used address space.
-	 */
-	static inline b3_count b3GetCPUBits()
-	{
-		return b3Instance().cpu_bits;
-	}
-
-	/**
 	 * This method returns the hostname.
 	 *
 	 * @param hostname The buffer which receives the hostname.

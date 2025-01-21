@@ -25,7 +25,7 @@
 /**
  * Info about available CPUs.
  */
-enum b3_cpu_type
+enum b3_cpu_type : b3_u16
 {
 	B3_UNKNOWN_ENDIAN = 0,      //!< Unknown endian
 	B3_BIG_ENDIAN     = 0x4d4d, //!< Big endian like most SUN Solaris machines or MC680x0
@@ -54,15 +54,20 @@ enum b3_vector_unit
  */
 class B3_PLUGIN b3CPUBase
 {
+	static constexpr union
+	{
+		b3_u32      value;
+		b3_cpu_type array[2];
+	} endianess{.value  = (((b3_u32)B3_BIG_ENDIAN) << 16) | B3_LITTLE_ENDIAN};
+
 protected:
-	static const b3_count    cpu_bits = sizeof(void *) * 8;
-	b3_cpu_type              cpu_type = B3_UNKNOWN_ENDIAN;
-	b3_count                 cpu_count = 0; //!< Number of usable CPUs.
+	static constexpr b3_count     cpu_bits  = sizeof(void *) * 8;
+	b3_count                      cpu_count = 0; //!< Number of usable CPUs.
 
 	/**
 	 * This constructor initializes information abount the installed CPUs.
 	 */
-	b3CPUBase();
+	b3CPUBase() = default;
 
 	/**
 	 * Return type of available vector unit.
@@ -88,6 +93,32 @@ protected:
 #else
 		return B3_VU_FPU;
 #endif
+	}
+
+public:
+	/**
+	 * This method returns the CPU's bit count. This is the size of
+	 * a pointer in bits.
+	 *
+	 * @return The used address space.
+	 */
+	static constexpr inline b3_count b3GetCPUBits()
+	{
+		return b3CPUBase::cpu_bits;
+	}
+
+	/**
+	 * This method returns the used endian type of the CPU.
+	 *
+	 * @return The CPUs endian.
+	 */
+	static constexpr inline b3_cpu_type b3GetCPUType()
+	{
+		static_assert(
+			sizeof(endianess.value) == sizeof(endianess.array),
+			"CPU endianess computation wrong!");
+
+		return b3CPUBase::endianess.array[0];
 	}
 };
 

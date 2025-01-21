@@ -21,6 +21,7 @@
 #define B3_BASE_ENDIAN_H
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Runtime.h"
 
 /**
  * This class provides some static methods for endian change purposes.
@@ -29,22 +30,40 @@ class B3_PLUGIN b3Endian
 {
 public:
 	/**
-	 * This method gets a two byte integer in native order from the given
-	 * pointer position.
-	 *
-	 * @param Ptr The memory position.
-	 * @return The two byte integer.
-	 */
-	static b3_u16   b3Get16(const void * Ptr);
+	* This method gets an integer in native byte order from the given pointer
+	* position. The size depends on the template parameter type.
+	*
+	* @param Ptr The memory position.
+	* @return The two byte integer.
+	*/
+	template<typename T>
+	[[nodiscard]]
+	static inline T b3Get(const void * Ptr)
+	{
+		T Value{0};
 
-	/**
-	 * This method gets a four byte integer in native order from the given
-	 * pointer position.
-	 *
-	 * @param Ptr The memory position.
-	 * @return The four byte integer.
-	 */
-	static b3_u32   b3Get32(const void * Ptr);
+		if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+		{
+			b3_u08 * Pointer = (b3_u08 *)Ptr;
+
+			Pointer += sizeof(T);
+			for (b3_size i = 0; i < sizeof(T); ++i)
+			{
+				--Pointer;
+				Value = (Value << 8) | *Pointer;
+			}
+		}
+		else
+		{
+			b3_u08 * Pointer = (b3_u08 *)Ptr;
+
+			for (b3_size i = 0; i < sizeof(T); ++i)
+			{
+				Value = (Value << 8) | *Pointer++;
+			}
+		}
+		return Value;
+	}
 
 	/**
 	 * This method gets a two byte integer in big endian order from the given
