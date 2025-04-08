@@ -76,3 +76,6 @@ Version 3.1.11
 Version 3.1.12
 * Optimized code quality.
 * Fixed pixel alignment of video encoding.
+
+Version 3.1.13
+* Added Qt 6 support.
