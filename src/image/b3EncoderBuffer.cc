@@ -40,14 +40,24 @@ void b3CodecFrame::b3InitAudio(
 	const AVCodecContext * codec_context,
 	const b3_res           frames_per_second)
 {
-	m_Frame->format         = codec_context->sample_fmt;
-	m_Frame->sample_rate    = codec_context->sample_rate;
+#if LIBAVFORMAT_VERSION_MAJOR >= 60
+	av_channel_layout_copy(&m_Frame->ch_layout, &codec_context->ch_layout);
+
+	const int channels = m_Frame->ch_layout.nb_channels;
+#else
 	m_Frame->channel_layout = codec_context->channel_layout;
 	m_Frame->channels       = av_get_channel_layout_nb_channels(m_Frame->channel_layout);
 	m_Frame->nb_samples     = codec_context->sample_rate * m_Frame->channels / frames_per_second;
 
+	const int channels = m_Frame->channels;
+
+#endif
+	m_Frame->format         = codec_context->sample_fmt;
+	m_Frame->sample_rate    = codec_context->sample_rate;
+	m_Frame->nb_samples     = codec_context->sample_rate * channels / frames_per_second;
+
 	m_BufferSize = av_samples_get_buffer_size(nullptr,
-			m_Frame->channels,
+			channels,
 			codec_context->sample_rate / frames_per_second,
 			codec_context->sample_fmt, 1);
 	m_SampleSize = av_get_bytes_per_sample (codec_context->sample_fmt);

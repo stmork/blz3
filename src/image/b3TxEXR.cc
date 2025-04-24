@@ -30,7 +30,17 @@
 #include <ImfIO.h>
 #include <ImfInputFile.h>
 #include <ImfHeader.h>
+#include <ImfFrameBuffer.h>
+
 #include <ImathBox.h>
+
+#ifdef HAVE_LIBOPENEXR_3_1
+#	include <Imath/ImathVec.h>
+#	include <Imath/half.h>
+#else
+#	include <OpenEXR/ImathVec.h>
+#	include <OpenEXR/half.h>
+#endif
 
 using namespace Imath;
 using namespace Imf;
@@ -45,8 +55,8 @@ using namespace Iex;
 class b3ExrInputStream : public IStream
 {
 	const b3_u08  * m_Buffer = nullptr;
-	b3_size   m_Size   = 0;
-	b3_index  m_Index  = 0;
+	uint64_t        m_Size   = 0;
+	uint64_t        m_Index  = 0;
 
 public:
 	b3ExrInputStream(const b3_u08 * buffer, b3_size size, const char * filename) :
@@ -68,15 +78,15 @@ public:
 		m_Index += n;
 
 		// Return EOF.
-		return m_Index < static_cast<b3_index>(m_Size);
+		return m_Index < m_Size;
 	}
 
-	virtual Int64 tellg() override
+	virtual uint64_t tellg() override
 	{
 		return m_Index;
 	}
 
-	virtual void seekg(Int64 pos) override
+	virtual void seekg(uint64_t pos) override
 	{
 		if (pos >= m_Size)
 		{

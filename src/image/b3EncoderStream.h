@@ -60,7 +60,7 @@ class b3EncoderStream
 protected:
 	AVRational       m_FrameDuration { 0, 1 };
 	AVCodecID        m_CodecId      = AV_CODEC_ID_PROBE;
-	AVCodec     *    m_Codec        = nullptr;
+	const AVCodec  * m_Codec        = nullptr;
 	AVCodecContext * m_CodecContext = nullptr;
 	AVStream    *    m_Stream       = nullptr;
 

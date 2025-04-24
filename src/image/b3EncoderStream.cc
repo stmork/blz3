@@ -126,14 +126,26 @@ b3AudioStream::b3AudioStream(
 	b3CodecFrame & buffer) :
 	b3EncoderStream(format_context, filename, AV_CODEC_ID_PROBE, AVMEDIA_TYPE_AUDIO)
 {
-	m_CodecContext->sample_rate    = b3SuggestSampleRate();
-	m_CodecContext->bit_rate       = 64000;
-	m_CodecContext->sample_fmt     = m_Codec->sample_fmts[0];
+#if LIBAVFORMAT_VERSION_MAJOR >= 60
+	static constexpr AVChannelLayout channel_layout = AV_CHANNEL_LAYOUT_MONO;
+
+	av_channel_layout_copy(&m_CodecContext->ch_layout, &channel_layout);
+
+	const int channels = m_CodecContext->ch_layout.nb_channels;
+#else
 	m_CodecContext->channel_layout = AV_CH_LAYOUT_MONO;
 	m_CodecContext->channels       = av_get_channel_layout_nb_channels(
 			m_CodecContext->channel_layout);
+
+	const int channels = m_CodecContext->channels;
+#endif
+
+	m_CodecContext->sample_rate    = b3SuggestSampleRate();
+	m_CodecContext->bit_rate       = 64000;
+	m_CodecContext->sample_fmt     = m_Codec->sample_fmts[0];
+
 	m_CodecContext->frame_size     = av_samples_get_buffer_size(nullptr,
-			m_CodecContext->channels,
+			channels,
 			m_CodecContext->sample_rate / frames_per_second,
 			m_CodecContext->sample_fmt, 1);
 

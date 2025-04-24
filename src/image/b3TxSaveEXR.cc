@@ -31,6 +31,15 @@
 #include <ImfChannelList.h>
 #include <ImfHeader.h>
 #include <ImfIO.h>
+#include <ImfFrameBuffer.h>
+
+#ifdef HAVE_LIBOPENEXR_3_1
+#	include <Imath/ImathVec.h>
+#	include <Imath/half.h>
+#else
+#	include <OpenEXR/ImathVec.h>
+#	include <OpenEXR/half.h>
+#endif
 
 using namespace Imf;
 using namespace Imath;
@@ -67,12 +76,12 @@ public:
 		}
 	}
 
-	virtual Int64       tellp() override
+	virtual uint64_t    tellp() override
 	{
 		return ftell(m_FileHandle);
 	}
 
-	virtual void        seekp(Int64 pos) override
+	virtual void        seekp(uint64_t pos) override
 	{
 		clearerr(m_FileHandle);
 		fseek(m_FileHandle, pos, SEEK_SET);

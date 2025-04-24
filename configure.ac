@@ -236,7 +236,7 @@ AC_CHECK_HEADERS([OpenEXR/ImfInputFile.h],
 		AC_DEFINE([BLZ3_USE_OPENEXR], [1], [Do we can use OpenEXR?])
 		EXRFLAGS="-Wno-deprecated-copy -Wno-suggest-override"
 		PKG_LIST="$PKG_LIST OpenEXR"
-		DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24"
+		DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24|libopenexr-3-1-30"
 	])
 
 #AC_CHECK_HEADERS([OpenEXR/ImathBox.h OpenEXR/ImfHeader.h OpenEXR/ImfIO.h])
@@ -244,8 +244,16 @@ AC_CHECK_HEADERS([OpenEXR/ImfInputFile.h],
 
 AC_CHECK_LIB([Half], [main])
 AC_CHECK_LIB([Iex], [main])
+AC_CHECK_LIB([Iex-3_1], [main])
 AC_CHECK_LIB([Imath], [main])
 AC_CHECK_LIB([IlmImf], [main])
+
+AC_CHECK_LIB([OpenEXR-3_1], [main])
+AC_CHECK_LIB([OpenEXRUtil-3_1], [main])
+AC_CHECK_LIB([OpenEXRCore-3_1], [main])
+AC_CHECK_LIB([Iex-3_1], [main])
+AC_CHECK_LIB([IlmThread-3_1], [main])
+AC_CHECK_LIB([Imath-3_1], [main])
 
 AC_CHECK_HEADERS([jpeglib.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libjpeg8"])
 AC_CHECK_HEADERS([png.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libpng16-16"])
@@ -258,10 +266,10 @@ AC_CHECK_LIB([png], [main])
 AC_CHECK_LIB([tiff], [main])
 AC_CHECK_LIB([exiv2], [main])
 
-AC_CHECK_HEADERS([libswscale/swscale.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"])
-AC_CHECK_HEADERS([libavutil/opt.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"])
-AC_CHECK_HEADERS([libavformat/avformat.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"])
-AC_CHECK_HEADERS([libavcodec/avcodec.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"])
+AC_CHECK_HEADERS([libswscale/swscale.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5|libswscale7"])
+AC_CHECK_HEADERS([libavutil/opt.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56|libavutil58"])
+AC_CHECK_HEADERS([libavformat/avformat.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58|libavformat60"])
+AC_CHECK_HEADERS([libavcodec/avcodec.h], [DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58|libavcodec-extra60"])
 
 # Check for video encoder
 AC_CHECK_LIB([swscale], [main])

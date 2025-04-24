@@ -3586,11 +3586,11 @@ if test x$ac_prog_cxx_stdcxx = xno
 then :
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $CXX option to enable C++11 features" >&5
 printf %s "checking for $CXX option to enable C++11 features... " >&6; }
-if test ${ac_cv_prog_cxx_11+y}
+if test ${ac_cv_prog_cxx_cxx11+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
-  ac_cv_prog_cxx_11=no
+  ac_cv_prog_cxx_cxx11=no
 ac_save_CXX=$CXX
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -3632,11 +3632,11 @@ if test x$ac_prog_cxx_stdcxx = xno
 then :
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $CXX option to enable C++98 features" >&5
 printf %s "checking for $CXX option to enable C++98 features... " >&6; }
-if test ${ac_cv_prog_cxx_98+y}
+if test ${ac_cv_prog_cxx_cxx98+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
-  ac_cv_prog_cxx_98=no
+  ac_cv_prog_cxx_cxx98=no
 ac_save_CXX=$CXX
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -5919,7 +5919,11 @@ else $as_nop
 
 #error "This is not a C++ compiler"
 
-#elif __cplusplus < 201103L
+// MSVC always sets __cplusplus to 199711L in older versions; newer versions
+// only set it correctly if /Zc:__cplusplus is specified as well as a
+// /std:c++NN switch:
+// https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+#elif __cplusplus < 201103L && !defined _MSC_VER
 
 #error "This is not a C++11 compiler"
 
@@ -6206,7 +6210,7 @@ namespace cxx11
 
 #error "This is not a C++ compiler"
 
-#elif __cplusplus < 201402L
+#elif __cplusplus < 201402L && !defined _MSC_VER
 
 #error "This is not a C++14 compiler"
 
@@ -6326,7 +6330,7 @@ namespace cxx14
 
 #error "This is not a C++ compiler"
 
-#elif __cplusplus < 201703L
+#elif __cplusplus < 201703L && !defined _MSC_VER
 
 #error "This is not a C++17 compiler"
 
@@ -6692,7 +6696,7 @@ namespace cxx17
 
 }  // namespace cxx17
 
-#endif  // __cplusplus < 201703L
+#endif  // __cplusplus < 201703L && !defined _MSC_VER
 
 
 
@@ -9025,14 +9029,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        OPENEXR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "OpenEXR" 2>&1`
+                OPENEXR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "OpenEXR" 2>&1`
         else
-	        OPENEXR_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "OpenEXR" 2>&1`
+                OPENEXR_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "OpenEXR" 2>&1`
         fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$OPENEXR_PKG_ERRORS" >&5
+        # Put the nasty error message in config.log where it belongs
+        echo "$OPENEXR_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (OpenEXR) were not met:
+        as_fn_error $? "Package requirements (OpenEXR) were not met:
 
 $OPENEXR_PKG_ERRORS
 
@@ -9045,7 +9049,7 @@ See the pkg-config man page for more details." "$LINENO" 5
 elif test $pkg_failed = untried; then
         { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
-	{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+        { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
@@ -9058,8 +9062,8 @@ See the pkg-config man page for more details.
 To get pkg-config, see <http://pkg-config.freedesktop.org/>.
 See \`config.log' for more details" "$LINENO" 5; }
 else
-	OPENEXR_CFLAGS=$pkg_cv_OPENEXR_CFLAGS
-	OPENEXR_LIBS=$pkg_cv_OPENEXR_LIBS
+        OPENEXR_CFLAGS=$pkg_cv_OPENEXR_CFLAGS
+        OPENEXR_LIBS=$pkg_cv_OPENEXR_LIBS
         { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
 
@@ -9077,7 +9081,7 @@ printf "%s\n" "#define BLZ3_USE_OPENEXR 1" >>confdefs.h
 
 		EXRFLAGS="-Wno-deprecated-copy -Wno-suggest-override"
 		PKG_LIST="$PKG_LIST OpenEXR"
-		DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24"
+		DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libopenexr6|libopenexr22|libopenexr24|libopenexr-3-1-30"
 
 fi
 
@@ -9170,6 +9174,48 @@ then :
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lIex-3_1" >&5
+printf %s "checking for main in -lIex-3_1... " >&6; }
+if test ${ac_cv_lib_Iex_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lIex-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_Iex_3_1_main=yes
+else $as_nop
+  ac_cv_lib_Iex_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Iex_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_Iex_3_1_main" >&6; }
+if test "x$ac_cv_lib_Iex_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBIEX_3_1 1" >>confdefs.h
+
+  LIBS="-lIex-3_1 $LIBS"
+
+fi
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lImath" >&5
 printf %s "checking for main in -lImath... " >&6; }
 if test ${ac_cv_lib_Imath_main+y}
@@ -9251,6 +9297,259 @@ then :
   printf "%s\n" "#define HAVE_LIBILMIMF 1" >>confdefs.h
 
   LIBS="-lIlmImf $LIBS"
+
+fi
+
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lOpenEXR-3_1" >&5
+printf %s "checking for main in -lOpenEXR-3_1... " >&6; }
+if test ${ac_cv_lib_OpenEXR_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lOpenEXR-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_OpenEXR_3_1_main=yes
+else $as_nop
+  ac_cv_lib_OpenEXR_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_OpenEXR_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_OpenEXR_3_1_main" >&6; }
+if test "x$ac_cv_lib_OpenEXR_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBOPENEXR_3_1 1" >>confdefs.h
+
+  LIBS="-lOpenEXR-3_1 $LIBS"
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lOpenEXRUtil-3_1" >&5
+printf %s "checking for main in -lOpenEXRUtil-3_1... " >&6; }
+if test ${ac_cv_lib_OpenEXRUtil_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lOpenEXRUtil-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_OpenEXRUtil_3_1_main=yes
+else $as_nop
+  ac_cv_lib_OpenEXRUtil_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_OpenEXRUtil_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_OpenEXRUtil_3_1_main" >&6; }
+if test "x$ac_cv_lib_OpenEXRUtil_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBOPENEXRUTIL_3_1 1" >>confdefs.h
+
+  LIBS="-lOpenEXRUtil-3_1 $LIBS"
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lOpenEXRCore-3_1" >&5
+printf %s "checking for main in -lOpenEXRCore-3_1... " >&6; }
+if test ${ac_cv_lib_OpenEXRCore_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lOpenEXRCore-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_OpenEXRCore_3_1_main=yes
+else $as_nop
+  ac_cv_lib_OpenEXRCore_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_OpenEXRCore_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_OpenEXRCore_3_1_main" >&6; }
+if test "x$ac_cv_lib_OpenEXRCore_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBOPENEXRCORE_3_1 1" >>confdefs.h
+
+  LIBS="-lOpenEXRCore-3_1 $LIBS"
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lIex-3_1" >&5
+printf %s "checking for main in -lIex-3_1... " >&6; }
+if test ${ac_cv_lib_Iex_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lIex-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_Iex_3_1_main=yes
+else $as_nop
+  ac_cv_lib_Iex_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Iex_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_Iex_3_1_main" >&6; }
+if test "x$ac_cv_lib_Iex_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBIEX_3_1 1" >>confdefs.h
+
+  LIBS="-lIex-3_1 $LIBS"
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lIlmThread-3_1" >&5
+printf %s "checking for main in -lIlmThread-3_1... " >&6; }
+if test ${ac_cv_lib_IlmThread_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lIlmThread-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_IlmThread_3_1_main=yes
+else $as_nop
+  ac_cv_lib_IlmThread_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_IlmThread_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_IlmThread_3_1_main" >&6; }
+if test "x$ac_cv_lib_IlmThread_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBILMTHREAD_3_1 1" >>confdefs.h
+
+  LIBS="-lIlmThread-3_1 $LIBS"
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lImath-3_1" >&5
+printf %s "checking for main in -lImath-3_1... " >&6; }
+if test ${ac_cv_lib_Imath_3_1_main+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lImath-3_1  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int main ();
+}
+int
+main (void)
+{
+return conftest::main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_Imath_3_1_main=yes
+else $as_nop
+  ac_cv_lib_Imath_3_1_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_Imath_3_1_main" >&5
+printf "%s\n" "$ac_cv_lib_Imath_3_1_main" >&6; }
+if test "x$ac_cv_lib_Imath_3_1_main" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBIMATH_3_1 1" >>confdefs.h
+
+  LIBS="-lImath-3_1 $LIBS"
 
 fi
 
@@ -9472,7 +9771,7 @@ do :
 if test "x$ac_cv_header_libswscale_swscale_h" = xyes
 then :
   printf "%s\n" "#define HAVE_LIBSWSCALE_SWSCALE_H 1" >>confdefs.h
- DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5"
+ DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libswscale4|libswscale5|libswscale7"
 fi
 
 done
@@ -9482,7 +9781,7 @@ do :
 if test "x$ac_cv_header_libavutil_opt_h" = xyes
 then :
   printf "%s\n" "#define HAVE_LIBAVUTIL_OPT_H 1" >>confdefs.h
- DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56"
+ DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavutil55|libavutil56|libavutil58"
 fi
 
 done
@@ -9492,7 +9791,7 @@ do :
 if test "x$ac_cv_header_libavformat_avformat_h" = xyes
 then :
   printf "%s\n" "#define HAVE_LIBAVFORMAT_AVFORMAT_H 1" >>confdefs.h
- DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58"
+ DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavformat57|libavformat58|libavformat60"
 fi
 
 done
@@ -9502,7 +9801,7 @@ do :
 if test "x$ac_cv_header_libavcodec_avcodec_h" = xyes
 then :
   printf "%s\n" "#define HAVE_LIBAVCODEC_AVCODEC_H 1" >>confdefs.h
- DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58"
+ DEB_DEPENDENCIES="$DEB_DEPENDENCIES, libavcodec57|libavcodec-extra58|libavcodec-extra60"
 fi
 
 done

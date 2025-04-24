@@ -136,14 +136,34 @@
 /* Define to 1 if you have the `Iex' library (-lIex). */
 #undef HAVE_LIBIEX
 
+/* Define to 1 if you have the `Iex-3_1' library (-lIex-3_1). */
+#undef HAVE_LIBIEX_3_1
+
 /* Define to 1 if you have the `IlmImf' library (-lIlmImf). */
 #undef HAVE_LIBILMIMF
+
+/* Define to 1 if you have the `IlmThread-3_1' library (-lIlmThread-3_1). */
+#undef HAVE_LIBILMTHREAD_3_1
 
 /* Define to 1 if you have the `Imath' library (-lImath). */
 #undef HAVE_LIBIMATH
 
+/* Define to 1 if you have the `Imath-3_1' library (-lImath-3_1). */
+#undef HAVE_LIBIMATH_3_1
+
 /* Define to 1 if you have the `jpeg' library (-ljpeg). */
 #undef HAVE_LIBJPEG
+
+/* Define to 1 if you have the `OpenEXRCore-3_1' library (-lOpenEXRCore-3_1).
+   */
+#undef HAVE_LIBOPENEXRCORE_3_1
+
+/* Define to 1 if you have the `OpenEXRUtil-3_1' library (-lOpenEXRUtil-3_1).
+   */
+#undef HAVE_LIBOPENEXRUTIL_3_1
+
+/* Define to 1 if you have the `OpenEXR-3_1' library (-lOpenEXR-3_1). */
+#undef HAVE_LIBOPENEXR_3_1
 
 /* Define to 1 if you have the `png' library (-lpng). */
 #undef HAVE_LIBPNG
