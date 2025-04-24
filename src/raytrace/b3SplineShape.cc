@@ -32,18 +32,19 @@
 **                                                                      **
 *************************************************************************/
 
-b3SplineShape::b3SplineShape(b3_size class_size, b3_u32 class_type) :
-	b3TriangleShape(class_size, class_type)
+b3SplineShape::b3SplineShape(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3TriangleShape(class_size, class_type)
 {
 	m_Controls = nullptr;
 }
 
-b3SplineShape::b3SplineShape(b3_u32 class_type) : b3TriangleShape(sizeof(b3SplineShape), class_type)
+b3SplineShape::b3SplineShape(const b3_u32 class_type) : b3TriangleShape(sizeof(b3SplineShape), class_type)
 {
 	m_Controls = nullptr;
 }
 
-b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
+b3SplineShape::b3SplineShape(const b3_u32 * src) : b3TriangleShape(src)
 {
 	b3_size  i, control_count;
 
@@ -64,7 +65,7 @@ b3SplineShape::b3SplineShape(b3_u32 * src) : b3TriangleShape(src)
 
 	// Copy control points
 	control_count = m_Spline[0].m_ControlMax * m_Spline[1].m_ControlMax;
-	m_Controls    = b3Item::b3TypedAlloc<b3_vector>(control_count);
+	m_Controls    = m_Mem.b3TypedAlloc<b3_vector>(control_count);
 	m_Spline[0].m_Controls = m_Spline[1].m_Controls = m_Controls;
 
 	for (i = 0; i < control_count; i++)
@@ -109,7 +110,7 @@ void b3SplineShape::b3Init(
 	b3_count vControlNum)
 {
 	// Allocate controls
-	m_Controls      = b3Item::b3TypedAlloc<b3_vector>(
+	m_Controls      = m_Mem.b3TypedAlloc<b3_vector>(
 			m_Spline[0].m_ControlMax *
 			m_Spline[1].m_ControlMax);
 

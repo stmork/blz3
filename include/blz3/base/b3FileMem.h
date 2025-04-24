@@ -66,21 +66,21 @@ public:
 	 * @param mode     The access mode.
 	 * @throws b3FileException
 	 */
-	explicit b3FileMem(const char * filename, const b3_access_mode mode);
+	explicit  b3FileMem(const char * filename, const b3_access_mode mode);
 
 	/**
 	 * This destructor cleans up the instance. It calls b3Close().
 	 */
-	virtual ~b3FileMem();
+	virtual  ~b3FileMem();
 
 	/**
 	 * This method initializes the instance with the specified access mode.
 	 * only write access is useful with this constructor.
 	 *
 	 * @param mode The access mode.
-	 * @throws b3FileException
+	 * @throws b3FileException with parameter B3_FILE_MEMORY;
 	 */
-	bool     b3Open(const b3_access_mode mode);
+	void      b3Open(const b3_access_mode mode);
 
 	/**
 	 * This method opens an existing file for reading or appending. It reads the
@@ -111,7 +111,7 @@ public:
 	void      b3Close() override;
 
 private:
-	bool     b3EnsureBufferSize(b3_size new_size);
+	void      b3EnsureBufferSize(b3_size new_size);
 };
 
 #endif

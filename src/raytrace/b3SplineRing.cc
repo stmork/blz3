@@ -30,10 +30,10 @@
 **                                                                      **
 *************************************************************************/
 
-b3SplineRing::b3SplineRing(b3_u32 class_type) : b3SplineShape(sizeof(b3SplineRing), class_type)
+b3SplineRing::b3SplineRing(const b3_u32 class_type) : b3SplineShape(sizeof(b3SplineRing), class_type)
 {
 }
 
-b3SplineRing::b3SplineRing(b3_u32 * src) : b3SplineShape(src)
+b3SplineRing::b3SplineRing(const b3_u32 * src) : b3SplineShape(src)
 {
 }

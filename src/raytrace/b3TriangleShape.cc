@@ -30,19 +30,20 @@
 **                                                                      **
 *************************************************************************/
 
-b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
-	b3SimpleShape(class_size, class_type)
+b3TriangleShape::b3TriangleShape(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3SimpleShape(class_size, class_type)
 {
 	b3Clear();
 }
 
-b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
+b3TriangleShape::b3TriangleShape(const b3_u32 class_type) :
 	b3SimpleShape(sizeof(b3TriangleShape), class_type)
 {
 	b3Clear();
 }
 
-b3TriangleShape::b3TriangleShape(b3_u32 * src) :
+b3TriangleShape::b3TriangleShape(const b3_u32 * src) :
 	b3SimpleShape(src)
 {
 	b3Clear();
@@ -76,16 +77,16 @@ bool b3TriangleShape::b3Init(
 {
 	if (m_VertexCount != vertex_count)
 	{
-		b3Item::b3Free(m_Vertices);
+		m_Mem.b3Free(m_Vertices);
 		m_VertexCount = vertex_count;
-		m_Vertices    = b3Item::b3TypedAlloc<b3_vertex>(m_VertexCount);
+		m_Vertices    = m_Mem.b3TypedAlloc<b3_vertex>(m_VertexCount);
 	}
 
 	if (m_TriaCount != tria_count)
 	{
-		b3Item::b3Free(m_Triangles);
+		m_Mem.b3Free(m_Triangles);
 		m_TriaCount = tria_count;
-		m_Triangles = b3Item::b3TypedAlloc<b3_triangle>(m_TriaCount);
+		m_Triangles = m_Mem.b3TypedAlloc<b3_triangle>(m_TriaCount);
 	}
 	m_xTxSubDiv = new_xSize;
 	m_yTxSubDiv = new_ySize;

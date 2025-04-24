@@ -37,16 +37,14 @@ const b3_f64 b3AnimElement::epsilon = 1.0 / 2048;
 
 #define ANIM_STEP (2.0 * b3AnimElement::epsilon)
 
-b3AnimControl::b3AnimControl(b3_u32 class_type B3_UNUSED) :
-	b3Item(sizeof(b3AnimControl), CPOINT_4D)
+b3AnimControl::b3AnimControl(const b3_u32 class_type B3_UNUSED) :
+	b3Item(sizeof(b3AnimControl), CPOINT_4D),
+	m_Max(b3Spline::B3_MAX_CONTROLS)
 {
-	m_Dimension = 4;
-	m_Used      = 0;
-	m_Max       = b3Spline::B3_MAX_CONTROLS;
-	m_Controls  = b3TypedAlloc<b3_vector4D>(m_Max);
+	m_Controls  = m_Mem.b3TypedAlloc<b3_vector4D>(m_Max);
 }
 
-b3AnimControl::b3AnimControl(b3_u32 * src) : b3Item(src)
+b3AnimControl::b3AnimControl(const b3_u32 * src) : b3Item(src)
 {
 	b3_index i;
 
@@ -54,7 +52,7 @@ b3AnimControl::b3AnimControl(b3_u32 * src) : b3Item(src)
 	m_Used      = b3InitInt();
 	m_Max       = b3InitInt();
 
-	m_Controls  = b3TypedAlloc<b3_vector4D>(m_Max);
+	m_Controls  = m_Mem.b3TypedAlloc<b3_vector4D>(m_Max);
 	if (m_Controls == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
@@ -103,13 +101,13 @@ void b3AnimControl::b3InitNurbs(b3Nurbs & nurbs)
 **                                                                      **
 *************************************************************************/
 
-b3AnimElement::b3AnimElement(b3_u32 class_type) : b3Item(sizeof(b3AnimElement), class_type)
+b3AnimElement::b3AnimElement(const b3_u32 class_type) : b3Item(sizeof(b3AnimElement), class_type)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_VERTEX);
 }
 
-b3AnimElement::b3AnimElement(b3_u32 * src) : b3Item(src)
+b3AnimElement::b3AnimElement(const b3_u32 * src) : b3Item(src)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_VERTEX);

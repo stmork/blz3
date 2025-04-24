@@ -29,11 +29,11 @@ struct QB3BarInfo
 	b3_f64  page_size;
 	b3_f64  range;
 
-	int  bar_page_size;
-	int  bar_pos;
-	int  bar_min;
-	int  bar_max;
-	bool bar_inv;
+	int  bar_page_size = 0;
+	int  bar_pos = 0;
+	int  bar_min = 0;
+	int  bar_max = 0;
+	bool bar_inv = 0;
 
 	void set(
 		const b3_bool inverse,

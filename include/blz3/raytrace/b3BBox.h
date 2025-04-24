@@ -130,9 +130,10 @@ public:
 	 *
 	 * @return List of bounding box shapes.
 	 */
-	inline b3Base<b3Item> * b3GetShapeHead() const
+	template<class T = b3Item>
+	inline b3Base<T> * b3GetShapeHead() const
 	{
-		return &m_Heads[0];
+		return static_cast<b3Base<T> *>(&m_Heads[0]);
 	}
 
 	/**
@@ -140,9 +141,10 @@ public:
 	 *
 	 * @return List of sub bounding boxes.
 	 */
+	template<class T = b3Item>
 	inline b3Base<b3Item> * b3GetBBoxHead() const
 	{
-		return &m_Heads[1];
+		return static_cast<b3Base<T> *>(&m_Heads[1]);
 	}
 
 	/**

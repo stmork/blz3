@@ -72,14 +72,13 @@
 class B3_PLUGIN b3Bump : public b3Item
 {
 public:
-	b3_f32        m_Amplitude;  //!< This attribute provides a general bump amplitude.
+	b3_f32        m_Amplitude = 0.2f;  //!< This attribute provides a general bump amplitude.
 
 protected:
 	B3_ITEM_BASE(b3Bump); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Bump); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3Bump); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3Bump); //!< These constructors handle default initialization.
 
 	/**
 	 * Method for registering the bump mappings into the item registry.
@@ -168,12 +167,12 @@ public:
 class B3_PLUGIN b3BumpTexture : public b3Bump
 {
 public:
-	b3_f32         m_xStart, m_yStart;   //!< Surface coordinate start.
-	b3_f32         m_xScale, m_yScale;   //!< Texture scale.
-	b3_s32         m_xTimes, m_yTimes;   //!< Repeatition in x- y-direction.
-	b3_s32         m_Flags;              //!< Unused.
-	b3Path         m_Name;               //!< The texture file name.
-	b3Tx     *     m_Texture;            //!< The selected texture.
+	b3_f32         m_xStart = 0, m_yStart =  1;   //!< Surface coordinate start.
+	b3_f32         m_xScale = 1, m_yScale = -1;   //!< Texture scale.
+	b3_s32         m_xTimes = 2, m_yTimes =  2;   //!< Repeatition in x- y-direction.
+	b3_s32         m_Flags  = 0;                  //!< Unused.
+	b3Path         m_Name;                        //!< The texture file name.
+	b3Tx     *     m_Texture = nullptr;           //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3BumpTexture); //!< This constructor handles default initialization.
@@ -276,7 +275,7 @@ public:
 class B3_PLUGIN b3BumpGlossy : public b3Bump
 {
 public:
-	b3_s32      m_Flags; //!< Unused.
+	b3_s32      m_Flags = 0; //!< Unused.
 
 public:
 	B3_ITEM_INIT(b3BumpGlossy); //!< This constructor handles default initialization.
@@ -307,8 +306,7 @@ protected:
 	B3_ITEM_BASE(b3BumpWooden); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3BumpWooden); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3BumpWooden); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3BumpWooden); //!< These constructors handle default initialization.
 };
 
 /*************************************************************************

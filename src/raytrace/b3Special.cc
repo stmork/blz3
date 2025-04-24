@@ -54,15 +54,17 @@ void b3Special::b3Register()
 **                                                                      **
 *************************************************************************/
 
-b3Special::b3Special(b3_size class_size, b3_u32 class_type) : b3Item(class_size, class_type)
+b3Special::b3Special(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Item(class_size, class_type)
 {
 }
 
-b3Special::b3Special(b3_u32 class_type) : b3Item(sizeof(b3Special), class_type)
+b3Special::b3Special(const b3_u32 class_type) : b3Item(sizeof(b3Special), class_type)
 {
 }
 
-b3Special::b3Special(b3_u32 * src) : b3Item(src)
+b3Special::b3Special(const b3_u32 * src) : b3Item(src)
 {
 }
 
@@ -72,14 +74,14 @@ b3Special::b3Special(b3_u32 * src) : b3Item(src)
 **                                                                      **
 *************************************************************************/
 
-b3SuperSample::b3SuperSample(b3_u32 class_type) :
+b3SuperSample::b3SuperSample(const b3_u32 class_type) :
 	b3Special(sizeof(b3SuperSample), class_type)
 {
 	m_Limit.b3Init(0.2f, 0.2f, 0.2f);
 	m_Active  = true;
 }
 
-b3SuperSample::b3SuperSample(b3_u32 * src) :
+b3SuperSample::b3SuperSample(const b3_u32 * src) :
 	b3Special(src)
 {
 	b3_color limit;
@@ -135,7 +137,7 @@ void b3SuperSample::b3Activate(bool flag)
 **                                                                      **
 *************************************************************************/
 
-b3CameraPart::b3CameraPart(b3_u32 class_type) :
+b3CameraPart::b3CameraPart(const b3_u32 class_type) :
 	b3Special(sizeof(b3CameraPart), class_type)
 {
 	b3Vector::b3Init(&m_EyePoint,  0, -200,   0);
@@ -146,7 +148,7 @@ b3CameraPart::b3CameraPart(b3_u32 class_type) :
 	m_CameraName[0] = 0;
 }
 
-b3CameraPart::b3CameraPart(b3_u32 * src) :
+b3CameraPart::b3CameraPart(const b3_u32 * src) :
 	b3Special(src)
 {
 	b3InitVector(&m_Width);
@@ -204,7 +206,7 @@ void b3CameraPart::b3ScaleFocalLength(const b3_f64 factor)
 
 void b3CameraPart::b3Orientate(
 	const b3_vector * eye,
-	b3_vector    *    view,
+	const b3_vector * view,
 	const b3_f64      focal_length,
 	const b3_f64      width,
 	const b3_f64      height)
@@ -243,7 +245,7 @@ void b3CameraPart::b3ComputeAngles(b3_f64 & xAngle, b3_f64 & yAngle) const
 }
 
 void b3CameraPart::b3Overview(
-	b3_vector    *    center,
+	const b3_vector * center,
 	const b3_vector * size,
 	const b3_f64      xAngle,
 	const b3_f64      yAngle)
@@ -258,7 +260,7 @@ void b3CameraPart::b3Overview(
 	b3Orientate(&eye, center, 7.0 * rad, rad, rad);
 }
 
-void b3CameraPart::b3Transform(b3_matrix * transformation)
+void b3CameraPart::b3Transform(const b3_matrix * transformation)
 {
 	b3Matrix::b3VMul(transformation, &m_EyePoint,  &m_EyePoint,  true);
 	b3Matrix::b3VMul(transformation, &m_ViewPoint, &m_ViewPoint, true);
@@ -373,7 +375,7 @@ void b3CameraPart::b3SetTwirl(const b3_f64 twirl)
 **                                                                      **
 *************************************************************************/
 
-const b3_f64 b3ModellerInfo::m_UnitScaleTable[B3_UNIT_MAX] =
+const b3_f64 b3ModellerInfo::m_UnitScaleTable[B3_UNIT_MAX]
 {
 	1.0,   // B3_UNIT_MM
 	10.0,  // B3_UNIT_CM
@@ -383,17 +385,17 @@ const b3_f64 b3ModellerInfo::m_UnitScaleTable[B3_UNIT_MAX] =
 	1000.0 // B3_UNIT_M
 };
 
-const char * b3ModellerInfo::m_UnitDescrTable[B3_UNIT_MAX] =
+const char * b3ModellerInfo::m_UnitDescrTable[B3_UNIT_MAX]
 {
 	"mm", "cm", "in", "dm", "ft", "m"
 };
 
-const b3_u32 b3ModellerInfo::m_MeasureTable[B3_MEASURE_MAX - 1] =
+const b3_u32 b3ModellerInfo::m_MeasureTable[B3_MEASURE_MAX - 1]
 {
 	1, 10, 20, 50, 100, 200, 500, 1000
 };
 
-b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
+b3ModellerInfo::b3ModellerInfo(const b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo), class_type)
 {
 	m_Center.x         = 0;
@@ -404,9 +406,6 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_Unit             = B3_UNIT_CM;
 	m_Measure          = B3_MEASURE_100;
 	m_ResizeFlag       = true; // Not used in Blizzard III
-	m_CustomMeasure    = 100;
-	m_GridMove         = 10;
-	m_GridRot          = 15;
 	m_GridActive       = true;
 	m_AngleGridCamera  = false;
 	m_AngleGridObjects = true;
@@ -414,7 +413,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_UseSceneLights   = false;
 }
 
-b3ModellerInfo::b3ModellerInfo(b3_u32 * src) :
+b3ModellerInfo::b3ModellerInfo(const b3_u32 * src) :
 	b3Special(src)
 {
 	b3InitVector(&m_Center);
@@ -547,14 +546,14 @@ void b3ModellerInfo::b3SetMeasure(const b3_u32 measure)
 **                                                                      **
 *************************************************************************/
 
-b3Nebular::b3Nebular(b3_u32 class_type) :
-	b3Special(sizeof(b3Nebular), class_type)
+b3Nebular::b3Nebular(const b3_u32 class_type) :
+	b3Special(sizeof(b3Nebular), class_type),
+	m_NebularVal(-100.0)
 {
-	m_NebularVal = -100.0;
 	m_NebularColor.b3Init(0.8f, 0.9f, 1.0f);
 }
 
-b3Nebular::b3Nebular(b3_u32 * src) :
+b3Nebular::b3Nebular(const b3_u32 * src) :
 	b3Special(src)
 {
 	b3InitColor(m_NebularColor);
@@ -606,7 +605,7 @@ void b3Nebular::b3ComputeNebular(
 **                                                                      **
 *************************************************************************/
 
-b3LensFlare::b3LensFlare(b3_u32 class_type) :
+b3LensFlare::b3LensFlare(const b3_u32 class_type) :
 	b3Special(sizeof(b3LensFlare), class_type)
 {
 	b3Activate(false);
@@ -614,7 +613,7 @@ b3LensFlare::b3LensFlare(b3_u32 class_type) :
 	m_Expon = 13;
 }
 
-b3LensFlare::b3LensFlare(b3_u32 * src) :
+b3LensFlare::b3LensFlare(const b3_u32 * src) :
 	b3Special(src)
 {
 	m_Flags = b3InitInt();
@@ -652,21 +651,18 @@ void b3LensFlare::b3Activate(bool flag)
 **                                                                      **
 *************************************************************************/
 
-b3Distribute::b3Distribute(b3_u32 class_type) :
-	b3Special(sizeof(b3Distribute), class_type)
+b3Distribute::b3Distribute(const b3_u32 class_type) :
+	b3Special(sizeof(b3Distribute), class_type),
+	m_SamplesPerPixel (  5),
+	m_SamplesPerFrame ( 64)
 {
 	SAMPLE_SET_FLAGS(this, 0);
 	SAMPLE_SET_TYPE(this, SAMPLE_REGULAR);
 	m_PixelAperture   = B3_FILTER_BOX;
 	m_FrameAperture   = B3_FILTER_GAUSS;
-	m_SamplesPerPixel =  5;
-	m_SamplesPerFrame = 64;
-	m_DepthOfField    =  0;
-	m_FilterPixel     = nullptr;
-	m_FilterFrame     = nullptr;
 }
 
-b3Distribute::b3Distribute(b3_u32 * src) :
+b3Distribute::b3Distribute(const b3_u32 * src) :
 	b3Special(src)
 {
 	m_Type            = b3InitInt();
@@ -721,7 +717,7 @@ bool b3Distribute::b3IsMotionBlur()
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
 
-void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
+void b3Distribute::b3PrepareAnimation(const b3_res xSize, const b3Animation * animation)
 {
 	b3_f32    *   samples;
 	b3_f64        start, step;
@@ -745,7 +741,7 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 	spp     = m_SamplesPerPixel;
 	m_SPP   = type == SAMPLE_SEPARATED ? spp : spp * spp;
 
-	m_Samples  = b3TypedAlloc<b3_f32>(xSize * m_SPP * 2);
+	m_Samples  = m_Mem.b3TypedAlloc<b3_f32>(xSize * m_SPP * 2);
 	if (m_Samples == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
@@ -845,14 +841,14 @@ void b3Distribute::b3PrepareAnimation(b3_res xSize, b3Animation * animation)
 **                                                                      **
 *************************************************************************/
 
-b3Animation::b3Animation(b3_u32 class_type) :
+b3Animation::b3Animation(const b3_u32 class_type) :
 	b3Special(sizeof(b3Animation), class_type)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_ANIMATION);
 }
 
-b3Animation::b3Animation(b3_u32 * src) :
+b3Animation::b3Animation(const b3_u32 * src) :
 	b3Special(src)
 {
 	b3AllocHeads(1);
@@ -925,12 +921,12 @@ void b3Animation::b3Activate(bool activate)
 **                                                                      **
 *************************************************************************/
 
-b3Caustic::b3Caustic(b3_u32 class_type) :
+b3Caustic::b3Caustic(const b3_u32 class_type) :
 	b3Special(sizeof(b3Caustic), class_type)
 {
 }
 
-b3Caustic::b3Caustic(b3_u32 * src) :
+b3Caustic::b3Caustic(const b3_u32 * src) :
 	b3Special(src)
 {
 	m_Flags      = b3InitInt();
@@ -951,12 +947,12 @@ void b3Caustic::b3Write()
 **                                                                      **
 *************************************************************************/
 
-b3CloudBackground::b3CloudBackground(b3_u32 class_type) :
+b3CloudBackground::b3CloudBackground(const b3_u32 class_type) :
 	b3Special(sizeof(b3Caustic), class_type)
 {
 }
 
-b3CloudBackground::b3CloudBackground(b3_u32 * src) :
+b3CloudBackground::b3CloudBackground(const b3_u32 * src) :
 	b3Special(src)
 {
 	b3InitVector(&m_Anim);

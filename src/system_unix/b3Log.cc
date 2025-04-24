@@ -43,8 +43,8 @@ b3Log b3Log::m_Log;
 
 b3Log::b3Log()
 {
-	uid_t           uid    = getuid();
-	struct passwd * pw_ent = getpwuid(uid);
+	const uid_t           uid    = getuid();
+	const struct passwd * pw_ent = getpwuid(uid);
 
 	snprintf(b3LogBase::m_LogFile, sizeof(b3LogBase::m_LogFile), "%s/b3.log", pw_ent->pw_dir);
 

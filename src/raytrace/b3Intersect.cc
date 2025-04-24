@@ -741,9 +741,9 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList(
 
 	B3_ASSERT(grid_index < m_GridCount);
 
-	b3_triainfo  * infos  = m_TriaInfos.b3GetBuffer();
-	b3_index   *   buffer = m_GridList[grid_index].b3GetBuffer();
-	const b3_index max    = m_GridList[grid_index].b3GetCount();
+	b3_triainfo   *  infos  = m_TriaInfos.b3GetBuffer();
+	const b3_index * buffer = m_GridList[grid_index].b3GetBuffer();
+	const b3_index   max    = m_GridList[grid_index].b3GetCount();
 
 	for (b3_index i = 0; i < max; i++)
 	{
@@ -1772,7 +1772,7 @@ void b3BBox::b3CollectBBoxes(b3_ray * ray, b3Array<b3BBox *> * array)
 }
 
 void b3Scene::b3CollectBBoxes(
-	b3_line64     *     line,
+	const b3_line64  *  line,
 	b3Array<b3BBox *> * array,
 	b3_f64              max)
 {

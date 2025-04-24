@@ -670,7 +670,7 @@ protected:
 	 * @param transformation The transformation matrix.
 	 * @param isAffine If false the normals must be recomputed.
 	 */
-	void            b3TransformVertices(b3_matrix * transformation, bool isAffine);
+	void            b3TransformVertices(const b3_matrix * transformation, bool isAffine);
 
 private:
 	void            b3DefineTexture();
@@ -681,10 +681,10 @@ private:
 	void            b3DeleteDisplayList();
 
 	void            b3CheckGeometry(const b3RenderContext * context, const b3_render_mode render_mode);
-	void            b3DrawGeometry(b3RenderContext * context, const b3_render_mode render_mode);
+	void            b3DrawGeometry(const b3RenderContext * context, const b3_render_mode render_mode);
 
 	// Selecting material and drawing geometry in different modes
-	void            b3SelectMaterialForLineDrawing(b3RenderContext * context);
+	void            b3SelectMaterialForLineDrawing(const b3RenderContext * context);
 	void            b3SelectMaterialForFilledDrawing(const b3RenderContext * context);
 	void            b3DrawLinedGeometry(const b3RenderContext * context);
 	void            b3DrawFilledGeometry(const b3RenderContext * context);

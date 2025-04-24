@@ -48,9 +48,12 @@ cppcheck:
 	--suppress=preprocessorErrorDirective \
 	--suppress=syntaxError \
 	--suppress=unusedStructMember \
-	--suppress=useStlAlgorithm \
 	--suppress=noCopyConstructor \
 	--suppress=noOperatorEq \
+	--suppress=cstyleCast \
+	--suppress=useInitializationList \
+	--suppress=noExplicitConstructor \
+	--suppress=unusedPrivateFunction \
 	-I$(BLZ3_INCLUDE) -I$(BLZ3_HOME)/include_unix \
 	--language=c++ --std=c++14 \
 	--xml-version=2 --force -q -j `nproc` \

@@ -427,7 +427,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 	const b3_f32   fz,
 	const b3_index d)
 {
-	b3_noisetype    *    NoiseTable = &m_NoiseTable[d * NOISESIZE];
+	const b3_noisetype * NoiseTable = &m_NoiseTable[d * NOISESIZE];
 	alignas(16) b3_f32   a[4], b[4], c[4];
 	b3_loop              i;
 
@@ -537,7 +537,7 @@ void b3Noise::b3NoiseDeriv(
 **                                                                      **
 *************************************************************************/
 
-const b3Color b3Noise::m_MarbleColors[4] =
+const b3Color b3Noise::m_MarbleColors[4]
 {
 	b3Color(0.2f, 0.1f, 0.1f),
 	b3Color(0.1f, 0.8f, 0.2f),
@@ -546,12 +546,12 @@ const b3Color b3Noise::m_MarbleColors[4] =
 };
 
 inline void b3Noise::b3MarbleCurve(
-	b3Spline  *  Spline,
+	const b3Spline  *  Spline,
 	b3_vector  * result,
 	const b3_f64 x)
 {
-	b3_f32 * knots;
-	b3_f64  q;
+	const b3_f32 * knots;
+	b3_f64         q;
 
 	knots = Spline->m_Knots;
 	q =        x  * knots[Spline->m_Degree] +
@@ -616,7 +616,7 @@ b3_f64 b3Noise::b3Wood(const b3_vector * d)
 **                                                                      **
 *************************************************************************/
 
-const b3Color b3Noise::m_HellColors[4] =
+const b3Color b3Noise::m_HellColors[4]
 {
 	b3Color(0.8f, 0.2f, 0.1f),
 	b3Color(0.8f, 0.9f, 0.2f),

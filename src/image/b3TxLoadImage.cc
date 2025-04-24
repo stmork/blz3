@@ -303,7 +303,8 @@ b3_result b3Tx::b3LoadImage(const char * name, bool throw_exception)
 	try
 	{
 		b3Name(name);
-		b3_u08 * buffer = file.b3ReadBuffer(name, size);
+		const b3_u08 * buffer = file.b3ReadBuffer(name, size);
+
 		error_code      = b3LoadImage(buffer, size);
 		if (error_code != B3_OK)
 		{

@@ -34,10 +34,10 @@
 
 void b3Scene::b3Reorg()
 {
-	b3Base<b3Item>  depot;
-	b3Base<b3Item> * base;
-	b3Link<b3Item> * first;
-	b3_count        level;
+	b3Base<b3Item>         depot;
+	b3Base<b3Item>    *    base;
+	const b3Link<b3Item> * first;
+	b3_count               level;
 
 	base  =  b3GetBBoxHead();
 	depot = *base;
@@ -499,7 +499,7 @@ b3Base<b3Item> * b3BBox::b3FindBBoxHead(b3BBox * bbox)
 			return base;
 		}
 
-		b3BBox     *     inc_bbox = (b3BBox *)&item;
+		b3BBox     *     inc_bbox = static_cast<b3BBox *>(item);
 		b3Base<b3Item> * result   = inc_bbox->b3FindBBoxHead(bbox);
 		if (result != nullptr)
 		{
@@ -647,8 +647,8 @@ bool b3BBox::b3BacktraceRecompute(b3BBox * search)
 void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 {
 	b3_gl_vertex * glVertex = *glVertexElements;
-	b3_loop       i, visible_count = 0, invisible_count = 0;
-	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP | CLIP_BACK;
+	b3_loop        i, visible_count = 0;
+	b3_u32         flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP | CLIP_BACK;
 
 	for (i = 0; i < 8; i++)
 	{
@@ -714,7 +714,7 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection * projection)
 		m_Visibility = B3_BBOX_VISIBLE;
 		m_Visible++;
 	}
-	else if ((flag == 0) || (invisible_count > 0))
+	else if (flag == 0)
 	{
 		m_Visibility = B3_BBOX_PARTIALLY_VISIBLE;
 		m_PartiallyVisible++;

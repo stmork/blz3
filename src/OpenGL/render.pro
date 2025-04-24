@@ -1,4 +1,8 @@
-# Blizzard III  OpenGL rendering of scenes.
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+# Blizzard III OpenGL rendering of scenes.
 
 TEMPLATE  = app
 

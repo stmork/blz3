@@ -15,12 +15,12 @@ then
 fi
 
 test -f include_unix/blz3/autoconf.h && rm -f include_unix/blz3/autoconf.h
-test -f configure      && rm  -f configure
 test -d autom4te.cache && rm -rf autom4te.cache
 test -f src/icc.make   && rm  -f src/icc.make
 
 echo "Removing temp files..."
 find $BLZ3_HOME -name "*.a"   -exec rm -f {} \;
+find $BLZ3_HOME -name "*.so*" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.lib" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.log" -exec rm -f {} \;
 find $BLZ3_HOME -name "*.ncb" -exec rm -f {} \;

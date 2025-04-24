@@ -36,7 +36,7 @@ public:
 	 *
 	 * @param camera The camera to use.
 	 */
-	b3CameraProjection(const b3CameraPart * camera);
+	explicit b3CameraProjection(const b3CameraPart * camera);
 };
 
 #endif

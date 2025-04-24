@@ -147,7 +147,7 @@ public:
 		}
 
 		const __m128i sse = _mm_shuffle_epi32(
-				_mm_load_si128((const __m128i *)c),
+				_mm_load_si128(reinterpret_cast<const __m128i *>(c)),
 				_MM_SHUFFLE(0, 1, 2, 3));
 		v = _mm_div_ps(
 				_mm_cvtepi32_ps(sse),
@@ -316,7 +316,7 @@ public:
 	 */
 	inline const b3_f32 & operator[](const b3_color_index index) const
 	{
-		b3_f32 * ptr = (b3_f32 *)&v;
+		const b3_f32 * ptr = reinterpret_cast<const b3_f32 *>(&v);
 
 		return ptr[index];
 	}
@@ -329,7 +329,7 @@ public:
 	 */
 	inline b3_f32 & operator[](const b3_color_index index)
 	{
-		b3_f32 * ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = reinterpret_cast<b3_f32 *>(&v);
 
 		return ptr[index];
 	}
@@ -342,7 +342,7 @@ public:
 	 */
 	inline const b3_f32 & operator[](const int index) const
 	{
-		b3_f32 * ptr = (b3_f32 *)&v;
+		const b3_f32 * ptr = reinterpret_cast<const b3_f32 *>(&v);
 
 		return ptr[index];
 	}
@@ -355,7 +355,7 @@ public:
 	 */
 	inline b3_f32 & operator[](const int index)
 	{
-		b3_f32 * ptr = (b3_f32 *)&v;
+		b3_f32 * ptr = reinterpret_cast<b3_f32 *>(&v);
 
 		return ptr[index];
 	}
@@ -800,8 +800,8 @@ public:
 	 */
 	inline void b3Abs()
 	{
-		static const b3_u32 mask = 0x7fffffff;
-		const __m128 sign = _mm_load1_ps((const float *)&mask);
+		static constexpr b3_u32 mask = 0x7fffffff;
+		static const     __m128 sign = _mm_load1_ps(reinterpret_cast<const float *>(&mask));
 
 		v = _mm_and_ps(sign, v);
 	}

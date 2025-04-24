@@ -93,7 +93,7 @@ public:
 	 *
 	 * @param tx The image to resample.
 	 */
-	b3ImageSampler(b3Tx * tx);
+	b3ImageSampler(const b3Tx * tx);
 
 protected:
 	b3SampleInfo * b3SampleInit(const b3_count CPUs) override;

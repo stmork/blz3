@@ -55,7 +55,7 @@ private:
 	template<class T, class C> void testStdComplexInit()
 	{
 		std::complex<T> std_cpx;
-		C               b3_cpx = 0;
+		C               b3_cpx(0);
 
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Real());
 		CPPUNIT_ASSERT_TYPED_EQUAL(T, 0.0, b3_cpx.b3Imag());

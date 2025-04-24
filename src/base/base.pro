@@ -1,4 +1,8 @@
-# Blizzard III Basic algorithm library
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+# Blizzard III Basic algorithm library.
 
 CONFIG   -= gui core
 TEMPLATE  = lib

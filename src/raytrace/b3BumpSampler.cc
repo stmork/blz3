@@ -58,10 +58,10 @@ void b3BumpSampler::b3SetBump(b3Bump * bump)
 
 b3SampleInfo * b3BumpSampler::b3SampleInit(const b3_count CPUs)
 {
-	b3SampleInfo     *    info = new b3SampleInfo[CPUs];
-	b3_loop               i;
-	b3_res                yStart, yEnd;
-	b3_color       *      data = m_Data;
+	b3SampleInfo * info = new b3SampleInfo[CPUs];
+	b3_loop        i;
+	b3_res         yStart, yEnd;
+	b3_color   *   data = m_Data;
 
 	B3_ASSERT(m_Bump != nullptr);
 	m_Bump->b3Prepare(this);
@@ -83,13 +83,13 @@ b3SampleInfo * b3BumpSampler::b3SampleInit(const b3_count CPUs)
 
 void b3BumpSampler::b3SampleTask(const b3SampleInfo * info)
 {
-	b3Bump  *  bump = (b3Bump *)info->m_Ptr;
-	b3BBox     bbox = BBOX;
-	b3_coord   x, y;
-	b3_ray     ray;
-	b3_f64     fy, angle;
-	b3_vector  normal;
-	b3_color * data = info->m_Data;
+	const b3Bump * bump = static_cast<const b3Bump *>(info->m_Ptr);
+	b3BBox         bbox(BBOX);
+	b3_coord       x, y;
+	b3_ray         ray;
+	b3_f64         fy, angle;
+	b3_vector      normal;
+	b3_color   *   data = info->m_Data;
 
 	ray.bbox = &bbox;
 	b3Vector::b3Init(&ray.xDeriv, 1.0, 0.0, 0.0);

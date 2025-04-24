@@ -87,7 +87,7 @@ public:
 	 * @param other The other std::complex instance to copy from.
 	 */
 	template<typename F>
-	constexpr b3Complex<T>(const std::complex<F> & other)
+	explicit constexpr b3Complex<T>(const std::complex<F> & other)
 	{
 		v[Re] = other.real();
 		v[Im] = other.imag();
@@ -100,11 +100,12 @@ public:
 	 * @param re Real part of complex number.
 	 * @param im Imaginary part of the complex number.
 	 */
-	constexpr b3Complex<T>(const T re, const T im = 0)
+	explicit constexpr b3Complex<T>(const T re, const T im = 0)
 	{
 		v[Re] = re;
 		v[Im] = im;
 	}
+
 
 	/*************************************************************************
 	**                                                                      **
@@ -250,7 +251,7 @@ public:
 	 */
 	inline b3Complex<T> & operator*=(const b3Complex<T> & other)
 	{
-		alignas(16) T val[Max]
+		alignas(16) const T val[Max]
 		{
 			v[Re] * other.v[Re] - v[Im] * other.v[Im],
 			v[Im] * other.v[Re] + v[Re] * other.v[Im]
@@ -444,7 +445,7 @@ public:
 	 */
 	constexpr b3Complex<T> & b3Square()
 	{
-		alignas(16) T val[Max]
+		alignas(16) const T val[Max]
 		{
 			v[Re] * v[Re] - v[Im] * v[Im],
 			v[Im] * v[Re] + v[Re] * v[Im]

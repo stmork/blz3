@@ -31,11 +31,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3Cone::b3Cone(b3_u32 class_type) : b3Shape3(sizeof(b3Cone), class_type)
+b3Cone::b3Cone(const b3_u32 class_type) : b3Shape3(sizeof(b3Cone), class_type)
 {
 }
 
-b3Cone::b3Cone(b3_u32 * src) : b3Shape3(src)
+b3Cone::b3Cone(const b3_u32 * src) : b3Shape3(src)
 {
 }
 

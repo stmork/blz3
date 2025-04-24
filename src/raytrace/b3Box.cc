@@ -32,11 +32,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3Box::b3Box(b3_u32 class_type) : b3Shape3(sizeof(b3Box), class_type)
+b3Box::b3Box(const b3_u32 class_type) : b3Shape3(sizeof(b3Box), class_type)
 {
 }
 
-b3Box::b3Box(b3_u32 * src) : b3Shape3(src)
+b3Box::b3Box(const b3_u32 * src) : b3Shape3(src)
 {
 }
 

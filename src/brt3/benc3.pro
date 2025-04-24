@@ -1,4 +1,8 @@
-# Blizzard III  raytracing of scenes.
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+# Blizzard III Encoding animation images into mp4 video format.
 
 QT         -= gui core
 TEMPLATE    = app

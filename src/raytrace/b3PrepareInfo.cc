@@ -32,17 +32,17 @@
 **                                                                      **
 *************************************************************************/
 
-b3PrepareInfo::b3PrepareInfo()
+b3PrepareInfo::b3PrepareInfo() :
+	m_CPUs(b3Runtime::b3GetNumCPUs()),
+#ifdef _DEBUG
+	m_MinBBoxesForThreading(0)
+#else
+	m_MinBBoxesForThreading(B3_MIN_BBOXES_FOR_THREADING)
+#endif
 {
 	m_PrepareProc = nullptr;
-	m_CPUs        = b3Runtime::b3GetNumCPUs();
 	m_Threads     = m_CPUs > 1 ? new b3Thread[m_CPUs] : nullptr;
 
-#ifdef _DEBUG
-	m_MinBBoxesForThreading = 0;
-#else
-	m_MinBBoxesForThreading = B3_MIN_BBOXES_FOR_THREADING;
-#endif
 }
 
 b3PrepareInfo::~b3PrepareInfo()
@@ -53,7 +53,7 @@ b3PrepareInfo::~b3PrepareInfo()
 	}
 }
 
-void b3PrepareInfo::b3CollectBBoxes(b3Scene * scene)
+void b3PrepareInfo::b3CollectBBoxes(const b3Scene * scene)
 {
 	b3CollectBBoxes(scene->b3GetFirstBBox());
 }

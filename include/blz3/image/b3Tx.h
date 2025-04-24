@@ -346,7 +346,7 @@ private:
 	b3_count     *    histogramme = nullptr;
 	b3ColorIndices  * grid        = nullptr;
 	b3_tx_data        data;
-	b3_f64            white_ratio;
+	b3_f64            white_ratio = 0.025;
 	b3_size           dSize = 0, pSize = 0;
 	b3_tx_type        type     = B3_TX_UNDEFINED;
 	b3_tx_filetype    FileType = FT_UNKNOWN;
@@ -355,12 +355,12 @@ private:
 	static const b3_count B3_TX_MAX_HISTGRM        = (1 << B3_TX_MAX_HISTGRM_DEPTH);
 
 public:
-	b3_res            xSize = 0;   //!< The image width;
-	b3_res            ySize = 0;   //!< The image height;
-	b3_res            depth = 0;   //!< The image depth in bit;
-	b3_res            xDPI = 72;   //!< The pixel density in x direction.
-	b3_res            yDPI = 72;   //!< The pixel density in y direction.
-	b3_count          ScanLines;   //!< Number of row to process during scanning.
+	b3_res            xSize     =  0;   //!< The image width;
+	b3_res            ySize     =  0;   //!< The image height;
+	b3_res            depth     =  0;   //!< The image depth in bit;
+	b3_res            xDPI      = 72;   //!< The pixel density in x direction.
+	b3_res            yDPI      = 72;   //!< The pixel density in y direction.
+	b3_count          ScanLines =  0;   //!< Number of row to process during scanning.
 
 	/**
 	 * This constructor initializes an empty image.
@@ -373,7 +373,7 @@ public:
 	 * @param srcTx The source image.
 	 * @see b3Copy()
 	 */
-	explicit b3Tx(b3Tx * srcTx);
+	explicit b3Tx(const b3Tx * srcTx);
 
 	/**
 	 * This destructor deinitializes the image.
@@ -822,10 +822,10 @@ public:
 	 *      destination. No type checking is performed yet.
 	 */
 	bool     b3TxTransformTable(
-		b3_pkd_color * rTable,
-		b3_pkd_color * gTable,
-		b3_pkd_color * bTable,
-		const b3Tx  *  srcTx = nullptr);
+		const b3_pkd_color * rTable,
+		const b3_pkd_color * gTable,
+		const b3_pkd_color * bTable,
+		const b3Tx     *     srcTx = nullptr);
 
 	/**
 	 * This method converts the source image into a palettized destination image.
@@ -846,9 +846,9 @@ public:
 	 * B3_TX_RGB8.
 	 *
 	 * @throws b3TxException on out of memory.
-	 * @return True on success.
+	 * @throws b3TxException with B3_TX_MEMORY parameter on failure.
 	 */
-	bool           b3Histogramme();
+	void b3Histogramme();
 
 	/**
 	 * This method initializes the histogramme.
@@ -871,9 +871,9 @@ public:
 	 * @param yStart The lower y coordinete.
 	 * @param xStop The upper x coordinate.
 	 * @param yStop The upper y coordinate.
-	 * @return True on success.
+	 * @throws b3TxException with B3_TX_ILLEGAL_DATATYPE parameter on failure.
 	 */
-	bool           b3AddHist(
+	void b3AddHist(
 		b3_coord xStart,
 		b3_coord yStart,
 		b3_coord xStop,
@@ -1360,7 +1360,7 @@ private:
 
 	// b3TxImage.cc
 	b3_count       b3BuildRLE(b3_count * row, b3_u08 * rle);
-	void           b3BuildRow(b3_count * row, b3_u08 * rle, b3_count codeNum, b3_count byteNum);
+	void           b3BuildRow(const b3_count * row, b3_u08 * rle, b3_count codeNum, b3_count byteNum);
 	static b3_f64  b3Gamma(b3_f64 h, b3_f64 s, b3_f64 gamma, b3_f64 value, b3_f64 scale = 1.0);
 
 #ifdef HAVE_LIBTIFF

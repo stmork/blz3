@@ -68,7 +68,7 @@ void b3World::b3Free()
 		delete m_Start;
 		m_Start      = nullptr;
 	}
-	b3Mem::b3Free();
+	m_Mem.b3Free();
 	m_Buffer     = nullptr;
 	m_BufferSize = 0;
 	m_Missed     = 0;
@@ -351,7 +351,7 @@ bool b3World::b3Read(const char * name, const bool throw_exception)
 		B3_THROW(b3WorldException, error);
 	}
 
-	b3Mem::b3Free(m_Buffer);
+	m_Mem.b3Free(m_Buffer);
 	m_Buffer = nullptr;
 
 	return true;
@@ -387,7 +387,7 @@ b3_world_error b3World::b3Read(b3FileAbstract * file, const bool throw_exception
 		if (error != B3_WORLD_PARSE)
 		{
 			m_BufferSize = header[1];
-			m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
+			m_Buffer     = (b3_u32 *)m_Mem.b3Alloc(m_BufferSize);
 			if (m_Buffer != nullptr)
 			{
 				if (file->b3Read(m_Buffer, m_BufferSize) == m_BufferSize)
@@ -397,7 +397,7 @@ b3_world_error b3World::b3Read(b3FileAbstract * file, const bool throw_exception
 				else
 				{
 					error = B3_WORLD_READ;
-					b3Mem::b3Free(m_Buffer);
+					m_Mem.b3Free(m_Buffer);
 					m_Buffer = nullptr;
 				}
 			}
@@ -471,14 +471,14 @@ bool b3World::b3ReadDump(const char * world_name)
 		error = B3_WORLD_OPEN;
 	}
 
-	b3Mem::b3Free(m_Buffer);
+	m_Mem.b3Free(m_Buffer);
 	m_Buffer     = nullptr;
 	m_BufferSize = 0;
 	if (error != B3_WORLD_OK)
 	{
 		B3_THROW(b3WorldException, error);
 	}
-	return error == B3_WORLD_OK;
+	return true;
 }
 
 void b3World::b3CloneBase(
@@ -514,19 +514,20 @@ void b3World::b3CloneBase(
 		{
 			b3CloneBase(&srcItem->m_Heads[i], &dstItem->m_Heads[i], throw_exception);
 		}
-		srcItem->b3Free(srcItem->m_StoreBuffer);
+		srcItem->m_Mem.b3Free(srcItem->m_StoreBuffer);
 		srcItem->m_StoreBuffer = nullptr;
 		srcItem->m_StoreSize   = 0;
 	}
 }
 
-b3Item * b3World::b3Clone(b3Item * original, const bool throw_exception)
+b3Item * b3World::b3Clone(const b3Item * original, const bool throw_exception)
 {
 	b3ItemRegisterEntry * entry;
-	b3Item       *       item;
-	b3_u32               i;
+	b3Item        *       item;
+	b3Item        *       work = const_cast<b3Item *>(original);
+	b3_u32                i;
 
-	original->b3Store();
+	work->b3Store();
 	entry = b3ItemRegister::b3Instance().b3Find(original->b3GetClassType());
 	if (entry != nullptr)
 	{
@@ -548,9 +549,9 @@ b3Item * b3World::b3Clone(b3Item * original, const bool throw_exception)
 	{
 		b3CloneBase(&original->m_Heads[i], &item->m_Heads[i], throw_exception);
 	}
-	original->b3Free(original->m_StoreBuffer);
-	original->m_StoreBuffer = nullptr;
-	original->m_StoreSize   = 0;
+	work->m_Mem.b3Free(original->m_StoreBuffer);
+	work->m_StoreBuffer = nullptr;
+	work->m_StoreSize   = 0;
 
 	return item;
 }

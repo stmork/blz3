@@ -77,7 +77,7 @@ void b3PickInfo::b3Modified()
 	b3Recompute();
 }
 
-void b3PickInfo::b3AddVertex(b3_vector * point)
+void b3PickInfo::b3AddVertex(const b3_vector * point)
 {
 	b3_gl_vertex vertex;
 
@@ -90,7 +90,7 @@ void b3PickInfo::b3AddVertex(b3_vector * point)
 	m_Vertices.b3Add(vertex);
 }
 
-void b3PickInfo::b3AddLine(b3_index a, b3_index b)
+void b3PickInfo::b3AddLine(const b3_index a, const b3_index b)
 {
 	b3_gl_line line;
 

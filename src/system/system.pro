@@ -1,4 +1,8 @@
-# Blizzard III System library
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+# Blizzard III System library.
 
 QT         -= gui core
 TEMPLATE    = lib

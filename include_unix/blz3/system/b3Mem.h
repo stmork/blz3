@@ -26,6 +26,7 @@
 #include <cstdlib>
 
 #include "blz3/b3Types.h"
+#include "blz3/system/b3Assert.h"
 
 /**
  * This class provides system dependend methods for providing
@@ -46,12 +47,13 @@ public:
 	[[nodiscard]]
 	static inline void * b3Alloc(const b3_size size)
 	{
-		void * ptr = aligned_alloc(16, size);
+		void * ptr = std::aligned_alloc(B3_ALIGNMENT, b3Align(size));
 
 		if (ptr == nullptr)
 		{
 			throw std::bad_alloc();
 		}
+		B3_ASSERT((reinterpret_cast<uintptr_t>(ptr) % B3_ALIGNMENT) == 0);
 		bzero(ptr, size);
 		return ptr;
 	}
@@ -73,6 +75,16 @@ public:
 #ifdef REALLY_FREE
 		std::free(ptr);
 #endif
+	}
+
+private:
+	static const b3_size B3_ALIGNMENT = 16;
+
+	static b3_size b3Align(const b3_size input)
+	{
+		static constexpr b3_size mask = ~(B3_ALIGNMENT - 1);
+
+		return (input + B3_ALIGNMENT - 1) & mask;
 	}
 };
 

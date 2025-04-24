@@ -62,15 +62,17 @@ void b3Material::b3Register()
 **                                                                      **
 *************************************************************************/
 
-b3Material::b3Material(b3_size class_size, b3_u32 class_type) : b3Item(class_size, class_type)
+b3Material::b3Material(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Item(class_size, class_type)
 {
 }
 
-b3Material::b3Material(b3_u32 class_type) : b3Item(sizeof(b3Material), class_type)
+b3Material::b3Material(const b3_u32 class_type) : b3Item(sizeof(b3Material), class_type)
 {
 }
 
-b3Material::b3Material(b3_u32 * src) : b3Item(src)
+b3Material::b3Material(const b3_u32 * src) : b3Item(src)
 {
 }
 
@@ -80,17 +82,19 @@ b3Material::b3Material(b3_u32 * src) : b3Item(src)
 **                                                                      **
 *************************************************************************/
 
-b3MatNormal::b3MatNormal(b3_size class_size, b3_u32 class_type) : b3Material(class_size, class_type)
+b3MatNormal::b3MatNormal(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Material(class_size, class_type)
 {
 	b3Init();
 }
 
-b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal), class_type)
+b3MatNormal::b3MatNormal(const b3_u32 class_type) : b3Material(sizeof(b3MatNormal), class_type)
 {
 	b3Init();
 }
 
-b3MatNormal::b3MatNormal(b3_u32 * src) : b3Material(src)
+b3MatNormal::b3MatNormal(const b3_u32 * src) : b3Material(src)
 {
 	b3InitColor(m_Diffuse);
 	b3InitColor(m_Ambient);
@@ -141,7 +145,7 @@ bool b3MatNormal::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess), class_type)
+b3MatChess::b3MatChess(const b3_u32 class_type) : b3Material(sizeof(b3MatChess), class_type)
 {
 	m_Material[BLACK].m_Ambient  = b3Color::B3_BLACK;
 	m_Material[BLACK].m_Diffuse  = b3Color::B3_BLACK;
@@ -155,13 +159,9 @@ b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess), class
 	m_Material[BLACK].m_Refraction  = m_Material[WHITE].m_Refraction  =    0;
 	m_Material[BLACK].m_Ior         = m_Material[WHITE].m_Ior         =    1.5;
 	m_Material[BLACK].m_SpecularExp = m_Material[WHITE].m_SpecularExp = 1000;
-
-	m_Flags  = 0;
-	m_xTimes = 8;
-	m_yTimes = 8;
 }
 
-b3MatChess::b3MatChess(b3_u32 * src) : b3Material(src)
+b3MatChess::b3MatChess(const b3_u32 * src) : b3Material(src)
 {
 	b3InitColor(m_Material[BLACK].m_Diffuse);
 	b3InitColor(m_Material[BLACK].m_Ambient);
@@ -226,29 +226,16 @@ bool b3MatChess::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatTexture::b3MatTexture(b3_u32 class_type) : b3Material(sizeof(b3MatTexture), class_type)
+b3MatTexture::b3MatTexture(const b3_u32 class_type) :
+	b3Material(sizeof(b3MatTexture), class_type),
+	m_Reflection  (    0),
+	m_Refraction  (    0),
+	m_Ior         (    1.5),
+	m_SpecularExp ( 1000)
 {
-	// Init material values
-	m_Reflection  =    0;
-	m_Refraction  =    0;
-	m_Ior         =    1.5;
-	m_SpecularExp = 1000;
-
-	// Init texture repetition values
-	m_xStart     =  0;
-	m_yStart     =  1;
-	m_xScale     =  1;
-	m_yScale     = -1;
-	m_xTimes     =  2;
-	m_yTimes     =  2;
-
-	// Init texture
-	m_Name.b3Empty();
-	m_Texture = nullptr;
-	m_Flags   = 0;
 }
 
-b3MatTexture::b3MatTexture(b3_u32 * src) : b3Material(src)
+b3MatTexture::b3MatTexture(const b3_u32 * src) : b3Material(src)
 {
 	m_Reflection  = b3InitFloat();
 	m_Refraction  = b3InitFloat();
@@ -337,28 +324,16 @@ bool b3MatTexture::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatWrapTexture::b3MatWrapTexture(b3_u32 class_type) :
-	b3Material(sizeof(b3MatWrapTexture), class_type)
+b3MatWrapTexture::b3MatWrapTexture(const b3_u32 class_type) :
+	b3Material(sizeof(b3MatWrapTexture), class_type),
+	m_Reflection  (    0),
+	m_Refraction  (    0),
+	m_Ior         (    1.5),
+	m_SpecularExp ( 1000)
 {
-	// Material values
-	m_Reflection  =    0;
-	m_Refraction  =    0;
-	m_Ior         =    1.5;
-	m_SpecularExp = 1000.0;
-
-	// Mapping boundary values
-	m_xStart = 0;
-	m_xEnd   = 1;
-	m_yStart = 0;
-	m_yEnd   = 1;
-
-	// Init texture
-	m_Name.b3Empty();
-	m_Texture = nullptr;
-	m_Flags   = 0;
 }
 
-b3MatWrapTexture::b3MatWrapTexture(b3_u32 * src) : b3Material(src)
+b3MatWrapTexture::b3MatWrapTexture(const b3_u32 * src) : b3Material(src)
 {
 	m_Reflection  = b3InitFloat();
 	m_Refraction  = b3InitFloat();
@@ -480,7 +455,7 @@ bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide), class_type)
+b3MatSlide::b3MatSlide(const b3_u32 class_type) : b3Material(sizeof(b3MatSlide), class_type)
 {
 	m_Material[0].m_Diffuse  = b3Color::B3_RED;
 	m_Material[0].m_Ambient  = m_Material[0].m_Diffuse * 0.2;
@@ -494,13 +469,9 @@ b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide), class
 	m_Material[0].m_Refraction  = m_Material[1].m_Refraction  =    0;
 	m_Material[0].m_Ior         = m_Material[1].m_Ior         =    1.5;
 	m_Material[0].m_SpecularExp = m_Material[1].m_SpecularExp = 1000;
-
-	m_From = 0;
-	m_To   = 1;
-	m_ModeFlag = 0;
 }
 
-b3MatSlide::b3MatSlide(b3_u32 * src) : b3Material(src)
+b3MatSlide::b3MatSlide(const b3_u32 * src) : b3Material(src)
 {
 	b3InitColor(m_Material[0].m_Diffuse);
 	b3InitColor(m_Material[0].m_Ambient);
@@ -612,7 +583,7 @@ bool b3MatSlide::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble), class_type)
+b3MatMarble::b3MatMarble(const b3_u32 class_type) : b3Material(sizeof(b3MatMarble), class_type)
 {
 	m_LightMaterial.m_Diffuse     = b3Color::B3_LIGHT_GREY;
 	m_LightMaterial.m_Ambient     = m_LightMaterial.m_Diffuse * 0.2;
@@ -630,13 +601,10 @@ b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble), cl
 	m_DarkMaterial.m_Ior         =    1.5;
 	m_DarkMaterial.m_SpecularExp = 1000;
 
-	m_xTimes      =    0;
-	m_yTimes      =    0;
-
 	b3InitScaling(0.1f, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3MatMarble::b3MatMarble(b3_u32 * src) : b3Material(src)
+b3MatMarble::b3MatMarble(const b3_u32 * src) : b3Material(src)
 {
 	b3InitColor(m_LightMaterial.m_Diffuse);
 	b3InitColor(m_LightMaterial.m_Ambient);
@@ -721,17 +689,19 @@ bool b3MatMarble::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MaterialWooden::b3MaterialWooden(b3_size class_size, b3_u32 class_type) : b3Material(class_size, class_type)
+b3MaterialWooden::b3MaterialWooden(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Material(class_size, class_type)
 {
 	b3InitScaling(1.0, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3MaterialWooden::b3MaterialWooden(b3_u32 class_type) : b3Material(sizeof(b3MaterialWooden), class_type)
+b3MaterialWooden::b3MaterialWooden(const b3_u32 class_type) : b3Material(sizeof(b3MaterialWooden), class_type)
 {
 	b3InitScaling(1.0, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3MaterialWooden::b3MaterialWooden(b3_u32 * src) : b3Material(src)
+b3MaterialWooden::b3MaterialWooden(const b3_u32 * src) : b3Material(src)
 {
 }
 
@@ -762,12 +732,12 @@ void b3MaterialWooden::b3Init()
 **                                                                      **
 *************************************************************************/
 
-b3MatWood::b3MatWood(b3_u32 class_type) : b3MaterialWooden(sizeof(b3MatWood), class_type)
+b3MatWood::b3MatWood(const b3_u32 class_type) : b3MaterialWooden(sizeof(b3MatWood), class_type)
 {
 	b3Init();
 }
 
-b3MatWood::b3MatWood(b3_u32 * src) : b3MaterialWooden(src)
+b3MatWood::b3MatWood(const b3_u32 * src) : b3MaterialWooden(src)
 {
 	b3Init();
 	b3InitColor(m_DarkMaterial.m_Diffuse);
@@ -900,7 +870,7 @@ bool b3MatWood::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
+b3MatOakPlank::b3MatOakPlank(const b3_u32 class_type) :
 	b3MaterialWooden(sizeof(b3MatOakPlank), class_type),
 	b3OakPlank()
 {
@@ -909,7 +879,7 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
 	m_LightMaterials = nullptr;
 }
 
-b3MatOakPlank::b3MatOakPlank(b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
+b3MatOakPlank::b3MatOakPlank(const b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
 {
 	b3Init();
 
@@ -1109,7 +1079,7 @@ bool b3MatOakPlank::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
+b3MatCookTorrance::b3MatCookTorrance(const b3_u32 class_type) :
 	b3MatNormal(sizeof(b3MatCookTorrance), class_type)
 {
 	// Colors
@@ -1130,7 +1100,7 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	m_m    = 0.3f;
 }
 
-b3MatCookTorrance::b3MatCookTorrance(b3_u32 * src) : b3MatNormal(src)
+b3MatCookTorrance::b3MatCookTorrance(const b3_u32 * src) : b3MatNormal(src)
 {
 	m_ka = b3InitFloat();
 	m_kd = b3InitFloat();
@@ -1233,7 +1203,7 @@ bool b3MatCookTorrance::b3Illuminate(b3_surface * surface, b3_light_info * jit) 
 **                                                                      **
 *************************************************************************/
 
-b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite), class_type)
+b3MatGranite::b3MatGranite(const b3_u32 class_type) : b3Material(sizeof(b3MatGranite), class_type)
 {
 	m_DarkMaterial.m_Diffuse      = b3Color::B3_BLACK;
 	m_LightMaterial.m_Diffuse     = b3_pkd_color(0xd0dde0);
@@ -1252,7 +1222,7 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 	m_Octaves     =   2;
 }
 
-b3MatGranite::b3MatGranite(b3_u32 * src) : b3Material(src)
+b3MatGranite::b3MatGranite(const b3_u32 * src) : b3Material(src)
 {
 	b3Color light_diffuse, dummy;
 
@@ -1337,7 +1307,9 @@ bool b3MatGranite::b3GetSurfaceValues(b3_surface * surface) const
 **                                                                      **
 *************************************************************************/
 
-b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPaint), class_type)
+b3MatCarPaint::b3MatCarPaint(const b3_u32 class_type) :
+	b3Material(sizeof(b3MatCarPaint), class_type),
+	m_MetallicScale(0.015)
 {
 	m_Parallel.m_Diffuse     = b3Color::B3_BLUE;
 	m_Parallel.m_Specular    = b3Color::B3_GREY;
@@ -1348,12 +1320,9 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPain
 	m_Parallel.m_SpecularExp = 300.0;
 
 	m_Perpendicular = m_Parallel;
-
-	m_Flags         = B3_MAT_CP_METALLIC;
-	m_MetallicScale = 0.015;
 }
 
-b3MatCarPaint::b3MatCarPaint(b3_u32 * src) : b3Material(src)
+b3MatCarPaint::b3MatCarPaint(const b3_u32 * src) : b3Material(src)
 {
 	b3InitColor(m_Parallel.m_Diffuse);
 	b3InitColor(m_Parallel.m_Ambient);
@@ -1496,12 +1465,12 @@ bool b3MatCarPaint::b3ShadeComponents(b3_surface * surface, b3_f64 reflection, b
 *************************************************************************/
 
 b3Color   b3MatThinFilm::m_WaveLength(700.0, 510, 485.0, 0); // in nano meter
-b3_vector b3MatThinFilm::m_ScaleTime =
+b3_vector b3MatThinFilm::m_ScaleTime
 {
 	10, 10, 10
 };
 
-b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm), class_type)
+b3MatThinFilm::b3MatThinFilm(const b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm), class_type)
 {
 	m_Diffuse     = b3Color::B3_PEARL;
 	m_Ambient     = m_Diffuse * 0.2;
@@ -1516,7 +1485,7 @@ b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFil
 	b3InitScaling(0.05, B3_SCALE_IPOINT_ORIGINAL);
 }
 
-b3MatThinFilm::b3MatThinFilm(b3_u32 * src) : b3Material(src)
+b3MatThinFilm::b3MatThinFilm(const b3_u32 * src) : b3Material(src)
 {
 	b3InitColor(m_Diffuse);
 	b3InitColor(m_Ambient);
@@ -1550,7 +1519,7 @@ void b3MatThinFilm::b3Write()
 
 bool b3MatThinFilm::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_scene_preparation * info = (b3_scene_preparation *)prep_info;
+	const b3_scene_preparation * info = static_cast<b3_scene_preparation *>(prep_info);
 
 	m_t = info->m_t;
 	b3PrepareScaling();

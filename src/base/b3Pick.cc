@@ -113,10 +113,8 @@ void b3PickBase::b3Draw(const b3DrawContext * dc)
 *************************************************************************/
 
 b3Pick::b3Pick(const b3_coord x, const b3_coord y) :
-	b3Link<b3Pick>(sizeof(b3Pick))
+	b3Link<b3Pick>(sizeof(b3Pick)), m_x(x), m_y(y)
 {
-	m_x = x;
-	m_y = y;
 }
 
 b3Pick::~b3Pick()

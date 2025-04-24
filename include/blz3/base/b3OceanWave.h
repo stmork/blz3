@@ -34,7 +34,7 @@
 
 class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 {
-	const static b3_f64 g;
+	static constexpr b3_f64 g = 9.81;
 
 	b3_f64                  m_t;           // actual time point
 	b3_f64                  m_omega_t;     // omega t
@@ -51,9 +51,9 @@ class B3_PLUGIN b3OceanWave : protected b3Mem, protected b3FilterInfo
 	b3Complex64             m_Cycle;       // e^j*omega*t
 	b3Fourier               m_FFT;
 	b3Rand48<b3_f64>        m_Random;
-	b3Complex64      *      m_Phillips;
-	b3_vector       *       m_Normals;
-	bool                    m_Modified;
+	b3Complex64      *      m_Phillips = nullptr;
+	b3_vector       *       m_Normals  = nullptr;
+	bool                    m_Modified = true;
 
 public:
 	// time animation values
@@ -141,7 +141,13 @@ public:
 	 *
 	 * @param tx The retrieving image.
 	 */
-	void b3CopyHeightField(b3Tx * tx);
+	void b3CopyHeightField(const b3Tx * tx);
+
+protected:
+	void              b3TestSpectrum1();
+	void              b3TestSpectrum2();
+	void              b3TestSpectrum3();
+	void              b3TestSpectrum4();
 
 private:
 	void              b3ComputePhillipsSpectrum();
@@ -160,10 +166,6 @@ private:
 
 	void              b3SamplePhillipsSpectrum(b3_f64 fx, b3_f64 fy, b3_index index);
 	void              b3PrepareNormals();
-	void              b3TestSpectrum1();
-	void              b3TestSpectrum2();
-	void              b3TestSpectrum3();
-	void              b3TestSpectrum4();
 
 	inline b3_index  b3GetIndex(const b3_index x, const b3_index y) const
 	{

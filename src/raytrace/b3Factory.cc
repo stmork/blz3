@@ -153,10 +153,13 @@ b3CameraPart * b3Factory::b3CreateCamera(
 	return camera;
 }
 
-b3Scene * b3Factory::b3CreateBBox(b3BBox * original_bbox, b3_u32 class_type, b3CameraPart * original_camera)
+b3Scene * b3Factory::b3CreateBBox(
+	const b3BBox    *    original_bbox,
+	const b3_u32         class_type,
+	const b3CameraPart * original_camera)
 {
 	b3Scene    *   scene  = new b3Scene(class_type);
-	b3BBox    *    bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
+	b3BBox    *    bbox   = static_cast<b3BBox *>(b3World::b3Clone(original_bbox));
 	b3Light    *   light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart * camera;
 	b3_f64         rad;

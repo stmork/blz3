@@ -110,7 +110,7 @@ b3GaussFilter::b3GaussFilter()
 		for (x = -GAUSS_ND_MAX; x <= (GAUSS_ND_MAX + GAUSS_ND_STEP * 0.5); x += GAUSS_ND_STEP)
 		{
 			m_GaussNDTable.b3Add(m_Area);
-			m_Area += b3Func(x) * GAUSS_ND_STEP;
+			m_Area += b3GaussFilter::b3Func(x) * GAUSS_ND_STEP;
 		}
 		b3PrintF(B3LOG_FULL, "  area: %3.8f %d entries\n", m_Area, m_GaussNDTable.b3GetCount());
 	}
@@ -159,13 +159,13 @@ b3_f64 b3GaussFilter::b3Integral(b3_f64 val) const
 **                                                                      **
 *************************************************************************/
 
-b3ShutterFilter::b3ShutterFilter(b3_f64 max)
+b3ShutterFilter::b3ShutterFilter(b3_f64 max) :
+	m_lMax(max * 2 - 1),
+	m_uMax(1 - max * 2),
+	m_Max(max * 2),
+	m_Slope(0.5 / max),
+	m_Area(2.0 - 2.0 * max)
 {
-	m_Max   = max * 2;
-	m_lMax  = max * 2 - 1;
-	m_uMax  = 1 - max * 2;
-	m_Slope = 0.5 / max;
-	m_Area  = 2.0 - 2.0 * max;
 }
 
 b3_f64 b3ShutterFilter::b3Func(b3_f64 x) const

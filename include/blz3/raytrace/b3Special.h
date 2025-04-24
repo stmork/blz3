@@ -65,8 +65,7 @@ protected:
 	B3_ITEM_BASE(b3Special); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Special); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3Special); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3Special);
 
 	/**
 	 * Method for registering the shapes into the item registry.
@@ -138,7 +137,7 @@ public:
 	 */
 	void     b3Orientate(
 		const b3_vector * eye,
-		b3_vector    *    view,
+		const b3_vector * view,
 		const b3_f64      focal_length,
 		const b3_f64      width,
 		const b3_f64      height);
@@ -154,7 +153,7 @@ public:
 	 * @param yAngle The latitide.
 	 */
 	void     b3Overview(
-		b3_vector    *    center,
+		const b3_vector * center,
 		const b3_vector * size,
 		const b3_f64      xAngle,
 		const b3_f64      yAngle);
@@ -211,7 +210,7 @@ public:
 	 *
 	 * @param transformation The transformation matrix.
 	 */
-	void     b3Transform(b3_matrix * transformation);
+	void     b3Transform(const b3_matrix * transformation);
 
 	/**
 	 * This method returns the camera name.
@@ -329,23 +328,33 @@ enum b3_measure
 	B3_MEASURE_MAX     //!< Amount of usable measuring units.
 };
 
-/**
- * This enumeration lists type of snap to angle
- */
-enum b3_angle_grid
-{
-	B3_ANGLE_GRID_OBJECT_BIT = 0,  //!< Activation for object snap to grid
-	B3_ANGLE_GRID_CAMERA_BIT       //!< Activation for camera snap to grid
-};
-
-#define B3_ANGLE_GRID_OBJECT (1 << B3_ANGLE_GRID_OBJECT_BIT)
-#define B3_ANGLE_GRID_CAMERA (1 << B3_ANGLE_GRID_CAMERA_BIT)
 
 /**
  * This class represents some helping values to model with Lines III.
  */
 class B3_PLUGIN b3ModellerInfo : public b3Special
 {
+	/**
+	* This enumeration lists type of snap to angle
+	*/
+	enum b3_angle_grid : b3_u32
+	{
+		B3_ANGLE_GRID_OBJECT_BIT = 0,  //!< Activation for object snap to grid
+		B3_ANGLE_GRID_CAMERA_BIT       //!< Activation for camera snap to grid
+	};
+
+	static constexpr b3_u32 B3_ANGLE_GRID_OBJECT = 1 << B3_ANGLE_GRID_OBJECT_BIT;
+	static constexpr b3_u32 B3_ANGLE_GRID_CAMERA = 1 << B3_ANGLE_GRID_CAMERA_BIT;
+
+	static constexpr b3_u32 B3_UNIT_MASK            = 0x0000f;
+	static constexpr b3_u32 B3_MEASURE_MASK         = 0x000f0;
+	static constexpr b3_u32 B3_CUSTOM_MEASURE_MASK  = 0x3ff00;
+	static constexpr b3_u32 B3_USE_SCENE_LIGHTS     = 0x40000;
+
+	static constexpr b3_u32 B3_UNIT_SHIFT           =       0;
+	static constexpr b3_u32 B3_MEASURE_SHIFT        =       4;
+	static constexpr b3_u32 B3_CUSTOM_MEASURE_SHIFT =       8;
+
 	static const b3_f64   m_UnitScaleTable[B3_UNIT_MAX];
 	static const char  *  m_UnitDescrTable[B3_UNIT_MAX];
 	static const b3_u32   m_MeasureTable[B3_MEASURE_MAX - 1];
@@ -357,18 +366,18 @@ public:
 	b3_vector        m_Center;           //!< The position of the frustrum.
 	b3_vector        m_StepMove;         //!< Moving stepper.
 	b3_vector        m_StepRotate;       //!< Rotating stepper.
-	b3_f32           m_GridMove;         //!< Scale to grid for moving.
-	b3_f32           m_GridRot;          //!< Scale to angular grid for rotating.
+	b3_f32           m_GridMove = 10;    //!< Scale to grid for moving.
+	b3_f32           m_GridRot  = 15;    //!< Scale to angular grid for rotating.
 	bool             m_ResizeFlag;
-	bool             m_BBoxTitles;       //!< Draw object names into scene.
+	bool             m_BBoxTitles = false;       //!< Draw object names into scene.
 	bool             m_GridActive;       //!< Scale to grid active.
 	bool             m_AngleGridCamera;  //!< Snap to camera angle.
 	bool             m_AngleGridObjects; //!< Snap to object angle.
-	bool             m_CameraActive;
+	bool             m_CameraActive = false;
 	bool             m_UseSceneLights;   //!< Simple lighting (false) or scene lighting (true).
 	b3_unit          m_Unit;             //!< Used unit.
-	b3_measure       m_Measure;          //!< Used measuring unit.
-	b3_u32           m_CustomMeasure;    //!< Custum measuring unit in case of m_Measure holds B3_MEASURE_CUSTOM.
+	b3_measure       m_Measure;               //!< Used measuring unit.
+	b3_u32           m_CustomMeasure = 100;    //!< Custum measuring unit in case of m_Measure holds B3_MEASURE_CUSTOM.
 
 public:
 	B3_ITEM_INIT(b3ModellerInfo); //!< This constructor handles default initialization.
@@ -456,15 +465,6 @@ private:
 	void        b3Snap(b3_f64 & angle, const bool activation) const;
 };
 
-#define B3_UNIT_MASK           0x0000f
-#define B3_MEASURE_MASK        0x000f0
-#define B3_CUSTOM_MEASURE_MASK 0x3ff00
-#define B3_USE_SCENE_LIGHTS    0x40000
-
-#define B3_UNIT_SHIFT                0
-#define B3_MEASURE_SHIFT             4
-#define B3_CUSTOM_MEASURE_SHIFT      8
-
 class b3AnimElement;
 class b3Scene;
 
@@ -474,22 +474,22 @@ class b3Scene;
 class B3_PLUGIN b3Animation : public b3Special
 {
 	// OK, the following values are only for "Lines"
-	b3_count        m_Frames;          //!< Computed number of frames.
-	b3_count        m_Tracks;          //!< Number of visible tracks.
-	b3_index        m_TrackIndex;      //!< Start track in window .
-	b3_index        m_FrameIndex;      //!< Start frame in window.
-	b3_count        m_WTracks;         //!< Actual number of tracks.
-	b3_count        m_WFrames;         //!< Whole of frames.
-	b3AnimElement * m_Element;         //!< Actual animation element.
-	b3_vector       m_AnimCenter;      //!< Actual animation center.
+	b3_count        m_Frames;             //!< Computed number of frames.
+	b3_count        m_Tracks;             //!< Number of visible tracks.
+	b3_index        m_TrackIndex;         //!< Start track in window .
+	b3_index        m_FrameIndex;         //!< Start frame in window.
+	b3_count        m_WTracks;            //!< Actual number of tracks.
+	b3_count        m_WFrames;            //!< Whole of frames.
+	b3AnimElement * m_Element = nullptr;  //!< Actual animation element.
+	b3_vector       m_AnimCenter;         //!< Actual animation center.
 
 public:
-	b3_f64          m_Start;           //!< Start time (one unit per frame)
-	b3_f64          m_End;             //!< End time (one unit per frame)
-	b3_f64          m_Time;            //!< Actual time point
-	b3_f64          m_Neutral;         //!< Neutral point for resetting animation
-	b3_count        m_FramesPerSecond; //!< Frames per second.
-	b3_u32          m_Flags;           //!< Some flags.
+	b3_f64          m_Start;              //!< Start time (one unit per frame)
+	b3_f64          m_End;                //!< End time (one unit per frame)
+	b3_f64          m_Time;               //!< Actual time point
+	b3_f64          m_Neutral;            //!< Neutral point for resetting animation
+	b3_count        m_FramesPerSecond;    //!< Frames per second.
+	b3_u32          m_Flags;              //!< Some flags.
 
 public:
 	B3_ITEM_INIT(b3Animation); //!< This constructor handles default initialization.
@@ -498,7 +498,7 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static void            b3Register();
+	static void     b3Register();
 	void            b3Write() override;
 
 public:
@@ -637,18 +637,18 @@ enum b3_sample
 class B3_PLUGIN b3Distribute : public b3Special
 {
 public:
-	b3Array<b3_f64>    m_MotionBlur;       //!< The motion blur time points.
-	b3Array<b3_index>  m_TimeIndex;        //!< A randomized array of sample index references.
-	b3_count           m_SamplesPerPixel;  //!< Samples per pixel as power of two.
-	b3_count           m_SamplesPerFrame;  //!< Samples per frame.
-	b3_f32             m_DepthOfField;     //!< A place holder for depth of field but unused, yet.
-	b3_filter          m_PixelAperture;    //!< The pixel aperture type.
-	b3_filter          m_FrameAperture;    //!< The frame aperture type.
-	b3Filter     *     m_FilterPixel;      //!< The pixel aperture instance.
-	b3Filter     *     m_FilterFrame;      //!< The frame aperture instance.
-	b3_f32      *      m_Samples;          //!< This pointer points to an array of sampling positions inside one pixel.
-	b3_count           m_SPP;              //!< The real amount of samples per pixel.
-	b3_u32             m_Type;             //!< Flags of activated effects.
+	b3Array<b3_f64>    m_MotionBlur;             //!< The motion blur time points.
+	b3Array<b3_index>  m_TimeIndex;              //!< A randomized array of sample index references.
+	b3_count           m_SamplesPerPixel;        //!< Samples per pixel as power of two.
+	b3_count           m_SamplesPerFrame;        //!< Samples per frame.
+	b3_f32             m_DepthOfField = 0;       //!< A place holder for depth of field but unused, yet.
+	b3_filter          m_PixelAperture;          //!< The pixel aperture type.
+	b3_filter          m_FrameAperture;          //!< The frame aperture type.
+	b3Filter     *     m_FilterPixel = nullptr;  //!< The pixel aperture instance.
+	b3Filter     *     m_FilterFrame = nullptr;  //!< The frame aperture instance.
+	b3_f32      *      m_Samples     = nullptr;  //!< This pointer points to an array of sampling positions inside one pixel.
+	b3_count           m_SPP;                    //!< The real amount of samples per pixel.
+	b3_u32             m_Type;                   //!< Flags of activated effects.
 
 public:
 	B3_ITEM_INIT(b3Distribute); //!< This constructor handles default initialization.
@@ -682,7 +682,7 @@ public:
 	 * @param animation The animation for motion blur if any.
 	 * @throws b3WorldException
 	 */
-	void     b3PrepareAnimation(b3_res xSize, b3Animation * animation = nullptr);
+	void     b3PrepareAnimation(const b3_res xSize, const b3Animation * animation = nullptr);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0

@@ -100,14 +100,13 @@ static void b3PlayAnimation()
 	}
 	if (animation->m_Flags & ANIMF_ON)
 	{
-		b3Time    start, now, last;
+		b3Time    start, now;
 		b3_vector lower, upper;
 		b3_f64    t, span;
 		b3_count  count = 0;
 		b3_res    xSize, ySize;
 
 		b3PrintF(B3LOG_FULL, "Playing animation...\n");
-		last = start;
 		scene->b3GetDisplaySize(xSize, ySize);
 		do
 		{
@@ -299,10 +298,11 @@ static void b3Banner(const char * command)
 
 int main(int argc, char * argv[])
 {
+	const char * BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
+	const char * BLZ3_BIN     = getenv("BLZ3_BIN");
+	const char * HOME         = getenv("HOME");
+
 	b3Scene  * scene;
-	char   *   BLZ3_PLUGINS = getenv("BLZ3_PLUGINS");
-	char   *   BLZ3_BIN     = getenv("BLZ3_BIN");
-	char   *   HOME         = getenv("HOME");
 	b3Path     textures;
 	b3Path     pictures;
 	b3Path     data;

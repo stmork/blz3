@@ -36,6 +36,10 @@ protected:
 
 public:
 	b3TxSaveInfo(b3Tx * tx, const char * filename, const char * write_mode = nullptr);
+
+	b3TxSaveInfo(const b3TxSaveInfo & other) = delete;
+	b3TxSaveInfo & operator=(const b3TxSaveInfo & other) = delete;
+
 	virtual ~b3TxSaveInfo();
 };
 

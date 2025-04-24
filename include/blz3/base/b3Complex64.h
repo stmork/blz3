@@ -41,9 +41,9 @@ class B3_PLUGIN alignas(16) b3Complex64
 		Max
 	};
 
-	inline b3Complex64(const __m128d input)
+	// cppcheck-suppress noExplicitConstructor
+	inline b3Complex64(const __m128d input) : v(input)
 	{
-		v = input;
 	}
 
 public:
@@ -56,24 +56,26 @@ public:
 
 	inline b3Complex64() = default;
 
-	inline b3Complex64(const b3Complex64 & other)
+	inline b3Complex64(const b3Complex64 & other) :
+		v(other.v)
 	{
-		v = other.v;
 	}
 
-	inline b3Complex64(const std::complex<b3_f64> & other)
+	// cppcheck-suppress noExplicitConstructor
+	inline b3Complex64(const std::complex<b3_f64> & other) :
+		v(_mm_set_pd(other.imag(), other.real()))
 	{
-		v = _mm_set_pd(other.imag(), other.real());
 	}
 
-	inline b3Complex64(const b3_f64 re)
+	// cppcheck-suppress noExplicitConstructor
+	inline b3Complex64(const b3_f64 re) :
+		v(_mm_set_sd(re))
 	{
-		v = _mm_set_sd(re);
 	}
 
-	inline b3Complex64(const b3_f64 re, const b3_f64 im)
+	inline b3Complex64(const b3_f64 re, const b3_f64 im) :
+		v(_mm_set_pd(im, re))
 	{
-		v = _mm_set_pd(im, re);
 	}
 
 	/*************************************************************************
@@ -342,7 +344,7 @@ public:
 		return os;
 	}
 
-	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
+	inline static void b3CopyUncached(const b3Complex64 & dst, const b3Complex64 & src)
 	{
 		_mm_stream_pd(&dst.b3Real(), src.v);
 	}

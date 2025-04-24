@@ -372,7 +372,7 @@ private:
 	{
 		b3Material    *   material;
 		b3_ray            ray;
-		b3BBox            bbox = BBOX;
+		b3BBox            bbox(BBOX);
 		b3_surface        surface;
 		b3_stencil_limit  limit;
 		b3_pkd_color   *  data = info->m_Data;
@@ -591,8 +591,8 @@ void b3Shape::b3ComputeQuadricNormals(bool normalize)
 *************************************************************************/
 
 void b3Shape::b3ComputeSphereVertices(
-	b3_vector  & Base,
-	b3_vector  & Dir)
+	const b3_vector  & Base,
+	const b3_vector  & Dir)
 {
 	b3_gl_vertex * Vector;
 	b3_index      i, j;
@@ -644,7 +644,7 @@ void b3Shape::b3ComputeSphereVertices(
 	}
 }
 
-void b3Shape::b3ComputeSphereNormals(b3_vector & base, bool normalize)
+void b3Shape::b3ComputeSphereNormals(const b3_vector & base, const bool normalize)
 {
 	b3_gl_vertex * glVertex = *glVertexElements;
 	b3_index i;
@@ -680,10 +680,10 @@ void b3Shape::b3ComputeSphereNormals(b3_vector & base, bool normalize)
 *************************************************************************/
 
 void b3Shape::b3ComputeCylinderVertices(
-	b3_vector  & Base,
-	b3_vector  & Dir1,
-	b3_vector  & Dir2,
-	b3_vector  & Dir3)
+	const b3_vector  & Base,
+	const b3_vector  & Dir1,
+	const b3_vector  & Dir2,
+	const b3_vector  & Dir3)
 {
 	b3_gl_vertex * Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
@@ -808,10 +808,10 @@ void b3Shape::b3ComputeCylinderIndices()
 *************************************************************************/
 
 void b3Shape::b3ComputeConeVertices(
-	b3_vector  & Base,
-	b3_vector  & Dir1,
-	b3_vector  & Dir2,
-	b3_vector  & Dir3)
+	const b3_vector  & Base,
+	const b3_vector  & Dir1,
+	const b3_vector  & Dir2,
+	const b3_vector  & Dir3)
 {
 	b3_gl_vertex * Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
@@ -1019,10 +1019,10 @@ void b3Shape::b3ComputeConeIndices()
 *************************************************************************/
 
 void b3Shape::b3ComputeEllipsoidVertices(
-	b3_vector  & Base,
-	b3_vector  & Dir1,
-	b3_vector  & Dir2,
-	b3_vector  & Dir3)
+	const b3_vector  & Base,
+	const b3_vector  & Dir1,
+	const b3_vector  & Dir2,
+	const b3_vector  & Dir3)
 {
 	b3_gl_vertex * Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
@@ -1262,10 +1262,10 @@ void b3Shape::b3ComputeEllipsoidIndices()
 *************************************************************************/
 
 void b3Shape::b3ComputeBoxVertices(
-	b3_vector  & Base,
-	b3_vector  & Dir1,
-	b3_vector  & Dir2,
-	b3_vector  & Dir3)
+	const b3_vector  & Base,
+	const b3_vector  & Dir1,
+	const b3_vector  & Dir2,
+	const b3_vector  & Dir3)
 {
 	const b3_f32  *  tex_coord = m_BoxTexcoord;
 	b3_vector  Aux;
@@ -1341,12 +1341,12 @@ void b3Shape::b3ComputeBoxIndices()
 *************************************************************************/
 
 void b3Shape::b3ComputeTorusVertices(
-	b3_vector  & Base,
-	b3_vector  & Dir1,
-	b3_vector  & Dir2,
-	b3_vector  & Dir3,
-	b3_f64       aRad,
-	b3_f64       bRad)
+	const b3_vector  & Base,
+	const b3_vector  & Dir1,
+	const b3_vector  & Dir2,
+	const b3_vector  & Dir3,
+	const b3_f64       aRad,
+	const b3_f64       bRad)
 {
 	b3_gl_vertex * Vector;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;

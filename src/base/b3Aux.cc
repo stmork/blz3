@@ -35,15 +35,12 @@ b3Rect::b3Rect(
 	const b3_coord x1,
 	const b3_coord y1,
 	const b3_coord x2,
-	const b3_coord y2)
+	const b3_coord y2) :
+	m_x1(x1), m_y1(y1), m_x2(x2), m_y2(y2)
 {
-	m_x1 = x1;
-	m_y1 = y1;
-	m_x2 = x2;
-	m_y2 = y2;
 }
 
-bool b3Rect::b3UpdateBound(b3Rect * rect)
+bool b3Rect::b3UpdateBound(const b3Rect * rect)
 {
 	bool changed = false;
 

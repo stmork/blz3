@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_u32 b3Condition::m_LogicOps[] =
+const b3_u32 b3Condition::m_LogicOps[]
 {
 	MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
 };
@@ -58,15 +58,17 @@ void b3Condition::b3Register()
 }
 
 
-b3Condition::b3Condition(b3_size class_size, b3_u32 class_type) : b3Item(class_size, class_type)
+b3Condition::b3Condition(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Item(class_size, class_type)
 {
 }
 
-b3Condition::b3Condition(b3_u32 class_type) : b3Item(sizeof(b3Condition), class_type)
+b3Condition::b3Condition(const b3_u32 class_type) : b3Item(sizeof(b3Condition), class_type)
 {
 }
 
-b3Condition::b3Condition(b3_u32 * src) : b3Item(src)
+b3Condition::b3Condition(const b3_u32 * src) : b3Item(src)
 {
 }
 
@@ -164,16 +166,11 @@ void b3Condition::b3CheckOuterBound(
 **                                                                      **
 *************************************************************************/
 
-b3CondRectangle::b3CondRectangle(b3_u32 class_type) : b3Condition(sizeof(b3CondRectangle), class_type)
+b3CondRectangle::b3CondRectangle(const b3_u32 class_type) : b3Condition(sizeof(b3CondRectangle), class_type)
 {
-	m_xStart = 0;
-	m_yStart = 0;
-	m_xEnd   = 1;
-	m_yEnd   = 1;
-	m_Flags  = RCF_ACTIVE;
 }
 
-b3CondRectangle::b3CondRectangle(b3_u32 * src) : b3Condition(src)
+b3CondRectangle::b3CondRectangle(const b3_u32 * src) : b3Condition(src)
 {
 	m_xStart = b3InitFloat();
 	m_yStart = b3InitFloat();
@@ -284,12 +281,12 @@ bool b3CondRectangle::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondCircle::b3CondCircle(b3_u32 class_type) :
+b3CondCircle::b3CondCircle(const b3_u32 class_type) :
 	b3Condition(sizeof(b3CondCircle), class_type)
 {
 }
 
-b3CondCircle::b3CondCircle(b3_u32 * src) :
+b3CondCircle::b3CondCircle(const b3_u32 * src) :
 	b3Condition(src)
 {
 	m_xCenter = b3InitFloat();
@@ -343,11 +340,11 @@ bool b3CondCircle::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondSegment::b3CondSegment(b3_u32 class_type) : b3Condition(sizeof(b3CondSegment), class_type)
+b3CondSegment::b3CondSegment(const b3_u32 class_type) : b3Condition(sizeof(b3CondSegment), class_type)
 {
 }
 
-b3CondSegment::b3CondSegment(b3_u32 * src) : b3Condition(src)
+b3CondSegment::b3CondSegment(const b3_u32 * src) : b3Condition(src)
 {
 	m_xCenter    = b3InitFloat();
 	m_yCenter    = b3InitFloat();
@@ -431,15 +428,17 @@ bool b3CondSegment::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3Cond2::b3Cond2(b3_size class_size, b3_u32 class_type) : b3Condition(class_size, class_type)
+b3Cond2::b3Cond2(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Condition(class_size, class_type)
 {
 }
 
-b3Cond2::b3Cond2(b3_u32 class_type) : b3Condition(class_type)
+b3Cond2::b3Cond2(const b3_u32 class_type) : b3Condition(class_type)
 {
 }
 
-b3Cond2::b3Cond2(b3_u32 * src) : b3Condition(src)
+b3Cond2::b3Cond2(const b3_u32 * src) : b3Condition(src)
 {
 	m_xPos  = b3InitFloat();
 	m_yPos  = b3InitFloat();
@@ -506,11 +505,11 @@ void b3Cond2::b3ComputeBound(b3_stencil_limit * Limit) const
 **                                                                      **
 *************************************************************************/
 
-b3CondPara::b3CondPara(b3_u32 class_type) : b3Cond2(sizeof(b3CondPara), class_type)
+b3CondPara::b3CondPara(const b3_u32 class_type) : b3Cond2(sizeof(b3CondPara), class_type)
 {
 }
 
-b3CondPara::b3CondPara(b3_u32 * src) : b3Cond2(src)
+b3CondPara::b3CondPara(const b3_u32 * src) : b3Cond2(src)
 {
 }
 
@@ -542,11 +541,11 @@ bool b3CondPara::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondTria::b3CondTria(b3_u32 class_type) : b3Cond2(sizeof(b3CondTria), class_type)
+b3CondTria::b3CondTria(const b3_u32 class_type) : b3Cond2(sizeof(b3CondTria), class_type)
 {
 }
 
-b3CondTria::b3CondTria(b3_u32 * src) : b3Cond2(src)
+b3CondTria::b3CondTria(const b3_u32 * src) : b3Cond2(src)
 {
 }
 
@@ -578,11 +577,11 @@ bool b3CondTria::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondTexture::b3CondTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondTexture), class_type)
+b3CondTexture::b3CondTexture(const b3_u32 class_type) : b3Condition(sizeof(b3CondTexture), class_type)
 {
 }
 
-b3CondTexture::b3CondTexture(b3_u32 * src) : b3Condition(src)
+b3CondTexture::b3CondTexture(const b3_u32 * src) : b3Condition(src)
 {
 	m_Texture = (b3Tx *)b3InitNull();
 	m_Flags   = b3InitInt();
@@ -668,11 +667,11 @@ bool b3CondTexture::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondWrapTexture::b3CondWrapTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondWrapTexture), class_type)
+b3CondWrapTexture::b3CondWrapTexture(const b3_u32 class_type) : b3Condition(sizeof(b3CondWrapTexture), class_type)
 {
 }
 
-b3CondWrapTexture::b3CondWrapTexture(b3_u32 * src) : b3Condition(src)
+b3CondWrapTexture::b3CondWrapTexture(const b3_u32 * src) : b3Condition(src)
 {
 	m_Texture = (b3Tx *)b3InitNull();
 	m_Flags   = b3InitInt();
@@ -800,11 +799,11 @@ bool b3CondWrapTexture::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondEllipse::b3CondEllipse(b3_u32 class_type) : b3Condition(sizeof(b3CondEllipse), class_type)
+b3CondEllipse::b3CondEllipse(const b3_u32 class_type) : b3Condition(sizeof(b3CondEllipse), class_type)
 {
 }
 
-b3CondEllipse::b3CondEllipse(b3_u32 * src) : b3Condition(src)
+b3CondEllipse::b3CondEllipse(const b3_u32 * src) : b3Condition(src)
 {
 	m_xCenter    = b3InitFloat();
 	m_yCenter    = b3InitFloat();

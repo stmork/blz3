@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+
 CONFIG  += c++17 link_pkgconfig
 
 BLZ3_HOME = $$(BLZ3_HOME)
@@ -6,6 +11,8 @@ isEmpty(BLZ3_HOME) {
 	BLZ3_HOME = ../..
 	message("Setting BLZ3_HOME to parent directory.")
 }
+
+QMAKE_PROJECT_DEPTH = 0
 
 BLZ3_INCLUDE = $$BLZ3_HOME/include
 BLZ3_LIB     = $$BLZ3_HOME/lib

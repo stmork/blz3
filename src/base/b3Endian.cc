@@ -46,7 +46,7 @@ class b3EndianChanger
 public:
 	b3EndianChanger(const void * ptr, b3_size size)
 	{
-		const b3_u08 * cPtr = (const b3_u08 *)ptr;
+		const b3_u08 * cPtr = static_cast<const b3_u08 *>(ptr);
 
 		for (b3_size i = 0; i < size; i++)
 		{
@@ -212,7 +212,7 @@ b3_f64 b3Endian::b3GetIntelDouble(const void * ptr)
 
 b3_size b3Endian::b3ChangeEndian16(void * Ptr)
 {
-	b3_u08 * Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = static_cast<b3_u08 *>(Ptr);
 
 	std::swap(Pointer[0], Pointer[1]);
 	return sizeof(b3_u16);
@@ -220,7 +220,7 @@ b3_size b3Endian::b3ChangeEndian16(void * Ptr)
 
 b3_size b3Endian::b3ChangeEndian32(void * Ptr)
 {
-	b3_u08 * Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = static_cast<b3_u08 *>(Ptr);
 
 	std::swap(Pointer[0], Pointer[3]);
 	std::swap(Pointer[1], Pointer[2]);
@@ -229,7 +229,7 @@ b3_size b3Endian::b3ChangeEndian32(void * Ptr)
 
 b3_size b3Endian::b3ChangeEndian64(void * Ptr)
 {
-	b3_u08 * Pointer = (b3_u08 *)Ptr;
+	b3_u08 * Pointer = static_cast<b3_u08 *>(Ptr);
 
 	b3ChangeEndian32(&Pointer[0]);
 	b3ChangeEndian32(&Pointer[4]);

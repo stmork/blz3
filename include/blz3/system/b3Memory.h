@@ -93,6 +93,11 @@ public:
 	[[nodiscard]]
 	void  *  b3Realloc(void * oldptr, const b3_size newsize);
 
+	template <class T> inline T * b3TypedRealloc(T * oldptr, const b3_count count = 1)
+	{
+		return static_cast<T *>(b3Realloc(oldptr, sizeof(T) * count));
+	}
+
 	/**
 	 * This method frees the specified memory chunk.
 	 *

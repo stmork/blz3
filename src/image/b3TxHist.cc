@@ -131,16 +131,16 @@ void b3Tx::b3EndHist()
 }
 
 // All what we need is: "Schwarze Weizen Frühstückskorn"!
-bool b3Tx::b3Histogramme()
+void b3Tx::b3Histogramme()
 {
 	if (!b3StartHist())
 	{
 		B3_THROW(b3TxException, B3_TX_MEMORY);
 	}
-	return b3AddHist(0, 0, xSize, ySize);
+	b3AddHist(0, 0, xSize, ySize);
 }
 
-bool b3Tx::b3AddHist(
+void b3Tx::b3AddHist(
 	b3_coord xStart,
 	b3_coord yStart,
 	b3_coord xStop,
@@ -195,7 +195,7 @@ bool b3Tx::b3AddHist(
 				cPtr += xSize;
 			}
 		}
-		return true;
+		return;
 	}
 
 	// if Tx is type of interleaved
@@ -217,7 +217,7 @@ bool b3Tx::b3AddHist(
 				histogramme[1] += b3_tx_fill_bits::m_FillBits.bwBitsSet[cPtr[x]];
 			}
 		}
-		return true;
+		return;
 	}
 
 	if (type == B3_TX_RGB4)
@@ -237,7 +237,7 @@ bool b3Tx::b3AddHist(
 			}
 			sPtr += xSize;
 		}
-		return true;
+		return;
 	}
 
 	if (type == B3_TX_RGB8)
@@ -257,7 +257,7 @@ bool b3Tx::b3AddHist(
 			}
 			lPtr += xSize;
 		}
-		return true;
+		return;
 	}
 
 	if (type == B3_TX_FLOAT)
@@ -278,7 +278,7 @@ bool b3Tx::b3AddHist(
 			}
 			fPtr += xSize;
 		}
-		return true;
+		return;
 	}
 
 	B3_THROW(b3TxException, B3_TX_ILLEGAL_DATATYPE);
@@ -392,18 +392,16 @@ bool b3Tx::b3TransToBW(const b3_f64 ratio, const b3_tx_threshold mode)
 	b3_index threshold;
 	bool     result;
 
-	result = b3Histogramme();
-	if (result)
+	b3Histogramme();
+
+	threshold = b3ComputeThreshold(ratio, mode);
+	if (threshold >= 0)
 	{
-		threshold = b3ComputeThreshold(ratio, mode);
-		if (threshold >= 0)
-		{
-			result = b3TransToBW(threshold);
-		}
-		else
-		{
-			result = false;
-		}
+		result = b3TransToBW(threshold);
+	}
+	else
+	{
+		result = false;
 	}
 	return result;
 }

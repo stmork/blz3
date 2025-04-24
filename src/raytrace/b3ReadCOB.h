@@ -74,7 +74,7 @@ class b3COBReader
 	b3_bool      b3COB_AllocObject(b3Item * node, b3_cob_id id, b3_cob_id parent, b3_cob_type type);
 	b3COBInfo  * b3COB_FindInfo(b3_cob_id id);
 	b3Item   *   b3COB_Reconstruct();
-	void         b3COB_ComputeAvrgColor(b3Tx * texture, b3Color & color);
+	void         b3COB_ComputeAvrgColor(const b3Tx * texture, b3Color & color);
 	b3_size      b3COB_ParseGrou(const char * buffer, const char * name);
 	b3_size      b3COB_ParsePolH(const char * buffer, const char * name);
 	b3_size      b3COB_ParseMat(const char * buffer);

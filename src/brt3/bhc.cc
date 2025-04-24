@@ -220,18 +220,18 @@ void b3BHDParser::b3ParsePoint(b3_f64 scale)
 	m_Points.b3Add(point);
 }
 
-void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64 scale B3_UNUSED)
+void b3BHDParser::b3ParseRoom(const b3BBox * level, b3_f64 base, b3_f64 height, b3_f64 scale B3_UNUSED)
 {
-	b3BBox     *     room = new b3BBox(BBOX);
+	b3BBox      *     room = new b3BBox(BBOX);
 	b3CondRectangle * cond;
-	b3Area     *     area;
-	b3Light     *    light;
-	b3Item     *     item;
-	b3_f64           xMin, xMax, x;
-	b3_f64           yMin, yMax, y;
-	b3_index         index[16], i;
-	b3_count         args;
-	b3_vector        normal;
+	b3Area      *     area;
+	b3Light     *     light;
+	b3Item      *     item;
+	b3_f64            xMin, xMax, x;
+	b3_f64            yMin, yMax, y;
+	b3_index          index[16], i;
+	b3_count          args;
+	b3_vector         normal;
 
 	args = sscanf(&m_Line[m_Pos], "%*s %127s %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 			room->m_BoxName,
@@ -356,7 +356,7 @@ void b3BHDParser::b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64
 	m_Scene->b3GetLightHead()->b3Append(light);
 }
 
-void b3BHDParser::b3AddWall(b3BBox * room)
+void b3BHDParser::b3AddWall(const b3BBox * room)
 {
 
 	B3_FOR_TYPED_BASE(b3Shape, room->b3GetShapeHead(), shape)
@@ -372,7 +372,7 @@ void b3BHDParser::b3AddWall(b3BBox * room)
 	}
 }
 
-void b3BHDParser::b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_index b)
+void b3BHDParser::b3CheckOpenings(const b3BBox * room, b3Area * area, b3_index a, b3_index b)
 {
 	b3Area     *     left, *right, *top, *bottom;
 	b3CondRectangle * cond;

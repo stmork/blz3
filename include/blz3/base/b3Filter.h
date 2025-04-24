@@ -149,7 +149,8 @@ class B3_PLUGIN b3ShutterFilter : public b3Filter
 	b3_f64 m_Area;
 
 public:
-	b3ShutterFilter(b3_f64 max = 0.25);
+	explicit b3ShutterFilter(b3_f64 max = 0.25);
+
 	b3_f64 b3Func(b3_f64 x) const override;
 	b3_f64 b3Integral(b3_f64 x) const override;
 };

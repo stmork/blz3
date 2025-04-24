@@ -30,11 +30,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGBox::b3CSGBox(b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGBox), class_type)
+b3CSGBox::b3CSGBox(const b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGBox), class_type)
 {
 }
 
-b3CSGBox::b3CSGBox(b3_u32 * src) : b3CSGShape3(src)
+b3CSGBox::b3CSGBox(const b3_u32 * src) : b3CSGShape3(src)
 {
 }
 

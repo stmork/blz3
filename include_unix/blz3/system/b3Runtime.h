@@ -102,7 +102,17 @@ public:
 	 * @param procedure The procedure name to solve.
 	 * @return The mapped procedure.
 	 */
-	static void    *   b3GetOpenGLExtension(const char * procedure);
+	template<typename PROC>
+	static inline PROC b3GetOpenGLExtension(const char * procedure_name)
+	{
+#if defined(BLZ3_USE_OPENGL) && defined(RTLD_NEXT)
+		return static_cast<PROC>(dlsym(RTLD_NEXT, procedure_name));
+#else
+		(void)procedure_name;
+
+		return nullptr;
+#endif
+	}
 
 	/**
 	 * This method parses the command line arguments.
@@ -114,7 +124,12 @@ public:
 	 * @param size The size of the option buffer.
 	 * @return The next index to process.
 	 */
-	static int         b3ParseOption(int argc, char * argv[], int index, char * option, size_t size);
+	static int         b3ParseOption(
+		const int    argc,
+		char * const argv[],
+		int          index,
+		char    *    option,
+		const size_t size);
 
 private:
 	b3Runtime();

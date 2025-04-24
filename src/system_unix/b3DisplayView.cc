@@ -272,9 +272,9 @@ b3_count b3DisplayView::m_CmapCount;
 b3Mutex  b3DisplayView::m_DisplayMutex;
 long     b3DisplayView::m_Count = READY;
 
-b3DisplayView::b3DisplayView(const char * title) : b3Display(title)
+b3DisplayView::b3DisplayView(const char * title) :
+	b3Display(title), m_Title(title)
 {
-	m_Title = (char *)title;
 #ifdef HAVE_LIBX11
 	b3Open(m_xMax, m_yMax);
 #endif
@@ -286,9 +286,8 @@ b3DisplayView::b3DisplayView(const char * title) : b3Display(title)
 b3DisplayView::b3DisplayView(
 	const b3_res      xSize,
 	const b3_res      ySize,
-	const char    *   title) : b3Display(xSize, ySize, title)
+	const char    *   title) : b3Display(xSize, ySize, title), m_Title(title)
 {
-	m_Title = (char *)title;
 #ifdef HAVE_LIBX11
 	b3Open(xSize, ySize);
 #endif

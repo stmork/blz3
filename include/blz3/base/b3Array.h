@@ -81,7 +81,7 @@ public:
 	 * @param increment The incremental reallocations of memory.
 	 * @throws b3ArrayException
 	 */
-	inline b3Array(b3_count increment B3_UNUSED = B3_ARRAY_DEFAULT_INCREMENT)
+	explicit inline b3Array(b3_count increment B3_UNUSED = B3_ARRAY_DEFAULT_INCREMENT)
 	{
 	}
 

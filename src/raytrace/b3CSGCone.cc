@@ -31,11 +31,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGCone::b3CSGCone(b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGCone), class_type)
+b3CSGCone::b3CSGCone(const b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGCone), class_type)
 {
 }
 
-b3CSGCone::b3CSGCone(b3_u32 * src) : b3CSGShape3(src)
+b3CSGCone::b3CSGCone(const b3_u32 * src) : b3CSGShape3(src)
 {
 }
 

@@ -36,16 +36,13 @@
 // Instantiate as opened file
 b3FileMem::b3FileMem(const b3_access_mode access_mode)
 {
-	if (!b3Open(access_mode))
-	{
-		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
-	}
+	b3FileMem::b3Open(access_mode);
 }
 
 // Instantiate as opened file
 b3FileMem::b3FileMem(const char * file_name, const b3_access_mode access_mode)
 {
-	if (!b3Open(file_name, access_mode))
+	if (!b3FileMem::b3Open(file_name, access_mode))
 	{
 		B3_THROW(b3FileException, B3_FILE_NOT_FOUND);
 	}
@@ -56,7 +53,7 @@ b3FileMem::~b3FileMem()
 }
 
 // Open a file for reading, writing or appending
-bool b3FileMem::b3Open(const b3_access_mode access_mode)
+void b3FileMem::b3Open(const b3_access_mode access_mode)
 {
 	b3_file_error error = B3_FILE_NOT_OPEN;
 
@@ -70,11 +67,9 @@ bool b3FileMem::b3Open(const b3_access_mode access_mode)
 	case T_READ :
 		if (b3Buffer(16000))
 		{
-			if (b3EnsureBufferSize(0))
-			{
-				b3Seek(0, B3_SEEK_START);
-				return true;
-			}
+			b3EnsureBufferSize(0);
+			b3Seek(0, B3_SEEK_START);
+			return;
 		}
 		error = B3_FILE_MEMORY;
 	// Walk through!
@@ -149,8 +144,8 @@ b3_size b3FileMem::b3Write(
 {
 	b3_size written_size;
 
-	written_size = (b3EnsureBufferSize(m_BufferPos + write_size) ?
-			write_size : m_BufferMax - m_BufferPos);
+	b3EnsureBufferSize(m_BufferPos + write_size);
+	written_size = write_size;
 
 	memcpy(&m_Buffer[m_BufferPos], ptr, written_size);
 	m_BufferPos += written_size;
@@ -236,24 +231,21 @@ void b3FileMem::b3Close()
 bool b3FileMem::b3ReadBuffer(const char * filename)
 {
 	b3File   file;
-	b3_u08 * file_buffer = nullptr;
 	b3_size  file_size;
 
-	file_buffer = file.b3ReadBuffer(filename, file_size);
+	const b3_u08 * file_buffer = file.b3ReadBuffer(filename, file_size);
 	if (file_buffer != nullptr)
 	{
-		if (b3EnsureBufferSize(file_size))
-		{
-			memcpy(m_Buffer, file_buffer, file_size);
-			m_BufferSize = file_size;
-			m_BufferPos  = file_size;
-			return true;
-		}
+		b3EnsureBufferSize(file_size);
+		memcpy(m_Buffer, file_buffer, file_size);
+		m_BufferSize = file_size;
+		m_BufferPos  = file_size;
+		return true;
 	}
 	return false;
 }
 
-bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
+void b3FileMem::b3EnsureBufferSize(b3_size new_size)
 {
 	b3_u08 * new_buffer;
 
@@ -275,5 +267,4 @@ bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 			m_BufferPos = 0;
 		}
 	}
-	return true;
 }

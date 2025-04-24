@@ -454,10 +454,9 @@ public:
 	 */
 	inline b3_count b3GetCount() const
 	{
-		T    *    node;
 		b3_count  count = 0;
 
-		for (node  = First; node != nullptr; node  = node->Succ)
+		for (const T * node  = First; node != nullptr; node  = node->Succ)
 		{
 			count++;
 		}
@@ -658,7 +657,7 @@ public:
 	 * \param *ptr The element from which reselecting is based on.
 	 * \return The reselected element.
 	 */
-	inline T * b3Reselect(T * ptr)
+	inline T * b3Reselect(const T * ptr) const
 	{
 		T * select = nullptr;
 

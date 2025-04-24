@@ -97,7 +97,7 @@ b3_count b3Tx::b3BuildRLE(
 }
 
 void b3Tx::b3BuildRow(
-	b3_count * line,
+	const b3_count * line,
 	b3_u08  * cPtr,
 	b3_count  num,
 	b3_count  xBytes)
@@ -1137,12 +1137,12 @@ bool b3Tx::b3TxGauss(
 }
 
 bool b3Tx::b3TxTransformTable(
-	b3_pkd_color * rTable,
-	b3_pkd_color * gTable,
-	b3_pkd_color * bTable,
-	const b3Tx  *  srcTx)
+	const b3_pkd_color * rTable,
+	const b3_pkd_color * gTable,
+	const b3_pkd_color * bTable,
+	const b3Tx     *     srcTx)
 {
-	b3_pkd_color * srcPtr = nullptr;
+	const b3_pkd_color * srcPtr = nullptr;
 	b3_pkd_color * dstPtr = nullptr;
 	b3_index       num    = 0, i;
 
@@ -1333,9 +1333,9 @@ bool b3Tx::b3TxContrast(
 
 bool b3Tx::b3TxReduce(const b3Tx * src)
 {
-	b3_index       i, count, index;
-	b3_pkd_color * srcPtr = src->b3GetTrueColorData(), color;
-	b3_u08    *    dstPtr = b3GetIndexData();
+	const b3_pkd_color * srcPtr = src->b3GetTrueColorData();
+	b3_u08       *       dstPtr = b3GetIndexData();
+	b3_index             i, count, index;
 
 	if (!src->b3IsTrueColor())
 	{
@@ -1358,9 +1358,9 @@ bool b3Tx::b3TxReduce(const b3Tx * src)
 	count = xSize * ySize;
 	for (i = 0; i < count; i++)
 	{
-		b3_f32 dist_min = FLT_MAX;
+		b3_f32       dist_min = FLT_MAX;
+		b3_pkd_color color    = *srcPtr++;
 
-		color = *srcPtr++;
 		index = pSize;
 		for (b3_size p = 0; p < pSize; p++)
 		{

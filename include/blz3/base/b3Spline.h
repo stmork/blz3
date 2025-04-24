@@ -71,10 +71,10 @@ enum b3_bspline_error
 template<class VECTOR> class B3_PLUGIN b3SplineTemplate
 {
 public:
-	static const     unsigned B3_MAX_CONTROLS    = 32;
-	static const     unsigned B3_MAX_SUBDIV      = 64;
-	static const     unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
-	static const     unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
+	static constexpr unsigned B3_MAX_CONTROLS    = 32;
+	static constexpr unsigned B3_MAX_SUBDIV      = 64;
+	static constexpr unsigned B3_MAX_DEGREE      = B3_MAX_CONTROLS;
+	static constexpr unsigned B3_MAX_KNOTS       = B3_MAX_CONTROLS + B3_MAX_DEGREE + 1;
 
 	/** The used template parameter type. */
 	using             type = VECTOR;
@@ -104,30 +104,20 @@ public:
 	/** The spline handling error code. */
 	static            b3_bspline_error bspline_errno;
 
-	VECTOR     *    m_Controls;       //!< control point sequence.
-	b3_knots        m_Knots;          //!< knot sequence.
-	unsigned        m_ControlNum;     //!< used number of controls.
-	unsigned        m_KnotNum;        //!< used number of knots.
-	unsigned        m_Degree;         //!< spline degree.
-	unsigned        m_SubDiv;         //!< Sub division for triangulation.
-	unsigned        m_ControlMax;     //!< max. available control points.
-	unsigned        m_KnotMax;        //!< max. available knots.
-	b3_index        m_Offset;         //!< index offset between each control
-	bool            m_Closed;         //!< open/closed curve.
+	VECTOR     *    m_Controls   = nullptr;         //!< control point sequence.
+	b3_knots        m_Knots      = nullptr;         //!< knot sequence.
+	unsigned        m_ControlNum = 0;               //!< used number of controls.
+	unsigned        m_KnotNum    = 0;               //!< used number of knots.
+	unsigned        m_Degree     = 0;               //!< spline degree.
+	unsigned        m_SubDiv     = B3_MAX_SUBDIV;   //!< Sub division for triangulation.
+	unsigned        m_ControlMax = B3_MAX_CONTROLS; //!< max. available control points.
+	unsigned        m_KnotMax    = B3_MAX_KNOTS;    //!< max. available knots.
+	b3_index        m_Offset     = 1;               //!< index offset between each control
+	bool            m_Closed     = false;           //!< open/closed curve.
 
 public:
 	constexpr b3SplineTemplate<VECTOR>()
 	{
-		m_ControlMax = B3_MAX_CONTROLS;
-		m_KnotMax    = B3_MAX_KNOTS;
-		m_Degree     = 0;
-		m_ControlNum = 0;
-		m_KnotNum    = 0;
-		m_Offset     = 1;
-		m_Controls   = nullptr;
-		m_Knots      = nullptr;
-		m_SubDiv     = B3_MAX_SUBDIV;
-		m_Closed     = false;
 	}
 
 	explicit constexpr b3SplineTemplate<VECTOR>(const b3SplineTemplate<VECTOR> & src)
@@ -238,7 +228,7 @@ public:
 		const b3_count Offset = 1)
 	{
 		// Make some checks
-		if ((Degree <= 0) || (ControlNum <= 0))
+		if ((Degree == 0) || (ControlNum == 0))
 		{
 			bspline_errno = B3_BSPLINE_INVALID_ARGUMENT;
 			return false;
@@ -911,7 +901,6 @@ public:
 		const b3_index  index = 0) const
 	{
 		b3_index  l, j;
-		VECTOR  * ctrls;
 
 		b3SplineVector::b3Clear(point);
 		if (m_Closed)
@@ -928,7 +917,8 @@ public:
 		}
 		else
 		{
-			ctrls = &m_Controls[i * m_Offset + index];
+			VECTOR  * ctrls = &m_Controls[i * m_Offset + index];
+
 			for (l = m_Degree; l >= 0; l--)
 			{
 				b3SplineVector::b3AddScaled(it[l], *ctrls, point);

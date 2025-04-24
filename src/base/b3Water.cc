@@ -33,14 +33,14 @@
 **                                                                      **
 *************************************************************************/
 
-b3Water::b3Water()
+b3Water::b3Water() :
+	m_Octaves   ( 2),
+	m_Km        ( 1.0f),
+	m_WindAmp   ( 0.2f),
+	m_WindFreq  ( 0.5),
+	m_MinWind   ( 1.0f),
+	m_ScaleTime ( 1)
 {
-	m_Km        = 1.0f;
-	m_Octaves   = 2;
-	m_ScaleTime = 1;
-	m_WindFreq  = 0.5;
-	m_WindAmp   = 0.2f;
-	m_MinWind   = 1.0f;
 	b3Vector::b3Init(&m_Anim, 1.5f, 1.5f, 4.0f);
 	b3PrepareWater(0.0);
 }

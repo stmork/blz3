@@ -359,7 +359,7 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	distributed = b3GetDistributed();
 	if (distributed->b3IsActive())
 	{
-		b3Animation * animation = b3GetAnimation();
+		const b3Animation * animation = b3GetAnimation();
 
 		m_Distributed = distributed;
 		m_Distributed->b3PrepareAnimation(xSize, animation);
@@ -443,7 +443,6 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 
 void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 {
-	b3Row   *   row;
 	b3_res      xSize, ySize;
 	b3_count    CPUs, i;
 	b3_f64      fy, fyStep;
@@ -472,7 +471,8 @@ void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 		fyStep = 2.0 / (b3_f64)ySize;
 		for (i = 0; i < ySize; i++)
 		{
-			row = nullptr;
+			b3Row * row = nullptr;
+
 			if (m_Distributed != nullptr)
 			{
 				isMotionBlur = m_Distributed->b3IsMotionBlur();

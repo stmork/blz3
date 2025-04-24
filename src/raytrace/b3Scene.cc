@@ -45,7 +45,7 @@ void b3Scene::b3Register()
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, GLOBAL_ILLUM);
 }
 
-b3Scene::b3Scene(b3_u32 class_type) :
+b3Scene::b3Scene(const b3_u32 class_type) :
 	b3Item(sizeof(b3Scene), class_type),
 	m_TextureName{}
 {
@@ -77,7 +77,7 @@ b3Scene::b3Scene(b3_u32 class_type) :
 	b3ReallocateShader();
 }
 
-b3Scene::b3Scene(b3_u32 * buffer) : b3Item(buffer)
+b3Scene::b3Scene(const b3_u32 * buffer) : b3Item(buffer)
 {
 	b3PrintF(B3LOG_DEBUG, "Blizzard III scene load.\n");
 

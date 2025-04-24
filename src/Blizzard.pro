@@ -1,7 +1,5 @@
-# Generated with YAKINDU statechart tools
-#
 # SPDX-License-Identifier: BSD-3-Clause
-# SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
 #               All rights reserved */
 #
 
@@ -42,8 +40,8 @@ half.depends        = image
 bexif3.depends      = image
 brt3.depends        = raytrace
 render.depends      = raytrace
-qrender.depends     = raytrace
-qrender-sct.depends = raytrace
+qrender.depends     = raytrace render
+qrender-sct.depends = raytrace qrender
 
 unittest.depends = system base image
 longtest.depends = system base image
@@ -59,13 +57,13 @@ cppcheck.commands = cppcheck\
 	--inline-suppr\
 	--suppress=preprocessorErrorDirective\
 	--suppress=syntaxError\
-	--suppress=unusedStructMember\
-	--suppress=noCopyConstructor\
-	--suppress=noOperatorEq\
+	--suppress=cstyleCast\
+	--suppress=duplInheritedMember\
 	-I$$[QT_INSTALL_HEADERS]\
 	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\
 	--language=c++ --std=c++14\
 	--xml-version=2 --force -q -j `nproc`\
+	--library=qt\
 	system/*.cc system_unix/*.cc base/*.cc image/*.cc raytrace/*.cc\
 	OpenGL/*.c* OpenGL/*.h brt3/*.cc 2>cppcheck.xml
 

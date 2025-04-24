@@ -57,7 +57,8 @@ template <> b3_bool b3FileTest<b3FileMem>::openRead(const char * filename)
 
 template <> b3_bool b3FileTest<b3FileMem>::openWrite(const char * filename B3_UNUSED)
 {
-	return file.b3Open(B_WRITE);
+	file.b3Open(B_WRITE);
+	return true;
 }
 
 template <> void b3FileTest<b3FileMem>::removeFile(const char * filename B3_UNUSED)

@@ -31,11 +31,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGEllipsoid::b3CSGEllipsoid(b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGEllipsoid), class_type)
+b3CSGEllipsoid::b3CSGEllipsoid(const b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGEllipsoid), class_type)
 {
 }
 
-b3CSGEllipsoid::b3CSGEllipsoid(b3_u32 * src) : b3CSGShape3(src)
+b3CSGEllipsoid::b3CSGEllipsoid(const b3_u32 * src) : b3CSGShape3(src)
 {
 }
 

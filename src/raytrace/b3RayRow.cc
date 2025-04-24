@@ -34,8 +34,8 @@
 *************************************************************************/
 
 b3RayRow::b3RayRow(
-	b3Scene  * scene,
-	b3Display * display,
+	b3Scene     *    scene,
+	b3Display    *   display,
 	const b3_coord   y,
 	const b3_res     xSize,
 	const b3_res     ySize) :
@@ -108,15 +108,15 @@ void b3RayRow::b3Raytrace()
 *************************************************************************/
 
 b3SupersamplingRayRow::b3SupersamplingRayRow(
-	b3Scene        *       scene,
-	b3Display       *      display,
-	const b3_coord               y,
-	const b3_res                 xSize,
-	const b3_res                 ySize,
+	b3Scene        *        scene,
+	b3Display       *       display,
+	const b3_coord          y,
+	const b3_res            xSize,
+	const b3_res            ySize,
 	b3SupersamplingRayRow * last) :
-	b3RayRow(scene, display, y, xSize, ySize)
+	b3RayRow(scene, display, y, xSize, ySize),
+	m_Limit(scene->m_SuperSample->m_Limit)
 {
-	m_Limit      = m_Scene->m_SuperSample->m_Limit;
 	m_ThisResult = new b3Color[xSize];
 	m_RowState   = B3_STATE_NOT_STARTED;
 
@@ -256,7 +256,7 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 {
 	b3_ray        ray;
 	b3_res        x;
-	b3_vector64   dir;
+	b3_vector64   dir = m_preDir;
 	b3_f64        fxLeft, fxRight, fyUp, fyDown;
 	bool          do_refine_succ = false;
 	b3_pkd_color  result = b3Color::B3_BLACK;
@@ -267,7 +267,6 @@ inline void b3SupersamplingRayRow::b3Refine(const bool this_row)
 	ray.pos.x  = m_Scene->m_EyePoint.x;
 	ray.pos.y  = m_Scene->m_EyePoint.y;
 	ray.pos.z  = m_Scene->m_EyePoint.z;
-	ray.dir    = dir = m_preDir;
 
 	// Init coord values
 	fxRight = -1;
@@ -372,11 +371,11 @@ b3DistributedRayRow::b3DistributedRayRow(
 
 void b3DistributedRayRow::b3Raytrace()
 {
-	b3_ray        ray;
-	b3_coord      x, s;
-	b3Color       result;
-	b3_f64        fx, sx, sy;
-	b3_f32    *   samples = m_Samples;
+	b3_ray         ray;
+	b3_coord       x, s;
+	b3Color        result;
+	b3_f64         fx, sx, sy;
+	const b3_f32 * samples = m_Samples;
 
 	// Init eye position
 	ray.pos.x  =  m_Scene->m_EyePoint.x;
@@ -428,7 +427,7 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 {
 	b3_coord x;
 
-	m_Color = new (std::nothrow) b3Color[m_xSize];
+	m_Color = b3TypedAlloc<b3Color>(m_xSize);
 	if (m_Color == nullptr)
 	{
 		B3_THROW(b3WorldException, B3_WORLD_MEMORY);
@@ -444,11 +443,6 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 	m_BackupDir = m_preDir;
 	m_Modulo    = m_xSize * m_SPP;
 	m_Start     = B3_IRAN(m_Modulo);
-}
-
-b3MotionBlurRayRow::~b3MotionBlurRayRow()
-{
-	delete [] m_Color;
 }
 
 void b3MotionBlurRayRow::b3SetTimePoint(b3_f64 t)

@@ -625,13 +625,13 @@ inline b3_u32 b3Tx::b3ShiftCount(b3_count Count)
 
 b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u08 * Y = nullptr;
-	b3_u08 * U = nullptr;
-	b3_u08 * V = nullptr;
-	b3_u08 * CharData;
-	b3_u32 * LongData;
-	b3_u08   y, u, v, Uprev, Vprev;
-	b3_u32   i, k, Max, Pos = 12, Count = 0, Shift;
+	const b3_u08 * U = nullptr;
+	const b3_u08 * V = nullptr;
+	b3_u08    *    Y = nullptr;
+	b3_u08    *    CharData;
+	b3_u32    *    LongData;
+	b3_u08         y, u, v, Uprev, Vprev;
+	b3_u32         i, k, Max, Pos = 12, Count = 0, Shift;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_YUVN(%s)\n",
 		(const char *)image_name);

@@ -65,16 +65,16 @@ enum b3_error_prepare
 typedef bool(*b3PrepareProc)(b3BBox * bbox, void * ptr);
 typedef b3Exception<b3_error_prepare, 0x505250> b3PrepareException;
 
-#define B3_MIN_BBOXES_FOR_THREADING 50
-
 /**
  * This class handles multi threaded preparation of bounding boxes.
  */
 class B3_PLUGIN b3PrepareInfo : b3_preparation_info
 {
+	static constexpr b3_count B3_MIN_BBOXES_FOR_THREADING = 50;
+
 	b3Thread        *        m_Threads;
 	b3PrepareProc            m_PrepareProc;
-	void          *          m_Ptr;
+	void          *          m_Ptr = nullptr;
 	b3_count                 m_CPUs;
 
 protected:
@@ -99,7 +99,7 @@ public:
 	 *
 	 * @param scene The scene which contains the bounding box.
 	 */
-	void              b3CollectBBoxes(b3Scene * scene);
+	void              b3CollectBBoxes(const b3Scene * scene);
 
 	/**
 	 * This method collects all sub bounding boxes of the given bounding box.

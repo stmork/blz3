@@ -85,18 +85,7 @@ void b3Tx::b3TIFFWarnHandler(
 
 b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 {
-	data        = nullptr;
-	palette     = nullptr;
-	histogramme = nullptr;
-	grid        = nullptr;
-	type        = B3_TX_UNDEFINED;
-	FileType    = FT_UNKNOWN;
-	dSize       = 0;
-	pSize       = 0;
-	ScanLines   = 0;
-
 	image_name.b3Empty();
-	white_ratio  = 0.025;
 
 	// set TIFF error und warning handler
 	if (!m_ErrorHandlerInstalled)
@@ -112,13 +101,9 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 #endif
 }
 
-b3Tx::b3Tx(b3Tx * orig) : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
+b3Tx::b3Tx(const b3Tx * orig) : b3Link<b3Tx>(sizeof(b3Tx), USUAL_TEXTURE)
 {
 	image_name.b3Empty();
-	histogramme = nullptr;
-	grid        = nullptr;
-	data        = nullptr;
-	palette     = nullptr;
 	b3Copy(orig);
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx instantiated (%ldx%ld, %ld bits, type=%d) (%p)\n",

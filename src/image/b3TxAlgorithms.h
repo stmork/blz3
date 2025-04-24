@@ -44,7 +44,7 @@ struct B3_PLUGIN b3TxAlgorithms
 
 	template<class DST> static void b3SetRow(
 		const b3Color * row,
-		b3Tx      *     tx,
+		const b3Tx   *  tx,
 		std::function<DST(const b3Color &)> convert = [] (const b3Color & src)
 	{
 		return src;
@@ -99,7 +99,7 @@ struct B3_PLUGIN b3TxAlgorithms
 		tx->b3Free(old_data);
 	}
 
-	template<class DST> static void b3Turn(b3Tx * tx)
+	template<class DST> static void b3Turn(const b3Tx * tx)
 	{
 		const b3_count size = tx->xSize * tx->ySize;
 		const b3_count max  = size >> 1;
@@ -157,7 +157,7 @@ struct B3_PLUGIN b3TxAlgorithms
 
 	template<class DST> static void b3Transform(
 		const b3Tx     *     srcTx,
-		b3Tx        *        dstTx,
+		const b3Tx     *     dstTx,
 		const b3_pkd_color * rTable,
 		const b3_pkd_color * gTable,
 		const b3_pkd_color * bTable)

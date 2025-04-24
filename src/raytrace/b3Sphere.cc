@@ -31,13 +31,13 @@
 **                                                                      **
 *************************************************************************/
 
-b3Sphere::b3Sphere(b3_u32 class_type) : b3SimpleShape(sizeof(b3Sphere), class_type)
+b3Sphere::b3Sphere(const b3_u32 class_type) : b3SimpleShape(sizeof(b3Sphere), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir, 50);
 }
 
-b3Sphere::b3Sphere(b3_u32 * src) : b3SimpleShape(src)
+b3Sphere::b3Sphere(const b3_u32 * src) : b3SimpleShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);

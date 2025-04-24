@@ -28,41 +28,44 @@
 
 #define OW_SKIP B3_OCEAN_XSKIP
 
-GLfloat ambient[] =
+namespace
 {
-	1.0, 1.0, 1.0, 1.0
-};
+	GLfloat ambient[]
+	{
+		1.0, 1.0, 1.0, 1.0
+	};
 
-GLfloat diffuse[] =
-{
-	1.0, 1.0, 0.95, 1.0
-};
+	GLfloat diffuse[]
+	{
+		1.0, 1.0, 0.95, 1.0
+	};
 
-GLfloat light0[] =
-{
-	10.0, 15.0, 20.0, 1.0
-};
+	GLfloat light0[]
+	{
+		10.0, 15.0, 20.0, 1.0
+	};
 
-GLfloat * vPtr = nullptr;
-GLuint  * iPtr = nullptr;
-GLuint    size;
-b3Time    timepoint;
-b3_f64    start;
-b3_f64    last;
-b3_f64    halfgrid;
+	GLfloat * vPtr = nullptr;
+	GLuint  * iPtr = nullptr;
+	GLuint    size;
+	b3Time    timepoint;
+	b3_f64    start;
+	b3_f64    last;
+	b3_f64    halfgrid;
 
-b3OceanWave ocean;
+	b3OceanWave ocean;
 
-PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
-PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
-PFNGLBINDBUFFERARBPROC    glBindBufferARB;
-PFNGLBUFFERDATAARBPROC    glBufferDataARB;
-PFNGLMAPBUFFERARBPROC     glMapBufferARB;
-PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
+	PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
+	PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
+	PFNGLBINDBUFFERARBPROC    glBindBufferARB;
+	PFNGLBUFFERDATAARBPROC    glBufferDataARB;
+	PFNGLMAPBUFFERARBPROC     glMapBufferARB;
+	PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
 
-GLuint  vbo[2];
-b3_bool has_vbo;
-b3Mem   pool;
+	GLuint  vbo[2];
+	b3_bool has_vbo;
+	b3Mem   pool;
+}
 
 void init_vertices()
 {

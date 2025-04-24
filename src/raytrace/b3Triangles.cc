@@ -30,12 +30,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3Triangles::b3Triangles(b3_u32 class_type) :
+b3Triangles::b3Triangles(const b3_u32 class_type) :
 	b3TriangleShape(class_type)
 {
 }
 
-b3Triangles::b3Triangles(b3_u32 * src) : b3TriangleShape(src)
+b3Triangles::b3Triangles(const b3_u32 * src) : b3TriangleShape(src)
 {
 	b3_index i;
 
@@ -52,8 +52,8 @@ b3Triangles::b3Triangles(b3_u32 * src) : b3TriangleShape(src)
 	b3InitNOP();
 	b3InitNOP();
 
-	m_Vertices  = b3Item::b3TypedAlloc<b3_vertex>(m_VertexCount);
-	m_Triangles = b3Item::b3TypedAlloc<b3_triangle>(m_TriaCount);
+	m_Vertices  = m_Mem.b3TypedAlloc<b3_vertex>(m_VertexCount);
+	m_Triangles = m_Mem.b3TypedAlloc<b3_triangle>(m_TriaCount);
 
 	for (i = 0; i < m_VertexCount; i++)
 	{
@@ -121,9 +121,9 @@ void b3Triangles::b3GetCount(
 	b3_count     &    gridCount,
 	b3_count     &    polyCount)
 {
-	vertCount = m_Flags & B3_PHONG ? m_VertexCount : (m_TriaCount * 3);
-	gridCount = m_TriaCount * 3;
-	polyCount = m_TriaCount;
+	vertCount = (m_Flags & B3_PHONG) ? m_VertexCount : (m_TriaCount * 3);
+	gridCount =  m_TriaCount * 3;
+	polyCount =  m_TriaCount;
 }
 
 void b3Triangles::b3ComputeVertices()

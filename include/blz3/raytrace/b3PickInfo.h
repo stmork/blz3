@@ -47,11 +47,11 @@ class b3PickInfo : public b3PickBase, public b3RenderObject
 	b3Array<b3_gl_line>   m_Grid;
 
 protected:
-	b3Shape     *    m_Shape;           //!< The shape for which the pick points should be created.
+	b3Shape     *    m_Shape = nullptr; //!< The shape for which the pick points should be created.
 
 public:
-	b3_pick_mode     m_AllowedMode;     //!< The move mode.
-	static b3Color   m_GridColor;       //!< The color of the pick points.
+	b3_pick_mode     m_AllowedMode = B3_PICK_UNABLE;   //!< The move mode.
+	static b3Color   m_GridColor;                      //!< The color of the pick points.
 
 public:
 	/**
@@ -109,7 +109,7 @@ public:
 	 *
 	 * @param point The point to add.
 	 */
-	void     b3AddVertex(b3_vector * point);
+	void     b3AddVertex(const b3_vector * point);
 
 	/**
 	 * This method adds a line which connects to vertices.
@@ -117,7 +117,7 @@ public:
 	 * @param a The first vertex index.
 	 * @param b The second vertex index.
 	 */
-	void     b3AddLine(b3_index a, b3_index b);
+	void     b3AddLine(const b3_index a, const b3_index b);
 
 protected:
 	void     b3ComputeVertices() override;

@@ -53,7 +53,8 @@ void QB3OpenGLScrollArea::setGlWidget(QB3OpenGLWidget * glWidget)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	dumpObjectTree();
 	view().setOperationCallback(glWidget);
-	assert(subscribe(gui().getSelectionEnd()));
+	const bool success = subscribe(gui().getSelectionEnd());
+	assert(success);
 
 #if 1
 	connect(horizontalScrollBar(), &QScrollBar::valueChanged,
@@ -152,7 +153,11 @@ void QB3OpenGLScrollArea::b3PreviousView()
 
 void QB3OpenGLScrollArea::mousePressEvent(QMouseEvent * event)
 {
-	gui().raiseMouseDown(SCT_point{ event->x(), event->y() });
+	gui().raiseMouseDown(SCT_point
+	{
+		event->pos().x(),
+		event->pos().y()
+	});
 }
 
 void QB3OpenGLScrollArea::update(
@@ -172,7 +177,11 @@ void QB3OpenGLScrollArea::update(
 
 void QB3OpenGLScrollArea::mouseMoveEvent(QMouseEvent * event)
 {
-	gui().raiseMouseMove(SCT_point{ event->x(), event->y() });
+	gui().raiseMouseMove(SCT_point
+	{
+		event->pos().x(),
+		event->pos().y()
+	});
 }
 
 void QB3OpenGLScrollArea::next()
@@ -182,7 +191,11 @@ void QB3OpenGLScrollArea::next()
 
 void QB3OpenGLScrollArea::mouseReleaseEvent(QMouseEvent * event)
 {
-	gui().raiseMouseUp(SCT_point{ event->x(), event->y() });
+	gui().raiseMouseUp(SCT_point
+	{
+		event->pos().x(),
+		event->pos().y()
+	});
 }
 
 // https://stackoverflow.com/questions/30046006/using-qopenglwidget-as-viewport-in-qabstractscrollarea

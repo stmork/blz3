@@ -61,7 +61,7 @@ void b3BBox::b3Register()
 	b3Item::b3Register(&b3BBox::b3StaticInit, &b3BBox::b3StaticInit, CLASS_BBOX, true);
 }
 
-b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox), class_type)
+b3BBox::b3BBox(const b3_u32 class_type) : b3Item(sizeof(b3BBox), class_type)
 {
 	b3AllocHeads(2);
 	m_Heads[0].b3InitBase(CLASS_SHAPE);
@@ -80,7 +80,7 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox), class_type)
 	m_Visibility           = B3_BBOX_UNKNOWN;
 }
 
-b3BBox::b3BBox(b3_u32 * src) : b3Item(src)
+b3BBox::b3BBox(const b3_u32 * src) : b3Item(src)
 {
 	b3_size diff;
 

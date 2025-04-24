@@ -9,12 +9,14 @@ export OFLAGS="-O3"
 export CFLAGS=""
 export CXXFLAGS=""
 export CPPFLAGS=""
-export JOBS=`getconf _NPROCESSORS_ONLN`
+export JOBS=`nproc`
 
+test -f src/Makefile && make clean
+bin/clobber.sh
 make config depend
 
 cd src
-qmake CONFIG+=debug CONFIG+=gcov -r
+qmake6 CONFIG+=debug CONFIG+=gcov -r
 rm */Makefile
 cd ..
 
@@ -23,7 +25,7 @@ make -j ${JOBS}
 make install
 make cppcheck
 
-bin/brt3 -n -s 512 data/*
+bin/brt3 -n -s 512 data/* >/dev/null
 
 cd src/OpenGL
 ./qrender-sct --gtest_output=xml

@@ -502,7 +502,7 @@ public:
 	 * @param array The array which gets the object pointers.
 	 * @param max The maximum distance of the ray direction.
 	 */
-	void            b3CollectBBoxes(b3_line64 * line, b3Array<b3BBox *> * array, b3_f64 max = DBL_MAX);
+	void            b3CollectBBoxes(const b3_line64 * line, b3Array<b3BBox *> * array, b3_f64 max = DBL_MAX);
 
 	/**
 	 * This method collects all objects in the given bounding box.
@@ -843,17 +843,17 @@ private:
 class B3_PLUGIN b3RayRow : public b3Row
 {
 protected:
-	const b3_res       m_ySize;        //!< The resulting image height.
+	const b3_res       m_ySize;            //!< The resulting image height.
 
-	b3Display  * m_Display;      //!< The used b3Display.
-	b3Scene   *  m_Scene;        //!< The used b3Scene.
-	b3Shader  *  m_Shader;       //!< The used b3Shader.
-	b3Color   *  m_LastResult;   //!< The position of the previous color in row.
-	b3Color   *  m_ThisResult;   //!< The position of the actual color.
+	b3Display  * m_Display;                //!< The used b3Display.
+	b3Scene   *  m_Scene;                  //!< The used b3Scene.
+	b3Shader  *  m_Shader;                 //!< The used b3Shader.
+	b3Color   *  m_LastResult = nullptr;   //!< The position of the previous color in row.
+	b3Color   *  m_ThisResult = nullptr;   //!< The position of the actual color.
 	b3_vector64  m_preDir;
-	b3_f64       m_fxStep;       //!< The step width in camera projection plane vector values.
-	b3_f64       m_fy;           //!<
-	b3_f64       m_t;            //!< The actual time point.
+	b3_f64       m_fxStep;                 //!< The step width in camera projection plane vector values.
+	b3_f64       m_fy;                     //!<
+	b3_f64       m_t;                      //!< The actual time point.
 
 public:
 	/**
@@ -916,9 +916,9 @@ class B3_PLUGIN b3SupersamplingRayRow : public b3RayRow
 {
 	b3SupersamplingRayRow * m_PrevRow;
 	b3SupersamplingRayRow * m_SuccRow;
-	b3Color                m_Limit;
-	b3_row_state           m_RowState;
-	bool                   m_Debug;
+	b3Color                 m_Limit;
+	b3_row_state            m_RowState;
+	bool                    m_Debug;
 
 public:
 	/**
@@ -1023,7 +1023,7 @@ public:
 	/**
 	 * This destructor deinitializes this row instance.
 	 */
-	virtual        ~b3MotionBlurRayRow();
+	virtual        ~b3MotionBlurRayRow() = default;
 
 	/**
 	 * This method sets the actual time point for the animation which is needed

@@ -86,10 +86,10 @@
  */
 class B3_PLUGIN b3AnimControl : public b3Item
 {
-	b3_count      m_Dimension;           // vector dimension
-	b3_count      m_Used;                // used number of vectors
-	b3_count      m_Max;                 // maximum number of vectors
-	b3_vector4D * m_Controls;
+	b3_count      m_Dimension = 4;       // vector dimension
+	b3_count      m_Used      = 0;       // used number of vectors
+	b3_count      m_Max       = 0;       // maximum number of vectors
+	b3_vector4D * m_Controls  = nullptr;
 
 public:
 	B3_ITEM_INIT(b3AnimControl); //!< This constructor handles default initialization.
@@ -125,11 +125,11 @@ public:
 	b3_f64              m_End;                     //!< End of action
 	b3_u32              m_Flags;                   //!< ANIMF_xxx flags
 	b3_index            m_TrackIndex;              //!< Start track number
-	bool                m_CurveUse;                //!< Number of curves used
+	bool                m_CurveUse = false;        //!< Number of curves used
 	b3Nurbs             m_Param;                   //!< Param. curves
 	b3_f32              m_Knots[b3Nurbs::B3_MAX_KNOTS];  //!< Knot vector
-	char                m_Name[B3_ANIMSTRINGLEN];        //!< Element name
-	char                m_Object[B3_BOXSTRINGLEN];       //!< Name of destination object
+	char                m_Name[B3_ANIMSTRINGLEN]  {};    //!< Element name
+	char                m_Object[B3_BOXSTRINGLEN] {};    //!< Name of destination object
 
 public:
 	B3_ITEM_INIT(b3AnimElement); //!< This constructor handles default initialization.

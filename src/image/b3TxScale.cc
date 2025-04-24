@@ -378,23 +378,23 @@ void b3Tx::b3ComputeLineSmaller(
 
 bool b3Tx::b3ScaleBW2Grey(void * ptr)
 {
-	b3Mem            pool;
-	b3_rect_info  *  RectInfo;
-	b3_tx_type       dstType;
-	b3_u08     *     src;
-	b3_u08     *     cDst;
-	b3_pkd_color  *  lDst;
-	b3_pkd_color  *  pal;
-	const b3_count * rIndex;
-	const b3_count * cIndex;
-	b3_count    *    TxRowCounter;
-	b3_count    *    TxRowCells;
-	b3_res           xSrcSize;
-	b3_res           ySrcSize, ySrc;
-	b3_res           xDstSize, xDst;
-	b3_res           yDstSize, yDst;
-	b3_count         srcBytes, dstBytes;
-	b3_res           yMin, yMax;
+	b3Mem                pool;
+	b3_rect_info    *    RectInfo;
+	b3_tx_type           dstType;
+	b3_u08       *       src;
+	b3_u08       *       cDst;
+	b3_pkd_color    *    lDst;
+	const b3_pkd_color * pal;
+	const b3_count   *   rIndex;
+	const b3_count   *   cIndex;
+	b3_count      *      TxRowCounter;
+	b3_count      *      TxRowCells;
+	b3_res               xSrcSize;
+	b3_res               ySrcSize, ySrc;
+	b3_res               xDstSize, xDst;
+	b3_res               yDstSize, yDst;
+	b3_count             srcBytes, dstBytes;
+	b3_res               yMin, yMax;
 	void (*ComputeLine)(
 		b3_count * TxRowCounter,
 		b3_count * TxRowCells,
@@ -1783,14 +1783,14 @@ bool b3Tx::b3ScaleBW2BW(void * ptr)
 {
 	const b3_count   *   rIndex;
 	const b3_count   *   cIndex;
-	b3_rect_info * RectInfo;
-	b3_u08    *    src, *dst;
-	b3_coord       x, y, rx;
-	b3_res         yMin, yMax, xSize;
-	b3_u32         dstBit, srcBit;
-	b3_u08         dstByte;
-	b3_count       dstBytes, srcBytes, num;
-	b3_index       index;
+	const b3_rect_info * RectInfo;
+	b3_u08       *       src, *dst;
+	b3_coord             x, y, rx;
+	b3_res               yMin, yMax, xSize;
+	b3_u32               dstBit, srcBit;
+	b3_u08               dstByte;
+	b3_count             dstBytes, srcBytes, num;
+	b3_index             index;
 
 	RectInfo = static_cast<b3_rect_info *>(ptr);
 
@@ -2243,7 +2243,7 @@ void b3Tx::b3TransToGrey()
 {
 	b3_tx_data     cPtr;
 	b3_tx_data     old;
-	b3_u16    *    sPtr;
+	const b3_u16    *    sPtr;
 	b3_pkd_color * lPtr;
 	b3_color   *   fPtr;
 	b3_pkd_color * pPtr = nullptr;

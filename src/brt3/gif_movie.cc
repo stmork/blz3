@@ -33,14 +33,14 @@
 
 static void MovieGIF(char * name)
 {
-	b3File              in, out;
-	b3_u08       *      buffer, *data;
-	b3_size             size;
-	b3_count            diff, planes;
-	b3_bool             loop = true, visited = false, index = 0;
-	struct Extension  * transPtr;
-	struct Descriptor * descrPtr;
-	struct Repeator     repeat;
+	b3File                    in, out;
+	b3_u08          *         buffer, *data;
+	b3_size                   size;
+	b3_count                  diff, planes;
+	b3_bool                   loop = true, visited = false, index = 0;
+	struct Extension     *    transPtr;
+	const struct Descriptor * descrPtr;
+	struct Repeator           repeat;
 
 	b3PrintF(B3LOG_NORMAL, "\n");
 	b3PrintF(B3LOG_NORMAL, "FILE: %s\n", name);

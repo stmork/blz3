@@ -45,7 +45,7 @@ public:
 	 *
 	 * @param subdiv The new sub division value.
 	 */
-	b3ShapeRenderContext(const b3_count subdiv = 16);
+	explicit b3ShapeRenderContext(const b3_count subdiv = 16);
 
 	/**
 	 * This method initializes the sub division for render object indices.

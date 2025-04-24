@@ -120,6 +120,9 @@ public:
 		const b3_res frames_per_second = 25,
 		const bool   use_audio         = false);
 
+	b3MovieEncoder(const b3MovieEncoder & other) = delete;
+	b3MovieEncoder & operator=(const b3MovieEncoder & other) = delete;
+
 	/**
 	 * The destructor finishes the video stream and frees all resources
 	 * allocated by this video encoder.

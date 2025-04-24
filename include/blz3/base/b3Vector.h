@@ -79,7 +79,7 @@ public:
 	 *
 	 * @param value The value to initialize.
 	 */
-	inline b3VectorTemplate<F, dim>(F value)
+	explicit inline b3VectorTemplate<F, dim>(F value)
 	{
 		b3Value(value);
 	}
@@ -123,7 +123,7 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector32 & vec)
+	explicit inline b3VectorTemplate(const b3_vector32 & vec)
 	{
 		b3Init(vec.x, vec.y, vec.z);
 	}
@@ -133,7 +133,7 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_gl_vector & vec)
+	explicit inline b3VectorTemplate(const b3_gl_vector & vec)
 	{
 		b3Init(vec.x, vec.y, vec.z);
 	}
@@ -143,7 +143,7 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector64 & vec)
+	explicit inline b3VectorTemplate(const b3_vector64 & vec)
 	{
 		b3Init(vec.x, vec.y, vec.z);
 	}
@@ -153,7 +153,7 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector32_4D & vec)
+	explicit inline b3VectorTemplate(const b3_vector32_4D & vec)
 	{
 		b3Init(vec.x, vec.y, vec.z, vec.w);
 	}
@@ -163,7 +163,7 @@ public:
 	 *
 	 * @param vec The source vector.
 	 */
-	inline b3VectorTemplate(const b3_vector64_4D & vec)
+	explicit inline b3VectorTemplate(const b3_vector64_4D & vec)
 	{
 		b3Init(vec.x, vec.y, vec.z, vec.w);
 	}

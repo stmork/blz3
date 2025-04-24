@@ -37,23 +37,17 @@
 **                                                                      **
 *************************************************************************/
 
-const b3_f64 b3OceanWave::g = 9.81;
-
-b3OceanWave::b3OceanWave()
+b3OceanWave::b3OceanWave() :
+	m_t        ( -FLT_MAX),
+	m_Denom    ( 1.0 / 4096.0),
+	m_T        (     3),
+	m_Dim      (     9),
+	m_Wx       (     1),
+	m_Wy       (     0.7f),
+	m_A        (     1),
+	m_GridSize (   400),
+	m_l        (     0.0f)
 {
-	m_t        = -FLT_MAX;
-	m_T        =     3;
-	m_Dim      =     9;
-	m_Wx       =     1;
-	m_Wy       =     0.7f;
-	m_A        =     1;
-	m_GridSize =   400;
-	m_l        =     0.0f;
-	m_Denom    = 1.0 / 4096.0;
-
-	m_Phillips = nullptr;
-	m_Normals  = nullptr;
-	m_Modified = true;
 }
 
 b3OceanWave::~b3OceanWave()
@@ -237,12 +231,12 @@ void b3OceanWave::b3PrepareNormals()
 	}
 }
 
-void b3OceanWave::b3CopyHeightField(b3Tx * tx)
+void b3OceanWave::b3CopyHeightField(const b3Tx * tx)
 {
-	b3Complex64 * buffer = b3GetBuffer();
+	b3Complex64  * buffer = b3GetBuffer();
 	b3_pkd_color * ptr    = tx->b3GetTrueColorData();
-	b3_res        xSize  = tx->xSize;
-	b3_res        ySize  = tx->ySize;
+	b3_res         xSize  = tx->xSize;
+	b3_res         ySize  = tx->ySize;
 
 	for (b3_loop y = 0; y < ySize; y++)
 	{

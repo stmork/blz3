@@ -39,16 +39,16 @@ b3RenderViewItem::b3RenderViewItem() :
 }
 
 b3RenderViewItem::b3RenderViewItem(
-	b3_vector * lower,
-	b3_vector * upper) :
+	const b3_vector * lower,
+	const b3_vector * upper) :
 	b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
 {
 	b3Set(lower, upper);
 }
 
 void b3RenderViewItem::b3Set(
-	b3_vector * lower,
-	b3_vector * upper)
+	const b3_vector * lower,
+	const b3_vector * upper)
 {
 	m_Mid.x  = (upper->x + lower->x) * 0.5;
 	m_Mid.y  = (upper->y + lower->y) * 0.5;
@@ -69,11 +69,6 @@ void b3RenderViewItem::b3Set(
 b3RenderView::b3RenderView()
 {
 	m_ViewMode    = B3_VIEW_3D;
-	m_AntiAliased = false;
-	m_AspectRatio = true;
-	m_xRes        = 0;
-	m_yRes        = 0;
-	m_Actual      = nullptr;
 }
 
 b3RenderView::~b3RenderView()
@@ -88,7 +83,7 @@ b3RenderView::~b3RenderView()
 	m_Depot.b3Free();
 }
 
-b3RenderViewItem * b3RenderView::b3NewRenderViewItem(b3RenderViewItem * last)
+b3RenderViewItem * b3RenderView::b3NewRenderViewItem(const b3RenderViewItem * last)
 {
 	b3RenderViewItem * item;
 
@@ -135,7 +130,7 @@ b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode) const
 	return m_ViewMode == mode;
 }
 
-void b3RenderView::b3SetCamera(b3CameraPart * camera)
+void b3RenderView::b3SetCamera(const b3CameraPart * camera)
 {
 	m_EyePoint  = camera->m_EyePoint;
 	m_ViewPoint = camera->m_ViewPoint;
@@ -143,7 +138,7 @@ void b3RenderView::b3SetCamera(b3CameraPart * camera)
 	m_Height    = camera->m_Height;
 }
 
-void b3RenderView::b3SetCamera(b3Scene * scene)
+void b3RenderView::b3SetCamera(const b3Scene * scene)
 {
 	m_EyePoint  = scene->m_EyePoint;
 	m_ViewPoint = scene->m_ViewPoint;
@@ -391,8 +386,8 @@ void b3RenderView::b3GetViewDirection(b3_vector * dir) const
 }
 
 b3_f64 b3RenderView::b3GetPositionAngle(
-	b3_vector * center,
-	b3_vector * position) const
+	const b3_vector * center,
+	const b3_vector * position) const
 {
 	b3_f64 result = 0;
 
@@ -422,9 +417,9 @@ b3_f64 b3RenderView::b3GetPositionAngle(
 }
 
 void b3RenderView::b3SetTranslationStepper(
-	b3_vector   *   steps,
-	b3_vector   *   mover,
-	b3_action_mode  mode) const
+	const b3_vector * steps,
+	b3_vector    *    mover,
+	b3_action_mode    mode) const
 {
 	b3Vector::b3Init(mover);
 	switch (m_ViewMode)
@@ -536,9 +531,9 @@ void b3RenderView::b3SetTranslationStepper(
 }
 
 b3_f64 b3RenderView::b3SetRotationStepper(
-	b3_vector   *   steps,
-	b3_vector   *   axis,
-	b3_action_mode  mode)
+	const b3_vector	* steps,
+	b3_vector    *    axis,
+	b3_action_mode    mode)
 {
 	b3_f64 angle = 0;
 

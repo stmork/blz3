@@ -26,7 +26,7 @@ pipeline
 				echo "Node name: $NODE_NAME"
 				echo "Branch name: $GIT_BRANCH"
 				sh '''
-				test -f src/Makefile && make clean
+				test -f src/Makefile && make clean distclean
 				make config depend
 				'''
 			}
@@ -38,7 +38,7 @@ pipeline
 			{
 				sh '''
 					cd src
-					qmake CONFIG+=debug CONFIG+=gcov -r
+					qmake6 CONFIG+=debug CONFIG+=gcov -r
 					rm */Makefile
 				'''
 			}
@@ -51,6 +51,7 @@ pipeline
 				sh '''
 				make -j `nproc` install
 				make -j `nproc`
+				make install
 				'''
 			}
 		}
@@ -61,6 +62,14 @@ pipeline
 			{
 				sh 'make cppcheck'
 				publishCppcheck pattern: 'src/cppcheck.xml'
+			}
+		}
+
+		stage ('Render')
+		{
+			steps
+			{
+				sh 'bin/brt3 -n -s 512 data/* >/dev/null'
 			}
 		}
 

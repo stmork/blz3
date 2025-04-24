@@ -42,12 +42,12 @@ void b3Light::b3Register()
 	b3Item::b3Register(&b3Light::b3StaticInit, &b3Light::b3StaticInit, SPOT_LIGHT);
 }
 
-b3Light::b3Light(b3_u32 class_type) : b3Item(sizeof(b3Light), class_type)
+b3Light::b3Light(const b3_u32 class_type) : b3Item(sizeof(b3Light), class_type)
 {
 	b3InitValues();
 }
 
-b3Light::b3Light(b3_u32 * src) : b3Item(src)
+b3Light::b3Light(const b3_u32 * src) : b3Item(src)
 {
 	b3InitValues();
 	b3InitVector(&m_Position);

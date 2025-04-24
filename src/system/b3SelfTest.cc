@@ -85,7 +85,7 @@ b3_bool b3SelfTest::b3TestDataSize()
 b3_bool b3SelfTest::b3TestMemory()
 {
 	b3_u32    v1, v2;
-	void   *  ptr1, *ptr2;
+	b3_u08  * ptr1, *ptr2;
 	b3Mem     mem;
 	b3_count  count = 0;
 	b3_u08    buffer[MEM_MIN];
@@ -100,12 +100,12 @@ b3_bool b3SelfTest::b3TestMemory()
 	}
 	mem.b3Dump();
 
-	ptr1 = mem.b3Alloc(MEM_MIN);
+	ptr1 = mem.b3TypedAlloc<b3_u08>(MEM_MIN);
 	result &= (ptr1 != nullptr);
 	b3PrintF(B3LOG_NORMAL, "ptr1: %p\n", ptr1);
 	mem.b3Dump();
 
-	ptr2 = mem.b3Alloc(MEM_MIN);
+	ptr2 = mem.b3TypedAlloc<b3_u08>(MEM_MIN);
 	result &= (ptr2 != nullptr);
 	b3PrintF(B3LOG_NORMAL, "ptr2: %p\n", ptr2);
 	mem.b3Dump();
@@ -122,25 +122,25 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF(B3LOG_NORMAL, "whole node freed...\n");
 	mem.b3Dump();
 
-	ptr1 = mem.b3Realloc(nullptr,  MEM_MIN * 2);
+	ptr1 = mem.b3TypedRealloc<b3_u08>(nullptr,  MEM_MIN * 2);
 	mem.b3Dump();
 	for (int i = 0; i < MEM_MIN; i++)
 	{
-		((b3_u08 *)ptr1)[i] = buffer[i];
+		ptr1[i] = buffer[i];
 	}
 	b3PrintF(B3LOG_NORMAL, "ptr1 = %p after b3Realloc() (%s)\n",
 		ptr1,
 		ptr1 != nullptr ? "OK" : "wrong");
 	result &= (ptr1 != nullptr);
 
-	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
+	ptr2 = mem.b3TypedRealloc(ptr1,  MEM_MIN);
 	mem.b3Dump();
 	b3PrintF(B3LOG_NORMAL, "ptr2 = %p, ptr1 = %p after b3Realloc() with size reduction (%s)\n",
 		ptr2, ptr1,
 		(ptr1 == ptr2) && (ptr2 != nullptr) ? "OK" : "wrong");
 	result &= ((ptr1 == ptr2) && (ptr2 != nullptr));
 
-	ptr1 = mem.b3Realloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
+	ptr1 = mem.b3TypedRealloc(ptr2, MEM_MIN * MEM_HIGH_MULT);
 	mem.b3Dump();
 	b3PrintF(B3LOG_NORMAL, "ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1, ptr2,
@@ -160,20 +160,20 @@ b3_bool b3SelfTest::b3TestMemory()
 			{
 				b3PrintF(B3LOG_NORMAL, "\n%04x: ", i);
 			}
-			b3PrintF(B3LOG_NORMAL, " %02x-%02x", buffer[i], ((b3_u08 *)ptr1)[i]);
+			b3PrintF(B3LOG_NORMAL, " %02x-%02x", buffer[i], ptr1[i]);
 		}
 		b3PrintF(B3LOG_NORMAL, "\n");
 	}
 
 	for (int i = MEM_MIN; i < (MEM_MIN * MEM_HIGH_MULT); i++)
 	{
-		count += ((char *)ptr1)[i];
+		count += ptr1[i];
 	}
 	b3PrintF(B3LOG_NORMAL, "   Rest memory buffer is %s\n",
 		count == 0 ? "zero initialized (OK)" : "garbled (wrong)");
 	result &= (count == 0);
 
-	ptr2 = mem.b3Realloc(ptr1,     0);
+	ptr2 = mem.b3TypedRealloc(ptr1,     0);
 	b3PrintF(B3LOG_NORMAL, "ptr2 = %p, ptr1 = %p after b3Realloc() with zero size allocation (%s)\n",
 		ptr2, ptr1,
 		(ptr1 != ptr2) && (ptr2 == nullptr) ? "OK" : "wrong");
@@ -210,13 +210,13 @@ b3_bool b3SelfTest::b3TestDir()
 		switch (code)
 		{
 		case B3_TYPE_FILE :
-			b3PrintF(B3LOG_NORMAL, "f: %s\n", (const char *)name);
+			b3PrintF(B3LOG_NORMAL, "f: %s\n", static_cast<const char *>(name));
 			break;
 		case B3_TYPE_DIR :
-			b3PrintF(B3LOG_NORMAL, "d: %s\n", (const char *)name);
+			b3PrintF(B3LOG_NORMAL, "d: %s\n", static_cast<const char *>(name));
 			break;
 		default :
-			b3PrintF(B3LOG_NORMAL, "?: %s\n", (const char *)name);
+			b3PrintF(B3LOG_NORMAL, "?: %s\n", static_cast<const char *>(name));
 			break;
 		}
 		name.b3Empty();
@@ -306,11 +306,12 @@ b3_bool b3SelfTest::b3TestIO()
 	}
 
 	b3PrintF(B3LOG_NORMAL, "Memory file: ------------------\n");
-	if (filemem.b3Open(B_WRITE))
+	try
 	{
+		filemem.b3Open(B_WRITE);
 		success &= b3TestFile(filemem);
 	}
-	else
+	catch (...)
 	{
 		success = false;
 	}

@@ -165,10 +165,10 @@ void b3Animation::b3RecomputeNeutralInverse(b3AnimElement * Element)
 
 void b3Animation::b3ResetAnimation(b3Scene * Global)
 {
-	b3AnimElement * Anim;
-	b3AnimElement * prev;
-	b3Item     *    item;
-	b3_matrix       resetMatrix;
+	const b3AnimElement * prev;
+	b3AnimElement    *    Anim;
+	b3Item        *       item;
+	b3_matrix             resetMatrix;
 
 	// reset animation, compute time range and number of tracks
 	m_Tracks = 0;

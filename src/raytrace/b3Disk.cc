@@ -31,11 +31,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3Disk::b3Disk(b3_u32 class_type) : b3Shape2(sizeof(b3Disk), class_type)
+b3Disk::b3Disk(const b3_u32 class_type) : b3Shape2(sizeof(b3Disk), class_type)
 {
 }
 
-b3Disk::b3Disk(b3_u32 * src) : b3Shape2(src)
+b3Disk::b3Disk(const b3_u32 * src) : b3Shape2(src)
 {
 }
 
@@ -152,9 +152,9 @@ void b3Disk::b3ComputeVertices()
 
 void b3Disk::b3ComputeIndices()
 {
-	b3_gl_line   *  gPtr;
-	b3_gl_polygon * pPtr;
-	b3_bool         EndLines = false;
+	b3_gl_line   *  gPtr = *glGridElements;
+	b3_gl_polygon * pPtr = *glPolygonElements;
+	b3_bool         segmented = false;
 	b3_index        i, pos;
 	b3_count        Overhead;
 	b3_count        grid_count = 0;
@@ -164,12 +164,9 @@ void b3Disk::b3ComputeIndices()
 	Overhead = b3GetIndexOverhead(0.0, 0.0);
 	if (Overhead < 0)
 	{
-		EndLines = true;
-		Overhead = -Overhead;
+		segmented = true;
+		Overhead  = -Overhead;
 	}
-
-	gPtr = *glGridElements;
-	pPtr = *glPolygonElements;
 
 	for (i = pos = 0; i < Overhead; i++)
 	{
@@ -184,10 +181,15 @@ void b3Disk::b3ComputeIndices()
 		pos += 2;
 	}
 
-	if (EndLines)
+	if (segmented)
 	{
-		B3_GL_LINIT(gPtr, 0, 1);
-		B3_GL_LINIT(gPtr, Overhead + Overhead, Overhead + Overhead + 1);
+		const decltype(gPtr->a) start = 0;
+		const decltype(gPtr->a) end   = Overhead + Overhead;
+
+		gPtr[0].a = start;
+		gPtr[0].b = start + 1;
+		gPtr[1].a = end;
+		gPtr[1].b = end + 1;
 
 		grid_count += 2;
 	}

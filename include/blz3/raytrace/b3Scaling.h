@@ -61,7 +61,7 @@ public:
 	 * @param scale The scaling factors as vector.
 	 * @param mode  The scaling mode.
 	 */
-	void            b3InitScaling(b3_vector * scale, b3_scaling_mode mode);
+	void            b3InitScaling(const b3_vector * scale, const b3_scaling_mode mode);
 
 	/**
 	 * This initializes scaling with the same scaling factor for all three directions

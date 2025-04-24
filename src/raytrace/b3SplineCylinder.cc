@@ -30,11 +30,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3SplineCylinder::b3SplineCylinder(b3_u32 class_type) :
+b3SplineCylinder::b3SplineCylinder(const b3_u32 class_type) :
 	b3SplineShape(sizeof(b3SplineCylinder), class_type)
 {
 }
 
-b3SplineCylinder::b3SplineCylinder(b3_u32 * src) : b3SplineShape(src)
+b3SplineCylinder::b3SplineCylinder(const b3_u32 * src) : b3SplineShape(src)
 {
 }

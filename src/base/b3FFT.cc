@@ -38,18 +38,9 @@ using namespace std::complex_literals;
 **                                                                      **
 *************************************************************************/
 
-b3Fourier::b3Fourier()
+b3Fourier::b3Fourier() :
+	m_CPUs(std::min<b3_count>(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs()))
 {
-	// Dimension
-	m_xOrig  = m_yOrig  = 0;
-	m_xSize  = m_ySize  = 0;
-	m_xStart = m_yStart = 0;
-	m_xDim   = m_yDim   = 0;
-
-	m_Buffer = nullptr;
-	m_Lines  = nullptr;
-	m_Aux    = nullptr;
-	m_CPUs   = std::min<b3_count>(B3_FFT_MAX_THREADS, b3Runtime::b3GetNumCPUs());
 }
 
 b3Fourier::~b3Fourier()
@@ -512,14 +503,8 @@ bool b3Fourier::b3SelfTest()
 		}
 	}
 
-	if (!b3FFT2D())
-	{
-		return false;
-	}
-	if (!b3IFFT2D())
-	{
-		return false;
-	}
+	b3FFT2D();
+	b3IFFT2D();
 
 	random.b3SetSeed();
 	for (y = 0; y < m_ySize; y++)

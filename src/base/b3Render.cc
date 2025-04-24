@@ -515,8 +515,8 @@ bool b3RenderObject::b3ComputeBounds(b3_vector * lower, b3_vector * upper)
 }
 
 void b3RenderObject::b3TransformVertices(
-	b3_matrix * transformation,
-	bool        is_affine)
+	const b3_matrix * transformation,
+	bool              is_affine)
 {
 	if (glVertexElements != nullptr)
 	{
@@ -1128,8 +1128,8 @@ void b3RenderObject::b3CheckGeometry(
 }
 
 void b3RenderObject::b3DrawGeometry(
-	b3RenderContext    *   context,
-	const b3_render_mode   render_mode)
+	const b3RenderContext * context,
+	const b3_render_mode    render_mode)
 {
 	switch (render_mode)
 	{
@@ -1155,7 +1155,7 @@ void b3RenderObject::b3DrawGeometry(
 	}
 }
 
-void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext * context)
+void b3RenderObject::b3SelectMaterialForLineDrawing(const b3RenderContext * context)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3Color         diffuse;

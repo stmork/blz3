@@ -705,7 +705,7 @@ void b3ImageTest::testHist()
 		CPPUNIT_ASSERT(tx.b3AllocTx(TEST_IMG_XMAX, TEST_IMG_YMAX, depth));
 		CPPUNIT_ASSERT_NO_THROW(tx.b3Copy(m_TxMap[depth]));
 
-		CPPUNIT_ASSERT(tx.b3Histogramme());
+		CPPUNIT_ASSERT_NO_THROW(tx.b3Histogramme());
 	}
 }
 

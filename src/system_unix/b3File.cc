@@ -136,7 +136,7 @@ b3_offset b3File::b3Read(
 	const b3_size  buffer_size)
 
 {
-	return m_File != -1 ? read(m_File, (void *)buffer, buffer_size) : -1;
+	return m_File != -1 ? read(m_File, buffer, buffer_size) : -1;
 }
 
 // Guess what, but including caching
@@ -144,7 +144,7 @@ b3_size b3File::b3Write(
 	const void  *  ptr,
 	const b3_size  buffer_size)
 {
-	b3_u08 * buffer = (b3_u08 *)ptr;
+	const b3_u08 * buffer = static_cast<const b3_u08 *>(ptr);
 	b3_size  written;
 
 	// write buffer is cachable

@@ -74,8 +74,6 @@ b3_bool b3SearchPath::b3IsValid(
 	const char * partial_filename,
 	char    *    full_filename)
 {
-	b3PathEntry * path;
-
 	if ((partial_filename != nullptr) && (strlen(partial_filename) > 0))
 	{
 		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", (char *)partial_filename);
@@ -89,6 +87,8 @@ b3_bool b3SearchPath::b3IsValid(
 		}
 		else
 		{
+			b3PathEntry * path;
+
 			B3_FOR_BASE(&m_SearchPath, path)
 			{
 				b3Path fq_filename;

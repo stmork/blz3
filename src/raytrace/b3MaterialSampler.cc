@@ -76,13 +76,13 @@ b3SampleInfo * b3MaterialSampler::b3SampleInit(const b3_count CPUs)
 
 void b3MaterialSampler::b3SampleTask(const b3SampleInfo * info)
 {
-	b3Material * material = (b3Material *)info->m_Ptr;
-	b3BBox      bbox = BBOX;
-	b3_coord    x, y;
-	b3_ray      ray;
-	b3_surface  surface;
-	b3_f64      fy;
-	b3_color  * data = (b3_color *)info->m_Data;
+	const b3Material * material = static_cast<const b3Material *>(info->m_Ptr);
+	b3BBox             bbox(BBOX);
+	b3_coord           x, y;
+	b3_ray             ray;
+	b3_surface         surface;
+	b3_f64             fy;
+	b3_color     *     data = info->m_Data;
 
 	ray.bbox           = &bbox;
 	ray.Q              = 1;

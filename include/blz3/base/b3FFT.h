@@ -39,7 +39,7 @@ class b3Fourier;
 
 struct b3FilterInfo
 {
-	b3Fourier * m_Fourier;
+	b3Fourier * m_Fourier = nullptr;
 };
 
 typedef void (*b3SampleFunc)(const b3_f64 fx, const b3_f64 fy, const b3_index index, b3FilterInfo * info);
@@ -57,13 +57,13 @@ struct b3_fft_info
 
 class B3_PLUGIN b3Fourier : protected b3Mem
 {
-	b3Complex64      *     m_Buffer;
-	b3Complex64     **     m_Lines;
-	b3Complex64      *     m_Aux;
+	b3Complex64      *     m_Buffer = nullptr;
+	b3Complex64     **     m_Lines  = nullptr;
+	b3Complex64      *     m_Aux    = nullptr;
 	b3_count               m_CPUs;
 
-	b3_res                 m_xSize, m_xOrig, m_xStart, m_xDim;
-	b3_res                 m_ySize, m_yOrig, m_yStart, m_yDim;
+	b3_res                 m_xSize = 0, m_xOrig = 0, m_xStart = 0, m_xDim = 0;
+	b3_res                 m_ySize = 0, m_yOrig = 0, m_yStart = 0, m_yDim = 0;
 
 public:
 	b3Fourier();

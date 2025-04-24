@@ -122,7 +122,7 @@ b3_path_type b3Dir::b3DirNext(char * name)
 	name[0] = 0;
 	do
 	{
-		struct dirent * entry;
+		const struct dirent * entry;
 
 		loop = false;
 		type = B3_NOT_EXISTANT;
@@ -408,7 +408,7 @@ void b3Path::b3ParentName(
 
 	// Copy to destination if available else
 	// overwrite source
-	strcpy(parent != nullptr ? parent : (char *)file, actDir);
+	strcpy(parent != nullptr ? parent : const_cast<char *>(file), actDir);
 }
 
 // Non static one...

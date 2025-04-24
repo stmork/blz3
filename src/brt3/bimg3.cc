@@ -87,9 +87,10 @@ static void load(const char * name)
 
 int main(int argc, char * argv[])
 {
-	char    *    BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
-	char    *    BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
-	char    *    HOME             = getenv("HOME");
+	const char * BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
+	const char * BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
+	const char * HOME             = getenv("HOME");
+
 	b3Path       textures;
 	b3Path       pictures;
 	b3FileList   list;

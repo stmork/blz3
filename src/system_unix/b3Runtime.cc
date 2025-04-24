@@ -126,21 +126,13 @@ const char * b3Runtime::b3GetUserName()
 	return runtime.m_UserName;
 }
 
-void * b3Runtime::b3GetOpenGLExtension(const char * procedure_name)
-{
-#if defined(BLZ3_USE_OPENGL) && defined(RTLD_NEXT)
-	return dlsym(RTLD_NEXT, procedure_name);
-#else
-	return nullptr;
-#endif
-}
-
 int b3Runtime::b3ParseOption(
-	int     argc,
-	char  * argv[],
-	int     i,
-	char  * option,
-	size_t  size)
+	const int    argc,
+	// cppcheck-suppress constParameter
+	char * const argv [],
+	int          i,
+	char    *    option,
+	const size_t size)
 {
 	if (strlen(argv[i]) > 2)
 	{

@@ -61,9 +61,9 @@ public:
 	 * @return The preview scene with the cloned object.
 	 */
 	static b3Scene    *   b3CreateBBox(
-		b3BBox    *    originalBBox,
-		b3_u32         classType,
-		b3CameraPart * originalCamera = nullptr);
+		const b3BBox    *    originalBBox,
+		const b3_u32         classType,
+		const b3CameraPart * originalCamera = nullptr);
 
 	/**
 	 * This method creates a scene for previewing materials. The scene contains a checker

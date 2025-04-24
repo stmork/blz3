@@ -106,7 +106,9 @@ void b3Activation::b3Animate(b3_anim_activation activate)
 **                                                                      **
 *************************************************************************/
 
-b3Shape::b3Shape(b3_size class_size, b3_u32 class_type) : b3Item(class_size, class_type)
+b3Shape::b3Shape(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Item(class_size, class_type)
 {
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
@@ -114,7 +116,7 @@ b3Shape::b3Shape(b3_size class_size, b3_u32 class_type) : b3Item(class_size, cla
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
+b3Shape::b3Shape(const b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
@@ -122,7 +124,7 @@ b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3Shape::b3Shape(b3_u32 * src) : b3Item(src)
+b3Shape::b3Shape(const b3_u32 * src) : b3Item(src)
 {
 	b3InitVector(); // This is the normal
 	b3InitVector(); // This is Polar.Polar
@@ -273,15 +275,17 @@ void b3Shape::b3Transform(
 **                                                                      **
 *************************************************************************/
 
-b3SimpleShape::b3SimpleShape(b3_size class_size, b3_u32 class_type) : b3Shape(class_size, class_type)
+b3SimpleShape::b3SimpleShape(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Shape(class_size, class_type)
 {
 }
 
-b3SimpleShape::b3SimpleShape(b3_u32 class_type) : b3Shape(sizeof(b3SimpleShape), class_type)
+b3SimpleShape::b3SimpleShape(const b3_u32 class_type) : b3Shape(sizeof(b3SimpleShape), class_type)
 {
 }
 
-b3SimpleShape::b3SimpleShape(b3_u32 * src) : b3Shape(src)
+b3SimpleShape::b3SimpleShape(const b3_u32 * src) : b3Shape(src)
 {
 }
 
@@ -302,21 +306,23 @@ bool b3SimpleShape::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3Shape2::b3Shape2(b3_size class_size, b3_u32 class_type) : b3SimpleShape(class_size, class_type)
+b3Shape2::b3Shape2(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3SimpleShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
 	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
 }
 
-b3Shape2::b3Shape2(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape2), class_type)
+b3Shape2::b3Shape2(const b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape2), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
 	b3Vector::b3Init(&m_Dir2, 0, 50, 0);
 }
 
-b3Shape2::b3Shape2(b3_u32 * src) : b3SimpleShape(src)
+b3Shape2::b3Shape2(const b3_u32 * src) : b3SimpleShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir1);
@@ -361,7 +367,9 @@ void b3Shape2::b3SetupPicking(b3PickInfo * info)
 **                                                                      **
 *************************************************************************/
 
-b3Shape3::b3Shape3(b3_size class_size, b3_u32 class_type) : b3SimpleShape(class_size, class_type)
+b3Shape3::b3Shape3(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3SimpleShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
@@ -369,7 +377,7 @@ b3Shape3::b3Shape3(b3_size class_size, b3_u32 class_type) : b3SimpleShape(class_
 	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
-b3Shape3::b3Shape3(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape3), class_type)
+b3Shape3::b3Shape3(const b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape3), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
@@ -377,7 +385,7 @@ b3Shape3::b3Shape3(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape3), class_ty
 	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
-b3Shape3::b3Shape3(b3_u32 * src) : b3SimpleShape(src)
+b3Shape3::b3Shape3(const b3_u32 * src) : b3SimpleShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]

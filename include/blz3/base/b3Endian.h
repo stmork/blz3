@@ -40,12 +40,11 @@ public:
 	[[nodiscard]]
 	static inline T b3Get(const void * Ptr)
 	{
-		T Value{0};
+		const b3_u08 * Pointer = static_cast<const b3_u08 *>(Ptr);
+		T              Value{0};
 
 		if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
 		{
-			b3_u08 * Pointer = (b3_u08 *)Ptr;
-
 			Pointer += sizeof(T);
 			for (b3_size i = 0; i < sizeof(T); ++i)
 			{
@@ -55,8 +54,6 @@ public:
 		}
 		else
 		{
-			b3_u08 * Pointer = (b3_u08 *)Ptr;
-
 			for (b3_size i = 0; i < sizeof(T); ++i)
 			{
 				Value = (Value << 8) | *Pointer++;

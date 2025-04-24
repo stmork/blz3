@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGTorus), class_type)
+b3CSGTorus::b3CSGTorus(const b3_u32 class_type) : b3CSGShape(sizeof(b3CSGTorus), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
@@ -41,7 +41,7 @@ b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGTorus), class
 	m_bRad = 1;
 }
 
-b3CSGTorus::b3CSGTorus(b3_u32 * src) : b3CSGShape(src)
+b3CSGTorus::b3CSGTorus(const b3_u32 * src) : b3CSGShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]

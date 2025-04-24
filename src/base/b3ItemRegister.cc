@@ -36,13 +36,13 @@
 **                                                                      **
 *************************************************************************/
 
-b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem), class_type)
+b3FirstItem::b3FirstItem(const b3_u32  class_type) : b3Item(sizeof(b3FirstItem), class_type)
 {
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase();
 }
 
-b3FirstItem::b3FirstItem(b3_u32 * src) : b3Item(src)
+b3FirstItem::b3FirstItem(const b3_u32 * src) : b3Item(src)
 {
 }
 

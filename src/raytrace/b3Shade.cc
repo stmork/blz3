@@ -36,7 +36,7 @@ b3Shader::b3Shader(b3Scene * scene) : m_Scene(scene)
 
 	info.m_Scene = scene;
 	info.m_t     = scene->b3GetTimePoint();
-	b3Prepare(&info);
+	b3Shader::b3Prepare(&info);
 }
 
 void b3Shader::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)

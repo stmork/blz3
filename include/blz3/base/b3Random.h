@@ -62,7 +62,7 @@ template<class T>class B3_PLUGIN b3PseudoRandom : public b3Random<T>
 	long int m_Seed;
 
 public:
-	inline b3PseudoRandom<T>(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED) :
+	explicit inline b3PseudoRandom<T>(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED) :
 		b3Random<T>()
 	{
 		m_Seed = seed;
@@ -99,7 +99,7 @@ template<class T> class B3_PLUGIN b3Rand48 : public b3Random<T>
 	b3_f64 m_Seed;
 
 public:
-	constexpr b3Rand48<T>(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED) :
+	explicit constexpr b3Rand48<T>(const int seed = b3Random<T>::B3_RANDOM_DEFAULT_SEED) :
 		b3Random<T>()
 	{
 		unsigned short conv = seed & 0xffff;
@@ -133,7 +133,7 @@ private:
 		return m_Seed / (__rand_A - 1);
 	}
 
-	constexpr void b3Seed48(unsigned short * seed)
+	constexpr void b3Seed48(const unsigned short * seed)
 	{
 		B3_ASSERT(*seed != 0);
 		m_Seed = *seed;

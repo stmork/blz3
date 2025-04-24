@@ -121,13 +121,15 @@ class b3FirstItem;
  *
  * \see b3Item
  */
-class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
+class B3_PLUGIN b3World : public b3SearchPath
 {
-	b3_u32     *    m_Buffer = nullptr;
+	b3_u32     *    m_Buffer     = nullptr;
+	b3FirstItem  *  m_Start      = nullptr;
 	b3_u32          m_BufferSize = 0;
+	b3_count        m_Missed     = 0;
 	bool            m_NeedEndianChange;
-	b3FirstItem  *  m_Start = nullptr;
-	b3_count        m_Missed = 0;
+
+	b3Mem           m_Mem;
 
 public:
 	/**
@@ -148,7 +150,7 @@ public:
 	 *
 	 * @param worldname The file to deserialize.
 	 */
-	b3World(const char * worldname);
+	explicit b3World(const char * worldname);
 
 	/**
 	 * This destructor deinitializes this instance. If the auto deletion is activated
@@ -159,7 +161,7 @@ public:
 	/**
 	 * This method frees all memory inside this world instance.
 	 */
-	void            b3Free();
+	void            b3Free(void);
 
 	/**
 	 * This method allocates a b3Item instance from the item registry. If the
@@ -292,7 +294,7 @@ public:
 	 * @return The cloned b3Item.
 	 * @throws b3WorldException
 	 */
-	static b3Item * b3Clone(b3Item * original, const bool throw_exception = true);
+	static b3Item * b3Clone(const b3Item * original, const bool throw_exception = true);
 
 	/**
 	 * This method clones a complete b3Base list. The items must be stored
@@ -322,16 +324,20 @@ private:
 /**
  * This defines an initialization function for b3Item initialization with default values.
  */
-typedef b3Item * (*b3_item_init_func)(b3_u32  class_type);
+typedef b3Item * (*b3_item_init_func)(const b3_u32  class_type);
 
 /**
  * This defines an initialization function for b3Item initialization from a serialization buffer.
  */
-typedef b3Item * (*b3_item_load_func)(b3_u32 * src);
+typedef b3Item * (*b3_item_load_func)(const b3_u32 * src);
 
-#define B3_ITEM_BASE(item_class)  item_class(b3_size class_size,b3_u32 classtype);
-#define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3StaticInit(b3_u32  class_type) { return new item_class(class_type); }
-#define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3StaticInit(b3_u32 *src)        { return new item_class(src); }
+#define B3_ITEM_BASE(item_class)      explicit item_class(const b3_size class_size, const b3_u32 classtype);
+#define B3_ITEM_INIT(item_class)      explicit item_class(const b3_u32 class_type); static inline b3Item *b3StaticInit(const b3_u32  class_type) { return new item_class(class_type); }
+#define B3_ITEM_LOAD(item_class)      explicit item_class(const b3_u32 *src);       static inline b3Item *b3StaticInit(const b3_u32 *src)        { return new item_class(src); }
+
+#define B3_ITEM_ABSTRACT(item_class) \
+	explicit item_class(const b3_u32 class_type); \
+	explicit item_class(const b3_u32 *src);
 
 struct b3_preparation_info
 {
@@ -340,23 +346,25 @@ struct b3_preparation_info
 /**
  * This class provides serialization methods for one data item.
  */
-class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
+class B3_PLUGIN b3Item : public b3Link<b3Item>
 {
 protected:
-	b3_u32           m_ItemSize;    //!< The stored size of this item in bytes.
-	b3_s32           m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
-	b3Base<b3Item> * m_Heads;       //!< The list heads.
-	b3_u32           m_HeadCount;   //!< The number of list heads.
+	b3_u32           m_ItemSize   = 0;        //!< The stored size of this item in bytes.
+	b3_s32           m_ItemOffset = 0;        //!< The offset to the text area in this stored b3Item.
+	b3Base<b3Item> * m_Heads      = nullptr;  //!< The list heads.
+	b3_u32           m_HeadCount  = 0;        //!< The number of list heads.
 
 	// Attributes for parsing
-	b3_u32     *     m_Buffer;      //!< This is a memory buffer of an archived b3Item.
-	b3_u32           m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
+	b3_u32     *     m_Buffer     = nullptr;  //!< This is a memory buffer of an archived b3Item.
+	b3_u32           m_ParseIndex = 0;        //!< This is an index in the memory buffer for parsing the b3Item.
 
 	// Attributes for writing
-	b3_u32           m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
-	b3_s32           m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
-	b3_u32           m_StoreSize;   //!< The number of 32 bit unsigned integers.
-	b3_u32     *     m_StoreBuffer; //!< A temporary store buffer.
+	b3_u32           m_StoreIndex  = 0;       //!< The index to a 32 bit unsigned integer of the actual store position.
+	b3_s32           m_StoreOffset = 0;       //!< The index to the text area as an index to a 32 bit wide unsigned integer.
+	b3_u32           m_StoreSize   = 0;       //!< The number of 32 bit unsigned integers.
+	b3_u32     *     m_StoreBuffer = nullptr; //!< A temporary store buffer.
+
+	b3Mem            m_Mem;
 
 public:
 	/**
@@ -371,7 +379,7 @@ public:
 	 * @param classsize The instance size.
 	 * @param classtype The class type of the new instance.
 	 */
-	b3Item(b3_size classsize, b3_u32 classtype);
+	explicit b3Item(const b3_size classsize, const b3_u32 classtype);
 
 	/**
 	 * This constructor initializes the instance content from a serialization buffer. The
@@ -379,7 +387,7 @@ public:
 	 *
 	 * @param buffer The serialization buffer.
 	 */
-	b3Item(b3_u32 * buffer);
+	explicit b3Item(const b3_u32 * buffer);
 
 	/**
 	 * This destructor deinitializes this instance.
@@ -706,7 +714,7 @@ protected:
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector(b3Vector32 & vec);
+	void     b3StoreVector(const b3Vector32 & vec);
 
 	/**
 	 * This method stores a four component vector.
@@ -720,7 +728,7 @@ protected:
 	 *
 	 * @param vec The vector to store.
 	 */
-	void     b3StoreVector4D(b3Vector32 & vec);
+	void     b3StoreVector4D(const b3Vector32 & vec);
 
 	/**
 	 * This method stores a 4x4 matrix.
@@ -741,7 +749,7 @@ protected:
 	 *
 	 * @param col The color.
 	 */
-	void     b3StoreColor(b3Color   &  col);
+	void     b3StoreColor(const b3Color   &  col);
 
 	/**
 	 * This method stores the contents of a b3Spline class.
@@ -792,6 +800,16 @@ private:
 	void            b3EnsureStoreBuffer(b3_u32 needed, bool    is_data = true);
 	b3_world_error  b3ParseLinkuage(b3Item ** array, b3_u32 node_count, b3_u32 class_limit, b3_count level = 0);
 
+	template<typename T>
+	void b3StoreValue(const T value)
+	{
+		b3EnsureStoreBuffer(1);
+
+		static_assert(sizeof(T) == 4, "Size of type is not 32 bit!");
+
+		T * ptr = reinterpret_cast<T *>(&m_StoreBuffer[m_StoreIndex++]);
+		*ptr = (T)value;
+	}
 	friend class b3World;
 };
 

@@ -61,7 +61,7 @@ void b3Wood::b3PrepareWood(b3_vector * scale)
 	b3Matrix::b3RotateY(&m_Warp, &m_Warp, nullptr, m_yRot);
 }
 
-b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
+b3_f64 b3Wood::b3ComputeWood(const b3_vector * polar, const b3_f64 dist) const
 {
 	b3_vector d;
 	b3_vector offset;
@@ -130,7 +130,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector * polar, const b3_f64 dist) const
 	return inring * m_Ringy * (1 - grain) + grain;
 }
 
-void b3Wood::b3CopyWobbled(b3Wood * wood, b3_f64 wobble, b3_f64 fx, b3_f64 fy)
+void b3Wood::b3CopyWobbled(const b3Wood * wood, b3_f64 wobble, b3_f64 fx, b3_f64 fy)
 {
 	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx, 0, 0) * wobble * 7;
 	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0, fy, 0) * wobble * 5;
@@ -206,7 +206,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector * scale)
 	}
 }
 
-b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector * polar, b3_f64 distance, b3_index & index) const
+b3_f64 b3OakPlank::b3ComputeOakPlank(const b3_vector * polar, b3_f64 distance, b3_index & index) const
 {
 	b3_vector surface;
 	b3_index  ix, iy;

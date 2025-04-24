@@ -113,11 +113,11 @@ private:
 	void selectBBox(b3BBox * bbox);
 	QB3AbstractItem<b3BBox> * findBBoxItem(b3BBox * bbox);
 
-	Ui::MainWindow    *   ui;
+	Ui::MainWindow    *   ui           = nullptr;
+	QStandardItemModel  * camera_model = nullptr;
+	QStandardItemModel  * light_model  = nullptr;
+	QStandardItemModel  * bbox_model   = nullptr;
 	QPropertyAnimation    animation;
-	QStandardItemModel  * camera_model;
-	QStandardItemModel  * light_model;
-	QStandardItemModel  * bbox_model;
 
 	b3Path                textures;
 	b3Path                pictures;

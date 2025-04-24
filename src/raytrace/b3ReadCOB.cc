@@ -106,10 +106,11 @@ b3COBInfo * b3COBReader::b3COB_FindInfo(b3_cob_id id)
 
 b3Item * b3COBReader::b3COB_Reconstruct()
 {
-	b3COBInfo    *    cobInfo, *next;
-	b3BBox      *     root = nullptr, *BBox;
-	b3TriangleShape * Shape;
-
+	const b3BBox      *     BBox;
+	const b3TriangleShape * Shape;
+	b3BBox         *        root = nullptr;
+	b3COBInfo       *       cobInfo;
+	b3COBInfo       *       next;
 
 	/* First find root object in object list. */
 	/* Follow error messages for exceptions! */
@@ -229,8 +230,8 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 }
 
 void b3COBReader::b3COB_ComputeAvrgColor(
-	b3Tx  *  texture,
-	b3Color & color)
+	const b3Tx * texture,
+	b3Color   &  color)
 {
 	b3_coord     x, y, xMax, yMax;
 
@@ -692,9 +693,8 @@ b3_size b3COBReader::b3COB_ParseMat(const char * buffer)
 		}
 		if (strlen(name) > 0)
 		{
-			b3Tx * texture;
+			const b3Tx * texture = b3Scene::m_TexturePool.b3LoadTexture(name);
 
-			texture = b3Scene::m_TexturePool.b3LoadTexture(name);
 			if (texture != nullptr)
 			{
 				b3COB_ComputeAvrgColor(texture, Mat->m_Diffuse);

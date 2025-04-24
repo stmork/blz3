@@ -138,7 +138,7 @@ int b3Tx::b3CloseProc(B3_UNUSED thandle_t fd)
 
 toff_t b3Tx::b3SizeProc(thandle_t fd)
 {
-	b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
+	const b3MemTiffInfo * value = static_cast<b3MemTiffInfo *>(fd);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "IMG TIFF # b3ProcSize: %ld\n", value->m_Size);
@@ -148,7 +148,7 @@ toff_t b3Tx::b3SizeProc(thandle_t fd)
 
 int b3Tx::b3MMapProc(thandle_t fd, tdata_t * pbase, toff_t * psize)
 {
-	b3MemTiffInfo * tiff_info = static_cast<b3MemTiffInfo *>(fd);
+	const b3MemTiffInfo * tiff_info = static_cast<b3MemTiffInfo *>(fd);
 
 	*pbase = tiff_info->m_Ptr;
 	*psize = tiff_info->m_Size;
@@ -427,7 +427,7 @@ b3_result b3Tx::b3LoadTIFF(const char * tiff_name)
 
 	try
 	{
-		b3_u08 * buffer = tiff_file.b3ReadBuffer(tiff_name, size);
+		const b3_u08 * buffer = tiff_file.b3ReadBuffer(tiff_name, size);
 
 		error_code = b3LoadTIFF(tiff_name, buffer, size);
 	}

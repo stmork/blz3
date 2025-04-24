@@ -60,7 +60,7 @@ void b3VertexBuffer::b3Draw()
 
 b3SimpleVertexElements::~b3SimpleVertexElements()
 {
-	b3FreeVertexMemory();
+	b3SimpleVertexElements::b3FreeVertexMemory();
 }
 
 void b3SimpleVertexElements::b3AllocVertexMemory(
@@ -98,7 +98,7 @@ void b3SimpleVertexElements::b3FreeVertexMemory()
 
 b3SimpleGridElements::~b3SimpleGridElements()
 {
-	b3FreeVertexMemory();
+	b3SimpleGridElements::b3FreeVertexMemory();
 }
 
 void b3SimpleGridElements::b3AllocVertexMemory(
@@ -136,7 +136,7 @@ void b3SimpleGridElements::b3FreeVertexMemory()
 
 b3SimplePolygonElements::~b3SimplePolygonElements()
 {
-	b3FreeVertexMemory();
+	b3SimplePolygonElements::b3FreeVertexMemory();
 }
 
 void b3SimplePolygonElements::b3AllocVertexMemory(

@@ -47,7 +47,6 @@ void b3CodecFrame::b3InitAudio(
 #else
 	m_Frame->channel_layout = codec_context->channel_layout;
 	m_Frame->channels       = av_get_channel_layout_nb_channels(m_Frame->channel_layout);
-	m_Frame->nb_samples     = codec_context->sample_rate * m_Frame->channels / frames_per_second;
 
 	const int channels = m_Frame->channels;
 

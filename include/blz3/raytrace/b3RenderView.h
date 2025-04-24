@@ -84,7 +84,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	b3RenderViewItem(b3_vector * lower, b3_vector * upper);
+	b3RenderViewItem(const b3_vector * lower, const b3_vector * upper);
 
 	/**
 	 * This method sets a new boundary to this view item.
@@ -92,7 +92,7 @@ public:
 	 * @param lower The lower corner.
 	 * @param upper The upper corner.
 	 */
-	void b3Set(b3_vector * lower, b3_vector * upper);
+	void b3Set(const b3_vector * lower, const b3_vector * upper);
 };
 
 /**
@@ -127,19 +127,19 @@ class b3RenderView
 	b3_vector                 m_Upper;
 
 	// View volume dimensions (from mid point to border)
-	b3_render_view_info       m_ViewInfo;
+	b3_render_view_info       m_ViewInfo{};
 
 	b3Base<b3RenderViewItem>  m_ViewStack[B3_VIEW_MAX];
 	b3Base<b3RenderViewItem>  m_Depot;
-	b3RenderViewItem     *    m_Actual;
+	b3RenderViewItem     *    m_Actual      = nullptr;
 
 public:
-	b3_bool                   m_AntiAliased; //!< Use anti aliasing.
-	b3_bool                   m_AspectRatio; //!< Use correct aspect ratio.
+	b3_bool                   m_AntiAliased = false; //!< Use anti aliasing.
+	b3_bool                   m_AspectRatio = true;  //!< Use correct aspect ratio.
 
 	// Viewport size
-	b3_res                    m_xRes;        //!< The view port width.
-	b3_res                    m_yRes;        //!< The view port height.
+	b3_res                    m_xRes        = 0;     //!< The view port width.
+	b3_res                    m_yRes        = 0;     //!< The view port height.
 
 public:
 	/**
@@ -174,7 +174,7 @@ public:
 	 *
 	 * @param camera The camera to set.
 	 */
-	void              b3SetCamera(b3CameraPart * camera);
+	void              b3SetCamera(const b3CameraPart * camera);
 
 	/**
 	 * This method switches the perspective to the camera set as
@@ -182,7 +182,7 @@ public:
 	 *
 	 * @param scene The scene with the actual camera.
 	 */
-	void              b3SetCamera(b3Scene * scene);
+	void              b3SetCamera(const b3Scene * scene);
 
 	/**
 	 * This method resizes the view section so that the whole scene
@@ -285,8 +285,8 @@ public:
 	 * @return The resulting position angle.
 	 */
 	b3_f64            b3GetPositionAngle(
-		b3_vector * center,
-		b3_vector * position) const;
+		const b3_vector * center,
+		const b3_vector * position) const;
 
 	/**
 	 * This Method selects a new view section and puts the new view onto
@@ -331,7 +331,10 @@ public:
 	 * @param mover The resulting mover.
 	 * @param mode The view mode to use.
 	 */
-	void              b3SetTranslationStepper(b3_vector * steps, b3_vector * mover, b3_action_mode mode) const;
+	void              b3SetTranslationStepper(
+		const b3_vector * steps,
+		b3_vector    *    mover,
+		b3_action_mode	mode) const;
 
 	/**
 	 * This method initializes a rotation axis and a step vector which contains
@@ -341,7 +344,10 @@ public:
 	 * @param axisDir The resulting direction vector of the axis.
 	 * @param mode The view mode to use.
 	 */
-	b3_f64            b3SetRotationStepper(b3_vector * steps, b3_vector * axisDir, b3_action_mode mode);
+	b3_f64            b3SetRotationStepper(
+		const b3_vector * steps,
+		b3_vector    *    axisDir,
+		b3_action_mode    mode);
 
 	/**
 	 * This method projects a point onto the projection plane of the actually
@@ -452,7 +458,7 @@ public:
 	static void b3Print(const b3_view_info & info);
 
 private:
-	b3RenderViewItem * b3NewRenderViewItem(b3RenderViewItem * lastItem = nullptr);
+	b3RenderViewItem * b3NewRenderViewItem(const b3RenderViewItem * lastItem = nullptr);
 	b3_f64             b3ComputeFarClippingPlane() const;
 	void               b3UnprojectInternal(
 		const b3_f64 xRel,

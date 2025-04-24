@@ -110,8 +110,7 @@ protected:
 	B3_ITEM_BASE(b3Material); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Material); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3Material); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3Material); //!< These constructors handle default initialization.
 
 	/**
 	 * This method registers the default material implementations to the b3World item registry.
@@ -274,9 +273,9 @@ class B3_PLUGIN b3MatChess : public b3Material
 {
 public:
 	b3_material m_Material[2]; //!< The two used materials.
-	b3_s32      m_Flags;       //!< Unused.
-	b3_s32      m_xTimes;      //!< The horizontal repeatition count.
-	b3_s32      m_yTimes;      //!< The vertical repeatition count.
+	b3_s32      m_Flags  = 0;  //!< Unused.
+	b3_s32      m_xTimes = 8;  //!< The horizontal repeatition count.
+	b3_s32      m_yTimes = 8;  //!< The vertical repeatition count.
 
 	/**
 	 * This enumeration lists the material indices.
@@ -313,16 +312,16 @@ private:
 class B3_PLUGIN b3MatTexture : public b3Material
 {
 public:
-	b3_f32            m_Reflection;         //!< The reflectance.
-	b3_f32            m_Refraction;         //!< The refractance.
-	b3_f32            m_Ior;                //!< The index of refraction.
-	b3_f32            m_SpecularExp;        //!< The specular exponent in range [1..100000].
-	b3_f32            m_xStart, m_yStart;   //!< Surface coordinate start.
-	b3_f32            m_xScale, m_yScale;   //!< Texture scale.
-	b3_s32            m_xTimes, m_yTimes;   //!< Repeatition in x- y-direction.
-	b3_s32            m_Flags;              //!< Unused.
-	b3Path            m_Name;               //!< The texture file name.
-	b3Tx       *      m_Texture;            //!< The selected texture.
+	b3_f32            m_Reflection;                  //!< The reflectance.
+	b3_f32            m_Refraction;                  //!< The refractance.
+	b3_f32            m_Ior;                         //!< The index of refraction.
+	b3_f32            m_SpecularExp;                 //!< The specular exponent in range [1..100000].
+	b3_f32            m_xStart = 0, m_yStart =  1;   //!< Surface coordinate start.
+	b3_f32            m_xScale = 1, m_yScale = -1;   //!< Texture scale.
+	b3_s32            m_xTimes = 2, m_yTimes =  2;   //!< Repeatition in x- y-direction.
+	b3_s32            m_Flags  = 0;                  //!< Unused.
+	b3Path            m_Name;                        //!< The texture file name.
+	b3Tx       *      m_Texture = nullptr;           //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3MatTexture); //!< This constructor handles default initialization.
@@ -347,15 +346,15 @@ public:
 class B3_PLUGIN b3MatWrapTexture : public b3Material
 {
 public:
-	b3_f32            m_Reflection;         //!< The reflectance.
-	b3_f32            m_Refraction;         //!< The refractance.
-	b3_f32            m_Ior;                //!< The index of refraction.
-	b3_f32            m_SpecularExp;        //!< The specular exponent in range [1..100000].
-	b3_f32            m_xStart, m_yStart;   //!< Surface coordinate start
-	b3_f32            m_xEnd, m_yEnd;       //!< Surface coordinate end
-	b3_s32            m_Flags;              //!< Unused.
-	b3Path            m_Name;               //!< The texture file name.
-	b3Tx       *      m_Texture;            //!< The selected texture.
+	b3_f32            m_Reflection;                 //!< The reflectance.
+	b3_f32            m_Refraction;                 //!< The refractance.
+	b3_f32            m_Ior;                        //!< The index of refraction.
+	b3_f32            m_SpecularExp;                //!< The specular exponent in range [1..100000].
+	b3_f32            m_xStart = 0, m_yStart = 0;   //!< Surface coordinate start
+	b3_f32            m_xEnd   = 1, m_yEnd   = 1;   //!< Surface coordinate end
+	b3_s32            m_Flags  = 0;                 //!< Unused.
+	b3Path            m_Name;                       //!< The texture file name.
+	b3Tx       *      m_Texture = nullptr;          //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3MatWrapTexture); //!< This constructor handles default initialization.
@@ -383,8 +382,9 @@ class B3_PLUGIN b3MatSlide : public b3Material
 {
 public:
 	b3_material       m_Material[2];         //!< The border materials
-	b3_f32            m_From, m_To;          //!< The relative polar values of start, end
-	b3_s32            m_ModeFlag;            //!< The direction and cut flags, see below
+	b3_f32            m_From     = 0;        //!< The relative polar values of start
+	b3_f32            m_To       = 1;        //!< The relative polar values of end
+	b3_s32            m_ModeFlag = 0;        //!< The direction and cut flags, see below
 
 public:
 	B3_ITEM_INIT(b3MatSlide); //!< This constructor handles default initialization.
@@ -423,7 +423,7 @@ public:
  */
 class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling
 {
-	b3_s32            m_xTimes, m_yTimes;
+	b3_s32            m_xTimes = 0, m_yTimes = 0;
 
 public:
 	b3_material       m_DarkMaterial;  //!< The darkest material.
@@ -460,8 +460,7 @@ protected:
 	B3_ITEM_BASE(b3MaterialWooden); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3MaterialWooden); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3MaterialWooden); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3MaterialWooden); //!< These constructors handle default initialization.
 
 protected:
 	void     b3Init();
@@ -598,10 +597,14 @@ class B3_PLUGIN b3MatCarPaint : public b3Material
 {
 	b3_f64            m_MetallicScaleHalf;
 
+	static constexpr b3_u32 B3_MAT_CP_METALLIC = 1;
+
+
+
 public:
 	b3_material       m_Parallel;      //!< Parallel material.
 	b3_material       m_Perpendicular; //!< Perpendicular material.
-	b3_u32            m_Flags;         //!< Some flags
+	b3_u32            m_Flags = B3_MAT_CP_METALLIC;         //!< Some flags
 	b3_f64            m_MetallicScale; //!< Scaling the metallic effect.
 
 public:
@@ -629,8 +632,6 @@ private:
 		b3Vector::b3Normalize(dst);
 	}
 };
-
-#define B3_MAT_CP_METALLIC 1
 
 /*************************************************************************
 **                                                                      **

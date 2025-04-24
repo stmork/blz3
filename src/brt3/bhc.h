@@ -66,6 +66,10 @@ class b3BHDParser
 
 private:
 	explicit b3BHDParser(const char * filename);
+
+	b3BHDParser(const b3BHDParser & other) = delete;
+	b3BHDParser & operator=(const b3BHDParser & other) = delete;
+
 	virtual~b3BHDParser();
 
 	b3_bhd_token    b3ReadLine();
@@ -73,9 +77,9 @@ private:
 	void            b3ParseHouse();
 	void            b3ParseLevel(b3_f64 scale);
 	void            b3ParsePoint(b3_f64 scale);
-	void            b3ParseRoom(b3BBox * level, b3_f64 base, b3_f64 height, b3_f64 scale);
-	void            b3CheckOpenings(b3BBox * room, b3Area * area, b3_index a, b3_index b);
-	void            b3AddWall(b3BBox * room);
+	void            b3ParseRoom(const b3BBox * level, b3_f64 base, b3_f64 height, b3_f64 scale);
+	void            b3CheckOpenings(const b3BBox * room, b3Area * area, b3_index a, b3_index b);
+	void            b3AddWall(const b3BBox * room);
 	void            b3ParseDoor(b3_f64 scale);
 	void            b3ParseWindow(b3_f64 scale);
 

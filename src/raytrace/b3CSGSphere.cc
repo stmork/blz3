@@ -31,13 +31,13 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGSphere), class_type)
+b3CSGSphere::b3CSGSphere(const b3_u32 class_type) : b3CSGShape(sizeof(b3CSGSphere), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir, 50);
 }
 
-b3CSGSphere::b3CSGSphere(b3_u32 * src) : b3CSGShape(src)
+b3CSGSphere::b3CSGSphere(const b3_u32 * src) : b3CSGShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);

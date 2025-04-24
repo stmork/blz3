@@ -151,7 +151,7 @@ b3_bool b3TGFReader::b3ParseLight(char * ptr)
 	return true;
 }
 
-b3_bool b3TGFReader::b3ProcessMaterial(b3Shape * shape, b3_index index)
+b3_bool b3TGFReader::b3ProcessMaterial(const b3Shape * shape, const b3_index index)
 {
 	b3_count max = m_Materials.b3GetCount();
 	b3_index i;
@@ -171,10 +171,10 @@ b3_bool b3TGFReader::b3ProcessMaterial(b3Shape * shape, b3_index index)
 }
 
 b3Triangles * b3TGFReader::b3ProcessOneShape(
-	b3Array<b3_vertex>   &   vertices,
-	b3Array<b3_tgf_facette> & facettes,
-	b3_index                 facStart,
-	b3_index                 facEnd)
+	const b3Array<b3_vertex>    &   vertices,
+	const b3Array<b3_tgf_facette> & facettes,
+	const b3_index                  facStart,
+	const b3_index                  facEnd)
 {
 	b3Triangles * shape = new b3Triangles(TRIANGLES);
 	b3_count     k, min, max, start, end, face = 0;
@@ -228,9 +228,9 @@ b3Triangles * b3TGFReader::b3ProcessOneShape(
 }
 
 b3_bool b3TGFReader::b3ParseShapes(
-	b3BBox         *         bbox,
-	b3Array<b3_vertex>   &   vertices,
-	b3Array<b3_tgf_facette> & facettes)
+	const b3BBox          *         bbox,
+	const b3Array<b3_vertex>    &   vertices,
+	const b3Array<b3_tgf_facette> & facettes)
 {
 	b3_index  i, facStart, facEnd;
 	b3_count  numFac, count;
@@ -258,7 +258,7 @@ b3_bool b3TGFReader::b3ParseShapes(
 	return true;
 }
 
-b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
+b3_bool b3TGFReader::b3ParseGeometry(const b3BBox * bbox, const char * ptr)
 {
 	b3Array<b3_vertex>       vertices;
 	b3Array<b3_tgf_facette>  facettes;
@@ -267,17 +267,15 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 	b3_u32                   numVert;
 	b3_u32                   numAttr;
 	b3_u32                   numFac;
-	b3_u32                   numDef;
 	b3_tgf_vertex            type;
 	b3_size                  size, skip, i, pos;
 	b3_f64         *         vPtr;
 	b3_u32         *         lPtr;
-	b3_u16         *         sPtr;
 
 	numVert = b3Endian::b3GetIntel32(&ptr[ 0]);
 	numAttr = b3Endian::b3GetIntel32(&ptr[ 4]);
 	numFac  = b3Endian::b3GetIntel32(&ptr[ 8]);
-	numDef  = b3Endian::b3GetIntel32(&ptr[12]);
+
 	type    = (b3_tgf_vertex)b3Endian::b3GetIntel16(&ptr[16]);
 	switch (type)
 	{
@@ -319,18 +317,19 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 	ptr  += skip;
 	pos  += skip;
 
-	sPtr  = (b3_u16 *)ptr;
 	skip  = numAttr * sizeof(b3_u16) * 3;
+#ifdef VERBOSE
+	b3_u16 * sPtr  = (b3_u16 *)ptr;
 	for (i = 0; i < numAttr; i++)
 	{
-#ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "%5u %5u - %5u\n",
 			b3Endian::b3GetIntel16(&sPtr[0]),
 			b3Endian::b3GetIntel16(&sPtr[1]),
 			b3Endian::b3GetIntel16(&sPtr[2]));
-#endif
+
 		sPtr += 3;
 	}
+#endif
 	ptr  += skip;
 	pos  += skip;
 
@@ -344,14 +343,14 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 		facettes.b3Add(facette);
 		lPtr += 3;
 	}
+#ifdef VERBOSE
 	ptr  += skip;
 	pos  += skip;
 
-	lPtr  = (b3_u32 *)ptr;
 	skip  = numDef  * sizeof(b3_u32) * 6;
+	lPtr  = (b3_u32 *)ptr;
 	for (i = 0; i < numDef; i++)
 	{
-#ifdef VERBOSE
 		b3PrintF(B3LOG_FULL, "%5u %5u %5u # %5u %5u %5u\n",
 			b3Endian::b3GetIntel32(&lPtr[0]),
 			b3Endian::b3GetIntel32(&lPtr[1]),
@@ -359,9 +358,9 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox * bbox, char * ptr)
 			b3Endian::b3GetIntel32(&lPtr[3]),
 			b3Endian::b3GetIntel32(&lPtr[4]),
 			b3Endian::b3GetIntel32(&lPtr[5]));
-#endif
 		lPtr += 6;
 	}
+#endif
 
 	return b3ParseShapes(bbox, vertices, facettes);
 }

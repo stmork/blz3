@@ -130,11 +130,10 @@ class B3_PLUGIN b3Condition : public b3Item
 	static const b3_u32 m_LogicOps[];
 
 protected:
-	B3_ITEM_BASE(b3Condition); //!< This is a base class deserialization constructor.
+	B3_ITEM_BASE(b3Condition);     //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Condition); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3Condition); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3Condition); //!< These constructors handle default initialization.
 
 	/**
 	 * Method for registering the shapes into the item registry.
@@ -202,10 +201,13 @@ protected:
  */
 class B3_PLUGIN b3CondRectangle : public b3Condition
 {
+	static constexpr b3_u32 RCB_ACTIVE = 0;
+	static constexpr b3_u32 RCF_ACTIVE = 1 << RCB_ACTIVE;
+
 public:
-	b3_f32  m_xStart, m_yStart;   //!< Polar start coordinates.
-	b3_f32  m_xEnd,  m_yEnd;      //!< Polar end coordinates.
-	b3_s32  m_Flags;              //!< Some flags.
+	b3_f32  m_xStart = 0, m_yStart = 0;   //!< Polar start coordinates.
+	b3_f32  m_xEnd   = 0, m_yEnd   = 0;   //!< Polar end coordinates.
+	b3_s32  m_Flags  = RCF_ACTIVE;        //!< Some flags.
 
 public:
 	B3_ITEM_INIT(b3CondRectangle); //!< This constructor handles default initialization.
@@ -215,9 +217,6 @@ public:
 	void    b3ComputeBound(b3_stencil_limit * limit) const override;
 	bool    b3CheckStencil(b3_polar * polar) const override;
 };
-
-#define RCB_ACTIVE  0
-#define RCF_ACTIVE (1 << RCB_ACTIVE)
 
 /**
  * This class represents 2d shapes for stencelling such as a triangle or
@@ -237,8 +236,7 @@ protected:
 	B3_ITEM_BASE(b3Cond2); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3Cond2); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3Cond2); //!< This constructor handles deserialization.
+	B3_ITEM_ABSTRACT(b3Cond2); //!< These constructors handle default initialization.
 
 	void    b3Write() override;
 	bool    b3Prepare(b3_preparation_info * prep_info) override;
@@ -340,7 +338,7 @@ protected:
 	b3_s32            m_xTimes, m_yTimes;   //!< Repeatition in x- y-direction.
 	b3_s32            m_Flags;              //!< Unused.
 	b3Path            m_Name;               //!< The texture file name.
-	b3Tx       *      m_Texture;            //!< The selected texture.
+	b3Tx       *      m_Texture = nullptr;  //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3CondTexture); //!< This constructor handles default initialization.
@@ -363,7 +361,7 @@ protected:
 	b3_f32            m_xEnd, m_yEnd;       //!< Surface coordinate end
 	b3_s32            m_Flags;              //!< Unused.
 	b3Path            m_Name;               //!< The texture file name.
-	b3Tx       *      m_Texture;            //!< The selected texture.
+	b3Tx       *      m_Texture = nullptr;  //!< The selected texture.
 
 public:
 	B3_ITEM_INIT(b3CondWrapTexture); //!< This constructor handles default initialization.

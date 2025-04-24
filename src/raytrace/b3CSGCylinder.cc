@@ -31,11 +31,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGCylinder::b3CSGCylinder(b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGCylinder), class_type)
+b3CSGCylinder::b3CSGCylinder(const b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGCylinder), class_type)
 {
 }
 
-b3CSGCylinder::b3CSGCylinder(b3_u32 * src) : b3CSGShape3(src)
+b3CSGCylinder::b3CSGCylinder(const b3_u32 * src) : b3CSGShape3(src)
 {
 }
 

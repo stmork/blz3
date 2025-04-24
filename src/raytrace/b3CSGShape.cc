@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_csg_operation b3CSGShape::m_CSGMode[] =
+b3_csg_operation b3CSGShape::m_CSGMode[]
 {
 	B3_CSG_UNION,
 	B3_CSG_INTERSECT,
@@ -44,17 +44,19 @@ b3_csg_operation b3CSGShape::m_CSGMode[] =
 **                                                                      **
 *************************************************************************/
 
-b3CSGShape::b3CSGShape(b3_size class_size, b3_u32 class_type) : b3Shape(class_size, class_type)
+b3CSGShape::b3CSGShape(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3Shape(class_size, class_type)
 {
 	m_Operation = B3_CSG_UNION;
 }
 
-b3CSGShape::b3CSGShape(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape), class_type)
+b3CSGShape::b3CSGShape(const b3_u32 class_type) : b3Shape(sizeof(b3CSGShape), class_type)
 {
 	m_Operation = B3_CSG_UNION;
 }
 
-b3CSGShape::b3CSGShape(b3_u32 * src) : b3Shape(src)
+b3CSGShape::b3CSGShape(const b3_u32 * src) : b3Shape(src)
 {
 }
 
@@ -73,13 +75,13 @@ b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode) const
 }
 
 void b3CSGShape::b3Operate(
-	b3_shape_intervals * local,
-	b3_bbox_intervals * source,
-	b3_bbox_intervals * result)
+	const b3_shape_intervals * local,
+	const b3_bbox_intervals  * source,
+	b3_bbox_intervals     *    result)
 {
-	b3_csg_point   *   Point, *PointA, *PointB;
-	b3_count           aCount, bCount;
-	bool               stat, aStat, bStat, cStat;
+	const b3_csg_point * Point, *PointA, *PointB;
+	b3_count             aCount, bCount;
+	bool                 stat, aStat, bStat, cStat;
 
 	// pointer to result interval
 	result->m_Count = 0;
@@ -170,7 +172,9 @@ b3_count b3CSGShape::b3GetMaxIntersections() const
 **                                                                      **
 *************************************************************************/
 
-b3CSGShape3::b3CSGShape3(b3_size class_size, b3_u32 class_type) : b3CSGShape(class_size, class_type)
+b3CSGShape3::b3CSGShape3(
+	const b3_size class_size,
+	const b3_u32  class_type) : b3CSGShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
@@ -178,7 +182,7 @@ b3CSGShape3::b3CSGShape3(b3_size class_size, b3_u32 class_type) : b3CSGShape(cla
 	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
-b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGShape3), class_type)
+b3CSGShape3::b3CSGShape3(const b3_u32 class_type) : b3CSGShape(sizeof(b3CSGShape3), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
@@ -186,7 +190,7 @@ b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGShape3), cl
 	b3Vector::b3Init(&m_Dir3, 0, 0, 50);
 }
 
-b3CSGShape3::b3CSGShape3(b3_u32 * src) : b3CSGShape(src)
+b3CSGShape3::b3CSGShape3(const b3_u32 * src) : b3CSGShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]

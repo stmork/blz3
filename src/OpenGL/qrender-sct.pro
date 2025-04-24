@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+# Blizzard III Statechart unit test.
+
 QT         -= core gui widgets
 
 include(../common.pri)
@@ -20,7 +26,7 @@ SOURCES += \
 	src-test/MouseSelectTest.cpp \
 	src-lib/sc_runner.cpp
 
-INCLUDEPATH += src-gen
-INCLUDEPATH += src-lib model
+INCLUDEPATH += $$PWD/src-gen
+INCLUDEPATH += $$PWD/src-lib $$PWD/model
 LIBS        += -lgtest -lgtest_main
 QMAKE_CLEAN += test*.xml qrender-sct

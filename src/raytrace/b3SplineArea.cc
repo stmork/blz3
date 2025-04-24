@@ -30,10 +30,10 @@
 **                                                                      **
 *************************************************************************/
 
-b3SplineArea::b3SplineArea(b3_u32 class_type) : b3SplineShape(sizeof(b3SplineArea), class_type)
+b3SplineArea::b3SplineArea(const b3_u32 class_type) : b3SplineShape(sizeof(b3SplineArea), class_type)
 {
 }
 
-b3SplineArea::b3SplineArea(b3_u32 * src) : b3SplineShape(src)
+b3SplineArea::b3SplineArea(const b3_u32 * src) : b3SplineShape(src)
 {
 }

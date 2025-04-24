@@ -152,7 +152,7 @@ public:
 	 * @param rect The rectangle for adjusting.
 	 * @return True if any adjustment occured.
 	 */
-	bool    b3UpdateBound(b3Rect * rect);
+	bool    b3UpdateBound(const b3Rect * rect);
 };
 
 /**

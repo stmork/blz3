@@ -35,7 +35,7 @@ b3Scaling::b3Scaling()
 	b3InitScaling(20.0, 20.0, 20.0, B3_SCALE_BOX_POLAR);
 }
 
-void b3Scaling::b3InitScaling(b3_vector * scale, b3_scaling_mode mode)
+void b3Scaling::b3InitScaling(const b3_vector * scale, const b3_scaling_mode mode)
 {
 	m_Scale = *scale;
 	b3SetScaleMode(mode);

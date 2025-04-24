@@ -52,11 +52,11 @@ b3_f32 b3Area::m_AreaTexcoord[8]
 	1, 0
 };
 
-b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area), class_type)
+b3Area::b3Area(const b3_u32 class_type) : b3Shape2(sizeof(b3Area), class_type)
 {
 }
 
-b3Area::b3Area(b3_u32 * src) : b3Shape2(src)
+b3Area::b3Area(const b3_u32 * src) : b3Shape2(src)
 {
 }
 

@@ -84,12 +84,13 @@ void b3FileList::b3RecCreateList(const char * startDir)
 {
 	b3Path       subdir, name;
 	b3Dir        dir;
-	b3_path_type type;
 	b3_bool      loop = true;
 
 	dir.b3OpenDir(startDir);
 	do
 	{
+		b3_path_type type;
+
 		type = dir.b3DirNext(name);
 
 		switch (type)
@@ -128,7 +129,7 @@ bool b3FileList::b3Add(const char * name)
 		entry = new b3FileEntry(name);
 		list.b3Append(entry);
 	}
-	catch (std::bad_alloc & e)
+	catch (const std::bad_alloc & e)
 	{
 		entry = nullptr;
 	}

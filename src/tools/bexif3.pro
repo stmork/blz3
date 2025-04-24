@@ -1,4 +1,8 @@
-# Blizzard III  raytracing of scenes.
+# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+#               All rights reserved */
+#
+# Blizzard III EXIF handling of JPEGs.
 
 QT         -= gui core
 TEMPLATE    = app

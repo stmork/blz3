@@ -418,6 +418,8 @@ public:
 	 */
 	static void    b3AnimThinFilm(const b3_f64 t, b3_vector * result);
 
+	static void    b3OldMarble(const b3_vector * P, b3Color & Color);
+
 private:
 	static b3_noisetype b3GetDiff(
 		const b3_index xs, const b3_index ys, const b3_index zs,
@@ -429,8 +431,7 @@ private:
 
 	static b3_f64       b3GradNoise(const b3_f32 x, const b3_f32 y, const b3_f32 z, const b3_index i);
 
-	static void         b3OldMarble(const b3_vector * P, b3Color & Color);
-	static void         b3MarbleCurve(b3Spline * Spline, b3_vector * result, const b3_f64 x);
+	static void         b3MarbleCurve(const b3Spline * Spline, b3_vector * result, const b3_f64 x);
 
 	template<typename T> static inline T b3Grad(const int hash, const T x, const T y, const T z)
 	{

@@ -113,12 +113,12 @@ b3Display::~b3Display()
 
 void b3Display::b3PutRow(const b3Row * row)
 {
-	b3_coord   y = row->m_y;
-	b3_color * src, *dst;
-
 	B3_ASSERT(m_Buffer != nullptr);
-	src = row->m_buffer;
-	dst = &m_Buffer[y * m_xMax];
+
+	b3_coord		y    = row->m_y;
+	b3_color    *    dst = &m_Buffer[y * m_xMax];
+	const b3_color * src = row->m_buffer;
+
 	if (src != dst)
 	{
 		b3ColorMemCopy(dst, src, m_xMax);

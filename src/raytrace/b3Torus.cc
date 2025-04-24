@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3Torus::b3Torus(b3_u32 class_type) : b3SimpleShape(sizeof(b3Torus), class_type)
+b3Torus::b3Torus(const b3_u32 class_type) : b3SimpleShape(sizeof(b3Torus), class_type)
 {
 	b3Vector::b3Init(&m_Base);
 	b3Vector::b3Init(&m_Dir1, 50, 0, 0);
@@ -41,7 +41,7 @@ b3Torus::b3Torus(b3_u32 class_type) : b3SimpleShape(sizeof(b3Torus), class_type)
 	m_bRad = 1;
 }
 
-b3Torus::b3Torus(b3_u32 * src) : b3SimpleShape(src)
+b3Torus::b3Torus(const b3_u32 * src) : b3SimpleShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]

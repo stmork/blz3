@@ -185,7 +185,7 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3ShaderPhong(b3Scene * scene);
+	explicit b3ShaderPhong(b3Scene * scene);
 
 protected:
 	void    b3ShadeSurface(b3_surface * surface, b3_count depth) override;
@@ -212,7 +212,7 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3ShaderMork(b3Scene * scene);
+	explicit b3ShaderMork(b3Scene * scene);
 
 	void     b3Prepare(b3_preparation_info * prep_info) override;
 
@@ -243,7 +243,7 @@ public:
 	 *
 	 * @param scene The scene to shade.
 	 */
-	b3ShaderMork2(b3Scene * scene);
+	explicit b3ShaderMork2(b3Scene * scene);
 
 	void     b3Prepare(b3_preparation_info * prep_info) override;
 

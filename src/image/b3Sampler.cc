@@ -75,7 +75,7 @@ bool b3Sampler::b3SampleThread(void * ptr)
 **                                                                      **
 *************************************************************************/
 
-b3ImageSampler::b3ImageSampler(b3Tx * tx)
+b3ImageSampler::b3ImageSampler(const b3Tx * tx)
 {
 	// Init texture
 	m_xMax  = tx->xSize;

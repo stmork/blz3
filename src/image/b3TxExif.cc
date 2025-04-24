@@ -83,9 +83,10 @@ b3TxExif::b3TxExif()
 b3TxExif & b3TxExif::operator=(const b3TxExif & other)
 {
 #ifdef HAVE_LIBEXIV2
-	m_ExifData = other.m_ExifData;
-	m_xDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.XResolution"], 72);
-	m_yDPI     = b3RoundedQuotient(m_ExifData["Exif.Image.YResolution"], 72);
+	m_ExifData  = other.m_ExifData;
+	m_UtcOffset = other.m_UtcOffset;
+	m_xDPI      = b3RoundedQuotient(m_ExifData["Exif.Image.XResolution"], 72);
+	m_yDPI      = b3RoundedQuotient(m_ExifData["Exif.Image.YResolution"], 72);
 #else
 	(void)other;
 #endif
