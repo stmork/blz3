@@ -1,0 +1,28 @@
+name: Blizzard III Raytracer - Ubuntu classic compile
+on: [push]
+
+jobs:
+   BLZ3-Ubuntu-Classical:
+      runs-on: ubuntu-latest
+      env:
+         LC_ALL: de_DE.UTF-8
+         LANG: de_DE.UTF-8
+         TZ: Europe/Berlin
+      steps:
+         - uses: actions/checkout@v4
+         - name: Prepare locales
+           run: sudo locale-gen de_DE.UTF-8
+         - name: Update package info
+           run: sudo apt update -y
+         - name: Install Compilers and Tools
+           run: sudo apt install -y build-essential autoconf doxygen cppcheck libcppunit-dev libgtest-dev
+         - name: Install Development Packages
+           run: sudo apt install -y libopenexr-dev libilmbase-dev libjpeg-dev libexiv2-dev libtiff5-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libxt-dev libglu1-mesa-dev freeglut3-dev
+         - name: Configure
+           run: make config depend
+         - name: Build
+           run: make -j `nproc`
+         - name: CPP-Check
+           run: make cppcheck
+         - name: Test
+           run: cd src/unittest; make -j `nproc` unittest && ./unittest

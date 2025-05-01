@@ -1,0 +1,35 @@
+name: Blizzard III Raytracer - Ubuntu Qt6 compile
+on: [push]
+
+jobs:
+   BLZ3-Ubuntu-Qt6:
+      runs-on: ubuntu-latest
+      env:
+         LC_ALL: de_DE.UTF-8
+         LANG: de_DE.UTF-8
+         TZ: Europe/Berlin
+         LD_LIBRARY_PATH: ${{ github.workspace }}/lib
+      steps:
+         - uses: actions/checkout@v4
+         - name: Prepare locales
+           run: sudo locale-gen de_DE.UTF-8
+         - name: Update package info
+           run: sudo apt update -y
+         - name: Install Compilers and Tools
+           run: sudo apt install -y build-essential autoconf doxygen cppcheck libcppunit-dev libgtest-dev
+         - name: Install Development Packages
+           run: sudo apt install -y libopenexr-dev libilmbase-dev libjpeg-dev libexiv2-dev libtiff5-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libxt-dev libglu1-mesa-dev freeglut3-dev
+         - name: Install Qt6 Packages
+           run: sudo apt install -y qt6-base-dev qt6-documentation-tools
+         - name: Configure
+           run: make config depend
+         - name: QMake
+           run: cd src/ ; qmake6 -r ; rm */Makefile
+         - name: Build
+           run: make -j `nproc` install && make -j `nproc`
+         - name: CPP-Check
+           run: make cppcheck
+         - name: Unit Test
+           run: cd src/unittest; ./unittest
+         - name: SCT Test
+           run: cd src/OpenGL;./qrender-sct
