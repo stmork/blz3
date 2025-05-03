@@ -50,20 +50,20 @@ PFNGLUNMAPBUFFERARBPROC   b3VectorBufferObjects::glUnmapBufferARB;
 void b3VectorBufferObjects::b3Init(const char * extensions)
 {
 #ifdef BLZ3_USE_OPENGL
-	const char * vendor = (const char *)glGetString(GL_VENDOR);
+	const char * vendor = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
 
 	if (extensions == nullptr)
 	{
-		extensions = (const char *)glGetString(GL_EXTENSIONS);
+		extensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
 	}
 
-	glGenBuffersARB    = b3Runtime::b3GetOpenGLExtension<PFNGLGENBUFFERSARBPROC>("glGenBuffersARB");
+	glGenBuffersARB    = b3Runtime::b3GetOpenGLExtension<PFNGLGENBUFFERSARBPROC>   ("glGenBuffersARB");
 	glDeleteBuffersARB = b3Runtime::b3GetOpenGLExtension<PFNGLDELETEBUFFERSARBPROC>("glDeleteBuffersARB");
-	glBindBufferARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBINDBUFFERARBPROC>("glBindBufferARB");
-	glBufferDataARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBUFFERDATAARBPROC>("glBufferDataARB");
+	glBindBufferARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBINDBUFFERARBPROC>   ("glBindBufferARB");
+	glBufferDataARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBUFFERDATAARBPROC>   ("glBufferDataARB");
 	glBufferSubDataARB = b3Runtime::b3GetOpenGLExtension<PFNGLBUFFERSUBDATAARBPROC>("glBufferSubDataARB");
-	glMapBufferARB     = b3Runtime::b3GetOpenGLExtension<PFNGLMAPBUFFERARBPROC>("glMapBufferARB");
-	glUnmapBufferARB   = b3Runtime::b3GetOpenGLExtension<PFNGLUNMAPBUFFERARBPROC>("glUnmapBufferARB");
+	glMapBufferARB     = b3Runtime::b3GetOpenGLExtension<PFNGLMAPBUFFERARBPROC>    ("glMapBufferARB");
+	glUnmapBufferARB   = b3Runtime::b3GetOpenGLExtension<PFNGLUNMAPBUFFERARBPROC>  ("glUnmapBufferARB");
 
 #ifdef USE_VBOS
 	bool is_not_ati       = strncmp(vendor, "ATI", 3) != 0;

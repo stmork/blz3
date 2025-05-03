@@ -420,14 +420,6 @@ void b3Item::b3InitString(char * name, b3_size len)
 	m_ParseIndex += ((b3_u32)(len + 3) >> 2);
 }
 
-void * b3Item::b3InitNull()
-{
-	B3_ASSERT_INDEX;
-	m_ParseIndex++;
-
-	return nullptr;
-}
-
 void b3Item::b3InitNOP()
 {
 	B3_ASSERT_INDEX;
@@ -787,7 +779,7 @@ void b3Item::b3StoreString(const char * name, const b3_size len)
 	{
 		m_StoreOffset = m_StoreIndex;
 	}
-	b3Locale::b3LocaleToIso(name, (char *)&m_StoreBuffer[m_StoreIndex], len);
+	b3Locale::b3LocaleToIso(name, reinterpret_cast<char *>(&m_StoreBuffer[m_StoreIndex]), len);
 	m_StoreIndex += ((b3_u32)len >> 2);
 }
 

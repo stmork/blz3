@@ -250,12 +250,12 @@ void b3OceanWave::b3CopyHeightField(const b3Tx * tx)
 }
 
 void b3OceanWave::b3FilterPhillipsSpectrum(
-	const b3_f64        fx,
-	const b3_f64        fy,
-	const b3_index      index,
+	const b3_f64   fx,
+	const b3_f64   fy,
+	const b3_index index,
 	b3FilterInfo * filter_info)
 {
-	b3OceanWave * ocean  = (b3OceanWave *)filter_info;
+	b3OceanWave * ocean  = static_cast<b3OceanWave *>(filter_info);
 
 	ocean->b3SamplePhillipsSpectrum(fx, fy, index);
 }
@@ -313,7 +313,7 @@ void b3OceanWave::b3SampleHeight(
 	const b3_index   index,
 	b3FilterInfo  *  filter_info)
 {
-	b3OceanWave * ocean  = (b3OceanWave *)filter_info;
+	b3OceanWave * ocean  = static_cast<b3OceanWave *>(filter_info);
 	b3Complex64 * buffer = ocean->b3GetBuffer();
 
 	buffer[index] = ocean->m_Phillips[index] * ocean->m_Cycle;

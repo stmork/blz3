@@ -873,7 +873,7 @@ b3Animation::b3Animation(const b3_u32 * src) :
 		m_WFrames    = b3InitCount();
 		if (B3_PARSE_INDEX_VALID)
 		{
-			m_Element    = (b3AnimElement *)b3InitNull();
+			m_Element = b3InitNull<b3AnimElement>();
 		}
 	}
 }

@@ -53,7 +53,7 @@ static void MovieGIF(char * name)
 	}
 	data = buffer;
 
-	if (strncmp((const char *)buffer, "GIF8", 4) != 0)
+	if (strncmp(reinterpret_cast<const char *>(buffer), "GIF8", 4) != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "not a GIF image!\n");
 		return;
@@ -108,7 +108,7 @@ static void MovieGIF(char * name)
 					out.b3Write(&repeat, sizeof(struct Repeator));
 					visited = true;
 				}
-				transPtr = (struct Extension *)data;
+				transPtr = reinterpret_cast<struct Extension *>(data);
 				if (VAL2(transPtr->delay) == 0)
 				{
 					transPtr->delay[0] = 1;
@@ -145,7 +145,7 @@ static void MovieGIF(char * name)
 			break;
 
 		case 0x2c :
-			descrPtr  = (struct Descriptor *)data;
+			descrPtr  = reinterpret_cast<struct Descriptor *>(data);
 			data     += sizeof(struct Descriptor);
 			planes    = (descrPtr->flags & 0x07) + 1;
 			if (descrPtr->flags & 0x80)

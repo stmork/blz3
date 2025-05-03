@@ -64,7 +64,7 @@ void b3PrepareInfo::b3CollectBBoxes(b3BBox * bbox)
 	while (bbox != nullptr)
 	{
 		bbox->b3CollectBBoxes(m_BBoxRefArray);
-		bbox = (b3BBox *)bbox->Succ;
+		bbox = static_cast<b3BBox *>(bbox->Succ);
 	}
 
 }
@@ -89,7 +89,7 @@ void b3PrepareInfo::b3RebuildListFromArray()
 
 bool b3PrepareInfo::b3PrepareThread(void * ptr)
 {
-	b3PrepareInfo  *  info = (b3PrepareInfo *)ptr;
+	b3PrepareInfo  *  info = static_cast<b3PrepareInfo *>(ptr);
 	b3BBoxReference * reference;
 
 	while ((reference = info->b3GetBBoxReference()) != nullptr)

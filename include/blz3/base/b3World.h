@@ -635,7 +635,14 @@ protected:
 	 *
 	 * @return Null pointer.
 	 */
-	void  *  b3InitNull();
+	template<typename T>
+	inline T * b3InitNull()
+	{
+		B3_ASSERT_INDEX;
+		m_ParseIndex++;
+
+		return nullptr;
+	}
 
 	/**
 	 * This method simply bumps the read index.

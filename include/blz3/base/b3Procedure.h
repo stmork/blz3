@@ -322,7 +322,7 @@ public:
 		const b3_count   octaves,
 		const b3_f32     amplification,
 		const b3_f32     attenuation,
-		b3_vector * result)
+		b3_vector    *   result)
 	{
 		alignas(16) b3_f32 v[4];
 		alignas(16) b3_f32 factor[4];
@@ -347,7 +347,7 @@ public:
 		}
 		for (i = 0; i < octaves; i++)
 		{
-			b3NoiseDeriv(v[1], v[2], v[3], (b3_vector *)&sum[0]);
+			b3NoiseDeriv(v[1], v[2], v[3], reinterpret_cast<b3_vector *>(&sum[0]));
 
 			for (k = 0; k < 4; k++)
 			{

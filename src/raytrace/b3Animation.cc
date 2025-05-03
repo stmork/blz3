@@ -87,7 +87,7 @@ b3AnimElement * b3Animation::b3FindSameTrack(b3AnimElement * Anim)
 {
 	b3AnimElement * prev = Anim;
 
-	while ((prev = (b3AnimElement *)prev->Prev) != nullptr)
+	while ((prev = static_cast<b3AnimElement *>(prev->Prev)) != nullptr)
 	{
 		if ((prev->b3GetClassType() == Anim->b3GetClassType()) &&
 			(prev->m_CurveUse       == Anim->m_CurveUse) &&
@@ -173,7 +173,7 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 	// reset animation, compute time range and number of tracks
 	m_Tracks = 0;
 	m_Frames = 0;
-	Anim  = (b3AnimElement *)b3GetAnimElementHead()->First;
+	Anim     = static_cast<b3AnimElement *>(b3GetAnimElementHead()->First);
 	m_Start = m_End = (Anim != nullptr ? Anim->m_Start : 0);
 	while (Anim != nullptr)
 	{
@@ -191,12 +191,12 @@ void b3Animation::b3ResetAnimation(b3Scene * Global)
 			m_Tracks += Anim->m_CurveUse;
 		}
 
-		Anim  = (b3AnimElement *)Anim->Succ;
+		Anim  = static_cast<b3AnimElement *>(Anim->Succ);
 	}
 
 	B3_FOR_BASE_BACK(b3GetAnimElementHead(), item)
 	{
-		Anim = (b3AnimElement *)item;
+		Anim = static_cast<b3AnimElement *>(item);
 		b3Matrix::b3Inverse(&Anim->m_Actual, &resetMatrix);
 		b3ApplyTransformation(Global, Anim, &resetMatrix, m_Neutral);
 		b3Matrix::b3Unit(&Anim->m_Actual);
@@ -251,7 +251,7 @@ void b3Animation::b3SetAnimation(b3Scene * Global, b3_f64 t)
 	// reset tracks backwards
 	B3_FOR_BASE_BACK(b3GetAnimElementHead(), item)
 	{
-		Anim = (b3AnimElement *)item;
+		Anim = static_cast<b3AnimElement *>(item);
 		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{
 			if (b3Matrix::b3Inverse(&Anim->m_Actual, &resetMatrix))

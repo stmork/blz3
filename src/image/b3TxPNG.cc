@@ -126,7 +126,7 @@ b3_result b3Tx::b3ParsePNG(const b3_u08 * buffer, b3_size buffer_size)
 	b3PNG png(buffer, buffer_size);
 
 	b3PrintF(B3LOG_FULL, "IMG PNG  # b3ParsePNG(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	if (setjmp(png_jmpbuf(png)))
 	{

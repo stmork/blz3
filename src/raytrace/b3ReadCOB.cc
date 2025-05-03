@@ -133,7 +133,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 				return nullptr;
 			}
 
-			root = (b3BBox *)cobInfo->refNode;
+			root = static_cast<b3BBox *>(cobInfo->refNode);
 
 			cobInfos.b3Remove(cobInfo);
 			cobDone.b3Append(cobInfo);
@@ -172,7 +172,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			{
 			case COB_GROU :
 #ifndef ONE_BBOX
-				BBox = (b3BBox *)next->refNode;
+				BBox = static_cast<b3BBox *>(next->refNode);
 				BBox->b3GetBBoxHead()->b3Append(cobInfo->refNode);
 #endif
 				break;
@@ -188,7 +188,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			{
 			case COB_GROU :
 #ifndef ONE_BBOX
-				BBox = (b3BBox *)next->refNode;
+				BBox = static_cast<b3BBox *>(next->refNode);
 #else
 				BBox = root;
 #endif
@@ -205,7 +205,7 @@ b3Item * b3COBReader::b3COB_Reconstruct()
 			switch (next->refType)
 			{
 			case COB_POLH :
-				Shape = (b3TriangleShape *)next->refNode;
+				Shape = static_cast<b3TriangleShape *>(next->refNode);
 				Shape->b3GetMaterialHead()->b3Append(cobInfo->refNode);
 				break;
 
@@ -510,8 +510,8 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		{
 			b3_triangle   *  tria;
 
-			vert = (b3_vertex *)TriaShape->m_Vertices;
-			tria = (b3_triangle *)TriaShape->m_Triangles;
+			vert = TriaShape->m_Vertices;
+			tria = TriaShape->m_Triangles;
 
 			/* read vertices */
 			i = vPos;
@@ -813,10 +813,10 @@ b3BBox * b3COBReader::b3ReadCOB(const char * cobfile)
 	b3_size      size;
 
 	b3PrintF(B3LOG_NORMAL, "Reading COB %s\n", cobfile);
-	buffer = (const char *)file.b3ReadBuffer(cobfile, size);
+	buffer = reinterpret_cast<const char *>(file.b3ReadBuffer(cobfile, size));
 	if (buffer != nullptr)
 	{
-		bbox = (b3BBox *)reader.b3COB_Parse(buffer, cobfile, size);
+		bbox = static_cast<b3BBox *>(reader.b3COB_Parse(buffer, cobfile, size));
 	}
 	return bbox;
 }

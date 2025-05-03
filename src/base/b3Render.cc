@@ -544,15 +544,15 @@ void b3RenderObject::b3TransformVertices(
 			{
 				for (i = 0; i < glVertexCount; i++)
 				{
-					b3Vector::b3MatrixMul4D(transformation, (b3_vector *)&glVertex[i].v);
-					b3Vector::b3MatrixMul3D(transformation, (b3_vector *)&glVertex[i].n);
+					b3Vector::b3MatrixMul4D(transformation, reinterpret_cast<b3_vector *>(&glVertex[i].v));
+					b3Vector::b3MatrixMul3D(transformation, reinterpret_cast<b3_vector *>(&glVertex[i].n));
 				}
 			}
 			else
 			{
 				for (i = 0; i < glVertexCount; i++)
 				{
-					b3Vector::b3MatrixMul4D(transformation, (b3_vector *)&glVertex[i].v);
+					b3Vector::b3MatrixMul4D(transformation, reinterpret_cast<b3_vector *>(&glVertex[i].v));
 				}
 
 				b3MapIndices(B3_MAP_VBO_R);
@@ -766,7 +766,7 @@ void b3RenderObject::b3CreateTexture(
 #endif
 			if (size != 0)
 			{
-				void  * ptr = b3MemAccess::b3Alloc(size * 4);
+				GLubyte  * ptr = b3MemAccess::b3TypedAlloc<GLubyte>(size * 4);
 				GLenum  error;
 
 				if (ptr == nullptr)
@@ -777,7 +777,7 @@ void b3RenderObject::b3CreateTexture(
 				{
 					b3MemAccess::b3Free(glTextureData);
 				}
-				glTextureData  = (GLubyte *)ptr;
+				glTextureData  =  ptr;
 				glTextureSize  =  size;
 				glTextureSizeX = xSize;
 				glTextureSizeY = ySize;

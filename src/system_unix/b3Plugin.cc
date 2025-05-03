@@ -59,11 +59,11 @@ b3Plugin::b3Plugin(b3Path & library) : b3PluginBase(library)
 	m_Handle = dlopen(m_PluginPath, RTLD_LAZY | RTLD_GLOBAL);
 	if (m_Handle != nullptr)
 	{
-		b3_plugin_init_func init;
-
 		b3PrintF(B3LOG_DEBUG, "Plugin %s loaded.\n", path);
 
-		init = (b3_plugin_init_func)(dlsym(m_Handle, B3_PLUGIN_INIT_FUNC));
+		// cppcheck-suppress cstyleCast
+		b3_plugin_init_func init = (b3_plugin_init_func)dlsym(m_Handle, B3_PLUGIN_INIT_FUNC);
+
 		if (init != nullptr)
 		{
 			init();

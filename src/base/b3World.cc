@@ -312,7 +312,7 @@ b3_world_error b3World::b3Parse(const bool throw_exception)
 	}
 #endif
 
-	m_Start = (b3FirstItem *)array[0];
+	m_Start = static_cast<b3FirstItem *>(array[0]);
 	result  = m_Start->b3ParseLinkuage(
 			array.b3GetBuffer(),
 			array.b3GetCount(), B3_CLASS_MAX);
@@ -387,7 +387,7 @@ b3_world_error b3World::b3Read(b3FileAbstract * file, const bool throw_exception
 		if (error != B3_WORLD_PARSE)
 		{
 			m_BufferSize = header[1];
-			m_Buffer     = (b3_u32 *)m_Mem.b3Alloc(m_BufferSize);
+			m_Buffer     = static_cast<b3_u32 *>(m_Mem.b3Alloc(m_BufferSize));
 			if (m_Buffer != nullptr)
 			{
 				if (file->b3Read(m_Buffer, m_BufferSize) == m_BufferSize)

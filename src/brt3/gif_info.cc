@@ -52,7 +52,7 @@ static void InfoGIF(char * name)
 	}
 	data = buffer;
 
-	if (strncmp((const char *)buffer, "GIF8", 4) != 0)
+	if (strncmp(reinterpret_cast<const char *>(buffer), "GIF8", 4) != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "not a GIF image!\n");
 		return;
@@ -87,7 +87,7 @@ static void InfoGIF(char * name)
 				break;
 
 			case 0xf9 :
-				transPtr         = (struct Extension *)data;
+				transPtr = reinterpret_cast<struct Extension *>(data);
 				b3PrintF(B3LOG_NORMAL, "*** Graphic Control Extension:\n");
 				b3PrintF(B3LOG_NORMAL, "flags: $%02x\n", transPtr->flags);
 				b3PrintF(B3LOG_NORMAL, "transparency: %s\n",
@@ -136,7 +136,7 @@ static void InfoGIF(char * name)
 			break;
 
 		case 0x2c :
-			descrPtr = (struct Descriptor *)data;
+			descrPtr = reinterpret_cast<struct Descriptor *>(data);
 			planes   = (descrPtr->flags & 0x07) + 1;
 			b3PrintF(B3LOG_NORMAL, "*** Image descriptor:\n");
 			b3PrintF(B3LOG_NORMAL, "xPos:   %4ld\n", VAL2(descrPtr->xPos));

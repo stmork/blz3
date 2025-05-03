@@ -83,7 +83,7 @@ b3RenderContext::b3RenderContext()
 void b3RenderContext::b3Init(bool double_buffered)
 {
 #ifdef BLZ3_USE_OPENGL
-	const char * extensions = (const char *)glGetString(GL_EXTENSIONS);
+	const char * extensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
 
 	if (extensions == nullptr)
 	{

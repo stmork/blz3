@@ -267,7 +267,7 @@ long b3Tx::b3TIFFDecode(
 		unsigned long  step;
 
 		step = TX_BWA(xSize);
-		cPtr = (b3_u08 *)data;
+		cPtr = data;
 		for (y = 0; y < ySize; y++)
 		{
 			if (TIFFReadScanline(tiff, cPtr, y, 0) != 1)
@@ -349,7 +349,7 @@ long b3Tx::b3TIFFDecode(
 		b3_count        max;
 
 		max  = xSize * ySize;
-		fPtr = (uint32_t *)b3GetTrueColorData();
+		fPtr = b3GetTrueColorData();
 		bPtr = fPtr + max;
 		max  = ySize >> 1;
 
@@ -475,7 +475,8 @@ b3_result b3Tx::b3LoadTIFF(
 		B3_THROW(b3TxException, B3_TX_NOT_FOUND);
 	}
 	b3Name(tiff_name);
-	b3PrintF(B3LOG_FULL, "IMG TIFF # b3LoadTIFF(%s)\n", (const char *)image_name);
+	b3PrintF(B3LOG_FULL, "IMG TIFF # b3LoadTIFF(%s)\n",
+		static_cast<const char *>(image_name));
 
 	TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH,      &xSize);
 	TIFFGetField(tiff, TIFFTAG_IMAGELENGTH,     &ySize);

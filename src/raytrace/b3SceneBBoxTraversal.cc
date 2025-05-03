@@ -61,7 +61,7 @@ void b3BBox::b3Reorg(
 	b3BBox     *     bbox;
 	b3Base<b3Item> * sub_base = nullptr;
 
-	while ((bbox = (b3BBox *)depot->First) != nullptr)
+	while ((bbox = static_cast<b3BBox *>(depot->First)) != nullptr)
 	{
 		new_level = bbox->b3GetType();
 		if (new_level < level)

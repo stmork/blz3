@@ -204,7 +204,7 @@ void b3BBox::b3AllocVertexMemory(b3RenderContext * context)
 		glVertexElements->b3SetCount(8);
 		glVertexElements->b3SetCustom(true);
 	}
-	glGridElements->b3SetGrids((b3_gl_line *)m_BBoxIndices);
+	glGridElements->b3SetGrids(const_cast<b3_gl_line *>(m_BBoxIndices));
 	glGridElements->b3SetCount(12);
 	glGridElements->b3SetCustom(true);
 

@@ -153,10 +153,10 @@ b3_result b3Tx::b3ParseRAW(
 	b3_res   y,
 	b3_s32   ppm_type)
 {
-	b3_count      i, Max;
+	b3_count     i, Max;
 
 	b3PrintF(B3LOG_FULL, "IMG RAW  # b3ParseRAW(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	switch (ppm_type)
 	{
@@ -200,7 +200,7 @@ b3_result b3Tx::b3ParseRAW(
 	case 6 : /* 24 Bit */
 		if (b3AllocTx(x, y, 24))
 		{
-			b3_pkd_color * newLData = (b3_u32 *)data;
+			b3_pkd_color * newLData = data;
 
 			Max      = x * y;
 			for (i = 0; i < Max; i++)
@@ -253,7 +253,7 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 	numColors = b3Endian::b3GetIntel32(&header_bmp->biClrUsed);
 
 	b3PrintF(B3LOG_FULL, "IMG BMP  # b3ParseBMP(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	if (header_bmp->biCompression != 0)
 	{
@@ -428,12 +428,12 @@ b3_result b3Tx::b3ParseBMP(const b3_u08 * buffer)
 
 b3_result b3Tx::b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_coord      x, y;
-	b3_res        xNewSize, yNewSize;
-	b3_count      lSize;
+	b3_coord     x, y;
+	b3_res       xNewSize, yNewSize;
+	b3_count     lSize;
 
 	b3PrintF(B3LOG_FULL, "IMG BMF  # b3ParseBMF(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	xNewSize = b3Endian::b3GetIntel16(&buffer[2]);
 	yNewSize = b3Endian::b3GetIntel16(&buffer[4]);
@@ -443,7 +443,7 @@ b3_result b3Tx::b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size)
 	case 2 :
 		if (b3AllocTx(xNewSize, yNewSize, 8))
 		{
-			b3_u08 * gray    = data;
+			b3_u08 * gray = data;
 
 			buffer += buffer_size;
 			for (y = 0; y < ySize; y++)
@@ -466,7 +466,7 @@ b3_result b3Tx::b3ParseBMF(const b3_u08 * buffer, b3_size buffer_size)
 		{
 			b3_pkd_color * pixel;
 
-			pixel   = (b3_pkd_color *)data;
+			pixel   = data;
 			buffer += buffer_size;
 			lSize   = xSize + xSize + xSize;
 			for (y = 0; y < xSize; y++)

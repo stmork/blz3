@@ -194,7 +194,7 @@ b3BumpTexture::b3BumpTexture(const b3_u32 * src) : b3Bump(src)
 	m_xTimes    = b3InitInt();
 	m_yTimes    = b3InitInt();
 	m_Amplitude = b3InitFloat();
-	m_Texture   = (b3Tx *)b3InitNull();
+	m_Texture   = b3InitNull<b3Tx>();
 	m_Flags     = b3InitInt();
 	b3InitString(m_Name, B3_TEXSTRINGLEN);
 }
@@ -332,7 +332,7 @@ void b3BumpWater::b3Write()
 
 bool b3BumpWater::b3Prepare(b3_preparation_info * prep_info)
 {
-	const b3_scene_preparation * info = (b3_scene_preparation *)prep_info;
+	const b3_scene_preparation * info = static_cast<const b3_scene_preparation *>(prep_info);
 	const b3_f64                 t    = (m_ScaleTime < 0.0001 ? 0 : info->m_t / m_ScaleTime);
 
 	b3PrepareScaling();
@@ -870,7 +870,7 @@ void b3BumpOcean::b3Write()
 
 bool b3BumpOcean::b3Prepare(b3_preparation_info * prep_info)
 {
-	b3_scene_preparation * scene_info = (b3_scene_preparation *)prep_info;
+	const b3_scene_preparation * scene_info = static_cast<const b3_scene_preparation *>(prep_info);
 
 	b3PrepareOceanWave(scene_info->m_t);
 	b3PrepareScaling();

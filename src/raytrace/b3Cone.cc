@@ -50,7 +50,7 @@ void b3Cone::b3GetCount(
 
 void b3Cone::b3AllocVertexMemory(b3RenderContext * ctx)
 {
-	b3ShapeRenderContext * context = (b3ShapeRenderContext *)ctx;
+	b3ShapeRenderContext * context = static_cast<b3ShapeRenderContext *>(ctx);
 
 	b3RenderObject::b3AllocVertexMemory(context);
 	GridsCyl  = context->b3GetCylinderIndices();

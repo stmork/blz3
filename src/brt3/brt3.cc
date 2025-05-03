@@ -69,7 +69,7 @@ static b3_bool b3SaveRaytracedImage(
 	}
 	else
 	{
-		imagename.b3Format("%s%s", (const char *)filename, BLZ3_EXTENSION);
+		imagename.b3Format("%s%s", static_cast<const char *>(filename), BLZ3_EXTENSION);
 	}
 	exif.b3Update();
 	return display->b3SaveImage(imagename, &exif);
@@ -350,7 +350,7 @@ int main(int argc, char * argv[])
 					{
 						b3RaytraceExif exif;
 
-						scene = (b3Scene *)item;
+						scene = static_cast<b3Scene *>(item);
 
 						scene->b3Reorg();
 						scene->b3SetupVertexMemory(&context);

@@ -583,7 +583,7 @@ b3CondTexture::b3CondTexture(const b3_u32 class_type) : b3Condition(sizeof(b3Con
 
 b3CondTexture::b3CondTexture(const b3_u32 * src) : b3Condition(src)
 {
-	m_Texture = (b3Tx *)b3InitNull();
+	m_Texture = b3InitNull<b3Tx>();
 	m_Flags   = b3InitInt();
 	m_xStart  = b3InitFloat();
 	m_yStart  = b3InitFloat();
@@ -667,13 +667,14 @@ bool b3CondTexture::b3CheckStencil(b3_polar * polar) const
 **                                                                      **
 *************************************************************************/
 
-b3CondWrapTexture::b3CondWrapTexture(const b3_u32 class_type) : b3Condition(sizeof(b3CondWrapTexture), class_type)
+b3CondWrapTexture::b3CondWrapTexture(const b3_u32 class_type) :
+	b3Condition(sizeof(b3CondWrapTexture), class_type)
 {
 }
 
 b3CondWrapTexture::b3CondWrapTexture(const b3_u32 * src) : b3Condition(src)
 {
-	m_Texture = (b3Tx *)b3InitNull();
+	m_Texture = b3InitNull<b3Tx>();
 	m_Flags   = b3InitInt();
 	m_xStart  = b3InitFloat();
 	m_yStart  = b3InitFloat();

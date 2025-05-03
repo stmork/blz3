@@ -92,7 +92,7 @@ b3Scene::b3Scene(const b3_u32 * buffer) : b3Item(buffer)
 	b3InitVector(&m_Height);
 
 	// Some other values
-	b3InitNull();
+	b3InitNull<void>();
 	m_xAngle           = b3InitFloat();
 	m_yAngle           = b3InitFloat();
 	m_BBoxOverSize     = b3InitFloat();
@@ -338,7 +338,7 @@ b3CameraPart * b3Scene::b3GetFirstCamera(bool must_active)
 	{
 		if (item->b3GetClassType() == CAMERA)
 		{
-			camera = (b3CameraPart *)item;
+			camera = static_cast<b3CameraPart *>(item);
 			if (first == nullptr)
 			{
 				first = camera;
@@ -379,7 +379,7 @@ b3CameraPart * b3Scene::b3GetCameraByName(const char * camera_name) const
 	{
 		if (item->b3GetClassType() == CAMERA)
 		{
-			camera = (b3CameraPart *)item;
+			camera = static_cast<b3CameraPart *>(item);
 			if (b3StringTool::b3CaseCompare(camera->b3GetName(), camera_name) == 0)
 			{
 				return camera;
@@ -401,7 +401,7 @@ b3CameraPart * b3Scene::b3GetActualCamera()
 
 b3CameraPart * b3Scene::b3GetNextCamera(b3CameraPart * camera) const
 {
-	while ((camera = (b3CameraPart *)camera->Succ) != nullptr)
+	while ((camera = static_cast<b3CameraPart *>(camera->Succ)) != nullptr)
 	{
 		if (camera->b3GetClassType() == CAMERA)
 		{
@@ -494,7 +494,7 @@ b3Light * b3Scene::b3GetLight(bool must_active)
 	}
 
 	b3Light * light;
-	if ((light = (b3Light *)b3GetLightHead()->First) == nullptr)
+	if ((light = static_cast<b3Light *>(b3GetLightHead()->First)) == nullptr)
 	{
 		light = new b3Light(SPOT_LIGHT);
 		b3Mem::b3StrCpy(light->m_Name, "Light", sizeof(light->m_Name));

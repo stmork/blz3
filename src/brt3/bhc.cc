@@ -114,18 +114,18 @@ void b3BHDParser::b3CheckToken(b3_bhd_token token)
 
 void b3BHDParser::b3ParseHouse()
 {
-	b3Path       name;
+	b3Path           name;
 	b3ModellerInfo * info;
-	b3CameraPart  * camera;
-	b3_bhd_token token;
-	//	b3_vector     lower,upper;
-	b3_vector     eye, view;
+	b3CameraPart  *  camera;
+	b3_bhd_token     token;
+//	b3_vector        lower,upper;
+	b3_vector        eye, view;
 
 	b3PrintF(B3LOG_DEBUG, "Creating house...\n");
 	b3CheckToken(TKN_HOUSE);
 
 	m_Scene = new b3Scene(TRACEPHOTO_MORK);
-	if (sscanf(&m_Line[m_Pos], "%*s %64s %lf\n", (char *)name, &m_Scale) < 1)
+	if (sscanf(&m_Line[m_Pos], "%*s %64s %lf\n", static_cast<char *>(name), &m_Scale) < 1)
 	{
 		throw b3ParseException("Invalid number of arguments", m_LineNo);
 	}
@@ -298,7 +298,7 @@ void b3BHDParser::b3ParseRoom(const b3BBox * level, b3_f64 base, b3_f64 height, 
 
 	B3_FOR_BASE(room->b3GetShapeHead(), item)
 	{
-		area = (b3Area *)item;
+		area = static_cast<b3Area *>(item);
 		cond = new b3CondRectangle(COND_ARECTANGLE);
 		cond->m_xStart = 0;
 		cond->m_yStart = 0;
@@ -307,11 +307,11 @@ void b3BHDParser::b3ParseRoom(const b3BBox * level, b3_f64 base, b3_f64 height, 
 		area->b3GetConditionHead()->b3Append(cond);
 	}
 
-	area = (b3Area *)room->b3GetShapeHead()->First;
+	area = static_cast<b3Area *>(room->b3GetShapeHead()->First);
 	for (i = 0; i < args; i++)
 	{
 		b3CheckOpenings(room, area, index[i], index[i + 1]);
-		area = (b3Area *)area->Succ;
+		area = static_cast<b3Area *>(area->Succ);
 	}
 
 	// ceil

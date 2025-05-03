@@ -124,7 +124,7 @@ b3_result b3Tx::b3ParseGIF(const b3_u08 * buffer)
 	b3GifDecoder   decoder;
 
 	b3PrintF(B3LOG_FULL, "IMG GIF  # b3ParseGIF(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	NewDepth = (pPtr[10] & 0x07) + 1;
 	Colors   = (1 << NewDepth);

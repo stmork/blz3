@@ -52,7 +52,7 @@ static void TransGIF(char * name)
 	}
 	data = buffer;
 
-	if (strncmp((const char *)buffer, "GIF8", 4) != 0)
+	if (strncmp(reinterpret_cast<const char *>(buffer), "GIF8", 4) != 0)
 	{
 		b3PrintF(B3LOG_NORMAL, "not a GIF image!\n");
 		return;
@@ -99,7 +99,7 @@ static void TransGIF(char * name)
 				break;
 
 			case 0xf9 :
-				transPtr         = (struct Extension *)data;
+				transPtr         = reinterpret_cast<struct Extension *>(data);
 				transPtr->flags |= 1;
 				data += (transPtr->size + 3);
 				visited = true;
@@ -137,7 +137,7 @@ static void TransGIF(char * name)
 				index = WriteGIF(out, buffer, data, index);
 				out.b3Write(&trans, sizeof(trans));
 			}
-			descrPtr = (struct Descriptor *)data;
+			descrPtr = reinterpret_cast<struct Descriptor *>(data);
 			data   += sizeof(struct Descriptor);
 			planes  = (descrPtr->flags & 0x07) + 1;
 			if (descrPtr->flags & 0x80)

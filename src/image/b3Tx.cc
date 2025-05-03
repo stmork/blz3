@@ -183,13 +183,7 @@ bool b3Tx::b3AllocTx(
 
 	if (pSize > 0)
 	{
-		new_ptr = b3Realloc(palette, pSize * sizeof(b3_pkd_color));
-		if (new_ptr == nullptr)
-		{
-			b3FreeTx();
-			return false;
-		}
-		palette = (b3_pkd_color *)new_ptr;
+		palette = b3TypedRealloc<b3_pkd_color>(palette, pSize);
 	}
 
 	// setting size values
@@ -232,7 +226,7 @@ void b3Tx::b3FreeTx()
 	{
 		try
 		{
-			b3Free((void *)palette);
+			b3Free(palette);
 		}
 		catch (...)
 		{
@@ -530,7 +524,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 				switch (type)
 				{
 				case B3_TX_VGA:
-					bPtr = (b3_u08 *)data;
+					bPtr = data;
 					for (y = 0; y < ySize; y++)
 					{
 						srcTx->b3CopyILBMtoVGA(bPtr, y);
@@ -539,7 +533,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 					break;
 
 				case B3_TX_RGB8:
-					lPtr = (b3_pkd_color *)data;;
+					lPtr = data;;
 					for (y = 0; y < ySize; y++)
 					{
 						srcTx->b3CopyILBMtoRGB8(lPtr, y);
@@ -548,7 +542,7 @@ void b3Tx::b3Copy(const b3Tx * srcTx)
 					break;
 
 				case B3_TX_FLOAT:
-					cPtr = (b3_color *)data;;
+					cPtr = data;;
 					for (y = 0; y < ySize; y++)
 					{
 						srcTx->b3CopyILBMtoFloat(cPtr, y);
@@ -602,7 +596,7 @@ void b3Tx::b3Name(const char * ImageName)
 {
 	image_name = ImageName != nullptr ? ImageName : "";
 	b3PrintF(B3LOG_FULL, "### CLASS: b3Tx   # b3Name(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 }
 
 void b3Tx::b3SetPalette(
@@ -616,7 +610,7 @@ void b3Tx::b3SetPalette(
 
 	// exchange pointer
 	b3Free(palette);
-	palette = (b3_pkd_color *)newPalette;
+	palette = const_cast<b3_pkd_color *>(newPalette);
 }
 
 void b3Tx::b3SetData(const b3_tx_data newData, const b3_size size)

@@ -106,7 +106,7 @@ b3_result b3Tx::b3ParseOpenEXR(const b3_u08 * buffer, b3_size size)
 	b3_result result = B3_ERROR;
 
 	b3PrintF(B3LOG_FULL, "IMG EXR  # b3ParseOpenEXR(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	try
 	{
@@ -121,9 +121,9 @@ b3_result b3Tx::b3ParseOpenEXR(const b3_u08 * buffer, b3_size size)
 			b3_color  *  ptr = b3GetHdrData();
 			FrameBuffer  fb;
 
-			fb.insert("R", Slice(FLOAT, (char *)&ptr->r, sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
-			fb.insert("G", Slice(FLOAT, (char *)&ptr->g, sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
-			fb.insert("B", Slice(FLOAT, (char *)&ptr->b, sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
+			fb.insert("R", Slice(FLOAT, reinterpret_cast<char *>(&ptr->r), sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
+			fb.insert("G", Slice(FLOAT, reinterpret_cast<char *>(&ptr->g), sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
+			fb.insert("B", Slice(FLOAT, reinterpret_cast<char *>(&ptr->b), sizeof(b3_color), sizeof(b3_color) * width, 1, 1, 0.0));
 			file.setFrameBuffer(fb);
 			file.readPixels(dw.min.y, dw.max.y);
 

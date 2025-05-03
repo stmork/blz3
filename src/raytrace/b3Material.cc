@@ -247,7 +247,7 @@ b3MatTexture::b3MatTexture(const b3_u32 * src) : b3Material(src)
 	m_yScale      = b3InitFloat();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
-	m_Texture     = (b3Tx *)b3InitNull();
+	m_Texture     = b3InitNull<b3Tx>();
 	m_Flags       = b3InitInt();
 	b3InitString(m_Name, B3_TEXSTRINGLEN);
 }
@@ -343,7 +343,7 @@ b3MatWrapTexture::b3MatWrapTexture(const b3_u32 * src) : b3Material(src)
 	m_yStart      = b3InitFloat();
 	m_xEnd        = b3InitFloat();
 	m_yEnd        = b3InitFloat();
-	m_Texture     = (b3Tx *)b3InitNull();
+	m_Texture     = b3InitNull<b3Tx>();
 	m_Flags       = b3InitInt();
 	b3InitString(m_Name, B3_TEXSTRINGLEN);
 }

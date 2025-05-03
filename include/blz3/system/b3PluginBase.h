@@ -25,7 +25,7 @@
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3SearchPath.h"
 
-typedef void (*b3_plugin_init_func)();
+typedef void (*b3_plugin_init_func)(void);
 
 class b3PluginBase;
 

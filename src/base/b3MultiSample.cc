@@ -43,7 +43,7 @@ void b3MultiSample::b3Init(const char * extensions)
 #ifdef HAS_MULTISAMPLE
 	if (extensions == nullptr)
 	{
-		extensions = (const char *)glGetString(GL_EXTENSIONS);
+		extensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
 	}
 
 	glHasMS = strstr(extensions, "ARB_multisample") !=  nullptr;

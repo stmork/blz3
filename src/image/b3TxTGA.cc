@@ -43,7 +43,8 @@ b3_result b3Tx::b3ParseTGA(const b3_u08 * buffer)
 	yNewSize = b3Endian::b3GetIntel16(&buffer[14]);
 
 	b3PrintF(B3LOG_FULL, "IMG TGA  # b3ParseTGA(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
+
 	if (b3AllocTx(xNewSize, yNewSize, 24))
 	{
 		b3_pkd_color * srcPtr = data;

@@ -297,9 +297,9 @@ void b3VboVertexElements::b3Map(b3_vbo_mapping map_mode)
 	if (!glCustom)
 	{
 		glBindBufferARB((GLenum)GL_ARRAY_BUFFER_ARB, glVBO);
-		glVertex = (b3_gl_vertex *)glMapBufferARB(
-				(GLenum)GL_ARRAY_BUFFER_ARB,
-				(GLenum)map_mode);
+		glVertex = reinterpret_cast<b3_gl_vertex *>(glMapBufferARB(
+					(GLenum)GL_ARRAY_BUFFER_ARB,
+					(GLenum)map_mode));
 
 		B3_ASSERT(glVertex != nullptr);
 	}
@@ -396,9 +396,9 @@ void b3VboGridElements::b3Map(b3_vbo_mapping map_mode)
 	if ((!glCustom) && (glElementCount > 0))
 	{
 		glBindBufferARB((GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
-		glGrids = (b3_gl_line *)glMapBufferARB(
-				(GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB,
-				(GLenum)map_mode);
+		glGrids = reinterpret_cast<b3_gl_line *>(glMapBufferARB(
+					(GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB,
+					(GLenum)map_mode));
 
 		B3_ASSERT(glGrids != nullptr);
 	}
@@ -495,9 +495,9 @@ void b3VboPolygonElements::b3Map(b3_vbo_mapping map_mode)
 	if ((!glCustom) && (glElementCount > 0))
 	{
 		glBindBufferARB((GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
-		glPolygons = (b3_gl_polygon *)glMapBufferARB(
-				(GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB,
-				(GLenum)map_mode);
+		glPolygons = reinterpret_cast<b3_gl_polygon *>(glMapBufferARB(
+					(GLenum)GL_ELEMENT_ARRAY_BUFFER_ARB,
+					(GLenum)map_mode));
 
 		B3_ASSERT(glPolygons != nullptr);
 	}

@@ -70,7 +70,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF * tiff)
 	TIFFSetField(tiff, TIFFTAG_COLORMAP, &r, &g, &b);
 
 	// OK, writing image data...
-	cPtr = (b3_u08 *)data;
+	cPtr = data;
 	for (y = 0; y < ySize; y++)
 	{
 		b3_u08 * pPtr = cPtr;	// to be changed for every bit depth...
@@ -333,7 +333,7 @@ b3_result b3Tx::b3SaveTIFF(const char * nameTx, b3TxExif * exif)
 	if (tiff != nullptr)
 	{
 		b3PrintF(B3LOG_DEBUG, "### CLASS: b3Tx:  # saving TIFF (%s)\n",
-			(char *)image_name);
+			static_cast<const char *>(image_name));
 
 		// Now select the saving version we need.
 		if (depth == 1)

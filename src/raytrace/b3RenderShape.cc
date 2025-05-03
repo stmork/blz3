@@ -283,7 +283,7 @@ bool b3Shape::b3GetChess(
 		result = item->b3GetClassType() == CHESS;
 		if (result)
 		{
-			b3MatChess * chess = (b3MatChess *)item;
+			b3MatChess * chess = static_cast<b3MatChess *>(item);
 			black   = chess->m_Material[0].m_Diffuse;
 			white   = chess->m_Material[1].m_Diffuse;
 			xRepeat = chess->m_xTimes;
@@ -305,7 +305,7 @@ b3Tx * b3Shape::b3GetTexture(
 	item = b3GetMaterialHead()->First;
 	if ((item != nullptr) && (item->b3GetClassType() == TEXTURE) && (item->Succ == nullptr))
 	{
-		b3MatTexture   *  mat = (b3MatTexture *)item;
+		b3MatTexture   *  mat = static_cast<b3MatTexture *>(item);
 		b3_stencil_limit  limit;
 		b3_f64            xLocSize;
 		b3_f64            yLocSize;
@@ -418,9 +418,9 @@ private:
 
 				color = b3Color::B3_BLACK;
 				loop  = true;
-				for (material  = (b3Material *)m_Shape->b3GetMaterialHead()->First;
+				for (material  = static_cast<b3Material *>(m_Shape->b3GetMaterialHead()->First);
 					(material != nullptr) && loop;
-					material  = (b3Material *)material->Succ)
+					 material  = static_cast<b3Material *>(material->Succ))
 				{
 					if (material->b3GetSurfaceValues(&surface))
 					{
@@ -1330,8 +1330,8 @@ void b3Shape::b3ComputeBoxVertices(
 
 void b3Shape::b3ComputeBoxIndices()
 {
-	glGridElements->b3SetGrids((b3_gl_line *)m_BoxGrids);
-	glPolygonElements->b3SetPolygons((b3_gl_polygon *)m_BoxPolygons);
+	glGridElements->b3SetGrids(const_cast<b3_gl_line *>(m_BoxGrids));
+	glPolygonElements->b3SetPolygons(const_cast<b3_gl_polygon *>(m_BoxPolygons));
 }
 
 /*************************************************************************

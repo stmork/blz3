@@ -1427,7 +1427,7 @@ private:
 	b3_result      b3ParseSGI(const b3_u08 * buffer);
 	void           b3ParseSGI3(const b3HeaderSGI * HeaderSGI, const b3_u08 * Data);
 
-	static void    b3ConvertSGILine(b3_u16 * buffer, b3_offset offset, b3_size size, b3_count bytes);
+	static void    b3ConvertSGILine(const b3_u16 * buffer, const b3_offset offset, b3_size size, const b3_count bytes);
 	static void    b3UnpackSGI(
 		b3_u08     *    buffer,
 		const void   *  inPtr,

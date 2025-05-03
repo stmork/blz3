@@ -41,15 +41,15 @@ inline void b3Tx::b3UnpackSGI(
 	b3_count     bytes,
 	b3_offset    offset)
 {
-	b3_u08 * bBuffer;
-	b3_u16   pixel;
+	const b3_u08 * bBuffer;
+	b3_u16         pixel;
 
 	switch (bytes)
 	{
 	case 1 :
 		if (count != 0)
 		{
-			bBuffer  = (b3_u08 *)inPtr;
+			bBuffer  = static_cast<const b3_u08 *>(inPtr);
 			bBuffer += (512 / sizeof(unsigned char) + offset);
 			while (count-- > 0)
 			{
@@ -58,11 +58,12 @@ inline void b3Tx::b3UnpackSGI(
 		}
 		else
 		{
-			bBuffer  = (b3_u08 *)inPtr;
+			bBuffer  = static_cast<const b3_u08 *>(inPtr);
 			bBuffer += offset;
 			do
 			{
 				pixel = *bBuffer++;
+
 				count = (pixel & 0x7f);
 				if (count == 0)
 				{
@@ -91,7 +92,7 @@ inline void b3Tx::b3UnpackSGI(
 	case 2 :
 		if (count != 0)
 		{
-			bBuffer  = (b3_u08 *)inPtr;
+			bBuffer  = static_cast<const b3_u08 *>(inPtr);
 			bBuffer += (512 / sizeof(unsigned short) + offset);
 			while (count-- > 0)
 			{
@@ -100,7 +101,7 @@ inline void b3Tx::b3UnpackSGI(
 		}
 		else
 		{
-			b3_u16 * sBuffer  = (b3_u16 *)inPtr;
+			const b3_u16 * sBuffer  = static_cast<const b3_u16 *>(inPtr);;
 
 			sBuffer += offset;
 			do
@@ -136,17 +137,17 @@ inline void b3Tx::b3UnpackSGI(
 }
 
 inline void b3Tx::b3ConvertSGILine(
-	b3_u16  *  buffer,
-	b3_offset  offset,
-	b3_size    size,
-	b3_count   bytes)
+	const b3_u16  *  buffer,
+	const b3_offset  offset,
+	b3_size          size,
+	const b3_count   bytes)
 {
 	if (bytes == 2)
 	{
 		buffer += offset;
 		while (size-- > 0)
 		{
-			b3Endian::b3ChangeEndian16(buffer++);
+			b3Endian::b3ChangeEndian16(const_cast<b3_u16 *>(buffer++));
 		}
 	}
 }
@@ -155,8 +156,8 @@ void b3Tx::b3ParseSGI3(
 	const b3HeaderSGI * HeaderSGI,
 	const b3_u08    *   buffer)
 {
-	b3_pkd_color * lineTable;
-	b3_pkd_color * lineSizes;
+	const b3_pkd_color * lineTable;
+	const b3_pkd_color * lineSizes;
 	b3_pkd_color * lPtr, value;
 	b3_u08    *    line;
 	b3_u08    *    cPtr;
@@ -177,8 +178,8 @@ void b3Tx::b3ParseSGI3(
 
 
 	/* convert line offsets */
-	lineTable = (b3_pkd_color *)&buffer[512];
-	lineSizes = (b3_pkd_color *)&lineTable[zSize * ySize];
+	lineTable = reinterpret_cast<const b3_pkd_color *>(&buffer[512]);
+	lineSizes = reinterpret_cast<const b3_pkd_color *>(&lineTable[zSize * ySize]);
 	if (HeaderSGI->imagic == IMAGIC2) /* check for converting endian */
 	{
 		if (rle <= 0) /* RLE data */
@@ -187,9 +188,11 @@ void b3Tx::b3ParseSGI3(
 			{
 				for (b3_count z = 0; z < zSize; z++)
 				{
-					b3Endian::b3ChangeEndian32(&lineTable[y + z * ySize]);
-					b3Endian::b3ChangeEndian32(&lineSizes[y + z * ySize]);
-					b3ConvertSGILine((b3_u16 *)buffer,
+					b3Endian::b3ChangeEndian32(
+						const_cast<b3_u32 *>(&lineTable[y + z * ySize]));
+					b3Endian::b3ChangeEndian32(
+						const_cast<b3_u32 *>(&lineSizes[y + z * ySize]));
+					b3ConvertSGILine(reinterpret_cast<const b3_u16 *>(buffer),
 						lineTable[y + z * ySize],
 						lineSizes[y + z * ySize], bytes);
 				}
@@ -201,7 +204,7 @@ void b3Tx::b3ParseSGI3(
 			{
 				for (b3_count z = 0; z < zSize; z++)
 				{
-					b3ConvertSGILine((b3_u16 *)buffer,
+					b3ConvertSGILine(reinterpret_cast<const b3_u16 *>(buffer),
 						256 + y * xSize * zSize + z * xSize, xSize, bytes);
 				}
 			}
@@ -211,7 +214,7 @@ void b3Tx::b3ParseSGI3(
 	switch (type)
 	{
 	case B3_TX_RGB8 :
-		lPtr  = (b3_pkd_color *)data;
+		lPtr  = data;
 		block = xSize * ySize;
 		for (b3_count y = ySize - 1; y >= 0; y--)
 		{
@@ -262,26 +265,27 @@ void b3Tx::b3ParseSGI3(
 
 b3_result b3Tx::b3ParseSGI(const b3_u08 * buffer)
 {
-	b3HeaderSGI * HeaderSGI;
-	b3_bool       success = false;
-	b3_res        xNewSize, yNewSize;
-	b3_index      c;
+	const b3HeaderSGI * HeaderSGI = reinterpret_cast<const struct b3HeaderSGI *>(buffer);
+	b3_bool             success = false;
+	b3_res              xNewSize, yNewSize;
+	b3_index            c;
 
 	b3PrintF(B3LOG_FULL, "IMG SGI  # b3ParseSGI(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
-	HeaderSGI = (struct b3HeaderSGI *)buffer;
 	if (HeaderSGI->imagic == IMAGIC2)
 	{
-		b3Endian::b3ChangeEndian16(&HeaderSGI->type);
-		b3Endian::b3ChangeEndian16(&HeaderSGI->dim);
-		b3Endian::b3ChangeEndian16(&HeaderSGI->xsize);
-		b3Endian::b3ChangeEndian16(&HeaderSGI->ysize);
-		b3Endian::b3ChangeEndian16(&HeaderSGI->zsize);
-		b3Endian::b3ChangeEndian32(&HeaderSGI->min);
-		b3Endian::b3ChangeEndian32(&HeaderSGI->max);
-		b3Endian::b3ChangeEndian32(&HeaderSGI->wastebytes);
-		b3Endian::b3ChangeEndian32(&HeaderSGI->colormap);
+		b3HeaderSGI * header = const_cast<b3HeaderSGI *>(HeaderSGI);
+
+		b3Endian::b3ChangeEndian16(&header->type);
+		b3Endian::b3ChangeEndian16(&header->dim);
+		b3Endian::b3ChangeEndian16(&header->xsize);
+		b3Endian::b3ChangeEndian16(&header->ysize);
+		b3Endian::b3ChangeEndian16(&header->zsize);
+		b3Endian::b3ChangeEndian32(&header->min);
+		b3Endian::b3ChangeEndian32(&header->max);
+		b3Endian::b3ChangeEndian32(&header->wastebytes);
+		b3Endian::b3ChangeEndian32(&header->colormap);
 	}
 
 	xNewSize = HeaderSGI->xsize;

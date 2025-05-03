@@ -110,9 +110,9 @@ public:
 				color.b = pow(color.b, 2.2);
 			});
 #endif
-			fb.insert("R", Slice(FLOAT, (char *)&data->r, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
-			fb.insert("G", Slice(FLOAT, (char *)&data->g, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
-			fb.insert("B", Slice(FLOAT, (char *)&data->b, sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
+			fb.insert("R", Slice(FLOAT, reinterpret_cast<char *>(&data->r), sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
+			fb.insert("G", Slice(FLOAT, reinterpret_cast<char *>(&data->g), sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
+			fb.insert("B", Slice(FLOAT, reinterpret_cast<char *>(&data->b), sizeof(b3_color), sizeof(b3_color) * m_Tx->xSize));
 
 			file.setFrameBuffer(fb);
 			file.writePixels(m_Tx->ySize);

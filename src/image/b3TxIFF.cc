@@ -106,20 +106,20 @@ b3_u08 b3_tx_yuv_table::m_ConvertBits[8]
 
 b3_result b3Tx::b3ParseIFF_RGB8(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u08    *   cPtr;
+	const b3_u08 * cPtr;
+	const b3_u32 * srcPtr;
 	b3_pkd_color * dstPtr, Color;
-	b3_u32    *   srcPtr;
-	b3_count      Amount, Max;
-	b3_index      Pos = 12, i = 0, k;
+	b3_count       Amount, Max;
+	b3_index       Pos = 12, i = 0, k;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_RGB8(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	palette	 = nullptr;
 	while (Pos < (b3_index)buffer_size)
 	{
-		srcPtr = (b3_u32 *)&buffer[Pos];
-		cPtr   = (b3_u08 *)srcPtr;
+		srcPtr = reinterpret_cast<const b3_u32 *>(&buffer[Pos]);
+		cPtr   = reinterpret_cast<const b3_u08 *>(srcPtr);
 		switch (b3Endian::b3GetMot32(srcPtr))
 		{
 		case IFF_BMHD :
@@ -136,7 +136,7 @@ b3_result b3Tx::b3ParseIFF_RGB8(const b3_u08 * buffer, b3_size buffer_size)
 				B3_THROW(b3TxException, B3_TX_MEMORY);
 			}
 			Max = xSize * ySize;
-			dstPtr = (b3_pkd_color *)data;
+			dstPtr = data;
 
 			cPtr += 8;
 			while (i < Max)
@@ -183,20 +183,20 @@ b3_result b3Tx::b3ParseIFF_RGB8(const b3_u08 * buffer, b3_size buffer_size)
 
 b3_result b3Tx::b3ParseIFF_RGB4(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u08 * CharData;
-	b3_u32 * LongData;
-	b3_u16 * dstPtr;
-	b3_u32   Pos = 12, Max, i = 0;
+	const b3_u08 * CharData;
+	const b3_u32 * LongData;
+	b3_u16    *    dstPtr;
+	b3_u32		Pos = 12, Max, i = 0;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_RGB4(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	palette  = nullptr;
 	FileType = FT_RGB4;
 	while (Pos < buffer_size)
 	{
-		LongData = (b3_u32 *)&buffer[Pos];
-		CharData = (b3_u08 *)LongData;
+		LongData = reinterpret_cast<const b3_u32 *>(&buffer[Pos]);
+		CharData = reinterpret_cast<const b3_u08 *>(LongData);
 		switch (b3Endian::b3GetMot32(LongData))
 		{
 		case IFF_BMHD :
@@ -370,7 +370,7 @@ void b3Tx::b3HamPalette(bool HAM8)
 	offset  = (((xSize + 15) & 0x7fffff0) >> 3) * depth;
 	if (HAM8)
 	{
-		b3_u32 * LData  = (b3_u32 *)NewData;
+		b3_u32 * LData  = reinterpret_cast<b3_u32 *>(NewData);
 
 		for (y = 0; y < ySize; y++)
 		{
@@ -439,7 +439,7 @@ void b3Tx::b3HamPalette(bool HAM8)
 	b3Free(Line);
 	b3Free(palette);
 	b3Free(data);
-	data    = (b3_u08 *)sData;
+	data    = reinterpret_cast<b3_u08 *>(sData);
 	palette = nullptr;
 
 	type = (HAM8 ? B3_TX_RGB8 : B3_TX_RGB4);
@@ -447,23 +447,23 @@ void b3Tx::b3HamPalette(bool HAM8)
 
 b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 {
-	b3_u08 * Copy;
-	b3_u08 * CharData;
-	b3_u32   Code, i;
-	b3_u32   Max, k, Pos = 12;
-	b3_u32 * Set;
-	b3_u32 * LongData;
-	bool     Compressed = false, Ham = false, EHB = false, Ham8 = false;
+	const b3_u32 * LongData;
+	const b3_u08 * CharData;
+	b3_u08    *    Copy;
+	b3_u32    *    Set;
+	b3_u32         Code, i;
+	b3_u32         Max, k, Pos = 12;
+	bool           Compressed = false, Ham = false, EHB = false, Ham8 = false;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_ILBM(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	palette	 = nullptr;
 	FileType = FT_ILBM;
 	while (Pos < buffer_size)
 	{
-		LongData  = (b3_u32 *)&buffer[Pos];
-		CharData  = (b3_u08 *)LongData;
+		LongData  = reinterpret_cast<const b3_u32 *>(&buffer[Pos]);
+		CharData  = reinterpret_cast<const b3_u08 *>(LongData);
 		switch (b3Endian::b3GetMot32(LongData))
 		{
 		case IFF_BMHD :
@@ -499,7 +499,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 
 				B3_THROW(b3TxException, B3_TX_MEMORY);
 			}
-			Set = (b3_u32 *)palette;
+			Set = palette;
 			CharData += 8;
 			for (k = 0; k < Max; k++)
 			{
@@ -580,7 +580,7 @@ b3_result b3Tx::b3ParseIFF_ILBM(const b3_u08 * buffer, b3_size buffer_size)
 					b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 					B3_THROW(b3TxException, B3_TX_MEMORY);
 				}
-				Copy = (b3_u08 *)data;
+				Copy      = data;
 				CharData += 8;
 				memcpy(data, CharData, Max);
 			}
@@ -627,23 +627,23 @@ b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 {
 	const b3_u08 * U = nullptr;
 	const b3_u08 * V = nullptr;
-	b3_u08    *    Y = nullptr;
-	b3_u08    *    CharData;
-	b3_u32    *    LongData;
+	const b3_u08 * Y = nullptr;
+	const b3_u08 * CharData;
+	const b3_u32 * LongData;
 	b3_u08         y, u, v, Uprev, Vprev;
 	b3_u32         i, k, Max, Pos = 12, Count = 0, Shift;
 
 	b3PrintF(B3LOG_FULL, "IMG IFF  # b3ParseIFF_YUVN(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	palette  = nullptr;
 	FileType = FT_YUV;
-	LongData = (b3_u32 *)&buffer[Pos];
-	CharData = (b3_u08 *)LongData;
+	LongData = reinterpret_cast<const b3_u32 *>(&buffer[Pos]);
+	CharData = reinterpret_cast<const b3_u08 *>(LongData);
 
 	while (Pos < buffer_size)
 	{
-		LongData = (b3_u32 *)CharData;
+		LongData = reinterpret_cast<const b3_u32 *>(CharData);
 		switch (b3Endian::b3GetMot32(LongData))
 		{
 		case IFF_YCHD :
@@ -701,13 +701,13 @@ b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 			break;
 
 		case IFF_DATY :
-			Y = (b3_u08 *)(CharData + 8);
+			Y = static_cast<const b3_u08 *>(CharData + 8);
 			break;
 		case IFF_DATU :
-			U = (b3_u08 *)(CharData + 8);
+			U = static_cast<const b3_u08 *>(CharData + 8);
 			break;
 		case IFF_DATV :
-			V = (b3_u08 *)(CharData + 8);
+			V = static_cast<const b3_u08 *>(CharData + 8);
 			break;
 
 		}
@@ -746,7 +746,8 @@ b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL, "IMG IFF  # Error allocating memory:\n");
 			B3_THROW(b3TxException, B3_TX_MEMORY);
 		}
-		LongData = (b3_pkd_color *)data;
+
+		b3_pkd_color * lPtr = data;
 
 		Uprev = U[0];
 		Vprev = V[0];
@@ -762,7 +763,7 @@ b3_result b3Tx::b3ParseIFF_YUVN(const b3_u08 * buffer, b3_size buffer_size)
 				y = Y[0];
 				u = Uprop >> Shift;
 				v = Vprop >> Shift;
-				*LongData++ =
+				*lPtr++ =
 					b3_tx_yuv_table::m_MultYuvTable.MultR[y + b3_tx_yuv_table::m_MultYuvTable.MultRV[v]] |
 					b3_tx_yuv_table::m_MultYuvTable.MultG[y + b3_tx_yuv_table::m_MultYuvTable.MultGU[u] + b3_tx_yuv_table::m_MultYuvTable.MultGV[v]] |
 					b3_tx_yuv_table::m_MultYuvTable.MultB[y + b3_tx_yuv_table::m_MultYuvTable.MultBU[u]];

@@ -192,15 +192,15 @@ void b3Tx::b3GetColorMask(
 	b3_pkd_color  colorMask) const
 {
 	b3_pkd_color * lPtr, bit;
-	b3_u08    *   bPtr;
-	b3_coord      x, y;
-	b3_index      xBytes, pos;
-	b3_u08        cache;
+	b3_u08    *    bPtr;
+	b3_coord       x, y;
+	b3_index       xBytes, pos;
+	b3_u08         cache;
 
 	switch (type)
 	{
 	case B3_TX_ILBM:
-		bPtr   = (b3_u08 *)data;
+		bPtr   = data;
 		xBytes = TX_BWA(xSize);
 		for (y = 0; y < ySize; y++)
 		{
@@ -214,7 +214,7 @@ void b3Tx::b3GetColorMask(
 		break;
 
 	case B3_TX_VGA:
-		bPtr = (b3_u08 *)data;
+		bPtr = data;
 		for (y = 0; y < ySize; y++)
 		{
 			pos   =   0;
@@ -241,7 +241,7 @@ void b3Tx::b3GetColorMask(
 		break;
 
 	case B3_TX_RGB8:
-		lPtr = (b3_pkd_color *)data;
+		lPtr = data;
 		for (y = 0; y < ySize; y++)
 		{
 			pos   =   0;

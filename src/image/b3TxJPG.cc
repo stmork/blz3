@@ -129,7 +129,7 @@ b3_bool b3JPEG::b3Decompress(b3Tx * tx)
 			b3_coord x;
 
 			jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
-			line = (b3_u08 *)m_SampleArray[0];
+			line = static_cast<b3_u08 *>(m_SampleArray[0]);
 			for (x = 0; x < (b3_coord)m_Decompress.output_width; x++)
 			{
 				*out++ = b3Color::b3MakePkdColor(line[0], line[1], line[2]);
@@ -163,7 +163,7 @@ void b3JPEG::b3Deinit()
 
 void b3JPEG::b3ErrorHandler(j_common_ptr cinfo)
 {
-	struct b3_jpeg_error_mgr * myerr = (struct b3_jpeg_error_mgr *) cinfo->err;
+	struct b3_jpeg_error_mgr * myerr = reinterpret_cast<struct b3_jpeg_error_mgr *>(cinfo->err);
 
 	(*cinfo->err->output_message)(cinfo);
 	longjmp(myerr->m_SetjmpBuffer, 1);
@@ -203,7 +203,7 @@ b3_result b3Tx::b3ParseJPEG(const b3_u08 * buffer, b3_size buffer_size)
 	b3JPEG jpeg;
 
 	b3PrintF(B3LOG_FULL, "IMG JPEG # b3ParseJPEG(%s)\n",
-		(const char *)image_name);
+		static_cast<const char *>(image_name));
 
 	// NOTE: this is only dummy because the data is completly loaded.
 	if (!jpeg.b3Init(buffer, buffer_size))

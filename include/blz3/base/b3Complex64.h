@@ -269,14 +269,26 @@ public:
 		return atan2(b3Imag(), b3Real());
 	}
 
-	inline b3_f64 & b3Real() const
+	inline const b3_f64 & b3Real() const
+	{
+		return (const b3_f64 &)v;
+	}
+
+	inline b3_f64 & b3Real()
 	{
 		return (b3_f64 &)v;
 	}
 
-	inline b3_f64 & b3Imag() const
+	inline const b3_f64 & b3Imag() const
 	{
-		b3_f64 * ptr = (b3_f64 *)&v;
+		const b3_f64 * ptr = reinterpret_cast<const b3_f64 *>(&v);
+
+		return ptr[Im];
+	}
+
+	inline b3_f64 & b3Imag()
+	{
+		b3_f64 * ptr = reinterpret_cast<b3_f64 *>(&v);
 
 		return ptr[Im];
 	}
@@ -344,7 +356,7 @@ public:
 		return os;
 	}
 
-	inline static void b3CopyUncached(const b3Complex64 & dst, const b3Complex64 & src)
+	inline static void b3CopyUncached(b3Complex64 & dst, const b3Complex64 & src)
 	{
 		_mm_stream_pd(&dst.b3Real(), src.v);
 	}

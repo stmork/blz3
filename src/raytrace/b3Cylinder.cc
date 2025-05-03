@@ -52,7 +52,7 @@ void b3Cylinder::b3GetCount(
 
 void b3Cylinder::b3AllocVertexMemory(b3RenderContext * ctx)
 {
-	b3ShapeRenderContext * context = (b3ShapeRenderContext *)ctx;
+	b3ShapeRenderContext * context = static_cast<b3ShapeRenderContext *>(ctx);
 
 	b3RenderObject::b3AllocVertexMemory(context);
 	glGridElements->b3SetGrids(context->b3GetCylinderIndices());

@@ -184,7 +184,7 @@ const char * b3AnimElement::b3GetName() const
 
 void b3AnimElement::b3GetPosition(b3_vector32_4D * position, b3_f64 t)
 {
-	b3AnimControl * ctrl = (b3AnimControl *)m_Heads[0].First;
+	b3AnimControl * ctrl = static_cast<b3AnimControl *>(m_Heads[0].First);
 	b3_f64          coeffs[b3Spline::B3_MAX_DEGREE + 1];
 
 	if (ctrl != nullptr)
@@ -369,8 +369,8 @@ void b3AnimElement::b3SelectObjects(b3BBox * bbox)
 		{
 			bbox->b3Animate(b3Activation::B3_ANIM_ACTIVE, (m_Flags & ANIMFLAGF_RECURSIVE) != 0);
 		}
-		b3SelectObjects((b3BBox *)bbox->b3GetBBoxHead()->First);
-		bbox = (b3BBox *)bbox->Succ;
+		b3SelectObjects(static_cast<b3BBox *>(bbox->b3GetBBoxHead()->First));
+		bbox = static_cast<b3BBox *>(bbox->Succ);
 	}
 }
 

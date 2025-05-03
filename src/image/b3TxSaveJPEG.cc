@@ -180,7 +180,7 @@ void b3InfoJPEG::b3Write()
 {
 	for (b3_coord y = 0; y < m_Tx->ySize; y++)
 	{
-		b3_u08 * line = (b3_u08 *)JPEGrow_pointer[JPEGline++];
+		b3_u08 * line = static_cast<b3_u08 *>(JPEGrow_pointer[JPEGline++]);
 
 		if (JPEGline >= JPEG_ROWS)
 		{
@@ -214,7 +214,7 @@ b3InfoJPEG::~b3InfoJPEG()
 
 	if (JPEGwritten < (JDIMENSION)m_Tx->ySize)
 	{
-		b3_u08 * line = (b3_u08 *)JPEGrow_pointer[0];
+		b3_u08 * line = static_cast<b3_u08 *>(JPEGrow_pointer[0]);
 
 		for (b3_coord x = 0; x < m_Tx->xSize; x++)
 		{

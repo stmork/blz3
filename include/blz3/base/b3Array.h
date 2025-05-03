@@ -145,11 +145,19 @@ public:
 	 *
 	 * @return The allocated buffer with the elements.
 	 */
-	inline T * b3GetBuffer() const
+	inline T * b3GetBuffer()
 	{
-		T * ptr = (T *)elements.data();
+		return elements.data();
+	}
 
-		return ptr;
+	/**
+	 * This method returns the allocated buffer as pointer.
+	 *
+	 * @return The allocated buffer with the elements.
+	 */
+	inline const T * b3GetBuffer() const
+	{
+		return elements.data();
 	}
 
 	/**

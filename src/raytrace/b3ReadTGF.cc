@@ -269,8 +269,8 @@ b3_bool b3TGFReader::b3ParseGeometry(const b3BBox * bbox, const char * ptr)
 	b3_u32                   numFac;
 	b3_tgf_vertex            type;
 	b3_size                  size, skip, i, pos;
-	b3_f64         *         vPtr;
-	b3_u32         *         lPtr;
+	const b3_f64      *      vPtr;
+	const b3_u32      *      lPtr;
 
 	numVert = b3Endian::b3GetIntel32(&ptr[ 0]);
 	numAttr = b3Endian::b3GetIntel32(&ptr[ 4]);
@@ -294,7 +294,7 @@ b3_bool b3TGFReader::b3ParseGeometry(const b3BBox * bbox, const char * ptr)
 	ptr += 18;
 	pos  = 18;
 
-	vPtr  = (b3_f64 *)ptr;
+	vPtr  = reinterpret_cast<const b3_f64 *>(ptr);
 	skip  = numVert * sizeof(b3_f64) * size;
 	for (i = 0; i < numVert; i++)
 	{
@@ -333,7 +333,7 @@ b3_bool b3TGFReader::b3ParseGeometry(const b3BBox * bbox, const char * ptr)
 	ptr  += skip;
 	pos  += skip;
 
-	lPtr  = (b3_u32 *)ptr;
+	lPtr  = reinterpret_cast<const b3_u32 *>(ptr);
 	skip  = numFac  * sizeof(b3_u32) * 3;
 	for (i = 0; i < numFac; i++)
 	{
@@ -500,7 +500,7 @@ b3Scene * b3TGFReader::b3ReadTGFScene(const char * tgffile)
 	b3_size      size;
 
 	b3PrintF(B3LOG_NORMAL, "Reading TGF %s\n", tgffile);
-	buffer = (char *)file.b3ReadBuffer(tgffile, size);
+	buffer = reinterpret_cast<char *>(file.b3ReadBuffer(tgffile, size));
 	if (buffer != nullptr)
 	{
 		b3BBox * bbox = reader.b3Parse(buffer, size, tgffile);
@@ -542,7 +542,7 @@ b3BBox * b3TGFReader::b3ReadTGFBBox(const char * tgffile)
 	b3_size      size;
 
 	b3PrintF(B3LOG_NORMAL, "Reading TGF %s\n", tgffile);
-	buffer = (char *)file.b3ReadBuffer(tgffile, size);
+	buffer = reinterpret_cast<char *>(file.b3ReadBuffer(tgffile, size));
 	if (buffer != nullptr)
 	{
 		bbox = reader.b3Parse(buffer, size, tgffile);

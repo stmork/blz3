@@ -67,7 +67,7 @@ bool b3Scene::b3RaytraceThread(void * ptr)
 		{
 			b3CriticalSection lock(scene->m_PoolMutex);
 
-			row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
+			row = static_cast<b3RayRow *>(scene->m_RowPool.b3RemoveFirst());
 		}
 		// Leave critical section
 
@@ -105,7 +105,7 @@ bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 			{
 				b3CriticalSection lock(scene->m_PoolMutex);
 
-				row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
+				row = static_cast<b3RayRow *>(scene->m_RowPool.b3RemoveFirst());
 			}
 			// Leave critical section
 
@@ -274,7 +274,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 
 bool b3Scene::b3PrepareBBoxThread(b3BBox * bbox, void * ptr)
 {
-	return bbox->b3PrepareBBox((b3_scene_preparation *)ptr);
+	return bbox->b3PrepareBBox(static_cast<b3_scene_preparation *>(ptr));
 }
 
 bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
@@ -406,7 +406,7 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 	// Init lights
 	b3PrintF(B3LOG_FULL, "  preparing lights...\n");
 	m_LightCount = 0;
-	for (light = b3GetLight(); light != nullptr; light = (b3Light *)light->Succ)
+	for (light = b3GetLight(); light != nullptr; light = static_cast<b3Light *>(light->Succ))
 	{
 		if (!light->b3Prepare(info))
 		{
@@ -484,7 +484,7 @@ void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 			if (m_SuperSample != nullptr)
 			{
 				row = new b3SupersamplingRayRow(this, display, i, xSize, ySize,
-					(b3SupersamplingRayRow *)m_RowPool.Last);
+					static_cast<b3SupersamplingRayRow *>(m_RowPool.Last));
 			}
 
 			// Add default row

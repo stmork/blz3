@@ -156,15 +156,16 @@ b3_bool has_vbo;
 
 void init_vbo()
 {
-	char * extensions = (char *)glGetString(GL_EXTENSIONS);
+	const char * extensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
+
 	if (strstr(extensions, "ARB_vertex_buffer_object") != 0)
 	{
-		glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
-		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
-		glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
-		glBufferDataARB    = (PFNGLBUFFERDATAARBPROC)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
-		glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
-		glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
+		glGenBuffersARB    = b3Runtime::b3GetOpenGLExtension<PFNGLGENBUFFERSARBPROC>   ("glGenBuffersARB");
+		glDeleteBuffersARB = b3Runtime::b3GetOpenGLExtension<PFNGLDELETEBUFFERSARBPROC>("glDeleteBuffersARB");
+		glBindBufferARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBINDBUFFERARBPROC>   ("glBindBufferARB");
+		glBufferDataARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBUFFERDATAARBPROC>   ("glBufferDataARB");
+		glMapBufferARB     = b3Runtime::b3GetOpenGLExtension<PFNGLMAPBUFFERARBPROC>    ("glMapBufferARB");
+		glUnmapBufferARB   = b3Runtime::b3GetOpenGLExtension<PFNGLUNMAPBUFFERARBPROC>  ("glUnmapBufferARB");
 
 		has_vbo =
 			(glGenBuffersARB  != nullptr) &&

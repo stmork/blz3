@@ -56,7 +56,7 @@ static void b3SetLights()
 		b3PrintF(B3LOG_DEBUG, "Using multiple lights with%s spots...\n",
 			spot_light ? "" : "out");
 
-		lights.b3SetScene((b3Scene *)world->b3GetFirst());
+		lights.b3SetScene(static_cast<b3Scene *>(world->b3GetFirst()));
 		lights.b3SetLightMode(spot_light ? B3_LIGHT_SCENE_SPOT : B3_LIGHT_SCENE);
 	}
 	else
@@ -80,7 +80,7 @@ static void b3DisplayFunc()
 
 	b3PrintF(B3LOG_FULL, ">b3DisplayFunc()\n");
 	context.b3StartDrawing();
-	scene = (b3Scene *)world->b3GetFirst();
+	scene = static_cast<b3Scene *>(world->b3GetFirst());
 	scene->b3Draw(&context);
 
 	glutSwapBuffers();
@@ -92,7 +92,7 @@ static void b3PlayAnimation()
 	b3Scene   *   scene;
 	b3Animation * animation;
 
-	scene     = (b3Scene *)world->b3GetFirst();
+	scene     = static_cast<b3Scene *>(world->b3GetFirst());
 	animation = scene->b3GetAnimation();
 	if (animation == nullptr)
 	{
@@ -167,7 +167,7 @@ static void b3KeyboardFunc(unsigned char key, int x B3_UNUSED, int y B3_UNUSED)
 	b3Scene * scene;
 	bool      refresh = false;
 
-	scene = (b3Scene *)world->b3GetFirst();
+	scene = static_cast<b3Scene *>(world->b3GetFirst());
 	switch (key)
 	{
 	case 'l':
@@ -343,7 +343,7 @@ int main(int argc, char * argv[])
 
 	try
 	{
-		const char   *  filename = (const char *)argv[i];
+		const char   *  filename = reinterpret_cast<const char *>(argv[i]);
 		b3Item     *    item;
 
 		b3Dir::b3LinkFileName(data,     HOME, "Blizzard/Data");
@@ -353,7 +353,7 @@ int main(int argc, char * argv[])
 		b3Scene::m_TexturePool.b3AddPath(textures);
 		b3Scene::m_TexturePool.b3AddPath(pictures);
 
-		filename = (const char *)argv[i];
+		filename = reinterpret_cast<const char *>(argv[i]);
 		world = new b3World();
 		world->b3AddPath(data);
 
@@ -373,7 +373,7 @@ int main(int argc, char * argv[])
 			item != nullptr;
 			item  = scene->Succ)
 		{
-			scene = (b3Scene *)item;
+			scene = static_cast<b3Scene *>(item);
 			b3Prepare(scene);
 
 			//			glutInit(&argc, argv);

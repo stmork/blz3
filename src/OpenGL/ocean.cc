@@ -97,7 +97,8 @@ void init_vertices()
 		{
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 			glBufferDataARB(GL_ARRAY_BUFFER_ARB, vSize, nullptr, GL_DYNAMIC_DRAW_ARB);
-			vPtr = (GLfloat *)glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
+			vPtr = reinterpret_cast<GLfloat *>(glMapBufferARB(GL_ARRAY_BUFFER_ARB,
+			GL_WRITE_ONLY));
 		}
 		else
 		{
@@ -131,7 +132,8 @@ void init_vertices()
 		{
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize * sizeof(GLint), nullptr, GL_DYNAMIC_DRAW_ARB);
-			iPtr = (GLuint *)glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
+			iPtr = reinterpret_cast<GLuint *>(glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+			GL_WRITE_ONLY));
 		}
 		else
 		{
@@ -175,15 +177,16 @@ void init_vertices()
 
 void init_vbo()
 {
-	char * extensions = (char *)glGetString(GL_EXTENSIONS);
+	const char * extensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
+
 	if (strstr(extensions, "ARB_vertex_buffer_object") != 0)
 	{
-		glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
-		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
-		glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
-		glBufferDataARB    = (PFNGLBUFFERDATAARBPROC)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
-		glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
-		glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
+		glGenBuffersARB    = b3Runtime::b3GetOpenGLExtension<PFNGLGENBUFFERSARBPROC>   ("glGenBuffersARB");
+		glDeleteBuffersARB = b3Runtime::b3GetOpenGLExtension<PFNGLDELETEBUFFERSARBPROC>("glDeleteBuffersARB");
+		glBindBufferARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBINDBUFFERARBPROC>   ("glBindBufferARB");
+		glBufferDataARB    = b3Runtime::b3GetOpenGLExtension<PFNGLBUFFERDATAARBPROC>   ("glBufferDataARB");
+		glMapBufferARB     = b3Runtime::b3GetOpenGLExtension<PFNGLMAPBUFFERARBPROC>    ("glMapBufferARB");
+		glUnmapBufferARB   = b3Runtime::b3GetOpenGLExtension<PFNGLUNMAPBUFFERARBPROC>  ("glUnmapBufferARB");
 
 		has_vbo =
 			false &&

@@ -76,7 +76,7 @@ b3_bool b3SearchPath::b3IsValid(
 {
 	if ((partial_filename != nullptr) && (strlen(partial_filename) > 0))
 	{
-		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", (char *)partial_filename);
+		b3PrintF(B3LOG_FULL, "Trying \"%s\"...\n", partial_filename);
 		if (b3Dir::b3Exists(partial_filename) == B3_TYPE_FILE)
 		{
 			if (full_filename != nullptr)
@@ -94,7 +94,7 @@ b3_bool b3SearchPath::b3IsValid(
 				b3Path fq_filename;
 
 				fq_filename.b3LinkFileName((const char *)*path, partial_filename);
-				b3PrintF(B3LOG_FULL, "Trying \"%s\"...", (const char *)full_filename);
+				b3PrintF(B3LOG_FULL, "Trying \"%s\"...", full_filename);
 
 				if (b3Dir::b3Exists(fq_filename) == B3_TYPE_FILE)
 				{

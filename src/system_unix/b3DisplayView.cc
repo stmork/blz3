@@ -493,7 +493,7 @@ void b3DisplayView::b3Open(
 			WhitePixel(m_Display, m_Screen),
 			BlackPixel(m_Display, m_Screen));
 
-	XStringListToTextProperty((char **)&m_Title, 1, &CInfoName);
+	XStringListToTextProperty(const_cast<char **>(&m_Title), 1, &CInfoName);
 	XSetWMName(m_Display, m_Window, &CInfoName);
 
 

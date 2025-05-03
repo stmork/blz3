@@ -57,7 +57,6 @@ cppcheck.commands = cppcheck\
 	--inline-suppr\
 	--suppress=preprocessorErrorDirective\
 	--suppress=syntaxError\
-	--suppress=cstyleCast\
 	--suppress=duplInheritedMember\
 	-I$$[QT_INSTALL_HEADERS]\
 	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\

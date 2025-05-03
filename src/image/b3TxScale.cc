@@ -702,9 +702,7 @@ void b3Tx::b3ScaleFilteredFromBW(
 		for (i = 0; i < NumCPUs; i++)
 		{
 			tx_thread[i].b3Name("b3Tx - b3MonoScaleToGrey");
-			tx_thread[i].b3Start(
-				b3ScaleBW2Grey,
-				(void *)&RectInfo[i], TX_PRIO);
+			tx_thread[i].b3Start(b3ScaleBW2Grey, &RectInfo[i], TX_PRIO);
 		}
 
 		// Wait for threads
@@ -716,7 +714,7 @@ void b3Tx::b3ScaleFilteredFromBW(
 	else
 	{
 		// Simple call
-		b3ScaleBW2Grey((void *)&RectInfo[0]);
+		b3ScaleBW2Grey(&RectInfo[0]);
 	}
 }
 
@@ -1119,9 +1117,7 @@ void b3Tx::b3ScaleFilteredFromTrueColor(
 		for (i = 0; i < NumCPUs; i++)
 		{
 			tx_thread[i].b3Name("b3Tx - b3ColorScaleToGrey");
-			tx_thread[i].b3Start(
-				b3RGB8ScaleToRGB8,
-				(void *)&RectInfo[i], TX_PRIO);
+			tx_thread[i].b3Start(b3RGB8ScaleToRGB8, &RectInfo[i], TX_PRIO);
 		}
 
 		// Wait for threads
@@ -1133,7 +1129,7 @@ void b3Tx::b3ScaleFilteredFromTrueColor(
 	else
 	{
 		// Simple call
-		b3RGB8ScaleToRGB8((void *)&RectInfo[0]);
+		b3RGB8ScaleToRGB8(&RectInfo[0]);
 	}
 }
 
@@ -1469,9 +1465,7 @@ void b3Tx::b3ScaleFilteredFromFloat(
 		for (i = 0; i < NumCPUs; i++)
 		{
 			tx_thread[i].b3Name("b3Tx - b3ColorScaleToGrey");
-			tx_thread[i].b3Start(
-				b3FloatScaleToRGB8,
-				(void *)&RectInfo[i], TX_PRIO);
+			tx_thread[i].b3Start(b3FloatScaleToRGB8, &RectInfo[i], TX_PRIO);
 		}
 
 		// Wait for threads
@@ -1483,7 +1477,7 @@ void b3Tx::b3ScaleFilteredFromFloat(
 	else
 	{
 		// Simple call
-		b3FloatScaleToRGB8((void *)&RectInfo[0]);
+		b3FloatScaleToRGB8(&RectInfo[0]);
 	}
 }
 
@@ -1944,9 +1938,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 			for (i = 0; i < NumCPUs; i++)
 			{
 				tx_thread[i].b3Name("b3Tx - b3MonoScale");
-				tx_thread[i].b3Start(
-					b3ScaleBW2BW,
-					(void *)&RectInfo[i], TX_PRIO);
+				tx_thread[i].b3Start(b3ScaleBW2BW, &RectInfo[i], TX_PRIO);
 			}
 
 			// Wait for threads
@@ -1958,7 +1950,7 @@ void b3Tx::b3ScaleUnfilteredFromBW(
 		else
 		{
 			// Simple call
-			b3ScaleBW2BW((void *)&RectInfo[0]);
+			b3ScaleBW2BW(&RectInfo[0]);
 		}
 	}
 }
@@ -2046,7 +2038,7 @@ void b3Tx::b3ScaleUnfilteredFromVGA(
 	{
 		b3_pkd_color * pDst = palette;
 
-		pSrc = (b3_pkd_color *)Tx->b3GetPalette();
+		pSrc = Tx->b3GetPalette();
 		num  = 1 << depth;
 		for (x = 0; x < num; x++)
 		{
@@ -2100,7 +2092,7 @@ inline b3_index b3Tx::b3ILBMPlaneValue(
 
 	BytesPerLine = TX_BWA(xSize);
 	PlaneValue   = 0;
-	Address      = (b3_u08 *)data;
+	Address      = data;
 	Address     += ((y + 1) * BytesPerLine * depth + (x >> 3));
 	Bit          = m_Bits[x & 7];
 	for (i = 0; i < depth; i++)
@@ -2127,7 +2119,7 @@ void b3Tx::b3ScaleUnfilteredFromILBM(
 	switch (type)
 	{
 	case B3_TX_VGA:
-		cDst = (b3_u08 *)data;
+		cDst = data;
 		memcpy(palette, srcTx->b3GetPalette(), std::min(pSize, srcTx->pSize) * sizeof(b3_pkd_color));
 		for (y = 0; y < ySize; y++)
 		{
@@ -2139,7 +2131,7 @@ void b3Tx::b3ScaleUnfilteredFromILBM(
 		break;
 
 	case B3_TX_RGB8:
-		lDst = (b3_pkd_color *)data;
+		lDst = data;
 		for (y = 0; y < ySize; y++)
 		{
 			for (x = 0; x < xSize; x++)

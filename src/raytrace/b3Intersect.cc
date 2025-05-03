@@ -1619,7 +1619,7 @@ b3Shape * b3Scene::b3Intersect(
 
 			if (BBoxes->First != nullptr)
 			{
-				aux = b3Intersect((b3BBox *)BBoxes->First, ray, check_visibility);
+				aux = b3Intersect(static_cast<b3BBox *>(BBoxes->First), ray, check_visibility);
 				if (aux != nullptr)
 				{
 					ResultShape = aux;
@@ -1642,7 +1642,7 @@ b3Shape * b3Scene::b3Intersect(
 						ray->bbox   = BBox;
 						ray->Q      = Result;
 
-						*((b3_polar *)&ray->polar) = polar;
+						*(&ray->polar) = polar;
 					}
 				}
 				break;
@@ -1661,7 +1661,7 @@ b3Shape * b3Scene::b3Intersect(
 				break;
 			}
 		}
-		BBox = (b3BBox *)BBox->Succ;
+		BBox = static_cast<b3BBox *>(BBox->Succ);
 	}
 	return ResultShape;
 }
@@ -1712,7 +1712,7 @@ b3Shape * b3Scene::b3IsObscured(
 			BBoxes = BBox->b3GetBBoxHead();
 			if (BBoxes->First != nullptr)
 			{
-				ResultShape = b3IsObscured((b3BBox *)BBoxes->First, ray);
+				ResultShape = b3IsObscured(static_cast<b3BBox *>(BBoxes->First), ray);
 				if (ResultShape != nullptr)
 				{
 					return ResultShape;
@@ -1720,7 +1720,7 @@ b3Shape * b3Scene::b3IsObscured(
 			}
 
 		}
-		BBox = (b3BBox *)BBox->Succ;
+		BBox = static_cast<b3BBox *>(BBox->Succ);
 	}
 	return nullptr;
 }

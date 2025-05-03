@@ -201,6 +201,7 @@ void * b3Thread::b3Trampoline(void * ptr)
 		b3PrintF(B3LOG_NORMAL, "   Nicing error!\n");
 	}
 	threadClass->b3Inc();
+	// cppcheck-suppress cstyleCast
 	threadClass->m_Result = threadClass->m_CallProc((void *)threadClass->m_CallArg);
 	threadClass->b3Dec();
 

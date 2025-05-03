@@ -315,13 +315,13 @@ xSize & %1111 = 14: XXXXXXXX XXXXXXnn -> 11111111 11111100
 xSize & %1111 = 15: XXXXXXXX XXXXXXXn -> 11111111 11111110
 
 ********************************/
-const b3_u08 b3Tx::m_RightMaskLeftByte[16] =
+const b3_u08 b3Tx::m_RightMaskLeftByte[16]
 {
 	0xff, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe,
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
 
-const b3_u08 b3Tx::m_RightMaskRightByte[16] =
+const b3_u08 b3Tx::m_RightMaskRightByte[16]
 {
 	0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe
@@ -342,7 +342,7 @@ XXXXXXnn -> XXXXXX11
 XXXXXXXn -> XXXXXXX1
 XXXXXXXX -> XXXXXXXX
 ********************************/
-const b3_u08 b3Tx::m_RightBorder[] =
+const b3_u08 b3Tx::m_RightBorder[]
 {
 	0xff, 0x7f, 0x3f, 0x1f, 0x0f, 0x07, 0x03, 0x01
 };
@@ -373,7 +373,7 @@ void b3Tx::b3RemoveBlackBorder()
 	xEnd   = xSize >> 3;
 
 	// Mask right border (set bits outside the image to black)
-	cPtr = (b3_u08 *)data;
+	cPtr = data;
 	x    = xSize & 3;
 	if (x != 0)
 	{
@@ -389,7 +389,7 @@ void b3Tx::b3RemoveBlackBorder()
 	}
 
 	// Do Black Border Removal!
-	cPtr   = (b3_u08 *)data;
+	cPtr   = data;
 	for (y = 0; y < ySize; y++)
 	{
 		// remove left black border
@@ -684,8 +684,8 @@ void b3Tx::b3TurnRightILBM()
 	}
 
 	// change data pointer
-	oldData   = (b3_u08 *)data;
-	ptrToFree = (b3_u08 *)data;
+	oldData   = data;
+	ptrToFree = data;
 	data      = newData;
 
 	xNewBlock = xNewBytes << 3;
@@ -805,8 +805,8 @@ void b3Tx::b3TurnLeftILBM()
 	}
 
 	// change data pointer
-	oldData   = (b3_u08 *)data;
-	ptrToFree = (b3_u08 *)data;
+	oldData   = data;
+	ptrToFree = data;
 	data      = newData;
 
 	// Mask outside bits of last image
@@ -976,8 +976,8 @@ void b3Tx::b3Turn()
 				// We start from left and right simultanously.
 				// Exchanging the bytes and turning the bits
 				// inside these bytes using a lookup table.
-				bfPtr = (b3_u08 *)bPtr;
-				bbPtr = (b3_u08 *)(bfPtr + size);
+				bfPtr = bPtr;
+				bbPtr = bfPtr + size;
 				for (b3_coord x = 0; x < max; x++)
 				{
 					bbPtr--;
@@ -992,15 +992,15 @@ void b3Tx::b3Turn()
 
 		// Second: Turn vertical
 		max   = ySize >> 1;
-		bfPtr = (b3_u08 *)data;
-		bPtr  = (b3_u08 *)(data + size * ySize * depth);
+		bfPtr = data;
+		bPtr  = data + size * ySize * depth;
 		for (y = 0; y < max; y++)
 		{
 			bPtr -= (depth * size);
 			for (b3_res d = 0; d < depth; d++)
 			{
 				// Now exchange the two lines. Do it! Do it!
-				bbPtr = (b3_u08 *)bPtr;
+				bbPtr = bPtr;
 				for (b3_coord x = 0; x < size; x++)
 				{
 					bBack  = *bbPtr;

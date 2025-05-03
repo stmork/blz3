@@ -104,7 +104,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 
 	// GIF
-	if (strncmp((const char *)buffer, "GIF", 3) == 0)
+	if (strncmp(reinterpret_cast<const char *>(buffer), "GIF", 3) == 0)
 	{
 		return b3ParseGIF(buffer);
 	}
@@ -148,7 +148,8 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 				space++;
 			}
 		}
-		const std::string        parse((const char *)buffer, pos);
+		const std::string parse(reinterpret_cast<const char *>(buffer), pos);
+
 		if (std::regex_match(parse, matcher, regex))
 		{
 			unsigned                 ppm_type;
@@ -197,7 +198,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 
 #ifdef BLZ3_USE_OPENEXR
 	// OpenEXR
-	if (Imf::isImfMagic((const char *)buffer))
+	if (Imf::isImfMagic(reinterpret_cast<const char *>(buffer)))
 	{
 		return b3ParseOpenEXR(buffer, buffer_size);
 	}
@@ -219,7 +220,7 @@ b3_result b3Tx::b3LoadImage(const b3_u08 * buffer, b3_size buffer_size)
 	{
 		static const std::regex  regex(R"((\d+)\s+(\d+).*)");
 		std::smatch              matcher;
-		const std::string        parse((const char *)buffer, pos++);
+		const std::string        parse(reinterpret_cast<const char *>(buffer), pos++);
 
 		if (std::regex_match(parse, matcher, regex))
 		{
