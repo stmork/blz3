@@ -120,7 +120,7 @@ b3Item * b3World::b3AllocNode(b3_u32 class_value, const bool throw_exception)
 {
 	b3ItemRegisterEntry * entry;
 
-	entry = b3ItemRegister::b3Instance().b3Find(class_value);
+	entry = b3ItemRegister::b3Instance().b3FindCached(class_value);
 	if (entry != nullptr)
 	{
 		return entry->b3Init();
@@ -141,7 +141,7 @@ b3Item * b3World::b3AllocNode(b3_u32 * buffer, const bool throw_exception)
 	b3Item        *       item;
 	b3_u32                class_type = buffer[B3_NODE_IDX_CLASSTYPE];
 
-	entry = b3ItemRegister::b3Instance().b3Find(class_type);
+	entry = b3ItemRegister::b3Instance().b3FindCached(class_type);
 	if (entry != nullptr)
 	{
 		item = entry->b3Load(buffer);
@@ -234,7 +234,7 @@ b3_world_error b3World::b3Parse(const bool throw_exception)
 		return result;
 	}
 
-	if (b3ItemRegister::b3Instance().b3Find(B3_CLASS_MAX) == nullptr)
+	if (b3ItemRegister::b3Instance().b3FindCached(B3_CLASS_MAX) == nullptr)
 	{
 		b3PrintF(B3LOG_NORMAL, "Item registry not initialized!\n");
 		return B3_WORLD_PARSE;
@@ -492,7 +492,7 @@ void b3World::b3CloneBase(
 
 	B3_FOR_BASE(srcBase, srcItem)
 	{
-		entry = b3ItemRegister::b3Instance().b3Find(srcItem->b3GetClassType());
+		entry = b3ItemRegister::b3Instance().b3FindCached(srcItem->b3GetClassType());
 		if (entry != nullptr)
 		{
 			dstItem = entry->b3Load(srcItem->m_StoreBuffer);
@@ -528,7 +528,7 @@ b3Item * b3World::b3Clone(const b3Item * original, const bool throw_exception)
 	b3_u32                i;
 
 	work->b3Store();
-	entry = b3ItemRegister::b3Instance().b3Find(original->b3GetClassType());
+	entry = b3ItemRegister::b3Instance().b3FindCached(original->b3GetClassType());
 	if (entry != nullptr)
 	{
 		item = entry->b3Load(original->m_StoreBuffer);

@@ -74,7 +74,7 @@ b3ItemRegister::~b3ItemRegister()
 	b3Free();
 }
 
-b3ItemRegisterEntry * b3ItemRegister::b3Find(b3_u32 class_type)
+b3ItemRegisterEntry * b3ItemRegister::b3FindCached(b3_u32 class_type)
 {
 	b3ItemRegisterEntry * entry;
 

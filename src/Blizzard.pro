@@ -52,12 +52,13 @@ longtest.depends = system base image
 #
 #####################################################################
 
+#	--suppress=duplInheritedMember\
+
 cppcheck.commands = cppcheck\
 	--enable=style,warning,performance,portability\
 	--inline-suppr\
 	--suppress=preprocessorErrorDirective\
 	--suppress=syntaxError\
-	--suppress=duplInheritedMember\
 	-I$$[QT_INSTALL_HEADERS]\
 	-I$$BLZ3_INCLUDE -I$$BLZ3_HOME/include_unix\
 	--language=c++ --std=c++14\

@@ -33,7 +33,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Special::b3Register()
+void b3Special::b3RegisterSpecials()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering special features...\n");
 

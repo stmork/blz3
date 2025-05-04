@@ -48,14 +48,14 @@ const b3_gl_line b3BBox::m_BBoxIndices[12 * 2]
 	{ 3, 7 }
 };
 
-b3Color  b3BBox::m_GridColor{ 0.4f, 0.4f, 0.4f, 0.0f };
+b3Color  b3BBox::m_BBoxGridColor{ 0.4f, 0.4f, 0.4f, 0.0f };
 bool     b3BBox::m_GridVisible = true;
 
 b3_count b3BBox::m_Visible;
 b3_count b3BBox::m_PartiallyVisible;
 b3_count b3BBox::m_Invisible;
 
-void b3BBox::b3Register()
+void b3BBox::b3RegisterBBoxes()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering bounding boxes...\n");
 	b3Item::b3Register(&b3BBox::b3StaticInit, &b3BBox::b3StaticInit, CLASS_BBOX, true);

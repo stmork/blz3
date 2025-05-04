@@ -115,7 +115,7 @@ public:
 	/**
 	 * This method registers the default material implementations to the b3World item registry.
 	 */
-	static  void    b3Register();
+	static  void    b3RegisterMaterials();
 
 	virtual bool    b3Prepare(b3_preparation_info * prep_info B3_UNUSED) override
 	{
@@ -248,14 +248,24 @@ protected:
 	B3_ITEM_BASE(b3MatNormal); //!< This is a base class deserialization constructor.
 
 public:
-	B3_ITEM_INIT(b3MatNormal); //!< This constructor handles default initialization.
-	B3_ITEM_LOAD(b3MatNormal); //!< This constructor handles deserialization.
+	explicit b3MatNormal(const b3_u32 class_type);
+	explicit b3MatNormal(const b3_u32 * src);
+
+	static inline b3Item * b3StaticInitMatNormal(const b3_u32  class_type)
+	{
+		return new b3MatNormal(class_type);
+	}
+
+	static inline b3Item * b3StaticInitMatNormal(const b3_u32 * src)
+	{
+		return new b3MatNormal(src);
+	}
 
 	void    b3Write() override;
 	virtual bool    b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
-	void    b3Init();
+	void    b3InitMatNormal();
 };
 
 /*************************************************************************
@@ -463,7 +473,7 @@ public:
 	B3_ITEM_ABSTRACT(b3MaterialWooden); //!< These constructors handle default initialization.
 
 protected:
-	void     b3Init();
+	void     b3InitMaterialWooden();
 };
 
 /*************************************************************************
@@ -491,7 +501,7 @@ public:
 	bool    b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
-	void    b3Init();
+	void    b3InitMatWood();
 };
 
 /*************************************************************************
@@ -523,7 +533,7 @@ public:
 	bool     b3GetSurfaceValues(b3_surface * surface) const override;
 
 private:
-	void     b3Init();
+	void     b3InitMatOakPlank();
 };
 
 /*************************************************************************

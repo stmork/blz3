@@ -70,7 +70,7 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static void b3Register();
+	static void b3RegisterSpecials();
 };
 
 /**
@@ -498,7 +498,7 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static void     b3Register();
+	static void     b3RegisterAnimations();
 	void            b3Write() override;
 
 public:

@@ -36,7 +36,7 @@ const b3_u32 b3Condition::m_LogicOps[]
 	MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
 };
 
-void b3Condition::b3Register()
+void b3Condition::b3RegisterConditions()
 {
 	b3_u32  mode;
 	b3_size i;

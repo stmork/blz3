@@ -383,6 +383,9 @@ class B3_PLUGIN b3RenderObject
 	bool                glMaterialComputed = false;
 	bool                glInit             = false;
 
+	static b3Color      m_GridColor;              //!< The grid color.
+	static b3Color      m_SelectedColor;          //!< The grid color in case this object is selected.
+
 protected:
 	b3VertexElements  * glVertexElements   = nullptr;  //!< The vertex data.
 	b3GridElements   *  glGridElements     = nullptr;  //!< The line index data.
@@ -408,10 +411,6 @@ protected:
 	b3_f64              glTextureScaleX;          //!< The x scaling factor of the texture.
 	b3_f64              glTextureScaleY;          //!< The y scaling factor of the texture.
 #endif
-
-public:
-	static b3Color     m_GridColor;        //!< The grid color.
-	static b3Color     m_SelectedColor;    //!< The grid color in case this object is selected.
 
 protected:
 	/**
@@ -493,12 +492,12 @@ public:
 	 * This method updates the geometry if necessary. After updating the
 	 * recomputation is done.
 	 */
-	void b3Update();
+	virtual void b3Update();
 
 	/**
 	 * This method updates the material properties if necessary.
 	 */
-	void b3UpdateMaterial();
+	virtual	void b3UpdateMaterial();
 
 	/**
 	 * This method adjusts the given bounding box with the vertices found in this

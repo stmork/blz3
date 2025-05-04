@@ -32,7 +32,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Animation::b3Register()
+void b3Animation::b3RegisterAnimations()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering animation elements...\n");
 	b3Item::b3Register(&b3AnimElement::b3StaticInit, &b3AnimElement::b3StaticInit, ANIM_MOVE);

@@ -62,6 +62,9 @@ class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 	b3_count         m_CSGIntersectionCount;
 	b3_matrix        m_Inverse;
 
+	static b3Color   m_BBoxGridColor;             //!< Grid color of bounding boxes.
+	static bool      m_GridVisible;               //!< Flag if bounding box grid should be shown.
+
 public:
 	b3_vector        m_DimBase;                   //!< Lower base position of dimension size.
 	b3_vector        m_DimSize;                   //!< Dimension size.
@@ -70,9 +73,6 @@ public:
 	char             m_BoxURL[B3_BOXSTRINGLEN];   //!< HTML link (actually unused.)
 
 	b3_gl_vertex     m_BBoxVertex[8];             //!< Bounding box vertex list (custom list in b3RenderObject).
-
-	static b3Color   m_GridColor;                 //!< Grid color of bounding boxes.
-	static bool      m_GridVisible;               //!< Flag if bounding box grid should be shown.
 
 	static b3_count  m_Visible;                   //!< Statistic cound of completely camera visible bounding boxes.
 	static b3_count  m_PartiallyVisible;          //!< Statistic cound of partially camera visible bounding boxes.
@@ -85,7 +85,7 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static void      b3Register();
+	static void      b3RegisterBBoxes();
 	void             b3Write() override;
 	void             b3Dump(b3_count level) const override;
 	void             b3SetName(const char * name);
@@ -101,12 +101,12 @@ public:
 	bool             b3IsActive() const;
 	void             b3Expand(bool expand = true);
 	bool             b3IsExpanded() const;
-	void             b3Update();
-	void             b3UpdateMaterial();
+	void             b3Update() override;
+	void             b3UpdateMaterial() override;
 	void             b3UpdateBBox();
 	bool             b3ComputeBounds(b3_vector * lower, b3_vector * upper, b3_f64 tolerance);
 	b3_count         b3Count() const;
-	bool b3PrepareBBox(b3_scene_preparation * prep_info, bool recursive = false);
+	bool             b3PrepareBBox(b3_scene_preparation * prep_info, bool recursive = false);
 	const char   *   b3GetName() const override;
 	bool             b3BacktraceRecompute(b3BBox * search);
 	b3Base<b3Item> * b3FindBBoxHead(b3BBox * bbox);
@@ -170,7 +170,7 @@ public:
 protected:
 	inline void b3GetGridColor(b3Color & color) const override
 	{
-		color = m_GridColor;
+		color = m_BBoxGridColor;
 	}
 
 	inline b3_render_mode  b3GetRenderMode() const override

@@ -138,7 +138,7 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static  void    b3Register();
+	static  void    b3RegisterConditions();
 	virtual bool    b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**

@@ -132,7 +132,7 @@ public:
 	/**
 	 * Method for registering the shapes into the item registry.
 	 */
-	static  void        b3Register();
+	static  void        b3RegisterShapes();
 	void                b3Write() override;
 	virtual bool        b3Prepare(b3_preparation_info * prep_info) override;
 
@@ -221,7 +221,7 @@ public:
 	 * @param info The pick info class.
 	 * @see b3PickInfo
 	 */
-	virtual void        b3SetupGrid(b3PickInfo * info);
+	virtual void            b3SetupGrid(b3PickInfo * info);
 
 	/**
 	 * The implementation of this method computes the normal at the intersection point given in the
@@ -230,7 +230,7 @@ public:
 	 * @param ray The ray structure which contains all information of the incident
 	 *            ray and the intersection point.
 	 */
-	virtual void b3Normal(b3_ray * ray B3_UNUSED) const
+	virtual void            b3Normal(b3_ray * ray B3_UNUSED) const
 	{
 	}
 

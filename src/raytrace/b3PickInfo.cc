@@ -32,7 +32,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3Color b3PickInfo::m_GridColor(0.7f, 0.7f, 0.7f);
+b3Color b3PickInfo::m_PickGridColor(0.7f, 0.7f, 0.7f);
 
 b3PickInfo::b3PickInfo()
 {
@@ -114,5 +114,5 @@ void b3PickInfo::b3ComputeIndices()
 
 void b3PickInfo::b3GetGridColor(b3Color & color) const
 {
-	color = m_GridColor;
+	color = m_PickGridColor;
 }

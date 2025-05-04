@@ -31,7 +31,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Bump::b3Register()
+void b3Bump::b3RegisterBumps()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering bump mapping...\n");
 	b3Item::b3Register(&b3BumpNoise::b3StaticInit,     &b3BumpNoise::b3StaticInit,     BUMP_NOISE);

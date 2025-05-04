@@ -33,7 +33,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Scene::b3Register()
+void b3Scene::b3RegisterScene()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering scene classes...\n");
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEANGLE_MORK);

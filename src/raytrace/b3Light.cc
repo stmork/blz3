@@ -33,7 +33,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Light::b3Register()
+void b3Light::b3RegisterLights()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering light sources...\n");
 
@@ -225,7 +225,7 @@ bool b3Light::b3Prepare(b3_preparation_info * prep_info B3_UNUSED)
 	return true;
 }
 
-void b3Light::b3Dump(b3_count level)
+void b3Light::b3Dump(b3_count level) const
 {
 	b3DumpSpace(level);
 	b3PrintF(B3LOG_NORMAL, "Light %s, switched %s\n", b3GetName(), b3IsActive() ? "on" : "off");

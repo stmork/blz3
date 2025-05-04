@@ -45,13 +45,13 @@ class b3PickInfo : public b3PickBase, public b3RenderObject
 {
 	b3Array<b3_gl_vertex> m_Vertices;
 	b3Array<b3_gl_line>   m_Grid;
+	static b3Color        m_PickGridColor;             //!< The color of the pick points.
 
 protected:
-	b3Shape     *    m_Shape = nullptr; //!< The shape for which the pick points should be created.
+	b3Shape       *       m_Shape = nullptr;           //!< The shape for which the pick points should be created.
 
 public:
 	b3_pick_mode     m_AllowedMode = B3_PICK_UNABLE;   //!< The move mode.
-	static b3Color   m_GridColor;                      //!< The color of the pick points.
 
 public:
 	/**

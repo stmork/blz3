@@ -191,7 +191,7 @@ public:
 	 * @param scene The scene to use.
 	 * @return True on success.
 	 */
-	bool b3SetBounds(b3Scene * scene);
+	bool              b3SetBounds(b3Scene * scene);
 
 	/**
 	 * This method sets the view section to the given bounds.

@@ -36,15 +36,15 @@
 
 void b3RaytracingItems::b3Register()
 {
-	b3Scene::b3Register();
-	b3Special::b3Register();
-	b3Animation::b3Register();
-	b3Light::b3Register();
-	b3BBox::b3Register();
-	b3Shape::b3Register();
-	b3Material::b3Register();
-	b3Bump::b3Register();
-	b3Condition::b3Register();
+	b3Scene::b3RegisterScene();
+	b3Special::b3RegisterSpecials();
+	b3Animation::b3RegisterAnimations();
+	b3Light::b3RegisterLights();
+	b3BBox::b3RegisterBBoxes();
+	b3Shape::b3RegisterShapes();
+	b3Material::b3RegisterMaterials();
+	b3Bump::b3RegisterBumps();
+	b3Condition::b3RegisterConditions();
 }
 
 bool b3Scene::b3CheckTexture(b3Tx ** tx, const char * name)

@@ -519,7 +519,7 @@ void MainWindow::on_actionActivate_triggered()
 		ui->glView->update();
 
 		// Proceed with next bbox.
-		selectBBox((b3BBox *)bbox->Succ);
+		selectBBox(static_cast<b3BBox *>(bbox->Succ));
 	}
 }
 
@@ -534,7 +534,7 @@ void MainWindow::on_actionDeactivate_triggered()
 		ui->glView->update();
 
 		// Proceed with next bbox.
-		selectBBox((b3BBox *)bbox->Succ);
+		selectBBox(static_cast<b3BBox *>(bbox->Succ));
 	}
 }
 
@@ -547,11 +547,15 @@ void MainWindow::on_actionDeactivateOther_triggered()
 		b3BBox * aux;
 
 		bbox->b3Activate(true);
-		for (aux = (b3BBox *)bbox->Prev; aux != nullptr; aux = (b3BBox *)aux->Prev)
+		for (aux  = static_cast<b3BBox *>(bbox->Prev);
+			aux != nullptr;
+			aux  = static_cast<b3BBox *>(aux->Prev))
 		{
 			aux->b3Activate(false);
 		}
-		for (aux = (b3BBox *)bbox->Succ; aux != nullptr; aux = (b3BBox *)aux->Succ)
+		for (aux  = static_cast<b3BBox *>(bbox->Succ);
+			aux != nullptr;
+			aux  = static_cast<b3BBox *>(aux->Succ))
 		{
 			aux->b3Activate(false);
 		}

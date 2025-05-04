@@ -83,7 +83,7 @@ public:
 	/**
 	 * Method for registering the bump mappings into the item registry.
 	 */
-	static         void    b3Register();
+	static         void    b3RegisterBumps();
 
 	virtual        bool    b3Prepare(b3_preparation_info * info B3_UNUSED) override
 	{

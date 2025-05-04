@@ -168,7 +168,7 @@ public:
 	/**
 	 * Method for registering the scene elements into the item registry.
 	 */
-	static  void     b3Register();
+	static  void     b3RegisterScene();
 
 
 	void             b3Write() override;

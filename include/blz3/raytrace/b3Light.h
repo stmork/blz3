@@ -100,24 +100,24 @@ public:
 	/**
 	 * Method for registering the light source classes into the item registry.
 	 */
-	static void     b3Register();
-	void     b3Write() override;
-	void     b3Dump(b3_count level);
-	bool     b3Prepare(b3_preparation_info * prep_info) override;
+	static void     b3RegisterLights();
+	void            b3Write() override;
+	void            b3Dump(b3_count level) const override;
+	bool            b3Prepare(b3_preparation_info * prep_info) override;
 
 	/**
 	 * This method returns the lights name.
 	 *
 	 * @return The light name.
 	 */
-	const char * b3GetName() const override;
+	const char   *  b3GetName() const override;
 
 	/**
 	 * This method renames the light source.
 	 *
 	 * @param name The new light name.
 	 */
-	void     b3SetName(const char * name);
+	void            b3SetName(const char * name);
 
 	/**
 	 * This method returns the activation flag of this light source.
@@ -135,7 +135,7 @@ public:
 	 *
 	 * @return The spot lights directional light exponent for OpenGL.
 	 */
-	b3_f64   b3ComputeSpotExponent() const;
+	b3_f64          b3ComputeSpotExponent() const;
 
 	/**
 	 * This method illuminats a surface with the given shader.
@@ -146,7 +146,7 @@ public:
 	 * @see b3Shader
 	 * @see b3_surface.
 	 */
-	bool     b3Illuminate(const b3Shader * shader, b3_surface * surface) const;
+	bool            b3Illuminate(const b3Shader * shader, b3_surface * surface) const;
 
 private:
 	void            b3InitValues();

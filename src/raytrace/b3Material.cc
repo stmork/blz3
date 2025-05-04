@@ -33,12 +33,13 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Material::b3Register()
+void b3Material::b3RegisterMaterials()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering materials...\n");
 #ifndef DEBUG_MATERIAL
-	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       NORMAL_MATERIAL);
+	b3Item::b3Register(&b3MatNormal::b3StaticInitMatNormal, &b3MatNormal::b3StaticInitMatNormal, NORMAL_MATERIAL);
 #endif
+
 	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
 	b3Item::b3Register(&b3MatChess::b3StaticInit,        &b3MatChess::b3StaticInit,        CHESS);
 	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit,  &b3MatWrapTexture::b3StaticInit,  WRAPTEXTURE);
@@ -86,12 +87,12 @@ b3MatNormal::b3MatNormal(
 	const b3_size class_size,
 	const b3_u32  class_type) : b3Material(class_size, class_type)
 {
-	b3Init();
+	b3InitMatNormal();
 }
 
 b3MatNormal::b3MatNormal(const b3_u32 class_type) : b3Material(sizeof(b3MatNormal), class_type)
 {
-	b3Init();
+	b3InitMatNormal();
 }
 
 b3MatNormal::b3MatNormal(const b3_u32 * src) : b3Material(src)
@@ -118,7 +119,7 @@ void b3MatNormal::b3Write()
 	b3StoreInt(m_Flags);
 }
 
-void b3MatNormal::b3Init()
+void b3MatNormal::b3InitMatNormal()
 {
 	m_Diffuse     = b3Color::B3_BLUE;
 	m_Ambient     = m_Diffuse * 0.2;
@@ -705,7 +706,7 @@ b3MaterialWooden::b3MaterialWooden(const b3_u32 * src) : b3Material(src)
 {
 }
 
-void b3MaterialWooden::b3Init()
+void b3MaterialWooden::b3InitMaterialWooden()
 {
 	m_LightMaterial.m_Diffuse.b3Init(0.5f, 0.2f, 0.067f);
 	m_LightMaterial.m_Ambient  = m_LightMaterial.m_Diffuse * 0.2;
@@ -734,12 +735,12 @@ void b3MaterialWooden::b3Init()
 
 b3MatWood::b3MatWood(const b3_u32 class_type) : b3MaterialWooden(sizeof(b3MatWood), class_type)
 {
-	b3Init();
+	b3InitMatWood();
 }
 
 b3MatWood::b3MatWood(const b3_u32 * src) : b3MaterialWooden(src)
 {
-	b3Init();
+	b3InitMatWood();
 	b3InitColor(m_DarkMaterial.m_Diffuse);
 	b3InitColor(m_DarkMaterial.m_Ambient);
 	b3InitColor(m_DarkMaterial.m_Specular);
@@ -794,9 +795,9 @@ b3MatWood::b3MatWood(const b3_u32 * src) : b3MaterialWooden(src)
 	}
 }
 
-void b3MatWood::b3Init()
+void b3MatWood::b3InitMatWood()
 {
-	b3MaterialWooden::b3Init();
+	b3MaterialWooden::b3InitMaterialWooden();
 
 	// Basic parameters
 	m_xTimes =   0; // unused
@@ -874,14 +875,14 @@ b3MatOakPlank::b3MatOakPlank(const b3_u32 class_type) :
 	b3MaterialWooden(sizeof(b3MatOakPlank), class_type),
 	b3OakPlank()
 {
-	b3Init();
+	b3InitMatOakPlank();
 	m_DarkMaterials  = nullptr;
 	m_LightMaterials = nullptr;
 }
 
 b3MatOakPlank::b3MatOakPlank(const b3_u32 * src) : b3MaterialWooden(src), b3OakPlank()
 {
-	b3Init();
+	b3InitMatOakPlank();
 
 	// Dark
 	b3InitColor(m_DarkMaterial.m_Diffuse); // Overwritten later
@@ -951,9 +952,9 @@ b3MatOakPlank::~b3MatOakPlank()
 	}
 }
 
-void b3MatOakPlank::b3Init()
+void b3MatOakPlank::b3InitMatOakPlank()
 {
-	b3MaterialWooden::b3Init();
+	b3MaterialWooden::b3InitMaterialWooden();
 
 	// Basic parameters
 	b3InitOakPlank();

@@ -46,7 +46,7 @@ public:
 	void     b3Dump() const;
 };
 
-class B3_PLUGIN b3ItemRegister : public b3Base<b3ItemRegisterEntry>
+class B3_PLUGIN b3ItemRegister : protected b3Base<b3ItemRegisterEntry>
 {
 	b3ItemRegister();
 
@@ -60,18 +60,10 @@ public:
 		return instance;
 	}
 
-	b3ItemRegisterEntry * b3Find(b3_u32 class_type);
+	b3ItemRegisterEntry * b3FindCached(b3_u32 class_type);
 	void                  b3Dump() const;
 
-	inline void           b3Append(b3ItemRegisterEntry * new_entry)
-	{
-		b3Base::b3Append(new_entry);
-	}
-
-	inline b3_bool        b3IsEmpty() const
-	{
-		return b3IsEmpty();
-	}
+	friend class b3Item;
 };
 
 #endif

@@ -33,7 +33,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3Register()
+void b3Shape::b3RegisterShapes()
 {
 	b3PrintF(B3LOG_DEBUG, "Registering shapes...\n");
 	b3Item::b3Register(&b3Sphere::b3StaticInit,           &b3Sphere::b3StaticInit,           SPHERE);
