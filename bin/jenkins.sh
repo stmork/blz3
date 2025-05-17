@@ -5,7 +5,10 @@ BLZ3_DEBIAN=${PWD}/../debian/blz3
 BLZ3_DEBIAN_DEV=${PWD}/../debian/libblz3-dev
 ARCH=`dpkg --print-architecture`
 BUILD_NUMBER=${BUILD_NUMBER:=0}
-JOBS=`getconf _NPROCESSORS_ONLN`
+JOBS=`nproc`
+
+QMAKE=${QMAKE:-qmake6}
+QT_INSTALL_DOCS=`${QMAKE} -query QT_INSTALL_DOCS`
 
 rm -rf ${BLZ3_DEBIAN} ${BLZ3_DEBIAN_DEV} 
 umask 022
@@ -15,6 +18,7 @@ mkdir -p ${BLZ3_DEBIAN}/DEBIAN
 mkdir -p ${BLZ3_DEBIAN}/usr/share/doc/blz3
 
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/share/doc/blz3
+mkdir -p ${BLZ3_DEBIAN_DEV}/${QT_INSTALL_DOCS}
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/share/doc/libblz3-dev
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/include
 mkdir -p ${BLZ3_DEBIAN_DEV}/usr/lib
@@ -61,6 +65,7 @@ rsync -av include/blz3/      ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 rsync -av include_unix/blz3/ ${BLZ3_DEBIAN_DEV}/usr/include/blz3/
 cp -a lib/lib*.a ${BLZ3_DEBIAN_DEV}/usr/lib/
 cp -a ${COPYRIGHT} ${BLZ3_DEBIAN_DEV}/usr/share/doc/libblz3-dev/
+mv ${BLZ3_DEBIAN_DEV}/usr/share/doc/blz3/*.qch ${BLZ3_DEBIAN_DEV}/${QT_INSTALL_DOCS}
 
 find  ${BLZ3_DEBIAN_DEV} -name .svn -type d | xargs rm -rf 
 fakeroot dpkg -b ${BLZ3_DEBIAN_DEV} libblz3-dev_${VERSION}_${ARCH}.deb
