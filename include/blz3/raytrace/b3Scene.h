@@ -818,8 +818,8 @@ public:
 private:
 	bool            b3FindObscurer(b3_ray * ray, b3_f64 max = DBL_MAX);
 	void            b3ReallocateShader();
-	void            b3DoRaytrace(b3Display * display, b3_count CPUs);
-	void            b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs);
+	void            b3DoRaytrace(b3Display * display, const b3_count CPUs);
+	void            b3DoRaytraceMotionBlur(b3Display * display, const b3_count CPUs);
 	static  bool    b3RaytraceThread(void * ptr);
 	static  bool    b3RaytraceMotionBlurThread(void * ptr);
 	static  bool    b3UpdateThread(b3BBox * bbox, void * ptr);

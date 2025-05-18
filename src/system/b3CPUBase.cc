@@ -21,6 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include <thread>
+
 #include "b3SystemIndInclude.h"
 #include "blz3/system/b3CPUBase.h"
 
@@ -29,3 +31,8 @@
 **                        CPU info base class                           **
 **                                                                      **
 *************************************************************************/
+
+b3CPUBase::b3CPUBase() :
+	cpu_count(std::thread::hardware_concurrency())
+{
+}

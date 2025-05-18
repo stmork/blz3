@@ -69,14 +69,6 @@ public:
 	 * @return The return value of the terminated thread procedure.
 	 */
 	virtual b3_u32   b3Wait() = 0;
-
-	/**
-	 * This method behaves different on each platform to compensate
-	 * different time measurements methods.
-	 *
-	 * @param span The time span to add the cpu time used from the thread.
-	 */
-	virtual void     b3AddTimeSpan(b3TimeSpan * span) = 0;
 };
 
 #endif

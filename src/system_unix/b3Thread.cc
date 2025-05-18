@@ -245,14 +245,3 @@ b3_u32 b3Thread::b3Wait()
 	b3PThread::b3CheckResult(pthread_join(m_Thread, &ptr));
 	return m_Result;
 }
-
-void b3Thread::b3AddTimeSpan(b3TimeSpan * span)
-{
-#ifdef __linux__
-	if (!b3CPU::b3HasCorrectRUsage())
-	{
-		span->m_uTime += m_Span.m_uTime;
-		span->m_sTime += m_Span.m_sTime;
-	}
-#endif
-}

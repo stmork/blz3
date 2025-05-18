@@ -130,16 +130,12 @@ bool b3Scene::b3RaytraceMotionBlurThread(void * ptr)
 	return 0;
 }
 
-void b3Scene::b3DoRaytrace(b3Display * display, b3_count CPUs)
+void b3Scene::b3DoRaytrace(b3Display * display, const b3_count CPUs)
 {
-	b3_rt_info * infos;
-	b3TimeSpan   span;
-	b3Thread  *  threads;
-	b3_count     i;
-
-	// Allocate some instances
-	infos       = new b3_rt_info[CPUs];
-	threads     = new b3Thread[CPUs];
+	b3_rt_info infos[CPUs];
+	b3Thread   threads[CPUs];
+	b3TimeSpan span;
+	b3_count   i;
 
 	b3PrintF(B3LOG_NORMAL, "Starting threads...\n");
 	span.b3Start();
@@ -152,8 +148,6 @@ void b3Scene::b3DoRaytrace(b3Display * display, b3_count CPUs)
 
 		if (!threads[i].b3Start(b3RaytraceThread, &infos[i], m_RenderPriority))
 		{
-			delete [] threads;
-			delete [] infos;
 			B3_THROW(b3PrepareException, B3_PREPARE_NO_THREAD);
 		}
 	}
@@ -163,28 +157,19 @@ void b3Scene::b3DoRaytrace(b3Display * display, b3_count CPUs)
 	for (i = 0; i < CPUs; i++)
 	{
 		threads[i].b3Wait();
-		threads[i].b3AddTimeSpan(&span);
 	}
 	span.b3Stop();
 	span.b3Print();
-
-	// Free what we have allocated.
-	delete [] threads;
-	delete [] infos;
 }
 
-void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
+void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, const b3_count CPUs)
 {
-	b3_rt_info * infos;
+	b3_rt_info    infos[CPUs];
+	b3Thread      threads[CPUs];
+	b3TimeSpan    span;
 	b3Animation * anim = b3GetAnimation();
-	b3TimeSpan   span;
-	b3Thread  *  threads;
-	b3_count     i, k;
-	b3_f64       t, base = anim->m_Time;
-
-	// Allocate some instances
-	infos       = new b3_rt_info[CPUs];
-	threads     = new b3Thread[CPUs];
+	b3_count      i, k;
+	b3_f64        t, base = anim->m_Time;
 
 	b3PrintF(B3LOG_NORMAL, "Starting threads...\n");
 	b3PrintF(B3LOG_FULL,  "  Reference time point: %3.3lf FPS: %d\n",
@@ -198,8 +183,6 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 
 		if (!threads[i].b3Start(b3RaytraceMotionBlurThread, &infos[i], m_RenderPriority))
 		{
-			delete [] threads;
-			delete [] infos;
 			B3_THROW(b3PrepareException, B3_PREPARE_NO_THREAD);
 		}
 	}
@@ -255,15 +238,10 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display * display, b3_count CPUs)
 	for (i = 0; i < CPUs; i++)
 	{
 		threads[i].b3Wait();
-		threads[i].b3AddTimeSpan(&span);
 	}
 
 	span.b3Stop();
 	span.b3Print();
-
-	// Free what we have allocated.
-	delete [] threads;
-	delete [] infos;
 }
 
 /*************************************************************************
@@ -444,12 +422,12 @@ bool b3Scene::b3PrepareScene(b3_res xSize, b3_res ySize)
 void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 {
 	b3_res      xSize, ySize;
-	b3_count    CPUs, i;
+	b3_count    i;
 	b3_f64      fy, fyStep;
 
 	try
 	{
-		bool        isMotionBlur = false;
+		bool isMotionBlur = false;
 
 		b3UpdateCamera();
 
@@ -464,7 +442,7 @@ void b3Scene::b3Raytrace(b3Display * display, bool multi_threaded)
 		b3ComputeVisibility();
 
 		// Determine CPU count
-		CPUs = multi_threaded ? b3Runtime::b3GetNumCPUs() : 1;
+		const b3_count CPUs = multi_threaded ? b3Runtime::b3GetNumCPUs() : 1;
 
 		// add rows to list
 		fy     = 1.0;

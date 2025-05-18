@@ -31,26 +31,11 @@
  */
 class b3CPU : public b3CPUBase
 {
-	static bool     m_CorrectRUsage;
-
 public:
 	/**
 	 * This constructor initializes information abount the installed CPUs.
 	 */
-	b3CPU();
-
-	/**
-	 * This method returns true if the underlying operating system
-	 * provides a correct getrusage() method. Linux has an error
-	 * in that method until kernel version 2.6.9 with incorrect
-	 * time measurement on thread handling.
-	 *
-	 * @return True if getrusage() is correct.
-	 */
-	inline static bool     b3HasCorrectRUsage()
-	{
-		return m_CorrectRUsage;
-	}
+	b3CPU() = default;
 };
 
 class b3PThread
@@ -186,7 +171,6 @@ public:
 	bool     b3IsRunning() override;
 	bool     b3Stop() override;
 	b3_u32   b3Wait() override;
-	void     b3AddTimeSpan(b3TimeSpan * span) override;
 
 private:
 	static void * b3Trampoline(void * thread);

@@ -62,12 +62,12 @@ class B3_PLUGIN b3CPUBase
 
 protected:
 	static constexpr b3_count     cpu_bits  = sizeof(void *) * 8;
-	b3_count                      cpu_count = 0; //!< Number of usable CPUs.
+	const            b3_count     cpu_count; //!< Number of usable CPUs.
 
 	/**
 	 * This constructor initializes information abount the installed CPUs.
 	 */
-	b3CPUBase() = default;
+	b3CPUBase();
 
 	/**
 	 * Return type of available vector unit.
