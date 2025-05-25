@@ -323,7 +323,7 @@ public:
 	 * @param rgb The new grey level.
 	 * @param a   The new alpha channel.
 	 */
-	inline void b3Init(const b3_f32 rgb, const b3_f32 a = 0)
+	inline constexpr void b3Init(const b3_f32 rgb, const b3_f32 a = 0)
 	{
 		v[R] = v[G] = v[B] = rgb;
 		v[A] = a;

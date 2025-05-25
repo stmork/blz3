@@ -325,6 +325,18 @@ public:
 	}
 
 	/**
+	 * The * operator. The operation scales this complex number
+	 * with the scalar @c value.
+	 *
+	 * @param value The scalar to scale this complex number.
+	 * @return This as result.
+	 */
+	inline const b3Complex<T> operator*(const T value) const
+	{
+		return b3Complex<T>(*this) *= value;
+	}
+
+	/**
 	 * The *= operator. The operation scales this complex number
 	 * with the scalar @c value.
 	 *
@@ -339,6 +351,18 @@ public:
 		}
 
 		return *this;
+	}
+
+	/**
+	 * The / operator. The operation divides this complex number
+	 * with the scalar @c value.
+	 *
+	 * @param value The scalar to divide this complex number.
+	 * @return This as result.
+	 */
+	inline const b3Complex<T> operator/(const T value) const
+	{
+		return b3Complex<T>(*this) /= value;
 	}
 
 	/**
