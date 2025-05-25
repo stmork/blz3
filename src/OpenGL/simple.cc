@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	simple.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001 - 2025 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - simple OpenGL testing
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2025  Steffen A. Mork
 **          All Rights Reserved
 **
 **

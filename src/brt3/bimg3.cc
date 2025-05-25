@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	bimg3.cc $
-**	$Release:	Dortmund 2001-2007 $
+**	$Release:	Dortmund 2001-2025 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Image loading and displaying
 **
-**      (C) Copyright 2001-2007  Steffen A. Mork
+**      (C) Copyright 2001-2025  Steffen A. Mork
 **          All Rights Reserved
 **
 **

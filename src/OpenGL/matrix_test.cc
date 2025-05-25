@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	matrix_test.cc $
-**	$Release:	Dortmund 2001, 2002 $
+**	$Release:	Dortmund 2001 - 2025 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Testing matrix manipulation
 **
-**      (C) Copyright 2001, 2002  Steffen A. Mork
+**      (C) Copyright 2001 - 2025  Steffen A. Mork
 **          All Rights Reserved
 **
 **

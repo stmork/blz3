@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	bconv3.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001 - 2025 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Converting image formats
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2001 - 2025  Steffen A. Mork
 **          All Rights Reserved
 **
 **

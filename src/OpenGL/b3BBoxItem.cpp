@@ -1,11 +1,11 @@
 /*
 **
 **	$Filename:	b3BBoxItem.cpp $
-**	$Release:	Dortmund 2001 - 2021 $
+**	$Release:	Dortmund 2001 - 2025 $
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001 - 2021  Steffen A. Mork
+**      (C) Copyright 2001 - 2025  Steffen A. Mork
 **          All Rights Reserved
 **
 **

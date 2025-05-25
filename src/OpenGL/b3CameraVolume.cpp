@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3CameraColume.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2025 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Drawing the cameras view volume
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001 - 2025  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

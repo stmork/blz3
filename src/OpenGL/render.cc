@@ -279,7 +279,7 @@ static void b3Prepare(b3Scene * scene)
 static void b3Banner(const char * command)
 {
 	b3PrintF(B3LOG_NORMAL, "Blizzard III OpenGL scene viewer\n");
-	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2021\n");
+	b3PrintF(B3LOG_NORMAL, "Copyright (C) Steffen A. Mork  2001-2025\n");
 	b3PrintF(B3LOG_NORMAL, "\n");
 	if (command != nullptr)
 	{
