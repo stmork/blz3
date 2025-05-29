@@ -9,15 +9,16 @@
 
 #include <cstdint>
 #include <string>
+#include <ctime>
 
 namespace sc
 {
-	typedef uint16_t  ushort;
-	typedef int       integer;
-	typedef int       errorCode;
-	typedef double    real;
-	typedef size_t    eventid;
-	typedef time_t    time;
+	typedef std::uint16_t  ushort;
+	typedef int            integer;
+	typedef int            errorCode;
+	typedef double         real;
+	typedef std::size_t    eventid;
+	typedef std::time_t    time;
 }
 
 #endif /* SC_TYPES_H_ */

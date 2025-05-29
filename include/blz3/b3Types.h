@@ -53,16 +53,16 @@ enum b3_result
 };
 
 // Unsigned integer
-typedef uint8_t             b3_u08;  //!< Granted unsigned integer with 8 bits.
-typedef uint16_t            b3_u16;  //!< Granted unsigned integer with 16 bits.
-typedef uint32_t            b3_u32;  //!< Granted unsigned integer with 32 bits.
-typedef uint64_t            b3_u64;  //!< Granted unsigned integer with 64 bits.
+typedef std::uint8_t        b3_u08;  //!< Granted unsigned integer with 8 bits.
+typedef std::uint16_t       b3_u16;  //!< Granted unsigned integer with 16 bits.
+typedef std::uint32_t       b3_u32;  //!< Granted unsigned integer with 32 bits.
+typedef std::uint64_t       b3_u64;  //!< Granted unsigned integer with 64 bits.
 
 // Signed integer
-typedef int8_t              b3_s08;  //!< Granted signed integer with 8 bits.
-typedef int16_t             b3_s16;  //!< Granted signed integer with 16 bits.
-typedef int32_t             b3_s32;  //!< Granted signed integer with 32 bits.
-typedef int64_t             b3_s64;  //!< Granted signed integer with 64 bits.
+typedef std::int8_t         b3_s08;  //!< Granted signed integer with 8 bits.
+typedef std::int16_t        b3_s16;  //!< Granted signed integer with 16 bits.
+typedef std::int32_t        b3_s32;  //!< Granted signed integer with 32 bits.
+typedef std::int64_t        b3_s64;  //!< Granted signed integer with 64 bits.
 
 // Boolean
 typedef b3_u32              b3_bool; //!< Granted boolean value with 32 bits.
@@ -73,7 +73,7 @@ typedef double              b3_f64;  //!< Granted double precision floating poin
 typedef long double         b3_f96;  //!< Granted extended precision floating point number with at leat 80 bits.
 
 // Some other types
-typedef size_t              b3_size;       //!< A size specifier (like size_t).
+typedef std::size_t         b3_size;       //!< A size specifier (like size_t).
 typedef off_t               b3_offset;     //!< An offset specifier (like off_t).
 typedef int                 b3_index;      //!< A signed index specifier.
 typedef int                 b3_count;      //!< A signed counter.

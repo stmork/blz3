@@ -60,13 +60,7 @@ public:
 	 */
 	inline explicit b3CriticalSection(b3MutexAbstract & mutex) : m_Mutex(mutex)
 	{
-#ifdef _DEBUG
-		bool    locked = m_Mutex.b3Lock();
-
-		B3_ASSERT(locked);
-#else
 		m_Mutex.b3Lock();
-#endif
 	}
 
 	/**
@@ -74,13 +68,7 @@ public:
 	 */
 	inline virtual ~b3CriticalSection()
 	{
-#ifdef _DEBUG
-		bool    unlocked = m_Mutex.b3Unlock();
-
-		B3_ASSERT(unlocked);
-#else
 		m_Mutex.b3Unlock();
-#endif
 	}
 };
 
@@ -103,7 +91,7 @@ public:
 	 *
 	 * @return True on success.
 	 */
-	virtual bool    b3Wait()  = 0;
+	virtual bool b3Wait()  = 0;
 };
 
 #endif

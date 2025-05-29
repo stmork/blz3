@@ -20,6 +20,8 @@
 #ifndef B3_SYSTEM_THREAD_H
 #define B3_SYSTEM_THREAD_H
 
+#include <mutex>
+
 #include "blz3/system/b3MutexAbstract.h"
 #include "blz3/system/b3ThreadAbstract.h"
 #include "blz3/system/b3CPUBase.h"
@@ -63,33 +65,31 @@ public:
  */
 class b3Mutex : public b3MutexAbstract
 {
-	pthread_mutex_t mutex;
+	std::mutex m_Mutex;
 
 public:
 	/**
 	 * This constructor initializes the mutex.
 	 */
-	b3Mutex()
-	{
-		b3PThread::b3CheckResult(pthread_mutex_init(&mutex, NULL));
-	}
+	b3Mutex() = default;
 
 	/**
 	 * Ths destructor deinitializes the mutex.
 	 */
-	virtual ~b3Mutex()
+	virtual ~b3Mutex() = default;
+
+	inline bool b3Lock() override
 	{
-		b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
+		m_Mutex.lock();
+
+		return true;
 	}
 
-	inline bool     b3Lock() override
+	inline bool b3Unlock() override
 	{
-		return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
-	}
+		m_Mutex.unlock();
 
-	inline bool     b3Unlock() override
-	{
-		return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
+		return true;
 	}
 };
 
@@ -100,15 +100,7 @@ public:
  * two processes. Note that this class can be used
  * as global variables.
  */
-class b3IPCMutex : public b3MutexAbstract
-{
-	pthread_mutex_t mutex;
-public:
-	b3IPCMutex();
-	virtual ~b3IPCMutex();
-	bool     b3Lock() override;
-	bool     b3Unlock() override;
-};
+typedef b3Mutex b3IPCMutex;
 
 /**
  * This class implements a simple signalling event pipe.

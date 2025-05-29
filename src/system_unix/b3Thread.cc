@@ -31,34 +31,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III IPC mutex                        **
-**                                                                      **
-*************************************************************************/
-
-b3IPCMutex::b3IPCMutex()
-{
-	b3PThread::b3CheckResult(pthread_mutex_init(&mutex, NULL));
-}
-
-b3IPCMutex::~b3IPCMutex()
-{
-	b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
-}
-
-// Method for entering a critical code section
-bool b3IPCMutex::b3Lock()
-{
-	return b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
-}
-
-// Method for leaving a critical code section
-bool b3IPCMutex::b3Unlock()
-{
-	return b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
-}
-
-/*************************************************************************
-**                                                                      **
 **                        b3 event                                      **
 **                                                                      **
 *************************************************************************/
