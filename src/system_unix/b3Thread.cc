@@ -35,42 +35,24 @@
 **                                                                      **
 *************************************************************************/
 
-b3Event::b3Event()
-{
-	b3PThread::b3CheckResult(pthread_cond_init(&event, NULL));
-	b3PThread::b3CheckResult(pthread_mutex_init(&mutex, NULL));
-	pulse = false;
-}
-
-b3Event::~b3Event()
-{
-	b3PThread::b3CheckResult(pthread_mutex_destroy(&mutex));
-	b3PThread::b3CheckResult(pthread_cond_destroy(&event));
-}
-
 // Signal another thread that there has happend something.
 void b3Event::b3Pulse()
 {
-	b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
-	pulse = true;
-	b3PThread::b3CheckResult(pthread_cond_broadcast(&event));
-	b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
+	m_Pulsed = true;
+	m_Conditional.notify_all();
 }
 
 // Wait for a signal from another thread.
 bool b3Event::b3Wait()
 {
-	bool success = true;
+	std::unique_lock lock(m_Mutex);
 
-	success &= b3PThread::b3CheckResult(pthread_mutex_lock(&mutex));
-	if (!pulse)
-	{
-		success &= b3PThread::b3CheckResult(pthread_cond_wait(&event, &mutex));
-	}
-	pulse = false;
-	success &= b3PThread::b3CheckResult(pthread_mutex_unlock(&mutex));
-
-	return success;
+	m_Conditional.wait(lock,[&]
+					   {
+		return m_Pulsed;
+	});
+	m_Pulsed = false;
+	return true;
 }
 
 /*************************************************************************

@@ -21,6 +21,7 @@
 #define B3_SYSTEM_THREAD_H
 
 #include <mutex>
+#include <condition_variable>
 
 #include "blz3/system/b3MutexAbstract.h"
 #include "blz3/system/b3ThreadAbstract.h"
@@ -107,21 +108,20 @@ typedef b3Mutex b3IPCMutex;
  */
 class b3Event : public b3EventAbstract
 {
-	pthread_cond_t  event;
-	pthread_mutex_t mutex;
-
-	volatile bool   pulse;
+	std::condition_variable m_Conditional;
+	std::mutex              m_Mutex;
+	bool                    m_Pulsed = false;
 
 public:
 	/**
 	 * This constructor initializes this event handler.
 	 */
-	b3Event();
+	b3Event() = default;
 
 	/**
 	 * This destructor deinitializes this event handler.
 	 */
-	virtual ~b3Event();
+	virtual ~b3Event() = default;
 
 	void     b3Pulse() override;
 	bool     b3Wait() override;
