@@ -97,8 +97,7 @@ void init_vertices()
 		{
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 			glBufferDataARB(GL_ARRAY_BUFFER_ARB, vSize, nullptr, GL_DYNAMIC_DRAW_ARB);
-			vPtr = reinterpret_cast<GLfloat *>(glMapBufferARB(GL_ARRAY_BUFFER_ARB,
-			GL_WRITE_ONLY));
+			vPtr = reinterpret_cast<GLfloat *>(glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY));
 		}
 		else
 		{
@@ -132,8 +131,7 @@ void init_vertices()
 		{
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, iSize * sizeof(GLint), nullptr, GL_DYNAMIC_DRAW_ARB);
-			iPtr = reinterpret_cast<GLuint *>(glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-			GL_WRITE_ONLY));
+			iPtr = reinterpret_cast<GLuint *>(glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY));
 		}
 		else
 		{

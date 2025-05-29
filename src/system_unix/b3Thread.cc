@@ -47,8 +47,8 @@ bool b3Event::b3Wait()
 {
 	std::unique_lock lock(m_Mutex);
 
-	m_Conditional.wait(lock,[&]
-					   {
+	m_Conditional.wait(lock, [&]
+	{
 		return m_Pulsed;
 	});
 	m_Pulsed = false;
@@ -61,15 +61,15 @@ bool b3Event::b3Wait()
 **                                                                      **
 *************************************************************************/
 
-b3_count   b3Thread::m_ThreadCount;
-b3IPCMutex b3Thread::m_ThreadMutex;
+std::mutex           b3Thread::m_ThreadMutex;
+std::atomic_size_t   b3Thread::m_ThreadCount;
 
-static b3_count   threadSuccess;
-static b3_count   threadError;
+static std::atomic_int   threadSuccess;
+static std::atomic_int   threadError;
 
 b3Thread::b3Thread(const char * task_name)
 {
-	m_Name = task_name;
+	b3Name(task_name);
 }
 
 b3Thread::~b3Thread()
@@ -79,7 +79,7 @@ b3Thread::~b3Thread()
 
 void b3Thread::b3Inc()
 {
-	b3CriticalSection lock(m_ThreadMutex);
+	std::lock_guard<std::mutex> lock(m_ThreadMutex);
 
 	if (!m_IsRunning)
 	{
@@ -91,7 +91,7 @@ void b3Thread::b3Inc()
 
 void b3Thread::b3Dec()
 {
-	b3CriticalSection lock(m_ThreadMutex);
+	std::lock_guard<std::mutex> lock(m_ThreadMutex);
 
 	if (m_IsRunning)
 	{
@@ -103,7 +103,14 @@ void b3Thread::b3Dec()
 
 void b3Thread::b3Name(const char * task_name)
 {
-	m_Name = task_name;
+	if (task_name != nullptr)
+	{
+		m_Name.assign(task_name);
+	}
+	else
+	{
+		m_Name = "no name";
+	}
 }
 
 bool b3Thread::b3Start(
@@ -128,20 +135,20 @@ bool b3Thread::b3Start(
 	{
 		threadSuccess++;
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # started thread %02lX (%s).\n",
-			m_Thread,
-			m_Name != nullptr ? m_Name : "no name");
+			m_Thread, m_Name.c_str());
 	}
 	else
 	{
-		b3CriticalSection lock(m_ThreadMutex);
+		std::lock_guard<std::mutex> lock(m_ThreadMutex);
 
 		threadError++;
 		b3PrintF(B3LOG_NORMAL, "### CLASS: b3Thrd # Thread (%lx) not started!\n",
 			m_Thread);
 		b3PrintF(B3LOG_NORMAL, "    OK/error count: %d/%d\n",
-			threadSuccess, threadError);
-		b3PrintF(B3LOG_NORMAL, "    thread count:   %d\n",
-			m_ThreadCount);
+			threadSuccess.load(),
+			threadError.load());
+		b3PrintF(B3LOG_NORMAL, "    thread count:   %zu\n",
+			m_ThreadCount.load());
 	}
 	return success;
 }
@@ -179,8 +186,7 @@ bool b3Thread::b3Stop()
 	if (m_IsRunning)
 	{
 		b3PrintF(B3LOG_FULL, "### CLASS: b3Thrd # terminated thread %02lX (%s).\n",
-			m_Thread,
-			m_Name != nullptr ? m_Name : "no name");
+			m_Thread, m_Name.c_str());
 	}
 
 	b3Dec();

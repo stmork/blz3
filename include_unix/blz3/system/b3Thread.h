@@ -20,9 +20,10 @@
 #ifndef B3_SYSTEM_THREAD_H
 #define B3_SYSTEM_THREAD_H
 
+#include <atomic>
 #include <mutex>
 #include <condition_variable>
-
+#include <string>
 #include "blz3/system/b3MutexAbstract.h"
 #include "blz3/system/b3ThreadAbstract.h"
 #include "blz3/system/b3CPUBase.h"
@@ -132,18 +133,18 @@ public:
  */
 class b3Thread : public b3ThreadAbstract
 {
-	const char  * m_Name;
-	b3TimeSpan    m_Span;
-	int           m_Prio = 0;
+	std::string                  m_Name;
+	b3TimeSpan                   m_Span;
+	int                          m_Prio = 0;
 
-	pthread_t              m_Thread    = 0;
-	volatile bool          m_IsRunning = false;
-	volatile b3_u32        m_Result    = 0;
-	volatile b3ThreadProc  m_CallProc  = nullptr;
-	volatile void     *    m_CallArg   = nullptr;
+	pthread_t                    m_Thread    = 0;
+	volatile bool                m_IsRunning = false;
+	volatile b3_u32              m_Result    = 0;
+	volatile b3ThreadProc        m_CallProc  = nullptr;
+	volatile void     *          m_CallArg   = nullptr;
 
-	static   b3IPCMutex    m_ThreadMutex;
-	static   b3_count      m_ThreadCount;
+	static   std::atomic_size_t  m_ThreadCount;
+	static   std::mutex          m_ThreadMutex;
 
 public:
 	/**

@@ -420,7 +420,7 @@ private:
 				loop  = true;
 				for (material  = static_cast<b3Material *>(m_Shape->b3GetMaterialHead()->First);
 					(material != nullptr) && loop;
-					 material  = static_cast<b3Material *>(material->Succ))
+					material  = static_cast<b3Material *>(material->Succ))
 				{
 					if (material->b3GetSurfaceValues(&surface))
 					{
