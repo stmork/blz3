@@ -2,6 +2,7 @@
 *.so*
 *.a
 *.gcda
+*.gcno
 *.pro.user
 *.bak
 moc_*.*

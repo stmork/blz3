@@ -141,7 +141,7 @@ class b3Thread : public b3ThreadAbstract
 	volatile bool                m_IsRunning = false;
 	volatile b3_u32              m_Result    = 0;
 	volatile b3ThreadProc        m_CallProc  = nullptr;
-	volatile void     *          m_CallArg   = nullptr;
+	volatile void        *       m_CallArg   = nullptr;
 
 	static   std::atomic_size_t  m_ThreadCount;
 	static   std::mutex          m_ThreadMutex;
