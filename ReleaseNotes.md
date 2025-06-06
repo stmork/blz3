@@ -79,3 +79,6 @@ Version 3.1.12
 
 Version 3.1.13
 * Added Qt 6 support.
+* Optimized code quality.
+* Improved integration of OpenEXR.
+* Improved integration of AVlib.
