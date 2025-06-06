@@ -69,7 +69,7 @@ static std::atomic_int   threadError;
 
 b3Thread::b3Thread(const char * task_name)
 {
-	b3Name(task_name);
+	b3Thread::b3Name(task_name);
 }
 
 b3Thread::~b3Thread()
