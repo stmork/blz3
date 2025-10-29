@@ -9,6 +9,7 @@ QT         -= core gui widgets
 include(../common.pri)
 
 QMAKE_CXXFLAGS  -= -Wsuggest-override
+QMAKE_CXXFLAGS  -= -Wshadow
 LIBS            += -L$$BLZ3_LIB
 
 message("*** Blizzard III Qt OpenGL renderer statechart unittests $$VERSION ***")

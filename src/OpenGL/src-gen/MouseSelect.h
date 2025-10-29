@@ -1,7 +1,7 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
  *               All rights reserved */
 
 #ifndef MOUSESELECT_H_
@@ -311,7 +311,6 @@ private:
 	void exseq_main_region_Panning();
 	void exseq_main_region();
 	void react_main_region__entry_Default();
-	sc::integer react(const sc::integer transitioned_before);
 	sc::integer main_region_Normal_react(const sc::integer transitioned_before);
 	sc::integer main_region_Selection_react(const sc::integer transitioned_before);
 	sc::integer main_region_Moving_react(const sc::integer transitioned_before);

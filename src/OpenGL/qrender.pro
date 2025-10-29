@@ -12,6 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 5) {
 
 include(../common.pri)
 
+QMAKE_CXXFLAGS -= -Wshadow
+
 target.path = $$BLZ3_BIN
 LIBS       += -L$$BLZ3_LIB
 INSTALLS   += target

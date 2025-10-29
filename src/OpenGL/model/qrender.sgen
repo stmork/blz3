@@ -1,4 +1,9 @@
-GeneratorModel for yakindu::cpp11
+//
+//  SPDX-License-Identifier: BSD-3-Clause
+//  SPDX-FileCopyrightText: Copyright (C) 2001-2025 Steffen A. Mork
+//
+
+GeneratorModel for create::cpp
 {
 	const PROJECT : string = "OpenGL"
 	const SRC_GEN : string = "src-gen"
@@ -12,7 +17,7 @@ GeneratorModel for yakindu::cpp11
 			"Generated with YAKINDU statechart tools\n" +
 			" *\n" +
 			" * SPDX-License-Identifier: BSD-3-Clause\n" +
-			" * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork\n" +
+			" * SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork\n" +
 			" *               All rights reserved\n"
 		}
 

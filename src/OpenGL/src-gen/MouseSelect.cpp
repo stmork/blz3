@@ -1,7 +1,7 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2024  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
  *               All rights reserved */
 
 #include "MouseSelect.h"
@@ -49,7 +49,7 @@ MouseSelect::View::View(MouseSelect* parent_) noexcept :
 
 MouseSelect::EventInstance* MouseSelect::getNextEvent() noexcept
 {
-	MouseSelect::EventInstance* nextEvent = 0;
+	MouseSelect::EventInstance* nextEvent = nullptr;
 
 	if(!incomingEventQueue.empty()) {
 		nextEvent = incomingEventQueue.front();
@@ -84,9 +84,8 @@ bool MouseSelect::dispatchEvent(MouseSelect::EventInstance* event) noexcept
 		case MouseSelect::Event::Gui_mouseDown:
 		{
 			MouseSelect::EventInstanceWithValue<SCT_point>* e = static_cast<MouseSelect::EventInstanceWithValue<SCT_point> *>(event);
-			if(e != 0) {
-				ifaceGui.mouseDown_value
-				 = e->value;
+			if(e != nullptr) {
+				ifaceGui.mouseDown_value = e->value;
 				ifaceGui.mouseDown_raised = true;
 			}
 			break;
@@ -94,9 +93,8 @@ bool MouseSelect::dispatchEvent(MouseSelect::EventInstance* event) noexcept
 		case MouseSelect::Event::Gui_mouseMove:
 		{
 			MouseSelect::EventInstanceWithValue<SCT_point>* e = static_cast<MouseSelect::EventInstanceWithValue<SCT_point> *>(event);
-			if(e != 0) {
-				ifaceGui.mouseMove_value
-				 = e->value;
+			if(e != nullptr) {
+				ifaceGui.mouseMove_value = e->value;
 				ifaceGui.mouseMove_raised = true;
 			}
 			break;
@@ -104,9 +102,8 @@ bool MouseSelect::dispatchEvent(MouseSelect::EventInstance* event) noexcept
 		case MouseSelect::Event::Gui_mouseUp:
 		{
 			MouseSelect::EventInstanceWithValue<SCT_point>* e = static_cast<MouseSelect::EventInstanceWithValue<SCT_point> *>(event);
-			if(e != 0) {
-				ifaceGui.mouseUp_value
-				 = e->value;
+			if(e != nullptr) {
+				ifaceGui.mouseUp_value = e->value;
 				ifaceGui.mouseUp_raised = true;
 			}
 			break;
@@ -134,10 +131,11 @@ bool MouseSelect::isActive() const noexcept
  */
 bool MouseSelect::isFinal() const noexcept
 {
-	   return false;
+	return false;
 }
 
-bool MouseSelect::check() const noexcept{
+bool MouseSelect::check() const noexcept
+{
 	if (this->ifaceGui.ifaceGuiOperationCallback == nullptr) {
 		return false;
 	}
@@ -192,40 +190,35 @@ void MouseSelect::Gui::setOperationCallback(OperationCallback* operationCallback
 
 /*! Raises the in event 'onSelect' of interface scope 'gui'. */
 void MouseSelect::Gui::raiseOnSelect() {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstance(MouseSelect::Event::Gui_onSelect))
-	;
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstance(MouseSelect::Event::Gui_onSelect));
 	parent->runCycle();
 }
 
 
 /*! Raises the in event 'onDisable' of interface scope 'gui'. */
 void MouseSelect::Gui::raiseOnDisable() {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstance(MouseSelect::Event::Gui_onDisable))
-	;
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstance(MouseSelect::Event::Gui_onDisable));
 	parent->runCycle();
 }
 
 
 /*! Raises the in event 'mouseDown' of interface scope 'gui'. */
 void MouseSelect::Gui::raiseMouseDown(SCT_point mouseDown_) {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseDown, mouseDown_))
-	;
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseDown, mouseDown_));
 	parent->runCycle();
 }
 
 
 /*! Raises the in event 'mouseMove' of interface scope 'gui'. */
 void MouseSelect::Gui::raiseMouseMove(SCT_point mouseMove_) {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseMove, mouseMove_))
-	;
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseMove, mouseMove_));
 	parent->runCycle();
 }
 
 
 /*! Raises the in event 'mouseUp' of interface scope 'gui'. */
 void MouseSelect::Gui::raiseMouseUp(SCT_point mouseUp_) {
-	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseUp, mouseUp_))
-	;
+	parent->incomingEventQueue.push_back(new MouseSelect::EventInstanceWithValue<SCT_point>(MouseSelect::Event::Gui_mouseUp, mouseUp_));
 	parent->runCycle();
 }
 
@@ -384,11 +377,6 @@ void MouseSelect::react_main_region__entry_Default()
 	enseq_main_region_Normal_default();
 }
 
-sc::integer MouseSelect::react(const sc::integer transitioned_before) {
-	/* State machine reactions. */
-	return transitioned_before;
-}
-
 sc::integer MouseSelect::main_region_Normal_react(const sc::integer transitioned_before) {
 	/* The reactions of state Normal. */
 	sc::integer transitioned_after = transitioned_before;
@@ -398,7 +386,6 @@ sc::integer MouseSelect::main_region_Normal_react(const sc::integer transitioned
 		{ 
 			exseq_main_region_Normal();
 			enseq_main_region_Selection_default();
-			react(0);
 			transitioned_after = 0;
 		}  else
 		{
@@ -408,7 +395,6 @@ sc::integer MouseSelect::main_region_Normal_react(const sc::integer transitioned
 				ifaceGui.selectionEnd_raised = true;
 				ifaceGui.selectionEnd_observable.next();
 				enseq_main_region_Normal_default();
-				react(0);
 				transitioned_after = 0;
 			}  else
 			{
@@ -418,7 +404,6 @@ sc::integer MouseSelect::main_region_Normal_react(const sc::integer transitioned
 					setP2(ifaceGui.mouseDown_value);
 					ifaceView.ifaceViewOperationCallback->cursorPanning();
 					enseq_main_region_Panning_default();
-					react(0);
 					transitioned_after = 0;
 				} 
 			}
@@ -428,7 +413,7 @@ sc::integer MouseSelect::main_region_Normal_react(const sc::integer transitioned
 	if ((transitioned_after) == (transitioned_before))
 	{ 
 		/* then execute local reactions. */
-		transitioned_after = react(transitioned_before);
+		transitioned_after = transitioned_before;
 	} 
 	return transitioned_after;
 }
@@ -442,7 +427,6 @@ sc::integer MouseSelect::main_region_Selection_react(const sc::integer transitio
 		{ 
 			exseq_main_region_Selection();
 			enseq_main_region_Normal_default();
-			react(0);
 			transitioned_after = 0;
 		}  else
 		{
@@ -453,7 +437,6 @@ sc::integer MouseSelect::main_region_Selection_react(const sc::integer transitio
 				setP2(ifaceGui.mouseDown_value);
 				ifaceView.ifaceViewOperationCallback->show();
 				enseq_main_region_Moving_default();
-				react(0);
 				transitioned_after = 0;
 			} 
 		}
@@ -462,7 +445,7 @@ sc::integer MouseSelect::main_region_Selection_react(const sc::integer transitio
 	if ((transitioned_after) == (transitioned_before))
 	{ 
 		/* then execute local reactions. */
-		transitioned_after = react(transitioned_before);
+		transitioned_after = transitioned_before;
 	} 
 	return transitioned_after;
 }
@@ -481,7 +464,6 @@ sc::integer MouseSelect::main_region_Moving_react(const sc::integer transitioned
 			ifaceView.ifaceViewOperationCallback->select(p1.x, p1.y, p2.x, p2.y);
 			ifaceGui.ifaceGuiOperationCallback->updateScrolling();
 			enseq_main_region_Normal_default();
-			react(0);
 			transitioned_after = 0;
 		}  else
 		{
@@ -490,7 +472,6 @@ sc::integer MouseSelect::main_region_Moving_react(const sc::integer transitioned
 				exseq_main_region_Moving();
 				setP2(ifaceGui.mouseMove_value);
 				enseq_main_region_Moving_default();
-				react(0);
 				transitioned_after = 0;
 			} 
 		}
@@ -499,7 +480,7 @@ sc::integer MouseSelect::main_region_Moving_react(const sc::integer transitioned
 	if ((transitioned_after) == (transitioned_before))
 	{ 
 		/* then execute local reactions. */
-		transitioned_after = react(transitioned_before);
+		transitioned_after = transitioned_before;
 	} 
 	return transitioned_after;
 }
@@ -515,7 +496,6 @@ sc::integer MouseSelect::main_region_Panning_react(const sc::integer transitione
 			setP2(ifaceGui.mouseMove_value);
 			ifaceView.ifaceViewOperationCallback->move((p2.x - p1.x), (p2.y - p1.y));
 			enseq_main_region_Panning_default();
-			react(0);
 			transitioned_after = 0;
 		}  else
 		{
@@ -525,7 +505,6 @@ sc::integer MouseSelect::main_region_Panning_react(const sc::integer transitione
 				ifaceView.ifaceViewOperationCallback->cursorArrow();
 				ifaceGui.ifaceGuiOperationCallback->updateScrolling();
 				enseq_main_region_Normal_default();
-				react(0);
 				transitioned_after = 0;
 			} 
 		}
@@ -534,7 +513,7 @@ sc::integer MouseSelect::main_region_Panning_react(const sc::integer transitione
 	if ((transitioned_after) == (transitioned_before))
 	{ 
 		/* then execute local reactions. */
-		transitioned_after = react(transitioned_before);
+		transitioned_after = transitioned_before;
 	} 
 	return transitioned_after;
 }
