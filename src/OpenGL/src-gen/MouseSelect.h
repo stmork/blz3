@@ -1,7 +1,7 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2026  Steffen A. Mork
  *               All rights reserved */
 
 #ifndef MOUSESELECT_H_
@@ -81,6 +81,8 @@ public:
 		virtual ~EventInstanceWithValue() = default;
 		const T value;
 	};
+
+
 
 
 	//! Inner class for gui interface scope.
@@ -269,7 +271,6 @@ protected:
 	bool dispatchEvent(EventInstance * event) noexcept;
 
 
-
 private:
 	MouseSelect(const MouseSelect & rhs);
 	MouseSelect & operator=(const MouseSelect &);
@@ -325,7 +326,6 @@ private:
 	void setP1(SCT_point p1) noexcept;
 	/*! Sets the value of the variable 'p2' that is defined in the internal scope. */
 	void setP2(SCT_point p2) noexcept;
-
 
 
 };

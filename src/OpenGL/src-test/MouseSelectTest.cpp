@@ -1,7 +1,7 @@
 /** Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2026  Steffen A. Mork
  *               All rights reserved */
 #include <string>
 #include <list>
@@ -11,7 +11,9 @@
 #include "sc_runner.h"
 #include "sc_types.h"
 
+#ifndef SC_UNUSED
 #define SC_UNUSED(P) (void)P
+#endif
 
 namespace  {
 

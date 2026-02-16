@@ -1,7 +1,7 @@
 /* Generated with YAKINDU statechart tools
  *
  * SPDX-License-Identifier: BSD-3-Clause
- * SPDX-FileCopyrightText:  Copyright (C)  2025  Steffen A. Mork
+ * SPDX-FileCopyrightText:  Copyright (C)  2026  Steffen A. Mork
  *               All rights reserved */
 
 #include "MouseSelect.h"
@@ -108,7 +108,6 @@ bool MouseSelect::dispatchEvent(MouseSelect::EventInstance* event) noexcept
 			}
 			break;
 		}
-		
 		default:
 			//pointer got out of scope
 			delete event;
@@ -578,6 +577,8 @@ void MouseSelect::runCycle() {
 
 void MouseSelect::enter() {
 	/* Activates the state machine. */
+	{
+	};
 	if (isExecuting)
 	{ 
 		return;
