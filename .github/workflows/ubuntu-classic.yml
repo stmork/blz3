@@ -9,7 +9,7 @@ jobs:
          LANG: de_DE.UTF-8
          TZ: Europe/Berlin
       steps:
-         - uses: actions/checkout@v4
+         - uses: actions/checkout@v6
          - name: Prepare locales
            run: sudo locale-gen de_DE.UTF-8
          - name: Update package info

@@ -10,7 +10,7 @@ jobs:
          TZ: Europe/Berlin
          LD_LIBRARY_PATH: ${{ github.workspace }}/lib
       steps:
-         - uses: actions/checkout@v4
+         - uses: actions/checkout@v6
          - name: Prepare locales
            run: sudo locale-gen de_DE.UTF-8
          - name: Update package info
