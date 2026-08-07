@@ -1567,12 +1567,9 @@ public:
 		static_assert(std::is_floating_point<F>(), "Expect float as vector member type!");
 
 		return
-			a->x * b->y * c->z -
-			c->x * b->y * a->z +
-			b->x * c->y * a->z -
-			b->x * a->y * c->z +
-			c->x * a->y * b->z -
-			a->x * c->y * b->z;
+			a->x * (b->y * c->z - c->y * b->z) -
+			b->x * (a->y * c->z - c->y * a->z) +
+			c->x * (a->y * b->z - b->y * a->z);
 	}
 
 	/**

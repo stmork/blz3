@@ -82,3 +82,6 @@ Version 3.1.13
 * Optimized code quality.
 * Improved integration of OpenEXR.
 * Improved integration of AVlib.
+
+Version 3.1.14
+* Optimized 3d determinant.
