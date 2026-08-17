@@ -508,6 +508,7 @@ class MouseSelectTest : public ::testing::Test{
 		public:
 		MouseSelectTest* owner;
 		MockGui(MouseSelectTest* owner) : owner(owner) {}
+		virtual ~MockGui() = default;
 		void updateScrolling() {
 			owner->guiUpdateScrollingMock->updateScrolling();
 		}
@@ -516,6 +517,7 @@ class MouseSelectTest : public ::testing::Test{
 		public:
 		MouseSelectTest* owner;
 		MockView(MouseSelectTest* owner) : owner(owner) {}
+		virtual ~MockView() = default;
 		bool is3D() {
 			return (owner->viewIs3DMock->*(owner->viewIs3DMock->getBehavior()))();
 		}

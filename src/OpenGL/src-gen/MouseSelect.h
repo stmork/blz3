@@ -78,7 +78,7 @@ public:
 			EventInstance(id),
 			value(val)
 		{}
-		virtual ~EventInstanceWithValue() = default;
+		~EventInstanceWithValue() noexcept override = default;
 		const T value;
 	};
 
@@ -117,9 +117,11 @@ public:
 		class OperationCallback
 		{
 		public:
-			virtual ~OperationCallback() = 0;
-
 			virtual void updateScrolling() = 0;
+
+
+		protected:
+			~OperationCallback() noexcept = default;
 
 
 		};
@@ -184,8 +186,6 @@ public:
 		class OperationCallback
 		{
 		public:
-			virtual ~OperationCallback() = 0;
-
 			virtual bool is3D() = 0;
 
 			virtual void show() = 0;
@@ -201,6 +201,10 @@ public:
 			virtual void select(int32_t x1, int32_t y1, int32_t x2, int32_t y2) = 0;
 
 			virtual void move(int32_t dx, int32_t dy) = 0;
+
+
+		protected:
+			~OperationCallback() noexcept = default;
 
 
 		};
@@ -280,12 +284,11 @@ private:
 
 
 
-	//! the maximum number of orthogonal states defines the dimension of the state configuration vector.
-	static const sc::ushort maxOrthogonalStates {1};
+	static constexpr sc::ushort maxOrthogonalStates {1};
 
 
 
-	State stateConfVector[maxOrthogonalStates];
+	State stateConfVector[maxOrthogonalStates] = {};
 
 
 	Gui ifaceGui {Gui{nullptr}};
@@ -331,8 +334,6 @@ private:
 };
 
 
-inline MouseSelect::Gui::OperationCallback::~OperationCallback() {}
-inline MouseSelect::View::OperationCallback::~OperationCallback() {}
 
 
 #endif /* MOUSESELECT_H_ */

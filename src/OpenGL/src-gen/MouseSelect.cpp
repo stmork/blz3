@@ -13,13 +13,12 @@ Implementation of the state machine 'MouseSelect'
 
 
 
-MouseSelect::MouseSelect() noexcept
+MouseSelect::MouseSelect() noexcept :
+	sc::EventDrivenInterface()
 {
 	this->ifaceGui.parent = this;
 	this->ifaceView.parent = this;
-	for (sc::ushort state_vec_pos = 0; state_vec_pos < maxOrthogonalStates; ++state_vec_pos)
-		stateConfVector[state_vec_pos] = MouseSelect::State::NO_STATE;
-	
+	std::fill(std::begin(stateConfVector), std::end(stateConfVector), MouseSelect::State::NO_STATE);
 	clearInEvents();
 	clearOutEvents();
 }
